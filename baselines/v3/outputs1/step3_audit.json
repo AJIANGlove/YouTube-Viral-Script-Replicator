@@ -1,0 +1,56 @@
+{
+  "verdict": "fail",
+  "total_score": 78,
+  "issues": [
+    {
+      "location": "CH15 8:59-10:00",
+      "dimension": "originality",
+      "severity": "blocker",
+      "evidence_quote": "Here's the honest answer. It depends entirely on scale.",
+      "problem": "查重报告命中源视频连续重合'the honest answer it depends entirely on'与'answer it depends entirely on scale'（6词以上连续重合）。style.language_patterns 中无任何 pattern 覆盖'honest answer + depends entirely on scale'这一完整措辞——LP06 仅涉及自问自答反问句式(sound like good money? it is...)，不能豁免此处的整句复制。FS15 originality_constraint 亦要求分层答案须自创，此处与源案例结论句高度雷同。",
+      "suggestion": "改写为赌场语境的自创分层判词，避免'depends entirely on scale'原措辞，例如'诚实的回答只有一个变量：你有多大'或'规模决定一切——但不是你想的那种方式'。"
+    },
+    {
+      "location": "CH12 6:51-7:46",
+      "dimension": "density",
+      "severity": "minor",
+      "evidence_quote": "Fontainebleau Las Vegas topped out at nearly seventy stories, then sat as a blue glass shell for over a decade.",
+      "problem": "词密度报告标注 CH12 为115wpm(目标169.8)偏稀，仅达目标68%，低于80%阈值。该章为 conflict_escalation 高冲击章节，语速过慢会削弱废墟案例的荒诞冲击节奏。",
+      "suggestion": "在 word_budget(156)内补充第二个失败案例的具象数字或一个荒诞细节（如拍卖低价、改作他用），把词量提升至接近目标语速。"
+    },
+    {
+      "location": "CH09 4:56-5:35",
+      "dimension": "density",
+      "severity": "minor",
+      "evidence_quote": "Surveillance never sleeps, so the camera operators watch every table twenty-four hours a day.",
+      "problem": "词密度报告标注 CH09 为134wpm(目标169.8)偏稀，达目标79%，略低于80%阈值。刚性成本章节信息填充略不足。",
+      "suggestion": "在 word_budget(112)内补一类刚性成本类目或强化'成本不随客流变化'的具象化表述，提升词密度。"
+    },
+    {
+      "location": "CH14 8:24-8:59",
+      "dimension": "density",
+      "severity": "minor",
+      "evidence_quote": "The standalone slot barn is dying. The future is the integrated resort: gaming shrinking to a slice of a machine built around conventions, arenas, and retail.",
+      "problem": "词密度报告标注 CH14 为135wpm(目标169.8)偏稀，达目标80%边界，趋势前瞻章节略稀。",
+      "suggestion": "可在 word_budget(98)内补一个体验/效率层面技术趋势的具象数字或场景，微调至目标语速。"
+    }
+  ],
+  "factual_claims": [
+    { "location": "CH03", "claim": "Las Vegas Sands sold The Venetian and its expo hall for roughly $6.25 billion", "risk": "medium" },
+    { "location": "CH04", "claim": "Casino operators trade at high single-digit to low-teens multiples of earnings", "risk": "medium" },
+    { "location": "CH05", "claim": "A modern integrated resort routinely runs $2 to $4 billion just in construction", "risk": "medium" },
+    { "location": "CH05", "claim": "Wynn Las Vegas opened around $2.7 billion", "risk": "medium" },
+    { "location": "CH05", "claim": "The Cosmopolitan came in near $3.9 billion", "risk": "medium" },
+    { "location": "CH05", "claim": "a regional casino that gets built for under $200 million", "risk": "low" },
+    { "location": "CH06", "claim": "Revel in Atlantic City. A $2.4 billion resort that opened late, over budget... the property went bankrupt twice, then sold for a fraction of what it cost", "risk": "medium" },
+    { "location": "CH07", "claim": "Rates range from single digits in Nevada to over fifty percent in places like Pennsylvania", "risk": "medium" },
+    { "location": "CH08", "claim": "On the Las Vegas Strip, non-gaming now makes up over sixty percent of total revenue", "risk": "medium" },
+    { "location": "CH08", "claim": "A top Vegas club can pull in over a hundred million dollars a year from one room", "risk": "medium" },
+    { "location": "CH10", "claim": "Nevada shut its casinos completely for roughly eleven weeks", "risk": "medium" },
+    { "location": "CH10", "claim": "Caesars and MGM restructured billions in obligations to stay standing", "risk": "medium" },
+    { "location": "CH12", "claim": "Fontainebleau Las Vegas topped out at nearly seventy stories... Announced around $2.9 billion, sold in bankruptcy for a few hundred million", "risk": "high" },
+    { "location": "CH13", "claim": "the best of them post EBITDA margins north of thirty percent", "risk": "medium" },
+    { "location": "CH14", "claim": "In many states online gaming already outgrows the physical floor", "risk": "medium" },
+    { "location": "CH15", "claim": "gaming operators earn somewhere in the mid-teens on operating margin in a normal year", "risk": "medium" }
+  ]
+}

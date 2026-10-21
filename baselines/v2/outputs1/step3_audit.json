@@ -1,0 +1,44 @@
+{
+  "verdict": "pass",
+  "total_score": 88,
+  "issues": [
+    {
+      "location": "CH04 | 02:09–03:46",
+      "dimension": "originality",
+      "severity": "minor",
+      "evidence_quote": "Call it the trust hormone, if you haven't heard the name for it.",
+      "problem": "查重命中源字幕 6 词以上连续重合片段 'if you haven't heard the name'。但该短语属于 style.language_patterns LP03『术语现场翻译』公式句式（formula: 术语 + 'if you haven't heard the name' + 一句人话定义），按审核规则可豁免；此处仅作记录，不构成 blocker。",
+      "suggestion": "如需彻底规避查重，可改写为 'you might know it by another name' 等等价口语引导句，保留同等翻译功能。"
+    },
+    {
+      "location": "CH09 | 07:55–09:07",
+      "dimension": "originality",
+      "severity": "minor",
+      "evidence_quote": "There's one last thing, and honestly it might matter most of everything I've said.",
+      "problem": "查重命中 'and it might be the most'。该片段对应 style.narration_rules.transition_style『重要性声明』（there's one last thing, it might be the most important part），属公式化过渡句式，可豁免；仅作记录。",
+      "suggestion": "可微调为 'and it may be the single most useful thing here' 以拉开与源文的连续重合。"
+    },
+    {
+      "location": "CH04 | 02:09–03:46",
+      "dimension": "blueprint",
+      "severity": "minor",
+      "evidence_quote": "In a study published in a leading biology journal, researchers measured a specific bonding molecule in both cats and their owners before and after a session of quiet, gentle interaction.",
+      "problem": "Blueprint FS04 information_goal 要求『顶级期刊研究（年份+机构+期刊类型）』。脚本给出了期刊类型（leading biology journal），但未提供年份与机构；相较 FS03（University of Sussex 有名有姓机构）与 FS08 的落点，本章证据链的『机构』锚点偏弱。Style 要求研究叙述含『机构+方法+量化结果+对照组』完整链条，此处机构与年份缺位。",
+      "suggestion": "补一个具真实性的机构或年份锚点（如 '在一项发表于某生物学期刊的研究中，研究者……'保留通俗化的同时，可加入方法学的可信度细节），或保持匿名但强化方法描述以补偿。须真实可查，不得编造。"
+    }
+  ],
+  "factual_claims": [
+    { "location": "CH03", "claim": "University of Sussex 研究让主人对猫慢眨眼后，猫显著更可能回以慢眨眼，并更可能在之后靠近该人，相较中性表情。", "risk": "medium" },
+    { "location": "CH03", "claim": "对小型捕食者而言，直接、不间断的凝视是一种威胁信号。", "risk": "low" },
+    { "location": "CH04", "claim": "一项发表于生物学期刊的研究测量了猫与主人在安静互动前后体内的一种结合分子（信任荷尔蒙），互动后该分子在人和猫体内都上升，且两者上升幅度正相关形成正反馈回路。", "risk": "high" },
+    { "location": "CH04", "claim": "同样设置用于猫与陌生人时，该分子几乎不变化，回路不启动。", "risk": "high" },
+    { "location": "CH04", "claim": "该分子与母亲抱新生儿时上升的是同一种。", "risk": "medium" },
+    { "location": "CH05", "claim": "东地中海一带的发掘发现猫与人类聚居的时间远早于'农业储粮'叙事所允许的年代。", "risk": "medium" },
+    { "location": "CH05", "claim": "在一座地中海岛屿上，考古学家发现一具人类与一只猫被刻意合葬。", "risk": "medium" },
+    { "location": "CH05", "claim": "家猫与野生祖先的 DNA 差异极小，且出现差异的基因集中在与恐惧、奖赏、对人反应相关的基因上。", "risk": "high" },
+    { "location": "CH06", "claim": "追踪生活在嘈杂、拥挤、不可预测家庭中的猫，其压力标记物客观读数更差，但这些家庭的主人报告的关系最紧密、猫最主动寻求互动与慢眨眼。", "risk": "high" },
+    { "location": "CH08", "claim": "研究者给猫与主人佩戴轻量心率监测器，记录居家安静时段，发现随人平静下来猫的心律向其靠拢、二者节律趋同；与陌生人则不同步。", "risk": "high" },
+    { "location": "CH09", "claim": "猫擅长隐藏疼痛，常在出现跛行前先安静下来。", "risk": "medium" },
+    { "location": "CH09", "claim": "相当比例的老年猫会出现年龄相关的认知退化，但各研究的确切数字差异很大。", "risk": "medium" }
+  ]
+}

@@ -1,0 +1,2732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>爆款文案生成平台</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; margin: 0; background: #f5f6f8; color: #222; }
+  header { background: #1f2937; color: #fff; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 17px; margin: 0; }
+  nav button { background: transparent; color: #9ca3af; border: none; padding: 6px 14px; font-size: 14px; cursor: pointer; border-radius: 5px; }
+  nav button.active { background: #374151; color: #fff; }
+  main { max-width: 1100px; margin: 0 auto; padding: 16px; transition: max-width .15s; }
+  main.wide { max-width: 1480px; }
+  .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; }
+  .card h2 { font-size: 15px; margin: 0 0 8px; }
+  .detail-title-copy { padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+  .detail-title-copy:hover { color: #2563eb; }
+  .detail-title-copy:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; border-radius: 2px; }
+  .detail-title-copy-status { margin-left: 8px; font-size: 11px; font-weight: 400; color: #059669; }
+  .detail-title-copy-status.error { color: #dc2626; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  label { display: block; font-size: 12px; color: #374151; margin-bottom: 3px; }
+  input[type=text], input[type=password], input[type=number], select {
+    width: 100%; padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 5px; font-size: 13px;
+  }
+  button.primary { padding: 7px 16px; border: none; border-radius: 5px; font-size: 13px; cursor: pointer; background: #2563eb; color: #fff; }
+  button.ghost { padding: 6px 12px; background: #fff; color: #374151; border: 1px solid #d1d5db; border-radius: 5px; font-size: 12px; cursor: pointer; }
+  button.danger { padding: 6px 12px; background: #fff; color: #dc2626; border: 1px solid #fca5a5; border-radius: 5px; font-size: 12px; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  .lib-header { display: flex; align-items: baseline; gap: 10px; margin: 4px 2px 12px; }
+  .lib-header h2 { font-size: 18px; margin: 0; color: #111827; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: stretch; }
+  .asset-card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px 18px; background: #fff; display: flex; flex-direction: column; box-shadow: 0 1px 2px rgba(0,0,0,.04); transition: box-shadow .15s, border-color .15s; }
+  .asset-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,.08); border-color: #d1d5db; }
+  .asset-card h3 { font-size: 16px; font-weight: 650; margin: 0 0 8px; color: #111827; line-height: 1.4; }
+  .asset-card .tags { margin-bottom: 10px; }
+  .asset-card .src { font-size: 12px; line-height: 1.6; color: #6b7280; background: #f8fafc; border-left: 3px solid #c7d2fe; border-radius: 0 6px 6px 0; padding: 6px 10px; margin-bottom: 10px; }
+  .asset-card .src .src-zh { display: block; font-size: 13px; font-weight: 600; color: #374151; }
+  .asset-card .src .src-en { display: block; color: #9ca3af; }
+  .asset-card .desc { font-size: 13px; color: #4b5563; line-height: 1.65; margin: 0 0 10px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .asset-card .desc.expanded { display: block; -webkit-line-clamp: unset; }
+  .asset-card .desc-toggle { font-size: 12px; color: #2563eb; cursor: pointer; user-select: none; margin: -6px 0 10px; }
+  .asset-card .desc-toggle:hover { text-decoration: underline; }
+  .asset-card mark { background: #fef08a; padding: 0; border-radius: 2px; }
+  .asset-card .foot { margin-top: auto; padding-top: 10px; border-top: 1px solid #f3f4f6; display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #9ca3af; }
+  .asset-card .foot .stats { font-variant-numeric: tabular-nums; }
+  .asset-card .foot .src-link { font-size: 12px; color: #2563eb; text-decoration: none; padding: 3px 10px; border: 1px solid #bfdbfe; border-radius: 5px; }
+  .asset-card .foot .src-link:hover { background: #eff6ff; }
+  .asset-card.selectable { cursor: pointer; position: relative; }
+  .asset-card.selectable .src { margin-right: 58px; }
+  .asset-card.selected { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(37,99,235,.22); background: #f5f8ff; }
+  .asset-card .sel-badge { display: none; position: absolute; top: 10px; right: 12px; font-size: 11px; color: #fff; background: #2563eb; border-radius: 999px; padding: 2px 9px; z-index: 1; }
+  .asset-card.selected .sel-badge { display: inline-block; }
+  .tag { display: inline-block; font-size: 11px; background: #eef2ff; color: #4338ca; border-radius: 4px; padding: 2px 8px; margin-right: 4px; }
+  .tag.green { background: #ecfdf5; color: #047857; }
+  .tag.red { background: #fef2f2; color: #b91c1c; }
+  .tag.yellow { background: #fffbeb; color: #b45309; }
+  .tag.sky { background: #f0f9ff; color: #0369a1; }
+  .asset-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 2px 12px; }
+  .asset-toolbar input[type=text] { width: 240px; }
+  .asset-toolbar select { width: auto; }
+  #lib-channels, #gen-channels { display: inline-flex; flex-wrap: nowrap; overflow-x: auto; max-width: 100%; }
+  #lib-channels .chip, #gen-channels .chip { flex: 0 0 auto; margin-top: 0; }
+  .chip.on { background: #2563eb; border-color: #2563eb; color: #fff; }
+  .channel-head { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 8px; margin: 6px 0 -4px; padding: 4px 2px 6px; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; background: #fff; z-index: 4; }
+  .channel-head .channel-name { font-size: 15px; font-weight: 650; color: #111827; }
+  .channel-head .hint { margin-top: 0; }
+  .status-running { color: #2563eb; } .status-done { color: #059669; } .status-failed { color: #dc2626; } .status-queued { color: #6b7280; }
+  .mono { font-family: Consolas, "Courier New", monospace; font-size: 12px; white-space: pre-wrap; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 5px; padding: 10px; max-height: 420px; overflow: auto; }
+  .steps { display: flex; gap: 6px; margin: 10px 0; }
+  .step-pill { flex: 1; text-align: center; font-size: 12px; padding: 6px 4px; border-radius: 5px; background: #f3f4f6; color: #6b7280; }
+  .step-pill.running { background: #dbeafe; color: #1d4ed8; }
+  .step-pill.done { background: #d1fae5; color: #047857; }
+  .step-pill.failed { background: #fee2e2; color: #b91c1c; }
+  .hidden { display: none; }
+  .hint { font-size: 11px; color: #9ca3af; margin-top: 4px; }
+  .err-list { color: #dc2626; font-size: 12px; }
+  .fact { background: #fffbeb; border: 1px solid #fcd34d; border-radius: 5px; padding: 10px; font-size: 12px; white-space: pre-wrap; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #e5e7eb; font-size: 12px; }
+  th { color: #6b7280; font-weight: 500; }
+  tr.clickable { cursor: pointer; } tr.clickable:hover { background: #f9fafb; }
+  .gen-steps { display: flex; align-items: center; gap: 10px; margin: 4px 2px 12px; font-size: 13px; }
+  .gen-step { padding: 5px 14px; border-radius: 999px; background: #e5e7eb; color: #6b7280; }
+  .gen-step.active { background: #2563eb; color: #fff; }
+  .gen-step-arrow { color: #9ca3af; }
+  .gen-step.clickable { cursor: pointer; }
+  .gen-step.clickable:hover { filter: brightness(.95); }
+  .step1-foot { position: sticky; bottom: 0; background: #fff; border-top: 1px solid #e5e7eb; padding: 10px 2px 4px; margin-top: 14px; display: flex; justify-content: flex-end; align-items: center; gap: 12px; z-index: 5; }
+  .sel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; color: #374151; }
+  #gen-selected-asset { margin-bottom: 14px; }
+  .runs-header { display: flex; align-items: baseline; gap: 10px; margin: 4px 2px 12px; }
+  .runs-header h2 { font-size: 18px; margin: 0; color: #111827; }
+  .runs-live { margin-left: 10px; font-size: 11px; color: #059669; display: flex; align-items: center; gap: 5px; }
+  .runs-live::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #10b981; animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
+  .runs-table th { padding: 10px 8px; border-bottom: 2px solid #e5e7eb; white-space: nowrap; }
+  .runs-table td { padding: 10px 8px; vertical-align: top; line-height: 1.5; }
+  .runs-table td .sub { display: block; font-size: 11px; color: #9ca3af; margin-top: 2px; }
+  .runs-table .time { font-variant-numeric: tabular-nums; color: #6b7280; white-space: nowrap; font-size: 12px; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 999px; white-space: nowrap; }
+  .badge-done { background: #d1fae5; color: #047857; }
+  .badge-running { background: #dbeafe; color: #1d4ed8; }
+  .badge-failed { background: #fee2e2; color: #b91c1c; }
+  .badge-cancelled { background: #f3f4f6; color: #6b7280; }
+  .badge-queued { background: #fef3c7; color: #b45309; }
+  .runs-empty { text-align: center; color: #9ca3af; font-size: 13px; padding: 36px 0; }
+  .op-btn { padding: 3px 10px; font-size: 12px; border-radius: 5px; cursor: pointer; background: #fff; border: 1px solid #d1d5db; color: #374151; }
+  .op-btn:hover { border-color: #9ca3af; }
+  .op-btn.danger { color: #dc2626; border-color: #fca5a5; }
+  .op-btn.danger:hover { background: #fef2f2; }
+  .script-grid.two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+  .track-row { display: flex; gap: 8px; }
+  .track-row input { flex: 1; }
+  .topic-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 12px; margin-bottom: 6px; cursor: pointer; transition: border-color .15s, background .15s; }
+  .topic-card:hover { border-color: #2563eb; background: #f8fafc; }
+  .topic-card .topic-zh { font-weight: 600; font-size: 14px; color: #111827; }
+  .topic-card .topic-target { color: #6b7280; font-size: 13px; margin-top: 2px; }
+  .topics-head { display: flex; align-items: center; gap: 10px; margin: 10px 0 8px; }
+  .spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid #bfdbfe; border-top-color: #2563eb; border-radius: 50%; animation: spin .8s linear infinite; vertical-align: -2px; }
+  .spinner-light { border-color: rgba(255,255,255,.4); border-top-color: #fff; margin-right: 4px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .skel-card { border: 1px solid #eef2f7; border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; }
+  .skel-line { height: 13px; border-radius: 4px; background: linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; }
+  .skel-line + .skel-line { margin-top: 6px; height: 11px; width: 70%; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  .topic-card.selected { border-color: #2563eb; background: #eff6ff; box-shadow: 0 0 0 2px rgba(37,99,235,.18); }
+  .topic-card .topic-check { float: right; color: #2563eb; font-size: 12px; font-weight: 700; visibility: hidden; }
+  .topic-card.selected .topic-check { visibility: visible; }
+  .flash { animation: flashborder 1.2s ease; }
+  @keyframes flashborder { 0%,100% { box-shadow: none; } 30% { box-shadow: 0 0 0 3px rgba(37,99,235,.35); border-color: #2563eb; } }
+  .chip { display: inline-block; font-size: 12px; padding: 3px 10px; margin: 5px 6px 0 0; border: 1px solid #d1d5db; border-radius: 999px; color: #374151; cursor: pointer; background: #fff; }
+  .chip:hover { border-color: #2563eb; color: #2563eb; }
+  .topics-err { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 8px 0; }
+  /* 指纹检测面板与 V1.5/V2.5 */
+  .script-col { display: flex; flex-direction: column; }
+  .script-col .card { margin-bottom: 14px; }
+  .script-col .card:last-child { margin-bottom: 0; }
+  .card.v15 { border-color: #a7f3d0; background: #fbfefc; }
+  /* 视频简介(各版本卡片内) */
+  .desc-box { margin-top: 10px; border: 1px solid #e5e7eb; border-radius: 6px; background: #fff; }
+  .desc-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 10px; border-bottom: 1px solid #eef2f7; flex-wrap: wrap; }
+  .desc-box .mono { border: none; background: transparent; max-height: 320px; border-radius: 0; }
+  .fp-toolbar { display: flex; gap: 10px; align-items: center; margin: 8px 0 10px; flex-wrap: wrap; }
+  .fp-meta { font-size: 11px; color: #9ca3af; }
+  .fp-hit { border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; }
+  .fp-hit.replaced { opacity: .6; background: #f0fdf4; }
+  .fp-hit.failed { border-color: #fca5a5; background: #fef2f2; }
+  .fp-hit-head { display: flex; gap: 8px; align-items: center; font-size: 12px; color: #6b7280; }
+  .fp-hit-head input[type=checkbox] { margin: 0; }
+  .fp-hit .fp-orig { font-size: 13px; margin: 8px 0 6px; white-space: pre-wrap; line-height: 1.6; }
+  .fp-hit textarea { width: 100%; font-size: 13px; padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 5px; font-family: inherit; line-height: 1.6; resize: vertical; }
+  .fp-hit .fp-status { font-size: 12px; margin-top: 4px; }
+  .fp-hit.replaced .fp-status { color: #047857; }
+  .fp-hit.failed .fp-status { color: #b91c1c; }
+  .fp-summary { font-size: 13px; color: #047857; margin-top: 8px; }
+  /* 文案内嵌高亮(按指纹类型分色) */
+  .fp-mark { border-radius: 3px; padding: 0 1px; cursor: pointer; border-bottom: 2px solid transparent; }
+  .fp-t-reversal { background: #fef9c3; border-bottom-color: #eab308; }
+  .fp-t-generic_subject { background: #dbeafe; border-bottom-color: #3b82f6; }
+  .fp-t-secret_reveal { background: #fee2e2; border-bottom-color: #ef4444; }
+  .fp-t-transition_crank { background: #f3f4f6; border-bottom-color: #9ca3af; }
+  .fp-mark.fp-dim { background: transparent; border-bottom-style: dotted; opacity: .55; }
+  .fp-mark.fp-done { background: #d1fae5; border-bottom-color: #059669; }
+  /* 气泡卡片 */
+  .fp-popover { position: absolute; z-index: 50; width: 360px; background: #fff; border: 1px solid #d1d5db; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.14); padding: 10px 12px; }
+  .fp-pop-head { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
+  .fp-pop-reason { font-size: 12px; color: #92400e; background: #fffbeb; border-radius: 4px; padding: 4px 8px; margin-bottom: 6px; line-height: 1.5; }
+  .fp-zh { font-size: 12px; color: #6b7280; margin: 2px 0 6px; line-height: 1.5; }
+  .fp-pop-ops { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+  .fp-chip-off { opacity: .45; }
+  .fp-legacy { font-size: 12px; color: #92400e; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 5px; padding: 6px 10px; margin: 8px 0; }
+  /* 商业化检查面板与内嵌高亮(复用 fp 面板结构,独立配色) */
+  .cp-summary { border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px 12px; margin: 8px 0; background: #fafafa; }
+  .cp-risk { display: inline-block; font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
+  .cp-risk-0 { background: #d1fae5; color: #047857; }
+  .cp-risk-1 { background: #fef3c7; color: #b45309; }
+  .cp-risk-2 { background: #fee2e2; color: #b91c1c; }
+  .cp-rating { display: inline-block; font-size: 12px; padding: 3px 10px; margin: 5px 6px 0 0; border-radius: 999px; border: 1px solid #e5e7eb; }
+  .cp-r-低 { background: #f0fdf4; color: #047857; }
+  .cp-r-中 { background: #fffbeb; color: #b45309; }
+  .cp-r-高 { background: #fef2f2; color: #b91c1c; }
+  .cp-sev { font-size: 11px; padding: 1px 7px; border-radius: 999px; font-weight: 700; }
+  .cp-sev-high { background: #fee2e2; color: #b91c1c; }
+  .cp-sev-medium { background: #fef3c7; color: #b45309; }
+  .cp-sev-low { background: #f3f4f6; color: #6b7280; }
+  .cp-mark { border-radius: 3px; padding: 0 1px; cursor: pointer; border-bottom: 2px solid transparent; }
+  .cp-t-originality { background: #ffedd5; border-bottom-color: #f97316; }
+  .cp-t-template { background: #e0e7ff; border-bottom-color: #6366f1; }
+  .cp-t-ai_feel { background: #ccfbf1; border-bottom-color: #14b8a6; }
+  .cp-t-reused { background: #fce7f3; border-bottom-color: #ec4899; }
+  .cp-mark.cp-dim { background: transparent; border-bottom-style: dotted; opacity: .55; }
+  .cp-mark.cp-done { background: #d1fae5; border-bottom-color: #059669; }
+  /* 开头留存检查(复用 fp/cp 面板结构,独立色系;面板互斥,不与 fp/cp 高亮同屏) */
+  .or-mark { border-radius: 3px; padding: 0 1px; cursor: pointer; border-bottom: 2px solid transparent; }
+  .or-t-phenomenon_missing { background: #ede9fe; border-bottom-color: #8b5cf6; }
+  .or-t-conflict_weak { background: #fee2e2; border-bottom-color: #ef4444; }
+  .or-t-essence_missing { background: #e0e7ff; border-bottom-color: #6366f1; }
+  .or-t-value_promise_missing { background: #fef3c7; border-bottom-color: #f59e0b; }
+  .or-t-hook_weak { background: #dbeafe; border-bottom-color: #3b82f6; }
+  .or-t-promise_mismatch { background: #ffe4e6; border-bottom-color: #f43f5e; }
+  .or-mark.or-dim { background: transparent; border-bottom-style: dotted; opacity: .55; }
+  .or-mark.or-done { background: #d1fae5; border-bottom-color: #059669; }
+  .or-score { display: inline-block; font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
+  .or-score-2 { background: #d1fae5; color: #047857; }
+  .or-score-1 { background: #fef3c7; color: #b45309; }
+  .or-score-0 { background: #fee2e2; color: #b91c1c; }
+  .or-seg { margin-top: 8px; font-size: 13px; }
+  .or-check { display: flex; gap: 8px; font-size: 12px; line-height: 1.6; margin-top: 3px; }
+  .or-check-note { color: #6b7280; }
+  .or-mode { font-size: 11px; padding: 1px 7px; border-radius: 999px; font-weight: 700; }
+  .or-mode-replace { background: #e0e7ff; color: #4338ca; }
+  .or-mode-insert_after { background: #d1fae5; color: #047857; }
+
+  /* ---------- 视频网站集成:频道搜索下拉 / 推送弹窗 / 列表两列 ---------- */
+  /* 推送视频是唯一"对外提交"动作(会在视频网站建项目、消耗额度),与左侧检测/改写类按钮分层:
+     浅紫底紫边 + 播放图标,并用竖线与分析类按钮分组。不宜用实心色——"复制"已是主蓝实心,会互相抢眼。 */
+  button.video-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    border-color: #c4b5fd; background: #f5f3ff; color: #6d28d9; font-weight: 600;
+  }
+  button.video-btn:hover { background: #ede9fe; border-color: #a78bfa; color: #5b21b6; }
+  button.video-btn:disabled { opacity: .5; }
+  .btn-sep { display: inline-block; width: 1px; height: 15px; background: #e5e7eb; margin: 0 5px; vertical-align: -3px; }
+
+  .combo { position: relative; }
+  .combo-list { position: absolute; z-index: 30; left: 0; right: 0; top: 100%; margin-top: 2px; max-height: 260px; overflow-y: auto;
+    background: #fff; border: 1px solid #d1d5db; border-radius: 6px; box-shadow: 0 8px 22px rgba(0,0,0,.12); padding: 4px; }
+  .combo-item { padding: 6px 8px; font-size: 13px; border-radius: 4px; cursor: pointer; }
+  .combo-item:hover, .combo-item.on { background: #eff6ff; color: #1d4ed8; }
+  .combo-item .combo-sub { display: block; font-size: 11px; color: #9ca3af; margin-top: 1px; word-break: break-all; }
+  .combo-empty { padding: 8px; font-size: 12px; color: #9ca3af; }
+  .combo-mark { background: #fef08a; padding: 0; border-radius: 2px; }
+
+  .modal-mask { position: fixed; inset: 0; background: rgba(17,24,39,.45); display: flex; align-items: center; justify-content: center; z-index: 60; padding: 20px; }
+  /* .hidden 在样式表更早处定义,这里必须用更高特异性压回,否则遮罩会常显 */
+  .modal-mask.hidden { display: none; }
+  .modal-box { background: #fff; border-radius: 10px; width: 100%; max-width: 540px; box-shadow: 0 18px 50px rgba(0,0,0,.28); overflow: hidden; }
+  .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid #e5e7eb; }
+  .modal-head h3 { margin: 0; font-size: 15px; }
+  .modal-close { border: 0; background: none; font-size: 20px; line-height: 1; color: #6b7280; cursor: pointer; padding: 0 4px; }
+  .modal-body { padding: 14px 18px; max-height: 68vh; overflow-y: auto; }
+  .modal-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 12px 18px; border-top: 1px solid #f3f4f6; background: #fafafa; }
+  .kv { display: flex; gap: 10px; font-size: 13px; padding: 5px 0; border-bottom: 1px dashed #f3f4f6; }
+  .kv .k { color: #6b7280; flex: 0 0 76px; }
+  .kv .v { color: #111827; word-break: break-word; }
+  .notice { border-radius: 6px; padding: 9px 12px; font-size: 12px; line-height: 1.6; margin-top: 10px; }
+  .notice.warn { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+  .notice.err { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; }
+  .notice.info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+  .modal-loading { font-size: 12px; color: #2563eb; }
+
+  .video-badge { display: inline-block; font-size: 11px; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+  .vb-draft { background: #f3f4f6; color: #4b5563; }
+  .vb-running { background: #dbeafe; color: #1d4ed8; }
+  .vb-completed { background: #d1fae5; color: #047857; }
+  .vb-paused { background: #fef3c7; color: #b45309; }
+  .vb-failed { background: #fee2e2; color: #b91c1c; }
+  .vb-none { color: #cbd5e1; }
+  .video-cell { font-size: 12px; line-height: 1.5; }
+  .video-cell .ver { font-size: 11px; color: #6b7280; margin-left: 4px; }
+  #view-runs .card { overflow-x: auto; }
+  .runs-table { min-width: 1120px; }
+  .script-peek { margin-top: 8px; max-height: 132px; overflow-y: auto; white-space: pre-wrap; font-size: 12px; line-height: 1.6;
+    color: #374151; background: #fafafa; border: 1px solid #eef0f3; border-radius: 6px; padding: 8px 10px; }
+  .bind-state { font-size: 12px; line-height: 1.7; }
+  .bind-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<header>
+  <h1>爆款文案生成平台</h1>
+  <nav>
+    <button id="nav-generate" class="active" onclick="showView('generate')">文案创作</button>
+    <button id="nav-runs" onclick="showView('runs')">任务</button>
+    <button id="nav-library" onclick="showView('library')">资产库</button>
+    <button id="nav-settings" onclick="showView('settings')">设置</button>
+  </nav>
+</header>
+<main>
+
+  <!-- ========== 资产库 ========== -->
+  <div id="view-library">
+    <div class="lib-header">
+      <h2>框架资产库</h2>
+      <span class="hint" id="asset-count"></span>
+    </div>
+    <div class="asset-toolbar">
+      <input type="text" id="lib-search" placeholder="搜索框架 / 源标题 / 频道" oninput="libFilter.q=this.value;renderLibList()">
+      <select id="lib-sort" onchange="libFilter.sort=this.value;renderLibList()">
+        <option value="">默认排序</option>
+        <option value="examples">样本数多</option>
+        <option value="wpm">语速快</option>
+        <option value="chapters">章数多</option>
+      </select>
+      <span id="lib-channels"></span>
+    </div>
+    <div class="grid" id="asset-list"></div>
+  </div>
+
+  <!-- ========== 文案创作 ========== -->
+  <div id="view-generate" class="hidden">
+    <div class="gen-steps">
+      <span class="gen-step active" id="genstep-1" onclick="pillGoto(1)">1 选择框架</span>
+      <span class="gen-step-arrow">→</span>
+      <span class="gen-step" id="genstep-2" onclick="pillGoto(2)">2 主题与受众</span>
+    </div>
+
+    <!-- 第 1 步：选择框架 -->
+    <div class="card" id="gen-step1">
+      <h2>第 1 步：选择框架资产</h2>
+      <div class="asset-toolbar">
+        <input type="text" id="gen-search" placeholder="搜索框架 / 源标题 / 频道" oninput="genFilter.q=this.value;renderGenAssetList()">
+        <select id="gen-sort" onchange="genFilter.sort=this.value;renderGenAssetList()">
+          <option value="">默认排序</option>
+          <option value="examples">样本数多</option>
+          <option value="wpm">语速快</option>
+          <option value="chapters">章数多</option>
+        </select>
+        <span id="gen-channels"></span>
+      </div>
+      <div id="gen-asset-list" class="grid"></div>
+      <div class="step1-foot">
+        <span class="hint" id="gen-step1-status" style="margin-top:0"></span>
+        <button class="primary" id="btn-next" onclick="gotoStep2()" disabled>下一步</button>
+      </div>
+    </div>
+
+    <!-- 第 2 步：主题与受众 -->
+    <div class="card hidden" id="gen-step2">
+      <div class="sel-head">
+        <span><b>第 2 步：主题与受众</b>（已选框架如下）</span>
+        <button class="ghost" onclick="gotoStep1()">← 返回上一步 / 更换框架</button>
+      </div>
+      <div id="gen-selected-asset"></div>
+      <div><label>赛道(选填,填写后可推荐选题)</label>
+        <div class="track-row">
+          <input type="text" id="gen-track" placeholder="例如:财经、宠物心理、黑帮职级" oninput="onTrackChange()">
+          <button id="btn-topics" onclick="suggestTopics(false)" disabled>推荐选题</button>
+        </div>
+        <div>
+          <span class="chip" onclick="setTrack('财经')">财经</span>
+          <span class="chip" onclick="setTrack('宠物心理')">宠物心理</span>
+          <span class="chip" onclick="setTrack('黑帮职级')">黑帮职级</span>
+          <span class="chip" onclick="setTrack('行业经济学')">行业经济学</span>
+        </div>
+      </div>
+      <div class="grid" style="margin-top:8px">
+        <div><label>新主题(选题)</label><input type="text" id="gen-topic" placeholder="例如:The Economics of Owning a Casino"></div>
+        <div>
+          <label>频道(选填 · 推送视频时使用)</label>
+          <div class="combo">
+            <input type="text" id="gen-channel" placeholder="加载频道…" autocomplete="off"
+              onfocus="openChannelPicker()" oninput="onChannelInput()" onkeydown="onChannelKey(event)" onblur="closeChannelPickerSoon()">
+            <div class="combo-list hidden" id="gen-channel-list" onmousedown="onChannelListMouseDown(event)"></div>
+          </div>
+          <div class="hint" id="gen-channel-hint" style="margin-top:3px"></div>
+        </div>
+      </div>
+      <div class="grid" style="margin-top:8px">
+        <div><label>目标语言</label>
+          <select id="gen-lang" onchange="clearTopics()">
+            <option value="English" selected>English（英语）</option>
+            <option value="Hindi">Hindi（印地语）</option>
+            <option value="Spanish">Spanish（西班牙语）</option>
+            <option value="Portuguese">Portuguese（葡萄牙语）</option>
+            <option value="Japanese">Japanese（日语）</option>
+            <option value="Korean">Korean（韩语）</option>
+            <option value="Indonesian">Indonesian（印尼语）</option>
+            <option value="German">German（德语）</option>
+            <option value="French">French（法语）</option>
+            <option value="Vietnamese">Vietnamese（越南语）</option>
+            <option value="Arabic">Arabic（阿拉伯语）</option>
+            <option value="Chinese">Chinese（中文）</option>
+          </select>
+        </div>
+        <div><label>目标国家/市场</label>
+          <select id="gen-country">
+            <option value="US" selected>US（美国）</option>
+            <option value="IN">IN（印度）</option>
+            <option value="BR">BR（巴西）</option>
+            <option value="MX">MX（墨西哥）</option>
+            <option value="JP">JP（日本）</option>
+            <option value="KR">KR（韩国）</option>
+            <option value="ID">ID（印尼）</option>
+            <option value="DE">DE（德国）</option>
+            <option value="GB">GB（英国）</option>
+            <option value="FR">FR（法国）</option>
+            <option value="VN">VN（越南）</option>
+            <option value="SA">SA（沙特）</option>
+          </select>
+        </div>
+        <div><label>目标受众</label><input type="text" id="gen-aud" placeholder="例如:18-45岁"></div>
+        <div><label>视频目的(时长)</label><input type="text" id="gen-goal" value="10分钟"></div>
+      </div>
+      <div id="topics-result"></div>
+      <div style="margin-top:12px; display:flex; align-items:center; gap:14px">
+        <button class="primary" id="btn-run" onclick="createRun()">开始生成(约 3-8 分钟)</button>
+        <span class="hint" id="gen-status" style="margin-top:0"></span>
+      </div>
+      <div class="hint">自动执行 Blueprint → Script → Audit → Optimization,步间确定性校验,可随时到"任务"页查看进度。多个任务可并行。开头强化改为任务完成后在详情页按版本按需进行。</div>
+    </div>
+  </div>
+
+  <!-- ========== 任务列表 ========== -->
+  <div id="view-runs" class="hidden">
+    <div class="runs-header">
+      <h2>生成任务</h2>
+      <span class="hint" id="runs-count" style="margin-top:0"></span>
+      <span class="hint" id="runs-video-hint" style="margin-top:0"></span>
+      <button class="ghost" id="runs-refresh-video" style="margin-left:auto" onclick="refreshVideoStates()"
+        title="向视频网站查询已推送项目的最新状态">刷新视频状态</button>
+      <span class="runs-live">自动刷新中</span>
+    </div>
+    <div class="card" style="padding:6px 16px 12px">
+      <table class="runs-table">
+        <thead><tr>
+          <th style="width:19%">主题</th>
+          <th style="width:15%">框架</th>
+          <th style="width:12%">目标</th>
+          <th style="width:8%">频道</th>
+          <th style="width:7%">状态</th>
+          <th style="width:9%">是否生成视频</th>
+          <th style="width:5%">步骤</th>
+          <th style="width:9%">创建时间</th>
+          <th style="width:9%">结束时间</th>
+          <th style="width:7%">操作</th>
+        </tr></thead>
+        <tbody id="runs-tbody"></tbody>
+      </table>
+      <div id="runs-empty" class="runs-empty hidden">暂无任务，去「文案创作」发起第一个生成任务吧。</div>
+    </div>
+  </div>
+
+  <!-- ========== 任务详情 ========== -->
+  <div id="view-detail" class="hidden">
+    <div class="card">
+      <button class="ghost" onclick="showView('runs')">← 返回任务列表</button>
+      <h2 style="margin-top:8px">
+        <button type="button" id="detail-title" class="detail-title-copy" title="点击复制标题" onclick="copyDetailTitle()"></button><span id="detail-title-copy-status" class="detail-title-copy-status" role="status" aria-live="polite"></span>
+      </h2>
+      <div class="hint" id="detail-sub"></div>
+      <div class="steps" id="detail-steps"></div>
+      <div id="detail-error" class="err-list"></div>
+    </div>
+    <div id="detail-scripts" class="script-grid">
+      <div class="script-col">
+        <div class="card hidden" id="detail-final-card">
+          <h2 style="display:flex;justify-content:space-between;align-items:center">V1文案
+            <span>
+              <button class="ghost" id="desc-btn-v1" onclick="genDescription('v1')">生成简介</button>
+              <button class="ghost" id="fp-btn-v1" onclick="openFpPanel('v1')">指纹检测</button>
+              <button class="ghost" id="cp-btn-v1" onclick="openCpPanel('v1')">YouTube 商业化检查</button>
+              <button class="ghost" id="or-btn-v1" onclick="openOrPanel('v1')">开头留存检查</button>
+              <button class="ghost" id="ob-btn-v1" onclick="openBoostPanel('v1')">强化开头</button>
+              <span class="btn-sep" aria-hidden="true"></span>
+              <button class="ghost video-btn" id="vd-btn-v1" onclick="openVideoDialog('v1')" title="推送该版本文案到视频网站（存草稿 / 自动生视频）"><svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>视频</button>
+              <button class="primary" onclick="copyScript('detail-final', this)">复制</button>
+            </span>
+          </h2>
+          <div class="mono" id="detail-final"></div>
+          <div class="desc-box hidden" id="desc-v1"></div>
+          <div class="desc-box hidden" id="ob-box-v1"></div>
+        </div>
+        <div class="card v15 hidden" id="detail-v15-card">
+          <h2 style="display:flex;justify-content:space-between;align-items:center">V1.5文案
+            <span>
+              <button class="ghost" id="desc-btn-v1_5" onclick="genDescription('v1_5')">生成简介</button>
+              <button class="ghost" id="cp-btn-v1_5" onclick="openCpPanel('v1_5')">YouTube 商业化检查</button>
+              <button class="ghost" id="or-btn-v1_5" onclick="openOrPanel('v1_5')">开头留存检查</button>
+              <button class="ghost" id="ob-btn-v1_5" onclick="openBoostPanel('v1_5')">强化开头</button>
+              <span class="btn-sep" aria-hidden="true"></span>
+              <button class="ghost video-btn" id="vd-btn-v1_5" onclick="openVideoDialog('v1_5')" title="推送该版本文案到视频网站（存草稿 / 自动生视频）"><svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>视频</button>
+              <button class="primary" onclick="copyScript('detail-v15', this)">复制</button>
+            </span>
+          </h2>
+          <div class="mono" id="detail-v15"></div>
+          <div class="desc-box hidden" id="desc-v1_5"></div>
+          <div class="desc-box hidden" id="ob-box-v1_5"></div>
+        </div>
+      </div>
+      <div class="script-col">
+        <div class="card hidden" id="detail-v2-card">
+          <h2 style="display:flex;justify-content:space-between;align-items:center">V2文案(已强化开头)
+            <span>
+              <button class="ghost" id="desc-btn-v2" onclick="genDescription('v2')">生成简介</button>
+              <button class="ghost" id="fp-btn-v2" onclick="openFpPanel('v2')">指纹检测</button>
+              <button class="ghost" id="cp-btn-v2" onclick="openCpPanel('v2')">YouTube 商业化检查</button>
+              <button class="ghost" id="or-btn-v2" onclick="openOrPanel('v2')">开头留存检查</button>
+              <button class="ghost" id="ob-btn-v2" onclick="openBoostPanel('v2')">强化开头</button>
+              <span class="btn-sep" aria-hidden="true"></span>
+              <button class="ghost video-btn" id="vd-btn-v2" onclick="openVideoDialog('v2')" title="推送该版本文案到视频网站（存草稿 / 自动生视频）"><svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>视频</button>
+              <button class="primary" onclick="copyScript('detail-v2', this)">复制</button>
+            </span>
+          </h2>
+          <div class="mono" id="detail-v2"></div>
+          <div class="desc-box hidden" id="desc-v2"></div>
+          <div class="desc-box hidden" id="ob-box-v2"></div>
+        </div>
+        <div class="card v15 hidden" id="detail-v25-card">
+          <h2 style="display:flex;justify-content:space-between;align-items:center">V2.5文案
+            <span>
+              <button class="ghost" id="desc-btn-v2_5" onclick="genDescription('v2_5')">生成简介</button>
+              <button class="ghost" id="cp-btn-v2_5" onclick="openCpPanel('v2_5')">YouTube 商业化检查</button>
+              <button class="ghost" id="or-btn-v2_5" onclick="openOrPanel('v2_5')">开头留存检查</button>
+              <button class="ghost" id="ob-btn-v2_5" onclick="openBoostPanel('v2_5')">强化开头</button>
+              <span class="btn-sep" aria-hidden="true"></span>
+              <button class="ghost video-btn" id="vd-btn-v2_5" onclick="openVideoDialog('v2_5')" title="推送该版本文案到视频网站（存草稿 / 自动生视频）"><svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>视频</button>
+              <button class="primary" onclick="copyScript('detail-v25', this)">复制</button>
+            </span>
+          </h2>
+          <div class="mono" id="detail-v25"></div>
+          <div class="desc-box hidden" id="desc-v2_5"></div>
+          <div class="desc-box hidden" id="ob-box-v2_5"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card hidden" id="fp-panel"></div>
+    <div class="card hidden" id="cp-panel"></div>
+    <div class="card hidden" id="or-panel"></div>
+    <div id="fp-popover" class="fp-popover hidden"></div>
+    <div class="card hidden" id="detail-fact-card">
+      <h2>⚠ 待人工核实的事实断言</h2>
+      <div class="fact" id="detail-fact"></div>
+    </div>
+  </div>
+
+  <!-- ========== 设置 ========== -->
+  <div id="view-settings" class="hidden">
+    <div class="card">
+      <h2>视频生成网站绑定(全局单账号)</h2>
+      <div id="video-binding-body" class="bind-state">加载中…</div>
+    </div>
+    <div class="card">
+      <h2>主流程 API 配置(服务端全局 · 四阶段生成)</h2>
+      <div class="grid">
+        <div><label>渠道商</label><div id="cfg-provider"></div></div>
+        <div><label>模型</label><div id="cfg-model"></div></div>
+        <div><label>Temperature</label><input type="number" id="cfg-temp" step="0.1" min="0" max="2"></div>
+        <div><label>Max Tokens</label><input type="number" id="cfg-maxtokens" step="512"></div>
+      </div>
+      <div style="margin-top:10px">
+        <button class="primary" onclick="saveSettings()">保存</button>
+        <button onclick="testConnection()">测试连通性</button>
+        <span class="hint" id="cfg-status"></span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>微调按钮 API 配置(服务端全局)</h2>
+      <div class="hint" style="margin-bottom:8px">作用于:选题推荐 / 生成简介 / 指纹检测 / YouTube 商业化检查 / 开头留存检查 / 强化开头</div>
+      <div class="grid">
+        <div><label>渠道商</label><div id="twk-provider"></div></div>
+        <div><label>模型</label><div id="twk-model"></div></div>
+        <div><label>Temperature</label><input type="number" id="twk-temp" step="0.1" min="0" max="2"></div>
+        <div><label>Max Tokens</label><input type="number" id="twk-maxtokens" step="512"></div>
+      </div>
+      <div style="margin-top:10px">
+        <button class="primary" onclick="saveTweakSettings()">保存</button>
+        <button onclick="testTweakConnection()">测试连通性</button>
+        <span class="hint" id="twk-status"></span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ========== 推送视频弹窗(存草稿 / 自动生视频) ========== -->
+<div id="video-modal" class="modal-mask hidden" onclick="onVideoModalMask(event)">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="video-modal-title">
+    <div class="modal-head">
+      <h3 id="video-modal-title">推送到视频网站</h3>
+      <button class="modal-close" type="button" onclick="closeVideoDialog()" aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body" id="video-modal-body"></div>
+    <div class="modal-foot" id="video-modal-foot"></div>
+  </div>
+</div>
+
+<script>
+let selectedAsset = null;
+let currentRunId = null;
+let pollTimer = null;
+
+function showView(v) {
+  ['library','generate','runs','detail','settings'].forEach(x => {
+    document.getElementById('view-' + x).classList.toggle('hidden', x !== v);
+    const nav = document.getElementById('nav-' + x);
+    if (nav) nav.classList.toggle('active', x === v);
+  });
+  document.querySelector('main').classList.toggle('wide', v === 'runs');
+  if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  if (v === 'library') loadAssets();
+  if (v === 'generate') loadGenAssets();
+  if (v === 'runs') { loadRuns(); pollTimer = setInterval(loadRuns, 3000); }
+  if (v === 'detail' && currentRunId) { loadRunDetail(); pollTimer = setInterval(loadRunDetail, 3000); }
+  if (v === 'settings') loadSettings();
+}
+
+async function api(url, opts) {
+  const resp = await fetch(url, opts);
+  const data = await resp.json().catch(() => ({}));
+  if (!resp.ok) throw new Error(data.error || JSON.stringify(data.errors || resp.status));
+  return data;
+}
+
+// ---------- 资产库 ----------
+let libAssets = [];
+const libFilter = { q: '', channel: '', sort: '' };
+
+const CONTENT_TYPE_LABELS = {
+  business_economics_explainer: '商业经济解说',
+  documentary_explainer: '纪录片解说',
+  educational_explainer: '教学解说',
+  history_engineering_explainer: '历史工程解说',
+  immersive_documentary_fiction: '沉浸纪实故事',
+  narrative_explainer: '叙事解说',
+  science_explainer: '科普解说',
+  science_psychology_explainer: '心理科普解说',
+  speculative_science_explainer: '推演科普解说',
+  video_essay_explainer: '视频散文解说',
+};
+function contentTypeLabel(t) { return CONTENT_TYPE_LABELS[t] || t || '?'; }
+
+function sortAssets(list, sort) {
+  const key = { examples: 'example_count', wpm: 'wpm', chapters: 'chapters' }[sort];
+  if (!key) return list;
+  return [...list].sort((a, b) => (b[key] || 0) - (a[key] || 0));
+}
+
+// 在原始文本(已 esc)上按查询词切分并包 <mark>，先转义后切分，避免 XSS 与标签断裂
+function hl(text, q) {
+  const s = esc(text == null ? '' : text);
+  const qs = esc((q || '').trim());
+  if (!s || !qs) return s;
+  const re = new RegExp('(' + qs.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+  return s.split(re).map((p, i) => (i % 2 ? '<mark>' + p + '</mark>' : p)).join('');
+}
+
+async function loadAssets() {
+  libAssets = await api('/api/assets');
+  document.getElementById('asset-count').textContent = libAssets.length ? `共 ${libAssets.length} 个框架` : '';
+  renderLibList();
+}
+
+function renderLibList() {
+  document.getElementById('lib-search').value = libFilter.q;
+  document.getElementById('lib-sort').value = libFilter.sort;
+  document.getElementById('lib-channels').innerHTML = channelChipsHtml(libAssets, libFilter, 'lib');
+  const filtered = sortAssets(libAssets.filter(a => assetMatches(a, libFilter)), libFilter.sort);
+  document.getElementById('asset-list').innerHTML = filtered.length ? groupedAssetHtml(filtered, false, libFilter.q) : '<div class="hint">没有匹配的框架。</div>';
+}
+
+function assetMatches(a, f) {
+  if (f.channel && (a.channel || '') !== f.channel) return false;
+  const q = f.q.trim().toLowerCase();
+  if (q) {
+    const hay = [a.name, a.source_title, a.source_title_zh, a.description, a.channel].filter(Boolean).join('\n').toLowerCase();
+    if (!hay.includes(q)) return false;
+  }
+  return true;
+}
+
+function channelChipsHtml(list, f, target) {
+  const counts = {};
+  list.forEach(a => { const c = a.channel || ''; counts[c] = (counts[c] || 0) + 1; });
+  const chs = Object.keys(counts).sort((x, y) => counts[y] - counts[x] || x.localeCompare(y));
+  const chips = [`<span class="chip${f.channel === '' ? ' on' : ''}" onclick="setAssetFilter('${target}','')">全部 ${list.length}</span>`];
+  chs.forEach(c => {
+    chips.push(`<span class="chip${f.channel === c ? ' on' : ''}" onclick="setAssetFilter('${target}','${encodeURIComponent(c)}')">${esc(c || '未分类')} ${counts[c]}</span>`);
+  });
+  return chips.join('');
+}
+
+function setAssetFilter(target, ch) {
+  const f = target === 'lib' ? libFilter : genFilter;
+  f.channel = decodeURIComponent(ch || '');
+  if (target === 'lib') renderLibList(); else renderGenAssetList();
+}
+
+function groupedAssetHtml(list, forSelect, q) {
+  const groups = {};
+  list.forEach(a => { const c = a.channel || ''; (groups[c] = groups[c] || []).push(a); });
+  const entries = Object.entries(groups)
+    .sort((x, y) => y[1].length - x[1].length || x[0].localeCompare(y[0]));
+  const single = entries.length === 1;
+  return entries.map(([ch, items]) =>
+      (single ? '' : `<div class="channel-head"><span class="channel-name">${esc(ch || '未分类')}</span><span class="hint">${items.length} 个框架</span></div>`) +
+      items.map(a => assetCard(a, forSelect, { hideChannel: single, q })).join('')
+    ).join('');
+}
+
+function toggleDesc(ev, el) {
+  ev.stopPropagation();
+  const d = el.previousElementSibling;
+  if (!d || !d.classList.contains('desc')) return;
+  el.textContent = d.classList.toggle('expanded') ? '收起' : '展开';
+}
+
+function assetCard(a, forSelect, opts) {
+  opts = opts || {};
+  const q = opts.q || '';
+  const sel = forSelect && a.id === selectedAsset;
+  return `<div class="asset-card${forSelect ? ' selectable' : ''}${sel ? ' selected' : ''}"${forSelect ? ` data-asset-id="${a.id}" onclick="selectAsset('${a.id}')"` : ''}>
+    ${forSelect ? '<span class="sel-badge">✓ 已选</span>' : ''}
+    <div class="src">
+      ${a.source_title_zh ? `<span class="src-zh">${hl(a.source_title_zh, q)}</span>` : ''}
+      <span class="src-en">源标题:${hl(a.source_title || '-', q)}</span>
+    </div>
+    <h3>${hl(a.name || a.id, q)}</h3>
+    <div class="tags">
+      ${a.channel && !opts.hideChannel ? `<span class="tag sky">${esc(a.channel)}</span>` : ''}
+      <span class="tag" title="${esc(a.content_type || '')}">${esc(contentTypeLabel(a.content_type))}</span>
+      ${a.has_srt ? '<span class="tag green" title="有原始字幕文件">SRT</span>' : '<span class="tag yellow" title="无原始字幕文件">无SRT</span>'}
+      <span class="tag">${a.chapters || '?'} 章</span>
+    </div>
+    ${a.description ? `<p class="desc">${hl(a.description, q)}</p>` : ''}
+    ${(a.description || '').length > 140 ? '<span class="desc-toggle" onclick="toggleDesc(event,this)">展开</span>' : ''}
+    <div class="foot">
+      <span class="stats" title="源视频语速 ${a.wpm || '?'} 词/分钟 · ${a.example_count || '?'} 个例句样本">语速 ${a.wpm || '?'} wpm · ${a.example_count || '?'} 样本</span>
+      <a class="src-link" href="/source.html?id=${encodeURIComponent(a.id)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">查看原文</a>
+    </div>
+  </div>`;
+}
+
+// ---------- 新建生成 ----------
+let genAssets = [];
+const genFilter = { q: '', channel: '', sort: '' };
+
+async function loadGenAssets() {
+  genAssets = await api('/api/assets');
+  renderGenAssetList();
+  // 回到本页时始终从第 1 步开始
+  if (selectedAsset) renderSelectedAsset();
+  else gotoStep1(true);
+}
+
+function renderGenAssetList() {
+  document.getElementById('gen-search').value = genFilter.q;
+  document.getElementById('gen-sort').value = genFilter.sort;
+  document.getElementById('gen-channels').innerHTML = channelChipsHtml(genAssets, genFilter, 'gen');
+  const filtered = sortAssets(genAssets.filter(a => assetMatches(a, genFilter)), genFilter.sort);
+  document.getElementById('gen-asset-list').innerHTML = filtered.length ? groupedAssetHtml(filtered, true, genFilter.q) : '<div class="hint">没有匹配的框架。</div>';
+}
+
+function selectedAssetLabel() {
+  const a = genAssets.find(x => x.id === selectedAsset);
+  return '已选择: ' + (a ? (a.name || a.id) : selectedAsset);
+}
+
+function selectAsset(id) {
+  selectedAsset = id;
+  document.querySelectorAll('#gen-asset-list .asset-card').forEach(c => c.classList.remove('selected'));
+  const card = document.querySelector(`#gen-asset-list .asset-card[data-asset-id="${id}"]`);
+  if (card) card.classList.add('selected');
+  document.getElementById('btn-next').disabled = false;
+  document.getElementById('gen-step1-status').textContent = selectedAssetLabel();
+}
+
+function setGenStep(n) {
+  document.getElementById('gen-step1').classList.toggle('hidden', n !== 1);
+  document.getElementById('gen-step2').classList.toggle('hidden', n !== 2);
+  document.getElementById('genstep-1').classList.toggle('active', n === 1);
+  document.getElementById('genstep-2').classList.toggle('active', n === 2);
+  document.getElementById('genstep-1').classList.toggle('clickable', n === 2);
+  document.getElementById('genstep-2').classList.toggle('clickable', n === 1 && !!selectedAsset);
+}
+
+function pillGoto(n) {
+  if (n === 1) {
+    if (!document.getElementById('gen-step2').classList.contains('hidden')) gotoStep1();
+  } else if (n === 2) {
+    gotoStep2();
+  }
+}
+
+function gotoStep1(silent) {
+  setGenStep(1);
+  if (!silent) document.getElementById('gen-step1-status').textContent = selectedAsset ? selectedAssetLabel() : '';
+}
+
+function renderSelectedAsset() {
+  const a = genAssets.find(x => x.id === selectedAsset);
+  document.getElementById('gen-selected-asset').innerHTML = a ? assetCard(a, false) : '<div class="hint">框架数据缺失，请返回重新选择。</div>';
+}
+
+function gotoStep2() {
+  if (!selectedAsset) return;
+  clearTopics(); // 换框架后旧的推荐结果不再适用
+  renderSelectedAsset();
+  // 视频时长默认值取所选框架源视频时长(毫秒→分钟取整),可手动修改
+  const a = genAssets.find(x => x.id === selectedAsset);
+  if (a && a.source_duration_ms) {
+    document.getElementById('gen-goal').value = Math.round(a.source_duration_ms / 60000) + '分钟';
+  }
+  document.getElementById('gen-status').textContent = '';
+  setGenStep(2);
+}
+
+async function createRun() {
+  if (!selectedAsset) { alert('请先选择一个框架资产'); return; }
+  const topic = document.getElementById('gen-topic').value.trim();
+  if (!topic) { // 已有推荐结果时引导点击填入,不打断流程
+    document.getElementById('gen-status').textContent = currentTopics.length
+      ? '尚未选择选题:可点击上方推荐选题一键填入,或手动填写新主题'
+      : '请填写新主题';
+    if (currentTopics.length) document.getElementById('topics-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
+  }
+  const pickedChannel = videoChannels.find(c => c.id === genChannelId) || null;
+  const body = {
+    asset_id: selectedAsset,
+    topic,
+    // 频道选填:决定后续推送视频时用哪个频道建项目
+    channel_id: pickedChannel ? pickedChannel.id : null,
+    channel_name: pickedChannel ? pickedChannel.name : '',
+    audience: {
+      target_language: document.getElementById('gen-lang').value,
+      target_country: document.getElementById('gen-country').value,
+      target_audience: document.getElementById('gen-aud').value,
+      video_goal: document.getElementById('gen-goal').value
+    }
+  };
+  document.getElementById('btn-run').disabled = true;
+  try {
+    const r = await api('/api/runs', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    // 提交成功:清空选择与表单,回到第 1 步并提示
+    selectedAsset = null;
+    document.getElementById('gen-topic').value = '';
+    document.getElementById('gen-track').value = '';
+    setChannelSelection(null); // 下一个任务重新选频道
+    clearTopics(); // 内部已重置按钮文案与禁用态,无需再调 onTrackChange
+    renderGenAssetList();
+    document.getElementById('btn-next').disabled = true;
+    setGenStep(1);
+    document.getElementById('gen-step1-status').textContent = '✓ 任务已创建(' + r.id + '),可前往「任务」页查看进度。';
+  } catch (e) {
+    document.getElementById('gen-status').textContent = '创建失败: ' + e.message;
+  } finally {
+    document.getElementById('btn-run').disabled = false;
+  }
+}
+
+// ---------- 选题推荐 ----------
+let currentTopics = [];    // 当前展示的选题("换一批"时把 target 标题作为临时去重传给后端)
+let selectedTopicIdx = -1; // 已点击填入的卡片下标
+let topicsReqSeq = 0;      // 请求序号:只接受最后一次请求的结果(防竞态)
+let topicsTimer = null;    // loading 已等待计时器
+let lastTopicsReq = null;  // 上一次请求体,供失败就地重试
+
+const TOPICS_TIMEOUT_MS = 90000;
+
+function onTrackChange() { clearTopics(); } // 赛道变更:结果清空 + 按钮态重置都由 clearTopics 处理
+
+function clearTopics() {
+  topicsReqSeq++; // 使进行中的请求结果作废
+  stopTopicsTimer();
+  currentTopics = [];
+  selectedTopicIdx = -1;
+  const box = document.getElementById('topics-result');
+  if (box) box.innerHTML = '';
+  const btn = document.getElementById('btn-topics');
+  if (btn) { btn.textContent = '推荐选题'; btn.disabled = !document.getElementById('gen-track').value.trim(); }
+}
+
+function stopTopicsTimer() { if (topicsTimer) { clearInterval(topicsTimer); topicsTimer = null; } }
+
+function startTopicsTimer() {
+  stopTopicsTimer();
+  const t0 = Date.now();
+  const tick = () => {
+    const el = document.getElementById('topics-elapsed');
+    if (el) el.textContent = '已等待 ' + Math.floor((Date.now() - t0) / 1000) + 's / 预计 15-40s';
+  };
+  tick();
+  topicsTimer = setInterval(tick, 1000);
+}
+
+function topicsSkeleton() {
+  let s = '<div class="topics-head"><span class="spinner"></span><span class="hint" style="margin:0" id="topics-elapsed"></span></div>';
+  for (let i = 0; i < 5; i++) s += '<div class="skel-card"><div class="skel-line"></div><div class="skel-line"></div></div>';
+  return s;
+}
+
+async function suggestTopics(isRefresh, retryReq) {
+  if (!selectedAsset) return;
+  if (!retryReq && !document.getElementById('gen-track').value.trim()) return;
+  const btn = document.getElementById('btn-topics');
+  const box = document.getElementById('topics-result');
+  const seq = ++topicsReqSeq;
+  const reqBody = retryReq || {
+    asset_id: selectedAsset,
+    track: document.getElementById('gen-track').value.trim(),
+    audience: {
+      target_language: document.getElementById('gen-lang').value,
+      target_country: document.getElementById('gen-country').value,
+      target_audience: document.getElementById('gen-aud').value
+    },
+    current_batch: isRefresh ? currentTopics.map(t => t.target) : []
+  };
+  lastTopicsReq = reqBody;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner spinner-light"></span>推荐中…';
+  box.innerHTML = topicsSkeleton();
+  startTopicsTimer();
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  const ctrl = new AbortController();
+  const to = setTimeout(() => ctrl.abort(), TOPICS_TIMEOUT_MS);
+  try {
+    const r = await api('/api/topics/suggest', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(reqBody), signal: ctrl.signal });
+    if (seq !== topicsReqSeq) return; // 已有更新的请求或上下文已变,丢弃过期结果
+    currentTopics = r.topics || [];
+    selectedTopicIdx = -1;
+    renderTopics(r.module);
+  } catch (e) {
+    if (seq !== topicsReqSeq) return;
+    currentTopics = [];
+    renderTopicsError(e.name === 'AbortError' ? '请求超时(90s),请重试' : e.message);
+  } finally {
+    clearTimeout(to);
+    if (seq === topicsReqSeq) {
+      stopTopicsTimer();
+      btn.disabled = false;
+      btn.textContent = '推荐选题';
+    }
+  }
+}
+
+function renderTopics(module) {
+  const box = document.getElementById('topics-result');
+  if (!currentTopics.length) { box.innerHTML = '<div class="hint">未生成有效选题,请重试。</div>'; return; }
+  const cards = currentTopics.map((t, i) => {
+    const same = t.zh === t.target; // 目标语言为中文时两版本相同,只显示一行
+    return `<div class="topic-card" onclick="pickTopic(${i})">
+      <span class="topic-check">✓ 已填入</span>
+      <div class="topic-zh">${esc(t.zh)}</div>
+      ${same ? '' : `<div class="topic-target">${esc(t.target)}</div>`}
+    </div>`;
+  }).join('');
+  box.innerHTML = `<div class="topics-head">
+      <span class="tag">${esc(module || '推荐选题')}</span>
+      <span class="hint" style="margin:0">点击选题自动填入"新主题"(填入目标语言版本)</span>
+    </div>${cards}
+    <div style="margin:8px 0 4px"><button class="ghost" onclick="suggestTopics(true)">换一批</button></div>`;
+}
+
+// 只回填目标语言版本(与下游管线 topic 惯例一致),中文仅作展示
+function pickTopic(i) {
+  const t = currentTopics[i];
+  if (!t) return;
+  selectedTopicIdx = i;
+  document.querySelectorAll('#topics-result .topic-card').forEach((c, j) => c.classList.toggle('selected', j === i));
+  const input = document.getElementById('gen-topic');
+  input.value = t.target;
+  input.classList.remove('flash'); // 重新触发高亮动画,提示已填入
+  void input.offsetWidth;
+  input.classList.add('flash');
+  document.getElementById('gen-status').textContent = '';
+}
+
+function renderTopicsError(msg) {
+  const box = document.getElementById('topics-result');
+  const noKey = /API Key/i.test(msg); // 未配置 Key 引导去设置页,其余错误给就地重试
+  box.innerHTML = `<div class="topics-err err-list">
+    <span>选题推荐失败: ${esc(msg)}</span>
+    ${noKey ? '<button class="ghost" onclick="showView(\'settings\')">前往设置</button>' : '<button class="ghost" onclick="retryTopics()">重试</button>'}
+  </div>`;
+}
+
+function retryTopics() { if (lastTopicsReq) suggestTopics(false, lastTopicsReq); }
+
+// 示例 chips:只填入赛道(不自动调用,由用户点"推荐选题"发起,避免误触扣费)
+function setTrack(v) {
+  document.getElementById('gen-track').value = v;
+  onTrackChange();
+}
+
+// ---------- 任务 ----------
+const STEP_LABELS = { blueprint: '① 蓝图', script: '② 脚本', audit: '③ 审核', optimized: '④ 优化', opening_boost: '⑤ 强化开头' };
+const STATUS_LABELS = { queued: '排队中', running: '生成中', done: '完成', failed: '失败', cancelled: '已取消' };
+const LANG_LABELS = { English: '英语', Hindi: '印地语', Spanish: '西班牙语', Portuguese: '葡萄牙语', Japanese: '日语', Korean: '韩语', Indonesian: '印尼语', German: '德语', French: '法语', Vietnamese: '越南语', Arabic: '阿拉伯语', Chinese: '中文' };
+const COUNTRY_LABELS = { US: '美国', IN: '印度', BR: '巴西', MX: '墨西哥', JP: '日本', KR: '韩国', ID: '印尼', DE: '德国', GB: '英国', FR: '法国', VN: '越南', SA: '沙特' };
+
+function fmtTime(s) {
+  if (!s) return '—';
+  const d = new Date(s);
+  if (isNaN(d)) return '—';
+  const p = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+function audienceCell(a) {
+  a = a || {};
+  const lang = a.target_language ? esc(a.target_language) + (LANG_LABELS[a.target_language] ? '（' + LANG_LABELS[a.target_language] + '）' : '') : '-';
+  const country = a.target_country ? esc(a.target_country) + (COUNTRY_LABELS[a.target_country] ? '（' + COUNTRY_LABELS[a.target_country] + '）' : '') : '-';
+  const goal = a.video_goal ? esc(a.video_goal) : '-';
+  const aud = a.target_audience ? `<span class="sub">受众:${esc(a.target_audience)}</span>` : '';
+  return `${lang} · ${country} · ${goal}${aud}`;
+}
+
+function runOpsCell(r) {
+  if (r.status === 'queued' || r.status === 'running') {
+    return `<button class="op-btn danger" onclick="event.stopPropagation();cancelRunById('${r.id}')">取消</button>`;
+  }
+  if (r.status === 'failed' || r.status === 'cancelled') {
+    return `<button class="op-btn" onclick="event.stopPropagation();retryRunById('${r.id}')">重试</button>`;
+  }
+  return '<span class="hint" style="margin-top:0">—</span>';
+}
+
+// 版本徽标:v1 → V1、v1_5 → V1.5
+function versionLabel(v) { return String(v || '').replace('_', '.').toUpperCase(); }
+
+// "是否生成视频"列:只展示最新一条推送(用户确认);有 project_url 时可点击跳到视频网站项目
+function videoStatusCell(v) {
+  if (!v) return '<span class="vb-none">—</span>';
+  const cls = 'vb-' + (v.status || 'draft');
+  const label = v.status === 'running' && v.stage_label ? v.stage_label : (v.status_label || v.status || '');
+  const tip = [v.error, v.updated_at ? '更新于 ' + fmtTime(v.updated_at) : ''].filter(Boolean).join(' · ');
+  const body = `<span class="video-badge ${cls}">${esc(label)}</span><span class="ver">${esc(versionLabel(v.version))}</span>`;
+  if (!v.project_url) return `<span class="video-cell" title="${esc(tip)}">${body}</span>`;
+  return `<a class="video-cell" href="${esc(v.project_url)}" target="_blank" rel="noopener"`
+    + ` onclick="event.stopPropagation()" title="${esc(tip || '打开视频网站项目')}">${body}</a>`;
+}
+
+async function loadRuns() {
+  const [list, assets] = await Promise.all([api('/api/runs'), api('/api/assets')]);
+  const assetMap = {};
+  assets.forEach(a => { assetMap[a.id] = a; });
+  document.getElementById('runs-count').textContent = list.length ? `共 ${list.length} 个任务` : '';
+  document.getElementById('runs-empty').classList.toggle('hidden', list.length > 0);
+  const ended = s => ['done', 'failed', 'cancelled'].includes(s);
+  document.getElementById('runs-tbody').innerHTML = list.map(r => {
+    const zh = (assetMap[r.asset_id] || {}).source_title_zh;
+    return `
+    <tr class="clickable" onclick="openRun('${r.id}')">
+      <td>${esc(r.topic)}</td>
+      <td>${esc(r.asset_name || r.asset_id)}${zh ? `<span class="sub">源:${esc(zh)}</span>` : ''}</td>
+      <td style="font-size:12px;color:#4b5563">${audienceCell(r.audience)}</td>
+      <td style="font-size:12px;color:#4b5563">${r.channel_name ? esc(r.channel_name) : '<span class="vb-none">—</span>'}</td>
+      <td><span class="badge badge-${r.status}">${STATUS_LABELS[r.status] || r.status}${r.error ? ' ✗' : ''}</span></td>
+      <td>${videoStatusCell(r.video)}</td>
+      <td class="time">${(() => { const t = r.boost_opening ? 5 : 4; return r.status === 'running' ? 'Step ' + r.current_step + '/' + t : (r.status === 'done' ? t + '/' + t : '—'); })()}</td>
+      <td class="time">${fmtTime(r.created_at)}</td>
+      <td class="time">${ended(r.status) ? fmtTime(r.updated_at) : '—'}</td>
+      <td>${runOpsCell(r)}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function cancelRunById(id) {
+  if (!confirm('确定取消该任务?当前进行中的步骤会跑完后停止。')) return;
+  await api('/api/runs/' + id + '/cancel', { method: 'POST' });
+  loadRuns();
+}
+
+async function retryRunById(id) {
+  await api('/api/runs/' + id + '/retry', { method: 'POST' });
+  loadRuns();
+}
+
+function openRun(id) { currentRunId = id; resetDetailTitleCopyFeedback(); fpState = null; cpState = null; Object.keys(descPending).forEach(k => delete descPending[k]); document.getElementById('fp-panel').classList.add('hidden'); document.getElementById('cp-panel').classList.add('hidden'); document.getElementById('fp-popover').classList.add('hidden'); showView('detail'); }
+
+async function loadRunDetail() {
+  const r = await api('/api/runs/' + currentRunId);
+  document.getElementById('detail-title').textContent = r.topic;
+  document.getElementById('detail-sub').textContent =
+    `${r.asset_name || r.asset_id} · ${STATUS_LABELS[r.status] || r.status} · 创建于 ${fmtTime(r.created_at)}`;
+  const stepKeys = ['blueprint', 'script', 'audit', 'optimized'];
+  if (r.boost_opening || (r.steps || {}).opening_boost) stepKeys.push('opening_boost');
+  document.getElementById('detail-steps').innerHTML = stepKeys.map((k, i) => {
+    const s = (r.steps || {})[k] || {};
+    const cls = s.status === 'done' ? 'done' : (s.status === 'running' ? 'running' : (s.status === 'failed' ? 'failed' : ''));
+    const extra = s.secs ? ` (${s.secs}s)` : '';
+    const gate = s.gate_retry ? ' ⟳重试' : '';
+    return `<div class="step-pill ${cls}">${STEP_LABELS[k]}${extra}${gate}</div>`;
+  }).join('');
+  document.getElementById('detail-error').innerHTML =
+    (r.error ? '错误: ' + esc(r.error) : '') +
+    ((r.status === 'failed' || r.status === 'cancelled')
+      ? ' <button class="primary" style="margin-left:8px" onclick="retryRun()">续跑此任务</button>' : '');
+
+  lastRunDetail = r; // 供指纹/商业化高亮重渲染
+  const v1Text = r.script_v1 || r.final_script;
+  document.getElementById('detail-final-card').classList.toggle('hidden', !v1Text);
+  document.getElementById('detail-v2-card').classList.toggle('hidden', !r.script_v2);
+  document.getElementById('detail-scripts').classList.toggle('two', !!r.script_v2);
+  // V1.5 / V2.5(指纹替换或商业化检查采纳的产物,未生成则不显示);检测按钮仅任务完成时可用
+  document.getElementById('detail-v15-card').classList.toggle('hidden', !r.script_v1_5);
+  document.getElementById('detail-v25-card').classList.toggle('hidden', !r.script_v2_5);
+  renderScriptCards(); // 四个版本文案统一渲染:商业化面板开→商业化高亮;指纹面板开→指纹高亮;否则纯文本
+  const fpUsable = r.status === 'done';
+  document.getElementById('fp-btn-v1').style.display = fpUsable && v1Text ? '' : 'none';
+  document.getElementById('fp-btn-v2').style.display = fpUsable && r.script_v2 ? '' : 'none';
+  const cpVersions = { v1: v1Text, v2: r.script_v2, v1_5: r.script_v1_5, v2_5: r.script_v2_5 };
+  ['v1', 'v2', 'v1_5', 'v2_5'].forEach(v => {
+    document.getElementById('cp-btn-' + v).style.display = fpUsable && cpVersions[v] ? '' : 'none';
+    document.getElementById('or-btn-' + v).style.display = fpUsable && cpVersions[v] ? '' : 'none'; // 开头留存检查:可用性与商业化检查一致
+    // 强化开头:任意版本可用;V1 在 V2 已生成后锁定、V2 在 V2.5 已生成后锁定(锁定置灰并提示),V1.5/V2.5 可反复原地强化
+    const obBtn = document.getElementById('ob-btn-' + v);
+    obBtn.style.display = fpUsable && cpVersions[v] ? '' : 'none';
+    const obLock = (v === 'v1' && r.script_v2) ? '已生成 V2,V1 不可再强化'
+      : (v === 'v2' && r.script_v2_5) ? '已生成 V2.5,V2 不可再强化' : '';
+    obBtn.disabled = !!obLock;
+    obBtn.title = obLock;
+    // 推送视频:与其它外挂按钮同一可用性口径(任务完成且该版本文案存在)
+    const vdBtn = document.getElementById('vd-btn-' + v);
+    if (vdBtn) vdBtn.style.display = fpUsable && cpVersions[v] ? '' : 'none';
+  });
+  // 视频简介:按钮可用性与指纹检测一致;已缓存的简介随轮询渲染(进行中的版本跳过,防冲掉加载态)
+  document.getElementById('desc-btn-v1').style.display = fpUsable && v1Text ? '' : 'none';
+  document.getElementById('desc-btn-v2').style.display = fpUsable && r.script_v2 ? '' : 'none';
+  ['v1', 'v2', 'v1_5', 'v2_5'].forEach(v => {
+    if (descPending[v]) return;
+    renderDescription(v, (r.descriptions || {})[v] || null);
+  });
+
+  // 待人工核实的事实断言(audit 的 factual_claims + 优化器在 Change Log 后追加的条目),一条一行
+  const facts = [];
+  try {
+    const audit = JSON.parse((r.outputs || {}).step3 || '{}');
+    (audit.factual_claims || []).forEach(c => facts.push(`[${c.risk}] ${c.location}: ${c.claim}`));
+  } catch (e) {}
+  const tail = r.checks && r.checks.optimized && r.checks.optimized.tail;
+  if (tail) {
+    let items = null;
+    try {
+      const m = tail.match(/\[[\s\S]*\]/);
+      const arr = m ? JSON.parse(m[0]) : null;
+      if (Array.isArray(arr) && arr.length) items = arr;
+    } catch (e) {}
+    if (items) items.forEach(x => facts.push('[优化器] ' + String(x)));
+    else facts.push('[优化器] ' + tail);
+  }
+  document.getElementById('detail-fact-card').classList.toggle('hidden', !facts.length);
+  document.getElementById('detail-fact').textContent = facts.join('\n');
+}
+
+// V1文案:展示时去掉 "Optimized Script" 标题行;复制时再去除章节标签行
+// 容错:允许行首 Markdown 装饰(#/>/列表符/加粗)与行尾加粗 —— 存量文案里出现过 **[CH01 | ..]** 形态
+const CH_TAG_LINE = /^[\s#>*+_\-]*\[CH\d+\s*\|\s*\d{1,2}:\d{2}(?::\d{2})?\s*[-–—~]\s*\d{1,2}:\d{2}(?::\d{2})?\s*\|[^\]]*\][\s*_]*$/;
+
+function displayScriptText(raw) {
+  return raw.replace(/^Optimized Script[ \t]*(\n+|$)/, '');
+}
+
+function cleanScriptText(raw) {
+  return displayScriptText(raw).split('\n')
+    .filter(l => !CH_TAG_LINE.test(l.trim()))
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+// 复制:优先 Clipboard API(安全上下文),否则回退 textarea + execCommand(局域网 HTTP 环境)
+function legacyCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  document.body.removeChild(ta);
+  return ok;
+}
+
+let detailTitleCopyTimer = null;
+
+function resetDetailTitleCopyFeedback() {
+  if (detailTitleCopyTimer !== null) {
+    clearTimeout(detailTitleCopyTimer);
+    detailTitleCopyTimer = null;
+  }
+  const status = document.getElementById('detail-title-copy-status');
+  status.textContent = '';
+  status.classList.remove('error');
+}
+
+async function copyDetailTitle() {
+  const runId = currentRunId;
+  const text = document.getElementById('detail-title').textContent;
+  if (!text) return;
+  let ok = false;
+  if (navigator.clipboard && window.isSecureContext) {
+    try { await navigator.clipboard.writeText(text); ok = true; } catch (e) { ok = legacyCopy(text); }
+  } else {
+    ok = legacyCopy(text);
+  }
+  if (runId !== currentRunId) return;
+  resetDetailTitleCopyFeedback();
+  const status = document.getElementById('detail-title-copy-status');
+  status.textContent = ok ? '已复制 ✓' : '复制失败';
+  status.classList.toggle('error', !ok);
+  detailTitleCopyTimer = setTimeout(resetDetailTitleCopyFeedback, 1500);
+  if (!ok) alert('标题复制失败,请检查浏览器剪贴板权限后重试');
+}
+
+async function copyScript(elId, btn) {
+  const text = cleanScriptText(document.getElementById(elId).textContent);
+  let ok = false;
+  if (navigator.clipboard && window.isSecureContext) {
+    try { await navigator.clipboard.writeText(text); ok = true; } catch (e) { ok = legacyCopy(text); }
+  } else {
+    ok = legacyCopy(text);
+  }
+  if (btn) {
+    btn.textContent = ok ? '已复制 ✓' : '复制失败';
+    btn.disabled = true;
+    setTimeout(() => { btn.textContent = '复制'; btn.disabled = false; }, 1500);
+  }
+  if (!ok) alert('复制失败,请手动全选文本复制');
+}
+
+// ---------- 开头强化(任意版本按需执行,选章后直接重写写回) ----------
+let boostPending = null; // 进行中的强化版本,防并发重复提交
+const OB_TARGET_LABEL = { v1: 'V2', v2: 'V2.5', v1_5: 'V1.5', v2_5: 'V2.5' };
+
+function openBoostPanel(version) {
+  const box = document.getElementById('ob-box-' + version);
+  if (!box.classList.contains('hidden')) { box.classList.add('hidden'); return; } // 再点收起
+  ['v1', 'v2', 'v1_5', 'v2_5'].forEach(v => { // 同时只开一个
+    const b = document.getElementById('ob-box-' + v);
+    if (b) b.classList.add('hidden');
+  });
+  const inPlace = version === 'v1_5' || version === 'v2_5';
+  const action = inPlace ? '原地更新 ' + OB_TARGET_LABEL[version] : '生成 ' + OB_TARGET_LABEL[version];
+  box.innerHTML = `<div style="padding:10px 14px">
+    <div style="margin-bottom:6px">选择要强化的章节(按源爆款开头逐句仿写重写,其余章节逐字保留):</div>
+    <label style="margin-right:14px;cursor:pointer"><input type="checkbox" id="ob-ch01-${version}" checked> CH01</label>
+    <label style="cursor:pointer"><input type="checkbox" id="ob-ch02-${version}" checked> CH02</label>
+    <div class="hint" style="margin:6px 0">将${action};每次强化都调用 LLM(约 1-2 分钟),结果不缓存。</div>
+    <button class="primary" id="ob-go-${version}" onclick="runBoost('${version}')">开始强化</button>
+    <button class="ghost" onclick="document.getElementById('ob-box-${version}').classList.add('hidden')">取消</button>
+  </div>`;
+  box.classList.remove('hidden');
+}
+
+async function runBoost(version) {
+  if (boostPending) return;
+  const chapters = [];
+  if (document.getElementById('ob-ch01-' + version).checked) chapters.push('CH01');
+  if (document.getElementById('ob-ch02-' + version).checked) chapters.push('CH02');
+  if (!chapters.length) { alert('请至少选择一章'); return; }
+  boostPending = version;
+  const btn = document.getElementById('ob-go-' + version);
+  if (btn) { btn.disabled = true; btn.textContent = '强化中…'; }
+  // 需要读取 409 的 code 字段,不用 api() 助手(与商业化/留存替换同一模式)
+  const post = body => fetch('/api/runs/' + currentRunId + '/boost', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+  }).then(async resp => {
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) { const e = new Error(data.error || String(resp.status)); e.code = data.code; throw e; }
+    return data;
+  });
+  try {
+    let r;
+    try {
+      r = await post({ version, chapters });
+    } catch (e) {
+      if (e.code !== 'overwrite_confirm') throw e;
+      if (!confirm(e.message + ',是否继续?')) return;
+      r = await post({ version, chapters, overwrite: true });
+    }
+    document.getElementById('ob-box-' + version).classList.add('hidden');
+    await loadRunDetail();
+    alert('强化完成:' + chapters.join('、') + ' → ' + (OB_TARGET_LABEL[version] || r.target) + '(' + r.secs + 's)');
+  } catch (e) {
+    alert('强化失败: ' + e.message);
+  } finally {
+    boostPending = null;
+    if (btn) { btn.disabled = false; btn.textContent = '开始强化'; }
+  }
+}
+
+async function retryRun() {
+  await api('/api/runs/' + currentRunId + '/retry', { method: 'POST' });
+  loadRunDetail();
+}
+
+// ---------- 视频简介生成 ----------
+// 按版本各自缓存(服务端 run.descriptions);descPending 防止 3s 轮询冲掉生成中的加载态
+const descPending = {};
+
+async function genDescription(version, force) {
+  const runId = currentRunId; // 生成期间用户可能切换任务,响应回来时已不是同一任务则不渲染
+  const box = document.getElementById('desc-' + version);
+  descPending[version] = true;
+  box.classList.remove('hidden');
+  box.innerHTML = '<div class="desc-head"><span class="hint" style="margin:0">正在生成简介(约数十秒)…</span></div>';
+  try {
+    const r = await api('/api/runs/' + runId + '/description', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ version, force: !!force })
+    });
+    delete descPending[version];
+    if (runId !== currentRunId) return;
+    renderDescription(version, r.description);
+  } catch (e) {
+    delete descPending[version];
+    if (runId !== currentRunId) return;
+    box.innerHTML = '<div class="desc-head"><span class="err-list">简介生成失败: ' + esc(e.message) + '</span>' +
+      '<button class="ghost" onclick="genDescription(\'' + version + '\', true)">重试</button></div>';
+  }
+}
+
+function renderDescription(version, desc) {
+  const box = document.getElementById('desc-' + version);
+  if (!desc) { box.classList.add('hidden'); box.innerHTML = ''; return; }
+  box.classList.remove('hidden');
+  box.innerHTML =
+    '<div class="desc-head">' +
+      '<span class="hint" style="margin:0">视频简介 · ' + esc(desc.model || '') +
+        (desc.generated_at ? ' · ' + fmtTime(desc.generated_at) : '') +
+        (desc.stale ? ' · <span style="color:#b45309">文案已更新,简介基于旧版,建议重新生成</span>' : '') + '</span>' +
+      '<span>' +
+        '<button class="ghost" onclick="genDescription(\'' + version + '\', true)">重新生成</button> ' +
+        '<button class="primary" onclick="copyDescription(\'' + version + '\', this)">复制</button> ' +
+        '<button class="ghost" onclick="downloadDescription(\'' + version + '\')">下载</button>' +
+      '</span>' +
+    '</div>' +
+    '<div class="mono" id="desc-text-' + version + '"></div>';
+  document.getElementById('desc-text-' + version).textContent = desc.content;
+}
+
+async function copyDescription(version, btn) {
+  const text = document.getElementById('desc-text-' + version).textContent;
+  let ok = false;
+  if (navigator.clipboard && window.isSecureContext) {
+    try { await navigator.clipboard.writeText(text); ok = true; } catch (e) { ok = legacyCopy(text); }
+  } else {
+    ok = legacyCopy(text);
+  }
+  if (btn) {
+    btn.textContent = ok ? '已复制 ✓' : '复制失败';
+    btn.disabled = true;
+    setTimeout(() => { btn.textContent = '复制'; btn.disabled = false; }, 1500);
+  }
+  if (!ok) alert('复制失败,请手动全选文本复制');
+}
+
+function downloadDescription(version) {
+  const text = document.getElementById('desc-text-' + version).textContent;
+  const topic = (document.getElementById('detail-title').textContent || 'video').slice(0, 60);
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain; charset=utf-8' }));
+  a.download = topic + ' - description-' + version + '.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+// ---------- 爆款指纹检测 ----------
+// 面板状态独立于 3s 轮询:轮询只刷新数据与高亮、不重建面板,正在编辑的建议文本不会被冲掉
+let fpState = null; // { runId, base, loading, error, cached, scan, summary, hiddenTypes, showList }
+let fpReqSeq = 0;   // 请求序号:只接受最后一次请求的响应(防重复点击/快速切换的竞态)
+let lastRunDetail = null; // 最近一次详情数据,供高亮重渲染用
+
+function fpHitsFor(base) {
+  return (fpState && fpState.scan && fpState.base === base && fpState.runId === currentRunId) ? fpState.scan.hits : null;
+}
+
+async function openFpPanel(base, force) {
+  closeCpPanel(); closeOrPanel(); // 三个检测面板互斥,高亮不同时混显
+  // 本地已有该版本结果且非强制重检:直接展示,不发请求(服务端同样会返回已保存结果)
+  if (!force && fpState && fpState.runId === currentRunId && fpState.base === base && fpState.scan) {
+    renderFpPanel();
+    refreshFpMarks();
+    return;
+  }
+  const seq = ++fpReqSeq;
+  fpState = { runId: currentRunId, base, loading: true, error: null, cached: false, scan: null, summary: null, hiddenTypes: {}, showList: false };
+  renderFpPanel();
+  try {
+    const r = await api('/api/runs/' + currentRunId + '/fingerprint/detect', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ base, force: !!force })
+    });
+    if (seq !== fpReqSeq) return; // 已有更新的请求,丢弃过期响应
+    (r.scan.hits || []).forEach(h => { h.checked = h.status !== 'replaced'; });
+    fpState = { runId: currentRunId, base, loading: false, error: null, cached: r.cached, scan: r.scan, summary: null, hiddenTypes: {}, showList: false };
+  } catch (e) {
+    if (seq !== fpReqSeq) return;
+    fpState.loading = false;
+    fpState.error = e.message;
+  }
+  renderFpPanel();
+  refreshFpMarks();
+}
+
+function closeFpPanel() {
+  fpState = null;
+  closeFpPopover();
+  document.getElementById('fp-panel').classList.add('hidden');
+  refreshFpMarks(); // 清除文案内的高亮
+}
+
+// ---------- 文案内嵌高亮 ----------
+// 与后端 fingerprint.js 相同的章节切分(按 [CHxx] 标签行)
+function fpChapterRanges(text) {
+  const lines = text.split('\n');
+  const offs = [];
+  let pos = 0;
+  lines.forEach((l, i) => { offs.push(pos); pos += l.length + 1; });
+  const tags = [];
+  lines.forEach((l, i) => { const m = l.trim().match(CH_TAG_LINE); if (m) tags.push({ tag: 'CH' + m[1], off: offs[i] }); });
+  if (!tags.length) return [{ tag: null, start: 0, end: text.length }];
+  const secs = [];
+  if (tags[0].off > 0) secs.push({ tag: null, start: 0, end: tags[0].off });
+  tags.forEach((t, i) => secs.push({ tag: t.tag, start: t.off, end: (i + 1 < tags.length ? tags[i + 1].off : text.length) }));
+  return secs;
+}
+
+// 每条命中在展示文本中的精确区间(章节锚定),重叠时保留更长者
+function fpComputeMarks(text, hits) {
+  const secs = fpChapterRanges(text);
+  const marks = [];
+  for (const h of hits) {
+    if (!h.original) continue;
+    let scope = { start: 0, end: text.length };
+    if (h.chapter) { const s = secs.find(x => x.tag === h.chapter); if (s) scope = s; }
+    const idx = text.slice(scope.start, scope.end).indexOf(h.original);
+    if (idx === -1) continue;
+    marks.push({ start: scope.start + idx, end: scope.start + idx + h.original.length, hit: h });
+  }
+  marks.sort((a, b) => a.start - b.start || (b.end - b.start) - (a.end - a.start));
+  const out = [];
+  let lastEnd = -1;
+  for (const m of marks) { if (m.start < lastEnd) continue; out.push(m); lastEnd = m.end; }
+  return out;
+}
+
+function renderFpScript(elId, text, hits) {
+  const el = document.getElementById(elId);
+  const visible = (hits || []).filter(h => !((fpState && fpState.hiddenTypes) || {})[h.type]);
+  if (!visible.length) { el.textContent = text; return; }
+  const marks = fpComputeMarks(text, visible);
+  let html = '', cur = 0;
+  for (const m of marks) {
+    const h = m.hit;
+    const cls = 'fp-mark fp-t-' + h.type + (h.checked === false ? ' fp-dim' : '') + (h.status === 'replaced' ? ' fp-done' : '');
+    html += esc(text.slice(cur, m.start));
+    html += '<mark class="' + cls + '" data-hid="' + h.id + '">' + esc(text.slice(m.start, m.end)) + '</mark>';
+    cur = m.end;
+  }
+  html += esc(text.slice(cur));
+  el.innerHTML = html;
+}
+
+function refreshFpMarks() {
+  if (!lastRunDetail) return;
+  const r = lastRunDetail;
+  const v1Text = r.script_v1 || r.final_script;
+  if (v1Text) renderFpScript('detail-final', displayScriptText(v1Text), fpHitsFor('v1'));
+  if (r.script_v2) renderFpScript('detail-v2', displayScriptText(r.script_v2), fpHitsFor('v2'));
+}
+
+// ---------- 气泡卡片 ----------
+function fpPopoverHtml(h, names) {
+  return `<div class="fp-pop-head">
+      <span class="tag">${esc(h.chapter || '全文')}</span>
+      <span class="tag yellow">${esc(names[h.type] || h.type)}</span>
+      <button class="ghost" style="margin-left:auto;padding:2px 8px" onclick="closeFpPopover()">×</button></div>
+    ${h.reason ? `<div class="fp-pop-reason">${esc(h.reason)}</div>` : ''}
+    <div class="fp-orig" style="font-size:13px;white-space:pre-wrap;line-height:1.6;margin-bottom:2px">${esc(h.original)}</div>
+    ${h.original_zh ? `<div class="fp-zh">${esc(h.original_zh)}</div>` : ''}
+    <textarea rows="2" style="width:100%;font-size:13px;padding:6px 8px;border:1px solid #d1d5db;border-radius:5px;font-family:inherit;line-height:1.6;resize:vertical" oninput="fpEditSuggestion('${h.id}', this.value)">${esc(h.suggestion)}</textarea>
+    ${h.suggestion_zh ? `<div class="fp-zh">${esc(h.suggestion_zh)}</div>` : ''}
+    <div class="fp-pop-ops">
+      <button class="primary" onclick="fpSetAccepted('${h.id}', true)">采纳</button>
+      <button class="ghost" onclick="fpSetAccepted('${h.id}', false)">忽略</button>
+      ${h.status === 'replaced' ? '<span style="font-size:12px;color:#047857">✓ 已替换</span>' : ''}
+      ${h.status === 'failed' ? `<span style="font-size:12px;color:#b91c1c">✗ ${esc(h.failReason || '替换失败')}</span>` : ''}
+    </div>`;
+}
+
+function openFpPopover(hitId, anchorEl) {
+  if (!fpState || !fpState.scan) return;
+  const h = fpState.scan.hits.find(x => x.id === hitId);
+  if (!h) return;
+  const pop = document.getElementById('fp-popover');
+  pop.innerHTML = fpPopoverHtml(h, fpState.scan.pattern_names || {});
+  pop.classList.remove('hidden');
+  const r = anchorEl.getBoundingClientRect();
+  pop.style.top = (r.bottom + window.scrollY + 6) + 'px';
+  pop.style.left = Math.max(8, Math.min(r.left + window.scrollX, document.documentElement.clientWidth - 376)) + 'px';
+}
+
+function closeFpPopover() { document.getElementById('fp-popover').classList.add('hidden'); }
+
+function fpSetAccepted(id, accepted) {
+  const h = fpState.scan.hits.find(x => x.id === id);
+  if (!h) return;
+  h.checked = accepted;
+  fpRefreshApplyBtn();
+  refreshFpMarks();
+  // 气泡原地刷新内容(锚点元素已随高亮重渲染,不重定位)
+  const pop = document.getElementById('fp-popover');
+  if (!pop.classList.contains('hidden')) pop.innerHTML = fpPopoverHtml(h, fpState.scan.pattern_names || {});
+}
+
+// 点击高亮句开气泡;点击其他区域关气泡(一次性委托)
+document.addEventListener('click', e => {
+  const mark = e.target.closest && e.target.closest('.fp-mark');
+  if (mark && fpState && fpState.scan) { openFpPopover(mark.dataset.hid, mark); return; }
+  const cmark = e.target.closest && e.target.closest('.cp-mark');
+  if (cmark && cpState && cpState.scan) { openCpPopover(cmark.dataset.hid, cmark); return; }
+  const omark = e.target.closest && e.target.closest('.or-mark');
+  if (omark && orState && orState.scan) { openOrPopover(omark.dataset.hid, omark); return; }
+  if (!e.target.closest || !e.target.closest('#fp-popover')) closeFpPopover();
+});
+
+
+function renderFpPanel() {
+  const panel = document.getElementById('fp-panel');
+  if (!fpState) { panel.classList.add('hidden'); return; }
+  panel.classList.remove('hidden');
+  const baseLabel = fpState.base === 'v2' ? 'V2' : 'V1';
+  if (fpState.loading) {
+    panel.innerHTML = `<h2>指纹检测 — ${baseLabel}文案</h2>
+      <div class="topics-head"><span class="spinner"></span><span class="hint" style="margin:0">检测中(首次检测需调用 LLM,约 1-3 分钟;已有保存结果时秒开)…</span></div>`;
+    return;
+  }
+  if (fpState.error) {
+    panel.innerHTML = `<h2>指纹检测 — ${baseLabel}文案</h2>
+      <div class="topics-err err-list"><span>检测失败: ${esc(fpState.error)}</span>
+        <button class="ghost" onclick="openFpPanel('${fpState.base}', true)">重试</button>
+        <button class="ghost" onclick="closeFpPanel()">收起</button></div>`;
+    return;
+  }
+  const scan = fpState.scan;
+  const hits = scan.hits || [];
+  const names = scan.pattern_names || {};
+  const selCount = hits.filter(h => h.checked && h.status !== 'replaced').length;
+  const legacy = hits.length > 0 && hits[0].original_zh === undefined; // 旧格式结果无中文对照字段
+  const typeCounts = {};
+  hits.forEach(h => { typeCounts[h.type] = (typeCounts[h.type] || 0) + 1; });
+  const chips = Object.entries(typeCounts).map(([t, n]) =>
+    `<span class="chip${(fpState.hiddenTypes || {})[t] ? ' fp-chip-off' : ''}" onclick="fpToggleType('${t}')">${esc(names[t] || t)} ${n}</span>`
+  ).join('');
+  const head = `<h2 style="display:flex;justify-content:space-between;align-items:center">
+      <span>指纹检测 — ${baseLabel}文案 <span class="tag">${hits.length} 处命中</span></span>
+      <button class="ghost" onclick="closeFpPanel()">收起(同时清除高亮)</button></h2>
+    <div class="fp-meta">检测时间 ${fmtTime(scan.scanned_at)} · 模式库 v${esc(scan.lib_version || '?')} · 模型 ${esc(scan.model || '?')} · 用时 ${scan.secs || '?'}s${fpState.cached ? ' · 已保存结果(未重新扣费)' : ''}</div>
+    ${legacy ? '<div class="fp-legacy">当前为旧格式检测结果,无中文对照。点「重新检测」可获取带中文翻译与理由的结果(会重新调用 LLM)。</div>' : ''}`;
+  const guide = hits.length
+    ? `<div class="hint" style="margin:6px 0 0">命中句已在上方 ${baseLabel} 文案中高亮,点击高亮句查看双语对照与改写、逐条采纳/忽略。类型筛选只影响高亮显示,不影响勾选。</div>
+       <div style="margin:2px 0 0">${chips}</div>`
+    : '';
+  panel.innerHTML = head + fpToolbar(selCount) + guide +
+    (hits.length ? '' : '<div class="hint" style="margin:10px 0">未发现公式化指纹句式。</div>') +
+    (fpState.showList && hits.length
+      ? hits.map(h => fpHitRow(h, names)).join('')
+      : '') +
+    (fpState.summary ? `<div class="fp-summary">${esc(fpState.summary)}</div>` : '');
+}
+
+function fpToolbar(selCount) {
+  return `<div class="fp-toolbar">
+    <button class="ghost" onclick="fpToggleAll(true)">全选</button>
+    <button class="ghost" onclick="fpToggleAll(false)">全不选</button>
+    <button class="primary" id="fp-apply-btn" onclick="applyFpReplace()" ${selCount ? '' : 'disabled'}>替换选中(${selCount})</button>
+    <button class="ghost" onclick="openFpPanel('${fpState.base}', true)" title="重新调用 LLM 检测并覆盖当前结果">重新检测</button>
+    <button class="ghost" onclick="fpToggleList()">${fpState.showList ? '收起列表' : '列表视图'}</button>
+    <span class="hint" style="margin:0">替换后生成 ${fpState.base === 'v2' ? 'V2.5' : 'V1.5'}(底版原样保留);匹配不到的项标红说明,不会静默失败</span>
+  </div>`;
+}
+
+function fpHitRow(h, names) {
+  const cls = h.status === 'replaced' ? ' replaced' : (h.status === 'failed' ? ' failed' : '');
+  const dis = h.status === 'replaced' ? ' disabled' : '';
+  return `<div class="fp-hit${cls}">
+    <div class="fp-hit-head">
+      <input type="checkbox" ${h.checked ? 'checked' : ''}${dis} onchange="fpToggleHit('${h.id}', this.checked)">
+      <span class="tag">${esc(h.chapter || '全文')}</span>
+      <span class="tag yellow">${esc(names[h.type] || h.type)}</span>
+      ${h.reason ? `<span class="fp-meta" style="color:#92400e">${esc(h.reason)}</span>` : ''}
+    </div>
+    <div class="fp-orig">${esc(h.original)}</div>
+    ${h.original_zh ? `<div class="fp-zh">${esc(h.original_zh)}</div>` : ''}
+    <textarea rows="2" placeholder="改写建议(可编辑后再替换)"${dis} oninput="fpEditSuggestion('${h.id}', this.value)">${esc(h.suggestion)}</textarea>
+    ${h.suggestion_zh ? `<div class="fp-zh">${esc(h.suggestion_zh)}</div>` : ''}
+    ${h.status === 'replaced' ? '<div class="fp-status">✓ 已替换</div>' : ''}
+    ${h.status === 'failed' ? `<div class="fp-status">✗ 替换失败:${esc(h.failReason || '未在指定位置找到原句')}</div>` : ''}
+  </div>`;
+}
+
+function fpRefreshApplyBtn() {
+  const n = fpState.scan.hits.filter(h => h.checked && h.status !== 'replaced').length;
+  const btn = document.getElementById('fp-apply-btn');
+  if (btn) { btn.textContent = `替换选中(${n})`; btn.disabled = !n; }
+}
+
+function fpToggleHit(id, checked) {
+  const h = fpState.scan.hits.find(x => x.id === id);
+  if (h) h.checked = checked;
+  fpRefreshApplyBtn();
+  refreshFpMarks(); // 勾选态同步到文案高亮(取消勾选的句变暗)
+}
+
+function fpToggleAll(checked) {
+  fpState.scan.hits.forEach(h => { if (h.status !== 'replaced') h.checked = checked; });
+  renderFpPanel();
+  refreshFpMarks();
+}
+
+function fpToggleType(type) {
+  fpState.hiddenTypes = fpState.hiddenTypes || {};
+  fpState.hiddenTypes[type] = !fpState.hiddenTypes[type];
+  renderFpPanel();
+  refreshFpMarks();
+}
+
+function fpToggleList() {
+  fpState.showList = !fpState.showList;
+  renderFpPanel();
+}
+
+function fpEditSuggestion(id, value) {
+  const h = fpState.scan.hits.find(x => x.id === id);
+  if (h) h.suggestion = value; // 只写状态不重渲染,保持输入焦点
+}
+
+async function applyFpReplace() {
+  const hits = fpState.scan.hits.filter(h => h.checked && h.status !== 'replaced');
+  if (!hits.length) return;
+  const items = hits.map(h => ({ id: h.id, chapter: h.chapter, original: h.original, suggestion: h.suggestion }));
+  const btn = document.getElementById('fp-apply-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '替换中…'; }
+  try {
+    const r = await api('/api/runs/' + currentRunId + '/fingerprint/replace', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ base: fpState.base, items })
+    });
+    const failedById = {};
+    (r.failed || []).forEach(f => { if (f.id) failedById[f.id] = f.reason; });
+    hits.forEach(h => {
+      if (failedById[h.id]) { h.status = 'failed'; h.failReason = failedById[h.id]; }
+      else { h.status = 'replaced'; }
+      h.checked = false;
+    });
+    const failN = (r.failed || []).length;
+    fpState.summary = `已替换 ${r.replaced_count} 处${failN ? ',跳过 ' + failN + ' 处(见标红项)' : ''} — ${fpState.base === 'v2' ? 'V2.5' : 'V1.5'} 已生成/更新`;
+    closeFpPopover();
+    renderFpPanel();
+    loadRunDetail(); // 刷新下方 .5 版本卡片与文案高亮(已替换的句变绿)
+  } catch (e) {
+    renderFpPanel();
+    alert('替换失败: ' + e.message);
+  }
+}
+
+// ---------- YouTube 商业化检查 ----------
+// 结构与指纹检测一致:面板状态独立于 3s 轮询;两个面板互斥(打开一个关掉另一个),气泡弹层复用 #fp-popover
+let cpState = null; // { runId, version, loading, error, cached, scan, summary, hiddenTypes, showList }
+let cpReqSeq = 0;   // 请求序号:只接受最后一次请求的响应
+
+const CP_VERSION_LABELS = { v1: 'V1', v2: 'V2', v1_5: 'V1.5', v2_5: 'V2.5' };
+const CP_SEV_NAMES = { high: '高', medium: '中', low: '低' };
+
+function cpHitsFor(version) {
+  return (cpState && cpState.scan && cpState.version === version && cpState.runId === currentRunId) ? cpState.scan.hits : null;
+}
+
+// 统一渲染四个版本文案:开头留存面板开→仅留存高亮;商业化面板开→仅商业化高亮;指纹面板开→仅指纹高亮(v1/v2);都关→纯文本
+function renderScriptCards() {
+  if (!lastRunDetail) return;
+  const r = lastRunDetail;
+  const texts = { v1: r.script_v1 || r.final_script, v2: r.script_v2, v1_5: r.script_v1_5, v2_5: r.script_v2_5 };
+  const elIds = { v1: 'detail-final', v2: 'detail-v2', v1_5: 'detail-v15', v2_5: 'detail-v25' };
+  for (const v of ['v1', 'v2', 'v1_5', 'v2_5']) {
+    if (!texts[v]) continue;
+    const text = displayScriptText(texts[v]);
+    const orHits = orHitsFor(v);
+    if (orHits) { renderOrScript(elIds[v], text, orHits); continue; }
+    const cpHits = cpHitsFor(v);
+    if (cpHits) { renderCpScript(elIds[v], text, cpHits); continue; }
+    if (v === 'v1' || v === 'v2') { renderFpScript(elIds[v], text, fpHitsFor(v)); continue; }
+    document.getElementById(elIds[v]).textContent = text;
+  }
+}
+
+async function openCpPanel(version, force) {
+  closeFpPanel(); closeOrPanel(); // 三个检测面板互斥,高亮不同时混显
+  // 本地已有该版本结果且非强制重检:直接展示,不发请求(服务端同样会返回已保存结果)
+  if (!force && cpState && cpState.runId === currentRunId && cpState.version === version && cpState.scan) {
+    renderCpPanel();
+    refreshCpMarks();
+    return;
+  }
+  const seq = ++cpReqSeq;
+  cpState = { runId: currentRunId, version, loading: true, error: null, cached: false, scan: null, summary: null, hiddenTypes: {}, showList: false };
+  renderCpPanel();
+  try {
+    const r = await api('/api/runs/' + currentRunId + '/compliance/detect', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ version, force: !!force })
+    });
+    if (seq !== cpReqSeq) return; // 已有更新的请求,丢弃过期响应
+    (r.scan.hits || []).forEach(h => { h.checked = h.status !== 'replaced'; });
+    cpState = { runId: currentRunId, version, loading: false, error: null, cached: r.cached, scan: r.scan, summary: null, hiddenTypes: {}, showList: false };
+  } catch (e) {
+    if (seq !== cpReqSeq) return;
+    cpState.loading = false;
+    cpState.error = e.message;
+  }
+  renderCpPanel();
+  refreshCpMarks();
+}
+
+function closeCpPanel() {
+  cpState = null;
+  closeFpPopover();
+  const panel = document.getElementById('cp-panel');
+  if (panel) panel.classList.add('hidden');
+  refreshCpMarks(); // 清除文案内的商业化高亮
+}
+
+function refreshCpMarks() { renderScriptCards(); }
+
+// 命中区间计算复用 fpComputeMarks(同一套章节锚定),仅配色与类名不同
+function renderCpScript(elId, text, hits) {
+  const el = document.getElementById(elId);
+  const visible = (hits || []).filter(h => !((cpState && cpState.hiddenTypes) || {})[h.type]);
+  if (!visible.length) { el.textContent = text; return; }
+  const marks = fpComputeMarks(text, visible);
+  let html = '', cur = 0;
+  for (const m of marks) {
+    const h = m.hit;
+    const cls = 'cp-mark cp-t-' + h.type + (h.checked === false ? ' cp-dim' : '') + (h.status === 'replaced' ? ' cp-done' : '');
+    html += esc(text.slice(cur, m.start));
+    html += '<mark class="' + cls + '" data-hid="' + h.id + '">' + esc(text.slice(m.start, m.end)) + '</mark>';
+    cur = m.end;
+  }
+  html += esc(text.slice(cur));
+  el.innerHTML = html;
+}
+
+// ---------- 气泡卡片(复用 #fp-popover 容器) ----------
+function cpPopoverHtml(h, names) {
+  return `<div class="fp-pop-head">
+      <span class="tag">${esc(h.chapter || '全文')}</span>
+      <span class="tag yellow">${esc(names[h.type] || h.type)}</span>
+      <span class="cp-sev cp-sev-${esc(h.severity || 'medium')}">${CP_SEV_NAMES[h.severity] || '中'}风险</span>
+      <button class="ghost" style="margin-left:auto;padding:2px 8px" onclick="closeFpPopover()">×</button></div>
+    ${h.reason ? `<div class="fp-pop-reason">${esc(h.reason)}</div>` : ''}
+    <div class="fp-orig" style="font-size:13px;white-space:pre-wrap;line-height:1.6;margin-bottom:2px">${esc(h.original)}</div>
+    ${h.original_zh ? `<div class="fp-zh">${esc(h.original_zh)}</div>` : ''}
+    <textarea rows="3" style="width:100%;font-size:13px;padding:6px 8px;border:1px solid #d1d5db;border-radius:5px;font-family:inherit;line-height:1.6;resize:vertical" oninput="cpEditSuggestion('${h.id}', this.value)">${esc(h.suggestion)}</textarea>
+    ${h.suggestion_zh ? `<div class="fp-zh">${esc(h.suggestion_zh)}</div>` : ''}
+    <div class="fp-pop-ops">
+      <button class="primary" onclick="cpSetAccepted('${h.id}', true)">采纳</button>
+      <button class="ghost" onclick="cpSetAccepted('${h.id}', false)">忽略</button>
+      ${h.status === 'replaced' ? '<span style="font-size:12px;color:#047857">✓ 已替换</span>' : ''}
+      ${h.status === 'failed' ? `<span style="font-size:12px;color:#b91c1c">✗ ${esc(h.failReason || '替换失败')}</span>` : ''}
+    </div>`;
+}
+
+function openCpPopover(hitId, anchorEl) {
+  if (!cpState || !cpState.scan) return;
+  const h = cpState.scan.hits.find(x => x.id === hitId);
+  if (!h) return;
+  const pop = document.getElementById('fp-popover');
+  pop.innerHTML = cpPopoverHtml(h, cpState.scan.type_names || {});
+  pop.classList.remove('hidden');
+  const r = anchorEl.getBoundingClientRect();
+  pop.style.top = (r.bottom + window.scrollY + 6) + 'px';
+  pop.style.left = Math.max(8, Math.min(r.left + window.scrollX, document.documentElement.clientWidth - 376)) + 'px';
+}
+
+function cpSetAccepted(id, accepted) {
+  const h = cpState.scan.hits.find(x => x.id === id);
+  if (!h) return;
+  h.checked = accepted;
+  cpRefreshApplyBtn();
+  refreshCpMarks();
+  // 气泡原地刷新内容(锚点元素已随高亮重渲染,不重定位)
+  const pop = document.getElementById('fp-popover');
+  if (!pop.classList.contains('hidden')) pop.innerHTML = cpPopoverHtml(h, cpState.scan.type_names || {});
+}
+
+// ---------- 面板 ----------
+function renderCpPanel() {
+  const panel = document.getElementById('cp-panel');
+  if (!cpState) { panel.classList.add('hidden'); return; }
+  panel.classList.remove('hidden');
+  const vLabel = CP_VERSION_LABELS[cpState.version] || cpState.version;
+  if (cpState.loading) {
+    panel.innerHTML = `<h2>YouTube 商业化检查 — ${vLabel}文案</h2>
+      <div class="topics-head"><span class="spinner"></span><span class="hint" style="margin:0">检查中(首次检查需调用 LLM,约 1-3 分钟;已有保存结果时秒开)…</span></div>`;
+    return;
+  }
+  if (cpState.error) {
+    panel.innerHTML = `<h2>YouTube 商业化检查 — ${vLabel}文案</h2>
+      <div class="topics-err err-list"><span>检查失败: ${esc(cpState.error)}</span>
+        <button class="ghost" onclick="openCpPanel('${cpState.version}', true)">重试</button>
+        <button class="ghost" onclick="closeCpPanel()">收起</button></div>`;
+    return;
+  }
+  const scan = cpState.scan;
+  const hits = scan.hits || [];
+  const names = scan.type_names || {};
+  const selCount = hits.filter(h => h.checked && h.status !== 'replaced').length;
+  const typeCounts = {};
+  hits.forEach(h => { typeCounts[h.type] = (typeCounts[h.type] || 0) + 1; });
+  const chips = Object.entries(typeCounts).map(([t, n]) =>
+    `<span class="chip${(cpState.hiddenTypes || {})[t] ? ' fp-chip-off' : ''}" onclick="cpToggleType('${t}')">${esc(names[t] || t)} ${n}</span>`
+  ).join('');
+  const head = `<h2 style="display:flex;justify-content:space-between;align-items:center">
+      <span>YouTube 商业化检查 — ${vLabel}文案 <span class="tag">${hits.length} 处命中</span></span>
+      <button class="ghost" onclick="closeCpPanel()">收起(同时清除高亮)</button></h2>
+    <div class="fp-meta">检查时间 ${fmtTime(scan.scanned_at)} · 模型 ${esc(scan.model || '?')} · 用时 ${scan.secs || '?'}s${scan.target_language ? ' · 替换正文语言 ' + esc(scan.target_language) : ''}${cpState.cached ? ' · 已保存结果(未重新扣费)' : ''}</div>
+    ${scan.stale ? '<div class="fp-legacy">文案已在本次检查后被修改,以下结果基于旧版文案,建议重新检测。</div>' : ''}`;
+  const guide = hits.length
+    ? `<div class="hint" style="margin:6px 0 0">命中内容已在上方 ${vLabel} 文案中高亮,点击高亮查看双语对照与改写、逐条采纳/忽略。类型筛选只影响高亮显示,不影响勾选。</div>
+       <div style="margin:2px 0 0">${chips}</div>`
+    : '';
+  panel.innerHTML = head + cpSummaryHtml(scan.summary, names) + cpToolbar(selCount) + guide +
+    (hits.length ? '' : '<div class="hint" style="margin:10px 0">未发现需要定位修改的风险表达。</div>') +
+    (cpState.showList && hits.length
+      ? hits.map(h => cpHitRow(h, names)).join('')
+      : '') +
+    (cpState.summary ? `<div class="fp-summary">${esc(cpState.summary)}</div>` : '');
+}
+
+// 总体评估块(纯展示,不可采纳):风险总档 + 四维度评级 + 结论 + 结构风险 + 增强方向
+function cpSummaryHtml(s, names) {
+  if (!s) return '';
+  const riskCls = s.risk_level === '安全' ? 'cp-risk-0' : (s.risk_level === '高风险' ? 'cp-risk-2' : 'cp-risk-1');
+  const ratings = s.ratings && typeof s.ratings === 'object' ? s.ratings : {};
+  const ratingChips = ['originality', 'template', 'ai_feel', 'reused']
+    .filter(t => ratings[t])
+    .map(t => `<span class="cp-rating cp-r-${esc(ratings[t])}">${esc(names[t] || t)} ${esc(ratings[t])}</span>`).join('');
+  const list = (arr, title) => (Array.isArray(arr) && arr.length)
+    ? `<div style="margin-top:6px"><b style="font-size:12px">${title}</b><ul style="margin:4px 0 0;padding-left:18px;font-size:12px;line-height:1.7">${arr.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>`
+    : '';
+  return `<div class="cp-summary">
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <span class="cp-risk ${riskCls}">${esc(s.risk_level || '需要优化')}</span>
+      ${ratingChips}
+    </div>
+    ${s.conclusion ? `<div style="font-size:13px;margin-top:6px;line-height:1.7">${esc(s.conclusion)}</div>` : ''}
+    ${list(s.structure, '整体结构风险')}
+    ${list(s.directions, '原创增强方向')}
+  </div>`;
+}
+
+function cpToolbar(selCount) {
+  const targetHint = (cpState.version === 'v1' || cpState.version === 'v2')
+    ? '替换后生成 ' + (cpState.version === 'v1' ? 'V1.5' : 'V2.5') + '(底版原样保留)'
+    : '采纳后直接更新当前 ' + (CP_VERSION_LABELS[cpState.version] || '') + ' 文案';
+  return `<div class="fp-toolbar">
+    <button class="ghost" onclick="cpToggleAll(true)">全选</button>
+    <button class="ghost" onclick="cpToggleAll(false)">全不选</button>
+    <button class="primary" id="cp-apply-btn" onclick="applyCpReplace()" ${selCount ? '' : 'disabled'}>替换选中(${selCount})</button>
+    <button class="ghost" onclick="openCpPanel('${cpState.version}', true)" title="重新调用 LLM 检查并覆盖当前结果">重新检测</button>
+    <button class="ghost" onclick="cpToggleList()">${cpState.showList ? '收起列表' : '列表视图'}</button>
+    <span class="hint" style="margin:0">${targetHint};匹配不到的项标红说明,不会静默失败</span>
+  </div>`;
+}
+
+function cpHitRow(h, names) {
+  const cls = h.status === 'replaced' ? ' replaced' : (h.status === 'failed' ? ' failed' : '');
+  const dis = h.status === 'replaced' ? ' disabled' : '';
+  return `<div class="fp-hit${cls}">
+    <div class="fp-hit-head">
+      <input type="checkbox" ${h.checked ? 'checked' : ''}${dis} onchange="cpToggleHit('${h.id}', this.checked)">
+      <span class="tag">${esc(h.chapter || '全文')}</span>
+      <span class="tag yellow">${esc(names[h.type] || h.type)}</span>
+      <span class="cp-sev cp-sev-${esc(h.severity || 'medium')}">${CP_SEV_NAMES[h.severity] || '中'}</span>
+      ${h.reason ? `<span class="fp-meta" style="color:#92400e">${esc(h.reason)}</span>` : ''}
+    </div>
+    <div class="fp-orig">${esc(h.original)}</div>
+    ${h.original_zh ? `<div class="fp-zh">${esc(h.original_zh)}</div>` : ''}
+    <textarea rows="3" placeholder="改写建议(可编辑后再替换)"${dis} oninput="cpEditSuggestion('${h.id}', this.value)">${esc(h.suggestion)}</textarea>
+    ${h.suggestion_zh ? `<div class="fp-zh">${esc(h.suggestion_zh)}</div>` : ''}
+    ${h.status === 'replaced' ? '<div class="fp-status">✓ 已替换</div>' : ''}
+    ${h.status === 'failed' ? `<div class="fp-status">✗ 替换失败:${esc(h.failReason || '未在指定位置找到原句')}</div>` : ''}
+  </div>`;
+}
+
+function cpRefreshApplyBtn() {
+  const n = cpState.scan.hits.filter(h => h.checked && h.status !== 'replaced').length;
+  const btn = document.getElementById('cp-apply-btn');
+  if (btn) { btn.textContent = `替换选中(${n})`; btn.disabled = !n; }
+}
+
+function cpToggleHit(id, checked) {
+  const h = cpState.scan.hits.find(x => x.id === id);
+  if (h) h.checked = checked;
+  cpRefreshApplyBtn();
+  refreshCpMarks(); // 勾选态同步到文案高亮(取消勾选的句变暗)
+}
+
+function cpToggleAll(checked) {
+  cpState.scan.hits.forEach(h => { if (h.status !== 'replaced') h.checked = checked; });
+  renderCpPanel();
+  refreshCpMarks();
+}
+
+function cpToggleType(type) {
+  cpState.hiddenTypes = cpState.hiddenTypes || {};
+  cpState.hiddenTypes[type] = !cpState.hiddenTypes[type];
+  renderCpPanel();
+  refreshCpMarks();
+}
+
+function cpToggleList() {
+  cpState.showList = !cpState.showList;
+  renderCpPanel();
+}
+
+function cpEditSuggestion(id, value) {
+  const h = cpState.scan.hits.find(x => x.id === id);
+  if (h) h.suggestion = value; // 只写状态不重渲染,保持输入焦点
+}
+
+// 采纳:v1/v2 → 生成对应 .5(已存在时服务端返 409,确认后覆盖);v1_5/v2_5 → 原地更新
+async function applyCpReplace() {
+  const hits = cpState.scan.hits.filter(h => h.checked && h.status !== 'replaced');
+  if (!hits.length) return;
+  const items = hits.map(h => ({ id: h.id, chapter: h.chapter, original: h.original, suggestion: h.suggestion }));
+  const btn = document.getElementById('cp-apply-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '替换中…'; }
+  // 需要读取 409 的 code 字段,不用 api() 助手
+  const post = body => fetch('/api/runs/' + currentRunId + '/compliance/replace', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+  }).then(async resp => {
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) { const e = new Error(data.error || String(resp.status)); e.code = data.code; throw e; }
+    return data;
+  });
+  try {
+    let r;
+    try {
+      r = await post({ version: cpState.version, items });
+    } catch (e) {
+      if (e.code !== 'overwrite_confirm') throw e;
+      if (!confirm(e.message + ',是否继续?')) { renderCpPanel(); return; }
+      r = await post({ version: cpState.version, items, overwrite: true });
+    }
+    const failedById = {};
+    (r.failed || []).forEach(f => { if (f.id) failedById[f.id] = f.reason; });
+    hits.forEach(h => {
+      if (failedById[h.id]) { h.status = 'failed'; h.failReason = failedById[h.id]; }
+      else { h.status = 'replaced'; }
+      h.checked = false;
+    });
+    const failN = (r.failed || []).length;
+    cpState.summary = r.replaced_count
+      ? `已替换 ${r.replaced_count} 处${failN ? ',跳过 ' + failN + ' 处(见标红项)' : ''} — ${CP_VERSION_LABELS[r.target] || ''} 已生成/更新`
+      : `未替换任何内容，${failN} 处失败(见标红项)，文案未生成或更新`;
+    if (r.replaced_count && r.target === cpState.version) cpState.scan.stale = true; // 原地更新后,本次结果基于旧文案
+    closeFpPopover();
+    renderCpPanel();
+    if (r.replaced_count) loadRunDetail(); // 有成功项才刷新文案卡片(已替换的句变绿)
+    else refreshCpMarks(); // 全部失败只更新本地勾选/失败高亮,不重新加载任务
+  } catch (e) {
+    renderCpPanel();
+    alert('替换失败: ' + e.message);
+  }
+}
+
+// ---------- 开头留存检查 ----------
+// 结构与商业化检查一致:面板状态独立于 3s 轮询;三个面板互斥(打开一个关掉另外两个),气泡弹层复用 #fp-popover
+let orState = null; // { runId, version, loading, error, cached, scan, summary, hiddenTypes, showList }
+let orReqSeq = 0;   // 请求序号:只接受最后一次请求的响应
+
+const OR_SEG_NAMES = { s0_30: '前30秒', s30_60: '30–60秒' };
+
+function orHitsFor(version) {
+  return (orState && orState.scan && orState.version === version && orState.runId === currentRunId) ? orState.scan.hits : null;
+}
+
+async function openOrPanel(version, force) {
+  closeFpPanel(); closeCpPanel(); // 三个检测面板互斥,高亮不同时混显
+  // 本地已有该版本结果且非强制重检:直接展示,不发请求(服务端同样会返回已保存结果)
+  if (!force && orState && orState.runId === currentRunId && orState.version === version && orState.scan) {
+    renderOrPanel();
+    refreshOrMarks();
+    return;
+  }
+  const seq = ++orReqSeq;
+  orState = { runId: currentRunId, version, loading: true, error: null, cached: false, scan: null, summary: null, hiddenTypes: {}, showList: false };
+  renderOrPanel();
+  try {
+    const r = await api('/api/runs/' + currentRunId + '/opening/detect', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ version, force: !!force })
+    });
+    if (seq !== orReqSeq) return; // 已有更新的请求,丢弃过期响应
+    (r.scan.hits || []).forEach(h => { h.checked = h.status !== 'replaced'; });
+    orState = { runId: currentRunId, version, loading: false, error: null, cached: r.cached, scan: r.scan, summary: null, hiddenTypes: {}, showList: false };
+  } catch (e) {
+    if (seq !== orReqSeq) return;
+    orState.loading = false;
+    orState.error = e.message;
+  }
+  renderOrPanel();
+  refreshOrMarks();
+}
+
+function closeOrPanel() {
+  orState = null;
+  closeFpPopover();
+  const panel = document.getElementById('or-panel');
+  if (panel) panel.classList.add('hidden');
+  refreshOrMarks(); // 清除文案内的留存高亮
+}
+
+function refreshOrMarks() { renderScriptCards(); }
+
+// 命中区间计算复用 fpComputeMarks(同一套章节锚定),仅配色与类名不同
+function renderOrScript(elId, text, hits) {
+  const el = document.getElementById(elId);
+  const visible = (hits || []).filter(h => !((orState && orState.hiddenTypes) || {})[h.type]);
+  if (!visible.length) { el.textContent = text; return; }
+  const marks = fpComputeMarks(text, visible);
+  let html = '', cur = 0;
+  for (const m of marks) {
+    const h = m.hit;
+    const cls = 'or-mark or-t-' + h.type + (h.checked === false ? ' or-dim' : '') + (h.status === 'replaced' ? ' or-done' : '');
+    html += esc(text.slice(cur, m.start));
+    html += '<mark class="' + cls + '" data-hid="' + h.id + '">' + esc(text.slice(m.start, m.end)) + '</mark>';
+    cur = m.end;
+  }
+  html += esc(text.slice(cur));
+  el.innerHTML = html;
+}
+
+// ---------- 气泡卡片(复用 #fp-popover 容器) ----------
+function orPopoverHtml(h, names) {
+  return `<div class="fp-pop-head">
+      <span class="tag">${esc(h.chapter || '开头')}</span>
+      <span class="tag yellow">${esc(names[h.type] || h.type)}</span>
+      <span class="tag">${esc(OR_SEG_NAMES[h.segment] || '')}</span>
+      <span class="or-mode or-mode-${esc(h.mode)}">${h.mode === 'insert_after' ? '插入' : '改写'}</span>
+      <button class="ghost" style="margin-left:auto;padding:2px 8px" onclick="closeFpPopover()">×</button></div>
+    ${h.reason ? `<div class="fp-pop-reason">${esc(h.reason)}</div>` : ''}
+    <div class="fp-orig" style="font-size:13px;white-space:pre-wrap;line-height:1.6;margin-bottom:2px">${esc(h.original)}</div>
+    ${h.original_zh ? `<div class="fp-zh">${esc(h.original_zh)}</div>` : ''}
+    ${h.mode === 'insert_after' ? '<div class="fp-zh">插入模式:下方文本 = 锚点原句 + 新插入句,采纳时请保持锚点句部分原样</div>' : ''}
+    <textarea rows="3" style="width:100%;font-size:13px;padding:6px 8px;border:1px solid #d1d5db;border-radius:5px;font-family:inherit;line-height:1.6;resize:vertical" oninput="orEditSuggestion('${h.id}', this.value)">${esc(h.suggestion)}</textarea>
+    ${h.suggestion_zh ? `<div class="fp-zh">${esc(h.suggestion_zh)}</div>` : ''}
+    <div class="fp-pop-ops">
+      <button class="primary" onclick="orSetAccepted('${h.id}', true)">采纳</button>
+      <button class="ghost" onclick="orSetAccepted('${h.id}', false)">忽略</button>
+      ${h.status === 'replaced' ? '<span style="font-size:12px;color:#047857">✓ 已替换</span>' : ''}
+      ${h.status === 'failed' ? `<span style="font-size:12px;color:#b91c1c">✗ ${esc(h.failReason || '替换失败')}</span>` : ''}
+    </div>`;
+}
+
+function openOrPopover(hitId, anchorEl) {
+  if (!orState || !orState.scan) return;
+  const h = orState.scan.hits.find(x => x.id === hitId);
+  if (!h) return;
+  const pop = document.getElementById('fp-popover');
+  pop.innerHTML = orPopoverHtml(h, orState.scan.type_names || {});
+  pop.classList.remove('hidden');
+  const r = anchorEl.getBoundingClientRect();
+  pop.style.top = (r.bottom + window.scrollY + 6) + 'px';
+  pop.style.left = Math.max(8, Math.min(r.left + window.scrollX, document.documentElement.clientWidth - 376)) + 'px';
+}
+
+function orSetAccepted(id, accepted) {
+  const h = orState.scan.hits.find(x => x.id === id);
+  if (!h) return;
+  h.checked = accepted;
+  orRefreshApplyBtn();
+  refreshOrMarks();
+  // 气泡原地刷新内容(锚点元素已随高亮重渲染,不重定位)
+  const pop = document.getElementById('fp-popover');
+  if (!pop.classList.contains('hidden')) pop.innerHTML = orPopoverHtml(h, orState.scan.type_names || {});
+}
+
+// ---------- 面板 ----------
+function renderOrPanel() {
+  const panel = document.getElementById('or-panel');
+  if (!orState) { panel.classList.add('hidden'); return; }
+  panel.classList.remove('hidden');
+  const vLabel = CP_VERSION_LABELS[orState.version] || orState.version;
+  if (orState.loading) {
+    panel.innerHTML = `<h2>开头留存检查 — ${vLabel}文案</h2>
+      <div class="topics-head"><span class="spinner"></span><span class="hint" style="margin:0">检查中(首次检查需调用 LLM,约 1-3 分钟;已有保存结果时秒开)…</span></div>`;
+    return;
+  }
+  if (orState.error) {
+    panel.innerHTML = `<h2>开头留存检查 — ${vLabel}文案</h2>
+      <div class="topics-err err-list"><span>检查失败: ${esc(orState.error)}</span>
+        <button class="ghost" onclick="openOrPanel('${orState.version}', true)">重试</button>
+        <button class="ghost" onclick="closeOrPanel()">收起</button></div>`;
+    return;
+  }
+  const scan = orState.scan;
+  const hits = scan.hits || [];
+  const names = scan.type_names || {};
+  const selCount = hits.filter(h => h.checked && h.status !== 'replaced').length;
+  const typeCounts = {};
+  hits.forEach(h => { typeCounts[h.type] = (typeCounts[h.type] || 0) + 1; });
+  const chips = Object.entries(typeCounts).map(([t, n]) =>
+    `<span class="chip${(orState.hiddenTypes || {})[t] ? ' fp-chip-off' : ''}" onclick="orToggleType('${t}')">${esc(names[t] || t)} ${n}</span>`
+  ).join('');
+  const head = `<h2 style="display:flex;justify-content:space-between;align-items:center">
+      <span>开头留存检查 — ${vLabel}文案 <span class="tag">${hits.length} 处命中</span></span>
+      <button class="ghost" onclick="closeOrPanel()">收起(同时清除高亮)</button></h2>
+    <div class="fp-meta">检查时间 ${fmtTime(scan.scanned_at)} · 模型 ${esc(scan.model || '?')} · 用时 ${scan.secs || '?'}s${orState.cached ? ' · 已保存结果(未重新扣费)' : ''}</div>
+    ${scan.stale ? '<div class="fp-legacy">文案已在本次检查后被修改,以下结果基于旧版文案,建议重新检测。</div>' : ''}`;
+  const guide = hits.length
+    ? `<div class="hint" style="margin:6px 0 0">命中内容已在上方 ${vLabel} 文案中高亮,点击高亮查看双语对照与修改建议、逐条采纳/忽略;「插入」类命中会把新句加到锚点句之后。类型筛选只影响高亮显示,不影响勾选。采纳后可对该版本重新检测,对比前后评分。</div>
+       <div style="margin:2px 0 0">${chips}</div>`
+    : '';
+  panel.innerHTML = head + orSummaryHtml(scan.summary) + orToolbar(selCount) + guide +
+    (hits.length ? '' : '<div class="hint" style="margin:10px 0">开头两段未发现需要定位修改的问题。</div>') +
+    (orState.showList && hits.length
+      ? hits.map(h => orHitRow(h, names)).join('')
+      : '') +
+    (orState.summary ? `<div class="fp-summary">${esc(orState.summary)}</div>` : '');
+}
+
+// 分段评估块(纯展示,不可采纳):两个分数 + 内容类型定位 + 最大问题 + 前30秒三项检查 + 30–60秒价值承诺 + 结论
+function orSummaryHtml(s) {
+  if (!s) return '';
+  const scoreChip = (label, v) => {
+    const n = (v === null || v === undefined || !Number.isFinite(Number(v))) ? null : Number(v);
+    const cls = n === null ? '' : (n >= 8 ? ' or-score-2' : n >= 6 ? ' or-score-1' : ' or-score-0');
+    return `<span class="or-score${cls}">${label} ${n === null ? '–' : n}/10</span>`;
+  };
+  const checkRow = (label, c) => {
+    const st = (c && c.status) || 'weak';
+    const icon = st === 'ok' ? '✅' : st === 'missing' ? '❌' : '⚠️';
+    return `<div class="or-check"><span style="white-space:nowrap">${icon} ${label}</span>${c && c.note ? `<span class="or-check-note">${esc(c.note)}</span>` : ''}</div>`;
+  };
+  const seg0 = s.seg_0_30 || {};
+  const vp = (s.seg_30_60 && s.seg_30_60.value_promise) || {};
+  const vpLabel = '价值承诺' + (vp.category && vp.status === 'ok' ? '(' + vp.category + ')' : '');
+  return `<div class="cp-summary">
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      ${scoreChip('前30秒', s.score_0_30)}
+      ${scoreChip('30–60秒', s.score_30_60)}
+      ${s.content_type ? `<span class="tag"${s.content_type_note ? ` title="${esc(s.content_type_note)}"` : ''}>内容类型:${esc(s.content_type)}</span>` : ''}
+    </div>
+    ${s.biggest_problem ? `<div style="font-size:13px;margin-top:6px;line-height:1.7"><b>最大的问题:</b>${esc(s.biggest_problem)}</div>` : ''}
+    <div class="or-seg"><b>前 30 秒 · 现象 / 冲突 / 本质</b>
+      ${checkRow('现象', seg0.phenomenon)}
+      ${checkRow('冲突', seg0.conflict)}
+      ${checkRow('本质', seg0.essence)}
+    </div>
+    <div class="or-seg"><b>30–60 秒 · 价值承诺(知识拆解 / 方法 / 认知纠偏 / 具体步骤)</b>
+      ${checkRow(vpLabel, vp)}
+    </div>
+    ${s.conclusion ? `<div style="font-size:13px;margin-top:8px;line-height:1.7"><b>结论:</b>${esc(s.conclusion)}</div>` : ''}
+  </div>`;
+}
+
+function orToolbar(selCount) {
+  const targetHint = (orState.version === 'v1' || orState.version === 'v2')
+    ? '采纳后生成 ' + (orState.version === 'v1' ? 'V1.5' : 'V2.5') + '(底版原样保留)'
+    : '采纳后直接更新当前 ' + (CP_VERSION_LABELS[orState.version] || '') + ' 文案';
+  return `<div class="fp-toolbar">
+    <button class="ghost" onclick="orToggleAll(true)">全选</button>
+    <button class="ghost" onclick="orToggleAll(false)">全不选</button>
+    <button class="primary" id="or-apply-btn" onclick="applyOrReplace()" ${selCount ? '' : 'disabled'}>采纳选中(${selCount})</button>
+    <button class="ghost" onclick="openOrPanel('${orState.version}', true)" title="重新调用 LLM 检查并覆盖当前结果">重新检测</button>
+    <button class="ghost" onclick="orToggleList()">${orState.showList ? '收起列表' : '列表视图'}</button>
+    <span class="hint" style="margin:0">${targetHint};匹配不到的项标红说明,不会静默失败</span>
+  </div>`;
+}
+
+function orHitRow(h, names) {
+  const cls = h.status === 'replaced' ? ' replaced' : (h.status === 'failed' ? ' failed' : '');
+  const dis = h.status === 'replaced' ? ' disabled' : '';
+  return `<div class="fp-hit${cls}">
+    <div class="fp-hit-head">
+      <input type="checkbox" ${h.checked ? 'checked' : ''}${dis} onchange="orToggleHit('${h.id}', this.checked)">
+      <span class="tag">${esc(h.chapter || '开头')}</span>
+      <span class="tag yellow">${esc(names[h.type] || h.type)}</span>
+      <span class="tag">${esc(OR_SEG_NAMES[h.segment] || '')}</span>
+      <span class="or-mode or-mode-${esc(h.mode)}">${h.mode === 'insert_after' ? '插入' : '改写'}</span>
+      ${h.reason ? `<span class="fp-meta" style="color:#92400e">${esc(h.reason)}</span>` : ''}
+    </div>
+    <div class="fp-orig">${esc(h.original)}</div>
+    ${h.original_zh ? `<div class="fp-zh">${esc(h.original_zh)}</div>` : ''}
+    <textarea rows="3" placeholder="修改建议(可编辑后再采纳)"${dis} oninput="orEditSuggestion('${h.id}', this.value)">${esc(h.suggestion)}</textarea>
+    ${h.suggestion_zh ? `<div class="fp-zh">${esc(h.suggestion_zh)}</div>` : ''}
+    ${h.status === 'replaced' ? '<div class="fp-status">✓ 已替换</div>' : ''}
+    ${h.status === 'failed' ? `<div class="fp-status">✗ 替换失败:${esc(h.failReason || '未在指定位置找到原句')}</div>` : ''}
+  </div>`;
+}
+
+function orRefreshApplyBtn() {
+  const n = orState.scan.hits.filter(h => h.checked && h.status !== 'replaced').length;
+  const btn = document.getElementById('or-apply-btn');
+  if (btn) { btn.textContent = `采纳选中(${n})`; btn.disabled = !n; }
+}
+
+function orToggleHit(id, checked) {
+  const h = orState.scan.hits.find(x => x.id === id);
+  if (h) h.checked = checked;
+  orRefreshApplyBtn();
+  refreshOrMarks(); // 勾选态同步到文案高亮(取消勾选的句变暗)
+}
+
+function orToggleAll(checked) {
+  orState.scan.hits.forEach(h => { if (h.status !== 'replaced') h.checked = checked; });
+  renderOrPanel();
+  refreshOrMarks();
+}
+
+function orToggleType(type) {
+  orState.hiddenTypes = orState.hiddenTypes || {};
+  orState.hiddenTypes[type] = !orState.hiddenTypes[type];
+  renderOrPanel();
+  refreshOrMarks();
+}
+
+function orToggleList() {
+  orState.showList = !orState.showList;
+  renderOrPanel();
+}
+
+function orEditSuggestion(id, value) {
+  const h = orState.scan.hits.find(x => x.id === id);
+  if (h) h.suggestion = value; // 只写状态不重渲染,保持输入焦点
+}
+
+// 采纳:v1/v2 → 生成对应 .5(已存在时服务端返 409,确认后覆盖);v1_5/v2_5 → 原地更新
+async function applyOrReplace() {
+  const hits = orState.scan.hits.filter(h => h.checked && h.status !== 'replaced');
+  if (!hits.length) return;
+  const items = hits.map(h => ({ id: h.id, chapter: h.chapter, original: h.original, suggestion: h.suggestion }));
+  const btn = document.getElementById('or-apply-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '采纳中…'; }
+  // 需要读取 409 的 code 字段,不用 api() 助手
+  const post = body => fetch('/api/runs/' + currentRunId + '/opening/replace', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+  }).then(async resp => {
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) { const e = new Error(data.error || String(resp.status)); e.code = data.code; throw e; }
+    return data;
+  });
+  try {
+    let r;
+    try {
+      r = await post({ version: orState.version, items });
+    } catch (e) {
+      if (e.code !== 'overwrite_confirm') throw e;
+      if (!confirm(e.message + ',是否继续?')) { renderOrPanel(); return; }
+      r = await post({ version: orState.version, items, overwrite: true });
+    }
+    const failedById = {};
+    (r.failed || []).forEach(f => { if (f.id) failedById[f.id] = f.reason; });
+    hits.forEach(h => {
+      if (failedById[h.id]) { h.status = 'failed'; h.failReason = failedById[h.id]; }
+      else { h.status = 'replaced'; }
+      h.checked = false;
+    });
+    const failN = (r.failed || []).length;
+    orState.summary = `已采纳 ${r.replaced_count} 处${failN ? ',跳过 ' + failN + ' 处(见标红项)' : ''} — ${CP_VERSION_LABELS[r.target] || ''} 已生成/更新,可对该版本重新检测对比评分`;
+    if (r.target === orState.version) orState.scan.stale = true; // 原地更新后,本次结果基于旧文案
+    closeFpPopover();
+    renderOrPanel();
+    loadRunDetail(); // 刷新文案卡片与高亮(已采纳的句变绿)
+  } catch (e) {
+    renderOrPanel();
+    alert('采纳失败: ' + e.message);
+  }
+}
+
+// ---------- 设置 ----------
+// 渠道商/模型单选均由服务端 providers(含 models)渲染,新增渠道或模型只需改 config.json;
+// 主流程(四阶段生成)与微调按钮(选题推荐/简介/指纹/商业化/留存/强化开头)两套配置独立保存、互不影响
+let settingsCache = null;
+
+function renderProviders(containerId, radioName, providers, selectedId) {
+  document.getElementById(containerId).innerHTML = (providers || []).map(p =>
+    `<label style="display:inline-block;margin-right:14px;font-weight:normal"><input type="radio" name="${radioName}" value="${esc(p.id)}"${p.id === selectedId ? ' checked' : ''}> ${esc(p.name)}${p.has_key ? '' : '(未配置Key)'}</label>`
+  ).join('');
+}
+
+function renderModels(containerId, radioName, models, selectedModel) {
+  const list = models || [];
+  const checked = list.includes(selectedModel) ? selectedModel : list[0];
+  document.getElementById(containerId).innerHTML = list.map(m =>
+    `<label style="display:inline-block;margin-right:14px;font-weight:normal"><input type="radio" name="${radioName}" value="${esc(m)}"${m === checked ? ' checked' : ''}> ${esc(m)}</label>`
+  ).join('');
+}
+
+function modelsOf(providerId) {
+  const p = (((settingsCache || {}).providers) || []).find(x => x.id === providerId);
+  return p ? p.models : [];
+}
+
+// 渠道切换联动:按新渠道重渲染该区块的模型列表(已选模型仍可用则保留)
+function bindProviderModelLinkage(providerDivId, modelDivId, modelRadioName) {
+  document.getElementById(providerDivId).addEventListener('change', e => {
+    if (!e.target || e.target.type !== 'radio') return;
+    renderModels(modelDivId, modelRadioName, modelsOf(e.target.value), selectedRadio(modelRadioName));
+  });
+}
+
+async function loadSettings() {
+  await loadVideoBinding(); // 视频网站绑定状态与会话有效性由此刷新
+  const cfg = await api('/api/settings');
+  settingsCache = cfg;
+  renderProviders('cfg-provider', 'cfg-provider', cfg.providers, cfg.provider);
+  renderModels('cfg-model', 'cfg-model', modelsOf(cfg.provider), cfg.model);
+  document.getElementById('cfg-temp').value = cfg.temperature ?? 0.7;
+  document.getElementById('cfg-maxtokens').value = cfg.max_tokens || 8192;
+  const tw = cfg.tweak || {};
+  renderProviders('twk-provider', 'twk-provider', cfg.providers, tw.provider);
+  renderModels('twk-model', 'twk-model', modelsOf(tw.provider), tw.model);
+  document.getElementById('twk-temp').value = tw.temperature ?? 0.7;
+  document.getElementById('twk-maxtokens').value = tw.max_tokens || 8192;
+}
+
+function selectedRadio(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? el.value : '';
+}
+
+async function saveScopeSettings(scope, pfx) {
+  const status = document.getElementById(pfx + '-status');
+  const body = {
+    scope,
+    provider: selectedRadio(pfx + '-provider'),
+    model: selectedRadio(pfx + '-model'),
+    temperature: parseFloat(document.getElementById(pfx + '-temp').value),
+    max_tokens: parseInt(document.getElementById(pfx + '-maxtokens').value)
+  };
+  if (!body.provider || !body.model) { status.textContent = '请选择渠道商和模型'; return; }
+  try {
+    await api('/api/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    status.textContent = '已保存';
+  } catch (e) {
+    status.textContent = '保存失败: ' + e.message;
+  }
+}
+function saveSettings() { saveScopeSettings('main', 'cfg'); }
+function saveTweakSettings() { saveScopeSettings('tweak', 'twk'); }
+
+async function testScopeConnection(scope, pfx) {
+  const provider = selectedRadio(pfx + '-provider');
+  const status = document.getElementById(pfx + '-status');
+  if (!provider) { status.textContent = '请先选择渠道商'; return; }
+  status.textContent = '测试中...';
+  try {
+    const r = await api('/api/settings/test', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ scope, provider, model: selectedRadio(pfx + '-model') }) });
+    status.textContent = r.ok
+      ? `连通正常(${r.latency_ms}ms,模型 ${r.model || '-'})`
+      : `连接失败(${r.latency_ms}ms): ${r.error || '未知错误'}`;
+  } catch (e) {
+    status.textContent = e.message; // 如「该渠道未配置 API Key」
+  }
+}
+function testConnection() { testScopeConnection('main', 'cfg'); }
+function testTweakConnection() { testScopeConnection('tweak', 'twk'); }
+
+function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+// ================= 视频生成网站集成:绑定 / 频道下拉 / 推送弹窗 =================
+// 与后端 lib/video.js 同一套语言映射(视频后端只有这六种 locale)
+const VIDEO_LOCALE_BY_LANGUAGE = {
+  English: 'en-US', Japanese: 'ja-JP', Korean: 'ko-KR',
+  Spanish: 'es-ES', Portuguese: 'pt-BR', French: 'fr-FR'
+};
+
+let videoBinding = { bound: false, channels: [], base_url: '', username: '', account: null, channels_at: null, default_base_url: '' };
+let videoBindingLoaded = false;
+let videoChannels = [];
+let vbShowForm = false;
+let genChannelId = '';
+let videoDialog = null;
+
+function videoScriptOf(run, version) {
+  if (!run) return '';
+  if (version === 'v1') return run.script_v1 || run.final_script || '';
+  if (version === 'v2') return run.script_v2 || '';
+  if (version === 'v1_5') return run.script_v1_5 || '';
+  if (version === 'v2_5') return run.script_v2_5 || '';
+  return '';
+}
+
+// ---------- 绑定状态 ----------
+async function loadVideoBinding() {
+  try {
+    applyVideoBinding(await api('/api/video/binding'));
+  } catch (e) {
+    const box = document.getElementById('video-binding-body');
+    if (box) box.innerHTML = `<div class="notice err">读取视频绑定状态失败:${esc(e.message)}</div>`;
+  }
+}
+
+function applyVideoBinding(info) {
+  videoBinding = info || { bound: false, channels: [] };
+  videoBindingLoaded = true;
+  videoChannels = Array.isArray(videoBinding.channels) ? videoBinding.channels : [];
+  renderVideoBindingCard();
+  renderGenChannelPicker();
+}
+
+function renderVideoBindingCard() {
+  const box = document.getElementById('video-binding-body');
+  if (!box) return;
+  if (!videoBinding.bound || vbShowForm) {
+    const base = videoBinding.bound ? videoBinding.base_url : (videoBinding.default_base_url || 'http://192.168.110.200:8000');
+    const user = videoBinding.bound ? videoBinding.username : '';
+    box.innerHTML = `
+      <div class="grid">
+        <div><label>视频网站地址</label><input type="text" id="vb-base" value="${esc(base)}" placeholder="http://192.168.110.200:8000"></div>
+        <div><label>用户名</label><input type="text" id="vb-user" value="${esc(user)}" autocomplete="username"></div>
+      </div>
+      <div class="grid" style="margin-top:8px">
+        <div><label>密码</label><input type="password" id="vb-pass" autocomplete="current-password" placeholder="视频网站登录密码"></div>
+        <div style="display:flex;align-items:flex-end;gap:8px">
+          <button class="primary" type="button" onclick="submitVideoBinding()">保存绑定</button>
+          ${videoBinding.bound ? '<button class="ghost" type="button" onclick="cancelVideoBindingForm()">取消</button>' : ''}
+        </div>
+      </div>
+      <div class="hint">保存后会立即登录校验并拉取该账号下全部频道。用户名与密码保存在本机服务端(与 API Key 同级),仅用于会话(12 小时)过期后自动重新登录。</div>
+      <div class="hint" id="vb-status"></div>`;
+    return;
+  }
+  const acc = videoBinding.account || {};
+  box.innerHTML = `
+    <div class="kv"><span class="k">视频网站</span><span class="v">${esc(videoBinding.base_url)}</span></div>
+    <div class="kv"><span class="k">账号</span><span class="v">${esc(videoBinding.username)}${acc.role ? ' · ' + esc(acc.role) : ''}</span></div>
+    <div class="kv"><span class="k">频道</span><span class="v">共 ${videoChannels.length} 个 · 最近同步 ${esc(fmtTime(videoBinding.channels_at))}</span></div>
+    <div class="bind-actions" style="margin-top:10px">
+      <button class="ghost" type="button" onclick="refreshVideoChannels()">刷新频道</button>
+      <button class="ghost" type="button" onclick="showVideoBindingForm()">重新绑定</button>
+      <button class="danger" type="button" onclick="unbindVideo()">解除绑定</button>
+    </div>
+    <div class="hint" id="vb-status"></div>`;
+}
+
+function showVideoBindingForm() { vbShowForm = true; renderVideoBindingCard(); }
+function cancelVideoBindingForm() { vbShowForm = false; renderVideoBindingCard(); }
+
+async function submitVideoBinding() {
+  const base = (document.getElementById('vb-base').value || '').trim();
+  const username = (document.getElementById('vb-user').value || '').trim();
+  const password = document.getElementById('vb-pass').value || '';
+  const status = document.getElementById('vb-status');
+  if (!username || !password) { if (status) status.textContent = '请填写用户名与密码'; return; }
+  if (status) { status.style.color = ''; status.textContent = '正在登录并拉取频道…'; }
+  try {
+    const info = await api('/api/video/binding', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ base_url: base, username, password })
+    });
+    vbShowForm = false;
+    applyVideoBinding(info);
+    const s = document.getElementById('vb-status');
+    if (s) { s.style.color = '#059669'; s.textContent = `绑定成功,已获取 ${videoChannels.length} 个频道`; }
+  } catch (e) {
+    if (status) { status.style.color = '#dc2626'; status.textContent = '绑定失败:' + e.message; }
+  }
+}
+
+async function refreshVideoChannels() {
+  const status = document.getElementById('vb-status');
+  if (status) { status.style.color = ''; status.textContent = '刷新中…'; }
+  try {
+    applyVideoBinding(await api('/api/video/channels/refresh', { method: 'POST' }));
+    const s = document.getElementById('vb-status');
+    if (s) { s.style.color = '#059669'; s.textContent = `已同步 ${videoChannels.length} 个频道`; }
+  } catch (e) {
+    if (status) { status.style.color = '#dc2626'; status.textContent = '刷新失败:' + e.message; }
+  }
+}
+
+async function unbindVideo() {
+  if (!confirm('解除绑定会清除本机保存的视频网站账号与频道缓存;已推送的视频项目不受影响。确定继续?')) return;
+  try {
+    applyVideoBinding(await api('/api/video/binding', { method: 'DELETE' }));
+    genChannelId = '';
+    renderGenChannelPicker();
+  } catch (e) {
+    alert('解除绑定失败:' + e.message);
+  }
+}
+
+// ---------- 创作页频道下拉(模糊搜索) ----------
+function renderGenChannelPicker() {
+  const input = document.getElementById('gen-channel');
+  const hint = document.getElementById('gen-channel-hint');
+  if (!input) return;
+  if (!videoBinding.bound) {
+    input.value = '';
+    input.disabled = true;
+    input.placeholder = '未绑定视频账号';
+    genChannelId = '';
+    if (hint) hint.textContent = '先在「设置」页绑定视频网站账号;不选频道也能生成文案,只是无法推送视频。';
+    return;
+  }
+  input.disabled = false;
+  input.placeholder = `共 ${videoChannels.length} 个频道,输入关键字筛选`;
+  if (genChannelId && !videoChannels.some(c => c.id === genChannelId)) {
+    genChannelId = '';
+    input.value = '';
+  }
+  updateChannelHint();
+}
+
+function updateChannelHint() {
+  const hint = document.getElementById('gen-channel-hint');
+  if (!hint || !videoBinding.bound) return;
+  const ch = videoChannels.find(c => c.id === genChannelId);
+  hint.textContent = ch ? `已选:${ch.name}(推送视频时用作项目频道)` : '未选择频道:该任务生成后无法推送视频。';
+  hint.style.color = ch ? '#059669' : '#9ca3af';
+}
+
+function openChannelPicker() {
+  if (!videoBinding.bound || !videoChannels.length) return;
+  renderChannelList();
+  const box = document.getElementById('gen-channel-list');
+  if (box) box.classList.remove('hidden');
+}
+function closeChannelPicker() {
+  const box = document.getElementById('gen-channel-list');
+  if (box) box.classList.add('hidden');
+}
+function closeChannelPickerSoon() { setTimeout(closeChannelPicker, 150); }
+
+function onChannelInput() {
+  genChannelId = '';
+  updateChannelHint();
+  renderChannelList();
+  const box = document.getElementById('gen-channel-list');
+  if (box) box.classList.remove('hidden');
+}
+
+function onChannelKey(e) {
+  if (e.key === 'Escape') { closeChannelPicker(); return; }
+  if (e.key !== 'Enter') return;
+  e.preventDefault();
+  const box = document.getElementById('gen-channel-list');
+  const first = box && box.querySelector('[data-cid]');
+  if (first) { setChannelSelection(first.dataset.cid, first.dataset.cname); closeChannelPicker(); }
+}
+
+function onChannelListMouseDown(e) {
+  const item = e.target.closest('[data-cid]');
+  if (!item) return;
+  e.preventDefault(); // 防止输入框 blur 先把列表隐藏掉
+  setChannelSelection(item.dataset.cid, item.dataset.cname);
+  closeChannelPicker();
+}
+
+function setChannelSelection(id, name) {
+  genChannelId = id || '';
+  const input = document.getElementById('gen-channel');
+  if (input) input.value = id ? name : '';
+  updateChannelHint();
+}
+
+function hlChannelName(name, q) {
+  const s = esc(name);
+  if (!q) return s;
+  const qs = esc(q);
+  const idx = s.toLowerCase().indexOf(qs.toLowerCase());
+  if (idx < 0) return s;
+  return s.slice(0, idx) + '<span class="combo-mark">' + s.slice(idx, idx + qs.length) + '</span>' + s.slice(idx + qs.length);
+}
+
+function renderChannelList() {
+  const box = document.getElementById('gen-channel-list');
+  if (!box) return;
+  const input = document.getElementById('gen-channel');
+  const q = (genChannelId ? '' : (input ? input.value : '')).trim().toLowerCase();
+  const list = videoChannels.filter(c =>
+    !q || c.name.toLowerCase().includes(q) || (c.url || '').toLowerCase().includes(q));
+  if (!list.length) { box.innerHTML = '<div class="combo-empty">没有匹配的频道</div>'; return; }
+  box.innerHTML = list.map(c => `
+    <div class="combo-item${c.id === genChannelId ? ' on' : ''}" data-cid="${esc(c.id)}" data-cname="${esc(c.name)}">
+      ${hlChannelName(c.name, q)}<span class="combo-sub">${esc(c.url || '')}</span>
+    </div>`).join('');
+}
+
+// ---------- 推送弹窗:存草稿 / 自动生视频 ----------
+async function openVideoDialog(version) {
+  if (!videoBindingLoaded) await loadVideoBinding();
+  const r = lastRunDetail;
+  if (!r) return;
+  if (r.status !== 'done') { alert('仅已完成的任务可推送视频'); return; }
+  const text = videoScriptOf(r, version);
+  if (!text.trim()) { alert('该版本文案不存在'); return; }
+  const pushes = Array.isArray(r.video_pushes) ? r.video_pushes : [];
+  const prev = pushes.filter(p => p.version === version).slice(-1)[0] || null;
+  videoDialog = { version, runId: r.id, run: r, text, prev, busy: false, duplicate: false, error: null, done: null, pendingMode: null };
+  renderVideoDialog();
+  document.getElementById('video-modal').classList.remove('hidden');
+}
+
+function closeVideoDialog() {
+  const mask = document.getElementById('video-modal');
+  if (mask) mask.classList.add('hidden');
+  const finished = videoDialog && videoDialog.done;
+  videoDialog = null;
+  if (finished && currentRunId) loadRunDetail();
+}
+
+function onVideoModalMask(e) {
+  if (e.target === document.getElementById('video-modal')) closeVideoDialog();
+}
+
+function allowDuplicateVideo() {
+  if (!videoDialog) return;
+  videoDialog.duplicate = true;
+  renderVideoDialog();
+}
+
+function renderVideoDialog() {
+  const st = videoDialog;
+  if (!st) return;
+  const r = st.run;
+  const lang = (r.audience || {}).target_language || 'English';
+  const locale = VIDEO_LOCALE_BY_LANGUAGE[lang] || null;
+  const channel = videoChannels.find(c => c.id === r.channel_id) || null;
+  const channelName = channel ? channel.name : (r.channel_name || '');
+  const words = st.text.trim().split(/\s+/).filter(Boolean).length;
+
+  document.getElementById('video-modal-title').textContent = `推送 ${versionLabel(st.version)} 文案到视频网站`;
+  const body = document.getElementById('video-modal-body');
+  const foot = document.getElementById('video-modal-foot');
+
+  if (st.done) {
+    body.innerHTML = `
+      <div class="notice info">${esc(st.done.message)}</div>
+      ${st.done.warning ? `<div class="notice warn">${esc(st.done.warning)}</div>` : ''}
+      ${st.done.url ? `<div class="kv" style="margin-top:10px"><span class="k">项目</span><span class="v"><a href="${esc(st.done.url)}" target="_blank" rel="noopener">在视频网站打开</a></span></div>` : ''}`;
+    foot.innerHTML = '<button class="primary" type="button" onclick="closeVideoDialog()">关闭</button>';
+    return;
+  }
+
+  const problems = [];
+  if (!videoBinding.bound) problems.push('尚未绑定视频网站账号,请先到「设置」页完成绑定。');
+  if (!r.channel_id) problems.push('该任务创建时未选择频道,无法推送。请新建任务并在「新主题」右侧选择频道。');
+  if (!locale) problems.push(`该任务的目标语言「${lang}」视频网站不支持,仅支持:English / Japanese / Korean / Spanish / Portuguese / French。`);
+  if (st.prev && !st.duplicate) {
+    problems.push(`该版本的文案已推送过(${st.prev.status_label || st.prev.status}${st.prev.created_at ? ' · ' + fmtTime(st.prev.created_at) : ''})。如需再建一个,请点「再建一个」。`);
+  }
+
+  body.innerHTML = `
+    <div class="kv"><span class="k">版本</span><span class="v">${esc(versionLabel(st.version))}</span></div>
+    <div class="kv"><span class="k">标题</span><span class="v">${esc(r.topic || '')}</span></div>
+    <div class="kv"><span class="k">频道</span><span class="v">${esc(channelName || '未选择')}</span></div>
+    <div class="kv"><span class="k">语言</span><span class="v">${esc(lang)}${locale ? ' → ' + esc(locale) : ''}</span></div>
+    <div class="kv"><span class="k">文案</span><span class="v">${words} 词 · ${st.text.length} 字符(已去掉标题行与章节标签)</span></div>
+    <div class="script-peek">${esc(st.text.slice(0, 260))}${st.text.length > 260 ? '\n…' : ''}</div>
+    ${problems.map(p => `<div class="notice warn">${esc(p)}</div>`).join('')}
+    ${st.error ? `<div class="notice err">${esc(st.error)}</div>` : ''}
+    ${st.busy ? `<div class="notice info modal-loading">${st.pendingMode === 'auto' ? '正在创建项目并启动全链路自动生产,通常需要 10–60 秒,请勿关闭…' : '正在创建项目…'}</div>` : ''}
+    <div class="notice ${st.pendingMode === 'auto' ? 'warn' : 'info'}">${st.pendingMode === 'auto'
+      ? '自动生视频会立即提交并冻结生产快照(文案、角色、风格、音色、语言、画幅不可再改),随后自动串联配音 → 导演 → 故事板 → 视频 → 合成,并消耗真实额度。'
+      : '存草稿只创建项目(视频网站里为「草稿」阶段),不会启动配音与视频生成,之后可在视频网站手动提交生产。'}</div>`;
+
+  const blocked = st.busy || problems.length > 0;
+  foot.innerHTML = `
+    <button class="ghost" type="button" onclick="closeVideoDialog()" ${st.busy ? 'disabled' : ''}>取消</button>
+    ${st.prev && !st.duplicate ? '<button class="ghost" type="button" onclick="allowDuplicateVideo()">再建一个</button>' : ''}
+    <button class="ghost" type="button" onclick="pushVideo('draft')" ${blocked ? 'disabled' : ''}>${st.busy && st.pendingMode === 'draft' ? '创建中…' : '存草稿'}</button>
+    <button class="primary" type="button" onclick="pushVideo('auto')" ${blocked ? 'disabled' : ''}>${st.busy && st.pendingMode === 'auto' ? '启动中…' : '自动生视频'}</button>`;
+}
+
+async function pushVideo(mode) {
+  const st = videoDialog;
+  if (!st || st.busy) return;
+  st.busy = true;
+  st.pendingMode = mode;
+  st.error = null;
+  renderVideoDialog();
+  try {
+    const res = await api(`/api/runs/${st.runId}/video`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ version: st.version, mode, confirm_duplicate: !!st.duplicate })
+    });
+    const p = res.push || {};
+    const base = (videoBinding.base_url || '').replace(/\/+$/, '');
+    st.done = {
+      message: mode === 'auto'
+        ? `已提交自动生产:视频项目「${p.project_title || st.run.topic}」已创建并开始全链路自动生产。`
+        : `已存为草稿:视频项目「${p.project_title || st.run.topic}」已创建,可在视频网站继续提交生产。`,
+      warning: res.warning || null,
+      url: p.project_id && base ? base + '/#/project/' + encodeURIComponent(p.project_id) + '/auto_progress' : null
+    };
+    st.busy = false;
+    st.pendingMode = null;
+    renderVideoDialog();
+  } catch (e) {
+    st.busy = false;
+    st.pendingMode = null;
+    st.error = e.message;
+    renderVideoDialog();
+  }
+}
+
+// ---------- 列表:批量刷新视频状态 ----------
+async function refreshVideoStates() {
+  const btn = document.getElementById('runs-refresh-video');
+  const hint = document.getElementById('runs-video-hint');
+  if (!btn) return;
+  const label = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '刷新中…';
+  if (hint) { hint.style.color = '#6b7280'; hint.textContent = '正在向视频网站查询…'; }
+  try {
+    const r = await api('/api/video/refresh-all', { method: 'POST' });
+    await loadRuns();
+    if (hint) {
+      const fails = r.failures || [];
+      hint.style.color = fails.length ? '#b45309' : '#059669';
+      hint.textContent = `已刷新 ${r.updated}/${r.total} 个已推送任务` + (fails.length ? `,${fails.length} 个失败:${fails[0].error || ''}` : '');
+    }
+  } catch (e) {
+    if (hint) { hint.style.color = '#dc2626'; hint.textContent = '刷新失败:' + e.message; }
+  } finally {
+    btn.disabled = false;
+    btn.textContent = label;
+  }
+}
+
+bindProviderModelLinkage('cfg-provider', 'cfg-model', 'cfg-model');
+bindProviderModelLinkage('twk-provider', 'twk-model', 'twk-model');
+
+loadVideoBinding();
+showView('generate');
+</script>
+</body>
+</html>

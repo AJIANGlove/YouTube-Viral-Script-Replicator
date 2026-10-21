@@ -1,0 +1,69 @@
+{
+  "id": "run_69b819ed4dbd",
+  "status": "failed",
+  "current_step": 2,
+  "steps": {
+    "blueprint": {
+      "status": "done",
+      "secs": 512.5,
+      "chars": 9352,
+      "stop_reason": "stop",
+      "finished_at": "2026-10-08T08:41:23.236Z"
+    },
+    "script": {
+      "status": "failed",
+      "started_at": "2026-10-08T08:41:23.249Z"
+    }
+  },
+  "created_at": "2026-10-08T08:32:50.683Z",
+  "updated_at": "2026-10-08T09:09:43.233Z",
+  "asset_id": "the-economics-of-owning-a-coffee-shop",
+  "asset_name": "小生意经济学拆解（高毛利幻觉的解剖）",
+  "topic": "The Hidden Economics of Korean Cafés",
+  "audience": {
+    "target_language": "English",
+    "target_country": "US",
+    "target_audience": "",
+    "video_goal": "23分钟"
+  },
+  "prompt_version": "v3",
+  "started_at": "2026-10-08T08:32:50.696Z",
+  "attempts": [
+    {
+      "ts": "2026-10-08T08:41:23.234Z",
+      "label": "Step 1",
+      "provider": "kimi",
+      "model": "kimi-k3",
+      "ok": true,
+      "secs": 512.5,
+      "stop_reason": "stop"
+    },
+    {
+      "ts": "2026-10-08T09:09:43.232Z",
+      "label": "Step 2",
+      "provider": "kimi",
+      "model": "kimi-k3",
+      "ok": false,
+      "secs": 1700,
+      "error": "Step 2 共 4 次调用均失败: HTTP 429: {\"error\":{\"message\":\"Your credit balance is running low for account \\u003corg-335ee9c782304e86a89c51eddac199a6\\u003e, please recharge immediately to avoid service disruption\",\"type\":\"exceeded_current_quota_error\"}}"
+    }
+  ],
+  "checks": {
+    "blueprint": {
+      "plagiarism": [],
+      "duration": {
+        "ok": true,
+        "detail": "23:00 ≈ 目标 23:00",
+        "endSec": 1380,
+        "goalSec": 1380
+      }
+    }
+  },
+  "outputs": {
+    "step1": "{\n  \"topic\": \"The Hidden Economics of Korean Cafés\",\n  \"chapters\": [\n    {\n      \"id\": \"FS01\",\n      \"time_range\": \"0:00-0:41\",\n      \"function\": \"promise_setup\",\n      \"purpose\": \"用第二人称复述“在首尔开一家梦想中的漂亮咖啡馆”的幻想,亮出咖啡饮品惊人的表面毛利,立刻用韩国咖啡馆市场的饱和与倒闭数据击碎幻觉,抛出主问题“钱到底去哪了”。\",\n      \"information_goal\": \"需要三类事实类型:韩国咖啡馆总量/密度及市场饱和程度的权威统计量级;一杯代表性咖啡饮品的表面毛利率量级;新开咖啡馆若干年内的倒闭/停业率数据。禁止编造具体数值,制作期以公开行业数据填充。\",\n      \"emotion_goal\": \"aspiration_then_shock——先唤起审美咖啡馆的开店梦,再用市场冷水惊醒。\",\n      \"retention_goal\": \"第二人称幻想+毛利幻觉+倒闭率反转三连击,主问题悬挂;前30秒内完成首次数字兑现。\",\n      \"word_budget\": 132,\n      \"open_loop\": {\n        \"open\": \"LOOP01主问题:表面毛利如此可观的韩国咖啡馆,钱到底消失在哪里?\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\"\n    },\n    {\n      \"id\": \"FS02\",\n      \"time_range\": \"0:41-1:34\",\n      \"function\": \"belief_challenge\",\n      \"purpose\": \"破除“生意好=赚钱”与“饮品好=活得好”两个次级幻觉,用繁忙却亏损的店主画像制造不安,预告真正的原因被严重低估。\",\n      \"information_goal\": \"需要:满座排队却实得收入不及员工的在营店主对照画像(以韩国薪资水平为基准);失败原因分布中“产品口味差”占比极低的证据类型;对“被低估的真正原因”的悬念预告。\",\n      \"emotion_goal\": \"discomfort——店主画像的辛酸感。\",\n      \"retention_goal\": \"繁忙画面与亏损现实的落差+产品质量排除句+被低估原因预告,让观众放弃产品解释并等待真正答案。\",\n      \"word_budget\": 171,\n      \"open_loop\": {\n        \"open\": \"LOOP02:那个悄悄吃掉生意、却被几乎所有人低估的东西是什么?\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"排除句与店主画像须全新表述:避开源案例的排除句式、其超长工时店主画像的具体数字与细节,以韩国语境重新具名画像。\"\n    },\n    {\n      \"id\": \"FS03\",\n      \"time_range\": \"1:34-2:28\",\n      \"function\": \"evidence_build\",\n      \"purpose\": \"第一个被低估的开业前决策:规模选择的两端陷阱——外带小档口、社区中店、大型多楼层打卡店三档各自的死法。\",\n      \"information_goal\": \"需要:三档规模各自的收入上限与固定成本结构逻辑(最小档限死收入、最大档限死生存);首尔不同档位的租金与人力量级事实类型;档位选择后悔现象的判词依据。\",\n      \"emotion_goal\": \"uncertainty——规模选择的两难。\",\n      \"retention_goal\": \"三档权衡推演+判词收束,观众理解两端皆陷阱、中档难选中。\",\n      \"word_budget\": 174,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"档位判词为价值定性句,须全新:避开源案例“首店选档必错”式判词落点,生成属于韩国三档语境的新判词。\"\n    },\n    {\n      \"id\": \"FS04\",\n      \"time_range\": \"2:28-4:19\",\n      \"function\": \"reveal\",\n      \"purpose\": \"全片核心解剖:把一杯代表性饮品(如冰美式)的售价逐项拆到只剩零头,表面毛利被拆成真实净利,幻觉正式死亡。\",\n      \"information_goal\": \"需要:韩国市场逐项成本事实类型——原料与包材、人力工时、租金分摊、支付通道与外卖平台手续费、水电杂费、损耗、税负;至少一个有公开记录的单项年度总额冲击案例;最终净利率与表面毛利的显式对照。禁止编造具体数字。\",\n      \"emotion_goal\": \"revelation——成本解剖的智性冲击。\",\n      \"retention_goal\": \"逐项短句报数+真实年度总额案例+净利vs毛利对照,构成全片第一信息峰值并闭合主问题的数字级答案。\",\n      \"word_budget\": 357,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"LOOP01关闭:以逐项解剖后的净利落点数字,给出“钱去哪了”的数字级答案\"\n      },\n      \"originality_constraint\": \"\"\n    },\n    {\n      \"id\": \"FS05\",\n      \"time_range\": \"4:19-5:52\",\n      \"function\": \"worldview_upgrade\",\n      \"purpose\": \"世界观升级:揭示韩国咖啡馆需求的时间结构——高峰集中与久坐型占座并存,而产能与成本全天不退场,解构“多卖点不就行了”的反驳。\",\n      \"information_goal\": \"需要:需求时段分布与翻台率事实类型;久坐型顾客(学习/办公)占座时长与单杯贡献的对照;为高峰准备的产能在闲时的闲置成本;高峰与闲时单位成本的显式对照数字。\",\n      \"emotion_goal\": \"insight——结构重定义带来的顿悟。\",\n      \"retention_goal\": \"一句重命名式判断+闲置产能具象化+高峰/闲时单位成本对照+“忙不等于赚”式判词收束。\",\n      \"word_budget\": 299,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"LOOP02关闭:以新的结构重定义揭示“被严重低估的东西”就是这门生意的时间与空间结构\"\n      },\n      \"originality_constraint\": \"核心比喻章:此处需要一句把“卖咖啡”重构为另一种事物的重命名判断。避开源案例把生意重构为“出租某资源”的比喻方向及其配套分钟数与闲时单位成本数字;新比喻须原生自韩国久坐/打卡语境,蓝图不预写落点词。\"\n    },\n    {\n      \"id\": \"FS06\",\n      \"time_range\": \"5:52-7:23\",\n      \"function\": \"evidence_build\",\n      \"purpose\": \"顾客分层:谁才真正在养这家店。\",\n      \"information_goal\": \"需要:至少三类顾客(外带通勤型、忠诚常客型、久坐学习型、周末打卡型)的消费画像、到店频次、客单价与月度价值对照;忠诚顾客客单价溢价的数据类型。\",\n      \"emotion_goal\": \"recognition——观众在画像中认出自己。\",\n      \"retention_goal\": \"多画像自我代入+同样进店次数下的月值倍数差对照,观众理解常客与加购才是利润所在。\",\n      \"word_budget\": 293,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\"\n    },\n    {\n      \"id\": \"FS07\",\n      \"time_range\": \"7:23-8:33\",\n      \"function\": \"evidence_build\",\n      \"purpose\": \"附加消费经济学:不加人不加设备让客单价跳升的机制与菜单设计(甜品、招牌特调、打卡款)。\",\n      \"information_goal\": \"需要:加购一件商品带来的客单价跳升幅度数据;菜单价格锚定的设计手法;高毛利配角品类的成本率数字;自制与外包两条供货路径的成本取舍。\",\n      \"emotion_goal\": \"delight——机制揭开的巧妙感。\",\n      \"retention_goal\": \"章内自问自答:加购机制+价格锚定+配角成本率揭示,观众理解菜单是被设计的利润机器。\",\n      \"word_budget\": 225,\n      \"open_loop\": {\n        \"open\": \"LOOP03:为什么聪明的店主痴迷于让你多点一件?\",\n        \"close\": \"LOOP03关闭:以加购跳升幅度与配角成本率数字作答\"\n      },\n      \"originality_constraint\": \"\"\n    },\n    {\n      \"id\": \"FS08\",\n      \"time_range\": \"8:33-9:15\",\n      \"function\": \"conflict_escalation\",\n      \"purpose\": \"扩张诱惑的反面:再进一步(加正餐、扩厨房、加楼层),配套合规与工程成本就爆炸。\",\n      \"information_goal\": \"需要:扩品类/扩空间触发的配套清单事实类型——排烟、消防、上下水、装修与许可;对应造价量级;菜单纪律判词的依据。\",\n      \"emotion_goal\": \"caution——扩张成本爆炸的警示。\",\n      \"retention_goal\": \"配套造价清单冲击+菜单纪律判词,观众理解为什么成功的店克制菜单。\",\n      \"word_budget\": 135,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"菜单纪律判词为价值定性句,须全新:避开源案例以“每件商品只有两个去向”收束的判词结构。\"\n    },\n    {\n      \"id\": \"FS09\",\n      \"time_range\": \"9:15-11:11\",\n      \"function\": \"evidence_build\",\n      \"purpose\": \"选址与租约:开业前最不可逆的决定,租金结构与条款里藏着利润抽成;韩国特有的保证金与权利金机制放大不可逆性。\",\n      \"information_goal\": \"需要:选址流量逻辑事实类型(街角溢价、地铁动线、双向人流);韩国租赁结构术语(大额保证金、权利金、月租递增条款)的通俗解释;递增/抽成条款的数值推演与个人资金风险;商圈生命周期(街区爆红→租金跳涨→老店被挤出)的机制。\",\n      \"emotion_goal\": \"gravity——不可逆性的沉重。\",\n      \"retention_goal\": \"条款机制揭示+数值推演+“选错无法回头”的锁死感,观众理解位置与租约提前锁定利润归属。\",\n      \"word_budget\": 374,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\"\n    },\n    {\n      \"id\": \"FS10\",\n      \"time_range\": \"11:11-13:08\",\n      \"function\": \"conflict_escalation\",\n      \"purpose\": \"开业前烧钱:真实启动成本与第一死因——审美装修工程本身就是最大的隐形账单。\",\n      \"information_goal\": \"需要:两档真实启动总成本(保证金、审美装修工程、设备、首批物料)的事实类型;没人拍照的隐蔽工程项造价区间;审批与装修期空付租金/占用资金的机制;开业前现金枯竭的第一死因判词依据。\",\n      \"emotion_goal\": \"sticker_shock——启动成本量级冲击。\",\n      \"retention_goal\": \"账面预算vs真实成本落差+隐蔽项造价+第一死因判词,构成全片中段信息峰值。\",\n      \"word_budget\": 377,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"第一死因为价值归因句,须全新:避开源案例“开业前资金问题先于客流问题”的归因句式与其两档启动成本数字,以韩国押金/装修结构给出新归因表述。\"\n    },\n    {\n      \"id\": \"FS11\",\n      \"time_range\": \"13:08-14:46\",\n      \"function\": \"conflict_escalation\",\n      \"purpose\": \"脆弱性演示:普通的一周坏运气如何抹掉几个月利润,以及顾客习惯的不可逆流失。\",\n      \"information_goal\": \"需要:多事件叠加的坏一周场景事实类型(核心设备故障、兼职缺勤、平台或口碑事件、季节因素);单日损失量级与紧急维修费率;常客被打断日常动线后在别处形成新习惯的长期代价。\",\n      \"emotion_goal\": \"tension——坏一周的窒息感。\",\n      \"retention_goal\": \"事件级联场景+紧急费率数字+习惯流失判词,观众体会小本生意容错率之低。\",\n      \"word_budget\": 316,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\"\n    },\n    {\n      \"id\": \"FS12\",\n      \"time_range\": \"14:46-15:59\",\n      \"function\": \"evidence_build\",\n      \"purpose\": \"巨头不对称:韩国大型连锁在采购、毛利、容错上的结构性优势,正面拼价格与速度必输。\",\n      \"information_goal\": \"需要:头部连锁的门店数与采购体量量级;独立店与连锁的毛利区间对照;低价连锁的交叉补贴逻辑与数据化运营画面(对照独立店的经验式管理)。\",\n      \"emotion_goal\": \"awe——规模压迫感。\",\n      \"retention_goal\": \"规模数字冲击+毛利区间对照+“那独立店还怎么打”的悬念预告。\",\n      \"word_budget\": 235,\n      \"open_loop\": {\n        \"open\": \"LOOP04:独立咖啡馆凭什么和这些庞然大物竞争?\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\"\n    },\n    {\n      \"id\": \"FS13\",\n      \"time_range\": \"15:59-17:27\",\n      \"function\": \"worldview_upgrade\",\n      \"purpose\": \"差异化出路:卖连锁结构性无法复制的东西,获得定价权与抗周期能力。\",\n      \"information_goal\": \"需要:不可复制项的事实类型(空间设计、限定特调、主理人品牌、社区黏性);消费者从平价连锁向精品单店迁移的升级现象;溢价对冲原料成本波动的机制;今日大牌也曾是单店的对照案例类型。\",\n      \"emotion_goal\": \"hope——出路的豁然开朗。\",\n      \"retention_goal\": \"出路答案+消费升级现象+定价权逻辑,闭合LOOP04,情绪由压迫转向希望。\",\n      \"word_budget\": 283,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"LOOP04关闭:以“卖连锁无法复制之物”的差异化答案兑现\"\n      },\n      \"originality_constraint\": \"核心论点章:避开源案例以“地方感+忠诚”定义不可复制性的落点词,以及“小额成本差对大额售价差”的定价权表述;不可复制项须以韩国语境重新定义,蓝图不预写最终答案。\"\n    },\n    {\n      \"id\": \"FS14\",\n      \"time_range\": \"17:27-19:10\",\n      \"function\": \"evidence_build\",\n      \"purpose\": \"人力刚性:工资钟从不停摆,培训投资随人离开,政策还在推高底线。\",\n      \"information_goal\": \"需要:非产出工时的事实类型(开档、打烊、盘点、培训);韩国最低时薪政策轨迹对人力成本占比的推动;兼职高流动下培训沉没成本的流失;排班不可预测性的机制。\",\n      \"emotion_goal\": \"weight——人力刚性的持续压迫。\",\n      \"retention_goal\": \"非产出工时清单+政策推动数字+排班两难判词,观众理解排班是永恒的猜谜。\",\n      \"word_budget\": 332,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"排班判词为价值定性句,须全新:避开源案例“任何工具都预测不了某个工作日早晨”式落点句式。\"\n    },\n    {\n      \"id\": \"FS15\",\n      \"time_range\": \"19:10-20:25\",\n      \"function\": \"reveal\",\n      \"purpose\": \"真正的商业模式:门店只是品牌的橱窗,利润在别处建造——自烘焙批发、零售商品、订阅、课程、联名与加盟化。\",\n      \"information_goal\": \"需要:柜台之外各渠道(自烘焙批发、零售豆/周边、订阅、课程、品牌合作)的利润率对照事实类型;一件零售商品与一杯饮品的单位利润换算关系(新倍数);有经验者仍继续开店的原因。\",\n      \"emotion_goal\": \"clarity——真实商业模式的通透。\",\n      \"retention_goal\": \"商业模式揭示+单位利润换算冲击,章内自问自答,观众理解活得好的店把生意做到了柜台之外。\",\n      \"word_budget\": 242,\n      \"open_loop\": {\n        \"open\": \"LOOP05:既然这么难,为什么有经验的人还继续开更多店?\",\n        \"close\": \"LOOP05关闭:以“门店不是整个公司”的商业模式揭示兑现\"\n      },\n      \"originality_constraint\": \"核心重命名章:避开源案例对“门店零售地位”的否定式定性句式,以及“一件零售商品等于若干杯饮品”的具体换算倍数;须以新句式与新换算落点呈现。\"\n    },\n    {\n      \"id\": \"FS16\",\n      \"time_range\": \"20:25-23:00\",\n      \"function\": \"closure\",\n      \"purpose\": \"双情景对照:同一起点营收在精细运营与普通运营下的两个结局,并以“真正的产品”重定义收束全片。\",\n      \"information_goal\": \"需要:同一起点营收下乐观与现实两个净利结局数字(新区间);两者差距金额及其归因(开业前已锁定的决策);一句全新的“真正的产品”重定义。\",\n      \"emotion_goal\": \"sober_resolution——双结局对照后的清醒。\",\n      \"retention_goal\": \"双结局数字对照+开业前归因+全片重定义收束,构成情绪与信息的双重最高回报。\",\n      \"word_budget\": 499,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"全片最终重命名:避开源案例把“真正产品”落成一份运营要素清单的收束方式及其清单内容、双结局净利率区间数字;须为韩国咖啡馆生成全新的“真正产品”重定义,蓝图不预写答案。\"\n    }\n  ]\n}",
+    "step2": "",
+    "step3": "",
+    "step4": ""
+  },
+  "error": "Step 2 失败: Step 2 共 4 次调用均失败: HTTP 429: {\"error\":{\"message\":\"Your credit balance is running low for account \\u003corg-335ee9c782304e86a89c51eddac199a6\\u003e, please recharge immediately to avoid service disruption\",\"type\":\"exceeded_current_quota_error\"}}"
+}

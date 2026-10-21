@@ -1,0 +1,44 @@
+{
+  "verdict": "fail",
+  "total_score": 72,
+  "issues": [
+    {
+      "location": "CH09 4:36-4:40",
+      "dimension": "originality",
+      "severity": "blocker",
+      "evidence_quote": "So let me throw something at you that sounds a little unhinged.",
+      "problem": "查重报告命中6词以上连续重合'let me throw something at you that'。虽然 style.language_patterns 的 LP03（元叙述兴奋点预告）将 'let me throw something at you' 列为公式句式,但豁免仅覆盖该短语本身;查重命中的是包含额外词'that'的更长串,且该串与源案例逐字重合超过公式模板范围。按铁律默认 blocker,LP03 只能豁免'let me throw something at you'这一模板本体,无法覆盖后续与源视频逐字相同的连续片段。需改写句尾结构以脱离逐字重合。",
+      "suggestion": "保留 LP03 的预告功能但改写落点,例如'So here's an idea that sounds slightly unhinged'或'Let me hand you something that sounds a bit crazy',避免与源字幕出现6词以上逐字重合。"
+    },
+    {
+      "location": "CH01 0:00-0:12",
+      "dimension": "density",
+      "severity": "major",
+      "evidence_quote": "You're crouched in a forest. Dawn. Cold mist on your skin. A bitter smell rises off a cracked red berry. No mugs. No morning alarm. No barista spelling your name wrong. Just you, and one strange little seed you're about to bite into.",
+      "problem": "词密度报告显示 43词/215wpm,为目标149的144%,超标。word_budget 为30词,实际43词,超出约43%。开场语速过快会破坏 immersion 情绪的沉浸铺垫节奏。",
+      "suggestion": "压缩到30词左右,删减一处否定排比项(如去掉'No morning alarm'或'No barista spelling your name wrong'其一),保留感官场景与一处现代物品反差幽默即可。"
+    },
+    {
+      "location": "CH02 0:12-0:30",
+      "dimension": "density",
+      "severity": "minor",
+      "evidence_quote": "So. When did humans start drinking coffee? That's the question. But here's the thing. It doesn't start with a café. Not with Italy. Not with a roast. Not even with a cup. Because that jolt you chase every morning? Humans were reaching for it long before anyone thought to brew anything at all.",
+      "problem": "词密度报告显示 53词/177wpm,为目标149的119%,超标。word_budget 为45词,实际53词。承诺重构段语速偏快,略压缩可提升 curiosity 的停顿感。",
+      "suggestion": "删减一到两处排除项或精简收尾从句,压至45词以内,让'not X, not Y'排除法阶梯有呼吸感。"
+    }
+  ],
+  "factual_claims": [
+    { "location": "CH03 0:30-1:00", "claim": "考古学家发现了因研磨植物而磨损的石器,已有数万年历史,位于古代炉灶旁", "risk": "medium" },
+    { "location": "CH04 1:00-1:54", "claim": "某些植物制造苦味化合物专门用于毒杀啃食它们的昆虫,这种化学物质恰好锁定人类神经系统中通常告知大脑疲倦的受体,并阻断该信号", "risk": "medium" },
+    { "location": "CH05 1:54-2:42", "claim": "研究者在早期定居社群中挖出内壁烘烤有干燥植物残留的陶器,证明有人明确浸泡过某种植物", "risk": "medium" },
+    { "location": "CH06 2:42-3:06", "claim": "一位古代旅行者曾记载山区居民用浆果酿造一种深色提神饮料,后世考古学家在同一山区挖掘证实其记载属实且有所保守", "risk": "high" },
+    { "location": "CH07 3:06-4:12", "claim": "在这些浆果最初被重视的高地,人们把整颗果实连果肉果皮种子一起研磨,拌入动物脂肪,做成密实的能量球,供战士和旅行者食用;另有地方生嚼叶片,还有地方将果肉发酵成温和的酒", "risk": "high" },
+    { "location": "CH08 4:12-4:36", "claim": "近年发掘不断发现该植物在比教科书记载更早的时期、在旧时间线声称从未到达的地区被使用,每次新发掘都把年代往前推", "risk": "high" },
+    { "location": "CH09 4:36-6:00", "claim": "有真正的研究者提出一种被称为'intoxication drive'的严肃理论,认为人类对致幻/改变心智植物的渴求是一种基本欲求,与饥饿口渴并列", "risk": "medium" },
+    { "location": "CH09 4:36-6:00", "claim": "野生山羊啃食某些灌木后会兴奋跳跃;鸟类大量食用发酵浆果后会撞向窗户;某些猴子被观察到反复回到同一种致醉果实处,显然不为营养", "risk": "medium" },
+    { "location": "CH10 6:00-7:12", "claim": "在一个文明中医师煎煮苦味提神植物以增强专注、对抗疲劳并作为药物开处方;在另一文明healers用同类植物镇痛、安抚肠胃并按重量精确给药;在第三个文明战士长途行军前被分发提神叶片以抑制饥饿", "risk": "high" },
+    { "location": "CH11 7:12-7:54", "claim": "现代神经科学显示,共享仪式会降低人的戒备并激活构建信任与归属感的相同神经回路", "risk": "medium" },
+    { "location": "CH12 7:54-8:54", "claim": "该植物如今被种植在过去养活家庭的土地上,由报酬极低的人采摘,并作为一种生活方式卖回给我们", "risk": "medium" },
+    { "location": "CH13 8:54-10:00", "claim": "这种为继续前行而伸手求助于植物的本能,比农业、比文字都更古老", "risk": "medium" }
+  ]
+}

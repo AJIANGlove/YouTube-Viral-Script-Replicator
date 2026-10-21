@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>原文对照</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; margin: 0; background: #f5f6f8; color: #222; }
+  header { background: #1f2937; color: #fff; padding: 14px 20px; display: flex; align-items: center; gap: 16px; }
+  header .back { color: #9ca3af; text-decoration: none; font-size: 13px; white-space: nowrap; padding: 4px 10px; border: 1px solid #4b5563; border-radius: 5px; }
+  header .back:hover { color: #fff; border-color: #9ca3af; }
+  header .titles { min-width: 0; }
+  header h1 { font-size: 17px; margin: 0; }
+  header .sub { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+  main { max-width: 960px; margin: 0 auto; padding: 16px; }
+  .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 22px; }
+  .cue { display: grid; grid-template-columns: 118px 1fr 1fr; gap: 14px; padding: 8px 0; border-bottom: 1px solid #f3f4f6; }
+  .cue:last-child { border-bottom: none; }
+  .cue .time { font-family: Consolas, "Courier New", monospace; font-size: 12px; color: #9ca3af; padding-top: 2px; font-variant-numeric: tabular-nums; }
+  .cue .en { font-size: 14px; line-height: 1.7; color: #1f2937; }
+  .cue .zh { font-size: 13px; line-height: 1.7; color: #6b7280; border-left: 1px solid #e5e7eb; padding-left: 14px; }
+  .hint { color: #9ca3af; font-size: 13px; text-align: center; padding: 40px 0; }
+  .total { font-size: 12px; color: #9ca3af; text-align: center; padding: 12px 0 4px; }
+  button.ghost { padding: 6px 12px; background: #fff; color: #374151; border: 1px solid #d1d5db; border-radius: 5px; font-size: 12px; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="/">← 返回资产库</a>
+  <div class="titles">
+    <h1 id="title">原文对照</h1>
+    <div class="sub" id="subtitle"></div>
+  </div>
+</header>
+<main>
+  <div class="card" id="content"><div class="hint">加载中…</div></div>
+  <div class="total" id="total"></div>
+</main>
+<script>
+function esc(s) { return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function fmtT(t) { return (t || '').replace(',', '.').slice(0, 12); }
+
+async function load() {
+  const id = new URLSearchParams(location.search).get('id');
+  const content = document.getElementById('content');
+  if (!id) { content.innerHTML = '<div class="hint">缺少资产 id 参数。</div>'; return; }
+  content.innerHTML = '<div class="hint">加载中…</div>';
+  let r;
+  try {
+    const resp = await fetch('/api/assets/' + encodeURIComponent(id) + '/source');
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || ('HTTP ' + resp.status));
+    r = data;
+  } catch (e) {
+    content.innerHTML = `<div class="hint">加载失败:${esc(e.message)}<br><br><button class="ghost" onclick="load()">重试</button></div>`;
+    return;
+  }
+  document.title = '原文对照 · ' + (r.name || r.id);
+  document.getElementById('title').textContent = r.name || r.id;
+  document.getElementById('subtitle').textContent =
+    (r.source_title_zh ? r.source_title_zh + ' · ' : '') + (r.source_title || '');
+  content.innerHTML = r.cues.map(c =>
+    `<div class="cue"><span class="time">${fmtT(c.start)} → ${fmtT(c.end)}</span>` +
+    `<span class="en">${esc(c.en)}</span><span class="zh">${esc(c.zh || '')}</span></div>`
+  ).join('') || '<div class="hint">无内容。</div>';
+  document.getElementById('total').textContent = `共 ${r.cues.length} 条`;
+}
+load();
+</script>
+</body>
+</html>

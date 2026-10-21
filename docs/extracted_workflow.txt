@@ -1,0 +1,1252 @@
+系统设计与实施手册
+爆款文案逆向工程系统
+阶段 1-8 工作流（重构版）
+Title + SRT  →  Framework / Timeline / Style / Examples
+保留 V2.2 引擎 A 的八阶段分析逻辑，将最终交付从“人类可读分析报告”改造为“机器可导入的四层资产数据”。
+版本 1.0  |  2026-07-27
+适用范围：MVP、Claude 工作流交接、后端导入与质量验收
+
+1. 执行摘要
+最终决策  标题与 SRT 为必填输入。引擎 A 连续执行阶段 1-8；阶段 8 在完成结尾机制分析后，统一标准化并输出 framework.json、timeline.json、style.json、examples.json。默认批处理模式不要求用户逐阶段确认，但每阶段都保存可追溯中间结果。
+本重构不把单条爆款视频直接认定为“已验证通用框架”。由单条标题与 SRT 产出的 Framework 状态必须是 candidate（候选框架）；只有在多个案例或真实 CTR、留存、观看时长等数据支持后，才能升级为 validated。
+资产
+核心问题
+主要来源
+阶段8用途
+Framework
+为什么有效
+阶段1-3、5-6、8
+保存可迁移机制，不保存原文
+Timeline
+何时发生、节奏如何
+SRT + 阶段2-6
+保存绝对时间与归一化时间
+Style
+如何表达
+阶段7 + 全文证据
+保存语言人格、句式、节奏与禁用规则
+Examples
+真实感觉如何校准
+阶段3、5、7、8
+保存10-20个短样本及时间证据
+
+1.1 本文档回答的六个问题
+标题与 SRT 进入系统后，八个阶段分别做什么。
+哪些步骤应由确定性程序完成，哪些步骤适合交给 Claude/LLM。
+每阶段的输入、输出、通过条件与失败处理是什么。
+四层资产如何分工、关联并直接导入数据库。
+JSON 字段、ID、时间、置信度与缺失值如何统一。
+MVP 应实现什么、暂缓什么，以及如何验收。
+2. 产品目标与边界
+2.1 产品目标
+将一条已表现优秀的视频从“标题 + SRT 字幕”逆向拆解为可计算、可检索、可生成、可复核的内容资产。系统不是把字幕换词改写，而是保留可迁移的结构、节奏与表达机制，并保留原始证据定位。
+核心输入：视频标题 + 合法 SRT 文件；封面文案、播放数据、CTR、留存曲线等只作为可选增强信息。
+核心输出：同一 asset_bundle_id 下的四个 JSON 文件，可由导入服务直接校验并写入数据库。
+2.2 双分支中的位置
+分支
+回答的问题
+输入
+输出
+本文件覆盖
+A：验证框架
+这条爆款为什么有效，哪些机制值得复用？
+标题 + SRT
+四层资产
+完整覆盖阶段1-8
+B：验证主题
+某个新主题是否适合某个候选框架？
+四层资产 + 新主题 + 素材
+Blueprint、时间轴脚本、质量评估
+只定义接口，不展开生成流程
+
+边界提醒  标题 + SRT 只能证明“结构上发生了什么”，不能单独证明“这些机制导致了爆款”。无真实表现数据时，系统只能输出结构证据、迁移条件和分析置信度，不能输出确定性的爆款概率。
+2.3 可验证成功标准
+合法标题与 SRT 能被确定性解析；cue 顺序、时间戳、持续时长和文本哈希可复现。
+阶段 2-7 的关键结论均带 evidence_refs，能够回指 SRT cue 或时间段。
+阶段 8 只输出四个文件，四个文件通过 JSON Schema、跨文件 ID、时间覆盖和枚举校验。
+Framework 的 data 区不含原人物、具体年份、原句或案例细节；这些内容仅允许存在于 provenance 或 Examples 的受限短样本中。
+Timeline 同时保留 observed（绝对时间）与 normalized（0-1 比例）两套表达。
+Examples 为 10-20 条、每条不超过 25 个词，且不得拼接成连续原文。
+缺乏证据时写 null 并登记 unknown_fields，禁止为了填满 Schema 而推测。
+
+3. 整体流程与执行架构
+工作流保留 V2.2 引擎 A 的核心分析顺序：定性与底层卖点、功能骨架、标题与 Hook、Retention Map、三线推进与爆点、Open Loop、Voice Bible、结尾机制。重构只改变输入准入、证据链和最终输出形态。
+
+图 1  重构后的引擎 A：八阶段分析与四层资产导出
+3.1 逻辑 Agent 与物理服务分离
+层级
+负责内容
+适合实现
+确定性层
+SRT 解析、时间计算、哈希、ID、统计、Schema 校验、跨文件校验
+后端程序；不得交给 LLM 猜测
+语义分析层
+功能、心理目的、情绪、Open Loop、表达机制、迁移条件
+Claude/LLM 分阶段调用
+编排层
+状态机、重试、缓存、人工复核、版本与审计
+Workflow Orchestrator
+存储层
+原始 SRT、中间产物、四层资产、导入日志
+对象存储 + PostgreSQL/JSONB
+
+MVP 关键取舍  “八个 Agent”是八个职责边界，不要求部署八套模型服务。MVP 可使用同一模型、八套版本化提示词，加确定性解析与验证器；这样成本更低、结果仍可分阶段重跑。
+3.2 默认执行模式
+模式
+行为
+适用场景
+batch（默认）
+阶段1通过后自动运行至阶段8；仅在硬性校验失败时停止
+批量验证、节省时间
+review（可选）
+在阶段1、3、6、7后允许人工修订或确认
+高价值案例、提示词迭代、质量标注
+
+无论哪种模式，每一阶段都必须保存 analysis_run_id、prompt_version、model_run_id、输入哈希、输出 JSON 和验证结果。这样即使 Schema 迭代，也可从中间结果重新生成阶段8资产，而不必重新上传或重新分析整条 SRT。
+
+4. 阶段 1-8 详细工作流
+通用证据规则  阶段2-8的每个关键判断必须包含 evidence_refs（cue_id、start_ms、end_ms）与 confidence（0-1）。没有证据时使用 null，不得用模型常识补齐源视频事实。
+阶段 1  输入准入、SRT 标准化与定性卡片
+保留 V2.2 的定性逻辑，同时把标题与 SRT 设为强制输入门槛。
+项目
+定义
+目标
+建立可信的 Source Case；判断内容类型、表面主题、底层卖点、目标受众与主要叙事驱动。
+必填输入
+title；一个 .srt 文件。
+可选输入
+thumbnail_text、channel、publish_date、views、ctr、average_view_duration、retention_curve、language_hint。
+确定性输出
+source_case_id、asset_bundle_id、input_sha256、normalized_cues、duration_ms、cue_count、字符数、解析质量报告。
+LLM 输出
+qualitative_card：content_type、surface_topic、deep_promise、target_audience、narrative_driver、initial_transfer_hypothesis。
+负责 Agent
+Input Validator + SRT Parser + Qualitative Analyst。
+
+执行步骤
+校验标题：去除首尾空白后 5-200 个字符；保留原始语言，不自动改写标题。
+校验文件：扩展名为 .srt；编码优先 UTF-8/UTF-8 BOM，必要时检测并转码；MVP 建议上限 2 MB、90 分钟。
+解析 cue：生成稳定 cue_id，统一为整数毫秒；修正纯格式问题，但不改写字幕文本。
+计算确定性指标：视频时长、cue 间隔、重叠、空白区间、字符/词速率、前30秒覆盖。
+仅在解析通过后调用 LLM，生成定性卡片，并要求每个判断回指证据。
+硬性失败条件
+无标题、文件为空、无法解析任何有效 cue。
+结束时间早于开始时间，且自动修复会改变内容顺序。
+有效字幕覆盖不足以分析，例如全片仅有极少片段。
+解析语言与标题明显不一致且用户未提供语言说明；转入人工复核，不自行翻译。
+通过条件  parse_status=passed；cue 按 start_ms 升序；duration_ms>0；input_sha256 已记录；qualitative_card 的关键字段至少各有一条 evidence_ref。
+阶段 2  功能结构骨架提取
+把字幕切成“完成什么作用”的功能段，而不是按“讲了什么内容”做摘要。
+项目
+定义
+目标
+得到覆盖全片的 functional_segments，提取可迁移的结构顺序和每段的进入/退出条件。
+输入
+阶段1 normalized_cues、qualitative_card、title。
+输出
+functional_structure：stage_id、start/end、function、purpose、viewer_state、required_payload、entry_condition、exit_condition。
+负责 Agent
+Functional Structure Analyst。
+主要进入资产
+Framework.structure_pattern；Timeline.observed_segments。
+
+分析规则
+段落标签使用稳定功能码，例如 identity_entry、belief_challenge、evidence_build、conflict_escalation、reveal、worldview_upgrade、closure。
+同一段可有一个 primary_function 和最多两个 secondary_functions；禁止用具体人物或事件作为 function。
+功能段必须覆盖 0-100% 内容区间；相邻段允许边界重合不超过一个 cue。
+同时保留绝对毫秒和 normalized_ratio，为不同目标时长迁移提供基础。
+质量门槛
+功能段数量通常为 4-16 段。少于 4 段往往过度概括；多于 16 段应检查是否把内容主题误当成功能。自动规则不强制截断，而是标记 granularity_warning。
+阶段 3  标题—开头 Hook 契约分析
+保留 V2.2 的标题/封面/开头联动思想；在无封面输入时绝不虚构封面结论。
+项目
+定义
+目标
+判断标题提出了什么承诺，前30秒如何兑现、延迟或重构该承诺。
+输入
+title、前30-60秒 cues、阶段1定性卡片；thumbnail_text 可选。
+输出
+title_hook_contract、hook_windows、first_payoff_ms、curiosity_gap、promise_delivery_mode、risk_flags。
+负责 Agent
+CTR & Hook Contract Analyst。
+主要进入资产
+Framework.title_hook_contract；Timeline.hook_window；Examples 中的 hook 样本。
+
+必做判断
+标题公式：只抽象语义结构，不照抄标题，例如“被忽视的 X 如何改变 Y”。
+点击触发器：curiosity、risk、identity、authority、conflict、transformation 等稳定枚举。
+开头兑现类型：immediate_payoff、partial_payoff、delayed_payoff、promise_reframe。
+第一刺激点、第一开放循环、第一实际奖励的出现时间。
+标题与开头是否错配；存在夸大但未兑现时标记 promise_gap_risk。
+封面处理  只有用户提供 thumbnail_text 或后续图像分析结果时，才生成 thumbnail_contract。未提供时固定写 null，并在 unknown_fields 中记录 thumbnail_contract；不得根据标题推测封面。
+阶段 4  Retention Map 与 Timeline 事实层
+把 SRT 的“什么时候”与前面阶段的“为什么”合并为可迁移节奏资产。
+项目
+定义
+目标
+按时间生成留存地图，识别刺激点、信息奖励、模式打断、情绪变化和弱区。
+输入
+normalized_cues、functional_structure、title_hook_contract。
+输出
+retention_events、observed_segments、hook_intervals、strong_points、weak_points、pacing_metrics。
+负责 Agent
+Timeline & Retention Analyst；时间统计由确定性程序完成。
+主要进入资产
+timeline.json。
+
+切片方法
+固定观察窗：0-30秒 Hook；随后以60秒为统计窗，90秒为最大无新刺激预警阈值（阈值可配置，不是普适爆款定律）。
+语义事件窗：当功能、情绪、信息状态或 Open Loop 状态变化时创建事件，不强行等长切割。
+每个 retention_event 记录 event_type、mechanism、viewer_reason_to_continue、evidence_refs 与 confidence。
+保留观察事实与推断标签：时间、cue、字数属于 measured；心理目的与情绪属于 inferred。
+禁止事项
+不得仅凭字幕预测“30秒留存85%”之类业务指标。没有真实 Analytics 时，只能输出 retention_design_strength 或 coverage_gap，不能伪造实际留存率。
+阶段 5  三线推进与爆点分布
+同步分析信息线、情绪线和故事/论证线，识别它们何时交汇成高价值爆点。
+项目
+定义
+目标
+解释观众在每个阶段知道什么、感觉什么、看到什么进展，并识别主要认知或情绪奖励。
+输入
+functional_structure、retention_map、全量 cues。
+输出
+information_arc、emotion_arc、story_or_argument_arc、peak_points、alignment_gaps。
+负责 Agent
+Multi-Arc & Peak Analyst。
+主要进入资产
+Framework.core_engine / emotion_curve；Timeline.peak_points；Examples 中的 reveal/payoff 样本。
+
+爆点判定标准
+信息变化显著：关键答案、反常证据、尺度跃迁或因果重构。
+观众状态变化显著：从怀疑到相信、从焦虑到释然、从局部理解到世界观升级。
+结构上承担功能：关闭旧 Loop、开启更大 Loop、转入新阶段或兑现标题承诺。
+必须有时间证据；只写“这里很震撼”而无具体文本与位置视为无效。
+输出中的 peak_position 使用 0-1 小数，而不是“22%”字符串；原案例的具体峰值可保留在 Timeline，但不得硬编码为通用 Framework 的固定比例。
+阶段 6  Open Loop、悬念账本与回报闭环
+记录问题何时开启、何时关闭、悬挂多久、是否嵌套，以及结尾是否完成承诺回收。
+项目
+定义
+目标
+形成 loop_ledger，避免把“每段有悬念”写成空泛规则。
+输入
+title_hook_contract、retention_events、multi_arc_map、全量 cues。
+输出
+open_loops、nested_relations、payoff_events、unresolved_loops、controversy_loops。
+负责 Agent
+Open Loop & Payoff Analyst。
+主要进入资产
+Framework.retention_system；Timeline.loop_events；Examples 中的 transition/payoff/ending 样本。
+
+Loop 数据要求
+每个 loop_id 必须有 open_time、open_question_or_tension、status 和 evidence_refs。
+closed 的 Loop 必须有 close_time、payoff_type、payoff_strength；open-ended 争议须说明其叙事用途。
+嵌套关系使用 parent_loop_id，禁止只写“有嵌套悬念”。
+悬挂时长由程序计算；LLM 只解释其功能。
+风险门槛  若标题主承诺在结尾仍未兑现，必须生成 unresolved_primary_promise 风险；阶段8不能以“风格化开放结尾”为理由自动消除该风险。
+阶段 7  Voice Bible 与 Reference Example 候选集
+把“怎么说”与“说了什么”分开，并为生成模型保留少量、可定位的真实表达校准样本。
+项目
+定义
+目标
+提取旁白人格、语气、句式、节奏、幽默、修辞与禁用表达；筛选10-20个短样本。
+输入
+全量 cues、阶段3 Hook、阶段5爆点、阶段6回报事件。
+输出
+voice_bible、style_measurements、language_patterns、example_candidates。
+负责 Agent
+Style Analyst + Example Curator。
+主要进入资产
+style.json 与 examples.json。
+
+Style 的证据纪律
+句长比例、词速等统计由程序计算；自动字幕缺少标点时，sentence_metrics.measurement_quality 必须降级。
+旁白人格、幽默机制、修辞功能为 LLM 推断，必须有多处证据而非单句印象。
+Style 不包含主题事实、人物、年份或故事结构。
+forbidden_style 同时记录源作者明显避免的表达，以及系统为防止 AI 腔额外设定的规则；二者需区分来源。
+Example 选择规则
+数量 10-20 条；单条最多 25 个词；优先覆盖 hook、transition、information_reveal、emotional_payoff、humor、worldview_shift、ending。
+必须保存 source_cue_ids、source_start_ms、source_end_ms 和 exact_excerpt=true。
+相邻样本不得拼接后构成连续长段；重复表达只保留最具代表性的一条。
+usage_instruction 说明“学什么机制”；negative_instruction 明确“不要复制哪些词或事实”。
+阶段 8  结尾机制分析、四层标准化与导出
+保留原阶段8的结尾分析，并把所有阶段结果规范化为四个可直接入库的 JSON 文件。
+项目
+定义
+目标
+确认结尾如何回收标题、核心情绪与 Open Loop；随后完成抽象、分层、关联、校验和导出。
+输入
+阶段1-7全部中间 JSON、确定性指标、预分配 ID、schema_version。
+输出
+framework.json、timeline.json、style.json、examples.json。
+负责 Agent
+Ending Mechanism Analyst + Asset Normalizer + Deterministic Validators。
+运行原则
+LLM 负责映射与抽象；程序负责 ID、哈希、时间、Schema、跨文件和版权约束。
+
+阶段8的七步处理
+分析结尾：主承诺是否兑现、情绪是否回收、世界观是否升级、CTA 是否与内容一致。
+把具体案例机制与可迁移机制分离：Framework.data 只保留后者。
+生成 observed Timeline 和 normalized Timeline；验证时间覆盖与排序。
+生成 Style；把 measured 与 inferred 字段分开并记录置信度。
+从候选集中去重、截断并选择 10-20 条 Examples。
+运行四个 JSON Schema 和跨文件外键校验；失败只重跑相关资产，不重跑整条链路。
+以同一 asset_bundle_id 写入一个目录；导入成功后把 workflow_run 标记为 exported。
+导出目录
+BND_<uuid>/
+  framework.json
+  timeline.json
+  style.json
+  examples.json
+最终状态  单案例生成的 framework.status 固定为 candidate；当至少多个独立案例或真实表现数据完成验证后，由单独的验证流程升级，而不是由阶段8自行宣布 validated。
+
+5. 四层资产模型与数据库关系
+
+图 2  四层资产共享同一 Bundle、来源案例与 Schema 版本
+5.1 共同标识与生成责任
+字段
+格式
+生成者
+规则
+schema_version
+SemVer，如 1.0.0
+后端
+四文件必须完全一致
+asset_bundle_id
+BND_<UUID>
+后端
+同次导出共享；LLM 只能原样回显
+source_case_id
+CASE_<UUID>
+后端
+对应标题 + SRT 输入案例
+framework_id
+FW_<UUID>
+后端
+Timeline、Style、Examples 必须引用
+timeline_id
+TL_<UUID>
+后端
+Examples 可引用具体时间资产
+style_id
+ST_<UUID>
+后端
+Examples 必须引用
+example_id
+EX_<UUID>
+后端或导入器
+每条样本唯一
+analysis_run_id
+RUN_<UUID>
+编排器
+用于追踪模型、提示词与重跑
+
+重要实现规则  ID、时间戳、哈希、字数和比率由程序生成并作为已知值传给 Claude。不要让 Claude 自己“创造”生产 ID 或计算哈希，否则无法保证幂等与关联一致性。
+5.2 四层职责边界
+层
+必须包含
+必须排除
+Framework
+核心承诺、受众心理、叙事引擎、功能结构、留存与迁移规则
+原句、人物、具体年份、固定案例数据、绝对时间
+Timeline
+原始时段、相对比例、留存事件、峰值、Loop 时间与节奏指标
+未经证据支持的真实留存率、通用成功结论
+Style
+旁白人格、语气、句式、节奏、幽默、修辞、禁用表达
+主题事实、故事顺序、原文长段
+Examples
+短原文样本、功能、位置、心理目的、表达机制、使用与禁用说明
+长段、连续拼接、完整脚本、无时间证据样本
+
+5.3 建议数据库表
+source_cases：保存原始标题、SRT 对象地址、哈希、语言与可选表现数据。
+analysis_runs：保存阶段状态、提示词版本、模型运行信息、重试与验证日志。
+framework_assets：保存 framework.json 的 data、状态与证据摘要。
+timeline_assets：保存 timeline.json；大数组可使用 JSONB 或拆分 events 表。
+style_assets：保存 style.json；同一 Style 可在后期被多个 Framework 复用。
+reference_examples：一条样本一行，并同时带 framework_id、style_id、timeline_id、source_case_id。
+5.4 导入顺序与事务
+读取 framework.json，创建或确认 source_case 与 framework_asset。
+导入 timeline.json，校验 framework_id、source_case_id 与 bundle 一致。
+导入 style.json，校验 framework_id 与来源一致。
+导入 examples.json，逐条校验 framework_id、style_id、timeline_id 以及字数限制。
+四步必须在一个数据库事务中完成；任一失败则整包回滚，并保留 import_error_log。
+
+6. JSON 输出规范
+6.1 通用约束
+编码：UTF-8，无 BOM；文件内容必须是单一 JSON object，不输出 Markdown、解释文字或代码围栏。
+键名：snake_case 英文稳定码；面向用户的中文说明放在 *_label_zh 或 description 中。
+时间：计算字段使用整数毫秒；显示字段可附 HH:MM:SS.mmm；不得用“约3分钟”替代。
+比例：统一使用 0.0-1.0 数值；分数统一使用 0-100 整数；confidence 使用 0.0-1.0。
+缺失：字段保留并写 null，同时把 JSON Pointer 记入 quality.unknown_fields；禁止空字符串冒充未知。
+证据：语义判断使用 evidence_refs；引用 cue_id 和时间，不把整段字幕复制到非 Examples 资产。
+状态：single-case 输出为 candidate；validated 只能由后续证据流程写入。
+枚举：未知枚举写 other，并在 other_detail 中说明；不得临时创造同义值。
+6.2 framework.json
+Framework 只保存可迁移机制。provenance 是审计信封，不参与主题匹配；真正参与检索与生成的是 data。
+{
+  "schema_version": "1.0.0",
+  "asset_type": "framework",
+  "asset_bundle_id": "BND_<uuid>",
+  "framework_id": "FW_<uuid>",
+  "source_case_id": "CASE_<uuid>",
+  "status": "candidate",
+  "provenance": {
+    "source_title": "<原始标题>",
+    "source_srt_sha256": "<64位小写十六进制>",
+    "source_language": "en-US",
+    "source_duration_ms": 0,
+    "analysis_run_id": "RUN_<uuid>",
+    "prompt_version": "engine-a-stage8-v1.0.0",
+    "parser_version": "srt-parser-v1.0.0",
+    "generated_at": "2026-07-27T00:00:00Z"
+  },
+  "data": {
+    "name": "<可迁移机制名称>",
+    "description": "<不含具体案例的机制说明>",
+    "content_profile": {
+      "content_type": "documentary_explainer",
+      "genres": [
+        "history",
+        "science"
+      ],
+      "narrative_mode": "belief_transformation",
+      "recommended_duration_ms": {
+        "min": 0,
+        "max": 0
+      }
+    },
+    "core_engine": {
+      "surface_promise_pattern": "<标题表层承诺模式>",
+      "deep_emotional_promise": [
+        "identity_validation"
+      ],
+      "audience_transformation": {
+        "before_state": "<观看前状态>",
+        "after_state": "<观看后状态>"
+      }
+    },
+    "audience_psychology": {
+      "target_identity_traits": [
+        "<特征>"
+      ],
+      "pain_points": [
+        "<痛点>"
+      ],
+      "desires": [
+        "<欲望>"
+      ],
+      "click_triggers": [
+        "curiosity"
+      ]
+    },
+    "title_hook_contract": {
+      "title_formula": "<抽象公式>",
+      "opening_delivery_mode": "partial_payoff",
+      "must_deliver": [
+        "<必须兑现>"
+      ],
+      "risk_flags": []
+    },
+    "story_engine": {
+      "engine_type": "belief_transformation",
+      "core_question_pattern": "<核心问题模板>",
+      "tension_source": [
+        "<张力来源>"
+      ],
+      "belief_shift": {
+        "old_belief": "<旧认知>",
+        "new_belief": "<新认知>"
+      }
+    },
+    "structure_pattern": [
+      {
+        "stage_id": "FS01",
+        "order": 1,
+        "function": "identity_entry",
+        "purpose": "<阶段目的>",
+        "entry_condition": "<进入条件>",
+        "exit_condition": "<退出条件>",
+        "required_payload": [
+          "<必须具备的素材类型>"
+        ],
+        "optional_payload": []
+      }
+    ],
+    "retention_system": {
+      "mechanisms": [
+        "curiosity_gap"
+      ],
+      "open_loop_policy": [
+        "<可迁移规则>"
+      ],
+      "payoff_policy": [
+        "<回报规则>"
+      ],
+      "information_release_strategy": "<释放策略>"
+    },
+    "emotion_curve": [
+      {
+        "stage_id": "FS01",
+        "emotion": "curiosity",
+        "purpose": "<心理作用>"
+      }
+    ],
+    "transferability": {
+      "best_topic_traits": [
+        "<主题特征>"
+      ],
+      "avoid_topic_traits": [
+        "<不适用特征>"
+      ],
+      "prerequisites": [
+        "<使用前提>"
+      ],
+      "risk_flags": [
+        "<迁移风险>"
+      ]
+    },
+    "migration_rules": {
+      "must_preserve": [
+        "<机制>"
+      ],
+      "must_replace": [
+        "具体人物",
+        "具体事实",
+        "具体例证"
+      ],
+      "forbidden_copy_elements": [
+        "原句",
+        "专有比喻",
+        "原案例顺序细节"
+      ]
+    }
+  },
+  "quality": {
+    "analysis_confidence": 0.0,
+    "source_case_count": 1,
+    "evidence_refs": [
+      {
+        "cue_ids": [
+          "C0001"
+        ],
+        "start_ms": 0,
+        "end_ms": 0
+      }
+    ],
+    "unknown_fields": [],
+    "warnings": [
+      "single_case_framework"
+    ]
+  }
+}
+6.3 timeline.json
+Timeline 同时保存 observed（源视频事实）和 normalized（可迁移比例）。两者不能互相替代。
+{
+  "schema_version": "1.0.0",
+  "asset_type": "timeline",
+  "asset_bundle_id": "BND_<uuid>",
+  "timeline_id": "TL_<uuid>",
+  "framework_id": "FW_<uuid>",
+  "source_case_id": "CASE_<uuid>",
+  "provenance": {
+    "source_title": "<原始标题>",
+    "source_srt_sha256": "<64位小写十六进制>",
+    "source_language": "en-US",
+    "source_duration_ms": 0,
+    "analysis_run_id": "RUN_<uuid>",
+    "prompt_version": "engine-a-stage8-v1.0.0",
+    "parser_version": "srt-parser-v1.0.0",
+    "generated_at": "2026-07-27T00:00:00Z"
+  },
+  "data": {
+    "duration_profile": {
+      "observed_duration_ms": 0,
+      "duration_type": "long_form",
+      "recommended_duration_ms": {
+        "min": 0,
+        "max": 0
+      }
+    },
+    "subtitle_metrics": {
+      "cue_count": 0,
+      "token_or_word_count": 0,
+      "average_words_per_minute": null,
+      "measurement_quality": "high"
+    },
+    "hook_window": {
+      "start_ms": 0,
+      "end_ms": 30000,
+      "hook_type": "<枚举>",
+      "first_stimulus_ms": 0,
+      "first_payoff_ms": null,
+      "evidence_refs": [
+        "C0001"
+      ]
+    },
+    "observed_segments": [
+      {
+        "segment_id": "TS01",
+        "start_ms": 0,
+        "end_ms": 0,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:00.000",
+        "start_ratio": 0.0,
+        "end_ratio": 0.0,
+        "primary_function": "identity_entry",
+        "viewer_goal": "<继续观看原因>",
+        "information_move": "<信息变化>",
+        "emotion": "curiosity",
+        "retention_triggers": [
+          "curiosity_gap"
+        ],
+        "loop_events": [
+          "LOOP01_OPEN"
+        ],
+        "source_cue_ids": [
+          "C0001"
+        ],
+        "confidence": 0.0
+      }
+    ],
+    "normalized_pattern": [
+      {
+        "stage_id": "FS01",
+        "start_ratio": 0.0,
+        "end_ratio": 0.1,
+        "function": "identity_entry",
+        "required_retention_events": [
+          "<机制>"
+        ],
+        "scaling_rule": "preserve_ratio"
+      }
+    ],
+    "retention_events": [
+      {
+        "event_id": "RE01",
+        "time_ms": 0,
+        "position_ratio": 0.0,
+        "event_type": "new_question",
+        "mechanism": "curiosity_gap",
+        "viewer_reason_to_continue": "<原因>",
+        "source_cue_ids": [
+          "C0001"
+        ],
+        "confidence": 0.0
+      }
+    ],
+    "open_loops": [
+      {
+        "loop_id": "LOOP01",
+        "parent_loop_id": null,
+        "open_ms": 0,
+        "close_ms": null,
+        "status": "open_ended",
+        "tension_function": "<功能>",
+        "payoff_type": null,
+        "source_cue_ids": [
+          "C0001"
+        ]
+      }
+    ],
+    "peak_points": [
+      {
+        "peak_id": "PK01",
+        "time_ms": 0,
+        "position_ratio": 0.0,
+        "peak_type": "worldview_shift",
+        "strength": 0,
+        "reason": "<原因>",
+        "source_cue_ids": [
+          "C0001"
+        ]
+      }
+    ],
+    "pacing_rules": [
+      {
+        "rule": "<可迁移节奏规则>",
+        "evidence_count": 0,
+        "confidence": 0.0
+      }
+    ]
+  },
+  "quality": {
+    "coverage_ratio": 0.0,
+    "segments_sorted": true,
+    "invalid_overlaps": [],
+    "unknown_fields": [],
+    "warnings": []
+  }
+}
+6.4 style.json
+Style 的 measured 指标与 inferred 判断必须分开；自动字幕缺少标点时，不得给出高置信度句长比例。
+{
+  "schema_version": "1.0.0",
+  "asset_type": "style",
+  "asset_bundle_id": "BND_<uuid>",
+  "style_id": "ST_<uuid>",
+  "framework_id": "FW_<uuid>",
+  "source_case_id": "CASE_<uuid>",
+  "provenance": {
+    "source_title": "<原始标题>",
+    "source_srt_sha256": "<64位小写十六进制>",
+    "source_language": "en-US",
+    "source_duration_ms": 0,
+    "analysis_run_id": "RUN_<uuid>",
+    "prompt_version": "engine-a-stage8-v1.0.0",
+    "parser_version": "srt-parser-v1.0.0",
+    "generated_at": "2026-07-27T00:00:00Z"
+  },
+  "data": {
+    "voice_persona": {
+      "name": "<人格名称>",
+      "description": "<不含具体主题的描述>",
+      "relationship_to_viewer": "<关系>",
+      "authority_posture": "<权威姿态>",
+      "confidence": 0.0,
+      "evidence_refs": [
+        "C0001"
+      ]
+    },
+    "tone_profile": {
+      "primary_tones": [
+        "conversational"
+      ],
+      "formality_score": 0,
+      "emotional_intensity_score": 0,
+      "humor_level_score": 0,
+      "certainty_style": "<确定性表达方式>"
+    },
+    "measured_sentence_profile": {
+      "short_ratio": null,
+      "medium_ratio": null,
+      "long_ratio": null,
+      "average_words_per_sentence": null,
+      "measurement_quality": "low"
+    },
+    "rhythm_rules": [
+      {
+        "rule": "<节奏规则>",
+        "function": "<作用>",
+        "confidence": 0.0,
+        "evidence_refs": [
+          "C0001"
+        ]
+      }
+    ],
+    "narration_rules": {
+      "person_usage": [
+        "second_person"
+      ],
+      "dialogue_usage": "low",
+      "pause_and_emphasis": [
+        "<规则>"
+      ],
+      "transition_style": [
+        "<规则>"
+      ]
+    },
+    "humor_system": {
+      "humor_types": [
+        "dry_humor"
+      ],
+      "frequency_pattern": "<频率>",
+      "placement_rules": [
+        "<位置规则>"
+      ],
+      "avoid_rules": [
+        "<禁忌>"
+      ]
+    },
+    "language_patterns": [
+      {
+        "pattern_id": "LP01",
+        "pattern_name": "<稳定名称>",
+        "formula": "<抽象公式>",
+        "purpose": "<作用>",
+        "evidence_refs": [
+          "C0001"
+        ]
+      }
+    ],
+    "lexicon_profile": {
+      "preferred_traits": [
+        "<词汇特征>"
+      ],
+      "avoid_traits": [
+        "<避免特征>"
+      ]
+    },
+    "forbidden_style": [
+      {
+        "rule": "<禁用表达>",
+        "source": "observed_or_system_guardrail"
+      }
+    ],
+    "transfer_guardrails": [
+      "模仿语气、句法和节奏，不复制专有措辞、事实或比喻"
+    ]
+  },
+  "quality": {
+    "analysis_confidence": 0.0,
+    "evidence_span_count": 0,
+    "unknown_fields": [],
+    "warnings": []
+  }
+}
+6.5 examples.json
+Examples 必须同时关联 framework_id、style_id 与 timeline_id。每条样本可作为独立数据库行导入。
+{
+  "schema_version": "1.0.0",
+  "asset_type": "reference_examples",
+  "asset_bundle_id": "BND_<uuid>",
+  "example_set_id": "ES_<uuid>",
+  "framework_id": "FW_<uuid>",
+  "timeline_id": "TL_<uuid>",
+  "style_id": "ST_<uuid>",
+  "source_case_id": "CASE_<uuid>",
+  "provenance": {
+    "source_title": "<原始标题>",
+    "source_srt_sha256": "<64位小写十六进制>",
+    "source_language": "en-US",
+    "source_duration_ms": 0,
+    "analysis_run_id": "RUN_<uuid>",
+    "prompt_version": "engine-a-stage8-v1.0.0",
+    "parser_version": "srt-parser-v1.0.0",
+    "generated_at": "2026-07-27T00:00:00Z"
+  },
+  "policy": {
+    "min_examples": 10,
+    "max_examples": 20,
+    "max_words_per_example": 25,
+    "exact_excerpt_required": true,
+    "adjacent_stitching_forbidden": true
+  },
+  "examples": [
+    {
+      "example_id": "EX_<uuid>",
+      "framework_id": "FW_<uuid>",
+      "timeline_id": "TL_<uuid>",
+      "style_id": "ST_<uuid>",
+      "source_case_id": "CASE_<uuid>",
+      "type": "hook",
+      "function": "identity_entry",
+      "position": "opening",
+      "source_start_ms": 0,
+      "source_end_ms": 0,
+      "source_cue_ids": [
+        "C0001"
+      ],
+      "psychological_goal": "<心理目的>",
+      "expression_mechanism": "<表达机制>",
+      "example_text": "<不超过25词的精确短样本>",
+      "word_count": 0,
+      "usage_instruction": "<学习什么>",
+      "negative_instruction": "<不得复制什么>"
+    }
+  ],
+  "quality": {
+    "example_count": 10,
+    "all_word_limits_passed": true,
+    "duplicate_or_adjacent_flags": [],
+    "unknown_fields": [],
+    "warnings": []
+  }
+}
+6.6 核心枚举与校验规则
+字段组
+允许值/约束
+校验说明
+status
+candidate | validated | deprecated
+阶段8只能写 candidate
+asset_type
+framework | timeline | style | reference_examples
+必须与文件名匹配
+example.type
+hook | transition | information_reveal | emotional_payoff | humor | worldview_shift | ending
+不允许临时同义枚举
+confidence
+0.0-1.0
+不得用百分数字符串
+scores
+0-100 整数
+必须说明是结构评估，不是实际业务表现
+time_ms
+>=0 整数
+必须由解析器计算
+position_ratio
+0.0-1.0
+end_ratio >= start_ratio
+evidence_refs
+至少 cue_id 或时间范围
+无证据则对应结论为 null
+unknown_fields
+JSON Pointer 数组
+用于显式标记缺失
+
+
+7. Claude / LLM Agent 实现合同
+Claude 接收的是阶段化、已结构化的输入，不直接接收“请分析这篇爆款”这种开放任务。每次调用均使用固定角色、输入字段、输出 Schema、证据要求和失败策略。
+7.1 所有语义 Agent 共用的系统规则
+只使用用户标题、SRT、可选元数据和上游阶段结果；不得补充外部事实。
+输出仅为合法 JSON；不得输出 Markdown、解释或前后缀。
+每个关键结论附 evidence_refs 与 confidence；证据不足则 value=null。
+区分 observed、measured、inferred；不得把推断写成测量事实。
+保留输入 ID 与 schema_version，逐字回显，禁止自行生成生产 ID。
+不得改写字幕、补全缺失句或翻译后再当作原文证据。
+Framework 抽象机制；Timeline 保留时间；Style 只描述表达；Examples 只保存受限短样本。
+7.2 各阶段逻辑 Agent
+阶段
+逻辑 Agent
+核心职责
+内部产物
+1
+Qualitative Analyst
+定性卡片与底层卖点；不负责 SRT 计算
+stage1_positioning.json
+2
+Functional Structure Analyst
+功能段、进入/退出条件、可迁移角色
+stage2_structure.json
+3
+CTR & Hook Analyst
+标题承诺、开头兑现、Hook 窗口与错配风险
+stage3_hook.json
+4
+Timeline & Retention Analyst
+给确定性时间事实添加留存语义
+stage4_retention.json
+5
+Multi-Arc & Peak Analyst
+三线推进、爆点和对齐缺口
+stage5_arcs.json
+6
+Loop & Payoff Analyst
+Loop 开启/关闭/嵌套与回报
+stage6_loops.json
+7
+Style Analyst + Example Curator
+Voice Bible、语言规则、样本候选
+stage7_style_examples.json
+8
+Ending Analyst + Asset Normalizer
+结尾回收、四层映射与标准化
+四个最终 JSON
+
+7.3 编排器调用合同
+{
+  "run": {
+    "analysis_run_id": "RUN_<uuid>",
+    "execution_mode": "batch",
+    "schema_version": "1.0.0",
+    "prompt_versions": {
+      "stage_1": "1.0.0",
+      "stage_2": "1.0.0",
+      "stage_3": "1.0.0",
+      "stage_4": "1.0.0",
+      "stage_5": "1.0.0",
+      "stage_6": "1.0.0",
+      "stage_7": "1.0.0",
+      "stage_8": "1.0.0"
+    },
+    "retry_policy": {
+      "json_repair_attempts": 1,
+      "semantic_retry_attempts": 1,
+      "full_pipeline_retry_forbidden": true
+    }
+  }
+}
+7.4 阶段8 Normalizer 提示词骨架
+角色：四层资产标准化工程师。
+ 
+输入：
+1. 预分配 IDs、schema_version、provenance；
+2. 阶段1-7的结构化 JSON；
+3. 结尾机制分析；
+4. 四个目标 Schema。
+ 
+任务：
+- 将可迁移机制放入 framework.data；
+- 将绝对时间事实与归一化规则放入 timeline.data；
+- 将表达规则放入 style.data；
+- 从候选集中选出10-20条短样本放入 examples；
+- 不改变任何预分配 ID、哈希或时间；
+- 缺失字段写 null 并登记 unknown_fields；
+- 只输出指定资产对象，不输出解释。
+ 
+禁止：
+- 把具体案例写进 Framework.data；
+- 推测封面、CTR、真实留存率；
+- 生成无 evidence_refs 的关键结论；
+- 用新写的句子冒充 example_text。
+重试策略  JSON 语法失败先做一次纯格式修复；语义校验失败只回传错误路径和相关上游数据，让对应 Agent 局部重跑。最多两次局部尝试，随后进入 needs_review，禁止无限循环。
+8. 与原 V2.2 工作流的差异
+维度
+原 V2.2 侧重
+重构后
+输入
+可接受全文或多种材料
+标题 + SRT 强制；其他材料可选
+阶段结果
+面向人的《爆款基因档案》
+阶段 JSON + 最终四层机器资产
+时间轴
+作为分析维度呈现
+SRT 事实层；绝对时间与0-1比例并存
+封面
+标题-封面-开头三位一体
+封面缺失时显式 null，绝不推测
+结构
+深度案例分析
+区分案例证据与可迁移机制
+Style
+Voice Bible
+measured 与 inferred 分离，并附证据
+Examples
+原文表达可供人参考
+10-20条受限短样本，可独立入库
+阶段8
+结尾机制与档案完成
+先保留结尾分析，再标准化、校验并导出四文件
+验证
+人工判断为主
+JSON Schema、外键、时间、覆盖、枚举、短样本自动校验
+框架状态
+容易把单案例当作框架
+单案例固定 candidate，后续证据才可 validated
+运行方式
+阶段确认较强
+默认 batch；保留 review 模式和阶段快照
+
+8.1 保留不变的核心思想
+按功能拆解，而不是做内容摘要。
+先提取爆款基因，再进行迁移，不直接换词改写。
+重视标题、Hook、Retention、三线推进、Open Loop、Voice Bible 与结尾回收。
+每一阶段都有清晰任务边界，避免模型一步到位导致结构丢失。
+原始分析与可迁移资产分离，保留后续复核与迭代能力。
+
+9. MVP 实现建议
+9.1 MVP 必做范围
+上传页：标题输入、SRT 文件上传、语言提示和可选元数据。
+确定性 SRT Parser：cue、毫秒、时长、哈希、前30秒窗口、质量报告。
+八阶段编排：同一模型、版本化提示词、阶段 JSON、局部重试。
+四个 JSON Schema 与跨文件 Validator。
+Bundle 下载与数据库事务导入。
+简单人工复核页：显示关键结论及其时间证据。
+9.2 MVP 暂不实现
+自动抓取 YouTube、下载视频、ASR 转录。
+Framework 聚类、向量检索和结构迁移 Agent。
+自动预测爆款概率或伪造留存曲线。
+完整事实核查、去 AI 感、作者级风格克隆。
+Framework A+B 自动组合或跨赛道创造新结构。
+无限自动重写；仅允许局部重跑与人工复核。
+9.3 推荐技术架构
+组件
+MVP 推荐
+原因
+前端
+Next.js 或现有 Web 框架
+上传、进度、复核与下载足够
+API / Job
+FastAPI + 异步任务队列
+适合 SRT 解析、阶段状态和模型调用
+数据库
+PostgreSQL + JSONB
+先保留灵活 Schema，后续再拆热点字段
+对象存储
+本地受控目录或 S3 兼容存储
+保存原 SRT 与阶段产物
+Schema 校验
+Pydantic / JSON Schema Draft 2020-12
+导出前和导入时双重校验
+LLM
+同一可靠模型 + 8套提示词
+MVP 无需部署多模型或复杂 Agent 平台
+观测
+run 日志、token/cost、阶段耗时、失败路径
+便于定位哪一阶段不稳定
+
+9.4 最小 API
+POST /api/source-cases
+  multipart: title, srt_file, optional metadata
+ 
+POST /api/analysis-runs
+  body: source_case_id, execution_mode
+ 
+GET /api/analysis-runs/{run_id}
+  returns: stage, status, validation_errors
+ 
+GET /api/analysis-runs/{run_id}/bundle
+  returns: framework.json, timeline.json, style.json, examples.json
+ 
+POST /api/asset-bundles/import
+  validates and imports four files in one transaction
+9.5 状态机
+{
+  "states": [
+    "uploaded",
+    "parsing",
+    "stage_1",
+    "stage_2",
+    "stage_3",
+    "stage_4",
+    "stage_5",
+    "stage_6",
+    "stage_7",
+    "stage_8",
+    "validating",
+    "exported",
+    "needs_review",
+    "failed"
+  ],
+  "rule": "Only validation failures may move to needs_review; retry the smallest failed stage."
+}
+9.6 两周实施顺序（建议）
+时间
+交付
+验收点
+第1-2天
+SRT Parser、Source Case、哈希与质量报告
+同一输入结果可复现
+第3-5天
+阶段1-3语义分析与证据引用
+标题/Hook/结构结果可回指 cue
+第6-7天
+阶段4-6 Timeline、三线与 Loop
+时间排序、覆盖与 Loop 关系有效
+第8-9天
+阶段7 Style 与 Examples
+样本数量、字数、去重规则通过
+第10-11天
+阶段8 Normalizer 与四个 Schema
+四文件可一次导入
+第12-14天
+人工复核页、错误重跑、端到端测试
+3-5条真实 SRT 全链路通过
+
+10. 验收清单与测试用例
+10.1 文件与结构验收
+输出目录中恰好存在 framework.json、timeline.json、style.json、examples.json。
+四文件 schema_version、asset_bundle_id、source_case_id、framework_id 一致。
+每个 JSON 可由标准解析器读取，无尾随文本、注释、NaN 或重复键。
+Timeline 事件按时间升序，所有时间位于 0-duration_ms 范围。
+normalized segments 的 start/end 为 0-1，覆盖率达到配置阈值。
+Examples 数量 10-20，单条 word_count<=25，所有外键一致。
+Framework.data 不包含 source title、人物名、具体年份或 example_text。
+所有 null 均在 unknown_fields 登记；所有 warnings 可追溯。
+10.2 语义与证据验收
+测试
+输入情形
+预期
+无封面
+仅标题 + SRT
+thumbnail_contract=null；不得生成封面描述
+字幕缺标点
+自动字幕式长句
+句长统计 measurement_quality=low
+主承诺未兑现
+结尾未回答标题问题
+unresolved_primary_promise 风险存在
+事实不足
+无法判断受众痛点
+对应值为 null，unknown_fields 登记
+单案例
+只有一条爆款
+framework.status=candidate
+重复样本
+候选句高度相邻或重复
+去重或标记 duplicate_or_adjacent_flags
+超长样本
+候选超过25词
+重新选择自然短样本；不得机械截断破坏语义
+局部失败
+style.json Schema 失败
+只重跑 Stage7/Style 映射，不重跑 Timeline
+
+10.3 业务解释验收
+必须清楚展示  AI 给出的 framework_reusability、hook_strength 等仅为结构性评估；没有实际 CTR、留存与观看数据时，界面不得把它们命名为“爆款概率”“预计播放量”或“真实留存”。
+
+附录 A：阶段产物与四层字段映射
+阶段
+主要内部产物
+Framework
+Timeline
+Style
+Examples
+1
+定性卡片、Source Case
+核心定位、受众
+来源时长
+
+
+2
+功能结构
+结构顺序
+时段功能
+
+
+3
+标题/Hook 契约
+承诺规则
+Hook窗口
+
+Hook样本
+4
+Retention Map
+留存规则
+事件与弱区
+
+
+5
+三线与爆点
+核心引擎、情绪曲线
+峰值
+
+Reveal/Payoff
+6
+Loop账本
+Open Loop策略
+开启/关闭时间
+
+Transition/Payoff
+7
+Voice Bible、候选样本
+
+
+全部Style字段
+候选集
+8
+结尾机制、标准化
+结尾/迁移规则
+Ending事件
+结尾语气
+Ending样本
+
+附录 B：阶段8导出前检查顺序
+syntax_validation：四个 JSON 均为合法 JSON。
+schema_validation：字段、类型、枚举、必填项与数值范围通过。
+referential_validation：Bundle、Case、Framework、Timeline、Style、Examples 外键一致。
+timeline_validation：时间排序、覆盖、重叠、比例和 cue 引用有效。
+abstraction_validation：Framework.data 无案例专属内容。
+style_validation：Style 无故事事实；measured/inferred 已区分。
+example_validation：数量、词数、去重、相邻拼接、精确引用与时间定位通过。
+status_validation：单案例为 candidate，未擅自升级。
+transactional_import_test：四文件在测试数据库中可一次导入并回滚。
+附录 C：实施决策记录
+决策
+理由
+不再把《爆款基因档案》作为最终交付
+报告适合人阅读，但格式不稳定、难以直接导入和重算。
+保留每阶段中间 JSON
+Schema 变化时可重跑阶段8，避免重复消耗整条分析。
+Timeline 同时保留绝对和相对时间
+绝对时间用于证据，比例用于新时长迁移。
+Examples 同时带 Framework/Style/Timeline ID
+避免跨框架、跨风格检索时归属混乱。
+单案例只能生成候选框架
+防止把模型抽象误当成市场验证。
+默认 batch，保留 review
+满足节省验证时间，同时保留高价值案例的人审能力。
+
+交付结果  完成本规格后，Claude 的任务不再是写一份自由格式分析报告，而是按八个受控阶段生成证据充分的中间 JSON，并在阶段8导出一个可校验、可导入、可重跑的四层资产包。

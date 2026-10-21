@@ -1,0 +1,90 @@
+{
+  "verdict": "pass",
+  "total_score": 88,
+  "issues": [
+    {
+      "location": "CH03 0:33-0:39",
+      "dimension": "density",
+      "severity": "minor",
+      "evidence_quote": "So when did ancient humans first eat chili peppers? The answer starts before us. Stay with me.",
+      "problem": "词密度170wpm，超标(115%阈值为169.4wpm)，语速偏快可能削弱主问题悬挂的清晰度",
+      "suggestion": "略删1-2词或延长该章时长边界，使语速回落至147wpm附近"
+    },
+    {
+      "location": "CH05 2:01-2:31",
+      "dimension": "density",
+      "severity": "minor",
+      "evidence_quote": "And this isn't armchair theory. Feeding trials confirm the split.",
+      "problem": "词密度112wpm，偏稀(<80%阈值)。该章承担闭合LOOP03的实验验证功能，节奏偏松",
+      "suggestion": "可补入一处具体量化对照或第二项独立研究细节以填充节奏并强化intellectual_trust"
+    },
+    {
+      "location": "CH05 2:01-2:31",
+      "dimension": "blueprint",
+      "severity": "major",
+      "evidence_quote": "Measure the sensor response and the numbers line up. Different tolerance thresholds, same molecule.",
+      "problem": "Blueprint FS05 information_goal 明确要求'具体量化数据(浓度、摄入量、耐受阈值当量之类)'。脚本仅泛化描述'the numbers line up'与'different tolerance thresholds'，未落地任何可感知的量级/数值当量，量化冲击缺失",
+      "suggestion": "补入一处画面化的量级对照(如某浓度下鸟类摄食量与鼠类拒食的对比当量)，避免编造具体数字但需给出可感知的量级表达"
+    },
+    {
+      "location": "CH10 5:19-5:37",
+      "dimension": "density",
+      "severity": "minor",
+      "evidence_quote": "We are, as a species, a heat-seeking animal, drawn to the one flavor that fights back.",
+      "problem": "词密度117wpm，偏稀(<80%阈值)。worldview_upgrade定性句章节节奏偏松",
+      "suggestion": "可前置一句趋同发明逻辑的显式推理以填充，同时强化conviction"
+    },
+    {
+      "location": "CH14 8:50-9:36",
+      "dimension": "density",
+      "severity": "minor",
+      "evidence_quote": "We did not tolerate the fire. We chased it.",
+      "problem": "词密度112wpm，偏稀。综合定性顶点章节可承受更饱满信息量",
+      "suggestion": "补入跨案例共性蒙太奇的1-2项回收细节，强化reverence顶点"
+    },
+    {
+      "location": "CH15 9:36-10:11",
+      "dimension": "density",
+      "severity": "major",
+      "evidence_quote": "The burn alarm we answer with our tongues is tens of millions of years old, built long before us. Deliberate use shows up thousands of years ago in the Americas, before pottery, before settled farms.",
+      "problem": "词密度96wpm，偏稀(<80%阈值)。Blueprint FS15 information_goal 要求'关键年代数字的再次确认'，但脚本仅用'tens of millions of years'与'thousands of years'的模糊量级，未对前文已建立事实做数字层面的分层再确认，答案的智力满足度打折",
+      "suggestion": "在不引入新事实前提下，回收CH04/CH07已铺垫的时间锚点做更明确的分层复述，同时填充节奏"
+    },
+    {
+      "location": "CH16 10:11-10:59",
+      "dimension": "density",
+      "severity": "major",
+      "evidence_quote": "So tonight, when your lips sting and your eyes water and you reach for one more bite anyway, remember, you're answering the same dare a forager took at that riverbank.",
+      "problem": "词密度75wpm，严重偏稀(仅目标51%)。收尾章节节奏过松，可能造成结尾拖沓、情绪余韵稀释",
+      "suggestion": "或压缩该章时长边界至~45秒，或补入格言式收束的第二层意象以填满节奏"
+    },
+    {
+      "location": "CH03 0:33-0:39 / CH07 2:48-3:31 / CH11 5:37-7:23",
+      "dimension": "originality",
+      "severity": "minor",
+      "evidence_quote": "So when did ancient humans first eat chili peppers?",
+      "problem": "查重命中三处6词以上连续重合：'so when did ancient humans first'、'but at some point the story changes'、'and this is the detail that'。经比对，三处均属Style已登记的句式公式(LP03注意力预警/promise_setup原句式复述/LP08第一人称笑点背书'this is the detail that genuinely makes me laugh')，且填充的实质名词已全部替换为辣椒主题，非实质内容句照抄，予以豁免",
+      "suggestion": "可保留。如需进一步降重，'but at some point the story changes'可微调为同义变体，但非必须"
+    }
+  ],
+  "factual_claims": [
+    { "location": "CH04", "claim": "灼烧感来自capsaicin分子，通过一个同时对真实高温和物理损伤起反应的感受器被感知", "risk": "low" },
+    { "location": "CH04", "claim": "该'警报'感受系统在哺乳动物谱系深处演化形成，远早于烹饪出现", "risk": "medium" },
+    { "location": "CH04", "claim": "'Gatekeeper Hypothesis'：辣椒素筛选取食者——哺乳动物咀嚼破坏种子会被灼痛驱离，鸟类无法感知灼烧且不破坏种子故被放行", "risk": "medium" },
+    { "location": "CH05", "claim": "饲喂实验显示鼠类拒食辣椒而鸟类照常取食，感受器反应测量结果与此一致，构成两条独立证据", "risk": "medium" },
+    { "location": "CH07", "claim": "最早的确凿证据来自美洲遗址研磨石与炊具上的淀粉残留，经显微分析呈炭化、研磨、加工痕迹", "risk": "high" },
+    { "location": "CH07", "claim": "部分辣椒使用证据早于该地区的陶器烧制与定居农业村落", "risk": "high" },
+    { "location": "CH08", "claim": "关于最早使用动因存在三派学术观点：风味/食欲、药用(capsaicin杀灭某些细菌)、以及在炎热气候中通过发汗降温", "risk": "medium" },
+    { "location": "CH09", "claim": "中美洲将辣椒磨入饮品与可可混合；安第斯地区独立栽培本地辣椒品种并晒干跨谷贸易；亚马逊盆地湿地将辣椒加入鱼类与炖菜", "risk": "high" },
+    { "location": "CH09", "claim": "某些地区最早栽培者的后代至今仍种植同样的辣椒品种，传承未断，跨越约五千年", "risk": "high" },
+    { "location": "CH11", "claim": "中美洲辣椒成为贡赋单位，帝国如征税般索取，成袋干辣椒与黄金布匹并列记入官方账目", "risk": "high" },
+    { "location": "CH11", "claim": "辣椒出现在祭祀供品与仪式中，被抄写员写入图绘记录，考古出土残留物与文献记载相互印证", "risk": "high" },
+    { "location": "CH11", "claim": "古人按辣度、用途分类辣椒品种，形成描述灼烧的整套词汇", "risk": "medium" },
+    { "location": "CH11", "claim": "某些文化用辣椒烟作为武器，将辣椒投入炭火以呛退敌人或惩戒儿童；后世研究者复刻该烟证实其确实有效", "risk": "high" },
+    { "location": "CH12", "claim": "某些古代市场对辣椒欺诈(以次充好、掺假)设有真实处罚：罚款、公开羞辱等写入市场规则", "risk": "high" },
+    { "location": "CH13", "claim": "在无冷藏的炎热地区重度用辣可减缓食物腐败、掩盖已变质食物", "risk": "medium" },
+    { "location": "CH13", "claim": "治疗者将辣椒敷于伤口与酸痛关节", "risk": "medium" },
+    { "location": "CH13", "claim": "可从出土器物读出阶层分工：普通家庭用素面炊具，仪式用辣椒盛于更精细的装饰容器", "risk": "high" },
+    { "location": "CH15", "claim": "灼烧警报系统有数千万年历史；有意使用出现在数千年前的美洲、早于陶器与定居农业；并跨大陆独立传播", "risk": "high" }
+  ]
+}

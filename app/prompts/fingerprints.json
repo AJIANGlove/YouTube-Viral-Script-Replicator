@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-08-02",
+  "note": "爆款声音指纹模式库。LLM 结构检测语言无关(读 llm_hint);regex 仅作预筛加速,按语言积累,可为空数组。新增模式:追加一个 patterns 元素并升 version 即可,无需改代码。",
+  "patterns": [
+    {
+      "id": "reversal",
+      "name": "俗见反转",
+      "desc": "“你以为/人们以为 X……但其实/真相是 Y”式的俗见陈述+反转揭示结构",
+      "llm_hint": "识别“先陈述一个大众假设/常识,随即用转折词打脸揭示真相”的公式化句式,任何语言。典型标记:英语的 you think / the truth is / but the reality / turns out;韩语的 그런데 진짜 / 현실은 다르다;中文的 你以为…其实。只有当句子本身在制造“俗见→反转”节奏时才算,普通转折不算。",
+      "regex": {
+        "ko": ["그런데 (진짜|현실|사실)", "하지만 (현실|진짜|사실)", "현실은 다르", "사실은", "진실은"],
+        "zh": ["你以为", "其实", "事实上", "真相是", "现实是"],
+        "en": ["you think", "you'd think", "everyone thinks", "but the truth", "the truth is", "but the reality", "the reality is", "in reality", "turns out"]
+      }
+    },
+    {
+      "id": "generic_subject",
+      "name": "泛称主语",
+      "desc": "用“大多数人/人们/所有人”这类无锚点泛称主语下判断,没有任何具体数字、身份、场景支撑",
+      "llm_hint": "识别以泛称主语(people / most people / 대부분 / 사람들은 / 누구나 / 大多数人 / 大家)开头且不含任何具体锚点(数字、时间、地点、具体身份)的判断句。若句中已带具体锚点则不算。",
+      "regex": {
+        "ko": ["대부분", "사람들은", "사람들이", "누구나"],
+        "zh": ["大多数人", "所有人", "大家都", "很多人"],
+        "en": ["most people", "most owners", "everybody"]
+      }
+    },
+    {
+      "id": "secret_reveal",
+      "name": "无人告知",
+      "desc": "“没有人告诉你/没人谈论/老板自己都不知道”式的万能揭秘钩子",
+      "llm_hint": "识别“nobody tells you / 아무도 알려주지 않는 / 没人告诉你”这类把信息包装成“被隐瞒的秘密”的句式,以及“连当事人都不知道(모른다/모릅니다)”式的悬念断言,任何语言。",
+      "regex": {
+        "ko": ["아무도", "모른다", "모릅니다", "알려주지 않", "말해주지 않", "설명하지 않"],
+        "zh": ["没人", "没有人", "从未有人"],
+        "en": ["nobody tells you", "no one tells you", "nobody talks about", "no one talks about", "here's what nobody"]
+      }
+    },
+    {
+      "id": "transition_crank",
+      "name": "转折拐杖",
+      "desc": "句首高频依赖同一个转折词硬转(그런데/하지만/but/但),形成机械节奏",
+      "llm_hint": "识别以转折词开头、删掉该词句子依然成立的“拐杖句”:句首的 그런데/하지만/그래서/그리고、but / and here's、但/但是/问题是。重点是“为了制造节奏而硬加”的转折,逻辑上必需的转折不算。",
+      "regex": {
+        "ko": ["^(그런데|하지만|그래서|그리고|그럼)"],
+        "zh": ["^(但|但是|但问题是|问题是|然而)"],
+        "en": ["^but ", "^and here's", "^here's the thing", "^here's what", "but here's"]
+      }
+    }
+  ]
+}

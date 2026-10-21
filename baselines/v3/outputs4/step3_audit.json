@@ -1,0 +1,72 @@
+{
+  "verdict": "fail",
+  "total_score": 78,
+  "issues": [
+    {
+      "location": "CH03 0:33-0:38",
+      "dimension": "originality",
+      "severity": "blocker",
+      "evidence_quote": "So when did ancient humans first eat chili peppers?",
+      "problem": "查重报告命中6词以上连续重合 \"so when did ancient humans first\"。此为标题问题原句复述，Blueprint FS03 与 Framework 均要求'标题问题的显式复述'，但源案例问句结构被逐字沿用。style.language_patterns 无对应公式句式 pattern_id 可豁免此重合。",
+      "suggestion": "改写问句结构，如 'So how far back does humanity's chili habit actually run?' 或 'When exactly did our ancestors first bite into a chili?'，避开 'so when did ancient humans first' 的连续词串。"
+    },
+    {
+      "location": "CH06 2:30-2:48",
+      "dimension": "originality",
+      "severity": "blocker",
+      "evidence_quote": "But at some point the story flips.",
+      "problem": "查重报告命中 \"but at some point the story\"，对应 style transition 公式 'so we've established X, but at some point the story changes'。虽属换挡句式，但 forbidden_copy_elements 明列'原句'禁止复制，且此串为源案例原句。language_patterns 中无以此为公式的 pattern_id（LP 系列均无此条），故不满足豁免条件。",
+      "suggestion": "替换换挡措辞，如 'Then everything changes.' 或 'Here's where the story turns.'，避开 'but at some point the story' 连续串。"
+    },
+    {
+      "location": "CH11 5:36-7:24",
+      "dimension": "originality",
+      "severity": "blocker",
+      "evidence_quote": "All right, now let's talk about the civilization that stitched chili straight into its paperwork.",
+      "problem": "查重报告命中 \"let's talk about the civilization that\"。此为 narration_rules 元叙述兴奋点预告（'let's talk about the civilization that...'），但该串在源案例中出现为原句，forbidden_copy_elements 禁止复制原句。narration_rules 属 style 描述而非 language_patterns 的可豁免 pattern_id（LP01-LP08 中无此条），无法据 pattern_id 举证豁免。",
+      "suggestion": "改写元叙述引导，如 'Now jump to the civilization that wove chili into its bureaucracy.' 或 'Fast-forward to a state that filed chili into its ledgers.'，避开 'let's talk about the civilization that' 连续串。"
+    },
+    {
+      "location": "CH14 8:24-9:06",
+      "dimension": "density",
+      "severity": "minor",
+      "evidence_quote": "Line all of it up. The trade tallies. The fire god. The abstinence rite. The recipe that still works. The grave goods.",
+      "problem": "词密度报告标注偏稀：77词 110wpm，低于目标147.3的80%阈值。",
+      "suggestion": "在综合定性段增补一处共性推演或过渡句，使词数接近 word_budget=103，把语速抬回正常区间。"
+    },
+    {
+      "location": "CH15 9:06-9:42",
+      "dimension": "density",
+      "severity": "minor",
+      "evidence_quote": "So, when did ancient humans first eat chili peppers? Three answers, three layers.",
+      "problem": "词密度报告标注偏稀：66词 110wpm，低于目标147.3的80%阈值。",
+      "suggestion": "在分层答案复述中补充关键年代/层级细节（Blueprint FS15 要求'关键年代数字的再次确认'，当前脚本三层答案均无具体数字），既补足词数又满足 information_goal。"
+    },
+    {
+      "location": "CH15 9:06-9:42",
+      "dimension": "blueprint",
+      "severity": "major",
+      "evidence_quote": "The wiring came first, a pain channel shaped over millions of years, long before any human. The deliberate use came next, ground into cooking tools before villages, before pottery, before farming settled down. Then came the flood, the same choice made alone across separate regions.",
+      "problem": "Blueprint FS15 information_goal 明确要求'关键年代数字的再次确认（须与前文一致）'。但全片(CH04/CH07)从未给出任何具体年代数字（仅 'millions of years old'、'before villages/pottery/farming' 等相对表述），故 FS15 无数字可回收确认。虽 originality_constraint 禁止编造年份，导致前文无硬数字，但该分层收束缺少 Blueprint 要求的'关键数字再次确认'环节。",
+      "suggestion": "确认此为 Blueprint 内部张力（禁编数字 vs 要求确认数字）。若维持无具体年份策略，可将 FS15 的'数字确认'降级为对三层相对时序锚点（进化尺度/前定居/多地平行）的明确复述并与前文措辞对齐即可，无需强行造数。"
+    }
+  ],
+  "factual_claims": [
+    { "location": "CH04 0:38-2:00", "claim": "辣椒素通过劫持口腔中一个特定的痛觉感应通道产生灼烧感，该通道与触碰灼热物体时报警的是同一个", "risk": "low" },
+    { "location": "CH04 0:38-2:00", "claim": "辣椒演化出该分子是作为防御机制以驱赶动物", "risk": "medium" },
+    { "location": "CH04 0:38-2:00", "claim": "哺乳动物感受到灼烧而放弃，但鸟类无法感知该特定刺痛，会整粒吞下种子并完好散播", "risk": "medium" },
+    { "location": "CH05 2:00-2:30", "claim": "实验室研究确定了具体触发的神经通道及灼烧开启的浓度阈值，以百万分率的微小分数计量", "risk": "medium" },
+    { "location": "CH05 2:00-2:30", "claim": "野外投喂实验中，野生鸟类对处理过与未处理的种子偏好比例悬殊，鸟类完全无视刺痛", "risk": "medium" },
+    { "location": "CH07 2:48-3:36", "claim": "考古学家在古代烹饪面与磨石上发现微观淀粉粒与植硅体，即烤入工具的辣椒残留", "risk": "medium" },
+    { "location": "CH07 2:48-3:36", "claim": "这类辣椒加工证据出现在永久村落、陶窑与全职农业定居之前，人群仍处于流动状态", "risk": "high" },
+    { "location": "CH08 3:36-4:24", "claim": "学界就辣椒最早被利用动机分为'实用派'（杀菌/掩盖腐败/药用/保鲜）与'意义派'（灼烧本身作为归属标记）两个仍开放的阵营", "risk": "medium" },
+    { "location": "CH09 4:24-5:18", "claim": "三个互不接触的地区各自独立利用辣椒：某河谷用小型辛辣野生种入炖菜、某高地盆地培育肥大温和肉厚品种并熏干储存、某海岸渔业社区磨成酱料", "risk": "high" },
+    { "location": "CH09 4:24-5:18", "claim": "某河谷现代祖母仍研磨其祖先所用的同一地方品种辣椒，形成未断传承", "risk": "high" },
+    { "location": "CH11 5:36-7:24", "claim": "存在一个庞大的贡赋帝国，各省需以辣椒作为税项成袋上缴首都，辣椒成为财富单位", "risk": "high" },
+    { "location": "CH11 5:36-7:24", "claim": "该文化将辣椒关联到一位特定的火神/灶神，某些神圣时段人们需完全戒食辣椒作为虔诚形式", "risk": "high" },
+    { "location": "CH11 5:36-7:24", "claim": "彩绘古籍记录了哪些辣椒用于哪些菜肴、按强度排序、作为祭品列出，与出土厨房及储藏罐互证", "risk": "high" },
+    { "location": "CH11 5:36-7:24", "claim": "有研究者复刻了一份古代记载的仪式性辣椒配方，用真实食材与古法烹制成功且风味均衡", "risk": "high" },
+    { "location": "CH12 7:24-7:42", "claim": "某古代法典规定，商人以砖粉掺假辣椒粉被抓获者会被迫在集市当众吃下一大碗纯辣椒粉", "risk": "high" },
+    { "location": "CH13 7:42-8:24", "claim": "另一社会中辣椒按阶层分化：劳动者作日常调味/敷剂/防腐，精英则封于精美彩绘容器、刻主人纹章并随葬入墓", "risk": "high" }
+  ]
+}

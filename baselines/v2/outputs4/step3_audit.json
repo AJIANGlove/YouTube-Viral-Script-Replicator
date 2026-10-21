@@ -1,0 +1,59 @@
+{
+  "verdict": "pass",
+  "total_score": 88,
+  "issues": [
+    {
+      "location": "CH02 | 0:34–2:02",
+      "dimension": "blueprint",
+      "severity": "minor",
+      "evidence_quote": "And once you see that principle, every strange choice they made begins to click into place. The formation. The animals. The diet. The route. Each one a piece of the same machine.",
+      "problem": "系统性预告列出'formation/animals/diet/route'四项，但正文实际拆解的子系统为编队、随身口粮、母马产奶、速度/机动、马群规模、屋顶式'负担即资产'、环境反转等，'route(路线)'并未作为独立子系统展开，预告与后文映射存在轻微不一致。",
+      "suggestion": "将预告项调整为与后文实际子系统对应（如'route'改为'the land'或'the speed'），或在后文补一个与路线相关的落点，保证预告-兑现闭环。"
+    },
+    {
+      "location": "全文",
+      "dimension": "density",
+      "severity": "minor",
+      "evidence_quote": "Imagine an army that carried no supply line. No grain stores. No wagon trains crawling behind it.",
+      "problem": "词密度报告未解析到 [CHxx] 章节标记（提示'未解析到 [CHxx] 章节标记'），无法据报告对各章 word_budget 达成度做逐章量化核对；脚本章节头格式为'[CH01 | 0:00–0:34 | identity_entry]'，与解析器期望的 [CHxx] 纯标记可能不匹配。",
+      "suggestion": "确认词密度解析器对章节头格式的兼容性，或统一章节标记格式以便密度报告生效；此为工具侧问题，非脚本实质缺陷。"
+    }
+  ],
+  "factual_claims": [
+    {
+      "location": "CH04",
+      "claim": "蒙古军队随身携带干肉、硬化奶酪(curds)和奶粉作为口粮，脱水后能量密度极高、可数月不腐",
+      "risk": "medium"
+    },
+    {
+      "location": "CH05",
+      "claim": "每个战士带多匹马，行军中母马持续产奶，一群母马每日产奶量足以维持随行士兵",
+      "risk": "medium"
+    },
+    {
+      "location": "CH07",
+      "claim": "每名战士常带三到四五匹备用马，十万骑兵的军队随行马匹数量为其数倍",
+      "risk": "medium"
+    },
+    {
+      "location": "CH07",
+      "claim": "困难时期蒙古人会从活马身上抽取少量血液作为食物，抽血后封口并让马恢复，不杀马",
+      "risk": "medium"
+    },
+    {
+      "location": "CH08",
+      "claim": "蒙古人通过轮换牲畜、休息坐骑、小量取奶取血、在草地耗尽前移动来精确管理活体补给",
+      "risk": "medium"
+    },
+    {
+      "location": "CH09",
+      "claim": "马群在行军途中产驹，靠自身繁殖补充损失，几乎无需人为干预即可维持数量",
+      "risk": "medium"
+    },
+    {
+      "location": "CH03/CH10",
+      "claim": "蒙古军队以分散队形行军以让马匹分区吃草而不耗尽某一处草地，将行军本身变为觅食模式",
+      "risk": "medium"
+    }
+  ]
+}

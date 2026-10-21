@@ -1,0 +1,73 @@
+{
+  "verdict": "fail",
+  "total_score": 72,
+  "issues": [
+    {
+      "location": "CH01 0:00-0:38",
+      "dimension": "originality",
+      "severity": "blocker",
+      "evidence_quote": "But feline behavioral science tells a completely different story.",
+      "problem": "查重报告命中6词以上连续重合 'tells a completely different story because'，与源视频科学预告句高度雷同，未落在任何 style.language_patterns 公式句式内，无法豁免。",
+      "suggestion": "改写科学预告句，避开 'tells a completely different story' 措辞，例如换成 'the science points somewhere else entirely' 之类的原创换挡表述。"
+    },
+    {
+      "location": "CH04 2:09-3:46",
+      "dimension": "originality",
+      "severity": "blocker",
+      "evidence_quote": "oxytocin, if you haven't heard the name, it's the same chemical that spikes between a parent and a newborn",
+      "problem": "查重报告命中 'if you haven't heard the name'。虽然该短语对应 LP03（术语现场翻译，formula: 术语 + 'if you haven't heard the name' + 一句人话定义），可举证为公式句式，但源视频亦用同一术语（oxytocin）+同一插入语+同类比喻（parent/newborn），构成整体措辞复用，超出'模仿句法不复制专有措辞'的护栏。",
+      "suggestion": "保留 LP03 句式框架但更换插入语措辞与后半通俗定义，例如 'oxytocin — the bonding chemical, the one your own body floods with during close contact'，避免与源句 'the same chemical' 落点重合。"
+    },
+    {
+      "location": "CH09 7:55-9:07",
+      "dimension": "originality",
+      "severity": "blocker",
+      "evidence_quote": "Now the last thing, and it might be the most important part.",
+      "problem": "查重报告命中 'and it might be the most important' 与 'might be the most important part' 两条连续重合，对应重要性声明换挡（narration_rules.transition_style 'there's one last thing, it might be the most important part'），但该短语在 style 中被记录为源案例原句而非抽象公式，属专有措辞复用，非 language_patterns 中带 pattern_id 的公式，不予豁免。",
+      "suggestion": "改写重要性声明句，避开 'the most important part'，例如 'And there's one more thing worth more than all of it' 之类原创表述。"
+    },
+    {
+      "location": "CH04 2:09-3:46",
+      "dimension": "density",
+      "severity": "minor",
+      "evidence_quote": "When your cat locks eyes with you and lets them drift shut, something is firing under the fur.",
+      "problem": "词密度报告标记该章 145wpm 偏稀（<80% 目标）。",
+      "suggestion": "适度增补内容或压缩时间窗，使语速回落至目标区间。"
+    },
+    {
+      "location": "CH06 5:16-6:19",
+      "dimension": "density",
+      "severity": "minor",
+      "evidence_quote": "Now here's a study that almost never gets mentioned.",
+      "problem": "词密度报告标记该章 150wpm 偏稀（<80% 目标）。",
+      "suggestion": "增补机制解释细节或缩短时间区间。"
+    },
+    {
+      "location": "CH07 6:19-6:50",
+      "dimension": "density",
+      "severity": "minor",
+      "evidence_quote": "And that reframes the whole thing.",
+      "problem": "词密度报告标记该章 145wpm 偏稀（<80% 目标）。",
+      "suggestion": "小幅扩写常态重构视角或压缩窗口。"
+    },
+    {
+      "location": "CH08 6:50-7:55",
+      "dimension": "density",
+      "severity": "minor",
+      "evidence_quote": "And the newest work takes this somewhere almost hard to believe.",
+      "problem": "词密度报告标记该章 143wpm 偏稀（<80% 目标）。",
+      "suggestion": "补充生理同步研究的通俗解释细节或缩短时间窗。"
+    }
+  ],
+  "factual_claims": [
+    { "location": "CH03 1:19-2:09", "claim": "一组动物认知研究者做实验：主人对猫慢眨眼，猫更可能回眨并走近该主人，而非面无表情盯着它的中性人。", "risk": "medium" },
+    { "location": "CH04 2:09-3:46", "claim": "催产素是父母与新生儿之间会激增的同种化学物质。", "risk": "low" },
+    { "location": "CH04 2:09-3:46", "claim": "家猫的野生近缘（在人身边长大但未真正建立联结）对人类软眼信号几乎无反应，慢眨眼回路需要联结才能闭合。", "risk": "medium" },
+    { "location": "CH05 3:46-5:16", "claim": "人猫关系远早于普遍认知，在猫被有意喂养、成为现代意义宠物之前就已存在。", "risk": "medium" },
+    { "location": "CH05 3:46-5:16", "claim": "在一处古代墓葬中，一人与一只小猫被并排、同向、紧邻埋葬。", "risk": "medium" },
+    { "location": "CH05 3:46-5:16", "claim": "遗传学家比较家猫与野生祖先，发现与恐惧、压力、以及对友好面孔的读取和反应相关的基因存在真实差异。", "risk": "high" },
+    { "location": "CH06 5:16-6:19", "claim": "研究者追踪慢眨眼交流中的身体压力标记，客观数值变化不大，但同批猫行为明显改变（更靠近、停留更久、选择留在眨眼者所在房间）。", "risk": "medium" },
+    { "location": "CH08 6:50-7:55", "claim": "近期研究发现，在平静眼软时刻，猫的呼吸节律与主人的呼吸开始趋同、进入共享节拍；与陌生人则无此同步。", "risk": "high" },
+    { "location": "CH09 7:55-9:07", "claim": "视觉与认知变化在年老猫中足够常见，慢眨眼行为的突变可能指向压力、疼痛或视觉/认知改变。", "risk": "medium" }
+  ]
+}
