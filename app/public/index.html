@@ -100,6 +100,28 @@
   .runs-live { margin-left: 10px; font-size: 11px; color: #059669; display: flex; align-items: center; gap: 5px; }
   .runs-live::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #10b981; animation: pulse 1.6s ease-in-out infinite; }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
+  .runs-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 2px 12px; }
+  .runs-toolbar input.runs-search { width: 260px; }
+  .runs-toolbar select { width: auto; min-width: 104px; }
+  .runs-chip-row { display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .runs-toolbar .chip { margin: 0; font-size: 11px; padding: 3px 10px; }
+  .runs-toolbar .chip.viral-chip.on { background: #d97706; border-color: #d97706; color: #fff; }
+  .runs-pager { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 2px 2px; font-size: 12px; color: #6b7280; }
+  .runs-pager .pg-nav { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+  .runs-pager .pgbtn { min-width: 26px; height: 26px; padding: 0 7px; border: 1px solid #d1d5db; border-radius: 5px; background: #fff; color: #374151; font-size: 12px; cursor: pointer; }
+  .runs-pager .pgbtn:hover:not(:disabled) { border-color: #2563eb; color: #2563eb; }
+  .runs-pager .pgbtn.cur { background: #2563eb; border-color: #2563eb; color: #fff; cursor: default; }
+  .runs-pager .pgbtn:disabled { color: #d1d5db; border-color: #e5e7eb; cursor: default; }
+  .runs-pager .pg-gap { color: #9ca3af; padding: 0 2px; }
+  .runs-pager select { width: auto; font-size: 12px; padding: 3px 6px; }
+  .runs-table tr.viral-row td { background: #fffbeb; }
+  .runs-table tr.viral-row td:first-child { box-shadow: inset 3px 0 0 #d97706; }
+  .runs-table tr.viral-row:hover td { background: #fef3c7; }
+  .viral-star { vertical-align: -2px; }
+  .viral-mark { color: #d97706; margin-right: 5px; }
+  .op-btn.viral { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; }
+  .op-btn.viral.on { color: #b45309; border-color: #f0b429; background: #fffbeb; font-weight: 600; }
+  .op-btn.viral.on:hover { background: #fef3c7; border-color: #d97706; }
   .runs-table th { padding: 10px 8px; border-bottom: 2px solid #e5e7eb; white-space: nowrap; }
   .runs-table td { padding: 10px 8px; vertical-align: top; line-height: 1.5; }
   .runs-table td .sub { display: block; font-size: 11px; color: #9ca3af; margin-top: 2px; }
@@ -418,6 +440,21 @@
         title="向视频网站查询已推送项目的最新状态">刷新视频状态</button>
       <span class="runs-live">自动刷新中</span>
     </div>
+    <div class="runs-toolbar">
+      <input type="text" id="runs-q" class="runs-search" placeholder="搜索主题 / 框架 / 源标题 / 频道"
+        oninput="onRunsSearch(this.value)">
+      <select id="runs-range" onchange="setRunsRange(this.value)">
+        <option value="all">全部时间</option>
+        <option value="7">近 7 天</option>
+        <option value="30">近 30 天</option>
+        <option value="90">近 90 天</option>
+      </select>
+      <span class="runs-chip-row" id="runs-status-chips"></span>
+      <span class="runs-chip-row" id="runs-lang-chips"></span>
+      <span class="runs-chip-row" id="runs-video-chips"></span>
+      <span class="runs-chip-row" id="runs-viral-chip"></span>
+      <button class="ghost" id="runs-clear" onclick="clearRunsFilter()">清空筛选</button>
+    </div>
     <div class="card" style="padding:6px 16px 12px">
       <table class="runs-table">
         <thead><tr>
@@ -430,11 +467,12 @@
           <th style="width:5%">步骤</th>
           <th style="width:9%">创建时间</th>
           <th style="width:9%">结束时间</th>
-          <th style="width:7%">操作</th>
+          <th style="width:8%">操作</th>
         </tr></thead>
         <tbody id="runs-tbody"></tbody>
       </table>
       <div id="runs-empty" class="runs-empty hidden">暂无任务，去「文案创作」发起第一个生成任务吧。</div>
+      <div id="runs-pager" class="runs-pager"></div>
     </div>
   </div>
 
@@ -596,7 +634,7 @@ function showView(v) {
   if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
   if (v === 'library') loadAssets();
   if (v === 'generate') loadGenAssets();
-  if (v === 'runs') { loadRuns(); pollTimer = setInterval(loadRuns, 3000); }
+  if (v === 'runs') { parseRunsHash(); syncRunsToolbar(); loadRuns(); pollTimer = setInterval(() => loadRuns({ silent: true }), 3000); }
   if (v === 'detail' && currentRunId) { loadRunDetail(); pollTimer = setInterval(loadRunDetail, 3000); }
   if (v === 'settings') loadSettings();
 }
@@ -1002,6 +1040,13 @@ function audienceCell(a) {
   return `${lang} · ${country} · ${goal}${aud}`;
 }
 
+// 爆款图标:实心 = 已标记,空心 = 未标记(内联 SVG,避免 emoji 在 Win 下渲染成彩色)
+function viralIcon(filled, cls) {
+  return `<svg class="viral-star${cls ? ' ' + cls : ''}" width="12" height="12" viewBox="0 0 24 24" aria-hidden="true">`
+    + `<path d="M12 2.8l2.85 5.78 6.38.93-4.62 4.5 1.09 6.36L12 17.36l-5.7 3.01 1.09-6.36-4.62-4.5 6.38-.93z"`
+    + ` fill="${filled ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`;
+}
+
 function runOpsCell(r) {
   if (r.status === 'queued' || r.status === 'running') {
     return `<button class="op-btn danger" onclick="event.stopPropagation();cancelRunById('${r.id}')">取消</button>`;
@@ -1009,7 +1054,11 @@ function runOpsCell(r) {
   if (r.status === 'failed' || r.status === 'cancelled') {
     return `<button class="op-btn" onclick="event.stopPropagation();retryRunById('${r.id}')">重试</button>`;
   }
-  return '<span class="hint" style="margin-top:0">—</span>';
+  // 仅已完成任务可标记爆款(服务端同样校验);再次点击取消
+  const marked = !!(r.viral && r.viral.marked);
+  return `<button class="op-btn viral${marked ? ' on' : ''}" title="${marked ? '点击取消爆款标记' : '标记为爆款(整行高亮)'}"`
+    + ` onclick="event.stopPropagation();toggleRunViral('${r.id}',${marked ? 'false' : 'true'})">`
+    + `${viralIcon(marked)}<span>爆款</span></button>`;
 }
 
 // 版本徽标:v1 → V1、v1_5 → V1.5
@@ -1027,29 +1076,252 @@ function videoStatusCell(v) {
     + ` onclick="event.stopPropagation()" title="${esc(tip || '打开视频网站项目')}">${body}</a>`;
 }
 
-async function loadRuns() {
-  const [list, assets] = await Promise.all([api('/api/runs'), api('/api/assets')]);
-  const assetMap = {};
-  assets.forEach(a => { assetMap[a.id] = a; });
-  document.getElementById('runs-count').textContent = list.length ? `共 ${list.length} 个任务` : '';
-  document.getElementById('runs-empty').classList.toggle('hidden', list.length > 0);
-  const ended = s => ['done', 'failed', 'cancelled'].includes(s);
-  document.getElementById('runs-tbody').innerHTML = list.map(r => {
-    const zh = (assetMap[r.asset_id] || {}).source_title_zh;
-    return `
-    <tr class="clickable" onclick="openRun('${r.id}')">
-      <td>${esc(r.topic)}</td>
-      <td>${esc(r.asset_name || r.asset_id)}${zh ? `<span class="sub">源:${esc(zh)}</span>` : ''}</td>
+// ---------- 任务列表:筛选 / 分页 / 爆款 ----------
+// 筛选与分页全部在服务端完成(见 GET /api/runs),前端只保存查询条件与当前页数据;
+// 3 秒轮询只在数据指纹变化时重绘,避免打断输入、翻页和滚动。
+const RUNS_PAGE_SIZES = [20, 50, 100];
+const VIDEO_STATUS_LABELS = { none: '未推送', draft: '草稿', running: '生产中', paused: '已暂停', completed: '已完成', failed: '失败' };
+const RUNS_STATUS_ORDER = ['done', 'running', 'queued', 'failed', 'cancelled'];
+const RUN_ENDED = s => ['done', 'failed', 'cancelled'].includes(s);
+const runsFilter = { q: '', status: [], lang: [], video: [], viral: false, range: 'all', page: 1, page_size: 50 };
+let runsData = null;
+let runsSig = '';
+let runsSearchTimer = null;
+
+function runsRangeFrom(range) {
+  const days = Number(range);
+  return days ? new Date(Date.now() - days * 86400000).toISOString() : '';
+}
+
+function runsApiQuery() {
+  const p = new URLSearchParams();
+  if (runsFilter.q.trim()) p.set('q', runsFilter.q.trim());
+  if (runsFilter.status.length) p.set('status', runsFilter.status.join(','));
+  if (runsFilter.lang.length) p.set('lang', runsFilter.lang.join(','));
+  if (runsFilter.video.length) p.set('video', runsFilter.video.join(','));
+  if (runsFilter.viral) p.set('viral', '1');
+  const from = runsRangeFrom(runsFilter.range);
+  if (from) p.set('from', from);
+  p.set('page', String(runsFilter.page));
+  p.set('page_size', String(runsFilter.page_size));
+  return p.toString();
+}
+
+function runsHashQuery() {
+  const p = new URLSearchParams();
+  if (runsFilter.q.trim()) p.set('q', runsFilter.q.trim());
+  if (runsFilter.status.length) p.set('status', runsFilter.status.join(','));
+  if (runsFilter.lang.length) p.set('lang', runsFilter.lang.join(','));
+  if (runsFilter.video.length) p.set('video', runsFilter.video.join(','));
+  if (runsFilter.viral) p.set('viral', '1');
+  if (runsFilter.range !== 'all') p.set('range', runsFilter.range);
+  if (runsFilter.page > 1) p.set('page', String(runsFilter.page));
+  if (runsFilter.page_size !== 50) p.set('page_size', String(runsFilter.page_size));
+  return p.toString();
+}
+
+// 查询条件写进 hash:刷新页面或从详情页返回后仍保持;没有 hash 路由,不影响视图切换
+function syncRunsHash() {
+  const qs = runsHashQuery();
+  try { history.replaceState(null, '', '#runs' + (qs ? '?' + qs : '')); } catch (e) {}
+}
+
+function parseRunsHash() {
+  const h = location.hash || '';
+  if (!h.startsWith('#runs')) return;
+  const at = h.indexOf('?');
+  if (at === -1) return;
+  const p = new URLSearchParams(h.slice(at + 1));
+  const list = k => (p.get(k) || '').split(',').map(s => s.trim()).filter(Boolean);
+  runsFilter.q = p.get('q') || '';
+  runsFilter.status = list('status').filter(s => RUNS_STATUS_ORDER.includes(s));
+  runsFilter.lang = list('lang');
+  runsFilter.video = list('video').filter(s => VIDEO_STATUS_LABELS[s]);
+  runsFilter.viral = p.get('viral') === '1';
+  runsFilter.range = ['7', '30', '90'].includes(p.get('range')) ? p.get('range') : 'all';
+  runsFilter.page = Math.max(1, Number(p.get('page')) || 1);
+  runsFilter.page_size = RUNS_PAGE_SIZES.includes(Number(p.get('page_size'))) ? Number(p.get('page_size')) : 50;
+}
+
+function syncRunsToolbar() {
+  const q = document.getElementById('runs-q');
+  if (q) q.value = runsFilter.q;
+  const r = document.getElementById('runs-range');
+  if (r) r.value = runsFilter.range;
+}
+
+function refreshRuns() { syncRunsHash(); loadRuns(); }
+
+function onRunsSearch(v) {
+  runsFilter.q = v;
+  if (runsSearchTimer) clearTimeout(runsSearchTimer);
+  runsSearchTimer = setTimeout(() => { runsFilter.page = 1; refreshRuns(); }, 250);
+}
+
+function setRunsRange(v) { runsFilter.range = v; runsFilter.page = 1; refreshRuns(); }
+
+function toggleRunsFilter(kind, val) {
+  const cur = runsFilter[kind];
+  const i = cur.indexOf(val);
+  if (i === -1) cur.push(val); else cur.splice(i, 1);
+  runsFilter.page = 1;
+  refreshRuns();
+}
+
+function clearRunsFilterOf(kind) { runsFilter[kind] = []; runsFilter.page = 1; refreshRuns(); }
+
+function toggleRunsViral() { runsFilter.viral = !runsFilter.viral; runsFilter.page = 1; refreshRuns(); }
+
+function setRunsPageSize(v) { runsFilter.page_size = Number(v) || 50; runsFilter.page = 1; refreshRuns(); }
+
+function gotoRunsPage(p) { runsFilter.page = Math.max(1, Number(p) || 1); refreshRuns(); }
+
+function clearRunsFilter() {
+  runsFilter.q = ''; runsFilter.status = []; runsFilter.lang = []; runsFilter.video = [];
+  runsFilter.viral = false; runsFilter.range = 'all'; runsFilter.page = 1;
+  syncRunsToolbar();
+  refreshRuns();
+}
+
+async function loadRuns(opts) {
+  const silent = !!(opts && opts.silent);
+  let data;
+  try {
+    data = await api('/api/runs?' + runsApiQuery());
+  } catch (e) {
+    if (!silent) console.error('任务列表加载失败:', e);
+    return;
+  }
+  // 兼容旧进程:未重启前 /api/runs 仍返回数组,降级成"无筛选/无分页"渲染,避免整页空白
+  if (Array.isArray(data)) {
+    data = { items: data, total: data.length, total_all: data.length, page: 1, pages: 1, page_size: data.length || 50, facets: {} };
+  }
+  // 服务端会把页码收敛到有效范围(筛选后页数变少时),这里同步回本地状态
+  runsFilter.page = data.page;
+  runsFilter.page_size = data.page_size;
+  const sig = JSON.stringify([data.total, data.total_all, data.page, data.page_size,
+    data.items.map(r => [r.id, r.topic, r.status, r.current_step, r.has_error, r.channel_name, r.asset_zh,
+      r.video ? [r.video.status, r.video.stage_label, r.video.updated_at] : null,
+      !!(r.viral && r.viral.marked)])]);
+  if (silent && sig === runsSig) return; // 无变化不重绘:不打断输入/翻页/滚动
+  runsSig = sig;
+  runsData = data;
+  renderRuns();
+}
+
+function renderRuns() {
+  const d = runsData;
+  if (!d) return;
+  const filtered = d.total !== d.total_all;
+  document.getElementById('runs-count').textContent = d.total_all
+    ? `共 ${d.total_all} 个任务` + (filtered ? ` · 筛选出 ${d.total} 个` : '')
+    : '';
+  const empty = document.getElementById('runs-empty');
+  empty.classList.toggle('hidden', d.items.length > 0);
+  empty.textContent = d.total_all ? '没有符合筛选条件的任务。' : '暂无任务，去「文案创作」发起第一个生成任务吧。';
+  document.getElementById('runs-tbody').innerHTML = d.items.map(runRowHtml).join('');
+  renderRunsFilters();
+  renderRunsPager();
+}
+
+function runRowHtml(r) {
+  const marked = !!(r.viral && r.viral.marked);
+  const steps = r.boost_opening ? 5 : 4;
+  const stepText = r.status === 'running' ? 'Step ' + r.current_step + '/' + steps : (r.status === 'done' ? steps + '/' + steps : '—');
+  return `
+    <tr class="clickable${marked ? ' viral-row' : ''}" onclick="openRun('${r.id}')">
+      <td>${marked ? viralIcon(true, 'viral-mark') : ''}${esc(r.topic)}</td>
+      <td>${esc(r.asset_name || r.asset_id)}${r.asset_zh ? `<span class="sub">源:${esc(r.asset_zh)}</span>` : ''}</td>
       <td style="font-size:12px;color:#4b5563">${audienceCell(r.audience)}</td>
       <td style="font-size:12px;color:#4b5563">${r.channel_name ? esc(r.channel_name) : '<span class="vb-none">—</span>'}</td>
-      <td><span class="badge badge-${r.status}">${STATUS_LABELS[r.status] || r.status}${r.error ? ' ✗' : ''}</span></td>
+      <td><span class="badge badge-${r.status}">${STATUS_LABELS[r.status] || r.status}${r.has_error ? ' ✗' : ''}</span></td>
       <td>${videoStatusCell(r.video)}</td>
-      <td class="time">${(() => { const t = r.boost_opening ? 5 : 4; return r.status === 'running' ? 'Step ' + r.current_step + '/' + t : (r.status === 'done' ? t + '/' + t : '—'); })()}</td>
+      <td class="time">${stepText}</td>
       <td class="time">${fmtTime(r.created_at)}</td>
-      <td class="time">${ended(r.status) ? fmtTime(r.updated_at) : '—'}</td>
+      <td class="time">${RUN_ENDED(r.status) ? fmtTime(r.updated_at) : '—'}</td>
       <td>${runOpsCell(r)}</td>
     </tr>`;
-  }).join('');
+}
+
+function chipHtml(label, on, onclick, extraCls) {
+  return `<span class="chip${on ? ' on' : ''}${extraCls ? ' ' + extraCls : ''}" onclick="${onclick}">${label}</span>`;
+}
+
+function renderRunsFilters() {
+  const d = runsData;
+  const f = d.facets || {};
+  // 状态:多选,计数来自全量(不受其他筛选影响),便于判断还有多少任务可切
+  const st = f.status || {};
+  const statusChips = [chipHtml('全部 ' + d.total_all, !runsFilter.status.length, "clearRunsFilterOf('status')")];
+  RUNS_STATUS_ORDER.forEach(s => {
+    const n = st[s] || 0;
+    if (!n) return;
+    statusChips.push(chipHtml((STATUS_LABELS[s] || s) + ' ' + n, runsFilter.status.includes(s), `toggleRunsFilter('status','${s}')`));
+  });
+  document.getElementById('runs-status-chips').innerHTML = statusChips.join('');
+
+  // 语言:只有一种语言时没有筛选意义,不显示
+  const langs = Object.entries(f.language || {}).sort((a, b) => b[1] - a[1]);
+  document.getElementById('runs-lang-chips').innerHTML = langs.length > 1
+    ? langs.map(([k, n]) => chipHtml(esc(LANG_LABELS[k] || k) + ' ' + n, runsFilter.lang.includes(k), `toggleRunsFilter('lang','${k}')`)).join('')
+    : '';
+
+  // 视频状态:只有一种状态时没有筛选意义(常见于还没推送过视频),不显示
+  const vids = f.video || {};
+  const vidKeys = Object.keys(VIDEO_STATUS_LABELS).filter(k => vids[k]);
+  document.getElementById('runs-video-chips').innerHTML = vidKeys.length > 1
+    ? vidKeys.map(k => chipHtml(VIDEO_STATUS_LABELS[k] + ' ' + vids[k], runsFilter.video.includes(k), `toggleRunsFilter('video','${k}')`)).join('')
+    : '';
+
+  document.getElementById('runs-viral-chip').innerHTML =
+    chipHtml('★ 只看爆款', runsFilter.viral, 'toggleRunsViral()', 'viral-chip');
+
+  const anyFilter = !!(runsFilter.q.trim() || runsFilter.status.length || runsFilter.lang.length
+    || runsFilter.video.length || runsFilter.viral || runsFilter.range !== 'all');
+  document.getElementById('runs-clear').style.visibility = anyFilter ? 'visible' : 'hidden';
+}
+
+function renderRunsPager() {
+  const d = runsData;
+  const el = document.getElementById('runs-pager');
+  if (!d.total) { el.innerHTML = ''; return; }
+  const start = (d.page - 1) * d.page_size + 1;
+  const end = Math.min(d.total, d.page * d.page_size);
+  // 页码:首页 + 当前页左右各一 + 末页,中间用省略号
+  const nums = [];
+  [1, d.page - 1, d.page, d.page + 1, d.pages].forEach(p => {
+    if (p >= 1 && p <= d.pages && !nums.includes(p)) nums.push(p);
+  });
+  nums.sort((a, b) => a - b);
+  const nav = [`<button class="pgbtn" ${d.page <= 1 ? 'disabled' : ''} onclick="gotoRunsPage(${d.page - 1})">‹</button>`];
+  nums.forEach((p, i) => {
+    if (i && p - nums[i - 1] > 1) nav.push('<span class="pg-gap">…</span>');
+    nav.push(`<button class="pgbtn${p === d.page ? ' cur' : ''}" onclick="gotoRunsPage(${p})">${p}</button>`);
+  });
+  nav.push(`<button class="pgbtn" ${d.page >= d.pages ? 'disabled' : ''} onclick="gotoRunsPage(${d.page + 1})">›</button>`);
+  el.innerHTML = `<span>共 ${d.total} 条 · 第 ${start}–${end} 条</span>`
+    + `<span class="pg-nav">`
+    + `<select onchange="setRunsPageSize(this.value)">`
+    + RUNS_PAGE_SIZES.map(n => `<option value="${n}"${n === d.page_size ? ' selected' : ''}>每页 ${n} 条</option>`).join('')
+    + `</select>${nav.join('')}</span>`;
+}
+
+// 爆款开关:传目标状态(而不是 toggle),避免连点/多端并发把状态翻反
+async function toggleRunViral(id, marked) {
+  try {
+    const res = await api('/api/runs/' + id + '/viral', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ marked })
+    });
+    const item = runsData && runsData.items.find(x => x.id === id);
+    if (item) item.viral = res.viral;
+    if (runsFilter.viral && !marked) { loadRuns(); return; } // 只看爆款时取消标记,该行应离开当前筛选
+    runsSig = '';
+    renderRuns();
+  } catch (e) {
+    alert('操作失败：' + e.message);
+  }
 }
 
 async function cancelRunById(id) {

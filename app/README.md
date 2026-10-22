@@ -16,6 +16,10 @@ node app/server.js
 1. **资产库**:上传四层 JSON(+ 可选源 SRT),严格校验(asset_type、schema_version、asset_bundle_id、framework_id、source_case_id 跨文件一致),不合格拒收;现有 5 个资产已全部预置并通过校验。
 2. **新建生成**:选框架资产 → 填新主题 + Audience Context → 自动执行 Blueprint → Script → Audit → Optimization。多任务并行,互不阻塞。
 3. **任务页**:所有任务实时进度(每 3 秒轮询),点进详情可见每步耗时、校验报告、各步产物、最终脚本(复制/下载)、fact_check_list 待核实清单。
+   - 筛选与分页全部在服务端完成(`GET /api/runs`,参数 `q` / `status` / `lang` / `video` / `viral` / `from` / `to` / `page` / `page_size`):关键词搜主题·框架·源标题·频道,状态多选,时间范围(全部/近 7·30·90 天,按 created_at),语言 chip,视频状态,只看爆款;默认每页 50 条,可选 20/100。查询条件写入 URL hash,刷新或从详情返回后保持。
+   - 列表数据来自 `data/runs.index.json`(只存列表字段 + 各 run 文件的 mtime/size 指纹):读取前用 readdir+stat 校验,不一致(新增/删除/被外部改写)才整体重建;正常写入由 `saveRun` 同步维护。列表页不再请求 `/api/assets`(源标题中文已并入索引)。
+   - 轮询只在数据指纹变化时重绘,不打断输入、翻页与滚动;旧进程返回数组时前端降级为无筛选渲染(仅为重启前的兼容窗口)。
+   - **爆款标记**:操作列的「☆ 爆款」按钮,点击后整行高亮(左侧琥珀色条 + 浅色底 + 主题前实心星),再次点击取消。行级标记、不绑定版本文案,仅 `status=done` 可标记;`POST /api/runs/:id/viral` 传目标状态 `{marked}` 而非 toggle,标记不刷新 `updated_at`(避免改写已完成任务的结束时间)。
 4. **指纹检测与替换(任务详情页)**:对已完成任务的 V1 / V2 文案做"爆款声音指纹"检测(俗见反转、泛称主语、无人告知、转折拐杖四类),逐条给出改写建议;勾选后一键替换,生成 V1.5 / V2.5(底版原样保留,.5 永远 = 底版 + 最近一次确认的勾选),完整明细记入任务的 fingerprint_log。
    - 检测为"正则预筛 + LLM 复核改写"混合架构:模式库 `prompts/fingerprints.json` 提供各语言表面正则(候选)与语言无关的结构判定要点,LLM 做最终判定并逐句改写;已保存的检测结果再次打开不重新扣费,显式点"重新检测"才会再次调用。
    - 模式库维护:直接编辑 `prompts/fingerprints.json`(改 version 即可生效,服务端按文件 mtime 自动重载);候选句型可用 `node tools/mine_fingerprints.js` 从资产库与历史生成稿中挖掘,人工筛选后入库。

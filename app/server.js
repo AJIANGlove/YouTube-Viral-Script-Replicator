@@ -54,10 +54,9 @@ const PUSH_STATUS_LABELS = {
   failed: '失败'
 };
 
-function latestVideoPush(run, baseUrl) {
-  const pushes = Array.isArray(run.video_pushes) ? run.video_pushes : [];
-  if (!pushes.length) return null;
-  const p = pushes[pushes.length - 1];
+// 单条推送记录 → 前端展示形态(补状态中文与项目链接);列表索引与全量 run 共用同一套口径
+function videoPushView(p, baseUrl) {
+  if (!p) return null;
   const base = (baseUrl || video.DEFAULT_BASE_URL).replace(/\/+$/, '');
   return {
     push_id: p.push_id,
@@ -78,6 +77,12 @@ function latestVideoPush(run, baseUrl) {
       ? base + '/#/project/' + encodeURIComponent(p.project_id) + '/auto_progress'
       : null
   };
+}
+
+function latestVideoPush(run, baseUrl) {
+  const pushes = Array.isArray(run.video_pushes) ? run.video_pushes : [];
+  if (!pushes.length) return null;
+  return videoPushView(pushes[pushes.length - 1], baseUrl);
 }
 
 // 推送时读取任务的最新快照再追加,避免长时间请求期间其他写入被整对象覆盖
@@ -180,7 +185,10 @@ async function pushToVideo(run, { version, mode, confirmDuplicate }) {
 }
 
 const server = http.createServer(async (req, res) => {
-  const url = req.url.split('?')[0];
+  const fullUrl = req.url || '/';
+  const qAt = fullUrl.indexOf('?');
+  const url = qAt === -1 ? fullUrl : fullUrl.slice(0, qAt);
+  const query = new URLSearchParams(qAt === -1 ? '' : fullUrl.slice(qAt + 1));
   const method = req.method;
   try {
     // ---------- 设置 ----------
@@ -389,24 +397,34 @@ const server = http.createServer(async (req, res) => {
     }
 
     // ---------- 生成任务 ----------
+    // 任务列表:筛选 + 分页全部在服务端完成(数据来自 runs.index.json,不解析完整 run 文件)
+    // 查询参数:q(关键词) / status(逗号分隔多选) / lang(语言多选) / video(视频状态多选)
+    //          / viral=1(只看爆款) / from,to(ISO 时间,按 created_at) / page / page_size(20|50|100)
     if (url === '/api/runs' && method === 'GET') {
       const binding = video.loadBinding();
       const baseUrl = binding ? binding.base_url : null;
-      const runs = store.listRuns().map(r => ({
-        id: r.id, asset_id: r.asset_id, asset_name: r.asset_name, topic: r.topic,
-        status: r.status, current_step: r.current_step, created_at: r.created_at,
-        started_at: r.started_at || null, updated_at: r.updated_at, error: r.error || null,
-        audience: r.audience || {},
-        // 是否含旧第五阶段(强化开头):仅识别历史任务(创建时勾选过、或正在/曾经跑过 opening_boost);
-        // 新流程的强化开头是任务完成后的按需操作(见 /boost 端点),不再计入步骤数
-        boost_opening: !!r.boost_opening || !!((r.steps || {}).opening_boost),
-        opening_boosted: !!r.opening_boosted,
-        // 频道(创建任务时选择)与最新一条视频推送;历史任务无频道时为空
-        channel_id: r.channel_id || null,
-        channel_name: r.channel_name || null,
-        video: latestVideoPush(r, baseUrl)
-      }));
-      return send(res, 200, runs);
+      const csv = key => (query.get(key) || '').split(',').map(s => s.trim()).filter(Boolean);
+      const result = store.queryRuns({
+        q: query.get('q') || '',
+        statuses: csv('status'),
+        languages: csv('lang'),
+        videos: csv('video'),
+        viralOnly: query.get('viral') === '1',
+        from: query.get('from') || '',
+        to: query.get('to') || '',
+        page: query.get('page'),
+        pageSize: query.get('page_size')
+      });
+      return send(res, 200, {
+        items: result.items.map(it => ({ ...it, video: videoPushView(it.video, baseUrl) })),
+        total: result.total,
+        total_all: result.total_all,
+        page: result.page,
+        pages: result.pages,
+        page_size: result.page_size,
+        facets: result.facets,
+        built_at: result.built_at
+      });
     }
 
     if (url === '/api/runs' && method === 'POST') {
@@ -474,6 +492,20 @@ const server = http.createServer(async (req, res) => {
         }
         return send(res, e.status ? 502 : 400, { error: e.message });
       }
+    }
+
+    // 爆款标记:行级、不绑定版本、仅已完成任务可标记;取消标记不限状态(防止状态回退后锁死)
+    const viralMatch = url.match(/^\/api\/runs\/([\w-]+)\/viral$/);
+    if (viralMatch && method === 'POST') {
+      const body = await readBody(req);
+      const r = store.getRun(viralMatch[1]);
+      if (!r) return send(res, 404, { error: '任务不存在' });
+      const current = !!(r.viral && r.viral.marked);
+      const marked = typeof body.marked === 'boolean' ? body.marked : !current;
+      if (marked && r.status !== 'done') return send(res, 400, { error: '仅已完成的任务可标记爆款(当前: ' + r.status + ')' });
+      const saved = store.setRunViral(r.id, marked);
+      if (!saved) return send(res, 404, { error: '任务不存在' });
+      return send(res, 200, { ok: true, id: r.id, viral: saved.viral });
     }
 
     // 取消任务:排队中直接取消;生成中打标记,当前步骤跑完后由管线停置为 cancelled
@@ -864,6 +896,8 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, HOST, () => {
   store.ensureDirs();
+  // 预热任务列表索引(不存在/已过期则在此重建一次),避免第一次打开列表页时要等全量解析
+  try { store.queryRuns({ page: 1, pageSize: 50 }); } catch (e) { console.log('任务索引预热失败(不影响运行): ' + e.message); }
   const os = require('os');
   const nets = os.networkInterfaces();
   const lan = Object.values(nets).flat().find(n => n && n.family === 'IPv4' && !n.internal);
