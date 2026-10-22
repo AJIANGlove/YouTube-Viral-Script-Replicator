@@ -1,0 +1,895 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.376Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "relatable_scene_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.04,
+      "start_sec": 0,
+      "end_sec": 50.3,
+      "position_label": "0%–4%(0:00–0:50)",
+      "purpose": "第二人称日常微场景开场：让观众在身体经验里先承认一个反常悖论",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "question_pose",
+          "strength": 70,
+          "position_ratio": 0.0399,
+          "time_ms": 50271,
+          "reason": "标题问句首次显式端出，主悬念悬挂"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：这段关系中到底谁驯化了谁（标题问句的显式悬挂）",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_relatable_scene"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "paradox_hook",
+          "mechanism": "power_without_control"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "scale_tease",
+          "mechanism": "hundreds_of_millions_households"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "question_pose",
+          "mechanism": "title_question_surfaced"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_scene",
+        "power_paradox",
+        "scale_escalation"
+      ],
+      "original_moves": [
+        "共感场景",
+        "力量反差",
+        "'你可以但你不会'悖论",
+        "规模放大到亿级家庭"
+      ],
+      "abstract_move": "第二人称日常微场景开场：让观众在身体经验里先承认一个反常悖论",
+      "replacement_needs": [
+        "具体的身体场景细节",
+        "力量或量级的反差数字",
+        "'你可以但你不会'式的悖论句",
+        "规模放大到亿级家庭的过渡"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "second_person_relatable_scene_with_scale_tease",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 22325,
+        "evidence_refs": [
+          "C0001",
+          "C0007",
+          "C0019"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "standard_theory_steelman",
+      "start_ratio": 0.04,
+      "end_ratio": 0.066,
+      "start_sec": 50.3,
+      "end_sec": 83.6,
+      "position_label": "4%–6.6%(0:50–1:24)",
+      "purpose": "显式端出反转问句，并公允陈述主流理论作为靶子",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "steelman",
+          "mechanism": "standard_theory_presented"
+        }
+      ],
+      "required_retention_events": [
+        "title_question_pose",
+        "steelman",
+        "interpretation_pivot"
+      ],
+      "original_moves": [
+        "反转问句显式提出",
+        "主流理论完整复述（粮仓-害兽-伙伴链条）",
+        "施动/被动角色分配",
+        "'另一种解读'枢轴"
+      ],
+      "abstract_move": "显式端出反转问句，并公允陈述主流理论作为靶子",
+      "replacement_needs": [
+        "标题问句的显式提出",
+        "主流理论的完整复述与合理铺垫",
+        "施动与被动的角色分配点明",
+        "'另一种解读'的枢轴句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "term_definition",
+      "start_ratio": 0.066,
+      "end_ratio": 0.115,
+      "start_sec": 83.6,
+      "end_sec": 145.2,
+      "position_label": "6.6%–11.5%(1:24–2:25)",
+      "purpose": "精确界定核心概念，为后续套用建立标尺",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "pivot",
+          "mechanism": "alternative_interpretation"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "benchmark_case",
+          "mechanism": "gold_standard_contrast"
+        }
+      ],
+      "required_retention_events": [
+        "definition_move",
+        "benchmark_case"
+      ],
+      "original_moves": [
+        "解读方法宣告",
+        "概念定义（人为选择育种+基因层面区别）",
+        "范式对照案例",
+        "可测量差异清单"
+      ],
+      "abstract_move": "精确界定核心概念，为后续套用建立标尺",
+      "replacement_needs": [
+        "核心概念的权威式定义",
+        "符合定义的范式对照案例",
+        "可测量的判别维度清单"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "definition_application_reframe",
+      "start_ratio": 0.115,
+      "end_ratio": 0.189,
+      "start_sec": 145.2,
+      "end_sec": 238,
+      "position_label": "11.5%–18.9%(2:25–3:58)",
+      "purpose": "把定义逐条套用到主题对象上，得出'勉强符合、方向相反'的反常结论并改名",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.1797,
+          "time_ms": 226197,
+          "reason": "定义套用后改名为'殖民'：方向感倒置的第一个大反转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "anomaly_verdict",
+          "mechanism": "barely_meets_definition"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "reframe_verdict",
+          "mechanism": "rename_as_colonization"
+        }
+      ],
+      "required_retention_events": [
+        "anomaly_verdict",
+        "direction_reversal",
+        "reframe_naming"
+      ],
+      "original_moves": [
+        "套用定义：基因距离极小",
+        "适应方向反转（是对方适应人）",
+        "'奇怪的驯化'",
+        "改名为'殖民'"
+      ],
+      "abstract_move": "把定义逐条套用到主题对象上，得出'勉强符合、方向相反'的反常结论并改名",
+      "replacement_needs": [
+        "逐条套用定义的证据",
+        "适应方向被反转的关键句",
+        "一句改名式重新定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "deal_accounting",
+      "start_ratio": 0.189,
+      "end_ratio": 0.302,
+      "start_sec": 238,
+      "end_sec": 380.5,
+      "position_label": "18.9%–30.2%(3:58–6:21)",
+      "purpose": "对关系双方做投入产出清算，得出账本失衡的判决并重新追问",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.2749,
+          "time_ms": 346011,
+          "reason": "'账本并不含糊'：双向清算的失衡判决"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "弱势方凭什么拿到这份明显不对等的交易",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "no_investment_reveal",
+          "mechanism": "zero_training_required"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "byproduct_verdict",
+          "mechanism": "benefit_as_selfish_byproduct"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "ledger_verdict",
+          "mechanism": "accounting_not_ambiguous"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "dry_verdict",
+          "mechanism": "not_criticism_but_description"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "question_repose",
+          "mechanism": "how_did_it_get_this_deal"
+        }
+      ],
+      "required_retention_events": [
+        "ledger_verdict",
+        "deal_question_repose"
+      ],
+      "original_moves": [
+        "被动方贡献（害兽控制）公允评估",
+        "零投入、自利副产品的本质",
+        "主动方投入清单堆叠",
+        "'账本不含糊'判决",
+        "弱势方凭什么拿到这份交易"
+      ],
+      "abstract_move": "对关系双方做投入产出清算，得出账本失衡的判决并重新追问",
+      "replacement_needs": [
+        "被动方贡献的公允评估及其自利本质",
+        "主动方投入的清单式堆叠",
+        "账本判决短句",
+        "交易悬念的重新提出"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75);打开的悬念 LOOP02→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "mechanism_inventory",
+      "start_ratio": 0.302,
+      "end_ratio": 0.56,
+      "start_sec": 380.5,
+      "end_sec": 492.8,
+      "position_label": "30.2%–56%(6:21–8:13)",
+      "purpose": "逐条清点被动方牵引主动方的行为机制库，每条绑定研究或数据背书",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.3417,
+          "time_ms": 430132,
+          "reason": "信号频率落在人类幼崽区间：操纵精度的量化背书"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.5481,
+          "time_ms": 689911,
+          "reason": "'生物按摩'定性把物理机制落到观众身体体验"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "这种声音的物理特性为何堪称最高效的行为工具",
+          "closes_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "被忽视的健康维度是否会改写账本失衡的结论",
+          "closes_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "该振动对人体的疗效因果在受控研究中尚未确证：刻意保持开放，叙事用途是以显式的证据纪律维护全片可信度，并把'未证实但体验一致'的余地留给观众自行加权",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "answer_tease",
+          "mechanism": "answer_lies_in_manipulation"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "mechanism_reveal",
+          "mechanism": "human_directed_vocalization"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "mechanism_reveal",
+          "mechanism": "infant_frequency_components"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "mechanism_reveal",
+          "mechanism": "embedded_cry_component"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "dry_humor",
+          "mechanism": "built_in_shoot_naming"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "mechanism_reveal",
+          "mechanism": "affiliation_signal"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "physics_reveal",
+          "mechanism": "therapeutic_frequency_range"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "payoff",
+          "mechanism": "biological_massage_metaphor"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "new_dimension",
+          "mechanism": "almost_never_mentioned"
+        }
+      ],
+      "required_retention_events": [
+        "manipulation_thesis",
+        "study_backed_mechanism",
+        "payoff_metaphor"
+      ],
+      "original_moves": [
+        "操纵命题+'非意识操纵'限定",
+        "定向叫声机制",
+        "婴儿频率成分背书",
+        "恳求式呼噜的内嵌喊叫",
+        "'内置喊叫'定性"
+      ],
+      "abstract_move": "逐条清点被动方牵引主动方的行为机制库，每条绑定研究或数据背书",
+      "replacement_needs": [
+        "操纵命题的显式提出及'非意识操纵'的限定",
+        "至少三组机制：定向信号、频率拟合、接触性安抚",
+        "每组机制配研究或数据背书",
+        "冷面绰号式定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80)、PK05(75);打开的悬念 LOOP04→FS07、LOOP06(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "counterevidence_reconciliation",
+      "start_ratio": 0.56,
+      "end_ratio": 0.654,
+      "start_sec": 704.6,
+      "end_sec": 823.3,
+      "position_label": "56%–65.4%(11:45–13:43)",
+      "purpose": "主动端出反方最强证据并和解：交换比表面更对等",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "ledger_rebalance",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "reconciliation",
+          "mechanism": "exchange_more_mutual"
+        }
+      ],
+      "required_retention_events": [
+        "counterevidence_intro",
+        "ledger_rebalance"
+      ],
+      "original_moves": [
+        "被忽视维度引入",
+        "压力生理指标的可测量下降",
+        "心血管关联证据",
+        "'交换比表面更对等'和解句"
+      ],
+      "abstract_move": "主动端出反方最强证据并和解：交换比表面更对等",
+      "replacement_needs": [
+        "被忽视维度的显式引入",
+        "可测量的反方数据",
+        "'交换比表面更对等'的和解句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS06→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "behavioral_modification_evidence",
+      "start_ratio": 0.654,
+      "end_ratio": 0.732,
+      "start_sec": 823.3,
+      "end_sec": 921.6,
+      "position_label": "65.4%–73.2%(13:43–15:22)",
+      "purpose": "亮出最强证据：主动方的行为已被系统性改造",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "是什么导致理性的资源管理者持续向一个'低回报'对象转移资源",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "strongest_evidence_open",
+          "mechanism": "what_humans_actually_do"
+        }
+      ],
+      "required_retention_events": [
+        "behavior_checklist",
+        "scale_reveal"
+      ],
+      "original_moves": [
+        "迁就行为清单（家具、作息、语气和日程）",
+        "消费规模数字",
+        "'理性资源管理者为何这样做'的机制追问"
+      ],
+      "abstract_move": "亮出最强证据：主动方的行为已被系统性改造",
+      "replacement_needs": [
+        "主动方迁就行为的清单",
+        "资源转移的规模数字",
+        "'是什么导致这一结果'的机制追问"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "explanatory_mechanism",
+      "start_ratio": 0.732,
+      "end_ratio": 0.788,
+      "start_sec": 921.6,
+      "end_sec": 992.1,
+      "position_label": "73.2%–78.8%(15:22–16:32)",
+      "purpose": "给出解释机制：被动方拟合了主动方的先天反应系统",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.7719,
+          "time_ms": 971552,
+          "reason": "'潜入育儿照料系统'：全片最强解释机制闭环"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mechanism_explanation",
+          "opened_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "explanatory_mechanism",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "mechanism_question",
+          "mechanism": "parental_instinct_systems"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "infiltration_verdict",
+          "mechanism": "parental_care_hijack"
+        }
+      ],
+      "required_retention_events": [
+        "instinct_system_exposition",
+        "infiltration_verdict"
+      ],
+      "original_moves": [
+        "先天反应系统的刺激清单（大眼、圆脸、幼态声频）",
+        "幼态延续证据",
+        "'潜入育儿系统'判决",
+        "'非有意策略'限定"
+      ],
+      "abstract_move": "给出解释机制：被动方拟合了主动方的先天反应系统",
+      "replacement_needs": [
+        "先天反应系统的刺激清单",
+        "拟合证据",
+        "'非有意策略、系长期选择结果'的限定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85);回收了前文的悬念 FS05→LOOP02、FS08→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "canonical_comparison",
+      "start_ratio": 0.788,
+      "end_ratio": 0.877,
+      "start_sec": 992.1,
+      "end_sec": 1104.1,
+      "position_label": "78.8%–87.7%(16:32–18:24)",
+      "purpose": "与范式对照案例比较，凸显主题案例的控制不对称",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.8699,
+          "time_ms": 1094886,
+          "reason": "'定规则的一方即权力方'：论证的逻辑顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "control_asymmetry",
+          "mechanism": "interaction_on_its_terms"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "power_verdict",
+          "mechanism": "terms_setter_has_power"
+        }
+      ],
+      "required_retention_events": [
+        "attachment_study",
+        "power_verdict"
+      ],
+      "original_moves": [
+        "范式案例的依附画像",
+        "依恋研究背书",
+        "依恋性质差异（资源依赖 vs 社交依赖）",
+        "互动条款由谁制定",
+        "权力归属判决"
+      ],
+      "abstract_move": "与范式对照案例比较，凸显主题案例的控制不对称",
+      "replacement_needs": [
+        "范式案例的对照画像",
+        "依恋性质差异的证据",
+        "互动条款由谁制定的对照",
+        "权力归属判决句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "cultural_evidence",
+      "start_ratio": 0.877,
+      "end_ratio": 0.95,
+      "start_sec": 1104.1,
+      "end_sec": 1196.1,
+      "position_label": "87.7%–95%(18:24–19:56)",
+      "purpose": "用跨文明与当代文化证据佐证牵引的深度",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "evidence_reveal",
+          "strength": 75,
+          "position_ratio": 0.9346,
+          "time_ms": 1176276,
+          "reason": "'无限选择下人们仍选择它'：当代媒介证据的文化判决"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "cultural_reveal",
+          "mechanism": "cross_civilization_veneration"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "psychology_verdict",
+          "mechanism": "beyond_rational_explanation"
+        }
+      ],
+      "required_retention_events": [
+        "cross_civilization_evidence",
+        "blank_canvas_experiment"
+      ],
+      "original_moves": [
+        "跨文明符号化证据（多文明神祇与传统）",
+        "早期互联网的'空白画布'实验",
+        "内容主导地位的持续",
+        "'超出理性功利解释'收束"
+      ],
+      "abstract_move": "用跨文明与当代文化证据佐证牵引的深度",
+      "replacement_needs": [
+        "跨文明的符号化证据",
+        "当代媒介环境下的自由选择实验",
+        "'无法用理性功利解释'的收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "two_tier_verdict",
+      "start_ratio": 0.95,
+      "end_ratio": 0.993,
+      "start_sec": 1196.1,
+      "end_sec": 1250.3,
+      "position_label": "95%–99.3%(19:56–20:50)",
+      "purpose": "显式回答标题问句：字面层面不成立、功能层面成立",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "title_callback",
+          "strength": 90,
+          "position_ratio": 0.9712,
+          "time_ms": 1222366,
+          "reason": "双层判决：字面不成立、功能上成立，标题问句兑现"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "这场安排里到底哪一方说了算",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "two_tier_verdict",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "verdict_part1",
+          "mechanism": "literal_answer_no"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "verdict_part2",
+          "mechanism": "functional_answer_yes"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "final_question",
+          "mechanism": "which_side_in_charge"
+        }
+      ],
+      "required_retention_events": [
+        "two_tier_verdict",
+        "final_question"
+      ],
+      "original_moves": [
+        "问句重新端出",
+        "字面层面的否定及理由",
+        "功能层面的肯定及证据",
+        "双向改造的对称陈述",
+        "'哪一方说了算'的最终悬念"
+      ],
+      "abstract_move": "显式回答标题问句：字面层面不成立、功能层面成立",
+      "replacement_needs": [
+        "字面层面的否定及理由",
+        "功能层面的肯定及证据",
+        "双向改造的对称陈述",
+        "最终控制权问句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(90);打开的悬念 LOOP07→FS13 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "callback_closure",
+      "start_ratio": 0.993,
+      "end_ratio": 1,
+      "start_sec": 1250.3,
+      "end_sec": 1258.6,
+      "position_label": "99.3%–100%(20:50–20:59)",
+      "purpose": "回环开场场景，把判决落到观众自己身上收束",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9987,
+          "time_ms": 1257030,
+          "reason": "开场场景回环，'这就是你的答案'完成全片收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "callback_answer",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "callback_close",
+          "mechanism": "this_is_your_answer"
+        }
+      ],
+      "required_retention_events": [
+        "callback_closure"
+      ],
+      "original_moves": [
+        "开场场景逐句复现",
+        "悖论句改写为答案",
+        "收束判词"
+      ],
+      "abstract_move": "回环开场场景，把判决落到观众自己身上收束",
+      "replacement_needs": [
+        "开场场景的逐句复现",
+        "悖论句改写为答案",
+        "一句收束性判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(90);回收了前文的悬念 FS12→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

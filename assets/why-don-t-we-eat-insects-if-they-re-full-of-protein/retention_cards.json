@@ -1,0 +1,1050 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.422Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "paradox_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0298,
+      "start_sec": 0,
+      "end_sec": 51,
+      "position_label": "0%–3%(0:00–0:51)",
+      "purpose": "悖论冷开场：先确认前提事实成立，再立刻展示它对行为毫无约束力，并用长清单自证观众的日常标准远比想象中宽松",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：既然前提优点属实，为什么我们不照做（标题问句以悖论形式悬挂到结尾）",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook",
+          "mechanism": "paradox_cold_open"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "threat_turn",
+          "mechanism": "visceral_aversion_detail"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "contrast_turn",
+          "mechanism": "self_indicting_list_payoff"
+        }
+      ],
+      "required_retention_events": [
+        "premise_confirmed",
+        "paradox_established",
+        "self_indicting_list"
+      ],
+      "original_moves": [
+        "前提优点确认",
+        "优点无效化反差",
+        "日常双标长清单自证",
+        "悖论建立"
+      ],
+      "abstract_move": "悖论冷开场：先确认前提事实成立，再立刻展示它对行为毫无约束力，并用长清单自证观众的日常标准远比想象中宽松",
+      "replacement_needs": [
+        "前提优点的确认陈述",
+        "优点无效化的反差落点",
+        "观众日常更离谱行为的长清单自证"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 73000,
+        "hook_type": "paradox_cold_open_with_self_indicting_list",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 66000,
+        "evidence_refs": [
+          "C0001",
+          "C0006",
+          "C0010"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "premise_subversion",
+      "start_ratio": 0.0298,
+      "end_ratio": 0.087,
+      "start_sec": 51,
+      "end_sec": 149,
+      "position_label": "3%–8.7%(0:51–2:29)",
+      "purpose": "立靶与证伪：把最显而易见的解释公平陈述出来，再用全球反例当庭推翻，并把标题问句重构为更精确的版本",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.0385,
+          "time_ms": 66000,
+          "reason": "'其实我们一直在吃'：显而易见的解释在开场一分钟内被推翻，全片第一个认知翻转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "重构后的精确问句：为什么部分人群中途把它移出了食物范畴",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "思维实验悬念：两个同质对象为何待遇天差地别",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "premise_flip",
+          "mechanism": "obvious_answer_subversion"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "question_reframe",
+          "mechanism": "question_precision_upgrade"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "thesis_line",
+          "mechanism": "one_line_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "obvious_answer_built",
+        "counterexample_flip",
+        "question_reframed",
+        "thesis_verdict"
+      ],
+      "original_moves": [
+        "厌恶解释陈述",
+        "'Except humans do'翻转",
+        "全球食用证据清单",
+        "问句重构",
+        "'优点无法回答'核心论点",
+        "'必须感觉能吃'落点"
+      ],
+      "abstract_move": "立靶与证伪：把最显而易见的解释公平陈述出来，再用全球反例当庭推翻，并把标题问句重构为更精确的版本",
+      "replacement_needs": [
+        "显而易见解释的合理陈述",
+        "大规模反例证据",
+        "问句重构句",
+        "核心论点句：该优点不是缺失的信息"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(80);打开的悬念 LOOP02→FS11、LOOP03→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "thought_experiment_reveal",
+      "start_ratio": 0.087,
+      "end_ratio": 0.1115,
+      "start_sec": 149,
+      "end_sec": 191,
+      "position_label": "8.7%–11.2%(2:29–3:11)",
+      "purpose": "用一组'同一类事物、两种待遇'的思维实验，把抽象的双标变成可视画面，并用一句俏皮判词定性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "thought_experiment",
+          "mechanism": "parallel_plates_analogy"
+        }
+      ],
+      "required_retention_events": [
+        "parallel_thought_experiment",
+        "image_management_verdict"
+      ],
+      "original_moves": [
+        "两个对象并列描写",
+        "二者同质证据",
+        "'差距来自形象管理'俏皮判词"
+      ],
+      "abstract_move": "用一组'同一类事物、两种待遇'的思维实验，把抽象的双标变成可视画面，并用一句俏皮判词定性",
+      "replacement_needs": [
+        "两个对象的并列描写",
+        "二者同质的证据",
+        "一句把差距归因于形象管理的俏皮判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "category_mechanism_reveal",
+      "start_ratio": 0.1115,
+      "end_ratio": 0.1652,
+      "start_sec": 191,
+      "end_sec": 283,
+      "position_label": "11.2%–16.5%(3:11–4:43)",
+      "purpose": "揭示第一层心理机制：童年习得的分类系统如何决定什么算食物，以及工业加工如何把动物'去传记化'",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "humor_peak",
+          "strength": 75,
+          "position_ratio": 0.1115,
+          "time_ms": 191000,
+          "reason": "'它赢得了极佳的公关'：双标定性笑点，思维实验落点"
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.1372,
+          "time_ms": 235000,
+          "reason": "'鸡早已变成几何'：加工匿名化机制的画面化封存"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "humor_verdict",
+          "mechanism": "occupational_metaphor_wit"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "mechanism_key",
+          "mechanism": "childhood_category_learning"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "metaphor_verdict",
+          "mechanism": "anonymization_metaphor"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "mechanism_reveal",
+          "mechanism": "visible_biography"
+        }
+      ],
+      "required_retention_events": [
+        "category_learning",
+        "anonymization_chain",
+        "visible_biography_contrast"
+      ],
+      "original_moves": [
+        "分类机制",
+        "加工匿名化链条",
+        "'变成几何'判词",
+        "完整形态保留传记",
+        "可见特征触发厌恶"
+      ],
+      "abstract_move": "揭示第一层心理机制：童年习得的分类系统如何决定什么算食物，以及工业加工如何把动物'去传记化'",
+      "replacement_needs": [
+        "分类学习的机制解释",
+        "加工匿名化如何绕过防御的具体链条",
+        "完整形态保留'传记'的对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75)、PK03(75);回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evolutionary_reframe",
+      "start_ratio": 0.1652,
+      "end_ratio": 0.2306,
+      "start_sec": 283,
+      "end_sec": 359,
+      "position_label": "16.5%–23.1%(4:43–5:59)",
+      "purpose": "为被嘲笑的反应正名：厌恶是进化而来的快速防御系统，有用但不精确，连带污染由此产生",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "perspective_reframe",
+          "mechanism": "evolutionary_vindication"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "metaphor_verdict",
+          "mechanism": "nervous_security_guard"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "association_escalation",
+          "mechanism": "single_sighting_inference"
+        }
+      ],
+      "required_retention_events": [
+        "protection_function",
+        "imprecision_metaphor",
+        "contamination_association"
+      ],
+      "original_moves": [
+        "防御系统的进化功能",
+        "过度警觉保安的拟人化定性",
+        "与污染源为邻的场景清单",
+        "餐厅单点目击的联想升级"
+      ],
+      "abstract_move": "为被嘲笑的反应正名：厌恶是进化而来的快速防御系统，有用但不精确，连带污染由此产生",
+      "replacement_needs": [
+        "防御系统的进化功能陈述",
+        "系统不精确性的拟人化定性",
+        "连带污染的具体场景清单"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "overgeneralization_debunk",
+      "start_ratio": 0.2306,
+      "end_ratio": 0.2971,
+      "start_sec": 395,
+      "end_sec": 509,
+      "position_label": "23.1%–29.7%(6:35–8:29)",
+      "purpose": "拆掉以偏概全：一个词把上百万个物种压成一团，用亲缘类比与植物类比揭示其荒谬，并引入传统知识体系",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "humor_peak",
+          "strength": 70,
+          "position_ratio": 0.265,
+          "time_ms": 454000,
+          "reason": "毒芹'等待信心变成医疗事件'：排比第三项的荒诞笑点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "rehook",
+          "mechanism": "chain_equation_compression"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "debunk_turn",
+          "mechanism": "kinship_analogy"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "humor_peak",
+          "mechanism": "absurd_third_item"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "contrast_reveal",
+          "mechanism": "outsider_expert_symmetry"
+        }
+      ],
+      "required_retention_events": [
+        "equation_chain",
+        "kinship_analogy_debunk",
+        "traditional_expertise"
+      ],
+      "original_moves": [
+        "等式链压缩概括逻辑",
+        "同纲类比证伪",
+        "物种差异清单",
+        "植物类比",
+        "传统生态知识举证",
+        "外行与专家的对照判词"
+      ],
+      "abstract_move": "拆掉以偏概全：一个词把上百万个物种压成一团，用亲缘类比与植物类比揭示其荒谬，并引入传统知识体系",
+      "replacement_needs": [
+        "概括链条的压缩呈现",
+        "同纲不同命的类比证伪",
+        "传统知识的专业性举证"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "efficiency_economics",
+      "start_ratio": 0.2971,
+      "end_ratio": 0.3584,
+      "start_sec": 509,
+      "end_sec": 614,
+      "position_label": "29.7%–35.8%(8:29–10:14)",
+      "purpose": "引入经济学视角：食物价值取决于获取效率，并揭示史料中的保存偏差如何系统性扭曲我们的想象",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "economics_turn",
+          "mechanism": "energy_threshold_demo"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "bias_reveal",
+          "mechanism": "preservation_bias"
+        }
+      ],
+      "required_retention_events": [
+        "energy_threshold",
+        "preservation_bias_reveal"
+      ],
+      "original_moves": [
+        "丰度与可预测性",
+        "采集能量收支演示",
+        "'糟糕生意/丰收'对照",
+        "史前食用史",
+        "保存偏差机制",
+        "被扭曲的流行印象"
+      ],
+      "abstract_move": "引入经济学视角：食物价值取决于获取效率，并揭示史料中的保存偏差如何系统性扭曲我们的想象",
+      "replacement_needs": [
+        "能量收支的效率阈值演示",
+        "证据保存偏差的机制解释",
+        "被偏差扭曲的流行印象"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "claim_audit",
+      "start_ratio": 0.3584,
+      "end_ratio": 0.4256,
+      "start_sec": 614,
+      "end_sec": 729,
+      "position_label": "35.8%–42.6%(10:14–12:09)",
+      "purpose": "审计宣传口径：把标题暗示的优点与环保宣称放上秤，逐项给出'成立但有限定'的校准结论",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "标题暗示的优点宣称本身是否经得起计量审计",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP05",
+          "tension": "纸面效率如此之高，为什么胜出的是另一批家畜",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "calibrated_verdict",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "claim_caution",
+          "mechanism": "measurement_caveat"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "calibrated_verdict",
+          "mechanism": "one_line_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "claim_stated",
+        "inflation_mechanism",
+        "calibrated_verdict"
+      ],
+      "original_moves": [
+        "营养成分的实情",
+        "宣称需警惕",
+        "干重口径与外骨骼氮的夸大机制",
+        "'不是魔法胶囊'判词",
+        "纸面效率清单",
+        "'实用得可疑'"
+      ],
+      "abstract_move": "审计宣传口径：把标题暗示的优点与环保宣称放上秤，逐项给出'成立但有限定'的校准结论",
+      "replacement_needs": [
+        "宣称的原始版本",
+        "计量或统计口径造成的夸大机制",
+        "校准后的保留性结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "domestication_economics",
+      "start_ratio": 0.4256,
+      "end_ratio": 0.4629,
+      "start_sec": 729,
+      "end_sec": 793,
+      "position_label": "42.6%–46.3%(12:09–13:13)",
+      "purpose": "回答'为什么赢家是另一批'：胜出者提供的从来不是单一产出，而是一整套收益套餐",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.4437,
+          "time_ms": 760000,
+          "reason": "'行走的银行、引擎、肥料机'：驯化胜负的复合收益清单揭示"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "pivot_question",
+          "mechanism": "rhetorical_question_transition"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "list_reveal",
+          "mechanism": "benefit_package_list"
+        }
+      ],
+      "required_retention_events": [
+        "benefit_package_list",
+        "composite_asset_metaphor"
+      ],
+      "original_moves": [
+        "反问换挡",
+        "各家畜多功能收益清单",
+        "'行走的复合资产'形象判词",
+        "落选者的结构性短板"
+      ],
+      "abstract_move": "回答'为什么赢家是另一批'：胜出者提供的从来不是单一产出，而是一整套收益套餐",
+      "replacement_needs": [
+        "胜出者的多功能收益清单",
+        "一句把胜出者定性为复合资产的形象比喻",
+        "落选者的结构性短板"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "agriculture_urbanization_turn",
+      "start_ratio": 0.4629,
+      "end_ratio": 0.5172,
+      "start_sec": 793,
+      "end_sec": 886,
+      "position_label": "46.3%–51.7%(13:13–14:46)",
+      "purpose": "历史转折：生产方式与居住环境把该对象从资源改写为敌人与污染符号",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "economics_reveal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "metaphor_wit",
+          "mechanism": "occupational_metaphor_wit"
+        }
+      ],
+      "required_retention_events": [
+        "relationship_reversal",
+        "public_health_double_edge"
+      ],
+      "original_moves": [
+        "农业改变地貌与关系",
+        "'空中查税'拟人判词",
+        "城市污染生态",
+        "公共卫生运动的双面性",
+        "污名符号化"
+      ],
+      "abstract_move": "历史转折：生产方式与居住环境把该对象从资源改写为敌人与污染符号",
+      "replacement_needs": [
+        "关系反转的事件链",
+        "拟人化定性把对象写成对立角色",
+        "公共卫生教训的双面性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS08→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "status_identity_mechanism",
+      "start_ratio": 0.5172,
+      "end_ratio": 0.5674,
+      "start_sec": 886,
+      "end_sec": 972,
+      "position_label": "51.7%–56.7%(14:46–16:12)",
+      "purpose": "揭示身份机制：人们吃的不是热量而是身份，并用一个地位反转先例证明边界可以移动",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.5587,
+          "time_ms": 957000,
+          "reason": "地位反转先例：'动物没有重新设计自己，变的是名声'——边界可移动的证据支点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "historical_cause_chain",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "thesis_line",
+          "mechanism": "one_line_verdict"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "aphorism_verdict",
+          "mechanism": "temporal_inversion_aphorism"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "precedent_reversal",
+          "mechanism": "status_reversal_precedent"
+        }
+      ],
+      "required_retention_events": [
+        "identity_thesis",
+        "precedent_reversal",
+        "boundary_mobility"
+      ],
+      "original_moves": [
+        "身份进食论点",
+        "外部压力改写社会含义",
+        "'先尴尬后难吃'判词",
+        "反转先例",
+        "'对象没变，名声变了'点题",
+        "可移动性结论"
+      ],
+      "abstract_move": "揭示身份机制：人们吃的不是热量而是身份，并用一个地位反转先例证明边界可以移动",
+      "replacement_needs": [
+        "身份进食的论点句",
+        "外部压力改写社会含义的过程",
+        "地位反转先例与'对象本身没变'的点题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "obstacle_audit",
+      "start_ratio": 0.5674,
+      "end_ratio": 0.697,
+      "start_sec": 972,
+      "end_sec": 1194,
+      "position_label": "56.7%–69.7%(16:12–19:54)",
+      "purpose": "现实障碍三连查：价格、安全、环保各自成立但都有条件，打破'优点一摆万事大吉'的想象",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "humor_peak",
+          "strength": 70,
+          "position_ratio": 0.6071,
+          "time_ms": 1040000,
+          "reason": "'带着极少的筹码进入谈判'：价格现实段的俏皮判词"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "cost_reveal",
+          "mechanism": "price_comparison"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "humor_verdict",
+          "mechanism": "negotiation_metaphor"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "safety_verdict",
+          "mechanism": "advice_rejection"
+        }
+      ],
+      "required_retention_events": [
+        "cost_evidence",
+        "safety_boundary",
+        "context_dependent_environment"
+      ],
+      "original_moves": [
+        "优点饱和分析",
+        "成本结构举证",
+        "'谈判筹码不足'判词",
+        "安全边界与过敏机制",
+        "生产链规则",
+        "环保宣称的语境依赖",
+        "'供应链上的动物'判词"
+      ],
+      "abstract_move": "现实障碍三连查：价格、安全、环保各自成立但都有条件，打破'优点一摆万事大吉'的想象",
+      "replacement_needs": [
+        "成本结构的举证",
+        "安全边界的举证（含过敏与生产链）",
+        "环保宣称的语境依赖性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "perception_psychology",
+      "start_ratio": 0.697,
+      "end_ratio": 0.7828,
+      "start_sec": 1194,
+      "end_sec": 1341,
+      "position_label": "69.7%–78.3%(19:54–22:21)",
+      "purpose": "接受度心理：研究揭示人们反对的不是吃而是'知道自己在吃'，预期会改写味觉，菜系是被驯化的厌恶",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.7688,
+          "time_ms": 1317000,
+          "reason": "'菜系是受控的厌恶'：把全片心理机制升级为世界观的定性句"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "research_reveal",
+          "mechanism": "hidden_form_acceptance"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "self_recognition",
+          "mechanism": "objection_redefinition"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "worldview_verdict",
+          "mechanism": "concept_redefinition"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_form_acceptance",
+        "expectation_rewrites_taste",
+        "controlled_disgust_verdict"
+      ],
+      "original_moves": [
+        "隐藏形态接受度规律",
+        "'知道、看见、感觉'自我识破",
+        "标签与预期改写感官",
+        "各国离谱食物对照",
+        "'受控的厌恶'世界观判词"
+      ],
+      "abstract_move": "接受度心理：研究揭示人们反对的不是吃而是'知道自己在吃'，预期会改写味觉，菜系是被驯化的厌恶",
+      "replacement_needs": [
+        "隐藏形态提升接受度的研究规律",
+        "标签与预期改写感官体验的机制",
+        "各国'在外人看来离谱'食物的对照清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "failure_diagnosis",
+      "start_ratio": 0.7828,
+      "end_ratio": 0.8476,
+      "start_sec": 1341,
+      "end_sec": 1452,
+      "position_label": "78.3%–84.8%(22:21–24:12)",
+      "purpose": "诊断现代推广为何失败：把食物当道德测试推销注定失败，成功食物靠愉悦与声望而非说教传播",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "humor_peak",
+          "strength": 75,
+          "position_ratio": 0.8255,
+          "time_ms": 1414000,
+          "reason": "'带腿的作业'：道德说教式推广失败的揶揄定性，全片最佳笑点之一"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "现代推广为何屡败，真正有效的路径到底是什么",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "humor_verdict",
+          "mechanism": "homework_metaphor"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "precedent_mechanism",
+          "mechanism": "success_path_counterexample"
+        }
+      ],
+      "required_retention_events": [
+        "moral_test_parody",
+        "success_path_counterexample"
+      ],
+      "original_moves": [
+        "风味实情与处理方案",
+        "说教式推销排比",
+        "'带腿的作业'揶揄判词",
+        "成功案例的声望传播机制",
+        "同样规则的未来推断"
+      ],
+      "abstract_move": "诊断现代推广为何失败：把食物当道德测试推销注定失败，成功食物靠愉悦与声望而非说教传播",
+      "replacement_needs": [
+        "道德说教式推销的排比呈现",
+        "一句把消费者感受拟人化的揶揄判词",
+        "成功案例的传播机制对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(75);打开的悬念 LOOP06→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS15",
+      "function": "realistic_forecast",
+      "start_ratio": 0.8476,
+      "end_ratio": 0.9177,
+      "start_sec": 1452,
+      "end_sec": 1572,
+      "position_label": "84.8%–91.8%(24:12–26:12)",
+      "purpose": "给出克制的未来图景：最可能的路径是隐形嵌入与饲料化而非戏剧化替代，并为传统知识正名",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "realistic_path_list",
+        "tradition_credit_correction"
+      ],
+      "original_moves": [
+        "现实路径清单",
+        "饲料化的迂回价值",
+        "无戏剧性替代",
+        "'新发明的不是食物'纠正",
+        "反对功劳抢占与传统展品化",
+        "'食物是个人化的'边界声明"
+      ],
+      "abstract_move": "给出克制的未来图景：最可能的路径是隐形嵌入与饲料化而非戏剧化替代，并为传统知识正名",
+      "replacement_needs": [
+        "现实路径清单",
+        "对'全新发明'叙事的纠正",
+        "尊重传统与个人选择的边界声明"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS16",
+      "function": "synthesis_closure",
+      "start_ratio": 0.9177,
+      "end_ratio": 1,
+      "start_sec": 1572,
+      "end_sec": 1713,
+      "position_label": "91.8%–100%(26:12–28:33)",
+      "purpose": "标题问句显式回归，多因合成答案按序落地，给出改变所需的条件排比，以格言句完成前提推翻与全片收束",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "title_callback",
+          "strength": 90,
+          "position_ratio": 0.9982,
+          "time_ms": 1710000,
+          "reason": "'富含蛋白质的宣称从来都不是缺失的信息'：标题前提的相关性被推翻，全片情绪与论证的最高收束点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "它在抗拒文化中能否真正常态化：视频只给条件式预测不做承诺，叙事用途是把未来判断权交还观众，以'反应可能改变，但不会立刻'的开放性呼应'边界由文化而非化学移动'的全片主题",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_synthesis_answer",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "success_conditions_reveal",
+          "opened_in": "FS14"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "title_return",
+          "mechanism": "title_question_return"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "synthesis_line",
+          "mechanism": "chemistry_vs_culture"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "aphorism_payoff",
+          "mechanism": "generational_swap"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "final_verdict",
+          "mechanism": "premise_relevance_reversal"
+        }
+      ],
+      "required_retention_events": [
+        "title_question_return",
+        "multi_cause_synthesis",
+        "condition_parallel",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "标题问句回归",
+        "'很多人其实一直在吃'先行回答",
+        "多因压缩复述",
+        "改变条件主体排比",
+        "代际转换格言",
+        "前提相关性推翻的收束句"
+      ],
+      "abstract_move": "标题问句显式回归，多因合成答案按序落地，给出改变所需的条件排比，以格言句完成前提推翻与全片收束",
+      "replacement_needs": [
+        "标题问句的原样回归",
+        "多因合成的压缩复述",
+        "改变条件的主体排比",
+        "推翻前提相关性的格言句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(90);打开的悬念 LOOP07(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01、FS14→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

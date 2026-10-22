@@ -1,0 +1,901 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.320Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "anomaly_hook_and_deferred_accounting",
+      "start_ratio": 0,
+      "end_ratio": 0.1054,
+      "start_sec": 0,
+      "end_sec": 80,
+      "position_label": "0%–10.5%(0:00–1:20)",
+      "purpose": "用极端金额与同岗结果反差建立异常，再明确延期交付可核算答案",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：观众持续支付的钱究竟经过怎样的分配，为何销售者到账仍不等于真正所得",
+          "closes_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "同一办公室内极端高低收入为何能够并存",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "anomaly_scale",
+          "mechanism": "extreme_recruitment_offer"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "income_contrast",
+          "mechanism": "same_office_extreme_gap"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "identity_retarget",
+          "mechanism": "not_the_extreme_case_but_your_seller"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "deferred_answer",
+          "mechanism": "exact_numbers_at_the_end"
+        }
+      ],
+      "required_retention_events": [
+        "extreme_amount",
+        "identity_retarget",
+        "deferred_exact_answer"
+      ],
+      "original_moves": [
+        "从高额挖人个案转到同办公室极端收入差，再指出从业者也算不清自己的合同，最后把观察对象重定向为曾向观众销售的人并承诺结尾给出数字"
+      ],
+      "abstract_move": "用极端金额与同岗结果反差建立异常，再明确延期交付可核算答案",
+      "replacement_needs": [
+        "极端收益或招募成本反差",
+        "同场景高低结果对照",
+        "与观众身份相关的对象重定向",
+        "后段精确核算承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS12、LOOP02→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "extreme_financial_contrast_with_identity_retarget",
+        "first_stimulus_ms": 40,
+        "first_payoff_ms": 115159,
+        "evidence_refs": [
+          "C0001",
+          "C0014",
+          "C0028",
+          "C0038",
+          "C0057"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "upfront_flow_arithmetic",
+      "start_ratio": 0.1054,
+      "end_ratio": 0.1706,
+      "start_sec": 80,
+      "end_sec": 129.5,
+      "position_label": "10.5%–17.1%(1:20–2:09)",
+      "purpose": "先用常识信念与一组等值演算提供部分奖励，同时植入到账不等于所得的前提",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.1517,
+          "time_ms": 115159,
+          "reason": "年度缴费与销售端前期分配在假设演算中等值，首次兑现标题的表层惊异"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "belief_challenge",
+          "mechanism": "received_money_is_not_yours"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "first_payoff",
+          "mechanism": "annual_payment_equals_upfront_distribution"
+        }
+      ],
+      "required_retention_events": [
+        "guided_arithmetic",
+        "equal_amount_reveal"
+      ],
+      "original_moves": [
+        "先确认高佣金直觉有其事实基础，再用单一假设合约算出年度缴费与销售端前期分配等值，并解释早期退保价值低的结构性原因"
+      ],
+      "abstract_move": "先用常识信念与一组等值演算提供部分奖励，同时植入到账不等于所得的前提",
+      "replacement_needs": [
+        "到账不等于所有的前提句",
+        "观众既有信念复述",
+        "单位价格到周期总额的共同演算",
+        "销售端所得与观众支出的等值对照",
+        "提前退出价值的结果解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 84
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "character_entry_and_deferred_risk",
+      "start_ratio": 0.1706,
+      "end_ratio": 0.255,
+      "start_sec": 129.5,
+      "end_sec": 193.6,
+      "position_label": "17.1%–25.5%(2:09–3:14)",
+      "purpose": "以低门槛和前期支持建立个案希望，再预告其信用恶化以制造命运反差",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "看似获得可观前期条件的年轻个案为何后来信用恶化",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "reversal",
+          "mechanism": "not_simply_kept_by_seller"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "character_entry",
+          "mechanism": "young_case_with_prior_goal"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "forward_tease",
+          "mechanism": "credit_outcome_explained_later"
+        }
+      ],
+      "required_retention_events": [
+        "character_entry",
+        "conditional_support",
+        "bad_outcome_tease"
+      ],
+      "original_moves": [
+        "低门槛与前期支持让职业看似容易进入；年轻个案获得附退还条件的支持和预付目标，讲述者随即延期解释其信用恶化原因"
+      ],
+      "abstract_move": "以低门槛和前期支持建立个案希望，再预告其信用恶化以制造命运反差",
+      "replacement_needs": [
+        "低准入门槛",
+        "个案背景与转变前目标",
+        "前期支持及附带条件",
+        "业绩目标与预付逻辑",
+        "稍后解释负面结局的前向指针"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "distribution_chain_reveal",
+      "start_ratio": 0.255,
+      "end_ratio": 0.3128,
+      "start_sec": 193.6,
+      "end_sec": 237.4,
+      "position_label": "25.5%–31.3%(3:14–3:57)",
+      "purpose": "把单笔款项拆成多层经手与信息不透明，修正单人全得的字面理解",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 77,
+          "position_ratio": 0.2821,
+          "time_ms": 214080,
+          "reason": "关键分成比例不向销售人员公开，个人无法预清算账的结论落地"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "单笔前期分配究竟有多少真正属于销售人员，为何本人算不清",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "distribution_chain_and_opacity_reveal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "opacity_reveal",
+          "mechanism": "ratio_not_disclosed_to_seller"
+        }
+      ],
+      "required_retention_events": [
+        "money_flow_map",
+        "hidden_ratio"
+      ],
+      "original_moves": [
+        "资金从供应方到代理机构再到销售人员，关键比例不向下透明；到账后还需覆盖办公成本与管理层分成，修正‘全部归一个人’的直觉"
+      ],
+      "abstract_move": "把单笔款项拆成多层经手与信息不透明，修正单人全得的字面理解",
+      "replacement_needs": [
+        "资金流向图",
+        "分成信息缺口",
+        "组织固定成本",
+        "管理层再分配",
+        "个人无法预清算账的结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(77)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 77
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "cost_and_incentive_stack",
+      "start_ratio": 0.3128,
+      "end_ratio": 0.4486,
+      "start_sec": 237.4,
+      "end_sec": 340.5,
+      "position_label": "31.3%–44.9%(3:57–5:40)",
+      "purpose": "将获客、转化、日常支出、保障缺口与产品激励叠加，解释表面高收益如何被侵蚀",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.4396,
+          "time_ms": 333600,
+          "reason": "推荐偏向从个人品德问题重构为产品收益与当月生计的结构问题"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "hidden_cost_turn",
+          "mechanism": "self_funded_customer_lists"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "conversion_gap",
+          "mechanism": "large_list_few_meetings"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "paradox_verdict",
+          "mechanism": "free_time_as_disaster"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "status_reveal",
+          "mechanism": "independent_business_not_employee"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "viewer_question",
+          "mechanism": "why_recommend_something_else"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "incentive_reframe",
+          "mechanism": "structure_over_individual_morality"
+        }
+      ],
+      "required_retention_events": [
+        "self_funded_leads",
+        "cost_inventory",
+        "incentive_over_morality"
+      ],
+      "original_moves": [
+        "客户名单需要自费购买且转化有限；交通、餐饮、人情与税费继续侵蚀收入，身份又缺少雇员保障；不同产品的收益差进一步解释推荐偏向"
+      ],
+      "abstract_move": "将获客、转化、日常支出、保障缺口与产品激励叠加，解释表面高收益如何被侵蚀",
+      "replacement_needs": [
+        "自费获客",
+        "低转化现场细节",
+        "自付成本清单",
+        "身份与保障差异",
+        "不同产品的激励错位",
+        "个体品德之外的结构性解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(82)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 82
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "contingent_clawback_reveal",
+      "start_ratio": 0.4486,
+      "end_ratio": 0.5536,
+      "start_sec": 340.5,
+      "end_sec": 420.2,
+      "position_label": "44.9%–55.4%(5:40–7:00)",
+      "purpose": "揭示前期支付来自对未来长期履约的预支，并把追回风险与控制权错位具象化",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 89,
+          "position_ratio": 0.475,
+          "time_ms": 360479,
+          "reason": "长期条件失败会被追回，‘到账不等于所得’获得明确机制名称"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 91,
+          "position_ratio": 0.5191,
+          "time_ms": 393919,
+          "reason": "销售人员收到钱，客户却控制追回时钟，控制权错位成为全片核心反转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "长期条件无法维持时会发生什么，追回风险由谁控制",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "clawback_and_control_reversal_explained",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "chapter_turn",
+          "mechanism": "most_important_second_part"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "term_reveal",
+          "mechanism": "clawback_question_and_answer"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "countdown_metaphor",
+          "mechanism": "two_year_clock"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "control_reversal",
+          "mechanism": "seller_paid_customer_controls_clock"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "base_rate_quantification",
+          "mechanism": "roughly_three_of_ten_do_not_last"
+        }
+      ],
+      "required_retention_events": [
+        "clawback_reveal",
+        "control_reversal",
+        "persistency_base_rate"
+      ],
+      "original_moves": [
+        "前期款项被解释为对长期合约收益的一次预支；早期解约触发追回，销售人员承担后果却无法控制客户决定，存续数据又表明风险并不罕见"
+      ],
+      "abstract_move": "揭示前期支付来自对未来长期履约的预支，并把追回风险与控制权错位具象化",
+      "replacement_needs": [
+        "预支逻辑",
+        "追回期限与比例",
+        "非本人控制的触发条件",
+        "存续率或违约基准",
+        "发生时间不可预测性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(89)、PK05(91)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 89
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 91
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "debt_escalation_and_character_payoff",
+      "start_ratio": 0.5536,
+      "end_ratio": 0.6726,
+      "start_sec": 420.2,
+      "end_sec": 510.5,
+      "position_label": "55.4%–67.3%(7:00–8:30)",
+      "purpose": "用负结算与个案债务结局兑现人物悬念，把抽象追回机制转化为生活后果",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.5536,
+          "time_ms": 420160,
+          "reason": "没有新合约的月份也可能因旧合约集中解约而出现负结算"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 92,
+          "position_ratio": 0.6264,
+          "time_ms": 475400,
+          "reason": "个案累计债务、信用结局和原有目标放弃，兑现人物弧线的情绪与因果回报"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "为何行业内部会劝告不要用本人合同补业绩，这种选择如何反噬",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "character_debt_cause_and_life_consequence",
+          "opened_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "self_contract_debt_cycle_explained",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "negative_settlement",
+          "mechanism": "no_new_sale_still_owes_money"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "income_clawback_contrast",
+          "mechanism": "monthly_income_smaller_than_clawback"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "character_payoff",
+          "mechanism": "debt_credit_and_life_consequence"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "counterintuitive_advice",
+          "mechanism": "do_not_fill_targets_with_own_contract"
+        }
+      ],
+      "required_retention_events": [
+        "negative_settlement",
+        "character_payoff"
+      ],
+      "original_moves": [
+        "旧合同集中解约可让没有新业绩的月份仍为负；大额追回轶事之后，年轻个案的同月收支、累计债务与信用结局兑现前向悬念，自我补单则展示更长的债务循环"
+      ],
+      "abstract_move": "用负结算与个案债务结局兑现人物悬念，把抽象追回机制转化为生活后果",
+      "replacement_needs": [
+        "零新业绩仍负结算的情境",
+        "大额追回轶事",
+        "人物收入与追回同月对照",
+        "债务累积与职业生活后果",
+        "自我补单恶性循环"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85)、PK07(92);回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 92
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "statistics_payoff_and_inequality",
+      "start_ratio": 0.6726,
+      "end_ratio": 0.7913,
+      "start_sec": 510.5,
+      "end_sec": 600.6,
+      "position_label": "67.3%–79.1%(8:30–10:01)",
+      "purpose": "用后段统计回答收入问题，解释平均值失真并回收开场同岗反差",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.7007,
+          "time_ms": 531800,
+          "reason": "中位数显著低于平均值，典型收入与整体平均被明确区分"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "income_distribution_statistics_and_opening_callback",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "deferred_answer_return",
+          "mechanism": "monthly_income_answer_now"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "average_corrective",
+          "mechanism": "median_exposes_pulled_up_mean"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "opening_callback",
+          "mechanism": "same_office_scene_returns"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "attrition_gate",
+          "mechanism": "survival_before_excellence"
+        }
+      ],
+      "required_retention_events": [
+        "median_vs_mean",
+        "opening_scene_callback",
+        "attrition_gate"
+      ],
+      "original_moves": [
+        "平均值先给出，再用成本前限定、中位数、低收入比例和高端认证条件纠偏；一年留存门槛与开场高低收入画面共同解释分布为何拉长"
+      ],
+      "abstract_move": "用后段统计回答收入问题，解释平均值失真并回收开场同岗反差",
+      "replacement_needs": [
+        "总体与分组均值",
+        "税费及成本前限定",
+        "中位数对照",
+        "低收入占比",
+        "高绩效条件与留存门槛",
+        "开场画面对照回收"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85);回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "counterargument_and_device_duality",
+      "start_ratio": 0.7913,
+      "end_ratio": 0.8242,
+      "start_sec": 600.6,
+      "end_sec": 625.5,
+      "position_label": "79.1%–82.4%(10:01–10:26)",
+      "purpose": "补充制度存在的现金流理由，避免把机制简化为恶意，再指出同一装置兼具支持与束缚",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.8126,
+          "time_ms": 616680,
+          "reason": "预支装置既补现金流缺口又能束缚人，单向道德判断被双重功能取代"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "正在拆除预支装置的规则变化具体是什么，会带来何种现场影响",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "counterargument",
+          "mechanism": "prepayment_solves_cash_flow_gap"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "device_duality",
+          "mechanism": "same_device_supports_and_traps"
+        }
+      ],
+      "required_retention_events": [
+        "counterargument",
+        "device_duality"
+      ],
+      "original_moves": [
+        "前期支付被放回长期回款与每月生活支出的时间差中理解；同一装置既帮助新人维持现金流，也能将其锁定，随后宣布规则正在改变"
+      ],
+      "abstract_move": "补充制度存在的现金流理由，避免把机制简化为恶意，再指出同一装置兼具支持与束缚",
+      "replacement_needs": [
+        "反方功能解释",
+        "现金流缺口逻辑",
+        "装置双重作用定性",
+        "即将变化的预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(80);打开的悬念 LOOP07→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "rule_change_and_future_stakes",
+      "start_ratio": 0.8242,
+      "end_ratio": 0.8699,
+      "start_sec": 625.5,
+      "end_sec": 660.2,
+      "position_label": "82.4%–87%(10:26–11:00)",
+      "purpose": "用规则变化抬高现实时效性，并把结构调整转化为未来收益的不确定性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "disclosure_cap_smoothing_and_expected_impact",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "rule_change",
+          "mechanism": "commission_disclosure_begins"
+        }
+      ],
+      "required_retention_events": [
+        "disclosure_change",
+        "longer_smoothing"
+      ],
+      "original_moves": [
+        "费用信息开始公开，前期支付受到上限约束并将逐步分摊到更长周期；现场因此预期短期收入与业绩下降"
+      ],
+      "abstract_move": "用规则变化抬高现实时效性，并把结构调整转化为未来收益的不确定性",
+      "replacement_needs": [
+        "透明度变化",
+        "前期支付上限",
+        "分摊周期变化",
+        "现场预期反馈"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS09→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "system_feedback_and_consumer_cost",
+      "start_ratio": 0.8699,
+      "end_ratio": 0.9412,
+      "start_sec": 660.2,
+      "end_sec": 714.3,
+      "position_label": "87%–94.1%(11:00–11:54)",
+      "purpose": "解释前期集中支付如何诱发挖人与换约，并把激励后果落到消费者的实际损失",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 86,
+          "position_ratio": 0.9122,
+          "time_ms": 692320,
+          "reason": "换约行为的系统激励最终转化为消费者的三类具体损失"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "被集中替换的是谁的合同，替换会给合同持有人造成什么损失",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "viewer_implication_and_three_consumer_costs",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "rule_rationale_return",
+          "mechanism": "front_loaded_money_makes_poaching_profitable"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "churn_mechanism",
+          "mechanism": "new_job_pressure_drives_contract_replacement"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "consumer_loss_list",
+          "mechanism": "three_costs_of_replacing_contract"
+        }
+      ],
+      "required_retention_events": [
+        "churn_mechanism",
+        "three_part_loss"
+      ],
+      "original_moves": [
+        "前期集中的收益让挖人有利可图，高额合约由此出现；换到新机构后的业绩压力推动旧约替换，集中换约证据随后落到消费者的积累损失、价格上升与保障空窗"
+      ],
+      "abstract_move": "解释前期集中支付如何诱发挖人与换约，并把激励后果落到消费者的实际损失",
+      "replacement_needs": [
+        "激励与挖人因果链",
+        "旧约换新约机制",
+        "换约集中发生的证据",
+        "消费者损失清单",
+        "外部处罚或约束证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(86)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 86
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "synthesis_and_actionable_closure",
+      "start_ratio": 0.9412,
+      "end_ratio": 1,
+      "start_sec": 714.3,
+      "end_sec": 758.9,
+      "position_label": "94.1%–100%(11:54–12:39)",
+      "purpose": "以预收款是未定债务压缩全片，保留人物后果，再转为观众可执行的信息核查",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "worldview_shift",
+          "strength": 94,
+          "position_ratio": 0.9412,
+          "time_ms": 714279,
+          "reason": "首月到账被重新定性为偿还日期未定的借款，标题与全片论证在结尾合流"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "结尾把‘无人解释资金经手路径’推广到其他领域；刻意开放是为了让观众迁移自查，而不是留下标题主承诺未答",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "corrective_thesis_and_actionable_closure",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP09"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "final_thesis",
+          "mechanism": "earned_money_reclassified_as_conditional_debt"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "future_invoice_image",
+          "mechanism": "future_cancellation_sends_another_bill"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "action_prompt",
+          "mechanism": "check_policy_switch_advice_and_disclosure"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "open_generalization",
+          "mechanism": "not_only_this_domain"
+        }
+      ],
+      "required_retention_events": [
+        "final_thesis",
+        "actionable_self_check",
+        "open_generalization"
+      ],
+      "original_moves": [
+        "首月到账被重新命名为偿还日期未定的借款，客户仍掌握触发权；个案未来账单维持现实张力，随后观众被引导检查个人凭证与费用透明度，结尾把问题推广到其他领域"
+      ],
+      "abstract_move": "以预收款是未定债务压缩全片，保留人物后果，再转为观众可执行的信息核查",
+      "replacement_needs": [
+        "核心判词",
+        "控制权重申",
+        "人物开放式后果",
+        "个人凭证自查行动",
+        "费用透明核查",
+        "向其他领域开放的反问"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(94);打开的悬念 LOOP09(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 94
+        }
+      ]
+    }
+  ]
+}

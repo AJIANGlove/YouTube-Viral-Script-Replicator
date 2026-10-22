@@ -1,0 +1,978 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.415Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.044,
+      "start_sec": 0,
+      "end_sec": 56,
+      "position_label": "0%–4.4%(0:00–0:56)",
+      "purpose": "第二人称失落清单开场：逐一举例观众经历过却无法回忆的人生第一次，让缺失本身成为具身体验",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "question_hook",
+          "strength": 70,
+          "position_ratio": 0.0344,
+          "time_ms": 44000,
+          "reason": "主问句'它们去了哪里'抛出，失落感转化为求知悬念"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：人生最初几年的记忆去了哪里、为什么会整体消失（标题问句的具身化悬挂）",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_loss_inventory"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "question_hook",
+          "mechanism": "central_question_raised"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "scale_reframe",
+          "mechanism": "not_like_forgetting_keys"
+        }
+      ],
+      "required_retention_events": [
+        "loss_inventory",
+        "main_question_raised"
+      ],
+      "original_moves": [
+        "从零信息到失落清单叠加，再到'它们真实发生过却消失了'的悖论，主问句抛出"
+      ],
+      "abstract_move": "第二人称失落清单开场：逐一举例观众经历过却无法回忆的人生第一次，让缺失本身成为具身体验",
+      "replacement_needs": [
+        "多个具体而普遍的'第一次'清单",
+        "强调这些时刻真实发生且观众在场",
+        "主问句的显式抛出"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "second_person_loss_inventory",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 30000,
+        "evidence_refs": [
+          "C0001",
+          "C0002",
+          "C0003",
+          "C0004"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "mystery_setup",
+      "start_ratio": 0.044,
+      "end_ratio": 0.056,
+      "start_sec": 56,
+      "end_sec": 72,
+      "position_label": "4.4%–5.6%(0:56–1:12)",
+      "purpose": "把这种遗忘与日常遗忘划清界限，定性为系统性抹除，并向观众承诺答案存在",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "erasure_framing",
+        "answer_promised"
+      ],
+      "original_moves": [
+        "与忘钥匙式日常遗忘切割",
+        "系统性抹除定性",
+        "'现在我们有答案了'的承诺"
+      ],
+      "abstract_move": "把这种遗忘与日常遗忘划清界限，定性为系统性抹除，并向观众承诺答案存在",
+      "replacement_needs": [
+        "与日常遗忘的对照",
+        "系统性抹除的定性",
+        "答案可得的承诺"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "false_suspect_elimination",
+      "start_ratio": 0.056,
+      "end_ratio": 0.095,
+      "start_sec": 72,
+      "end_sec": 122,
+      "position_label": "5.6%–9.5%(1:12–2:02)",
+      "purpose": "提出最直觉的解释（当时是否真的有意识体验），用证据当场排除，把悖论拧紧",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.0915,
+          "time_ms": 117000,
+          "reason": "直觉解释被排除，'里面有人却什么都没留下'的悖论确立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "最直觉的解释：当时是否真的存在值得记住的意识体验",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "promise_contract",
+          "mechanism": "answers_available"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "direct_question",
+          "mechanism": "obvious_question_first"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "instant_verdict",
+          "mechanism": "one_word_answer"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "evidence_reveal",
+          "mechanism": "womb_memory_evidence"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "paradox_tightening",
+          "mechanism": "someone_home_yet_nothing_sticks"
+        }
+      ],
+      "required_retention_events": [
+        "direct_question",
+        "consciousness_confirmed",
+        "paradox_stated"
+      ],
+      "original_moves": [
+        "直觉疑问提出",
+        "极短肯定判决",
+        "婴儿意识证据列举",
+        "'可它就是没留下来'悖论收束"
+      ],
+      "abstract_move": "提出最直觉的解释（当时是否真的有意识体验），用证据当场排除，把悖论拧紧",
+      "replacement_needs": [
+        "直觉疑问的显式提出",
+        "极短肯定判决",
+        "支持意识存在的具体证据",
+        "悖论收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75);打开的悬念 LOOP02→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "mechanism_reveal_encoding",
+      "start_ratio": 0.095,
+      "end_ratio": 0.207,
+      "start_sec": 122,
+      "end_sec": 264,
+      "position_label": "9.5%–20.7%(2:02–4:24)",
+      "purpose": "第一机制：先破除'记忆是录像'的默认误解，再揭示记忆编码器官在早期严重未成熟",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.1909,
+          "time_ms": 244000,
+          "reason": "相机无存储卡比喻落地第一机制，'没地方可存'的顿悟"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "第一机制无法解释的部分：编码器官已初步发育后为何仍然记不得",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "false_suspect_eliminated",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "myth_busting",
+          "mechanism": "memory_is_not_recording"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "mechanism_intro",
+          "mechanism": "memory_indexer_metaphor"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "escalation",
+          "mechanism": "degree_triple_denial"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "analogy_payoff",
+          "mechanism": "camera_without_memory_card"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "bridge_tease",
+          "mechanism": "incomplete_answer"
+        }
+      ],
+      "required_retention_events": [
+        "myth_busted",
+        "encoding_gap_revealed",
+        "analogy_landed"
+      ],
+      "original_moves": [
+        "记忆默认模型破除",
+        "记忆组装过程",
+        "关键器官发育缺口",
+        "相机比喻落地",
+        "'只是第一部分'预告"
+      ],
+      "abstract_move": "第一机制：先破除'记忆是录像'的默认误解，再揭示记忆编码器官在早期严重未成熟",
+      "replacement_needs": [
+        "对记忆默认模型的破除",
+        "记忆组装过程的通俗解释",
+        "关键器官的发育缺口",
+        "器物比喻落地",
+        "'只是答案第一部分'的递进预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75);打开的悬念 LOOP03→FS06 跨段;回收了前文的悬念 FS03→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "mechanism_reveal_growth",
+      "start_ratio": 0.207,
+      "end_ratio": 0.309,
+      "start_sec": 264,
+      "end_sec": 395,
+      "position_label": "20.7%–30.9%(4:24–6:35)",
+      "purpose": "第二机制：高速成长本身对已有连接的系统性干扰，揭示学习速度与记忆保存的权衡",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.3036,
+          "time_ms": 388000,
+          "reason": "'学习速度的代价是遗忘一切'：权衡判决句的苦涩顿悟"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "assumption_correction",
+          "mechanism": "old_science_wrong"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "analogy_payoff",
+          "mechanism": "chaotic_library"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "paradox_reveal",
+          "mechanism": "strength_is_weakness"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "verdict_beat",
+          "mechanism": "tradeoff_one_liner"
+        }
+      ],
+      "required_retention_events": [
+        "growth_twist",
+        "interference_analogy",
+        "tradeoff_verdict"
+      ],
+      "original_moves": [
+        "缺口重申",
+        "旧科学假设纠正",
+        "高速新生现象",
+        "图书馆比喻",
+        "权衡判决句"
+      ],
+      "abstract_move": "第二机制：高速成长本身对已有连接的系统性干扰，揭示学习速度与记忆保存的权衡",
+      "replacement_needs": [
+        "对旧科学假设的纠正",
+        "高速新生现象的具体描述",
+        "扩展比喻解释干扰机制",
+        "学习-记忆权衡的一句话判决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "mechanism_reveal_language",
+      "start_ratio": 0.309,
+      "end_ratio": 0.414,
+      "start_sec": 395,
+      "end_sec": 529,
+      "position_label": "30.9%–41.4%(6:35–8:49)",
+      "purpose": "第三机制：叙事工具与叙事自我的缺席，用连锁否定推导揭示记忆构建对语言的依赖",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.3764,
+          "time_ms": 481000,
+          "reason": "连锁否定金句链把语言与记忆的关系一次讲透"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "'最奇怪的第三因素'是什么，它如何让记忆根本无法被构建",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "suspense_tease",
+          "mechanism": "strangest_factor_announcement"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "aphorism_cascade",
+          "mechanism": "chained_negation"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "evidence_reveal",
+          "mechanism": "cross_population_studies"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "synthesis",
+          "mechanism": "three_factors_converge"
+        }
+      ],
+      "required_retention_events": [
+        "strangest_factor_tease",
+        "chained_negation",
+        "cross_population_evidence"
+      ],
+      "original_moves": [
+        "'最奇怪的一个'预告",
+        "先承认直觉再深化",
+        "连锁否定推导",
+        "跨文化跨语言证据",
+        "判决句"
+      ],
+      "abstract_move": "第三机制：叙事工具与叙事自我的缺席，用连锁否定推导揭示记忆构建对语言的依赖",
+      "replacement_needs": [
+        "'最奇怪的一个'递进预告",
+        "先承认直觉理解的合理性再深化",
+        "连锁否定推导",
+        "跨文化与跨语言群体的支持证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(75);回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "convergence_synthesis",
+      "start_ratio": 0.414,
+      "end_ratio": 0.437,
+      "start_sec": 529,
+      "end_sec": 558,
+      "position_label": "41.4%–43.7%(8:49–9:18)",
+      "purpose": "三机制合流：显式汇总为完整答案，同时用'更奇怪的事'重开悬念",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "如果记忆消失了，那些年月是否还在塑造现在的你",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "multi_mechanism_synthesis",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "pivot_reveal",
+          "mechanism": "still_shaped_you"
+        }
+      ],
+      "required_retention_events": [
+        "three_factors_converge",
+        "stranger_pivot"
+      ],
+      "original_moves": [
+        "三机制清单式汇总",
+        "失忆窗口定性",
+        "转折钩开启新悬念"
+      ],
+      "abstract_move": "三机制合流：显式汇总为完整答案，同时用'更奇怪的事'重开悬念",
+      "replacement_needs": [
+        "三机制的清单式汇总",
+        "失忆窗口的定性",
+        "'更奇怪的事'转折钩"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS08 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "consequence_reveal",
+      "start_ratio": 0.437,
+      "end_ratio": 0.534,
+      "start_sec": 558,
+      "end_sec": 683,
+      "position_label": "43.7%–53.4%(9:18–11:23)",
+      "purpose": "意义翻转第一步：消失的经历以隐性形式存续，持续塑造观众当下的情绪与关系模式",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.5289,
+          "time_ms": 676000,
+          "reason": "'你忘了经历，但留下了功课'：中段意义翻转的题眼"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "consequence_reveal",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "mechanism_reveal",
+          "mechanism": "nervous_system_calibration"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "verdict_beat",
+          "mechanism": "parallel_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "implicit_survival",
+        "calibration_examples",
+        "lessons_verdict"
+      ],
+      "original_moves": [
+        "隐性存续揭示",
+        "早期照护写入神经系统的机制",
+        "显性/隐性记忆区分",
+        "对仗判决句"
+      ],
+      "abstract_move": "意义翻转第一步：消失的经历以隐性形式存续，持续塑造观众当下的情绪与关系模式",
+      "replacement_needs": [
+        "显性记忆与隐性记忆的区分",
+        "早期照护模式如何写入神经系统的具体机制",
+        "观众当下行为与早期校准的连接",
+        "对仗判决句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85);回收了前文的悬念 FS07→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "fabricated_memory_reveal",
+      "start_ratio": 0.534,
+      "end_ratio": 0.659,
+      "start_sec": 683,
+      "end_sec": 842,
+      "position_label": "53.4%–65.9%(11:23–14:02)",
+      "purpose": "不安揭示：观众以为拥有的早期记忆可能由外部材料重构，把科学议题升级为存在性追问",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.6371,
+          "time_ms": 814000,
+          "reason": "不安顶点：你的早期记忆至少部分是别人讲给你、被你吸收的故事"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "你以为拥有的最早记忆中有多少是真实的",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "如果鲜活的早期记忆可能是借来的重构，'你是谁'还成立吗：显式拒绝闭合（'没有干净的答案，但值得想一想'），叙事用途是把科学议题升级为存在性反思，为结尾可怕面与解脱面并列的双面收束蓄势",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "unsettling_answer",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "discomfort_tease",
+          "mechanism": "fake_ones_announcement"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "mechanism_walkthrough",
+          "mechanism": "photo_story_reconstruction"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "evidence_reveal",
+          "mechanism": "implantation_research"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "audience_interrogation",
+          "mechanism": "self_audit_prompt"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "existential_question",
+          "mechanism": "borrowed_self_question"
+        }
+      ],
+      "required_retention_events": [
+        "fabrication_path_walkthrough",
+        "implantation_evidence",
+        "existential_question"
+      ],
+      "original_moves": [
+        "'聊聊假的那些'预告",
+        "重构路径还原",
+        "植入实证",
+        "观众自查提问",
+        "存在性追问留白"
+      ],
+      "abstract_move": "不安揭示：观众以为拥有的早期记忆可能由外部材料重构，把科学议题升级为存在性追问",
+      "replacement_needs": [
+        "记忆可被重构的具体路径还原",
+        "虚假记忆可植入的实证证据",
+        "邀请观众自查最早记忆的来源",
+        "身份哲学的开放式追问"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85);打开的悬念 LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "variation_factors",
+      "start_ratio": 0.659,
+      "end_ratio": 0.774,
+      "start_sec": 842,
+      "end_sec": 989,
+      "position_label": "65.9%–77.4%(14:02–16:29)",
+      "purpose": "个体差异变量枚举：解释为什么有人记得更早，覆盖文化实践、群体差异与情绪强度三类因素",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "为什么有些人比其他人记得更早",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "factor_enumeration",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "factor_reveal",
+          "mechanism": "memory_talk_culture"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "factor_reveal",
+          "mechanism": "emotional_alarm_residue"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "aphorism_beat",
+          "mechanism": "emotion_remembered"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "topic_tease",
+          "mechanism": "underdiscussed_topic"
+        }
+      ],
+      "required_retention_events": [
+        "culture_factor",
+        "group_difference_factor",
+        "stress_factor"
+      ],
+      "original_moves": [
+        "回归具体问题",
+        "变异事实与平均数",
+        "文化变量机制",
+        "群体差异与争议标注",
+        "情绪变量与金句"
+      ],
+      "abstract_move": "个体差异变量枚举：解释为什么有人记得更早，覆盖文化实践、群体差异与情绪强度三类因素",
+      "replacement_needs": [
+        "变异存在的实证事实与平均数",
+        "文化实践变量的机制解释",
+        "群体差异变量的争议标注",
+        "情绪强度变量的机制解释与金句"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP08。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:为什么有些人比其他人记得更早",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "hidden_variable_reveal",
+      "start_ratio": 0.774,
+      "end_ratio": 0.879,
+      "start_sec": 989,
+      "end_sec": 1124,
+      "position_label": "77.4%–87.9%(16:29–18:44)",
+      "purpose": "被低估的隐藏变量揭示：把'没有存成记忆'重估为'被用于更基础的建构'",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.8396,
+          "time_ms": 1073000,
+          "reason": "婴儿长时间睡眠是在搭建操作系统：'消失'被重估为'另作他用'"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "reframe_payoff",
+          "mechanism": "operating_system_building"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "metaphor_verdict",
+          "mechanism": "software_not_files"
+        }
+      ],
+      "required_retention_events": [
+        "underdiscussed_topic_hook",
+        "operating_system_analogy"
+      ],
+      "original_moves": [
+        "'讨论得不够多'重启钩",
+        "睡眠的生理事实",
+        "旧假设修正",
+        "操作系统比喻定性",
+        "架构而非叙事的收束"
+      ],
+      "abstract_move": "被低估的隐藏变量揭示：把'没有存成记忆'重估为'被用于更基础的建构'",
+      "replacement_needs": [
+        "'讨论得不够多'的话题重启钩",
+        "隐藏变量的生理事实",
+        "旧假设被修正的过程",
+        "操作系统式比喻的定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "meaning_reframe",
+      "start_ratio": 0.879,
+      "end_ratio": 0.954,
+      "start_sec": 1124,
+      "end_sec": 1219,
+      "position_label": "87.9%–95.4%(18:44–20:19)",
+      "purpose": "双面意义重估：这段时间不是浪费而是最关键，可怕面与解脱面并列呈现",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9124,
+          "time_ms": 1166000,
+          "reason": "'你由你无法访问的经历建成'：全片题眼与身份反转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "meaning_pivot",
+          "mechanism": "what_does_this_mean_for_you"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "thesis_statement",
+          "mechanism": "built_from_inaccessible"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "hope_turn",
+          "mechanism": "patterns_can_change"
+        }
+      ],
+      "required_retention_events": [
+        "not_wasted_reframe",
+        "dual_sided_split",
+        "actionable_hope"
+      ],
+      "original_moves": [
+        "'对你意味着什么'设问",
+        "'不是浪费'翻转",
+        "可怕面（地基无法自查）",
+        "解脱面（无叙事即可改写）",
+        "行动出口"
+      ],
+      "abstract_move": "双面意义重估：这段时间不是浪费而是最关键，可怕面与解脱面并列呈现",
+      "replacement_needs": [
+        "'不是浪费'的显式翻转",
+        "可怕面：地基无法自查",
+        "解脱面：无叙事即可改写",
+        "可行动出口的列举"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.954,
+      "end_ratio": 0.991,
+      "start_sec": 1219,
+      "end_sec": 1266,
+      "position_label": "95.4%–99.1%(20:19–21:06)",
+      "purpose": "格局升级：把个体谜团扩展为跨代际的隐性情感传承图景",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "scale_escalation",
+          "mechanism": "generational_inheritance"
+        }
+      ],
+      "required_retention_events": [
+        "generational_inheritance",
+        "running_the_show_verdict"
+      ],
+      "original_moves": [
+        "可塑性判决",
+        "'最后一件值得想想的事'",
+        "代际传递链",
+        "无源可溯的传承",
+        "'正在你体内运转'定性"
+      ],
+      "abstract_move": "格局升级：把个体谜团扩展为跨代际的隐性情感传承图景",
+      "replacement_needs": [
+        "代际传递链条的揭示",
+        "无源可溯的传承特征",
+        "'正在运转'的当下化定性"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.991,
+      "end_ratio": 1,
+      "start_sec": 1266,
+      "end_sec": 1278,
+      "position_label": "99.1%–100%(21:06–21:18)",
+      "purpose": "结尾收束：确认该时期的价值高于其后任何时期，以格言句完成意象收束",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "aphorism_close",
+          "strength": 90,
+          "position_ratio": 0.9977,
+          "time_ms": 1275000,
+          "reason": "'只是没让你留下收据'：格言句完成全片情绪与认知的双重收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE40",
+          "event_type": "aphorism_close",
+          "mechanism": "receipts_metaphor"
+        }
+      ],
+      "required_retention_events": [
+        "period_value_verdict",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "时期价值定性",
+        "格言句收束"
+      ],
+      "abstract_move": "结尾收束：确认该时期的价值高于其后任何时期，以格言句完成意象收束",
+      "replacement_needs": [
+        "时期价值的最终定性",
+        "一句把主题压缩为日常意象的格言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

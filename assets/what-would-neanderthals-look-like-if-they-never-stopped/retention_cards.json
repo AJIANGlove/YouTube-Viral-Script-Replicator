@@ -1,0 +1,1043 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.397Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.031,
+      "start_sec": 0,
+      "end_sec": 44,
+      "position_label": "0%–3.1%(0:00–0:44)",
+      "purpose": "第二人称沉浸开场：把反事实结果直接放进当代日常场景，让观众与'平行演化至今的它'擦肩相遇",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.0207,
+          "time_ms": 29000,
+          "reason": "陌生人身份点名：灭绝物种以当代形态坐在你对面"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_scenario"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "sensory_detail",
+          "mechanism": "uncanny_description"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "premise_reveal",
+          "mechanism": "identity_naming"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "impossibility_denied",
+          "mechanism": "absurdity_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_scene",
+        "identity_naming",
+        "absurdity_reframe"
+      ],
+      "original_moves": [
+        "从零信息到日常场景建立，到外貌违和感累积，再到身份点名与'并非不可能'承诺"
+      ],
+      "abstract_move": "第二人称沉浸开场：把反事实结果直接放进当代日常场景，让观众与'平行演化至今的它'擦肩相遇",
+      "replacement_needs": [
+        "日常场景的具体动作与感官细节",
+        "外貌白描中'熟悉又违和'的辨认张力",
+        "身份点名句",
+        "'听起来荒谬但并非不可能'的观看理由锁定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 44000,
+        "hook_type": "immersive_second_person_counterfactual_encounter",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 29000,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0006"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "mystery_setup",
+      "start_ratio": 0.031,
+      "end_ratio": 0.072,
+      "start_sec": 44,
+      "end_sec": 101,
+      "position_label": "3.1%–7.2%(0:44–1:41)",
+      "purpose": "正面拆解流行文化刻板印象，悬挂核心反事实问句并承诺答案超越影视想象",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：如果它们从未灭绝而是一直演化，今天会是什么样子（标题问句的具身化悬挂）",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "myth_busting",
+          "mechanism": "pop_image_dismantling"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "personal_relevance",
+          "mechanism": "dna_connection"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "core_question",
+          "mechanism": "counterfactual_question"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "promise_escalation",
+          "mechanism": "beyond_media_promise"
+        }
+      ],
+      "required_retention_events": [
+        "stereotype_dismantling",
+        "core_question",
+        "beyond_media_promise"
+      ],
+      "original_moves": [
+        "刻板印象否定",
+        "能力证据快清单",
+        "切身基因关联",
+        "核心问句",
+        "'比影视更奇异'承诺"
+      ],
+      "abstract_move": "正面拆解流行文化刻板印象，悬挂核心反事实问句并承诺答案超越影视想象",
+      "replacement_needs": [
+        "对刻板印象的显式否定",
+        "能力与文化证据的快速清单",
+        "与观众的切身关联点",
+        "核心反事实问句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP01→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "baseline_establishment",
+      "start_ratio": 0.072,
+      "end_ratio": 0.161,
+      "start_sec": 101,
+      "end_sec": 226,
+      "position_label": "7.2%–16.1%(1:41–3:46)",
+      "purpose": "用证据重建对象的真实基线与时间纵深，完成'平行旁支而非低等祖先'的身份正名",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "scale_shock",
+          "strength": 75,
+          "position_ratio": 0.0856,
+          "time_ms": 120000,
+          "reason": "40万年物种纵深与我们的30万年、1万年文明的数字锚点对比"
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.1491,
+          "time_ms": 209000,
+          "reason": "洞穴艺术归属翻转：最早的艺术家可能是它们"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "流行印象把它们讲成失败者，它们真实究竟是什么样子",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "scale_shock",
+          "mechanism": "number_anchor"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "capacity_reveal",
+          "mechanism": "brain_volume"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "care_evidence",
+          "mechanism": "fossil_care_evidence"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "verdict_triplet",
+          "mechanism": "short_verdicts"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "authorship_flip",
+          "mechanism": "art_attribution"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "identity_verdict",
+          "mechanism": "cousin_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "scale_anchor_comparison",
+        "care_and_art_evidence",
+        "identity_verdict"
+      ],
+      "original_moves": [
+        "流行形象定性为'诽谤'",
+        "数字锚点对比",
+        "身体与脑的反直觉事实",
+        "照护与艺术证据",
+        "'平行旁支而非祖先'裁决"
+      ],
+      "abstract_move": "用证据重建对象的真实基线与时间纵深，完成'平行旁支而非低等祖先'的身份正名",
+      "replacement_needs": [
+        "分类与地理范围的准确陈述",
+        "时间纵深的数字锚点对比",
+        "反直觉的能力事实",
+        "照护、装饰与艺术的考古证据",
+        "身份正名的一句话裁决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75)、PK03(75);打开的悬念 LOOP02→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "counterfactual_setup",
+      "start_ratio": 0.161,
+      "end_ratio": 0.22,
+      "start_sec": 226,
+      "end_sec": 309,
+      "position_label": "16.1%–22%(3:46–5:09)",
+      "purpose": "陈列灭绝假说并显式宣告思想实验规则，校准观众对演化时间尺度的预期",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "最具辨识度的颅面特征将向什么方向漂移",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "它们当年为何消失：开头陈列假说后主动搁置，结尾显式承认我们可能永远不会知道——刻意保持开放，叙事用途是以科学的谦逊与不可知强化挽歌基调，并把焦点让位给思想实验本身",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "baseline_identity_verdict",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "mystery_acknowledged",
+          "mechanism": "extinction_theories"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "rule_setting",
+          "mechanism": "experiment_rules"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "timescale_calibration",
+          "mechanism": "evolutionary_clock"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "roadmap_question",
+          "mechanism": "roadmap_tease"
+        }
+      ],
+      "required_retention_events": [
+        "extinction_theories",
+        "rule_setting",
+        "roadmap_question"
+      ],
+      "original_moves": [
+        "灭绝假说清单",
+        "规则宣告",
+        "时间尺度校准",
+        "路线图问句'从头骨开始'"
+      ],
+      "abstract_move": "陈列灭绝假说并显式宣告思想实验规则，校准观众对演化时间尺度的预期",
+      "replacement_needs": [
+        "灭绝原因的主流假说清单",
+        "'全部搁置'的实验规则宣告",
+        "时间尺度的双向校准（很长但非巨变）",
+        "路线图问句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS08、LOOP08(不闭合) 跨段;回收了前文的悬念 FS03→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "feature_function_exposition",
+      "start_ratio": 0.22,
+      "end_ratio": 0.276,
+      "start_sec": 309,
+      "end_sec": 387,
+      "position_label": "22%–27.6%(5:09–6:27)",
+      "purpose": "对最具辨识度的特征做功能溯源，建立'特征=对环境的解法'这一推演范式",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.2304,
+          "time_ms": 323000,
+          "reason": "'这些特征都不是随机的'：功能溯源范式确立，全片推演方法论落地"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "function_first",
+          "mechanism": "functional_pivot"
+        }
+      ],
+      "required_retention_events": [
+        "function_first_paradigm",
+        "elegance_verdict"
+      ],
+      "original_moves": [
+        "特征清单",
+        "'都不是随机的'范式宣告",
+        "咀嚼应力与冷空气预热的功能解释",
+        "'优雅解法'定性"
+      ],
+      "abstract_move": "对最具辨识度的特征做功能溯源，建立'特征=对环境的解法'这一推演范式",
+      "replacement_needs": [
+        "标志性特征的清单式呈现",
+        "每个特征对应的环境压力与功能解释",
+        "一句'优雅的生物解法'式定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "sponsor_insert",
+      "start_ratio": 0.276,
+      "end_ratio": 0.295,
+      "start_sec": 387,
+      "end_sec": 414,
+      "position_label": "27.6%–29.5%(6:27–6:54)",
+      "purpose": "口播广告插段，与正文语气显式切分",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "sponsor_message"
+      ],
+      "original_moves": [
+        "正文停顿",
+        "课程介绍、时长、优惠码与跳转指引",
+        "回到正文"
+      ],
+      "abstract_move": "口播广告插段，与正文语气显式切分",
+      "replacement_needs": [
+        "产品介绍与内容清单",
+        "时长、优惠与跳转指引"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "pressure_shift_projection",
+      "start_ratio": 0.295,
+      "end_ratio": 0.367,
+      "start_sec": 414,
+      "end_sec": 515,
+      "position_label": "29.5%–36.7%(6:54–8:35)",
+      "purpose": "推演选择压力放松后标志性特征的漂移方向，完成第一域的完整推演闭环",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "pressure_shift",
+          "mechanism": "selective_pressure_release"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "liability_flip",
+          "mechanism": "feature_liability"
+        }
+      ],
+      "required_retention_events": [
+        "pressure_release",
+        "liability_flip",
+        "directional_verdict"
+      ],
+      "original_moves": [
+        "保暖法则与现代对照",
+        "压力放松三条件",
+        "'优势变负担'机制",
+        "圆颅、出颏、鼻缩小但保留体量"
+      ],
+      "abstract_move": "推演选择压力放松后标志性特征的漂移方向，完成第一域的完整推演闭环",
+      "replacement_needs": [
+        "压力放松的条件假设",
+        "'曾经的优势变成负担'的机制解释",
+        "渐进突变的时间尺度缓冲",
+        "方向性外观结论"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "body_trajectory_projection",
+      "start_ratio": 0.367,
+      "end_ratio": 0.451,
+      "start_sec": 515,
+      "end_sec": 633,
+      "position_label": "36.7%–45.1%(8:35–10:33)",
+      "purpose": "推演身体形态随文明化的轨迹，并说明结构性状的演化惰性",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "为冰期与蛮力优化的身体在文明化后会变成什么样",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "directional_projection_verdict",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "section_tease",
+          "mechanism": "fascination_tease"
+        }
+      ],
+      "required_retention_events": [
+        "strength_evidence",
+        "structural_inertia",
+        "section_tease"
+      ],
+      "original_moves": [
+        "原始力量证据",
+        "农业化减压推演",
+        "骨骼扁平化的结构惰性",
+        "身高预测",
+        "'接下来才精彩：脑'换挡"
+      ],
+      "abstract_move": "推演身体形态随文明化的轨迹，并说明结构性状的演化惰性",
+      "replacement_needs": [
+        "原始力量与骨骼的证据",
+        "文明化后压力减弱的方向推演",
+        "结构性状难以快速消退的惰性说明",
+        "身高区间的预测"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS09 跨段;回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "cognitive_architecture_reveal",
+      "start_ratio": 0.451,
+      "end_ratio": 0.528,
+      "start_sec": 633,
+      "end_sec": 740,
+      "position_label": "45.1%–52.8%(10:33–12:20)",
+      "purpose": "揭示脑组织方式的差异，并完成'不同而非低等'的价值平权",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.5243,
+          "time_ms": 735000,
+          "reason": "'不同，而非低等'：认知平权叠句，全片价值观中枢"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "更大的脑是否意味着更聪明，它们的认知与我们孰优孰劣",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "它们的社会、文字、感官与文化会沿什么平行路径发展",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "directional_projection_verdict",
+          "opened_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "parity_verdict_refrain",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "brain_map",
+          "mechanism": "endocast_organization"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "verdict_refrain",
+          "mechanism": "different_not_lesser"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "section_tease",
+          "mechanism": "nobody_talks_about"
+        }
+      ],
+      "required_retention_events": [
+        "brain_map",
+        "deficit_reframe",
+        "verdict_refrain"
+      ],
+      "original_moves": [
+        "脑区差异证据",
+        "视觉空间优势翻转",
+        "社会认知扩张推演",
+        "'不同而非低等'裁决叠句"
+      ],
+      "abstract_move": "揭示脑组织方式的差异，并完成'不同而非低等'的价值平权",
+      "replacement_needs": [
+        "脑区组织差异的证据",
+        "'调校不同而非配备不足'的翻转",
+        "社会认知随群体扩张的方向推演",
+        "平权裁决叠句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80);打开的悬念 LOOP06→FS14 跨段;回收了前文的悬念 FS08→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "social_civilization_projection",
+      "start_ratio": 0.528,
+      "end_ratio": 0.618,
+      "start_sec": 740,
+      "end_sec": 867,
+      "position_label": "52.8%–61.8%(12:20–14:27)",
+      "purpose": "推演社会结构扩张与文明要素（农业、文字）的平行发生",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 70,
+          "position_ratio": 0.6063,
+          "time_ms": 850000,
+          "reason": "独有文字系统'大概也很美'：推演首次带上温柔的美学情感"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "writing_beauty",
+          "mechanism": "script_aesthetics"
+        }
+      ],
+      "required_retention_events": [
+        "civilization_phrase_dwelling",
+        "script_aesthetics"
+      ],
+      "original_moves": [
+        "'没人谈的部分'换挡",
+        "群体规模与纽带证据",
+        "农业与文字的概率论证",
+        "独有文字系统的美学想象"
+      ],
+      "abstract_move": "推演社会结构扩张与文明要素（农业、文字）的平行发生",
+      "replacement_needs": [
+        "群体规模与内部纽带的证据",
+        "农业与文字发生的概率论证（带缓冲词）",
+        "邀请观众停下来品味'它的文明'一词",
+        "独有符号系统的差异化想象与美学定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "sensory_identity_projection",
+      "start_ratio": 0.618,
+      "end_ratio": 0.678,
+      "start_sec": 867,
+      "end_sec": 951,
+      "position_label": "61.8%–67.8%(14:27–15:51)",
+      "purpose": "推演感官系统的演化转向，并把外观想象定稿为'熟悉又陌生且迷人'",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.6705,
+          "time_ms": 940000,
+          "reason": "面孔定稿：既熟悉又陌生且迷人，外观想象完成"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "face_portrait",
+          "mechanism": "familiar_alien"
+        }
+      ],
+      "required_retention_events": [
+        "sensory_inference",
+        "face_portrait"
+      ],
+      "original_moves": [
+        "感官解剖推断",
+        "环境变化后压力转向",
+        "大眼保留的理由",
+        "面孔定稿与魅力定性"
+      ],
+      "abstract_move": "推演感官系统的演化转向，并把外观想象定稿为'熟悉又陌生且迷人'",
+      "replacement_needs": [
+        "听觉、视觉、嗅觉的解剖学推断",
+        "环境变化后感官压力的转向",
+        "部分特征保留的理由",
+        "外观定稿与'放弃流行印象就会觉得迷人'的定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "hybridization_dilemma",
+      "start_ratio": 0.678,
+      "end_ratio": 0.76,
+      "start_sec": 951,
+      "end_sec": 1066,
+      "position_label": "67.8%–76%(15:51–17:46)",
+      "purpose": "推演两条谱系长期接触后的基因交融与身份边界问题",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "两条谱系持续接触会彻底融合还是保持边界",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "unavoidable_question",
+          "mechanism": "interbreeding_tease"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "boundary_blur",
+          "mechanism": "ambiguous_identity"
+        }
+      ],
+      "required_retention_events": [
+        "genomic_evidence",
+        "boundary_blur"
+      ],
+      "original_moves": [
+        "'避不开的混血问题'换挡",
+        "基因交流事实",
+        "两条路径",
+        "边界模糊的中间态个体"
+      ],
+      "abstract_move": "推演两条谱系长期接触后的基因交融与身份边界问题",
+      "replacement_needs": [
+        "基因交流的事实基础",
+        "融合与保持分异的两条路径",
+        "边界模糊地带个体的存在"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "culture_parallel_projection",
+      "start_ratio": 0.76,
+      "end_ratio": 0.857,
+      "start_sec": 1066,
+      "end_sec": 1202,
+      "position_label": "76%–85.7%(17:46–20:02)",
+      "purpose": "推演音乐、视觉艺术、建筑、饮食等文化形态的平行路径",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "ambiguous_boundary_verdict",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "acoustic_evidence",
+          "mechanism": "cave_acoustics"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "aesthetic_verdict",
+          "mechanism": "sculpture_before_painting"
+        }
+      ],
+      "required_retention_events": [
+        "acoustic_evidence",
+        "aesthetic_verdict",
+        "parallel_tradition"
+      ],
+      "original_moves": [
+        "文化问句换挡",
+        "洞穴声学真实现象",
+        "'先雕塑后绘画'美学定性",
+        "建筑与饮食的平行传统",
+        "三连定性"
+      ],
+      "abstract_move": "推演音乐、视觉艺术、建筑、饮食等文化形态的平行路径",
+      "replacement_needs": [
+        "每个文化域一个 ancestral 锚点加推演方向",
+        "一个可考的真实现象作为推测锚点",
+        "美学传统的差异化定性",
+        "饮食等日常领域的平行传统想象"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS12→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.857,
+      "end_ratio": 0.894,
+      "start_sec": 1202,
+      "end_sec": 1253,
+      "position_label": "85.7%–89.4%(20:02–20:53)",
+      "purpose": "把个案升级为对'单线进步观'的哲学粉碎：智慧、美与文明没有唯一模板",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "parallel_culture_portrait",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "worldview_upgrade",
+          "mechanism": "linear_progress_demolished"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "full_circle",
+          "mechanism": "scene_return"
+        }
+      ],
+      "required_retention_events": [
+        "linear_progress_demolished"
+      ],
+      "original_moves": [
+        "哲学维度换挡",
+        "线性进步观'彻底永久拆除'",
+        "'站台亲眼可见'具象化",
+        "学科版图影响"
+      ],
+      "abstract_move": "把个案升级为对'单线进步观'的哲学粉碎：智慧、美与文明没有唯一模板",
+      "replacement_needs": [
+        "对线性进步叙事的显式否定",
+        "'你可以亲眼在日常场景中看到'的具象化",
+        "对相关学科版图的影响陈述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS09→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "full_circle_callback",
+      "start_ratio": 0.894,
+      "end_ratio": 0.943,
+      "start_sec": 1253,
+      "end_sec": 1322,
+      "position_label": "89.4%–94.3%(20:53–22:02)",
+      "purpose": "全景回收开场场景：用全部推演结论重新填充相遇画面，让悬念以画面形式兑现",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9158,
+          "time_ms": 1284000,
+          "reason": "开场场景全景回收：'四万年平行演化坐在你对面'，标题问句以画面兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_portrait_scene_callback",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "portrait_payoff",
+          "mechanism": "parallel_evolution_portrait"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "humanizing_detail",
+          "mechanism": "almost_smile"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "projection_verdict",
+          "mechanism": "cartoon_projection"
+        }
+      ],
+      "required_retention_events": [
+        "scene_return",
+        "portrait_payoff",
+        "stare_break"
+      ],
+      "original_moves": [
+        "场景召回",
+        "外貌细节与推演结论逐一对应",
+        "'几乎笑了'的人性化瞬间",
+        "凝视点破"
+      ],
+      "abstract_move": "全景回收开场场景：用全部推演结论重新填充相遇画面，让悬念以画面形式兑现",
+      "replacement_needs": [
+        "开场场景的原样召回",
+        "每个外貌细节与推演结论的一一对应",
+        "一个人性化瞬间",
+        "对观众凝视行为的点破"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(90);回收了前文的悬念 FS02→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.943,
+      "end_ratio": 1,
+      "start_sec": 1322,
+      "end_sec": 1402,
+      "position_label": "94.3%–100%(22:02–23:22)",
+      "purpose": "挽歌式收束：投影批判、多次演化三连、基因遗产敬意，以短句慢节奏落幕",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.97,
+          "time_ms": 1360000,
+          "reason": "'它们永远不会是我们，这正是其非凡之处'：平行价值论的最高表述"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9979,
+          "time_ms": 1399000,
+          "reason": "'不够听见它们的音乐'：挽歌式收束，敬意与怅惘的顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "multiplicity_triplet",
+          "mechanism": "evolved_multiple_times"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "extraordinary_verdict",
+          "mechanism": "never_us"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "elegiac_close",
+          "mechanism": "dna_legacy"
+        }
+      ],
+      "required_retention_events": [
+        "projection_verdict",
+        "multiplicity_triplet",
+        "elegiac_close"
+      ],
+      "original_moves": [
+        "投影批判",
+        "多次演化三连",
+        "非凡裁决",
+        "灭绝不可知坦诚",
+        "基因遗产挽歌句"
+      ],
+      "abstract_move": "挽歌式收束：投影批判、多次演化三连、基因遗产敬意，以短句慢节奏落幕",
+      "replacement_needs": [
+        "卡通刻板形象是优越感投影的定性",
+        "智慧、社会性、文化多次独立演化的三连句",
+        "'永远不会是我们，这正是其非凡之处'的裁决",
+        "对灭绝不可知的坦诚",
+        "基因遗产的挽歌句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85)、PK10(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

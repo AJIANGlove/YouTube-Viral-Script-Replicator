@@ -1,0 +1,882 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.313Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "outlier_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0871,
+      "start_sec": 0,
+      "end_sec": 60.8,
+      "position_label": "0%–8.7%(0:00–1:01)",
+      "purpose": "用顶尖个案的反常选择与多元收入悬念迅速入场，同时把观察范围扩展到被忽视的多数。",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.0482,
+          "time_ms": 33680,
+          "reason": "五种收入来源被集中数出，首次把高薪个案从单一薪资想象扩展为复合结构。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：由顶尖个案进入，最终回答少数可见者与多数不可见者的结构差异。",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "开场小额好奇环：用收入口数量提供首次具体回报。",
+          "closes_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "范围扩展环：把观众从个例收入清单引向多数人的收入口数量。",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "未兑现的次要数字承诺：结尾交付结构总结而非准确剩余金额。",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "enumerated_income_inventory",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP04"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "cold_open",
+          "mechanism": "exceptional_offer_tease"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "choice_reversal",
+          "mechanism": "refusal_of_high_offer"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "first_payoff",
+          "mechanism": "five_income_streams_counted"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "new_question",
+          "mechanism": "majority_scope_question"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "promise_tease",
+          "mechanism": "exact_remainder_deferral"
+        }
+      ],
+      "required_retention_events": [
+        "exceptional_offer",
+        "refusal_reversal",
+        "income_stream_count_gap",
+        "majority_scope_question"
+      ],
+      "original_moves": [
+        "高额报价与被拒绝",
+        "多种收入来源的悬念",
+        "不能由个例判断职业",
+        "追问其余多数并承诺逐层下沉。"
+      ],
+      "abstract_move": "用顶尖个案的反常选择与多元收入悬念迅速入场，同时把观察范围扩展到被忽视的多数。",
+      "replacement_needs": [
+        "一个有公众认知度的顶尖个案",
+        "一项反常选择",
+        "收入来源数量的悬念",
+        "从个案转向整体范围的明确问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS11、LOOP03→FS11、LOOP04(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "counterintuitive_choice_with_multi_income_tease",
+        "first_stimulus_ms": 40,
+        "first_payoff_ms": 33680,
+        "evidence_refs": [
+          "C0001",
+          "C0003",
+          "C0013",
+          "C0017"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "income_stream_inventory",
+      "start_ratio": 0.0871,
+      "end_ratio": 0.1852,
+      "start_sec": 60.8,
+      "end_sec": 129.4,
+      "position_label": "8.7%–18.5%(1:01–2:09)",
+      "purpose": "逐项打开顶尖个案的收入来源，用排名、分配和权益结构兑现开场的部分好奇。",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 76,
+          "position_ratio": 0.176,
+          "time_ms": 122920,
+          "reason": "权益所有权解释让收入逻辑从劳动报酬跃迁到资产增值。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "scale_reveal",
+          "mechanism": "global_prize_ranking"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "new_mechanism",
+          "mechanism": "performance_linked_sales_share"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "ownership_reframe",
+          "mechanism": "equity_beyond_salary"
+        }
+      ],
+      "required_retention_events": [
+        "numbered_inventory",
+        "ranking_contrast",
+        "uncertainty_disclosure",
+        "ownership_reframe"
+      ],
+      "original_moves": [
+        "奖金与排名",
+        "商业合作与个人传播",
+        "未公开项目的核实边界",
+        "绩效分配",
+        "权益所有权带来的另一种增值方式。"
+      ],
+      "abstract_move": "逐项打开顶尖个案的收入来源，用排名、分配和权益结构兑现开场的部分好奇。",
+      "replacement_needs": [
+        "按项排列的收入来源清单",
+        "至少一项横向规模对照",
+        "对不可核实项目的明确保留",
+        "从劳动收入走向权益收入的结构解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(76)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 76
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "exception_longevity",
+      "start_ratio": 0.1852,
+      "end_ratio": 0.2672,
+      "start_sec": 129.4,
+      "end_sec": 186.6,
+      "position_label": "18.5%–26.7%(2:09–3:07)",
+      "purpose": "补充顶尖个案在职业长度与外部约束上的例外性，避免把优势简化为收入一项。",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "例外叠加环：收入之外继续证明个案不可作为行业平均。",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "exception_conditions_explained",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "new_tension",
+          "mechanism": "career_clock_anomaly"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "constraint_payoff",
+          "mechanism": "external_constraint_exception"
+        }
+      ],
+      "required_retention_events": [
+        "career_clock_anomaly",
+        "longevity_contrast",
+        "constraint_reveal",
+        "misconception_correction"
+      ],
+      "original_moves": [
+        "职业时钟异常",
+        "年龄与纪录对照",
+        "外部服役约束",
+        "特殊路径及其不等于完全豁免的澄清。"
+      ],
+      "abstract_move": "补充顶尖个案在职业长度与外部约束上的例外性，避免把优势简化为收入一项。",
+      "replacement_needs": [
+        "职业寿命的群体对照",
+        "长期契约或持续记录",
+        "外部职业约束说明",
+        "对常见误解的限定澄清"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP05。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:例外叠加环：收入之外继续证明个案不可作为行业平均。",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "exception_to_population_pivot",
+      "start_ratio": 0.2672,
+      "end_ratio": 0.3364,
+      "start_sec": 186.6,
+      "end_sec": 234.9,
+      "position_label": "26.7%–33.6%(3:07–3:55)",
+      "purpose": "明确反转前段造成的理想化印象，把顶尖个案命名为例外，并将镜头转向沉默多数。",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 84,
+          "position_ratio": 0.2728,
+          "time_ms": 190519,
+          "reason": "“图景完全改变”与例外判词推翻前段理想化印象，是主论证的方向反转。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "perspective_reversal",
+          "mechanism": "picture_completely_changes"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "condition_reveal",
+          "mechanism": "income_streams_require_visibility"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "majority_transition",
+          "mechanism": "open_the_other_pockets"
+        }
+      ],
+      "required_retention_events": [
+        "explicit_exception_verdict",
+        "condition_gating",
+        "visibility_logic_tease",
+        "majority_perspective_turn"
+      ],
+      "original_moves": [
+        "职业看似理想",
+        "这只是极少数例外",
+        "多项收入分别依赖名声、受众与组织认可",
+        "多数人的处境长期无人讲述。"
+      ],
+      "abstract_move": "明确反转前段造成的理想化印象，把顶尖个案命名为例外，并将镜头转向沉默多数。",
+      "replacement_needs": [
+        "明确的例外判词",
+        "对个案价值的平衡限定",
+        "每项优势背后的前提条件",
+        "转向多数群体的过渡句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 84
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "tiered_distribution_exposure",
+      "start_ratio": 0.3364,
+      "end_ratio": 0.4313,
+      "start_sec": 234.9,
+      "end_sec": 301.2,
+      "position_label": "33.6%–43.1%(3:55–5:01)",
+      "purpose": "沿职业层级逐级下沉，以门槛、保底和实际分布对照取代顶尖个案的单一尺度。",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "tier_contrast",
+          "mechanism": "single_league_extreme_ladder"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "distribution_reveal",
+          "mechanism": "majority_below_threshold"
+        }
+      ],
+      "required_retention_events": [
+        "tiered_descent",
+        "numeric_ladder",
+        "floor_disappearance",
+        "distribution_reality_check"
+      ],
+      "original_moves": [
+        "团队支出基准",
+        "一级与次级名单的保底",
+        "训练层缺少统一底线",
+        "实际收入分布集中在中低区间",
+        "顶尖与多数同场却处境悬殊。"
+      ],
+      "abstract_move": "沿职业层级逐级下沉，以门槛、保底和实际分布对照取代顶尖个案的单一尺度。",
+      "replacement_needs": [
+        "自上而下的层级序列",
+        "各层可核验的门槛或保底",
+        "底层缺少统一底线的说明",
+        "总体分布数据与个例的再次并置"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "labor_status_reframe",
+      "start_ratio": 0.4313,
+      "end_ratio": 0.5478,
+      "start_sec": 301.2,
+      "end_sec": 382.6,
+      "position_label": "43.1%–54.8%(5:01–6:23)",
+      "purpose": "从收入多少深入收入叫什么，解释契约命名如何改变保障、底线与退出后的权利。",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 91,
+          "position_ratio": 0.5002,
+          "time_ms": 349360,
+          "reason": "报酬从工资被重命名为赞助，收入问题由此转化为劳动身份与保障规则问题。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "核心因果环：从结果矛盾追溯分配规则和估值标准。",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "contract_reveal",
+          "mechanism": "management_contract_instead_of_employment"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "label_reframe",
+          "mechanism": "sponsorship_instead_of_wage"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "causal_question",
+          "mechanism": "why_did_this_happen"
+        }
+      ],
+      "required_retention_events": [
+        "single_income_verdict",
+        "contract_reveal",
+        "wage_label_reframe",
+        "rights_contrast",
+        "causal_question"
+      ],
+      "original_moves": [
+        "多数只有单一收入口",
+        "非标准劳动契约与保障缺口",
+        "报酬被重新命名",
+        "不同名称对应不同底线与救济",
+        "底层低收入由此获得制度解释。"
+      ],
+      "abstract_move": "从收入多少深入收入叫什么，解释契约命名如何改变保障、底线与退出后的权利。",
+      "replacement_needs": [
+        "多数仅有单一收入来源的归纳",
+        "契约类型与保障差异",
+        "关键称谓的原文证据",
+        "两种称谓对应规则的逐项对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(91);打开的悬念 LOOP06→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 91
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "revenue_distribution_bottleneck",
+      "start_ratio": 0.5478,
+      "end_ratio": 0.6651,
+      "start_sec": 382.6,
+      "end_sec": 464.5,
+      "position_label": "54.8%–66.5%(6:23–7:45)",
+      "purpose": "反驳行业缺钱这一简单解释，展示总收入增长与向下分配条件收窄之间的矛盾。",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 86,
+          "position_ratio": 0.6073,
+          "time_ms": 424160,
+          "reason": "先满足盈余再分配的规则揭示行业资金增长为何不一定向下传导。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "嵌套归因环：检验把责任全部归于团队的直觉。",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "expectation_reversal",
+          "mechanism": "record_high_industry_revenue"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "mechanism_explain",
+          "mechanism": "surplus_before_distribution"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "risk_reveal",
+          "mechanism": "distribution_may_be_zero"
+        }
+      ],
+      "required_retention_events": [
+        "record_revenue_contrast",
+        "distribution_rule_explain",
+        "surplus_condition",
+        "zero_distribution_warning",
+        "channel_narrowing"
+      ],
+      "original_moves": [
+        "并非行业缺钱",
+        "大额转播交易",
+        "分配从既有比例转为先满足盈余条件",
+        "无盈余则不分配",
+        "其他向下渠道也变窄。"
+      ],
+      "abstract_move": "反驳行业缺钱这一简单解释，展示总收入增长与向下分配条件收窄之间的矛盾。",
+      "replacement_needs": [
+        "行业总收入或交易规模证据",
+        "资金向下分配的既有规则",
+        "新增盈余条件",
+        "无盈余时的结果与相关方引述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(86);打开的悬念 LOOP07→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 86
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "allocation_mechanism_reveal",
+      "start_ratio": 0.6651,
+      "end_ratio": 0.7613,
+      "start_sec": 464.5,
+      "end_sec": 531.7,
+      "position_label": "66.5%–76.1%(7:45–8:52)",
+      "purpose": "用团队财务证据修正单怪团队的直觉，再揭示可见度如何成为收入与资源集中的核心机制。",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 84,
+          "position_ratio": 0.7075,
+          "time_ms": 494120,
+          "reason": "夺冠与赛前欠薪并置，以强烈反差修正对团队财务状况的简单判断。"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 94,
+          "position_ratio": 0.7495,
+          "time_ms": 523479,
+          "reason": "可见度被揭示为估值与资源集中的核心机制，统一解释前文多层矛盾。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "causal_mechanism_reveal",
+          "opened_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "actor_blame_reframe",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "narrator_correction",
+          "mechanism": "initial_team_blame_revised"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "paradox_reveal",
+          "mechanism": "champion_team_wage_arrears"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "core_answer",
+          "mechanism": "visibility_determines_allocation"
+        }
+      ],
+      "required_retention_events": [
+        "self_correction",
+        "team_loss_evidence",
+        "success_arrears_paradox",
+        "visibility_valuation_reveal",
+        "unifying_causal_answer"
+      ],
+      "original_moves": [
+        "原以为团队扣留资金",
+        "财务与欠薪证据推翻简单归因",
+        "外部母公司与赞助支撑",
+        "收入不按经营利润而按可见度定价",
+        "个例与多数的分化得到统一解释。"
+      ],
+      "abstract_move": "用团队财务证据修正单怪团队的直觉，再揭示可见度如何成为收入与资源集中的核心机制。",
+      "replacement_needs": [
+        "讲述者先前假设的公开修正",
+        "团队亏损或欠款证据",
+        "成绩与欠薪并置的反差事实",
+        "外部资金来源与可见度估值机制"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(84)、PK07(94);回收了前文的悬念 FS06→LOOP06、FS07→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 84
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 94
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "pipeline_cost_exposure",
+      "start_ratio": 0.7613,
+      "end_ratio": 0.8625,
+      "start_sec": 531.7,
+      "end_sec": 602.4,
+      "position_label": "76.1%–86.3%(8:52–10:02)",
+      "purpose": "回到职业入口，展示低龄进入、训练日常与教育中断如何改变前面对收入数字的理解。",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.8106,
+          "time_ms": 566120,
+          "reason": "长时间训练日程使此前收入数字获得新的单位时间含义，认知转为对人的成本关切。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "职业周期闭合环：把入口与日常成本延伸到退出结果。",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "entry_reveal",
+          "mechanism": "teenage_professional_entry"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "human_cost_reframe",
+          "mechanism": "schedule_changes_pay_perception"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "opportunity_cost_reveal",
+          "mechanism": "education_interruption"
+        }
+      ],
+      "required_retention_events": [
+        "entry_age_reveal",
+        "routine_detail",
+        "schedule_reframes_pay",
+        "education_cost",
+        "exit_question_tease"
+      ],
+      "original_moves": [
+        "低龄注册与选拔",
+        "长时间训练和集体生活",
+        "重新理解收入数字",
+        "教育中断",
+        "离开后的技能单一与外部约束仍未消失。"
+      ],
+      "abstract_move": "回到职业入口，展示低龄进入、训练日常与教育中断如何改变前面对收入数字的理解。",
+      "replacement_needs": [
+        "进入年龄与选拔路径",
+        "训练日程与共同生活细节",
+        "教育中断及其后果",
+        "同一外部制度对不同层级者的差异化影响"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80);打开的悬念 LOOP08→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "exit_precarity_reveal",
+      "start_ratio": 0.8625,
+      "end_ratio": 0.9475,
+      "start_sec": 602.4,
+      "end_sec": 661.7,
+      "position_label": "86.3%–94.8%(10:02–11:02)",
+      "purpose": "以短职业、短契约和有限退出路径完成职业周期闭环，并把可见度机制延伸到退役之后。",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "career_cycle_answer",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "exit_transition",
+          "mechanism": "ending_with_exit_story"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "precarity_reveal",
+          "mechanism": "short_contract_churn"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "emotional_evidence",
+          "mechanism": "uncertain_future_response"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "mechanism_callback",
+          "mechanism": "post_career_visibility_wall"
+        }
+      ],
+      "required_retention_events": [
+        "short_career_statistics",
+        "contract_churn",
+        "uncertain_future_response",
+        "limited_exit_roles",
+        "post_career_visibility_wall"
+      ],
+      "original_moves": [
+        "平均职业周期短",
+        "契约短且更新有限",
+        "缺少退出保障",
+        "未来方向模糊",
+        "常见转向岗位有限或仍依赖知名度",
+        "离开后同一机制延续。"
+      ],
+      "abstract_move": "以短职业、短契约和有限退出路径完成职业周期闭环，并把可见度机制延伸到退役之后。",
+      "replacement_needs": [
+        "职业年龄与年限分布",
+        "短契约和更新失败",
+        "退出保障缺口",
+        "退役意向与岗位容量的矛盾",
+        "可见度在退役后继续作用的回环"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS09→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "systemic_closure",
+      "start_ratio": 0.9475,
+      "end_ratio": 1,
+      "start_sec": 661.7,
+      "end_sec": 698.4,
+      "position_label": "94.8%–100%(11:02–11:38)",
+      "purpose": "用核心判词、收入口对照和标题镜像回答主问题，再把未被统计者与开放反问留给观众。",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 96,
+          "position_ratio": 0.9503,
+          "time_ms": 663680,
+          "reason": "“最贵的是名字而非技能”的判词把全片论证压缩成可复述的核心结论。"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "title_callback",
+          "strength": 97,
+          "position_ratio": 0.9743,
+          "time_ms": 680480,
+          "reason": "已知一人与未知五百人的镜像对照直接回收标题，并完成从个案到整体的认知升级。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "结尾开放环：把行业答案转化为观众可带走的观看与提问方式。",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "systemic_contrast_synthesis",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "comparative_parallel_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP09"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "thesis_drop",
+          "mechanism": "name_more_expensive_than_skill"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "scope_extension",
+          "mechanism": "unregistered_hopefuls_excluded"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "title_payoff",
+          "mechanism": "known_one_unknown_many"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "open_ending",
+          "mechanism": "not_only_this_arena_question"
+        }
+      ],
+      "required_retention_events": [
+        "name_over_skill_thesis",
+        "income_parallel_recap",
+        "statistical_boundary_extension",
+        "title_mirror_payoff",
+        "cross_industry_open_question"
+      ],
+      "original_moves": [
+        "最贵的是可见度而非单纯技能",
+        "少数多元收入与多数单一收入",
+        "单一收入也缺少标准保障",
+        "未进入正式统计者更不可见",
+        "已知一人与未知多数的标题回收",
+        "反问问题是否只属于这一行业。"
+      ],
+      "abstract_move": "用核心判词、收入口对照和标题镜像回答主问题，再把未被统计者与开放反问留给观众。",
+      "replacement_needs": [
+        "核心价值判词",
+        "多元收入与单一收入的镜像总结",
+        "统计边界之外的补充提醒",
+        "标题中的已知少数与未知多数对照",
+        "超越单一行业的开放反问"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(96)、PK10(97);打开的悬念 LOOP09(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01、FS01→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 96
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 97
+        }
+      ]
+    }
+  ]
+}

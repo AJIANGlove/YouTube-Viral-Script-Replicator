@@ -445,6 +445,8 @@
         </label>
         <label style="margin-top:6px">参考资料(选填 · 写前分析用:粘贴你查到的数据、报道、链接摘要,AI 只能用这里和它已知的事实)</label>
         <textarea id="gen-materials" rows="4" style="width:100%;box-sizing:border-box" placeholder="例如:2024 年韩国美发店平均月营业额 …(来源:统计厅)"></textarea>
+        <label style="margin-top:6px">频道声音设定(语体、称呼、风格;在「设置」页管理)</label>
+        <select id="gen-voice"><option value="__auto__">自动:按所选频道名匹配</option><option value="__none__">不使用</option></select>
       </div>
       <div style="margin-top:12px; display:flex; align-items:center; gap:14px">
         <button class="primary" id="btn-run" onclick="createRun()">开始生成(约 3-8 分钟)</button>
@@ -598,6 +600,27 @@
 
   <!-- ========== 设置 ========== -->
   <div id="view-settings" class="hidden">
+    <div class="card" id="voice-card">
+      <h2>频道声音设定(语体 · 称呼 · 风格)</h2>
+      <div class="hint" style="margin-bottom:8px">每个频道一份,写稿和优化时自动带上。名字和频道名一致时,新建任务选「自动」就会用它。AI 起草后要人工核对再保存,保存即确认。</div>
+      <div id="voice-list" style="margin-bottom:8px"></div>
+      <details id="voice-draft-box"><summary style="cursor:pointer">用 AI 起草一份新设定</summary>
+        <div class="grid" style="margin-top:6px">
+          <div><label>频道名</label><input type="text" id="vd-name" placeholder="和视频网站的频道名一致"></div>
+          <div><label>频道语言</label><input type="text" id="vd-lang" placeholder="例如 Korean"></div>
+        </div>
+        <label>频道说明(定位、受众、想要的感觉)</label><textarea id="vd-desc" rows="2" style="width:100%;box-sizing:border-box"></textarea>
+        <label>样稿(粘贴 1-3 篇频道自己的旁白,越多越准)</label><textarea id="vd-samples" rows="6" style="width:100%;box-sizing:border-box"></textarea>
+        <button style="margin-top:6px" id="vd-btn" onclick="draftVoice()">AI 起草</button> <span class="hint" id="vd-status" style="margin-top:0"></span>
+      </details>
+      <label style="margin-top:8px">编辑(JSON)</label>
+      <textarea id="voice-editor" class="an-json" style="min-height:260px" placeholder="点上面的设定名加载,或用 AI 起草"></textarea>
+      <div style="margin-top:6px;display:flex;gap:8px;align-items:center">
+        <button class="primary" onclick="saveVoice()">保存(确认)</button>
+        <button class="ghost" onclick="deleteVoice()">删除当前</button>
+        <span class="hint" id="voice-status" style="margin-top:0"></span>
+      </div>
+    </div>
     <div class="card">
       <h2>视频生成网站绑定(全局单账号)</h2>
       <div id="video-binding-body" class="bind-state">加载中…</div>
@@ -663,7 +686,7 @@ function showView(v) {
   if (v === 'generate') loadGenAssets();
   if (v === 'runs') { parseRunsHash(); syncRunsToolbar(); loadRuns(); pollTimer = setInterval(() => loadRuns({ silent: true }), 3000); }
   if (v === 'detail' && currentRunId) { loadRunDetail(); pollTimer = setInterval(loadRunDetail, 3000); }
-  if (v === 'settings') loadSettings();
+  if (v === 'settings') { loadSettings(); loadVoiceList(); }
 }
 
 async function api(url, opts) {
@@ -855,6 +878,7 @@ function renderSelectedAsset() {
 
 function gotoStep2() {
   if (!selectedAsset) return;
+  loadVoiceOptions();
   clearTopics(); // 换框架后旧的推荐结果不再适用
   renderSelectedAsset();
   // 视频时长默认值取所选框架源视频时长(毫秒→分钟取整),可手动修改
@@ -892,7 +916,8 @@ async function createRun() {
     // 写前分析(流程 B②-⑨):开启后任务先停在「待确认分析」,确认后才写稿
     pre_analysis: document.getElementById('gen-pre-analysis').checked,
     track: document.getElementById('gen-track').value.trim(),
-    materials: document.getElementById('gen-materials').value.trim()
+    materials: document.getElementById('gen-materials').value.trim(),
+    voice_name: document.getElementById('gen-voice').value
   };
   document.getElementById('btn-run').disabled = true;
   try {
@@ -1377,7 +1402,8 @@ async function loadRunDetail() {
   const r = await api('/api/runs/' + currentRunId);
   document.getElementById('detail-title').textContent = r.topic;
   document.getElementById('detail-sub').textContent =
-    `${r.asset_name || r.asset_id} · ${STATUS_LABELS[r.status] || r.status} · 创建于 ${fmtTime(r.created_at)}`;
+    `${r.asset_name || r.asset_id} · ${STATUS_LABELS[r.status] || r.status} · 创建于 ${fmtTime(r.created_at)}` +
+    (r.voice_used ? ` · 频道声音:${r.voice_used}` : '');
   const stepKeys = ['blueprint', 'script', 'audit', 'optimized'];
   if (r.pre_analysis || (r.steps || {}).analysis) stepKeys.unshift('analysis');
   if (r.boost_opening || (r.steps || {}).opening_boost) stepKeys.push('opening_boost');
@@ -1452,6 +1478,78 @@ async function loadRunDetail() {
   }
   document.getElementById('detail-fact-card').classList.toggle('hidden', !facts.length);
   document.getElementById('detail-fact').textContent = facts.join('\n');
+}
+
+
+// ---------- 频道声音设定(流程 A4) ----------
+async function loadVoiceOptions() {
+  const sel = document.getElementById('gen-voice');
+  const keep = sel.value;
+  try {
+    const list = await api('/api/voices');
+    sel.innerHTML = '<option value="__auto__">自动:按所选频道名匹配</option><option value="__none__">不使用</option>' +
+      list.map(v => `<option value="${esc(v.name).replace(/"/g, '&quot;')}">${esc(v.name)}${v.confirmed === false ? '(未确认)' : ''}</option>`).join('');
+    if ([...sel.options].some(o => o.value === keep)) sel.value = keep;
+  } catch (e) {}
+}
+
+async function loadVoiceList() {
+  const box = document.getElementById('voice-list');
+  try {
+    const list = await api('/api/voices');
+    box.innerHTML = list.length
+      ? list.map((v, i) => `<span class="chip" data-i="${i}">${esc(v.name)}</span>`).join('')
+      : '<span class="hint" style="margin-top:0">还没有设定。用下面的 AI 起草,或参照 app/voices/_template.json 手写。</span>';
+    box.querySelectorAll('.chip').forEach(el => {
+      el.onclick = () => {
+        document.getElementById('voice-editor').value = JSON.stringify(list[+el.dataset.i], null, 2);
+        document.getElementById('voice-status').textContent = '';
+      };
+    });
+  } catch (e) { box.textContent = '加载失败:' + e.message; }
+}
+
+async function draftVoice() {
+  const st = document.getElementById('vd-status');
+  const btn = document.getElementById('vd-btn');
+  const body = {
+    name: document.getElementById('vd-name').value.trim(),
+    language: document.getElementById('vd-lang').value.trim(),
+    description: document.getElementById('vd-desc').value.trim(),
+    samples: document.getElementById('vd-samples').value.trim()
+  };
+  if (!body.name) { st.textContent = '请填写频道名'; return; }
+  btn.disabled = true; st.textContent = '起草中,约 30-60 秒…';
+  try {
+    const v = await api('/api/voices/draft', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    document.getElementById('voice-editor').value = JSON.stringify(v, null, 2);
+    st.textContent = '已起草,请在下方核对修改后点「保存(确认)」';
+  } catch (e) { st.textContent = e.message; }
+  finally { btn.disabled = false; }
+}
+
+async function saveVoice() {
+  const st = document.getElementById('voice-status');
+  let v;
+  try { v = JSON.parse(document.getElementById('voice-editor').value); }
+  catch (e) { st.textContent = 'JSON 格式有误:' + e.message; return; }
+  try {
+    const saved = await api('/api/voices', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ voice: v }) });
+    document.getElementById('voice-editor').value = JSON.stringify(saved, null, 2);
+    st.textContent = '✓ 已保存:' + saved.name;
+    loadVoiceList();
+  } catch (e) { st.textContent = '保存失败:' + e.message; }
+}
+
+async function deleteVoice() {
+  const st = document.getElementById('voice-status');
+  let v;
+  try { v = JSON.parse(document.getElementById('voice-editor').value); } catch (e) { st.textContent = '编辑框里没有有效的设定'; return; }
+  if (!v.name || !confirm('删除频道声音设定「' + v.name + '」?')) return;
+  await api('/api/voices/' + encodeURIComponent(v.name), { method: 'DELETE' });
+  document.getElementById('voice-editor').value = '';
+  st.textContent = '已删除';
+  loadVoiceList();
 }
 
 // ---------- 写前分析(流程 B②-⑨)/ 留存检查(B⑪)/ 稿件检查(B⑭ K1-K5) ----------

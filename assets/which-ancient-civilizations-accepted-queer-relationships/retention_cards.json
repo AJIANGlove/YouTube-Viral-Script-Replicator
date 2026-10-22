@@ -1,0 +1,974 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.333Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "binary_answer_refusal",
+      "start_ratio": 0,
+      "end_ratio": 0.021,
+      "start_sec": 0,
+      "end_sec": 34,
+      "position_label": "0%–2.1%(0:00–0:34)",
+      "purpose": "同时否定两个默认答案，把熟悉议题陌生化，并亮出古代真实的分类轴",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook",
+          "mechanism": "binary_answer_refusal"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "reframe",
+          "mechanism": "category_axis_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "binary_answer_refused",
+        "category_axis_revealed"
+      ],
+      "original_moves": [
+        "两个默认答案同时被否定",
+        "古代真实的分类轴（公民/外人、自由/奴役、男性/女性、权力/无权）排比亮出"
+      ],
+      "abstract_move": "同时否定两个默认答案，把熟悉议题陌生化，并亮出古代真实的分类轴",
+      "replacement_needs": [
+        "两个被否定答案的并置",
+        "替代性分类轴的排比枚举",
+        "\"你站在社会何处比你要谁更重要\"的重心转移"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 34000,
+        "hook_type": "binary_answer_refusal_question_reframe",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 25000,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0005"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "question_deconstruction",
+      "start_ratio": 0.021,
+      "end_ratio": 0.04,
+      "start_sec": 34,
+      "end_sec": 64,
+      "position_label": "2.1%–4%(0:34–1:04)",
+      "purpose": "把标题问句拆成可检验的评判维度，确立全片的审计流程",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：标题问\"哪些文明接纳\"——正片先把问句本身拆开悬挂，直到综合裁决段才回答",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "question_deconstruction",
+          "mechanism": "rubric_enumeration"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "spectrum_enumeration",
+          "mechanism": "treatment_scale"
+        }
+      ],
+      "required_retention_events": [
+        "title_verb_challenged",
+        "rubric_enumerated",
+        "volatility_thesis"
+      ],
+      "original_moves": [
+        "笼统问句",
+        "反问\"接纳的是哪一种关系\"",
+        "关系变体排比",
+        "待遇光谱枚举（颂扬到无视）"
+      ],
+      "abstract_move": "把标题问句拆成可检验的评判维度，确立全片的审计流程",
+      "replacement_needs": [
+        "对标题动词的反问",
+        "关系变体的排比枚举",
+        "待遇光谱枚举",
+        "答案不稳定性断言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP01→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "case_audit_prime_candidate",
+      "start_ratio": 0.04,
+      "end_ratio": 0.286,
+      "start_sec": 64,
+      "end_sec": 214,
+      "position_label": "4%–28.6%(1:04–3:34)",
+      "purpose": "用观众心中\"最显而易见的赢家\"跑通审计模板：诱人表象→规则检视→证据偏斜提示→条件式小节判决",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.0401,
+          "time_ms": 64000,
+          "reason": "\"答案可以在一句话说完之前改变\"：排行榜式期待被预先瓦解"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.1291,
+          "time_ms": 206000,
+          "reason": "首个案例小节判决：\"不是现代平等提前到来，而是另一套不平等体系\""
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "humor_peak",
+          "strength": 70,
+          "position_ratio": 0.2343,
+          "time_ms": 374000,
+          "reason": "词源回报+官僚化冷幽默：\"没办完必要的手续\""
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.2613,
+          "time_ms": 417000,
+          "reason": "\"档案里的沉默不等于卧室里的沉默\"：全片情感与方法论的双重金句"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "第一候选是否真如表象般是\"显而易见的赢家\"",
+          "closes_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "档案沉默的另一面到底发生过什么：女性与底层的关系是否只是没被记录",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "thesis_drop",
+          "mechanism": "answer_volatility"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "subversion_tease",
+          "mechanism": "tempting_surface_then_inspection"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "rule_inspection",
+          "mechanism": "acceptance_structure"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "source_critique",
+          "mechanism": "elite_source_bias"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "reframe",
+          "mechanism": "status_question_swap"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "mini_verdict",
+          "mechanism": "inequality_relabel"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "subversion",
+          "mechanism": "modern_echo_interrupted"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "evidence_discipline",
+          "mechanism": "witnesses_not_polls"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "counterintuitive_reveal",
+          "mechanism": "love_as_strength"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "etymology_payoff",
+          "mechanism": "vocabulary_origin"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "aphorism",
+          "mechanism": "archive_silence_reframe"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "case_verdict",
+          "mechanism": "obey_the_architecture"
+        }
+      ],
+      "required_retention_events": [
+        "tempting_surface",
+        "rule_inspection",
+        "source_bias_note",
+        "conditional_verdict"
+      ],
+      "original_moves": [
+        "诱人表象（彩虹天堂+柱子）",
+        "宣布验货",
+        "固定身份不存在的说明",
+        "规则三要素（年龄/地位/角色）",
+        "史料作者偏斜提示",
+        "男性气概管制",
+        "\"另一种不平等体系\"小节判决"
+      ],
+      "abstract_move": "用观众心中\"最显而易见的赢家\"跑通审计模板：诱人表象→规则检视→证据偏斜提示→条件式小节判决",
+      "replacement_needs": [
+        "诱人表象的意象化呈现",
+        "固定身份范畴不存在的说明",
+        "规则三要素（年龄/地位/角色）",
+        "史料作者偏斜提示",
+        "一个经典文本证据的双面评价",
+        "小节判决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(70)、PK02(75)、PK03(70)、PK04(80);打开的悬念 LOOP02→FS04、LOOP08→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 70
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "case_audit_inherited_variant",
+      "start_ratio": 0.286,
+      "end_ratio": 0.462,
+      "start_sec": 457,
+      "end_sec": 590,
+      "position_label": "28.6%–46.2%(7:37–9:50)",
+      "purpose": "第二候选：继承前一案例的文化素材但把规则拧得更紧，以支配地位为唯一通行证",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "humor_peak",
+          "strength": 70,
+          "position_ratio": 0.312,
+          "time_ms": 498000,
+          "reason": "\"组织架构图\"错位类比把制度逻辑压缩成笑点与记忆点"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.364,
+          "time_ms": 581000,
+          "reason": "私人哀悼升级为跨帝国封神的规模冲击"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "继承者把同样的可能性拧得更紧之后，还能否被称作宽容",
+          "closes_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "东方案例的诗性委婉语是否意味着真正的接纳",
+          "closes_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP09",
+          "tension": "是否存在现代意义的平等婚姻：纪念规模盛大是否等于关系平等",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "conditional_verdict",
+          "opened_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "conditional_verdict",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "humor_payoff",
+          "mechanism": "anachronism_mapping"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "gossip_evidence",
+          "mechanism": "political_insult"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "power_loophole",
+          "mechanism": "status_of_emperor"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "scale_reveal",
+          "mechanism": "grief_memorialization"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "paradox_reveal",
+          "mechanism": "commemoration_not_equality"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "hostile_source_warning",
+          "mechanism": "slander_genre_alert"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "case_verdict",
+          "mechanism": "tolerance_with_edges"
+        }
+      ],
+      "required_retention_events": [
+        "dominance_rule_restate",
+        "elite_exception_showcase",
+        "hostile_source_warning",
+        "conditional_verdict"
+      ],
+      "original_moves": [
+        "继承交代",
+        "支配中心的规则重述",
+        "组织结构图笑点",
+        "极端不平等提示",
+        "政治侮辱证据",
+        "顶层破例",
+        "哀悼纪念规模升级"
+      ],
+      "abstract_move": "第二候选：继承前一案例的文化素材但把规则拧得更紧，以支配地位为唯一通行证",
+      "replacement_needs": [
+        "继承关系的交代",
+        "以支配地位为核心的规则重述",
+        "政治侮辱作为史料的分析",
+        "权力顶层破例的展示",
+        "纪念规模与关系平等的区分",
+        "敌意史料警示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(70)、PK06(75);打开的悬念 LOOP04→FS05、LOOP09→FS12 跨段;回收了前文的悬念 FS03→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 70
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "case_audit_euphemism_trail",
+      "start_ratio": 0.462,
+      "end_ratio": 0.563,
+      "start_sec": 737,
+      "end_sec": 898,
+      "position_label": "46.2%–56.3%(12:17–14:58)",
+      "purpose": "第三候选：以诗性委婉语与宫廷轶事为证据链的案例",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.5589,
+          "time_ms": 892000,
+          "reason": "第三案判决：\"家谱仍是强制的\"，宽容的边界被一句话划定"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "conditional_verdict",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "origin_story",
+          "mechanism": "cut_sleeve_anecdote"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "recognition_inference",
+          "mechanism": "euphemism_evidence"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "scandal_reframe",
+          "mechanism": "favoritism_not_love"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "case_verdict",
+          "mechanism": "family_tree_mandatory"
+        }
+      ],
+      "required_retention_events": [
+        "origin_anecdote",
+        "euphemism_inference",
+        "family_obligation_verdict"
+      ],
+      "original_moves": [
+        "地图转场",
+        "断袖轶事完整讲述",
+        "委婉语成词的推断",
+        "争议焦点现代翻译（偏袒而非爱情）",
+        "家族义务强制",
+        "\"家谱仍是强制的\"判决"
+      ],
+      "abstract_move": "第三候选：以诗性委婉语与宫廷轶事为证据链的案例",
+      "replacement_needs": [
+        "一个著名轶事的完整讲述",
+        "委婉语成为文学词汇的推断",
+        "争议焦点的现代翻译（偏袒而非爱情）",
+        "家族义务的强制性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(75);回收了前文的悬念 FS04→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "case_audit_textual_recognition",
+      "start_ratio": 0.563,
+      "end_ratio": 0.656,
+      "start_sec": 898,
+      "end_sec": 1047,
+      "position_label": "56.3%–65.6%(14:58–17:27)",
+      "purpose": "第四候选：以宗教图像与经典文本中的\"第三性\"范畴为证据",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "第三性范畴的文化可见性是否等于平等地位",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "two_way_lock_verdict",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "category_reveal",
+          "mechanism": "third_nature"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "narrower_conclusion",
+          "mechanism": "subcontinent_warning"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "worldview_shift",
+          "mechanism": "recognition_not_liberation"
+        }
+      ],
+      "required_retention_events": [
+        "third_nature_category",
+        "counter_evidence_penalties",
+        "two_way_lock_verdict"
+      ],
+      "original_moves": [
+        "性别融合的神祇图像",
+        "经典文本对第三性的直接描述",
+        "刑罚与罚款的反向证据",
+        "\"把次大陆简化为反应按钮\"警告",
+        "\"承认不是解放\"双向锁定判决"
+      ],
+      "abstract_move": "第四候选：以宗教图像与经典文本中的\"第三性\"范畴为证据",
+      "replacement_needs": [
+        "神祇性别融合的图像证据",
+        "经典文本对第三性的直接描述",
+        "刑罚与罚款的反向证据",
+        "对\"把多元区域简化为反应按钮\"的警告"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP05。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:第三性范畴的文化可见性是否等于平等地位",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "case_audit_sacred_ambiguity",
+      "start_ratio": 0.656,
+      "end_ratio": 0.721,
+      "start_sec": 1047,
+      "end_sec": 1151,
+      "position_label": "65.6%–72.1%(17:27–19:11)",
+      "purpose": "第五候选：宗教仪式中的性别越界角色，证据迷人但不稳定",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "仪式中的性别越界角色究竟如何被理解：神圣还是危险",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "ambivalence_verdict",
+          "mechanism": "sacred_and_mocked"
+        }
+      ],
+      "required_retention_events": [
+        "ritual_gender_crossing",
+        "label_misfit_disclaimer",
+        "ambivalence_verdict"
+      ],
+      "original_moves": [
+        "女神崇拜中的性别扰动",
+        "仪式人员身份的现代标签适配不良声明",
+        "预兆与法条中的地位焦虑",
+        "\"可以是神圣的，也可以是被嘲笑的\"双重定性"
+      ],
+      "abstract_move": "第五候选：宗教仪式中的性别越界角色，证据迷人但不稳定",
+      "replacement_needs": [
+        "仪式人员的性别越界证据",
+        "现代标签适配不良的显式声明",
+        "预兆与法条中的地位焦虑分析"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "case_audit_visual_enigma",
+      "start_ratio": 0.721,
+      "end_ratio": 0.771,
+      "start_sec": 1151,
+      "end_sec": 1230,
+      "position_label": "72.1%–77.1%(19:11–20:30)",
+      "purpose": "第六候选：视觉上最诱人、证据上最不确定的案例，用于演示\"禁止脑补\"纪律",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "合葬墓中两人究竟是恋人还是兄弟：刻意保持开放，叙事用途是以一桩永远无答案的悬案把\"证据不足禁止脑补\"的纪律具象化，并在结尾以\"画在墓上的门\"意象回收而不解答",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "ambivalence_verdict",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "image_tease",
+          "mechanism": "first_couple_claim"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "certainty_discipline",
+          "mechanism": "missing_caption_humor"
+        }
+      ],
+      "required_retention_events": [
+        "tempting_image",
+        "rival_readings",
+        "certainty_refused"
+      ],
+      "original_moves": [
+        "合葬墓亲密图像",
+        "两种对立解读并置",
+        "想象的贴心caption自嘲",
+        "神话中的支配性性事负面定性",
+        "档案更薄的横向对比"
+      ],
+      "abstract_move": "第六候选：视觉上最诱人、证据上最不确定的案例，用于演示\"禁止脑补\"纪律",
+      "replacement_needs": [
+        "一个著名视觉证据的呈现",
+        "两种对立解读的并置",
+        "反事实想象式自嘲",
+        "神话中支配性性事的负面定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07(不闭合) 跨段;回收了前文的悬念 FS07→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "archive_bias_analysis",
+      "start_ratio": 0.771,
+      "end_ratio": 0.796,
+      "start_sec": 1230,
+      "end_sec": 1271,
+      "position_label": "77.1%–79.6%(20:30–21:11)",
+      "purpose": "元分析：解释证据分布为何系统性偏斜，把\"没有记录\"与\"没有发生\"分开",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "meta_analysis_resolution",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "manufacture_warning",
+          "mechanism": "no_invented_evidence"
+        }
+      ],
+      "required_retention_events": [
+        "recorder_inventory",
+        "absence_not_nonexistence",
+        "no_manufactured_evidence"
+      ],
+      "original_moves": [
+        "记录者身份清单归因",
+        "沉默群体点名",
+        "缺席≠不存在",
+        "\"不能因故事更美好而制造证据\"的纪律声明"
+      ],
+      "abstract_move": "元分析：解释证据分布为何系统性偏斜，把\"没有记录\"与\"没有发生\"分开",
+      "replacement_needs": [
+        "记录者身份的清单式归因",
+        "沉默群体的点名",
+        "缺席不等于不存在的声明",
+        "禁止制造证据的反向约束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS03→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "counterexample_scan",
+      "start_ratio": 0.796,
+      "end_ratio": 0.815,
+      "start_sec": 1271,
+      "end_sec": 1301,
+      "position_label": "79.6%–81.5%(21:11–21:41)",
+      "purpose": "快速扫描明确限制同性行为的反面案例，防止全片变成单方面翻案",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "explicit_prohibitions",
+        "structure_causality"
+      ],
+      "original_moves": [
+        "具体禁令案例",
+        "解释争议提示",
+        "法条与地位违规",
+        "晚期立法敌意",
+        "\"态度随结构变化\"因果总结"
+      ],
+      "abstract_move": "快速扫描明确限制同性行为的反面案例，防止全片变成单方面翻案",
+      "replacement_needs": [
+        "至少两个明确的禁止性案例",
+        "法条范围与解释争议的提示"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "label_anachronism",
+      "start_ratio": 0.815,
+      "end_ratio": 0.85,
+      "start_sec": 1301,
+      "end_sec": 1356,
+      "position_label": "81.5%–85%(21:41–22:36)",
+      "purpose": "拆解现代标签的时代错置：行为相似，分类系统不相似",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "worldview_shift",
+          "mechanism": "filing_system_divergence"
+        }
+      ],
+      "required_retention_events": [
+        "terminology_date_anchor",
+        "isomorphic_verdict"
+      ],
+      "original_moves": [
+        "现代术语诞生年代锚点",
+        "伞式标签的双面评价",
+        "三个跨案例标签失配实例",
+        "\"归档系统不像\"同构判决"
+      ],
+      "abstract_move": "拆解现代标签的时代错置：行为相似，分类系统不相似",
+      "replacement_needs": [
+        "现代术语的诞生年代锚点",
+        "伞式标签的实用性与误导性双面评价",
+        "三个跨案例的标签失配实例"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "synthesis_answer",
+      "start_ratio": 0.85,
+      "end_ratio": 0.915,
+      "start_sec": 1356,
+      "end_sec": 1461,
+      "position_label": "85%–91.5%(22:36–24:21)",
+      "purpose": "综合裁决：逐案例回放判决，按维度宣布赢家，按现代标准宣布无人全胜",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.8935,
+          "time_ms": 1426000,
+          "reason": "\"没有人赢\"：按现代标准的否定答案是全片最重的一锤"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "dimensional_synthesis_answer",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "negative_verdict",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "synthesis_verdict",
+          "mechanism": "nobody_wins"
+        }
+      ],
+      "required_retention_events": [
+        "title_question_callback",
+        "dimensional_winners",
+        "nobody_wins",
+        "power_flow_verdict"
+      ],
+      "original_moves": [
+        "标题问句原样重提",
+        "六案例判决回放",
+        "按维度分流宣布赢家",
+        "现代标准下\"无人全胜\"",
+        "\"接纳从权力高地向下流动\"总定性"
+      ],
+      "abstract_move": "综合裁决：逐案例回放判决，按维度宣布赢家，按现代标准宣布无人全胜",
+      "replacement_needs": [
+        "标题问句的原样重提",
+        "逐案例一句话判决回放",
+        "按维度分流的赢家宣布",
+        "现代标准下的无人全胜判决",
+        "权力流向的总定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(90);回收了前文的悬念 FS02→LOOP01、FS04→LOOP09。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.915,
+      "end_ratio": 0.948,
+      "start_sec": 1461,
+      "end_sec": 1513,
+      "position_label": "91.5%–94.8%(24:21–25:13)",
+      "purpose": "双向认知升级：击碎\"该现象是现代发明\"的幻想，同时拒绝把古人美化成现代人",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "fantasy_destruction",
+        "de_romanticization",
+        "elegy_for_unrecorded"
+      ],
+      "original_moves": [
+        "\"近代才出现\"幻想的显式击碎",
+        "古人行为动词排比回放",
+        "\"不是穿凉鞋的现代社群\"去浪漫化",
+        "无人记录者的一句悼念"
+      ],
+      "abstract_move": "双向认知升级：击碎\"该现象是现代发明\"的幻想，同时拒绝把古人美化成现代人",
+      "replacement_needs": [
+        "对\"近代才出现\"幻想的显式击碎",
+        "古人行为的动词排比回放",
+        "\"不是穿着古装的现代社群\"的去浪漫化",
+        "无人记录者的一句悼念"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.948,
+      "end_ratio": 1,
+      "start_sec": 1513,
+      "end_sec": 1596,
+      "position_label": "94.8%–100%(25:13–26:36)",
+      "purpose": "用统摄性隐喻逐案回放收束全片，以同构短句连发的格言收尾",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.9981,
+          "time_ms": 1593000,
+          "reason": "四句同构格言完成认知收束，\"未完成的造物\"留下开放余韵"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "map_reframe",
+          "mechanism": "conditional_doors"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "aphorism_close",
+          "mechanism": "unfinished_invention"
+        }
+      ],
+      "required_retention_events": [
+        "map_reframe",
+        "metaphor_replay",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "核心隐喻首次亮相（条件之门地图）",
+        "逐案例隐喻回放",
+        "\"威胁系统时接纳迅速收窄\"机理",
+        "差异与等级未分离的当代回响",
+        "四句同构格言收束"
+      ],
+      "abstract_move": "用统摄性隐喻逐案回放收束全片，以同构短句连发的格言收尾",
+      "replacement_needs": [
+        "核心隐喻的首次亮相",
+        "逐案例隐喻回放",
+        "\"威胁系统时接纳迅速收窄\"的机理总结",
+        "同构短句连发加末句未完成式定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

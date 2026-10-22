@@ -28,7 +28,7 @@ function assetDir(id) { return path.join(ASSETS_ROOT, id); }
 function listAssets() {
   ensureDirs();
   return fs.readdirSync(ASSETS_ROOT, { withFileTypes: true })
-    .filter(e => e.isDirectory())
+    .filter(e => e.isDirectory() && !e.name.startsWith('_')) // _library 等下划线目录是汇总产物,不是资产
     .map(e => {
       try {
         const meta = JSON.parse(fs.readFileSync(path.join(ASSETS_ROOT, e.name, 'meta.json'), 'utf-8'));
@@ -50,7 +50,7 @@ function getAsset(id) {
     style: read('style.json'),
     examples: read('examples.json'),
     srt: read('source.srt'),
-    retention_cards: read('retention_cards.json') // 可选:tools/build_retention_cards.js 生成(含 AI 补的动作说明)
+    retention_cards: read('retention_cards.json') // 可选:bin/build_retention_cards.js 生成的 7 项留存卡(可人工修改)
   };
 }
 

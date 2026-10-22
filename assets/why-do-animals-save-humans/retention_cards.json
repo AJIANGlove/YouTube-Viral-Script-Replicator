@@ -1,0 +1,980 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.392Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "case_cold_open",
+      "start_ratio": 0,
+      "end_ratio": 0.0353,
+      "start_sec": 0,
+      "end_sec": 49,
+      "position_label": "0%–3.5%(0:00–0:49)",
+      "purpose": "戏剧性真实个案冷开场：让「顶级捕食者变成守护者」的反常事件在第一分钟内完成",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.0281,
+          "time_ms": 39000,
+          "reason": "绑匪逃跑、狮子留守：开场个案的反常结果完成，主悬念挂起"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：顶级捕食者为什么守护人类幼崽（标题问句的个案化悬置）",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "picture_this_cold_open"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "threat_turn",
+          "mechanism": "predator_identity_reveal"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "reversal_payoff",
+          "mechanism": "guardians_instead_of_predators"
+        }
+      ],
+      "required_retention_events": [
+        "dramatic_case_completed",
+        "witness_confusion_hook"
+      ],
+      "original_moves": [
+        "从零信息到危机现场，再到「捕食者变守护者」的反常结果完成"
+      ],
+      "abstract_move": "戏剧性真实个案冷开场：让「顶级捕食者变成守护者」的反常事件在第一分钟内完成",
+      "replacement_needs": [
+        "具体时间地点与受害者处境锚点",
+        "介入者的危险身份与行为的反差",
+        "守护行为的持续与自发撤离",
+        "第三方见证者的困惑反应"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(75);打开的悬念 LOOP01→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 49000,
+        "hook_type": "dramatic_true_case_cold_open",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 39000,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0006"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "hypothesis_undercut",
+      "start_ratio": 0.0353,
+      "end_ratio": 0.057,
+      "start_sec": 49,
+      "end_sec": 79,
+      "position_label": "3.5%–5.7%(0:49–1:19)",
+      "purpose": "给出专家初步解释让观众先有着落，再一句话指出其不完备",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "专家的幼崽哭声假设能否解释狮群的长时间守护",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "insufficiency_verdict",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "hypothesis_offer",
+          "mechanism": "expert_tentative_hypothesis"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "hypothesis_undercut",
+          "mechanism": "possible_but_incomplete"
+        }
+      ],
+      "required_retention_events": [
+        "expert_hypothesis",
+        "incompleteness_verdict"
+      ],
+      "original_moves": [
+        "专家假设给出",
+        "让步确认其可能",
+        "一句反驳",
+        "显式标注未解"
+      ],
+      "abstract_move": "给出专家初步解释让观众先有着落，再一句话指出其不完备",
+      "replacement_needs": [
+        "专家初步解释的内容",
+        "对该解释合理之处的让步确认",
+        "一句直指其逻辑缺口的反驳",
+        "「仍未被解释」的显式标注"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP02。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:专家的幼崽哭声假设能否解释狮群的长时间守护",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "pattern_expansion",
+      "start_ratio": 0.057,
+      "end_ratio": 0.0966,
+      "start_sec": 79,
+      "end_sec": 134,
+      "position_label": "5.7%–9.7%(1:19–2:14)",
+      "purpose": "用高速案例清单把一桩奇闻升级为反复出现、值得认真对待的现象类别",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "pattern_framing",
+          "mechanism": "category_of_events"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "montage_acceleration",
+          "mechanism": "cross_species_case_list"
+        }
+      ],
+      "required_retention_events": [
+        "category_framing",
+        "case_montage",
+        "collective_demand"
+      ],
+      "original_moves": [
+        "新闻类别定性",
+        "五物种案例清单排比",
+        "集体模式需要更深检视"
+      ],
+      "abstract_move": "用高速案例清单把一桩奇闻升级为反复出现、值得认真对待的现象类别",
+      "replacement_needs": [
+        "把事件定性为某新闻类别的句子",
+        "五个以上跨物种案例的一行式排比清单",
+        "「每个单独可解释，但集体模式需要更深检视」的转折"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "thesis_questions",
+      "start_ratio": 0.0966,
+      "end_ratio": 0.1262,
+      "start_sec": 134,
+      "end_sec": 175,
+      "position_label": "9.7%–12.6%(2:14–2:55)",
+      "purpose": "显式处决「本能」式懒惰答案，把标题问句拆成可研究的科学子问题",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.1017,
+          "time_ms": 141000,
+          "reason": "「本能不是解释，只是解释的缺席」：全片论点定调"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "出手相助的动物神经系统里到底发生了什么",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "collective_pattern_demand",
+          "mechanism": "beyond_just_instinct"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "thesis_drop",
+          "mechanism": "lazy_answer_execution"
+        }
+      ],
+      "required_retention_events": [
+        "lazy_answer_execution",
+        "question_stack"
+      ],
+      "original_moves": [
+        "懒答案处决",
+        "神经/进化/关系三层子问题",
+        "先建判据的方法论声明"
+      ],
+      "abstract_move": "显式处决「本能」式懒惰答案，把标题问句拆成可研究的科学子问题",
+      "replacement_needs": [
+        "「X不是解释，X只是解释的缺席」式断言",
+        "神经机制、进化压力、人兽关系三个层面的子问题",
+        "「先建立前提再分析案例」的方法论声明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(85);打开的悬念 LOOP03→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "toolkit_build",
+      "start_ratio": 0.1262,
+      "end_ratio": 0.1637,
+      "start_sec": 175,
+      "end_sec": 227,
+      "position_label": "12.6%–16.4%(2:55–3:47)",
+      "purpose": "在分析案例前给出操作定义与构成要件，让观众拿到可复用的分析框架",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "criteria_establishment",
+          "mechanism": "operational_definition_first"
+        }
+      ],
+      "required_retention_events": [
+        "operational_definition",
+        "two_component_model"
+      ],
+      "original_moves": [
+        "术语操作定义",
+        "构成要件清单",
+        "情感/认知双成分模型"
+      ],
+      "abstract_move": "在分析案例前给出操作定义与构成要件，让观众拿到可复用的分析框架",
+      "replacement_needs": [
+        "核心术语的同句操作定义",
+        "构成要件清单（侦测痛苦-动机-行动能力）",
+        "情感成分与认知成分的双层模型"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "substrate_evidence",
+      "start_ratio": 0.1637,
+      "end_ratio": 0.2278,
+      "start_sec": 227,
+      "end_sec": 316,
+      "position_label": "16.4%–22.8%(3:47–5:16)",
+      "purpose": "给出跨物种共享的神经基础，让「动物可能有类共情」从猜测变成可测量命题",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.2206,
+          "time_ms": 306000,
+          "reason": "「这不是比喻，是可测量的神经活动」：共情命题坐实"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "evidence_shift",
+          "mechanism": "comparative_psychology_shift"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "substrate_reveal",
+          "mechanism": "shared_neural_architecture"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "epistemic_verdict",
+          "mechanism": "not_a_metaphor"
+        }
+      ],
+      "required_retention_events": [
+        "shared_architecture",
+        "measurable_verdict"
+      ],
+      "original_moves": [
+        "比较心理学证据趋势",
+        "同源脑结构清单",
+        "镜像神经元",
+        "非比喻断言"
+      ],
+      "abstract_move": "给出跨物种共享的神经基础，让「动物可能有类共情」从猜测变成可测量命题",
+      "replacement_needs": [
+        "比较心理学证据趋势的交代",
+        "同源脑结构的清单",
+        "镜像神经元机制",
+        "一句击退拟人化质疑的置信断言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "anchor_case_deepdive",
+      "start_ratio": 0.2278,
+      "end_ratio": 0.3944,
+      "start_sec": 414,
+      "end_sec": 547,
+      "position_label": "22.8%–39.4%(6:54–9:07)",
+      "purpose": "选取与人类共进化最深的物种作为锚点案例，用共进化史+神经化学+工作实例给出全片最完整的机制答案",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.3187,
+          "time_ms": 442000,
+          "reason": "双向催产素联结机制揭示，锚点案例获得完整答案"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "anchor_case_framing",
+          "mechanism": "most_studied_case"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "mechanism_reveal",
+          "mechanism": "mutual_oxytocin_bonding"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "mechanism_reframe",
+          "mechanism": "alarm_state_not_decision"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "concrete_instance",
+          "mechanism": "working_dog_example"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "value_reframe",
+          "mechanism": "more_impressive_not_less"
+        }
+      ],
+      "required_retention_events": [
+        "coevolution_evidence",
+        "bonding_neurochemistry",
+        "value_reframe"
+      ],
+      "original_moves": [
+        "信号显著性",
+        "双向催产素联结",
+        "警报状态非理性决定",
+        "工作实例",
+        "价值重估"
+      ],
+      "abstract_move": "选取与人类共进化最深的物种作为锚点案例，用共进化史+神经化学+工作实例给出全片最完整的机制答案",
+      "replacement_needs": [
+        "共进化的时间尺度",
+        "驯化改造社会认知的对照证据",
+        "双向神经化学联结的具体机制",
+        "工作犬类实例",
+        "「不是理性决定，而是神经系统已在警报状态」的机制定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75);回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "case_ladder_wild",
+      "start_ratio": 0.3944,
+      "end_ratio": 0.5263,
+      "start_sec": 547,
+      "end_sec": 730,
+      "position_label": "39.4%–52.6%(9:07–12:10)",
+      "purpose": "案例爬坡第一级：用跨文化跨时代文献最厚的野生海洋哺乳动物案例，演示「同种救援行为向人类迁移」机制",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "防鲨守护行为能否用同种救援迁移解释",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "ladder_step",
+          "mechanism": "historically_persistent_cases"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "form_matching",
+          "mechanism": "surface_support_symmetry"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "difficulty_escalation",
+          "mechanism": "shark_protection_puzzle"
+        }
+      ],
+      "required_retention_events": [
+        "historical_depth",
+        "form_matching"
+      ],
+      "original_moves": [
+        "案例历史纵深",
+        "同种救援原型",
+        "迁移条件",
+        "形式匹配",
+        "防鲨案例的更高难度"
+      ],
+      "abstract_move": "案例爬坡第一级：用跨文化跨时代文献最厚的野生海洋哺乳动物案例，演示「同种救援行为向人类迁移」机制",
+      "replacement_needs": [
+        "案例的跨文化历史纵深",
+        "同种救援行为的原始形态描述",
+        "迁移发生所需的感知条件",
+        "行为形式匹配论证"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "case_ladder_cognition",
+      "start_ratio": 0.5263,
+      "end_ratio": 0.6381,
+      "start_sec": 730,
+      "end_sec": 885,
+      "position_label": "52.6%–63.8%(12:10–14:45)",
+      "purpose": "案例爬坡第二级：用大脑与社会记忆最强的物种，展示长期个体关系驱动的偏向性协助",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.5739,
+          "time_ms": 796000,
+          "reason": "象群在守护者死后两天内自发到访：全片最诡异感人的事实"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "plausible_hypothesis_with_uncertainty",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "emotional_payoff",
+          "mechanism": "mourning_visit_case"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "cognition_evidence",
+          "mechanism": "grief_and_theory_of_mind"
+        }
+      ],
+      "required_retention_events": [
+        "mourning_case",
+        "theory_of_mind"
+      ],
+      "original_moves": [
+        "认知资历清单",
+        "哀悼探访个案",
+        "偏向性协助记录",
+        "哀伤与心智理论"
+      ],
+      "abstract_move": "案例爬坡第二级：用大脑与社会记忆最强的物种，展示长期个体关系驱动的偏向性协助",
+      "replacement_needs": [
+        "物种认知资历清单",
+        "一个长期关系与哀悼行为的具名个案",
+        "偏向性协助的多条记录",
+        "哀伤反应与心智理论的证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80);回收了前文的悬念 FS08→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "case_ladder_debate",
+      "start_ratio": 0.6381,
+      "end_ratio": 0.7332,
+      "start_sec": 885,
+      "end_sec": 1017,
+      "position_label": "63.8%–73.3%(14:45–16:57)",
+      "purpose": "案例爬坡第三级：选取传播最广的案例，正面呈现两种竞争性解释，演示不裁决动机也能给出确定结论",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.6662,
+          "time_ms": 924000,
+          "reason": "轻抱、搬运、送到门口的动作链：传播最广案例的视觉化高点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "传播最广的救援案例究竟是训练使然还是共情使然",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "outcome_verdict_with_motivation_open",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "incident_setup",
+          "mechanism": "child_falls_into_enclosure"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "action_chain",
+          "mechanism": "gentle_carry_sequence"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "debate_presented",
+          "mechanism": "competing_interpretations"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "clean_verdict",
+          "mechanism": "outcome_without_motive"
+        }
+      ],
+      "required_retention_events": [
+        "competing_interpretations",
+        "outcome_only_verdict"
+      ],
+      "original_moves": [
+        "戏剧化事实链",
+        "训练解释",
+        "共情解释",
+        "行为复杂度细节",
+        "剥离动机的裁决"
+      ],
+      "abstract_move": "案例爬坡第三级：选取传播最广的案例，正面呈现两种竞争性解释，演示不裁决动机也能给出确定结论",
+      "replacement_needs": [
+        "案例的戏剧化事实链",
+        "训练解释与共情解释的对峙",
+        "行为复杂度的关键细节",
+        "剥离动机后的确定结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "case_ladder_extreme",
+      "start_ratio": 0.7332,
+      "end_ratio": 0.8479,
+      "start_sec": 1017,
+      "end_sec": 1176,
+      "position_label": "73.3%–84.8%(16:57–19:36)",
+      "purpose": "案例爬坡第四级：用与人类无共进化关系的巨型野生动物，把解释难度推到顶点，并引入跨物种利他的文献证据",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.7779,
+          "time_ms": 1079000,
+          "reason": "虎鲨现身：十分钟异常行为被重新定性为保护"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.8082,
+          "time_ms": 1121000,
+          "reason": "跨物种干预虎鲸捕猎的文献记录：利他触发跨越物种边界"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "无共进化关系的巨型动物护人是否有意为之",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "explicit_undeterminability_verdict",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "hardest_category",
+          "mechanism": "no_coevolution_case"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "threat_reveal",
+          "mechanism": "shark_noticed_retroactive_reframe"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "cross_species_altruism",
+          "mechanism": "orca_hunt_interference"
+        }
+      ],
+      "required_retention_events": [
+        "firsthand_case",
+        "cross_species_altruism"
+      ],
+      "original_moves": [
+        "排除论证",
+        "研究者亲历个案",
+        "显式无法确定",
+        "跨物种干预捕猎记录",
+        "同类反应归类"
+      ],
+      "abstract_move": "案例爬坡第四级：用与人类无共进化关系的巨型野生动物，把解释难度推到顶点，并引入跨物种利他的文献证据",
+      "replacement_needs": [
+        "为何此类最难解释的排除论证",
+        "一个具名研究者亲历个案",
+        "「无法确定」的显式标注",
+        "跨物种干预捕猎的文献记录",
+        "触发条件跨物种的归类命题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80)、PK08(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "synthesis_map",
+      "start_ratio": 0.8479,
+      "end_ratio": 0.8767,
+      "start_sec": 1176,
+      "end_sec": 1216,
+      "position_label": "84.8%–87.7%(19:36–20:16)",
+      "purpose": "把散落各案例的解释收拢成一张多机制并存的地图，显式否定单一机制幻想",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "synthesis",
+          "mechanism": "multi_factor_intersection"
+        }
+      ],
+      "required_retention_events": [
+        "mechanism_map"
+      ],
+      "original_moves": [
+        "多因素交汇总起",
+        "四类机制一行式并列"
+      ],
+      "abstract_move": "把散落各案例的解释收拢成一张多机制并存的地图，显式否定单一机制幻想",
+      "replacement_needs": [
+        "「多因素交汇而非单一机制」的总起句",
+        "四类机制的一行式并列（共进化嵌入/社会模型纳入/高认知利他/保护程序迁移）"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "honest_residual",
+      "start_ratio": 0.8767,
+      "end_ratio": 0.9056,
+      "start_sec": 1216,
+      "end_sec": 1256,
+      "position_label": "87.7%–90.6%(20:16–20:56)",
+      "purpose": "诚实留白：承认最震撼的案例仍超出全部既有解释，把「智识上不适但很可能准确」立为成熟姿态",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.8767,
+          "time_ms": 1216000,
+          "reason": "诚实留白：没有单一解释能完全覆盖开场个案"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "没有任何单一解释能完全覆盖开场狮群个案：刻意保持开放，叙事用途是把未解悬念转化为结尾「不确定性本身最有趣」的主题句，让观众带着问题而非答案离开",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "honest_residual",
+          "mechanism": "opening_case_unresolved"
+        }
+      ],
+      "required_retention_events": [
+        "residual_uncertainty_verdict"
+      ],
+      "original_moves": [
+        "回指开场个案",
+        "无单一解释全覆盖",
+        "智识不适命名",
+        "边界定性句"
+      ],
+      "abstract_move": "诚实留白：承认最震撼的案例仍超出全部既有解释，把「智识上不适但很可能准确」立为成熟姿态",
+      "replacement_needs": [
+        "对开场案例的显式回指",
+        "「没有单一解释能完全覆盖」的承认",
+        "对智识不适的坦然命名",
+        "解释边界的定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(75);打开的悬念 LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.9056,
+      "end_ratio": 0.9546,
+      "start_sec": 1256,
+      "end_sec": 1324,
+      "position_label": "90.6%–95.5%(20:56–22:04)",
+      "purpose": "认知升级：把证据总量提炼为世界观命题——帮助行为的动机根源比人类更古老、分布比人类谱系更宽",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "worldview_shift",
+          "mechanism": "not_uniquely_human"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "worldview_verdict",
+          "mechanism": "older_than_our_species"
+        }
+      ],
+      "required_retention_events": [
+        "not_uniquely_human",
+        "older_than_species"
+      ],
+      "original_moves": [
+        "跨物种分布总起",
+        "人类只是精细化者",
+        "断代句"
+      ],
+      "abstract_move": "认知升级：把证据总量提炼为世界观命题——帮助行为的动机根源比人类更古老、分布比人类谱系更宽",
+      "replacement_needs": [
+        "跨物种分布的总起句",
+        "人类只是将其精细化与制度化的对照",
+        "「根源早于我们物种」的断代句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "callback_closure",
+      "start_ratio": 0.9546,
+      "end_ratio": 1,
+      "start_sec": 1324,
+      "end_sec": 1387,
+      "position_label": "95.5%–100%(22:04–23:07)",
+      "purpose": "逐一回收开场清单中的案例并赋予统一命名，以开场个案与不确定性格言双重收束",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9906,
+          "time_ms": 1374000,
+          "reason": "「比任何干净的自利理论都更奇异、道德上更复杂」的收束定性"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "multi_mechanism_map_with_residual_mystery",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "callback_montage",
+          "mechanism": "opening_cases_revisited"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "unified_naming",
+          "mechanism": "species_boundary_definition"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "closing_verdict",
+          "mechanism": "stranger_than_clean_theory"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "aphorism_close",
+          "mechanism": "uncertainty_as_interest"
+        }
+      ],
+      "required_retention_events": [
+        "unified_naming",
+        "uncertainty_aphorism"
+      ],
+      "original_moves": [
+        "案例逐个回收标注可解释度",
+        "统一命名",
+        "回到开场个案",
+        "不确定性格言"
+      ],
+      "abstract_move": "逐一回收开场清单中的案例并赋予统一命名，以开场个案与不确定性格言双重收束",
+      "replacement_needs": [
+        "开场案例逐个回收并标注各自的可解释度",
+        "「跨越物种边界的帮助」式统一命名",
+        "回到开场个案的最终一句",
+        "把不确定性本身立为趣点的格言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

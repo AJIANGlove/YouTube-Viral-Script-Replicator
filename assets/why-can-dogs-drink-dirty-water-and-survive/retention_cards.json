@@ -1,0 +1,948 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.363Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.035,
+      "start_sec": 0,
+      "end_sec": 48,
+      "position_label": "0%–3.5%(0:00–0:48)",
+      "purpose": "第二人称生活场景开场：让观众以主人身份亲历一次'阻止失败'，建立轻微懊恼与好奇",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.0175,
+          "time_ms": 24000,
+          "reason": "'没事但不是你那种没事'的预期违背，确立人犬机制差异主题"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_identity_assignment"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "humor_beat",
+          "mechanism": "serene_expression_contrast"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "paradox_reveal",
+          "mechanism": "fine_but_not_your_fine"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_scene",
+        "paradox_hook"
+      ],
+      "original_moves": [
+        "从零信息到日常场景建立，再到'它大概没事、但不是你那种没事'的预期违背"
+      ],
+      "abstract_move": "第二人称生活场景开场：让观众以主人身份亲历一次'阻止失败'，建立轻微懊恼与好奇",
+      "replacement_needs": [
+        "日常道具与场景锚点",
+        "观众阻止失败的动作链",
+        "主体毫无自觉的平静神态对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 48000,
+        "hook_type": "immersive_second_person_everyday_scene",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 24000,
+        "evidence_refs": [
+          "C0001",
+          "C0003",
+          "C0004"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "roadmap_promise",
+      "start_ratio": 0.035,
+      "end_ratio": 0.052,
+      "start_sec": 48,
+      "end_sec": 71,
+      "position_label": "3.5%–5.2%(0:48–1:11)",
+      "purpose": "显式抛出标题问题，承诺答案通往意外之地，并预告逐层拆解的路线图",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：它为什么能喝下对你致命的水而安然无恙（标题'为什么'问句的具身化悬挂）",
+          "closes_in": "FS13"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "答案'通往意想不到的地方'：这个承诺的意外之处到底是什么",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "question_pose",
+          "mechanism": "title_question_explicit"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "promise_tease",
+          "mechanism": "leads_somewhere_surprising"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "roadmap",
+          "mechanism": "roadmap_enumeration"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "section_shift",
+          "mechanism": "start_with_priority_reason"
+        }
+      ],
+      "required_retention_events": [
+        "title_question",
+        "surprise_promise",
+        "roadmap"
+      ],
+      "original_moves": [
+        "标题问题抛出",
+        "意外承诺",
+        "四层机制地图预告"
+      ],
+      "abstract_move": "显式抛出标题问题，承诺答案通往意外之地，并预告逐层拆解的路线图",
+      "replacement_needs": [
+        "标题问题的显式抛出",
+        "'答案出人意料'的承诺",
+        "按机制层级排列的路径预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP01→FS13、LOOP02→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "mechanism_layer",
+      "start_ratio": 0.052,
+      "end_ratio": 0.121,
+      "start_sec": 71,
+      "end_sec": 166,
+      "position_label": "5.2%–12.1%(1:11–2:46)",
+      "purpose": "第一层防御机制：用量化对照锚定核心差异，并把危险源重新定义为'微生物而非载体本身'",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.073,
+          "time_ms": 100000,
+          "reason": "胃酸数值对照确立第一层防线优势"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "number_anchor",
+          "mechanism": "ph_value_comparison"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "reframe",
+          "mechanism": "threat_redefinition"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "mechanism_verdict",
+          "mechanism": "kill_zone_metaphor"
+        }
+      ],
+      "required_retention_events": [
+        "number_anchor",
+        "threat_redefinition"
+      ],
+      "original_moves": [
+        "pH 数值对照",
+        "危险源重定义",
+        "微生物清单",
+        "'杀戮区'定性",
+        "通过速度补充与限定"
+      ],
+      "abstract_move": "第一层防御机制：用量化对照锚定核心差异，并把危险源重新定义为'微生物而非载体本身'",
+      "replacement_needs": [
+        "双方量化指标的对照锚点",
+        "危险源的重定义",
+        "次要机制的补充与限定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "myth_busting",
+      "start_ratio": 0.121,
+      "end_ratio": 0.187,
+      "start_sec": 166,
+      "end_sec": 256,
+      "position_label": "12.1%–18.7%(2:46–4:16)",
+      "purpose": "点名拆穿一个流传迷思，置换为更准确且更有趣的真实图景",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.1483,
+          "time_ms": 203000,
+          "reason": "'干净口腔'迷思被当众拆穿并置换为'宿主特异性'图景"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "'干净口腔'的流行迷思到底对不对",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "myth_correction",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "section_shift",
+          "mechanism": "now_lets_talk_about"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "myth_flag",
+          "mechanism": "myth_introduced_as_false"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "myth_bust",
+          "mechanism": "differently_contaminated"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "mechanism_detail",
+          "mechanism": "enzyme_first_pass"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "honesty_caveat",
+          "mechanism": "real_but_modest"
+        }
+      ],
+      "required_retention_events": [
+        "myth_flag",
+        "myth_bust_verdict",
+        "honest_qualification"
+      ],
+      "original_moves": [
+        "迷思预告",
+        "显式判假",
+        "'不是干净是不同污染'置换",
+        "酶机制",
+        "程度限定"
+      ],
+      "abstract_move": "点名拆穿一个流传迷思，置换为更准确且更有趣的真实图景",
+      "replacement_needs": [
+        "迷思的显式点名与否定",
+        "真实图景的置换式表述",
+        "真实机制的程度限定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "system_reframe",
+      "start_ratio": 0.187,
+      "end_ratio": 0.239,
+      "start_sec": 256,
+      "end_sec": 327,
+      "position_label": "18.7%–23.9%(4:16–5:27)",
+      "purpose": "把防御从'静态屏障'升格为'会学习的系统'，引入'暴露即校准'的核心概念",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "reframe",
+          "mechanism": "learning_system_reframe"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "human_contrast",
+          "mechanism": "municipal_water_no_memory"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "section_shift",
+          "mechanism": "not_random_origin"
+        }
+      ],
+      "required_retention_events": [
+        "learning_system_reframe",
+        "human_contrast"
+      ],
+      "original_moves": [
+        "黏膜屏障",
+        "'不是静态防御是学习系统'",
+        "暴露记忆因果链",
+        "与净水人类的对照"
+      ],
+      "abstract_move": "把防御从'静态屏障'升格为'会学习的系统'，引入'暴露即校准'的核心概念",
+      "replacement_needs": [
+        "系统会学习的概念揭示",
+        "持续暴露与校准的因果链",
+        "与对照组的经验差距对照"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "evolutionary_origin",
+      "start_ratio": 0.239,
+      "end_ratio": 0.325,
+      "start_sec": 327,
+      "end_sec": 445,
+      "position_label": "23.9%–32.5%(5:27–7:25)",
+      "purpose": "回溯演化史：用祖先的觅食生态与选择压力解释这套系统为何存在",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.3214,
+          "time_ms": 440000,
+          "reason": "'不是违背天性而是天性使然'的警句式反转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "origin_reveal",
+          "mechanism": "scavenger_identity_correction"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "selection_vignette",
+          "mechanism": "mirror_fate_sentences"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "aphorism",
+          "mechanism": "not_despite_because_of"
+        }
+      ],
+      "required_retention_events": [
+        "origin_story",
+        "selection_vignette",
+        "aphorism_verdict"
+      ],
+      "original_moves": [
+        "祖先食腐生态修正",
+        "'拒绝脏水者死'的选择镜像句",
+        "驯化后压力延续",
+        "'不是违背而是顺应'警句"
+      ],
+      "abstract_move": "回溯演化史：用祖先的觅食生态与选择压力解释这套系统为何存在",
+      "replacement_needs": [
+        "祖先真实生态的修正性呈现",
+        "选择压力的场景化镜像句",
+        "警句式收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "mechanism_layer",
+      "start_ratio": 0.325,
+      "end_ratio": 0.419,
+      "start_sec": 445,
+      "end_sec": 574,
+      "position_label": "32.5%–41.9%(7:25–9:34)",
+      "purpose": "纵深第二层：微观生态维度，把危险行为重新定义为'维护活动'",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.3981,
+          "time_ms": 545000,
+          "reason": "脏水坑被重新定义为'菌群维护活动'"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "这套防御的边界在哪里，是否存在它扛不住的威胁",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "微观生态维度'科学界才刚刚开始描绘'：该前沿在全片内不会被完全回答；叙事用途是为中段注入前沿感与未知余味，支撑'这主题比表面更深'的层间悬念",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "frontier_tease",
+          "mechanism": "science_just_beginning"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "reframe",
+          "mechanism": "maintenance_activity"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "limit_flag",
+          "mechanism": "not_an_endorsement"
+        }
+      ],
+      "required_retention_events": [
+        "frontier_tease",
+        "behavior_redefinition",
+        "limit_flag"
+      ],
+      "original_moves": [
+        "前沿谦逊标注",
+        "菌群中心性",
+        "多样性因果",
+        "'维护活动'重定义",
+        "免责限定"
+      ],
+      "abstract_move": "纵深第二层：微观生态维度，把危险行为重新定义为'维护活动'",
+      "replacement_needs": [
+        "前沿科学的谦逊标注",
+        "多样性等于抵抗力的因果解释",
+        "行为重定义加免责限定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(75);打开的悬念 LOOP04→FS10、LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "behavior_layer",
+      "start_ratio": 0.419,
+      "end_ratio": 0.498,
+      "start_sec": 574,
+      "end_sec": 682,
+      "position_label": "41.9%–49.8%(9:34–11:22)",
+      "purpose": "揭示行为维度：看似鲁莽的动作实为经过选择的评估策略",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "dimension_tease",
+          "mechanism": "most_accounts_miss"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "behavior_reveal",
+          "mechanism": "sniff_assess_drink_chain"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "human_contrast",
+          "mechanism": "lost_behavioral_toolkit"
+        }
+      ],
+      "required_retention_events": [
+        "behavior_chain",
+        "human_toolkit_loss"
+      ],
+      "original_moves": [
+        "'多数叙述漏掉'预告",
+        "主动寻找水源",
+        "嗅探评估行为链",
+        "人类行为工具箱缺失对照"
+      ],
+      "abstract_move": "揭示行为维度：看似鲁莽的动作实为经过选择的评估策略",
+      "replacement_needs": [
+        "行为链的动词白描",
+        "感官评估的侦探化表述",
+        "对照组行为工具箱的丧失"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "boundary_mapping",
+      "start_ratio": 0.498,
+      "end_ratio": 0.644,
+      "start_sec": 682,
+      "end_sec": 882,
+      "position_label": "49.8%–64.4%(11:22–14:42)",
+      "purpose": "集中标定能力边界：按威胁类别逐一判定哪些能防、哪些致命",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.6377,
+          "time_ms": 873000,
+          "reason": "藻毒素一次遭遇即可致命：边界冲击的最高点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "某类寄生虫为何'更复杂'，胃酸防线为何对它无效",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "mechanism_qualification",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "category_rank",
+          "mechanism": "bacteria_strongest"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "complication",
+          "mechanism": "acid_proof_parasite"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "real_threat",
+          "mechanism": "vaccine_standard_threat"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "boundary_verdict",
+          "mechanism": "better_not_invulnerable"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "shock_limit",
+          "mechanism": "single_encounter_lethality"
+        }
+      ],
+      "required_retention_events": [
+        "category_ranking",
+        "lethal_exception",
+        "invulnerability_denial"
+      ],
+      "original_moves": [
+        "类别分级",
+        "细菌优势",
+        "寄生虫复杂案例",
+        "真实致死威胁",
+        "化学与藻毒素致命例外",
+        "'强不等于无敌'判词"
+      ],
+      "abstract_move": "集中标定能力边界：按威胁类别逐一判定哪些能防、哪些致命",
+      "replacement_needs": [
+        "按威胁类别的强弱分级",
+        "至少一个真实致命例外的场景化呈现",
+        "优势不等于无敌的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "comparison_flip",
+      "start_ratio": 0.644,
+      "end_ratio": 0.744,
+      "start_sec": 910,
+      "end_sec": 1018,
+      "position_label": "64.4%–74.4%(15:10–16:58)",
+      "purpose": "与人类的正面比较：现代基础设施的胜利及其隐性代价",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.7305,
+          "time_ms": 1000000,
+          "reason": "户外犬的免疫校准广度超过多数现代城市人"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "boundary_enumeration",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "comparison_turn",
+          "mechanism": "hidden_cost_of_triumph"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "status_flip",
+          "mechanism": "more_specifically_informed"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_cost",
+        "precision_inversion"
+      ],
+      "original_moves": [
+        "公共卫生成就承认",
+        "隐性代价揭示",
+        "首次遭遇的迟钝反应",
+        "'不是更强而是更对口'的精确反转"
+      ],
+      "abstract_move": "与人类的正面比较：现代基础设施的胜利及其隐性代价",
+      "replacement_needs": [
+        "对公共卫生成就的公平承认",
+        "隐性代价的揭示",
+        "不是更强而是更对口的措辞校准"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80);回收了前文的悬念 FS07→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.744,
+      "end_ratio": 0.795,
+      "start_sec": 1018,
+      "end_sec": 1088,
+      "position_label": "74.4%–79.5%(16:58–18:08)",
+      "purpose": "认知反转：喝净水的现代人是演化异常，喝脏水的它才是基线",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.786,
+          "time_ms": 1076000,
+          "reason": "'现代人才是演化异常，它才是基线'的主客反转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "worldview_inversion",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "worldview_flip",
+          "mechanism": "human_is_anomaly"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "qualifier_tease",
+          "mechanism": "almost_never_discussed"
+        }
+      ],
+      "required_retention_events": [
+        "label_inversion"
+      ],
+      "original_moves": [
+        "祖先同源饮水史",
+        "权衡一直存在",
+        "基础设施是我们选择的解",
+        "'异常/基线'标签对调"
+      ],
+      "abstract_move": "认知反转：喝净水的现代人是演化异常，喝脏水的它才是基线",
+      "replacement_needs": [
+        "祖先与主体同源性的论证",
+        "异常与基线标签的对仗式对调"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(90);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "variable_qualification",
+      "start_ratio": 0.795,
+      "end_ratio": 0.887,
+      "start_sec": 1088,
+      "end_sec": 1214,
+      "position_label": "79.5%–88.7%(18:08–20:14)",
+      "purpose": "诚实限定：该结论只干净地适用于特定年龄、健康与品种区间",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "品种间的耐受差异究竟有多大：研究尚不足以给出可信结论；刻意保持开放，叙事用途是以'证据不足'的诚实标注强化讲述者可信度，并让观众意识到该主题仍是活的研究前沿",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "vulnerability_window",
+          "mechanism": "maternal_antibody_fade"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "honesty_beat",
+          "mechanism": "research_gap_admission"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "synthesis_start",
+          "mechanism": "close_with_full_picture"
+        }
+      ],
+      "required_retention_events": [
+        "vulnerability_window",
+        "research_gap"
+      ],
+      "original_moves": [
+        "'几乎没人讨论'预告",
+        "幼年脆弱窗口",
+        "老年衰退",
+        "品种差异与研究空白承认"
+      ],
+      "abstract_move": "诚实限定：该结论只干净地适用于特定年龄、健康与品种区间",
+      "replacement_needs": [
+        "幼年与老年的脆弱窗口",
+        "证据不足处的明确标注"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "synthesis",
+      "start_ratio": 0.887,
+      "end_ratio": 0.942,
+      "start_sec": 1214,
+      "end_sec": 1289,
+      "position_label": "88.7%–94.2%(20:14–21:29)",
+      "purpose": "把全部机制链从入口到结局一次性走通，兑现标题问题",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9357,
+          "time_ms": 1281000,
+          "reason": "机制链一次性走通，'不是魔法，是演化积累'的满足释放"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_mechanism_synthesis",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "full_chain",
+        "non_magic_verdict"
+      ],
+      "original_moves": [
+        "逐站串联：唾液",
+        "胃酸",
+        "黏膜",
+        "菌群定殖抵抗",
+        "特异性记忆",
+        "'不是魔法是积累'定性"
+      ],
+      "abstract_move": "把全部机制链从入口到结局一次性走通，兑现标题问题",
+      "replacement_needs": [
+        "按物理路径串联全部机制",
+        "非魔法式定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);回收了前文的悬念 FS02→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.942,
+      "end_ratio": 1,
+      "start_sec": 1289,
+      "end_sec": 1369,
+      "position_label": "94.2%–100%(21:29–22:49)",
+      "purpose": "收束：主客关系最终定位，用开场道具的玩笑回扣",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "humor_peak",
+          "strength": 80,
+          "position_ratio": 0.9978,
+          "time_ms": 1366000,
+          "reason": "牵绳玩笑回扣开场场景，完成主客定位"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE40",
+          "event_type": "callback_close",
+          "mechanism": "leash_prop_callback"
+        }
+      ],
+      "required_retention_events": [
+        "habitat_redefinition",
+        "callback_close"
+      ],
+      "original_moves": [
+        "参数内运行定性",
+        "水坑等于天然栖息地重定义",
+        "你的基因组也有潜力",
+        "校准差异判词",
+        "道具回扣玩笑"
+      ],
+      "abstract_move": "收束：主客关系最终定位，用开场道具的玩笑回扣",
+      "replacement_needs": [
+        "对开场场景的最终回答",
+        "免责与反转压缩进同一句",
+        "道具回扣式玩笑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 80
+        }
+      ]
+    }
+  ]
+}

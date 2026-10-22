@@ -1,0 +1,1058 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.367Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "question_inversion",
+      "start_ratio": 0,
+      "end_ratio": 0.039,
+      "start_sec": 0,
+      "end_sec": 60,
+      "position_label": "0%–3.9%(0:00–1:00)",
+      "purpose": "用'缺席'前提冲击开场，再以问题倒置句把标题悬念重写为对观众自身期待的质疑",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.036,
+          "time_ms": 55000,
+          "reason": "问题倒置句落下:为什么我们期待每个葬礼都留下一个坑"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺:为什么有些远古人类从未被埋葬(标题问句的悬挂),并要求一个不虚妄的诚实回答",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "没有墓葬是否等于没有人爱他们(现代直觉误判的悬挂)",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "absence_premise_shock"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "assumption_named",
+          "mechanism": "modern_misjudgment_list"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "question_inversion",
+          "mechanism": "question_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "absence_premise_stated",
+        "modern_misjudgment_named",
+        "question_inverted"
+      ],
+      "original_moves": [
+        "缺席事实白描",
+        "现代误判显式化",
+        "替代形态排比",
+        "问题倒置句"
+      ],
+      "abstract_move": "用'缺席'前提冲击开场，再以问题倒置句把标题悬念重写为对观众自身期待的质疑",
+      "replacement_needs": [
+        "缺席事实的否定式白描",
+        "现代直觉误判的显式呈现",
+        "替代形态的快速排比",
+        "问题倒置句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(82);打开的悬念 LOOP01→FS15、LOOP02→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 82
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 60000,
+        "hook_type": "absence_premise_plus_question_inversion",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 55000,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0008",
+          "C0009"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "constraint_catalog",
+      "start_ratio": 0.039,
+      "end_ratio": 0.127,
+      "start_sec": 60,
+      "end_sec": 149,
+      "position_label": "3.9%–12.7%(1:00–2:29)",
+      "purpose": "第一层机制：现实约束（成本、流动性、突发状况、卫生动机纠偏）解释一部分缺席",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "为什么有些社群反其道而行,把死者埋在活人脚下",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "humor_payoff",
+          "mechanism": "modern_analogy_mapping"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "constraint_reveal",
+          "mechanism": "cost_accounting"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "verdict_line",
+          "mechanism": "verdict_line_cap"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "myth_busting",
+          "mechanism": "textbook_myth_correction"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "counter_case_tease",
+          "mechanism": "opposite_case_hook"
+        }
+      ],
+      "required_retention_events": [
+        "cost_accounting",
+        "urgency_list",
+        "hygiene_myth_corrected",
+        "verdict_line"
+      ],
+      "original_moves": [
+        "游群生活背景",
+        "挖掘成本算账",
+        "紧急情境列举",
+        "环境设定规则判决"
+      ],
+      "abstract_move": "第一层机制：现实约束（成本、流动性、突发状况、卫生动机纠偏）解释一部分缺席",
+      "replacement_needs": [
+        "时代生活形态背景",
+        "成本的具体化（工具与工时算账）",
+        "紧急情境列举",
+        "流行课本解释的复述与否定",
+        "'环境设定规则'式判决短句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "counter_case",
+      "start_ratio": 0.127,
+      "end_ratio": 0.164,
+      "start_sec": 194,
+      "end_sec": 251,
+      "position_label": "12.7%–16.4%(3:14–4:11)",
+      "purpose": "用一个与直觉完全相反的真实案例击碎'距离=尊重'的默认假设",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "motive_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "humor_payoff",
+          "mechanism": "property_analogy"
+        }
+      ],
+      "required_retention_events": [
+        "opposite_case_reveal",
+        "modern_analogy",
+        "emotional_logic"
+      ],
+      "original_moves": [
+        "有些社群恰恰相反的悬念",
+        "具体遗址案例",
+        "房产披露类比笑点",
+        "锚定情感逻辑"
+      ],
+      "abstract_move": "用一个与直觉完全相反的真实案例击碎'距离=尊重'的默认假设",
+      "replacement_needs": [
+        "反例的具体场景呈现",
+        "现代类比调侃",
+        "该实践的情感与功能逻辑解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS02→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "scale_quantification",
+      "start_ratio": 0.164,
+      "end_ratio": 0.205,
+      "start_sec": 251,
+      "end_sec": 313,
+      "position_label": "16.4%–20.5%(4:11–5:13)",
+      "purpose": "给出深时尺度与失踪者量级，把个案升级为'大多数'的结构性缺席",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.2021,
+          "time_ms": 309000,
+          "reason": "失踪的死者不是统计误差,而是大多数"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "失踪的死者去了哪里:为何连世代居住的遗址也找不到足够的死者",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "deep_time_anchor",
+          "mechanism": "deep_time_reveal"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "scale_verdict",
+          "mechanism": "majority_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "deep_time_anchor",
+        "rarity_verdict"
+      ],
+      "original_moves": [
+        "深时证据锚点",
+        "墓葬的行为含义",
+        "稀有性定量",
+        "大多数判决句"
+      ],
+      "abstract_move": "给出深时尺度与失踪者量级，把个案升级为'大多数'的结构性缺席",
+      "replacement_needs": [
+        "深时证据锚点",
+        "存量与真实总量的悬殊对比",
+        "'失踪者是大多数'式判决句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(78);打开的悬念 LOOP03→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 78
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "decay_mechanism",
+      "start_ratio": 0.205,
+      "end_ratio": 0.3,
+      "start_sec": 313,
+      "end_sec": 379,
+      "position_label": "20.5%–30%(5:13–6:19)",
+      "purpose": "第二层机制：自然分解与墓葬抹除，解释'埋了也会消失'",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "humor_payoff",
+          "mechanism": "personification_verdict"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "exception_reveal",
+          "mechanism": "preservation_lottery"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "transition_back",
+          "mechanism": "ad_return_continuation"
+        }
+      ],
+      "required_retention_events": [
+        "decay_inventory",
+        "preservation_exceptions",
+        "erasure_montage",
+        "limits_turn"
+      ],
+      "original_moves": [
+        "软组织时限",
+        "骨骼分解清单",
+        "特殊保存环境对照",
+        "与化学吵架拟人判决"
+      ],
+      "abstract_move": "第二层机制：自然分解与墓葬抹除，解释'埋了也会消失'",
+      "replacement_needs": [
+        "分解过程的具象清单",
+        "特殊保存环境的对照",
+        "人为与自然抹除途径排比",
+        "拟人化判决句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "alternative_practice_reveal",
+      "start_ratio": 0.3,
+      "end_ratio": 0.358,
+      "start_sec": 459,
+      "end_sec": 548,
+      "position_label": "30%–35.8%(7:39–9:08)",
+      "purpose": "第三层机制：揭示'不入土'本身可能就是完整葬礼（暴露与二次处置）",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.3362,
+          "time_ms": 514000,
+          "reason": "葬礼不是一个事件,而是一个序列:全片框架级重定义"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "既然保存解释不了一切,那些没有墓葬的人究竟经历了什么葬礼",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "partial_mechanism_reveal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "practice_reveal",
+          "mechanism": "named_practice_reveal"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "reframe",
+          "mechanism": "abandonment_to_passage"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "redefinition_verdict",
+          "mechanism": "sequence_redefinition"
+        }
+      ],
+      "required_retention_events": [
+        "practice_named",
+        "sequence_redefinition"
+      ],
+      "original_moves": [
+        "暴露葬命名定义",
+        "遗体到骨骼的转化",
+        "葬礼是序列重定义",
+        "二次葬术语落地"
+      ],
+      "abstract_move": "第三层机制：揭示'不入土'本身可能就是完整葬礼（暴露与二次处置）",
+      "replacement_needs": [
+        "替代实践的命名与定义",
+        "从遗体到骨骼的转化逻辑",
+        "'葬礼是一个序列'式重定义句",
+        "专业术语落地并即刻解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80);打开的悬念 LOOP05→FS14 跨段;回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "practice_logic_deepening",
+      "start_ratio": 0.358,
+      "end_ratio": 0.407,
+      "start_sec": 548,
+      "end_sec": 622,
+      "position_label": "35.8%–40.7%(9:08–10:22)",
+      "purpose": "展示替代实践的内部逻辑（混合骨骼、部位特殊对待），并植入解读谨慎",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "analogy_payoff",
+          "mechanism": "family_archive_analogy"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "logic_reveal",
+          "mechanism": "identity_logic"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "humor_payoff",
+          "mechanism": "deadpan_understatement"
+        }
+      ],
+      "required_retention_events": [
+        "archive_analogy",
+        "interpretation_caution"
+      ],
+      "original_moves": [
+        "不完整骨骼现场",
+        "家庭档案馆类比",
+        "头骨与身份",
+        "解读谨慎刹车"
+      ],
+      "abstract_move": "展示替代实践的内部逻辑（混合骨骼、部位特殊对待），并植入解读谨慎",
+      "replacement_needs": [
+        "考古现场的混乱表象",
+        "其背后的反复造访逻辑",
+        "现代空间类比",
+        "对单一解释的显式警告"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "evidence_discipline",
+      "start_ratio": 0.407,
+      "end_ratio": 0.466,
+      "start_sec": 622,
+      "end_sec": 713,
+      "position_label": "40.7%–46.6%(10:22–11:53)",
+      "purpose": "建立全片解读纪律：同一痕迹可对应多种动机，语境裁决",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.4591,
+          "time_ms": 702000,
+          "reason": "同一把石刀可表达爱、必需、羞辱或饥饿:解读纪律顶点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "切痕是否意味着食人:最戏剧性的解释能否成立",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "dramatic_question",
+          "mechanism": "cannibalism_tension"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "context_verdict",
+          "mechanism": "context_decides"
+        }
+      ],
+      "required_retention_events": [
+        "question_barrage",
+        "context_verdict"
+      ],
+      "original_moves": [
+        "取证问题连发",
+        "不接受采访拟人笑点",
+        "食人解读的诱惑",
+        "石刀判决句"
+      ],
+      "abstract_move": "建立全片解读纪律：同一痕迹可对应多种动机，语境裁决",
+      "replacement_needs": [
+        "取证问题的连续反问",
+        "最戏剧性解释的诱惑与刹车",
+        "'同一工具可表达相反动机'式判决句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(82);打开的悬念 LOOP06→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 82
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "practical_driver_reveal",
+      "start_ratio": 0.466,
+      "end_ratio": 0.569,
+      "start_sec": 767,
+      "end_sec": 870,
+      "position_label": "46.6%–56.9%(12:47–14:30)",
+      "purpose": "第四层机制：空间与资源约束驱动的实践，并给出'部分代表整体'的象征逻辑",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "interpretation_discipline",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "case_anchor",
+          "mechanism": "real_case_grounding"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "humor_payoff",
+          "mechanism": "storage_management_humor"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "constraint_reveal",
+          "mechanism": "resource_accounting"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "symbolism_reveal",
+          "mechanism": "fragment_sufficiency"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "humor_payoff",
+          "mechanism": "modern_symbol_montage"
+        }
+      ],
+      "required_retention_events": [
+        "space_case",
+        "cremation_accounting",
+        "fragment_symbolism"
+      ],
+      "original_moves": [
+        "燃料技能算账",
+        "残余物形态",
+        "考古不可见性",
+        "现代象征物类比排比"
+      ],
+      "abstract_move": "第四层机制：空间与资源约束驱动的实践，并给出'部分代表整体'的象征逻辑",
+      "replacement_needs": [
+        "真实案例锚点",
+        "资源约束的算账式呈现",
+        "现代象征物类比排比",
+        "克制幽默落点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS08→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "ambiguous_context_catalog",
+      "start_ratio": 0.569,
+      "end_ratio": 0.659,
+      "start_sec": 932,
+      "end_sec": 1007,
+      "position_label": "56.9%–65.9%(15:32–16:47)",
+      "purpose": "第五层机制：水域与洞穴等模糊处置场景，训练观众识别'无法判定'",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "humor_peak",
+          "strength": 62,
+          "position_ratio": 0.6076,
+          "time_ms": 929000,
+          "reason": "没有国际沼泽政策:冷幽默记忆点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "沼泽尸体的暴力死亡究竟是谋杀、处决还是葬礼",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "被异常处置的人是否就是被社群拒绝的人",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "honest_ambiguity",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "spectacle_detail",
+          "mechanism": "preservation_spectacle"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "humor_payoff",
+          "mechanism": "deadpan_policy_humor"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "definition_verdict",
+          "mechanism": "behavior_not_position"
+        }
+      ],
+      "required_retention_events": [
+        "water_cases",
+        "cave_ambiguity",
+        "behavior_definition"
+      ],
+      "original_moves": [
+        "洞穴处置形态",
+        "自然陷阱干扰",
+        "著名案例争议",
+        "埋葬是行为定义句"
+      ],
+      "abstract_move": "第五层机制：水域与洞穴等模糊处置场景，训练观众识别'无法判定'",
+      "replacement_needs": [
+        "两类场景的具体形态",
+        "保存奇观的细节",
+        "多解释并列（献祭、意外、迁移）",
+        "'行为而非位置'式定义句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(62);打开的悬念 LOOP08→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 62
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "misinterpretation_warning",
+      "start_ratio": 0.659,
+      "end_ratio": 0.761,
+      "start_sec": 1007,
+      "end_sec": 1098,
+      "position_label": "65.9%–76.1%(16:47–18:18)",
+      "purpose": "第六层：排斥与误读陷阱——异常处置不等于被拒绝，可见性差异不等于不存在",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "婴儿为何在墓地记录中缺席:被排斥还是看不见",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "misread_correction",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "discipline_warning",
+          "mechanism": "assumption_danger"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "verdict_line",
+          "mechanism": "performance_vs_emotion"
+        }
+      ],
+      "required_retention_events": [
+        "exclusion_list",
+        "alternative_explanations",
+        "assumption_danger_verdict"
+      ],
+      "original_moves": [
+        "排斥动机列举",
+        "异常处置替代解释连发",
+        "现代假设冒充证据警告",
+        "豪华不等于被爱判决"
+      ],
+      "abstract_move": "第六层：排斥与误读陷阱——异常处置不等于被拒绝，可见性差异不等于不存在",
+      "replacement_needs": [
+        "排斥动机的列举",
+        "每类异常证据的替代解释连发",
+        "发掘者偏差的自我指涉",
+        "'豪华不等于被爱'式判决句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP09→FS12 跨段;回收了前文的悬念 FS10→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "extreme_condition_limit",
+      "start_ratio": 0.761,
+      "end_ratio": 0.789,
+      "start_sec": 1164,
+      "end_sec": 1207,
+      "position_label": "76.1%–78.9%(19:24–20:07)",
+      "purpose": "第七层机制：大规模死亡压垮仪式能力",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "multi_cause_resolution",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "verdict_line",
+          "mechanism": "double_disappearance"
+        }
+      ],
+      "required_retention_events": [
+        "catastrophe_montage",
+        "survivor_limit_verdict"
+      ],
+      "original_moves": [
+        "灾难类型排比",
+        "幸存者极限",
+        "仪式依赖幸存者判决"
+      ],
+      "abstract_move": "第七层机制：大规模死亡压垮仪式能力",
+      "replacement_needs": [
+        "灾难类型排比",
+        "幸存者的体力与安全极限",
+        "'仪式依赖幸存者'式判决句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS11→LOOP09。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "binary_dissolution",
+      "start_ratio": 0.789,
+      "end_ratio": 0.841,
+      "start_sec": 1207,
+      "end_sec": 1286,
+      "position_label": "78.9%–84.1%(20:07–21:26)",
+      "purpose": "溶解'被埋葬与被抛弃'的二元框架，展示两者之间的连续光谱与遗骨流转",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "verdict_line",
+          "mechanism": "survivor_limit"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "worldview_shift",
+          "mechanism": "social_presence_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "spectrum_enumeration",
+        "social_presence_reframe"
+      ],
+      "original_moves": [
+        "二元否定",
+        "中间态枚举",
+        "遗骨流转实例",
+        "仍是参与者重定义"
+      ],
+      "abstract_move": "溶解'被埋葬与被抛弃'的二元框架，展示两者之间的连续光谱与遗骨流转",
+      "replacement_needs": [
+        "光谱中间态的枚举",
+        "遗骨在生者中流转的实例",
+        "'仍是参与者'式重定义句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "record_bias_reveal",
+      "start_ratio": 0.841,
+      "end_ratio": 0.926,
+      "start_sec": 1342,
+      "end_sec": 1416,
+      "position_label": "84.1%–92.6%(22:22–23:36)",
+      "purpose": "认知升级：现代个体墓观念与古代转化观的对立，加上幸存者偏差的统计真相",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 86,
+          "position_ratio": 0.8934,
+          "time_ms": 1366000,
+          "reason": "骨骼会说谎,因为幸存选择见证者:保存偏差揭示"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "practice_catalog_reveal",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "worldview_shift",
+          "mechanism": "survival_chooses_witnesses"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "metaphor_payoff",
+          "mechanism": "archive_metaphor"
+        }
+      ],
+      "required_retention_events": [
+        "worldview_contrast",
+        "survival_chooses_witnesses",
+        "archive_metaphor"
+      ],
+      "original_moves": [
+        "墓地选择性证据",
+        "骨骼会说谎拟人判决",
+        "偏差机制拆解",
+        "环境没撕碎的书页隐喻"
+      ],
+      "abstract_move": "认知升级：现代个体墓观念与古代转化观的对立，加上幸存者偏差的统计真相",
+      "replacement_needs": [
+        "两种死亡观的对照",
+        "正式仪式选择性的证据",
+        "'幸存选择见证者'式拟人判决",
+        "档案隐喻"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(86);回收了前文的悬念 FS06→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 86
+        }
+      ]
+    },
+    {
+      "stage_id": "FS15",
+      "function": "title_question_answer",
+      "start_ratio": 0.926,
+      "end_ratio": 0.96,
+      "start_sec": 1416,
+      "end_sec": 1468,
+      "position_label": "92.6%–96%(23:36–24:28)",
+      "purpose": "对标题问题给出显式正面回答：多因清单排比加核心教训句",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "title_callback",
+          "strength": 90,
+          "position_ratio": 0.9261,
+          "time_ms": 1416000,
+          "reason": "标题问题显式正面作答"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 92,
+          "position_ratio": 0.9464,
+          "time_ms": 1447000,
+          "reason": "核心教训:埋葬与在乎不是一回事"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "multi_cause_answer_and_lesson",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "belief_correction",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "title_answer",
+          "mechanism": "direct_answer"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "core_lesson",
+          "mechanism": "form_emotion_decoupling"
+        }
+      ],
+      "required_retention_events": [
+        "title_recall",
+        "multi_cause_answer",
+        "core_lesson"
+      ],
+      "original_moves": [
+        "标题问句召回",
+        "原因排比",
+        "埋葬与在乎不是一回事教训句"
+      ],
+      "abstract_move": "对标题问题给出显式正面回答：多因清单排比加核心教训句",
+      "replacement_needs": [
+        "标题问句的召回句",
+        "原因排比清单",
+        "形式与情感解绑的教训句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(90)、PK08(92);回收了前文的悬念 FS01→LOOP01、FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 92
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.96,
+      "end_ratio": 1,
+      "start_sec": 1468,
+      "end_sec": 1502,
+      "position_label": "96%–100%(24:28–25:02)",
+      "purpose": "以'意义比物质更易朽'的诚实缺口与'缺席不等于空无'的格言句收束",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.998,
+          "time_ms": 1526000,
+          "reason": "以大地从未设计用来保存的方式被记住:格言收束"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP10",
+          "tension": "遗体旁最后的话语、歌声与记忆已永远不可恢复:刻意保持开放,叙事用途是以意义的消逝比骨骼更快制造余韵,让观众带着对不可知部分的敬畏离开,并与结尾缺席不等于空无形成张力对照",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP10"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE40",
+          "event_type": "aphorism_close",
+          "mechanism": "closing_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "irreversibility_montage",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "意义比骨头腐朽得更快",
+        "可重建与不可恢复对照排比",
+        "沉默的诱惑点名"
+      ],
+      "abstract_move": "以'意义比物质更易朽'的诚实缺口与'缺席不等于空无'的格言句收束",
+      "replacement_needs": [
+        "不可恢复之物的排比（话语、歌声、记忆）",
+        "沉默诱惑的点名",
+        "格言式收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(88);打开的悬念 LOOP10(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 88
+        }
+      ]
+    }
+  ]
+}

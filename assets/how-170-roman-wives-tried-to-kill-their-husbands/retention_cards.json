@@ -1,0 +1,1031 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.470Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.041,
+      "start_sec": 0,
+      "end_sec": 47,
+      "position_label": "0%–4.1%(0:00–0:47)",
+      "purpose": "第二人称沉浸式死亡开场：让观众以受害者身份亲历禁忌行为的结果",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_identity_assignment"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "threat_turn",
+          "mechanism": "sensory_body_horror"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_victim_scene",
+        "death_completed"
+      ],
+      "original_moves": [
+        "从零信息到身份场景建立，再到中毒死亡完成"
+      ],
+      "abstract_move": "第二人称沉浸式死亡开场：让观众以受害者身份亲历禁忌行为的结果",
+      "replacement_needs": [
+        "具体年代与身份锚点",
+        "感官化的身体崩坏过程",
+        "禁忌行为与受害者的亲密关系暗示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "immersive_second_person_victim_scene",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 30000,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0006"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "anomaly_reveal",
+      "start_ratio": 0.041,
+      "end_ratio": 0.11,
+      "start_sec": 47,
+      "end_sec": 126,
+      "position_label": "4.1%–11%(0:47–2:06)",
+      "purpose": "建立'自然灾害'官方解释，再用统计学式反常当众拆穿它",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.0883,
+          "time_ms": 101000,
+          "reason": "'瘟疫在数学上重男轻女'拆穿自然灾害假象，全片第一个认知翻转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：这场针对权贵的集体死亡事件到底是谁、如何组织的（标题'如何'问句的具身化悬挂）",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "为什么这场'瘟疫'只杀死有钱有势的男人",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "scale_tease",
+          "mechanism": "not_the_only_one"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "anomaly_reveal",
+          "mechanism": "false_explanation_subversion"
+        }
+      ],
+      "required_retention_events": [
+        "false_explanation_built",
+        "anomaly_subversion",
+        "title_drop"
+      ],
+      "original_moves": [
+        "官方瘟疫定性建立",
+        "性别选择性异常拆穿假象",
+        "'黑寡妇之夏'点题"
+      ],
+      "abstract_move": "建立'自然灾害'官方解释，再用统计学式反常当众拆穿它",
+      "replacement_needs": [
+        "官方对事件的错误定性及其合理性铺垫",
+        "一条无法用自然解释的反常模式",
+        "为事件命名的点题句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(75);打开的悬念 LOOP01→FS14、LOOP02→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "suspicion_build",
+      "start_ratio": 0.11,
+      "end_ratio": 0.198,
+      "start_sec": 126,
+      "end_sec": 227,
+      "position_label": "11%–19.8%(2:06–3:47)",
+      "purpose": "用公开仪式与私下流言的反差，把嫌疑指向最不可能的人群",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "title_callback",
+          "strength": 70,
+          "position_ratio": 0.1101,
+          "time_ms": 126000,
+          "reason": "'黑寡妇之夏'点题句落下，主题正式确立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "哀悼中的寡妇为何行为可疑，她们图什么",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "title_drop",
+          "mechanism": "event_naming"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "spectacle_detail",
+          "mechanism": "ritual_texture"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "suspicion_turn",
+          "mechanism": "gossip_framing"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "dark_humor_payoff",
+          "mechanism": "behavior_identity_mismatch"
+        }
+      ],
+      "required_retention_events": [
+        "gossip_framing",
+        "mismatch_case"
+      ],
+      "original_moves": [
+        "葬礼仪式奇观",
+        "浴场流言",
+        "具体案例",
+        "寡妇试戴珠宝的反差"
+      ],
+      "abstract_move": "用公开仪式与私下流言的反差，把嫌疑指向最不可能的人群",
+      "replacement_needs": [
+        "公开场面的仪式感细节",
+        "私下流言的八卦化呈现",
+        "一个行为与身份严重不符的具体案例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(70);打开的悬念 LOOP03→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "motive_reveal",
+      "start_ratio": 0.198,
+      "end_ratio": 0.301,
+      "start_sec": 227,
+      "end_sec": 344,
+      "position_label": "19.8%–30.1%(3:47–5:44)",
+      "purpose": "切换到加害者视角，用制度处境解释动机，并给出作案手法的约束条件",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.2369,
+          "time_ms": 271000,
+          "reason": "死亡漏洞揭示：丈夫一死，枷锁即自由与继承"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "冒死告密的奴隶能否换来保护与信任",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "motive_reveal",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "perspective_shift",
+          "mechanism": "motive_question_transition"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "myth_busting",
+          "mechanism": "movie_image_vs_reality"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "loophole_reveal",
+          "mechanism": "system_loophole"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "motive_verdict",
+          "mechanism": "one_line_verdict"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "method_constraint",
+          "mechanism": "must_look_natural"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "character_entry",
+          "mechanism": "night_infiltration"
+        }
+      ],
+      "required_retention_events": [
+        "system_exposition",
+        "loophole_reveal",
+        "method_constraint"
+      ],
+      "original_moves": [
+        "流行印象 vs 真实处境",
+        "制度性压迫",
+        "死亡漏洞",
+        "动机点题",
+        "手法约束"
+      ],
+      "abstract_move": "切换到加害者视角，用制度处境解释动机，并给出作案手法的约束条件",
+      "replacement_needs": [
+        "流行印象与真实处境的对照",
+        "制度性压迫的具体规则",
+        "压迫解除的唯一漏洞",
+        "动机的一句话点题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75);打开的悬念 LOOP04→FS06 跨段;回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "whistleblower_entry",
+      "start_ratio": 0.301,
+      "end_ratio": 0.386,
+      "start_sec": 344,
+      "end_sec": 442,
+      "position_label": "30.1%–38.6%(5:44–7:22)",
+      "purpose": "引入打破僵局的底层小人物，用其个人生死风险抬高信息价值",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "告密者的真实姓名无从考证：刻意保持开放，叙事用途是以'历史没有记录她的名字'强化真实感，并与'底层人物改变历史却被历史抹去'的主题形成对照",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "stakes_raise",
+          "mechanism": "personal_death_risk"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "deal_struck",
+          "mechanism": "immunity_negotiation"
+        }
+      ],
+      "required_retention_events": [
+        "underdog_stakes",
+        "immunity_deal"
+      ],
+      "original_moves": [
+        "深夜潜行",
+        "匿名底层身份",
+        "十字架风险",
+        "豁免交易达成"
+      ],
+      "abstract_move": "引入打破僵局的底层小人物，用其个人生死风险抬高信息价值",
+      "replacement_needs": [
+        "告密者的卑微身份与匿名处理",
+        "其行动失败将付出的极端代价",
+        "与权力者的谈判交易"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP08(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "central_reveal",
+      "start_ratio": 0.386,
+      "end_ratio": 0.446,
+      "start_sec": 442,
+      "end_sec": 510,
+      "position_label": "38.6%–44.6%(7:22–8:30)",
+      "purpose": "全片中枢揭示：不存在自然灾害，存在一个有组织的秘密网络",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.3864,
+          "time_ms": 442000,
+          "reason": "中枢揭示：没有神罚，只有贵妇毒药网络"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "指控者若拿不到铁证将被权贵家族毁灭，他能否证明真相",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "deal_struck",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "bombshell_reveal",
+          "mechanism": "false_explanation_destroyed"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "network_reveal",
+          "mechanism": "secret_organization"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "humor_payoff",
+          "mechanism": "pop_culture_analogy"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "stakes_escalation",
+          "mechanism": "accuser_career_risk"
+        }
+      ],
+      "required_retention_events": [
+        "false_explanation_destroyed",
+        "secret_network_reveal",
+        "pop_culture_verdict"
+      ],
+      "original_moves": [
+        "否定神罚",
+        "毒物清单",
+        "秘密网络的成员反差",
+        "运作方式",
+        "流行文化定性"
+      ],
+      "abstract_move": "全片中枢揭示：不存在自然灾害，存在一个有组织的秘密网络",
+      "replacement_needs": [
+        "对官方解释的彻底否定",
+        "秘密网络的成员身份反差",
+        "运作方式的具体细节",
+        "一句现代流行文化类比定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85);打开的悬念 LOOP05→FS13 跨段;回收了前文的悬念 FS02→LOOP02、FS04→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "stakes_escalation",
+      "start_ratio": 0.446,
+      "end_ratio": 0.474,
+      "start_sec": 510,
+      "end_sec": 542,
+      "position_label": "44.6%–47.4%(8:30–9:02)",
+      "purpose": "揭示行动者的政治风险：指控若失败，指控者自身毁灭",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "白昼突袭会撞见什么",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "action_launch",
+          "mechanism": "daylight_raid"
+        }
+      ],
+      "required_retention_events": [
+        "accuser_risk",
+        "proof_constraint"
+      ],
+      "original_moves": [
+        "政治地雷分析",
+        "取证两难",
+        "'必须抓现行'约束"
+      ],
+      "abstract_move": "揭示行动者的政治风险：指控若失败，指控者自身毁灭",
+      "replacement_needs": [
+        "指控失败的具体毁灭性后果",
+        "取证的两难约束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "raid_reveal",
+      "start_ratio": 0.474,
+      "end_ratio": 0.553,
+      "start_sec": 542,
+      "end_sec": 633,
+      "position_label": "47.4%–55.3%(9:02–10:33)",
+      "purpose": "突袭场面：用视觉化证据把'指控'变成'实证'，并引出被告主角",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "evidence_reveal",
+          "strength": 80,
+          "position_ratio": 0.4983,
+          "time_ms": 570000,
+          "reason": "白昼突袭撞破秘密化学实验室，指控变成实证"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "evidence_reveal",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "evidence_reveal",
+          "mechanism": "crime_scene_inventory"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "leaders_introduced",
+          "mechanism": "named_antagonists"
+        }
+      ],
+      "required_retention_events": [
+        "raid_sequence",
+        "evidence_inventory",
+        "leaders_introduced"
+      ],
+      "original_moves": [
+        "突袭组织",
+        "现场证据清单",
+        "20名贵妇现行",
+        "双主角身份量级"
+      ],
+      "abstract_move": "突袭场面：用视觉化证据把'指控'变成'实证'，并引出被告主角",
+      "replacement_needs": [
+        "突袭的时间与方式细节",
+        "现场证据的清单式呈现",
+        "核心被告的身份量级"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80);回收了前文的悬念 FS07→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "bluff_escalation",
+      "start_ratio": 0.553,
+      "end_ratio": 0.643,
+      "start_sec": 633,
+      "end_sec": 735,
+      "position_label": "55.3%–64.3%(10:33–12:15)",
+      "purpose": "公开对质：被告以无法当场证伪的抵赖反将一军",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "humor_peak",
+          "strength": 75,
+          "position_ratio": 0.632,
+          "time_ms": 723000,
+          "reason": "'大师级操纵且可能奏效'：抵赖之大出意料的错愕笑点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "被告'这是药不是毒'的抵赖能否得逞",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "public_spectacle",
+          "mechanism": "crowd_convergence"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "bluff_launch",
+          "mechanism": "audacious_denial"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "reversal_verdict",
+          "mechanism": "gaslighting_masterclass"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "deadlock_exposition",
+          "mechanism": "era_forensic_constraint"
+        }
+      ],
+      "required_retention_events": [
+        "public_trial",
+        "audacious_bluff"
+      ],
+      "original_moves": [
+        "广场公审人群",
+        "指控",
+        "被告面不改色",
+        "反转叙事",
+        "大师级定性"
+      ],
+      "abstract_move": "公开对质：被告以无法当场证伪的抵赖反将一军",
+      "replacement_needs": [
+        "围观人群的情绪铺垫",
+        "被告面不改色的姿态描写",
+        "一套把指控反转成冤枉的完整叙事"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(75);打开的悬念 LOOP07→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "deadlock_analysis",
+      "start_ratio": 0.643,
+      "end_ratio": 0.674,
+      "start_sec": 735,
+      "end_sec": 771,
+      "position_label": "64.3%–67.4%(12:15–12:51)",
+      "purpose": "向观众解释僵局为何无解：时代缺乏取证技术，误判将引发内战",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "final_move",
+          "mechanism": "underdog_returns"
+        }
+      ],
+      "required_retention_events": [
+        "era_constraint",
+        "crowd_doubt"
+      ],
+      "original_moves": [
+        "取证技术缺失",
+        "两种液体无法区分",
+        "政治代价",
+        "人群动摇"
+      ],
+      "abstract_move": "向观众解释僵局为何无解：时代缺乏取证技术，误判将引发内战",
+      "replacement_needs": [
+        "时代取证能力缺失的具体说明",
+        "误判的政治代价",
+        "人群态度开始动摇的细节"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "gambit_reveal",
+      "start_ratio": 0.674,
+      "end_ratio": 0.719,
+      "start_sec": 771,
+      "end_sec": 822,
+      "position_label": "67.4%–71.9%(12:51–13:42)",
+      "purpose": "小人物发出终极挑战：用被告自己的逻辑设下无解陷阱",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.715,
+          "time_ms": 818000,
+          "reason": "'那就当众喝一杯'：以被告逻辑设下的无解陷阱"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "fatal_challenge",
+          "mechanism": "drink_it_challenge"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "checkmate_framing",
+          "mechanism": "dilemma_symmetry"
+        }
+      ],
+      "required_retention_events": [
+        "unanswerable_challenge"
+      ],
+      "original_moves": [
+        "奴隶再次挺身而出",
+        "直指被告的挑战",
+        "广场凝固"
+      ],
+      "abstract_move": "小人物发出终极挑战：用被告自己的逻辑设下无解陷阱",
+      "replacement_needs": [
+        "挑战者再次挺身而出的动作",
+        "一句以被告主张为前提的致命要求",
+        "全场反应的瞬间凝固"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "checkmate_analysis",
+      "start_ratio": 0.719,
+      "end_ratio": 0.776,
+      "start_sec": 822,
+      "end_sec": 888,
+      "position_label": "71.9%–77.6%(13:42–14:48)",
+      "purpose": "替观众拆解死局：两条出路都通向毁灭",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "calculation_beat",
+          "mechanism": "brutal_math"
+        }
+      ],
+      "required_retention_events": [
+        "dilemma_symmetry",
+        "cold_decision"
+      ],
+      "original_moves": [
+        "死局对称拆解",
+        "被告私语计算",
+        "冷静恐怖的决定"
+      ],
+      "abstract_move": "替观众拆解死局：两条出路都通向毁灭",
+      "replacement_needs": [
+        "两种选择各自后果的对称拆解",
+        "被告方私下计算的短暂过程",
+        "决定的做出"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "climax_payoff",
+      "start_ratio": 0.776,
+      "end_ratio": 0.823,
+      "start_sec": 888,
+      "end_sec": 941,
+      "position_label": "77.6%–82.3%(14:48–15:41)",
+      "purpose": "高潮：被告以当众自毁完成无可辩驳的供词",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 95,
+          "position_ratio": 0.8103,
+          "time_ms": 927000,
+          "reason": "当众饮毒自尽：全片情绪与悬念的最高释放点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "public_vindication",
+          "opened_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "self_incrimination_payoff",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "ritual_action",
+          "mechanism": "final_toast"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "climax_payoff",
+          "mechanism": "public_self_destruction"
+        }
+      ],
+      "required_retention_events": [
+        "public_self_destruction",
+        "truth_physically_proven"
+      ],
+      "original_moves": [
+        "举杯仪式",
+        "即时毙命",
+        "'史上最戏剧性供词'定性"
+      ],
+      "abstract_move": "高潮：被告以当众自毁完成无可辩驳的供词",
+      "replacement_needs": [
+        "自证动作的仪式感呈现",
+        "即时且公开的物理后果",
+        "一句'史上最戏剧性供词'式的定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(95);回收了前文的悬念 FS06→LOOP05、FS09→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 95
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "fallout_reveal",
+      "start_ratio": 0.823,
+      "end_ratio": 0.886,
+      "start_sec": 941,
+      "end_sec": 1013,
+      "position_label": "82.3%–88.6%(15:41–16:53)",
+      "purpose": "连锁崩塌：个案扩大为全规模清算，兑现标题数字",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "title_callback",
+          "strength": 85,
+          "position_ratio": 0.8645,
+          "time_ms": 989000,
+          "reason": "标题大数字显式兑现，事件定性为内部政变"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_account_and_scale_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "domino_effect",
+          "mechanism": "chain_confessions"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "title_number_payoff",
+          "mechanism": "explicit_number_delivery"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "scale_verdict",
+          "mechanism": "coup_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "domino_confessions",
+        "title_number_payoff",
+        "scale_verdict"
+      ],
+      "original_moves": [
+        "阴谋揭开",
+        "供出名单",
+        "上层搜捕",
+        "170人定罪",
+        "'内部政变'定性"
+      ],
+      "abstract_move": "连锁崩塌：个案扩大为全规模清算，兑现标题数字",
+      "replacement_needs": [
+        "连锁供出与全城搜捕",
+        "标题数字的显式兑现",
+        "事件规模级别的定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);回收了前文的悬念 FS02→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS15",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.886,
+      "end_ratio": 0.964,
+      "start_sec": 1013,
+      "end_sec": 1103,
+      "position_label": "88.6%–96.4%(16:53–18:23)",
+      "purpose": "认知反转：真正的威胁不在外部而在枕边，'温顺者'神话粉碎",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "worldview_shift",
+          "mechanism": "external_internal_inversion"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "absurd_detail",
+          "mechanism": "superstitious_ritual"
+        }
+      ],
+      "required_retention_events": [
+        "external_internal_inversion",
+        "stereotype_shattering"
+      ],
+      "original_moves": [
+        "外部防御对照",
+        "'温顺妻子'神话粉碎",
+        "集体创伤",
+        "钉子驱邪仪式"
+      ],
+      "abstract_move": "认知反转：真正的威胁不在外部而在枕边，'温顺者'神话粉碎",
+      "replacement_needs": [
+        "外部防御与内部威胁的对照",
+        "对'温顺者'刻板印象的显式击碎",
+        "该事件造成集体创伤的具体证据"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.964,
+      "end_ratio": 1,
+      "start_sec": 1103,
+      "end_sec": 1144,
+      "position_label": "96.4%–100%(18:23–19:04)",
+      "purpose": "结尾定性：把个案提炼为对压迫结构的教训，以格言句收束",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9983,
+          "time_ms": 1142000,
+          "reason": "'最危险的武器不是剑，是一杯茶'：格言句完成全片认知收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "moral_verdict",
+          "mechanism": "structural_lesson"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "aphorism_close",
+          "mechanism": "weapon_redefinition"
+        }
+      ],
+      "required_retention_events": [
+        "structural_lesson",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "历史首次大审判定性",
+        "压迫结构教训",
+        "'茶杯'格言收束"
+      ],
+      "abstract_move": "结尾定性：把个案提炼为对压迫结构的教训，以格言句收束",
+      "replacement_needs": [
+        "事件的历史地位定性",
+        "对压迫结构的因果教训",
+        "一句把主题压缩成意象的格言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

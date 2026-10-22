@@ -1,0 +1,906 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.384Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "hook_scale_claim",
+      "start_ratio": 0,
+      "end_ratio": 0.039,
+      "start_sec": 0,
+      "end_sec": 54,
+      "position_label": "0%–3.9%(0:00–0:54)",
+      "purpose": "用累计规模断言把熟悉主题抬到史诗量级，并承诺存在\"疯狂且超前\"的解决方案",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "hook_claim",
+          "strength": 70,
+          "position_ratio": 0,
+          "time_ms": 0,
+          "reason": "开场规模断言：困境累计死亡超过任何战争，主题量级瞬间确立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：这些应对困境的妙招疯狂且超前，会改变你对该群体的看法（标题问句的具身化悬挂）",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "scale_claim",
+          "mechanism": "mortality_scale_assertion"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "scope_escalation",
+          "mechanism": "biology_shaping_claim"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "promise_tease",
+          "mechanism": "crazy_solutions_promise"
+        }
+      ],
+      "required_retention_events": [
+        "scale_claim",
+        "crazy_promise"
+      ],
+      "original_moves": [
+        "从零信息到\"累计死亡超过任何战争\"的规模断言，再到\"不止硬扛、还有疯狂妙招\"的承诺"
+      ],
+      "abstract_move": "用累计规模断言把熟悉主题抬到史诗量级，并承诺存在\"疯狂且超前\"的解决方案",
+      "replacement_needs": [
+        "跨时空的累计规模断言（超过战争级别的死亡量级）",
+        "\"不止X，还Y\"的悬念升级",
+        "对解决方案\"反直觉/超前\"的定性预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 62000,
+        "hook_type": "scale_claim_plus_catalog_promise",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 46000,
+        "evidence_refs": [
+          "C0001",
+          "C0006",
+          "C0008"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "catalog_contract",
+      "start_ratio": 0.039,
+      "end_ratio": 0.045,
+      "start_sec": 54,
+      "end_sec": 62,
+      "position_label": "3.9%–4.5%(0:54–1:02)",
+      "purpose": "显式建立目录式契约并预告排序策略，让观众预期一整组答案而非单一故事",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "catalog_contract",
+          "mechanism": "lets_go_through_them"
+        }
+      ],
+      "required_retention_events": [
+        "catalog_promise",
+        "ordering_tease"
+      ],
+      "original_moves": [
+        "逐条盘点承诺",
+        "排序预告",
+        "首案例反直觉钩子"
+      ],
+      "abstract_move": "显式建立目录式契约并预告排序策略，让观众预期一整组答案而非单一故事",
+      "replacement_needs": [
+        "\"我们逐条盘点\"的口头契约",
+        "从最反直觉案例开始的排序预告",
+        "首案例的\"听起来是错的，直到你理解原理\"式钩子"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "case_cycle",
+      "start_ratio": 0.045,
+      "end_ratio": 0.16,
+      "start_sec": 62,
+      "end_sec": 219,
+      "position_label": "4.5%–16%(1:02–3:39)",
+      "purpose": "案例一（最反直觉）：完整执行微循环，用\"主动住进困境元素\"的做法建立全片翻案基调",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.1366,
+          "time_ms": 187000,
+          "reason": "\"这不是原始即兴，是应用物理\"+现代工程师无法改进：首个翻案判词确立全片基调"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "为什么主动住进雪里反而是天才做法",
+          "closes_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "往身上抹油这种恶心的做法到底有什么用",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "counterintuitive_framing",
+          "mechanism": "sounds_wrong_until_physics"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "intuition_reversal",
+          "mechanism": "did_the_opposite"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "mechanism_number",
+          "mechanism": "temperature_delta_number"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "stakes_punch",
+          "mechanism": "alive_or_dead"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "engineering_detail",
+          "mechanism": "cold_air_trap"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "efficiency_reveal",
+          "mechanism": "two_people_two_hours"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "verdict_reframe",
+          "mechanism": "applied_physics_verdict"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "principle_generalization",
+          "mechanism": "enemy_to_solution"
+        }
+      ],
+      "required_retention_events": [
+        "counterintuitive_framing",
+        "mechanism_exposition",
+        "verdict_reframe"
+      ],
+      "original_moves": [
+        "反直觉定性",
+        "现代直觉对照",
+        "工程级机制细节",
+        "跨文化扩展",
+        "翻案判词"
+      ],
+      "abstract_move": "案例一（最反直觉）：完整执行微循环，用\"主动住进困境元素\"的做法建立全片翻案基调",
+      "replacement_needs": [
+        "现代直觉对照（现代人视该元素为敌）",
+        "古人反向操作的做法呈现",
+        "工程级机制细节（结构、温差、建造效率）",
+        "跨文化独立趋同的扩展",
+        "翻案判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80);打开的悬念 LOOP03→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "case_cycle",
+      "start_ratio": 0.16,
+      "end_ratio": 0.259,
+      "start_sec": 219,
+      "end_sec": 354,
+      "position_label": "16%–25.9%(3:39–5:54)",
+      "purpose": "案例二：用\"先恶心后拍案\"的做法维持反直觉节奏，并示范现代等价物桥接",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "油脂护肤的营养红利是否被古人有意识地理解：刻意保持开放，叙事用途是以\"是否理解机制不可考\"的坦白强化全片主题——知识无需理解机制即可真实有效，并为考古留白建立信任",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_reveal_plus_hidden_bonus",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "disgust_tease",
+          "mechanism": "sounds_disgusting_before_brilliant"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "practice_reveal",
+          "mechanism": "fat_on_skin"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "modern_equivalent",
+          "mechanism": "channel_swimmer_balm"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "hidden_bonus",
+          "mechanism": "vitamin_d_through_skin"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "humility_verdict",
+          "mechanism": "worked_regardless_of_understanding"
+        }
+      ],
+      "required_retention_events": [
+        "disgust_tease",
+        "modern_equivalent_bridge",
+        "hidden_bonus"
+      ],
+      "original_moves": [
+        "厌恶感预告",
+        "做法呈现",
+        "疏水屏障机制",
+        "现代等价物认亲",
+        "隐藏红利",
+        "不可考留白"
+      ],
+      "abstract_move": "案例二：用\"先恶心后拍案\"的做法维持反直觉节奏，并示范现代等价物桥接",
+      "replacement_needs": [
+        "厌恶感预告",
+        "做法与疏水/屏障机制解释",
+        "现代运动场景等价物认亲",
+        "隐藏营养红利的二次揭示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07(不闭合) 跨段;回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "case_cycle",
+      "start_ratio": 0.259,
+      "end_ratio": 0.369,
+      "start_sec": 354,
+      "end_sec": 505,
+      "position_label": "25.9%–36.9%(5:54–8:25)",
+      "purpose": "案例三：从已知常识切入，把反直觉点藏在\"可调节\"细节里，深化机制密度",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "counterintuitive_turn",
+          "strength": 70,
+          "position_ratio": 0.2958,
+          "time_ms": 405000,
+          "reason": "\"目标是防止出汗，这听起来反了\"：自我点评式反直觉断言"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "为什么在严寒中目标反而是防止出汗",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "counterintuitive_part",
+          "mechanism": "adjustable_venting"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "backwards_claim",
+          "mechanism": "prevent_sweating"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "stakes_explain",
+          "mechanism": "wet_insulation_death"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "craft_praise",
+          "mechanism": "engineering_task_praise"
+        }
+      ],
+      "required_retention_events": [
+        "backwards_claim",
+        "stakes_explain",
+        "craft_praise"
+      ],
+      "original_moves": [
+        "常识确认",
+        "反直觉点",
+        "出汗致命连锁机制",
+        "双层系统工程细节",
+        "匠人敬意"
+      ],
+      "abstract_move": "案例三：从已知常识切入，把反直觉点藏在\"可调节\"细节里，深化机制密度",
+      "replacement_needs": [
+        "常识部分的快速确认",
+        "反直觉点（目标不是更暖而是不出汗）",
+        "出汗致命的连锁机制拆解",
+        "双层系统的工程细节与匠人敬意"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "case_cycle",
+      "start_ratio": 0.369,
+      "end_ratio": 0.473,
+      "start_sec": 505,
+      "end_sec": 594,
+      "position_label": "36.9%–47.3%(8:25–9:54)",
+      "purpose": "案例四：用臭名远扬的食物清单制造笑点，再以营养机制与历史对照完成翻案",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "comparison_payoff",
+          "strength": 85,
+          "position_ratio": 0.428,
+          "time_ms": 586000,
+          "reason": "史前已防住坏血病、近代海军还在死人：历史对照的中段最高点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "臭名远扬的发酵食品为什么值得吃",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "nutrition_mechanism_plus_historical_comparison",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "gross_out_list",
+          "mechanism": "fermented_food_list"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "dry_humor",
+          "mechanism": "diplomatic_smell"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "nutrition_reveal",
+          "mechanism": "vitamin_c_reveal"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "comparison_flex",
+          "mechanism": "royal_navy_comparison"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "sponsor_insert",
+          "mechanism": "course_ad_insert"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "beyond_obvious_tease",
+          "mechanism": "beyond_fermentation"
+        }
+      ],
+      "required_retention_events": [
+        "nutrition_reveal",
+        "historical_comparison",
+        "humility_verdict"
+      ],
+      "original_moves": [
+        "臭名清单与笑点",
+        "无火保存机制",
+        "关键维生素揭示",
+        "与近代海军的历史对照"
+      ],
+      "abstract_move": "案例四：用臭名远扬的食物清单制造笑点，再以营养机制与历史对照完成翻案",
+      "replacement_needs": [
+        "重口味食物清单与气味笑点",
+        "无火保存与营养释放机制",
+        "关键维生素的揭示",
+        "与近代权威机构的历史对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "case_cycle",
+      "start_ratio": 0.473,
+      "end_ratio": 0.538,
+      "start_sec": 647,
+      "end_sec": 737,
+      "position_label": "47.3%–53.8%(10:47–12:17)",
+      "purpose": "案例五：把\"储存\"升级为\"环境工程\"，展示知识体系的系统性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "research_verdict",
+          "mechanism": "research_program_without_lab"
+        }
+      ],
+      "required_retention_events": [
+        "inventory_list",
+        "research_program_verdict"
+      ],
+      "original_moves": [
+        "超越常识的升级预告",
+        "三类缓存地点清单",
+        "经验积累机制",
+        "跨代研究计划判词"
+      ],
+      "abstract_move": "案例五：把\"储存\"升级为\"环境工程\"，展示知识体系的系统性",
+      "replacement_needs": [
+        "\"不只是储存\"的升级预告",
+        "不同食物匹配不同地点的缓存清单",
+        "经验知识如何积累与传承的机制说明",
+        "研究计划式定性判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "case_cycle",
+      "start_ratio": 0.538,
+      "end_ratio": 0.634,
+      "start_sec": 737,
+      "end_sec": 868,
+      "position_label": "53.8%–63.4%(12:17–14:28)",
+      "purpose": "案例六：挑战\"火堆放中间\"的现代直觉，引入热储存技术与材料安全知识",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "intuition_challenge",
+          "mechanism": "fire_in_middle_challenge"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "tech_recognition",
+          "mechanism": "sauna_tech_recognition"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "danger_detail",
+          "mechanism": "exploding_stones"
+        }
+      ],
+      "required_retention_events": [
+        "intuition_challenge",
+        "tech_recognition",
+        "danger_detail"
+      ],
+      "original_moves": [
+        "现代直觉挑战",
+        "反射定位机制与考古证据",
+        "热储存技术现代认亲",
+        "材料爆炸危险知识"
+      ],
+      "abstract_move": "案例六：挑战\"火堆放中间\"的现代直觉，引入热储存技术与材料安全知识",
+      "replacement_needs": [
+        "现代直觉的直接挑战",
+        "辐射热定位机制与考古证据",
+        "热储存技术的现代认亲（桑拿场景）",
+        "材料安全知识（会爆炸的材料）"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "case_cycle",
+      "start_ratio": 0.634,
+      "end_ratio": 0.729,
+      "start_sec": 868,
+      "end_sec": 998,
+      "position_label": "63.4%–72.9%(14:28–16:38)",
+      "purpose": "案例七：把观察对象从物扩展到动物，建立\"向更长经验的物种学习\"的情报系统观",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "animal_field_research",
+          "mechanism": "reading_animal_assessment"
+        }
+      ],
+      "required_retention_events": [
+        "layered_applications",
+        "field_research_verdict"
+      ],
+      "original_moves": [
+        "动物行为=生存信息定性",
+        "选址/迁徙/预警三层应用",
+        "无实验室田野研究判词"
+      ],
+      "abstract_move": "案例七：把观察对象从物扩展到动物，建立\"向更长经验的物种学习\"的情报系统观",
+      "replacement_needs": [
+        "动物行为=生存信息的定性",
+        "选址、迁徙、预警三层应用",
+        "\"动物的选址经过更长时间筛选\"的逻辑解释",
+        "田野研究式判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "case_cycle",
+      "start_ratio": 0.729,
+      "end_ratio": 0.831,
+      "start_sec": 998,
+      "end_sec": 1137,
+      "position_label": "72.9%–83.1%(16:38–18:57)",
+      "purpose": "案例八：让观众认亲自己的身体反应，并把社会习俗揭示为协作生存机制",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.7458,
+          "time_ms": 1021000,
+          "reason": "\"你的秋冬食欲是古老程序按设计运行\"：观众认亲的认知反转"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.7765,
+          "time_ms": 1063000,
+          "reason": "盛宴=协调性热量装载：社会习俗被揭示为生存机制"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "self_recognition",
+          "mechanism": "ancient_program_running"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "feast_reframe",
+          "mechanism": "coordinated_caloric_loading"
+        }
+      ],
+      "required_retention_events": [
+        "self_recognition",
+        "feast_reframe",
+        "social_survival_mechanism"
+      ],
+      "original_moves": [
+        "现代身体经验认亲",
+        "\"古老程序按设计运行\"揭示",
+        "盛宴功能性重定义",
+        "社会分配的群体生存逻辑"
+      ],
+      "abstract_move": "案例八：让观众认亲自己的身体反应，并把社会习俗揭示为协作生存机制",
+      "replacement_needs": [
+        "现代身体经验的认亲入口",
+        "\"古老行为程序按设计运行\"的揭示",
+        "习俗的功能性重定义（盛宴=协调热量装载）",
+        "社会分配的群体生存逻辑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80)、PK06(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "climax_case",
+      "start_ratio": 0.831,
+      "end_ratio": 0.947,
+      "start_sec": 1137,
+      "end_sec": 1297,
+      "position_label": "83.1%–94.7%(18:57–21:37)",
+      "purpose": "压轴案例：显式声明\"把前面一切串起来\"，用认知成就级案例完成升级",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.8802,
+          "time_ms": 1205000,
+          "reason": "著名巨石遗迹=冬季生存仪器：神秘感的操作性重定义"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "压轴的\"集大成\"案例是什么，凭什么把其他一切串起来",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "climax_declaration",
+          "mechanism": "ties_everything_together"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "monument_reframe",
+          "mechanism": "survival_instruments"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "elder_voice",
+          "mechanism": "past_the_worst_quote"
+        }
+      ],
+      "required_retention_events": [
+        "climax_declaration",
+        "monument_reframe",
+        "operational_verdict"
+      ],
+      "original_moves": [
+        "压轴声明",
+        "著名遗迹=生存仪器的重定义",
+        "多指标综合判读",
+        "长者决策场景",
+        "\"为预测冬天建起天文台\"定性"
+      ],
+      "abstract_move": "压轴案例：显式声明\"把前面一切串起来\"，用认知成就级案例完成升级",
+      "replacement_needs": [
+        "压轴地位的显式声明",
+        "著名遗迹的功能性重定义（生存仪器而非神秘场所）",
+        "多指标综合判读的技能展示",
+        "长者一句话决策的场景化呈现",
+        "该知识直接影响生死决策的操作性论证"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85);打开的悬念 LOOP06→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "recap_verdict",
+      "start_ratio": 0.947,
+      "end_ratio": 0.985,
+      "start_sec": 1297,
+      "end_sec": 1349,
+      "position_label": "94.7%–98.5%(21:37–22:29)",
+      "purpose": "重新定义标题关键词，并点名回扫全部案例形成加速凝聚",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9474,
+          "time_ms": 1297000,
+          "reason": "\"疯狂\"被重新定义：翻案叙事在语义层面封口"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "cognitive_achievement_reveal",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "word_redefinition",
+          "mechanism": "crazy_redefined"
+        }
+      ],
+      "required_retention_events": [
+        "word_redefinition",
+        "full_recap_montage"
+      ],
+      "original_moves": [
+        "关键词语义重定义",
+        "全案例清单逐句点名回扫"
+      ],
+      "abstract_move": "重新定义标题关键词，并点名回扫全部案例形成加速凝聚",
+      "replacement_needs": [
+        "\"疯狂不是非理性，而是远超刻板叙事\"的语义重定义",
+        "全部案例的逐句点名回扫"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85);回收了前文的悬念 FS11→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "closure",
+      "start_ratio": 0.985,
+      "end_ratio": 1,
+      "start_sec": 1349,
+      "end_sec": 1369,
+      "position_label": "98.5%–100%(22:29–22:49)",
+      "purpose": "以方法论总结、开场句回扣与格言句完成三段式收束",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9978,
+          "time_ms": 1366000,
+          "reason": "\"没被杀死的那些人留下了说明书\"：开场回扣+格言句的全片最高释放点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "keyword_redefinition_plus_full_recap_plus_aphorism",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "aphorism_close",
+          "mechanism": "left_us_instructions"
+        }
+      ],
+      "required_retention_events": [
+        "opening_callback",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "极致观察方法论总结",
+        "开场句逐字回扣",
+        "格言句收束"
+      ],
+      "abstract_move": "以方法论总结、开场句回扣与格言句完成三段式收束",
+      "replacement_needs": [
+        "\"知识来自极致观察而非文字科学\"的方法论总结",
+        "开场规模断言的逐字回扣",
+        "把主题压缩成意象的格言句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

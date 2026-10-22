@@ -1,0 +1,914 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.315Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "anomaly_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.055,
+      "start_sec": 0.1,
+      "end_sec": 60.9,
+      "position_label": "0%–5.5%(0:00–1:01)",
+      "purpose": "用日常场景中的规则异常建立问题，再把单一疑问扩展为可追踪的付款路径与经营账本任务",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.0253,
+          "time_ms": 27960,
+          "reason": "同一商品仅因附带活动权益就出现明显价差，开场问题得到第一次具象回答"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：经营者究竟靠什么获得收入；随后收窄为追踪一笔付款、全年销售和实际留存",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "scene_anchor",
+          "mechanism": "everyday_scene_recognition"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "rule_conflict",
+          "mechanism": "illegality_notice"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "new_question",
+          "mechanism": "profit_source_question"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "partial_answer",
+          "mechanism": "bundled_price_reveal"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "price_contrast",
+          "mechanism": "ordinary_vs_bundled_item"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "scope_lock",
+          "mechanism": "money_trail_and_ledger_promise"
+        }
+      ],
+      "required_retention_events": [
+        "everyday_scene_anchor",
+        "rule_conflict",
+        "price_contrast",
+        "scope_promise"
+      ],
+      "original_moves": [
+        "从门店招牌和禁止兑换提示切入，先给出“费用并入其他商品”的初步答案，再提出追踪一笔付款及全年销售账本的完整任务"
+      ],
+      "abstract_move": "用日常场景中的规则异常建立问题，再把单一疑问扩展为可追踪的付款路径与经营账本任务",
+      "replacement_needs": [
+        "日常可识别的场景",
+        "一条与经营常识冲突的规则",
+        "初步收费答案",
+        "明确的追踪范围"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(74);打开的悬念 LOOP01→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 74
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "everyday_rule_anomaly_with_immediate_partial_payoff",
+        "first_stimulus_ms": 80,
+        "first_payoff_ms": 21560,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0010",
+          "C0013"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "belief_stress_test",
+      "start_ratio": 0.055,
+      "end_ratio": 0.113,
+      "start_sec": 60.9,
+      "end_sec": 125.1,
+      "position_label": "5.5%–11.3%(1:01–2:05)",
+      "purpose": "把观众最可能的直觉解释摆上桌面，用支持与反驳材料检验它，而不是直接把刻板判断当作答案",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "直觉争议：是否几乎所有门店都在暗中兑换，若不是则靠何种机制持续经营",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "belief_challenge",
+          "mechanism": "comment_as_prior_belief"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "claim_validation",
+          "mechanism": "partial_truth_confirmation"
+        }
+      ],
+      "required_retention_events": [
+        "comment_belief_proxy",
+        "partial_claim_validation",
+        "legal_consequence"
+      ],
+      "original_moves": [
+        "先复述评论区近乎全称的推测，再用两类实际案件验证抽成与兑换确实存在，最后以相反经历削弱全称判断"
+      ],
+      "abstract_move": "把观众最可能的直觉解释摆上桌面，用支持与反驳材料检验它，而不是直接把刻板判断当作答案",
+      "replacement_needs": [
+        "一种流行的直觉解释",
+        "支持该解释的具体材料",
+        "该解释不能覆盖全体的迹象"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "alternative_flow_reveal",
+      "start_ratio": 0.113,
+      "end_ratio": 0.2335,
+      "start_sec": 125.1,
+      "end_sec": 258.5,
+      "position_label": "11.3%–23.4%(2:05–4:19)",
+      "purpose": "展示多种表面不同的收费与奖励安排，抽象出共同的资金分配机制，并追问上一层收款者",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.179,
+          "time_ms": 198200,
+          "reason": "不同收费外壳被归纳为共同的先扣除再分配机制，复杂案例第一次被统一解释"
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.2228,
+          "time_ms": 246720,
+          "reason": "上层凭证收入被明确拆成奖励与经营者留存，资金追踪完成关键一层"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "上层资金去向：门店购买权益凭证所付的钱最终进入谁的手中",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "partial_validation_plus_alternative_mechanisms",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "upstream_percentage_split",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "counterexample",
+          "mechanism": "opposing_experience"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "alternative_mechanism",
+          "mechanism": "non_cash_reward_substitute"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "mechanism_equivalence",
+          "mechanism": "different_forms_same_rake"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "new_question",
+          "mechanism": "upstream_payee_question"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "money_split_reveal",
+          "mechanism": "eighty_twenty_split"
+        }
+      ],
+      "required_retention_events": [
+        "counterexample",
+        "alternative_reward_path",
+        "mechanism_equivalence",
+        "percentage_split"
+      ],
+      "original_moves": [
+        "以非现金奖励安排回应反例，沿参与费、权益凭证、赛事公司与奖金逐层追踪，最后指出不同外壳都存在先扣除再分配的共性"
+      ],
+      "abstract_move": "展示多种表面不同的收费与奖励安排，抽象出共同的资金分配机制，并追问上一层收款者",
+      "replacement_needs": [
+        "至少两种替代安排",
+        "付款者与收款者链条",
+        "不同安排之间的共同机制",
+        "上一层资金分配比例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(82)、PK03(80);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 82
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "network_scale_exposure",
+      "start_ratio": 0.2335,
+      "end_ratio": 0.3132,
+      "start_sec": 258.5,
+      "end_sec": 346.7,
+      "position_label": "23.4%–31.3%(4:19–5:47)",
+      "purpose": "把单店资金流放大为组织化网络，检验公开外观与法律认定之间的落差，为后续规则变化提供原因",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "规则改变后的收费问题：旧路径受处罚时，经营者改用什么名目收取付款",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "facade_reveal",
+          "mechanism": "public_venue_legality_contrast"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "rule_transition",
+          "mechanism": "post_boundary_pricing_question"
+        }
+      ],
+      "required_retention_events": [
+        "network_mapping",
+        "scale_numbers",
+        "public_facade_contrast",
+        "court_boundary"
+      ],
+      "original_moves": [
+        "用赛事规模、组织角色、场地外观与判决材料扩展资金链，说明社区场景可作为上层活动的入口，并引出新规则下的收费转型问题"
+      ],
+      "abstract_move": "把单店资金流放大为组织化网络，检验公开外观与法律认定之间的落差，为后续规则变化提供原因",
+      "replacement_needs": [
+        "网络节点的角色清单",
+        "可比较的规模材料",
+        "公开外观与认定结果的冲突",
+        "规则或裁判结果"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "rule_boundary_reprice",
+      "start_ratio": 0.3132,
+      "end_ratio": 0.4292,
+      "start_sec": 346.7,
+      "end_sec": 475.2,
+      "position_label": "31.3%–42.9%(5:47–7:55)",
+      "purpose": "在规则约束明确后，拆解经营方如何改写收费名称与商品组合，并比较不同路径下同一笔付款的去向",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.3737,
+          "time_ms": 413720,
+          "reason": "两份文件并排后，同一商品的附加价格直接显形，纸面收费名目与经济实质分离"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "documented_price_relabel_and_flow_comparison",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "viewer_risk",
+          "mechanism": "participant_liability_warning"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "document_comparison",
+          "mechanism": "side_by_side_menu_math"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "relabel_reveal",
+          "mechanism": "free_on_paper_paid_in_price"
+        }
+      ],
+      "required_retention_events": [
+        "viewer_relevance_warning",
+        "two_document_comparison",
+        "price_difference",
+        "on_paper_vs_practice"
+      ],
+      "original_moves": [
+        "先说明兑换与参与风险，再用双菜单、附加权益和积分条款显示价格如何被重新命名，最后比较先抽成再返还与全部计为门店销售两条路径"
+      ],
+      "abstract_move": "在规则约束明确后，拆解经营方如何改写收费名称与商品组合，并比较不同路径下同一笔付款的去向",
+      "replacement_needs": [
+        "适用参与者的规则说明",
+        "两份可对照的价格或条款材料",
+        "名称变化与实际内容的对应",
+        "不同路径的资金终点比较"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(84);回收了前文的悬念 FS04→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 84
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "cost_stack_mapping",
+      "start_ratio": 0.4292,
+      "end_ratio": 0.5385,
+      "start_sec": 475.2,
+      "end_sec": 596.2,
+      "position_label": "42.9%–53.9%(7:55–9:56)",
+      "purpose": "把收入问题补全为成本问题，逐层加入开办、持续授权、人力与场地成本，同时提示不同参与者的风险",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "成本问题：开门之前和持续经营期间需要支付哪些投入与固定支出",
+          "closes_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "核心账本问题：一年销售多少，扣除全部成本后真正留下多少",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "startup_and_operating_cost_map",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "cost_question",
+          "mechanism": "startup_and_monthly_outflow"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "dual_use_measurement",
+          "mechanism": "reward_as_sales_meter"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "stakeholder_warning",
+          "mechanism": "worker_liability_relevance"
+        }
+      ],
+      "required_retention_events": [
+        "cost_question",
+        "cost_inventory",
+        "dual_use_measurement",
+        "dealer_risk"
+      ],
+      "original_moves": [
+        "依次列入开办投入、授权费、权益凭证计量、人力工资与场地分摊，并把经营越界的责任延伸到雇员"
+      ],
+      "abstract_move": "把收入问题补全为成本问题，逐层加入开办、持续授权、人力与场地成本，同时提示不同参与者的风险",
+      "replacement_needs": [
+        "一次性投入",
+        "持续性费用",
+        "人力成本",
+        "场地成本",
+        "参与者责任边界"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "unit_economics_contrast",
+      "start_ratio": 0.5385,
+      "end_ratio": 0.6416,
+      "start_sec": 596.2,
+      "end_sec": 710.3,
+      "position_label": "53.9%–64.2%(9:56–11:50)",
+      "purpose": "用可比账本回答销售规模与实际留存，先展示门店间巨大差异，再分离销售额、利润与总部收益",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 86,
+          "position_ratio": 0.5823,
+          "time_ms": 644680,
+          "reason": "同一经营体系内销售规模出现十六倍极差，强烈冲击稳定高收入预设"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 88,
+          "position_ratio": 0.6028,
+          "time_ms": 667360,
+          "reason": "大额销售被换算为不足一成的经营留存，真实账本与标题直觉形成核心反差"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "sales_spread_and_operating_margin_answer",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "unit_economics_question",
+          "mechanism": "annual_sales_after_costs"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "scale_contrast",
+          "mechanism": "sixteen_fold_sales_spread"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "margin_reveal",
+          "mechanism": "sales_to_operating_profit"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "headquarters_contrast",
+          "mechanism": "loss_to_profit_with_network_growth"
+        }
+      ],
+      "required_retention_events": [
+        "annual_sales_question",
+        "sixteen_fold_spread",
+        "margin_reveal",
+        "headquarters_store_contrast"
+      ],
+      "original_moves": [
+        "从竞争加剧与亏损经历进入登记账本，先给平均销售和十六倍极差，再揭示不足一成的经营留存，并对照总部由亏转盈与另一网络收缩"
+      ],
+      "abstract_move": "用可比账本回答销售规模与实际留存，先展示门店间巨大差异，再分离销售额、利润与总部收益",
+      "replacement_needs": [
+        "同口径销售数据",
+        "最高与最低对照",
+        "扣除成本后的留存",
+        "不同主体或时期的账本反差"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(86)、PK06(88);回收了前文的悬念 FS06→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 86
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 88
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "incentive_escalation",
+      "start_ratio": 0.6416,
+      "end_ratio": 0.7773,
+      "start_sec": 710.3,
+      "end_sec": 860.5,
+      "position_label": "64.2%–77.7%(11:50–14:21)",
+      "purpose": "把合法口径下的低留存与越界收费下的高抽成放在同一计算框架中，解释越界激励及其扩散风险",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 90,
+          "position_ratio": 0.664,
+          "time_ms": 735120,
+          "reason": "越界抽成与常规门店月销售被放进同一计算，收益激励获得最清晰的量化解释"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "行为因果：既然常规经营留存有限，为什么仍有经营者选择越界收费",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "最终付款者：越界抽成和后续集中分配究竟从谁的钱包中产生",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "illicit_incentive_causal_answer",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "illicit_scale_reveal",
+          "mechanism": "one_month_vs_several_month_sales"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "calculation_payoff",
+          "mechanism": "fee_only_multiplier"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "network_scale",
+          "mechanism": "organized_network_expansion"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "causal_question",
+          "mechanism": "why_cross_line_then_who_pays"
+        }
+      ],
+      "required_retention_events": [
+        "same_assets_different_economics",
+        "illicit_scale_calculation",
+        "crime_network_expansion",
+        "why_cross_line_question"
+      ],
+      "original_moves": [
+        "以同桌同筹码但收益完全不同的对照开场，用月度抽成与常规月销售计算量化诱惑，再扩展到组织化网络、保护费与持续执法，最后把问题转向付款者"
+      ],
+      "abstract_move": "把合法口径下的低留存与越界收费下的高抽成放在同一计算框架中，解释越界激励及其扩散风险",
+      "replacement_needs": [
+        "同口径的两种收益计算",
+        "越界模式的组织化案例",
+        "外部风险或强制成本",
+        "激励因果的明确总结"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(90);打开的悬念 LOOP08→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "human_cost_grounding",
+      "start_ratio": 0.7773,
+      "end_ratio": 0.8355,
+      "start_sec": 860.5,
+      "end_sec": 925,
+      "position_label": "77.7%–83.6%(14:21–15:25)",
+      "purpose": "把抽象抽成比例落到参与者的损失与日常行为，解释钱的最终来源，并提供与内容风险一致的帮助信息",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 84,
+          "position_ratio": 0.7899,
+          "time_ms": 874480,
+          "reason": "参与者长期损失让“谁支付抽成”的抽象问题获得沉重的人本答案"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "participant_loss_and_chip_flow_answer",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "human_loss_reveal",
+          "mechanism": "participant_loss_scale"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "support_transition",
+          "mechanism": "care_resource_before_counterargument"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "counterargument",
+          "mechanism": "operator_reputation_concern"
+        }
+      ],
+      "required_retention_events": [
+        "human_story_turn",
+        "loss_scale",
+        "wallet_answer",
+        "support_resource"
+      ],
+      "original_moves": [
+        "用参与者从好奇到日常化及持续损失的经历落地资金链，说明先到抽成、再向少数主导者集中的路径，随后转入求助信息"
+      ],
+      "abstract_move": "把抽象抽成比例落到参与者的损失与日常行为，解释钱的最终来源，并提供与内容风险一致的帮助信息",
+      "replacement_needs": [
+        "可定位的参与者经历",
+        "损失规模与生活影响",
+        "抽象机制与个人付款的连接",
+        "适当的支持信息"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(84);回收了前文的悬念 FS08→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 84
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "counterargument_and_criteria",
+      "start_ratio": 0.8355,
+      "end_ratio": 0.9151,
+      "start_sec": 925,
+      "end_sec": 1013.2,
+      "position_label": "83.6%–91.5%(15:25–16:53)",
+      "purpose": "主动呈现经营者的反面主张，再用常见争议对照提炼判断边界，避免把全片简化为对整个活动的道德定罪",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 87,
+          "position_ratio": 0.8948,
+          "time_ms": 990600,
+          "reason": "判断标准由活动种类转为资金回流与许可，常见争议得到可迁移的辨别框架"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "行业争议：活动能否作为健康产业发展，以及如何避免少数越界者造成整体污名",
+          "closes_in": null
+        },
+        {
+          "loop_id": "LOOP10",
+          "tension": "常见类比争议：为何职业赛事奖金可以成为新闻，而社区场景中的相似活动会被认定为越界",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP10",
+          "payoff_type": "prize_flow_plus_license_two_part_test",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP09"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "controversy_question",
+          "mechanism": "professional_vs_local_analogy"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "criterion_reframe",
+          "mechanism": "not_game_type_but_flow_and_license"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "legal_line_payoff",
+          "mechanism": "unlicensed_prize_return_boundary"
+        }
+      ],
+      "required_retention_events": [
+        "counterargument",
+        "controversy_question",
+        "analogy_reframe",
+        "two_part_legal_test"
+      ],
+      "original_moves": [
+        "先给经营者关于健康发展与污名的反方意见，再借职业选手与社区场景的常见比较，落到“是否为奖金回流、是否获许可”的双标准"
+      ],
+      "abstract_move": "主动呈现经营者的反面主张，再用常见争议对照提炼判断边界，避免把全片简化为对整个活动的道德定罪",
+      "replacement_needs": [
+        "可辨认的反方论点",
+        "一个常见类比疑问",
+        "类比双方的可比与不可比处",
+        "资金回流与许可标准"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(87);打开的悬念 LOOP09(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 87
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "edge_case_qualification",
+      "start_ratio": 0.9151,
+      "end_ratio": 0.9387,
+      "start_sec": 1013.2,
+      "end_sec": 1039.2,
+      "position_label": "91.5%–93.9%(16:53–17:19)",
+      "purpose": "用大型但仍有约束的情形补充边界，说明规模或赞助外观不能替代资金用途审查，并回到主承诺",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "qualification",
+          "mechanism": "sponsor_does_not_remove_all_limits"
+        }
+      ],
+      "required_retention_events": [
+        "large_event_exception",
+        "sponsor_qualification",
+        "direct_path_answer"
+      ],
+      "original_moves": [
+        "展示高额奖励的大型活动仍存在，再补充赞助与运营费的限制，最后明确常规合规口径下的付款止于门店销售而非赛事奖金"
+      ],
+      "abstract_move": "用大型但仍有约束的情形补充边界，说明规模或赞助外观不能替代资金用途审查，并回到主承诺",
+      "replacement_needs": [
+        "一个容易误判为例外的情形",
+        "仍然适用的限制条件",
+        "对核心付款路径的直接判断"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "comparative_closure",
+      "start_ratio": 0.9387,
+      "end_ratio": 1,
+      "start_sec": 1039.2,
+      "end_sec": 1107.1,
+      "position_label": "93.9%–100%(17:19–18:27)",
+      "purpose": "回收开场物件与主问题，用多路径对照压缩全片答案，再把具体发现提升为可迁移的观察方法",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "promise_payoff",
+          "strength": 92,
+          "position_ratio": 0.9719,
+          "time_ms": 1076039,
+          "reason": "结尾同时回收全年销售与低经营留存，直接兑现真实账本和收入反差的主承诺"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP11",
+          "tension": "迁移问题：通过改写所售物名称来收取实际活动费用的做法是否只存在于本片所讨论的经营场景",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "multi_path_ledger_recap",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP11"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "opening_callback",
+          "mechanism": "illegal_notice_return"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "primary_payoff",
+          "mechanism": "ledger_and_customer_spending_recap"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "worldview_generalization",
+          "mechanism": "relabelled_product_question"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "closing_cta",
+          "mechanism": "same_series_next_episode"
+        }
+      ],
+      "required_retention_events": [
+        "opening_callback",
+        "parallel_path_recap",
+        "primary_ledger_payoff",
+        "generalizing_question",
+        "consistent_cta"
+      ],
+      "original_moves": [
+        "回到禁止兑换提示，并排复盘多条付款路径及销售、利润答案，再把“改写所售物名称”的做法提升为跨业态问题，最后以同类内容预告收束"
+      ],
+      "abstract_move": "回收开场物件与主问题，用多路径对照压缩全片答案，再把具体发现提升为可迁移的观察方法",
+      "replacement_needs": [
+        "开场元素的回扣",
+        "各路径的并排结论",
+        "销售与留存的最终数字回收",
+        "可迁移的一般性问题",
+        "与内容一致的行动邀请"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(92);打开的悬念 LOOP11(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 92
+        }
+      ]
+    }
+  ]
+}

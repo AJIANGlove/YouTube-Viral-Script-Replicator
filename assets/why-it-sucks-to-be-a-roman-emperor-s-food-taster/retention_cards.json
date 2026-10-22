@@ -1,0 +1,1043 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.438Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.028,
+      "start_sec": 0,
+      "end_sec": 32.1,
+      "position_label": "0%–2.8%(0:00–0:32)",
+      "purpose": "第二人称岗位契约开场：一句话给出'你先承担风险'的残酷对价，并把岗位定性为权力斗争中的人肉防线",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_job_contract"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "role_assignment",
+          "mechanism": "human_shield_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "job_contract_stated",
+        "asymmetric_price"
+      ],
+      "original_moves": [
+        "从零信息到岗位定义，再到岗位作为人肉防线的权力定性"
+      ],
+      "abstract_move": "第二人称岗位契约开场：一句话给出'你先承担风险'的残酷对价，并把岗位定性为权力斗争中的人肉防线",
+      "replacement_needs": [
+        "岗位核心动作的一句话定义",
+        "安全与出事两种结果的不对称对价",
+        "岗位在权力结构中的真实功能定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "second_person_job_contract",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 27480,
+        "evidence_refs": [
+          "C0001",
+          "C0003",
+          "C0013",
+          "C0014"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "mystery_setup",
+      "start_ratio": 0.028,
+      "end_ratio": 0.05,
+      "start_sec": 32.1,
+      "end_sec": 56.6,
+      "position_label": "2.8%–5%(0:32–0:57)",
+      "purpose": "剧透式悬念：预告今夜将发生的著名死亡，并用'三种可能'把观众锁定为裁决者",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.0298,
+          "time_ms": 33880,
+          "reason": "剧透式死亡预告：今夜皇帝将吃下蘑菇并死去，戏剧反讽引擎启动"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "mystery_setup",
+          "strength": 70,
+          "position_ratio": 0.0417,
+          "time_ms": 47400,
+          "reason": "三种可能并列抛出，全片主悬念建立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念：漏检、同谋、蘑菇无辜，三种可能到底哪个为真（标题抱怨背后的真相裁决）",
+          "closes_in": "FS16"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "剧透预告：今夜皇帝将吃下蘑菇并死去，这一预言如何兑现",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "spoiler_flashforward",
+          "mechanism": "foretold_death"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "mystery_setup",
+          "mechanism": "three_possibility_loop"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "identity_reveal",
+          "mechanism": "named_protagonist"
+        }
+      ],
+      "required_retention_events": [
+        "spoiler_flashforward",
+        "three_possibilities",
+        "named_protagonist"
+      ],
+      "original_moves": [
+        "死亡预告",
+        "你仍活着的矛盾",
+        "三种互斥解释",
+        "主角姓名揭晓"
+      ],
+      "abstract_move": "剧透式悬念：预告今夜将发生的著名死亡，并用'三种可能'把观众锁定为裁决者",
+      "replacement_needs": [
+        "死亡事件的剧透式预告",
+        "主角'仍活着'与死者'已死'之间的矛盾",
+        "三种互斥解释的并列清单",
+        "主角姓名锚点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(75)、PK02(70);打开的悬念 LOOP01→FS16、LOOP02→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "scene_entry",
+      "start_ratio": 0.05,
+      "end_ratio": 0.081,
+      "start_sec": 56.6,
+      "end_sec": 92.2,
+      "position_label": "5%–8.1%(0:57–1:32)",
+      "purpose": "感官化场景建立：用黎明前的宫廷细节把观众放进历史现场，并用一个自我拆台的穿越式笑点定调幽默",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "humor_payoff",
+          "mechanism": "modern_analogy"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "humor_payoff",
+          "mechanism": "anachronism_self_correction"
+        }
+      ],
+      "required_retention_events": [
+        "sensory_scene",
+        "anachronism_humor"
+      ],
+      "original_moves": [
+        "岗位定性笑话",
+        "精确时间锚点",
+        "多感官苏醒场景",
+        "敌人规模具象化",
+        "自我拆台笑点"
+      ],
+      "abstract_move": "感官化场景建立：用黎明前的宫廷细节把观众放进历史现场，并用一个自我拆台的穿越式笑点定调幽默",
+      "replacement_needs": [
+        "精确的时间锚点",
+        "多感官的苏醒场景细节",
+        "敌人规模的夸张具象化",
+        "一个现代职业类比笑点与一个自我拆台的穿越笑点"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "job_deconstruction",
+      "start_ratio": 0.081,
+      "end_ratio": 0.188,
+      "start_sec": 92.2,
+      "end_sec": 213.7,
+      "position_label": "8.1%–18.8%(1:32–3:34)",
+      "purpose": "第一层无解：拆穿流行想象，展示岗位在制度上为何注定失败",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "每道菜都试吃，毒物如何仍能绕过防线到达皇帝口中",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "role_redefinition",
+          "mechanism": "job_truth_verdict"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "humor_payoff",
+          "mechanism": "absurdist_escalation"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "verdict_drop",
+          "mechanism": "one_line_verdict"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "humor_payoff",
+          "mechanism": "prestige_paradox_analogy"
+        }
+      ],
+      "required_retention_events": [
+        "supply_chain_reveal",
+        "delayed_poison",
+        "time_compromise",
+        "prestige_paradox"
+      ],
+      "original_moves": [
+        "流行想象拆穿",
+        "供应链清单",
+        "毒物隐匿与延时",
+        "职能重定义",
+        "时间妥协",
+        "尊贵悖论"
+      ],
+      "abstract_move": "第一层无解：拆穿流行想象，展示岗位在制度上为何注定失败",
+      "replacement_needs": [
+        "流行想象与真实运作的对照",
+        "供应链式多手环节清单",
+        "毒物隐匿性与延时性说明",
+        "试吃仪式的时间妥协推演",
+        "'尊贵位置'的反讽定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "stakes_context",
+      "start_ratio": 0.188,
+      "end_ratio": 0.283,
+      "start_sec": 213.7,
+      "end_sec": 321.3,
+      "position_label": "18.8%–28.3%(3:34–5:21)",
+      "purpose": "权力格局铺垫：死者背景、继承竞争与'这顿饭即选举'的定性，把私人晚餐升级为帝国级赌局",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "stakes_reframe",
+          "strength": 70,
+          "position_ratio": 0.2742,
+          "time_ms": 311720,
+          "reason": "'这不是家宴是选举'：私人晚餐升级为帝国赌局"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "stakes_reframe",
+          "mechanism": "election_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "succession_crisis",
+        "election_reframe"
+      ],
+      "original_moves": [
+        "幸存者人设",
+        "妻侄双重身份",
+        "两子对照",
+        "亲儿子地位上升",
+        "选举定性句"
+      ],
+      "abstract_move": "权力格局铺垫：死者背景、继承竞争与'这顿饭即选举'的定性，把私人晚餐升级为帝国级赌局",
+      "replacement_needs": [
+        "受害者的生存史与性格标签",
+        "竞争者双方的身份与优势对照",
+        "继承格局变化的临界点",
+        "'这不是晚餐是选举'式的定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "vulnerability_reveal",
+      "start_ratio": 0.283,
+      "end_ratio": 0.351,
+      "start_sec": 321.3,
+      "end_sec": 398.5,
+      "position_label": "28.3%–35.1%(5:21–6:38)",
+      "purpose": "第二层无解：受害者的饮食偏好成为可预测的暗杀窗口，且关键守卫恰好缺席，袭击条件全部齐备",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "vulnerability_reveal",
+          "mechanism": "predictability_double_edge"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "conditions_aligned",
+          "mechanism": "triad_parallelism"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "humor_payoff",
+          "mechanism": "modern_office_mapping"
+        }
+      ],
+      "required_retention_events": [
+        "favorite_food_window",
+        "guard_absent",
+        "conditions_triad"
+      ],
+      "original_moves": [
+        "饮食偏好",
+        "可预测性双刃推理",
+        "毒物自带伪装",
+        "谣言四起",
+        "守卫缺席",
+        "条件三连齐备"
+      ],
+      "abstract_move": "第二层无解：受害者的饮食偏好成为可预测的暗杀窗口，且关键守卫恰好缺席，袭击条件全部齐备",
+      "replacement_needs": [
+        "受害者饮食偏好及其双刃性",
+        "可预测性等于暗杀窗口的推理",
+        "关键保护者缺席的巧合",
+        "条件齐备的三连排比"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "ritual_spectacle",
+      "start_ratio": 0.351,
+      "end_ratio": 0.474,
+      "start_sec": 398.5,
+      "end_sec": 539.2,
+      "position_label": "35.1%–47.4%(6:38–8:59)",
+      "purpose": "宴会奇观与试吃折磨：宴席即剧院、座位即地位地图，主角的隐形性既是职业优点也是阴谋优点，每一口试吃都是零信息赌博",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "入场的妻子'看起来不像凶手'，她到底是不是凶手",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "advantage_reveal",
+          "mechanism": "invisibility_double_edge"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "dread_reframe",
+          "mechanism": "crime_scene_reframe"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "verdict_drop",
+          "mechanism": "parallel_contrast"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "character_entry",
+          "mechanism": "antagonist_entry"
+        }
+      ],
+      "required_retention_events": [
+        "banquet_theater",
+        "invisibility_advantage",
+        "tasting_torture"
+      ],
+      "original_moves": [
+        "宴会即剧院",
+        "座位即地位地图",
+        "隐形性双刃",
+        "每口都是零信息赌博",
+        "全员伪装和平"
+      ],
+      "abstract_move": "宴会奇观与试吃折磨：宴席即剧院、座位即地位地图，主角的隐形性既是职业优点也是阴谋优点，每一口试吃都是零信息赌博",
+      "replacement_needs": [
+        "宴会作为权力展演的细节",
+        "座位与地位的映射规则",
+        "仆从隐形性的双刃定性",
+        "试吃的心理折磨具象化",
+        "全员伪装和平的场面"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "murder_execution",
+      "start_ratio": 0.474,
+      "end_ratio": 0.567,
+      "start_sec": 539.2,
+      "end_sec": 644.2,
+      "position_label": "47.4%–56.7%(8:59–10:44)",
+      "purpose": "袭击执行与史料分歧：核心道具上桌，多份史料记载并列呈现作案版本，揭示'尝菜尝不到他那一片'的致命漏洞，延迟反应让袭击隐形",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.5192,
+          "time_ms": 590120,
+          "reason": "'盘子是安全的，那一口不是'：单片污染机制对仗定格，岗位无解坐实"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "mode_shift",
+          "mechanism": "source_disagreement_suspense"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "loophole_reveal",
+          "mechanism": "single_piece_loophole"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "mechanism_payoff",
+          "mechanism": "antithesis_verdict"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "threat_turn",
+          "mechanism": "body_collapse"
+        }
+      ],
+      "required_retention_events": [
+        "source_disagreement",
+        "single_piece_loophole",
+        "delayed_reaction"
+      ],
+      "original_moves": [
+        "道具上桌节拍",
+        "史源分歧显性化",
+        "单片污染机制",
+        "对仗判词",
+        "延迟反应与完美受害者"
+      ],
+      "abstract_move": "袭击执行与史料分歧：核心道具上桌，多份史料记载并列呈现作案版本，揭示'尝菜尝不到他那一片'的致命漏洞，延迟反应让袭击隐形",
+      "replacement_needs": [
+        "核心道具上桌的节拍句",
+        "史源分歧的显性化处理",
+        "单片污染的机制揭示",
+        "'盘子安全那口不安全'式对仗判词",
+        "延迟反应与'完美受害者'的伪装逻辑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85);回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "blame_inversion",
+      "start_ratio": 0.567,
+      "end_ratio": 0.641,
+      "start_sec": 644.2,
+      "end_sec": 728.2,
+      "position_label": "56.7%–64.1%(10:44–12:08)",
+      "purpose": "归责倒置：死亡开始，责任沿厨房链条回溯，主角'活着'从称职证据变成嫌疑证据",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "blame_inversion",
+          "strength": 75,
+          "position_ratio": 0.6236,
+          "time_ms": 708880,
+          "reason": "归责链排比抵达'所有人都怪试毒员'，活着变成嫌疑"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "所有人都怪试毒员：主角会被清算还是安然无恙",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "blame_inversion",
+          "mechanism": "blame_chain"
+        }
+      ],
+      "required_retention_events": [
+        "blame_chain",
+        "alive_equals_suspicious"
+      ],
+      "original_moves": [
+        "身体崩坏多版本",
+        "众人计算归责",
+        "归责链排比",
+        "活着=可疑",
+        "记忆不可靠"
+      ],
+      "abstract_move": "归责倒置：死亡开始，责任沿厨房链条回溯，主角'活着'从称职证据变成嫌疑证据",
+      "replacement_needs": [
+        "身体崩坏的多版本呈现",
+        "归责链的回溯排比",
+        "'活着等于可疑'的倒置逻辑",
+        "记忆在生死压力下的不可靠"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(75);打开的悬念 LOOP06→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "plot_complication",
+      "start_ratio": 0.641,
+      "end_ratio": 0.73,
+      "start_sec": 728.2,
+      "end_sec": 829.8,
+      "position_label": "64.1%–73%(12:08–13:50)",
+      "purpose": "情节反扑：受害者身体自救令袭击濒临失败，伪装成治疗的第二攻击载体登场，两个保命人变成两个嫌疑人",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.6982,
+          "time_ms": 793680,
+          "reason": "涂毒羽毛借治疗入喉：第二攻击载体揭示，救人与杀人身份重叠"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "皇帝的身体正在自救，第一次袭击失败后会怎样",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "panic_confirmation",
+          "opened_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "second_attack_reveal",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "panic_confirmation",
+          "mechanism": "customer_service_humor"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "bombshell_reveal",
+          "mechanism": "second_attack_vector"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "symmetry_verdict",
+          "mechanism": "cruel_symmetry"
+        }
+      ],
+      "required_retention_events": [
+        "body_fights_back",
+        "second_attack_vector"
+      ],
+      "original_moves": [
+        "身体自救",
+        "袭击者恐慌",
+        "无法重来绝境",
+        "医生登场",
+        "羽毛毒攻击",
+        "两保命人成嫌疑人"
+      ],
+      "abstract_move": "情节反扑：受害者身体自救令袭击濒临失败，伪装成治疗的第二攻击载体登场，两个保命人变成两个嫌疑人",
+      "replacement_needs": [
+        "身体自救带来的悬念重置",
+        "袭击者无法重来的绝境",
+        "第二攻击载体的伪装逻辑",
+        "'两个保命人成嫌疑人'的对称定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85);回收了前文的悬念 FS07→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "epistemic_doubt",
+      "start_ratio": 0.73,
+      "end_ratio": 0.759,
+      "start_sec": 829.8,
+      "end_sec": 862.6,
+      "position_label": "73%–75.9%(13:50–14:23)",
+      "purpose": "认识论下沉：抛出'也许根本没有毒'的可能，把史料矛盾与谣言生成机制摆上台面",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_doubt",
+          "strength": 80,
+          "position_ratio": 0.7315,
+          "time_ms": 831520,
+          "reason": "'也许根本没有毒'：全片假设被连根动摇，认识论下沉"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "终极认识论悬念：到底有没有毒、主角是否清白。刻意不裁决——叙事用途是把'无法证实'本身转化为结尾的三解读结构，让'怀疑两千年'成为主题：在这个系统里，真相缺席时怀疑本身就是惩罚",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "worldview_doubt",
+          "mechanism": "no_poison_possibility"
+        }
+      ],
+      "required_retention_events": [
+        "no_poison_possibility"
+      ],
+      "original_moves": [
+        "无毒说提出",
+        "史料写作背景",
+        "谣言机制",
+        "自然死亡合理性",
+        "反常疑点保留"
+      ],
+      "abstract_move": "认识论下沉：抛出'也许根本没有毒'的可能，把史料矛盾与谣言生成机制摆上台面",
+      "replacement_needs": [
+        "无毒说的显式提出",
+        "史料写作背景与谣言生成机制说明",
+        "自然死亡说的合理性",
+        "无法被自然解释的反常行为"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80);打开的悬念 LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "cover_story",
+      "start_ratio": 0.759,
+      "end_ratio": 0.801,
+      "start_sec": 862.6,
+      "end_sec": 910.8,
+      "position_label": "75.9%–80.1%(14:23–15:11)",
+      "purpose": "掩盖与继承运作：信息封锁、荒诞掩护剧目与继承准备同步进行，揭示权力交接的真实规则",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "absurd_reveal",
+          "mechanism": "comedy_cover_story"
+        }
+      ],
+      "required_retention_events": [
+        "absurd_cover_story",
+        "armed_succession_rule"
+      ],
+      "original_moves": [
+        "消息控制",
+        "喜剧演员掩护",
+        "竞争者软隔离",
+        "文人与军队就位",
+        "继承规则定性"
+      ],
+      "abstract_move": "掩盖与继承运作：信息封锁、荒诞掩护剧目与继承准备同步进行，揭示权力交接的真实规则",
+      "replacement_needs": [
+        "信息封锁的具体手段",
+        "荒诞掩护剧目",
+        "竞争者被软隔离",
+        "'武力而非名分'的继承规则定性"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "corridor_dilemma",
+      "start_ratio": 0.801,
+      "end_ratio": 0.828,
+      "start_sec": 910.8,
+      "end_sec": 940.8,
+      "position_label": "80.1%–82.8%(15:11–15:41)",
+      "purpose": "主角两难：把第二人称的观众推到决策死角，四个选项全是死路",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.8276,
+          "time_ms": 940760,
+          "reason": "死亡确认而宫门紧闭：剧透兑现，闭门政治开始"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "dilemma_lock",
+          "mechanism": "conditional_chain_dilemma"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "death_confirmed",
+          "mechanism": "closed_door_politics"
+        }
+      ],
+      "required_retention_events": [
+        "four_way_deadlock"
+      ],
+      "original_moves": [
+        "走廊待命",
+        "四选项逐个排除",
+        "岗位本质重定义",
+        "唯一还站着的屏障"
+      ],
+      "abstract_move": "主角两难：把第二人称的观众推到决策死角，四个选项全是死路",
+      "replacement_needs": [
+        "四个行动选项的逐个排除",
+        "岗位本质的重新定义",
+        "'唯一还站着的屏障'意象"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "succession_reveal",
+      "start_ratio": 0.828,
+      "end_ratio": 0.903,
+      "start_sec": 940.8,
+      "end_sec": 1026.8,
+      "position_label": "82.8%–90.3%(15:41–17:07)",
+      "purpose": "死亡确认与继位奇观：闭门后的政治运作完成，新主出场，软禁式拥抱与权力隐喻三连，死者获得荒诞身后名",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "foretold_death_payoff",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "worldview_shift",
+          "mechanism": "metaphor_triad"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "irony_payoff",
+          "mechanism": "deification_irony"
+        }
+      ],
+      "required_retention_events": [
+        "death_confirmed",
+        "metaphor_triad",
+        "new_ruler_proclaimed"
+      ],
+      "original_moves": [
+        "死亡确认",
+        "门禁封锁",
+        "拥抱=软禁",
+        "三连隐喻判词",
+        "新主出场继位",
+        "封神讽刺"
+      ],
+      "abstract_move": "死亡确认与继位奇观：闭门后的政治运作完成，新主出场，软禁式拥抱与权力隐喻三连，死者获得荒诞身后名",
+      "replacement_needs": [
+        "死亡确认与门禁",
+        "拥抱等于软禁的双关场面",
+        "三连隐喻判词",
+        "新主继位与军队的角色",
+        "封神的讽刺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "aftermath_ambiguity",
+      "start_ratio": 0.903,
+      "end_ratio": 0.975,
+      "start_sec": 1026.8,
+      "end_sec": 1108,
+      "position_label": "90.3%–97.5%(17:07–18:28)",
+      "purpose": "命运揭晓与开放裁决：主角未被清算的事实不提供答案，三种互斥解读并列呈现，把裁决权交给观众",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.937,
+          "time_ms": 1065120,
+          "reason": "'存活不是答案，是指向相反方向的线索'：开放裁决的情绪顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "fate_reveal",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "fate_reveal",
+          "mechanism": "anticlimactic_nothing"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "ambiguity_verdict",
+          "mechanism": "survival_as_ambiguous_clue"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "final_trap",
+          "mechanism": "triple_deadlock"
+        }
+      ],
+      "required_retention_events": [
+        "fate_reveal",
+        "triple_interpretation"
+      ],
+      "original_moves": [
+        "继位者黑色玩笑",
+        "主角未被清算",
+        "存活=反向线索",
+        "无辜/有罪/无毒三解读并列"
+      ],
+      "abstract_move": "命运揭晓与开放裁决：主角未被清算的事实不提供答案，三种互斥解读并列呈现，把裁决权交给观众",
+      "replacement_needs": [
+        "主角命运的反直觉揭晓",
+        "存活事实的双向解读",
+        "无辜、有罪、无毒三种版本的并列",
+        "'两千年嫌疑人'式的时间重量"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);回收了前文的悬念 FS09→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.975,
+      "end_ratio": 1,
+      "start_sec": 1108,
+      "end_sec": 1136.7,
+      "position_label": "97.5%–100%(18:28–18:57)",
+      "purpose": "收束：把个案提炼为岗位的终极陷阱三段式，回扣开场岗位定义，用格言升级为对系统信任的普遍教训",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.9931,
+          "time_ms": 1128880,
+          "reason": "安全取决于保护者人心的格言收束，完成全片认知升级"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "triple_interpretation_open_verdict",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "callback",
+          "mechanism": "opening_line_callback"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "aphorism_close",
+          "mechanism": "trust_system_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "final_trap_triad",
+        "opening_callback",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "终极陷阱三段式",
+        "开场岗位定义回扣",
+        "安全取决于保护者人心的格言"
+      ],
+      "abstract_move": "收束：把个案提炼为岗位的终极陷阱三段式，回扣开场岗位定义，用格言升级为对系统信任的普遍教训",
+      "replacement_needs": [
+        "终极陷阱的三段式排除",
+        "开场岗位定义的逐字回扣",
+        "把安全归结为保护者人心的格言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(90);回收了前文的悬念 FS02→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

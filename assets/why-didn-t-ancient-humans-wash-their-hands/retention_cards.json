@@ -1,0 +1,956 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.407Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "premise_refutation",
+      "start_ratio": 0,
+      "end_ratio": 0.054,
+      "start_sec": 0,
+      "end_sec": 74,
+      "position_label": "0%–5.4%(0:00–1:14)",
+      "purpose": "开场第一秒推翻标题预设，用'真实答案更有趣'重构问题，建立信任与悬念",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "premise_refutation",
+          "strength": 80,
+          "position_ratio": 0.0059,
+          "time_ms": 8000,
+          "reason": "开场第一句直接推翻标题预设，信任与悬念瞬间建立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：标题问句的真实答案——前提被当场推翻后，'那真正的答案是什么'悬置至结尾",
+          "closes_in": "FS13"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "'大量真实卫生行为偶然发生、机制隐形数千年'的核心悖论如何贯穿全史",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_refutation",
+          "mechanism": "title_premise_correction"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "question_reframe",
+          "mechanism": "more_interesting_question"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "thesis_drop",
+          "mechanism": "accidental_hygiene_paradox"
+        }
+      ],
+      "required_retention_events": [
+        "premise_refutation_hook",
+        "reframed_question",
+        "core_paradox"
+      ],
+      "original_moves": [
+        "一句话否定预设",
+        "跨文化快速举证",
+        "重构问句",
+        "'偶然有效、机制隐形'的核心悖论"
+      ],
+      "abstract_move": "开场第一秒推翻标题预设，用'真实答案更有趣'重构问题，建立信任与悬念",
+      "replacement_needs": [
+        "对标题预设的一句话否定",
+        "预设为何不成立的快速举证",
+        "重构后的更有趣问句",
+        "'偶然有效、机制隐形'的核心悖论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80);打开的悬念 LOOP01→FS13、LOOP02→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 74000,
+        "hook_type": "premise_refutation_then_reframe",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 8000,
+        "evidence_refs": [
+          "C0001",
+          "C0007",
+          "C0008"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "paradigm_exposition",
+      "start_ratio": 0.054,
+      "end_ratio": 0.141,
+      "start_sec": 74,
+      "end_sec": 192,
+      "position_label": "5.4%–14.1%(1:14–3:12)",
+      "purpose": "还原当时主流解释范式，说明它'错但预测有效'，并解释目标行为为何在旧范式中没有特权地位",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "为什么该行为在古代卫生思想中没有特权地位",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "context_set",
+          "mechanism": "pre_germ_theory_framing"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "paradigm_definition",
+          "mechanism": "dominant_theory_defined"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "epistemic_paradox",
+          "mechanism": "useful_but_wrong_theory"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "status_demotion",
+          "mechanism": "incidental_benefit_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "paradigm_definition",
+        "wrong_but_useful_verdict",
+        "status_demotion"
+      ],
+      "original_moves": [
+        "污染概念的反直觉性",
+        "主流范式定义",
+        "范式能解释的现象清单",
+        "'预测有效但机制错误'点评",
+        "行为地位被压低"
+      ],
+      "abstract_move": "还原当时主流解释范式，说明它'错但预测有效'，并解释目标行为为何在旧范式中没有特权地位",
+      "replacement_needs": [
+        "主流范式的定义与内容",
+        "该范式能正确解释的现象清单",
+        "'预测有效但机制错误'的认识论点评",
+        "目标行为在旧范式中的真实地位"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "cross_culture_catalog",
+      "start_ratio": 0.141,
+      "end_ratio": 0.22,
+      "start_sec": 192,
+      "end_sec": 299,
+      "position_label": "14.1%–22%(3:12–4:59)",
+      "purpose": "巡览多个文化传统中以精神理由驱动的同类实践，证明行为有效与动机框架无关",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "signature_transition",
+          "mechanism": "bring_up_importance_promise"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "catalog_detail",
+          "mechanism": "specific_ritual_rules"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "external_validation",
+          "mechanism": "historian_cited_evidence"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "thesis_verdict",
+          "mechanism": "practice_preceded_understanding"
+        }
+      ],
+      "required_retention_events": [
+        "signature_transition",
+        "multi_tradition_rules",
+        "practice_preceded_understanding"
+      ],
+      "original_moves": [
+        "签名转场预告重要性",
+        "四个传统的具体规则",
+        "动机的精神性定性",
+        "'行为结果与动机无关'",
+        "实践先于机制数千年"
+      ],
+      "abstract_move": "巡览多个文化传统中以精神理由驱动的同类实践，证明行为有效与动机框架无关",
+      "replacement_needs": [
+        "至少四个不同文化传统的具体实践规则",
+        "实践者真实动机的定性",
+        "'行为结果相同，与动机无关'的点题",
+        "实践先于理解的时长定性"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "artifact_history",
+      "start_ratio": 0.22,
+      "end_ratio": 0.294,
+      "start_sec": 299,
+      "end_sec": 400,
+      "position_label": "22%–29.4%(4:59–6:40)",
+      "purpose": "追溯关键制品的考古史，再用现代语言拆解其机制，强化'有效早于理解'",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "artifact_reveal",
+          "mechanism": "oldest_recipe_archaeology"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "unexpected_detail",
+          "mechanism": "unexpected_tool_preference"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "mechanism_elegance",
+          "mechanism": "molecular_explanation"
+        }
+      ],
+      "required_retention_events": [
+        "archaeology_evidence",
+        "mechanism_explanation",
+        "late_understanding_note"
+      ],
+      "original_moves": [
+        "签名转场",
+        "最早配方与年代",
+        "原始用途与意外细节",
+        "机制原理拆解",
+        "认知迟到时间"
+      ],
+      "abstract_move": "追溯关键制品的考古史，再用现代语言拆解其机制，强化'有效早于理解'",
+      "replacement_needs": [
+        "最早的考古实物证据与年代",
+        "制品的原始用途与预期外细节",
+        "机制原理的通俗拆解",
+        "机制被理解的具体迟到时间"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "central_case_study",
+      "start_ratio": 0.294,
+      "end_ratio": 0.426,
+      "start_sec": 400,
+      "end_sec": 579,
+      "position_label": "29.4%–42.6%(6:40–9:39)",
+      "purpose": "用一个数据对比强烈、结局悲剧的关键个案，展示'证据清晰也会败给制度心理'",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.3294,
+          "time_ms": 448000,
+          "reason": "两个病区死亡率数倍之差的成对数据冲击"
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.3713,
+          "time_ms": 505000,
+          "reason": "发现者死于他毕生试图预防的同类感染，全片情绪峰值"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.4074,
+          "time_ms": 554000,
+          "reason": "拒绝证据的心理机制揭示：接受等于承认自己一直在伤害患者"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "'史上最有决定性意义的时刻'究竟是什么、结局如何",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "tragic_case_resolution",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "stakes_tease",
+          "mechanism": "single_most_consequential_moment"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "stakes_set",
+          "mechanism": "mortality_context"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "data_shock",
+          "mechanism": "paired_mortality_contrast"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "vivid_fear_detail",
+          "mechanism": "extreme_avoidance_behavior"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "vindication",
+          "mechanism": "protocol_success"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "rejection_turn",
+          "mechanism": "establishment_hostility"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "tragic_irony",
+          "mechanism": "died_of_same_cause"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "lesson_drop",
+          "mechanism": "evidence_without_mechanism_insufficient"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "psychological_mechanism",
+          "mechanism": "motivated_rejection"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "theory_arrival",
+          "mechanism": "mechanism_theory_transition"
+        }
+      ],
+      "required_retention_events": [
+        "paired_data_contrast",
+        "intervention_success",
+        "establishment_rejection",
+        "tragic_irony",
+        "lesson_drop"
+      ],
+      "original_moves": [
+        "'最有决定性意义的时刻'预告",
+        "死亡率背景",
+        "两组数据对比",
+        "干预成功",
+        "建制拒绝",
+        "悲剧结局与平反",
+        "教训提炼"
+      ],
+      "abstract_move": "用一个数据对比强烈、结局悲剧的关键个案，展示'证据清晰也会败给制度心理'",
+      "replacement_needs": [
+        "两组可量化对比的数据",
+        "当事人的干预与数据改善",
+        "建制派的拒绝及其心理动因分析",
+        "当事人的悲剧结局与身后平反",
+        "'证据没有机制就推不动实践'的教训提炼"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(85)、PK03(90)、PK04(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "mechanism_arrival",
+      "start_ratio": 0.426,
+      "end_ratio": 0.494,
+      "start_sec": 579,
+      "end_sec": 672,
+      "position_label": "42.6%–49.4%(9:39–11:12)",
+      "purpose": "引入迟到的机制理论，说明它如何回填此前所有实践的合理性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "theory_arrival",
+        "case_evidence_explained",
+        "lag_foreshadow"
+      ],
+      "original_moves": [
+        "签名转场",
+        "机制理论核心人物与年代",
+        "个案证据被解释",
+        "机构改革成效",
+        "人口层面迟滞预告"
+      ],
+      "abstract_move": "引入迟到的机制理论，说明它如何回填此前所有实践的合理性",
+      "replacement_needs": [
+        "机制理论的核心人物与年代",
+        "理论如何解释此前个案的证据",
+        "机构层面改革的快速成效",
+        "人口层面行为改变的迟滞预告"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "convergent_practice_catalog",
+      "start_ratio": 0.494,
+      "end_ratio": 0.576,
+      "start_sec": 672,
+      "end_sec": 783,
+      "position_label": "49.4%–57.6%(11:12–13:03)",
+      "purpose": "盘点无机制认知下仍然有效的其他实践，提出'趋同行为发现'概念",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "etymology_payoff",
+          "mechanism": "word_origin_anecdote"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "concept_naming",
+          "mechanism": "convergent_behavioral_discovery"
+        }
+      ],
+      "required_retention_events": [
+        "practice_inventory",
+        "etymology_payoff",
+        "concept_naming"
+      ],
+      "original_moves": [
+        "签名转场",
+        "食物处理实践",
+        "发酵的微生物学事后解释",
+        "带词源故事的隔离实践",
+        "概念命名"
+      ],
+      "abstract_move": "盘点无机制认知下仍然有效的其他实践，提出'趋同行为发现'概念",
+      "replacement_needs": [
+        "至少三类实践的具体做法",
+        "每类实践的现代机制事后解释",
+        "一个带词源故事的标志性实践",
+        "'趋同行为发现'的概念命名"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "evidence_signature",
+      "start_ratio": 0.576,
+      "end_ratio": 0.621,
+      "start_sec": 783,
+      "end_sec": 845,
+      "position_label": "57.6%–62.1%(13:03–14:05)",
+      "purpose": "指出古代实践的效果分布在现代机制视角下'有签名可见'，把偶然性升级为可验证性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "route_reveal",
+          "mechanism": "transmission_route_interruption"
+        }
+      ],
+      "required_retention_events": [
+        "route_reveal",
+        "verifiability_claim"
+      ],
+      "original_moves": [
+        "签名转场",
+        "具体传播路径被打断",
+        "对应疾病清单",
+        "'一旦知道看什么就看得见'的可验证性断言"
+      ],
+      "abstract_move": "指出古代实践的效果分布在现代机制视角下'有签名可见'，把偶然性升级为可验证性",
+      "replacement_needs": [
+        "某类实践打断的具体传播路径",
+        "该路径对应的疾病清单",
+        "'一旦知道看什么就看得见'的可验证性断言"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "modern_paradox",
+      "start_ratio": 0.621,
+      "end_ratio": 0.66,
+      "start_sec": 845,
+      "end_sec": 898,
+      "position_label": "62.1%–66%(14:05–14:58)",
+      "purpose": "现代镜像第一次插入：在完全理解机制的场所里，依从率依然不及格",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.6353,
+          "time_ms": 864000,
+          "reason": "完全理解机制的现代专业场所依从率仍不及格"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "为什么完全理解机制的现代人依然做不到——知识与行为的鸿沟如何解释古今一致",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "modern_data_shock",
+          "mechanism": "compliance_below_threshold"
+        }
+      ],
+      "required_retention_events": [
+        "modern_data_shock",
+        "knowledge_insufficiency_verdict"
+      ],
+      "original_moves": [
+        "签名转场",
+        "当代专业场所依从率数据",
+        "知识与动机完备性说明",
+        "'障碍不在理解'的结论"
+      ],
+      "abstract_move": "现代镜像第一次插入：在完全理解机制的场所里，依从率依然不及格",
+      "replacement_needs": [
+        "当代专业场所的依从率数据",
+        "该场所知识、协议与动机完备性的说明",
+        "'障碍不在理解'的结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(75);打开的悬念 LOOP05→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "reputation_revision",
+      "start_ratio": 0.66,
+      "end_ratio": 0.743,
+      "start_sec": 898,
+      "end_sec": 1011,
+      "position_label": "66%–74.3%(14:58–16:51)",
+      "purpose": "回访一个被流行印象污名化的著名案例，给出工程性正名与双重性质定性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "reputation_revision",
+          "mechanism": "unfair_reputation_correction"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "dual_verdict",
+          "mechanism": "asset_and_vector"
+        }
+      ],
+      "required_retention_events": [
+        "reputation_revision",
+        "engineering_detail",
+        "dual_verdict"
+      ],
+      "original_moves": [
+        "签名转场",
+        "流行印象的部分承认",
+        "系统工程细节",
+        "真实盲区",
+        "'资产与传播场所并存'的双重定性"
+      ],
+      "abstract_move": "回访一个被流行印象污名化的著名案例，给出工程性正名与双重性质定性",
+      "replacement_needs": [
+        "流行印象的陈述与部分承认",
+        "系统复杂性的工程细节",
+        "该系统的真实盲区",
+        "'资产与传播场所并存'的双重定性"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "infrastructure_argument",
+      "start_ratio": 0.743,
+      "end_ratio": 0.811,
+      "start_sec": 1011,
+      "end_sec": 1103,
+      "position_label": "74.3%–81.1%(16:51–18:23)",
+      "purpose": "把行为差异从'知识与动机'重新归因到'基础设施可得性'，并用当代全球数据印证",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.786,
+          "time_ms": 1069000,
+          "reason": "当代全球数十亿人缺乏基本清洁设施的规模冲击"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "global_stat",
+          "mechanism": "population_scale_access_gap"
+        }
+      ],
+      "required_retention_events": [
+        "infrastructure_reframe",
+        "global_stat",
+        "policy_verdict"
+      ],
+      "original_moves": [
+        "签名转场",
+        "历史基础设施带来便利",
+        "崩塌导致行为倒退",
+        "当代全球缺口数据",
+        "政策结论"
+      ],
+      "abstract_move": "把行为差异从'知识与动机'重新归因到'基础设施可得性'，并用当代全球数据印证",
+      "replacement_needs": [
+        "历史上基础设施带来行为便利的证据",
+        "基础设施崩塌导致行为倒退的证据",
+        "当代缺乏基础设施的人口规模数据",
+        "政策层面的结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "boundary_mapping",
+      "start_ratio": 0.811,
+      "end_ratio": 0.908,
+      "start_sec": 1103,
+      "end_sec": 1235,
+      "position_label": "81.1%–90.8%(18:23–20:35)",
+      "purpose": "划定机制的适用边界：先抛出一个看似反驳全片的历史谜题，再用传播路径分类解答",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.8603,
+          "time_ms": 1170000,
+          "reason": "历史谜题抛出并在传播路径分类中获得边界解答"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "为什么高仪式卫生标准的文化总体死亡率并未显著更低",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "boundary_explanation",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "puzzle_pose",
+          "mechanism": "historical_puzzle"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "boundary_resolution",
+          "mechanism": "route_classification"
+        }
+      ],
+      "required_retention_events": [
+        "puzzle_pose",
+        "route_classification",
+        "boundary_resolution"
+      ],
+      "original_moves": [
+        "签名转场",
+        "疾病清单",
+        "历史谜题抛出",
+        "传播路径分类",
+        "边界性解答"
+      ],
+      "abstract_move": "划定机制的适用边界：先抛出一个看似反驳全片的历史谜题，再用传播路径分类解答",
+      "replacement_needs": [
+        "一个看似反驳核心论点的历史谜题",
+        "主要杀手疾病的传播路径分类",
+        "谜题的边界性解答"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "contemporary_echo",
+      "start_ratio": 0.908,
+      "end_ratio": 0.959,
+      "start_sec": 1235,
+      "end_sec": 1304,
+      "position_label": "90.8%–95.9%(20:35–21:44)",
+      "purpose": "现代镜像第二次插入：以近年全民运动实证'知道与做到的鸿沟'，并把古人重新人性化",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "title_callback",
+          "strength": 85,
+          "position_ratio": 0.9588,
+          "time_ms": 1304000,
+          "reason": "标题问句显式复述并以三层因果句直接作答"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "近年全民运动中自报行为激增，但实际行为是否同等改变'更难评估'：刻意保持开放，叙事用途是以诚实的证据缺口示范'知道不等于做到'的主题，并维护全片的学术克制可信度",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_direct_answer",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "behavioral_explanation",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "contemporary_echo",
+          "mechanism": "recent_global_campaign"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "humanizing_reframe",
+          "mechanism": "not_missing_information"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "title_callback",
+          "mechanism": "layered_direct_answer"
+        }
+      ],
+      "required_retention_events": [
+        "contemporary_echo",
+        "honest_evidence_gap",
+        "humanizing_reframe"
+      ],
+      "original_moves": [
+        "签名转场",
+        "全民运动强度",
+        "自报与实际行为的证据缺口",
+        "动机消退后回落",
+        "'古人不缺信息'的人性化结论"
+      ],
+      "abstract_move": "现代镜像第二次插入：以近年全民运动实证'知道与做到的鸿沟'，并把古人重新人性化",
+      "replacement_needs": [
+        "近年全民运动的强度描述",
+        "自报行为与实际行为的证据缺口（显式承认）",
+        "动机消退后行为回落的观察",
+        "'古人与今人受同样力量支配'的人性化结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85);打开的悬念 LOOP07(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01、FS09→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.959,
+      "end_ratio": 1,
+      "start_sec": 1304,
+      "end_sec": 1360,
+      "position_label": "95.9%–100%(21:44–22:40)",
+      "purpose": "显式复述标题问句，用分层因果句直接作答，并以定性句收束全片",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9978,
+          "time_ms": 1357000,
+          "reason": "'现代运动没有发明实践，只是提供了机制'的定性收束全片"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "thesis_completion",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "framework_explanation",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "verdict_drop",
+          "mechanism": "did_not_invent_practice"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "closing_statement",
+          "mechanism": "mechanism_explained_practice"
+        }
+      ],
+      "required_retention_events": [
+        "title_callback",
+        "layered_direct_answer",
+        "verdict_close"
+      ],
+      "original_moves": [
+        "问句复述",
+        "三层因果回答",
+        "'他们实际在做什么'总结",
+        "'运动没有发明实践'式定性句"
+      ],
+      "abstract_move": "显式复述标题问句，用分层因果句直接作答，并以定性句收束全片",
+      "replacement_needs": [
+        "标题问句的原句复述",
+        "分层递进的因果回答",
+        "'他们实际在做什么'的总结",
+        "'运动没有发明实践，只是解释了机制'式定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);回收了前文的悬念 FS01→LOOP02、FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

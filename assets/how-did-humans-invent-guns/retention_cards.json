@@ -1,0 +1,1036 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.391Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "ironic_origin_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.05,
+      "start_sec": 0,
+      "end_sec": 63,
+      "position_label": "0%–5%(0:00–1:03)",
+      "purpose": "意外起源开场：呈现一群追求与最终产物完全相反目标的人及其失败瞬间",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "hook_payoff",
+          "strength": 70,
+          "position_ratio": 0.0299,
+          "time_ms": 38000,
+          "reason": "意外爆炸与狼狈细节完成开场反差 payoff"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook",
+          "mechanism": "ironic_origin_scene"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "explosion_payoff",
+          "mechanism": "comic_failure_detail"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "naming_irony",
+          "mechanism": "original_name_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "ironic_origin_scene",
+        "explosion_payoff"
+      ],
+      "original_moves": [
+        "从零信息到起源场景建立，再到意外爆炸完成"
+      ],
+      "abstract_move": "意外起源开场：呈现一群追求与最终产物完全相反目标的人及其失败瞬间",
+      "replacement_needs": [
+        "具体年代与地点锚点",
+        "行动者的原始目标声明",
+        "意外发生的戏剧性瞬间"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 47000,
+        "hook_type": "ironic_origin_scene",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 29000,
+        "evidence_refs": [
+          "C0001",
+          "C0002",
+          "C0005"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "title_question_setup",
+      "start_ratio": 0.05,
+      "end_ratio": 0.078,
+      "start_sec": 63,
+      "end_sec": 99,
+      "position_label": "5%–7.8%(1:03–1:39)",
+      "purpose": "立项：把产物的历史量级顶到最高，显式提出主问句并预告路线图",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "title_callback",
+          "strength": 75,
+          "position_ratio": 0.0637,
+          "time_ms": 81000,
+          "reason": "主问句显式落下并预告路线图"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：意外产物如何一步步变成改变世界格局的成熟形态（标题问句的显式悬挂）",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "scale_tease",
+          "mechanism": "seed_metaphor_escalation"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "title_drop",
+          "mechanism": "explicit_question_and_roadmap"
+        }
+      ],
+      "required_retention_events": [
+        "scale_escalation",
+        "title_question_explicit"
+      ],
+      "original_moves": [
+        "意外产物的量级顶到最高",
+        "主问句显式落下",
+        "路线图预告"
+      ],
+      "abstract_move": "立项：把产物的历史量级顶到最高，显式提出主问句并预告路线图",
+      "replacement_needs": [
+        "产物的历史地位定性",
+        "从起点到终点的主问句",
+        "路线图的快节奏预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75);打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "mechanism_primer",
+      "start_ratio": 0.078,
+      "end_ratio": 0.111,
+      "start_sec": 99,
+      "end_sec": 141,
+      "position_label": "7.8%–11.1%(1:39–2:21)",
+      "purpose": "原理打底：用最简化的机制解释，声明理解它才能理解后续一切",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "为什么理解基础原理就能解释后续一切演化",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "mechanism_primer",
+          "mechanism": "ratio_specifics"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "one_line_secret",
+          "mechanism": "core_mechanism_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "mechanism_primer_promise",
+        "ratio_specifics"
+      ],
+      "original_moves": [
+        "元说明",
+        "配比与氧化机制",
+        "膨胀气体一句点题"
+      ],
+      "abstract_move": "原理打底：用最简化的机制解释，声明理解它才能理解后续一切",
+      "replacement_needs": [
+        "为何先讲原理的元说明",
+        "组成与配比的最简化呈现",
+        "核心机制的一句点题"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP02。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:为什么理解基础原理就能解释后续一切演化",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "benign_use_phase",
+      "start_ratio": 0.111,
+      "end_ratio": 0.143,
+      "start_sec": 141,
+      "end_sec": 182,
+      "position_label": "11.1%–14.3%(2:21–3:02)",
+      "purpose": "和平用途期：展示该技术最初的无害娱乐用途，强化反差",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "benign_use_reveal",
+          "mechanism": "not_weaponized_reveal"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "turn_signal",
+          "mechanism": "military_attention"
+        }
+      ],
+      "required_retention_events": [
+        "benign_use_reveal",
+        "origin_echo"
+      ],
+      "original_moves": [
+        "两用暗示",
+        "烟火庆典清单",
+        "起源呼应",
+        "军方介入转折"
+      ],
+      "abstract_move": "和平用途期：展示该技术最初的无害娱乐用途，强化反差",
+      "replacement_needs": [
+        "最初用途的清单式呈现",
+        "该用途与起源场景的呼应",
+        "普通人接触它的日常方式"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "weaponization_turn",
+      "start_ratio": 0.143,
+      "end_ratio": 0.188,
+      "start_sec": 182,
+      "end_sec": 239,
+      "position_label": "14.3%–18.8%(3:02–3:59)",
+      "purpose": "军用化转折：首个武器形态诞生并经实战验证，心理冲击被单独强调",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "battlefield_proof",
+          "strength": 75,
+          "position_ratio": 0.1692,
+          "time_ms": 215000,
+          "reason": "围城战验证首个武器形态有效"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "这个极简构造的首个武器形态在实战中真的有效吗",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "battlefield_proof",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "design_reveal",
+          "mechanism": "minimal_construction"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "battlefield_proof",
+          "mechanism": "siege_validation"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "psychological_impact",
+          "mechanism": "fire_projection_shock"
+        }
+      ],
+      "required_retention_events": [
+        "minimal_design_reveal",
+        "battlefield_proof_scene"
+      ],
+      "original_moves": [
+        "极简构造",
+        "实战验证",
+        "心理冲击分析"
+      ],
+      "abstract_move": "军用化转折：首个武器形态诞生并经实战验证，心理冲击被单独强调",
+      "replacement_needs": [
+        "首个武器形态的极简构造描述",
+        "具体战役的实战验证",
+        "对旧兵种的心理冲击分析"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "constraint_iteration_chain",
+      "start_ratio": 0.188,
+      "end_ratio": 0.271,
+      "start_sec": 239,
+      "end_sec": 345,
+      "position_label": "18.8%–27.1%(3:59–5:45)",
+      "purpose": "材料与结构迭代链：每一代改进都直指上一代的具体物理缺陷",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "milestone",
+          "strength": 80,
+          "position_ratio": 0.2337,
+          "time_ms": 297000,
+          "reason": "材料迭代催生成熟形态的里程碑"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "上一代材料承受不住更强装药，下一步怎么办",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "constraint_resolution",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "escalation",
+          "mechanism": "projectile_leap"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "failure_mode",
+          "mechanism": "material_limitation"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "birth_verdict",
+          "mechanism": "short_verdict_sentence"
+        }
+      ],
+      "required_retention_events": [
+        "constraint_solution_loop",
+        "failure_mode_detail"
+      ],
+      "original_moves": [
+        "加速声明",
+        "弹丸化概念跃迁",
+        "材料失效",
+        "新形态诞生",
+        "规模放大"
+      ],
+      "abstract_move": "材料与结构迭代链：每一代改进都直指上一代的具体物理缺陷",
+      "replacement_needs": [
+        "渐进式改良的第一步",
+        "上一代材料的具体失效方式",
+        "新材料带来的形态诞生",
+        "向上放大的变体"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "conqueror_absorption_transfer",
+      "start_ratio": 0.271,
+      "end_ratio": 0.359,
+      "start_sec": 345,
+      "end_sec": 456,
+      "position_label": "27.1%–35.9%(5:45–7:36)",
+      "purpose": "征服者吸收与搬运：征服者吸收而非排斥该技术，无意识充当跨洲传播载体",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "transfer_twist",
+          "strength": 80,
+          "position_ratio": 0.2769,
+          "time_ms": 352000,
+          "reason": "征服者吸收而非被击败的转折点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "支线技术\"数百年后重新浮出水面\"的预告始终不在本片展开：叙事用途是佐证\"演化不是单线\"的主题并拓宽故事尺度，把好奇留到片外",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP05"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "transfer_twist",
+          "mechanism": "absorption_not_defeat"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "modern_analogy",
+          "mechanism": "accidental_delivery_system"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "branch_reveal",
+          "mechanism": "story_branches"
+        }
+      ],
+      "required_retention_events": [
+        "conqueror_absorption_twist",
+        "modern_analogy_wit"
+      ],
+      "original_moves": [
+        "遭遇战",
+        "吸收转折句",
+        "投递系统类比",
+        "支线分叉声明"
+      ],
+      "abstract_move": "征服者吸收与搬运：征服者吸收而非排斥该技术，无意识充当跨洲传播载体",
+      "replacement_needs": [
+        "征服者遭遇该技术的战役",
+        "吸收而非排斥的转折句",
+        "传播机制的类比定性",
+        "支线分叉的存在声明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80);打开的悬念 LOOP05(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "reception_landscape",
+      "start_ratio": 0.359,
+      "end_ratio": 0.411,
+      "start_sec": 456,
+      "end_sec": 523,
+      "position_label": "35.9%–41.1%(7:36–8:43)",
+      "purpose": "接收地格局铺垫：技术抵达新大陆，落在即将被它颠覆的旧秩序版图上",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "evidence_reveal",
+          "mechanism": "resemblance_argument"
+        }
+      ],
+      "required_retention_events": [
+        "parallel_flow_pattern",
+        "resemblance_evidence"
+      ],
+      "original_moves": [
+        "多路线传播",
+        "同类迁移对照",
+        "传承证据",
+        "旧秩序版图"
+      ],
+      "abstract_move": "接收地格局铺垫：技术抵达新大陆，落在即将被它颠覆的旧秩序版图上",
+      "replacement_needs": [
+        "多路线并行的传播路径",
+        "同时期其他技术同类迁移的对照",
+        "两地造物高度相似的传承证据",
+        "旧秩序已存续时长"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "disruption_evidence",
+      "start_ratio": 0.411,
+      "end_ratio": 0.514,
+      "start_sec": 523,
+      "end_sec": 653,
+      "position_label": "41.1%–51.4%(8:43–10:53)",
+      "purpose": "颠覆证据链：旧秩序的象征物在新技术面前逐一崩塌",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_disruption",
+          "strength": 80,
+          "position_ratio": 0.4673,
+          "time_ms": 594000,
+          "reason": "廉价武器中和毕生训练精英的秩序颠覆顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "dry_wit",
+          "mechanism": "understatement"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "disruption_evidence",
+          "mechanism": "fortification_fall"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "elite_neutralized",
+          "mechanism": "cheap_vs_lifetime"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "architecture_shift",
+          "mechanism": "defensive_redesign"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "leap_announcement",
+          "mechanism": "next_leap_formula"
+        }
+      ],
+      "required_retention_events": [
+        "crude_prototype_detail",
+        "fortification_fall"
+      ],
+      "original_moves": [
+        "笨拙仿制白描",
+        "城墙失效",
+        "精英兵种被中和",
+        "建筑形态革命"
+      ],
+      "abstract_move": "颠覆证据链：旧秩序的象征物在新技术面前逐一崩塌",
+      "replacement_needs": [
+        "接收地早期仿制品的笨拙白描",
+        "防御工事失效的证据",
+        "精英兵种被廉价武器中和的反差",
+        "建筑形态被迫改变"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "ignition_mechanization",
+      "start_ratio": 0.514,
+      "end_ratio": 0.575,
+      "start_sec": 653,
+      "end_sec": 731,
+      "position_label": "51.4%–57.5%(10:53–12:11)",
+      "purpose": "关键机构化跃迁：把核心操作从手工协调中解放出来的机械装置",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "milestone",
+          "strength": 85,
+          "position_ratio": 0.5633,
+          "time_ms": 716000,
+          "reason": "首个机械击发装置的历史首次定性"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "双手协调与瞄准不可兼得的操作两难如何破解",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "mechanism_solution",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "historical_first",
+          "mechanism": "first_mechanical_device"
+        }
+      ],
+      "required_retention_events": [
+        "operation_dilemma",
+        "mechanism_elegance"
+      ],
+      "original_moves": [
+        "操作两难白描",
+        "机构原理",
+        "历史首次定性",
+        "精准质变"
+      ],
+      "abstract_move": "关键机构化跃迁：把核心操作从手工协调中解放出来的机械装置",
+      "replacement_needs": [
+        "上一代操作的两难白描",
+        "新机构的工作原理",
+        "该装置的历史首次定性",
+        "精准度的质变"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "adoption_backflow_loop",
+      "start_ratio": 0.575,
+      "end_ratio": 0.64,
+      "start_sec": 731,
+      "end_sec": 813,
+      "position_label": "57.5%–64%(12:11–13:33)",
+      "purpose": "全球采纳与回流：技术传遍各文明并被精修，最终回流原创地形成历史闭环",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "irony_peak",
+          "strength": 75,
+          "position_ratio": 0.6263,
+          "time_ms": 796000,
+          "reason": "原创地回流引进改良版的闭环反讽"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "backflow_irony",
+          "mechanism": "origin_reabsorption_loop"
+        }
+      ],
+      "required_retention_events": [
+        "adoption_inventory",
+        "craftsmanship_reversal"
+      ],
+      "original_moves": [
+        "各文明采纳清单",
+        "精修反超",
+        "原创地引进改良版",
+        "闭环定性"
+      ],
+      "abstract_move": "全球采纳与回流：技术传遍各文明并被精修，最终回流原创地形成历史闭环",
+      "replacement_needs": [
+        "各文明采纳的具体案例",
+        "某地精修后反超的口碑",
+        "原创地引进改良版的对策动机",
+        "历史闭环的反讽定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "tactical_system_coevolution",
+      "start_ratio": 0.64,
+      "end_ratio": 0.692,
+      "start_sec": 813,
+      "end_sec": 879,
+      "position_label": "64%–69.2%(13:33–14:39)",
+      "purpose": "战术协同演化：武器自身缺陷催生配套兵种与编队体系",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "旧机制依赖明火的致命缺陷能否被根治",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "vulnerability_reveal",
+          "mechanism": "reload_window"
+        }
+      ],
+      "required_retention_events": [
+        "weight_cost",
+        "reload_vulnerability"
+      ],
+      "original_moves": [
+        "重量代价",
+        "装填脆弱性",
+        "组合战术主导",
+        "未跟进对照"
+      ],
+      "abstract_move": "战术协同演化：武器自身缺陷催生配套兵种与编队体系",
+      "replacement_needs": [
+        "武器升级的重量代价",
+        "装填空窗的脆弱性",
+        "配套兵种保护的必然性",
+        "非欧军队未跟进的对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "ignition_succession_chain",
+      "start_ratio": 0.692,
+      "end_ratio": 0.787,
+      "start_sec": 879,
+      "end_sec": 1000,
+      "position_label": "69.2%–78.7%(14:39–16:40)",
+      "purpose": "点火机制接力淘汰：中间方案因成本约束无法普及，终极方案完成一统",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "ignition_succession",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "weakness_inventory",
+          "mechanism": "open_flame_list"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "cost_constraint",
+          "mechanism": "economics_of_adoption"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "invention_anchor",
+          "mechanism": "named_inventor_moment"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "dominance_reveal",
+          "mechanism": "two_century_reign"
+        }
+      ],
+      "required_retention_events": [
+        "weakness_inventory",
+        "intermediate_solution"
+      ],
+      "original_moves": [
+        "缺陷清单",
+        "中间方案",
+        "成本约束",
+        "终极方案",
+        "优势清单"
+      ],
+      "abstract_move": "点火机制接力淘汰：中间方案因成本约束无法普及，终极方案完成一统",
+      "replacement_needs": [
+        "旧机制缺陷的清单式列举",
+        "中间方案的原理与适用兵种",
+        "成本约束阻碍普及的因果",
+        "终极方案的发明者与年代"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS12→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "dominance_consolidation",
+      "start_ratio": 0.787,
+      "end_ratio": 0.874,
+      "start_sec": 1000,
+      "end_sec": 1111,
+      "position_label": "78.7%–87.4%(16:40–18:31)",
+      "purpose": "统治期与组合革命：成熟技术加配件组合兼并多种战场职能，引发组织级革命",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "两世纪统治地位最终会被什么终结",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "small_fix_big_effect",
+          "mechanism": "socket_ring_fix"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "revolution_naming",
+          "mechanism": "infantry_revolution"
+        }
+      ],
+      "required_retention_events": [
+        "reign_inventory",
+        "small_fix_big_effect"
+      ],
+      "original_moves": [
+        "两世纪统治清单",
+        "旧配件缺陷",
+        "微改动",
+        "组织革命命名",
+        "心理威慑"
+      ],
+      "abstract_move": "统治期与组合革命：成熟技术加配件组合兼并多种战场职能，引发组织级革命",
+      "replacement_needs": [
+        "统治期跨越的重大冲突清单",
+        "旧配件的具体缺陷",
+        "新配件的微小结构改动",
+        "组织级革命的命名与影响",
+        "心理威慑的独立价值"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP08→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "obsolescence_cascade",
+      "start_ratio": 0.874,
+      "end_ratio": 0.917,
+      "start_sec": 1111,
+      "end_sec": 1166,
+      "position_label": "87.4%–91.7%(18:31–19:26)",
+      "purpose": "过时瀑布：终极点火创新让所有前代机制在短时间内集体过时",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "cascade",
+          "strength": 85,
+          "position_ratio": 0.8922,
+          "time_ms": 1134000,
+          "reason": "全部前代机制一次性过时的冷酷宣判"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "obsolescence_reveal",
+          "opened_in": "FS14"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "reign_ended",
+          "mechanism": "percussion_arrival"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "cascade_verdict",
+          "mechanism": "all_obsolete_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "reign_ended",
+        "cascade_verdict"
+      ],
+      "original_moves": [
+        "统治终结锚点",
+        "新机制原理",
+        "点名式淘汰",
+        "全链最后一棒定位"
+      ],
+      "abstract_move": "过时瀑布：终极点火创新让所有前代机制在短时间内集体过时",
+      "replacement_needs": [
+        "统治期终结的时间锚点",
+        "新机制的工作原理",
+        "对全部前代的点名式淘汰",
+        "该节点作为全链最后一棒的定位"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);回收了前文的悬念 FS14→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "arc_retrospective_closure",
+      "start_ratio": 0.917,
+      "end_ratio": 1,
+      "start_sec": 1166,
+      "end_sec": 1271,
+      "position_label": "91.7%–100%(19:26–21:11)",
+      "purpose": "全弧回望与定性：俯瞰整个弧线，给出主题定性并以格言句收束",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "aphorism_close",
+          "strength": 90,
+          "position_ratio": 0.9976,
+          "time_ms": 1268000,
+          "reason": "\"始于一个错误\"的格言句完成全片收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_arc_account",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "thesis_verdict",
+          "mechanism": "nobody_set_out"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "anti_genius_verdict",
+          "mechanism": "no_singular_moment"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "aphorism_close",
+          "mechanism": "mistake_origin_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "arc_overview",
+        "three_factor_verdict"
+      ],
+      "original_moves": [
+        "全弧俯瞰",
+        "三因素定性",
+        "无天才时刻否定",
+        "接力者清单",
+        "格言收束"
+      ],
+      "abstract_move": "全弧回望与定性：俯瞰整个弧线，给出主题定性并以格言句收束",
+      "replacement_needs": [
+        "后续加速的一带而过",
+        "全弧线的一句话俯瞰",
+        "三因素主题定性",
+        "无天才时刻的显式否定",
+        "接力者清单式回望",
+        "呼应开场的格言句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(90);回收了前文的悬念 FS02→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

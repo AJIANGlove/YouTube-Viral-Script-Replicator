@@ -1,0 +1,882 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.547Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.034,
+      "start_sec": 0.3,
+      "end_sec": 46.2,
+      "position_label": "0%–3.4%(0:00–0:46)",
+      "purpose": "用第二人称完整复述大众的躺赚幻想，给予部分肯定后抛出'梦想与现实之间'的核心张力，并用'最聪明的人也在巨亏'抬升 stakes",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念：梦想与现实之间到底隔着什么，这到底是不是一门好生意",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "'最聪明的投资者为何巨亏'的悬念，经延期灾难与幽灵机场案例逐步兑现",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_hook",
+          "mechanism": "second_person_fantasy"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "analogy_payoff",
+          "mechanism": "toll_booth_analogy"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "monopoly_logic",
+          "mechanism": "definition_lock"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "pattern_interrupt",
+          "mechanism": "dream_reality_pivot"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "new_question",
+          "mechanism": "smart_money_failure_tease"
+        }
+      ],
+      "required_retention_events": [
+        "fantasy_restatement",
+        "dream_reality_pivot",
+        "stakes_hook"
+      ],
+      "original_moves": [
+        "幻想复述 + 收费站类比 + '不完全错，但'转折 + 聪明人巨亏悬念"
+      ],
+      "abstract_move": "用第二人称完整复述大众的躺赚幻想，给予部分肯定后抛出'梦想与现实之间'的核心张力，并用'最聪明的人也在巨亏'抬升 stakes",
+      "replacement_needs": [
+        "幻想的具象化复述",
+        "一个精妙的类比（收费站）",
+        "'不完全错，但'式转折",
+        "高 stakes 悬念"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS15、LOOP02→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "fantasy_premise_second_person",
+        "first_stimulus_ms": 300,
+        "first_payoff_ms": 5966,
+        "evidence_refs": [
+          "C0001",
+          "C0006",
+          "C0018",
+          "C0024"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "context_expansion",
+      "start_ratio": 0.034,
+      "end_ratio": 0.08,
+      "start_sec": 46.2,
+      "end_sec": 110.1,
+      "position_label": "3.4%–8%(0:46–1:50)",
+      "purpose": "交代市场版图：这门生意如何变成可以买卖的资产，全球格局与一个显著例外",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "market_data",
+          "mechanism": "landscape_statistics"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "exception_case",
+          "mechanism": "notable_exception"
+        }
+      ],
+      "required_retention_events": [
+        "market_landscape",
+        "exception_case"
+      ],
+      "original_moves": [
+        "私有化浪潮史 + 覆盖数据 + 美国例外及其原因"
+      ],
+      "abstract_move": "交代市场版图：这门生意如何变成可以买卖的资产，全球格局与一个显著例外",
+      "replacement_needs": [
+        "制度变迁简史",
+        "覆盖广度数据",
+        "一个反例市场及其原因"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.08,
+      "end_ratio": 0.11,
+      "start_sec": 110.1,
+      "end_sec": 151.6,
+      "position_label": "8%–11%(1:50–2:32)",
+      "purpose": "讲解准入机制：获得该资产的几种方式，并用一笔旗舰级交易定标价格量级",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "landmark_deal",
+          "mechanism": "price_anchor"
+        }
+      ],
+      "required_retention_events": [
+        "acquisition_mechanics",
+        "landmark_deal"
+      ],
+      "original_moves": [
+        "三种交易结构 + 悉尼机场旗舰交易金额"
+      ],
+      "abstract_move": "讲解准入机制：获得该资产的几种方式，并用一笔旗舰级交易定标价格量级",
+      "replacement_needs": [
+        "交易结构分类",
+        "一笔标志性交易及其金额"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.11,
+      "end_ratio": 0.137,
+      "start_sec": 151.7,
+      "end_sec": 187.7,
+      "position_label": "11%–13.7%(2:32–3:08)",
+      "purpose": "解释估值逻辑：买家买的不是当下利润而是长期垄断地位",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.1301,
+          "time_ms": 178500,
+          "reason": "'买的不是当期利润，是永久垄断地位'的估值逻辑重构"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "320亿澳元为何是合理价格",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "valuation_logic_explanation",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "core_logic",
+          "mechanism": "valuation_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "valuation_logic"
+      ],
+      "original_moves": [
+        "估值倍数区间 + '买的是地位不是当期利润'"
+      ],
+      "abstract_move": "解释估值逻辑：买家买的不是当下利润而是长期垄断地位",
+      "replacement_needs": [
+        "估值指标与合理倍数区间",
+        "'买的是地位不是当期利润'的核心逻辑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evidence_build",
+      "start_ratio": 0.137,
+      "end_ratio": 0.224,
+      "start_sec": 187.9,
+      "end_sec": 306.9,
+      "position_label": "13.7%–22.4%(3:08–5:07)",
+      "purpose": "拆解从零建造的全链条成本：土地、主体工程、配套系统、审批，每一项都用真实数字锚定",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "'摧毁项目的陷阱'是什么及其破坏力",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "cost_anchor",
+          "mechanism": "price_tag_reveal"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "number_juxtaposition",
+          "mechanism": "ratio_shock"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "trap_tease",
+          "mechanism": "named_trap"
+        }
+      ],
+      "required_retention_events": [
+        "build_cost_chain"
+      ],
+      "original_moves": [
+        "土地规模 + 跑道造价 + 航站楼系统 + 审批年限，全部用真实案例数字锚定"
+      ],
+      "abstract_move": "拆解从零建造的全链条成本：土地、主体工程、配套系统、审批，每一项都用真实数字锚定",
+      "replacement_needs": [
+        "至少四项成本类目及各自的真实价格锚点",
+        "一组跨案例的并置反差数字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "conflict_escalation",
+      "start_ratio": 0.224,
+      "end_ratio": 0.317,
+      "start_sec": 307.3,
+      "end_sec": 434.9,
+      "position_label": "22.4%–31.7%(5:07–7:15)",
+      "purpose": "揭示摧毁项目的核心陷阱：融资成本从第一天开始计时，用两个著名的延期超支案例坐实",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.2512,
+          "time_ms": 344766,
+          "reason": "九年延期、预算三倍超支的旗舰灾难数字"
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.3125,
+          "time_ms": 428900,
+          "reason": "空置机场每日烧钱金额把延期代价具象化"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "mechanism_plus_case_payoff",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "mechanism_reveal",
+          "mechanism": "interest_clock"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "disaster_case",
+          "mechanism": "delay_overrun_case"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "causal_verdict",
+          "mechanism": "accumulated_minor_failures"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "burn_rate_reveal",
+          "mechanism": "daily_burn"
+        }
+      ],
+      "required_retention_events": [
+        "financing_trap",
+        "delay_disaster_case"
+      ],
+      "original_moves": [
+        "融资计时机制 + 柏林机场九年延期三倍超支 + 丹佛行李系统与日烧金额"
+      ],
+      "abstract_move": "揭示摧毁项目的核心陷阱：融资成本从第一天开始计时，用两个著名的延期超支案例坐实",
+      "replacement_needs": [
+        "融资计时机制的清晰解释",
+        "一个标志性灾难案例（延期+超支量级）",
+        "失败原因的反直觉归因"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80)、PK03(75);回收了前文的悬念 FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "evidence_build",
+      "start_ratio": 0.317,
+      "end_ratio": 0.377,
+      "start_sec": 435.2,
+      "end_sec": 516.7,
+      "position_label": "31.7%–37.7%(7:15–8:37)",
+      "purpose": "拆解第一收入流并立刻引入其致命约束：表面垄断定价权被监管封死",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "航空收入被监管封顶后，机场靠什么赚钱",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "pattern_interrupt",
+          "mechanism": "problem_pivot"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "dispute_case",
+          "mechanism": "regulatory_conflict"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "hidden_business_tease",
+          "mechanism": "second_business_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "regulated_revenue_ceiling"
+      ],
+      "original_moves": [
+        "收费构成与单价 + 监管限价逻辑 + 具体限额与争端"
+      ],
+      "abstract_move": "拆解第一收入流并立刻引入其致命约束：表面垄断定价权被监管封死",
+      "replacement_needs": [
+        "收入构成与单价锚点",
+        "监管逻辑与具体限价案例",
+        "限价争端的实例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "reveal",
+      "start_ratio": 0.377,
+      "end_ratio": 0.493,
+      "start_sec": 516.9,
+      "end_sec": 676,
+      "position_label": "37.7%–49.3%(8:37–11:16)",
+      "purpose": "全片核心揭示：真正的钱在监管之外的第二门生意，并解剖其运作机制与设计细节",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.4774,
+          "time_ms": 655100,
+          "reason": "强制穿行动线提升销量 60%：消费设计揭示的最高点"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "insight_delight",
+          "strength": 70,
+          "position_ratio": 0.4853,
+          "time_ms": 666000,
+          "reason": "利手习惯驱动通道弯曲的反直觉设计细节"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "hidden_business_reveal",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "revenue_anchor",
+          "mechanism": "single_line_item_shock"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "mechanism_reveal",
+          "mechanism": "contract_downside_protection"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "behavioral_design_reveal",
+          "mechanism": "forced_walkthrough"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "behavioral_design_reveal",
+          "mechanism": "handedness_layout"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_second_business",
+        "contract_mechanism",
+        "behavioral_design"
+      ],
+      "original_moves": [
+        "非航收入占比 + 停车垄断 + 保底租金机制 + 航站楼消费动线设计"
+      ],
+      "abstract_move": "全片核心揭示：真正的钱在监管之外的第二门生意，并解剖其运作机制与设计细节",
+      "replacement_needs": [
+        "第二收入流的规模与占比数据",
+        "最大单一来源及金额锚点",
+        "合同机制（下行保护）",
+        "空间/行为设计细节（至少两个反直觉设计）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80)、PK05(70);回收了前文的悬念 FS07→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "evidence_build",
+      "start_ratio": 0.493,
+      "end_ratio": 0.559,
+      "start_sec": 676.6,
+      "end_sec": 766.8,
+      "position_label": "49.3%–55.9%(11:17–12:47)",
+      "purpose": "拆解成本结构：一切成本都是刚性的，与客流量无关",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "fixed_cost_verdict",
+          "mechanism": "volume_independence"
+        }
+      ],
+      "required_retention_events": [
+        "fixed_cost_structure"
+      ],
+      "original_moves": [
+        "安检强制升级 + 行李系统 + 能耗 + 消防值守 + 除雪 fleet + 成本不随流量变化"
+      ],
+      "abstract_move": "拆解成本结构：一切成本都是刚性的，与客流量无关",
+      "replacement_needs": [
+        "至少四类刚性成本",
+        "'成本不随客流变化'的显式总结"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "conflict_escalation",
+      "start_ratio": 0.559,
+      "end_ratio": 0.629,
+      "start_sec": 766.9,
+      "end_sec": 862.8,
+      "position_label": "55.9%–62.9%(12:47–14:23)",
+      "purpose": "压力测试：黑天鹅事件同时打击所有经营者，观察不同应对策略的生死差异",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "conflict_climax",
+          "strength": 75,
+          "position_ratio": 0.5667,
+          "time_ms": 777666,
+          "reason": "全球停飞引爆固定成本脆弱的顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "black_swan",
+          "mechanism": "industry_wide_shock"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "survival_strategy",
+          "mechanism": "cargo_pivot"
+        }
+      ],
+      "required_retention_events": [
+        "black_swan_stress_test"
+      ],
+      "original_moves": [
+        "全行业停飞数据 + 成本照付 + 保底租金豁免 + 货运改造"
+      ],
+      "abstract_move": "压力测试：黑天鹅事件同时打击所有经营者，观察不同应对策略的生死差异",
+      "replacement_needs": [
+        "全行业冲击的量化数据",
+        "收入归零但成本照付的具象化",
+        "聪明应对者的自救策略"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "evidence_build",
+      "start_ratio": 0.629,
+      "end_ratio": 0.685,
+      "start_sec": 863.1,
+      "end_sec": 939.6,
+      "position_label": "62.9%–68.5%(14:23–15:40)",
+      "purpose": "边缘案例解剖：规模不足者的生存依赖与代价",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "dependency_reveal",
+          "mechanism": "single_carrier_trap"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "failure_category",
+          "mechanism": "ghost_airport"
+        }
+      ],
+      "required_retention_events": [
+        "dependency_trap"
+      ],
+      "original_moves": [
+        "盈亏规模阈值 + 依附条款（降费+补贴） + 撤走威胁"
+      ],
+      "abstract_move": "边缘案例解剖：规模不足者的生存依赖与代价",
+      "replacement_needs": [
+        "盈亏分界的规模阈值",
+        "依附关系的价格与条款",
+        "被要挟的退出威胁"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "conflict_escalation",
+      "start_ratio": 0.685,
+      "end_ratio": 0.777,
+      "start_sec": 939.6,
+      "end_sec": 1066.3,
+      "position_label": "68.5%–77.7%(15:40–17:46)",
+      "purpose": "最惨失败类别：需求凭空想象的资产废墟，归纳共同错误",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.7307,
+          "time_ms": 1002933,
+          "reason": "十亿欧元资产收到一万欧元报价，全片最强数字反差"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "case_cascade_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "absurd_detail",
+          "mechanism": "valuation_collapse"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "causal_verdict",
+          "mechanism": "common_error_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "catastrophic_failure_cases",
+        "common_error_verdict"
+      ],
+      "original_moves": [
+        "两个幽灵机场案例（造价 vs 残值/现状） + '先问航司'的教训"
+      ],
+      "abstract_move": "最惨失败类别：需求凭空想象的资产废墟，归纳共同错误",
+      "replacement_needs": [
+        "至少两个失败案例及投资/残值对比数字",
+        "失败原因的共性归纳"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85);回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "reveal",
+      "start_ratio": 0.777,
+      "end_ratio": 0.84,
+      "start_sec": 1066.8,
+      "end_sec": 1153.5,
+      "position_label": "77.7%–84%(17:47–19:13)",
+      "purpose": "成功案例分析：做对了的玩家长什么样，用利润率与规模杠杆数据呈现",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.7929,
+          "time_ms": 1088133,
+          "reason": "标杆集团 60% 利润率，成功端的最强锚点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "'一切做对的机场'长什么样",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "success_benchmark",
+          "mechanism": "margin_shock"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "power_verdict",
+          "mechanism": "asymmetry_definition"
+        }
+      ],
+      "required_retention_events": [
+        "success_benchmark",
+        "scale_power_verdict"
+      ],
+      "original_moves": [
+        "标杆集团利润率 + 单客消费杠杆 + 枢纽网络权力"
+      ],
+      "abstract_move": "成功案例分析：做对了的玩家长什么样，用利润率与规模杠杆数据呈现",
+      "replacement_needs": [
+        "标杆企业的利润率数据与行业对照",
+        "规模杠杆的量化演示",
+        "'小场求着航司，大场本身就是目的地'式的权力总结"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80);打开的悬念 LOOP06→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.84,
+      "end_ratio": 0.898,
+      "start_sec": 1153.8,
+      "end_sec": 1232.1,
+      "position_label": "84%–89.8%(19:14–20:32)",
+      "purpose": "前瞻趋势：该资产形态的未来演化方向",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "success_case_payoff",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "honest_answer",
+          "mechanism": "layered_answer"
+        }
+      ],
+      "required_retention_events": [
+        "future_trends"
+      ],
+      "original_moves": [
+        "航空城模式 + 安检无摩擦化及其商业目的"
+      ],
+      "abstract_move": "前瞻趋势：该资产形态的未来演化方向",
+      "replacement_needs": [
+        "一个结构性的形态转变趋势",
+        "一个体验/效率层面的技术趋势及其商业目的"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS13→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "closure",
+      "start_ratio": 0.898,
+      "end_ratio": 1,
+      "start_sec": 1232.1,
+      "end_sec": 1372.4,
+      "position_label": "89.8%–100%(20:32–22:52)",
+      "purpose": "交付分层诚实答案，并重新定义'你实际上买的是什么'完成认知收束",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9796,
+          "time_ms": 1344300,
+          "reason": "'两种日子之间的差距就是财富得失之地'的全片格言顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_honest_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "aphorism_close",
+          "mechanism": "two_days_aphorism"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "asset_redefinition",
+          "mechanism": "forced_flows_redefinition"
+        }
+      ],
+      "required_retention_events": [
+        "layered_honest_answer",
+        "asset_redefinition"
+      ],
+      "original_moves": [
+        "按规模分层的盈利答案 + 行业基准 + 固定成本总结 + 资产重定义"
+      ],
+      "abstract_move": "交付分层诚实答案，并重新定义'你实际上买的是什么'完成认知收束",
+      "replacement_needs": [
+        "按规模/条件分层的直接回答",
+        "全行业基准数字",
+        "'你买的不是生意，是强制所有人的基础设施'式重定义",
+        "格言式收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

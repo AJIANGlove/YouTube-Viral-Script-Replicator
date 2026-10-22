@@ -1,0 +1,951 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.325Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "hidden_number_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0477,
+      "start_sec": 0.1,
+      "end_sec": 43.5,
+      "position_label": "0%–4.8%(0:00–0:44)",
+      "purpose": "用熟悉交易中的缺失项抛出核心疑问，并以后果事件证明该疑问值得追看",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：报价之外的激励如何分配，为何表面免费的选项反而更赚钱，门店真正售卖与定价的又是什么",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "pattern_interrupt",
+          "mechanism": "familiar_scene_missing_detail"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "new_question",
+          "mechanism": "unwritten_number"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "information_reveal",
+          "mechanism": "third_party_payment_source"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "stakes_escalation",
+          "mechanism": "crime_case_preview"
+        }
+      ],
+      "required_retention_events": [
+        "familiar_scene",
+        "missing_number",
+        "crime_stakes_preview"
+      ],
+      "original_moves": [
+        "柜台报价纸",
+        "未写出的激活返佣",
+        "转卖案件与店主被捕",
+        "形成“店主独吞”的直觉解释"
+      ],
+      "abstract_move": "用熟悉交易中的缺失项抛出核心疑问，并以后果事件证明该疑问值得追看",
+      "replacement_needs": [
+        "观众熟悉的交易场景",
+        "一个被省略的关键变量",
+        "一个说明潜在后果的短案例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "hidden_number_with_crime_stakes_and_false_answer_rejection",
+        "first_stimulus_ms": 120,
+        "first_payoff_ms": 14080,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0007",
+          "C0014"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "belief_challenge",
+      "start_ratio": 0.0477,
+      "end_ratio": 0.0806,
+      "start_sec": 43.5,
+      "end_sec": 73.4,
+      "position_label": "4.8%–8.1%(0:44–1:13)",
+      "purpose": "先推翻最省事的解释，再承诺精确净额，确立全片主问题",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "扣除返还、成本与内部分配之后，一线实际究竟能拿到多少",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "belief_challenge",
+          "mechanism": "not_all_kept_by_seller"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "promise_tease",
+          "mechanism": "exact_net_answer_deferred"
+        }
+      ],
+      "required_retention_events": [
+        "false_answer_rejection",
+        "net_margin_question",
+        "exact_answer_promise"
+      ],
+      "original_moves": [
+        "“店主赚走全部”被否定",
+        "大部分返还给顾客",
+        "公开资料缺少净额整理",
+        "承诺后文精确回答"
+      ],
+      "abstract_move": "先推翻最省事的解释，再承诺精确净额，确立全片主问题",
+      "replacement_needs": [
+        "对直觉结论的明确否定",
+        "总额与净额的区分",
+        "后置精确答案的可见承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "incentive_source_reveal",
+      "start_ratio": 0.0806,
+      "end_ratio": 0.1562,
+      "start_sec": 73.4,
+      "end_sec": 142.4,
+      "position_label": "8.1%–15.6%(1:13–2:22)",
+      "purpose": "解释激励由谁支付、按什么定价，并把推销行为改写成结构反应",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "worldview_shift",
+          "strength": 74,
+          "position_ratio": 0.1445,
+          "time_ms": 131720,
+          "reason": "升级推荐被解释为激励定价的结构反应，完成第一次行为动机纠偏。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "为何销售方持续推荐更高条件的交易方案",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "incentive_based_behavior_explanation",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "worldview_shift",
+          "mechanism": "income_not_from_customer_wallet"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "comparison_reveal",
+          "mechanism": "plan_determines_incentive"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "behavior_reframe",
+          "mechanism": "upsell_as_structural_response"
+        }
+      ],
+      "required_retention_events": [
+        "money_source_reframe",
+        "paired_number_contrast",
+        "worker_testimony"
+      ],
+      "original_moves": [
+        "返佣来源与寄售性质",
+        "套餐而非机型决定返佣",
+        "低高套餐相差十倍以上",
+        "升级推荐被重释"
+      ],
+      "abstract_move": "解释激励由谁支付、按什么定价，并把推销行为改写成结构反应",
+      "replacement_needs": [
+        "资金支付方与库存风险说明",
+        "同一交易在不同条件下的对照数字",
+        "一线说法作为补充证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 74
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "incentive_abuse_escalation",
+      "start_ratio": 0.1562,
+      "end_ratio": 0.2951,
+      "start_sec": 142.4,
+      "end_sec": 269,
+      "position_label": "15.6%–29.5%(2:22–4:29)",
+      "purpose": "展示单一激励如何分叉为多类附加行为，再用案件规模检验极端后果",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 72,
+          "position_ratio": 0.2308,
+          "time_ms": 210400,
+          "reason": "受害规模以具体数字落地，使极端机制后果获得现实重量。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "门店为何卷入开场案件，以及此类交易为何能被快速变现",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "role_and_convertibility_explained",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "inventory_expansion",
+          "mechanism": "addon_behavior_chain"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "risk_reveal",
+          "mechanism": "hidden_activation_abuse"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "scale_reveal",
+          "mechanism": "victim_count"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "perspective_transition",
+          "mechanism": "money_leak_to_character_story"
+        }
+      ],
+      "required_retention_events": [
+        "escalating_behavior_inventory",
+        "opening_case_callback",
+        "victim_scale",
+        "scope_qualifier"
+      ],
+      "original_moves": [
+        "附加服务、旧机、卡片与隐瞒开通",
+        "开场案件回收",
+        "受害规模与判决",
+        "为何偏偏是此类交易",
+        "资金另有所去"
+      ],
+      "abstract_move": "展示单一激励如何分叉为多类附加行为，再用案件规模检验极端后果",
+      "replacement_needs": [
+        "由同一激励导出的行为清单",
+        "从常见附加项到隐瞒行为的强度递进",
+        "规模案件与制度性外溢说明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(72)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 72
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "discount_mechanism",
+      "start_ratio": 0.2951,
+      "end_ratio": 0.3816,
+      "start_sec": 269,
+      "end_sec": 347.8,
+      "position_label": "29.5%–38.2%(4:29–5:48)",
+      "purpose": "用人物学习弧线引出折价机制，解释同类交易为何出现不同报价",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "头部销售者从竞争者那里学到的低价原理是什么",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "simple_rebate_sharing_mechanism",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "mechanism_reveal",
+          "mechanism": "rebate_shared_as_discount"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "worldview_shift",
+          "mechanism": "price_difference_from_retained_share"
+        }
+      ],
+      "required_retention_events": [
+        "character_learning_arc",
+        "simple_mechanism_reveal",
+        "price_difference_explanation"
+      ],
+      "original_moves": [
+        "头部销售者受挫与拜师",
+        "低价原理揭示",
+        "返佣大部分让给买方",
+        "统一定价与店铺让利区分"
+      ],
+      "abstract_move": "用人物学习弧线引出折价机制，解释同类交易为何出现不同报价",
+      "replacement_needs": [
+        "一个由失败到学习的人物短弧线",
+        "让利资金来源的简明演示",
+        "统一标准与个别让利的对照"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP05。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:头部销售者从竞争者那里学到的低价原理是什么",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "channel_economics_contrast",
+      "start_ratio": 0.3816,
+      "end_ratio": 0.5544,
+      "start_sec": 347.8,
+      "end_sec": 505.4,
+      "position_label": "38.2%–55.4%(5:48–8:25)",
+      "purpose": "区分看似同类的渠道，以一次性与持续性收益对照解释不同让利行为",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.5177,
+          "time_ms": 471919,
+          "reason": "一次性与持续性收益被压缩成一句高记忆度比喻，渠道差异变得可复述。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "激励设定是否构成不当协调仍存在争议；源文只呈现双方立场，不试图裁决；叙事用途：作为制度背景保留事实争议，提醒观众激励治理并非单一确定叙事；不影响主承诺闭合。",
+          "closes_in": null
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "为何招牌更显眼的一类门店反而不倾向同等让利",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "oneoff_vs_recurring_economics",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "contextual_conflict",
+          "mechanism": "incentive_governance_dispute"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "category_distinction",
+          "mechanism": "similar_signage_different_channel"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "metaphor_payoff",
+          "mechanism": "oneoff_vs_recurring_income"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "behavior_explanation",
+          "mechanism": "discount_from_single_opportunity"
+        }
+      ],
+      "required_retention_events": [
+        "category_myth_busting",
+        "recurring_vs_oneoff_model",
+        "domestic_metaphor",
+        "behavior_callback"
+      ],
+      "original_moves": [
+        "制度与争议背景",
+        "招牌越大越便宜的误判被否定",
+        "渠道类别与收益方式区分",
+        "一次性和持续性比喻",
+        "行为差异回收"
+      ],
+      "abstract_move": "区分看似同类的渠道，以一次性与持续性收益对照解释不同让利行为",
+      "replacement_needs": [
+        "制度变化作为背景而非主线",
+        "表面同类角色的清晰分类",
+        "一次性收益与持续收益的对照模型",
+        "由收益模型回推行为差异"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(78);打开的悬念 LOOP06(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 78
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "handset_margin_reversal",
+      "start_ratio": 0.5544,
+      "end_ratio": 0.6356,
+      "start_sec": 505.4,
+      "end_sec": 579.4,
+      "position_label": "55.4%–63.6%(8:25–9:39)",
+      "purpose": "用相同口径的对照算账兑现反直觉标题，使表面价格与真实留存脱钩",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "title_payoff",
+          "strength": 95,
+          "position_ratio": 0.6118,
+          "time_ms": 557720,
+          "reason": "同口径数字证明免费选项的真实留存更高，直接兑现标题核心反直觉承诺。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "comparison_setup",
+          "mechanism": "second_product_introduced"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "title_payoff",
+          "mechanism": "free_option_higher_margin"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "emotional_release",
+          "mechanism": "self_amused_recognition"
+        }
+      ],
+      "required_retention_events": [
+        "worked_math_comparison",
+        "counterintuitive_title_answer",
+        "prior_experience_reframe",
+        "self_amused_reaction"
+      ],
+      "original_moves": [
+        "高价机型计算",
+        "高额返佣需大部分让出",
+        "低价机型公开补贴与返佣拆分",
+        "免费机反而留存更高",
+        "自嘲回收"
+      ],
+      "abstract_move": "用相同口径的对照算账兑现反直觉标题，使表面价格与真实留存脱钩",
+      "replacement_needs": [
+        "两个可比选项的同口径计算",
+        "公开让利与店铺让利的拆分",
+        "一句直接对照结论",
+        "轻微自嘲式认知回收"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(95)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 95
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "clawback_risk_counterweight",
+      "start_ratio": 0.6356,
+      "end_ratio": 0.7398,
+      "start_sec": 579.4,
+      "end_sec": 674.4,
+      "position_label": "63.6%–74%(9:39–11:14)",
+      "purpose": "给已成立的收益答案加上期限与追回条件，并同时呈现交易双方的责任",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 90,
+          "position_ratio": 0.6937,
+          "time_ms": 632440,
+          "reason": "追回额相对原留存成倍放大，静态收益被反转为高脆弱风险。"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.714,
+          "time_ms": 650920,
+          "reason": "销售叮嘱由顾客关怀重释为经营者自保，行为动机再次翻转。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "为何高额激励附带特定最低持续期限，以及提前变更由谁承担追回",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "clawback_condition_and_bearer_explained",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "new_question",
+          "mechanism": "why_specific_duration"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "asymmetry_reveal",
+          "mechanism": "clawback_exceeds_retained_margin"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "motive_reframe",
+          "mechanism": "seller_self_concern"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "counterperspective",
+          "mechanism": "consumer_also_uses_rules"
+        }
+      ],
+      "required_retention_events": [
+        "new_condition_loop",
+        "asymmetric_clawback",
+        "livelihood_stakes",
+        "counterperspective"
+      ],
+      "original_moves": [
+        "六个月条件",
+        "降级触发返佣追回",
+        "留存与追回严重不对称",
+        "经营者生活风险",
+        "消费者利用规则的反例"
+      ],
+      "abstract_move": "给已成立的收益答案加上期限与追回条件，并同时呈现交易双方的责任",
+      "replacement_needs": [
+        "一个会改变结论的时间条件",
+        "收益与追回额的不对称计算",
+        "对一线经营者风险的具象化",
+        "另一方利用规则的对照视角"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(90)、PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "net_income_waterfall",
+      "start_ratio": 0.7398,
+      "end_ratio": 0.8308,
+      "start_sec": 674.4,
+      "end_sec": 757.4,
+      "position_label": "74%–83.1%(11:14–12:37)",
+      "purpose": "回到开场净额问题，逐层扣除并扩展到不同角色的收入上限",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 93,
+          "position_ratio": 0.7751,
+          "time_ms": 706600,
+          "reason": "总激励与一线实收的悬殊对照闭合开场净额问题，延迟答案形成强反差回报。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "高收入的头部销售者为何还有一句反直觉补充，“第一名”到底意味着什么",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "delayed_numeric_waterfall",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "question_callback",
+          "mechanism": "opening_net_question_returns"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "numeric_payoff",
+          "mechanism": "gross_to_actual_worker_income"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "scale_threshold",
+          "mechanism": "volume_required_for_viability"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "role_comparison",
+          "mechanism": "owner_revenue_to_take_home"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "status_payoff_then_tease",
+          "mechanism": "top_seller_income_revealed"
+        }
+      ],
+      "required_retention_events": [
+        "primary_question_return",
+        "numeric_waterfall",
+        "income_contrast",
+        "labor_condition_detail"
+      ],
+      "original_moves": [
+        "开场问题回归",
+        "返佣到店铺再到员工的逐层扣除",
+        "总额与实收反差",
+        "销量门槛",
+        "店主、员工与头部销售者对照"
+      ],
+      "abstract_move": "回到开场净额问题，逐层扣除并扩展到不同角色的收入上限",
+      "replacement_needs": [
+        "对开场问题的显式召回",
+        "从总激励到实际所得的瀑布式扣除",
+        "不同角色的收入与工作量对照",
+        "头部收入数字作为后文反转铺垫"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(93);打开的悬念 LOOP09→FS10 跨段;回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 93
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "ceiling_and_market_contraction",
+      "start_ratio": 0.8308,
+      "end_ratio": 0.9166,
+      "start_sec": 757.4,
+      "end_sec": 835.6,
+      "position_label": "83.1%–91.7%(12:37–13:56)",
+      "purpose": "拆解少数头部叙事，呈现收入天花板、市场收缩与扩张激励并存的悖论",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.8403,
+          "time_ms": 766040,
+          "reason": "头部称谓被大量分组名额去魅，收入峰值转为行业天花板问题。"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.859,
+          "time_ms": 783079,
+          "reason": "跨行业天花板对照让观众重新校准对“做到第一”的预期。"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.9146,
+          "time_ms": 833800,
+          "reason": "收缩与扩张并存的悖论获得激励解释，行业图景不再线性。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "status_label_deflated_and_ceiling_reframed",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "status_reversal",
+          "mechanism": "many_number_one_positions"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "scale_reframe",
+          "mechanism": "cross_industry_ceiling"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "market_context",
+          "mechanism": "contraction_count"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "paradox_reveal",
+          "mechanism": "contraction_and_expansion_coexist"
+        }
+      ],
+      "required_retention_events": [
+        "status_label_reversal",
+        "cross_industry_ceiling",
+        "contraction_numbers",
+        "expansion_paradox"
+      ],
+      "original_moves": [
+        "头部人数反转为数千",
+        "跨行业收入天花板对照",
+        "店铺减少与经营者感受",
+        "新开店仍获总部支持的悖论解释"
+      ],
+      "abstract_move": "拆解少数头部叙事，呈现收入天花板、市场收缩与扩张激励并存的悖论",
+      "replacement_needs": [
+        "对头部称谓的重新计数",
+        "跨行业天花板对照",
+        "市场收缩证据",
+        "收缩与扩张并存的激励解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)、PK09(82)、PK10(78);回收了前文的悬念 FS09→LOOP09。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 82
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 78
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "consumer_choice_reframe",
+      "start_ratio": 0.9166,
+      "end_ratio": 0.9636,
+      "start_sec": 835.6,
+      "end_sec": 878.4,
+      "position_label": "91.7%–96.4%(13:56–14:38)",
+      "purpose": "把行业解释转化为消费者决策规则，同时保留条件性例外而非给单一答案",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "information_power_shift",
+          "mechanism": "customer_arrives_with_the_paper"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "decision_rule",
+          "mechanism": "compare_total_long_term_cost"
+        }
+      ],
+      "required_retention_events": [
+        "information_power_reversal",
+        "conditional_alternative",
+        "exception_acknowledgement",
+        "total_cost_rule"
+      ],
+      "original_moves": [
+        "消费者到店前已查价",
+        "信息纸张的权力反转",
+        "绕过渠道的替代方案",
+        "大额补贴时的例外",
+        "两年总支出比较"
+      ],
+      "abstract_move": "把行业解释转化为消费者决策规则，同时保留条件性例外而非给单一答案",
+      "replacement_needs": [
+        "信息优势变化的具象描述",
+        "替代方案与其适用条件",
+        "对例外情况的明确承认",
+        "以全周期总支出替代单点价格"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "actionable_closure",
+      "start_ratio": 0.9636,
+      "end_ratio": 1,
+      "start_sec": 878.4,
+      "end_sec": 911.6,
+      "position_label": "96.4%–100%(14:38–15:12)",
+      "purpose": "用可执行核对动作完成情绪回收，再把具体账目升级为长期价值的普遍提问",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "worldview_shift",
+          "strength": 96,
+          "position_ratio": 0.9829,
+          "time_ms": 896040,
+          "reason": "商品与顾客的关系被反转，全片账本最终收束为未来付款如何定价顾客。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP10",
+          "tension": "按未来付款给当前顾客定价的逻辑是否也存在于其他交易场景；叙事用途：刻意用反问保持开放，把迁移判断交给观众；源文未提供其他行业证据，因此不闭合为事实断言。",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "title_comparison_plus_worldview_synthesis",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP10"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "action_payoff",
+          "mechanism": "photo_and_verify_checklist"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "worldview_shift",
+          "mechanism": "customer_is_the_priced_asset"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "open_ending",
+          "mechanism": "generalization_question"
+        }
+      ],
+      "required_retention_events": [
+        "photo_verification_action",
+        "post_transaction_check",
+        "aphoristic_reframe",
+        "open_generalization"
+      ],
+      "original_moves": [
+        "拍摄报价纸",
+        "核对套餐与附加服务",
+        "售出的是客户及未来付款",
+        "该定价逻辑并非此处独有"
+      ],
+      "abstract_move": "用可执行核对动作完成情绪回收，再把具体账目升级为长期价值的普遍提问",
+      "replacement_needs": [
+        "一个低成本留证动作",
+        "一次交易后核对动作",
+        "一句核心价值重构",
+        "以反问而非事实断言完成开放扩界"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(96);打开的悬念 LOOP10(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 96
+        }
+      ]
+    }
+  ]
+}

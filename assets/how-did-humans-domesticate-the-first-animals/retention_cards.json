@@ -1,0 +1,1051 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.405Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "mystery_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.0302,
+      "start_sec": 0,
+      "end_sec": 54,
+      "position_label": "0%–3%(0:00–0:54)",
+      "purpose": "悖论开场：把答案对象包装成悬念，数秒内揭晓为顶级掠食者，并显式抛出主问题",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "hook_reveal",
+          "strength": 85,
+          "position_ratio": 0.0078,
+          "time_ms": 14000,
+          "reason": "悖论揭晓：第一种被驯化的动物是狼，开场最大认知冲突"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：人类究竟如何与最危险的对手结成万年联盟（标题'如何'问句的显式悬挂）",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "paradox_hook"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "hook_payoff",
+          "mechanism": "identity_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "paradox_assertion",
+        "identity_reveal",
+        "core_question_posed"
+      ],
+      "original_moves": [
+        "悖论断言",
+        "感官化威胁能力清单",
+        "'它是狼'揭晓",
+        "冰期末背景",
+        "'How?'主问题"
+      ],
+      "abstract_move": "悖论开场：把答案对象包装成悬念，数秒内揭晓为顶级掠食者，并显式抛出主问题",
+      "replacement_needs": [
+        "与常识相反的威胁属性断言",
+        "感官化的能力清单",
+        "答案身份的短句揭晓",
+        "时间背景锚点与主问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(85);打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 85
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 62000,
+        "hook_type": "paradox_reveal_then_question",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 14000,
+        "evidence_refs": [
+          "C0001",
+          "C0002",
+          "C0008"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "concept_calibration",
+      "start_ratio": 0.0302,
+      "end_ratio": 0.0637,
+      "start_sec": 54,
+      "end_sec": 114,
+      "position_label": "3%–6.4%(0:54–1:54)",
+      "purpose": "校准核心概念：区分一次性驯服与跨代驯化、个体与种群，并给出'行为先变、形态后随'的分析框架",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "core_question",
+          "mechanism": "question_pose"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "concept_reframe",
+          "mechanism": "definition_distinction"
+        }
+      ],
+      "required_retention_events": [
+        "definition_distinction",
+        "behavior_first_rule"
+      ],
+      "original_moves": [
+        "主问题承接",
+        "定义对立",
+        "跨代选择机制",
+        "行为先于形态",
+        "渐变无人察觉"
+      ],
+      "abstract_move": "校准核心概念：区分一次性驯服与跨代驯化、个体与种群，并给出'行为先变、形态后随'的分析框架",
+      "replacement_needs": [
+        "定义对立句",
+        "跨代选择机制的白话解释",
+        "行为先于形态的规律",
+        "'渐变无人察觉'的悬念底色"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_review",
+      "start_ratio": 0.0637,
+      "end_ratio": 0.1291,
+      "start_sec": 114,
+      "end_sec": 231,
+      "position_label": "6.4%–12.9%(1:54–3:51)",
+      "purpose": "按证据可靠性递进：先展示化石记录的模糊性，再给出一个情感化的葬俗实证作为锚点",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.1207,
+          "time_ms": 216000,
+          "reason": "病犬被养活并入葬：全片最温柔的证据，情感峰值"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "驯化确切发生在何时何地",
+          "closes_in": "FS16"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "那些最古老的头骨究竟是不是驯化产物：刻意保持开放，叙事用途是示范'证据不足时不强行定论'的科学诚实，并为'最安全的证据出现得更晚'的递进让路",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP03"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "uncertainty_flag",
+          "mechanism": "fossil_ambiguity"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "evidence_turn",
+          "mechanism": "burial_evidence"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "emotional_payoff",
+          "mechanism": "care_evidence"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "thesis_verdict",
+          "mechanism": "one_line_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "fossil_ambiguity",
+        "emotional_case_anchor",
+        "relationship_verdict"
+      ],
+      "original_moves": [
+        "化石模糊性",
+        "'不寻常不等于驯化'",
+        "最安全证据出现",
+        "病犬照料推理",
+        "合葬",
+        "'人们在乎狗'判词"
+      ],
+      "abstract_move": "按证据可靠性递进：先展示化石记录的模糊性，再给出一个情感化的葬俗实证作为锚点",
+      "replacement_needs": [
+        "模糊证据及其为何不能定论的说明",
+        "'不寻常不等于定论'的证据分级示范",
+        "一个带情感重量的具体考古案例",
+        "一句为关系定性的短判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80);打开的悬念 LOOP02→FS16、LOOP03(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "mystery_deepening",
+      "start_ratio": 0.1291,
+      "end_ratio": 0.171,
+      "start_sec": 231,
+      "end_sec": 306,
+      "position_label": "12.9%–17.1%(3:51–5:06)",
+      "purpose": "遗传学把起点推得更早、地点更模糊：答案没有变清晰，悬念反而加深",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "mystery_deepen",
+          "mechanism": "genetics_pushback"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "humor_payoff",
+          "mechanism": "personification"
+        }
+      ],
+      "required_retention_events": [
+        "genetics_pushback",
+        "humor_release"
+      ],
+      "original_moves": [
+        "谱系分离年代",
+        "多地点候选罗列",
+        "DNA排除简单故事",
+        "湿墨水家谱笑点"
+      ],
+      "abstract_move": "遗传学把起点推得更早、地点更模糊：答案没有变清晰，悬念反而加深",
+      "replacement_needs": [
+        "把年代往前推的证据",
+        "多地点候选的罗列",
+        "排除简单故事但不给最终答案的诚实表态",
+        "一个拟人化幽默注脚释放张力"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "hypothesis_intro",
+      "start_ratio": 0.171,
+      "end_ratio": 0.2079,
+      "start_sec": 306,
+      "end_sec": 372,
+      "position_label": "17.1%–20.8%(5:06–6:12)",
+      "purpose": "第一假说登场：动物自我选择进入人类创造的生态位，自然选择接管",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "三个起源假说（拾荒、狩猎、收养）哪一个是真相",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "hypothesis_intro",
+          "mechanism": "named_hypothesis"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "niche_concept",
+          "mechanism": "concept_naming"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "selection_verdict",
+          "mechanism": "one_line_verdict"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "ad_break",
+          "mechanism": "mid_roll_ad"
+        }
+      ],
+      "required_retention_events": [
+        "hypothesis_presented",
+        "niche_concept",
+        "one_line_verdict"
+      ],
+      "original_moves": [
+        "拾荒假说命名",
+        "胆量筛选逻辑",
+        "新生态位概念",
+        "跨代选择",
+        "'它们选择的是剩饭'判词"
+      ],
+      "abstract_move": "第一假说登场：动物自我选择进入人类创造的生态位，自然选择接管",
+      "replacement_needs": [
+        "假说名称与画面化场景",
+        "胆量与风险的筛选逻辑",
+        "新生态位的概念命名",
+        "'它们选择的不是归宿，是利益'式判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "hypothesis_stress_test",
+      "start_ratio": 0.223,
+      "end_ratio": 0.2588,
+      "start_sec": 399,
+      "end_sec": 463,
+      "position_label": "22.3%–25.9%(6:39–7:43)",
+      "purpose": "先补第一假说的互利面，再压力测试其漏洞：竞争关系下为何容忍对手",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "benefit_reveal",
+          "mechanism": "benefit_inventory"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "critique_verdict",
+          "mechanism": "agency_rebalance"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "counter_evidence",
+          "mechanism": "stress_test"
+        }
+      ],
+      "required_retention_events": [
+        "benefit_inventory",
+        "counter_evidence"
+      ],
+      "original_moves": [
+        "互利清单",
+        "'自我驯化'术语纠偏",
+        "人的选择权",
+        "垃圾堆故事漏洞",
+        "限量餐笑点"
+      ],
+      "abstract_move": "先补第一假说的互利面，再压力测试其漏洞：竞争关系下为何容忍对手",
+      "replacement_needs": [
+        "互利清单",
+        "对流行术语的纠偏",
+        "'始于动物选择、延续于人类选择'的权责划分",
+        "一个致命反问揭示漏洞"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "hypothesis_alternatives",
+      "start_ratio": 0.2588,
+      "end_ratio": 0.3164,
+      "start_sec": 463,
+      "end_sec": 566,
+      "position_label": "25.9%–31.6%(7:43–9:26)",
+      "purpose": "第二、三假说互补登场：协作互惠路径与幼崽收养路径",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "hypothesis_synthesis",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "hypothesis_intro",
+          "mechanism": "named_hypothesis"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "synergy_reveal",
+          "mechanism": "complementarity"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "hypothesis_intro",
+          "mechanism": "named_hypothesis"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "humor_payoff",
+          "mechanism": "anachronism_mapping"
+        }
+      ],
+      "required_retention_events": [
+        "second_hypothesis",
+        "third_hypothesis",
+        "humor_beat"
+      ],
+      "original_moves": [
+        "狩猎互补",
+        "合作收益",
+        "幼崽收养场景",
+        "成年狼的现实约束",
+        "'公关'笑点",
+        "温顺个体筛选"
+      ],
+      "abstract_move": "第二、三假说互补登场：协作互惠路径与幼崽收养路径",
+      "replacement_needs": [
+        "协作互补的能力对照",
+        "'组合优于单干'的定量感",
+        "收养路径的温情场景与现实约束",
+        "一个拟人化笑点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "transformation_mechanism",
+      "start_ratio": 0.3164,
+      "end_ratio": 0.4226,
+      "start_sec": 566,
+      "end_sec": 756,
+      "position_label": "31.6%–42.3%(9:26–12:36)",
+      "purpose": "假说合成与机制详解：无数微决策跨代累积，行为先变、幼态延续、形态后随",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.327,
+          "time_ms": 585000,
+          "reason": "'没有契约，只有成千上万个小决定'：假说合成点题"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 72,
+          "position_ratio": 0.365,
+          "time_ms": 653000,
+          "reason": "社会能力被转向人类：'这是关键变化'的机制定格"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "synthesis_litany",
+          "mechanism": "micro_decision_litany"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "skill_reveal",
+          "mechanism": "pointing_gesture"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "crucial_change",
+          "mechanism": "redirection_verdict"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "transformation_verdict",
+          "mechanism": "blueprint_line"
+        }
+      ],
+      "required_retention_events": [
+        "synthesis_statement",
+        "micro_decision_litany",
+        "crucial_change_verdict"
+      ],
+      "original_moves": [
+        "三过程合成",
+        "微决策排比",
+        "读懂人类手势",
+        "'关键变化'点题",
+        "幼态延续与驯化综合征",
+        "'无蓝图重设计'判词"
+      ],
+      "abstract_move": "假说合成与机制详解：无数微决策跨代累积，行为先变、幼态延续、形态后随",
+      "replacement_needs": [
+        "'多过程叠加'的合成句",
+        "微决策排比的具体画面",
+        "关键变化的点题",
+        "术语命名与即时白话解释",
+        "'无蓝图的重设计'判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(78)、PK04(72)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 78
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 72
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "reciprocal_benefit",
+      "start_ratio": 0.4226,
+      "end_ratio": 0.4572,
+      "start_sec": 756,
+      "end_sec": 818,
+      "position_label": "42.3%–45.7%(12:36–13:38)",
+      "purpose": "互惠闭环：伙伴动物如何反向扩展人类能力，并为关系定性",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.4489,
+          "time_ms": 803000,
+          "reason": "'不是货物，是旅伴'：互惠段的关系定性"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "companionship_verdict",
+          "mechanism": "fellow_travelers"
+        }
+      ],
+      "required_retention_events": [
+        "reciprocity_list",
+        "companionship_verdict"
+      ],
+      "original_moves": [
+        "功用清单",
+        "应急口粮冷笑话",
+        "感官互补",
+        "联合狩猎监控系统",
+        "'不是货物，是旅伴'判词"
+      ],
+      "abstract_move": "互惠闭环：伙伴动物如何反向扩展人类能力，并为关系定性",
+      "replacement_needs": [
+        "功用清单",
+        "感官互补的对照",
+        "联合系统的比喻",
+        "'不是物品，是旅伴'式定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "scope_expansion",
+      "start_ratio": 0.4572,
+      "end_ratio": 0.564,
+      "start_sec": 818,
+      "end_sec": 1009,
+      "position_label": "45.7%–56.4%(13:38–16:49)",
+      "purpose": "范围扩展到畜牧：引入捕食路径，展示'猎杀变管理'的考古证据先于形态变化",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "pivot",
+          "mechanism": "one_line_verdict"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "evidence_reveal",
+          "mechanism": "forensic_kill_patterns"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "humor_payoff",
+          "mechanism": "anachronism_mapping"
+        }
+      ],
+      "required_retention_events": [
+        "pathway_introduced",
+        "forensic_evidence"
+      ],
+      "original_moves": [
+        "首次驯化与后世不同",
+        "两条路径引入",
+        "'狩猎变管理'转折句",
+        "宰杀模式的骨骼证据",
+        "山羊管理",
+        "'周二'笑点",
+        "羊毛后发"
+      ],
+      "abstract_move": "范围扩展到畜牧：引入捕食路径，展示'猎杀变管理'的考古证据先于形态变化",
+      "replacement_needs": [
+        "路径概念的引入与命名",
+        "从猎杀到管理的转折句",
+        "骨骼证据的细节呈现",
+        "一处生活化幽默"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "case_variations",
+      "start_ratio": 0.564,
+      "end_ratio": 0.6339,
+      "start_sec": 1009,
+      "end_sec": 1134,
+      "position_label": "56.4%–63.4%(16:49–18:54)",
+      "purpose": "物种变奏：不同物种以不同理由、不同路径进入人类世界",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.6311,
+          "time_ms": 1129000,
+          "reason": "'驯化是关系，不是纯度证书'：格言式认知升级"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "danger_scale",
+          "mechanism": "menace_framing"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "aphorism",
+          "mechanism": "definition_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "case_variation",
+        "aphorism_verdict"
+      ],
+      "original_moves": [
+        "原牛危险量级",
+        "用途错峰发展",
+        "猪的混合路径",
+        "基因混杂仍不失驯化本质",
+        "格言判词"
+      ],
+      "abstract_move": "物种变奏：不同物种以不同理由、不同路径进入人类世界",
+      "replacement_needs": [
+        "危险对象的量级描写",
+        "用途错峰发展的说明",
+        "混合路径与基因混杂仍不失驯化本质的解释",
+        "格言式定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "contrast_case",
+      "start_ratio": 0.6339,
+      "end_ratio": 0.6875,
+      "start_sec": 1134,
+      "end_sec": 1230,
+      "position_label": "63.4%–68.8%(18:54–20:30)",
+      "purpose": "对照案例：一个保留野性、条款弹性的物种，反证驯化光谱的宽度",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "contrast_presented",
+        "flexible_terms_verdict"
+      ],
+      "original_moves": [
+        "老鼠引来猫",
+        "互利清单",
+        "岛屿葬猫证据",
+        "保持野性",
+        "'弹性条款'幽默定性"
+      ],
+      "abstract_move": "对照案例：一个保留野性、条款弹性的物种，反证驯化光谱的宽度",
+      "replacement_needs": [
+        "互利场景的简明交代",
+        "地理证据一处",
+        "与主线物种的差异对照",
+        "'弹性条款'式幽默定性"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "taxonomy_synthesis",
+      "start_ratio": 0.6875,
+      "end_ratio": 0.725,
+      "start_sec": 1230,
+      "end_sec": 1297,
+      "position_label": "68.8%–72.5%(20:30–21:37)",
+      "purpose": "分类学合成：把散落案例收拢为三条路径的框架",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "为何人类猎过千万物种，驯化成功的却寥寥无几",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "taxonomy_named",
+        "directed_example"
+      ],
+      "original_moves": [
+        "三路径命名与定义",
+        "马的定向案例",
+        "驮畜补充",
+        "'进入未知'回望首段伙伴"
+      ],
+      "abstract_move": "分类学合成：把散落案例收拢为三条路径的框架",
+      "replacement_needs": [
+        "三条路径的命名与定义",
+        "晚期定向路径的例证",
+        "对开篇伙伴关系的一句回望"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "feasibility_filter",
+      "start_ratio": 0.725,
+      "end_ratio": 0.7753,
+      "start_sec": 1297,
+      "end_sec": 1387,
+      "position_label": "72.5%–77.5%(21:37–23:07)",
+      "purpose": "可行性过滤器：解释为何千万物种只有极少数通过，并用一个著名反例坐标准则",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "驯化的代价究竟由谁承担、有多大",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "trait_filter_and_counterexample",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "trait_checklist",
+        "counterexample_verdict"
+      ],
+      "original_moves": [
+        "必备性状清单",
+        "社会结构约束",
+        "恐惧与繁殖约束",
+        "斑马反例",
+        "'职场暴力'笑点"
+      ],
+      "abstract_move": "可行性过滤器：解释为何千万物种只有极少数通过，并用一个著名反例坐标准则",
+      "replacement_needs": [
+        "必备性状的清单式罗列",
+        "社会结构与恐惧约束",
+        "一个'看似可行实则不行'的反例",
+        "一处拟人化笑点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS15 跨段;回收了前文的悬念 FS13→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "costs_reveal",
+      "start_ratio": 0.7753,
+      "end_ratio": 0.8625,
+      "start_sec": 1387,
+      "end_sec": 1543,
+      "position_label": "77.5%–86.3%(23:07–25:43)",
+      "purpose": "直视代价与红利：疾病、财产化、人类自身也被改变，文明被重组",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "humor_peak",
+          "strength": 72,
+          "position_ratio": 0.7753,
+          "time_ms": 1387000,
+          "reason": "斑马'职场暴力'笑点：可行性过滤器的记忆点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "balanced_cost_verdict",
+          "opened_in": "FS14"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "counterexample_humor",
+          "mechanism": "anachronism_mapping"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "humor_payoff",
+          "mechanism": "personification"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "aphorism",
+          "mechanism": "image_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "cost_inventory",
+        "coevolution_reveal"
+      ],
+      "original_moves": [
+        "成本清单",
+        "病原跨界",
+        "'微生物发现机会'笑点",
+        "动物财产化",
+        "双向平衡判词",
+        "乳糖耐受",
+        "'会走路的财富'",
+        "文明重组"
+      ],
+      "abstract_move": "直视代价与红利：疾病、财产化、人类自身也被改变，文明被重组",
+      "replacement_needs": [
+        "成本清单与病原跨界",
+        "动物财产化的冷峻事实",
+        "'既不是友谊也不是支配'的平衡判词",
+        "人类被反向改变的证据",
+        "一句压缩红利的格言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(72);回收了前文的悬念 FS14→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 72
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "worldview_closure",
+      "start_ratio": 0.8625,
+      "end_ratio": 1,
+      "start_sec": 1543,
+      "end_sec": 1789,
+      "position_label": "86.3%–100%(25:43–29:49)",
+      "purpose": "认知收束：显式回答'没有单一发明者'，以兼容性判词、机制句与意象格言完成三重兑现",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.9061,
+          "time_ms": 1621000,
+          "reason": "'掠食者成了伙伴'三连收束：回顾蒙太奇的情绪高点"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.9497,
+          "time_ms": 1699000,
+          "reason": "核心机制兑现：最重要的一步是允许这段关系自我延续"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "aphorism_close",
+          "strength": 90,
+          "position_ratio": 0.9983,
+          "time_ms": 1786000,
+          "reason": "'危险动物靠近火堆而人没有驱赶'：意象格言完成全片收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "mechanism_synthesis_and_aphorism",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "epistemic_verdict",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "mechanism_verdict",
+          "mechanism": "choices_become_evolution"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "emotional_payoff",
+          "mechanism": "triad_close"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "worldview_verdict",
+          "mechanism": "compatibility_not_obedience"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "core_mechanism",
+          "mechanism": "relationship_reproduction"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "closure_verdict",
+          "mechanism": "changed_world"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "aphorism_close",
+          "mechanism": "fire_image"
+        }
+      ],
+      "required_retention_events": [
+        "epistemic_humility",
+        "compatibility_verdict",
+        "mechanism_verdict",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "考古局限声明",
+        "微决策即进化",
+        "无单一答案",
+        "逐物种回顾蒙太奇",
+        "兼容性判词",
+        "'允许关系延续'机制句",
+        "现代形态列举",
+        "首狼首人动机",
+        "意象格言收尾"
+      ],
+      "abstract_move": "认知收束：显式回答'没有单一发明者'，以兼容性判词、机制句与意象格言完成三重兑现",
+      "replacement_needs": [
+        "考古学局限的诚实声明",
+        "'微决策跨代即进化'的机制点题",
+        "逐物种回顾的蒙太奇",
+        "'不是服从，是兼容'的判词",
+        "'允许关系延续'的机制句",
+        "以画面意象收尾的格言句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80)、PK09(85)、PK10(90);回收了前文的悬念 FS01→LOOP01、FS03→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

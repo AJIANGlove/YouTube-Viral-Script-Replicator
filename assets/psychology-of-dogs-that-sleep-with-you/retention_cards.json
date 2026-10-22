@@ -1,0 +1,687 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.546Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.063,
+      "start_sec": 0.1,
+      "end_sec": 31.8,
+      "position_label": "0%–6.3%(0:00–0:32)",
+      "purpose": "用高度具体的共同生活场景开场，让观众立刻认领'这就是我家'，随即抛出浅层常识并预告'完全不同的故事'",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念：'完全不同的故事'——它睡在你身边到底意味着什么",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "scene_ownership",
+          "mechanism": "second_person_night_scene"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "humor_micro_payoff",
+          "mechanism": "relatable_measurement_joke"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "new_question",
+          "mechanism": "science_tease"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "stakes_escalation",
+          "mechanism": "significance_claim"
+        }
+      ],
+      "required_retention_events": [
+        "scene_ownership",
+        "science_tease"
+      ],
+      "original_moves": [
+        "凌晨场景 + 痛点幽默 + 浅层常识 + 科学预告 + 主题量级抬升"
+      ],
+      "abstract_move": "用高度具体的共同生活场景开场，让观众立刻认领'这就是我家'，随即抛出浅层常识并预告'完全不同的故事'",
+      "replacement_needs": [
+        "具体到时间与细节的共同场景",
+        "一个幽默化的痛点细节",
+        "浅层常识的复述",
+        "'科学给出完全不同的故事'的预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "scene_ownership_second_person",
+        "first_stimulus_ms": 133,
+        "first_payoff_ms": 8200,
+        "evidence_refs": [
+          "C0001",
+          "C0007",
+          "C0012",
+          "C0016"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "belief_challenge",
+      "start_ratio": 0.063,
+      "end_ratio": 0.131,
+      "start_sec": 31.9,
+      "end_sec": 66.6,
+      "position_label": "6.3%–13.1%(0:32–1:07)",
+      "purpose": "正式拆解浅层常识，用反证逻辑逼出真问题，并给出第一个解释层级（脆弱性逻辑）",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "取暖说被拆穿后：既然有得是选择，为什么偏选你",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "myth_dismantled",
+          "mechanism": "counterevidence_logic"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "principle_reveal",
+          "mechanism": "vulnerability_principle"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "contrast_image",
+          "mechanism": "instinct_vs_behavior_contrast"
+        }
+      ],
+      "required_retention_events": [
+        "myth_dismantling",
+        "first_principle"
+      ],
+      "original_moves": [
+        "常识反证 + 脆弱性原则 + 行为与本能的反差"
+      ],
+      "abstract_move": "正式拆解浅层常识，用反证逻辑逼出真问题，并给出第一个解释层级（脆弱性逻辑）",
+      "replacement_needs": [
+        "常识的反证（如果是X，那Y也成立）",
+        "一个解释行为底层逻辑的原则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.131,
+      "end_ratio": 0.215,
+      "start_sec": 66.9,
+      "end_sec": 109,
+      "position_label": "13.1%–21.5%(1:07–1:49)",
+      "purpose": "心理学层证据：经典实验范式的跨物种迁移，给出第一个量化结论与情感落点",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.2147,
+          "time_ms": 108966,
+          "reason": "'你是它世界里最安全的存在'完成第一个情感高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "attachment_answer",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "quantified_result",
+          "mechanism": "percentage_anchor"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "emotional_payoff",
+          "mechanism": "emotional_renaming"
+        }
+      ],
+      "required_retention_events": [
+        "psychology_layer",
+        "emotional_renaming"
+      ],
+      "original_moves": [
+        "依恋测试迁移 + 61% 安全型依恋量化 + '你是它世界里最安全的存在'"
+      ],
+      "abstract_move": "心理学层证据：经典实验范式的跨物种迁移，给出第一个量化结论与情感落点",
+      "replacement_needs": [
+        "一个有名有姓的研究机构与实验范式",
+        "量化结果",
+        "一句情感化重命名落点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(80);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "reveal",
+      "start_ratio": 0.215,
+      "end_ratio": 0.376,
+      "start_sec": 109.1,
+      "end_sec": 190.7,
+      "position_label": "21.5%–37.6%(1:49–3:11)",
+      "purpose": "神经化学层揭示：双向自我强化的生理回路及其物种独特性",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.3196,
+          "time_ms": 162166,
+          "reason": "自我强化回路 + 地球上无其他物种与人类共享"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "pattern_interrupt",
+          "mechanism": "layer_shift_signal"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "mechanism_reveal",
+          "mechanism": "feedback_loop"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "uniqueness_proof",
+          "mechanism": "control_group_failure"
+        }
+      ],
+      "required_retention_events": [
+        "neurochemistry_loop",
+        "control_group_failure"
+      ],
+      "original_moves": [
+        "顶级期刊研究 + 分子通俗化 + 正反馈回路推演 + 狼对照组失败 + 抚摸降皮质醇"
+      ],
+      "abstract_move": "神经化学层揭示：双向自我强化的生理回路及其物种独特性",
+      "replacement_needs": [
+        "顶级期刊研究（年份+机构+期刊名）",
+        "关键分子的通俗解释",
+        "正反馈回路的逐步推演",
+        "对照组失败（其他物种不成立）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evidence_build",
+      "start_ratio": 0.376,
+      "end_ratio": 0.526,
+      "start_sec": 190.9,
+      "end_sec": 267.1,
+      "position_label": "37.6%–52.6%(3:11–4:27)",
+      "purpose": "进化史层证据：关系的古老性与基因层面的塑造",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.4634,
+          "time_ms": 235166,
+          "reason": "一万四千年前护理病犬的考古细节，全片最温柔的揭示"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "人犬同眠从何时开始",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "new_question",
+          "mechanism": "origin_question"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "timeline_subversion",
+          "mechanism": "predates_civilization_markers"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "emotional_detail",
+          "mechanism": "archaeology_tenderness"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "genetic_evidence",
+          "mechanism": "chromosome_level_proof"
+        }
+      ],
+      "required_retention_events": [
+        "evolutionary_history",
+        "genetic_evidence"
+      ],
+      "original_moves": [
+        "驯化时间线颠覆 + 墓葬情感细节 + 基因插入差异"
+      ],
+      "abstract_move": "进化史层证据：关系的古老性与基因层面的塑造",
+      "replacement_needs": [
+        "一个颠覆时间线的驯化史事实",
+        "一个带情感细节的考古证据",
+        "基因层面的差异证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80);打开的悬念 LOOP03→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "reveal",
+      "start_ratio": 0.526,
+      "end_ratio": 0.631,
+      "start_sec": 267.7,
+      "end_sec": 320.2,
+      "position_label": "52.6%–63.1%(4:28–5:20)",
+      "purpose": "实证悖论：客观数据与主观体验相反，制造智性惊奇",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "surprise",
+          "strength": 75,
+          "position_ratio": 0.5712,
+          "time_ms": 289900,
+          "reason": "客观更差主观更好的睡眠悖论"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "数据更差但感受更好的悖论如何可能",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "evolutionary_history_answer",
+          "opened_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "mechanism_explanation",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "paradox_tease",
+          "mechanism": "impossible_finding_tease"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "paradox_reveal",
+          "mechanism": "objective_vs_subjective_split"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "mechanism_explanation",
+          "mechanism": "memory_gap_explanation"
+        }
+      ],
+      "required_retention_events": [
+        "paradox_and_explanation"
+      ],
+      "original_moves": [
+        "睡眠追踪悖论 + 补充调查 + 记忆缺口机制解释"
+      ],
+      "abstract_move": "实证悖论：客观数据与主观体验相反，制造智性惊奇",
+      "replacement_needs": [
+        "客观数据不利的结果",
+        "主观报告相反的结果",
+        "机制解释（记忆缺口/感受压过干扰）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75);回收了前文的悬念 FS05→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.631,
+      "end_ratio": 0.683,
+      "start_sec": 320.3,
+      "end_sec": 346.8,
+      "position_label": "63.1%–68.3%(5:20–5:47)",
+      "purpose": "把悖论升级为认知重构：现代独处才是例外，该行为是在修复更古老的东西",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.677,
+          "time_ms": 343600,
+          "reason": "负罪感解除：修复比睡眠卫生更古老的东西"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "worldview_reframe",
+          "mechanism": "norm_inversion"
+        }
+      ],
+      "required_retention_events": [
+        "norm_inversion_reframe"
+      ],
+      "original_moves": [
+        "人类群睡史重构 + '不是打扰，是修复'重定义"
+      ],
+      "abstract_move": "把悖论升级为认知重构：现代独处才是例外，该行为是在修复更古老的东西",
+      "replacement_needs": [
+        "人类学层面的常态重构",
+        "'不是打扰，是修复'式重定义"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "reveal",
+      "start_ratio": 0.683,
+      "end_ratio": 0.792,
+      "start_sec": 347,
+      "end_sec": 402.1,
+      "position_label": "68.3%–79.2%(5:47–6:42)",
+      "purpose": "最新证据封顶：双方生理指标实时同步，只在 bonded 关系中成立",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.7872,
+          "time_ms": 399500,
+          "reason": "两物种神经系统整夜共调节的最终定性"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "uniqueness_proof",
+          "mechanism": "control_group_failure"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "verdict",
+          "mechanism": "co_regulation_definition"
+        }
+      ],
+      "required_retention_events": [
+        "physiological_sync",
+        "control_group_failure"
+      ],
+      "original_moves": [
+        "HRV 同步研究 + 指标通俗化 + 陌生人对照失败 + 共调节定性"
+      ],
+      "abstract_move": "最新证据封顶：双方生理指标实时同步，只在 bonded 关系中成立",
+      "replacement_needs": [
+        "最新年份的生理指标研究",
+        "指标含义的通俗解释",
+        "对照组失败（陌生人不同步）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "evidence_build",
+      "start_ratio": 0.792,
+      "end_ratio": 0.911,
+      "start_sec": 402.4,
+      "end_sec": 462.5,
+      "position_label": "79.2%–91.1%(6:42–7:43)",
+      "purpose": "实用警示：该行为的消失是最早的健康/环境信号，把科学转化为可立即应用的观察工具",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "'最重要的一件事'是什么",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "importance_flag",
+          "mechanism": "last_thing_tease"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "actionable_warning",
+          "mechanism": "early_signal_reveal"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "quantified_stakes",
+          "mechanism": "prevalence_data"
+        }
+      ],
+      "required_retention_events": [
+        "actionable_warning"
+      ],
+      "original_moves": [
+        "行为突变的多因排查（环境/疼痛/认知退化）+ 35% 流行率 + 行动呼吁"
+      ],
+      "abstract_move": "实用警示：该行为的消失是最早的健康/环境信号，把科学转化为可立即应用的观察工具",
+      "replacement_needs": [
+        "行为突变的多因排查（环境/疼痛/认知退化）",
+        "量化流行率数据",
+        "'行为是它唯一的语言'式行动呼吁"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "closure",
+      "start_ratio": 0.911,
+      "end_ratio": 0.972,
+      "start_sec": 462.7,
+      "end_sec": 493.2,
+      "position_label": "91.1%–97.2%(7:43–8:13)",
+      "purpose": "回到开场场景，用全部科学层级叠加重放同一画面，完成情感闭环",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9585,
+          "time_ms": 486466,
+          "reason": "证据叠放后的场景重放，情感顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_science_answer_plus_scene_callback",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "actionable_warning",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "scene_callback",
+          "mechanism": "opening_scene_return"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "chosen_feeling_payoff",
+          "mechanism": "elimination_anaphora"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "final_verdict",
+          "mechanism": "evidence_stacking_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "scene_callback",
+        "evidence_stacking"
+      ],
+      "original_moves": [
+        "场景召唤重现 + 证据层级叠放 + '它选择了你'排比 + 最终定性"
+      ],
+      "abstract_move": "回到开场场景，用全部科学层级叠加重放同一画面，完成情感闭环",
+      "replacement_needs": [
+        "开场场景的召唤重现",
+        "全部证据层级的一句话叠放",
+        "排比式排除（不是A不是B，是你）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85);回收了前文的悬念 FS01→LOOP01、FS09→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "closure",
+      "start_ratio": 0.972,
+      "end_ratio": 1,
+      "start_sec": 493.3,
+      "end_sec": 507.5,
+      "position_label": "97.2%–100%(8:13–8:28)",
+      "purpose": "以互动问题与下一条预告完成频道留存闭环",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "cta",
+          "mechanism": "comment_prompt_next_tease"
+        }
+      ],
+      "required_retention_events": [
+        "comment_prompt",
+        "next_video_tease"
+      ],
+      "original_moves": [
+        "订阅请求 + 评论问题 + 下一条预告悬念"
+      ],
+      "abstract_move": "以互动问题与下一条预告完成频道留存闭环",
+      "replacement_needs": [
+        "与个人经历相关的评论引导问题",
+        "下一条内容的主题预告与悬念"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    }
+  ]
+}

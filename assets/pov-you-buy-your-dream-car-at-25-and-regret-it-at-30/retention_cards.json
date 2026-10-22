@@ -1,0 +1,490 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.538Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "seductive_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.11,
+      "start_sec": 0,
+      "end_sec": 123.2,
+      "position_label": "0%–11%(0:00–2:03)",
+      "purpose": "视频开始（标题已剧透结局，悬念全在过程）",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念（标题立约）：为什么渴望之物多年后变成后悔",
+          "closes_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "账单预告：这种感觉有过期日，账单一来就开始计费",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "sensory_hook",
+          "mechanism": "sensory_immersion"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "number_reveal",
+          "mechanism": "concrete_terms"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "dark_foreshadow",
+          "mechanism": "expiration_tease"
+        }
+      ],
+      "required_retention_events": "先给足糖，后面的苦才有重量——诱惑不充分，悔恨不可信",
+      "original_moves": [
+        "感官诱惑全景 + 成交数字落地（月供/期数/利率）+ 第一个暗色伏笔（这种感觉有过期日）"
+      ],
+      "abstract_move": "视频开始（标题已剧透结局，悬念全在过程）",
+      "replacement_needs": [
+        "能做到:感官细节开场（嗅觉/触觉/听觉）,具体的成交条件数字,一句\"我配得上\"的内心辩护,过期日伏笔"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS07、LOOP02→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "sensory_pov_immersion",
+        "first_stimulus_ms": 3040,
+        "first_payoff_ms": 116920,
+        "evidence_refs": [
+          "C0001",
+          "C0003",
+          "C0054"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "social_reward",
+      "start_ratio": 0.1086,
+      "end_ratio": 0.2292,
+      "start_sec": 121.6,
+      "end_sec": 256.6,
+      "position_label": "10.9%–22.9%(2:02–4:17)",
+      "purpose": "购买完成，账单尚未显形",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "区分伏笔：钦佩与尊重是两种货币，理解在五年之后",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "social_proof",
+          "mechanism": "status_montage"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "distinction_tease",
+          "mechanism": "open_distinction"
+        }
+      ],
+      "required_retention_events": "让观众先尝到甜头再怀疑甜头的成色，甜蜜与不安并存",
+      "original_moves": [
+        "社交回报蒙太奇（朋友围观、家人态度、派对话题）+ 表演机制的自觉 + 钦佩≠尊重的区分伏笔"
+      ],
+      "abstract_move": "购买完成，账单尚未显形",
+      "replacement_needs": [
+        "能做到:至少三个具体社交回报场景,一个最重要人物的认可时刻,\"表演\"机制的显式命名,两种货币的区分伏笔"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "true_cost_reveal",
+      "start_ratio": 0.2263,
+      "end_ratio": 0.3524,
+      "start_sec": 253.3,
+      "end_sec": 394.5,
+      "position_label": "22.6%–35.2%(4:13–6:34)",
+      "purpose": "新鲜感已转化为每月固定扣款",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "aphorism",
+          "strength": 72,
+          "position_ratio": 0.348,
+          "time_ms": 389560,
+          "reason": "温水格言把渐进的财务恶化凝成一句高传播性的话"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "itemized_bill",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "itemized_bill",
+          "mechanism": "bill_payoff"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "aphorism",
+          "mechanism": "boiling_water"
+        }
+      ],
+      "required_retention_events": "不安必须渐进而非爆发，让观众在每个\"合理的小牺牲\"里认出自己",
+      "original_moves": [
+        "真实成本逐项清单与合计 + 行业平均基准对照 + 温水煮青蛙式紧缩机制 + 收束格言"
+      ],
+      "abstract_move": "新鲜感已转化为每月固定扣款",
+      "replacement_needs": [
+        "能做到:逐项成本清单与合计数字,至少一个外部基准对照,紧缩的心理机制描述（每个小牺牲单独看都合理）,一句收束性格言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(72);回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 72
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "foil_reckoning",
+      "start_ratio": 0.3499,
+      "end_ratio": 0.5002,
+      "start_sec": 391.7,
+      "end_sec": 560,
+      "position_label": "35%–50%(6:32–9:20)",
+      "purpose": "财务紧缩已成常态，一次他人的人生事件触发比较",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "quantified_gutpunch",
+          "strength": 84,
+          "position_ratio": 0.4507,
+          "time_ms": 504640,
+          "reason": "机会成本总额完成全片最重的数字重击，后悔从情绪变为算术"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "对照组悬念：选择另一条路的同龄人后来怎样了",
+          "closes_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP05",
+          "tension": "自我对话的回避：还没准备好对自己承认的账，迟早要算",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "foil_intro",
+          "mechanism": "control_group"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "quantified_gutpunch",
+          "mechanism": "opportunity_cost"
+        }
+      ],
+      "required_retention_events": "嫉妒与自省混合的不适是本章燃料，数字必须重到让观众暂停",
+      "original_moves": [
+        "对照组引入（同龄同收入不同选择）+ 折旧事实 + 机会成本完整换算 + 回避心理的命名"
+      ],
+      "abstract_move": "财务紧缩已成常态，一次他人的人生事件触发比较",
+      "replacement_needs": [
+        "能做到:一个可信的对照人物（同起点、不同选择）,资产折旧的事实与比率,机会成本的完整换算（本金/期限/收益率）,回避心理的命名"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(84);打开的悬念 LOOP04→FS07、LOOP05→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 84
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "rock_bottom",
+      "start_ratio": 0.4974,
+      "end_ratio": 0.6453,
+      "start_sec": 556.9,
+      "end_sec": 722.4,
+      "position_label": "49.7%–64.5%(9:17–12:02)",
+      "purpose": "一次外部挫折使清算无法继续回避",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "rock_bottom",
+          "strength": 86,
+          "position_ratio": 0.5553,
+          "time_ms": 621680,
+          "reason": "净头寸总清算是全片情绪谷底，为放手章节蓄势"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "confrontation",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "rock_bottom_math",
+          "mechanism": "net_position"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "statistic_stack",
+          "mechanism": "timeline_pressure"
+        }
+      ],
+      "required_retention_events": "谷底不哭闹，用安静的算术制造窒息感",
+      "original_moves": [
+        "全景清算（累计已付/当前残值/剩余贷款/净头寸）+ 群体统计对照 + \"东西没变，是你变了\"的视角翻转"
+      ],
+      "abstract_move": "一次外部挫折使清算无法继续回避",
+      "replacement_needs": [
+        "能做到:精确时间戳的独处场景,全部账户同时打开的清算动作,净头寸数字,与个人命运相连的宏观统计,视角翻转句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(86);回收了前文的悬念 FS04→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 86
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "release",
+      "start_ratio": 0.6429,
+      "end_ratio": 0.7793,
+      "start_sec": 719.8,
+      "end_sec": 872.5,
+      "position_label": "64.3%–77.9%(12:00–14:32)",
+      "purpose": "决定已做出，动作平淡执行",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "deflation_reveal",
+          "strength": 78,
+          "position_ratio": 0.7069,
+          "time_ms": 791400,
+          "reason": "多年热爱的物质总产出被定价，梦想被彻底祛魅"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "counterintuitive_relief",
+          "strength": 82,
+          "position_ratio": 0.7414,
+          "time_ms": 830080,
+          "reason": "降级替代品中预期疼痛落空，轻盈感完成情绪反转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "终极问题：当初走进店里的那一刻到底在寻找什么",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "deflation_reveal",
+          "mechanism": "total_yield"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "counterintuitive_relief",
+          "mechanism": "relief_twist"
+        }
+      ],
+      "required_retention_events": "先陪主角哀悼，再用意外的轻盈完成全片情绪反转",
+      "original_moves": [
+        "反高潮的出售过程 + 对旧自我的哀悼 + 物质总产出数字 + 降级替代品中的意外轻松 + \"等待疼痛但它没来\""
+      ],
+      "abstract_move": "决定已做出，动作平淡执行",
+      "replacement_needs": [
+        "能做到:刻意平淡的交易细节,对旧自我的明确哀悼,全程物质总产出的定价,降级替代品里的意外轻松感,疼痛落空的转折"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(78)、PK05(82);打开的悬念 LOOP06→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 78
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 82
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.7756,
+      "end_ratio": 0.9968,
+      "start_sec": 868.4,
+      "end_sec": 1116,
+      "position_label": "77.6%–99.7%(14:28–18:36)",
+      "purpose": "时间跳到终点年龄，对照组的人生已具象化",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_aphorism",
+          "strength": 88,
+          "position_ratio": 0.9019,
+          "time_ms": 1009720,
+          "reason": "\"一个花钱，一个花年\"完成表演与表达的对照定义，全片命题压缩点"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "thesis_statement",
+          "strength": 90,
+          "position_ratio": 0.9555,
+          "time_ms": 1069720,
+          "reason": "真正的积累发生在无人观看处——全片命题的最终陈述与价值落点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "thesis_answer",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "distinction_resolution",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "foil_resolution",
+          "opened_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "identity_answer",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "thesis_reveal",
+          "mechanism": "time_cost"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "imagined_intervention",
+          "mechanism": "passenger_seat"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "closing_aphorism",
+          "mechanism": "better_question"
+        }
+      ],
+      "required_retention_events": "智慧必须是悲悯的而非说教的：让年长的自己理解年轻的自己，观众才允许自己被说服",
+      "original_moves": [
+        "时间成本命题 + 对当初渴望的人性化正名 + 表演与表达的对照定义 + 对年轻自己的悲悯 + 无人观看处积累的宣言"
+      ],
+      "abstract_move": "时间跳到终点年龄，对照组的人生已具象化",
+      "replacement_needs": [
+        "能做到:代价的最终定性（时间与复利最贵的年份）,对当初渴望的人性化正名,表达与表演的对照定义,对年轻自己的悲悯场景,一句可复述的收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(88)、PK07(90);回收了前文的悬念 FS01→LOOP01、FS02→LOOP03、FS04→LOOP04、FS06→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 88
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "cta",
+      "start_ratio": 0.9955,
+      "end_ratio": 1,
+      "start_sec": 1114.5,
+      "end_sec": 1119.6,
+      "position_label": "99.6%–100%(18:35–18:40)",
+      "purpose": "元命题已交付",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": "不打扰余味的最低限度行动号召",
+      "original_moves": [
+        "订阅CTA"
+      ],
+      "abstract_move": "元命题已交付",
+      "replacement_needs": [
+        "能做到:一句不破坏余味的行动号召"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    }
+  ]
+}

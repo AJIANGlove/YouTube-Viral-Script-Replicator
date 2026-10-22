@@ -1,0 +1,956 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.306Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "counterintuitive_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0653,
+      "start_sec": 0,
+      "end_sec": 49.4,
+      "position_label": "0%–6.5%(0:00–0:49)",
+      "purpose": "用熟悉交易中的反常低份额与连续异常问题建立双重承诺：追踪一笔付款，并解释经营对象的真正目的。",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 72,
+          "position_ratio": 0.0108,
+          "time_ms": 8160,
+          "reason": "开场预测后立即揭示经营者份额极小，建立全片反差底座。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：一笔付款的收益结构如何运作，商品交易之外的真实经营目的是什么。",
+          "closes_in": "FS13"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "开场提到的违规记录具体包含哪些问题。",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "familiar_scene_entry",
+          "mechanism": "concrete_price_anchor"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "direct_question",
+          "mechanism": "share_prediction_gap"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "immediate_payoff",
+          "mechanism": "counterintuitive_small_share"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "anomaly_question",
+          "mechanism": "routine_behavior_reframe"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "journey_promise",
+          "mechanism": "money_trace_promise"
+        }
+      ],
+      "required_retention_events": [
+        "direct_question",
+        "immediate_numeric_answer",
+        "money_trace_promise"
+      ],
+      "original_moves": [
+        "价格与加油量",
+        "网点仅得极小份额且部分亏损",
+        "自助化与夜间经营异常",
+        "违规记录悬念",
+        "追踪整笔付款的承诺。"
+      ],
+      "abstract_move": "用熟悉交易中的反常低份额与连续异常问题建立双重承诺：追踪一笔付款，并解释经营对象的真正目的。",
+      "replacement_needs": [
+        "观众熟悉的交易金额与数量",
+        "直接提问后立即给出的反直觉份额",
+        "经营异常与违规悬念",
+        "沿资金流向追踪的明确承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(72);打开的悬念 LOOP01→FS13、LOOP03→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 72
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "direct_share_question_with_immediate_counterintuitive_answer",
+        "first_stimulus_ms": 6120,
+        "first_payoff_ms": 8160,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0005",
+          "C0012",
+          "C0024"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "inventory_cost_setup",
+      "start_ratio": 0.0653,
+      "end_ratio": 0.1179,
+      "start_sec": 49.4,
+      "end_sec": 89.2,
+      "position_label": "6.5%–11.8%(0:49–1:29)",
+      "purpose": "建立商品进入经营场所的过程底座，同时植入“已收货却还不知道真实采购成本”的延迟结算主环。",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "经营者已经收货，为何不知道真实采购成本，后文将如何解释。",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "unknown_cost_tease",
+          "mechanism": "deferred_purchase_price"
+        }
+      ],
+      "required_retention_events": [
+        "unknown_cost_tease",
+        "deferred_answer_pointer"
+      ],
+      "original_moves": [
+        "入库流程与地下库存",
+        "大额库存资金",
+        "先按临时价付款",
+        "真实价格延后确定",
+        "暂缓解释并转向上游。"
+      ],
+      "abstract_move": "建立商品进入经营场所的过程底座，同时植入“已收货却还不知道真实采购成本”的延迟结算主环。",
+      "replacement_needs": [
+        "商品入库的空间与流程细节",
+        "库存资金规模提示",
+        "采购价格未定的反常事实",
+        "后文正式解释的显式预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "tax_inventory_reveal",
+      "start_ratio": 0.1179,
+      "end_ratio": 0.1993,
+      "start_sec": 89.2,
+      "end_sec": 150.8,
+      "position_label": "11.8%–19.9%(1:29–2:31)",
+      "purpose": "揭示固定代收成本在上游已进入商品价格，并说明库存时差如何让降价政策反而给经营者造成损失。",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.1559,
+          "time_ms": 117920,
+          "reason": "固定成本累计到售价的大比例，完成第一次资金归属重构。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "cost_location_reveal",
+          "mechanism": "upstream_cost_attachment"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "share_reveal",
+          "mechanism": "fixed_cost_accumulation"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "policy_inventory_reversal",
+          "mechanism": "tax_cut_stock_loss"
+        }
+      ],
+      "required_retention_events": [
+        "cost_location_reversal",
+        "share_reveal",
+        "policy_inventory_reversal"
+      ],
+      "original_moves": [
+        "上游固定成本叠加",
+        "成本占售价大比例",
+        "高成本库存遇上降价",
+        "经营者承受库存损失",
+        "外部只能看到单一标价。"
+      ],
+      "abstract_move": "揭示固定代收成本在上游已进入商品价格，并说明库存时差如何让降价政策反而给经营者造成损失。",
+      "replacement_needs": [
+        "固定成本的发生节点",
+        "多项固定成本累加的份额",
+        "政策变化与既有库存之间的时差",
+        "消费者只看到标价的对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "price_rigidity_explanation",
+      "start_ratio": 0.1993,
+      "end_ratio": 0.2814,
+      "start_sec": 150.8,
+      "end_sec": 212.8,
+      "position_label": "19.9%–28.1%(2:31–3:33)",
+      "purpose": "用公开标价、近邻竞争和三层原因解释价格为何上调快而下调慢，把抱怨改写为结构问题。",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "价格为何上调快而下调慢。",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "three_layer_price_rigidity_explained",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "visual_scene_reset",
+          "mechanism": "public_price_sign"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "everyday_complaint_callback",
+          "mechanism": "price_asymmetry_question"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "structure_verdict",
+          "mechanism": "structure_not_simple_sum"
+        }
+      ],
+      "required_retention_events": [
+        "everyday_complaint_callback",
+        "three_cause_chain",
+        "structure_verdict"
+      ],
+      "original_moves": [
+        "巨型公开标价",
+        "差价立刻影响客流",
+        "上调快下调慢的问题",
+        "三层结构性原因",
+        "转入交易分解。"
+      ],
+      "abstract_move": "用公开标价、近邻竞争和三层原因解释价格为何上调快而下调慢，把抱怨改写为结构问题。",
+      "replacement_needs": [
+        "价格高度可见的场景细节",
+        "近邻差价与比价工具带来的压力",
+        "上游均值、库存周期、固定成本三层原因",
+        "“不是简单加总而是结构”的定性"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP05。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:价格为何上调快而下调慢。",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "transaction_decomposition",
+      "start_ratio": 0.2814,
+      "end_ratio": 0.3514,
+      "start_sec": 212.8,
+      "end_sec": 265.8,
+      "position_label": "28.1%–35.1%(3:33–4:26)",
+      "purpose": "把一笔付款拆成代收部分、供货成本和经营者份额，再用人工成本与倍数差把抽象低利润转换为直观尺度。",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 78,
+          "position_ratio": 0.3035,
+          "time_ms": 229560,
+          "reason": "代收部分被明确判定为从不属于经营者，打破流水直觉。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "transaction_split",
+          "mechanism": "payment_decomposition"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "pass_through_reframe",
+          "mechanism": "never_operator_money"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "scale_conversion",
+          "mechanism": "labor_cost_equivalent"
+        }
+      ],
+      "required_retention_events": [
+        "transaction_split",
+        "pass_through_reframe",
+        "labor_equivalent"
+      ],
+      "original_moves": [
+        "实际付款",
+        "代收部分剥离",
+        "供货成本剥离",
+        "经营者仅剩小份额",
+        "换算成人力成本与倍数差",
+        "违规问题回调。"
+      ],
+      "abstract_move": "把一笔付款拆成代收部分、供货成本和经营者份额，再用人工成本与倍数差把抽象低利润转换为直观尺度。",
+      "replacement_needs": [
+        "同一笔交易的逐项资金流向",
+        "经营者份额的适用范围限定",
+        "把份额换算成人力成本与交易次数",
+        "回到开场违规问题的转场"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(78)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 78
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "violation_pattern_context",
+      "start_ratio": 0.3514,
+      "end_ratio": 0.4358,
+      "start_sec": 265.8,
+      "end_sec": 329.6,
+      "position_label": "35.1%–43.6%(4:26–5:30)",
+      "purpose": "回答违规类型，同时主动限定样本范围，拒绝把问题简化成少数坏经营者，并把追问推进到行业结构。",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "为何同类违规会在该行业反复出现，而不只是少数经营者品德问题。",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "violation_categories_and_consumer_effects_explained",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "opening_loop_callback",
+          "mechanism": "violation_record_return"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "mechanism_reframe",
+          "mechanism": "tax_leak_not_only_wallet"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "scope_caveat",
+          "mechanism": "three_part_qualification"
+        }
+      ],
+      "required_retention_events": [
+        "opening_loop_payoff",
+        "three_part_caveat",
+        "structural_why_question"
+      ],
+      "original_moves": [
+        "违规记录",
+        "质量、掺混、短量三类问题",
+        "三点范围限定",
+        "否定纯个体道德解释",
+        "继续追踪经营者小份额。"
+      ],
+      "abstract_move": "回答违规类型，同时主动限定样本范围，拒绝把问题简化成少数坏经营者，并把追问推进到行业结构。",
+      "replacement_needs": [
+        "违规记录来源与主要类别",
+        "每种类别如何影响消费者或代收成本",
+        "总体规模、时间跨度和个例概率的限定",
+        "从个别道德归因转向行业机制的追问"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS11 跨段;回收了前文的悬念 FS01→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "fee_structure_reversal",
+      "start_ratio": 0.4358,
+      "end_ratio": 0.5449,
+      "start_sec": 329.6,
+      "end_sec": 412.2,
+      "position_label": "43.6%–54.5%(5:30–6:52)",
+      "purpose": "揭示按整笔交易额计费的渠道成本可能高于经营者份额，且连代收部分也计费，使价格上涨进一步压缩经营者空间。",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 88,
+          "position_ratio": 0.459,
+          "time_ms": 347199,
+          "reason": "支付渠道所得超过实际经营者，形成全片最强的分配反差。"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.5178,
+          "time_ms": 391720,
+          "reason": "售价上涨与经营者空间变薄同时发生，颠覆高价格等于高收益的直觉。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "支付环节的计算为何会突然反转，谁实际分得更多。",
+          "closes_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "单位收益如此微薄，经营者究竟靠什么维持。",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "channel_fee_comparison_payoff",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "fee_reversal_tease",
+          "mechanism": "calculation_about_to_flip"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "comparison_payoff",
+          "mechanism": "fee_exceeds_operator_share"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "fee_base_reveal",
+          "mechanism": "fee_on_full_pass_through"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "belief_reversal",
+          "mechanism": "high_price_not_operator_windfall"
+        }
+      ],
+      "required_retention_events": [
+        "fee_reversal",
+        "fee_on_pass_through",
+        "high_price_margin_reversal"
+      ],
+      "original_moves": [
+        "支付渠道费用",
+        "渠道所得超过经营者",
+        "费用还覆盖代收部分",
+        "售价上涨反而压缩经营者空间",
+        "对争议措辞做立场区分。"
+      ],
+      "abstract_move": "揭示按整笔交易额计费的渠道成本可能高于经营者份额，且连代收部分也计费，使价格上涨进一步压缩经营者空间。",
+      "replacement_needs": [
+        "渠道费率与经营者份额的直接对比",
+        "渠道费用按含代收部分的总额计算",
+        "价格上涨时固定单位收益与比例费用的反向变化",
+        "对利益相关方说法的立场限定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(88)、PK05(82);打开的悬念 LOOP07→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 88
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 82
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "operational_adaptation",
+      "start_ratio": 0.5449,
+      "end_ratio": 0.6166,
+      "start_sec": 412.2,
+      "end_sec": 466.4,
+      "position_label": "54.5%–61.7%(6:52–7:46)",
+      "purpose": "回答薄利经营如何维持：依靠交易量、劳动转移与附加业务，同时指出采购端仍有无法由运营解决的约束。",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 76,
+          "position_ratio": 0.5594,
+          "time_ms": 423160,
+          "reason": "自助服务从便利设施被重构为劳动与成本转移机制。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "volume_labor_and_side_business_answer",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "direct_answer",
+          "mechanism": "volume_over_unit_margin"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "labor_transfer_reframe",
+          "mechanism": "self_service_cost_shift"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "side_business_inventory",
+          "mechanism": "site_monetization_list"
+        }
+      ],
+      "required_retention_events": [
+        "volume_answer",
+        "labor_transfer_reframe",
+        "side_business_inventory"
+      ],
+      "original_moves": [
+        "靠走量",
+        "自助化转移人工",
+        "车流与场地导入附加业务",
+        "主业不足由副业补足",
+        "采购端仍有约束。"
+      ],
+      "abstract_move": "回答薄利经营如何维持：依靠交易量、劳动转移与附加业务，同时指出采购端仍有无法由运营解决的约束。",
+      "replacement_needs": [
+        "以交易量弥补单位收益的答案",
+        "自助流程与劳动转移的因果解释",
+        "附加服务和场地利用清单",
+        "转向采购约束的未解问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(76);回收了前文的悬念 FS07→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 76
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "procurement_constraint",
+      "start_ratio": 0.6166,
+      "end_ratio": 0.7069,
+      "start_sec": 466.4,
+      "end_sec": 534.7,
+      "position_label": "61.7%–70.7%(7:46–8:55)",
+      "purpose": "解释品牌与供货绑定如何限制采购自由，并用非绑定经营与公共方案的效果对照说明经营者可控制的利润边界有限。",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "constraint_reveal",
+          "mechanism": "brand_supply_binding"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "policy_effect_reveal",
+          "mechanism": "limited_distribution_effect"
+        }
+      ],
+      "required_retention_events": [
+        "contract_constraint",
+        "policy_effect_reveal",
+        "cost_loop_callback"
+      ],
+      "original_moves": [
+        "供货绑定",
+        "非绑定经营的价格差",
+        "信任换采购权",
+        "公共方案效果有限",
+        "经营者可控制部分本就很窄",
+        "未知成本回调。"
+      ],
+      "abstract_move": "解释品牌与供货绑定如何限制采购自由，并用非绑定经营与公共方案的效果对照说明经营者可控制的利润边界有限。",
+      "replacement_needs": [
+        "标识与供货合同绑定的机制",
+        "非绑定经营者为何可能获得低价",
+        "信任与采购选择权交换",
+        "公共流通方案及其实际效果对照",
+        "回到未知采购成本的转场"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "deferred_settlement_reveal",
+      "start_ratio": 0.7069,
+      "end_ratio": 0.8142,
+      "start_sec": 534.7,
+      "end_sec": 615.9,
+      "position_label": "70.7%–81.4%(8:55–10:16)",
+      "purpose": "兑现开头未知采购成本环，完整解释先付临时价、事后结算和利润月末才确定的经营机制，并交代变化尝试。",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.7354,
+          "time_ms": 556279,
+          "reason": "事后结算被正式命名，开头长悬环获得完整答案。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "deferred_settlement_mechanism_explained",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "deferred_loop_payoff",
+          "mechanism": "post_settlement_named"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "comparative_context",
+          "mechanism": "other_market_comparison"
+        }
+      ],
+      "required_retention_events": [
+        "deferred_loop_payoff",
+        "unknown_cost_paradox",
+        "constraint_recap"
+      ],
+      "original_moves": [
+        "未知成本回调",
+        "临时价与事后结算命名",
+        "卖完才知成本的悖论",
+        "返还形式和外部对照",
+        "改变尝试",
+        "多重约束综合。"
+      ],
+      "abstract_move": "兑现开头未知采购成本环，完整解释先付临时价、事后结算和利润月末才确定的经营机制，并交代变化尝试。",
+      "replacement_needs": [
+        "临时价格与现金先付",
+        "事后结算与真实成本确认",
+        "未知成本下对外定价的悖论",
+        "返还形式与其他制度对照",
+        "行业改变正在发生的限定",
+        "采购、费用与竞争的综合复述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(84);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 84
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "exit_barrier_reframe",
+      "start_ratio": 0.8142,
+      "end_ratio": 0.8785,
+      "start_sec": 615.9,
+      "end_sec": 664.5,
+      "position_label": "81.4%–87.9%(10:16–11:05)",
+      "purpose": "把违规与退出都放在窄利润和高固定退出成本中重新解释，避免单纯道德归因，并说明为何停业场景会长期存在。",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "利润如此有限，经营者为何不直接退出。",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "narrow_margin_structural_causation",
+          "opened_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "fixed_exit_cost_and_unable_to_close_reframe",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "causal_callback",
+          "mechanism": "violation_margin_connection"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "exit_question_answer",
+          "mechanism": "costly_exit"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "unable_to_exit_verdict",
+          "mechanism": "closure_impossibility_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "violation_causal_callback",
+        "exit_cost_answer",
+        "unable_to_exit_verdict"
+      ],
+      "original_moves": [
+        "窄合法收益与越界诱因",
+        "不只是个体品德",
+        "为何不退出",
+        "拆除修复成本",
+        "并非没有停业而是无法完成退出",
+        "行业数量下降。"
+      ],
+      "abstract_move": "把违规与退出都放在窄利润和高固定退出成本中重新解释，避免单纯道德归因，并说明为何停业场景会长期存在。",
+      "replacement_needs": [
+        "合法收益空间与违规诱因的连接",
+        "非纯道德归因的限定",
+        "退出所需拆除与修复成本",
+        "停业外观与“无法退出”的重新定性",
+        "行业数量下降的后继问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS06→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "asset_value_synthesis",
+      "start_ratio": 0.8785,
+      "end_ratio": 0.968,
+      "start_sec": 664.5,
+      "end_sec": 732.2,
+      "position_label": "87.9%–96.8%(11:05–12:12)",
+      "purpose": "用区位资产的机会成本解释部分退出，再以高流水与低经营收益的对照综合全片，并保留经营差异。",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 86,
+          "position_ratio": 0.9121,
+          "time_ms": 689959,
+          "reason": "退出被解释为区位资产替代用途胜出，而非单纯经营失败。"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.9471,
+          "time_ms": 716440,
+          "reason": "高流水与低剩余直接对撞，把收益结构转化为易懂尺度。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "asset_reframe",
+          "mechanism": "land_over_product"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "revenue_profit_contrast",
+          "mechanism": "high_revenue_low_residual"
+        }
+      ],
+      "required_retention_events": [
+        "asset_opportunity_cost",
+        "revenue_profit_contrast",
+        "variance_caveat"
+      ],
+      "original_moves": [
+        "行业减少",
+        "亏损只解释一半",
+        "区位资产升值",
+        "替代用途优于商品经营",
+        "高流水与低所得对照",
+        "经营差异限定",
+        "总结提示。"
+      ],
+      "abstract_move": "用区位资产的机会成本解释部分退出，再以高流水与低经营收益的对照综合全片，并保留经营差异。",
+      "replacement_needs": [
+        "行业数量变化与单一解释的限定",
+        "区位、面积和资产升值细节",
+        "商品经营与资产替代用途的比较",
+        "高流水低收益的数字对照",
+        "经营差异与附加业务效果的限定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(86)、PK09(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 86
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "purpose_reframe_closure",
+      "start_ratio": 0.968,
+      "end_ratio": 1,
+      "start_sec": 732.2,
+      "end_sec": 756.4,
+      "position_label": "96.8%–100%(12:12–12:36)",
+      "purpose": "用极简资金流向复述回收收益结构承诺，再把商品销售重新定义为让车辆停下、让区位产生价值的手段，兑现“另有目的”的标题承诺。",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 96,
+          "position_ratio": 0.9895,
+          "time_ms": 748480,
+          "reason": "商品交易被重定义为车流与区位价值的手段，兑现标题真实目的。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_money_trace_and_purpose_reframe",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "title_promise_payoff",
+          "mechanism": "product_as_traffic_device"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "closing_verdict",
+          "mechanism": "location_as_true_purpose"
+        }
+      ],
+      "required_retention_events": [
+        "money_flow_recap",
+        "title_promise_payoff",
+        "short_final_verdict"
+      ],
+      "original_moves": [
+        "资金流总结",
+        "薄利仍守住核心区位",
+        "商品让车辆停下",
+        "单笔收益不是最终目的",
+        "区位本身才是目的。"
+      ],
+      "abstract_move": "用极简资金流向复述回收收益结构承诺，再把商品销售重新定义为让车辆停下、让区位产生价值的手段，兑现“另有目的”的标题承诺。",
+      "replacement_needs": [
+        "代收、供货、经营者与渠道成本的资金流复述",
+        "坚守区位的表面矛盾",
+        "车流与区位价值的解释",
+        "“小份额不是目的，区位才是目的”的最终重定义"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(96);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 96
+        }
+      ]
+    }
+  ]
+}

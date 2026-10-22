@@ -1,0 +1,486 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.532Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "scenario_hook_myth_tease",
+      "start_ratio": 0.0001,
+      "end_ratio": 0.0737,
+      "start_sec": 0.1,
+      "end_sec": 39.3,
+      "position_label": "0%–7.4%(0:00–0:39)",
+      "purpose": "视频开始",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念：狗跟着你的真正原因是什么",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "双误读：是焦虑还是太爱你",
+          "closes_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "场景loop：浴室门口那个身影到底在做什么",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "live_scenario",
+          "mechanism": "right_now_scene"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "myth_tease",
+          "mechanism": "both_real_neither_true"
+        }
+      ],
+      "required_retention_events": "先让观众点头\"我家就是这样\"，再告诉他们想错了——悬念由此产生",
+      "original_moves": [
+        "直播态场景钩子 + 两种大众解释 + \"都沾边但都不对\"的悬念 + 科学描述将改变一切"
+      ],
+      "abstract_move": "视频开始",
+      "replacement_needs": [
+        "能做到:一个此刻进行时的日常场景,两种大众解释的并置,\"都不对\"的悬置判词,科学答案将改变看法的承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS08、LOOP02→FS02、LOOP03→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "live_scenario_myth_tease",
+        "first_stimulus_ms": 60,
+        "first_payoff_ms": 93760,
+        "evidence_refs": [
+          "C0001",
+          "C0009",
+          "C0027"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "secure_base_effect",
+      "start_ratio": 0.0751,
+      "end_ratio": 0.2552,
+      "start_sec": 40,
+      "end_sec": 136.1,
+      "position_label": "7.5%–25.5%(0:40–2:16)",
+      "purpose": "悬念已立",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "core_reframe",
+          "strength": 85,
+          "position_ratio": 0.1758,
+          "time_ms": 93760,
+          "reason": "\"不是离不开你，是有你在更有能力\"——全片核心重释，担忧变欣赏"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "边界担忧：这种行为是不是一种病",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "secure_base_reframe",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "behavior_naming",
+          "mechanism": "velcro_dogs"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "experiment_demo",
+          "mechanism": "puzzle_owner_variable"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "the_reframe",
+          "mechanism": "secure_base"
+        }
+      ],
+      "required_retention_events": "第一层答案先卸下\"我的狗是不是有病\"的担忧",
+      "original_moves": [
+        "行为命名（Velcro dogs）+ 诊断式误读的悬置 + 维也纳解谜实验 + 主人特异性 + 安全基地效应 + 非焦虑症证据"
+      ],
+      "abstract_move": "悬念已立",
+      "replacement_needs": [
+        "能做到:行为的学名,一个\"看似简单\"的实验设计,对照变量（主人/陌生人）,类比（游乐场边的孩子）,非病理性证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(85);打开的悬念 LOOP05→FS07 跨段;回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "referential_looking",
+      "start_ratio": 0.2553,
+      "end_ratio": 0.4367,
+      "start_sec": 136.2,
+      "end_sec": 233,
+      "position_label": "25.5%–43.7%(2:16–3:53)",
+      "purpose": "安全基地已建立",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "evidence_wow",
+          "strength": 78,
+          "position_ratio": 0.306,
+          "time_ms": 163200,
+          "reason": "83%的参照性注视：狗把你当实时信息源的数字证据"
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "mechanism_reveal",
+          "strength": 80,
+          "position_ratio": 0.4073,
+          "time_ms": 217240,
+          "reason": "跟随=保持视觉通道：物理机制让\"黏人\"再也说不出口"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "为什么只跟家里的某一个人",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "fan_study",
+          "mechanism": "eighty_three_percent"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "positioning_insight",
+          "mechanism": "visual_access"
+        }
+      ],
+      "required_retention_events": "把\"黏人\"翻译成\"咨询在线\"——同一行为，完全不同的意义",
+      "original_moves": [
+        "参照性注视实验（风扇/83%）+ 情绪信息驱动行为 + 两篇论文互证 + 跟随=保持咨询在线 + \"是连接不是需要\""
+      ],
+      "abstract_move": "安全基地已建立",
+      "replacement_needs": [
+        "能做到:一个具象的实验道具（风扇）,关键百分比,表情驱动行为的对照,视觉通道的机制解释,连接/需要判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(78)、PK03(80);打开的悬念 LOOP04→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 78
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "event_prediction",
+      "start_ratio": 0.4373,
+      "end_ratio": 0.5085,
+      "start_sec": 233.2,
+      "end_sec": 271.2,
+      "position_label": "43.7%–50.8%(3:53–4:31)",
+      "purpose": "信息源机制已建立",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "consistency_answer",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "event_prediction",
+          "mechanism": "consistent_source"
+        }
+      ],
+      "required_retention_events": "用冰箱和外套三个小问题让观众笑着被说服",
+      "original_moves": [
+        "多人家庭的跟随偏好 + 非情感偏好的证据 + 三个生活化提问 + 跟随=追踪事件概率"
+      ],
+      "abstract_move": "信息源机制已建立",
+      "replacement_needs": [
+        "能做到:多人家庭的观察,一致性与事件预测机制,生活化问题三连,概率追踪判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS03→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "uncertainty_navigation",
+      "start_ratio": 0.5096,
+      "end_ratio": 0.5728,
+      "start_sec": 271.8,
+      "end_sec": 305.5,
+      "position_label": "51%–57.3%(4:32–5:06)",
+      "purpose": "跟随的信息功能已建立",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "copy_steps",
+          "mechanism": "uncertainty_management"
+        }
+      ],
+      "required_retention_events": "把跟随从\"依赖\"升格为\"策略\"——误读再少一层",
+      "original_moves": [
+        "新空间中的可见跟随 + 模仿非必要步骤实验 + 跟随=导航策略而非服从"
+      ],
+      "abstract_move": "跟随的信息功能已建立",
+      "replacement_needs": [
+        "能做到:新环境中的行为升级,模仿非必要步骤的反直觉发现,对已有经验者依然成立的细节,导航策略判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "genetic_architecture",
+      "start_ratio": 0.5736,
+      "end_ratio": 0.7147,
+      "start_sec": 305.9,
+      "end_sec": 381.2,
+      "position_label": "57.4%–71.5%(5:06–6:21)",
+      "purpose": "行为与认知机制已备",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "depth_reveal",
+          "strength": 86,
+          "position_ratio": 0.5832,
+          "time_ms": 311060,
+          "reason": "基因层答案：与人类同源疾病的对照带来宿命般的温柔"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "gene_reveal",
+          "mechanism": "written_into_genome"
+        }
+      ],
+      "required_retention_events": "最深的答案要让人感到宿命般的温柔：这不是习惯，是架构",
+      "original_moves": [
+        "\"这一切都不是偶然\"宣告 + 普林斯顿基因发现 + 人类同源疾病的对照 + 狼没有而狗有 + 为亲近而选择的育种史"
+      ],
+      "abstract_move": "行为与认知机制已备",
+      "replacement_needs": [
+        "能做到:基因发现（名称+机构+年份）,人类同源综合征的对照,狼/狗差异,育种选择的重新定向"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(86)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 86
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "velcro_vs_anxiety",
+      "start_ratio": 0.7152,
+      "end_ratio": 0.8657,
+      "start_sec": 381.5,
+      "end_sec": 461.8,
+      "position_label": "71.5%–86.6%(6:21–7:42)",
+      "purpose": "最深答案已交付",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "counterintuitive_finding",
+          "strength": 82,
+          "position_ratio": 0.7345,
+          "time_ms": 391780,
+          "reason": "分离焦虑的狗并不跟得更多——边界问题的反直觉回答"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "scene_callback_synthesis",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "boundary_clarified",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "tufts_surprise",
+          "mechanism": "anxiety_not_more_following"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "boundary_line",
+          "mechanism": "can_rest_test"
+        }
+      ],
+      "required_retention_events": "给完安慰再给边界——既不放任焦虑，也不制造焦虑",
+      "original_moves": [
+        "Tufts反直觉发现 + 跟随≠分离焦虑 + 清晰的区分线（能休息/无法脱离）+ \"你的狗没有问题\""
+      ],
+      "abstract_move": "最深答案已交付",
+      "replacement_needs": [
+        "能做到:一个反直觉的临床发现,两种神经系统的区分,可操作的判断线（你在家时能否休息）,无问题判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(82);回收了前文的悬念 FS01→LOOP03、FS02→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 82
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "synthesis_compliment",
+      "start_ratio": 0.8661,
+      "end_ratio": 0.9591,
+      "start_sec": 462,
+      "end_sec": 511.6,
+      "position_label": "86.6%–95.9%(7:42–8:32)",
+      "purpose": "机制与边界已备",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "closing_verdict",
+          "strength": 90,
+          "position_ratio": 0.9446,
+          "time_ms": 503840,
+          "reason": "\"科学能给出的最高赞美\"——把日常行为升格为被选择的证据"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_full_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "scene_callback",
+          "mechanism": "door_synthesis"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "compliment_verdict",
+          "mechanism": "highest_compliment"
+        }
+      ],
+      "required_retention_events": "让那个熟悉的身影从此自带光环——重释的终点是珍视",
+      "original_moves": [
+        "开场场景回收 + 三重机制总结 + 基因类比的温柔化 + \"最高赞美\"判词"
+      ],
+      "abstract_move": "机制与边界已备",
+      "replacement_needs": [
+        "能做到:开场场景的逐点回收,三重机制的压缩总结,温柔化的基因类比,最高赞美判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "cta_series_callback",
+      "start_ratio": 0.9597,
+      "end_ratio": 1,
+      "start_sec": 511.9,
+      "end_sec": 533.4,
+      "position_label": "96%–100%(8:32–8:53)",
+      "purpose": "重释已完成",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": "用提问把观众的故事变成下一波流量",
+      "original_moves": [
+        "订阅评论CTA + 提问互动 + 系列首集回引"
+      ],
+      "abstract_move": "重释已完成",
+      "replacement_needs": [
+        "能做到:一个低门槛互动问题,系列首集的回引"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    }
+  ]
+}

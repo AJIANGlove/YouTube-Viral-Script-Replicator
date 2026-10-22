@@ -1,0 +1,1000 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.427Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.034,
+      "start_sec": 0,
+      "end_sec": 46,
+      "position_label": "0%–3.4%(0:00–0:46)",
+      "purpose": "第二人称沉浸式威胁开场：让观众以祖先身份亲历一次被注视的黄昏",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_sensory_scene"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "threat_build",
+          "mechanism": "primal_fear_physiology"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_threat_scene",
+        "mundane_reframe_verdict"
+      ],
+      "original_moves": [
+        "从零信息到感官威胁场景建立，再到'这曾是日常'的反差定性"
+      ],
+      "abstract_move": "第二人称沉浸式威胁开场：让观众以祖先身份亲历一次被注视的黄昏",
+      "replacement_needs": [
+        "赤裸无防的感官细节清单",
+        "不可见威胁的注视感",
+        "生理恐惧反应的逐句推进",
+        "把惊悚场景降格为日常的反差判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 46000,
+        "hook_type": "immersive_second_person_threat_scene",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 46000,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0006"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "mystery_setup",
+      "start_ratio": 0.034,
+      "end_ratio": 0.064,
+      "start_sec": 46,
+      "end_sec": 86,
+      "position_label": "3.4%–6.4%(0:46–1:26)",
+      "purpose": "立下核心设问：硬件全劣的一方如何不仅活下来还登顶，并承诺三重观看体验",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "dark_humor",
+          "strength": 70,
+          "position_ratio": 0.0344,
+          "time_ms": 46000,
+          "reason": "'这只是星期二，这就是生活'：惊悚场景降格为日常的反差笑点，开场情绪定点"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "curiosity_hook",
+          "strength": 75,
+          "position_ratio": 0.0583,
+          "time_ms": 78000,
+          "reason": "核心设问显式落下并升级为'登顶每个生态系统'，主承诺成型"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主问题：硬件全劣的祖先如何在捕食者环伺中活下来并登顶（标题'如何'问句的具身化悬挂）",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "dark_humor_payoff",
+          "mechanism": "mundane_reframe"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "scale_tease",
+          "mechanism": "survival_miracle"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "core_question",
+          "mechanism": "direct_question_hook"
+        }
+      ],
+      "required_retention_events": [
+        "core_question_asked",
+        "tone_contract"
+      ],
+      "original_moves": [
+        "劣势清单",
+        "直接设问",
+        "幸存到登顶的升级",
+        "三重情绪承诺"
+      ],
+      "abstract_move": "立下核心设问：硬件全劣的一方如何不仅活下来还登顶，并承诺三重观看体验",
+      "replacement_needs": [
+        "劣势清单的快速盘点",
+        "'如何做到'的直接问句",
+        "从幸存到登顶的升级表述",
+        "三重情绪承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(70)、PK02(75);打开的悬念 LOOP01→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "stakes_establishment",
+      "start_ratio": 0.064,
+      "end_ratio": 0.132,
+      "start_sec": 86,
+      "end_sec": 177,
+      "position_label": "6.4%–13.2%(1:26–2:57)",
+      "purpose": "用量化悬殊对比把设问逼到绝境：数据上没有任何幸存的理由",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "答案不是一件事而是一摞互相叠加的机制，它们如何复利",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "promise_triplet",
+          "mechanism": "tone_contract"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "statistical_contrast",
+          "mechanism": "speed_ladder"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "stakes_verdict",
+          "mechanism": "paper_verdict"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "proof_reversal",
+          "mechanism": "reader_as_proof"
+        }
+      ],
+      "required_retention_events": [
+        "statistical_contrast",
+        "paper_verdict",
+        "reader_as_proof"
+      ],
+      "original_moves": [
+        "捕食者速度阶梯",
+        "纸面死刑判词",
+        "观众存在作为反证",
+        "机制清单预告"
+      ],
+      "abstract_move": "用量化悬殊对比把设问逼到绝境：数据上没有任何幸存的理由",
+      "replacement_needs": [
+        "对手能力的阶梯式数据对比",
+        "纸面结论的判决句",
+        "观众自身存在作为反证的转折",
+        "引出第一个机制名称的钩子"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.132,
+      "end_ratio": 0.188,
+      "start_sec": 177,
+      "end_sec": 252,
+      "position_label": "13.2%–18.8%(2:57–4:12)",
+      "purpose": "机制一：信息沟通——借动物警报叫声类比，揭示升级为可描述细节的信号系统",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "mechanism_tease",
+          "mechanism": "first_tool_named"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "analogy_reveal",
+          "mechanism": "animal_alarm_calls"
+        }
+      ],
+      "required_retention_events": [
+        "animal_analogy",
+        "one_line_verdict"
+      ],
+      "original_moves": [
+        "猴类警报叫声类比",
+        "proto语言描述细节",
+        "信息快过狮子的判词"
+      ],
+      "abstract_move": "机制一：信息沟通——借动物警报叫声类比，揭示升级为可描述细节的信号系统",
+      "replacement_needs": [
+        "一个观众陌生的动物行为类比",
+        "机制从类比到升级版的跃迁",
+        "群体层面收益的定性句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.188,
+      "end_ratio": 0.238,
+      "start_sec": 252,
+      "end_sec": 318,
+      "position_label": "18.8%–23.8%(4:12–5:18)",
+      "purpose": "机制二：群体凝聚——把社会性重定义为刻进生物学的保命策略",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "one_line_verdict",
+          "mechanism": "information_speed_verdict"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "reframe",
+          "mechanism": "isolation_death_sentence"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "mechanism_payoff",
+          "mechanism": "cohesion_against_ambush"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "perspective_shift",
+          "mechanism": "predator_pov_assignment"
+        }
+      ],
+      "required_retention_events": [
+        "death_sentence_reframe",
+        "cohesion_verdict"
+      ],
+      "original_moves": [
+        "独处=死刑",
+        "群体成型",
+        "不散乱的反本能行为",
+        "对捕食者策略的克制"
+      ],
+      "abstract_move": "机制二：群体凝聚——把社会性重定义为刻进生物学的保命策略",
+      "replacement_needs": [
+        "独处等于死刑的重定义",
+        "群体数量的画面化对比",
+        "不散乱这一反本能行为的点破"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "perspective_flip",
+      "start_ratio": 0.238,
+      "end_ratio": 0.27,
+      "start_sec": 318,
+      "end_sec": 361,
+      "position_label": "23.8%–27%(5:18–6:01)",
+      "purpose": "角色互换思想实验：让观众扮演捕食者重新计算风险，以幽默坐实机制",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "humor_peak",
+          "strength": 75,
+          "position_ratio": 0.264,
+          "time_ms": 353000,
+          "reason": "鬣狗视角小品收束：风险重估后离场，机制效果被对手反向证实"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "humor_payoff",
+          "mechanism": "escalating_surprises"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "verdict_payoff",
+          "mechanism": "risk_recalculation"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "retention_hazard",
+          "mechanism": "embedded_self_promo"
+        }
+      ],
+      "required_retention_events": [
+        "predator_pov_vignette",
+        "risk_recalculation"
+      ],
+      "original_moves": [
+        "捕食者身份指派",
+        "意外不断升级",
+        "风险重估",
+        "离场被目送"
+      ],
+      "abstract_move": "角色互换思想实验：让观众扮演捕食者重新计算风险，以幽默坐实机制",
+      "replacement_needs": [
+        "捕食者视角的身份指派",
+        "攻击过程中意外不断升级的遭遇",
+        "风险重估一句判词",
+        "猎物目送对手的静默收尾"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.292,
+      "end_ratio": 0.322,
+      "start_sec": 391,
+      "end_sec": 430,
+      "position_label": "29.2%–32.2%(6:31–7:10)",
+      "purpose": "机制三：文化传递——把讲故事重定义为跨代际的知识复利系统",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "hidden_mechanism_reveal",
+          "mechanism": "storytelling_as_survival"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "chapter_open",
+          "mechanism": "ceremonial_chapter_intro"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_mechanism_reframe",
+        "compounding_verdict"
+      ],
+      "original_moves": [
+        "叙事尾巴衔接",
+        "讲故事被点名为生存机制",
+        "险情复述=课程传递",
+        "代际复利"
+      ],
+      "abstract_move": "机制三：文化传递——把讲故事重定义为跨代际的知识复利系统",
+      "replacement_needs": [
+        "把日常行为指认为隐性生存机制",
+        "险情复述等于课程传递的等式",
+        "代际复利的定性句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.322,
+      "end_ratio": 0.412,
+      "start_sec": 430,
+      "end_sec": 551,
+      "position_label": "32.2%–41.2%(7:10–9:11)",
+      "purpose": "机制四：火——先给防御收益，再揭示更微妙的认知升级收益",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "火除了防线之外还做了什么'更微妙的事'",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "人类控制火的确切年代存在量级争议：刻意保持开放，叙事用途是以显式标注科学分歧强化讲述者的诚实姿态，同时'无论采信哪个年代都足够古老'使不确定性本身服务于论证",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "mechanism_payoff",
+          "mechanism": "invisible_wall"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "subtle_tease",
+          "mechanism": "deeper_layer_tease"
+        }
+      ],
+      "required_retention_events": [
+        "defense_benefit",
+        "subtle_effect_tease",
+        "cognition_payoff"
+      ],
+      "original_moves": [
+        "郑重开场",
+        "夜晚劣势反转",
+        "微妙伏笔",
+        "肠道缩短能量转移大脑的因果链"
+      ],
+      "abstract_move": "机制四：火——先给防御收益，再揭示更微妙的认知升级收益",
+      "replacement_needs": [
+        "章节式的郑重开场白",
+        "夜晚劣势到无形之墙的反转",
+        "'还有更微妙一层'的伏笔",
+        "消化到大脑的生理因果链"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS09、LOOP06(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.412,
+      "end_ratio": 0.497,
+      "start_sec": 592,
+      "end_sec": 664,
+      "position_label": "41.2%–49.7%(9:52–11:04)",
+      "purpose": "机制五：主动解题——从学习对手弱点到武器延伸触及，完成被动到主动的转向",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.4248,
+          "time_ms": 568000,
+          "reason": "肠道缩水、能量预算转给大脑：熟食到认知升级的因果链闭环"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "information_reveal",
+          "mechanism": "gut_brain_tradeoff"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "inventory_reveal",
+          "mechanism": "specialist_weakness_list"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "information_reveal",
+          "mechanism": "unseen_threat"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "rhetoric_payoff",
+          "mechanism": "rule_of_three"
+        }
+      ],
+      "required_retention_events": [
+        "weakness_inventory",
+        "range_extension_reveal",
+        "rule_of_three"
+      ],
+      "original_moves": [
+        "武器射程递进",
+        "70km/h不可感知打击",
+        "三连'没有X？给你Y'排比"
+      ],
+      "abstract_move": "机制五：主动解题——从学习对手弱点到武器延伸触及，完成被动到主动的转向",
+      "replacement_needs": [
+        "对手特长即弱点的清单式盘点",
+        "武器射程递进的技术叙事",
+        "从不可感知距离被击中的对手视角",
+        "三连否定-解答排比"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80);回收了前文的悬念 FS08→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.497,
+      "end_ratio": 0.629,
+      "start_sec": 722,
+      "end_sec": 841,
+      "position_label": "49.7%–62.9%(12:02–14:01)",
+      "purpose": "机制六：地形工具化与耐力底牌——环境变武器，持久追逐中猎手猎物身份倒置",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "身体本身还有什么被低估的底牌",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "one_line_verdict",
+          "mechanism": "three_noun_verdict"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "calibration_reveal",
+          "mechanism": "not_fastest_best"
+        }
+      ],
+      "required_retention_events": [
+        "terrain_conversion",
+        "precise_calibration",
+        "inversion_payoff"
+      ],
+      "original_moves": [
+        "身体底牌引出",
+        "不是最快而是最强的校准",
+        "三项生理优势拆解",
+        "一小时后局势倒置"
+      ],
+      "abstract_move": "机制六：地形工具化与耐力底牌——环境变武器，持久追逐中猎手猎物身份倒置",
+      "replacement_needs": [
+        "地形特征逐一转化为屏障",
+        "'不是最快而是最强'的精确校准",
+        "排汗与呼吸的生理优势拆解",
+        "一小时后局势倒置的画面"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "reality_check",
+      "start_ratio": 0.629,
+      "end_ratio": 0.674,
+      "start_sec": 841,
+      "end_sec": 901,
+      "position_label": "62.9%–67.4%(14:01–15:01)",
+      "purpose": "诚实校准：承认死亡率真实且惨重，防止前文显得夸大，并提炼'向死者学习'的黑暗定性",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.629,
+          "time_ms": 841000,
+          "reason": "耐力反转：一小时后追捕者沦为被耗垮的一方"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "dark_verdict",
+          "strength": 70,
+          "position_ratio": 0.6739,
+          "time_ms": 901000,
+          "reason": "'死亡是种群级教育'：诚实校准段的冷峻定性，可信度定点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "inversion_payoff",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "inversion_payoff",
+          "mechanism": "tables_turned"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "honesty_calibration",
+          "mechanism": "mortality_evidence"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "dark_verdict",
+          "mechanism": "death_as_education"
+        }
+      ],
+      "required_retention_events": [
+        "mortality_honesty",
+        "death_as_education_verdict"
+      ],
+      "original_moves": [
+        "显式否定开场",
+        "考古伤亡证据",
+        "脆弱人群列举",
+        "向死者学习的冷峻判词"
+      ],
+      "abstract_move": "诚实校准：承认死亡率真实且惨重，防止前文显得夸大，并提炼'向死者学习'的黑暗定性",
+      "replacement_needs": [
+        "对前文的显式否定开场",
+        "考古证据级的伤亡佐证",
+        "脆弱人群的具体列举",
+        "死亡教育种群的冷峻判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80)、PK06(70);回收了前文的悬念 FS10→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.674,
+      "end_ratio": 0.775,
+      "start_sec": 901,
+      "end_sec": 981,
+      "position_label": "67.4%–77.5%(15:01–16:21)",
+      "purpose": "机制七：心理反制与集体养育——识破恐吓不散乱，勇气被文化奖励，幼崽永不落单",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "mechanism_payoff",
+          "mechanism": "courage_culture"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "one_line_verdict",
+          "mechanism": "never_unsupervised"
+        }
+      ],
+      "required_retention_events": [
+        "intimidation_decode",
+        "courage_culture",
+        "never_unsupervised"
+      ],
+      "original_moves": [
+        "心理战双向性",
+        "恐吓策略拆解",
+        "勇气功能化",
+        "不恐慌群体难猎判词"
+      ],
+      "abstract_move": "机制七：心理反制与集体养育——识破恐吓不散乱，勇气被文化奖励，幼崽永不落单",
+      "replacement_needs": [
+        "捕食者恐吓策略的机制拆解",
+        "勇气作为文化奖励特征的功能化",
+        "最脆弱成员的保险系统",
+        "永不落单的判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "central_reveal",
+      "start_ratio": 0.775,
+      "end_ratio": 0.865,
+      "start_sec": 1036,
+      "end_sec": 1157,
+      "position_label": "77.5%–86.5%(17:16–19:17)",
+      "purpose": "全片中枢：悖论揭示——保命特质正是翻盘特质，猎物变顶级猎手且每项机制都扩展为文明组件",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 95,
+          "position_ratio": 0.7876,
+          "time_ms": 1053000,
+          "reason": "'人类不再是猎物，成了顶级捕食者'：全片最高认知反转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_account_and_identity_reversal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "central_reveal",
+          "mechanism": "prey_to_apex"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "montage_payoff",
+          "mechanism": "scaled_montage"
+        }
+      ],
+      "required_retention_events": [
+        "prey_to_apex",
+        "scaled_montage",
+        "civilization_reframe"
+      ],
+      "original_moves": [
+        "悖论句",
+        "猎物到顶级身份反转",
+        "逐项扩展蒙太奇",
+        "现代日常挂钩史前夜晚"
+      ],
+      "abstract_move": "全片中枢：悖论揭示——保命特质正是翻盘特质，猎物变顶级猎手且每项机制都扩展为文明组件",
+      "replacement_needs": [
+        "悖论句开场",
+        "猎物到顶级的身份反转",
+        "逐项'扩展'排比蒙太奇",
+        "现代日常与史前夜晚的显式挂钩"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(95);回收了前文的悬念 FS02→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 95
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "bonus_reveal",
+      "start_ratio": 0.865,
+      "end_ratio": 0.927,
+      "start_sec": 1157,
+      "end_sec": 1240,
+      "position_label": "86.5%–92.7%(19:17–20:40)",
+      "purpose": "哲学加分段：揭示噩梦与灾难想象在祖先环境中的预防性生存功能",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.8654,
+          "time_ms": 1157000,
+          "reason": "现代文明每个元素被指认为生存机制的胚胎，主题升华到观众日常"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "'还有一个很少被讨论的角度'——梦境的生存功能是什么",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "synthesis_payoff",
+          "opened_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "philosophical_payoff",
+          "opened_in": "FS14"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "worldview_shift",
+          "mechanism": "civilization_reframe"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "information_reveal",
+          "mechanism": "dream_as_simulation"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "synthesis_verdict",
+          "mechanism": "edge_that_compounds"
+        }
+      ],
+      "required_retention_events": [
+        "dream_mechanism",
+        "modern_ailment_inversion"
+      ],
+      "original_moves": [
+        "谦逊开场",
+        "心理模拟机制",
+        "现代焦虑与祖先功能倒置",
+        "预消化恐慌判词"
+      ],
+      "abstract_move": "哲学加分段：揭示噩梦与灾难想象在祖先环境中的预防性生存功能",
+      "replacement_needs": [
+        "'还有一个角度'的谦逊开场",
+        "心理模拟能力的机制化解释",
+        "现代病症与祖先功能的倒置",
+        "预消化恐慌的定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85);回收了前文的悬念 FS03→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS15",
+      "function": "synthesis_recap",
+      "start_ratio": 0.927,
+      "end_ratio": 0.969,
+      "start_sec": 1240,
+      "end_sec": 1295,
+      "position_label": "92.7%–96.9%(20:40–21:35)",
+      "purpose": "复利回收：把全部机制压缩成一张相互作用清单，强调组合而非单项",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "mechanism_inventory",
+        "compounding_verdict"
+      ],
+      "original_moves": [
+        "排除单项",
+        "六机制相互作用清单",
+        "跨世代累积收束"
+      ],
+      "abstract_move": "复利回收：把全部机制压缩成一张相互作用清单，强调组合而非单项",
+      "replacement_needs": [
+        "'不是任何单项而是组合'的排除式开场",
+        "全部机制的清单式点名回收",
+        "跨世代累积的收束句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.969,
+      "end_ratio": 1,
+      "start_sec": 1295,
+      "end_sec": 1337,
+      "position_label": "96.9%–100%(21:35–22:17)",
+      "purpose": "身份升华结尾：把观众的存在本身定性为幸存链条的成果，以赋能格言收束",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9985,
+          "time_ms": 1335000,
+          "reason": "'祖先赤脚摸黑做到了这一切，你能行'：赋能格言完成情绪封顶"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "identity_ascension",
+          "mechanism": "lineage_pride"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "aphorism_close",
+          "mechanism": "empowering_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "identity_ascension",
+        "empowering_aphorism"
+      ],
+      "original_moves": [
+        "史前火堆到观众此刻的一线串联",
+        "身份胜利性重定义",
+        "现代压力赋能收尾"
+      ],
+      "abstract_move": "身份升华结尾：把观众的存在本身定性为幸存链条的成果，以赋能格言收束",
+      "replacement_needs": [
+        "从史前火堆到观众此刻的一线串联",
+        "观众身份的胜利性重定义",
+        "把主题压缩成日常的格言句",
+        "面向现代压力的赋能收尾"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1004 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.440Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.061,
+      "start_sec": 0,
+      "end_sec": 42,
+      "position_label": "0%–6.1%(0:00–0:42)",
+      "purpose": "现代对照开场：先承认观众的日常烦恼，再用第二人称指派身份并以死亡级落差完成点题",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.0263,
+          "time_ms": 18000,
+          "reason": "顶嘴即法定死罪：现代烦恼被古代落差一击碾压的钩子"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "title_callback",
+          "strength": 75,
+          "position_ratio": 0.0482,
+          "time_ms": 33000,
+          "reason": "标题点题句落下，苦难盘点契约正式确立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：这个身份的处境到底能糟糕到什么程度（标题问句的具身化悬挂）",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "modern_anchor_contrast"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "threat_turn",
+          "mechanism": "death_sentence_drop"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "title_drop",
+          "mechanism": "welcome_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "modern_anchor_contrast",
+        "identity_assignment",
+        "title_drop"
+      ],
+      "original_moves": [
+        "现代烦恼清单",
+        "古代身份指派",
+        "顶嘴即死罪",
+        "欢迎来到糟糕世界"
+      ],
+      "abstract_move": "现代对照开场：先承认观众的日常烦恼，再用第二人称指派身份并以死亡级落差完成点题",
+      "replacement_needs": [
+        "现代日常烦恼的共鸣清单",
+        "第二人称身份指派",
+        "一个现代小烦恼在古代对应死亡级后果的落差句",
+        "标题点题句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80)、PK02(75);打开的悬念 LOOP01→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 33000,
+        "hook_type": "modern_contrast_second_person_identity_assignment",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 33000,
+        "evidence_refs": [
+          "C0001",
+          "C0002",
+          "C0004",
+          "C0005"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "channel_ritual",
+      "start_ratio": 0.061,
+      "end_ratio": 0.08,
+      "start_sec": 42,
+      "end_sec": 55,
+      "position_label": "6.1%–8%(0:42–0:55)",
+      "purpose": "频道使命口播：用一句话说清频道'比惨慰藉'的内容契约，并完成订阅引导",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "频道级契约：专挑人类历史上最惨的时期来让自己感觉好一点；刻意保持开放，叙事用途是把单条视频转化为系列习惯，为频道后续选题持续引流",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP02"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "channel_promise",
+          "mechanism": "comparative_misery_premise"
+        }
+      ],
+      "required_retention_events": [
+        "channel_promise",
+        "call_to_action"
+      ],
+      "original_moves": [
+        "频道使命宣言",
+        "啤酒点赞订阅的口语引导"
+      ],
+      "abstract_move": "频道使命口播：用一句话说清频道'比惨慰藉'的内容契约，并完成订阅引导",
+      "replacement_needs": [
+        "频道内容契约的一句话宣言",
+        "订阅与互动引导"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "myth_inversion",
+      "start_ratio": 0.08,
+      "end_ratio": 0.111,
+      "start_sec": 55,
+      "end_sec": 76,
+      "position_label": "8%–11.1%(0:55–1:16)",
+      "purpose": "击碎流行文化滤镜：指出银幕上的荣耀奇观与该身份真实战场的位置反差，给出编目路线图",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "myth_inversion",
+          "mechanism": "location_reversal"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "identity_erasure",
+          "mechanism": "no_unique_name"
+        }
+      ],
+      "required_retention_events": [
+        "pop_culture_filter_list",
+        "location_reversal"
+      ],
+      "original_moves": [
+        "角斗士神庙皇帝滤镜",
+        "性别分野",
+        "战场在客厅",
+        "身份编目预告"
+      ],
+      "abstract_move": "击碎流行文化滤镜：指出银幕上的荣耀奇观与该身份真实战场的位置反差，给出编目路线图",
+      "replacement_needs": [
+        "流行文化滤镜的具象清单",
+        "荣耀奇观与真实处境的位置反转句",
+        "编目起点预告"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "identity_erasure",
+      "start_ratio": 0.111,
+      "end_ratio": 0.156,
+      "start_sec": 76,
+      "end_sec": 107,
+      "position_label": "11.1%–15.6%(1:16–1:47)",
+      "purpose": "第一层苦难：系统连一个独立名字都不给，用编号化命名规则完成身份抹除",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "humor_peak",
+          "strength": 70,
+          "position_ratio": 0.1401,
+          "time_ms": 96000,
+          "reason": "女儿像软件更新一样被编号：身份抹除的荒诞笑点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "humor_payoff",
+          "mechanism": "anachronism_mapping"
+        }
+      ],
+      "required_retention_events": [
+        "naming_rule_contrast",
+        "numbering_analogy"
+      ],
+      "original_moves": [
+        "男孩三名制对照",
+        "女儿随父姓编号",
+        "软件更新/序列号类比"
+      ],
+      "abstract_move": "第一层苦难：系统连一个独立名字都不给，用编号化命名规则完成身份抹除",
+      "replacement_needs": [
+        "两性命名规则的对照",
+        "编号化命名机制的递进演示",
+        "一个把命名荒诞类比到现代物的笑点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "absolute_power_reveal",
+      "start_ratio": 0.156,
+      "end_ratio": 0.201,
+      "start_sec": 107,
+      "end_sec": 138,
+      "position_label": "15.6%–20.1%(1:47–2:18)",
+      "purpose": "第二层苦难：揭示家庭内部的绝对合法权力，把'顶嘴'升级为生死问题",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "一个12岁女孩的日常到底是什么样",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "power_reveal",
+          "mechanism": "named_legal_power"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "stakes_reveal",
+          "mechanism": "life_death_legality"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "transition",
+          "mechanism": "rhetorical_question"
+        }
+      ],
+      "required_retention_events": [
+        "named_legal_power",
+        "property_verdict"
+      ],
+      "original_moves": [
+        "家父权具名",
+        "卖奴与处死合法",
+        "财产定性",
+        "日常生活设问"
+      ],
+      "abstract_move": "第二层苦难：揭示家庭内部的绝对合法权力，把'顶嘴'升级为生死问题",
+      "replacement_needs": [
+        "一项具名的制度性权力及其白话解释",
+        "该权力的极端行使清单",
+        "'你只是待交易的财产'的定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "education_apartheid",
+      "start_ratio": 0.201,
+      "end_ratio": 0.282,
+      "start_sec": 138,
+      "end_sec": 193,
+      "position_label": "20.1%–28.2%(2:18–3:13)",
+      "purpose": "第三层苦难：教育资源按性别隔离，并用一个全民性仪式劳作证明该剥夺跨越阶层",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "daily_routine_reveal",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "contrast_reveal",
+          "mechanism": "sibling_education_gap"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "absurd_reveal",
+          "mechanism": "curriculum_downgrade"
+        }
+      ],
+      "required_retention_events": [
+        "sibling_contrast",
+        "curriculum_downgrade",
+        "authority_example"
+      ],
+      "original_moves": [
+        "兄弟私教对照",
+        "课程降级为纺羊毛",
+        "全民羊毛执念",
+        "皇帝女儿例证",
+        "人肉缝纫机笑点"
+      ],
+      "abstract_move": "第三层苦难：教育资源按性别隔离，并用一个全民性仪式劳作证明该剥夺跨越阶层",
+      "replacement_needs": [
+        "同性/异性教育路径的平行对照",
+        "主角一方课程的荒诞降级",
+        "一个最高阶层的例证证明无人豁免"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS05→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "body_policing",
+      "start_ratio": 0.282,
+      "end_ratio": 0.359,
+      "start_sec": 193,
+      "end_sec": 246,
+      "position_label": "28.2%–35.9%(3:13–4:06)",
+      "purpose": "第四层苦难：身体与嗜好被制度规训，用一个侵入性检查仪式把荒诞推到顶点",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "humor_peak",
+          "strength": 75,
+          "position_ratio": 0.3358,
+          "time_ms": 230000,
+          "reason": "怪叔叔合法呼气检测：侵入性仪式的现代类比笑点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "生在富贵人家能否免于这些苦难",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "prohibition_reveal",
+          "mechanism": "wine_ban_logic"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "ritual_reveal",
+          "mechanism": "invasive_inspection"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "humor_payoff",
+          "mechanism": "anachronism_mapping"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "false_hope_subversion",
+          "mechanism": "wealth_fails"
+        }
+      ],
+      "required_retention_events": [
+        "prohibition_reveal",
+        "invasive_ritual_detail",
+        "modern_gratitude_reframe"
+      ],
+      "original_moves": [
+        "禁酒规则与荒唐理由",
+        "合法惩罚",
+        "吻权检查仪式",
+        "怪叔叔呼气检测笑点",
+        "庆幸对照"
+      ],
+      "abstract_move": "第四层苦难：身体与嗜好被制度规训，用一个侵入性检查仪式把荒诞推到顶点",
+      "replacement_needs": [
+        "一项被禁止的日常嗜好及其荒唐理由",
+        "违规的合法惩罚",
+        "一个侵入性家庭检查仪式的细节",
+        "庆幸对照收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75);打开的悬念 LOOP04→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "elite_marriage_pipeline",
+      "start_ratio": 0.359,
+      "end_ratio": 0.463,
+      "start_sec": 246,
+      "end_sec": 317,
+      "position_label": "35.9%–46.3%(4:06–5:17)",
+      "purpose": "第五层苦难：精英路径的童婚流水线，用告别童年的仪式与婚礼奇观制造情感重击",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.3942,
+          "time_ms": 270000,
+          "reason": "七年级学生烧掉玩偶明天嫁人：童婚议题的情感重击"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "平民女孩的人生是否另有出路",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "false_hope_subversion",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "ritual_detail",
+          "mechanism": "childhood_funeral"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "emotional_payoff",
+          "mechanism": "modern_equivalence_shock"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "responsibility_whiplash",
+          "mechanism": "age_duty_mismatch"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "path_switch",
+          "mechanism": "class_branch_question"
+        }
+      ],
+      "required_retention_events": [
+        "childhood_funeral_ritual",
+        "wedding_spectacle",
+        "responsibility_whiplash"
+      ],
+      "original_moves": [
+        "有钱不能幸免",
+        "玩具献祭告别童年",
+        "七年级嫁人类比",
+        "婚礼奇观",
+        "13岁当家反差"
+      ],
+      "abstract_move": "第五层苦难：精英路径的童婚流水线，用告别童年的仪式与婚礼奇观制造情感重击",
+      "replacement_needs": [
+        "政治联姻的工具化定性",
+        "告别童年的具象仪式",
+        "婚礼流程的奇观化细节",
+        "年龄与管理责任的反差句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85);打开的悬念 LOOP05→FS09 跨段;回收了前文的悬念 FS07→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "commoner_marriage_trap",
+      "start_ratio": 0.463,
+      "end_ratio": 0.564,
+      "start_sec": 317,
+      "end_sec": 386,
+      "position_label": "46.3%–56.4%(5:17–6:26)",
+      "purpose": "第六层苦难：平民路径同样无路可逃，居住与劳作环境更差，且婚姻制度本身是个占有陷阱",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "女孩们发现的巨大法律漏洞到底是什么、能否奏效",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "alternate_path_reveal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "system_reveal",
+          "mechanism": "possession_marriage"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "humor_payoff",
+          "mechanism": "modern_equivalence_shock"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "hope_turn",
+          "mechanism": "agency_loophole_beat"
+        }
+      ],
+      "required_retention_events": [
+        "class_branch_question",
+        "possession_marriage_reveal"
+      ],
+      "original_moves": [
+        "99%分岔设问",
+        "危楼与童工",
+        "占有式婚姻规则",
+        "合租房类比笑点"
+      ],
+      "abstract_move": "第六层苦难：平民路径同样无路可逃，居住与劳作环境更差，且婚姻制度本身是个占有陷阱",
+      "replacement_needs": [
+        "平民生活环境的危险细节",
+        "童工式劳作的清单",
+        "占有式婚姻制度的规则白话解释",
+        "同居即被占有的现代类比笑点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS10 跨段;回收了前文的悬念 FS08→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "loophole_hack",
+      "start_ratio": 0.564,
+      "end_ratio": 0.639,
+      "start_sec": 386,
+      "end_sec": 438,
+      "position_label": "56.4%–63.9%(6:26–7:18)",
+      "purpose": "喘息节拍：被压迫者发现制度漏洞并以机智操作夺回部分自主权，给观众一次小额胜利",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "humor_peak",
+          "strength": 80,
+          "position_ratio": 0.6102,
+          "time_ms": 418000,
+          "reason": "把人权当免费试用在扣费前重置：漏洞机智的喝彩笑点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "loophole_reveal",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "humor_payoff",
+          "mechanism": "subscription_analogy"
+        }
+      ],
+      "required_retention_events": [
+        "loophole_announcement",
+        "subscription_analogy",
+        "admiration_verdict"
+      ],
+      "original_moves": [
+        "漏洞存在宣告",
+        "三夜机制",
+        "订阅制免费试用类比",
+        "天才定性",
+        "两害相权选择"
+      ],
+      "abstract_move": "喘息节拍：被压迫者发现制度漏洞并以机智操作夺回部分自主权，给观众一次小额胜利",
+      "replacement_needs": [
+        "漏洞存在的反转宣告",
+        "漏洞的规则机制解释",
+        "漏洞操作的现代订阅制类比笑点",
+        "一句对主角机智的赞叹定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80);回收了前文的悬念 FS09→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "beauty_biohazard",
+      "start_ratio": 0.639,
+      "end_ratio": 0.766,
+      "start_sec": 438,
+      "end_sec": 525,
+      "position_label": "63.9%–76.6%(7:18–8:45)",
+      "purpose": "第七层苦难：审美标准本身是生化危害，用递增的有害美容细节制造恶心与荒诞",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "pivot",
+          "mechanism": "universal_job_verdict"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "disgust_reveal",
+          "mechanism": "toxic_beauty_reveal"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "disgust_payoff",
+          "mechanism": "gross_out_detail"
+        }
+      ],
+      "required_retention_events": [
+        "toxic_beauty_reveal",
+        "absurd_beauty_standard",
+        "gross_out_detail"
+      ],
+      "original_moves": [
+        "主业务定性",
+        "铅粉日常",
+        "中毒后果",
+        "一字眉标准",
+        "鼠毛树脂",
+        "角斗士汗液",
+        "庆幸对照"
+      ],
+      "abstract_move": "第七层苦难：审美标准本身是生化危害，用递增的有害美容细节制造恶心与荒诞",
+      "replacement_needs": [
+        "主线任务的残酷一句话总结",
+        "有害物质日常化的第一个细节",
+        "荒诞审美标准的第二个细节",
+        "体液商品化的第三个细节",
+        "庆幸对照收束句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "ultimate_stakes",
+      "start_ratio": 0.766,
+      "end_ratio": 0.832,
+      "start_sec": 525,
+      "end_sec": 570,
+      "position_label": "76.6%–83.2%(8:45–9:30)",
+      "purpose": "苦难顶点：生育是终极死亡风险，揭示早婚的制度原因与死亡率真相",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.819,
+          "time_ms": 561000,
+          "reason": "生育是年轻女性首要死因：全片最沉重的真相落地"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "escalation_verdict",
+          "mechanism": "nothing_compared_to"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "grim_reveal",
+          "mechanism": "russian_roulette_metaphor"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "mortality_reveal",
+          "mechanism": "leading_cause_of_death"
+        }
+      ],
+      "required_retention_events": [
+        "systemic_cause_reveal",
+        "mortality_reveal"
+      ],
+      "original_moves": [
+        "升级句式",
+        "帝国需要士兵",
+        "你是工厂",
+        "零麻醉轮盘赌",
+        "分娩椅细节",
+        "首要死因揭示"
+      ],
+      "abstract_move": "苦难顶点：生育是终极死亡风险，揭示早婚的制度原因与死亡率真相",
+      "replacement_needs": [
+        "早婚的制度性原因",
+        "生育风险的轮盘赌式定性",
+        "分娩场景的器具与流程细节",
+        "首要死因的揭示句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "escape_route_reveal",
+      "start_ratio": 0.832,
+      "end_ratio": 0.888,
+      "start_sec": 570,
+      "end_sec": 608,
+      "position_label": "83.2%–88.8%(9:30–10:08)",
+      "purpose": "出路揭示：存在唯一一条逃离路径，先用特权清单把希望拉满",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "有没有办法逃脱包办婚姻、有毒妆容与致命生育",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "唯一出路的'残酷代价'到底是什么",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "escape_question",
+          "mechanism": "way_out_rhetoric"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "perk_reveal",
+          "mechanism": "status_transformation"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "catch_tease",
+          "mechanism": "brutal_catch_warning"
+        }
+      ],
+      "required_retention_events": [
+        "escape_question",
+        "privilege_escalation"
+      ],
+      "original_moves": [
+        "出路设问",
+        "八岁入选脱离父权",
+        "法律独立",
+        "特权递增",
+        "免死金牌类比",
+        "代价预告"
+      ],
+      "abstract_move": "出路揭示：存在唯一一条逃离路径，先用特权清单把希望拉满",
+      "replacement_needs": [
+        "唯一出路的入选条件与年龄",
+        "法律地位的根本转变",
+        "特权清单的递增呈现",
+        "一个现代类比式的权力定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS15、LOOP08→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "brutal_catch",
+      "start_ratio": 0.888,
+      "end_ratio": 0.959,
+      "start_sec": 608,
+      "end_sec": 657,
+      "position_label": "88.8%–95.9%(10:08–10:57)",
+      "purpose": "对称反转：出路的代价是恐怖刑罚与报废式退休，希望被压成更深的绝望",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 95,
+          "position_ratio": 0.9124,
+          "time_ms": 625000,
+          "reason": "活埋白描与城市照常午饭的冷漠对照：全片恐怖顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "brutal_catch_reveal",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "horror_sequence",
+          "mechanism": "ritual_action_inventory"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "horror_payoff",
+          "mechanism": "indifferent_world_detail"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "analogy_verdict",
+          "mechanism": "internship_analogy"
+        }
+      ],
+      "required_retention_events": [
+        "ritual_action_inventory",
+        "retirement_irony"
+      ],
+      "original_moves": [
+        "30年贞洁誓言",
+        "活埋仪式逐步白描",
+        "城市照常午餐",
+        "高压实习类比",
+        "退休反讽",
+        "婚姻更糟定论"
+      ],
+      "abstract_move": "对称反转：出路的代价是恐怖刑罚与报废式退休，希望被压成更深的绝望",
+      "replacement_needs": [
+        "代价条款的一句话转折",
+        "惩罚仪式的逐步动作白描",
+        "现代职场类比定性",
+        "退役年龄的反讽"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(95);回收了前文的悬念 FS13→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 95
+        }
+      ]
+    },
+    {
+      "stage_id": "FS15",
+      "function": "closure",
+      "start_ratio": 0.959,
+      "end_ratio": 1,
+      "start_sec": 657,
+      "end_sec": 685,
+      "position_label": "95.9%–100%(10:57–11:25)",
+      "purpose": "收束：用总结隐喻为该身份定性，把观众的现代烦恼重估为幸运，并以多重细节回调结束",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.9956,
+          "time_ms": 682000,
+          "reason": "三重细节回调完成庆幸重估：现代烦恼被重新定价"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_catalog_and_comfort_reframe",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "escape_route_ironic_reveal",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "worldview_shift",
+          "mechanism": "summary_metaphor"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "comfort_reframe",
+          "mechanism": "modern_gratitude_reframe"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "callback_close",
+          "mechanism": "callback_montage"
+        }
+      ],
+      "required_retention_events": [
+        "summary_metaphor",
+        "modern_gratitude_reframe",
+        "callback_montage_close"
+      ],
+      "original_moves": [
+        "棋盘卒子定性",
+        "无名无声",
+        "双路径回顾",
+        "现代烦恼重估",
+        "编号/鼠毛/呼气检测回调"
+      ],
+      "abstract_move": "收束：用总结隐喻为该身份定性，把观众的现代烦恼重估为幸运，并以多重细节回调结束",
+      "replacement_needs": [
+        "一个把处境压缩成意象的总结隐喻",
+        "两条人生路径的并行回顾",
+        "对观众现代烦恼的庆幸重估",
+        "全片细节的多重回调句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(80);回收了前文的悬念 FS01→LOOP01、FS13→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        }
+      ]
+    }
+  ]
+}

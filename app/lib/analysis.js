@@ -7,6 +7,7 @@ const path = require('path');
 const store = require('./store');
 const checks = require('./checks');
 const retention = require('./retention');
+const voice = require('./voice');
 
 const PROMPTS_DIR = path.join(__dirname, '..', 'prompts');
 const GATE_MAX_RETRIES = 2;
@@ -72,7 +73,8 @@ function buildAnalysisPrompt(run, asset) {
     hook_contract: retention.hookContract(asset.timeline),
     retention_library: retention.librarySummary(4, 8),
     track_card: card ? card.text : '(没有匹配的赛道证据卡:事实按通用标准填写,来源、年份、地区缺一不可)',
-    materials: run.materials || '(无)'
+    materials: run.materials || '(无)',
+    voice: voice.voiceBrief(voice.voiceForRun(run))
   };
   let tpl = readPrompt('analysis.md');
   for (const k of Object.keys(vars)) tpl = tpl.replaceAll('{{' + k + '}}', vars[k]);

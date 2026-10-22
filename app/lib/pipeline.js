@@ -10,6 +10,7 @@ const checks = require('./checks');
 const textnorm = require('./textnorm');
 const retention = require('./retention');
 const analysis = require('./analysis');
+const voice = require('./voice');
 
 const CONFIG_PATH = path.join(__dirname, '..', 'config.json');
 
@@ -90,6 +91,7 @@ function fillTemplate(tpl, ctx, tools) {
     .replaceAll('{{chapters}}', ctx.chapters || '(未指定)')
     .replaceAll('{{chapter_rules}}', ctx.chapter_rules || '')
     .replaceAll('{{analysis}}', ctx.analysis || '(无写前分析,按原流程执行)')
+    .replaceAll('{{voice}}', ctx.voice || '(未设定频道声音,按 Style 执行)')
     .replaceAll('{{plagiarism_report}}', plag)
     .replaceAll('{{density_report}}', dens);
 }
@@ -275,8 +277,11 @@ async function runGeneration(runId) {
     framework: asset.framework, timeline: asset.timeline, style: asset.style, examples: asset.examples,
     topic: run.topic, audience: audienceStr,
     // 写前分析经人工确认后才注入四步提示词(未确认/旧任务按原流程)
-    analysis: run.analysis_confirmed ? analysis.analysisBrief(run.analysis) : null
+    analysis: run.analysis_confirmed ? analysis.analysisBrief(run.analysis) : null,
+    // 频道声音设定(语体/称呼/自称/固定用语),写稿与优化时注入
+    voice: voice.voiceBrief(voice.voiceForRun(run))
   };
+  run.voice_used = (voice.voiceForRun(run) || {}).name || null;
   const tools = checks.makeRefTools({ examples: asset.examples, srt: asset.srt, timeline: asset.timeline });
 
   // 每次 LLM 调用(首轮/闸门重试/截断续写)都记一条流水到 run.attempts(封顶 100 条),失败原因不再随重试丢失

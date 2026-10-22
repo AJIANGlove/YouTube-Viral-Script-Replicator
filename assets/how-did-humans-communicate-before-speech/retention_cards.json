@@ -1,0 +1,986 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.340Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "hook_question",
+      "start_ratio": 0,
+      "end_ratio": 0.021,
+      "start_sec": 0,
+      "end_sec": 30,
+      "position_label": "0%–2.1%(0:00–0:30)",
+      "purpose": "悬念问句开场：先抛出'在X之前我们有别的东西'的悖论预告，再用一个具象两难场景把核心问题砸实，并承诺答案超出预期",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：在该能力出现之前，我们究竟是如何做到这件事的（标题问句的具身化悬挂）",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "paradox_cold_open"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "question_pose",
+          "mechanism": "concrete_scenario_question"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "embodied_demo",
+          "mechanism": "embodied_demonstration"
+        }
+      ],
+      "required_retention_events": [
+        "paradox_cold_open",
+        "concrete_scenario_question",
+        "answer_promise"
+      ],
+      "original_moves": [
+        "悖论预告",
+        "核心问句三连",
+        "具象两难场景",
+        "'答案超出预期'的承诺"
+      ],
+      "abstract_move": "悬念问句开场：先抛出'在X之前我们有别的东西'的悖论预告，再用一个具象两难场景把核心问题砸实，并承诺答案超出预期",
+      "replacement_needs": [
+        "'先有别的什么东西'的悖论预告句",
+        "一个观众能立刻代入的两难场景",
+        "答案超出预期的显式承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "paradox_tease_concrete_scenario_question",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 30000,
+        "evidence_refs": [
+          "C0001",
+          "C0003",
+          "C0004"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "modality_reveal",
+      "start_ratio": 0.021,
+      "end_ratio": 0.099,
+      "start_sec": 30,
+      "end_sec": 142,
+      "position_label": "2.1%–9.9%(0:30–2:22)",
+      "purpose": "第一通道揭示：用观众此刻就能做的具身演示开场，升级为解剖学硬事实与跨文化普遍性证据，引入署名研究者概念，落到进化功能与章节判决",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "fact_reveal",
+          "mechanism": "anatomy_fact"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "universality_reveal",
+          "mechanism": "cross_cultural_universality"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "named_researcher",
+          "mechanism": "named_researcher_backing"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "function_reveal",
+          "mechanism": "survival_function_explanation"
+        }
+      ],
+      "required_retention_events": [
+        "embodied_demonstration",
+        "anatomy_fact",
+        "chapter_verdict"
+      ],
+      "original_moves": [
+        "具身演示",
+        "解剖学硬事实",
+        "跨文化普遍性",
+        "署名研究者概念",
+        "进化功能",
+        "章节判决"
+      ],
+      "abstract_move": "第一通道揭示：用观众此刻就能做的具身演示开场，升级为解剖学硬事实与跨文化普遍性证据，引入署名研究者概念，落到进化功能与章节判决",
+      "replacement_needs": [
+        "观众当下可验证的具身演示指令",
+        "硬性解剖/统计事实",
+        "跨文化普遍性证据",
+        "署名研究者与概念命名",
+        "进化功能解释",
+        "章节判决句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "modality_reveal",
+      "start_ratio": 0.099,
+      "end_ratio": 0.215,
+      "start_sec": 142,
+      "end_sec": 308,
+      "position_label": "9.9%–21.5%(2:22–5:08)",
+      "purpose": "第二通道揭示：从深时分叉锚点切入近亲动物的行为清单，证明其意向性，再用人类发育阶段的呼应证据与主导理论命名收口，以隐喻格言收章",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.099,
+          "time_ms": 142000,
+          "reason": "第一章判决：交流不是被发明而是被升级，全片论点首次亮相"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "humor_peak",
+          "strength": 65,
+          "position_ratio": 0.1798,
+          "time_ms": 258000,
+          "reason": "宠物只盯手指不看所指的反差笑点，坐实人类指向行为的独特性"
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.2098,
+          "time_ms": 301000,
+          "reason": "隐喻格言收章：手修了路，嘴只是学会在上面开车"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "该能力是否真的始于双手而非嘴巴",
+          "closes_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "在看不见的黑暗与密林中，什么填补了手势的空白",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "chapter_verdict",
+          "mechanism": "chapter_verdict_aphorism"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "animal_inventory",
+          "mechanism": "animal_behavior_inventory"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "intentionality_reveal",
+          "mechanism": "intentionality_markers"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "deep_time_verdict",
+          "mechanism": "deep_time_anchor"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "twist",
+          "mechanism": "human_infant_twist"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "humor_payoff",
+          "mechanism": "animal_contrast_humor"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "aphorism_payoff",
+          "mechanism": "chapter_verdict_aphorism"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "constraint_pivot",
+          "mechanism": "constraint_pivot_transition"
+        }
+      ],
+      "required_retention_events": [
+        "animal_behavior_inventory",
+        "human_infant_twist",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "深时分叉锚点",
+        "动物行为清单",
+        "意向性判定",
+        "量化目录",
+        "婴儿呼应",
+        "理论命名",
+        "神经证据",
+        "隐喻格言"
+      ],
+      "abstract_move": "第二通道揭示：从深时分叉锚点切入近亲动物的行为清单，证明其意向性，再用人类发育阶段的呼应证据与主导理论命名收口，以隐喻格言收章",
+      "replacement_needs": [
+        "深时时间锚点",
+        "近亲动物行为清单",
+        "意向性判定标准",
+        "量化研究目录",
+        "人类发育阶段的呼应证据",
+        "主导理论命名",
+        "隐喻格言收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(70)、PK02(65)、PK03(80);打开的悬念 LOOP03→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 65
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "modality_reveal",
+      "start_ratio": 0.215,
+      "end_ratio": 0.331,
+      "start_sec": 308,
+      "end_sec": 475,
+      "position_label": "21.5%–33.1%(5:08–7:55)",
+      "purpose": "第三通道揭示：先指出上一通道的物理局限作为转场枢轴，再用动物报警系统清单展示信号的指称性，诚实标注证据缺口后以解剖代理证据与行为反证推进",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.2439,
+          "time_ms": 350000,
+          "reason": "三种叫声对应三种天敌与三种反应：信号指称性的清单式实锤"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.3206,
+          "time_ms": 460000,
+          "reason": "葬死者、制颜料、戴饰物的物种不可能无话可说：对近亲物种的成见被反转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "早期人类听来究竟如何——在不留化石的前提下能否作答",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "proxy_inference_answer",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "signal_inventory",
+          "mechanism": "animal_behavior_inventory"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "concession_verdict",
+          "mechanism": "concession_reversal"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "honest_unknown",
+          "mechanism": "honest_unknown_labeling"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "counter_evidence",
+          "mechanism": "behavior_counter_evidence"
+        }
+      ],
+      "required_retention_events": [
+        "constraint_pivot",
+        "signal_inventory",
+        "proxy_reasoning"
+      ],
+      "original_moves": [
+        "局限转场",
+        "声学属性",
+        "动物报警清单",
+        "让步定位",
+        "化石缺口诚实",
+        "解剖代理",
+        "行为反证"
+      ],
+      "abstract_move": "第三通道揭示：先指出上一通道的物理局限作为转场枢轴，再用动物报警系统清单展示信号的指称性，诚实标注证据缺口后以解剖代理证据与行为反证推进",
+      "replacement_needs": [
+        "上一通道的局限转场",
+        "信号物理属性说明",
+        "动物案例的清单式呈现",
+        "让步式定位判决",
+        "证据缺口的诚实标注",
+        "解剖代理证据",
+        "行为层面的反证"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75)、PK05(75);回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "modality_reveal",
+      "start_ratio": 0.331,
+      "end_ratio": 0.438,
+      "start_sec": 475,
+      "end_sec": 629,
+      "position_label": "33.1%–43.8%(7:55–10:29)",
+      "purpose": "第四通道揭示：单词主题句开章，铺陈跨文化普遍性与同步生理效应，用现代场景三连锚点解释其社会粘合功能，引入署名学者理论解决群体规模难题，以可达性论证收尾",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.3526,
+          "time_ms": 506000,
+          "reason": "同步行为改变激素、痛阈与凝聚力：社会粘合的生理证据落地"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "群体大到无法逐一梳理时，靠什么维系社会粘合",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "chapter_drop",
+          "mechanism": "topic_word_chapter_drop"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "physiology_reveal",
+          "mechanism": "physiology_fact_list"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "theory_reveal",
+          "mechanism": "named_scholar_theory"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "artifact_evidence",
+          "mechanism": "absence_of_evidence_argument"
+        }
+      ],
+      "required_retention_events": [
+        "physiology_reveal",
+        "named_scholar_theory",
+        "artifact_evidence"
+      ],
+      "original_moves": [
+        "单词主题句",
+        "普遍性断言",
+        "生理效应清单",
+        "现代三连锚点",
+        "特有适应性",
+        "署名理论",
+        "规模算术",
+        "器物证据",
+        "可达性论证"
+      ],
+      "abstract_move": "第四通道揭示：单词主题句开章，铺陈跨文化普遍性与同步生理效应，用现代场景三连锚点解释其社会粘合功能，引入署名学者理论解决群体规模难题，以可达性论证收尾",
+      "replacement_needs": [
+        "单词主题句",
+        "跨文化普遍性断言",
+        "同步行为的生理效应清单",
+        "现代场景三连锚点",
+        "人类特有适应性的指出",
+        "署名学者理论",
+        "群体规模算术",
+        "考古器物证据",
+        "无工具亦可行的可达性论证"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "modality_reveal",
+      "start_ratio": 0.438,
+      "end_ratio": 0.497,
+      "start_sec": 629,
+      "end_sec": 713,
+      "position_label": "43.8%–49.7%(10:29–11:53)",
+      "purpose": "第五通道揭示：身体姿态与触觉通道，用白描清单与问句连发展示空间语义，强调其跨文化跨物种的一致性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "semantics_reveal",
+          "mechanism": "touch_semantics"
+        }
+      ],
+      "required_retention_events": [
+        "posture_inventory",
+        "touch_semantics"
+      ],
+      "original_moves": [
+        "姿态白描",
+        "空间关系问句连发",
+        "触觉语义对照",
+        "跨物种一致性断言"
+      ],
+      "abstract_move": "第五通道揭示：身体姿态与触觉通道，用白描清单与问句连发展示空间语义，强调其跨文化跨物种的一致性",
+      "replacement_needs": [
+        "姿态白描清单",
+        "空间关系的问句连发",
+        "触觉语义的对照",
+        "跨物种一致性断言"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "primacy_reframe",
+      "start_ratio": 0.497,
+      "end_ratio": 0.544,
+      "start_sec": 713,
+      "end_sec": 781,
+      "position_label": "49.7%–54.4%(11:53–13:01)",
+      "purpose": "主从反转：指出通行术语的误导性，论证这些系统才是主系统——当新旧信号冲突时，人们永远信旧的",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.5282,
+          "time_ms": 758000,
+          "reason": "新旧信号冲突时人们永远信旧的：主从反转的实证落点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "reframe",
+          "mechanism": "term_critique"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "worldview_shift",
+          "mechanism": "contrast_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "term_critique",
+        "contrast_verdict"
+      ],
+      "original_moves": [
+        "术语批判",
+        "先来者更可靠论证",
+        "日常演示",
+        "对照判决",
+        "层叠定性"
+      ],
+      "abstract_move": "主从反转：指出通行术语的误导性，论证这些系统才是主系统——当新旧信号冲突时，人们永远信旧的",
+      "replacement_needs": [
+        "对通行术语的批判",
+        "'先来者更可靠'的论证",
+        "口头否认被身体拆穿的日常演示",
+        "一句对照判决",
+        "层叠而非替代的定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "modality_reveal",
+      "start_ratio": 0.544,
+      "end_ratio": 0.631,
+      "start_sec": 781,
+      "end_sec": 906,
+      "position_label": "54.4%–63.1%(13:01–15:06)",
+      "purpose": "最被忽视的通道揭示：先让步承认大众印象，再反转出具体信号证据与绕过意识的实验结果，诚实标注其精度极限后定位为背景广播通道",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.5554,
+          "time_ms": 797000,
+          "reason": "我们能闻到恐惧——不是比喻，是字面意义：最反直觉的断言"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "teaser",
+          "mechanism": "overlooked_channel_teaser"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "literal_claim",
+          "mechanism": "concession_reversal"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "mate_selection_reveal",
+          "mechanism": "experiment_evidence"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "limit_concession",
+          "mechanism": "dry_humor_concession"
+        }
+      ],
+      "required_retention_events": [
+        "overlooked_channel_teaser",
+        "bypass_consciousness_experiment",
+        "limit_concession"
+      ],
+      "original_moves": [
+        "被忽视预告",
+        "大众印象让步",
+        "反直觉断言",
+        "绕过意识实验",
+        "择偶计算",
+        "精度让步",
+        "背景定位"
+      ],
+      "abstract_move": "最被忽视的通道揭示：先让步承认大众印象，再反转出具体信号证据与绕过意识的实验结果，诚实标注其精度极限后定位为背景广播通道",
+      "replacement_needs": [
+        "'被忽视'预告",
+        "对大众印象的让步",
+        "反直觉能力断言",
+        "绕过意识加工的实验细节",
+        "择偶/社交计算证据",
+        "精度极限的让步",
+        "背景通道定位"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "proxy_inference",
+      "start_ratio": 0.631,
+      "end_ratio": 0.743,
+      "start_sec": 906,
+      "end_sec": 1066,
+      "position_label": "63.1%–74.3%(15:06–17:46)",
+      "purpose": "涌现路径推演：诚实承认'该能力不留痕迹'，改用代理指标——器物传统所需的认知架构恰好等于该能力的认知架构，得出'最后一块拼图'而非'巨变'的结论",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.724,
+          "time_ms": 1039000,
+          "reason": "那次跨越不是从沉默到大师，而是同一套系统加上语法：涌现路径定性"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "从多通道系统到该能力的跨越究竟何时、如何发生",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "该能力涌现的确切时刻与最初的声音形态永远无法直接考证：刻意保持开放，叙事用途是以'不留痕迹'维持深时敬畏感与科学诚实信用，并把注意力从不可知的确切时刻引导到可代理回答的系统层累问题上",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "bridge_open",
+          "mechanism": "honest_unknown_labeling"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "equivalence_reveal",
+          "mechanism": "cognitive_equivalence_argument"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "aphorism_payoff",
+          "mechanism": "contrast_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "honest_unknown_labeling",
+        "cognitive_equivalence_argument",
+        "contrast_aphorism"
+      ],
+      "original_moves": [
+        "诚实未知",
+        "代理指标",
+        "器物复杂度对比",
+        "认知架构等同",
+        "时间锚点",
+        "拼图解锁",
+        "反差格言",
+        "语法增量"
+      ],
+      "abstract_move": "涌现路径推演：诚实承认'该能力不留痕迹'，改用代理指标——器物传统所需的认知架构恰好等于该能力的认知架构，得出'最后一块拼图'而非'巨变'的结论",
+      "replacement_needs": [
+        "未知状态的诚实声明",
+        "代理指标清单",
+        "早期与后期器物的复杂度对比",
+        "认知架构等同论证",
+        "关键时间锚点",
+        "'拼图最后一块'的可能性陈述",
+        "反差格言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);打开的悬念 LOOP08(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "transmission_reveal",
+      "start_ratio": 0.751,
+      "end_ratio": 0.846,
+      "start_sec": 1077,
+      "end_sec": 1214,
+      "position_label": "75.1%–84.6%(17:57–20:14)",
+      "purpose": "跨代传递机制：指出交流不止于当下信息更在于跨代传递，用人类特有的过度模仿倾向与脚手架式示范说明文化如何不靠文字累积，以诗意白描收束",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "没有任何人能写下或说清它时，知识如何存活数十万年",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "poetic_answer",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "concept_reveal",
+          "mechanism": "overimitation_reveal"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "poetic_beat",
+          "mechanism": "poetic_reframe_close"
+        }
+      ],
+      "required_retention_events": [
+        "overimitation_reveal",
+        "poetic_beat"
+      ],
+      "original_moves": [
+        "传递点题",
+        "模仿机制",
+        "过度模仿证据",
+        "文化累积",
+        "现代师徒锚点",
+        "诗意收束"
+      ],
+      "abstract_move": "跨代传递机制：指出交流不止于当下信息更在于跨代传递，用人类特有的过度模仿倾向与脚手架式示范说明文化如何不靠文字累积，以诗意白描收束",
+      "replacement_needs": [
+        "传递维度点题",
+        "模仿机制说明",
+        "过度模仿概念与儿童证据",
+        "文化累积断言",
+        "现代师徒场景锚点",
+        "诗意收束句"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP07。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:没有任何人能写下或说清它时，知识如何存活数十万年",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "capability_payoff",
+      "start_ratio": 0.846,
+      "end_ratio": 0.878,
+      "start_sec": 1214,
+      "end_sec": 1260,
+      "position_label": "84.6%–87.8%(20:14–21:00)",
+      "purpose": "兑现新能力带来的增量：以'有了它你可以…'排比连发铺陈增量，落到其迅速普及的因果解释",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "capability_anaphora",
+        "causal_explanation"
+      ],
+      "original_moves": [
+        "增量排比连发",
+        "情感维度条目",
+        "普及因果解释"
+      ],
+      "abstract_move": "兑现新能力带来的增量：以'有了它你可以…'排比连发铺陈增量，落到其迅速普及的因果解释",
+      "replacement_needs": [
+        "能力增量的排比连发",
+        "情感维度条目",
+        "普及原因的因果解释"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "synthesis_recap",
+      "start_ratio": 0.878,
+      "end_ratio": 0.958,
+      "start_sec": 1260,
+      "end_sec": 1374,
+      "position_label": "87.8%–95.8%(21:00–22:54)",
+      "purpose": "整体收束：否定'原始/草稿'定性，逐通道回顾'早已在运行'，点明新能力是加入而非替代，并用三个当下场景证明旧系统此刻仍在工作",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_synthesis_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "synthesis_verdict",
+          "mechanism": "negation_reframe"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "key_verdict",
+          "mechanism": "joined_not_replaced_verdict"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "present_day_proof",
+          "mechanism": "present_day_triad"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "zoom_out",
+          "mechanism": "layering_montage"
+        }
+      ],
+      "required_retention_events": [
+        "negation_reframe",
+        "joined_not_replaced_verdict",
+        "present_day_triad"
+      ],
+      "original_moves": [
+        "否定式翻案",
+        "能力清单",
+        "逐通道排比",
+        "加入非替代判决",
+        "当下三场景",
+        "失配捕获"
+      ],
+      "abstract_move": "整体收束：否定'原始/草稿'定性，逐通道回顾'早已在运行'，点明新能力是加入而非替代，并用三个当下场景证明旧系统此刻仍在工作",
+      "replacement_needs": [
+        "否定式翻案",
+        "系统能力清单",
+        "'早已'逐通道排比",
+        "加入非替代的判决",
+        "当下三场景证明",
+        "信号失配被旧系统捕获的场景"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "closure",
+      "start_ratio": 0.958,
+      "end_ratio": 1,
+      "start_sec": 1374,
+      "end_sec": 1435,
+      "position_label": "95.8%–100%(22:54–23:55)",
+      "purpose": "结尾：拉到深时远景做'逐步叠加'的蒙太奇式回顾，把观众当下的每个非语言动作重新定性为'回到最古老的自己'，以无名古老系统的意象温和收束",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9916,
+          "time_ms": 1423000,
+          "reason": "结尾翻案：你每个无声的回应都是在使用最古老的自己，全片情绪收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE40",
+          "event_type": "closing_reframe",
+          "mechanism": "poetic_reframe_close"
+        }
+      ],
+      "required_retention_events": [
+        "layering_montage",
+        "poetic_reframe_close"
+      ],
+      "original_moves": [
+        "深时远景",
+        "叠加蒙太奇排比",
+        "当下动作翻案",
+        "无名古老系统意象",
+        "温和落点"
+      ],
+      "abstract_move": "结尾：拉到深时远景做'逐步叠加'的蒙太奇式回顾，把观众当下的每个非语言动作重新定性为'回到最古老的自己'，以无名古老系统的意象温和收束",
+      "replacement_needs": [
+        "深时远景句",
+        "叠加式蒙太奇排比",
+        "当下动作的诗意翻案",
+        "无名古老系统的意象",
+        "温和落点句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1104 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.450Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "fantasy_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.025,
+      "start_sec": 0,
+      "end_sec": 31,
+      "position_label": "0%–2.5%(0:00–0:31)",
+      "purpose": "完整复述流行文化的浪漫幻想画面，建立即将被粉碎的靶子",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_media_scene"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_scene",
+        "fantasy_inventory"
+      ],
+      "original_moves": [
+        "观影/阅读场景代入",
+        "大理石宫殿、剥好的葡萄、竖琴、轻纱的幻想清单",
+        "终极异域幻想定性"
+      ],
+      "abstract_move": "完整复述流行文化的浪漫幻想画面，建立即将被粉碎的靶子",
+      "replacement_needs": [
+        "具体可画面化的幻想细节清单",
+        "大众文化来源锚点（影视/小说）",
+        "对幻想的情绪定性（终极奢华幻想）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 54000,
+        "hook_type": "romanticized_fantasy_subversion",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 46000,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0007"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "myth_shatter",
+      "start_ratio": 0.025,
+      "end_ratio": 0.063,
+      "start_sec": 31,
+      "end_sec": 77,
+      "position_label": "2.5%–6.3%(0:31–1:17)",
+      "purpose": "用第一记现实重击拆穿幻想，并把体制定性为高压职场",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 65,
+          "position_ratio": 0.0377,
+          "time_ms": 46000,
+          "reason": "第一记现实重击：幻想中的慵懒日常实为体罚与苦役"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE02",
+          "event_type": "tone_turn",
+          "mechanism": "fantasy_to_nightmare_pivot"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "first_strike",
+          "mechanism": "unexpected_punishment_detail"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "verdict",
+          "mechanism": "corporate_ladder_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "first_reality_strike",
+        "corporate_verdict"
+      ],
+      "original_moves": [
+        "幻想粉碎预告",
+        "体罚第一击",
+        "'不是泳池派对'",
+        "'史上最残酷晋升系统'定性",
+        "训练/守卫/生存竞争清单"
+      ],
+      "abstract_move": "用第一记现实重击拆穿幻想，并把体制定性为高压职场",
+      "replacement_needs": [
+        "一个出人意料的惩罚细节作为第一击",
+        "把体制映射为现代职场的总定性句",
+        "体制真实功能的清单（训练/守卫/竞争）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(65)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 65
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "stakes_hook",
+      "start_ratio": 0.063,
+      "end_ratio": 0.107,
+      "start_sec": 77,
+      "end_sec": 130,
+      "position_label": "6.3%–10.7%(1:17–2:10)",
+      "purpose": "抛出核心钩子：赢下这场游戏的奖品本身是诅咒，并完成点题",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "title_callback",
+          "strength": 70,
+          "position_ratio": 0.0837,
+          "time_ms": 102000,
+          "reason": "点题句落下，标题诉苦契约正式确立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：为什么赢下这场生存游戏反而让人生变成噩梦（标题诉苦问句的具象化悬挂）",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "为什么'晋升'意味着有人会合法地绞死你的孩子",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "这个体制里的人是怎么进来的",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "dark_promise",
+          "mechanism": "winner_curse_tease"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "title_drop",
+          "mechanism": "world_naming"
+        }
+      ],
+      "required_retention_events": [
+        "winner_curse_tease",
+        "title_drop"
+      ],
+      "original_moves": [
+        "'但有一个陷阱'",
+        "赢家噩梦预告",
+        "绞索意象",
+        "点题句",
+        "频道品牌与订阅段落"
+      ],
+      "abstract_move": "抛出核心钩子：赢下这场游戏的奖品本身是诅咒，并完成点题",
+      "replacement_needs": [
+        "'赢家下场更惨'的反转预告",
+        "一个具体而恐怖的代价意象",
+        "点题句与内容承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(70);打开的悬念 LOOP01→FS15、LOOP02→FS09、LOOP03→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "origin_exposition",
+      "start_ratio": 0.107,
+      "end_ratio": 0.167,
+      "start_sec": 130,
+      "end_sec": 203,
+      "position_label": "10.7%–16.7%(2:10–3:23)",
+      "purpose": "交代入场路径：体制成员的来源、仪式与身份抹除",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "origin_explain",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "system_reframe",
+          "mechanism": "acquisition_department_analogy"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "identity_erasure",
+          "mechanism": "old_life_deleted"
+        }
+      ],
+      "required_retention_events": [
+        "entry_question",
+        "identity_erasure"
+      ],
+      "original_moves": [
+        "'怎么得到这份工作'设问",
+        "奴隶来源与制度解释",
+        "入场年龄",
+        "改名与身份删除",
+        "词源点题",
+        "与世隔绝"
+      ],
+      "abstract_move": "交代入场路径：体制成员的来源、仪式与身份抹除",
+      "replacement_needs": [
+        "成员来源的制度性解释",
+        "入场年龄与入门仪式",
+        "改名与身份删除",
+        "名称词源的点题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "institution_reveal",
+      "start_ratio": 0.167,
+      "end_ratio": 0.227,
+      "start_sec": 203,
+      "end_sec": 277,
+      "position_label": "16.7%–22.7%(3:23–4:37)",
+      "purpose": "揭示体制真面目是精英教育机构，用现代学历类比完成祛魅",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "rank_reveal",
+          "mechanism": "unpaid_intern_analogy"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "humor_payoff",
+          "mechanism": "elite_school_contrast"
+        }
+      ],
+      "required_retention_events": [
+        "rank_analogy",
+        "training_inventory",
+        "consequence_contrast"
+      ],
+      "original_moves": [
+        "神话破灭预告",
+        "实习生等级类比",
+        "多年训练科目清单",
+        "'名校但失败即终身洗衣'定性",
+        "大多数人只是高学历女佣"
+      ],
+      "abstract_move": "揭示体制真面目是精英教育机构，用现代学历类比完成祛魅",
+      "replacement_needs": [
+        "入门等级的现代职位类比",
+        "多年训练科目清单",
+        "成败后果的反差类比句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "power_structure_reveal",
+      "start_ratio": 0.227,
+      "end_ratio": 0.286,
+      "start_sec": 277,
+      "end_sec": 349,
+      "position_label": "22.7%–28.6%(4:37–5:49)",
+      "purpose": "全片第一个大反转：名义主人只是客人，真正掌权者是最恐怖的大家长",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.233,
+          "time_ms": 284000,
+          "reason": "权力结构反转：真正的掌权者不是名义上的主人"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "真正掌管这个体制人事大权的是谁",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "power_structure_reveal",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "power_twist",
+          "mechanism": "figurehead_inversion"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "villain_intro",
+          "mechanism": "terrifying_boss_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "power_inversion",
+        "true_ruler_verdict",
+        "escalated_analogy"
+      ],
+      "original_moves": [
+        "'最大剧情反转'预告",
+        "名义主人被架空",
+        "真正掌权者登场",
+        "亲属梗类比升级",
+        "生杀权力清单",
+        "讨好规则"
+      ],
+      "abstract_move": "全片第一个大反转：名义主人只是客人，真正掌权者是最恐怖的大家长",
+      "replacement_needs": [
+        "名义掌权者被架空的一句反转",
+        "真正掌权者的身份与量级定性",
+        "现代亲属关系类比的逐步升级",
+        "掌权者生杀予夺的具体权力"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "humiliation_ritual",
+      "start_ratio": 0.286,
+      "end_ratio": 0.347,
+      "start_sec": 349,
+      "end_sec": 423,
+      "position_label": "28.6%–34.7%(5:49–7:03)",
+      "purpose": "呈现'晋升之夜'的屈辱仪式，彻底消解浪漫想象",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 70,
+          "position_ratio": 0.3208,
+          "time_ms": 391000,
+          "reason": "晋升仪式实为屈辱爬行，浪漫想象彻底破产"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "humiliation_ritual",
+          "mechanism": "crawl_description"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "humor_payoff",
+          "mechanism": "anticlimax_reward"
+        }
+      ],
+      "required_retention_events": [
+        "ritual_detail",
+        "anti_romance_verdict"
+      ],
+      "original_moves": [
+        "取悦掌权者的清单",
+        "获选与仪式准备",
+        "爬行与等待许可的白描",
+        "'毫无浪漫'判词",
+        "体操裁判调侃"
+      ],
+      "abstract_move": "呈现'晋升之夜'的屈辱仪式，彻底消解浪漫想象",
+      "replacement_needs": [
+        "仪式的准备流程",
+        "身体屈辱动作的白描",
+        "多年努力与荒诞回报的对照判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "false_summit_turn",
+      "start_ratio": 0.347,
+      "end_ratio": 0.4,
+      "start_sec": 423,
+      "end_sec": 487,
+      "position_label": "34.7%–40%(7:03–8:07)",
+      "purpose": "虚假登顶：拿到大奖（子嗣）的一刻正是恐怖开场",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.3856,
+          "time_ms": 470000,
+          "reason": "虚假登顶反转：中奖瞬间即恐怖片开场"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "拿到终极大奖之后，人生是否就此安全",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "那条被称为史上最残酷的规则到底是什么",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "false_summit_reversal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "tone_shift",
+          "mechanism": "horror_movie_turn"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "law_tease",
+          "mechanism": "most_brutal_law_announcement"
+        }
+      ],
+      "required_retention_events": [
+        "jackpot_reveal",
+        "false_summit_reversal"
+      ],
+      "original_moves": [
+        "大奖=生子",
+        "身份跃升清单",
+        "'你以为你安全了'",
+        "恐怖片换挡句",
+        "背上靶心定性"
+      ],
+      "abstract_move": "虚假登顶：拿到大奖（子嗣）的一刻正是恐怖开场",
+      "replacement_needs": [
+        "目标达成后的身份跃升清单",
+        "'你以为你赢了'的代入句",
+        "恐怖反转的明确换挡句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80);打开的悬念 LOOP06→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "system_rule_reveal",
+      "start_ratio": 0.4,
+      "end_ratio": 0.48,
+      "start_sec": 487,
+      "end_sec": 585,
+      "position_label": "40%–48%(8:07–9:45)",
+      "purpose": "中枢揭示：一条系统性残酷规则解释所有苦难的必然性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "law_reveal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "decree_quote",
+          "mechanism": "direct_law_quotation"
+        }
+      ],
+      "required_retention_events": [
+        "law_tease",
+        "decree_quote",
+        "execution_method_detail"
+      ],
+      "original_moves": [
+        "'最残酷法律'预告",
+        "对照制度差异",
+        "众子平等继承权",
+        "内战难题",
+        "规则条文引述",
+        "执行方式细节",
+        "停顿邀请"
+      ],
+      "abstract_move": "中枢揭示：一条系统性残酷规则解释所有苦难的必然性",
+      "replacement_needs": [
+        "与对照制度的差异解释",
+        "规则制定者与条文引述",
+        "规避禁忌的执行方式细节",
+        "'请观众停下来消化'的元叙述停顿"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS03→LOOP02、FS08→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "stakes_personalization",
+      "start_ratio": 0.48,
+      "end_ratio": 0.578,
+      "start_sec": 585,
+      "end_sec": 704,
+      "position_label": "48%–57.8%(9:45–11:44)",
+      "purpose": "第二人称代入母亲视角，把抽象规则转化为每日生存战争",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.4996,
+          "time_ms": 609000,
+          "reason": "'王位或绞索'二选一判词三连，生存规则封顶"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "这条规则是否真的被执行过、规模有多大",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "personalization",
+          "mechanism": "imagine_you_are_mother"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "zero_sum_verdict",
+          "mechanism": "throne_or_cord_triplet"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "paranoia_texture",
+          "mechanism": "food_tasting_detail"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "modern_mapping",
+          "mechanism": "modern_parenting_analogy"
+        }
+      ],
+      "required_retention_events": [
+        "mother_perspective",
+        "zero_sum_verdict",
+        "espionage_texture",
+        "modern_analogy"
+      ],
+      "original_moves": [
+        "'想象你是母亲'代入",
+        "零和判词三连",
+        "谍战与试毒细节清单",
+        "构陷对手皇子",
+        "现代育儿类比换算"
+      ],
+      "abstract_move": "第二人称代入母亲视角，把抽象规则转化为每日生存战争",
+      "replacement_needs": [
+        "代入式假设场景",
+        "零和判词的短句三连",
+        "每日谍战与试毒的细节清单",
+        "现代育儿焦虑的类比换算"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85);打开的悬念 LOOP07→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "case_payoff",
+      "start_ratio": 0.578,
+      "end_ratio": 0.638,
+      "start_sec": 704,
+      "end_sec": 778,
+      "position_label": "57.8%–63.8%(11:44–12:58)",
+      "purpose": "用真实历史案例兑现规则的恐怖规模",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.6112,
+          "time_ms": 745000,
+          "reason": "真实案例兑现：一个下午的集体处决与棺木游行，恐怖规模坐实"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "historical_case_payoff",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "case_tease",
+          "mechanism": "real_case_announcement"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "mass_execution_reveal",
+          "mechanism": "precise_number_and_detail"
+        }
+      ],
+      "required_retention_events": [
+        "case_anchor",
+        "precise_number_delivery",
+        "coffin_image"
+      ],
+      "original_moves": [
+        "'规则不是理论'过渡",
+        "年份与人物锚点",
+        "上任首日处决",
+        "精确数字与幼小化细节",
+        "棺木游行",
+        "母亲旁观"
+      ],
+      "abstract_move": "用真实历史案例兑现规则的恐怖规模",
+      "replacement_needs": [
+        "具体年份与人物锚点",
+        "上任首日的处决决定",
+        "精确数字与幼小化细节",
+        "棺木游行的视觉画面",
+        "幸存母亲的旁观视角"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(90);回收了前文的悬念 FS10→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "aftermath_reveal",
+      "start_ratio": 0.638,
+      "end_ratio": 0.684,
+      "start_sec": 778,
+      "end_sec": 834,
+      "position_label": "63.8%–68.4%(12:58–13:54)",
+      "purpose": "揭示失败者的下场：体制是生意，无用资产即流放；唯一赢家开启循环",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "失去孩子的母亲们会得到什么下场",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "fate_reveal",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "fate_question",
+          "mechanism": "rhetorical_question_denial"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "exile_reveal",
+          "mechanism": "useless_inventory_verdict"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "cycle_reveal",
+          "mechanism": "only_winner_becomes_boss"
+        }
+      ],
+      "required_retention_events": [
+        "fate_question",
+        "exile_verdict",
+        "cycle_reveal"
+      ],
+      "original_moves": [
+        "反问设问",
+        "冷面否定",
+        "'无用资产'定性",
+        "流放地功能定性",
+        "唯一赢家晋升",
+        "循环重启"
+      ],
+      "abstract_move": "揭示失败者的下场：体制是生意，无用资产即流放；唯一赢家开启循环",
+      "replacement_needs": [
+        "反问式设问（她们得到体面下场吗）",
+        "'无用资产'的冷面定性",
+        "流放地的功能定性",
+        "唯一赢家与循环重启"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP08。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:失去孩子的母亲们会得到什么下场",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "reform_backfire",
+      "start_ratio": 0.684,
+      "end_ratio": 0.807,
+      "start_sec": 834,
+      "end_sec": 984,
+      "position_label": "68.4%–80.7%(13:54–16:24)",
+      "purpose": "二次反转：废除酷规的改革制造了更糟的制度",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.7186,
+          "time_ms": 876000,
+          "reason": "改革反转：处决改为终身囚禁，解决方案更糟"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "废除残酷规则之后，体制里的人是否终于能松一口气",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "reform_backfire_reveal",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "reform_tease",
+          "mechanism": "expectation_subversion_sentence"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "cage_reveal",
+          "mechanism": "euphemism_translation"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "tragic_detail",
+          "mechanism": "decades_without_sky"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "absurd_payoff",
+          "mechanism": "crowned_from_cage"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "madness_case",
+          "mechanism": "named_mad_ruler_case"
+        }
+      ],
+      "required_retention_events": [
+        "expectation_subversion",
+        "cage_reveal",
+        "madness_case"
+      ],
+      "original_moves": [
+        "舆论压力",
+        "废除酷规",
+        "'你以为会更好'",
+        "囚禁制度名称与细节",
+        "数十年不见天日",
+        "拖出囚禁直接登基",
+        "疯君案例"
+      ],
+      "abstract_move": "二次反转：废除酷规的改革制造了更糟的制度",
+      "replacement_needs": [
+        "'你以为会更好'的预期违背句式",
+        "新制度的名称与字面含义",
+        "奢华囚禁的细节白描",
+        "被拖出囚禁直接登基的荒诞后果",
+        "一个真实疯君案例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "system_summary",
+      "start_ratio": 0.807,
+      "end_ratio": 0.848,
+      "start_sec": 984,
+      "end_sec": 1034,
+      "position_label": "80.7%–84.8%(16:24–17:14)",
+      "purpose": "收束体制全貌：最好结局也只是高薪惊恐的棋子",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP10",
+          "tension": "唯一打破规则的例外者究竟做到了什么",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "exception_tease",
+          "mechanism": "one_famous_exception"
+        }
+      ],
+      "required_retention_events": [
+        "recap_inventory",
+        "best_case_verdict"
+      ],
+      "original_moves": [
+        "从头回顾清单",
+        "最好结局定性",
+        "终日恐惧的奖赏",
+        "'有一个著名例外'悬念开启"
+      ],
+      "abstract_move": "收束体制全貌：最好结局也只是高薪惊恐的棋子",
+      "replacement_needs": [
+        "从头回顾的清单式总结",
+        "最好结局的冷峻定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP10→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "exception_case",
+      "start_ratio": 0.848,
+      "end_ratio": 0.952,
+      "start_sec": 1034,
+      "end_sec": 1161,
+      "position_label": "84.8%–95.2%(17:14–19:21)",
+      "purpose": "例外者故事：唯一打破规则的人，并用判词粉碎其神话",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.8983,
+          "time_ms": 1095000,
+          "reason": "例外者打破体制顶点：合法公开大婚震动帝国"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9459,
+          "time_ms": 1153000,
+          "reason": "'掠食者或猎物'判词完成全片认知收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_system_account_and_verdict",
+          "opened_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP10",
+          "payoff_type": "exception_story_payoff",
+          "opened_in": "FS14"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "matrix_break",
+          "mechanism": "rewrite_the_code"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "marriage_shock",
+          "mechanism": "ultimate_rule_break"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "ruthlessness_reveal",
+          "mechanism": "rival_removal_reveal"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "worldview_verdict",
+          "mechanism": "predator_or_prey"
+        }
+      ],
+      "required_retention_events": [
+        "exception_story",
+        "rule_breaking_streak",
+        "ruthless_player_verdict",
+        "predator_prey_verdict"
+      ],
+      "original_moves": [
+        "卑微出身",
+        "识破路径陷阱",
+        "三连破例",
+        "震动帝国类比",
+        "权势清单",
+        "清除对手",
+        "'最冷酷玩家'反转判词",
+        "掠食者或猎物"
+      ],
+      "abstract_move": "例外者故事：唯一打破规则的人，并用判词粉碎其神话",
+      "replacement_needs": [
+        "例外者的卑微出身",
+        "她识破路径陷阱的觉醒",
+        "三连破例行动",
+        "震动帝国的现代类比定性",
+        "'不是摧毁体制而是成为最冷酷玩家'的反转判词",
+        "二选一的世界观判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(80)、PK10(85);回收了前文的悬念 FS03→LOOP01、FS14→LOOP10。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "modern_mirror_close",
+      "start_ratio": 0.952,
+      "end_ratio": 1,
+      "start_sec": 1161,
+      "end_sec": 1219,
+      "position_label": "95.2%–100%(19:21–20:19)",
+      "purpose": "把全程苦难映射回现代职场日常，以黑色幽默释然收束并引导互动",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP11",
+          "tension": "邀请观众提名下一个想被'毁掉'的历史体制：刻意保持开放，叙事用途是把单集内容扩展为系列承诺，并以提问引导评论互动",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP11"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "modern_mirror",
+          "mechanism": "office_politics_mapping"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "closing_verdict",
+          "mechanism": "contrast_aphorism"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "engagement_hook",
+          "mechanism": "comment_prompt"
+        }
+      ],
+      "required_retention_events": [
+        "modern_contrast_triplet",
+        "aphorism_verdict",
+        "engagement_question"
+      ],
+      "original_moves": [
+        "现代职场委屈清单",
+        "'至少没那么糟'对照三连",
+        "对照金句",
+        "互动提问收尾"
+      ],
+      "abstract_move": "把全程苦难映射回现代职场日常，以黑色幽默释然收束并引导互动",
+      "replacement_needs": [
+        "现代职场委屈的清单",
+        "'至少你的处境没那么糟'的对照三连",
+        "一句压缩主题的冷峻对照句",
+        "互动提问收尾"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP11(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    }
+  ]
+}

@@ -6,6 +6,7 @@ YouTube爆款脚本执行写手(Viral Script Writer)。
 
 资产优先级(从高到低):
 1. Blueprint(最高执行权)——章节功能、目标、Open Loop 不可违背。
+1.5 频道声音设定——语体、称呼观众、自称、固定开场/结尾/互动引导以它为准;与 Style 冲突时这几项听它的。
 2. Examples——校准真实语感(学机制,不抄词句)。
 3. Style——语气、句式、节奏、幽默与禁用规则。
 4. Audience Context——语言与受众适配。
@@ -20,6 +21,9 @@ YouTube爆款脚本执行写手(Viral Script Writer)。
 
 【Style】
 {{style}}
+
+【频道声音设定(有则必须遵守)】
+{{voice}}
 
 【Examples】
 {{examples}}

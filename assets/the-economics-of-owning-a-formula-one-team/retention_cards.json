@@ -1,0 +1,1174 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.523Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.0292,
+      "start_sec": 0.2,
+      "end_sec": 41.5,
+      "position_label": "0%–2.9%(0:00–0:42)",
+      "purpose": "邀约+天真画面+历史谎言+估值爆炸+核心问题",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.0146,
+          "time_ms": 20720,
+          "reason": "烧金窟50年 vs 今天最便宜车队也值$15亿的时代反差"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "核心问题：让老板破产50年的运动，为什么所有人突然抢着进",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "direct_address",
+          "mechanism": "aspirational_invitation"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "naive_picture",
+          "mechanism": "factory_engineers_paint_sunday"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "era_contrast",
+          "mechanism": "rich_to_less_rich"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "valuation_shock",
+          "mechanism": "cheapest_worth_billions"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "central_question",
+          "mechanism": "bankrupting_yet_fighting"
+        }
+      ],
+      "required_retention_events": [
+        "direct_address",
+        "era_contrast"
+      ],
+      "original_moves": [
+        "第二人称邀约（找工厂/雇工程师/喷漆/周日参赛）+ '这幅画面在大部分历史里是谎言' + 数十年拥有车队=富人变穷最快的方式之一，车队倒闭、老板净身出户 + 今天最便宜的车队值$15亿+、最贵约$65亿 + 同一运动、同样10个车库、完全不同的生意 + 核心问题：既然这项运动悄悄让老板破产了50年，为什么所有人突然抢着进来"
+      ],
+      "abstract_move": "邀约+天真画面+历史谎言+估值爆炸+核心问题",
+      "replacement_needs": [
+        "第二人称邀约与天真画面",
+        "'画面是谎言'的历史反转",
+        "今天的估值锚点（最便宜/最贵）",
+        "'为什么突然抢着进'的设问"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80);打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 41520,
+        "hook_type": "era_contrast_central_question",
+        "first_stimulus_ms": 240,
+        "first_payoff_ms": 20720,
+        "evidence_refs": [
+          "C0001",
+          "C0009",
+          "C0012",
+          "C0019"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "belief_challenge",
+      "start_ratio": 0.0278,
+      "end_ratio": 0.0833,
+      "start_sec": 39.6,
+      "end_sec": 118.6,
+      "position_label": "2.8%–8.3%(0:40–1:59)",
+      "purpose": "规则数字的公众误读：上限只是某一块的天花板",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.0538,
+          "time_ms": 76560,
+          "reason": "'那个数字不是车队的实际预算'：规则重定义"
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.0763,
+          "time_ms": 108560,
+          "reason": "真实年支出$2.5-3.5亿——在拿到第一个积分之前"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "为什么光是'存在'就要花这么多",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "rule_intro",
+          "mechanism": "cost_cap_numbers"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "rule_reframe",
+          "mechanism": "not_actual_budget"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "outside_cap_stacking",
+          "mechanism": "drivers_execs_marketing_engines"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "real_spend_verdict",
+          "mechanism": "quarter_to_350m"
+        }
+      ],
+      "required_retention_events": [
+        "rule_reframe",
+        "cap_history_numbers"
+      ],
+      "original_moves": [
+        "成本上限=FIA设定的支出额度：2021年$1.45亿",
+        "2023年约$1.35亿",
+        "2026年$2.15亿（主要是口径调整而非放开）+ 圈外几乎没人懂的部分：这个数字不是车队的实际预算，只是赛车设计/赛事运营/大部分工程人员这一块的天花板 + 车手薪水、三位最高管薪酬、营销、接待、客户引擎合同全在 cap 之外 + 加回来后，有竞争力的车队真实年支出$2.5-3.5亿——在拿到第一个积分之前"
+      ],
+      "abstract_move": "规则数字的公众误读：上限只是某一块的天花板",
+      "replacement_needs": [
+        "规则定义与历年数字",
+        "'不是预算只是切片天花板'的重定义",
+        "cap 外项目完整列举",
+        "真实总支出的累加宣判+前置条件"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80)、PK03(80);打开的悬念 LOOP02→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.0817,
+      "end_ratio": 0.1278,
+      "start_sec": 116.2,
+      "end_sec": 181.8,
+      "position_label": "8.2%–12.8%(1:56–3:02)",
+      "purpose": "存在即昂贵的工程与物流根源",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "engineering_root",
+          "mechanism": "five_thousand_components"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "logistics_scale",
+          "mechanism": "fifty_tons_five_continents"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "air_freight_cost",
+          "mechanism": "fourteen_million_four_hundred_kg"
+        }
+      ],
+      "required_retention_events": [
+        "no_assembly_line",
+        "component_count"
+      ],
+      "original_moves": [
+        "F1赛车没有流水线：单个底盘约5,000个独立设计的部件，每个都经CAD建模",
+        "数百万小时模拟气流",
+        "风洞",
+        "高压釜成型，没有一件是现成的 + 每个比赛周末要搬约50吨设备：车库/备件/工具/移动车间，全年20多场比赛横跨五大洲 + 重的可替代的海运，工程师周中可能要的关键部件空运 + 空运一年约$1,400万≈每公斤$400"
+      ],
+      "abstract_move": "存在即昂贵的工程与物流根源",
+      "replacement_needs": [
+        "无流水线的定制制造（部件数/模拟/风洞/成型）",
+        "巡回物流的规模与频次",
+        "海空分流的逻辑",
+        "单位运输成本"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "evidence_build",
+      "start_ratio": 0.1263,
+      "end_ratio": 0.1641,
+      "start_sec": 179.7,
+      "end_sec": 233.4,
+      "position_label": "12.6%–16.4%(3:00–3:53)",
+      "purpose": "同规则下的规模两极+关键部件的刚性租金",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "scale_contrast",
+          "mechanism": "lean_vs_mercedes"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "engine_lease",
+          "mechanism": "sixteen_million_rent"
+        }
+      ],
+      "required_retention_events": [
+        "scale_contrast",
+        "lean_vs_giant"
+      ],
+      "original_moves": [
+        "精简样本：几百名员工、直接从法拉利买变速箱和引擎、底盘设计外包 + 对比：梅赛德斯单基地800+员工、年营业额约$8.48亿——同一 cap，底下是完全不同的公司 + 不自造引擎的车队需向制造商租赁：客户引擎合同每赛季可达约$1,600万，无论上领奖台还是退赛照付——为全车最重要部件付的年租"
+      ],
+      "abstract_move": "同规则下的规模两极+关键部件的刚性租金",
+      "replacement_needs": [
+        "精简运营样本",
+        "巨头规模数据",
+        "关键部件租赁费用+'无论结果照付'的刚性"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evidence_build",
+      "start_ratio": 0.1625,
+      "end_ratio": 0.2845,
+      "start_sec": 231.3,
+      "end_sec": 404.8,
+      "position_label": "16.3%–28.5%(3:51–6:45)",
+      "purpose": "四类收入来源及其波动性格",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "surprise",
+          "strength": 85,
+          "position_ratio": 0.193,
+          "time_ms": 274639,
+          "reason": "一个名次=$8-12M：退后一名=一个部门一年的预算"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "这些钱到底从哪来",
+          "closes_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "同样的四个收入池，为什么落袋悬殊",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "engineering_logistics_cost_answer",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "money_question",
+          "mechanism": "where_money_comes_from"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "prize_money_structure",
+          "mechanism": "forty_five_percent_pool"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "position_value",
+          "mechanism": "eight_to_twelve_million"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "department_verdict",
+          "mechanism": "lost_position_funds_department"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "sponsorship_scale",
+          "mechanism": "oracle_aramco_deals"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "manufacturer_vs_independent",
+          "mechanism": "parent_funding"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "side_businesses",
+          "mechanism": "wind_tunnel_consulting_hospitality"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "income_mix_portfolio",
+          "mechanism": "shaky_slice_vs_floor"
+        }
+      ],
+      "required_retention_events": [
+        "prize_money_split",
+        "position_value"
+      ],
+      "original_moves": [
+        "①奖金：FOM把约45%的运动总收入分给10支车队，近年池子约$15亿，按上年度名次分配（榜首约14%、榜尾约6%），一个名次=$8-12M=一个部门一年的预算 ②赞助：甲骨文/红牛约$5亿/5年、沙特阿美/阿斯顿马丁同级，头部$50-100M/年且不随周日成绩波动 ③厂商输血：梅赛德斯/法拉利有母公司支持（赛车=广告+技术实验室），独立车队没有 ④副业：出租风洞与工程咨询（梅赛德斯为美洲杯帆船队做咨询）、周边/授权/围场接待 + 聪明的车队会构建收入组合：让依赖成绩的那一块不至于在低迷年沉掉整盘生意"
+      ],
+      "abstract_move": "四类收入来源及其波动性格",
+      "replacement_needs": [
+        "成绩挂钩池的分配机制与单位价值",
+        "品牌赞助的规模与稳定性",
+        "厂商输血的有无之别",
+        "副业清单",
+        "'地板vs刺激'的组合管理原则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85);打开的悬念 LOOP03→FS06、LOOP04→FS07 跨段;回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "reveal",
+      "start_ratio": 0.2832,
+      "end_ratio": 0.3659,
+      "start_sec": 403,
+      "end_sec": 520.6,
+      "position_label": "28.3%–36.6%(6:43–8:41)",
+      "purpose": "结构性不平等：与成绩无关的历史付款",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.3215,
+          "time_ms": 457440,
+          "reason": "第四的法拉利比第一的迈凯伦多拿$1亿+：成绩≠收入"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "four_streams_plus_mix_answer",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "inequality_question",
+          "mechanism": "same_pools_unequal_results"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "ferrari_bonus",
+          "mechanism": "five_percent_for_showing_up"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "fourth_outearns_first",
+          "mechanism": "ferrari_278m_vs_mclaren_166m"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "rigged_history",
+          "mechanism": "ecclestone_private_deals"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_arrangement",
+        "ferrari_bonus"
+      ],
+      "original_moves": [
+        "几十年商业协议里藏着与名次无关的安排 + 法拉利：自1950年以来唯一全勤的制造商，协议保证其约5%总奖金池的固定奖金，近年单此项约$6,300万；叠加历史冠军奖金后某赛季总进账约$2.78亿——赛道第四名却比第一名多拿$1亿+（当年第一的迈凯伦约$1.66亿） + 梅赛德斯凭2010年代中期的统治也有每年上亿的遗产付款，与当前状态无关 + 小车队多年抗议这是为豪门设计的系统 + 这套结构大多由伯尼·埃克莱斯顿当年用私下逐队谈判锁住大牌、防止分裂 + 2017年自由媒体接手后试图拉平，但遗产付款从未完全消失"
+      ],
+      "abstract_move": "结构性不平等：与成绩无关的历史付款",
+      "replacement_needs": [
+        "历史特权案例（固定奖金+冠军遗产）",
+        "'第四名比第一名多拿'的对照",
+        "小车队抗议与历史谈判者",
+        "新东家拉平但未根除"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85);回收了前文的悬念 FS05→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "reveal",
+      "start_ratio": 0.3644,
+      "end_ratio": 0.4653,
+      "start_sec": 518.6,
+      "end_sec": 662.1,
+      "position_label": "36.4%–46.5%(8:39–11:02)",
+      "purpose": "买家逻辑：广告、稀缺与圈层触达",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.4196,
+          "time_ms": 597120,
+          "reason": "'一块碰巧还会比赛的广告牌'：车队作为广告"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "明知不平等，亿万富翁为什么还要买",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "legacy_payments_answer",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "billionaire_question",
+          "mechanism": "why_buy_into_unequal"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "team_as_advertisement",
+          "mechanism": "never_the_product"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "stroll_case",
+          "mechanism": "aston_martin_halo"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "haas_case",
+          "mechanism": "billboard_that_races"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "scarcity_logic",
+          "mechanism": "only_ten_seats"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "paddock_access",
+          "mechanism": "lvmh_billionaires_one_afternoon"
+        }
+      ],
+      "required_retention_events": [
+        "team_as_advertisement",
+        "halo_effect_case"
+      ],
+      "original_moves": [
+        "对开支票的人来说，车队从来不是产品，是广告 + 劳伦斯·斯特罗尔：2020年约5亿英镑控股阿斯顿·马丁并并入车队，每次赛车出镜卖的是'阿斯顿·马丁能造站在工程极限上的车'——光环支撑百万美元限量车与约$23万均价 + 吉尼·哈斯：北美最大数控机床商，2016年建队只为让品牌随赛车进入欧亚中东、触达看不到美国广告的工业买家——'一块碰巧还会比赛的广告牌' + 主权基金/私募的逻辑更简单：稀缺——只有10个席位，几乎只能买现有车队 + 奢侈品集团（LVMH十年约$1.5亿/年）买的是围场：地球上最后一个能在一个下午把品牌放到亿万富翁、王室与元首面前的地方"
+      ],
+      "abstract_move": "买家逻辑：广告、稀缺与圈层触达",
+      "replacement_needs": [
+        "'车队从来不是产品是广告'的定性",
+        "品牌光环转化案例",
+        "'碰巧还会比赛的广告牌'案例",
+        "席位稀缺逻辑",
+        "圈层触达案例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80);打开的悬念 LOOP05→FS08 跨段;回收了前文的悬念 FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "evidence_build",
+      "start_ratio": 0.464,
+      "end_ratio": 0.5014,
+      "start_sec": 660.3,
+      "end_sec": 713.5,
+      "position_label": "46.4%–50.1%(11:00–11:54)",
+      "purpose": "无上限时代的军备竞赛与死亡案例",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.496,
+          "time_ms": 705760,
+          "reason": "差£50万即倒闭，212名员工同周失业：无上限时代的残酷"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "从年亏数千万到身家数十亿的跳跃，靠的是哪一条规则改变",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "advertisement_scarcity_access_answer",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "rule_change_tease",
+          "mechanism": "one_single_rule_change"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "unlimited_arms_race",
+          "mechanism": "four_hundred_million_tenth"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "caterham_case",
+          "mechanism": "administration_2014"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "manor_case",
+          "mechanism": "five_hundred_k_short"
+        }
+      ],
+      "required_retention_events": [
+        "rule_change_tease",
+        "unlimited_arms_race"
+      ],
+      "original_moves": [
+        "从年亏数千万到身家数十亿的跳跃，需要一条规则改变来解释 + 2021年前没有上限：厂商豪门年烧$4亿+追0.1秒，独立车队用零头求生且通常失败 + 死亡案例一：Caterham 2014年进入破产管理、欠债超£2,000万，法庭指定的管理人亲自运营只为撑到卖出 + 死亡案例二：Manor 2017年因差£50万无缘冬季测试而倒闭，212名员工同一周失业"
+      ],
+      "abstract_move": "无上限时代的军备竞赛与死亡案例",
+      "replacement_needs": [
+        "无上限时代的投入量级",
+        "两个死亡案例（债务/差一点钱）与具体人数代价"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80);打开的悬念 LOOP06→FS10 跨段;回收了前文的悬念 FS07→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "reveal",
+      "start_ratio": 0.4998,
+      "end_ratio": 0.5379,
+      "start_sec": 711.2,
+      "end_sec": 765.4,
+      "position_label": "50%–53.8%(11:51–12:45)",
+      "purpose": "规则改变的效果：生意正常化与盈利证据",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.5339,
+          "time_ms": 759760,
+          "reason": "'控制成本的价值，原来比赢球还大'"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "cap_effect",
+          "mechanism": "bounded_business"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "profit_evidence",
+          "mechanism": "mercedes_mclaren_williams"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "cost_control_verdict",
+          "mechanism": "worth_more_than_winning"
+        }
+      ],
+      "required_retention_events": [
+        "bounded_business_reframe",
+        "profit_evidence"
+      ],
+      "original_moves": [
+        "上限到来后，花钱不再是区分胜负的东西，这项运动看起来不再像无上限的工程军备竞赛，而像有边界的正常生意 + 成本被封顶后，奖金/赞助/媒体权利的收入增长直接流进利润而不是填回烧钱战 + 效果几乎即时：梅赛德斯某赛季净利润超£1亿；多年失血的迈凯伦转为持续盈利；连差点倒闭、被私募约$2亿买下的威廉姆斯如今估值超$10亿 + 宣判：控制成本对这些生意的价值，原来比赢球还大"
+      ],
+      "abstract_move": "规则改变的效果：生意正常化与盈利证据",
+      "replacement_needs": [
+        "'从军备竞赛到有边界生意'的重构",
+        "收入增长直接变利润的机制",
+        "多家车队的盈利/估值证据",
+        "价值排序宣判"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "evidence_build",
+      "start_ratio": 0.5368,
+      "end_ratio": 0.6283,
+      "start_sec": 763.8,
+      "end_sec": 894.1,
+      "position_label": "53.7%–62.8%(12:44–14:54)",
+      "purpose": "硬币级脆弱性：微案例与量级对照",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.5782,
+          "time_ms": 822720,
+          "reason": "一把没坐正的轮胎枪=一个第二名：零点几秒自带价签"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "cost_cap_effect_answer",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE40",
+          "event_type": "wheel_nut_story",
+          "mechanism": "monaco_2021_stripped_nut"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "price_tag_moment",
+          "mechanism": "fraction_of_second_priced"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "brake_story",
+          "mechanism": "austria_2020_overheat"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "tightrope_tradeoff",
+          "mechanism": "weight_vs_speed"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "two_dollar_part_verdict",
+          "mechanism": "two_dollar_part_eight_figures"
+        }
+      ],
+      "required_retention_events": [
+        "coin_sized_stakes",
+        "wheel_nut_story"
+      ],
+      "original_moves": [
+        "即使背靠数亿美元，赛季仍可能系于硬币大小的东西 + 2021年摩纳哥：进站第二名，轮胎枪没对正，0.1秒内螺母被磨圆卡死，比赛当场终结，最后要在英国工厂用旋转工具切掉——一把没坐正的轮胎枪，一个第二名没了；而年底一个名次值$8-12M，那零点几秒自带价签 + 2020年奥地利：双车因刹车过热退赛（导管为空气动力学牺牲散热）+ 可靠性工程师的走钢丝：加重更安全但更慢，减重更快但一个密封圈/传感器/紧固件就是领奖台与退赛之差 + 大多数时候赌赢了没人听见，偶尔赌输：一个$2的零件输掉八位数的结果"
+      ],
+      "abstract_move": "硬币级脆弱性：微案例与量级对照",
+      "replacement_needs": [
+        "一个完整微案例（情境/失误/后果/价签）",
+        "第二个同类案例",
+        "走钢丝式权衡机制",
+        "极小成本vs极大损失的对照宣判"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);回收了前文的悬念 FS08→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "reveal",
+      "start_ratio": 0.6268,
+      "end_ratio": 0.6797,
+      "start_sec": 891.9,
+      "end_sec": 967.1,
+      "position_label": "62.7%–68%(14:52–16:07)",
+      "purpose": "惩罚保守的规则：拉平机制与财务陷阱",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "既然可靠性这么脆弱，为什么不直接保守一点",
+          "closes_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "双封顶的系统真的没有作弊空间吗",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE45",
+          "event_type": "restraint_question",
+          "mechanism": "why_not_play_safe"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "atr_mechanism",
+          "mechanism": "winner_least_testing"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "financial_trap",
+          "mechanism": "ten_million_tenth_of_second"
+        }
+      ],
+      "required_retention_events": [
+        "restraint_punished",
+        "atr_mechanism"
+      ],
+      "original_moves": [
+        "既然这么脆弱，为什么不保守点？因为规则惩罚保守 + 空气动力学测试条例：风洞与模拟时间与上年度名次挂钩——冠军只拿约70%基准额度，垫底拿约115%，最差车队比最好车队多约45%研发时间 + 这是刻意的拉平机制：你表现越好，每一小时风洞越珍贵 + 财务陷阱：无上限时代可以24小时烧风洞蛮干；现在预算与测试时间双封顶，$10M新空力套件可能只买0.1-0.2秒，模拟错了甚至变更慢，且没有余粮在季中纠错"
+      ],
+      "abstract_move": "惩罚保守的规则：拉平机制与财务陷阱",
+      "replacement_needs": [
+        "资源与名次反向挂钩的机制与数字",
+        "拉平意图",
+        "双封顶下的投入产出陷阱"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS12、LOOP08→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "evidence_build",
+      "start_ratio": 0.6779,
+      "end_ratio": 0.745,
+      "start_sec": 964.6,
+      "end_sec": 1060.2,
+      "position_label": "67.8%–74.5%(16:05–17:40)",
+      "purpose": "规则的牙齿：违规审计案",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.7365,
+          "time_ms": 1048000,
+          "reason": "一张餐饮账单也能塑造下赛季的冠军"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "atr_restraint_punishment_answer",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE48",
+          "event_type": "audit_case",
+          "mechanism": "red_bull_breach_2021"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "boring_line_items",
+          "mechanism": "catering_sick_leave"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "rivals_arguments",
+          "mechanism": "freed_up_money_elsewhere"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "settlement_penalty",
+          "mechanism": "seven_million_ten_percent_cut"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "catering_bill_verdict",
+          "mechanism": "catering_shapes_champion"
+        }
+      ],
+      "required_retention_events": [
+        "audit_case",
+        "boring_line_items"
+      ],
+      "original_moves": [
+        "'听起来没有作弊空间？Almost.' + 2022年10月FIA首次全面审计（覆盖2021赛季）：红牛超出约$200万（上限约$1.88亿，超约1.5%）+ 超支不是秘密零件，而是员工餐饮、社保、病假工资、赛车与引擎部门工时分摊这类'无聊的、几乎看不见'的条目 + 对手不买账：迈凯伦书面主张任何额外支出都变相解放了别处的钱；梅赛德斯称几百万也够一次正经空力升级 + 和解：$700万罚款+次年风洞/模拟额度减10%（70%",
+        "63%）+ 这一案证明：在这个时代，一张报错税的账单或超标的餐饮费也能塑造下赛季的赢家"
+      ],
+      "abstract_move": "规则的牙齿：违规审计案",
+      "replacement_needs": [
+        "审计与违规事实（数字/比例）",
+        "违规内容的'无聊条目'清单",
+        "对手的逻辑主张",
+        "处罚结构",
+        "'小事决定冠军'的升格宣判"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85);回收了前文的悬念 FS11→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "reveal",
+      "start_ratio": 0.7439,
+      "end_ratio": 0.8386,
+      "start_sec": 1058.5,
+      "end_sec": 1193.4,
+      "position_label": "74.4%–83.9%(17:38–19:53)",
+      "purpose": "所有权价值爆炸：传奇案例+三大驱动+估值数据",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "surprise",
+          "strength": 85,
+          "position_ratio": 0.7755,
+          "time_ms": 1103440,
+          "reason": "£1→$1.7亿→近$60亿：同一支车队的二十年"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "red_bull_breach_case_answer",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE53",
+          "event_type": "brawn_gp_story",
+          "mechanism": "pound_to_mercedes"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "pound_to_billions_arc",
+          "mechanism": "same_team_six_billion"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "three_drivers",
+          "mechanism": "liberty_scarcity_cap"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "valuation_data",
+          "mechanism": "average_three_five_billion"
+        }
+      ],
+      "required_retention_events": [
+        "brawn_gp_story",
+        "pound_to_billions_arc"
+      ],
+      "original_moves": [
+        "与此同时，车队所有权变成全球体育最值钱的位子之一 + 2008年本田金融危机中撤资，罗斯·布朗与尼克·弗莱以象征性£1买下整支车队，改名布朗GP次年双冠，数月后约$1.7亿卖给梅赛德斯——当时已是体育史传奇；而这同一支车队今天值近$60亿 + 三大驱动：①自由媒体2017年收购后靠幕后纪录片重建观众（尤其美国）②稀缺：仍只有约10个席位，基本只能买现有车队 ③成本上限切断了'糟糕赛季=账户崩塌'的旧链条：车队可以多年中游仍值$10亿+，因为投资者定价的是10个全球媒体特许经营权之一的长期价值 + 2025年平均车队约$35亿（一年涨近50%），法拉利$60-70亿居首，梅赛德斯约$60亿，威廉姆斯超$10亿"
+      ],
+      "abstract_move": "所有权价值爆炸：传奇案例+三大驱动+估值数据",
+      "replacement_needs": [
+        "£1→数亿→数十亿的传奇案例",
+        "观众重建/稀缺/规则三大驱动",
+        "最新估值数据（均值/头部/反转样本）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(85);回收了前文的悬念 FS11→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "evidence_build",
+      "start_ratio": 0.8371,
+      "end_ratio": 0.8999,
+      "start_sec": 1191.2,
+      "end_sec": 1280.6,
+      "position_label": "83.7%–90%(19:51–21:21)",
+      "purpose": "财富分配：股东逻辑与薪酬双世界",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE57",
+          "event_type": "ferrari_luxury_multiple",
+          "mechanism": "fifty_times_earnings"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "equity_realization",
+          "mechanism": "alpine_stake_doubled"
+        },
+        {
+          "event_id": "RE59",
+          "event_type": "pay_gap_reveal",
+          "mechanism": "two_salary_worlds"
+        }
+      ],
+      "required_retention_events": [
+        "ferrari_luxury_multiple",
+        "equity_realization"
+      ],
+      "original_moves": [
+        "答案取决于你坐哪个位子 + 法拉利特殊：公路车业务在纽交所上市，别家车企市盈率 modest，法拉利按奢侈品约50倍盈利交易——溢价很大程度来自车队声望；它故意每年只卖不到14,000台公路车 + 车队老板主要通过股权增值兑现（雷诺出售Alpine部分股权近$10亿估值，同一股权不到3年翻倍）+ 楼里并非人人受益：工程师薪水大多在 cap 内被压制，而 cap 碰不到的人——明星车手与前三高管——年薪可达数千万且无上限；同一座工厂，两组人活在两个薪酬世界"
+      ],
+      "abstract_move": "财富分配：股东逻辑与薪酬双世界",
+      "replacement_needs": [
+        "上市主体的奢侈品估值逻辑",
+        "股权增值兑现案例",
+        "cap 内压薪 vs cap 外无上限的双世界"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "evidence_build",
+      "start_ratio": 0.8984,
+      "end_ratio": 0.9581,
+      "start_sec": 1278.4,
+      "end_sec": 1363.3,
+      "position_label": "89.8%–95.8%(21:18–22:43)",
+      "purpose": "双情景账本：好年坏年的摆动与来源",
+      "peaks": [
+        {
+          "peak_id": "PK12",
+          "peak_type": "surprise",
+          "strength": 85,
+          "position_ratio": 0.9444,
+          "time_ms": 1343840,
+          "reason": "好年坏年差超$1亿，变量在赛车停在哪而非花了多少"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE60",
+          "event_type": "strong_year_math",
+          "mechanism": "tens_of_millions_profit"
+        },
+        {
+          "event_id": "RE61",
+          "event_type": "drop_two_positions",
+          "mechanism": "loss_thirty_forty_million"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "swing_source_verdict",
+          "mechanism": "where_car_finished"
+        }
+      ],
+      "required_retention_events": [
+        "strong_year_math",
+        "drop_two_positions"
+      ],
+      "original_moves": [
+        "中游车队强年：按 cap 花约$2亿（含 cap 外项），收入端奖金$80-100M+赞助$50-70M+副业与厂商$20M",
+        "真实经营利润数千万美元，外加股权增值数亿 + 同一支车队掉两个名次（差距可小到一个磨圆的螺母或过热的刹车）：奖金少$20-30M、赞助商不续约再少约$20M，成本却因 cap 几乎不动",
+        "预期盈利变年亏$30-40M + 好年与坏年之差可超$1亿，而摆动几乎全部来自赛车停在哪里，不是花了多少钱"
+      ],
+      "abstract_move": "双情景账本：好年坏年的摆动与来源",
+      "replacement_needs": [
+        "强年的支出与三类收入→利润+股权增值",
+        "掉名次的收入缺口+成本刚性→亏损",
+        "摆幅金额与'来源在成绩不在支出'的宣判"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK12(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK12",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.9569,
+      "end_ratio": 1,
+      "start_sec": 1361.6,
+      "end_sec": 1423,
+      "position_label": "95.7%–100%(22:42–23:43)",
+      "purpose": "时代定性+产品重定义+开放悬念",
+      "peaks": [
+        {
+          "peak_id": "PK13",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9718,
+          "time_ms": 1382880,
+          "reason": "'最快的车不再是主要产品，车队本身才是资产'"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "rule_change_scarcity_asset_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE63",
+          "event_type": "team_is_the_asset",
+          "mechanism": "fastest_car_not_product"
+        },
+        {
+          "event_id": "RE64",
+          "event_type": "midpack_vs_championship",
+          "mechanism": "profitable_midpack_better"
+        },
+        {
+          "event_id": "RE65",
+          "event_type": "next_seat_tease",
+          "mechanism": "who_buys_next_seat"
+        }
+      ],
+      "required_retention_events": [
+        "seventy_year_verdict",
+        "team_is_the_asset"
+      ],
+      "original_moves": [
+        "这项运动的前70年：车队价值=工程师水平+老板愿意烧多少钱；亏损源于无上限追逐0.1秒且对手可以 simply outspend + 今天：最快的车不再是主要产品，车队本身——10席之一、全球转播观众、成本锁在天花板内——才是资产 + 对老板而言，盈利且升值的十亿特许经营权里的中游，好过烧钱换冠军 + 下一个经济学变革不会来自风洞或新引擎，而来自一个更简单的问题：谁获准买下这张桌子的下一个席位，以及要付多少钱才能坐下"
+      ],
+      "abstract_move": "时代定性+产品重定义+开放悬念",
+      "replacement_needs": [
+        "七十年与今天的对比定性",
+        "'车队本身才是资产'的重定义",
+        "对所有者而言的成绩重排",
+        "'谁获准买下一个席位'的前瞻悬念"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK13(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK13",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

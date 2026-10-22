@@ -1,0 +1,580 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.541Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.095,
+      "start_sec": 0.1,
+      "end_sec": 63,
+      "position_label": "0%–9.5%(0:00–1:03)",
+      "purpose": "最底层：失足少年被招募做体力黑工，现金诱惑与'别问箱子里是什么'的规矩",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "层级天梯：每一级是什么样，终点是什么",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "你在为谁工作",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "level_hook",
+          "mechanism": "rank_and_age_anchor"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "cash_reality_hook",
+          "mechanism": "wage_contrast"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "rule_and_breach",
+          "mechanism": "dont_ask_once_guns"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "mystery_hook",
+          "mechanism": "unknown_employer"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "promotion_signal",
+          "mechanism": "black_mercedes"
+        }
+      ],
+      "required_retention_events": [
+        "recruitment_scene",
+        "cash_reality_hook"
+      ],
+      "original_moves": [
+        "层级名+年龄 + 招募场景 + 第一笔现金 + 别问规矩 + 黑车到来"
+      ],
+      "abstract_move": "最底层：失足少年被招募做体力黑工，现金诱惑与'别问箱子里是什么'的规矩",
+      "replacement_needs": [
+        "层级名与年龄锚点",
+        "招募场景与第一笔现金（对比普通人日薪）",
+        "'不问内容'的规矩与一次越界暗示（枪）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS08、LOOP02→FS02 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "immediate_second_person_drop",
+        "first_stimulus_ms": 80,
+        "first_payoff_ms": 80,
+        "evidence_refs": [
+          "C0001",
+          "C0011",
+          "C0015"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "conflict_escalation",
+      "start_ratio": 0.095,
+      "end_ratio": 0.254,
+      "start_sec": 63,
+      "end_sec": 168.2,
+      "position_label": "9.5%–25.4%(1:03–2:48)",
+      "purpose": "打手层：讨债与恐吓的职责，第一次跨过暴力门槛后的情感关闭",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "dark_reveal",
+          "strength": 80,
+          "position_ratio": 0.2072,
+          "time_ms": 137280,
+          "reason": "立威断骨与'这只是生意'的情感关闭"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "employer_reveal",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "intimidation_scene",
+          "mechanism": "railing_drop_threat"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "violence_threshold",
+          "mechanism": "example_making"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "emotional_shutdown",
+          "mechanism": "just_business_verdict"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "promotion_hook",
+          "mechanism": "being_trained"
+        }
+      ],
+      "required_retention_events": [
+        "first_violence_threshold",
+        "emotional_shutdown"
+      ],
+      "original_moves": [
+        "恐吓讨债 + 立威断骨 + '这只是生意' + 被带着学做生意"
+      ],
+      "abstract_move": "打手层：讨债与恐吓的职责，第一次跨过暴力门槛后的情感关闭",
+      "replacement_needs": [
+        "一次恐吓讨债的成功案例",
+        "一次'立威'暴力事件（断骨、亲属目睹）",
+        "'没有愧疚也没有满足，这只是生意'的定性",
+        "被带着学做生意的上升通道"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(80);回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.254,
+      "end_ratio": 0.384,
+      "start_sec": 168.2,
+      "end_sec": 254.6,
+      "position_label": "25.4%–38.4%(2:48–4:15)",
+      "purpose": "业务主管层：走私线路运营（协调、贿赂、风控）与'温柔的威胁'处理方式",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "dark_reveal",
+          "strength": 75,
+          "position_ratio": 0.3508,
+          "time_ms": 232400,
+          "reason": "厨房喝茶式威胁：威胁的文明化"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "income_reveal",
+          "mechanism": "monthly_cut"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "gentle_menace",
+          "mechanism": "kitchen_tea_threat"
+        }
+      ],
+      "required_retention_events": [
+        "operations_risk_management",
+        "gentle_menace"
+      ],
+      "original_moves": [
+        "走私链路与分成 + 风控手段 + 司机被捕 + 厨房喝茶式威胁"
+      ],
+      "abstract_move": "业务主管层：走私线路运营（协调、贿赂、风控）与'温柔的威胁'处理方式",
+      "replacement_needs": [
+        "走私链条的路线与利润分配",
+        "风控手段（轮换司机、换路线）",
+        "事故案例与'喝茶式'威胁的解决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.384,
+      "end_ratio": 0.562,
+      "start_sec": 254.6,
+      "end_sec": 372.1,
+      "position_label": "38.4%–56.2%(4:15–6:12)",
+      "purpose": "战略家层：从暴力者异化为商人——网络犯罪招募与合法外衣下的掠夺",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.5535,
+          "time_ms": 366720,
+          "reason": "'穿西装的掠食者'的异化定性"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "recruitment_deal",
+          "mechanism": "protection_for_cut"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "predation_mechanics",
+          "mechanism": "unbearable_life_pressure"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "drift_verdict",
+          "mechanism": "suit_predator"
+        }
+      ],
+      "required_retention_events": [
+        "businessman_drift_verdict"
+      ],
+      "original_moves": [
+        "网络犯罪招募 + 整栋楼掠夺收购 + '商人化的掠食者'定性"
+      ],
+      "abstract_move": "战略家层：从暴力者异化为商人——网络犯罪招募与合法外衣下的掠夺",
+      "replacement_needs": [
+        "对技术型犯罪团队的招揽（保护换抽成）",
+        "利用制度混乱掠夺弱势群体的案例（整栋楼收购）",
+        "投入产出数字与'西装掠食者'定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "conflict_escalation",
+      "start_ratio": 0.562,
+      "end_ratio": 0.785,
+      "start_sec": 372.1,
+      "end_sec": 519.7,
+      "position_label": "56.2%–78.5%(6:12–8:40)",
+      "purpose": "法典贵族层：加冕仪式、调停战争、担任内部法官并处决自己人",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "dark_reveal",
+          "strength": 80,
+          "position_ratio": 0.7462,
+          "time_ms": 494319,
+          "reason": "法官处决自己人：24小时告别与干净的一枪"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.7665,
+          "time_ms": 507759,
+          "reason": "'不是暴力不是钱，是权威尊重终局'的权力重定义"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "coronation_ritual",
+          "mechanism": "prison_crowning"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "mediation_authority",
+          "mechanism": "war_settlement"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "internal_judgment",
+          "mechanism": "code_verdict"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "execution_reveal",
+          "mechanism": "clean_professional_death"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "power_redefinition",
+          "mechanism": "authority_over_violence"
+        }
+      ],
+      "required_retention_events": [
+        "coronation",
+        "internal_judgment"
+      ],
+      "original_moves": [
+        "加冕与纹身 + 调停战争 + 审判并处决违规者 + 法典自缚"
+      ],
+      "abstract_move": "法典贵族层：加冕仪式、调停战争、担任内部法官并处决自己人",
+      "replacement_needs": [
+        "加冕仪式与纹身叙事",
+        "调停组织间战争的权威展示",
+        "审判并处决违规者的完整过程",
+        "法典对自身的约束（不能有合法财产）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80)、PK05(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "conflict_escalation",
+      "start_ratio": 0.785,
+      "end_ratio": 0.87,
+      "start_sec": 519.7,
+      "end_sec": 576,
+      "position_label": "78.5%–87%(8:40–9:36)",
+      "purpose": "跨国经营者层：流亡中的全球业务与'无法回家'的代价",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.8608,
+          "time_ms": 570240,
+          "reason": "视频通话看女儿婚礼：拥有一切也一无所有"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "无法回家的流亡何时了结",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "exile_price",
+          "mechanism": "wedding_video_call"
+        }
+      ],
+      "required_retention_events": [
+        "exile_paradox"
+      ],
+      "original_moves": [
+        "避风港与跨国业务 + 离岸财富 + 无法出席女儿婚礼"
+      ],
+      "abstract_move": "跨国经营者层：流亡中的全球业务与'无法回家'的代价",
+      "replacement_needs": [
+        "避风港 relocation 与跨国业务清单",
+        "离岸财富结构",
+        "无法出席女儿婚礼的场景"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85);打开的悬念 LOOP03→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "conflict_escalation",
+      "start_ratio": 0.87,
+      "end_ratio": 0.926,
+      "start_sec": 576,
+      "end_sec": 613.3,
+      "position_label": "87%–92.6%(9:36–10:13)",
+      "purpose": "被猎杀者层：国际通缉、流亡者接连死亡、'只是时间问题'",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "'只是时间问题'的死亡预告",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "hunted_status",
+          "mechanism": "red_notice"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "countdown_verdict",
+          "mechanism": "matter_of_time"
+        }
+      ],
+      "required_retention_events": [
+        "death_countdown"
+      ],
+      "original_moves": [
+        "国际通缉 + 隔离生活 + 流亡者死法列举 + '只是时间问题'"
+      ],
+      "abstract_move": "被猎杀者层：国际通缉、流亡者接连死亡、'只是时间问题'",
+      "replacement_needs": [
+        "通缉与制裁清单",
+        "无处可去的隔离生活",
+        "同行流亡者的死法列举与'时间问题'的觉悟"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "closure",
+      "start_ratio": 0.926,
+      "end_ratio": 1,
+      "start_sec": 613.3,
+      "end_sec": 662.4,
+      "position_label": "92.6%–100%(10:13–11:02)",
+      "purpose": "结局：一场日常的午餐中被毒杀，官方死因与众人皆知，'机器从不停下'",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "dark_reveal",
+          "strength": 80,
+          "position_ratio": 0.941,
+          "time_ms": 623360,
+          "reason": "海边午餐的一杯茶：日常场景中的死亡"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "dark_payoff",
+          "strength": 80,
+          "position_ratio": 0.9625,
+          "time_ms": 637600,
+          "reason": "官方死因与众人心知肚明的反差"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9939,
+          "time_ms": 658399,
+          "reason": "'无人哀悼，机器从不停下'的冷终局"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_ladder_plus_death_ending",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "death_resolution",
+          "opened_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "poisoning_scene",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "mundane_death",
+          "mechanism": "poisoned_tea"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "official_irony",
+          "mechanism": "heart_failure_cover"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "machine_verdict",
+          "mechanism": "no_mourning_machine"
+        }
+      ],
+      "required_retention_events": [
+        "mundane_death",
+        "machine_verdict"
+      ],
+      "original_moves": [
+        "日常死亡场景 + 官方死因反差 + 行业定性 + 无人哀悼"
+      ],
+      "abstract_move": "结局：一场日常的午餐中被毒杀，官方死因与众人皆知，'机器从不停下'",
+      "replacement_needs": [
+        "平常日子的死亡场景（日常感与突然性）",
+        "官方结论与真实死因的反差",
+        "'不退休、不逃脱，只是尽量活'的行业定性",
+        "'无人哀悼，机器不停'的最终句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80)、PK08(80)、PK09(85);回收了前文的悬念 FS01→LOOP01、FS06→LOOP03、FS07→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

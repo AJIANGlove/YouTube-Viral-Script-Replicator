@@ -1,0 +1,995 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.396Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "question_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.026,
+      "start_sec": 0,
+      "end_sec": 35.2,
+      "position_label": "0%–2.6%(0:00–0:35)",
+      "purpose": "元设问开场：宣告问题'听起来简单、越挖越复杂'，铺陈其跨学科与贴身双重重量",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.0257,
+          "time_ms": 35020,
+          "reason": "带保留的即时简答在四十秒内兑现方向性答案"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：标题是非问句——远古人类是否只有一个伴侣（以即时简答加详细论证的双轨悬挂）",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "'不满足任何人的答案往往是对的'这一可信度预告能否兑现",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "question_hook",
+          "mechanism": "meta_question_framing"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "scope_escalation",
+          "mechanism": "discipline_stack"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "credibility_tease",
+          "mechanism": "unsatisfying_answer_as_truth_signal"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "answer_teaser",
+          "mechanism": "instant_partial_answer"
+        }
+      ],
+      "required_retention_events": [
+        "meta_question_framing",
+        "credibility_tease"
+      ],
+      "original_moves": [
+        "从零信息到问句抛出，再到'听起来简单、越挖越复杂'的元定性，最后落在'不满足任何人的答案往往是对的'"
+      ],
+      "abstract_move": "元设问开场：宣告问题'听起来简单、越挖越复杂'，铺陈其跨学科与贴身双重重量",
+      "replacement_needs": [
+        "标题问句的逐字呈现",
+        "问题跨学科分量的排比铺陈",
+        "把'答案不讨好任何人'反转为可信度信号的预告句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS15、LOOP02→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 42000,
+        "hook_type": "meta_question_plus_instant_partial_answer",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 36232,
+        "evidence_refs": [
+          "C0001",
+          "C0029",
+          "C0033"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "answer_teaser",
+      "start_ratio": 0.026,
+      "end_ratio": 0.04,
+      "start_sec": 35.2,
+      "end_sec": 53.9,
+      "position_label": "2.6%–4%(0:35–0:54)",
+      "purpose": "即时简答加保留：先给方向性短答案，并宣告核心概念需先厘清才能成立",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "roadmap",
+          "mechanism": "discipline_tour_roadmap"
+        }
+      ],
+      "required_retention_events": [
+        "instant_partial_answer",
+        "roadmap_promise"
+      ],
+      "original_moves": [
+        "带保留的短答案",
+        "概念定义前置声明",
+        "'更详细的答案如下'路线图"
+      ],
+      "abstract_move": "即时简答加保留：先给方向性短答案，并宣告核心概念需先厘清才能成立",
+      "replacement_needs": [
+        "一句带保留的短答案",
+        "核心概念需要前置处理的声明",
+        "按学科顺序展开的取证路线图宣告"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "method_declaration",
+      "start_ratio": 0.04,
+      "end_ratio": 0.108,
+      "start_sec": 53.9,
+      "end_sec": 147.5,
+      "position_label": "4%–10.8%(0:54–2:27)",
+      "purpose": "第一证据域方法宣告：把身体或实物定义为行为的'化石档案'，并用极端参照案例建立标尺一端",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "method_claim",
+          "mechanism": "archive_metaphor"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "extreme_anchor",
+          "mechanism": "extreme_anchor_contrast"
+        }
+      ],
+      "required_retention_events": [
+        "method_legitimacy_claim",
+        "extreme_anchor_contrast"
+      ],
+      "original_moves": [
+        "身体即化石档案的方法宣告",
+        "选择压力机制",
+        "极端参照案例的体型数据",
+        "对照组的同体型逻辑"
+      ],
+      "abstract_move": "第一证据域方法宣告：把身体或实物定义为行为的'化石档案'，并用极端参照案例建立标尺一端",
+      "replacement_needs": [
+        "该证据域取证合法性的方法论证",
+        "极端参照案例的数据化呈现",
+        "'身体即档案'式的隐喻定性句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "human_positioning",
+      "start_ratio": 0.108,
+      "end_ratio": 0.132,
+      "start_sec": 147.5,
+      "end_sec": 179.9,
+      "position_label": "10.8%–13.2%(2:27–3:00)",
+      "purpose": "人类数据落点：把人类放在两极端之间的中间位置，给出第一个'介于两者之间'的小裁决",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.1246,
+          "time_ms": 169810,
+          "reason": "人类体型数据落在两极端之间，第一个'中间态'小裁决"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "human_data_drop",
+          "mechanism": "human_middle_placement"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "middle_verdict",
+          "mechanism": "bracket_comparison"
+        }
+      ],
+      "required_retention_events": [
+        "human_data_drop",
+        "middle_verdict"
+      ],
+      "original_moves": [
+        "人类测量数据",
+        "大于严格单偶物种、小于强多偶物种",
+        "第一个'介于两者之间'小裁决"
+      ],
+      "abstract_move": "人类数据落点：把人类放在两极端之间的中间位置，给出第一个'介于两者之间'的小裁决",
+      "replacement_needs": [
+        "人类的具体测量数据",
+        "与标尺两端的双向比较",
+        "中间态小结句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "second_marker_sweep",
+      "start_ratio": 0.132,
+      "end_ratio": 0.234,
+      "start_sec": 179.9,
+      "end_sec": 318.8,
+      "position_label": "13.2%–23.4%(3:00–5:19)",
+      "purpose": "第二指标巡回：换一个更敏感的测量指标重复同一取证节拍，完成该学科小综合并换挡到下一学科",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "second_marker_intro",
+          "mechanism": "more_revealing_marker_tease"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "extreme_anchor",
+          "mechanism": "extreme_anchor_contrast"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "humor_payoff",
+          "mechanism": "dry_understatement_humor"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "database_setup",
+          "mechanism": "source_credibility_framing"
+        }
+      ],
+      "required_retention_events": [
+        "second_marker_repeat",
+        "dry_understatement_humor",
+        "discipline_transition"
+      ],
+      "original_moves": [
+        "第二指标引入",
+        "两个极端锚点对比",
+        "人类居中加干涩调侃",
+        "生物学小综合",
+        "转场宣告"
+      ],
+      "abstract_move": "第二指标巡回：换一个更敏感的测量指标重复同一取证节拍，完成该学科小综合并换挡到下一学科",
+      "replacement_needs": [
+        "第二指标的两个极端锚点",
+        "人类的居中落点",
+        "一句克制的口语化调侃",
+        "学科小结与下一证据域的转场宣告"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "striking_statistic",
+      "start_ratio": 0.234,
+      "end_ratio": 0.254,
+      "start_sec": 318.8,
+      "end_sec": 345.5,
+      "position_label": "23.4%–25.4%(5:19–5:46)",
+      "purpose": "惊人统计引用：抛出一个被广泛用于支持简单答案的统计数字，并公平复述其流行解读",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.2398,
+          "time_ms": 326677,
+          "reason": "绝大多数社会允许多妻的惊人统计数字"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "绝大多数社会允许多妻的惊人统计是否真的证明了某种'自然系统'",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "striking_statistic",
+          "mechanism": "striking_number"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "demolition_flag",
+          "mechanism": "misleading_warning"
+        }
+      ],
+      "required_retention_events": [
+        "striking_number",
+        "misleading_warning"
+      ],
+      "original_moves": [
+        "数据库可信度交代",
+        "惊人数字呈现",
+        "流行解读复述",
+        "'缺少语境会误导'预警"
+      ],
+      "abstract_move": "惊人统计引用：抛出一个被广泛用于支持简单答案的统计数字，并公平复述其流行解读",
+      "replacement_needs": [
+        "数据来源与方法的可信度交代",
+        "统计数字的显式呈现",
+        "流行解读的公平复述",
+        "祛魅预警句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80);打开的悬念 LOOP03→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "statistic_demolition",
+      "start_ratio": 0.254,
+      "end_ratio": 0.342,
+      "start_sec": 345.5,
+      "end_sec": 466.1,
+      "position_label": "25.4%–34.2%(5:46–7:46)",
+      "purpose": "编号式祛魅：用序数词标记的多条结构性纠正拆穿统计的表层含义",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.2746,
+          "time_ms": 374078,
+          "reason": "许可不等于实践：流行解读的第一块基石被抽掉"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "demolition_payoff",
+          "mechanism": "permission_vs_practice"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "demolition_payoff",
+          "mechanism": "sample_bias_reveal"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "demolition_payoff",
+          "mechanism": "independent_emergence_evidence"
+        }
+      ],
+      "required_retention_events": [
+        "numbered_demolition",
+        "sample_bias_reveal",
+        "independent_emergence_evidence"
+      ],
+      "original_moves": [
+        "纠正一：许可不等于实践",
+        "纠正二：样本偏向分层社会、演化主流环境另算",
+        "纠正三：对立规范独立多次出现"
+      ],
+      "abstract_move": "编号式祛魅：用序数词标记的多条结构性纠正拆穿统计的表层含义",
+      "replacement_needs": [
+        "纠正一：名义许可与实际行为的区分",
+        "纠正二：样本结构偏差与演化相关环境的重估",
+        "纠正三：反向证据（对立规范独立多次出现）",
+        "每条纠正以序数词明确编号"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "functional_theory",
+      "start_ratio": 0.342,
+      "end_ratio": 0.464,
+      "start_sec": 466.1,
+      "end_sec": 631.6,
+      "position_label": "34.2%–46.4%(7:46–10:32)",
+      "purpose": "功能性解释：把文化规范解释为解决具体协调问题的'社会技术'，发明但不失效",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.4454,
+          "time_ms": 606755,
+          "reason": "规范被重定性为'社会技术'：被发明但有效"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "这种规范究竟解决了什么问题、为何在不同文化中反复出现",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "numbered_contextual_demolition",
+          "opened_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "functional_reframe_social_technology",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "pivot_question",
+          "mechanism": "rhetorical_pivot"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "stakes_reveal",
+          "mechanism": "destabilization_stakes"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "verdict_reframe",
+          "mechanism": "social_technology_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "named_theory_logic",
+        "social_technology_reframe"
+      ],
+      "original_moves": [
+        "反问换挡",
+        "代表性理论的功能逻辑",
+        "失配群体的破坏性",
+        "跨域数据支持",
+        "亲缘确定性机制",
+        "'被发明但有效'定性"
+      ],
+      "abstract_move": "功能性解释：把文化规范解释为解决具体协调问题的'社会技术'，发明但不失效",
+      "replacement_needs": [
+        "研究共同体的代表性理论及其功能逻辑",
+        "规范所解决的问题链条",
+        "支持性的跨域数据",
+        "'社会技术'式定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(75);回收了前文的悬念 FS06→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "archival_evidence",
+      "start_ratio": 0.464,
+      "end_ratio": 0.573,
+      "start_sec": 631.6,
+      "end_sec": 781,
+      "position_label": "46.4%–57.3%(10:32–13:01)",
+      "purpose": "档案证据揭示：用基因或实物档案给出全片最具冲击力的具体锚点，并配格言式定性",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "evidence_reveal",
+          "strength": 85,
+          "position_ratio": 0.4953,
+          "time_ms": 674726,
+          "reason": "一位古代男性留下千万级男性后裔的基因档案炸弹"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "社会规范与真实行为之间的差距到底有多大",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "domain_transition",
+          "mechanism": "norms_vs_behavior_pivot"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "bombshell_statistic",
+          "mechanism": "descendant_number_shock"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "aphorism",
+          "mechanism": "archive_aphorism"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "reframe",
+          "mechanism": "structural_constraint_explanation"
+        }
+      ],
+      "required_retention_events": [
+        "bombshell_statistic",
+        "archive_aphorism",
+        "trend_contrast"
+      ],
+      "original_moves": [
+        "转入真实行为史",
+        "父系谱系研究与惊人后裔数字",
+        "'基因记得'格言",
+        "农耕加剧不平等",
+        "采集社会的结构约束"
+      ],
+      "abstract_move": "档案证据揭示：用基因或实物档案给出全片最具冲击力的具体锚点，并配格言式定性",
+      "replacement_needs": [
+        "一个数量级惊人的具体锚点案例",
+        "档案隐喻的格言句",
+        "不同时期与制度的对比趋势",
+        "物质结构约束的因果解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85);打开的悬念 LOOP05→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "universal_establishment",
+      "start_ratio": 0.573,
+      "end_ratio": 0.68,
+      "start_sec": 781,
+      "end_sec": 925.9,
+      "position_label": "57.3%–68%(13:01–15:26)",
+      "purpose": "普遍性论证：确立核心行为模式的跨文化普遍性及其生物机制，同时诚实承认偏差行为与之共存",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "统计分布之外的个体差异：每个具体的人落在分布何处——叙事刻意不作回答，用途是把宏观裁决转化为观众的自我定位邀请，为结尾'谈过恋爱的人都不意外'的俏皮收束提供支点",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "coexistence_reveal",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "universal_claim",
+          "mechanism": "true_universal_declaration"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "honest_complication",
+          "mechanism": "honest_deviation_acknowledgment"
+        }
+      ],
+      "required_retention_events": [
+        "universal_claim",
+        "neurochemical_mechanism",
+        "honest_deviation_acknowledgment"
+      ],
+      "original_moves": [
+        "核心纽带定义与神经化学机制",
+        "'有效所以演化出来'",
+        "偏差行为双向共存",
+        "偏差的有结构非随机性"
+      ],
+      "abstract_move": "普遍性论证：确立核心行为模式的跨文化普遍性及其生物机制，同时诚实承认偏差行为与之共存",
+      "replacement_needs": [
+        "核心模式的定义与机制级证据",
+        "'它演化而来因为它有效'的功能句",
+        "偏差行为普遍存在的诚实承认",
+        "偏差的有结构、非随机性说明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06(不闭合) 跨段;回收了前文的悬念 FS09→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "variability_acknowledgment",
+      "start_ratio": 0.68,
+      "end_ratio": 0.724,
+      "start_sec": 925.9,
+      "end_sec": 985.9,
+      "position_label": "68%–72.4%(15:26–16:26)",
+      "purpose": "个体差异承认：提醒观众模型描述的是分布而非每个人，防止把平均数当宿命",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "aphorism",
+          "mechanism": "distribution_maxim"
+        }
+      ],
+      "required_retention_events": [
+        "distribution_maxim"
+      ],
+      "original_moves": [
+        "官方模型忽略的维度",
+        "个体差异真实且有意义",
+        "'演化不消除变异、只移动分布'格言"
+      ],
+      "abstract_move": "个体差异承认：提醒观众模型描述的是分布而非每个人，防止把平均数当宿命",
+      "replacement_needs": [
+        "统计趋势与个体差异的区分",
+        "'差异是系统的一部分而非噪声'的断言",
+        "可复述的分布格言"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "mechanism_window",
+      "start_ratio": 0.724,
+      "end_ratio": 0.828,
+      "start_sec": 985.9,
+      "end_sec": 1127.7,
+      "position_label": "72.4%–82.8%(16:26–18:48)",
+      "purpose": "心理机制取证：用一种普遍性情绪作为通往祖先环境的窗口，揭示其内部的不对称结构",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.7808,
+          "time_ms": 1063748,
+          "reason": "两性嫉妒触发点的不对称揭示，直接照见观众自身经验"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "mechanism_logic",
+          "mechanism": "threat_logic_claim"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "asymmetry_reveal",
+          "mechanism": "gender_asymmetry_reveal"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "aphorism",
+          "mechanism": "record_metaphor_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "threat_logic_claim",
+        "asymmetry_reveal",
+        "record_metaphor_aphorism"
+      ],
+      "original_moves": [
+        "情绪作为祖先环境窗口",
+        "'不为不存在的威胁演化机制'逻辑",
+        "普遍性证据",
+        "两性触发点不对称",
+        "代价对应解释",
+        "'心理即记录'格言"
+      ],
+      "abstract_move": "心理机制取证：用一种普遍性情绪作为通往祖先环境的窗口，揭示其内部的不对称结构",
+      "replacement_needs": [
+        "'不会为不存在的威胁演化出机制'的逻辑句",
+        "该情绪跨文化普遍性的证据",
+        "两类触发点不对称的呈现",
+        "不对称与演化代价相对应的因果解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "agency_correction",
+      "start_ratio": 0.828,
+      "end_ratio": 0.879,
+      "start_sec": 1127.7,
+      "end_sec": 1197.5,
+      "position_label": "82.8%–87.9%(18:48–19:58)",
+      "purpose": "被忽视方能动性纠正：纠正早期理论对其中一方主动性的系统性低估",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "mechanism_detail",
+          "mechanism": "hard_to_fake_logic"
+        }
+      ],
+      "required_retention_events": [
+        "blind_spot_admission",
+        "active_agency_inventory"
+      ],
+      "original_moves": [
+        "早期理论盲点承认",
+        "主动行为清单",
+        "偏好的复合标准",
+        "小群体信息环境使伪装困难"
+      ],
+      "abstract_move": "被忽视方能动性纠正：纠正早期理论对其中一方主动性的系统性低估",
+      "replacement_needs": [
+        "对早期理论盲点的显式承认",
+        "被忽视方主动行为的清单式呈现",
+        "小群体信息环境如何使伪装困难的机制说明"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "institution_universality",
+      "start_ratio": 0.879,
+      "end_ratio": 0.918,
+      "start_sec": 1197.5,
+      "end_sec": 1250.1,
+      "position_label": "87.9%–91.8%(19:58–20:50)",
+      "purpose": "制度普遍性论证：用'每种文化都为之建立制度'反推核心模式既真实又脆弱",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "universal_claim",
+          "mechanism": "institution_universality"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "synthesis_pivot",
+          "mechanism": "rhetorical_pivot"
+        }
+      ],
+      "required_retention_events": [
+        "institution_universality",
+        "management_inference_logic"
+      ],
+      "original_moves": [
+        "制度普遍性断言",
+        "形式多样性与功能一致性区分",
+        "'重要才需要管理'的反推逻辑",
+        "'真实但脆弱'的双重定性"
+      ],
+      "abstract_move": "制度普遍性论证：用'每种文化都为之建立制度'反推核心模式既真实又脆弱",
+      "replacement_needs": [
+        "制度存在于所有已知文化的事实断言",
+        "制度形式多样性与功能一致性的区分",
+        "'需要外部管理的事物才会发展出制度'的反推逻辑"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "synthesis_verdict",
+      "start_ratio": 0.918,
+      "end_ratio": 0.983,
+      "start_sec": 1250.1,
+      "end_sec": 1339.5,
+      "position_label": "91.8%–98.3%(20:50–22:20)",
+      "purpose": "综合裁决：用术语化命名回答标题问题，并显式拒绝满足任何阵营",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "title_callback",
+          "strength": 85,
+          "position_ratio": 0.9517,
+          "time_ms": 1296448,
+          "reason": "术语化命名落地，标题是非问句获得正式裁决"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "named_verdict_full_synthesis",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "term_verdict",
+          "mechanism": "term_coining_verdict"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "impartiality_payoff",
+          "mechanism": "no_camp_satisfaction"
+        }
+      ],
+      "required_retention_events": [
+        "term_coining_verdict",
+        "no_camp_satisfaction"
+      ],
+      "original_moves": [
+        "'这一切说明什么'换挡",
+        "主伴侣常态加不排他",
+        "术语化命名",
+        "逐一否定各阵营",
+        "证据复杂性重申"
+      ],
+      "abstract_move": "综合裁决：用术语化命名回答标题问题，并显式拒绝满足任何阵营",
+      "replacement_needs": [
+        "'这对所有人都不方便'的两边不讨好声明",
+        "术语化的系统命名",
+        "对各阵营主张的逐一否定",
+        "证据复杂性的重申"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "aphorism_closure",
+      "start_ratio": 0.983,
+      "end_ratio": 1,
+      "start_sec": 1339.5,
+      "end_sec": 1362.3,
+      "position_label": "98.3%–100%(22:20–22:42)",
+      "purpose": "排比加俏皮收束：用极短排比压缩裁决，再用一句把宏大主题拉回观众日常经验的玩笑结束",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "humor_peak",
+          "strength": 75,
+          "position_ratio": 0.9958,
+          "time_ms": 1356639,
+          "reason": "'谈过恋爱的人都不意外'：全片唯一一次直接戳向观众私生活的收束玩笑"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "impartiality_confirmation",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "triplet_summary",
+          "mechanism": "triplet_summary"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "closing_joke",
+          "mechanism": "self_deprecating_close"
+        }
+      ],
+      "required_retention_events": [
+        "triplet_summary",
+        "self_deprecating_close"
+      ],
+      "original_moves": [
+        "三连短句排比",
+        "多因素耦合与可概括性抵抗",
+        "指向观众亲身经验的自嘲式玩笑"
+      ],
+      "abstract_move": "排比加俏皮收束：用极短排比压缩裁决，再用一句把宏大主题拉回观众日常经验的玩笑结束",
+      "replacement_needs": [
+        "三连短句排比",
+        "对'可概括性抵抗'的承认",
+        "指向观众亲身经验的自嘲式玩笑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(75);回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 75
+        }
+      ]
+    }
+  ]
+}

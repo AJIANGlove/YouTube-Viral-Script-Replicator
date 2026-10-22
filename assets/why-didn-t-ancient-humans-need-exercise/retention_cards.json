@@ -1,0 +1,850 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.432Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "paradox_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0864,
+      "start_sec": 0,
+      "end_sec": 115,
+      "position_label": "0%–8.6%(0:00–1:55)",
+      "purpose": "用连续否定排比建立悖论前提，再用硬核证据坐实，最后显式抛出主问句并预告答案是彻底重构",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "central_question",
+          "strength": 70,
+          "position_ratio": 0.0766,
+          "time_ms": 102000,
+          "reason": "主问句显式抛出并预告答案是彻底重构，全片悬念正式建立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：没有该现代发明的物种如何保持更优状态（标题问句的显式悬挂）",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook_assertion",
+          "mechanism": "negation_anaphora"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "evidence_reveal",
+          "mechanism": "skeletal_evidence"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "stakes_universalization",
+          "mechanism": "not_outliers"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "contrast_jab",
+          "mechanism": "modern_group_sting"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "central_question",
+          "mechanism": "explicit_question"
+        }
+      ],
+      "required_retention_events": [
+        "negation_anaphora",
+        "paradox_evidence",
+        "explicit_question",
+        "promise_tease"
+      ],
+      "original_moves": [
+        "三连否定排比",
+        "骨骼与生物力学证据坐实",
+        "普遍性强调",
+        "刺痛现代对照组",
+        "主问句显式化与答案预告"
+      ],
+      "abstract_move": "用连续否定排比建立悖论前提，再用硬核证据坐实，最后显式抛出主问句并预告答案是彻底重构",
+      "replacement_needs": [
+        "三连否定排比列举目标人群从不做的事",
+        "可核查的硬证据证明悖论为真",
+        "'他们不是特例，是普通人'的普遍性强调",
+        "对现代对照组的刺痛式贬低",
+        "主问句的显式陈述与答案性质预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "negation_anaphora_paradox",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 102000,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0014"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "definition_reframe",
+      "start_ratio": 0.0864,
+      "end_ratio": 0.1638,
+      "start_sec": 115,
+      "end_sec": 218,
+      "position_label": "8.6%–16.4%(1:55–3:38)",
+      "purpose": "指出观众混淆了两个概念，分别定义它们并断言二者的生理后果不等价",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.1337,
+          "time_ms": 178000,
+          "reason": "核心区分断言落下：两种刺激即使总量相近后果也不等价"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "开场预告的'现代版本在特定生物学意义上是劣质替代品'论断待证",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "promise_tease",
+          "mechanism": "reframing_promise"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "section_shift",
+          "mechanism": "conflation_correction"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "core_distinction",
+          "mechanism": "side_by_side_definition"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "evolutionary_framing",
+          "mechanism": "calibration_baseline"
+        }
+      ],
+      "required_retention_events": [
+        "conflation_correction",
+        "side_by_side_definition"
+      ],
+      "original_moves": [
+        "纠偏宣告",
+        "两个概念并排定义",
+        "并排断言完成区分",
+        "进化校准视角建立"
+      ],
+      "abstract_move": "指出观众混淆了两个概念，分别定义它们并断言二者的生理后果不等价",
+      "replacement_needs": [
+        "'大多数人混淆了两件事'的纠偏宣告",
+        "两个概念的并排定义对照",
+        "一句并排断言完成区分",
+        "进化校准视角：身体按哪种环境设计"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80);打开的悬念 LOOP02→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "vivid_reconstruction",
+      "start_ratio": 0.1638,
+      "end_ratio": 0.281,
+      "start_sec": 218,
+      "end_sec": 374,
+      "position_label": "16.4%–28.1%(3:38–6:14)",
+      "purpose": "破除观众对目标人群日常的简单想象，用量化数据与动作清单重建真实图景",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "evidence_reveal",
+          "strength": 65,
+          "position_ratio": 0.1833,
+          "time_ms": 244000,
+          "reason": "现存采集人群日行距离数据给出可感知的量级冲击"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "目标人群的日常活动到底是什么样子，为什么比简单想象更有趣",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "vivid_reconstruction",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "myth_tease",
+          "mechanism": "more_interesting_picture"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "data_drop",
+          "mechanism": "forager_distances"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "contrast_deconstruction",
+          "mechanism": "sidewalk_contrast"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "point_verdict",
+          "mechanism": "variety_is_key"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "inventory_reveal",
+          "mechanism": "load_carrying_list"
+        }
+      ],
+      "required_retention_events": [
+        "data_drop",
+        "kinetic_inventory",
+        "point_verdict"
+      ],
+      "original_moves": [
+        "现存类比人群量化数据",
+        "否定简单想象",
+        "地形与动作清单",
+        "多样性定性",
+        "负重维度与考古旁证"
+      ],
+      "abstract_move": "破除观众对目标人群日常的简单想象，用量化数据与动作清单重建真实图景",
+      "replacement_needs": [
+        "现存最接近人群的可量化日常数据",
+        "对简单想象的显式否定",
+        "动作与环境的清单式具象堆叠",
+        "一句'关键特征是X'的定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(65)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 65
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.281,
+      "end_ratio": 0.4718,
+      "start_sec": 374,
+      "end_sec": 593,
+      "position_label": "28.1%–47.2%(6:14–9:53)",
+      "purpose": "揭示最核心的生理机制维度：两种刺激在信号层面种类不同而非数量不同",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.4132,
+          "time_ms": 550000,
+          "reason": "'它不能完全替代'：全片核心否定以极短句独立落下"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mechanism_evidence_verdict",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "stakes_raise",
+          "mechanism": "most_consequential_dimension"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "mechanism_staccato",
+          "mechanism": "acute_stress_response"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "balanced_verdict",
+          "mechanism": "why_it_works_then_turn"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "mechanism_reveal",
+          "mechanism": "cellular_level_process"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "core_negation",
+          "mechanism": "short_verdict_drop"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "balance_guard",
+          "mechanism": "not_an_argument_against"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "promo_break",
+          "mechanism": "course_promo_insert"
+        }
+      ],
+      "required_retention_events": [
+        "acute_vs_chronic_signal",
+        "core_negation",
+        "balanced_verdict"
+      ],
+      "original_moves": [
+        "维度升级预告",
+        "急性应激-恢复机制",
+        "慢性背景信号机制清单",
+        "现代人群信号缺失",
+        "核心否定",
+        "平衡声明"
+      ],
+      "abstract_move": "揭示最核心的生理机制维度：两种刺激在信号层面种类不同而非数量不同",
+      "replacement_needs": [
+        "'这是最关键且最反直觉的维度'的升级预告",
+        "现代方案的生理机制承认其有效性",
+        "进化基线信号的机制清单",
+        "现代人群该信号缺失的对照",
+        "核心否定句与紧随的平衡声明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "dimension_expansion",
+      "start_ratio": 0.4718,
+      "end_ratio": 0.5838,
+      "start_sec": 628,
+      "end_sec": 777,
+      "position_label": "47.2%–58.4%(10:28–12:57)",
+      "purpose": "第一扩展维度（成长阶段）：论证早期活动模式对终身体质的奠基作用",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "成长阶段的活动模式如何影响终身体质",
+          "closes_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "现代久坐世代的长期健康后果'才刚刚开始显现'：刻意保持开放，叙事用途是把历史话题翻转为面向现代观众的未完结警告，制造'这个故事仍在进行中'的紧迫感与自我关联",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "section_shift",
+          "mechanism": "childhood_dimension"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "kinetic_inventory",
+          "mechanism": "play_movement_list"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "mechanism_reveal",
+          "mechanism": "bone_loading_window"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "contrast_alarm",
+          "mechanism": "unprecedented_inactivity"
+        }
+      ],
+      "required_retention_events": [
+        "fresh_angle_tease",
+        "mechanism_reveal",
+        "contrast_alarm"
+      ],
+      "original_moves": [
+        "换挡开场",
+        "自由玩耍动作清单",
+        "骨密度奠基机制",
+        "心血管与协调奠基",
+        "现代对照反常",
+        "长尾后果警告"
+      ],
+      "abstract_move": "第一扩展维度（成长阶段）：论证早期活动模式对终身体质的奠基作用",
+      "replacement_needs": [
+        "新维度开场换挡句",
+        "目标人群在该维度的自然状态",
+        "该维度影响的机制解释",
+        "现代对照的反常数据",
+        "长尾后果的未完结警告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP08(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "dimension_expansion",
+      "start_ratio": 0.5838,
+      "end_ratio": 0.6679,
+      "start_sec": 777,
+      "end_sec": 889,
+      "position_label": "58.4%–66.8%(12:57–14:49)",
+      "purpose": "第二扩展维度（恢复环节）：揭示目标人群的恢复质量优势及其双向循环",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "恢复环节如何参与让古老活动模式成立",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "fresh_angle_tease",
+          "mechanism": "never_discussed_topic"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "mechanism_reveal",
+          "mechanism": "deep_sleep_restoration"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "loop_mechanism",
+          "mechanism": "bidirectional_relationship"
+        }
+      ],
+      "required_retention_events": [
+        "fresh_angle_tease",
+        "loop_mechanism"
+      ],
+      "original_moves": [
+        "新鲜角度钩子",
+        "恢复质量差异",
+        "深睡机制",
+        "双向循环关系",
+        "现代模式双边破坏"
+      ],
+      "abstract_move": "第二扩展维度（恢复环节）：揭示目标人群的恢复质量优势及其双向循环",
+      "replacement_needs": [
+        "'几乎从不出现在主流讨论中'的新鲜角度钩子",
+        "恢复质量差异的机制解释",
+        "双向促进的循环关系",
+        "现代模式同时破坏循环两边的拆解"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "dimension_expansion",
+      "start_ratio": 0.6679,
+      "end_ratio": 0.7588,
+      "start_sec": 889,
+      "end_sec": 1010,
+      "position_label": "66.8%–75.9%(14:49–16:50)",
+      "purpose": "第三扩展维度（大脑层面）：把论证从身体升级到认知，揭示互相强化的循环",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "humor_peak",
+          "strength": 55,
+          "position_ratio": 0.7055,
+          "time_ms": 939000,
+          "reason": "对研究者昵称'既简化又准确'的冷面旁白，全片罕见笑点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "活动与大脑功能之间的互相强化关系是什么",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "section_shift",
+          "mechanism": "cognitive_dimension"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "dry_wit",
+          "mechanism": "researcher_nickname_aside"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "synthesis_elegance",
+          "mechanism": "circular_reinforcement"
+        }
+      ],
+      "required_retention_events": [
+        "dimension_escalation",
+        "circular_synthesis"
+      ],
+      "original_moves": [
+        "维度升级预告",
+        "关键生化因子机制",
+        "冷面旁白",
+        "循环句式",
+        "现代久坐的认知后果文献清单"
+      ],
+      "abstract_move": "第三扩展维度（大脑层面）：把论证从身体升级到认知，揭示互相强化的循环",
+      "replacement_needs": [
+        "维度升级预告：从身体到大脑",
+        "关键生化因子的机制解释",
+        "'做这件事需要智力，同时它滋养智力'的循环句式",
+        "现代对照的研究文献后果清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(55);打开的悬念 LOOP06→FS08 跨段;回收了前文的悬念 FS06→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 55
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "dimension_expansion",
+      "start_ratio": 0.7588,
+      "end_ratio": 0.8633,
+      "start_sec": 1010,
+      "end_sec": 1149,
+      "position_label": "75.9%–86.3%(16:50–19:09)",
+      "purpose": "第四扩展维度（静息姿态）：揭示目标人群连'不动'都比现代人多样的隐性差异",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "姿态多样性这一从不被讨论的维度有多重要",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "reframe_verdict",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "fresh_angle_tease",
+          "mechanism": "never_discussed_topic"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "damage_inventory",
+          "mechanism": "sitting_dysfunction_list"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "vivid_reframe",
+          "mechanism": "natural_resting_posture"
+        }
+      ],
+      "required_retention_events": [
+        "fresh_angle_tease",
+        "damage_inventory",
+        "reframe_verdict"
+      ],
+      "original_moves": [
+        "新鲜角度钩子",
+        "现代坐姿伤害清单",
+        "多样姿态与自然休息位",
+        "现代补救手段的重定义定性"
+      ],
+      "abstract_move": "第四扩展维度（静息姿态）：揭示目标人群连'不动'都比现代人多样的隐性差异",
+      "replacement_needs": [
+        "'几乎从不被讨论'的新鲜角度钩子",
+        "现代单一姿态的伤害清单",
+        "目标人群的多样姿态与自然休息位",
+        "现代补救手段的重定义定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS07→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "practical_synthesis",
+      "start_ratio": 0.8633,
+      "end_ratio": 0.9437,
+      "start_sec": 1149,
+      "end_sec": 1256,
+      "position_label": "86.3%–94.4%(19:09–20:56)",
+      "purpose": "收束全部论证，重估现代方案：它是压缩式补偿，部分有效但不完备",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "reframe_verdict",
+          "mechanism": "recovered_capacity_definition"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "evidence_verdict",
+          "mechanism": "background_activity_research"
+        }
+      ],
+      "required_retention_events": [
+        "balanced_verdict",
+        "shocking_comparison"
+      ],
+      "original_moves": [
+        "现代方案定性",
+        "平衡承认",
+        "背景信号研究结论",
+        "冲击性对照",
+        "种类不同的定性"
+      ],
+      "abstract_move": "收束全部论证，重估现代方案：它是压缩式补偿，部分有效但不完备",
+      "replacement_needs": [
+        "现代方案的明确定性：补偿性适应",
+        "承认其真实价值的平衡陈述",
+        "背景信号与专门刺激同等甚至更重要的研究结论",
+        "一句冲击性对照（长时间静坐加短时补偿不如全天低强度）"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "title_answer_payoff",
+      "start_ratio": 0.9437,
+      "end_ratio": 0.9669,
+      "start_sec": 1256,
+      "end_sec": 1287,
+      "position_label": "94.4%–96.7%(20:56–21:27)",
+      "purpose": "显式回收标题问句，用一句话给出答案：他们的生活本身就是那个东西",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.9437,
+          "time_ms": 1256000,
+          "reason": "长时间静坐加短时补偿不如全天低强度的冲击性对照"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "title_callback",
+          "strength": 90,
+          "position_ratio": 0.9549,
+          "time_ms": 1271000,
+          "reason": "标题问句显式回收：他们的生活本身就是那个东西"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "central_answer_reveal",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "shocking_comparison",
+          "mechanism": "eight_hours_vs_all_day"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "title_callback",
+          "mechanism": "question_in_title"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "central_answer",
+          "mechanism": "lives_were_the_thing"
+        }
+      ],
+      "required_retention_events": [
+        "title_question_callback",
+        "one_line_answer"
+      ],
+      "original_moves": [
+        "标题问题显式指认",
+        "一句话答案",
+        "意象清单回放"
+      ],
+      "abstract_move": "显式回收标题问句，用一句话给出答案：他们的生活本身就是那个东西",
+      "replacement_needs": [
+        "'这正是标题问题真正所问'的显式指认",
+        "一句话答案：生活本身就是那个东西",
+        "支撑答案的意象清单回放"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85)、PK07(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "closure",
+      "start_ratio": 0.9669,
+      "end_ratio": 1,
+      "start_sec": 1287,
+      "end_sec": 1331,
+      "position_label": "96.7%–100%(21:27–22:11)",
+      "purpose": "把答案翻转为对现代的启示，以意象化收束句结束",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.9977,
+          "time_ms": 1328000,
+          "reason": "跨越漫长岁月的骨骼证据仍在作证的意象收束，完成从知识到生活方式反思的升格"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE40",
+          "event_type": "aphorism_close",
+          "mechanism": "time_spanning_evidence"
+        }
+      ],
+      "required_retention_events": [
+        "modern_inversion",
+        "image_aphorism_close"
+      ],
+      "original_moves": [
+        "生存活动定性",
+        "现代版因果句",
+        "聊胜于无的判词",
+        "重新定义目标人群",
+        "跨时间意象收束"
+      ],
+      "abstract_move": "把答案翻转为对现代的启示，以意象化收束句结束",
+      "replacement_needs": [
+        "现代版因果句：需要它是因为生活移除了它",
+        "'聊胜于无，但不如原物'的冷静判词",
+        "把目标人群重新定义为普通人的收束句",
+        "意象化结尾：跨越时间的证据仍在作证"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    }
+  ]
+}

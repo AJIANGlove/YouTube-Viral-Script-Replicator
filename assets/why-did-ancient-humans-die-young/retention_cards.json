@@ -1,0 +1,1023 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.335Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "myth_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.035,
+      "start_sec": 0,
+      "end_sec": 46,
+      "position_label": "0%–3.5%(0:00–0:46)",
+      "purpose": "抛出流行数字并当场定性'为真但误导'，立下拆解契约",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：把这个流行数字拆开——它为何如此低、真相为何'更黑暗'（标题问句的完整悬挂）",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook",
+          "mechanism": "famous_number_stated"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "paradox_verdict",
+          "mechanism": "true_but_misleading_paradox"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "caricature",
+          "mechanism": "caricature_of_popular_image"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "dark_tease",
+          "mechanism": "darker_explanation_promise"
+        }
+      ],
+      "required_retention_events": [
+        "famous_number_stated",
+        "true_but_misleading_verdict"
+      ],
+      "original_moves": [
+        "流行数字引用",
+        "悖论定性",
+        "流行错误画面的讽刺白描",
+        "'几乎全错'的断言"
+      ],
+      "abstract_move": "抛出流行数字并当场定性'为真但误导'，立下拆解契约",
+      "replacement_needs": [
+        "流行数字的原样引用",
+        "'为真但误导'的悖论定性",
+        "数字所唤起错误画面的讽刺性白描",
+        "真相'更有趣也更黑暗'的预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 46000,
+        "hook_type": "famous_statistic_true_but_misleading_contract",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 16000,
+        "evidence_refs": [
+          "C0001",
+          "C0002",
+          "C0007"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "mechanism_exposition",
+      "start_ratio": 0.035,
+      "end_ratio": 0.078,
+      "start_sec": 46,
+      "end_sec": 103,
+      "position_label": "3.5%–7.8%(0:46–1:43)",
+      "purpose": "讲解该数字的统计口径机制，指出公众混淆的两个不同概念",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "mission_statement",
+          "mechanism": "take_number_apart"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "setup_announce",
+          "mechanism": "thought_experiment_teaser"
+        }
+      ],
+      "required_retention_events": [
+        "mission_statement",
+        "concept_distinction"
+      ],
+      "original_moves": [
+        "黑暗真相预告",
+        "拆解承诺",
+        "出生口径 vs 成年口径",
+        "平均值敏感性",
+        "思想实验预告"
+      ],
+      "abstract_move": "讲解该数字的统计口径机制，指出公众混淆的两个不同概念",
+      "replacement_needs": [
+        "两个易混统计概念的区分定义",
+        "平均值对某类极端值异常敏感的说明"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "thought_experiment",
+      "start_ratio": 0.078,
+      "end_ratio": 0.121,
+      "start_sec": 103,
+      "end_sec": 160,
+      "position_label": "7.8%–12.1%(1:43–2:40)",
+      "purpose": "用微型假想模型把抽象口径问题变成观众可亲手心算的直观结论",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.107,
+          "time_ms": 141000,
+          "reason": "思想实验结论：没人在36岁死于衰老，平均值不对应任何真实人生"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "十人假想群体的平均寿命到底是多少（向观众直接提问）",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "calculated_answer_with_twist",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "direct_question",
+          "mechanism": "viewer_calculation_question"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "information_reveal",
+          "mechanism": "nobody_died_at_average"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "verdict",
+          "mechanism": "average_describes_nobody"
+        }
+      ],
+      "required_retention_events": [
+        "viewer_calculation",
+        "average_describes_nobody"
+      ],
+      "original_moves": [
+        "十人模型设定",
+        "提问",
+        "心算得出36",
+        "'没人在36岁死于衰老'点破",
+        "平均值不对应任何真实个体"
+      ],
+      "abstract_move": "用微型假想模型把抽象口径问题变成观众可亲手心算的直观结论",
+      "replacement_needs": [
+        "极简假想群体模型",
+        "两步以内的心算演示",
+        "'平均值不对应任何真实个体'的点破句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(78)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 78
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "core_correction",
+      "start_ratio": 0.121,
+      "end_ratio": 0.174,
+      "start_sec": 160,
+      "end_sec": 229,
+      "position_label": "12.1%–17.4%(2:40–3:49)",
+      "purpose": "给出修正口径后的真实图景，完成第一次认知翻案",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.1616,
+          "time_ms": 213000,
+          "reason": "第一次翻案：活过童年者预期寿命达六七十岁，'这不是小修正'"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "为什么幼年死亡率高到灾难级（成因问题链）",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "pivot",
+          "mechanism": "better_statistic_intro"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "information_reveal",
+          "mechanism": "statistic_correction"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "causal_question",
+          "mechanism": "why_so_high_question"
+        }
+      ],
+      "required_retention_events": [
+        "corrected_statistic",
+        "emphatic_verdict"
+      ],
+      "original_moves": [
+        "机制回接到流行数字",
+        "修正口径引入",
+        "六七十岁修正数字",
+        "'这不是小修正'强调"
+      ],
+      "abstract_move": "给出修正口径后的真实图景，完成第一次认知翻案",
+      "replacement_needs": [
+        "替代性统计口径的引入",
+        "修正后的量级数字",
+        "'这不是小修正'的强调句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(82);打开的悬念 LOOP03→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 82
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "primary_cause_counterintuitive",
+      "start_ratio": 0.174,
+      "end_ratio": 0.266,
+      "start_sec": 229,
+      "end_sec": 351,
+      "position_label": "17.4%–26.6%(3:49–5:51)",
+      "purpose": "回答'为什么'的第一层：最大死因类别，并内嵌一个反直觉子反转",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.2307,
+          "time_ms": 304000,
+          "reason": "反直觉反转：定居化与农业反而推高传染病死亡"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "counterintuitive_reveal",
+          "mechanism": "progress_made_it_worse"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "category_announce",
+          "mechanism": "second_cause_dual_victims"
+        }
+      ],
+      "required_retention_events": [
+        "causal_question_open",
+        "counterintuitive_sub_reveal"
+      ],
+      "original_moves": [
+        "成因问题抛出",
+        "小群体保护机制",
+        "密度依赖术语解释",
+        "定居化反而增加死亡的反转",
+        "机制清单"
+      ],
+      "abstract_move": "回答'为什么'的第一层：最大死因类别，并内嵌一个反直觉子反转",
+      "replacement_needs": [
+        "类别宣告句",
+        "该死因的机制解释",
+        "反直觉子反转及其机制说明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "secondary_cause_cumulative_math",
+      "start_ratio": 0.266,
+      "end_ratio": 0.372,
+      "start_sec": 351,
+      "end_sec": 490,
+      "position_label": "26.6%–37.2%(5:51–8:10)",
+      "purpose": "第二层死因：用'单次概率×重复暴露'的累积数学制造情绪冲击",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 82,
+          "position_ratio": 0.3035,
+          "time_ms": 400000,
+          "reason": "约1/15到1/12的女性死于生育：累积数学的情绪顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "number_tease",
+          "mechanism": "modest_single_risk"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "scale_shock",
+          "mechanism": "cumulative_probability_math"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "emotional_payoff",
+          "mechanism": "one_in_fifteen_verdict"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "scale_shock",
+          "mechanism": "child_mortality_scale"
+        }
+      ],
+      "required_retention_events": [
+        "cumulative_probability_math",
+        "scale_shock"
+      ],
+      "original_moves": [
+        "生育风险双人群宣告",
+        "单次概率",
+        "累积判决（约1/15到1/12）",
+        "死因清单",
+        "30-50%幼年死亡规模"
+      ],
+      "abstract_move": "第二层死因：用'单次概率×重复暴露'的累积数学制造情绪冲击",
+      "replacement_needs": [
+        "看似温和的单次风险数字",
+        "重复暴露的事实",
+        "累积后果的判决句",
+        "同一事件波及两类人群的并行清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(82)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 82
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "recap_lock",
+      "start_ratio": 0.372,
+      "end_ratio": 0.392,
+      "start_sec": 490,
+      "end_sec": 516,
+      "position_label": "37.2%–39.2%(8:10–8:36)",
+      "purpose": "小结锁定主因，用一句冷峻判决防止观众遗忘核心机制",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.3915,
+          "time_ms": 516000,
+          "reason": "'他们根本没有活到成年'：全片最冷峻的一句判决"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "causal_category_full_account",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "verdict",
+          "mechanism": "not_adult_lives_at_all"
+        }
+      ],
+      "required_retention_events": [
+        "short_verdict_sentence"
+      ],
+      "original_moves": [
+        "主因回扣",
+        "'他们没有活到成年'的排除式判决"
+      ],
+      "abstract_move": "小结锁定主因，用一句冷峻判决防止观众遗忘核心机制",
+      "replacement_needs": [
+        "主因回扣句",
+        "对流行误读的排除式否定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80);回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "contested_cause_honesty",
+      "start_ratio": 0.392,
+      "end_ratio": 0.436,
+      "start_sec": 516,
+      "end_sec": 574,
+      "position_label": "39.2%–43.6%(8:36–9:34)",
+      "purpose": "补齐次要成因清单，其中一处刻意呈现学术争议以示范证据边界",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "暴力死亡在成年男性死因中占比究竟多高：学术争议悬而未决——刻意保持开放，叙事用途是示范对证据边界的诚实，让死亡拼图保留一块未完成区域以维持智识张力",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "debate_open",
+          "mechanism": "academic_debate_honesty"
+        }
+      ],
+      "required_retention_events": [
+        "balanced_two_sides"
+      ],
+      "original_moves": [
+        "暴力类别宣告",
+        "高估计派观点与数字",
+        "反对派反驳",
+        "争议保持开放"
+      ],
+      "abstract_move": "补齐次要成因清单，其中一处刻意呈现学术争议以示范证据边界",
+      "replacement_needs": [
+        "争议双方观点的均衡呈现",
+        "次要成因的机制白描（小伤小病如何变成致命威胁）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "hidden_amplifier_reveal",
+      "start_ratio": 0.436,
+      "end_ratio": 0.507,
+      "start_sec": 574,
+      "end_sec": 668,
+      "position_label": "43.6%–50.7%(9:34–11:08)",
+      "purpose": "揭示贯穿所有类别的隐藏放大器，把解释从'体质差异'重构为'工具差异'",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.4954,
+          "time_ms": 653000,
+          "reason": "抗生素放大器揭示并完成'工具而非体质'的解释重构"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "contrast",
+          "mechanism": "minor_to_fatal_contrast"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "amplifier_reveal",
+          "mechanism": "hidden_amplifier_named"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "mechanism_detail",
+          "mechanism": "sepsis_speed"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "reframe_verdict",
+          "mechanism": "tools_not_bodies_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "amplifier_named",
+        "tools_not_bodies_reframe"
+      ],
+      "original_moves": [
+        "意外与环境风险",
+        "骨折变致命的今昔对比",
+        "抗生素放大器揭示",
+        "败血症速度",
+        "工具重构判决"
+      ],
+      "abstract_move": "揭示贯穿所有类别的隐藏放大器，把解释从'体质差异'重构为'工具差异'",
+      "replacement_needs": [
+        "放大器的命名与强调句",
+        "其作用机制的今昔戏剧化对比",
+        "体质与工具的重构判决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "positive_evidence_rebuild",
+      "start_ratio": 0.507,
+      "end_ratio": 0.572,
+      "start_sec": 668,
+      "end_sec": 754,
+      "position_label": "50.7%–57.2%(11:08–12:34)",
+      "purpose": "回到主问题，用实物证据与当代对照观察正面重建'长寿常态'图景",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "活过童年的人，真实的成年衰老到底是什么样子",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "为什么人类几乎独特地演化出超越生育年限的长寿",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "transition",
+          "mechanism": "return_to_main_question"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "evidence_reveal",
+          "mechanism": "contemporary_elder_observation"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "hypothesis_intro",
+          "mechanism": "named_evolutionary_hypothesis"
+        }
+      ],
+      "required_retention_events": [
+        "physical_evidence_inventory",
+        "elder_social_roles"
+      ],
+      "original_moves": [
+        "主线回归句",
+        "骨骼退变证据清单",
+        "当代对照群体观察",
+        "老人的社会功能"
+      ],
+      "abstract_move": "回到主问题，用实物证据与当代对照观察正面重建'长寿常态'图景",
+      "replacement_needs": [
+        "实物证据清单（骨骼痕迹类）",
+        "当代对照群体观察",
+        "长寿者在群体中的真实社会功能"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS14、LOOP06→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "evolutionary_existence_proof",
+      "start_ratio": 0.572,
+      "end_ratio": 0.621,
+      "start_sec": 754,
+      "end_sec": 818,
+      "position_label": "57.2%–62.1%(12:34–13:38)",
+      "purpose": "用进化逻辑完成存在性证明：若早夭为真，某特征根本不会演化出来",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.6153,
+          "time_ms": 811000,
+          "reason": "存在性证明：长寿祖母的存在本身就是人类深层长寿的证据"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "evolutionary_explanation",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "proof_verdict",
+          "mechanism": "existence_proof_logic"
+        }
+      ],
+      "required_retention_events": [
+        "existence_proof_logic"
+      ],
+      "original_moves": [
+        "进化假说提出",
+        "假说机制",
+        "'演化不保留永不表达的特征'逻辑刃",
+        "存在性证明判决"
+      ],
+      "abstract_move": "用进化逻辑完成存在性证明：若早夭为真，某特征根本不会演化出来",
+      "replacement_needs": [
+        "一个以长寿者为核心角色的进化假说",
+        "'演化不保留永不表达的特征'的逻辑刃",
+        "存在本身即证据的判决句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(82);回收了前文的悬念 FS10→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 82
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "methodology_self_audit",
+      "start_ratio": 0.621,
+      "end_ratio": 0.682,
+      "start_sec": 818,
+      "end_sec": 899,
+      "position_label": "62.1%–68.2%(13:38–14:59)",
+      "purpose": "方法论自纠：揭示测量工具本身如何系统性地压低了数字",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "method_reveal",
+          "mechanism": "precision_defect_reveal"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "bias_verdict",
+          "mechanism": "systematic_bias_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "precision_defect_reveal",
+        "systematic_bias_verdict"
+      ],
+      "original_moves": [
+        "测龄方法说明",
+        "精度随年龄下降",
+        "'50+笼统归类'惯例",
+        "系统性低估判决"
+      ],
+      "abstract_move": "方法论自纠：揭示测量工具本身如何系统性地压低了数字",
+      "replacement_needs": [
+        "测量方法的通俗说明",
+        "精度随对象年龄上升而下降的缺陷",
+        "系统性偏差的方向判决"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "case_study_revision",
+      "start_ratio": 0.682,
+      "end_ratio": 0.769,
+      "start_sec": 899,
+      "end_sec": 1014,
+      "position_label": "68.2%–76.9%(14:59–16:54)",
+      "purpose": "用一桩经典案例的'初测-复测'翻案弧线示范方法论自纠的现实后果",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "这个教科书案例的真实人口结构到底什么样（初测结论能否成立）",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "reanalysis_revision",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "case_intro",
+          "mechanism": "textbook_case_anchor"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "revision_reveal",
+          "mechanism": "reanalysis_revision"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "verdict",
+          "mechanism": "cautionary_tale_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "reanalysis_revision",
+        "cautionary_tale_verdict"
+      ],
+      "original_moves": [
+        "案例锚点",
+        "初测契合流行叙事",
+        "新方法复测",
+        "翻案",
+        "学科警示定性",
+        "普遍性模式"
+      ],
+      "abstract_move": "用一桩经典案例的'初测-复测'翻案弧线示范方法论自纠的现实后果",
+      "replacement_needs": [
+        "案例锚点（遗址/数据集）",
+        "初测结论与流行叙事的契合",
+        "复测翻案",
+        "警示定性"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP05。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:这个教科书案例的真实人口结构到底什么样（初测结论能否成立）",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "payoff_statistic",
+      "start_ratio": 0.769,
+      "end_ratio": 0.832,
+      "start_sec": 1014,
+      "end_sec": 1096,
+      "position_label": "76.9%–83.2%(16:54–18:16)",
+      "purpose": "兑现全片最有力的替代性统计，直接回答标题问句",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "title_callback",
+          "strength": 90,
+          "position_ratio": 0.8149,
+          "time_ms": 1074000,
+          "reason": "成年死亡众数70-72岁：对标题问句的直接兑现，全片最高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "modal_age_statistic_reveal",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "payoff_tease",
+          "mechanism": "modal_statistic_setup"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "payoff_statistic",
+          "mechanism": "modal_age_payoff"
+        }
+      ],
+      "required_retention_events": [
+        "modal_statistic_payoff",
+        "restatement_emphasis"
+      ],
+      "original_moves": [
+        "跨群体比较研究",
+        "死亡曲线与现代同构",
+        "众数口径铺垫",
+        "70-72兑现",
+        "'最常见结局'重述"
+      ],
+      "abstract_move": "兑现全片最有力的替代性统计，直接回答标题问句",
+      "replacement_needs": [
+        "跨群体一致性证据",
+        "替代性统计（众数而非均值）的显式给出",
+        "'最常见结局'的直白重述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(90);回收了前文的悬念 FS10→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS15",
+      "function": "complexity_guardrail",
+      "start_ratio": 0.832,
+      "end_ratio": 0.91,
+      "start_sec": 1096,
+      "end_sec": 1200,
+      "position_label": "83.2%–91%(18:16–20:00)",
+      "purpose": "主动防止新的过度简化：指出历史内部的不均匀性与分类陷阱",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "anti_linear_reveal",
+          "mechanism": "named_crisis"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "category_warning",
+          "mechanism": "category_laziness_warning"
+        }
+      ],
+      "required_retention_events": [
+        "anti_linear_evidence",
+        "category_laziness_warning"
+      ],
+      "original_moves": [
+        "转型期衰退证据",
+        "'危机'命名",
+        "急性流行病叠加",
+        "两种世界不可并类的警告"
+      ],
+      "abstract_move": "主动防止新的过度简化：指出历史内部的不均匀性与分类陷阱",
+      "replacement_needs": [
+        "反线性叙事的证据",
+        "急性危机叠加在背景死亡率上的说明",
+        "对笼统分类的警告句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS16",
+      "function": "worldview_shift_closure",
+      "start_ratio": 0.91,
+      "end_ratio": 1,
+      "start_sec": 1200,
+      "end_sec": 1318,
+      "position_label": "91%–100%(20:00–21:58)",
+      "purpose": "升华：分析神话为何流行的叙事功能，重构现代成就定义，以双向判决格言收束",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.9651,
+          "time_ms": 1272000,
+          "reason": "'没有抬高天花板，而是抬高了地板'：现代成就定义的升华重构"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9917,
+          "time_ms": 1307000,
+          "reason": "'童年更暗、成年更亮'的双向判决完成全片收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_deconstruction_and_dual_verdict",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "myth_function_analysis",
+          "mechanism": "flattering_the_present"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "worldview_shift",
+          "mechanism": "ceiling_floor_reframe"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "aphorism_close",
+          "mechanism": "dual_verdict_close"
+        }
+      ],
+      "required_retention_events": [
+        "ceiling_floor_reframe",
+        "dual_verdict_close"
+      ],
+      "original_moves": [
+        "神话的叙事功能分析",
+        "谄媚当下机制",
+        "成就重构（地板/天花板）",
+        "更了不起的物种故事",
+        "更暗也更亮的双向收束"
+      ],
+      "abstract_move": "升华：分析神话为何流行的叙事功能，重构现代成就定义，以双向判决格言收束",
+      "replacement_needs": [
+        "神话流行的心理功能分析（谄媚当下）",
+        "'天花板与地板'式成就重构",
+        "'某处更暗、某处更亮'的双向对照收束判决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(88)、PK10(85);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 88
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

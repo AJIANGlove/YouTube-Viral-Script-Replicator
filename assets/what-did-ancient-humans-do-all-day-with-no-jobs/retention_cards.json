@@ -1,0 +1,852 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.373Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "counterfactual_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.04,
+      "start_sec": 0,
+      "end_sec": 54.4,
+      "position_label": "0%–4%(0:00–0:54)",
+      "purpose": "第二人称反事实开场：让观众设想现代制度一夜消失，在失重感中悬挂标题问句",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "title_callback",
+          "strength": 70,
+          "position_ratio": 0.0358,
+          "time_ms": 49159,
+          "reason": "标题问句显式落地，主问题正式悬挂"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：古人整天到底在做什么（标题问句的显式悬挂）",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_identity_assignment"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "escalation",
+          "mechanism": "absence_listing"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "twist",
+          "mechanism": "self_congratulation"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "punchline",
+          "mechanism": "calendar_reframe"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "title_drop",
+          "mechanism": "direct_question"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_counterfactual",
+        "absence_listing"
+      ],
+      "original_moves": [
+        "从零信息到反事实场景建立，再到标题问句悬挂"
+      ],
+      "abstract_move": "第二人称反事实开场：让观众设想现代制度一夜消失，在失重感中悬挂标题问句",
+      "replacement_needs": [
+        "现代制度消失物的三连排比清单",
+        "观众的直觉反应被命名并调侃",
+        "标题问句的显式复述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 54403,
+        "hook_type": "second_person_counterfactual_scenario",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 49159,
+        "evidence_refs": [
+          "C0001",
+          "C0044",
+          "C0047"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "thesis_promise",
+      "start_ratio": 0.04,
+      "end_ratio": 0.066,
+      "start_sec": 54.4,
+      "end_sec": 90.5,
+      "position_label": "4%–6.6%(0:54–1:31)",
+      "purpose": "给出反直觉核心论点与证据承诺，建立\"答案会让你意外\"的预期",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.0563,
+          "time_ms": 77347,
+          "reason": "\"被称原始的人比我们过得好\"的核心反转论点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "\"他们过得比我们好\"的论点凭什么成立（证据承诺）",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "tease",
+          "mechanism": "triple_modifier_preview"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "thesis_claim",
+          "mechanism": "counterintuitive_reversal"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "myth_label",
+          "mechanism": "biggest_lie_framing"
+        }
+      ],
+      "required_retention_events": [
+        "triple_modifier_tease",
+        "counterintuitive_claim"
+      ],
+      "original_moves": [
+        "答案三连定性预告",
+        "反直觉论点",
+        "可信度声明",
+        "转场"
+      ],
+      "abstract_move": "给出反直觉核心论点与证据承诺，建立\"答案会让你意外\"的预期",
+      "replacement_needs": [
+        "答案预览的三连修饰定性",
+        "反直觉论点的直白陈述",
+        "\"我不是为了夸张\"式的可信度声明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75);打开的悬念 LOOP02→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "myth_demolition",
+      "start_ratio": 0.066,
+      "end_ratio": 0.132,
+      "start_sec": 90.5,
+      "end_sec": 180.7,
+      "position_label": "6.6%–13.2%(1:31–3:01)",
+      "purpose": "把大众想象命名为\"谎言\"，用同构证据清单逐条拆穿",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "我们为什么会轻信受苦叙事这么久",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "curiosity_gap",
+          "mechanism": "funny_reason_tease"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "counter_evidence",
+          "mechanism": "artifact_inventory"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "counter_evidence",
+          "mechanism": "care_burial_evidence"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "verdict",
+          "mechanism": "total_inversion"
+        }
+      ],
+      "required_retention_events": [
+        "myth_labeling",
+        "evidence_inventory"
+      ],
+      "original_moves": [
+        "流行想象漫画化",
+        "轻信机制",
+        "反证清单（乐器/首饰/远行/墓葬）",
+        "全盘否定判词"
+      ],
+      "abstract_move": "把大众想象命名为\"谎言\"，用同构证据清单逐条拆穿",
+      "replacement_needs": [
+        "流行想象的漫画式复述",
+        "\"我们为何轻信\"的机制解释",
+        "反证清单的同构连发",
+        "全盘否定的极短判词"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP03。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:我们为什么会轻信受苦叙事这么久",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "anchor_research_reveal",
+      "start_ratio": 0.132,
+      "end_ratio": 0.234,
+      "start_sec": 180.7,
+      "end_sec": 320.8,
+      "position_label": "13.2%–23.4%(3:01–5:21)",
+      "purpose": "以一项权威田野研究给出全片数据锚点，并与现代处境正面对照",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.1641,
+          "time_ms": 225279,
+          "reason": "核心数据锚点：每天仅少量时间用于谋生，其余完全自由"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "data_anchor_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "data_reveal",
+          "mechanism": "shocking_data_point"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "naming_verdict",
+          "mechanism": "oxymoron_label"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "modern_mirror",
+          "mechanism": "leisure_comparison"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "verdict",
+          "mechanism": "comparison_punchline"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "transition",
+          "mechanism": "domain_shift"
+        }
+      ],
+      "required_retention_events": [
+        "authority_research_anchor",
+        "shocking_data_point"
+      ],
+      "original_moves": [
+        "权威研究背书",
+        "核心数据重复",
+        "命名式定性",
+        "现代对照组的数字与屏幕处境",
+        "判词"
+      ],
+      "abstract_move": "以一项权威田野研究给出全片数据锚点，并与现代处境正面对照",
+      "replacement_needs": [
+        "研究者与方法的权威背书",
+        "核心数据锚点的重复强调",
+        "数据含义的命名式定性",
+        "现代对照组的数字与处境描写"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(85);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "social_bond_reframe",
+      "start_ratio": 0.234,
+      "end_ratio": 0.332,
+      "start_sec": 320.8,
+      "end_sec": 456.5,
+      "position_label": "23.4%–33.2%(5:21–7:36)",
+      "purpose": "巡礼第一域·社交：把\"闲聊\"从浪费时间正名为最古老的社交技术",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.3266,
+          "time_ms": 448475,
+          "reason": "\"你没有浪费时间\"：闲聊被正名为最古老的人类行为"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "theory_reveal",
+          "mechanism": "authority_theory"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "reframe",
+          "mechanism": "gossip_dignification"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "absolution",
+          "mechanism": "self_mapping"
+        }
+      ],
+      "required_retention_events": [
+        "campfire_scene",
+        "data_point"
+      ],
+      "original_moves": [
+        "场景还原",
+        "占比数据",
+        "权威理论（语言=社交梳理）",
+        "规模论证",
+        "现代自我映射"
+      ],
+      "abstract_move": "巡礼第一域·社交：把\"闲聊\"从浪费时间正名为最古老的社交技术",
+      "replacement_needs": [
+        "该域时间占比数据",
+        "一个权威理论解释其功能",
+        "\"你每次做X其实是在做Y\"的自我映射"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "sleep_rhythm_reframe",
+      "start_ratio": 0.332,
+      "end_ratio": 0.435,
+      "start_sec": 456.5,
+      "end_sec": 597.3,
+      "position_label": "33.2%–43.5%(7:36–9:57)",
+      "purpose": "巡礼第二域·作息：拆解\"标准睡眠\"的现代性，为非常规作息的观众正名",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.425,
+          "time_ms": 583579,
+          "reason": "半夜醒来被正名为祖传节律，观众获得赦免"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "关于睡眠，有什么会\"让第一次听说的人震惊\"的事实",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "tease",
+          "mechanism": "amazement_preview"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "pattern_reveal",
+          "mechanism": "biphasic_reveal"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "mechanism",
+          "mechanism": "technology_cause"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "absolution",
+          "mechanism": "symptom_dignification"
+        }
+      ],
+      "required_retention_events": [
+        "curiosity_tease",
+        "historian_evidence_chain"
+      ],
+      "original_moves": [
+        "teaser预告",
+        "历史学家证据链",
+        "两段式睡眠揭示",
+        "消失时段活动清单",
+        "照明压缩机制",
+        "直接赦免"
+      ],
+      "abstract_move": "巡礼第二域·作息：拆解\"标准睡眠\"的现代性，为非常规作息的观众正名",
+      "replacement_needs": [
+        "被误解的现代规范及其成因",
+        "历史学证据链",
+        "消失时段的活动清单",
+        "\"你这样其实很正常\"的直接赦免"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "craft_art_reframe",
+      "start_ratio": 0.435,
+      "end_ratio": 0.564,
+      "start_sec": 597.3,
+      "end_sec": 774.1,
+      "position_label": "43.5%–56.4%(9:57–12:54)",
+      "purpose": "巡礼第三域·技艺与审美：击碎\"技术原始\"印象，把审美成就推到情感高点",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.5436,
+          "time_ms": 746430,
+          "reason": "洞窟壁画\"电影错觉\"：技艺平反的情感顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "verdict",
+          "mechanism": "skill_barrier"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "artifact_shock",
+          "mechanism": "age_reveal"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "aesthetic_reveal",
+          "mechanism": "cinematic_verdict"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "transition",
+          "mechanism": "domain_shift"
+        }
+      ],
+      "required_retention_events": [
+        "skill_barrier",
+        "artifact_age_shock"
+      ],
+      "original_moves": [
+        "误解陈述",
+        "否定判词",
+        "技艺门槛",
+        "实物年代震撼",
+        "审美现代化定性"
+      ],
+      "abstract_move": "巡礼第三域·技艺与审美：击碎\"技术原始\"印象，把审美成就推到情感高点",
+      "replacement_needs": [
+        "一门技艺的学习门槛描写",
+        "实物证据的年代震撼",
+        "审美成就的现代化定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "play_learning_reframe",
+      "start_ratio": 0.564,
+      "end_ratio": 0.653,
+      "start_sec": 774.1,
+      "end_sec": 896.3,
+      "position_label": "56.4%–65.3%(12:54–14:56)",
+      "purpose": "巡礼第四域·游戏：论证游戏是跨物种的本能而非现代奢侈",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "cross_species_evidence",
+        "ancient_artifact"
+      ],
+      "original_moves": [
+        "跨物种举证",
+        "古老实物",
+        "普遍性推断",
+        "游戏即学习机制"
+      ],
+      "abstract_move": "巡礼第四域·游戏：论证游戏是跨物种的本能而非现代奢侈",
+      "replacement_needs": [
+        "跨物种游戏行为举证",
+        "古老游戏实物证据",
+        "游戏即学习的机制解释"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "care_ethics_reframe",
+      "start_ratio": 0.653,
+      "end_ratio": 0.75,
+      "start_sec": 896.3,
+      "end_sec": 1029.6,
+      "position_label": "65.3%–75%(14:56–17:10)",
+      "purpose": "巡礼第五域·照护：用遗骸证据完成全片最温情的反转——他们并不冷漠",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.6951,
+          "time_ms": 954470,
+          "reason": "\"因为愿意而非被迫\"：照护反转的温情顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "case_reveal",
+          "mechanism": "fossil_case"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "evidence",
+          "mechanism": "healed_bones"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "transition",
+          "mechanism": "crazy_tease"
+        }
+      ],
+      "required_retention_events": [
+        "overlooked_detail_tease",
+        "fossil_case"
+      ],
+      "original_moves": [
+        "流行叙事忽略点",
+        "残障遗骸案例",
+        "生存算计张力句",
+        "对仗判词",
+        "愈合骨折与葬仪"
+      ],
+      "abstract_move": "巡礼第五域·照护：用遗骸证据完成全片最温情的反转——他们并不冷漠",
+      "replacement_needs": [
+        "重度残障个体被长期供养的实物证据",
+        "\"从生存算计看是负担\"的张力句",
+        "否定-肯定对仗的定性判词",
+        "葬仪证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "endurance_feat_reframe",
+      "start_ratio": 0.75,
+      "end_ratio": 0.876,
+      "start_sec": 1029.6,
+      "end_sec": 1203.1,
+      "position_label": "75%–87.6%(17:10–20:03)",
+      "purpose": "巡礼第六域·体能：把一项看似笑话的策略讲成身体的进化勋章",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.87,
+          "time_ms": 1194703,
+          "reason": "\"你为此而生\"：体能域的自我正名高点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "听起来像笑话的狩猎策略凭什么有效",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "feat_reveal",
+          "mechanism": "endurance_mechanics"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "verdict",
+          "mechanism": "species_verdict"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "self_mapping",
+          "mechanism": "evolutionary_medal"
+        }
+      ],
+      "required_retention_events": [
+        "crazy_tease",
+        "mechanism_breakdown"
+      ],
+      "original_moves": [
+        "疯狂预告",
+        "策略拆解",
+        "热生理机制",
+        "身体特征清单",
+        "半马场景自我映射"
+      ],
+      "abstract_move": "巡礼第六域·体能：把一项看似笑话的策略讲成身体的进化勋章",
+      "replacement_needs": [
+        "\"听起来像笑话\"的预告",
+        "策略机制的逐步拆解",
+        "身体特征清单式论证",
+        "观众现代挫败感的反写"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "mental_rest_reframe",
+      "start_ratio": 0.876,
+      "end_ratio": 0.98,
+      "start_sec": 1203.1,
+      "end_sec": 1345.1,
+      "position_label": "87.6%–98%(20:03–22:25)",
+      "purpose": "巡礼第七域·心智休息：用现代脑科学概念诊断观众的信息过载，反衬古人的留白日常",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "concept_reveal",
+          "mechanism": "neuroscience_concept"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "diagnosis",
+          "mechanism": "environment_indictment"
+        }
+      ],
+      "required_retention_events": [
+        "unexpected_tease",
+        "neuroscience_concept"
+      ],
+      "original_moves": [
+        "没人料到的预告",
+        "脑科学概念",
+        "现代环境诊断",
+        "火边留白诗意还原",
+        "创造力关联"
+      ],
+      "abstract_move": "巡礼第七域·心智休息：用现代脑科学概念诊断观众的信息过载，反衬古人的留白日常",
+      "replacement_needs": [
+        "一个现代脑科学概念的通俗引入",
+        "现代环境如何破坏该机制的诊断",
+        "古人日常场景的诗意还原",
+        "该机制与创造力的关联"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "reflective_closure",
+      "start_ratio": 0.98,
+      "end_ratio": 1,
+      "start_sec": 1345.1,
+      "end_sec": 1373.2,
+      "position_label": "98%–100%(22:25–22:53)",
+      "purpose": "收束：把全部领域升华为\"这些日常孕育了人类文明\"，以开放式问题把判断权交给观众",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.9868,
+          "time_ms": 1355062,
+          "reason": "篝火故事=科学哲学宗教的祖先：全片认知收束"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "\"你想回到过去吗\"刻意保持开放：叙事用途是把全片的认知反转转化为观众的个人选择，驱动评论区互动与完播后的回味",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_answer_synthesis",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "synthesis",
+          "mechanism": "civilization_synthesis"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "open_question",
+          "mechanism": "reflective_cta"
+        }
+      ],
+      "required_retention_events": [
+        "civilization_synthesis",
+        "open_question_cta"
+      ],
+      "original_moves": [
+        "总括映射",
+        "开放式发问",
+        "评论区引导",
+        "道别"
+      ],
+      "abstract_move": "收束：把全部领域升华为\"这些日常孕育了人类文明\"，以开放式问题把判断权交给观众",
+      "replacement_needs": [
+        "各领域到文明成果的总括映射",
+        "开放式问题的直接发问",
+        "评论区互动引导"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(80);打开的悬念 LOOP06(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        }
+      ]
+    }
+  ]
+}

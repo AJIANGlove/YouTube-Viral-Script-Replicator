@@ -1,0 +1,1026 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.457Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.064,
+      "start_sec": 0,
+      "end_sec": 51,
+      "position_label": "0%–6.4%(0:00–0:51)",
+      "purpose": "第二人称身份指派开场：让观众以掌权者家属身份坐拥安全感，再当众夺走其至亲",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.0592,
+          "time_ms": 47000,
+          "reason": "儿子被暴民当众杀害：仇恨资格与主悬念的冲击性建立"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_identity_assignment"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "threat_tease",
+          "mechanism": "worst_news_setup"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "inciting_incident",
+          "mechanism": "public_murder_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_identity_scene",
+        "loss_event_delivered"
+      ],
+      "original_moves": [
+        "身份与权势锚定",
+        "安全感三连确认",
+        "噩耗送达、儿子被暴民公开杀害"
+      ],
+      "abstract_move": "第二人称身份指派开场：让观众以掌权者家属身份坐拥安全感，再当众夺走其至亲",
+      "replacement_needs": [
+        "权势地位的具体化锚点",
+        "安全感的三连确认式铺垫",
+        "噩耗的暴力化公开呈现"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "immersive_second_person_power_scene",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 47000,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0006"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "protagonist_anomaly",
+      "start_ratio": 0.064,
+      "end_ratio": 0.132,
+      "start_sec": 51,
+      "end_sec": 105,
+      "position_label": "6.4%–13.2%(0:51–1:45)",
+      "purpose": "用'常规反应'铺垫反衬主角的反常：不逃、不哭、直接宣誓超额报复，并给事件一个可复述的定性",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.0995,
+          "time_ms": 79000,
+          "reason": "不逃反宣战：烧毁整城的不成比例誓言"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：她能否兑现'烧毁仇家整座城市'的誓言（标题'最残忍复仇'的具身化悬挂）",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "expectation_subversion",
+          "mechanism": "negation_triad"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "vow_reveal",
+          "mechanism": "disproportionate_vow"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "metaphor_contract",
+          "mechanism": "corporate_takeover_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "expectation_subversion",
+        "vow_reveal",
+        "metaphor_contract"
+      ],
+      "original_moves": [
+        "常规反应清单",
+        "否定三连的反常揭示",
+        "报复誓言",
+        "把家仇定性为敌意收购",
+        "订阅引导"
+      ],
+      "abstract_move": "用'常规反应'铺垫反衬主角的反常：不逃、不哭、直接宣誓超额报复，并给事件一个可复述的定性",
+      "replacement_needs": [
+        "同类事件中'正常人'的标准反应清单",
+        "主角否定式三连的反常揭示",
+        "把家仇重新定性为商业行为的比喻契约"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75);打开的悬念 LOOP01→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "obstacle_setup",
+      "start_ratio": 0.132,
+      "end_ratio": 0.171,
+      "start_sec": 105,
+      "end_sec": 136,
+      "position_label": "13.2%–17.1%(1:45–2:16)",
+      "purpose": "建立资源落差：有野心没预算，仇家城池坚不可摧，强攻等于自杀",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "没有军队、武器与预算，她从哪里弄到复仇的资源",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "problem_setup",
+          "mechanism": "resource_gap"
+        }
+      ],
+      "required_retention_events": [
+        "resource_gap",
+        "force_option_eliminated"
+      ],
+      "original_moves": [
+        "后勤难题",
+        "资源为零清单",
+        "城防具象化",
+        "强攻=自杀的排除结论"
+      ],
+      "abstract_move": "建立资源落差：有野心没预算，仇家城池坚不可摧，强攻等于自杀",
+      "replacement_needs": [
+        "主角资源为零的清单式确认",
+        "敌方防御力量的具象化描写",
+        "强攻方案被显式排除"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "alliance_pitch",
+      "start_ratio": 0.171,
+      "end_ratio": 0.252,
+      "start_sec": 136,
+      "end_sec": 200,
+      "position_label": "17.1%–25.2%(2:16–3:20)",
+      "purpose": "资源获取弧线：主角向超级势力路演，把私人恩怨重新包装成对方的利益受损，借来压倒性武力",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.2469,
+          "time_ms": 196000,
+          "reason": "话术成交：零资源主角借到整支军队与舰队"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "resource_acquisition",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "quest_launch",
+          "mechanism": "networking_trip"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "power_context",
+          "mechanism": "superpower_mapping"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "pitch_scene",
+          "mechanism": "no_begging_posture"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "pitch_reframe",
+          "mechanism": "insult_to_empire"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "deal_struck",
+          "mechanism": "army_granted"
+        }
+      ],
+      "required_retention_events": [
+        "interest_reframe_pitch",
+        "deal_struck"
+      ],
+      "original_moves": [
+        "求助之旅",
+        "超级势力体量",
+        "不求施舍只谈交易",
+        "把暗杀重构为对帝国的侮辱",
+        "成交"
+      ],
+      "abstract_move": "资源获取弧线：主角向超级势力路演，把私人恩怨重新包装成对方的利益受损，借来压倒性武力",
+      "replacement_needs": [
+        "超级势力的体量描写",
+        "把私仇重构为对方利益的话术",
+        "利用对方自负与贪婪完成成交"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75);回收了前文的悬念 FS03→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "siege_setup",
+      "start_ratio": 0.252,
+      "end_ratio": 0.298,
+      "start_sec": 200,
+      "end_sec": 237,
+      "position_label": "25.2%–29.8%(3:20–3:57)",
+      "purpose": "大军压境与围城开启：用城内视角的窒息感把冲突拖入消耗战",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "九个月围城：坚城能否被攻破",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "arrival_shock",
+          "mechanism": "army_at_gates"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "siege_begins",
+          "mechanism": "time_anchor_attrition"
+        }
+      ],
+      "required_retention_events": [
+        "army_at_gates",
+        "siege_time_anchor"
+      ],
+      "original_moves": [
+        "带兵回归",
+        "守方心态反转",
+        "闭城死守",
+        "九个月围困时间锚点",
+        "城内窒息感"
+      ],
+      "abstract_move": "大军压境与围城开启：用城内视角的窒息感把冲突拖入消耗战",
+      "replacement_needs": [
+        "守方从'以为摆脱'到'恐慌'的心态反转",
+        "围困时长的时间锚点",
+        "城内生存恶化的感官细节"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "assault_montage",
+      "start_ratio": 0.298,
+      "end_ratio": 0.373,
+      "start_sec": 237,
+      "end_sec": 296,
+      "position_label": "29.8%–37.3%(3:57–4:56)",
+      "purpose": "攻防蒙太奇：强攻器械与地道偷袭逐一登场又逐一被破解，僵局加深",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "地道偷袭能否从地下钻进城里",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "immersion",
+          "mechanism": "terror_inside_walls"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "assault_montage",
+          "mechanism": "siege_engines_fail"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "tactic_shift",
+          "mechanism": "tunnel_warfare"
+        }
+      ],
+      "required_retention_events": [
+        "assault_methods_fail",
+        "tunnel_shift"
+      ],
+      "original_moves": [
+        "攻城塔与撞锤",
+        "守方沸水箭雨死守",
+        "转向地道偷袭"
+      ],
+      "abstract_move": "攻防蒙太奇：强攻器械与地道偷袭逐一登场又逐一被破解，僵局加深",
+      "replacement_needs": [
+        "至少两种攻城手段的具体呈现",
+        "守方以命相搏的抵抗描写",
+        "攻方资源与士气的消耗"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "defense_ingenuity",
+      "start_ratio": 0.373,
+      "end_ratio": 0.443,
+      "start_sec": 296,
+      "end_sec": 352,
+      "position_label": "37.3%–44.3%(4:56–5:52)",
+      "purpose": "守方智慧高光：小人物用土法侦测破解偷袭，给观众一个智力回报点，同时抬高攻方账单",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.3917,
+          "time_ms": 311000,
+          "reason": "铜盾听音定位地道：民间智慧破解军事工程的高光回报"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "ingenuity_reveal",
+          "mechanism": "brass_shield_detection"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "horror_setpiece",
+          "mechanism": "underground_knife_fight"
+        }
+      ],
+      "required_retention_events": [
+        "ingenuity_device",
+        "attackers_annihilated"
+      ],
+      "original_moves": [
+        "民间高手登场",
+        "铜盾听音机关",
+        "垂直反挖",
+        "黑暗地下刀战",
+        "偷袭者全灭"
+      ],
+      "abstract_move": "守方智慧高光：小人物用土法侦测破解偷袭，给观众一个智力回报点，同时抬高攻方账单",
+      "replacement_needs": [
+        "一个可复述的民间智慧机关",
+        "黑暗环境中的近身搏杀奇观",
+        "攻方'武力无效'的结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "tactic_pivot",
+      "start_ratio": 0.443,
+      "end_ratio": 0.472,
+      "start_sec": 352,
+      "end_sec": 375,
+      "position_label": "44.3%–47.2%(5:52–6:15)",
+      "purpose": "战术转向：从军事手段切换到规则诈术，抛出和平谈判的诱饵",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "defense_success",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "stalemate",
+          "mechanism": "mutual_exhaustion"
+        }
+      ],
+      "required_retention_events": [
+        "force_abandoned",
+        "peace_bait"
+      ],
+      "original_moves": [
+        "攻方力竭",
+        "承认硬攻无解",
+        "转向肮脏法律伎俩",
+        "抛出和约诱饵"
+      ],
+      "abstract_move": "战术转向：从军事手段切换到规则诈术，抛出和平谈判的诱饵",
+      "replacement_needs": [
+        "'打不破墙就骗他们开门'的思路转换句",
+        "和约条件的表面合理性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS06→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "trap_setup",
+      "start_ratio": 0.472,
+      "end_ratio": 0.543,
+      "start_sec": 375,
+      "end_sec": 431,
+      "position_label": "47.2%–54.3%(6:15–7:11)",
+      "purpose": "陷阱暗线铺设：秘密改造地面，再用'以脚下土地为条件'的誓言把陷阱写进契约文字",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.5428,
+          "time_ms": 431000,
+          "reason": "条件誓言原句落下：陷阱以文字形式显式武装"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "以'脚下土地坚实'为条件的誓言会否、以及如何被字面打破",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "tactic_pivot",
+          "mechanism": "legal_trick_pivot"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "trap_setup",
+          "mechanism": "camouflaged_trench"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "oath_reveal",
+          "mechanism": "conditional_oath"
+        }
+      ],
+      "required_retention_events": [
+        "trap_construction",
+        "conditional_oath"
+      ],
+      "original_moves": [
+        "深夜挖沟",
+        "木板覆土伪装地面",
+        "引导守方领袖站上陷阱",
+        "以脚下土地为条件起誓"
+      ],
+      "abstract_move": "陷阱暗线铺设：秘密改造地面，再用'以脚下土地为条件'的誓言把陷阱写进契约文字",
+      "replacement_needs": [
+        "陷阱工程的分步施工细节",
+        "引导对方站上陷阱区域的谈判走位",
+        "一句字面严谨、实则留口的条件誓言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85);打开的悬念 LOOP05→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "false_relief",
+      "start_ratio": 0.543,
+      "end_ratio": 0.596,
+      "start_sec": 431,
+      "end_sec": 473,
+      "position_label": "54.3%–59.6%(7:11–7:53)",
+      "purpose": "假性解脱：让守方与观众一起相信噩梦结束，把情绪抬到最高点以便摔落",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "false_relief",
+          "mechanism": "celebration_before_fall"
+        }
+      ],
+      "required_retention_events": [
+        "relief_celebration",
+        "weapons_down"
+      ],
+      "original_moves": [
+        "绝望处境回顾",
+        "条件看似公平",
+        "如释重负",
+        "签约开门",
+        "群体庆祝、放下武器"
+      ],
+      "abstract_move": "假性解脱：让守方与观众一起相信噩梦结束，把情绪抬到最高点以便摔落",
+      "replacement_needs": [
+        "守方的绝望处境回顾以合理化其轻信",
+        "如释重负的群体庆祝场面",
+        "武器放下的关键动作"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "betrayal_payoff",
+      "start_ratio": 0.596,
+      "end_ratio": 0.65,
+      "start_sec": 473,
+      "end_sec": 516,
+      "position_label": "59.6%–65%(7:53–8:36)",
+      "purpose": "背叛兑现：物理性打破誓言条件，宣告契约作废，在守方解除武装的瞬间完成碾压",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 95,
+          "position_ratio": 0.6247,
+          "time_ms": 496000,
+          "reason": "地面碎裂、契约作废、屠戮开始：全片反转与情绪的最高释放点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "城市陷落后，她会把报复推进到什么程度",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "trick_victory",
+          "opened_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "loophole_payoff",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "betrayal_trigger",
+          "mechanism": "ground_shattered"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "contract_void",
+          "mechanism": "loophole_sprung"
+        }
+      ],
+      "required_retention_events": [
+        "trap_triggered",
+        "contract_void_verdict",
+        "massacre"
+      ],
+      "original_moves": [
+        "砸碎木板",
+        "地面塌陷",
+        "'契约作废'宣告",
+        "军队涌入",
+        "没有战斗只有屠戮"
+      ],
+      "abstract_move": "背叛兑现：物理性打破誓言条件，宣告契约作废，在守方解除武装的瞬间完成碾压",
+      "replacement_needs": [
+        "陷阱触发的物理动作",
+        "'条件不再成立、契约作废'的冷酷宣告",
+        "'没有战斗、只有屠戮'的短句判决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(95);打开的悬念 LOOP06→FS13 跨段;回收了前文的悬念 FS05→LOOP03、FS09→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 95
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "atrocity_escalation",
+      "start_ratio": 0.65,
+      "end_ratio": 0.782,
+      "start_sec": 516,
+      "end_sec": 621,
+      "position_label": "65%–78.2%(8:36–10:21)",
+      "purpose": "兑现标题的'最残忍'：清算按'直接凶手-幕后关联者'分层升级，并以公共展示逻辑把尸体变成威慑符号",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.7116,
+          "time_ms": 565000,
+          "reason": "活桩环城被定性为'恐怖广告牌'：标题'最残忍'的第一层兑现"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.7733,
+          "time_ms": 614000,
+          "reason": "惩罚升级至家属、连行刑者都震惊：残忍程度封顶"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "tone_shift",
+          "mechanism": "true_crime_turn"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "atrocity_reveal",
+          "mechanism": "impalement_ring"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "metaphor_verdict",
+          "mechanism": "terrifying_billboard"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "escalation",
+          "mechanism": "punishment_extends_to_families"
+        }
+      ],
+      "required_retention_events": [
+        "public_display_atrocity",
+        "escalation_to_families",
+        "perpetrators_shocked"
+      ],
+      "original_moves": [
+        "真犯罪基调宣告",
+        "活桩示众成环形广告牌",
+        "牵连妻子、更 disturbing 的惩罚",
+        "旁观者震惊定调"
+      ],
+      "abstract_move": "兑现标题的'最残忍'：清算按'直接凶手-幕后关联者'分层升级，并以公共展示逻辑把尸体变成威慑符号",
+      "replacement_needs": [
+        "从政治游戏转向真犯罪的基调宣告",
+        "第一层暴行的仪式感与展示逻辑",
+        "第二层暴行的升级与旁观者震惊反应"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)、PK08(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "fallout_reckoning",
+      "start_ratio": 0.782,
+      "end_ratio": 0.868,
+      "start_sec": 621,
+      "end_sec": 689,
+      "position_label": "78.2%–86.8%(10:21–11:29)",
+      "purpose": "善后与反噬铺垫：平民被当作交易筹码处理，主角登顶权力顶点，同时埋下'宇宙会算账'的转向",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "'宇宙迟早会追上你'：她自己将付出什么代价",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "怪病的真实成因无医学解释、史料只记录症状：刻意保持开放，叙事用途是把'天谴还是巧合'的解读权留给观众，并用史家口吻为报应定性保留神秘余味",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_revenge_completion",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "atrocity_reveal",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "shock_verdict",
+          "mechanism": "even_perpetrators_shocked"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "aftermath",
+          "mechanism": "population_as_payment"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "karma_setup",
+          "mechanism": "universe_warning"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "karma_reveal",
+          "mechanism": "historian_attributed_disease"
+        }
+      ],
+      "required_retention_events": [
+        "revenge_completed",
+        "universe_warning"
+      ],
+      "original_moves": [
+        "平民移交帝国抵债",
+        "变卖为奴、城池清空",
+        "复仇完成",
+        "手段清单复盘",
+        "登顶预警"
+      ],
+      "abstract_move": "善后与反噬铺垫：平民被当作交易筹码处理，主角登顶权力顶点，同时埋下'宇宙会算账'的转向",
+      "replacement_needs": [
+        "无辜者的处置与城池清空",
+        "主角战术清单的回马枪式总结",
+        "登顶即转折的预警句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS14、LOOP08(不闭合) 跨段;回收了前文的悬念 FS02→LOOP01、FS11→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "karma_payoff",
+      "start_ratio": 0.868,
+      "end_ratio": 0.931,
+      "start_sec": 689,
+      "end_sec": 739,
+      "position_label": "86.8%–93.1%(11:29–12:19)",
+      "purpose": "报应兑现：引信史记载的恐怖病死，让施暴者以更恶心的方式死于自身腐坏",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.8929,
+          "time_ms": 709000,
+          "reason": "蛆虫噬体的信史病死：报应反转的重口兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "karma_payoff",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "gore_detail",
+          "mechanism": "body_horror_detail"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "moral_verdict",
+          "mechanism": "cosmic_karma_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "historian_attribution",
+        "gruesome_death",
+        "karma_verdict"
+      ],
+      "original_moves": [
+        "史料归因",
+        "怪病降临",
+        "皮肤腐坏",
+        "蛆虫噬体细节",
+        "史家定性为天谴"
+      ],
+      "abstract_move": "报应兑现：引信史记载的恐怖病死，让施暴者以更恶心的方式死于自身腐坏",
+      "replacement_needs": [
+        "明确的史料来源归因",
+        "病症的逐级恶化与腐坏细节",
+        "史家把死因解读为天谴的定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(90);回收了前文的悬念 FS13→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS15",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.931,
+      "end_ratio": 0.971,
+      "start_sec": 739,
+      "end_sec": 771,
+      "position_label": "93.1%–97.1%(12:19–12:51)",
+      "purpose": "认知升级：把个案提炼为'以尸山铺路者无好下场'的博弈论教训",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "worldview_lesson",
+          "mechanism": "career_on_bodies_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "tactics_ledger",
+        "causal_aphorism"
+      ],
+      "original_moves": [
+        "手段总账复盘",
+        "'手段决定结局'因果格言",
+        "退休计划灾难隐喻"
+      ],
+      "abstract_move": "认知升级：把个案提炼为'以尸山铺路者无好下场'的博弈论教训",
+      "replacement_needs": [
+        "对主角所用手段的总账式复盘",
+        "'手段决定结局'的因果格言"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.971,
+      "end_ratio": 1,
+      "start_sec": 771,
+      "end_sec": 794,
+      "position_label": "97.1%–100%(12:51–13:14)",
+      "purpose": "现代对照收尾：把观众的日常职场委屈与故事暴行逐一对比，用'已经够好了'的黑色安慰降调离场",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "humor_peak",
+          "strength": 70,
+          "position_ratio": 0.9899,
+          "time_ms": 786000,
+          "reason": "现代职场对照：把极端暴行降级为日常烦恼的黑色安慰"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "modern_mapping",
+          "mechanism": "office_politics_comfort"
+        }
+      ],
+      "required_retention_events": [
+        "modern_mapping_comfort",
+        "engagement_question"
+      ],
+      "original_moves": [
+        "职场委屈对照",
+        "暴行逐项降级为日常烦恼",
+        "黑色安慰",
+        "下期预告提问"
+      ],
+      "abstract_move": "现代对照收尾：把观众的日常职场委屈与故事暴行逐一对比，用'已经够好了'的黑色安慰降调离场",
+      "replacement_needs": [
+        "观众现实处境与故事暴行的逐一对照",
+        "一句把极端结局日常化的黑色安慰",
+        "互动提问式收尾"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 70
+        }
+      ]
+    }
+  ]
+}

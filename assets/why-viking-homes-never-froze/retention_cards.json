@@ -1,0 +1,734 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.552Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.057,
+      "start_sec": 0.2,
+      "end_sec": 51.5,
+      "position_label": "0%–5.7%(0:00–0:52)",
+      "purpose": "用反事实假设开场制造认知缺口，随即铺陈刻板印象画面并宣告其为错",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念：没有现代材料的房子凭什么胜过现代住宅",
+          "closes_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "刻板印象被推翻后，真相的核心是什么",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "counterfactual_hook",
+          "mechanism": "impossible_premise"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "myth_montage",
+          "mechanism": "stereotype_imagery"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "inversion_declaration",
+          "mechanism": "myth_rejection"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "magic_exclusion",
+          "mechanism": "exclusion_triad"
+        }
+      ],
+      "required_retention_events": [
+        "counterfactual_hook",
+        "myth_inversion"
+      ],
+      "original_moves": [
+        "反事实开场 + 阴冷刻板印象铺陈 + '这个画面是错的'反转宣告"
+      ],
+      "abstract_move": "用反事实假设开场制造认知缺口，随即铺陈刻板印象画面并宣告其为错",
+      "replacement_needs": [
+        "反事实假设（没有X、没有Y，却胜过Z）",
+        "刻板印象的画面化铺陈",
+        "'这个画面合情合理，但它是错的'式反转宣告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS12、LOOP02→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "counterfactual_question",
+        "first_stimulus_ms": 200,
+        "first_payoff_ms": 29266,
+        "evidence_refs": [
+          "C0001",
+          "C0013",
+          "C0014"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "promise_setup",
+      "start_ratio": 0.057,
+      "end_ratio": 0.136,
+      "start_sec": 51.5,
+      "end_sec": 122.3,
+      "position_label": "5.7%–13.6%(0:52–2:02)",
+      "purpose": "排除魔法式解释，提出全片元原则：思维从'造更多'转向'失更少'",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.1141,
+          "time_ms": 102533,
+          "reason": "全片元原则：不问造热，问保热——思维转向的最高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "meta_principle",
+          "mechanism": "question_shift"
+        }
+      ],
+      "required_retention_events": [
+        "magic_exclusion",
+        "meta_principle"
+      ],
+      "original_moves": [
+        "排除魔法论 + 系统性预告 + '冬季不是要征服的敌人，是要管理的条件' + 思维转向"
+      ],
+      "abstract_move": "排除魔法式解释，提出全片元原则：思维从'造更多'转向'失更少'",
+      "replacement_needs": [
+        "否定三连排除（不靠魔法/硬扛/堆资源）",
+        "元原则对仗句（不是X，而是Y）",
+        "系统性预告（每个元素协同）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.136,
+      "end_ratio": 0.253,
+      "start_sec": 123.3,
+      "end_sec": 227.5,
+      "position_label": "13.6%–25.3%(2:03–3:48)",
+      "purpose": "子系统一：整体形态——居住共同体本身作为能源，外形作为气流设计",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "insight",
+          "strength": 75,
+          "position_ratio": 0.231,
+          "time_ms": 207666,
+          "reason": "'房子不抵抗风，它引导风'的拟人化设计诗学"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "meta_principle_reveal",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "mechanism_reveal",
+          "mechanism": "density_as_resource"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "aphorism_payoff",
+          "mechanism": "personified_design"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "knowledge_transfer",
+          "mechanism": "maritime_to_architecture"
+        }
+      ],
+      "required_retention_events": [
+        "subsystem_form_and_airflow"
+      ],
+      "original_moves": [
+        "共同体聚热 + 船形导风 + 航海知识上岸"
+      ],
+      "abstract_move": "子系统一：整体形态——居住共同体本身作为能源，外形作为气流设计",
+      "replacement_needs": [
+        "共同体聚集的热力学解释",
+        "外形曲线的导风逻辑与知识来源（航海）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75);回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "evidence_build",
+      "start_ratio": 0.253,
+      "end_ratio": 0.365,
+      "start_sec": 228.9,
+      "end_sec": 328.1,
+      "position_label": "25.3%–36.5%(3:49–5:28)",
+      "purpose": "子系统二：材料——就地材料的热物理特性与'房子长进土地'的活结构",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "physics_reveal",
+          "mechanism": "still_air_principle"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "living_structure",
+          "mechanism": "house_land_merger"
+        }
+      ],
+      "required_retention_events": [
+        "subsystem_material_physics"
+      ],
+      "original_moves": [
+        "木材稀缺 + 两米草皮墙 + 静止空气隔热 + 房屋长进土地"
+      ],
+      "abstract_move": "子系统二：材料——就地材料的热物理特性与'房子长进土地'的活结构",
+      "replacement_needs": [
+        "材料稀缺背景",
+        "静止空气隔热原理",
+        "结构随时间自我强化的细节"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evidence_build",
+      "start_ratio": 0.365,
+      "end_ratio": 0.468,
+      "start_sec": 329.6,
+      "end_sec": 420.6,
+      "position_label": "36.5%–46.8%(5:30–7:01)",
+      "purpose": "子系统三：能源——生物体作为永不熄灭的供热系统，建筑引导热量流向",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.4046,
+          "time_ms": 363733,
+          "reason": "一头牲口=几台常开电暖器的现代换算冲击"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "defect_as_design",
+          "mechanism": "crudeness_reversal"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "modern_conversion",
+          "mechanism": "reference_translation"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "passive_design",
+          "mechanism": "heat_routing"
+        }
+      ],
+      "required_retention_events": [
+        "subsystem_energy_with_conversion"
+      ],
+      "original_moves": [
+        "牲畜入室 + '粗陋实为精密'反转 + 电暖器换算 + 高差导热气流"
+      ],
+      "abstract_move": "子系统三：能源——生物体作为永不熄灭的供热系统，建筑引导热量流向",
+      "replacement_needs": [
+        "'看似粗陋实为精密'的显式反转",
+        "现代参照系换算（一头牲口=几台电暖器）",
+        "高差引导热气流的被动设计"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "evidence_build",
+      "start_ratio": 0.468,
+      "end_ratio": 0.562,
+      "start_sec": 421.5,
+      "end_sec": 505.4,
+      "position_label": "46.8%–56.2%(7:01–8:25)",
+      "purpose": "子系统四：气流——真正的敌人是风而不是冷，开口即弱点",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "insight",
+          "strength": 70,
+          "position_ratio": 0.5503,
+          "time_ms": 494733,
+          "reason": "前厅作为概念命名前的早期气闸"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "principle_reveal",
+          "mechanism": "enemy_redefinition"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "absence_as_choice",
+          "mechanism": "functional_absence"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "modern_conversion",
+          "mechanism": "concept_ante_dating"
+        }
+      ],
+      "required_retention_events": [
+        "enemy_redefinition"
+      ],
+      "original_moves": [
+        "'冷不死人风致命' + 无窗的功能性解释 + 低矮入口 + 前厅气闸"
+      ],
+      "abstract_move": "子系统四：气流——真正的敌人是风而不是冷，开口即弱点",
+      "replacement_needs": [
+        "'冷不死人，风才致命'的原则句",
+        "无窗的功能性解释（不是不会，是不愿）",
+        "缓冲前厅的早期气闸设计"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "evidence_build",
+      "start_ratio": 0.562,
+      "end_ratio": 0.661,
+      "start_sec": 506.4,
+      "end_sec": 594.4,
+      "position_label": "56.2%–66.1%(8:26–9:54)",
+      "purpose": "子系统五：热源——长火塘的热储能设计与无烟囱悖论",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "没有烟囱为什么不是致命的",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "scale_reveal",
+          "mechanism": "dimension_anchor"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "paradox_suspension",
+          "mechanism": "deadly_by_modern_standards"
+        }
+      ],
+      "required_retention_events": [
+        "heat_source_scale",
+        "paradox_suspension"
+      ],
+      "original_moves": [
+        "十米长火塘 + 石材蓄热 + 泥炭燃料 + 社会中心 + 无烟囱悖论"
+      ],
+      "abstract_move": "子系统五：热源——长火塘的热储能设计与无烟囱悖论",
+      "replacement_needs": [
+        "中央火塘的尺度与石材蓄热",
+        "燃料替代（泥炭）",
+        "火塘的多功能与社会中心地位",
+        "无烟囱悖论悬念"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "reveal",
+      "start_ratio": 0.661,
+      "end_ratio": 0.741,
+      "start_sec": 595.8,
+      "end_sec": 665.9,
+      "position_label": "66.1%–74.1%(9:56–11:06)",
+      "purpose": "悖论解答：烟雾是被管理的资源（保温层+防腐剂），代价被有意识地权衡",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.6809,
+          "time_ms": 612166,
+          "reason": "烟雾保温毯：悖论解答的最高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "paradox_resolution",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "paradox_resolution",
+          "mechanism": "smoke_blanket"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "bonus_function",
+          "mechanism": "soot_preservation"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "conscious_tradeoff",
+          "mechanism": "survival_priority_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "paradox_resolution",
+        "conscious_tradeoff"
+      ],
+      "original_moves": [
+        "烟雾保温毯 + 烟灰防腐 + 可调通风口 + '舒适让位于生存'"
+      ],
+      "abstract_move": "悖论解答：烟雾是被管理的资源（保温层+防腐剂），代价被有意识地权衡",
+      "replacement_needs": [
+        "烟雾保温层机制",
+        "烟灰防腐的附带功能",
+        "可调通风口与'舒适让位于生存'的自觉权衡"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(75);回收了前文的悬念 FS07→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "evidence_build",
+      "start_ratio": 0.741,
+      "end_ratio": 0.824,
+      "start_sec": 667.1,
+      "end_sec": 741.2,
+      "position_label": "74.1%–82.4%(11:07–12:21)",
+      "purpose": "子系统六：屋顶——数吨重量作为保温与锚固，自我修护的活层",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "insight",
+          "strength": 70,
+          "position_ratio": 0.8053,
+          "time_ms": 724000,
+          "reason": "屋顶靠被放着不管就能自我修护"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "mass_as_function",
+          "mechanism": "weight_as_insulation"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "self_repair",
+          "mechanism": "benign_neglect_design"
+        }
+      ],
+      "required_retention_events": [
+        "mass_as_insulation"
+      ],
+      "original_moves": [
+        "树皮防水+草皮保温 + '重量即保温' + 自我修护活层"
+      ],
+      "abstract_move": "子系统六：屋顶——数吨重量作为保温与锚固，自我修护的活层",
+      "replacement_needs": [
+        "多层构造（树皮防水+草皮保温）",
+        "'重量即保温'的反转",
+        "自我修护机制"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "reveal",
+      "start_ratio": 0.824,
+      "end_ratio": 0.902,
+      "start_sec": 742.6,
+      "end_sec": 810.9,
+      "position_label": "82.4%–90.2%(12:23–13:31)",
+      "purpose": "最终反转：最大的威胁（雪）被当作最后的保温材料",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "image_peak",
+          "strength": 75,
+          "position_ratio": 0.8647,
+          "time_ms": 777400,
+          "reason": "村庄没入雪下只剩烟柱的电影化画面"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "为什么不铲雪反而任其堆积",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "threat_as_resource",
+          "mechanism": "enemy_redefinition"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "cinematic_image",
+          "mechanism": "burial_protection_reversal"
+        }
+      ],
+      "required_retention_events": [
+        "threat_as_resource_reversal"
+      ],
+      "original_moves": [
+        "雪的隔热物理 + '被埋实为被保护' + 村庄没入雪中的画面"
+      ],
+      "abstract_move": "最终反转：最大的威胁（雪）被当作最后的保温材料",
+      "replacement_needs": [
+        "雪的隔热物理",
+        "'看似被埋实为被保护'的画面反转",
+        "村庄没入雪中的电影化画面"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(75);打开的悬念 LOOP04→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "closure",
+      "start_ratio": 0.902,
+      "end_ratio": 0.98,
+      "start_sec": 812.9,
+      "end_sec": 881.1,
+      "position_label": "90.2%–98%(13:33–14:41)",
+      "purpose": "元原则回收：用排比蒙太奇重放全部子系统，给出'不是对抗自然，而是与之对齐'的总定性",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9191,
+          "time_ms": 826266,
+          "reason": "'温暖不是被制造的，是被保存的'全片格言顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "threat_as_resource_reveal",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "aphorism_payoff",
+          "mechanism": "creation_preservation_reframe"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "systems_montage",
+          "mechanism": "subsystem_recap"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "final_verdict",
+          "mechanism": "alignment_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "title_callback",
+        "aphorism_payoff",
+        "systems_montage"
+      ],
+      "original_moves": [
+        "标题问题回收 + '温暖不是被制造，是被保存' + 子系统排比蒙太奇 + '不是对抗自然，是与之对齐'"
+      ],
+      "abstract_move": "元原则回收：用排比蒙太奇重放全部子系统，给出'不是对抗自然，而是与之对齐'的总定性",
+      "replacement_needs": [
+        "标题问题的直接回收",
+        "元原则的格言化重述",
+        "子系统排比蒙太奇",
+        "与现代能耗的对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(90);回收了前文的悬念 FS10→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "closure",
+      "start_ratio": 0.98,
+      "end_ratio": 1,
+      "start_sec": 881.7,
+      "end_sec": 899,
+      "position_label": "98%–100%(14:42–14:59)",
+      "purpose": "把历史智慧定性为人类遗产，用静默提问接回当下",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_closure",
+          "strength": 80,
+          "position_ratio": 0.9966,
+          "time_ms": 895900,
+          "reason": "静默提问把历史智慧接回当下"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "systems_answer_with_meta_principle",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "quiet_question_close",
+          "mechanism": "open_ended_legacy_question"
+        }
+      ],
+      "required_retention_events": [
+        "quiet_question_close"
+      ],
+      "original_moves": [
+        "遗产三连定性 + 指向当下的开放提问"
+      ],
+      "abstract_move": "把历史智慧定性为人类遗产，用静默提问接回当下",
+      "replacement_needs": [
+        "'不是传说，不是神话，是遗产'式三连定性",
+        "一个指向当下的开放提问"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(80);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        }
+      ]
+    }
+  ]
+}

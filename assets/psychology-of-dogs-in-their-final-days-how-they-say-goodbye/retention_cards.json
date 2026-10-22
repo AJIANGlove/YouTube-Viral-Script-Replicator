@@ -1,0 +1,560 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.533Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "scenario_hook_promise_reframe",
+      "start_ratio": 0.0004,
+      "end_ratio": 0.1017,
+      "start_sec": 0.3,
+      "end_sec": 70,
+      "position_label": "0%–10.2%(0:00–1:10)",
+      "purpose": "视频开始",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "thesis_reveal",
+          "strength": 80,
+          "position_ratio": 0.0786,
+          "time_ms": 54130,
+          "reason": "核心答案预告：不知道会死，但知道有重要的事将发生——全片问题框架确立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念：它们在最后的日子经历什么、如何告别",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "核心问题：它们知道自己将要死吗、它们害怕吗",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "主人愧疚：我做错了吗、我做得够吗",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "scenario_hook",
+          "mechanism": "food_in_bowl"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "question_cascade",
+          "mechanism": "inner_questions"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "promise_reframe",
+          "mechanism": "not_dark_but_comforting"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "thesis_partial",
+          "mechanism": "knows_something_significant"
+        }
+      ],
+      "required_retention_events": "先让观众感到被理解（那些问题你也问过），再承诺这趟不会只会更痛",
+      "original_moves": [
+        "告别行为场景 + 常见误读预告 + 内心问题连珠 + 情感契约重构 + 核心答案预告"
+      ],
+      "abstract_move": "视频开始",
+      "replacement_needs": [
+        "能做到:一个高代入度的告别行为场景,至少四个内心问题,对常见误读的预告,安慰契约的显式声明,核心答案的预告句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80);打开的悬念 LOOP01→FS09、LOOP02→FS09、LOOP03→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "scenario_question_cascade",
+        "first_stimulus_ms": 250,
+        "first_payoff_ms": 54130,
+        "evidence_refs": [
+          "C0001",
+          "C0009",
+          "C0022"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "death_concept_science",
+      "start_ratio": 0.1024,
+      "end_ratio": 0.1626,
+      "start_sec": 70.5,
+      "end_sec": 111.9,
+      "position_label": "10.2%–16.3%(1:10–1:52)",
+      "purpose": "核心问题已抛出",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": "把恐惧问题转化为智识好奇——观众第一次松一口气",
+      "original_moves": [
+        "研究引用 + 死亡概念的最小定义 + 人类独特性对照 + 更立即更诚实的替代描述"
+      ],
+      "abstract_move": "核心问题已抛出",
+      "replacement_needs": [
+        "能做到:一条带年份机构的哲学/科学研究,概念分层辨析,人类独特性的对照,更诚实的替代性描述"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "scent_evidence",
+      "start_ratio": 0.163,
+      "end_ratio": 0.2406,
+      "start_sec": 112.2,
+      "end_sec": 165.6,
+      "position_label": "16.3%–24.1%(1:52–2:46)",
+      "purpose": "感知层答案已建立",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "evidence_wow",
+          "strength": 76,
+          "position_ratio": 0.1948,
+          "time_ms": 134090,
+          "reason": "99%准确率：都市传说被证实为真，感知能力的惊叹点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "superpower_evidence",
+          "mechanism": "receptors_and_accuracy"
+        }
+      ],
+      "required_retention_events": "用\"超能力\"式证据把悲伤话题短暂点亮为惊叹",
+      "original_moves": [
+        "嗅觉受体数字 + 癌症检测研究（准确率）+ 自身化学签名分析 + \"它们感知得到故障\""
+      ],
+      "abstract_move": "感知层答案已建立",
+      "replacement_needs": [
+        "能做到:受体数量级,至少两项检测研究（含准确率）,自身监测的逻辑推论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(76)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 76
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "behavior_reinterpretation",
+      "start_ratio": 0.2413,
+      "end_ratio": 0.4062,
+      "start_sec": 166.1,
+      "end_sec": 279.6,
+      "position_label": "24.1%–40.6%(2:46–4:40)",
+      "purpose": "它们感知得到变化已确立",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "myth_flip",
+          "strength": 84,
+          "position_ratio": 0.2827,
+          "time_ms": 194645,
+          "reason": "\"不是放弃的信号，是进化传承的全力以赴\"——最痛误读的科学翻转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "hart_reinterpretation",
+          "mechanism": "not_giving_up"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "evolutionary_origin",
+          "mechanism": "wolf_pack_logic"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "trust_verdict",
+          "mechanism": "attachment_is_trust"
+        }
+      ],
+      "required_retention_events": "最痛的误会被解开——躲你不是拒绝你，是护着你",
+      "original_moves": [
+        "两种行为的常见误读 + 奠基性研究（全力以赴）+ 狼群进化起源 + 就医信号的边界 + \"那是信任\"判词"
+      ],
+      "abstract_move": "它们感知得到变化已确立",
+      "replacement_needs": [
+        "能做到:两种相反行为及其误读,一条奠基性研究,进化起源叙事,就医信号的边界提示,信任判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 84
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "last_rally",
+      "start_ratio": 0.4067,
+      "end_ratio": 0.5342,
+      "start_sec": 280,
+      "end_sec": 367.7,
+      "position_label": "40.7%–53.4%(4:40–6:08)",
+      "purpose": "行为已被重释",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "science_reveal",
+          "strength": 82,
+          "position_ratio": 0.4957,
+          "time_ms": 341230,
+          "reason": "终末伽马波爆发：回光现象的神经科学解释，智识高潮"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "回光之谜：最后突然的能量爆发是什么",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "dual_truth_answer",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "phenomenon_naming",
+          "mechanism": "last_rally"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "gamma_surge",
+          "mechanism": "final_burst"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "dual_truth",
+          "mechanism": "science_and_meaning"
+        }
+      ],
+      "required_retention_events": "那个最后的微笑不需要在科学与爱之间二选一",
+      "original_moves": [
+        "回光现象素描 + 编目研究 + 伽马波终末爆发 + \"科学可以是解释，意义可以是真的\"双修句"
+      ],
+      "abstract_move": "行为已被重释",
+      "replacement_needs": [
+        "能做到:回光的典型场景,编目研究,神经科学的终末爆发证据,双修句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(82)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 82
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "euthanasia_demystified",
+      "start_ratio": 0.5348,
+      "end_ratio": 0.6669,
+      "start_sec": 368.2,
+      "end_sec": 459.1,
+      "position_label": "53.5%–66.7%(6:08–7:39)",
+      "purpose": "面临或背负该决策的观众被点名",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "安乐死愧疚：它受苦了吗、它知道吗、我做错了吗",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "mechanism_and_evidence_absolution",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "euthanasia_reframe",
+          "mechanism": "kindest_act"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "stress_marker_evidence",
+          "mechanism": "low_stress"
+        }
+      ],
+      "required_retention_events": "愧疚被证据一寸寸卸下",
+      "original_moves": [
+        "决策的正名 + 时间机制数字 + 死后反应≠痛苦 + 压力标记研究 + \"安乐死对它们没有意义\"判词"
+      ],
+      "abstract_move": "面临或背负该决策的观众被点名",
+      "replacement_needs": [
+        "能做到:决策的正名句,时间机制数字,死后反应的祛魅,压力标记研究,概念无意义判词"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP04。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:安乐死愧疚：它受苦了吗、它知道吗、我做错了吗",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "presence_neuroscience",
+      "start_ratio": 0.6674,
+      "end_ratio": 0.7426,
+      "start_sec": 459.5,
+      "end_sec": 511.2,
+      "position_label": "66.7%–74.3%(7:39–8:31)",
+      "purpose": "过程已被祛魅",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_summit",
+          "strength": 95,
+          "position_ratio": 0.722,
+          "time_ms": 497060,
+          "reason": "\"你是它们最后体验到的美好。不是疼痛。不是恐惧。是你。\"——全片情感顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "fmri_evidence",
+          "mechanism": "caudate_owner_scent"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "emotional_summit",
+          "mechanism": "last_good_thing"
+        }
+      ],
+      "required_retention_events": "全片的哭泣点——但流的是被需要的泪",
+      "original_moves": [
+        "fMRI尾状核研究 + \"不是食物不是狗，是你\" + 最后几秒的感官注册 + \"你是它们最后体验到的美好\"顶点判词"
+      ],
+      "abstract_move": "过程已被祛魅",
+      "replacement_needs": [
+        "能做到:一项fMRI研究（部位+对照刺激）,单词句排比,最后感官注册的描述,顶点判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(95)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 95
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "grief_legitimacy",
+      "start_ratio": 0.743,
+      "end_ratio": 0.9047,
+      "start_sec": 511.5,
+      "end_sec": 622.8,
+      "position_label": "74.3%–90.5%(8:32–10:23)",
+      "purpose": "告别已完成或即将到来",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "validation",
+          "strength": 86,
+          "position_ratio": 0.8662,
+          "time_ms": 596290,
+          "reason": "\"依恋回路不检查物种\"——悲伤合法性的神经科学判词"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "悲伤合法性：为一只宠物悲伤成这样是正常的吗",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "clinical_and_neural_validation",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "disenfranchised_naming",
+          "mechanism": "grief_not_valid"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "attachment_circuit",
+          "mechanism": "no_species_check"
+        }
+      ],
+      "required_retention_events": "你不必再为\"为一只狗哭成这样\"道歉",
+      "original_moves": [
+        "丧失的重量 + 悲伤障碍数据 + 预期性悲伤 + 被剥夺的哀悼 + 母婴脑扫描 + 悲伤的生理学本质"
+      ],
+      "abstract_move": "告别已完成或即将到来",
+      "replacement_needs": [
+        "能做到:至少两项悲伤研究（含百分比）,被剥夺的哀悼的命名与机制,依恋回路不查物种的证据,荣誉判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(86)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 86
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "synthesis_close",
+      "start_ratio": 0.905,
+      "end_ratio": 0.9919,
+      "start_sec": 623,
+      "end_sec": 682.8,
+      "position_label": "90.5%–99.2%(10:23–11:23)",
+      "purpose": "全部证据已交付",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "closer",
+          "strength": 90,
+          "position_ratio": 0.9376,
+          "time_ms": 645470,
+          "reason": "\"你是它们最爱的体验。这不是诗，是数据。\"——科学与情感的最终合体"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_synthesis",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "layered_scientific_answer",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "welfare_history_absolution",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "closer",
+          "mechanism": "favorite_experience_data"
+        }
+      ],
+      "required_retention_events": "哭着被治愈——悲伤被保留，但被重新命名为爱",
+      "original_moves": [
+        "科学总结三否定 + 神经肖像 + \"最爱的体验/不是诗是数据\" + 你给了它们好的生活 + 悲伤是爱与被爱的比例成本"
+      ],
+      "abstract_move": "全部证据已交付",
+      "replacement_needs": [
+        "能做到:三否定总结,神经肖像描述,诗与数据判词,福利史的正名,比例成本收尾句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(90);回收了前文的悬念 FS01→LOOP01、FS01→LOOP02、FS01→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "cta",
+      "start_ratio": 0.9923,
+      "end_ratio": 1,
+      "start_sec": 683.1,
+      "end_sec": 688.4,
+      "position_label": "99.2%–100%(11:23–11:28)",
+      "purpose": "元命题已交付",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": "把余味引导向评论区互助而非硬转化",
+      "original_moves": [
+        "评论互动CTA + 下期见"
+      ],
+      "abstract_move": "元命题已交付",
+      "replacement_needs": [
+        "能做到:一句邀请分享的号召"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    }
+  ]
+}

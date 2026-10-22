@@ -1,0 +1,944 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.309Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "anomaly_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.058,
+      "start_sec": 0,
+      "end_sec": 53.5,
+      "position_label": "0%–5.8%(0:00–0:54)",
+      "purpose": "用人人可见的冷清场景与即时交易损失建立异常，让观众追问表面无客为何仍能持续经营。",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.0509,
+          "time_ms": 47000,
+          "reason": "买入与原地转卖差额被量化，首次证明交易起点就存在不可忽视的价值损失。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：可见空店为何仍能经营，库存越积越富的反常识命题究竟如何成立。",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "同一对象买入与立即转卖之间消失的差额究竟被哪些项目分走，门店实际留下多少。",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "anomaly_scene",
+          "mechanism": "everyday_empty_store_cold_open"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "demand_scale_contradiction",
+          "mechanism": "national_purchase_scale"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "new_question",
+          "mechanism": "gold_destination_question"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "numeric_comparison",
+          "mechanism": "buy_price_anchor"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "instant_loss_quantified",
+          "mechanism": "same_spot_resale_spread"
+        }
+      ],
+      "required_retention_events": [
+        "everyday_anomaly",
+        "demand_contradiction",
+        "instant_spread_loss"
+      ],
+      "original_moves": [
+        "社区空店画面",
+        "全国购买与金条销售增长",
+        "买入价和原地卖出价并列",
+        "未出店即出现差额。"
+      ],
+      "abstract_move": "用人人可见的冷清场景与即时交易损失建立异常，让观众追问表面无客为何仍能持续经营。",
+      "replacement_needs": [
+        "高熟悉度日常异常",
+        "需求或交易活跃的对照证据",
+        "同一对象买卖双价的可量化对照",
+        "明确但未回答的经营问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(74);打开的悬念 LOOP01→FS09、LOOP02→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 74
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "everyday_anomaly_with_demand_contradiction",
+        "first_stimulus_ms": 40,
+        "first_payoff_ms": 47000,
+        "evidence_refs": [
+          "C0001",
+          "C0008",
+          "C0012",
+          "C0022"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "roadmap_and_mystery_escalation",
+      "start_ratio": 0.058,
+      "end_ratio": 0.1467,
+      "start_sec": 53.5,
+      "end_sec": 135.5,
+      "position_label": "5.8%–14.7%(0:54–2:16)",
+      "purpose": "把价差连接到真实规避行为，叠加“无客仍开店”和盗窃转向，最后给出多路收入的拆解路线图。",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "顾客不来而盗窃者为何而来，特别警报与门店真实资产结构有何关系。",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "路线图承诺的多路收入分别是什么，合并后能否充分解释门店经营。",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "scale_anecdote",
+          "mechanism": "smuggling_to_avoid_percentage"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "tax_connection",
+          "mechanism": "avoided_tax_equals_spread_component"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "paradox_reinforcement",
+          "mechanism": "no_customers_but_open"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "pattern_interrupt",
+          "mechanism": "theft_alert_turn"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "roadmap_promise",
+          "mechanism": "multiple_revenue_paths"
+        }
+      ],
+      "required_retention_events": [
+        "smuggling_stakes",
+        "empty_but_open",
+        "theft_pattern_interrupt",
+        "revenue_roadmap"
+      ],
+      "original_moves": [
+        "机场规避税费案例",
+        "税费与柜台价差挂钩",
+        "过去少量顾客即可维生到如今无客",
+        "盗窃警报与库存升值",
+        "三类收入及最终结余预告。"
+      ],
+      "abstract_move": "把价差连接到真实规避行为，叠加“无客仍开店”和盗窃转向，最后给出多路收入的拆解路线图。",
+      "replacement_needs": [
+        "价差重要性的外部行为对照",
+        "经营历史与当前反差",
+        "非顾客来访者造成的模式打断",
+        "分路揭秘与延后结余承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS11、LOOP04→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "transaction_cost_decomposition",
+      "start_ratio": 0.1467,
+      "end_ratio": 0.2408,
+      "start_sec": 135.5,
+      "end_sec": 222.4,
+      "position_label": "14.7%–24.1%(2:16–3:42)",
+      "purpose": "先纠正价格口径，再把买卖差额拆成税费、加工与待解释余量，防止把价差简单归为门店暴利。",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "misconception_reset",
+          "mechanism": "headline_price_not_retail_price"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "decomposition_launch",
+          "mechanism": "largest_component_first"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "nested_question",
+          "mechanism": "remaining_spread_question"
+        }
+      ],
+      "required_retention_events": [
+        "price_basis_reset",
+        "spread_decomposition",
+        "nonrecoverable_cost",
+        "remaining_gap_question"
+      ],
+      "original_moves": [
+        "新闻报价不等于零售买入价",
+        "约两成涨幅才回本",
+        "价差拆分",
+        "税费只买时收、卖时不退",
+        "加工费在转卖称重时消失。"
+      ],
+      "abstract_move": "先纠正价格口径，再把买卖差额拆成税费、加工与待解释余量，防止把价差简单归为门店暴利。",
+      "replacement_needs": [
+        "不同价格口径的显式区分",
+        "买卖差额逐项拆解",
+        "不可回收成本的时间点",
+        "加工价值与转卖估值口径的对照"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "baseline_margin_reveal",
+      "start_ratio": 0.2408,
+      "end_ratio": 0.3333,
+      "start_sec": 222.4,
+      "end_sec": 307.8,
+      "position_label": "24.1%–33.3%(3:42–5:08)",
+      "purpose": "用不同加工状态的对照证明费用口径，再坦承公开资料缺口，以两条源内线索估算基础商品的真实零售余量。",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.3143,
+          "time_ms": 290280,
+          "reason": "高价值基准商品的零售余量被估算为小额，直接击破“高价商品自然高利润”的直觉。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "spread_decomposed_and_baseline_margin_estimated",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "concrete_proof",
+          "mechanism": "shaped_vs_unshaped_comparison"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "evidence_boundary",
+          "mechanism": "undisclosed_margin"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "baseline_margin_reveal",
+          "mechanism": "small_pure_gold_retail_margin"
+        }
+      ],
+      "required_retention_events": [
+        "processing_fee_proof",
+        "evidence_limit",
+        "triangulated_margin",
+        "narrator_recalculation"
+      ],
+      "original_moves": [
+        "不同形状物品的买卖价对照",
+        "加工差额确认",
+        "零售利润无公开资料",
+        "访谈比例与公开手续费交叉估算",
+        "单件仅约小额余量",
+        "叙述者主动复核。"
+      ],
+      "abstract_move": "用不同加工状态的对照证明费用口径，再坦承公开资料缺口，以两条源内线索估算基础商品的真实零售余量。",
+      "replacement_needs": [
+        "同材质不同加工状态的对照",
+        "资料缺口的明确承认",
+        "两条不同来源线索的交叉估算",
+        "与直觉反差强烈的基准利润结果"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80);回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "product_mix_reframe",
+      "start_ratio": 0.3333,
+      "end_ratio": 0.4196,
+      "start_sec": 307.8,
+      "end_sec": 387.5,
+      "position_label": "33.3%–42%(5:08–6:27)",
+      "purpose": "推翻“高纯度商品就是主业”的预设，用加工费和渠道抽成约束解释为何另一商品组合更能留下收益。",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 83,
+          "position_ratio": 0.4104,
+          "time_ms": 379000,
+          "reason": "不同商品组合的同尺度余量形成数倍差异，陈列和利润逻辑同时被改写。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "顾客不买入也不卖出时，门店为何仍能获得收入。",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "category_transition",
+          "mechanism": "beyond_pure_gold"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "constraint_inference",
+          "mechanism": "channel_fee_as_margin_proof"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "comparative_payoff",
+          "mechanism": "margin_multiple"
+        }
+      ],
+      "required_retention_events": [
+        "main_product_reversal",
+        "channel_fee_inference",
+        "margin_multiple",
+        "display_logic_verdict"
+      ],
+      "original_moves": [
+        "主力并非高纯度金条",
+        "合金饰品及加工费占比",
+        "商市场准入抽成作为反证",
+        "高纯度商品无法覆盖抽成而合金商品可以",
+        "单件余量倍差",
+        "陈列逻辑重写。"
+      ],
+      "abstract_move": "推翻“高纯度商品就是主业”的预设，用加工费和渠道抽成约束解释为何另一商品组合更能留下收益。",
+      "replacement_needs": [
+        "对默认主力商品的否定",
+        "加工费占比随商品形态变化的机制",
+        "渠道费用约束作为交叉证据",
+        "同尺度利润倍差与陈列结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(83);打开的悬念 LOOP05→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 83
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "service_revenue_reframe",
+      "start_ratio": 0.4196,
+      "end_ratio": 0.4922,
+      "start_sec": 387.5,
+      "end_sec": 454.6,
+      "position_label": "42%–49.2%(6:27–7:35)",
+      "purpose": "展示没有净买卖也能收费的服务位置，把门店从“卖出存货的地方”重构为“提供处理与改造服务的地方”。",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.485,
+          "time_ms": 447879,
+          "reason": "门店被重新定义为提供处理服务而非单纯卖货的场所，收入类别发生根本扩展。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "service_fees_and_business_category_reframed",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "new_revenue_question",
+          "mechanism": "income_without_purchase_or_sale"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "delayed_importance",
+          "mechanism": "cashless_service_tease"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "worldview_verdict",
+          "mechanism": "handling_service_not_only_sales"
+        }
+      ],
+      "required_retention_events": [
+        "no_sale_revenue",
+        "service_fee_stack",
+        "no_cash_outlay",
+        "business_category_redefinition"
+      ],
+      "original_moves": [
+        "旧饰品换金条需求",
+        "检测费与加工费",
+        "金属仍归顾客、门店无需垫现金",
+        "修理与尺寸服务",
+        "收入定义从卖货改为处理服务。"
+      ],
+      "abstract_move": "展示没有净买卖也能收费的服务位置，把门店从“卖出存货的地方”重构为“提供处理与改造服务的地方”。",
+      "replacement_needs": [
+        "不发生净买卖的服务场景",
+        "费用项目拆分",
+        "门店无需额外垫付的交易结构",
+        "与行情方向相对独立的小额服务收入",
+        "类别重定义判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(82);回收了前文的悬念 FS05→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 82
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "invisible_demand_reframe",
+      "start_ratio": 0.4922,
+      "end_ratio": 0.5687,
+      "start_sec": 454.6,
+      "end_sec": 525.2,
+      "position_label": "49.2%–56.9%(7:35–8:45)",
+      "purpose": "正面接住“没有顾客怎么服务”的反驳，揭示顾客不必站在陈列前，订单可来自店外组织渠道。",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.5642,
+          "time_ms": 521039,
+          "reason": "店外订单与远程交付解释了“看似无客仍经营”，开头视觉谜面获得直接回报。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "即便存在服务收入，没有到店顾客时这些交易和服务究竟在哪里发生。",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "offscreen_corporate_demand_revealed",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "explanation_pointer",
+          "mechanism": "empty_store_reason_here"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "paradox_resolution",
+          "mechanism": "business_without_visible_customers"
+        }
+      ],
+      "required_retention_events": [
+        "objection_voice",
+        "corporate_orders",
+        "offscreen_transaction",
+        "empty_store_callback"
+      ],
+      "original_moves": [
+        "提出顾客必要性的反驳",
+        "企业纪念与退休订单",
+        "批量需求及加工附加值",
+        "报价竞标和主动开发",
+        "电话、报价单、快递完成交易",
+        "空店仍可经营。"
+      ],
+      "abstract_move": "正面接住“没有顾客怎么服务”的反驳，揭示顾客不必站在陈列前，订单可来自店外组织渠道。",
+      "replacement_needs": [
+        "观众自然反驳的显式复述",
+        "店外组织客户与采购场景",
+        "订单竞争和主动获客过程",
+        "不依赖到店的人流与交付链",
+        "回扣空店画面的解释句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 84
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "contradiction_escalation",
+      "start_ratio": 0.5687,
+      "end_ratio": 0.6706,
+      "start_sec": 525.2,
+      "end_sec": 619.2,
+      "position_label": "56.9%–67.1%(8:45–10:19)",
+      "purpose": "让门店数新高与销售骤降、持续亏损同时出现，再用价格上涨导致消费降级解释需求侧，形成“为何仍有人入场”的核心问题。",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "门店数量创新高而现有经营者销售骤降，新进入者究竟看到了什么收益。",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "contradiction_escalation",
+          "mechanism": "two_opposite_reports"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "demand_pressure",
+          "mechanism": "affordability_downtrade"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "core_answer_pointer",
+          "mechanism": "todays_answer_starts_here"
+        }
+      ],
+      "required_retention_events": [
+        "opposing_reports",
+        "record_growth_vs_sales_collapse",
+        "affordability_downtrade",
+        "core_answer_pointer"
+      ],
+      "original_moves": [
+        "相反报道并置",
+        "门店数量纪录与老店销售崩降",
+        "亏损与退出预期",
+        "高价使礼品规格下降并转向银",
+        "行业似应衰退却仍新开",
+        "宣布核心答案。"
+      ],
+      "abstract_move": "让门店数新高与销售骤降、持续亏损同时出现，再用价格上涨导致消费降级解释需求侧，形成“为何仍有人入场”的核心问题。",
+      "replacement_needs": [
+        "时间接近但方向相反的两组证据",
+        "行业数量与个体经营结果对照",
+        "价格上涨压制购买的具体路径",
+        "消费替代与降级证据",
+        "指向核心答案的明确前向指针"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "inventory_asset_reveal",
+      "start_ratio": 0.6706,
+      "end_ratio": 0.7504,
+      "start_sec": 619.2,
+      "end_sec": 693,
+      "position_label": "67.1%–75%(10:19–11:33)",
+      "purpose": "把开店存货从待售成本重估为可随行情升值的资产，用未出售也增值的反事实对照兑现标题核心反常承诺。",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 95,
+          "position_ratio": 0.734,
+          "time_ms": 677800,
+          "reason": "未售库存的跨期升值被压缩为“滞销库存变资产”的标题判词，完成全片最大认知翻转。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "库存升值若真是核心收入，为何还称存在巨大陷阱，账面财富何时才能成为现金。",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "inventory_asset_thesis_with_later_liquidity_caveat",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "unsold_inventory_appreciation_quantified",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "belief_reframe",
+          "mechanism": "inventory_not_sunk_cost"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "asset_revaluation",
+          "mechanism": "unsold_inventory_doubles"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "title_thesis",
+          "mechanism": "dead_stock_becomes_asset_growth"
+        }
+      ],
+      "required_retention_events": [
+        "inventory_not_sunk_cost",
+        "unsold_asset_appreciation",
+        "profit_scale_contrast",
+        "title_thesis_verdict"
+      ],
+      "original_moves": [
+        "开店存货与装修投入",
+        "创业者不把存货视为消耗成本",
+        "与其他行业滞销处置对照",
+        "未售库存随行情升值",
+        "资产增量与销售利润比较",
+        "“滞销库存变资产”标题判词。"
+      ],
+      "abstract_move": "把开店存货从待售成本重估为可随行情升值的资产，用未出售也增值的反事实对照兑现标题核心反常承诺。",
+      "replacement_needs": [
+        "高额初始存货的规模感",
+        "存货与其他行业易损库存的性质对照",
+        "不出售也发生重估的跨期证据",
+        "资产增量与经营利润的同尺度比较",
+        "标题核心命题的明确判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(95);打开的悬念 LOOP08→FS10 跨段;回收了前文的悬念 FS01→LOOP01、FS08→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 95
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "liquidity_constraint_reveal",
+      "start_ratio": 0.7504,
+      "end_ratio": 0.8445,
+      "start_sec": 693,
+      "end_sec": 779.9,
+      "position_label": "75%–84.5%(11:33–13:00)",
+      "purpose": "在最大回报后立刻加上变现限制：继续经营就要按新价补货，只有退出并不再补足库存，账面增值才转成现金。",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 93,
+          "position_ratio": 0.7648,
+          "time_ms": 706279,
+          "reason": "只有退出并全部变现才真正获益，账面财富与可支配现金被明确分开。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "exit_liquidity_and_cash_flow_constraints_explained",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "trap_pointer",
+          "mechanism": "large_caveat_after_title_payoff"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "liquidity_verdict",
+          "mechanism": "profit_only_when_exiting"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "cash_flow_reversal",
+          "mechanism": "rising_price_brings_sellers"
+        }
+      ],
+      "required_retention_events": [
+        "trap_after_payoff",
+        "exit_liquidity_verdict",
+        "restocking_cash_trap",
+        "buyer_seller_reversal",
+        "conditional_profit_caveat"
+      ],
+      "original_moves": [
+        "核心答案后的陷阱预告",
+        "店主称退出并全部变现才算真正获益",
+        "卖货后必须同价补回",
+        "不再补货才留下现金",
+        "涨价吸引卖方而非买方",
+        "门店需支付收购现金",
+        "早期持有者与新进入者结果不同。"
+      ],
+      "abstract_move": "在最大回报后立刻加上变现限制：继续经营就要按新价补货，只有退出并不再补足库存，账面增值才转成现金。",
+      "replacement_needs": [
+        "资产增值后的即时风险反转",
+        "退出变现的条件化证言",
+        "补货价格同步上涨的现金流演示",
+        "买方变卖方造成的资金方向反转",
+        "新旧进入者结果限定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(93);回收了前文的悬念 FS09→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 93
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "asset_risk_concretization",
+      "start_ratio": 0.8445,
+      "end_ratio": 0.918,
+      "start_sec": 779.9,
+      "end_sec": 847.8,
+      "position_label": "84.5%–91.8%(13:00–14:08)",
+      "purpose": "用盗窃、伪造与安防成本证明库存既是不记名的高流动资产，也是必须持续守护的风险集中点。",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "asset_risk_and_security_cost_explained",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "callback",
+          "mechanism": "theft_alert_return"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "asset_property",
+          "mechanism": "anonymous_and_cash_convertible"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "callback_payoff",
+          "mechanism": "customers_absent_thieves_present"
+        }
+      ],
+      "required_retention_events": [
+        "theft_alert_callback",
+        "anonymous_liquid_asset",
+        "fraud_risk",
+        "security_cost_contrast",
+        "opening_aphorism_return"
+      ],
+      "original_moves": [
+        "回到特别盗窃警报",
+        "门店与通宵便利店同列巡查",
+        "无记名、易变现库存",
+        "外层真金内部其他材质的欺诈案例",
+        "每日展示大额资产",
+        "偷盗频率与保险陈列成本",
+        "空店悖论回环。"
+      ],
+      "abstract_move": "用盗窃、伪造与安防成本证明库存既是不记名的高流动资产，也是必须持续守护的风险集中点。",
+      "replacement_needs": [
+        "开场警报的明确回环",
+        "资产易变现与难以识别来源的属性",
+        "专业经营者也可能受骗的具体风险",
+        "每日展示与安防支出对照",
+        "以悖论句收束支线"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "synthesis_and_transfer_closure",
+      "start_ratio": 0.918,
+      "end_ratio": 1,
+      "start_sec": 847.8,
+      "end_sec": 923.5,
+      "position_label": "91.8%–100%(14:08–15:23)",
+      "purpose": "压缩复盘收入路径与库存主逻辑，再把账面财富的变现困境推广到观众自身，最后以可执行观察而非营销指令结束。",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.9635,
+          "time_ms": 889800,
+          "reason": "单一行业的变现困境被推广到店铺、住房和离职补偿，观众开始重新审视自己的账面财富。"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 86,
+          "position_ratio": 0.9926,
+          "time_ms": 916680,
+          "reason": "设计、包装和情感纪念最终让位于称重估值，首尾价格口径以克制判词闭合。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "账面增值只有退出或变现时才能使用的处境，是否也存在于观众自己的资产与人生安排中。",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "four_route_recap_plus_inventory_superiority",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP09"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "recap",
+          "mechanism": "four_revenue_routes"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "generalization",
+          "mechanism": "not_only_this_business"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "closing_verdict",
+          "mechanism": "weight_over_design_and_sentiment"
+        }
+      ],
+      "required_retention_events": [
+        "four_route_recap",
+        "illiquid_weather_generalization",
+        "practical_observation_cta",
+        "weight_only_final_verdict"
+      ],
+      "original_moves": [
+        "四类顾客收入逐项复盘",
+        "库存升值超过交易收入",
+        "只有结业才变现",
+        "推广到店铺权益、住房与离职补偿",
+        "检查买卖价差与家中物品重量",
+        "设计上情感让位于估值重量。"
+      ],
+      "abstract_move": "压缩复盘收入路径与库存主逻辑，再把账面财富的变现困境推广到观众自身，最后以可执行观察而非营销指令结束。",
+      "replacement_needs": [
+        "前文收入路径的压缩复盘",
+        "资产增值与变现条件的双重回收",
+        "面向观众自身的有限普遍化",
+        "非营销式观察行动",
+        "与开场双价和称重口径呼应的最后判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(88)、PK09(86);打开的悬念 LOOP09(不闭合) 跨段;回收了前文的悬念 FS02→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 88
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 86
+        }
+      ]
+    }
+  ]
+}

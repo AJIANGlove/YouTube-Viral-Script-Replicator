@@ -1,0 +1,935 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.345Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "immersive_scene_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0319,
+      "start_sec": 0,
+      "end_sec": 48.1,
+      "position_label": "0%–3.2%(0:00–0:48)",
+      "purpose": "画面式冷开场：用一段有具体时间、地点与感官细节的古代微场景直接演出一幕'答案'，让观众先看见愉悦发生",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "emotional_payoff",
+          "strength": 70,
+          "position_ratio": 0.0208,
+          "time_ms": 31402,
+          "reason": "否定清单落点:没有生存收益,纯粹因为好玩"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "开场夜舞场景的意义:这一幕'没有任何生存目的'的活动到底是什么",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "imagine_scene_drop_in"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "action_start",
+          "mechanism": "rhythm_and_movement_scene"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "scene_payoff",
+          "mechanism": "negation_list_payoff"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "first_person_hook",
+          "mechanism": "bothering_me_lately"
+        }
+      ],
+      "required_retention_events": [
+        "imagine_scene_drop_in",
+        "negation_list_payoff"
+      ],
+      "original_moves": [
+        "从零信息到具体时空场景建立,再到'没有生存收益、纯粹因为好玩'的否定式落点"
+      ],
+      "abstract_move": "画面式冷开场：用一段有具体时间、地点与感官细节的古代微场景直接演出一幕'答案'，让观众先看见愉悦发生",
+      "replacement_needs": [
+        "具体时空锚点（年代与地点）",
+        "群体动作与声音的画面化细节",
+        "'没有获得食物、没有建造庇护、没有躲避危险'式否定清单落点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP02→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 39153,
+        "hook_type": "immersive_scene_cold_open",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 37112,
+        "evidence_refs": [
+          "C0001",
+          "C0026",
+          "C0029"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "question_framing",
+      "start_ratio": 0.0319,
+      "end_ratio": 0.0697,
+      "start_sec": 48.1,
+      "end_sec": 105,
+      "position_label": "3.2%–7%(0:48–1:45)",
+      "purpose": "把场景悬念提炼为全片核心问题，并用排除法收窄定义，再预告类目路线图",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "title_callback",
+          "strength": 75,
+          "position_ratio": 0.0365,
+          "time_ms": 55060,
+          "reason": "排除法框定的核心问句显式落地,主题确立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺:剥离生存功能之后,他们纯粹为了愉悦究竟做什么(标题问句的显式悬挂)",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "路线图承诺:兔子洞将穿过舞蹈、古老笑话、戏水等多个类目证据",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "core_question",
+          "mechanism": "exclusion_framing"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "surprise_tease",
+          "mechanism": "evidence_reveals_surprise"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "roadmap_tease",
+          "mechanism": "rabbit_hole_invitation"
+        }
+      ],
+      "required_retention_events": [
+        "exclusion_question",
+        "catalog_roadmap_tease"
+      ],
+      "original_moves": [
+        "排除法框定问题",
+        "证据将揭示意外的预告",
+        "类目路线图钩子"
+      ],
+      "abstract_move": "把场景悬念提炼为全片核心问题，并用排除法收窄定义，再预告类目路线图",
+      "replacement_needs": [
+        "第一人称'最近困扰我的问题'式引入",
+        "排除法框定（不是为了生存/地位/仪式，而是纯粹为了愉悦）",
+        "证据将揭示意外之物的预告",
+        "贯穿全片的类目路线图钩子"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75);打开的悬念 LOOP01→FS10、LOOP03→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "catalog_unit",
+      "start_ratio": 0.0697,
+      "end_ratio": 0.182,
+      "start_sec": 105,
+      "end_sec": 274.3,
+      "position_label": "7%–18.2%(1:45–4:34)",
+      "purpose": "类目单元一（身体律动类）：论证零成本、无遗存的身体性娱乐如何被间接证据确认",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "catalog_start",
+          "mechanism": "verbal_transition"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "evidence_reveal",
+          "mechanism": "circumstantial_evidence"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "site_detail",
+          "mechanism": "cave_chamber_specificity"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "mechanism_reveal",
+          "mechanism": "endorphin_reward"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "pattern_reveal",
+          "mechanism": "independent_invention"
+        }
+      ],
+      "required_retention_events": [
+        "verbal_transition",
+        "circumstantial_evidence",
+        "mechanism_reveal"
+      ],
+      "original_moves": [
+        "转场开场",
+        "无遗存取证难题",
+        "痕迹与图像间接证据",
+        "生理奖赏机制",
+        "独立人群反复出现"
+      ],
+      "abstract_move": "类目单元一（身体律动类）：论证零成本、无遗存的身体性娱乐如何被间接证据确认",
+      "replacement_needs": [
+        "口头转场句开场",
+        "'几乎不留实物遗存'的取证难题",
+        "间接实物证据（痕迹、图像）",
+        "生理机制层面的奖赏解释",
+        "跨人群独立出现的模式句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "catalog_unit",
+      "start_ratio": 0.182,
+      "end_ratio": 0.3431,
+      "start_sec": 390.9,
+      "end_sec": 517,
+      "position_label": "18.2%–34.3%(6:31–8:37)",
+      "purpose": "类目单元二（语言幽默类）：用'最古老实物'与'记录成本'双重证据证明愉悦的文化价值",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.2009,
+          "time_ms": 302679,
+          "reason": "约四千年泥板上的最古老笑话实物出土"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "humor_peak",
+          "strength": 70,
+          "position_ratio": 0.3029,
+          "time_ms": 456374,
+          "reason": "'厕所涂鸦的古代等价物'类比笑点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "'接下来这件事会让人意外':最古老的幽默实物是什么、有多意外",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "surprise_payoff",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "surprise_flag",
+          "mechanism": "takes_people_by_surprise"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "artifact_reveal",
+          "mechanism": "oldest_recorded_instance"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "humor_payoff",
+          "mechanism": "modern_analogy"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "value_insight",
+          "mechanism": "laborious_recording_cost"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "topic_bridge",
+          "mechanism": "post_insert_reconnect"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "scale_detail",
+          "mechanism": "thousands_of_spectators"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "humor_payoff",
+          "mechanism": "graffiti_analogy"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "universality_claim",
+          "mechanism": "no_exception_across_cultures"
+        }
+      ],
+      "required_retention_events": [
+        "surprise_flag",
+        "oldest_artifact_reveal",
+        "modern_analogy",
+        "universality_claim"
+      ],
+      "original_moves": [
+        "纸草证据",
+        "制度化剧场形态",
+        "普通人涂鸦",
+        "跨文化无例外",
+        "进化定性"
+      ],
+      "abstract_move": "类目单元二（语言幽默类）：用'最古老实物'与'记录成本'双重证据证明愉悦的文化价值",
+      "replacement_needs": [
+        "'这件事会让人意外'式预告",
+        "对受众刻板形象的先行反转",
+        "一件'史上最古老'的实物证据",
+        "'费力也要记录'的成本价值洞察",
+        "跨文明制度化与民间形态的对照",
+        "跨文化无例外的普遍性定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80)、PK04(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "catalog_unit",
+      "start_ratio": 0.3431,
+      "end_ratio": 0.4533,
+      "start_sec": 517,
+      "end_sec": 683.1,
+      "position_label": "34.3%–45.3%(8:37–11:23)",
+      "purpose": "类目单元三（水域嬉戏类）：用图像证据与儿童行为论证愉悦的本能性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "transition_hook",
+          "mechanism": "something_more_physical"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "visual_evidence",
+          "mechanism": "recognizable_pose_depiction"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "instinct_argument",
+          "mechanism": "children_unprompted_play"
+        }
+      ],
+      "required_retention_events": [
+        "first_person_surprise",
+        "visual_evidence",
+        "children_instinct_argument"
+      ],
+      "original_moves": [
+        "转场+第一人称惊讶",
+        "万年前泳姿图像",
+        "公共洗浴社交空间",
+        "儿童自发戏水",
+        "本能定性"
+      ],
+      "abstract_move": "类目单元三（水域嬉戏类）：用图像证据与儿童行为论证愉悦的本能性",
+      "replacement_needs": [
+        "口头转场与第一人称惊讶 confession",
+        "可识别的姿态图像证据",
+        "环境变迁背景（当时与今日的反差）",
+        "公共设施作为社交空间的形态",
+        "儿童无引导自发行为的本能论证"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "catalog_unit",
+      "start_ratio": 0.4533,
+      "end_ratio": 0.5642,
+      "start_sec": 683.1,
+      "end_sec": 850.2,
+      "position_label": "45.3%–56.4%(11:23–14:10)",
+      "purpose": "类目单元四（共享宴饮类）：论证综合型社交娱乐如何把多种愉悦编织进一个事件",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "evidence_reveal",
+          "strength": 75,
+          "position_ratio": 0.4801,
+          "time_ms": 723552,
+          "reason": "著名遗址远途运猪宴饮的证据细节"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "catalog_claim",
+          "mechanism": "most_consistently_documented"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "evidence_reveal",
+          "mechanism": "monument_site_long_haul"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "linkage_reveal",
+          "mechanism": "surprisingly_early_fermentation"
+        }
+      ],
+      "required_retention_events": [
+        "scale_evidence",
+        "seasonal_rhythm",
+        "alcohol_link"
+      ],
+      "original_moves": [
+        "跨文化最一致定性",
+        "超家庭规模遗存",
+        "著名遗址远途运输细节",
+        "季节节点选择",
+        "发酵饮品角色"
+      ],
+      "abstract_move": "类目单元四（共享宴饮类）：论证综合型社交娱乐如何把多种愉悦编织进一个事件",
+      "replacement_needs": [
+        "'记录最一致'的跨文化定性",
+        "超出家庭规模的食物遗存证据",
+        "著名遗址的远途运输细节",
+        "与季节节点绑定的庆祝节奏",
+        "发酵饮品作为感官与纽带层的揭示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "catalog_unit",
+      "start_ratio": 0.5642,
+      "end_ratio": 0.6825,
+      "start_sec": 850.2,
+      "end_sec": 1028.4,
+      "position_label": "56.4%–68.3%(14:10–17:08)",
+      "purpose": "类目单元五（竞技观赏类）：论证'观看他人较量'的快感是古老且连续的人类常量",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.6659,
+          "time_ms": 1003478,
+          "reason": "大型竞技节庆的规模化顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "spectacle_turn",
+          "mechanism": "distinct_from_combat"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "manual_detail",
+          "mechanism": "instructional_manual_sequences"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "scale_peak",
+          "mechanism": "mass_festival_example"
+        }
+      ],
+      "required_retention_events": [
+        "technique_manual_detail",
+        "spectator_psychology",
+        "festival_scale_peak"
+      ],
+      "original_moves": [
+        "与实战区分",
+        "多文明壁画围观者",
+        "教学手册式动作序列",
+        "旁观快感心理",
+        "大型节庆顶点"
+      ],
+      "abstract_move": "类目单元五（竞技观赏类）：论证'观看他人较量'的快感是古老且连续的人类常量",
+      "replacement_needs": [
+        "与实用功能的显式区分（不是实战或训练）",
+        "围观者形象作为观赏性证据",
+        "'教学手册式'的技术细节佐证规则化",
+        "旁观快感的心理学定性",
+        "大型节庆的规模化顶点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "catalog_unit",
+      "start_ratio": 0.6825,
+      "end_ratio": 0.7589,
+      "start_sec": 1028.4,
+      "end_sec": 1143.6,
+      "position_label": "68.3%–75.9%(17:08–19:04)",
+      "purpose": "类目单元六（审美造物类）：论证纯粹为视觉、触觉与听觉之美的造物行为",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "roadmap_fulfillment",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "artifact_reveal",
+          "mechanism": "deep_time_adornment"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "craft_devotion",
+          "mechanism": "instrument_craftsmanship"
+        }
+      ],
+      "required_retention_events": [
+        "deep_time_artifact",
+        "craft_devotion",
+        "measurable_pleasure"
+      ],
+      "original_moves": [
+        "与地位展示区分",
+        "深时饰物证据",
+        "创作之乐",
+        "乐器工艺投入",
+        "可测量的愉悦反应"
+      ],
+      "abstract_move": "类目单元六（审美造物类）：论证纯粹为视觉、触觉与听觉之美的造物行为",
+      "replacement_needs": [
+        "与地位展示的显式区分",
+        "深时饰物证据（年代量级冲击）",
+        "工艺投入与'主要用途仅为悦耳'的乐器证据",
+        "对节奏与旋律的可测量反应"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "pattern_synthesis",
+      "start_ratio": 0.7589,
+      "end_ratio": 0.8166,
+      "start_sec": 1143.6,
+      "end_sec": 1230.6,
+      "position_label": "75.9%–81.7%(19:04–20:31)",
+      "purpose": "把并列类目收拢为统一模式：无目的愉悦具有间接进化价值",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "无目的愉悦为何被写进人类天性的终极原因:全程停留在'研究表明/可能'的措辞层面,刻意保持开放;叙事用途是维护科学谦逊感,避免过度断言,并为结尾'还有更多故事值得一起探索'的频道钩子提供正当性",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP05"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "synthesis_turn",
+          "mechanism": "ties_themes_together"
+        }
+      ],
+      "required_retention_events": [
+        "evolutionary_reframe",
+        "social_fabric_logic"
+      ],
+      "original_moves": [
+        "收拢预告",
+        "间接进化价值",
+        "纽带信任合作机制链",
+        "群体存活率逻辑闭环"
+      ],
+      "abstract_move": "把并列类目收拢为统一模式：无目的愉悦具有间接进化价值",
+      "replacement_needs": [
+        "'有个更重要的东西'式收拢预告",
+        "无目的享受的间接进化价值论点",
+        "纽带、信任、合作的机制链",
+        "'在依赖群体合作的环境中这就是生存价值'的逻辑闭环"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "opening_callback",
+      "start_ratio": 0.8166,
+      "end_ratio": 0.838,
+      "start_sec": 1230.6,
+      "end_sec": 1262.9,
+      "position_label": "81.7%–83.8%(20:31–21:03)",
+      "purpose": "回访开场场景并重写其意义：那一幕不是偷闲，而是在做正经事",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.8166,
+          "time_ms": 1230588,
+          "reason": "'愉悦是基础社会技术'的核心重构"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.8274,
+          "time_ms": 1246841,
+          "reason": "开场场景回访:那不是偷闲,是正经事"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "concept_reframe_answer",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "scene_callback_reframe",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "concept_reframe",
+          "mechanism": "basic_social_technology"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "opening_callback",
+          "mechanism": "cave_scene_reframed"
+        }
+      ],
+      "required_retention_events": [
+        "concept_reframe",
+        "opening_scene_callback"
+      ],
+      "original_moves": [
+        "社会技术定性",
+        "'那不是偷闲而是正经事'的开场回访"
+      ],
+      "abstract_move": "回访开场场景并重写其意义：那一幕不是偷闲，而是在做正经事",
+      "replacement_needs": [
+        "核心重构句（愉悦即基础社会技术）",
+        "开场场景的显式回访",
+        "场景意义反转定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)、PK08(85);回收了前文的悬念 FS02→LOOP01、FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "category_dissolution",
+      "start_ratio": 0.838,
+      "end_ratio": 0.9165,
+      "start_sec": 1262.9,
+      "end_sec": 1381.1,
+      "position_label": "83.8%–91.7%(21:03–23:01)",
+      "purpose": "承认类目划分是叙事人为，还原'多种愉悦交织成一个夜晚'的真实形态",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "evening_montage",
+          "mechanism": "one_evening_flow"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "continuity_claim",
+          "mechanism": "essence_unchanged"
+        }
+      ],
+      "required_retention_events": [
+        "meta_confession",
+        "evening_montage",
+        "modern_continuity"
+      ],
+      "original_moves": [
+        "承认分类人为",
+        "类目交织论证",
+        "一个晚上蒙太奇",
+        "现代连续性判断"
+      ],
+      "abstract_move": "承认类目划分是叙事人为，还原'多种愉悦交织成一个夜晚'的真实形态",
+      "replacement_needs": [
+        "'我们是为了讲清楚才强行分类'的元坦白",
+        "类目互相交织的论证",
+        "从共餐到歌舞到竞技到火边故事的流程化还原",
+        "'好好聚一场的本质几万年没变'的连续性判断"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "stereotype_refutation",
+      "start_ratio": 0.9165,
+      "end_ratio": 0.9537,
+      "start_sec": 1381.1,
+      "end_sec": 1437.2,
+      "position_label": "91.7%–95.4%(23:01–23:57)",
+      "purpose": "显式击碎'史前生活灰暗挣扎'的刻板印象，完成认知反转",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9193,
+          "time_ms": 1385301,
+          "reason": "刻板印象被定性为'误导',认知反转完成"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "stereotype_refutation",
+          "mechanism": "frankly_misleading"
+        }
+      ],
+      "required_retention_events": [
+        "stereotype_shattering",
+        "not_just_survived_list"
+      ],
+      "original_moves": [
+        "第一人称总结",
+        "刻板印象定性为误导",
+        "'不只是活下来'清单回放"
+      ],
+      "abstract_move": "显式击碎'史前生活灰暗挣扎'的刻板印象，完成认知反转",
+      "replacement_needs": [
+        "第一人称总结者姿态",
+        "对刻板印象的显式点名与定性",
+        "'他们不只是活下来'的类目回放清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "modern_mirror_bridge",
+      "start_ratio": 0.9537,
+      "end_ratio": 0.9801,
+      "start_sec": 1437.2,
+      "end_sec": 1477,
+      "position_label": "95.4%–98%(23:57–24:37)",
+      "purpose": "把观众当下的日常场景接入万年链条，完成情感落点",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9599,
+          "time_ms": 1446490,
+          "reason": "观众日常场景接入万年链条的情感最高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "viewer_mirror",
+          "mechanism": "next_time_you_participate"
+        }
+      ],
+      "required_retention_events": [
+        "viewer_life_mirror",
+        "direct_connection_statement"
+      ],
+      "original_moves": [
+        "'下次你……'场景镜像",
+        "直接连接句",
+        "主动为愉悦留证据的敬意升华"
+      ],
+      "abstract_move": "把观众当下的日常场景接入万年链条，完成情感落点",
+      "replacement_needs": [
+        "'下次你……'式观众生活场景清单",
+        "直接连接句",
+        "'他们主动为愉悦留下位置与证据'的敬意升华"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "cta_closure",
+      "start_ratio": 0.9801,
+      "end_ratio": 1,
+      "start_sec": 1477,
+      "end_sec": 1506.9,
+      "position_label": "98%–100%(24:37–25:07)",
+      "purpose": "以内容价值确认、评论提问与下期预告收束全片",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "cta_outro",
+          "mechanism": "comment_prompt_next_video"
+        }
+      ],
+      "required_retention_events": [
+        "comment_prompt",
+        "next_video_tease"
+      ],
+      "original_moves": [
+        "内容价值确认",
+        "评论提问",
+        "下期预告"
+      ],
+      "abstract_move": "以内容价值确认、评论提问与下期预告收束全片",
+      "replacement_needs": [
+        "'如果这种连接打动你'的价值确认",
+        "引导评论的具体提问",
+        "下期预告句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    }
+  ]
+}

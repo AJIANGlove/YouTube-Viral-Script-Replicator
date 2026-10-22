@@ -1,0 +1,862 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.354Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "recognition_montage",
+      "start_ratio": 0,
+      "end_ratio": 0.044,
+      "start_sec": 0,
+      "end_sec": 52.4,
+      "position_label": "0%–4.4%(0:00–0:52)",
+      "purpose": "现代群像镜像开场：连续白描3个携带该特质的现代'问题人物'，让观众先认出熟人再认出偏见",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "开场群像中现代'问题人物'的处境始终未在片内交代：刻意保持开放，叙事用途是让观众把结尾的情绪转化为对现实环境改变的期待，而非给出童话式结案",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "modern_vignette_mirror"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "vignette_expansion",
+          "mechanism": "occupational_vignette_echo"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "label_callout",
+          "mechanism": "label_dictionary_callout"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "premise_inversion",
+          "mechanism": "rewind_hinge"
+        }
+      ],
+      "required_retention_events": [
+        "modern_vignette_mirror",
+        "label_dictionary_callout"
+      ],
+      "original_moves": [
+        "三个现代场景白描",
+        "周围人的微妙负面反应",
+        "负面标签词典点名",
+        "'世界把这类心智当作待矫正的错误'"
+      ],
+      "abstract_move": "现代群像镜像开场：连续白描3个携带该特质的现代'问题人物'，让观众先认出熟人再认出偏见",
+      "replacement_needs": [
+        "2-3个具象的现代生活场景人物",
+        "周围人的微妙负面反应",
+        "一句对负面标签体系的点名"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP06(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "modern_vignette_mirror_montage",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 36133,
+        "evidence_refs": [
+          "C0001",
+          "C0019",
+          "C0033"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "premise_inversion",
+      "start_ratio": 0.044,
+      "end_ratio": 0.082,
+      "start_sec": 52.4,
+      "end_sec": 98.1,
+      "position_label": "4.4%–8.2%(0:52–1:38)",
+      "purpose": "时间置换预告：用'把时间倒回足够远'的铰链句，宣告同一特质在对照语境中可能是宝贵资产",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：这套被判定为缺陷的特质，是否真的帮助了古老群体的存续（标题问句的显式悬挂）",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "value_verdict",
+          "mechanism": "need_not_pity_verdict"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "reframe_question",
+          "mechanism": "nothing_wrong_reframe"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "title_drop",
+          "mechanism": "title_question_drop"
+        }
+      ],
+      "required_retention_events": [
+        "rewind_premise_inversion",
+        "trait_to_role_mapping"
+      ],
+      "original_moves": [
+        "置换铰链",
+        "同一心智在对照语境中的价值预告",
+        "开场人物与角色逐一映射",
+        "'如果它从没错过呢'的反问"
+      ],
+      "abstract_move": "时间置换预告：用'把时间倒回足够远'的铰链句，宣告同一特质在对照语境中可能是宝贵资产",
+      "replacement_needs": [
+        "置换铰链句",
+        "开场人物与对照角色的逐一映射",
+        "反转反问句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP01→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "title_question_contract",
+      "start_ratio": 0.082,
+      "end_ratio": 0.096,
+      "start_sec": 98.1,
+      "end_sec": 115.3,
+      "position_label": "8.2%–9.6%(1:38–1:55)",
+      "purpose": "显式抛出标题问句并许下观看契约：看完本片后'正常'的定义将变窄",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "观看契约：看完本片后'正常'的定义将显得狭窄",
+          "closes_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "'需要被拆解的假设'是否成立：该特质是现代产物、在残酷过去必然被淘汰",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "retention_contract",
+          "mechanism": "stay_with_us_contract"
+        }
+      ],
+      "required_retention_events": [
+        "title_question_drop",
+        "retention_contract"
+      ],
+      "original_moves": [
+        "标题问句完整陈述",
+        "结尾收益承诺"
+      ],
+      "abstract_move": "显式抛出标题问句并许下观看契约：看完本片后'正常'的定义将变窄",
+      "replacement_needs": [
+        "标题问句的完整陈述",
+        "明确的结尾收益承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS12、LOOP03→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "assumption_build",
+      "start_ratio": 0.096,
+      "end_ratio": 0.131,
+      "start_sec": 115.3,
+      "end_sec": 157.8,
+      "position_label": "9.6%–13.1%(1:55–2:38)",
+      "purpose": "把待拆假设立得足够可信：'该特质是现代产物，在残酷过去必然被淘汰'，先让观众点头",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "assumption_statement",
+          "mechanism": "modern_disorder_assumption"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "humor_beat",
+          "mechanism": "station_wagon_irony"
+        }
+      ],
+      "required_retention_events": [
+        "assumption_statement",
+        "assumption_pushed_to_absurd"
+      ],
+      "original_moves": [
+        "假设完整陈述",
+        "直觉逻辑链复述",
+        "一句调侃把假设推向荒诞"
+      ],
+      "abstract_move": "把待拆假设立得足够可信：'该特质是现代产物，在残酷过去必然被淘汰'，先让观众点头",
+      "replacement_needs": [
+        "假设的完整陈述",
+        "假设背后的直觉逻辑链",
+        "一句把假设推向荒诞的轻微调侃"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "core_thesis_reveal",
+      "start_ratio": 0.131,
+      "end_ratio": 0.191,
+      "start_sec": 157.8,
+      "end_sec": 229.3,
+      "position_label": "13.1%–19.1%(2:38–3:49)",
+      "purpose": "全片中枢揭示：同质化群体反而脆弱，群体韧性来自不同心智的互补，并给出有学理名字的机制",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.1397,
+          "time_ms": 167848,
+          "reason": "'完全相同的群体危险地脆弱'：中枢断言落下，直觉假设崩解"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "concept_naming",
+          "strength": 70,
+          "position_ratio": 0.1685,
+          "time_ms": 202396,
+          "reason": "机制获得学理命名，论证可信度上台阶"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "盘点承诺：逐项特征能否都被从'麻烦'改写为'岗位'",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "assumption_demolished",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "subversion",
+          "mechanism": "survival_logic_subversion"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "thesis_reveal",
+          "mechanism": "sameness_fragility_thesis"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "diversity_verdict",
+          "mechanism": "diversity_resilience_verdict"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "concept_naming",
+          "mechanism": "complementary_cognition_naming"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "specialist_verdict",
+          "mechanism": "designed_to_include_verdict"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "inventory_framing",
+          "mechanism": "tool_inventory_framing"
+        }
+      ],
+      "required_retention_events": [
+        "assumption_subverted",
+        "sameness_fragility_thesis",
+        "named_concept_anchor"
+      ],
+      "original_moves": [
+        "假设否定",
+        "同质化脆弱因果链",
+        "机制学理命名",
+        "'系统本就该包含的专门角色'重定性"
+      ],
+      "abstract_move": "全片中枢揭示：同质化群体反而脆弱，群体韧性来自不同心智的互补，并给出有学理名字的机制",
+      "replacement_needs": [
+        "对假设的明确否定",
+        "同质化脆弱性的因果链",
+        "机制的学理命名与通俗解释",
+        "专门角色定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(75)、PK02(70);打开的悬念 LOOP04→FS07 跨段;回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "trait_reframe_loop",
+      "start_ratio": 0.191,
+      "end_ratio": 0.661,
+      "start_sec": 239.7,
+      "end_sec": 357.8,
+      "position_label": "19.1%–66.1%(4:00–5:58)",
+      "purpose": "逐项盘点5-7个子特质，每项用固定三段式循环：现代代价白描→'把同一特质放到对照语境'的置换铰链→功能揭示与角色加冕",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.263,
+          "time_ms": 315842,
+          "reason": "'活图书馆'加冕：第一个角色隐喻完成特质改写"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.3438,
+          "time_ms": 412946,
+          "reason": "'这样的心智是生存武器'：细节特质加冕"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.5356,
+          "time_ms": 643246,
+          "reason": "'等等，这说不通'：异议者引语落地，不随众的价值具象化"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "群体迷思会把整个群体带向哪里，谁能免于这种传染",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "function_reveal",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "transfer_hinge",
+          "mechanism": "transfer_hinge"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "expertise_stakes",
+          "mechanism": "life_death_expertise_list"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "role_coronation",
+          "mechanism": "living_library_coronation"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "modern_critique",
+          "mechanism": "medication_engine_critique"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "spotting_frame",
+          "mechanism": "spotting_game_frame"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "role_coronation",
+          "mechanism": "weapon_of_survival_coronation"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "authority_endorsement",
+          "mechanism": "researcher_authority_endorsement"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "trait_tease",
+          "mechanism": "underrated_trait_tease"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "trust_payoff",
+          "mechanism": "safest_person_verdict"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "groupthink_danger",
+          "mechanism": "groupthink_abyss"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "dissent_voice",
+          "mechanism": "dissent_voice_quote"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "independence_verdict",
+          "mechanism": "nonconformity_verdict"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "role_coronation",
+          "mechanism": "sentinel_gift_coronation"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "role_coronation",
+          "mechanism": "method_keeper_coronation"
+        }
+      ],
+      "required_retention_events": [
+        "inventory_framing",
+        "per_unit_transfer_hinge",
+        "per_unit_role_coronation",
+        "mid_loop_authority_or_critique"
+      ],
+      "original_moves": [
+        "现代代价白描",
+        "置换铰链",
+        "生死级专业知识清单",
+        "'活图书馆'加冕",
+        "对现代矫正的批判"
+      ],
+      "abstract_move": "逐项盘点5-7个子特质，每项用固定三段式循环：现代代价白描→'把同一特质放到对照语境'的置换铰链→功能揭示与角色加冕",
+      "replacement_needs": [
+        "每个单元的现代代价白描",
+        "每单元的置换铰链句",
+        "每单元的对照语境功能细节",
+        "每单元末尾的隐喻角色加冕句",
+        "循环中段插入一次权威背书或现代批判以变换节奏"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75)、PK04(80)、PK05(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "roster_synthesis",
+      "start_ratio": 0.661,
+      "end_ratio": 0.757,
+      "start_sec": 794.3,
+      "end_sec": 909.5,
+      "position_label": "66.1%–75.7%(13:14–15:10)",
+      "purpose": "汇总升格：把逐项盘点的结果排成角色清单，宣告'这不是缺陷清单而是岗位清单'，并确立两类心智互补成整体的生态观",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.6829,
+          "time_ms": 820271,
+          "reason": "'这不是缺陷清单，这是岗位清单'：盘点升格为尊严叙事"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "inventory_complete_roster_synthesis",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "roster_synthesis",
+          "mechanism": "deficits_to_roles_synthesis"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "two_halves_verdict",
+          "mechanism": "two_halves_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "role_roster_recap",
+        "deficits_to_roles_synthesis",
+        "two_halves_verdict"
+      ],
+      "original_moves": [
+        "角色清单排比",
+        "缺陷清单",
+        "岗位清单升格",
+        "两类心智互为另一半的生态定性",
+        "对单一心智乌托邦的调侃"
+      ],
+      "abstract_move": "汇总升格：把逐项盘点的结果排成角色清单，宣告'这不是缺陷清单而是岗位清单'，并确立两类心智互补成整体的生态观",
+      "replacement_needs": [
+        "角色清单式排比复述",
+        "缺陷清单→岗位清单的升格断言",
+        "互补生态的定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85);回收了前文的悬念 FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "responsible_caveat",
+      "start_ratio": 0.757,
+      "end_ratio": 0.845,
+      "start_sec": 909.5,
+      "end_sec": 969.9,
+      "position_label": "75.7%–84.5%(15:10–16:10)",
+      "purpose": "两段式减速告诫：先显式降速信号，承认特质伴随的真实困难与光谱差异；再拒绝把对照语境浪漫化为宽容天堂，把主张收窄为'特定语境下的优势'",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "slowdown_signal",
+          "mechanism": "slowdown_signal"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "caveat_verdict",
+          "mechanism": "support_not_poster_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "slowdown_signal",
+        "real_struggle_acknowledged",
+        "anti_romanticization"
+      ],
+      "original_moves": [
+        "降速信号",
+        "真实困难清单",
+        "光谱宽度说明",
+        "'需要支持而非励志海报'落点"
+      ],
+      "abstract_move": "两段式减速告诫：先显式降速信号，承认特质伴随的真实困难与光谱差异；再拒绝把对照语境浪漫化为宽容天堂，把主张收窄为'特定语境下的优势'",
+      "replacement_needs": [
+        "显式降速信号句",
+        "对真实困难的诚实清单",
+        "对浪漫化对照语境的拒绝",
+        "收窄后的窄断言"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "relevance_bridge",
+      "start_ratio": 0.845,
+      "end_ratio": 0.872,
+      "start_sec": 1014.5,
+      "end_sec": 1047.8,
+      "position_label": "84.5%–87.2%(16:54–17:28)",
+      "purpose": "把论证接回观众现实：无论关乎你、家人还是你默默判定为'太怪'的人，该特质是古老而反复出现的心智类型",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "viewer_relation_callout"
+      ],
+      "original_moves": [
+        "观众关系圈点名",
+        "'古老且反复出现的心智类型'定性",
+        "角色排比复述"
+      ],
+      "abstract_move": "把论证接回观众现实：无论关乎你、家人还是你默默判定为'太怪'的人，该特质是古老而反复出现的心智类型",
+      "replacement_needs": [
+        "对观众关系圈的点名",
+        "古老且反复出现的定性"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "worldview_inversion",
+      "start_ratio": 0.872,
+      "end_ratio": 0.927,
+      "start_sec": 1047.8,
+      "end_sec": 1113.3,
+      "position_label": "87.2%–92.7%(17:28–18:33)",
+      "purpose": "世界观反转：不是心智变了而是环境变了——现代环境按另一类心智建造，再把不适配命名为'障碍'",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.8724,
+          "time_ms": 1047780,
+          "reason": "'不是大脑变了，是环境变了'：全片世界观反转顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "worldview_shift",
+          "mechanism": "environment_changed_inversion"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "metaphor_anchor",
+          "mechanism": "deep_sea_metaphor"
+        }
+      ],
+      "required_retention_events": [
+        "environment_changed_inversion",
+        "cross_domain_metaphor"
+      ],
+      "original_moves": [
+        "环境建造偏向清单",
+        "错配评价因果链",
+        "深海生物比喻锚定",
+        "'专门角色失去位置'的历史定性"
+      ],
+      "abstract_move": "世界观反转：不是心智变了而是环境变了——现代环境按另一类心智建造，再把不适配命名为'障碍'",
+      "replacement_needs": [
+        "环境建造偏向的具体清单",
+        "错配评价机制的因果链",
+        "一个跨域类比意象"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "identity_address",
+      "start_ratio": 0.927,
+      "end_ratio": 0.962,
+      "start_sec": 1113.3,
+      "end_sec": 1155,
+      "position_label": "92.7%–96.2%(18:33–19:15)",
+      "purpose": "对号入座的身份正名：直接对携带该特质的观众说话，把'你是失败版本'改写为'你是被遗忘的专门角色'",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9415,
+          "time_ms": 1130778,
+          "reason": "'你不是正常人的失败版本'：对号入座者的身份正名"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "identity_vindication",
+          "mechanism": "not_failed_version_vindication"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_trait_rollcall",
+        "not_failed_version_vindication"
+      ],
+      "original_moves": [
+        "第二人称特征排比点名",
+        "'失败版本",
+        "专门角色'改写",
+        "群体存续因果收束"
+      ],
+      "abstract_move": "对号入座的身份正名：直接对携带该特质的观众说话，把'你是失败版本'改写为'你是被遗忘的专门角色'",
+      "replacement_needs": [
+        "第二人称特征排比点名",
+        "失败版本→专门角色的改写句",
+        "群体存续因果的收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "title_payoff_closure",
+      "start_ratio": 0.962,
+      "end_ratio": 1,
+      "start_sec": 1155,
+      "end_sec": 1201.1,
+      "position_label": "96.2%–100%(19:15–20:01)",
+      "purpose": "显式回答标题问句并把答案抬升一级（不只是有帮助，而是可能不可或缺），再以格言句把全片压缩成可带走的判断",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "title_callback",
+          "strength": 95,
+          "position_ratio": 0.9703,
+          "time_ms": 1165457,
+          "reason": "标题问句显式回答并升级为'可能不可或缺'：主悬念的最高释放"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "aphorism_close",
+          "strength": 85,
+          "position_ratio": 0.9963,
+          "time_ms": 1196577,
+          "reason": "结尾格言把全片压缩成一句关于'喧闹世界'的判断"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "answer_with_escalation",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "worldview_narrowing_promise_kept",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "title_payoff",
+          "mechanism": "necessary_answer_payoff"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "closing_verdict",
+          "mechanism": "never_broken_verdict"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "aphorism_close",
+          "mechanism": "loud_world_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "title_question_replay",
+        "answer_escalation",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "标题问句回放",
+        "答案升级",
+        "多样性共同体总结",
+        "'从未坏过'断言",
+        "格言收束"
+      ],
+      "abstract_move": "显式回答标题问句并把答案抬升一级（不只是有帮助，而是可能不可或缺），再以格言句把全片压缩成可带走的判断",
+      "replacement_needs": [
+        "标题问句的逐字回放",
+        "升级一级的显式回答",
+        "多样性共同体的总结画面",
+        "格言式收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(95)、PK10(85);回收了前文的悬念 FS02→LOOP01、FS03→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 95
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,966 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.331Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "epistemic_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.041,
+      "start_sec": 0.1,
+      "end_sec": 57.6,
+      "position_label": "0%–4.1%(0:00–0:58)",
+      "purpose": "元认知开场：先拆穿'史料中立'的默认假设，让观众意识到自己一直看到的是利益相关方的版本",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：被主流版本压缩的真实图景到底是什么（标题体验式问句的悬挂）",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "frame_reset",
+          "mechanism": "epistemic_frame_reset"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "bias_examples",
+          "mechanism": "mirror_subject_parallelism"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "promise_tease",
+          "mechanism": "richer_picture_promise"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "reanchor_transition",
+          "mechanism": "real_beginning_pointer"
+        }
+      ],
+      "required_retention_events": [
+        "frame_reset",
+        "bias_examples",
+        "comparative_promise"
+      ],
+      "original_moves": [
+        "从'问题为何难答'到'记录者皆有立场'的镜像排比，再到'这是必要的第一步'定性与'真实图景更丰厚'的承诺"
+      ],
+      "abstract_move": "元认知开场：先拆穿'史料中立'的默认假设，让观众意识到自己一直看到的是利益相关方的版本",
+      "replacement_needs": [
+        "对'历史由谁书写'的直接质疑",
+        "三类利益相关记录者的镜像排比",
+        "'不代表无价值但不完整'的平衡限定",
+        "'这是理解一切的第一步'式定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "epistemic_frame_reset_with_comparative_promise",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 57569,
+        "evidence_refs": [
+          "C0001",
+          "C0011",
+          "C0037"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "origin_reanchor",
+      "start_ratio": 0.041,
+      "end_ratio": 0.074,
+      "start_sec": 57.6,
+      "end_sec": 103.6,
+      "position_label": "4.1%–7.4%(0:58–1:44)",
+      "purpose": "承诺更丰厚的真实图景，并把叙事起点重锚到被主流版本跳过的真正源头",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "worldview_verdict",
+          "mechanism": "not_a_chapter_but_introduction"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "survey_launch",
+          "mechanism": "diversity_inventory"
+        }
+      ],
+      "required_retention_events": [
+        "reanchor_transition",
+        "not_a_chapter_verdict"
+      ],
+      "original_moves": [
+        "'从真正的起点开始'转场",
+        "人类起源事实",
+        "科学共识背书",
+        "'不是章节而是序章'的地位反转"
+      ],
+      "abstract_move": "承诺更丰厚的真实图景，并把叙事起点重锚到被主流版本跳过的真正源头",
+      "replacement_needs": [
+        "'真实图景更丰厚'的比较级承诺",
+        "'从真正的起点开始'式转场句",
+        "源头事实的科学共识背书",
+        "'不是章节而是序章'的地位反转句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "civilization_survey",
+      "start_ratio": 0.074,
+      "end_ratio": 0.201,
+      "start_sec": 103.6,
+      "end_sec": 282.8,
+      "position_label": "7.4%–20.1%(1:44–4:43)",
+      "purpose": "用编年成就清单建立'接触前即有高度文明'的事实底座，为后文的损失量化蓄势",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.1732,
+          "time_ms": 244108,
+          "reason": "朝圣之旅压低整个区域经济十余年金价：财富规模的具身化轶事"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "achievement_reveal",
+          "mechanism": "empire_conquers_empire"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "achievement_reveal",
+          "mechanism": "four_great_powers_ranking"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "wonder_detail",
+          "mechanism": "mortarless_stone_city"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "scale_anecdote",
+          "mechanism": "measurable_wealth_consequence"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "achievement_detail",
+          "mechanism": "knowledge_center_inventory"
+        }
+      ],
+      "required_retention_events": [
+        "achievement_inventory",
+        "scale_anecdote",
+        "not_primitive_verdict"
+      ],
+      "original_moves": [
+        "社会形态多样性",
+        "帝国成就清单（征服宗主国、四强之一、无灰泥石城）",
+        "财富轶事压低金价",
+        "学术中心数十万手稿",
+        "'绝不原始'定性"
+      ],
+      "abstract_move": "用编年成就清单建立'接触前即有高度文明'的事实底座，为后文的损失量化蓄势",
+      "replacement_needs": [
+        "多种社会形态并存的多样性陈述",
+        "若干政权与城市的具体成就清单",
+        "至少一个可量化的财富或规模轶事",
+        "知识与学术中心的证据",
+        "'绝不原始'的显式定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "catastrophe_reframe",
+      "start_ratio": 0.201,
+      "end_ratio": 0.272,
+      "start_sec": 282.8,
+      "end_sec": 382.6,
+      "position_label": "20.1%–27.2%(4:43–6:23)",
+      "purpose": "把灾难重新定性为'对既有文明的摧毁'而非'文明的开端'，并用规模数字量化损失",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.218,
+          "time_ms": 307222,
+          "reason": "'不是救援行动也不是文明开端'：灾难定性的根本翻转"
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.2659,
+          "time_ms": 374628,
+          "reason": "'现代性的经济基础建立在此之上'：历史灾难与当下世界的因果挂钩"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "myth_busting",
+          "mechanism": "not_primitive_verdict"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "catastrophe_verdict",
+          "mechanism": "not_rescue_not_beginning"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "scale_numbers",
+          "mechanism": "ten_to_twelve_million"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "thesis_drop",
+          "mechanism": "modernity_foundation_link"
+        }
+      ],
+      "required_retention_events": [
+        "catastrophe_reframe",
+        "scale_numbers",
+        "modernity_link"
+      ],
+      "original_moves": [
+        "'不是救援不是开端'双重否定",
+        "数百年时间轴与千万级规模数字",
+        "对输出方的连带损失",
+        "现代经济基础挂钩"
+      ],
+      "abstract_move": "把灾难重新定性为'对既有文明的摧毁'而非'文明的开端'，并用规模数字量化损失",
+      "replacement_needs": [
+        "'不是救援、不是开端'的双重否定",
+        "跨度数百年的时间轴与规模数字",
+        "灾难对输出方造成的连带损失描述",
+        "灾难与现代世界经济的因果挂钩"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80)、PK03(78)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 78
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "interior_world_reveal",
+      "start_ratio": 0.272,
+      "end_ratio": 0.335,
+      "start_sec": 382.6,
+      "end_sec": 471.9,
+      "position_label": "27.2%–33.5%(6:23–7:52)",
+      "purpose": "转向压迫下的内部世界：展示文化如何被集体保存、改造并传承给后代",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "perspective_turn",
+          "mechanism": "interior_world_turn"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "legacy_reveal",
+          "mechanism": "genre_foundation_attribution"
+        }
+      ],
+      "required_retention_events": [
+        "underestimate_refrain",
+        "legacy_attribution"
+      ],
+      "original_moves": [
+        "'标准叙事低估了X'纠偏转场",
+        "内部世界构成（信仰、音乐、亲属、知识）",
+        "集体传承存活机制",
+        "后世几乎全部主流音乐流派的遗产确权"
+      ],
+      "abstract_move": "转向压迫下的内部世界：展示文化如何被集体保存、改造并传承给后代",
+      "replacement_needs": [
+        "'标准叙事低估了X'的纠偏转场",
+        "内部社会世界的具体构成（信仰、音乐、亲属、知识）",
+        "'因集体传承而存活'的机制解释",
+        "从内部创造到后世主流遗产的确权清单"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "resistance_reveal",
+      "start_ratio": 0.335,
+      "end_ratio": 0.373,
+      "start_sec": 471.9,
+      "end_sec": 526,
+      "position_label": "33.5%–37.3%(7:52–8:46)",
+      "purpose": "揭示抵抗的持续性、多样性与组织度，并以一场以弱胜强的标志性胜利兑现情绪峰值",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.3512,
+          "time_ms": 494792,
+          "reason": "被奴役者击败当时最强军队并建国：抵抗叙事的情绪最高点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "'值得特别关注'的起义到底特别在哪里、结局如何",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "event_explained_with_aftermath",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "attention_pointer",
+          "mechanism": "deserves_special_attention"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "upset_reveal",
+          "mechanism": "underdog_defeats_superpower"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "injustice_detail",
+          "mechanism": "reparations_until_20th_century"
+        }
+      ],
+      "required_retention_events": [
+        "underdog_victory",
+        "punitive_aftermath"
+      ],
+      "original_moves": [
+        "日常抵抗列举",
+        "'值得特别关注'预告",
+        "击败当时最强军队并建国",
+        "数十亿赔款与孤立的长期代价"
+      ],
+      "abstract_move": "揭示抵抗的持续性、多样性与组织度，并以一场以弱胜强的标志性胜利兑现情绪峰值",
+      "replacement_needs": [
+        "日常抵抗形式的列举",
+        "标志性起义的'值得特别关注'预告",
+        "以弱胜强的事实陈述",
+        "胜利方长期代价的揭示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "promise_and_backlash",
+      "start_ratio": 0.373,
+      "end_ratio": 0.412,
+      "start_sec": 526,
+      "end_sec": 580,
+      "position_label": "37.3%–41.2%(8:46–9:40)",
+      "purpose": "呈现'短暂窗口—暴力反扑'的历史节律：机会不是因失败而终，而是被组织化暴力终结",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.3982,
+          "time_ms": 561063,
+          "reason": "'不是失败而是组织化暴力反扑'：对窗口期终结的因果纠偏"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "backlash_reveal",
+          "mechanism": "not_failure_but_violence"
+        }
+      ],
+      "required_retention_events": [
+        "causal_reversal_verdict",
+        "organized_backlash"
+      ],
+      "original_moves": [
+        "窗口期政治成就",
+        "'不是失败而是暴力反扑'因果置换",
+        "反扑的组织性与系统性",
+        "新制度维持近一个世纪"
+      ],
+      "abstract_move": "呈现'短暂窗口—暴力反扑'的历史节律：机会不是因失败而终，而是被组织化暴力终结",
+      "replacement_needs": [
+        "窗口期的具体政治成就",
+        "'不是失败而是暴力反扑'的因果置换句",
+        "反扑的组织性与系统性描写",
+        "新压迫制度的时间跨度"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "institution_building",
+      "start_ratio": 0.412,
+      "end_ratio": 0.502,
+      "start_sec": 580,
+      "end_sec": 706.8,
+      "position_label": "41.2%–50.2%(9:40–11:47)",
+      "purpose": "展示在专门阻止其成功的条件下建起的机构与思想传统，为被边缘化的思想者翻案",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 72,
+          "position_ratio": 0.4935,
+          "time_ms": 695343,
+          "reason": "'不是配角而是同时代最锋利的头脑'：思想地位的公开翻案"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "institution_detail",
+          "mechanism": "press_and_renaissance"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "thinker_reveal",
+          "mechanism": "enduring_concept"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "verdict_drop",
+          "mechanism": "sharpest_minds_vindication"
+        }
+      ],
+      "required_retention_events": [
+        "institution_inventory",
+        "thinker_vindication"
+      ],
+      "original_moves": [
+        "机构清单（大学、报纸、文艺复兴）",
+        "思想者贡献（政治哲学、调查报道、双重意识概念）",
+        "'不是配角而是最锋利头脑'定性"
+      ],
+      "abstract_move": "展示在专门阻止其成功的条件下建起的机构与思想传统，为被边缘化的思想者翻案",
+      "replacement_needs": [
+        "禁锢条件下建起的机构清单",
+        "文化繁荣期的代表例证",
+        "若干思想者及其概念的具体贡献",
+        "'不是配角'的翻案定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(72)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 72
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "movement_mechanics",
+      "start_ratio": 0.502,
+      "end_ratio": 0.627,
+      "start_sec": 706.8,
+      "end_sec": 883,
+      "position_label": "50.2%–62.7%(11:47–14:43)",
+      "purpose": "拆穿'靠道德呼吁取胜'的简版神话，还原变革运动的策略机制与外部条件",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 82,
+          "position_ratio": 0.6159,
+          "time_ms": 867837,
+          "reason": "被普遍预期会流血的权力交接以和平完成：反差带来的释然与敬意"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "myth_busting",
+          "mechanism": "strategy_over_conscience"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "scale_shift",
+          "mechanism": "handful_to_dozens"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "transition_reversal",
+          "mechanism": "peaceful_against_expectation"
+        }
+      ],
+      "required_retention_events": [
+        "myth_busting",
+        "strategy_inventory",
+        "peaceful_transition_reversal"
+      ],
+      "original_moves": [
+        "'良心呼吁'神话否定",
+        "策略组合清单",
+        "冷战外交杠杆",
+        "去殖民化数量激增",
+        "隔离制度细节",
+        "27年监禁后和平交接"
+      ],
+      "abstract_move": "拆穿'靠道德呼吁取胜'的简版神话，还原变革运动的策略机制与外部条件",
+      "replacement_needs": [
+        "对流行简版叙事（良心呼吁）的否定",
+        "策略组合清单（组织、经济压力、对抗战术）",
+        "外部地缘政治条件的利用",
+        "去殖民化的规模变化",
+        "和平交接的反差呈现"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(82)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 82
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "contemporary_synthesis",
+      "start_ratio": 0.627,
+      "end_ratio": 0.707,
+      "start_sec": 883,
+      "end_sec": 996.6,
+      "position_label": "62.7%–70.7%(14:43–16:37)",
+      "purpose": "当代综合：承载全部历史重量而不被简化为历史，完成'受害者到做选择的人'的身份重构",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.6823,
+          "time_ms": 961434,
+          "reason": "'不仅仅是受害者而是做选择的人'：全片身份重构的中枢"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "agency_reframe",
+          "mechanism": "not_victims_but_choosers"
+        }
+      ],
+      "required_retention_events": [
+        "agent_reframe",
+        "inevitability_verdict"
+      ],
+      "original_moves": [
+        "'承载重量而不被简化'辩证句",
+        "当代多样性与全球文化影响",
+        "压缩叙事的双重损失",
+        "身份重构",
+        "'每代必出杰出者'必然性定性"
+      ],
+      "abstract_move": "当代综合：承载全部历史重量而不被简化为历史，完成'受害者到做选择的人'的身份重构",
+      "replacement_needs": [
+        "'承载重量而不被简化'的辩证句",
+        "当代多样性与全球文化影响力的陈述",
+        "'不是受害者而是做选择的人'的身份重构",
+        "'杰出者不是偶然偏差'的必然性定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "map_expansion",
+      "start_ratio": 0.707,
+      "end_ratio": 0.761,
+      "start_sec": 996.6,
+      "end_sec": 1071.6,
+      "position_label": "70.7%–76.1%(16:37–17:52)",
+      "purpose": "维度扩展一：把地理版图扩展到主流叙事之外，证明故事从来不只发生在一处",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "被主线叙事吸收的性别维度究竟包含什么",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "map_expansion",
+          "mechanism": "beyond_expected_geography"
+        }
+      ],
+      "required_retention_events": [
+        "map_expansion",
+        "isolation_myth_busting"
+      ],
+      "original_moves": [
+        "'未被充分注意'转场",
+        "中世纪欧洲与西亚东亚的存在证据",
+        "近八百年的半岛影响",
+        "早于主线灾难的全球流散",
+        "'地理孤立'版本否定"
+      ],
+      "abstract_move": "维度扩展一：把地理版图扩展到主流叙事之外，证明故事从来不只发生在一处",
+      "replacement_needs": [
+        "主流地图之外的存在证据清单",
+        "早于主线灾难的全球流散事实",
+        "对'地理孤立'版本的显式否定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "dimension_expansion",
+      "start_ratio": 0.761,
+      "end_ratio": 0.82,
+      "start_sec": 1071.6,
+      "end_sec": 1155.7,
+      "position_label": "76.1%–82%(17:52–19:16)",
+      "purpose": "维度扩展二：补上被主线叙事吸收的性别维度，为隐形组织者正名",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "dimension_restored",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "countable_exploits",
+          "mechanism": "nineteen_missions"
+        }
+      ],
+      "required_retention_events": [
+        "countable_exploits",
+        "invisible_organizer_contrast"
+      ],
+      "original_moves": [
+        "特有脆弱性事实",
+        "十九次潜入营救等可计数功绩",
+        "'做事的人与被记住的人'对照",
+        "'独立且仍在进行的工程'定性"
+      ],
+      "abstract_move": "维度扩展二：补上被主线叙事吸收的性别维度，为隐形组织者正名",
+      "replacement_needs": [
+        "该维度特有的脆弱性事实",
+        "代表性人物的可计数功绩",
+        "'做事的人与被记住的人'的对照句",
+        "'这是独立且仍在进行的工程'式定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS11→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "art_reframe",
+      "start_ratio": 0.82,
+      "end_ratio": 0.87,
+      "start_sec": 1155.7,
+      "end_sec": 1225.1,
+      "position_label": "82%–87%(19:16–20:25)",
+      "purpose": "维度扩展三：把艺术重新定义为政治与智识工作，揭示'挪用-冒名-再发明'的循环机制",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "信仰在这个故事中扮演什么被低估的角色",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "appropriation_reveal",
+          "mechanism": "appropriation_cycle"
+        }
+      ],
+      "required_retention_events": [
+        "art_as_work_redefinition",
+        "appropriation_cycle"
+      ],
+      "original_moves": [
+        "'不是装饰而是工作'重定义",
+        "艺术形式产地谱系",
+        "'被挪用-被冒名-再发明'三连动词机制",
+        "'不减损反增维度'限定"
+      ],
+      "abstract_move": "维度扩展三：把艺术重新定义为政治与智识工作，揭示'挪用-冒名-再发明'的循环机制",
+      "replacement_needs": [
+        "'不是装饰而是工作'的重定义",
+        "具体艺术形式的产地与谱系",
+        "挪用循环的三连动词概括",
+        "'不减损反增维度'的平衡限定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "religion_reframe",
+      "start_ratio": 0.87,
+      "end_ratio": 0.959,
+      "start_sec": 1225.1,
+      "end_sec": 1350.9,
+      "position_label": "87%–95.9%(20:25–22:31)",
+      "purpose": "维度扩展四：把信仰实践揭示为文化保存与编码抵抗的双重载体",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.8939,
+          "time_ms": 1259487,
+          "reason": "融合传统点名+'不是妥协而是编码抵抗'：对信仰实践的价值翻转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "role_explained",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "syncretism_reveal",
+          "mechanism": "syncretic_traditions_list"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "institution_reframe",
+          "mechanism": "church_as_public_center"
+        }
+      ],
+      "required_retention_events": [
+        "syncretism_renaming",
+        "moral_language_supply"
+      ],
+      "original_moves": [
+        "压制背景",
+        "融合传统'不是妥协而是适应'重命名",
+        "'既是实践又是编码抵抗'双重定性",
+        "教堂机构角色",
+        "为运动供给道德语言"
+      ],
+      "abstract_move": "维度扩展四：把信仰实践揭示为文化保存与编码抵抗的双重载体",
+      "replacement_needs": [
+        "信仰被压制的历史背景",
+        "融合传统'不是妥协而是适应'的重命名",
+        "'既是精神实践又是编码抵抗'的双重定性",
+        "信仰机构作为公共生活中心的角色",
+        "对后世运动的道德语言供给"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(78);回收了前文的悬念 FS13→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 78
+        }
+      ]
+    },
+    {
+      "stage_id": "FS15",
+      "function": "closure",
+      "start_ratio": 0.959,
+      "end_ratio": 1,
+      "start_sec": 1350.9,
+      "end_sec": 1409,
+      "position_label": "95.9%–100%(22:31–23:29)",
+      "purpose": "用时间倒装排比直接回答开场问句，再以进行时的开放环收束，把故事的继续讲述交还给时间与观众",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "title_callback",
+          "strength": 88,
+          "position_ratio": 0.9618,
+          "time_ms": 1355176,
+          "reason": "时间倒装排比直接回答标题问句：全片主旨的最高释放点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "'完整版本仍在被复原、被讲述'：刻意不闭合的环，叙事用途是把故事的所有权交还给时间与观众，让结尾停留在进行时的尊严感上，并暗示主题值得持续关注",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "parallel_recap_full_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP05"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "title_callback",
+          "mechanism": "title_question_return"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "open_ending_tease",
+          "mechanism": "still_being_recovered"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "closing_verdict",
+          "mechanism": "worth_knowing_superlative"
+        }
+      ],
+      "required_retention_events": [
+        "title_question_callback",
+        "parallel_recap",
+        "open_ended_close"
+      ],
+      "original_moves": [
+        "标题问句逐字重提",
+        "'先于一切身份之前已是…'时间倒装排比",
+        "此刻仍在继续",
+        "'仍在被复原、被讲述'开放环",
+        "克制最高级收束"
+      ],
+      "abstract_move": "用时间倒装排比直接回答开场问句，再以进行时的开放环收束，把故事的继续讲述交还给时间与观众",
+      "replacement_needs": [
+        "开场问句的逐字重提",
+        "'先于一切身份之前已是…'的时间倒装排比",
+        "'此刻仍在继续'的当下延伸",
+        "'仍在被复原、被讲述'的开放环",
+        "'最值得知道的故事之一'的克制最高级收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(88);打开的悬念 LOOP05(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 88
+        }
+      ]
+    }
+  ]
+}

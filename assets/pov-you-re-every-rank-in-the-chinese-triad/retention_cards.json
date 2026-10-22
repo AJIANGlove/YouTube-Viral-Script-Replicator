@@ -1,0 +1,494 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.536Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "entrapment_inciting",
+      "start_ratio": 0,
+      "end_ratio": 0.1481,
+      "start_sec": 0,
+      "end_sec": 106.1,
+      "position_label": "0%–14.8%(0:00–1:46)",
+      "purpose": "视频开始",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "trap_reveal",
+          "strength": 82,
+          "position_ratio": 0.1245,
+          "time_ms": 89200,
+          "reason": "\"这从来不是慈善，是陷阱\"——入局机制揭盅，观众对主角的同情与恐惧同时建立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念：每一个职级是什么样子，顶端之后是什么",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "债务母题：这笔恩情究竟要用什么偿还",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "inciting_incident",
+          "mechanism": "family_crisis"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "impossible_gift",
+          "mechanism": "envelope_cash"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "trap_reveal",
+          "mechanism": "gift_to_debt"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "org_reveal",
+          "mechanism": "name_drop"
+        }
+      ],
+      "required_retention_events": "先让观众在绝境中接住那笔钱，再和主角一起发现代价——同情先于恐惧",
+      "original_moves": [
+        "绝境建立（病情/费用/积蓄缺口）+ 神秘救助 + 恩情陷阱揭盅 + 组织名称曝光"
+      ],
+      "abstract_move": "视频开始",
+      "replacement_needs": [
+        "能做到:一场具体家庭危机（病人/费用/缺口数字）,一次违反常理的慷慨,陷阱揭盅句,组织名称曝光"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(82);打开的悬念 LOOP01→FS08、LOOP02→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 82
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "in_medias_res_crisis",
+        "first_stimulus_ms": 2280,
+        "first_payoff_ms": 97280,
+        "evidence_refs": [
+          "C0001",
+          "C0002",
+          "C0051"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "apprenticeship",
+      "start_ratio": 0.1441,
+      "end_ratio": 0.2585,
+      "start_sec": 103.2,
+      "end_sec": 185.2,
+      "position_label": "14.4%–25.9%(1:43–3:05)",
+      "purpose": "已加入，偿还期开始",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "loyalty_test",
+          "mechanism": "arrest_silence"
+        }
+      ],
+      "required_retention_events": "让观众在无聊与恐惧的交替中理解底层的可抛弃本质",
+      "original_moves": [
+        "底层职责清单 + 无知即安全的规则 + 逮捕考验与沉默 + 信任升级信号"
+      ],
+      "abstract_move": "已加入，偿还期开始",
+      "replacement_needs": [
+        "能做到:底层任务的具体细节（放哨/搬运）,禁止提问的规则判词,一次执法接触中的沉默考验,上级的认可信号"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "initiation_binding",
+      "start_ratio": 0.2561,
+      "end_ratio": 0.363,
+      "start_sec": 183.4,
+      "end_sec": 260,
+      "position_label": "25.6%–36.3%(3:03–4:20)",
+      "purpose": "忠诚已获证明",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "blood_binding",
+          "strength": 78,
+          "position_ratio": 0.3459,
+          "time_ms": 247760,
+          "reason": "血礼把\"终身绑定\"具象化为一个不可逆动作，退出想象彻底关闭"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "oath_escalation",
+          "mechanism": "punishment_list"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "blood_binding",
+          "mechanism": "irreversible_act"
+        }
+      ],
+      "required_retention_events": "用神圣感包装枷锁——越庄重，越无路可退",
+      "original_moves": [
+        "蒙眼转移 + 仪式空间全细节 + 逐级加码的誓言惩罚 + 血礼 + 无退出条款判词"
+      ],
+      "abstract_move": "忠诚已获证明",
+      "replacement_needs": [
+        "能做到:仪式空间的感官细节,逐条加码的誓言,一个不可逆的具象动作（血/誓/印）,无退出条款的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(78)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 78
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "violence_escalation",
+      "start_ratio": 0.3597,
+      "end_ratio": 0.5156,
+      "start_sec": 257.6,
+      "end_sec": 369.3,
+      "position_label": "36%–51.6%(4:18–6:09)",
+      "purpose": "晋升为执行者",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "moral_crossing",
+          "strength": 85,
+          "position_ratio": 0.496,
+          "time_ms": 355280,
+          "reason": "\"奉命杀人\"的冷定性是主角道德不可逆点，全片最安静的惊雷"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "家庭线：父亲会不会知道自己变成了什么",
+          "closes_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "帮派战争：地盘冲突将升级到什么程度、如何收场",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "war_truce_resolution",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "raid_scene",
+          "mechanism": "violence_process"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "moral_crossing",
+          "mechanism": "killed_on_order"
+        }
+      ],
+      "required_retention_events": "暴力不渲染快感，只呈现流程与余震",
+      "original_moves": [
+        "职级与编号 + 暴力行动执行 + 报复循环与战争 + 生命的数字化定价 + \"奉命杀人\"的冷定性"
+      ],
+      "abstract_move": "晋升为执行者",
+      "replacement_needs": [
+        "能做到:一次完整的暴力行动,报复—升级循环,停战谈判与生命定价,道德跨越的冷定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(85);打开的悬念 LOOP03→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "system_management",
+      "start_ratio": 0.5126,
+      "end_ratio": 0.6448,
+      "start_sec": 367.1,
+      "end_sec": 461.8,
+      "position_label": "51.3%–64.5%(6:07–7:42)",
+      "purpose": "从暴力岗转入管理岗",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "premise_flip",
+          "strength": 88,
+          "position_ratio": 0.6342,
+          "time_ms": 454240,
+          "reason": "\"债务从来不存在，只是拥有你的借口\"——开局被整体重写，观众被迫重看一切"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "执法线：专案组建档的案件何时收网",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "自由线：\"陷得太深无法离开\"最终将导向何处",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "laundering_mechanics",
+          "mechanism": "business_of_crime"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "surveillance_close_in",
+          "mechanism": "law_pressure"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "debt_reframe",
+          "mechanism": "premise_flip"
+        }
+      ],
+      "required_retention_events": "富足与恐惧同步增长——西装越贵，镜头背后的眼睛越多",
+      "original_moves": [
+        "合法外壳的洗钱机制 + 高利贷的数学暴力 + 执法建档逼近 + \"债务从来不存在\"的命题翻转"
+      ],
+      "abstract_move": "从暴力岗转入管理岗",
+      "replacement_needs": [
+        "能做到:一套洗钱机制的具体演示,高利贷的复利数字,执法机构的逼近信号,开局母题的翻转判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(88);打开的悬念 LOOP05→FS08、LOOP06→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 88
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "tradition_and_modernization",
+      "start_ratio": 0.6416,
+      "end_ratio": 0.7654,
+      "start_sec": 459.6,
+      "end_sec": 548.2,
+      "position_label": "64.2%–76.5%(7:40–9:08)",
+      "purpose": "资历与忠诚达到顶层信任",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "tragic_irony",
+          "strength": 84,
+          "position_ratio": 0.7605,
+          "time_ms": 544720,
+          "reason": "\"救了父亲的命，输掉了一切其他\"——家庭线以反讽完成结算"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "tragic_irony_resolution",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "family_bill",
+          "mechanism": "tragic_irony"
+        }
+      ],
+      "required_retention_events": "赢得一切身外之物，输掉一切身内之物",
+      "original_moves": [
+        "仪式掌管权 + 代际价值观冲突 + 犯罪形态现代化 + 财富顶点 + 父亲去世不知真相"
+      ],
+      "abstract_move": "资历与忠诚达到顶层信任",
+      "replacement_needs": [
+        "能做到:传统职责的具体内容,代际价值观冲突,业务现代化的方向与规模数字,家庭线的悲剧结算"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(84);回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 84
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "apex_responsibility",
+      "start_ratio": 0.7625,
+      "end_ratio": 0.8936,
+      "start_sec": 546.1,
+      "end_sec": 640,
+      "position_label": "76.3%–89.4%(9:06–10:40)",
+      "purpose": "前任临终指定继任",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "apex_captivity",
+          "strength": 86,
+          "position_ratio": 0.8817,
+          "time_ms": 631480,
+          "reason": "\"你从未自由过，从医院那一夜起\"——顶端被揭示为最早的囚笼"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "political_bargain",
+          "mechanism": "higher_power"
+        }
+      ],
+      "required_retention_events": "顶点即囚笼——权力越大，说\"不\"的代价越是死亡",
+      "original_moves": [
+        "继位仪式 + 统治规模数字 + 首领隐性义务清单 + 与更高权力的交易 + \"你从未自由过\"回环点题"
+      ],
+      "abstract_move": "前任临终指定继任",
+      "replacement_needs": [
+        "能做到:继位场景,规模数字（成员/营收）,义务清单（律师/抚恤/仲裁）,与体制权力的交易细节,回环开局的点题句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(86)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 86
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "collapse",
+      "start_ratio": 0.8908,
+      "end_ratio": 1,
+      "start_sec": 638,
+      "end_sec": 716.2,
+      "position_label": "89.1%–100%(10:38–11:56)",
+      "purpose": "外部环境剧变，组织的利用价值消失",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "closing_metaphor",
+          "strength": 90,
+          "position_ratio": 0.99,
+          "time_ms": 709080,
+          "reason": "\"梯子一直架在尸体上，剩下的只有还不清的债\"——隐喻与母题的双重终判"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "complete_ladder_plus_collapse",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "motif_ultimate_reframe",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "case_closes",
+          "opened_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "entrapment_completion",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "mass_arrest",
+          "mechanism": "collapse_executed"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "closing_metaphor",
+          "mechanism": "corpses_ladder"
+        }
+      ],
+      "required_retention_events": "崩塌不来自主角的失误，而来自他从未掌控的力量——宿命感大于道德审判",
+      "original_moves": [
+        "政治环境剧变 + 利用价值消失 + 大抓捕行动 + 判决与地点反讽 + 阶梯隐喻与债务回环收束"
+      ],
+      "abstract_move": "外部环境剧变，组织的利用价值消失",
+      "replacement_needs": [
+        "能做到:清算的政治逻辑,抓捕的仪式感（镜头前上铐）,判决数字,地点反讽（同一所监狱）,回环母题判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(90);回收了前文的悬念 FS01→LOOP01、FS01→LOOP02、FS05→LOOP05、FS05→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

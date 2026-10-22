@@ -1,0 +1,884 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.389Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.0636,
+      "start_sec": 0,
+      "end_sec": 82,
+      "position_label": "0%–6.4%(0:00–1:22)",
+      "purpose": "第二人称绝境代入：把观众直接放进具体时空的致命现场，随即抛出主问题并预告答案结构",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "question_drop",
+          "strength": 70,
+          "position_ratio": 0.0465,
+          "time_ms": 60000,
+          "reason": "主问题显式抛出：无现代技术如何熬过冰期级寒冬"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "第二人称身份悬挂：开场把观众放进绝境中的\"你\"，结尾把同一个\"你\"拉回现代日常重新框定",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "主承诺：没有任何现代技术的人群究竟如何熬过整个冰期级别的寒冬（标题\"如何\"问句的具身化悬挂）",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "\"披块兽皮就行\"的想当然是否成立，古人如何证明穿衣的时间与工艺",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_identity_assignment"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "humor_recognition",
+          "mechanism": "absence_stacking"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "scale_tease",
+          "mechanism": "not_just_one_night"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "central_question",
+          "mechanism": "explicit_how_question"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "answer_preview",
+          "mechanism": "three_part_answer_tease"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_cold_open",
+        "central_question_asked"
+      ],
+      "original_moves": [
+        "零信息",
+        "身份场景建立",
+        "现代便利缺席排比",
+        "主问题抛出",
+        "答案三元预告"
+      ],
+      "abstract_move": "第二人称绝境代入：把观众直接放进具体时空的致命现场，随即抛出主问题并预告答案结构",
+      "replacement_needs": [
+        "具体年代与地理锚点",
+        "感官化的环境致命细节",
+        "现代便利缺席的排比否定",
+        "主问题问句",
+        "答案结构预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS11、LOOP02→FS11、LOOP03→FS02 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 44000,
+        "hook_type": "immersive_second_person_survival_scene",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 29000,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0007"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "assumption_subversion",
+      "start_ratio": 0.0636,
+      "end_ratio": 0.1915,
+      "start_sec": 82,
+      "end_sec": 247,
+      "position_label": "6.4%–19.2%(1:22–4:07)",
+      "purpose": "装备章：粉碎\"随便披块兽皮就行\"的想当然，用意外证据来源揭示工艺精妙",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.0829,
+          "time_ms": 107000,
+          "reason": "虱子分化定年：全片第一个意外证据高峰，\"这也能知道\"的顿悟"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "assumption_subversion",
+          "mechanism": "naive_assumption_stated"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "unexpected_evidence",
+          "mechanism": "parasite_dating_reveal"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "craftsmanship_reveal",
+          "mechanism": "precision_tools_inventory"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "principle_distill",
+          "mechanism": "trapped_air_principle"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "evidence_shift",
+          "mechanism": "skeletal_stress_patterns"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "humor_payoff",
+          "mechanism": "modern_equipment_analogy"
+        }
+      ],
+      "required_retention_events": [
+        "naive_assumption_stated",
+        "unexpected_evidence",
+        "principle_distilled"
+      ],
+      "original_moves": [
+        "想当然假设",
+        "虱子证据意外揭示",
+        "骨针与缝制工艺",
+        "锁温原理提炼",
+        "鞋履骨骼证据",
+        "现代类比"
+      ],
+      "abstract_move": "装备章：粉碎\"随便披块兽皮就行\"的想当然，用意外证据来源揭示工艺精妙",
+      "replacement_needs": [
+        "观众预设的显式陈述",
+        "出人意料的证据来源",
+        "工艺细节清单",
+        "底层原理一句话提炼",
+        "现代对应物嫁接"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(85);回收了前文的悬念 FS01→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "lifeline_reveal",
+      "start_ratio": 0.1915,
+      "end_ratio": 0.2752,
+      "start_sec": 247,
+      "end_sec": 355,
+      "position_label": "19.2%–27.5%(4:07–5:55)",
+      "purpose": "热源章：以\"真正的主角\"式拟人化引入核心资源，展示它从工具升级为生命线并重塑社会结构",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "chapter_promotion",
+          "strength": 65,
+          "position_ratio": 0.1977,
+          "time_ms": 255000,
+          "reason": "核心资源被拟人化立为\"真正的主角\"，叙事轨道切换"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "被立为\"真正的主角\"的核心资源到底解决了多少层问题",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "personification_promotion",
+          "mechanism": "true_main_character"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "social_reveal",
+          "mechanism": "night_shift_vigil"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "worldview_root",
+          "mechanism": "storytelling_roots_tracing"
+        }
+      ],
+      "required_retention_events": [
+        "resource_personified",
+        "social_structure_reveal"
+      ],
+      "original_moves": [
+        "拟人化主角引入",
+        "守夜轮班约束",
+        "社会排班假说",
+        "讲故事传统溯源",
+        "现代篝火习惯回扣"
+      ],
+      "abstract_move": "热源章：以\"真正的主角\"式拟人化引入核心资源，展示它从工具升级为生命线并重塑社会结构",
+      "replacement_needs": [
+        "拟人化的主角式引入",
+        "资源失效即死亡的维护约束",
+        "围绕资源形成的社会协作形态",
+        "资源衍生出的文化效益"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(65);打开的悬念 LOOP04→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 65
+        }
+      ]
+    },
+    {
+      "stage_id": "SP01",
+      "function": "sponsor_insert",
+      "start_ratio": 0.2752,
+      "end_ratio": 0.3031,
+      "start_sec": 355,
+      "end_sec": 391,
+      "position_label": "27.5%–30.3%(5:55–6:31)",
+      "purpose": "",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [],
+      "original_moves": [
+        "正片悬念悬挂",
+        "课程推广口播",
+        "广告结束后回到能量话题"
+      ],
+      "abstract_move": "（频道自营课程口播广告，与正片叙事无关）",
+      "replacement_needs": [
+        "能让观众:（频道自营课程口播广告，与正片叙事无关）"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "secondary_payoff",
+      "start_ratio": 0.3031,
+      "end_ratio": 0.3341,
+      "start_sec": 391,
+      "end_sec": 431,
+      "position_label": "30.3%–33.4%(6:31–7:11)",
+      "purpose": "能量章：揭示核心资源的第二层收益——能量效率优势与长期演化红利",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.3279,
+          "time_ms": 423000,
+          "reason": "\"熬过冬天可能悄悄推动了人类智力\"的演化级暗示"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "熟食与守火是否直接推动了大脑与社会复杂度演化：刻意保持开放，叙事用途是以\"一些研究者认为\"的口径保持科学诚实，承认这些因果链仍是进行中的假说，并给观众留下继续探究的钩子",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "energy_reveal",
+          "mechanism": "cooked_food_advantage"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "evolution_hint",
+          "mechanism": "brain_forward_nudge"
+        }
+      ],
+      "required_retention_events": [
+        "energy_ledger",
+        "evolution_hint"
+      ],
+      "original_moves": [
+        "消化能量对比",
+        "熟食热量优势",
+        "大脑能量需求假说",
+        "演化红利暗示"
+      ],
+      "abstract_move": "能量章：揭示核心资源的第二层收益——能量效率优势与长期演化红利",
+      "replacement_needs": [
+        "能量账本的直接对比",
+        "第二层收益的机制解释",
+        "对更大演化议题的暗示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75);打开的悬念 LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "adaptation_montage",
+      "start_ratio": 0.3341,
+      "end_ratio": 0.4992,
+      "start_sec": 431,
+      "end_sec": 644,
+      "position_label": "33.4%–49.9%(7:11–10:44)",
+      "purpose": "身体章：内在适应蒙太奇，多条生理机制逐条揭示，每条执行\"看似缺陷或烦人反应、实为精妙设计\"的反转",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.3767,
+          "time_ms": 486000,
+          "reason": "\"你的骨骼被祖先经历的气候雕刻\"的具身化认知翻转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "外部手段之外，身体本身如何在生理层面适应极寒",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "multi_layer_payoff",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "perspective_shift",
+          "mechanism": "external_to_internal"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "pattern_notice",
+          "mechanism": "limb_proportion_pattern"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "embodied_reveal",
+          "mechanism": "skeleton_shaped_by_climate"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "mechanism_tease",
+          "mechanism": "unfamiliar_term_intro"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "humor_analogy",
+          "mechanism": "internal_heater_analogy"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "reframe",
+          "mechanism": "annoying_reaction_reframed"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "mechanism_reveal",
+          "mechanism": "circulatory_reflex_reveal"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "scale_zoom_out",
+          "mechanism": "step_back_think_bigger"
+        }
+      ],
+      "required_retention_events": [
+        "three_plus_adaptations",
+        "counterintuitive_reframes"
+      ],
+      "original_moves": [
+        "外部到内部转场",
+        "四肢比例与热力学",
+        "骨骼被气候雕刻",
+        "体脂与棕色脂肪",
+        "寒颤机制",
+        "血管狩猎反射"
+      ],
+      "abstract_move": "身体章：内在适应蒙太奇，多条生理机制逐条揭示，每条执行\"看似缺陷或烦人反应、实为精妙设计\"的反转",
+      "replacement_needs": [
+        "三条以上并行生理机制",
+        "每条机制的反直觉定性",
+        "人群统计层面的证据口吻",
+        "回扣观众自身的具身句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80);打开的悬念 LOOP05→FS06 跨段;回收了前文的悬念 FS03→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "planning_reveal",
+      "start_ratio": 0.4992,
+      "end_ratio": 0.5814,
+      "start_sec": 644,
+      "end_sec": 750,
+      "position_label": "49.9%–58.1%(10:44–12:30)",
+      "purpose": "储备章：尺度升级，从\"活过一夜\"到\"活过整季\"，展示超前规划与保存技术",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "从活过一夜到活过整季、乃至世代延续，需要什么尺度的规划、协作与策略",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "adaptation_montage_complete",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "preservation_reveal",
+          "mechanism": "ancient_jerky_reveal"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "inversion",
+          "mechanism": "environment_turned_tool"
+        }
+      ],
+      "required_retention_events": [
+        "scale_upgrade_transition",
+        "preservation_inventory"
+      ],
+      "original_moves": [
+        "尺度拉升转场",
+        "风干肉与天然冷冻",
+        "把致命环境变工具",
+        "发酵",
+        "脂肪优先狩猎原则"
+      ],
+      "abstract_move": "储备章：尺度升级，从\"活过一夜\"到\"活过整季\"，展示超前规划与保存技术",
+      "replacement_needs": [
+        "尺度升级的转场句",
+        "保存技术清单",
+        "\"把想杀死你的环境反过来当工具\"的反转",
+        "资源优先级原则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS09 跨段;回收了前文的悬念 FS05→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "cooperation_reveal",
+      "start_ratio": 0.5814,
+      "end_ratio": 0.6837,
+      "start_sec": 750,
+      "end_sec": 882,
+      "position_label": "58.1%–68.4%(12:30–14:42)",
+      "purpose": "协作与住所章：给\"独自硬扛\"判死刑，展示分工协作与住所工程的精妙",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "engineering_reveal",
+          "strength": 75,
+          "position_ratio": 0.6256,
+          "time_ms": 807000,
+          "reason": "巨兽骨骼搭建的半永久冬屋：工程能力具象化高峰"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "counterintuitive_reveal",
+          "strength": 80,
+          "position_ratio": 0.6543,
+          "time_ms": 844000,
+          "reason": "雪屋反而保暖：反直觉物理的顿悟点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "verdict",
+          "mechanism": "solo_death_sentence"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "engineering_spectacle",
+          "mechanism": "giant_bone_architecture"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "counterintuitive_physics",
+          "mechanism": "cold_material_keeps_warm"
+        }
+      ],
+      "required_retention_events": [
+        "solo_death_verdict",
+        "shelter_engineering"
+      ],
+      "original_moves": [
+        "独活死刑定性",
+        "共享体温与分工",
+        "猛犸骨住所工程",
+        "雪屋反直觉热学"
+      ],
+      "abstract_move": "协作与住所章：给\"独自硬扛\"判死刑，展示分工协作与住所工程的精妙",
+      "replacement_needs": [
+        "\"独活等于死刑\"的定性句",
+        "分工带来的效率论证",
+        "住所工程的具象材料与结构细节",
+        "空间规划能力的证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(75)、PK07(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "knowledge_reveal",
+      "start_ratio": 0.6837,
+      "end_ratio": 0.7519,
+      "start_sec": 882,
+      "end_sec": 970,
+      "position_label": "68.4%–75.2%(14:42–16:10)",
+      "purpose": "知识章：揭示隐性资产——跨代知识传承与参与式教育",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "dimension_shift",
+          "mechanism": "rarely_considered_dimension"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "elder_value",
+          "mechanism": "memory_as_survival_asset"
+        }
+      ],
+      "required_retention_events": [
+        "elder_value",
+        "participatory_learning"
+      ],
+      "original_moves": [
+        "很少有人想到的转场",
+        "长者记忆价值",
+        "儿童沉浸式学习",
+        "实践智能定性"
+      ],
+      "abstract_move": "知识章：揭示隐性资产——跨代知识传承与参与式教育",
+      "replacement_needs": [
+        "\"很少有人想到\"的转场",
+        "长者记忆价值的论证",
+        "儿童参与式学习的描写",
+        "对\"智能\"定义的反思"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "counterintuitive_strategy",
+      "start_ratio": 0.7519,
+      "end_ratio": 0.8202,
+      "start_sec": 970,
+      "end_sec": 1058,
+      "position_label": "75.2%–82%(16:10–17:38)",
+      "purpose": "迁移章：反直觉选项——不硬扛而是移动，展示人与动物行为绑定的长期策略",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "strategy_stack_complete",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "surprise_turn",
+          "mechanism": "not_staying_put"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "domestication_seed",
+          "mechanism": "herding_groundwork"
+        }
+      ],
+      "required_retention_events": [
+        "migration_option",
+        "domestication_seed"
+      ],
+      "original_moves": [
+        "意外转场",
+        "跟随迁徙策略",
+        "人兽行为绑定",
+        "早期放牧伏笔"
+      ],
+      "abstract_move": "迁移章：反直觉选项——不硬扛而是移动，展示人与动物行为绑定的长期策略",
+      "replacement_needs": [
+        "\"并非所有策略都是硬扛\"的意外转场",
+        "跟随动物迁徙的策略逻辑",
+        "该策略的意外长期衍生后果"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS06→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "honest_counterpoint",
+      "start_ratio": 0.8202,
+      "end_ratio": 0.8938,
+      "start_sec": 1058,
+      "end_sec": 1153,
+      "position_label": "82%–89.4%(17:38–19:13)",
+      "purpose": "诚实失败段：直白承认并非每次都成功，用证据防止叙事过度美化，并给出近缘物种的平行对照",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "honesty_beat",
+          "strength": 65,
+          "position_ratio": 0.8202,
+          "time_ms": 1058000,
+          "reason": "\"并非每次尝试都成功\"：诚实段防止过度美化，可信度峰值"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "honesty_beat",
+          "mechanism": "failures_acknowledged"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "parallel_species",
+          "mechanism": "cousin_species_comparison"
+        }
+      ],
+      "required_retention_events": [
+        "failure_acknowledged",
+        "parallel_species"
+      ],
+      "original_moves": [
+        "失败承认",
+        "营养压力证据",
+        "风险结构性解释",
+        "近缘物种平行适应对照"
+      ],
+      "abstract_move": "诚实失败段：直白承认并非每次都成功，用证据防止叙事过度美化，并给出近缘物种的平行对照",
+      "replacement_needs": [
+        "失败证据的直白承认",
+        "风险的结构性解释",
+        "近缘物种平行适应的对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(65)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 65
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "modern_echo_closure",
+      "start_ratio": 0.8938,
+      "end_ratio": 1,
+      "start_sec": 1153,
+      "end_sec": 1290,
+      "position_label": "89.4%–100%(19:13–21:30)",
+      "purpose": "现代回声收束：把每项古代机制逐一映射回观众此刻的生活，以\"你的存在即证据\"的格言式定性收束全片",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "modern_mirror",
+          "strength": 85,
+          "position_ratio": 0.8938,
+          "time_ms": 1153000,
+          "reason": "\"你与冻死之间隔着一整套隐形工程\"的现代回声高点"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "aphorism_close",
+          "strength": 85,
+          "position_ratio": 0.9977,
+          "time_ms": 1287000,
+          "reason": "\"你的存在本身即证据\"式格言收束完成情绪封顶"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "identity_reframe",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "full_system_account",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "modern_mirror",
+          "mechanism": "invisible_engineering_between"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "echo_mapping",
+          "mechanism": "closet_jacket_echo"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "scene_reframe",
+          "mechanism": "next_winter_reframed"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "system_verdict",
+          "mechanism": "not_a_single_trick"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "aphorism_close",
+          "mechanism": "existence_as_evidence"
+        }
+      ],
+      "required_retention_events": [
+        "modern_echo_mapping",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "回到今天转场",
+        "现代便利逐项映射",
+        "下一个冬天的场景再框定",
+        "系统总结定性",
+        "格言收束"
+      ],
+      "abstract_move": "现代回声收束：把每项古代机制逐一映射回观众此刻的生活，以\"你的存在即证据\"的格言式定性收束全片",
+      "replacement_needs": [
+        "\"回到今天\"的转场",
+        "现代便利与古代机制的逐项映射",
+        "对下一次日常场景的再框定",
+        "全片系统的总结性定性",
+        "格言式收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85)、PK10(85);回收了前文的悬念 FS01→LOOP01、FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

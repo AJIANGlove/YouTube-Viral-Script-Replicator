@@ -1,0 +1,1019 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.297Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "everyday_anomaly_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0589,
+      "start_sec": 0.1,
+      "end_sec": 52,
+      "position_label": "0%–5.9%(0:00–0:52)",
+      "purpose": "用可见忙碌与低价之间的反差建立主问题，再以一个费用流向样本证明收入不等于剩余，把调查对象转向经营者。",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：高忙碌、高销量的一线经营究竟能留下多少，隐性陷阱由哪些成本与分配机制构成。",
+          "closes_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP09",
+          "tension": "一笔礼券交易的费用由谁承担，组织方在同一交易中是否有其他收入。",
+          "closes_in": "FS01"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "early_fee_asymmetry_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "scene_entry",
+          "mechanism": "familiar_queue_scene"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "new_question",
+          "mechanism": "busy_but_low_price_profit_question"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "information_payoff",
+          "mechanism": "asymmetric_fee_flow"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "perspective_redirect",
+          "mechanism": "owner_story_pointer"
+        }
+      ],
+      "required_retention_events": [
+        "immediate_scene_question",
+        "small_fee_payoff",
+        "owner_perspective_redirect"
+      ],
+      "original_moves": [
+        "低价门店排队与员工忙碌",
+        "礼券费用由店主承担而总部另行获利",
+        "今日重点不是罚款而是开店者。"
+      ],
+      "abstract_move": "用可见忙碌与低价之间的反差建立主问题，再以一个费用流向样本证明收入不等于剩余，把调查对象转向经营者。",
+      "replacement_needs": [
+        "高熟悉度日常场景",
+        "价格与忙碌的可见反差",
+        "一笔不对称费用流向",
+        "从表面争议转向经营者账本的明确改道"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "everyday_anomaly_with_fee_flow_tease",
+        "first_stimulus_ms": 120,
+        "first_payoff_ms": 43039,
+        "evidence_refs": [
+          "C0001",
+          "C0006",
+          "C0010",
+          "C0020"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "promise_and_market_paradox",
+      "start_ratio": 0.0589,
+      "end_ratio": 0.1668,
+      "start_sec": 52,
+      "end_sec": 147.2,
+      "position_label": "5.9%–16.7%(0:52–2:27)",
+      "purpose": "用同一体系内经营结果悬殊、公开投入缺项和持续扩张悖论放大问题，并明示将给出完整金额账。",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 76,
+          "position_ratio": 0.0806,
+          "time_ms": 71159,
+          "reason": "同招牌门店销售结果相差逾260倍，早期尺度反差打破品牌决定论。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "公开开店投入为何会在真实开业时显著增加，缺口由哪些项目构成。",
+          "closes_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "门店已经高度密集，为什么仍有新进入者且体系持续扩张。",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "scale_contrast",
+          "mechanism": "same_sign_extreme_revenue_gap"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "explicit_promise",
+          "mechanism": "full_amount_ledger_promise"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "early_caveat",
+          "mechanism": "owner_labor_excluded"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "paradox_reveal",
+          "mechanism": "saturation_with_continued_growth"
+        }
+      ],
+      "required_retention_events": [
+        "scale_contrast",
+        "double_payoff_promise",
+        "labor_caveat"
+      ],
+      "original_moves": [
+        "同招牌门店销售额相差逾260倍",
+        "公开投入表缺少关键项目",
+        "承诺解释实际投入与每月剩余",
+        "提示老板劳动未计价",
+        "门店密集却仍扩张。"
+      ],
+      "abstract_move": "用同一体系内经营结果悬殊、公开投入缺项和持续扩张悖论放大问题，并明示将给出完整金额账。",
+      "replacement_needs": [
+        "同口径结果的极端对照",
+        "公开数字的遗漏项预警",
+        "投入与月度剩余的双重承诺",
+        "劳动成本未计的早期提示",
+        "扩张与饱和并存的悖论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(76);打开的悬念 LOOP02→FS03、LOOP03→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 76
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "startup_cost_stack",
+      "start_ratio": 0.1668,
+      "end_ratio": 0.2979,
+      "start_sec": 147.2,
+      "end_sec": 262.8,
+      "position_label": "16.7%–29.8%(2:27–4:23)",
+      "purpose": "把公开入口价格逐层补全为可开业总投入，用遗漏项累加兑现第一个大额认知回报。",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.2935,
+          "time_ms": 258919,
+          "reason": "实际开业总投入与公开费用表正式对照，投入端主环获得强回报。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "itemized_total_cost_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "ledger_launch",
+          "mechanism": "startup_table_itemization"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "omission_reframe",
+          "mechanism": "not_operational_without_extras"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "major_payoff",
+          "mechanism": "actual_startup_total_contrast"
+        }
+      ],
+      "required_retention_events": [
+        "sequential_cost_additions",
+        "operability_check",
+        "first_major_payoff"
+      ],
+      "original_moves": [
+        "公开8,100만费用表",
+        "税费与空调、收银等必要项目另计",
+        "通常投入约1억2천만",
+        "计入场地押金后约2억",
+        "与公开数字直接对照。"
+      ],
+      "abstract_move": "把公开入口价格逐层补全为可开业总投入，用遗漏项累加兑现第一个大额认知回报。",
+      "replacement_needs": [
+        "公开费用分项",
+        "税费与必要设备遗漏",
+        "可开业状态反事实",
+        "场地成本追加",
+        "总投入的显式对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(84);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 84
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "revenue_scenario_translation",
+      "start_ratio": 0.2979,
+      "end_ratio": 0.3597,
+      "start_sec": 262.8,
+      "end_sec": 317.4,
+      "position_label": "29.8%–36%(4:23–5:17)",
+      "purpose": "把营业额换算成每日销量和出杯频率，兑现标题的高销量场景，同时用分布差异限制平均值误读。",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.3228,
+          "time_ms": 284840,
+          "reason": "标题中的每日高销量被换算为持续出杯强度，抽象流水获得具身尺度。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "投入之后每月营业能剩多少，高流水经过各项扣减的暂时答案是什么。",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "unit_translation",
+          "mechanism": "annual_to_daily_sales"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "title_quantity_payoff",
+          "mechanism": "cups_and_service_tempo"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "assumption_caveat",
+          "mechanism": "average_is_not_individual_guarantee"
+        }
+      ],
+      "required_retention_events": [
+        "title_scene_payoff",
+        "daily_unit_translation",
+        "assumption_caveat"
+      ],
+      "original_moves": [
+        "单店年销售4억1,200만",
+        "每日约110만与600余杯",
+        "营业期间持续高频出杯",
+        "高低门店分布差异提醒",
+        "设定日100만、月3천만的计算情景。"
+      ],
+      "abstract_move": "把营业额换算成每日销量和出杯频率，兑现标题的高销量场景，同时用分布差异限制平均值误读。",
+      "replacement_needs": [
+        "统一口径营业数据",
+        "年到日再到单杯的换算",
+        "高销量对应的操作频率",
+        "平均值适用范围警示",
+        "明确假设计算情景"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80);打开的悬念 LOOP04→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "variable_cost_and_supply_control",
+      "start_ratio": 0.3597,
+      "end_ratio": 0.4493,
+      "start_sec": 317.4,
+      "end_sec": 396.4,
+      "position_label": "36%–44.9%(5:17–6:36)",
+      "purpose": "先扣减直接经营成本，再揭示采购控制权如何让成本无法由经营者自由优化。",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "指定采购与费用承担为何会走到政府调查和正式处分。",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "cost_reveal",
+          "mechanism": "material_ratio_deduction"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "comparison_reveal",
+          "mechanism": "mandatory_equipment_markup"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "mechanism_verdict",
+          "mechanism": "cost_lock_in"
+        }
+      ],
+      "required_retention_events": [
+        "successive_deductions",
+        "supply_control_reveal",
+        "comparison_payoff"
+      ],
+      "original_moves": [
+        "材料成本按流水比例扣减",
+        "配送费用再压缩剩余",
+        "总部指定采购",
+        "设备与耗材存在显著加价",
+        "经营者难以自行节省这部分成本。"
+      ],
+      "abstract_move": "先扣减直接经营成本，再揭示采购控制权如何让成本无法由经营者自由优化。",
+      "replacement_needs": [
+        "直接材料成本",
+        "渠道费用修正",
+        "指定采购规则",
+        "可比较的市场价格",
+        "销售下降但成本刚性跟随的结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "operating_cost_waterfall",
+      "start_ratio": 0.4493,
+      "end_ratio": 0.5257,
+      "start_sec": 396.4,
+      "end_sec": 463.8,
+      "position_label": "44.9%–52.6%(6:36–7:44)",
+      "purpose": "把固定与运营费用逐项扣除，给出一个暂时剩余数字，再主动指出该数字仍未完整。",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.5017,
+          "time_ms": 442680,
+          "reason": "高月流水经完整运营扣减后只剩较小暂时剩余，形成第一次总账冲击。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "provisional_operating_waterfall",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "provisional_payoff",
+          "mechanism": "operating_waterfall_bottom_line"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "new_withholding",
+          "mechanism": "taxes_and_owner_still_missing"
+        }
+      ],
+      "required_retention_events": [
+        "dense_but_ordered_deductions",
+        "provisional_payoff",
+        "new_caveat_loop"
+      ],
+      "original_moves": [
+        "直接成本后剩余",
+        "人工、租金、水电、支付及体系费用逐项扣除",
+        "月销售3천만仅剩450만",
+        "税费与老板本人劳动仍未处理。"
+      ],
+      "abstract_move": "把固定与运营费用逐项扣除，给出一个暂时剩余数字，再主动指出该数字仍未完整。",
+      "replacement_needs": [
+        "人员与场地费用",
+        "公共事业与交易费用",
+        "体系使用及行政费用",
+        "暂时剩余数字",
+        "未扣项目与未计价人物的双重悬念"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(84);回收了前文的悬念 FS04→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 84
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "owner_labor_reframe",
+      "start_ratio": 0.5257,
+      "end_ratio": 0.6095,
+      "start_sec": 463.8,
+      "end_sec": 537.8,
+      "position_label": "52.6%–61%(7:44–8:58)",
+      "purpose": "把经营者本人的劳动从利润中剥离，用亲自工作与替代劳动的反事实重定义真正的经营收益。",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 93,
+          "position_ratio": 0.5475,
+          "time_ms": 483080,
+          "reason": "暂时剩余中的自有劳动被重新定义为工资，利润与劳动收入正式分离。"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 82,
+          "position_ratio": 0.6049,
+          "time_ms": 533720,
+          "reason": "真实从业者以“前面赚、后面亏”的经验句收束复杂成本链，情绪落点集中。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "如果老板不亲自出店，剩余会怎样变化，差额代表什么。",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "owner_absence_counterfactual",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "worldview_reframe",
+          "mechanism": "owner_labor_is_wage_not_profit"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "counterfactual_payoff",
+          "mechanism": "owner_absent_vs_owner_working"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "emotional_payoff",
+          "mechanism": "front_earn_back_lose_quote"
+        }
+      ],
+      "required_retention_events": [
+        "central_reframe",
+        "two_scenario_comparison",
+        "emotional_grounding"
+      ],
+      "original_moves": [
+        "450만以老板每周五天、每天八小时工作为前提",
+        "其中165만是最低工资口径的自有劳动",
+        "不亲自工作约200만与长时工作520만对照",
+        "差额320만被定义为老板劳动价值",
+        "亏损从业者评论收束。"
+      ],
+      "abstract_move": "把经营者本人的劳动从利润中剥离，用亲自工作与替代劳动的反事实重定义真正的经营收益。",
+      "replacement_needs": [
+        "劳动时间与工资口径",
+        "利润中自有劳动的拆分",
+        "亲自经营与替代经营对照",
+        "差额作为劳动价值",
+        "从业者经验短样本"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(93)、PK06(82)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 93
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 82
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "payback_and_competition_risk",
+      "start_ratio": 0.6095,
+      "end_ratio": 0.6567,
+      "start_sec": 537.8,
+      "end_sec": 579.4,
+      "position_label": "61%–65.7%(8:58–9:39)",
+      "purpose": "把月度剩余转换为投入回收周期，显示劳动投入如何改变回收速度，并重新开启谁更稳定获益的问题。",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "初始经营投入需要多久才能回收，两种经营方式有何差异。",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "在这一结构中谁能够更稳定地获益，原因是否只是收费高低。",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "payback_period_comparison",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "payback_reveal",
+          "mechanism": "recovery_years_scenario_contrast"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "core_question",
+          "mechanism": "who_reliably_profits"
+        }
+      ],
+      "required_retention_events": [
+        "time_horizon_shift",
+        "scenario_contrast",
+        "larger_question"
+      ],
+      "original_moves": [
+        "剔除可返还押金后以1억2천만计算",
+        "替代经营约五年与亲自经营约两年回收",
+        "差异来自老板工作时长",
+        "竞争门店增加无法保证",
+        "谁在这个结构中稳定获利。"
+      ],
+      "abstract_move": "把月度剩余转换为投入回收周期，显示劳动投入如何改变回收速度，并重新开启谁更稳定获益的问题。",
+      "replacement_needs": [
+        "可回收与可返还投入的区分",
+        "两种经营情景的回收周期",
+        "劳动而非追加资本造成差异的解释",
+        "回收期内竞争风险",
+        "稳定获益方问句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP08→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "headquarters_profit_mechanism",
+      "start_ratio": 0.6567,
+      "end_ratio": 0.7742,
+      "start_sec": 579.4,
+      "end_sec": 683.1,
+      "position_label": "65.7%–77.4%(9:39–11:23)",
+      "purpose": "从低显性使用费转向设备、材料与分配数据，解释组织方的真实收益通道及双方增长差异。",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.7247,
+          "time_ms": 639440,
+          "reason": "收益去向与分配比例被揭示，供应机制带来的不公感获得具体落点。"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.7552,
+          "time_ms": 666360,
+          "reason": "同周期组织方利润增长与门店销售停滞形成对照，重构对体系繁荣的理解。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "scale_contrast",
+          "mechanism": "low_royalty_vs_large_operating_profit"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "mechanism_naming",
+          "mechanism": "continuous_supply_margin"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "distribution_reveal",
+          "mechanism": "profit_dividend_concentration"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "comparative_data_peak",
+          "mechanism": "headquarters_growth_vs_store_stagnation"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "callback_transition",
+          "mechanism": "return_to_opening_voucher_case"
+        }
+      ],
+      "required_retention_events": [
+        "royalty_expectation_reversal",
+        "mechanism_naming",
+        "comparative_data_peak"
+      ],
+      "original_moves": [
+        "月度品牌使用费较低",
+        "总部整体收入与营业利润规模揭示",
+        "设备、材料持续供应形成差价收益",
+        "利润分配数据",
+        "同周期总部利润大幅增长而门店销售近乎停滞、关闭率上升",
+        "回到礼券争议。"
+      ],
+      "abstract_move": "从低显性使用费转向设备、材料与分配数据，解释组织方的真实收益通道及双方增长差异。",
+      "replacement_needs": [
+        "低显性费用与整体业绩的对照",
+        "持续供应交易的收益机制",
+        "机制合法与需协商的限定",
+        "收益分配数据",
+        "双方增长与退出的同周期对照",
+        "回到开场伏笔的转场"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)、PK08(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "accountability_and_legal_escalation",
+      "start_ratio": 0.7742,
+      "end_ratio": 0.8612,
+      "start_sec": 683.1,
+      "end_sec": 759.8,
+      "position_label": "77.4%–86.1%(11:23–12:40)",
+      "purpose": "用调查、处分和诉讼材料兑现开场伏笔，把抽象分配机制落到可追责的争议事件。",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 76,
+          "position_ratio": 0.8344,
+          "time_ms": 736240,
+          "reason": "行政处分后进入集体诉讼，累积的分配争议转化为追责行动。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP10",
+          "tension": "只讲组织方获利是否公平，其提供的价值与双方冲突能否同时成立。",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "regulatory_findings_and_sanctions",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "concealed_fee_payoff",
+          "mechanism": "separate_issuer_arrangement"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "legal_escalation",
+          "mechanism": "collective_lawsuit_after_regulatory_action"
+        }
+      ],
+      "required_retention_events": [
+        "callback_payoff",
+        "documented_consequence",
+        "dispute_progression"
+      ],
+      "original_moves": [
+        "未经事先协商由店主承担移动礼券费用",
+        "总部另行约定并收取费用",
+        "店主后来才从指南得知",
+        "设备与礼券事项被处分",
+        "店主提起诉讼",
+        "同类争议裁判先例交代。"
+      ],
+      "abstract_move": "用调查、处分和诉讼材料兑现开场伏笔，把抽象分配机制落到可追责的争议事件。",
+      "replacement_needs": [
+        "调查确认的行为与时间范围",
+        "费用承担与另行获利的对应",
+        "知情时点的限定",
+        "行政处理与诉讼请求",
+        "相关裁判先例作为行动背景"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(76);打开的悬念 LOOP10→FS11 跨段;回收了前文的悬念 FS05→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 76
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "balanced_counterweight",
+      "start_ratio": 0.8612,
+      "end_ratio": 0.9263,
+      "start_sec": 759.8,
+      "end_sec": 817.3,
+      "position_label": "86.1%–92.6%(12:40–13:37)",
+      "purpose": "主动承认组织方提供的价值，再用新增门店对双方后果不同揭示真正的激励冲突。",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 92,
+          "position_ratio": 0.9239,
+          "time_ms": 815160,
+          "reason": "新增门店对组织方与既有经营者利益不同，核心激励冲突被精确命名。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "asymmetric_expansion_incentive_explanation",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "headquarters_mechanism_plus_incentive_conflict",
+          "opened_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP10",
+          "payoff_type": "balanced_benefits_then_incentive_conflict",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "fairness_reset",
+          "mechanism": "self_imposed_balance_check"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "structural_verdict",
+          "mechanism": "asymmetric_expansion_incentives"
+        }
+      ],
+      "required_retention_events": [
+        "counterargument",
+        "balanced_value_evidence",
+        "conflict_synthesis"
+      ],
+      "original_moves": [
+        "主动追问是否只呈现总部获利",
+        "广告、集中采购与品牌入门价值被承认",
+        "新增门店对总部始终带来交易与费用",
+        "对既有店主却可能分流顾客",
+        "结构本质被定位为扩张激励不一致。"
+      ],
+      "abstract_move": "主动承认组织方提供的价值，再用新增门店对双方后果不同揭示真正的激励冲突。",
+      "replacement_needs": [
+        "是否公平的自我校正问句",
+        "组织方实际投入与规模价值",
+        "对入门者的现实作用",
+        "新增门店对双方收益的不对称",
+        "结构判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(92);回收了前文的悬念 FS02→LOOP03、FS08→LOOP08、FS10→LOOP10。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 92
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "system_synthesis",
+      "start_ratio": 0.9263,
+      "end_ratio": 0.9527,
+      "start_sec": 817.3,
+      "end_sec": 840.6,
+      "position_label": "92.6%–95.3%(13:37–14:01)",
+      "purpose": "把投入、月度剩余、自有劳动与替代经营压缩成一份总账，并回扣从业者原话完成主承诺闭合。",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "emotional_payoff",
+          "strength": 88,
+          "position_ratio": 0.9504,
+          "time_ms": 838519,
+          "reason": "全片总账与从业者原话同时回扣，主承诺和同理情绪完成双重回收。"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_unit_economics_synthesis",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "synthesis_payoff",
+          "mechanism": "full_ledger_and_owner_quote_recap"
+        }
+      ],
+      "required_retention_events": [
+        "compact_recap",
+        "primary_loop_close",
+        "emotional_callback"
+      ],
+      "original_moves": [
+        "实际投入约2억与公开8,100만对照",
+        "月销售3천만剩余450만且含165万自有劳动",
+        "不亲自工作降为约200만",
+        "回扣“前面赚、后面亏”的从业者总结。"
+      ],
+      "abstract_move": "把投入、月度剩余、自有劳动与替代经营压缩成一份总账，并回扣从业者原话完成主承诺闭合。",
+      "replacement_needs": [
+        "真实投入与公开投入对照",
+        "营业剩余与自有劳动拆分",
+        "替代经营情景对照",
+        "核心结构判词复述",
+        "前文物化经验的回扣"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(88);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 88
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "decision_checklist_closure",
+      "start_ratio": 0.9527,
+      "end_ratio": 1,
+      "start_sec": 840.6,
+      "end_sec": 882.3,
+      "position_label": "95.3%–100%(14:01–14:42)",
+      "purpose": "把分析转成可执行的核查动作，最后以自有劳动是否计入成本的一般化问句收束。",
+      "peaks": [
+        {
+          "peak_id": "PK12",
+          "peak_type": "worldview_shift",
+          "strength": 79,
+          "position_ratio": 0.9969,
+          "time_ms": 879560,
+          "reason": "结尾把自有劳动计价从单一案例提升为跨场景判断原则。"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP11",
+          "tension": "自有劳动不计成本才勉强盈利的现象是否存在于更多场景；刻意开放是为了把判断原则交还观众迁移，而不是延续未兑现的标题承诺。",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP11"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "practical_action",
+          "mechanism": "lowest_sales_over_average"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "checklist_payoff",
+          "mechanism": "ask_for_omitted_line_items"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "open_generalization",
+          "mechanism": "owner_labor_beyond_single_topic"
+        }
+      ],
+      "required_retention_events": [
+        "practical_action_payoff",
+        "labor_principle_callback",
+        "open_generalization"
+      ],
+      "original_moves": [
+        "面向正在了解开店的人",
+        "查信息公开资料中的低值销售而非仅看平均",
+        "询问报价表遗漏项目",
+        "最后提醒自有劳动必须计入成本",
+        "追问该结构并非某一行业独有。"
+      ],
+      "abstract_move": "把分析转成可执行的核查动作，最后以自有劳动是否计入成本的一般化问句收束。",
+      "replacement_needs": [
+        "面向潜在决策者的明确指向",
+        "查看低值而非只看平均值的建议",
+        "询问公开表遗漏项的建议",
+        "自有劳动计价的最后提醒",
+        "跨主题一般化问句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK12(79);打开的悬念 LOOP11(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK12",
+          "strength": 79
+        }
+      ]
+    }
+  ]
+}

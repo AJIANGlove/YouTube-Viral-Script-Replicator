@@ -1,0 +1,973 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.394Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.054,
+      "start_sec": 0,
+      "end_sec": 70,
+      "position_label": "0%–5.4%(0:00–1:10)",
+      "purpose": "第二人称沉浸开场：把观众放置成无防御的史前猎物，并显式抛出标题问句",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：这群没有爪牙、跑不快的祖先究竟靠什么在天敌环伺中活下来（标题问句的具身化悬挂）",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_identity_assignment"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "threat_approach",
+          "mechanism": "proximity_tick"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "identity_flip",
+          "mechanism": "menu_verdict"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "scale_tease",
+          "mechanism": "population_twist"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "question_posed",
+          "mechanism": "title_question_voiced"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "myth_busting",
+          "mechanism": "rugged_image_rejected"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_prey_scene",
+        "title_question_posed"
+      ],
+      "original_moves": [
+        "零铺垫第二人称场景",
+        "无防御清单",
+        "近距离威胁逼近",
+        "菜单定性",
+        "人口反转",
+        "主问句与叠加承诺"
+      ],
+      "abstract_move": "第二人称沉浸开场：把观众放置成无防御的史前猎物，并显式抛出标题问句",
+      "replacement_needs": [
+        "感官化的无防御处境清单",
+        "\"你在菜单上\"的身份定性",
+        "标题问句的显式复述",
+        "\"答案比想象更离奇\"的叠加承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "immersive_second_person_vulnerability_scene",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 30000,
+        "evidence_refs": [
+          "C0001",
+          "C0002",
+          "C0004"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "expectation_subversion",
+      "start_ratio": 0.054,
+      "end_ratio": 0.082,
+      "start_sec": 70,
+      "end_sec": 107,
+      "position_label": "5.4%–8.2%(1:10–1:47)",
+      "purpose": "祛魅：击碎\"祖先很强壮\"的流行想象，把起点钉死为猎物",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 65,
+          "position_ratio": 0.0769,
+          "time_ms": 100000,
+          "reason": "猎物定性的极短判词，全片第一次认知校准"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "verdict_drop",
+          "mechanism": "prey_animal_stamp"
+        }
+      ],
+      "required_retention_events": [
+        "myth_busting",
+        "prey_verdict"
+      ],
+      "original_moves": [
+        "流行想象白描",
+        "直白否定",
+        "年代锚点",
+        "猎物判词"
+      ],
+      "abstract_move": "祛魅：击碎\"祖先很强壮\"的流行想象，把起点钉死为猎物",
+      "replacement_needs": [
+        "流行想象的白描",
+        "直白的否定",
+        "起点年代的锚定",
+        "猎物定性的短判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(65)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 65
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "threat_inventory",
+      "start_ratio": 0.082,
+      "end_ratio": 0.158,
+      "start_sec": 107,
+      "end_sec": 205,
+      "position_label": "8.2%–15.8%(1:47–3:25)",
+      "purpose": "威胁清单：逐项列举压倒性威胁并用量化细节升级量级，把绝望感写到极致",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.1468,
+          "time_ms": 191000,
+          "reason": "水坑陷阱逻辑：日常行为被重新定义为自投罗网"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "为什么在最初漫长岁月里一直没有灭绝——第一个机制是什么",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "threat_inventory",
+          "mechanism": "monster_roll_call"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "authenticity_stamp",
+          "mechanism": "not_cartoon_monsters"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "trap_reveal",
+          "mechanism": "waterhole_logic"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "question_repose",
+          "mechanism": "extinction_question"
+        }
+      ],
+      "required_retention_events": [
+        "threat_inventory",
+        "question_repose"
+      ],
+      "original_moves": [
+        "逐项巨兽清单加量化细节",
+        "真实性盖章",
+        "水坑陷阱逻辑",
+        "反问重抛主问题"
+      ],
+      "abstract_move": "威胁清单：逐项列举压倒性威胁并用量化细节升级量级，把绝望感写到极致",
+      "replacement_needs": [
+        "多项威胁的清单式列举",
+        "每项附一个量级化细节",
+        "\"这不是虚构怪物\"的真实性盖章",
+        "重新悬挂主问题的反问句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(70);打开的悬念 LOOP02→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.158,
+      "end_ratio": 0.277,
+      "start_sec": 205,
+      "end_sec": 360,
+      "position_label": "15.8%–27.7%(3:25–6:00)",
+      "purpose": "机制一（群体协作）：用掠食者视角的二选一场景解释稀释效应与群体威慑",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.2314,
+          "time_ms": 301000,
+          "reason": "掠食者经济学揭示：顶级掠食者其实输不起"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "\"真正不可逆改变游戏的东西\"到底是什么",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "predator_pov",
+          "mechanism": "predator_dilemma_scene"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "mechanism_naming",
+          "mechanism": "effect_named_and_backed"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "predator_economics",
+          "mechanism": "injury_equals_death"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "transition",
+          "mechanism": "game_changer_tease"
+        }
+      ],
+      "required_retention_events": [
+        "predator_pov_scene",
+        "mechanism_naming",
+        "risk_economics"
+      ],
+      "original_moves": [
+        "简单得不像答案的降级",
+        "掠食者视角二选一",
+        "机制命名",
+        "围攻行为",
+        "掠食者受伤经济学",
+        "自然选择收束"
+      ],
+      "abstract_move": "机制一（群体协作）：用掠食者视角的二选一场景解释稀释效应与群体威慑",
+      "replacement_needs": [
+        "\"简单得不像答案\"的先行降级",
+        "掠食者视角的二选一场景",
+        "机制术语的命名与背书",
+        "掠食者风险经济学的解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75);打开的悬念 LOOP03→FS05 跨段;回收了前文的悬念 FS03→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.277,
+      "end_ratio": 0.4,
+      "start_sec": 360,
+      "end_sec": 520,
+      "position_label": "27.7%–40%(6:00–8:40)",
+      "purpose": "机制二（转折点机制）：火的硬接线恐惧解释与\"人与世界关系被改写\"的定性",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.3935,
+          "time_ms": 512000,
+          "reason": "\"我们开始作用于世界\"：人与世界关系的根本反转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "meta_commentary",
+          "mechanism": "heard_it_before_reframe"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "mechanism_reveal",
+          "mechanism": "hardwired_fear"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "predator_pov",
+          "mechanism": "approach_and_retreat_scene"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "payoff",
+          "mechanism": "night_becomes_survivable"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "bonus_stacking",
+          "mechanism": "side_benefit_cascade"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "worldview_line",
+          "mechanism": "relationship_rewrite_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "hardwired_fear_reveal",
+        "predator_pov_scene",
+        "worldview_line"
+      ],
+      "original_moves": [
+        "元评论先抑后扬",
+        "硬接线恐惧",
+        "掠食者视角退却场景",
+        "夜晚可生存",
+        "溢出收益清单",
+        "关系改写定性"
+      ],
+      "abstract_move": "机制二（转折点机制）：火的硬接线恐惧解释与\"人与世界关系被改写\"的定性",
+      "replacement_needs": [
+        "\"你听腻了但我要你真正理解\"的元评论",
+        "恐惧硬接线的生物学解释",
+        "掠食者第一视角的接近-退却场景",
+        "一行溢出收益清单",
+        "关系级反转的定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85);回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.4,
+      "end_ratio": 0.474,
+      "start_sec": 520,
+      "end_sec": 617,
+      "position_label": "40%–47.4%(8:40–10:17)",
+      "purpose": "机制三（睡眠漏洞与高处方案）：把日常行为重新定义为致命漏洞，再用证据链给出解法",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "睡眠这个\"设计缺陷\"在有火之前如何解决",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "vulnerability_reframe",
+          "mechanism": "sleep_as_design_flaw"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "evidence_callback",
+          "mechanism": "anatomy_evidence"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "honest_caveat",
+          "mechanism": "threat_list_narrowed"
+        }
+      ],
+      "required_retention_events": [
+        "vulnerability_reframe",
+        "evidence_chain"
+      ],
+      "original_moves": [
+        "睡眠等于设计缺陷",
+        "现存近亲行为",
+        "解剖证据",
+        "例外威胁",
+        "威胁清单收窄判词"
+      ],
+      "abstract_move": "机制三（睡眠漏洞与高处方案）：把日常行为重新定义为致命漏洞，再用证据链给出解法",
+      "replacement_needs": [
+        "把日常行为重新定义为设计缺陷",
+        "现存近亲的行为佐证",
+        "解剖学证据",
+        "例外威胁的诚实降级"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "tradeoff_reveal",
+      "start_ratio": 0.474,
+      "end_ratio": 0.518,
+      "start_sec": 617,
+      "end_sec": 674,
+      "position_label": "47.4%–51.8%(10:17–11:14)",
+      "purpose": "机制四（庇护所权衡）：揭示完美方案其实是与他人分租，并用幽默节拍缓冲",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "humor_peak",
+          "strength": 70,
+          "position_ratio": 0.5073,
+          "time_ms": 660000,
+          "reason": "庇护所分租的拟人化幽默节拍"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "partial_solution_chain",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "humor_beat",
+          "mechanism": "timeshare_personification"
+        }
+      ],
+      "required_retention_events": [
+        "tradeoff_reveal",
+        "humor_beat"
+      ],
+      "original_moves": [
+        "看似完美",
+        "房东已有住户反转",
+        "轮流居住考古证据",
+        "拟人幽默"
+      ],
+      "abstract_move": "机制四（庇护所权衡）：揭示完美方案其实是与他人分租，并用幽默节拍缓冲",
+      "replacement_needs": [
+        "看似完美方案的铺陈",
+        "\"房东已有住户\"的反转",
+        "轮流居住的考古证据",
+        "一个拟人化幽默节拍"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(70);回收了前文的悬念 FS06→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.518,
+      "end_ratio": 0.599,
+      "start_sec": 674,
+      "end_sec": 779,
+      "position_label": "51.8%–59.9%(11:14–12:59)",
+      "purpose": "机制五（语言）：知识不再随个体死亡，升级为跨代累积的集体资产",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.5934,
+          "time_ms": 772000,
+          "reason": "\"长期看这不是一场对等的较量\"：知识复利的判词"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "跨越\"从防御到进攻\"的临界点后，人与掠食者的关系会怎样变化",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "thesis_transition",
+          "mechanism": "what_differentiated_us"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "cost_scene",
+          "mechanism": "knowledge_dies_with_individual"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "modern_analogy",
+          "mechanism": "generational_database"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "verdict_drop",
+          "mechanism": "not_a_fair_fight"
+        }
+      ],
+      "required_retention_events": [
+        "cost_scene",
+        "modern_analogy",
+        "verdict_drop"
+      ],
+      "original_moves": [
+        "差异化宣言",
+        "无语言代价场景",
+        "跨代传递链",
+        "现代技术类比",
+        "不对等判词"
+      ],
+      "abstract_move": "机制五（语言）：知识不再随个体死亡，升级为跨代累积的集体资产",
+      "replacement_needs": [
+        "\"真正让我们不同\"的段首宣言",
+        "无语言世界的代价场景",
+        "跨代传递的具体路径",
+        "一个现代技术类比",
+        "不对等判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(75);打开的悬念 LOOP05→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.599,
+      "end_ratio": 0.704,
+      "start_sec": 779,
+      "end_sec": 916,
+      "position_label": "59.9%–70.4%(12:59–15:16)",
+      "purpose": "机制六（投掷武器）：改写人与掠食者的伤害距离交易，恐惧开始调转方向",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.6987,
+          "time_ms": 909000,
+          "reason": "恐惧方向的历史性调转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "direction_reversal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "artifact_anchor",
+          "mechanism": "oldest_spears"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "equation_flip",
+          "mechanism": "range_transaction_rewrite"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "learning_turn",
+          "mechanism": "predators_learn_avoidance"
+        }
+      ],
+      "required_retention_events": [
+        "artifact_anchor",
+        "equation_flip",
+        "direction_reversal"
+      ],
+      "original_moves": [
+        "考古实物锚点",
+        "工程细节",
+        "距离交易改写",
+        "掠食者学习避让",
+        "恐惧方向反转"
+      ],
+      "abstract_move": "机制六（投掷武器）：改写人与掠食者的伤害距离交易，恐惧开始调转方向",
+      "replacement_needs": [
+        "考古实物锚点",
+        "\"工程制品\"的细节证据",
+        "伤害距离的交易改写",
+        "掠食者会学习并避让的机制",
+        "方向反转的过渡句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80);回收了前文的悬念 FS08→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "concept_upgrade",
+      "start_ratio": 0.704,
+      "end_ratio": 0.799,
+      "start_sec": 916,
+      "end_sec": 1040,
+      "position_label": "70.4%–79.9%(15:16–17:20)",
+      "purpose": "概念升级：借生态学术语把个体经验升级为集体认知地图，并指出人类开始重塑地图",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "生态学的风险地图概念如何解释人类行为的进一步升级",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "concept_upgrade",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "concept_import",
+          "mechanism": "ecology_term_introduced"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "evidence_settlement",
+          "mechanism": "site_selection_evidence"
+        }
+      ],
+      "required_retention_events": [
+        "concept_import",
+        "settlement_evidence"
+      ],
+      "original_moves": [
+        "术语引入",
+        "常见动物行为解释",
+        "人类独有升级",
+        "选址考古证据",
+        "从导航到重塑"
+      ],
+      "abstract_move": "概念升级：借生态学术语把个体经验升级为集体认知地图，并指出人类开始重塑地图",
+      "replacement_needs": [
+        "\"多数人没听过\"的术语引入",
+        "用常见动物行为解释术语",
+        "人类版本的两个独有升级",
+        "定居选址的考古佐证",
+        "从适应到重塑的过渡句"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP06。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:生态学的风险地图概念如何解释人类行为的进一步升级",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "hidden_advantage",
+      "start_ratio": 0.799,
+      "end_ratio": 0.879,
+      "start_sec": 1040,
+      "end_sec": 1144,
+      "position_label": "79.9%–87.9%(17:20–19:04)",
+      "purpose": "隐藏优势：把人类身体的平庸参数重新定义为bug级能力",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "surprise_reveal",
+          "mechanism": "heat_stroke_reversal"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "self_deprecating_verdict",
+          "mechanism": "endurance_machines"
+        }
+      ],
+      "required_retention_events": [
+        "heat_reversal",
+        "mechanism_naming",
+        "self_deprecating_verdict"
+      ],
+      "original_moves": [
+        "先承认平庸",
+        "速度示弱对照",
+        "热条件反转",
+        "术语命名",
+        "出汗与步态机制",
+        "自嘲判词"
+      ],
+      "abstract_move": "隐藏优势：把人类身体的平庸参数重新定义为bug级能力",
+      "replacement_needs": [
+        "先承认\"我们客观上不强\"",
+        "速度对照的示弱数据",
+        "热条件反转的意外结论",
+        "术语命名",
+        "贬词褒用的自嘲判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "threshold_crossing",
+      "start_ratio": 0.879,
+      "end_ratio": 0.943,
+      "start_sec": 1144,
+      "end_sec": 1227,
+      "position_label": "87.9%–94.3%(19:04–20:27)",
+      "purpose": "阈值跨越：行为现代性之后，昔日的猎手开始被系统性猎杀",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9377,
+          "time_ms": 1220000,
+          "reason": "\"我们不再是猎物\"的宣言式释放"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "role_reversal",
+          "mechanism": "hunting_the_hunters"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "declaration",
+          "mechanism": "no_longer_prey"
+        }
+      ],
+      "required_retention_events": [
+        "role_reversal",
+        "declaration"
+      ],
+      "original_moves": [
+        "年代阈值",
+        "能力清单升级",
+        "驱赶兽群",
+        "系统性猎杀顶级掠食者",
+        "仪式化证据",
+        "宣言定性"
+      ],
+      "abstract_move": "阈值跨越：行为现代性之后，昔日的猎手开始被系统性猎杀",
+      "replacement_needs": [
+        "年代阈值锚点",
+        "能力清单的升级展示",
+        "\"猎杀曾经的猎手\"的反转事实",
+        "仪式化细节佐证文化意义",
+        "一句宣言式定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "dark_mirror",
+      "start_ratio": 0.943,
+      "end_ratio": 0.992,
+      "start_sec": 1227,
+      "end_sec": 1291,
+      "position_label": "94.3%–99.2%(20:27–21:31)",
+      "purpose": "冷峻镜像：幸存故事的另一面是昔日威胁者的灭绝账单",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "人类抵达与大型动物接连消失之间的相关性意味着什么：刻意不做道德判决，叙事用途是把爽剧式幸存故事反转为冷峻账单，让观众带着反思离场",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "somber_montage",
+          "mechanism": "extinction_roll_call"
+        }
+      ],
+      "required_retention_events": [
+        "extinction_montage",
+        "attribution_argument"
+      ],
+      "original_moves": [
+        "语气换挡",
+        "灭绝清单连发",
+        "相关性归因",
+        "诚实限定"
+      ],
+      "abstract_move": "冷峻镜像：幸存故事的另一面是昔日威胁者的灭绝账单",
+      "replacement_needs": [
+        "\"沉重注脚\"的语气换挡",
+        "灭绝对象的连发清单",
+        "\"巧合不可能\"的归因论证",
+        "\"不是因为更强壮\"的诚实限定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.992,
+      "end_ratio": 1,
+      "start_sec": 1291,
+      "end_sec": 1301,
+      "position_label": "99.2%–100%(21:31–21:41)",
+      "purpose": "收束：三连否定排比加身份反转格言，以昔日掠食者迟来的恐惧落幕",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.9977,
+          "time_ms": 1298000,
+          "reason": "昔日掠食者\"学会恐惧太迟\"：全片身份反转定格"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "cumulative_mechanism_stack_plus_identity_inversion",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE40",
+          "event_type": "aphorism_close",
+          "mechanism": "too_late_to_fear"
+        }
+      ],
+      "required_retention_events": [
+        "triple_negation",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "三连否定排比",
+        "最危险存在定性",
+        "昔日掠食者迟来的恐惧"
+      ],
+      "abstract_move": "收束：三连否定排比加身份反转格言，以昔日掠食者迟来的恐惧落幕",
+      "replacement_needs": [
+        "三连否定排比",
+        "身份反转的格言句",
+        "昔日掠食者视角的迟来领悟"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1041 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.364Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "hook_inversion",
+      "start_ratio": 0,
+      "end_ratio": 0.0309,
+      "start_sec": 0,
+      "end_sec": 50,
+      "position_label": "0%–3.1%(0:00–0:50)",
+      "purpose": "用反转断言与环境敌意清单把设问推到极点",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：这个物种为什么主动走进能杀死它的严寒之地（标题问句的显式悬挂）",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "counterintuitive_assertion"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "threat_inventory",
+          "mechanism": "lethal_cost_listing"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "humor_payoff",
+          "mechanism": "anachronism_humor"
+        }
+      ],
+      "required_retention_events": [
+        "counterintuitive_assertion",
+        "hostility_inventory"
+      ],
+      "original_moves": [
+        "反转断言",
+        "致命环境清单",
+        "现代错位调侃",
+        "史前壮举定位"
+      ],
+      "abstract_move": "用反转断言与环境敌意清单把设问推到极点",
+      "replacement_needs": [
+        "反常识断言（不是误入而是反复前往）",
+        "致命成本清单（温度、黑暗、资源真空）",
+        "一句现代错位调侃"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "counterintuitive_assertion_with_hostility_inventory",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 32000,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0006"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "question_setup",
+      "start_ratio": 0.0309,
+      "end_ratio": 0.0685,
+      "start_sec": 50,
+      "end_sec": 111,
+      "position_label": "3.1%–6.9%(0:50–1:51)",
+      "purpose": "显式抛出标题问句，给出默认答案并当庭驳斥",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "question_drop",
+          "strength": 70,
+          "position_ratio": 0.0309,
+          "time_ms": 50000,
+          "reason": "标题问句显式抛出，主悬念正式悬挂"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "thesis_drop",
+          "strength": 80,
+          "position_ratio": 0.0642,
+          "time_ms": 104000,
+          "reason": "不是生存而是让它有利可图：全片论题落定"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "默认答案是否成立：是绝望把人赶进北方的吗",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "explanation_replacement",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "question_drop",
+          "mechanism": "explicit_why_question"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "default_answer",
+          "mechanism": "desperation_hypothesis"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "rebuttal",
+          "mechanism": "frontier_reframe"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "thesis_drop",
+          "mechanism": "profitable_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "explicit_question_drop",
+        "default_answer_rebuttal",
+        "thesis_drop"
+      ],
+      "original_moves": [
+        "设问抛出",
+        "绝望假设",
+        "模式级反驳",
+        "北方有利可图的命题句"
+      ],
+      "abstract_move": "显式抛出标题问句，给出默认答案并当庭驳斥",
+      "replacement_needs": [
+        "标题问句的显式抛出",
+        "大众默认解释（绝望驱赶）",
+        "对默认解释的模式级反驳",
+        "新框架命题句（目的地是机会而非绝路）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(70)、PK02(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "deep_apprenticeship",
+      "start_ratio": 0.0685,
+      "end_ratio": 0.1117,
+      "start_sec": 111,
+      "end_sec": 181,
+      "position_label": "6.9%–11.2%(1:51–3:01)",
+      "purpose": "把答案扎根于深时：抗寒不是一次发明而是长期学徒期",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "dark_humor_payoff",
+          "mechanism": "survivorship_bias_joke"
+        }
+      ],
+      "required_retention_events": [
+        "apprenticeship_verdict",
+        "survivorship_bias"
+      ],
+      "original_moves": [
+        "属级迁徙史",
+        "多古人类",
+        "学徒期定性",
+        "幸存者偏差提醒"
+      ],
+      "abstract_move": "把答案扎根于深时：抗寒不是一次发明而是长期学徒期",
+      "replacement_needs": [
+        "跨物种跨地域的适应简史",
+        "非单次发明而是长期学徒的定性",
+        "考古记录只保留成功的幸存者偏差提醒"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "ecosystem_reframe",
+      "start_ratio": 0.1117,
+      "end_ratio": 0.1728,
+      "start_sec": 181,
+      "end_sec": 280,
+      "position_label": "11.2%–17.3%(3:01–4:40)",
+      "purpose": "重构目的地生态：不是连续冰原而是高产草原",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "aphorism",
+          "strength": 70,
+          "position_ratio": 0.1679,
+          "time_ms": 272000,
+          "reason": "丰度不需要多样性需要的是蹄子：首个记忆点格言"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "ecosystem_reveal",
+          "mechanism": "steppe_naming"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "aphorism_verdict",
+          "mechanism": "abundance_needs_hooves"
+        }
+      ],
+      "required_retention_events": [
+        "ecosystem_reframe",
+        "abundance_verdict"
+      ],
+      "original_moves": [
+        "气候脉冲",
+        "生态系统正名",
+        "巨兽清单",
+        "丰度逻辑定性"
+      ],
+      "abstract_move": "重构目的地生态：不是连续冰原而是高产草原",
+      "replacement_needs": [
+        "气候脉冲式变化",
+        "生态系统的正名与范围",
+        "大型食草动物清单",
+        "丰度逻辑的一句定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "resource_logic",
+      "start_ratio": 0.1728,
+      "end_ratio": 0.2222,
+      "start_sec": 280,
+      "end_sec": 360,
+      "position_label": "17.3%–22.2%(4:40–6:00)",
+      "purpose": "给出第一重答案（猎物北上、人跟随），并揭示脂肪经济学",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.2167,
+          "time_ms": 351000,
+          "reason": "脂肪是硬通货：资源逻辑的经济学重构"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "光有肉食不够：纯瘦肉陷阱如何破解",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "concept_reveal",
+          "mechanism": "behavior_map"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "reason_stamp",
+          "mechanism": "first_reason_verdict"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "problem_reveal",
+          "mechanism": "nutrition_trap"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "currency_reveal",
+          "mechanism": "fat_as_currency"
+        }
+      ],
+      "required_retention_events": [
+        "reason_stamp",
+        "nutrition_trap",
+        "currency_reveal"
+      ],
+      "original_moves": [
+        "迁徙可预测性",
+        "行为地图",
+        "第一原因盖章",
+        "瘦肉陷阱",
+        "脂肪货币揭示"
+      ],
+      "abstract_move": "给出第一重答案（猎物北上、人跟随），并揭示脂肪经济学",
+      "replacement_needs": [
+        "迁徙路线的可预测性",
+        "行为地图概念",
+        "第一原因的显式盖章",
+        "纯瘦肉营养陷阱",
+        "脂肪硬通货揭示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "carcass_economy",
+      "start_ratio": 0.2426,
+      "end_ratio": 0.2846,
+      "start_sec": 393,
+      "end_sec": 461,
+      "position_label": "24.3%–28.5%(6:33–7:41)",
+      "purpose": "拆解一具猎物的全利用经济学，并建立变强正反馈环",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "humor_payoff",
+          "mechanism": "triadic_verdict"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "feedback_loop",
+          "mechanism": "hunting_clothing_loop"
+        }
+      ],
+      "required_retention_events": [
+        "carcass_inventory",
+        "feedback_loop"
+      ],
+      "original_moves": [
+        "部位清单",
+        "三分法定性",
+        "全利用经济",
+        "狩猎防护反馈环"
+      ],
+      "abstract_move": "拆解一具猎物的全利用经济学，并建立变强正反馈环",
+      "replacement_needs": [
+        "部位到用途的清单式拆解",
+        "即时能量、延后能量与材料的三分法定性",
+        "狩猎到防护到更远狩猎的反馈环",
+        "用其他动物建造环境的定性句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "survival_stack",
+      "start_ratio": 0.2846,
+      "end_ratio": 0.442,
+      "start_sec": 461,
+      "end_sec": 716,
+      "position_label": "28.5%–44.2%(7:41–11:56)",
+      "purpose": "逐层拆解物质技术栈：衣物、住所、火",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "mockery_humor",
+          "mechanism": "body_flaw_framing"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "stakes_verdict",
+          "mechanism": "coat_vs_animal"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "aphorism_verdict",
+          "mechanism": "stitched_daily"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "concept_reveal",
+          "mechanism": "reduced_to_one_room"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "humor_payoff",
+          "mechanism": "forgot_the_sticks"
+        }
+      ],
+      "required_retention_events": [
+        "clothing_layer",
+        "shelter_microclimate",
+        "fire_logistics"
+      ],
+      "original_moves": [
+        "人体散热缺陷",
+        "针与缝制",
+        "庇护所微气候",
+        "燃料后勤学"
+      ],
+      "abstract_move": "逐层拆解物质技术栈：衣物、住所、火",
+      "replacement_needs": [
+        "人体散热缺陷的白描",
+        "关键小工具及其隐藏维护成本",
+        "庇护所的微气候概念",
+        "燃料后勤学",
+        "生存每天都要重新缝好的维护观"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "social_infrastructure",
+      "start_ratio": 0.442,
+      "end_ratio": 0.5315,
+      "start_sec": 716,
+      "end_sec": 861,
+      "position_label": "44.2%–53.2%(11:56–14:21)",
+      "purpose": "揭示真正的适应不是身体而是社会系统",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.4691,
+          "time_ms": 760000,
+          "reason": "真正的适应不是厚皮而是他人：中枢认知翻转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "worldview_shift",
+          "mechanism": "adaptation_is_others"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "infrastructure_reveal",
+          "mechanism": "organized_dependence"
+        }
+      ],
+      "required_retention_events": [
+        "risk_pooling",
+        "cumulative_culture",
+        "network_infrastructure"
+      ],
+      "original_moves": [
+        "分工",
+        "分享摊平风险",
+        "累积文化",
+        "语言放大器",
+        "网络即基础设施"
+      ],
+      "abstract_move": "揭示真正的适应不是身体而是社会系统",
+      "replacement_needs": [
+        "分工与分享的风险摊平逻辑",
+        "累积文化与语言的放大器作用",
+        "远距离网络作为生存基础设施",
+        "不是厚皮而是他人的定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "evidence_gradation",
+      "start_ratio": 0.5315,
+      "end_ratio": 0.6543,
+      "start_sec": 861,
+      "end_sec": 1060,
+      "position_label": "53.2%–65.4%(14:21–17:40)",
+      "purpose": "用考古证据校准尺度，区分进入、占领、定居三级成就",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "遗骸证据能说明到什么程度：远征还是定居",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "calibrated_conclusion",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "humor_payoff",
+          "mechanism": "hobby_understatement"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "evidence_caution",
+          "mechanism": "carcass_is_not_town"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "tension_raise",
+          "mechanism": "boot_countdown_requestion"
+        }
+      ],
+      "required_retention_events": [
+        "site_evidence",
+        "evidence_humility",
+        "gradation_framework"
+      ],
+      "original_moves": [
+        "遗址证据清单",
+        "遗骸切痕",
+        "强度自我设限",
+        "三级成就",
+        "季节桥",
+        "寒冷双刃"
+      ],
+      "abstract_move": "用考古证据校准尺度，区分进入、占领、定居三级成就",
+      "replacement_needs": [
+        "具体遗址的证据清单",
+        "遗骸线索及其强度自我设限",
+        "进入、占领、定居的三级区分",
+        "季节作为扩张桥梁的机制",
+        "寒冷益处与代价的对照清单"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP04。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:遗骸证据能说明到什么程度：远征还是定居",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "comparative_motive",
+      "start_ratio": 0.6543,
+      "end_ratio": 0.7179,
+      "start_sec": 1060,
+      "end_sec": 1163,
+      "position_label": "65.4%–71.8%(17:40–19:23)",
+      "purpose": "用机会成本比较回答动机：别处也不轻松",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "logic_summary",
+          "strength": 75,
+          "position_ratio": 0.7043,
+          "time_ms": 1141000,
+          "reason": "回报、价格、风险、时机四句总结动机逻辑"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "既然代价如此之高，为什么还接受这一切",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "无法发掘个体的真实动机：刻意保持开放，叙事用途是显式标注史料极限以增强可信度，并把解释层从个人心理移向可见的经济逻辑",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "comparative_logic_answer",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "humor_payoff",
+          "mechanism": "no_master_plan_joke"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "logic_summary",
+          "mechanism": "rewards_price_risk_door"
+        }
+      ],
+      "required_retention_events": [
+        "opportunity_cost_comparison",
+        "logic_summary"
+      ],
+      "original_moves": [
+        "再设问",
+        "南方机会成本对照",
+        "代际渐进扩张模型",
+        "经济逻辑四句总结"
+      ],
+      "abstract_move": "用机会成本比较回答动机：别处也不轻松",
+      "replacement_needs": [
+        "为何接受这一切的再设问",
+        "南方并非空园的机会成本对照",
+        "代际渐进扩张模型",
+        "回报、价格、风险、时机的一句式总结"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(75);打开的悬念 LOOP06(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "failure_honesty",
+      "start_ratio": 0.7179,
+      "end_ratio": 0.7494,
+      "start_sec": 1163,
+      "end_sec": 1214,
+      "position_label": "71.8%–74.9%(19:23–20:14)",
+      "purpose": "坦承周期性失败，击碎直线征服神话",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "myth_shatter",
+          "strength": 75,
+          "position_ratio": 0.7265,
+          "time_ms": 1177000,
+          "reason": "这不是脚注：直线征服神话被击碎"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "myth_shatter",
+          "mechanism": "not_a_footnote"
+        }
+      ],
+      "required_retention_events": [
+        "collapse_evidence",
+        "myth_shattering"
+      ],
+      "original_moves": [
+        "严寒期收缩",
+        "记录断层",
+        "神话拆穿",
+        "适应力上限"
+      ],
+      "abstract_move": "坦承周期性失败，击碎直线征服神话",
+      "replacement_needs": [
+        "严寒期收缩与消失的证据",
+        "这不是脚注的神话拆穿句",
+        "适应力上限与系统崩溃触发点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "culture_vs_biology",
+      "start_ratio": 0.7494,
+      "end_ratio": 0.7926,
+      "start_sec": 1214,
+      "end_sec": 1284,
+      "position_label": "74.9%–79.3%(20:14–21:24)",
+      "purpose": "用速度对照解释机制：文化跑赢解剖",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.7728,
+          "time_ms": 1252000,
+          "reason": "文化跑赢解剖：机制层答案落定"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "humor_verdict",
+          "mechanism": "arctic_permits_joke"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "worldview_shift",
+          "mechanism": "culture_outran_anatomy"
+        }
+      ],
+      "required_retention_events": [
+        "culture_speed_contrast",
+        "aphorism_verdict"
+      ],
+      "original_moves": [
+        "生理适应缓慢",
+        "基因调侃",
+        "文化即时生效",
+        "身体热带行为行星"
+      ],
+      "abstract_move": "用速度对照解释机制：文化跑赢解剖",
+      "replacement_needs": [
+        "生理适应的缓慢",
+        "基因不发通行证的调侃",
+        "文化方案即时生效的对照",
+        "文化跑赢解剖的定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "world_consequence",
+      "start_ratio": 0.7926,
+      "end_ratio": 0.8309,
+      "start_sec": 1284,
+      "end_sec": 1346,
+      "position_label": "79.3%–83.1%(21:24–22:26)",
+      "purpose": "揭示世界史级后果：迁徙把人类带到另一块大陆门口",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "进入新大陆的时间与路线仍是活跃研究领域：刻意保持开放，叙事用途是以科学诚实收束世界史后果段，避免过度断言",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "scale_reveal",
+          "mechanism": "landbridge_correction"
+        }
+      ],
+      "required_retention_events": [
+        "sea_level_mechanism",
+        "historical_irony"
+      ],
+      "original_moves": [
+        "海平面机制",
+        "陆桥想象纠正",
+        "参与者不知情",
+        "后裔进入新大陆",
+        "不只是走廊"
+      ],
+      "abstract_move": "揭示世界史级后果：迁徙把人类带到另一块大陆门口",
+      "replacement_needs": [
+        "海平面下降与陆桥机制",
+        "对狭窄桥梁流行想象的纠正",
+        "参与者无意发现新大陆的反讽",
+        "但不只是走廊的限定句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "humanization_answer",
+      "start_ratio": 0.8309,
+      "end_ratio": 0.9216,
+      "start_sec": 1346,
+      "end_sec": 1493,
+      "position_label": "83.1%–92.2%(22:26–24:53)",
+      "purpose": "把目的地还原为家园与记忆，给出最深答案，并拆解系统脆弱性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "humanization",
+          "mechanism": "memory_landscape"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "deepest_answer",
+          "mechanism": "previous_humans_chain"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "aphorism_verdict",
+          "mechanism": "fragility_triplets"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "emotional_payoff",
+          "mechanism": "vulnerable_achievement"
+        }
+      ],
+      "required_retention_events": [
+        "memory_landscape",
+        "cumulative_answer",
+        "fragility_triplets"
+      ],
+      "original_moves": [
+        "生活质感",
+        "地名即记忆",
+        "文化景观继承",
+        "最深答案",
+        "系统拆件脆弱性三连"
+      ],
+      "abstract_move": "把目的地还原为家园与记忆，给出最深答案，并拆解系统脆弱性",
+      "replacement_needs": [
+        "生活质感证据（装饰、故事、关系）",
+        "地名即记忆的文化景观概念",
+        "前人使下一步成为可能的最深答案",
+        "拆掉任一零件系统即脆弱的三连句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "title_answer",
+      "start_ratio": 0.9216,
+      "end_ratio": 0.9673,
+      "start_sec": 1493,
+      "end_sec": 1567,
+      "position_label": "92.2%–96.7%(24:53–26:07)",
+      "purpose": "显式回收标题问句：动机清单加系统总装",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "title_callback",
+          "strength": 85,
+          "position_ratio": 0.9364,
+          "time_ms": 1517000,
+          "reason": "标题问句显式回收，可携带气候系统总装"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_system_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "title_callback",
+          "mechanism": "explicit_question_recycle"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "turn_payoff",
+          "mechanism": "could_not_stop_all"
+        }
+      ],
+      "required_retention_events": [
+        "title_callback",
+        "system_assembly",
+        "final_turn"
+      ],
+      "original_moves": [
+        "脆弱者宣言",
+        "体内体间对照",
+        "动机清单",
+        "系统总装句",
+        "转折收束"
+      ],
+      "abstract_move": "显式回收标题问句：动机清单加系统总装",
+      "replacement_needs": [
+        "脆弱者宣言（成就因此更了不起）",
+        "体内与体间适应的对照句",
+        "动机并列清单",
+        "可携带气候的系统总装句",
+        "转折收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.9673,
+      "end_ratio": 1,
+      "start_sec": 1567,
+      "end_sec": 1620,
+      "position_label": "96.7%–100%(26:07–27:00)",
+      "purpose": "以遗迹的新意义与格言句收束全片",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "aphorism_close",
+          "strength": 90,
+          "position_ratio": 0.9944,
+          "time_ms": 1611000,
+          "reason": "冰只是入场券的代价：格言句收束全片"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "aphorism_close",
+          "mechanism": "cost_of_admission"
+        }
+      ],
+      "required_retention_events": [
+        "artifact_rereading",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "小物件重读",
+        "反复进入史",
+        "边疆变家园",
+        "代价即门票格言"
+      ],
+      "abstract_move": "以遗迹的新意义与格言句收束全片",
+      "replacement_needs": [
+        "小物件大意义的重读",
+        "从未被一次征服的历史定性",
+        "边疆变家园的原因句",
+        "代价即门票式格言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

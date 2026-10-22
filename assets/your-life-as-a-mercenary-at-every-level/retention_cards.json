@@ -1,0 +1,912 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.482Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.1117,
+      "start_sec": 0,
+      "end_sec": 172.8,
+      "position_label": "0%–11.2%(0:00–2:53)",
+      "purpose": "退役不适+四倍邀约+测评筛选+眩晕数字",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.0052,
+          "time_ms": 8000,
+          "reason": "军队给了你技能，拿走了你的膝盖"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念：四倍薪水的数字最终会花掉他什么",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "level_card_drop",
+          "mechanism": "the_recruit_chapter"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "trade_verdict",
+          "mechanism": "skills_for_knees"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "restlessness",
+          "mechanism": "hardware_store_claw"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "offer",
+          "mechanism": "briggs_4x"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "sleepless_marker",
+          "mechanism": "electric_bill_website"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "assessment_rule",
+          "mechanism": "work_quiet_secret"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "contract_number",
+          "mechanism": "staggering_number"
+        }
+      ],
+      "required_retention_events": [
+        "level_card_drop",
+        "skills_for_knees"
+      ],
+      "original_moves": [
+        "章节卡：Level one. The recruit + 退役定格：24岁、刚服完4年步兵——军队给了你技能，拿走了你的膝盖；一个行李袋和一张退伍纸，几乎没有别的 + 平民世界的不适：又慢又软又陌生；五金店干了3个月差点疯掉——人们问你油漆颜色和草坪肥料，你微笑指向第七货架，体内有什么在挠墙 + 你怀念的：步枪的重量、任务的清晰、确切知道自己工作是什么 + 电话：旧单位的 Briggs，听起来不一样了——听起来像个赚真钱的人；一家雇退伍军人的公司，海外安保，薪水是军中的四倍 + 写在电费单背面的网址：你盯着天花板直到日出；第二天填申请（部署经历/武器资质/许可）+ 招募官：平直的声音、简短的问题——背景调查？体检？60天内能出国吗？你毫不犹豫地全答是；自费飞北卡 + 两天测评：跑步、射击、负重——他们看你负重下怎么移动、压力下怎么持枪、男人对你尖叫时你慌不慌；你不慌，你很久以前就学会了不慌；40人来，第二天剩一半 + 全场秘诀：你低下头做该做的——做工作，闭住嘴 + 合同：你没读完每一页就签了——底部的数字令人眩晕，比你父亲一年挣的还多；你现在是私人军事承包商，真正的生涯即将开始"
+      ],
+      "abstract_move": "退役不适+四倍邀约+测评筛选+眩晕数字",
+      "replacement_needs": [
+        "章节卡+退役定格",
+        "军队给/拿对仗",
+        "五金店的挠墙感",
+        "旧战友电话",
+        "四倍薪水",
+        "电费单背面网址",
+        "测评筛选（40剩半）",
+        "秘诀=做工作闭嘴",
+        "眩晕数字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(75);打开的悬念 LOOP01→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 172840,
+        "hook_type": "dead_end_civilian_then_4x_offer",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 67760,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0037",
+          "C0081"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "evidence_build",
+      "start_ratio": 0.1117,
+      "end_ratio": 0.214,
+      "start_sec": 172.8,
+      "end_sec": 331.2,
+      "position_label": "11.2%–21.4%(2:53–5:31)",
+      "purpose": "大门的真实形状（无聊包裹恐惧）+第一笔谎",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.1646,
+          "time_ms": 254760,
+          "reason": "漫长的无事包裹几秒恐惧：这份工作的真实形状"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "Rachel 的等待会等到什么",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "gate_rhythm",
+          "mechanism": "boredom_enemy"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "job_shape",
+          "mechanism": "nothing_wrapped_terror"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "expat_truth",
+          "mechanism": "running_from_something"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "first_lie",
+          "mechanism": "lie_to_keep_calm"
+        }
+      ],
+      "required_retention_events": [
+        "gate_twelve_hours",
+        "boredom_real_enemy"
+      ],
+      "original_moves": [
+        "Level two, the static guard + 抵达：包机、凌晨两点的沙漠机场，空气里是航空煤油和热沙味；第一份合同守卫一个后勤基地大院（基地属美国政府，你的公司持保护合同）+ 大门的日常：每天12小时查证件对打印名单、从头到尾搜车、用长杆镜子查车底；热是活物，中午120°；装备40磅压在肩上，汗顺脊椎积进靴子 + 真正的敌人：几周什么都不发生——无聊才是这工作真正的敌人，它钝化你的反射、软化你的注意；你用咖啡和纪律对抗 + 一秒与一万秒：一辆卡车在你门前怠速太久——心跳如鼓，手滑向步枪；司机只是迷路了；你挥手让他走，重新呼吸；这就是整个工作的一个瞬间：漫长的无事的小时，包裹着几秒恐惧 + 国际饭桌：南非人、英国人、斐济人——都是追同一张支票的前士兵，讲你半信的战争故事；你学到这里的每个人都在逃离什么：一场离婚、一笔债、一个没有他们位置的国家；你想自己在逃哪一个 + 潜规则：规定要登记每辆进入的车，一半司机给警卫塞几美元——钱比任何规则跑得快；你不拿，因为你还新；你每月挣$18,000，大部分寄回家 + Rachel：入伍前就在的女友，毫无怨言地等过你的部署，现在还在等；视频通话时你告诉她工作无聊又安全——前半句够真，后半句是让她安心的谎 + 第一份合同9个月结束：回家休假一个月，在她父母后院结婚；她父亲握手让你小心，你答应了；然后你登上另一架飞机"
+      ],
+      "abstract_move": "大门的真实形状（无聊包裹恐惧）+第一笔谎",
+      "replacement_needs": [
+        "大门12小时规程",
+        "热与装备重量",
+        "无聊才是敌人",
+        "怠速卡车=恐惧秒",
+        "国际饭桌",
+        "人人都在逃离",
+        "钱比规则快",
+        "寄钱回家",
+        "Rachel 与第一笔谎",
+        "后院婚礼再上飞机"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80);打开的悬念 LOOP02→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.214,
+      "end_ratio": 0.3092,
+      "start_sec": 331.2,
+      "end_sec": 478.5,
+      "position_label": "21.4%–30.9%(5:31–7:58)",
+      "purpose": "要员保护：读路如猎+藏住抖+女儿账户成立",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.2627,
+          "time_ms": 406600,
+          "reason": "你藏起抖了一小时的手：看起来弱的队长会失去他的人"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.2856,
+          "time_ms": 442000,
+          "reason": "那个账户成了你一直说 yes 的理由"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "Emma 的账户能买回父亲吗",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "training_proof",
+          "mechanism": "training_before_fear"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "leadership_rule",
+          "mechanism": "hide_shaking_hands"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "reason_established",
+          "mechanism": "emma_account"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "invisible_job",
+          "mechanism": "furniture_with_weapon"
+        }
+      ],
+      "required_retention_events": [
+        "principal_alive",
+        "read_road_hunter"
+      ],
+      "original_moves": [
+        "Level three, the protection operator + 升级：个人安保——保护人而不是建筑；薪水跳因为风险跳 + 车队规程：客户是穿越危险城市的外交官；三车装甲车队，你坐后排，步枪横在膝上；你的活是把 principal 活着送到 + 读路如猎：停着的车里有人=威胁；一堆垃圾可能藏炸弹；跟得太久的摩托车值得注意 + 演练即生命：先导车被击怎么办？principal 受伤怎么办？被围怎么办？每个答案演练一千遍——当它是真的时，演练让你活着 + 实战一闪：一辆车硬切进车队——训练先于恐惧接管；你把 principal 按到窗下，司机穿车流而出；结果是个迷糊的平民，没人死；但你的手抖了一小时——你把手藏起来不让年轻队员看见：看起来弱的队长会失去他的人；你27岁，早早学到这一课 + 女儿的账户：Rachel 怀孕了；你在安全屋的碎屏手机上看超声——是个女孩，取名 Emma；长途驾驶时你对自己念这个名字，承诺为她小心；但小心在这份工作是相对词 + 你为她单设一个账户：大学，你告诉自己，未来，安全的人生；那个账户成了你一直说 yes 的理由 + 家具的自觉：外交官多数日子不看你一眼——对他来说你是会带枪的家具；你记住他的日程、习惯与恐惧；他吃细餐时你站在门外吃蛋白棒 + 一晚人群在酒店附近聚集：你感到情绪像风暴一样变向，从侧门快速转移他——他甚至不知道有过危险；这就是做对了的工作：隐形而完整"
+      ],
+      "abstract_move": "要员保护：读路如猎+藏住抖+女儿账户成立",
+      "replacement_needs": [
+        "要员保护规程",
+        "读路如猎",
+        "演练一千遍",
+        "训练先于恐惧",
+        "藏住抖的手",
+        "队长不能弱",
+        "超声与名字",
+        "女儿账户=说 yes 的理由",
+        "家具自觉",
+        "侧门转移=隐形完整"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80)、PK04(80);打开的悬念 LOOP03→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "conflict_escalation",
+      "start_ratio": 0.3092,
+      "end_ratio": 0.4117,
+      "start_sec": 478.5,
+      "end_sec": 637.2,
+      "position_label": "30.9%–41.2%(7:58–10:37)",
+      "purpose": "开枪线+胸口的房间+Doyle+女儿不认识你的脸",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.3481,
+          "time_ms": 538720,
+          "reason": "第一次对人开枪：多数夜晚你相信，有些夜晚你盯着黑暗"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.3748,
+          "time_ms": 580000,
+          "reason": "Doyle 23岁：他的血浸透你的袖子并在那里干掉"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.3862,
+          "time_ms": 597680,
+          "reason": "你抱她她就哭：那比任何伤口都疼"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.4019,
+          "time_ms": 622000,
+          "reason": "真相是你在找那场战争：你的一部分想念它"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "胸口那个上锁的房间关得住吗",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "war_turn",
+          "mechanism": "news_ignores_war"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "first_shot",
+          "mechanism": "them_or_you"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "coping_mechanism",
+          "mechanism": "locked_room_chest"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "doyle_death",
+          "mechanism": "blood_on_sleeve"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "home_cost",
+          "mechanism": "emma_not_know_face"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "dark_pull",
+          "mechanism": "looking_for_war"
+        }
+      ],
+      "required_retention_events": [
+        "emma_future_yes",
+        "she_knows_lying"
+      ],
+      "original_moves": [
+        "Level four, the shooter + 战争与报价：一场新闻无视的战争打响；公司拿下作战支援合同，需要的不只是守门人——直接行动队，钱多到超乎想象，危险超过你见过的一切；你说 yes，因为这笔钱能锁定 Emma 的未来；你告诉 Rachel 这只是另一份安保工作——她知道你在撒谎；她一年前就不再问真的问题；你们之间的距离在每次通话里生长，你从这里无法修它 + 无政府区：民兵为石油、道路与旧怨而战；你的队清楼、护送补给纵队；踹开门不知道里面是什么——有时是空房间与受惊的家庭，有时是想你死的武装男人 + 第一次开枪：你扛了多年步枪从未对人开过；现在你做了，然后再做；你告诉自己是他们或是你——多数夜晚你完全相信，有些夜晚你躺在行军床上盯着黑暗 + 胸里的房间：你想起见过的脸；你把念头推进一个上锁的房间，它在胸口深处——这招你在军队里学的；它管用，直到有一天不管用 + Doyle 之死：一次坏轮值中的伏击；他23岁，来自俄亥俄，笑得太大声，心地好；你在重火力下把他的尸体抬上卡车，他的血浸透你的袖子并在那里干掉 + 你写给 Rachel 的信里只字未提；你带着钱和沉默回家 + 两岁的 Emma 不认识你的脸：你抱她她就哭，伸手要 Rachel——那比任何伤口都疼；你坐在客厅黑暗里，想自己正在变成哪种人；你喝得比以前多；凌晨三点伸手去摸步枪 + Rachel 发现你在窗前盯着街：她问你在找什么，你答不出——真相是你在找那场战争；你的一部分想念它；这最让你害怕 + 然后下一封合同邮件到了：你停止疑问，收拾行李"
+      ],
+      "abstract_move": "开枪线+胸口的房间+Doyle+女儿不认识你的脸",
+      "replacement_needs": [
+        "新闻无视的战争",
+        "为 Emma 未来说 yes",
+        "她知道你在撒谎",
+        "踹门未知",
+        "第一次开枪",
+        "他们或你多数夜晚",
+        "胸口的锁房间",
+        "Doyle 之死与血袖",
+        "钱与沉默回家",
+        "女儿哭找妈妈",
+        "想念战争的恐惧",
+        "下一封邮件"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85)、PK06(85)、PK07(85)、PK08(85);打开的悬念 LOOP04→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evidence_build",
+      "start_ratio": 0.4117,
+      "end_ratio": 0.5165,
+      "start_sec": 637.2,
+      "end_sec": 799.4,
+      "position_label": "41.2%–51.7%(10:37–13:19)",
+      "purpose": "队长：替人扛恐惧+信任像家人+错过的清单",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "「再来一份合同就停」的自我欺骗何时到头",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "leadership_truth",
+          "mechanism": "carry_fear_for_men"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "missed_list",
+          "mechanism": "missed_kindergarten"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "self_deception",
+          "mechanism": "one_more_contract"
+        }
+      ],
+      "required_retention_events": [
+        "alive_as_qualification",
+        "second_weight_heavier"
+      ],
+      "original_moves": [
+        "Level five, the team leader + 两轮之后升任队长：你擅长这工作，也还活着——在这行，活着本身就是一项资质 + 八人小队：四个前特种作战，四个像你当年一样的扎实枪手；你对任务负责，也对他们的命负责——第二种重量重得多 + 计划与口令：规划路线、演练应急预案、每次移动前做简报、决定何时推进何时撤回；一个坏决定会让你的人死，一个好决定也可能 + 领导力真相：领导力大部分是替别的男人扛恐惧——出问题时他们都看你，你不能让他们看见你自己的怀疑；于是你咽下它给出清晰口令，声音放平，手放稳；里面你在尖叫，他们永远不会知道 + 实战立威：护送修桥工程师时遭迫击炮与轻武器袭击——弹在头顶裂，土在靴边跳；你指挥战斗、呼叫空中支援、把人移进掩体、分区还击；承包商飞机到，攻击者散进山里；那天你没损失一个人；那之后你的人完全信任你——那种信任是这里最接近家人的东西；你琢磨「家人」这个词，它比预想的更刺 + 你比了解亲人还了解你的人：一个的母亲在德州生病，一个攒钱想开健身房；你知道谁靠喝酒入睡、谁祈祷；火力中有人僵住，你替他掩护，事后拉到一边悄悄重建他——这就是队长做的事，无人看见 + 错过的清单：Rachel 发来 Emma 上学的照片，书包比她的人还大；你错过她幼儿园的第一天，错过她上个月的生日；你几乎错过了所有重要的事 + 你告诉自己钱值得：Emma 的账户已经很大，你今天停下她也不缺任何东西——但你不停；你告诉自己再来一份合同就安全了；总还有一份合同；深夜里你不确定自己在对谁说"
+      ],
+      "abstract_move": "队长：替人扛恐惧+信任像家人+错过的清单",
+      "replacement_needs": [
+        "活着即资质",
+        "八人与第二种重量",
+        "替人扛恐惧",
+        "里面尖叫外面平稳",
+        "迫击炮实战零伤亡",
+        "信任像家人",
+        "比亲人还了解他们",
+        "掩护僵住的人",
+        "错过幼儿园",
+        "再来一份合同"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "evidence_build",
+      "start_ratio": 0.5165,
+      "end_ratio": 0.6185,
+      "start_sec": 799.4,
+      "end_sec": 957.2,
+      "position_label": "51.7%–61.9%(13:19–15:57)",
+      "purpose": "主管：防线挡住+死者变预算行项+怨恨保护对象",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.5976,
+          "time_ms": 924880,
+          "reason": "对他们死者是预算行项，对你是同桌吃过早餐的人"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "defense_proof",
+          "mechanism": "towers_hold"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "class_verdict",
+          "mechanism": "dead_line_item"
+        }
+      ],
+      "required_retention_events": [
+        "body_at_35",
+        "defense_design"
+      ],
+      "original_moves": [
+        "Level six, the site lead + 身体账单：膝盖与肩膀在报废——右肩睡姿不对就脱臼，冷晨膝盖疼；35岁感觉像老人 + 管理角色：成为大项目的现场主管——负责一个边境附近动荡地区油设施的全部安保；管理40名轮班承包商；设计整个大院的防御方案：塔楼设在哪、谁驻守、巡逻路线与反应演练；对接客户雇的本地警卫队——有人忠诚，有人是间谍，你慢慢学会分辨（看眼睛、核故事）+ 双语翻译：与穿干净西装担心预算的石油高管开会——你佩着枪担心汽车炸弹；你把他们的成本关切翻译成安全现实：哪里能省，哪里不能 + 管人：解雇值班喝酒的，提拔在压力下有判断的；出事就写事故报告——你写了很多很多事故报告 + 卡车冲门：地区升温，袭击周周增加；一天黎明一辆卡车冲撞正门——塔楼在它抵墙前开火；你的防线挡住了；你的人完全按演练反应；你建的那个方案那天救了命 + 你走过冒烟的残骸：几乎毫无感觉——一种奇怪的自嘲混杂着疲惫 + 无菌会议室里的感谢：他们给你奖金，然后请你下季度削减成本；你解释减警卫就是减安全；他们点头微笑，还是砍了预算 + 判词：穿西装的人永远不会真正明白——对他们来说死者是预算表上的一行，对你来说死者是你同桌吃过早餐的人 + 家：一年幸运回两次；Emma 六岁，把你当来访的叔叔，礼貌又有点怯；Rachel 和你几乎不谈任何真实的事，睡在房子的不同区域；你在提供一种你从不在场的生活；你开始想你到底在建什么"
+      ],
+      "abstract_move": "主管：防线挡住+死者变预算行项+怨恨保护对象",
+      "replacement_needs": [
+        "35岁的老人身体",
+        "防御方案设计",
+        "塔楼拦卡车",
+        "方案的骄傲与疲惫",
+        "奖金与砍预算",
+        "预算行项 vs 同桌早餐",
+        "女儿像来访叔叔",
+        "分区睡眠",
+        "从不在场的生活"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "conflict_escalation",
+      "start_ratio": 0.6185,
+      "end_ratio": 0.711,
+      "start_sec": 957.2,
+      "end_sec": 1100.4,
+      "position_label": "61.9%–71.1%(15:57–18:20)",
+      "purpose": "经理：签名即赌博+安排沉默+再一年说十年",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.6712,
+          "time_ms": 1038680,
+          "reason": "你告诉他们的妻子他们为重要的东西而死；你不说那份工作是什么"
+        },
+        {
+          "peak_id": "PK11",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.6935,
+          "time_ms": 1073280,
+          "reason": "「再一年」这句话你说了十年"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "signature_weight",
+          "mechanism": "gamble_lives"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "aftermath",
+          "mechanism": "arrange_silence"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "letters_home",
+          "mechanism": "died_serving_important"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "decade_lie",
+          "mechanism": "one_more_year_decade"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "self_verdict",
+          "mechanism": "good_at_ordering_death"
+        }
+      ],
+      "required_retention_events": [
+        "field_and_boardroom",
+        "signature_gamble_lives"
+      ],
+      "original_moves": [
+        "Level seven, the program manager + 全国合同：你管理一个国家量级的合同——数百名承包商、数千万预算；向总部高管汇报，与东道国政府谈准入，与客户谈范围与价钱；你坐在战场与董事会之间——两边都觉得你不懂他们，你比他们知道的更懂两边 + 签名即赌博：你任免队长，决定公司接得了哪些合同、哪些太危险；每个签名都是拿男人们的命赌博 + 死亡来电：承包商死了，电话打给你；你以前给家属打过那些电话，你知道你还会再打；你多年前就学会了写那些信，措辞从未变容易 + 路边炸弹：载着你的人的车触雷——两个死，三个重伤；你飞去现场处理后事：安排遗体和文书，也安排沉默；在野战医院陪幸存者，独自哀悼的同时撑住整个行动；那晚在灯下写回家的信——你告诉他们的妻子，他们是为重要的东西而死；你不告诉他们那份工作到底是什么 + 你39岁：几乎不再住战区，你住在办公室、飞机与大院里 + 家里的信：Rachel 求你彻底回家；10岁的 Emma 写信问同一件事——字迹很认真，话很简单，问你会不会在她的生日出现；你读了两遍放进口袋；你告诉他们再一年，只再一年——这句话你说了十年 + 真相：你不知道在家你会是谁；那个离开五金店的人已经不在了；在他位置上是一个能命令男人去死的人；你擅长这个，擅长得可怕；这项技能在安静的郊区生活里毫无用处——于是你留在它值钱的地方；你告诉自己这是为了 Emma 和 Rachel；但你的一部分知道，这是为了你自己"
+      ],
+      "abstract_move": "经理：签名即赌博+安排沉默+再一年说十年",
+      "replacement_needs": [
+        "全国合同与两边翻译",
+        "签名即赌博",
+        "死亡来电与信件",
+        "路边炸弹后事",
+        "安排沉默",
+        "为重要的东西而死（不说真相）",
+        "Rachel 求回家",
+        "女儿生日信",
+        "再一年说十年",
+        "能命令男人去死的擅长",
+        "是为了自己"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85)、PK11(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK11",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.711,
+      "end_ratio": 0.8034,
+      "start_sec": 1100.4,
+      "end_sec": 1243.4,
+      "position_label": "71.1%–80.3%(18:20–20:43)",
+      "purpose": "经纪人：安静的权力+回家却不会回家",
+      "peaks": [
+        {
+          "peak_id": "PK12",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.7958,
+          "time_ms": 1231480,
+          "reason": "你能读懂敌对的街，却读不懂餐桌旁的女儿"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "rewired",
+          "mechanism": "read_street_not_daughter"
+        }
+      ],
+      "required_retention_events": [
+        "quiet_power_network",
+        "knowledge_target"
+      ],
+      "original_moves": [
+        "Level eight, the broker + 离开战场：身体再也承受不了，家人也是；但你无法离开这个行业——它是你唯一还懂的世界 + 经纪人生意：为合同配人——你认识这行每个好操盘手；知道哪些公司付钱哪些耍赖、哪些合同是真的哪些是陷阱；把人连给工作抽一成，把公司连给人再抽一成；网络横跨十几个冲突区——一个国家的将军信你的话，另一国的国防部回你的电话；一家私人公司下月要40个枪手，你一周内交付；这是安静的一种权力 + 你不再扛步枪：你扛的是一手机重要的号码；你还扛着能终结职业生涯的知识——谁行了贿、谁犯了法、哪些行动正式地从未发生；这知识让你值钱，也让你成为靶子；你在酒店酒吧和安静咖啡馆见联系人，重要的事从不写下来——放在没人够得着的脑子里 + 你43岁，一年中大部分时间终于住在家里——但家不再像家 + 餐桌上的陌生：Emma 14岁，几乎不认识你；她礼貌而疏远，在你家像个客人；你问她学校，得到一个词的答案；你不认识她的朋友和她的音乐 + Rachel 和你睡同一张床：感觉像里面的陌生人；你有时伸手，碰到的是你们之间的冷空间 + 你努力在场：带 Emma 吃饭，话题很快用完；问 Rachel 她的一天，一小时后忘了答案——多年战场重新布了你的线：你能一眼读懂一条敌对的街，却读不懂餐桌旁你自己的女儿 + 你有了你想要的所有钱；你不确定它买到了任何能留得住的东西"
+      ],
+      "abstract_move": "经纪人：安静的权力+回家却不会回家",
+      "replacement_needs": [
+        "经纪人生意（双向抽成）",
+        "一周内40个枪手",
+        "一手机号码的权力",
+        "能终结职业的知识",
+        "从不写下来",
+        "家不像家",
+        "女儿一个词的答案",
+        "读得懂街读不懂女儿",
+        "钱没买到能留的"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK12(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK12",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.8034,
+      "end_ratio": 0.9012,
+      "start_sec": 1243.4,
+      "end_sec": 1394.6,
+      "position_label": "80.3%–90.1%(20:43–23:15)",
+      "purpose": "老板：产品是暴力+拒政变+长桌独餐+她不再等",
+      "peaks": [
+        {
+          "peak_id": "PK13",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.8289,
+          "time_ms": 1282840,
+          "reason": "你是一个商人，你的产品是暴力"
+        },
+        {
+          "peak_id": "PK14",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.8948,
+          "time_ms": 1384720,
+          "reason": "她不恨你，她只是不再等了"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "she_just_stopped_waiting_answer",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "money_is_all_he_has_left_to_give_answer",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "product_verdict",
+          "mechanism": "product_is_violence"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "line_kept",
+          "mechanism": "decline_coup"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "reduction",
+          "mechanism": "money_only_left"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "divorce_verdict",
+          "mechanism": "stopped_waiting_kind"
+        }
+      ],
+      "required_retention_events": [
+        "product_is_violence",
+        "protection_not_war_thin"
+      ],
+      "original_moves": [
+        "Level nine, the owner + 自己的公司：用网络、积蓄与名字，在法律友好的国家注册；雇你信任的前操盘手（有人曾在最坏的地方在你手下服役）；通过老客户赢下第一份合同，然后下一份，再下一份；三年内雇员数百 + 产品即暴力：为使馆、油田、航线提供安保；为不能动用军队的政府提供人；为不想留名的活提供可否认性；你坐在一支私人军队的顶端——你是一个商人为你的产品的是暴力；你告诉自己你提供的是保护，不是战争；两者之间的线很细，细过你愿意承认 + 线的看守：你决定接哪些、拒哪些；有些活因为太脏你拒绝——你还有一条不越的线；你不确定它能守多久：钱有种随时间移动线的方式；你看别的老板越过他们的线还发了财，你想你的顾虑是奢侈还是软弱 + 政变时刻：你有人的国家酝酿政变，双方都出钱让你选边；你都拒绝并把人撤出来——这个决定让你损失数百万；你不后悔，或者你告诉自己不后悔；你说不的夜晚，睡眠容易一点 + 严肃房间里的分量：将军接你的电话，部长问你的意见；你成了多年前 Briggs 描述的那种人；你的钱一辈子花不完，你有一支私人军队和一份无瑕的声誉——而你一个人在长桌上吃完饭 + 房子里全是昂贵的东西，空得没有人 + 你48岁：你错过了 Emma 的整个童年建起这个帝国；她上大学了，很少打电话，打来通常是关于钱——你不问缘由地寄，那是你仅剩能给的 + Rachel 两年前离婚：她很体面，这反而更糟——她不恨你，她只是不再等了 + 你独自住在一个安静国家的大房子里：你拥有一切，不属于任何人"
+      ],
+      "abstract_move": "老板：产品是暴力+拒政变+长桌独餐+她不再等",
+      "replacement_needs": [
+        "自己的公司",
+        "产品即暴力（保护/战争细线）",
+        "不越的线与钱的移线",
+        "拒政变撤人（损失数百万）",
+        "说不的夜晚睡得好",
+        "成了 Briggs 描述的人",
+        "长桌独餐",
+        "女儿的电话只剩钱",
+        "她不再等（很体面更糟）",
+        "拥有一切不属于任何人"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK13(80)、PK14(85);回收了前文的悬念 FS02→LOOP02、FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK13",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK14",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "closure",
+      "start_ratio": 0.9012,
+      "end_ratio": 0.9785,
+      "start_sec": 1394.6,
+      "end_sec": 1514.4,
+      "position_label": "90.1%–97.9%(23:15–25:14)",
+      "purpose": "幽灵总账：不自由+旧习惯不退休+脆弱的线",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "blood_still_felt_on_sleeve_answer",
+          "opened_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "sold_company_work_held_him_together_answer",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "retirement_void",
+          "mechanism": "work_held_together"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "fragile_thread",
+          "mechanism": "emails_life_depends"
+        }
+      ],
+      "required_retention_events": [
+        "sell_at_55",
+        "not_free_too_much_time"
+      ],
+      "original_moves": [
+        "Level 10, the ghost + 55岁出售公司：更大的公司以巨款买下；钱的问题永远回答了；你在远离任何战争的玻璃办公室签字，走出去一个非常富的人；你应该感到自由——你没有；那份工作是唯一把你撑在一起的东西；现在你成了时间太多的人：太多记忆，没有任务 + 海边的庄园：门口有警卫——是你曾雇过的人；你仍每晚睡4小时；仍在凌晨三点巡视周界——你在找不存在的威胁；旧习惯不随你退休 + 安全线路上的声音：有时政府打来问建议；你提供一个名字或一个方案；你是顾问了，一条安全线路上的声音；你不再带步枪，不再必要——你的名字本身就开门也关交易 + 想起的人：Doyle 倒在尘土里——你仍能感到他的血在你袖子上干掉；你写信给的那些家庭；Emma 学走路时你不在场 + Emma 23岁：偶尔发邮件，短、小心、礼貌；你每封都回，仿佛命悬于此——以某种安静的方式，确实如此；那根脆弱的线是你仅剩的家人 + Rachel 再婚：嫁给一个每晚回家的男人；你为她高兴——那份高兴仍然割得很深 + 总账：你做了大多数人永远不会知道的事；你保护了一些命，终结了另一些；你在别人的勇气上建了一个帝国，在你自己的冷酷神经上建起它；这些写不进任何诚实的史册；你是一个在阴影里发了财的幽灵"
+      ],
+      "abstract_move": "幽灵总账：不自由+旧习惯不退休+脆弱的线",
+      "replacement_needs": [
+        "卖公司=钱的问题永远解决",
+        "不自由（工作是粘合剂）",
+        "凌晨三点巡周界",
+        "安全线路上的声音",
+        "Doyle 的血袖仍在",
+        "她的邮件短而礼貌",
+        "你每封都回",
+        "Rachel 再婚的高兴与割",
+        "阴影里的幽灵"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS04→LOOP04、FS05→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "closure",
+      "start_ratio": 0.9785,
+      "end_ratio": 1,
+      "start_sec": 1514.4,
+      "end_sec": 1547.6,
+      "position_label": "97.9%–100%(25:14–25:48)",
+      "purpose": "循环回收：另一个刚退役的年轻人看到广告",
+      "peaks": [
+        {
+          "peak_id": "PK15",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9848,
+          "time_ms": 1524080,
+          "reason": "循环回收：另一个年轻人看到四倍薪水的广告"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_cost_arc_plus_cycle_continues",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "circular_callback",
+          "mechanism": "same_4x_ad"
+        }
+      ],
+      "required_retention_events": [
+        "circular_callback",
+        "same_4x_ad"
+      ],
+      "original_moves": [
+        "循环回收：在某个地方，一个年轻人刚服完兵役；他坐在小公寓里刷招聘网站；他看到一家雇退伍军人的公司的广告——薪水是他旧薪水的四倍 + 他不知道那个数字会花掉他什么：不知道胸口那些上锁的房间，不知道悄悄死掉的婚姻，不知道那些永远不会离开的脸 + 但他会知道——They always do + 收束：The cycle continues"
+      ],
+      "abstract_move": "循环回收：另一个刚退役的年轻人看到广告",
+      "replacement_needs": [
+        "刚退役的年轻人",
+        "四倍薪水广告",
+        "数字的代价预告",
+        "锁房间/婚姻/脸三预告",
+        "循环判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK15(85);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK15",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

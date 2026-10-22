@@ -1,0 +1,922 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.386Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "modern_contrast_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.039,
+      "start_sec": 0,
+      "end_sec": 50,
+      "position_label": "0%–3.9%(0:00–0:50)",
+      "purpose": "第二人称现代日常场景开场：先让观众依赖熟悉系统，再一键抽走并抛出标题问句",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "title_callback",
+          "strength": 70,
+          "position_ratio": 0.0337,
+          "time_ms": 43000,
+          "reason": "标题'如何'问句显式抛出，全片主承诺锁定"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：没有现代系统的古人究竟靠什么活下来（标题'如何'问句的显式悬挂）",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_sick_scene"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "threat_turn",
+          "mechanism": "modern_convenience_strip"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "central_question",
+          "mechanism": "title_question_drop"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_modern_scene",
+        "system_strip",
+        "central_question_drop"
+      ],
+      "original_moves": [
+        "现代日常场景",
+        "系统逐项抽离",
+        "古人确实幸存的事实",
+        "标题问句显式抛出"
+      ],
+      "abstract_move": "第二人称现代日常场景开场：先让观众依赖熟悉系统，再一键抽走并抛出标题问句",
+      "replacement_needs": [
+        "感官化的现代日常不适场景",
+        "现代系统被逐项抽走的排比",
+        "古人确实幸存的事实前提",
+        "标题问句的显式抛出"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 50000,
+        "hook_type": "modern_contrast_second_person_strip",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 35000,
+        "evidence_refs": [
+          "C0001",
+          "C0003",
+          "C0005",
+          "C0007"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "premise_reframe",
+      "start_ratio": 0.039,
+      "end_ratio": 0.091,
+      "start_sec": 50,
+      "end_sec": 116,
+      "position_label": "3.9%–9.1%(0:50–1:56)",
+      "purpose": "破除'古人=愚蠢版现代人'的预设陷阱，重建观众的敬意基线",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "这套系统治不了的病会怎么样——'那才有意思'的预告",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "myth_busting",
+          "mechanism": "false_presumption_named"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "knowledge_reveal",
+          "mechanism": "oral_tradition_chain"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "toolkit_open",
+          "mechanism": "disclaimer_then_claim"
+        }
+      ],
+      "required_retention_events": [
+        "false_presumption_named",
+        "knowledge_system_reveal"
+      ],
+      "original_moves": [
+        "预设陷阱命名",
+        "古人真实能力定性",
+        "试错积累",
+        "口耳相传的知识系统",
+        "'治不了的更有意思'预告"
+      ],
+      "abstract_move": "破除'古人=愚蠢版现代人'的预设陷阱，重建观众的敬意基线",
+      "replacement_needs": [
+        "对观众预设的显式命名与嘲讽式纠偏",
+        "古人真实能力的正面定性",
+        "知识代际传承机制的说明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "toolkit_reveal",
+      "start_ratio": 0.091,
+      "end_ratio": 0.203,
+      "start_sec": 116,
+      "end_sec": 259,
+      "position_label": "9.1%–20.3%(1:56–4:19)",
+      "purpose": "工具箱一：最常见的生存手段，用考古证据与现代科学验证完成三段式求证",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.1167,
+          "time_ms": 149000,
+          "reason": "六万年前墓葬中的药用植物今天仍在使用，古今首次接通"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "evidence_reveal",
+          "mechanism": "archaeological_pollen_burial"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "kicker_reveal",
+          "mechanism": "still_used_today"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "convergence_reveal",
+          "mechanism": "independent_continent_discovery"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "reframe_verdict",
+          "mechanism": "mass_clinical_trial_metaphor"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "threat_shift",
+          "mechanism": "fast_killer_topic_open"
+        }
+      ],
+      "required_retention_events": [
+        "archaeological_evidence",
+        "modern_validation",
+        "modern_concept_verdict"
+      ],
+      "original_moves": [
+        "'这不是迷信'防御开场",
+        "六万年前墓葬花粉证据",
+        "多洲独立发现收敛",
+        "炮制方法复杂度",
+        "'失控临床试验'定性"
+      ],
+      "abstract_move": "工具箱一：最常见的生存手段，用考古证据与现代科学验证完成三段式求证",
+      "replacement_needs": [
+        "先声明'这不是迷信'的防御性开场",
+        "一条考古证据链",
+        "多地域独立发现的收敛证据",
+        "现代科学验证"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "toolkit_reveal",
+      "start_ratio": 0.203,
+      "end_ratio": 0.303,
+      "start_sec": 259,
+      "end_sec": 387,
+      "position_label": "20.3%–30.3%(4:19–6:27)",
+      "purpose": "工具箱二：高频致命威胁的应对手段，含一个'恶心但真实'的猎奇节拍",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.2514,
+          "time_ms": 321000,
+          "reason": "蛆虫疗法预警式揭示：恶心与好奇的双重钩子"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "面对几天就能致命的伤口，古人到底怎么办",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "remedy_inventory_with_validation",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "remedy_validation",
+          "mechanism": "ancient_remedy_modern_product"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "disgust_fascination",
+          "mechanism": "gross_remedy_warning"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "validation_payoff",
+          "mechanism": "still_used_in_hospitals"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "absurd_remedy_reveal",
+          "mechanism": "spiderweb_chemistry"
+        }
+      ],
+      "required_retention_events": [
+        "threat_open",
+        "remedy_inventory",
+        "gross_payoff_with_validation"
+      ],
+      "original_moves": [
+        "威胁句开箱",
+        "蜂蜜/泥土/蛆虫/蜘蛛网四手段",
+        "每手段配现代机制解释",
+        "恶心手段现代医院背书"
+      ],
+      "abstract_move": "工具箱二：高频致命威胁的应对手段，含一个'恶心但真实'的猎奇节拍",
+      "replacement_needs": [
+        "以'杀人很快'的威胁句开箱",
+        "多个互不相同的应对手段逐一给出",
+        "每个手段的现代科学解释",
+        "恶心手段前的口语预警与现代机构背书"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "escalation_reveal",
+      "start_ratio": 0.303,
+      "end_ratio": 0.396,
+      "start_sec": 387,
+      "end_sec": 505,
+      "position_label": "30.3%–39.6%(6:27–8:25)",
+      "purpose": "震撼升级：揭示远超观众预期的高难度操作，用物证链坐实幸存，再用时代错位比较制造黑色幽默",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "evidence_reveal",
+          "strength": 85,
+          "position_ratio": 0.3101,
+          "time_ms": 396000,
+          "reason": "颅骨愈合痕迹证明九千年前的开颅患者活了下来"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "humor_peak",
+          "strength": 70,
+          "position_ratio": 0.3908,
+          "time_ms": 499000,
+          "reason": "古代户外手术卫生条件或优于近代医院的错位比较与黑色幽默判词"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "古人为什么要往头骨上钻孔",
+          "closes_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "钻孔术中精神性动机的确切比重无从考证：刻意保持开放，叙事用途是以'医学与信仰难以分割'强化历史真实感，避免把古人动机写成现代能完全解释的样子",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "theory_list_partial_answer",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "escalation_hook",
+          "mechanism": "jaw_dropping_tease"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "survival_proof",
+          "mechanism": "healed_bone_evidence"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "system_verdict",
+          "mechanism": "not_lucky_accident"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "era_comparison",
+          "mechanism": "modern_hospital_worse"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "humor_payoff",
+          "mechanism": "universe_dark_humor_verdict"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "pivot_reveal",
+          "mechanism": "inside_not_outside"
+        }
+      ],
+      "required_retention_events": [
+        "jaw_dropping_tease",
+        "physical_proof_of_survival",
+        "era_comparison"
+      ],
+      "original_moves": [
+        "升级预告",
+        "颅骨钻孔术+愈合物证",
+        "截肢存活与术后照护体系",
+        "近代医院更糟的错位比较",
+        "'宇宙黑色幽默'判词"
+      ],
+      "abstract_move": "震撼升级：揭示远超观众预期的高难度操作，用物证链坐实幸存，再用时代错位比较制造黑色幽默",
+      "replacement_needs": [
+        "'接下来更惊人'的升级预告",
+        "考古物证证明患者存活",
+        "术后照护体系的存在性论证",
+        "近代同行更惨的时代错位比较"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85)、PK05(70);打开的悬念 LOOP06(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "internal_system_reveal",
+      "start_ratio": 0.396,
+      "end_ratio": 0.471,
+      "start_sec": 505,
+      "end_sec": 602,
+      "position_label": "39.6%–47.1%(8:25–10:02)",
+      "purpose": "视角从外部手段转向身体内部机制：他们靠的是'体内自带的东西'",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.4495,
+          "time_ms": 574000,
+          "reason": "免疫落差导致的大陆级死亡揭示，内部机制的份量被反证"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "historical_catastrophe",
+          "mechanism": "immunity_gap_toll"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "aphorism_beat",
+          "mechanism": "immune_record_personification"
+        }
+      ],
+      "required_retention_events": [
+        "inside_not_outside_pivot",
+        "historical_catastrophe",
+        "personified_aphorism"
+      ],
+      "original_moves": [
+        "视角转换句",
+        "免疫系统的可学习性",
+        "无疫苗群体免疫的残酷机制",
+        "殖民疾病灾难反证",
+        "'免疫即祖先生存记录'格言"
+      ],
+      "abstract_move": "视角从外部手段转向身体内部机制：他们靠的是'体内自带的东西'",
+      "replacement_needs": [
+        "'不只靠手段，更靠体内'的视角转换句",
+        "内部机制的可学习性解释",
+        "一段免疫落差导致的历史灾难反证",
+        "一句把机制人格化的格言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "hidden_advantage_reveal",
+      "start_ratio": 0.471,
+      "end_ratio": 0.562,
+      "start_sec": 602,
+      "end_sec": 717,
+      "position_label": "47.1%–56.2%(10:02–11:57)",
+      "purpose": "揭示现代研究新发现的隐藏优势层：饮食与环境暴露带来的内在红利",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "听起来完全不科学的仪式治疗，凭什么说有真实科学背书",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "humor_payoff",
+          "mechanism": "modern_product_analogy"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "counterintuitive_reveal",
+          "mechanism": "dirt_benefit"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "comedic_disclaimer",
+          "mechanism": "wash_your_hands_gag"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "science_tease",
+          "mechanism": "sounds_unscientific_but"
+        }
+      ],
+      "required_retention_events": [
+        "modern_research_hook",
+        "counterintuitive_reveal",
+        "comedic_disclaimer"
+      ],
+      "original_moves": [
+        "肠道菌群热点切入",
+        "古人饮食与发酵清单",
+        "现代狩猎采集者对比研究",
+        "现代过敏/自免上升的归因",
+        "'脏反而好'反直觉揭示+免责调侃"
+      ],
+      "abstract_move": "揭示现代研究新发现的隐藏优势层：饮食与环境暴露带来的内在红利",
+      "replacement_needs": [
+        "现代研究热点作为切入",
+        "古人生活方式的具体清单",
+        "现代对比研究的结论",
+        "'脏一点反而好'的反直觉揭示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "mind_ritual_reveal",
+      "start_ratio": 0.562,
+      "end_ratio": 0.658,
+      "start_sec": 717,
+      "end_sec": 840,
+      "position_label": "56.2%–65.8%(11:57–14:00)",
+      "purpose": "把看似最玄的仪式治疗科学化重估：信念与照护信号有真实生理后果",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.6092,
+          "time_ms": 778000,
+          "reason": "'你被照顾着'的信号让仪式疗效落地为可测量的生理机制"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "neuroscience_validation",
+          "opened_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "counterbalance_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "mechanism_reveal",
+          "mechanism": "care_signal"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "nuanced_verdict",
+          "mechanism": "not_nothing_either"
+        }
+      ],
+      "required_retention_events": [
+        "science_tease",
+        "care_signal_reveal",
+        "nuanced_verdict"
+      ],
+      "original_moves": [
+        "'听着不科学但有背书'开场",
+        "安慰剂效应证据",
+        "仪式场景中被照护信号还原",
+        "'不是真药但也不是零'定性",
+        "现代医学正在追赶"
+      ],
+      "abstract_move": "把看似最玄的仪式治疗科学化重估：信念与照护信号有真实生理后果",
+      "replacement_needs": [
+        "'听起来不科学但有科学背书'的悬念开场",
+        "心理机制的现代医学证据",
+        "仪式场景中被照护信号的具身还原",
+        "分寸精确的让步式定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(75);回收了前文的悬念 FS07→LOOP04、FS02→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "counterbalance_confession",
+      "start_ratio": 0.658,
+      "end_ratio": 0.727,
+      "start_sec": 840,
+      "end_sec": 928,
+      "position_label": "65.8%–72.7%(14:00–15:28)",
+      "purpose": "公平性转折：主动摊牌古人做不到的事与惨烈代价，防止叙事滑向盲目美化",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.6852,
+          "time_ms": 875000,
+          "reason": "婴幼儿死亡率数字的沉重摊牌，叙事可信度的校准点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "fairness_turn",
+          "mechanism": "flip_side_demand"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "mortality_shock",
+          "mechanism": "child_death_rate"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "nuance_correction",
+          "mechanism": "life_expectancy_skew"
+        }
+      ],
+      "required_retention_events": [
+        "fairness_turn",
+        "mortality_shock",
+        "statistic_correction"
+      ],
+      "original_moves": [
+        "'公平起见'转折",
+        "无法救治清单",
+        "婴幼儿死亡率数字",
+        "平均寿命误读纠偏",
+        "'老年存在但不保证'判词"
+      ],
+      "abstract_move": "公平性转折：主动摊牌古人做不到的事与惨烈代价，防止叙事滑向盲目美化",
+      "replacement_needs": [
+        "'公平起见'的显式转折句",
+        "无法救治的致命清单",
+        "婴幼儿死亡率等沉重数据",
+        "对平均寿命误读的纠偏"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "modern_mirror",
+      "start_ratio": 0.727,
+      "end_ratio": 0.746,
+      "start_sec": 928,
+      "end_sec": 953,
+      "position_label": "72.7%–74.6%(15:28–15:53)",
+      "purpose": "现代镜像：古人的死因今天仍在别处杀人，唤起对现代系统的感恩",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "awe_reclaim",
+          "mechanism": "stopped_being_amazed"
+        }
+      ],
+      "required_retention_events": [
+        "ongoing_reality_reveal",
+        "awe_reclaim"
+      ],
+      "original_moves": [
+        "古今死因延续清单",
+        "'不是遥远的古代问题'点破",
+        "'我们已不再惊叹'的批评"
+      ],
+      "abstract_move": "现代镜像：古人的死因今天仍在别处杀人，唤起对现代系统的感恩",
+      "replacement_needs": [
+        "古今死因的当代延续清单",
+        "'这不是遥远的古代问题'的点破",
+        "对现代成就麻木的显式批评"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "tradition_survey",
+      "start_ratio": 0.746,
+      "end_ratio": 0.866,
+      "start_sec": 953,
+      "end_sec": 1106,
+      "position_label": "74.6%–86.6%(15:53–18:26)",
+      "purpose": "多文明传统巡礼：用各文明的成熟知识体系把敬意推向顶点",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "tradition_survey_peak",
+          "mechanism": "reverse_learning_anecdote"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "structure_reveal",
+          "mechanism": "not_prayers_prescriptions"
+        }
+      ],
+      "required_retention_events": [
+        "multi_civilization_inventory",
+        "modern_structure_echo"
+      ],
+      "original_moves": [
+        "埃及纸草文献",
+        "中医体系",
+        "印度外科与近代取经轶事",
+        "希腊自然病因说",
+        "苏美尔处方泥板",
+        "'不是祈祷，是处方'点破"
+      ],
+      "abstract_move": "多文明传统巡礼：用各文明的成熟知识体系把敬意推向顶点",
+      "replacement_needs": [
+        "至少四个不同文明的传统各给一段",
+        "每个传统各配一条硬证据或现代回响",
+        "一条与现代实践结构同构的点破"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "synthesis_answer",
+      "start_ratio": 0.866,
+      "end_ratio": 0.931,
+      "start_sec": 1106,
+      "end_sec": 1189,
+      "position_label": "86.6%–93.1%(18:26–19:49)",
+      "purpose": "清单式总回答：兑现标题问句，并把最终答案落在'彼此'这一人文要素上",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "title_callback",
+          "strength": 85,
+          "position_ratio": 0.8661,
+          "time_ms": 1106000,
+          "reason": "标题问句的一句话总回答：他们从未真正没有医学"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "synthesis_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "thesis_answer",
+          "mechanism": "never_truly_without"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "final_element_reveal",
+          "mechanism": "each_other"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "aphorism_beat",
+          "mechanism": "isolation_kills_connection_heals"
+        }
+      ],
+      "required_retention_events": [
+        "title_question_answer",
+        "list_synthesis",
+        "final_element_reveal"
+      ],
+      "original_moves": [
+        "问句总回答",
+        "机制清单排比回顾",
+        "'最重要的另有所在'递进",
+        "社群照护与孤独研究背书",
+        "'孤立杀人，连接治愈'格言"
+      ],
+      "abstract_move": "清单式总回答：兑现标题问句，并把最终答案落在'彼此'这一人文要素上",
+      "replacement_needs": [
+        "对标题问句的显式一句话回答",
+        "全部机制的清单式排比回顾",
+        "'最重要的另有所在'的悬念递进",
+        "社群照护的现代研究背书"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "closure",
+      "start_ratio": 0.931,
+      "end_ratio": 1,
+      "start_sec": 1189,
+      "end_sec": 1277,
+      "position_label": "93.1%–100%(19:49–21:17)",
+      "purpose": "结尾升华：工具面目全非而人从未改变，以'你就是活证据'完成身份认同收束",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9914,
+          "time_ms": 1266000,
+          "reason": "观众被点名为'活证据'，全片情感与身份认同的最高释放点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "identity_payoff",
+          "mechanism": "living_proof"
+        }
+      ],
+      "required_retention_events": [
+        "aphorism_close",
+        "identity_payoff"
+      ],
+      "original_moves": [
+        "现代奇迹谦卑化",
+        "古今建议本质一致",
+        "'工具不同人相同'格言",
+        "祖先成就致敬",
+        "观众被点名为活证据"
+      ],
+      "abstract_move": "结尾升华：工具面目全非而人从未改变，以'你就是活证据'完成身份认同收束",
+      "replacement_needs": [
+        "古今建议本质一致的镜像对照",
+        "'工具不同、人相同'的格言对仗",
+        "把观众本人点名为证据的身份兑现"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

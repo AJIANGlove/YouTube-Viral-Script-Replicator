@@ -1,0 +1,1068 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.513Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.0205,
+      "start_sec": 0,
+      "end_sec": 25.5,
+      "position_label": "0%–2.1%(0:00–0:26)",
+      "purpose": "收租幻觉+急刹+最奇怪故事预告",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念：商场到底怎么真正赚钱、怎么真正死去",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "direct_address",
+          "mechanism": "aspirational_invitation"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "rent_fantasy",
+          "mechanism": "privilege_of_standing"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "not_simple_undercut",
+          "mechanism": "sounds_simple_not_simple"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "strangest_story_tease",
+          "mechanism": "make_money_and_die"
+        }
+      ],
+      "required_retention_events": [
+        "direct_address",
+        "rent_fantasy"
+      ],
+      "original_moves": [
+        "第二人称邀约：买下大楼、装满商店、坐等每月租金支票 + 幻觉细节：每天数百购物者经过，每家店都为'站在那儿的特权'付钱 + 'Sounds simple. It is not simple.' + 预告：购物中心怎么真正赚钱、怎么真正死去，是整个房地产里最奇怪的故事之一"
+      ],
+      "abstract_move": "收租幻觉+急刹+最奇怪故事预告",
+      "replacement_needs": [
+        "第二人称邀约",
+        "收租幻想的具象细节",
+        "短句急刹",
+        "'怎么赚怎么死'的双线预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 25520,
+        "hook_type": "rent_fantasy_then_undercut",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 16160,
+        "evidence_refs": [
+          "C0001",
+          "C0008",
+          "C0009",
+          "C0012"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "evidence_build",
+      "start_ratio": 0.0192,
+      "end_ratio": 0.1081,
+      "start_sec": 23.9,
+      "end_sec": 134.8,
+      "position_label": "1.9%–10.8%(0:24–2:15)",
+      "purpose": "入场成本与等级鸿沟：买的是对社区的赌注",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.0806,
+          "time_ms": 100520,
+          "reason": "Rolling Acres以$275万卖出，前业主付过$3,300万+"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.0999,
+          "time_ms": 124600,
+          "reason": "'你买的不是楼，是对一个社区的赌注'"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "不是所有商场都是同一种商场——你下的是哪种注",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "build_cost_stack",
+          "mechanism": "more_than_small_hospital"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "class_a_gap",
+          "mechanism": "billion_vs_fraction"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "rolling_acres_price_arc",
+          "mechanism": "two_sevenfive_vs_thirtythree_m"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "bet_on_neighborhood",
+          "mechanism": "price_tag_tells_bet"
+        }
+      ],
+      "required_retention_events": [
+        "build_cost_stack",
+        "class_a_gap"
+      ],
+      "original_moves": [
+        "从零新建：土地数千万+混凝土/钢/数英里管线/多层停车/规划许可=数亿美元，在一家店开门之前；剪彩时花的能超过一家小医院 + 买现成的便宜些，但不是所有商场都是同一种商场 + A级：奢侈百货主力店/高坪效/品牌排队入驻/富裕郊区——最好的能卖超10亿美元，因为收入稳定可预期 + 往下两三级：旧楼/弱主力店/低收入社区——有的以建造成本的零头成交 + 案例锚点：俄亥俄阿克伦 Rolling Acres，2000年代初以$275万卖出（前业主付过$3,300万+），曾有140+店的它后来再以不到$200万转手且继续流失租户 + 宣判：'你买的不真是楼，是对一个社区的赌注，而价格标签几乎说明了你下的是哪种注'"
+      ],
+      "abstract_move": "入场成本与等级鸿沟：买的是对社区的赌注",
+      "replacement_needs": [
+        "新建成本栈与类比（超过一家小医院）",
+        "等级鸿沟与两端价格",
+        "真实案例的价格跳水弧线",
+        "'对社区的赌注'重定义"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(80)、PK02(80);打开的悬念 LOOP02→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.1064,
+      "end_ratio": 0.1483,
+      "start_sec": 132.6,
+      "end_sec": 184.9,
+      "position_label": "10.6%–14.8%(2:13–3:05)",
+      "purpose": "持有结构：信托基金与风险摊薄",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "收第一张租金支票之前要闯过哪几层隐性成本",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "class_gap_bet_answer",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "reit_explained",
+          "mechanism": "payout_for_tax_exemption"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "cup_of_coffee_shares",
+          "mechanism": "coffee_price_share"
+        }
+      ],
+      "required_retention_events": [
+        "reit_explained",
+        "cup_of_coffee_shares"
+      ],
+      "original_moves": [
+        "多数业主通过REIT（不动产投资信托）持有：持有收益型物业的公司，法律要求把几乎全部利润分给股东，换取免缴公司所得税 + 这个结构是大规模商场持有为何以当前形态存在的重要原因 + 普通投资者可以'用一杯咖啡的价格'在股市买商场REIT的份额，永远不用亲自处理漏水的屋顶或倒闭的主力店 + 最大的REIT同时持有几十甚至上百个购物中心，把单个商场倒闭的风险摊到巨大的组合里 + 对照：把全部身家押在一个小镇一栋楼上的私人买家，玩的是完全不同的游戏"
+      ],
+      "abstract_move": "持有结构：信托基金与风险摊薄",
+      "replacement_needs": [
+        "持有结构机制（分利润换免税的信托结构）",
+        "一杯咖啡买份额的门槛类比",
+        "组合摊薄",
+        "单一买家对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS05 跨段;回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "evidence_build",
+      "start_ratio": 0.1468,
+      "end_ratio": 0.2188,
+      "start_sec": 183,
+      "end_sec": 272.8,
+      "position_label": "14.7%–21.9%(3:03–4:33)",
+      "purpose": "继承的隐性成本三层：老租约/欠维护/共生条款",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "surprise",
+          "strength": 85,
+          "position_ratio": 0.2018,
+          "time_ms": 251640,
+          "reason": "cotenancy陷阱门：主力店离开那天成本才显形"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "inherited_anchor_leases",
+          "mechanism": "shockingly_low_rent"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "deferred_maintenance",
+          "mechanism": "first_winter_bill"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "cotenancy_clause",
+          "mechanism": "anchor_leaves_tenants_pay_less"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "trapdoor_verdict",
+          "mechanism": "see_it_when_anchor_leaves"
+        }
+      ],
+      "required_retention_events": [
+        "inherited_anchor_leases",
+        "deferred_maintenance"
+      ],
+      "original_moves": [
+        "收第一张租金支票之前的三层：①继承的主力店租约——几十年前签的、租金低到惊人、还要很多年才能重谈，上家的deal好坏照单全收 ②积压维护：百万平方英尺的屋顶/暖通/停车场/扶梯——上家若为账面好看而偷工，你在第一个冬天以一张巨额维修单发现 ③co-tenancy条款：几乎每份租约里都埋着——主力店一旦关门，周围小店可以合法减租甚至直接走人 +'买楼那天你看不到这个成本，你在主力店离开的那天看到它' + 陷阱门宣判：签约那天商场看起来满租，但只要一个大块头掉出去，底下整个财务结构就会在你什么都不做的情况下移动"
+      ],
+      "abstract_move": "继承的隐性成本三层：老租约/欠维护/共生条款",
+      "replacement_needs": [
+        "继承租约的锁定",
+        "积压维护的发现时刻",
+        "共生条款的机制",
+        "'买楼那天看不到'的时间对照宣判"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evidence_build",
+      "start_ratio": 0.2173,
+      "end_ratio": 0.3655,
+      "start_sec": 271,
+      "end_sec": 455.8,
+      "position_label": "21.7%–36.6%(4:31–7:36)",
+      "purpose": "四层收入解剖：倒挂、抽成、转嫁与非店铺",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "surprise",
+          "strength": 85,
+          "position_ratio": 0.2471,
+          "time_ms": 308120,
+          "reason": "招牌最大的店每平方英尺只付小店的1/10"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.2654,
+          "time_ms": 330960,
+          "reason": "业主不是把面积租给主力店，是向它租客流"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "inherited_costs_trapdoor_answer",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "base_rent_layer",
+          "mechanism": "forty_to_sixty_per_sqft"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "sears_five_dollars",
+          "mechanism": "five_vs_fifty"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "renting_foot_traffic",
+          "mechanism": "name_not_space"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "subsidy_reveal",
+          "mechanism": "others_subsidize_discount"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "percentage_rent",
+          "mechanism": "breakpoint_six_seven"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "cam_passthrough",
+          "mechanism": "billed_back_to_tenants"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "non_store_income",
+          "mechanism": "parking_ads_kiosks_popups"
+        }
+      ],
+      "required_retention_events": [
+        "base_rent_gap",
+        "sears_five_dollars"
+      ],
+      "original_moves": [
+        "第一层基础租金：强商场小店$40-60/平方英尺/年；而主力店只付零头——分析师研究Sears租约发现其常付约$5/平方英尺，同期优质商场其他租户$50-60：'再读一遍'——招牌最大面积最大的店，每平方英尺只付隔壁小服装店的1/10 + 为什么接受？主力店付的不是空间是名字：它带来客流，客流路过几十家小店——业主不是把面积租给主力店，而是向主力店'租客流'并用租金折扣支付；其他店全额付租其实都在补贴这个折扣 + 第二层抽成租金：年销售额超过breakpoint后，超出部分抽约6-7%——随商场表现自动放大 ③CAM公共区维护费：按面积占比分摊清洁/照明/停车场/安保，楼的实际运行成本大头直接向租户转嫁 ④非店铺收入：停车费/数字屏广告/中庭花车/快闪市集——单项不显眼，合计是有意义的一块"
+      ],
+      "abstract_move": "四层收入解剖：倒挂、抽成、转嫁与非店铺",
+      "replacement_needs": [
+        "基础租金与主力店倒挂数据",
+        "'向主力店租客流'的方向反转+补贴揭示",
+        "抽成租金的breakpoint机制",
+        "CAM转嫁机制",
+        "非店铺收入清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85)、PK05(85);回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "reveal",
+      "start_ratio": 0.3639,
+      "end_ratio": 0.3935,
+      "start_sec": 453.8,
+      "end_sec": 490.7,
+      "position_label": "36.4%–39.4%(7:34–8:11)",
+      "purpose": "位置>面积的花车悖论",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.3806,
+          "time_ms": 474520,
+          "reason": "面积和租金不是一回事，位置比空间值钱"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "kiosk_math",
+          "mechanism": "hundred_sqft_path"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "position_over_space",
+          "mechanism": "size_rent_not_same"
+        }
+      ],
+      "required_retention_events": [
+        "kiosk_math",
+        "position_over_space_verdict"
+      ],
+      "original_moves": [
+        "反直觉细节：走道中央的花车可能不到100平方英尺，但因为它坐在每个购物者的必经之路上，每平方英尺定价可以远高于墙边大店 + 宣判：'在这门生意里，面积和租金不是一回事。位置比空间值钱。' + 一个在最忙路口卖太阳镜的小推车，按平方英尺算可以是整栋楼里最值钱的地产之一"
+      ],
+      "abstract_move": "位置>面积的花车悖论",
+      "replacement_needs": [
+        "花车坪效案例",
+        "'面积≠租金'的对偶宣判",
+        "极端单价样本（太阳镜推车）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "reveal",
+      "start_ratio": 0.3922,
+      "end_ratio": 0.5,
+      "start_sec": 489,
+      "end_sec": 623.4,
+      "position_label": "39.2%–50%(8:09–10:23)",
+      "purpose": "账本另一侧：固定成本、空置螺旋与入住率陷阱",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.458,
+          "time_ms": 571080,
+          "reason": "空置螺旋：留下的店为空的楼付更多"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.4936,
+          "time_ms": 615400,
+          "reason": "'入住率不是收入'"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "四路印钞机听起来很美——账本的另一侧是什么",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "operating_cost_stack",
+          "mechanism": "hundreds_thousands_monthly"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "cam_vacancy_spiral",
+          "mechanism": "fixed_pool_fewer_tenants"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "wrong_mix_trap",
+          "mechanism": "ninety_percent_weak_cashflow"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "occupancy_not_income",
+          "mechanism": "distinction_trouble"
+        }
+      ],
+      "required_retention_events": [
+        "operating_cost_stack",
+        "cam_vacancy_spiral"
+      ],
+      "original_moves": [
+        "另一侧账本：百万平方英尺的恒温/照明/运转是最大经常性开支之一；安保/清洁/绿化/除雪/无尽小修——月运营账单可达数十万美元，在还贷款之前 + 房产税是最大单项之一，保险全行业飙升 + CAM空置螺旋：共享成本不因空置而减少——走廊照扫、空铺顶灯照亮、安保巡全楼；空置率上升",
+        "同一池固定成本摊给更少租户",
+        "留下的店CAM账单变贵",
+        "把边缘租户也推走 + 最大陷阱：'即使基本满租的商场，组合错了也能亏钱'——90%入住率看着健康，但若一半是几乎不付租的主力店、且越来越多内铺是打折短约，现金流远比入住率数字虚弱 + 宣判：'入住率不是收入。这个区分让很多业主栽了大跟头'"
+      ],
+      "abstract_move": "账本另一侧：固定成本、空置螺旋与入住率陷阱",
+      "replacement_needs": [
+        "巨型运营成本栈",
+        "共享成本不随空置减少的机制",
+        "空置→分摊→再流失的螺旋",
+        "错误组合陷阱与'入住率≠收入'宣判"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80)、PK08(85);打开的悬念 LOOP04→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "reveal",
+      "start_ratio": 0.4982,
+      "end_ratio": 0.5554,
+      "start_sec": 621.2,
+      "end_sec": 692.5,
+      "position_label": "49.8%–55.5%(10:21–11:33)",
+      "purpose": "建筑即机器：为曝光而设计",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.5449,
+          "time_ms": 679440,
+          "reason": "强制移动=曝光，曝光才是小租户真正在买的东西"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "operating_costs_occupancy_trap_answer",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "taubman_intro",
+          "mechanism": "designed_around_movement"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "movement_machine",
+          "mechanism": "three_blocks_escalator_ends"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "exposure_is_product",
+          "mechanism": "none_decoration"
+        }
+      ],
+      "required_retention_events": [
+        "taubman_design",
+        "movement_machine"
+      ],
+      "original_moves": [
+        "现代商场之父Alfred Taubman：不止盖楼，而是研究人如何在楼里移动再围绕移动设计 + 主力店相隔约三个街区——让你从一家大店走到另一家时路过几十家小店 + 扶梯电梯放在走廊尽头而非中间——逼你走完全程 + 天窗混入人工照明——让你难以察觉天黑、失去时间感 + '没有一样是装饰：每个选择都是为了最大化购物者到达目标前眼睛扫过的店面数量' + 一句话商业逻辑：'强制移动=增加曝光，而曝光正是小租户签租约时真正在买的东西'"
+      ],
+      "abstract_move": "建筑即机器：为曝光而设计",
+      "replacement_needs": [
+        "设计者与研究方法",
+        "三个设计手段（间距/扶梯位置/光线）",
+        "'没有装饰'宣判",
+        "移动→曝光→租金的一句话逻辑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(80);回收了前文的悬念 FS07→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "reveal",
+      "start_ratio": 0.5539,
+      "end_ratio": 0.663,
+      "start_sec": 690.6,
+      "end_sec": 826.6,
+      "position_label": "55.4%–66.3%(11:31–13:47)",
+      "purpose": "结构性风险：被建成依赖主力店的行业",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.6519,
+          "time_ms": 812760,
+          "reason": "商场死于一个部件掉出，而其余结构被建成依赖它在场"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "贯穿整个行业的结构性风险是什么",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "一家真实商场从开业到拆除的完整过程是什么样",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "anchor_backbone_history",
+          "mechanism": "no_anchor_no_loan"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "sears_bankruptcy_numbers",
+          "mechanism": "four_thousand_to_chapter11"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "cotenancy_trigger_wave",
+          "mechanism": "dozens_stores_at_once"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "refill_cost",
+          "mechanism": "hundred_million_three_years"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "one_piece_verdict",
+          "mechanism": "built_to_depend"
+        }
+      ],
+      "required_retention_events": [
+        "anchor_backbone_history",
+        "sears_bankruptcy_numbers"
+      ],
+      "original_moves": [
+        "20世纪大部分时间里百货是商场的脊梁：没有一两家主力店签约，银行根本不给项目贷款 + 2000年代起、2010年后加速，百货开始快速关店 + Sears：巅峰约4,000店的全国最大零售商，2018年10月破产；某大型商场业主旗下59个物业有Sears，另一家有40个；全网约80%的Sears门店开在区域商场里 + cotenancy回火：一次关店不只少一张租金支票，而是触发全场数十店的减租潮——用的是多年前'以为主力店永远在'时写下的合同语言 + 回填空主力店又慢又贵：为特定租户建的10万+平方英尺巨盒不易转换——某业主花$1亿用3年把一栋旧百货拆成四个小店；而Sears同时关几百家 + 结构真相：'商场不是因为处处生意差而死，而是因为一个部件掉出来，而其余结构一直被悄悄建造成依赖它留在原地'"
+      ],
+      "abstract_move": "结构性风险：被建成依赖主力店的行业",
+      "replacement_needs": [
+        "主力店=银行贷款前提的历史",
+        "最大零售商破产的覆盖面数据",
+        "共生条款回火的连锁减租",
+        "回填成本案例",
+        "'一个部件掉出'的失败重定义"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(90);打开的悬念 LOOP05→FS10、LOOP06→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "reveal",
+      "start_ratio": 0.6618,
+      "end_ratio": 0.7776,
+      "start_sec": 825.1,
+      "end_sec": 969.5,
+      "position_label": "66.2%–77.8%(13:45–16:10)",
+      "purpose": "真实全生命周期案例：从巅峰到废墟",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.7611,
+          "time_ms": 949000,
+          "reason": "98%满租到废墟不到二十年"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "anchor_dependence_verdict",
+          "opened_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "rolling_acres_lifecycle_answer",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "case_opening",
+          "mechanism": "rolling_acres_1975"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "case_peak",
+          "mechanism": "ninety_eight_percent"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "case_decline",
+          "mechanism": "competitor_target_dillards"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "case_price_collapse",
+          "mechanism": "one_six_million"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "case_empty",
+          "mechanism": "closed_2013"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "aftermath_details",
+          "mechanism": "scrappers_skylights_taxes"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "amazon_epilogue",
+          "mechanism": "distribution_center"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "sequence_not_event_verdict",
+          "mechanism": "less_than_two_decades"
+        }
+      ],
+      "required_retention_events": [
+        "full_lifecycle_case",
+        "anchors_leaving_sequence"
+      ],
+      "original_moves": [
+        "Rolling Acres全生命周期：1975年8月阿克伦开业，Sears为首锚+约20店；几年内长成140+店、五个主力店、影院、美食广场；90年代中期是区域最忙目的地，Target入驻时约98%满租 + 然后主力店慢慢离开：90年代末附近新装修的竞争对手开业分流；Target迁走；Dillard's关闭；另一家两年内两次改名后倒闭 + 2006年入住率大跌，以$160万卖出（曾估值超$3,000万） 2008年内部关闭；2011年Sears关；2013年底最后租户JCPenney outlet离开",
+        "全空 + 之后是财经频道而非鬼故事频道该讲的部分：拾荒者拆走铜线（一人触电身亡）、天窗被砸雨雪灌入多年、市政府因业主欠税超$100万而收回产权、2016-2019分段拆除 + 结局反转：亚马逊在同一块地上建了配送中心 + 教训：'它巅峰时98%满租；从那个数字到一堆废墟和一个仓库，用了不到二十年——界线不是一次戏剧事件，而是一连串小事件，每件都让下一件更可能'"
+      ],
+      "abstract_move": "真实全生命周期案例：从巅峰到废墟",
+      "replacement_needs": [
+        "开业/成长/巅峰数据",
+        "衰退序列（竞争/搬迁/关闭）",
+        "价格跳水与空置时间线",
+        "空楼之后的具身细节与反转结局（新业主）",
+        "'一连串小事件'的教训宣判"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(90);回收了前文的悬念 FS09→LOOP05、FS09→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "reveal",
+      "start_ratio": 0.776,
+      "end_ratio": 0.8379,
+      "start_sec": 967.6,
+      "end_sec": 1044.7,
+      "position_label": "77.6%–83.8%(16:08–17:25)",
+      "purpose": "根本原因：存在理由失效",
+      "peaks": [
+        {
+          "peak_id": "PK12",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.8091,
+          "time_ms": 1008760,
+          "reason": "商场存在的原始理由——便利——不再是商场独有"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "Sears破产与商场之死并非发生在真空里——同期到底发生了什么",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "convenience_monopoly_broken_answer",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE44",
+          "event_type": "convenience_monopoly",
+          "mechanism": "five_brands_one_trip"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "online_shopping_break",
+          "mechanism": "couch_hundreds_options"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "reason_stopped_unique",
+          "mechanism": "convenience_not_unique"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "middle_squeeze",
+          "mechanism": "not_upscale_not_cheap"
+        }
+      ],
+      "required_retention_events": [
+        "convenience_monopoly",
+        "online_shopping_break"
+      ],
+      "original_moves": [
+        "这一切不是真空发生：同期网购拿走了越来越多零售份额 + 20世纪大部分时间里商场的核心产品不是里面的店，是便利：想一个下午比较五个牌子的鞋，商场是城里唯一能一趟搞定的地方——这份便利是人们开车穿城、付停车费的理由 + 网购彻底打破了这个垄断：沙发上比较上百个选项、一两天送达、没有停车没有排队 +'商场存在的原始理由——便利——就这么不再是商场独有' + 死得最快的是卡在中间的：不够高端卖不了体验，不够便宜打不了折扣 + 本已财务紧张或人口流失区的最弱商场最先受创最重：强者更强、弱者更弱"
+      ],
+      "abstract_move": "根本原因：存在理由失效",
+      "replacement_needs": [
+        "原始产品的命名（便利）",
+        "垄断被打破的对照",
+        "'理由不再独有'宣判",
+        "中间挤压与强弱分化"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK12(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK12",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "evidence_build",
+      "start_ratio": 0.8346,
+      "end_ratio": 0.8797,
+      "start_sec": 1040.6,
+      "end_sec": 1096.8,
+      "position_label": "83.5%–88%(17:21–18:17)",
+      "purpose": "幸存者策略：卖'出门的理由'",
+      "peaks": [
+        {
+          "peak_id": "PK13",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.8696,
+          "time_ms": 1084280,
+          "reason": "活下来的商场开始卖'让人出门的理由'"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE48",
+          "event_type": "screen_cannot_replace",
+          "mechanism": "restaurants_gyms_clinics"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "mixed_use_conversion",
+          "mechanism": "apartments_hotels"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "reasons_to_leave_house",
+          "mechanism": "sell_reasons_not_products"
+        }
+      ],
+      "required_retention_events": [
+        "screen_cannot_replace_list",
+        "mixed_use_conversion"
+      ],
+      "original_moves": [
+        "活下来的业主改变了卖的东西：用屏幕真正无法替代的东西填满旧主力店盒子和空铺——需要实体桌子的餐厅、健身房、医疗诊所与急诊中心（按定义需要实体位置）、共享办公、影院/电玩/室内游乐等娱乐 + 有的把整翼改成公寓或酒店：纯零售空间变多收入流的综合体 + 底层逻辑简单（执行又贵又慢）：'商场过去卖产品；活下来的开始卖让人 physically 出门的理由——网购送不到家门口的理由'"
+      ],
+      "abstract_move": "幸存者策略：卖'出门的理由'",
+      "replacement_needs": [
+        "屏幕无法替代的业态清单",
+        "混合用途改造",
+        "'过去卖产品、现在卖理由'的重定位宣判"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK13(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK13",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "evidence_build",
+      "start_ratio": 0.876,
+      "end_ratio": 0.9748,
+      "start_sec": 1092.3,
+      "end_sec": 1215.5,
+      "position_label": "87.6%–97.5%(18:12–20:15)",
+      "purpose": "双版本年景：同一栋楼的两种命运",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE51",
+          "event_type": "optimistic_scenario",
+          "mechanism": "steady_predictable_income"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "bad_year_chain",
+          "mechanism": "anchor_closes_chain"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "bills_tied_to_size",
+          "mechanism": "building_not_occupancy"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "building_didnt_change",
+          "mechanism": "economics_did"
+        }
+      ],
+      "required_retention_events": [
+        "optimistic_scenario",
+        "bad_year_chain"
+      ],
+      "original_moves": [
+        "这门生意work吗？答案完全取决于哪家商场，好坏差距巨大 + 乐观版：位置好+主力店强引流+餐饮服务业态健康+低空置",
+        "基础租金+抽成+CAM=每月稳定可预期收入，价值随社区增长——这个版本把最大的商场REIT做成股市上最大的地产公司，把Taubman这样的人变成亿万富翁 + 现实坏年：一家主力店关闭",
+        "cotenancy触发",
+        "一批小店减租或离开；公用/保险/房产税照涨（这些账单挂在楼的尺寸上而非入住率）；空主力盒空置一年两年零收入还要安保保险维护；CAM池摊给更少人",
+        "留下的忠诚店也悄悄多付钱 + 同一栋楼两个年份之差=健康增值资产 vs 走向Rolling Acres结局 + '楼没变，楼底下的经济学变了'"
+      ],
+      "abstract_move": "双版本年景：同一栋楼的两种命运",
+      "replacement_needs": [
+        "乐观版的收入组合与价值增长",
+        "坏年链条（关店→减租→空盒→分摊）",
+        "账单挂在楼尺寸上的刚性",
+        "'楼没变，经济学变了'宣判"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.9732,
+      "end_ratio": 1,
+      "start_sec": 1213.4,
+      "end_sec": 1246.8,
+      "position_label": "97.3%–100%(20:13–20:47)",
+      "purpose": "系统定性与终极重定义",
+      "peaks": [
+        {
+          "peak_id": "PK14",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9958,
+          "time_ms": 1241600,
+          "reason": "'楼真的不是生意。走过楼的人才是。'"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_revenue_plus_interconnected_system_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE55",
+          "event_type": "interconnected_system",
+          "mechanism": "fortunes_tied"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "floor_pulled_out",
+          "mechanism": "anchor_sells_traffic"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "people_are_business",
+          "mechanism": "not_building"
+        }
+      ],
+      "required_retention_events": [
+        "interconnected_system",
+        "floor_pulled_out"
+      ],
+      "original_moves": [
+        "从外面看，商场是一栋装满店的楼；从里面看，它是一个紧密互联的财务系统：每个租户的命运都悄悄拴在其他租户身上，无论他们是否意识到 + 主力店卖的不只是家电服装——它卖的是周围每家小店赖以生存的客流；它离开时留下的不只是平面图上的洞，而是抽走了站在旁边的所有人的财务地板 + 终句：'楼真的不是生意。走过楼的人才是。'"
+      ],
+      "abstract_move": "系统定性与终极重定义",
+      "replacement_needs": [
+        "租户命运相互拴死的系统陈述",
+        "主力店离开=抽走财务地板",
+        "'楼不是生意，人流才是'终句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK14(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK14",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

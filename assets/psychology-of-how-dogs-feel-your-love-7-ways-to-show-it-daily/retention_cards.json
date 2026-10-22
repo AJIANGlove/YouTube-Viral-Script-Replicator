@@ -1,0 +1,747 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.529Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.0421,
+      "start_sec": 0,
+      "end_sec": 20.8,
+      "position_label": "0%–4.2%(0:00–0:21)",
+      "purpose": "大众假设立靶 + 研究反驳 + 数字清单承诺 + '几乎做对'微悬念",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念：哪7个每天发生的小瞬间比大投入更能被狗的大脑记录",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "'大多数人都几乎做对了。Almost.'——差的那一点到底是什么",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "assumption_setup",
+          "mechanism": "big_things_reframe"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "counter_claim",
+          "mechanism": "research_disagrees_listicle"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "micro_tension",
+          "mechanism": "single_word_almost"
+        }
+      ],
+      "required_retention_events": [
+        "big_vs_small_reframe",
+        "listicle_promise"
+      ],
+      "original_moves": [
+        "大众假设立靶（昂贵食物/长时间遛弯/玩具）+ 'The research disagrees' + 每天发生的7个小瞬间在大脑里分量更重 + '大多数人都几乎做对了。Almost.'微悬念"
+      ],
+      "abstract_move": "大众假设立靶 + 研究反驳 + 数字清单承诺 + '几乎做对'微悬念",
+      "replacement_needs": [
+        "一个大众持有的'正确答案'假设",
+        "'研究不同意'的直接反转",
+        "数字清单承诺",
+        "单词成句的微悬念"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS09、LOOP02→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "assumption_reframe_plus_listicle_promise",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 6240,
+        "evidence_refs": [
+          "C0001",
+          "C0002",
+          "C0003",
+          "C0004"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "evidence_build",
+      "start_ratio": 0.0421,
+      "end_ratio": 0.1487,
+      "start_sec": 20.8,
+      "end_sec": 73.4,
+      "position_label": "4.2%–14.9%(0:21–1:13)",
+      "purpose": "条目1（对视类）：神经化学回路 + 对照组失败证明独特性 + 指令",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.1053,
+          "time_ms": 52000,
+          "reason": "同协议测狼回路不激活：该生化交换为人犬独有"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "simultaneity_tease",
+          "mechanism": "happens_in_both"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "named_study",
+          "mechanism": "azabu_2015_science"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "sync_result",
+          "mechanism": "oxytocin_both_species"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "control_group_failure",
+          "mechanism": "wolves_loop_inactive"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "actionable_instruction",
+          "mechanism": "hold_softly"
+        }
+      ],
+      "required_retention_events": [
+        "named_study",
+        "sync_reveal"
+      ],
+      "original_moves": [
+        "2015年日本麻布大学发表于Science：30对人犬对视时双方催产素同时升高 + 同协议测狼：回路不激活 + 该回路为人犬共进化独有 + 指令：温柔地多保持几秒"
+      ],
+      "abstract_move": "条目1（对视类）：神经化学回路 + 对照组失败证明独特性 + 指令",
+      "replacement_needs": [
+        "顶级期刊具名研究（年份/机构/样本）",
+        "双方同步升高的量化结果",
+        "对照组不成立",
+        "一句祈使指令"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.1487,
+      "end_ratio": 0.2848,
+      "start_sec": 73.4,
+      "end_sec": 140.6,
+      "position_label": "14.9%–28.5%(1:13–2:21)",
+      "purpose": "条目2（言语类）：双通道机制（语气+词义）+ 神经证据",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "surprise",
+          "strength": 75,
+          "position_ratio": 0.2229,
+          "time_ms": 110080,
+          "reason": "'语气重要，但词同样重要'——细节反转整个理解"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "'大多数人忽略的细节'是什么——语气够了吗",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "tone_plus_words_mechanism",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "self_recognition",
+          "mechanism": "voice_never_in_public"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "detail_tease",
+          "mechanism": "detail_most_miss"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "experiment_result",
+          "mechanism": "only_relevant_words_condition"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "verdict",
+          "mechanism": "words_matter_just_as_much"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "neural_evidence",
+          "mechanism": "left_hemisphere_bias"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "combination_requirement",
+          "mechanism": "tone_and_word_together"
+        }
+      ],
+      "required_retention_events": [
+        "detail_tease",
+        "three_condition_experiment"
+      ],
+      "original_moves": [
+        "高音调'狗语'有真实神经作用 + 约克大学2018年37只狗三条件实验：只有'温暖语气+有意义的词'才吸引靠近 + 2016年fMRI：13只狗左脑半球处理词汇（与人类相同的偏侧化）+ 奖励区只在语气与词义同时积极时激活"
+      ],
+      "abstract_move": "条目2（言语类）：双通道机制（语气+词义）+ 神经证据",
+      "replacement_needs": [
+        "自我识别式场景（你不敢公开用的声音）",
+        "多条件实验",
+        "脑成像证据",
+        "组合条件的宣判"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "belief_challenge",
+      "start_ratio": 0.2863,
+      "end_ratio": 0.4187,
+      "start_sec": 141.4,
+      "end_sec": 206.7,
+      "position_label": "28.6%–41.9%(2:21–3:27)",
+      "purpose": "条目3（问候类）：流行建议因果倒置 + 诚实证据边界 + 指令",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.3496,
+          "time_ms": 172640,
+          "reason": "流行建议因果倒置：问候越平静分离行为越差"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "'进门无视狗'的建议到底对不对",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "cause_effect_reversal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "popular_advice_recall",
+          "mechanism": "ignore_your_dog"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "myth_reversal",
+          "mechanism": "survey_2000_backwards"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "mechanism_plus_caveat",
+          "mechanism": "oxytocin_reunion_lab_dogs"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "actionable_instruction",
+          "mechanism": "kneel_name_touch"
+        }
+      ],
+      "required_retention_events": [
+        "popular_advice_recall",
+        "myth_reversal"
+      ],
+      "original_moves": [
+        "流行建议复述（保持中性训练平静的狗）+ 2021年近2000名主人调查：平静问候反而对应更差的分离行为 + '建议把因果搞反了' + 2014年重逢催产素/皮质醇研究（诚实标注：实验犬）+ 真实世界调查同向 + 指令：蹲下、叫名字、触摸，荷尔蒙窗口很短"
+      ],
+      "abstract_move": "条目3（问候类）：流行建议因果倒置 + 诚实证据边界 + 指令",
+      "replacement_needs": [
+        "流行建议的公平复述",
+        "大样本调查的对照数据",
+        "'因果正好相反'宣判",
+        "证据边界标注",
+        "带时间窗的指令"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evidence_build",
+      "start_ratio": 0.4187,
+      "end_ratio": 0.547,
+      "start_sec": 206.7,
+      "end_sec": 270.1,
+      "position_label": "41.9%–54.7%(3:27–4:30)",
+      "purpose": "条目4（自主类）：视角重构 + 乐观度对照证据 + 权衡诚实的指令",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "surprise",
+          "strength": 75,
+          "position_ratio": 0.4911,
+          "time_ms": 242480,
+          "reason": "同样时长的两种遛弯，乐观度结果完全不同"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "拔河让狗赢真的会惯坏它吗",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "perspective_reframe",
+          "mechanism": "walk_is_escort"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "method_explained",
+          "mechanism": "cognitive_bias_test"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "optimism_result",
+          "mechanism": "nosework_more_optimistic"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "instruction_plus_tradeoff",
+          "mechanism": "follow_nose_less_ground"
+        }
+      ],
+      "required_retention_events": [
+        "perspective_reframe",
+        "method_explained"
+      ],
+      "original_moves": [
+        "遛弯围绕人类后勤=对狗而言更像押送 + 2019年20只狗两组对照（跟随训练vs嗅觉搜索）+ 认知偏向测试：嗅探组显著更乐观，跟随组无变化 + 嗅觉自由激活多巴胺奖励系统 + 指令：今天至少一次跟它的鼻子走，少走点路也值得"
+      ],
+      "abstract_move": "条目4（自主类）：视角重构 + 乐观度对照证据 + 权衡诚实的指令",
+      "replacement_needs": [
+        "日常行为的对方视角重构",
+        "两组对照实验+测量方法通俗化",
+        "乐观度差异结果",
+        "带诚实代价的指令"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75);打开的悬念 LOOP05→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "belief_challenge",
+      "start_ratio": 0.547,
+      "end_ratio": 0.6679,
+      "start_sec": 270.1,
+      "end_sec": 329.8,
+      "position_label": "54.7%–66.8%(4:30–5:30)",
+      "purpose": "条目5（游戏类）：支配神话直接检验 + 真正变量的揭示",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.587,
+          "time_ms": 289840,
+          "reason": "支配神话被直接检验推翻：输赢不影响支配维度"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "dominance_myth_dismantled",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "belief_recall",
+          "mechanism": "always_win_tug"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "myth_dismantled",
+          "mechanism": "dominance_unaffected"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "what_actually_changed",
+          "mechanism": "attentiveness_up"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "handler_effect",
+          "mechanism": "praise_lowers_cortisol"
+        }
+      ],
+      "required_retention_events": [
+        "belief_recall",
+        "direct_test"
+      ],
+      "original_moves": [
+        "广泛信念复述（狗赢了会难管）+ 2002年14只金毛20胜20负直接检验：支配维度完全不受输赢影响 + 服从性关注在游戏后普遍上升，最爱玩的狗赢了之后更关注主人 + 附加发现：游戏中温暖表扬",
+        "皮质醇下降，惩戒行为",
+        "皮质醇上升 + '你怎么参与比谁拿到绳子重要得多'"
+      ],
+      "abstract_move": "条目5（游戏类）：支配神话直接检验 + 真正变量的揭示",
+      "replacement_needs": [
+        "广泛信念复述",
+        "直接检验设计（胜负分组）",
+        "支配维度无影响的宣判",
+        "'你怎么参与'的附加发现"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80);回收了前文的悬念 FS05→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "evidence_build",
+      "start_ratio": 0.6679,
+      "end_ratio": 0.7784,
+      "start_sec": 329.8,
+      "end_sec": 384.3,
+      "position_label": "66.8%–77.8%(5:30–6:24)",
+      "purpose": "条目6（训练类）：赞美≥食物的神经证据 + 厌恶方法外溢警告 + 指令",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.7158,
+          "time_ms": 353440,
+          "reason": "偏爱赞美的狗在食物与主人之间跑向主人"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "赞美在狗脑里到底有多大分量",
+          "closes_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "'什么都不做'的最后一条为什么令人意外",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "praise_over_food_neuroscience",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "brain_tease",
+          "mechanism": "praise_changes_training"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "neural_result",
+          "mechanism": "praise_ge_food_caudate"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "behavioral_confirmation",
+          "mechanism": "chose_owner_over_food"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "warning",
+          "mechanism": "aversive_stress_leaks"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "instruction_verdict",
+          "mechanism": "it_accumulates"
+        }
+      ],
+      "required_retention_events": [
+        "brain_tease",
+        "praise_over_food"
+      ],
+      "original_moves": [
+        "2016年fMRI：15只狗尾状核对赞美与食物反应相当，部分狗对赞美更强 + 这些狗在行为选择中跑向主人而非食物 + 厌恶式训练：皮质醇更高、悲观行为外溢到训练之外 + 奖励式训练更平静自信 + 指令：饭前3分钟、简单动作、清晰反馈，赞美被当作一级奖励，会累积"
+      ],
+      "abstract_move": "条目6（训练类）：赞美≥食物的神经证据 + 厌恶方法外溢警告 + 指令",
+      "replacement_needs": [
+        "脑成像比较（赞美vs食物）",
+        "行为选择验证",
+        "厌恶式方法的外溢警告",
+        "最小剂量指令+会累积的定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85);打开的悬念 LOOP07→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "reveal",
+      "start_ratio": 0.78,
+      "end_ratio": 0.924,
+      "start_sec": 385.1,
+      "end_sec": 456.2,
+      "position_label": "78%–92.4%(6:25–7:36)",
+      "purpose": "条目7（陪伴类）：惊喜条目 + 主人精神状态揭示 + 在场指令",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.8344,
+          "time_ms": 412000,
+          "reason": "安静陪伴与抚摸的皮质醇下降效果相当：什么都不做也是爱"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.8676,
+          "time_ms": 428400,
+          "reason": "狗的压力追踪主人的反刍思维而非行为：你的在场质量才是变量"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "2025年的研究如何'彻底改变框架'",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "passive_presence_evidence",
+          "opened_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "rumination_framing_shift",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "surprise_tease",
+          "mechanism": "last_one_surprise"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "counterintuitive_result",
+          "mechanism": "passive_presence_equals_touch"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "framing_shift_tease",
+          "mechanism": "study_2025_changes_framing"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "variable_reveal",
+          "mechanism": "work_rumination"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "presence_instruction",
+          "mechanism": "be_in_the_room"
+        }
+      ],
+      "required_retention_events": [
+        "surprise_tease",
+        "counterintuitive_result"
+      ],
+      "original_moves": [
+        "'最后一条可能会让你意外' + 新收容犬三条件研究：安静陪伴≈抚摸≈玩耍的皮质醇下降效果 + 2025年85对人犬追踪：最可靠抬升狗皮质醇的不是工作压力而是反刍思维 + 狗的压力追踪主人的心理状态而非行为 + 指令：每天一次，关掉标签页、放下手机、真正在场"
+      ],
+      "abstract_move": "条目7（陪伴类）：惊喜条目 + 主人精神状态揭示 + 在场指令",
+      "replacement_needs": [
+        "惊喜预告",
+        "'无为≈接触'的对照证据",
+        "主人内在状态→对方压力的方向性发现",
+        "数字断舍离式在场指令"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80)、PK08(85);回收了前文的悬念 FS07→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "closure",
+      "start_ratio": 0.924,
+      "end_ratio": 1,
+      "start_sec": 456.2,
+      "end_sec": 493.8,
+      "position_label": "92.4%–100%(7:36–8:14)",
+      "purpose": "排比重放全部条目 + 统一科学定性 + 互动CTA",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9729,
+          "time_ms": 480400,
+          "reason": "'在平凡到不易察觉的瞬间被建立或被悄悄侵蚀'：全片定性"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "enumerated_ways_plus_recap_synthesis",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "per_way_missing_details_revealed",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "recap_anaphora",
+          "mechanism": "no_expensive_equipment"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "synthesis",
+          "mechanism": "bond_in_neurochemicals"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "cta",
+          "mechanism": "which_one_try_first"
+        }
+      ],
+      "required_retention_events": [
+        "recap_anaphora",
+        "neurochemical_definition"
+      ],
+      "original_moves": [
+        "无昂贵设备/无一小时方案/无大改 + 排比重放（多几秒的对视、有温度的问候、跟它走的散步）+ 联结写在神经化学与皮质醇模式里，奖励中心把你的声音当食物 + '在平凡到不易察觉的瞬间被建立或被悄悄侵蚀' + CTA：订阅+评论（你先试哪一条）"
+      ],
+      "abstract_move": "排比重放全部条目 + 统一科学定性 + 互动CTA",
+      "replacement_needs": [
+        "'无昂贵设备/无大改'的门槛解除",
+        "排比重放",
+        "'可测量、在平凡瞬间建立或侵蚀'的定性",
+        "回扣清单的评论问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);回收了前文的悬念 FS01→LOOP01、FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

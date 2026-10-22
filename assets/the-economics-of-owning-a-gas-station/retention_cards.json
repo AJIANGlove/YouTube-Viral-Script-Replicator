@@ -1,0 +1,1158 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.521Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.028,
+      "start_sec": 0,
+      "end_sec": 46.2,
+      "position_label": "0%–2.8%(0:00–0:46)",
+      "purpose": "日常场景+心算暴富+停止思考点+主配角反转预告",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.0237,
+          "time_ms": 39160,
+          "reason": "燃料对业主几乎只是附属品：全片反转预告"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念：你想象中的加油站不是真实的那家——燃料对业主几乎只是附属品，那真正的生意是什么",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "direct_address",
+          "mechanism": "aspirational_invitation"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "daily_scene_entry",
+          "mechanism": "sign_pumps_flow"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "mental_math_seduction",
+          "mechanism": "printing_money_thought"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "stop_thinking_pivot",
+          "mechanism": "where_most_stop_thinking"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "afterthought_tease",
+          "mechanism": "fuel_is_afterthought"
+        }
+      ],
+      "required_retention_events": [
+        "daily_scene_entry",
+        "mental_math_seduction"
+      ],
+      "original_moves": [
+        "第二人称邀约+日常场景（每天路过/大招牌/排队车流/每小时数百加仑）+ 观众心算：$3×10台泵=印钞机 + 'Here is where most people stop thinking' + 你想象的加油站并不存在，真实生意更陌生、更复杂、更脆弱 + 最大反转预告：你买的燃料对业主来说几乎是附属品"
+      ],
+      "abstract_move": "日常场景+心算暴富+停止思考点+主配角反转预告",
+      "replacement_needs": [
+        "第二人称邀约与日常场景",
+        "观众内心的心算独白",
+        "'大多数人到这里就不想了'的标记",
+        "招牌产品是附属品的反转预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80);打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 46200,
+        "hook_type": "mental_math_seduction_then_reframe",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 39160,
+        "evidence_refs": [
+          "C0001",
+          "C0009",
+          "C0010",
+          "C0022"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "evidence_build",
+      "start_ratio": 0.0265,
+      "end_ratio": 0.1077,
+      "start_sec": 43.8,
+      "end_sec": 177.6,
+      "position_label": "2.7%–10.8%(0:44–2:58)",
+      "purpose": "所有权形态分类学：同一行业，不同生意",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "加油站业主到底赚多少——取决于你站在五种形态的哪一种里",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "taxonomy_five_types",
+          "mechanism": "five_arrangements"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "arrangement_determines_outcome",
+          "mechanism": "same_industry_different_business"
+        }
+      ],
+      "required_retention_events": [
+        "taxonomy_five_types",
+        "control_risk_tradeoffs"
+      ],
+      "original_moves": [
+        "五种所有权形态：①全独立业主（土地/建筑/泵/地下罐/商店全有，最大控制最大风险）②加盟运营（首付$30-50k+月度抽成，换品牌/营销/保障供油，但有严格规矩）③公司直营（大油企或便利连锁持有，员工拿工资）④dealer 运营（油企持有土地建筑、dealer 租赁经营且必须从房东买油）⑤租赁运营（三重净租赁：租客付租金+地税+保险+维护，地产投资者躺收）+ 你站在哪一种里，决定业主赚多少——同一行业，完全不同的生意"
+      ],
+      "abstract_move": "所有权形态分类学：同一行业，不同生意",
+      "replacement_needs": [
+        "穷尽互斥的形态清单（4-6种）",
+        "每种形态的控制/风险/锁定条款",
+        "'选哪种决定结局'的框架句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.1065,
+      "end_ratio": 0.169,
+      "start_sec": 175.7,
+      "end_sec": 278.8,
+      "position_label": "10.7%–16.9%(2:56–4:39)",
+      "purpose": "资产解剖：你买的到底是什么",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "asset_reframe",
+          "mechanism": "not_pumps_register"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "asset_anatomy_stacking",
+          "mechanism": "tanks_canopy_licenses"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "infrastructure_over_fuel",
+          "mechanism": "barrier_time_engineering"
+        }
+      ],
+      "required_retention_events": [
+        "asset_anatomy_stacking",
+        "buried_tanks"
+      ],
+      "original_moves": [
+        "你买的不是泵和收银机：土地/建筑/三个埋在前场下的储油罐（各1-2万加仑易燃液体）/输油管/按风雪荷载设计的罩棚/冷藏柜/食品设备/监控/POS/货架库存 + 还有许可证（售油/彩票/酒类/环境许可）与供油合同（锁定条款）+ 关键认知：地下基础设施往往比燃料本身更值钱——从零安装要几十万美元+数月审批 + 门槛不只是钱，是时间、工程与政府批准 + 现有站点售价$50万-$2,500万"
+      ],
+      "abstract_move": "资产解剖：你买的到底是什么",
+      "replacement_needs": [
+        "'你以为买X，不是'的否定开场",
+        "实体资产层叠列举",
+        "许可证与锁定合同",
+        "基础设施比产品值钱的认知"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "evidence_build",
+      "start_ratio": 0.168,
+      "end_ratio": 0.2331,
+      "start_sec": 277.2,
+      "end_sec": 384.6,
+      "position_label": "16.8%–23.3%(4:37–6:25)",
+      "purpose": "入场成本阶梯与融资审视",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "entry_cost_ladder",
+          "mechanism": "lease_buy_build"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "before_single_gallon",
+          "mechanism": "permits_before_gallon"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "bank_scrutiny",
+          "mechanism": "financing_harder_than_location"
+        }
+      ],
+      "required_retention_events": [
+        "three_entry_paths",
+        "cost_ladder"
+      ],
+      "original_moves": [
+        "租赁接管：最低启动$25-30万 + 直接收购：$50万至数百万 + 从零新建：土地$50-200万、建筑罩棚$100-300万、地下罐安装$30-75万（含防泄漏传感/自动计量/联邦法律要求的环境防护）、店内设备$25-100万、环境许可$10-40万——在你卖出一加仑之前 + 新建总成本$200-500万 + 银行严查：独立可行性研究、偿债覆盖率——很多新手发现贷款获批比找位置更难"
+      ],
+      "abstract_move": "入场成本阶梯与融资审视",
+      "replacement_needs": [
+        "租/买/建三路径成本阶梯",
+        "'在你卖出一单位之前'的合规成本",
+        "银行审视维度与反直觉结论（融资比选址难）"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evidence_build",
+      "start_ratio": 0.2321,
+      "end_ratio": 0.2992,
+      "start_sec": 383,
+      "end_sec": 493.7,
+      "position_label": "23.2%–29.9%(6:23–8:14)",
+      "purpose": "供应链之旅与进货机制的两难",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "为什么燃料的毛利这么薄",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "supply_chain_journey",
+          "mechanism": "field_to_tank"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "branded_vs_unbranded",
+          "mechanism": "lock_in_vs_volatility"
+        }
+      ],
+      "required_retention_events": [
+        "supply_chain_journey",
+        "rack_concept"
+      ],
+      "original_moves": [
+        "油田",
+        "炼厂",
+        "管道",
+        "区域储运终端（rack）",
+        "油罐车（8,000-10,000加仑/趟）",
+        "地下罐；每一步都有成本 + 品牌经销商按 dealer tank wagon 价进货（含全国营销/专有添加剂/短缺时优先供应的溢价），但锁定10-15年独家 + 非品牌经销商按公开 rack 价进货，更便宜但随全球油市波动，且区域断供时最先断粮——品牌先来 + 没有绝对更好：一个用灵活换稳定，一个用稳定换微利"
+      ],
+      "abstract_move": "供应链之旅与进货机制的两难",
+      "replacement_needs": [
+        "从产地到站点的完整链条",
+        "每步成本的累积",
+        "品牌锁定vs公开市场波动的两难"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "reveal",
+      "start_ratio": 0.2979,
+      "end_ratio": 0.3831,
+      "start_sec": 491.6,
+      "end_sec": 632.1,
+      "position_label": "29.8%–38.3%(8:12–10:32)",
+      "purpose": "单价解剖：招牌产品的钱被谁分完",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.3535,
+          "time_ms": 583280,
+          "reason": "$3.11里业主只留下30-35¢毛利"
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.3775,
+          "time_ms": 622920,
+          "reason": "发卡行每加仑赚得比业主的实际利润还多"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "price_anatomy_start",
+          "mechanism": "three_eleven_breakdown"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "tax_layer",
+          "mechanism": "eighteen_four_to_eighty_nine"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "station_keeps",
+          "mechanism": "thirty_to_thirtyfive_cents"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "net_margin_fuel",
+          "mechanism": "ten_to_fifteen_cents"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "bank_outearns_owner",
+          "mechanism": "swipe_fees_vs_profit"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "math_verdict",
+          "mechanism": "not_exaggeration_math"
+        }
+      ],
+      "required_retention_events": [
+        "price_anatomy",
+        "tax_layer"
+      ],
+      "original_moves": [
+        "$3.11/加仑的解剖：原油约60%（$1.86）+ 炼制9%（$0.28）+ 税（联邦18.4¢+各州，加州89.3¢/伊利诺伊84.8¢/得州约40¢，平均50-60¢）+ 配送运输11%（34¢）+ 刷卡费（85%用卡，1.5-3.5%，约8¢）",
+        "业主毛利30-35¢（OPIS 2025年1月全国均值35.7¢）+ 扣掉人工/电/维护后净利10-15¢/加仑，月销10万加仑=净$1-1.5万（还贷前） + 重锤：发卡行每加仑赚的刷卡费比业主的实际利润还多——'这不是夸张，这是数学'"
+      ],
+      "abstract_move": "单价解剖：招牌产品的钱被谁分完",
+      "replacement_needs": [
+        "零售价的多方分账（每层百分比）",
+        "业主毛利与净利的精确区间",
+        "行业协会/数据源的近期均值",
+        "第三方赚得比业主多的对比实锤+数学背书"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80)、PK03(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "evidence_build",
+      "start_ratio": 0.3823,
+      "end_ratio": 0.4248,
+      "start_sec": 630.7,
+      "end_sec": 701,
+      "position_label": "38.2%–42.5%(10:31–11:41)",
+      "purpose": "招牌产品的价格动态：敏感度、价格战与涨快跌慢",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "price_anatomy_answer",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "price_sensitivity",
+          "mechanism": "three_to_five_cents_divert"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "price_war_dynamic",
+          "mechanism": "corridor_margins_shrink"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "rockets_and_feathers",
+          "mechanism": "up_fast_down_slow"
+        }
+      ],
+      "required_retention_events": [
+        "three_to_five_cents",
+        "price_transparency"
+      ],
+      "original_moves": [
+        "只差3-5¢就足以把多数价格敏感司机引向对手 + 燃料是零售中价格最透明的产品：转弯前2秒就能读到对手价格 + 半英里内两三家扎堆时一家降价全 corridor 跟降：没人想当最贵的那家 + 火箭与羽毛：批发价涨零售如火箭快涨，批发价跌零售如羽毛慢落——因为业主涨时不敢扛亏、跌时要补回上轮损失 + '这是理性，不是恶意——薄利生意的生存方式'"
+      ],
+      "abstract_move": "招牌产品的价格动态：敏感度、价格战与涨快跌慢",
+      "replacement_needs": [
+        "极低价差的分流效应",
+        "价格透明度的具身细节",
+        "扎堆竞争的毛利侵蚀",
+        "涨快跌慢的行业命名现象及其理性解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS05→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "reveal",
+      "start_ratio": 0.424,
+      "end_ratio": 0.5163,
+      "start_sec": 699.6,
+      "end_sec": 851.9,
+      "position_label": "42.4%–51.6%(11:40–14:12)",
+      "purpose": "核心反转：店内利润引擎+两记实锤",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.4411,
+          "time_ms": 727800,
+          "reason": "店内35%的收入贡献61.2%的毛利：收入结构倒挂"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "surprise",
+          "strength": 90,
+          "position_ratio": 0.4986,
+          "time_ms": 822600,
+          "reason": "一杯咖啡的净利超过泵12加仑汽油"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.5138,
+          "time_ms": 847720,
+          "reason": "'食物才是生意，燃料是广告'"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "'商店才是你真正赚钱的地方'——到底有多赚钱",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "coffee_beats_fillup_proof",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "store_reframe_pivot",
+          "mechanism": "store_is_where_money_is"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "revenue_profit_inversion",
+          "mechanism": "sixtyseven_vs_thirtyeight"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "margin_comparison",
+          "mechanism": "soda_chips_margins"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "coffee_math",
+          "mechanism": "twentythree_cents_to_five_dollars"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "fillup_math",
+          "mechanism": "twelve_gallons_forty_cents"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "coffee_beats_fuel",
+          "mechanism": "cup_over_twelve_gallons"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "food_chains_case",
+          "mechanism": "wawa_sheetz_caseys"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "food_is_business_verdict",
+          "mechanism": "fuel_is_advertisement"
+        }
+      ],
+      "required_retention_events": [
+        "revenue_profit_inversion",
+        "margin_comparison"
+      ],
+      "original_moves": [
+        "NACS数据：燃料占收入67.3%却只占毛利38.6%；店内（咖啡/零食/餐饮/彩票）占收入35%却贡献毛利61.2%——每$10利润中超过$6来自楼里 + 毛利对比：燃料约11% vs 店内30-50%；苏打水40¢卖$2、薯片25¢卖$1.50；香烟薄利但带来每周数次的回头客流 + 咖啡演算：成本23¢卖$3-5，毛利90%+，净约40% + 加油演算：12加仑×$3.11=$37.32，毛利约$3.60、刷卡费-82¢、运营再扣——净剩40-60¢ + 实锤：一杯咖啡的净利超过泵12加仑汽油 + Wawa/Sheetz/Casey's 早已建食品线：Casey's 按门店数已是美国最大披萨连锁之一 + 宣判：'食物才是生意，燃料是广告'"
+      ],
+      "abstract_move": "核心反转：店内利润引擎+两记实锤",
+      "replacement_needs": [
+        "收入占比vs利润占比的倒挂数据",
+        "单品的成本/售价比",
+        "两笔并排演算（咖啡vs加油）",
+        "微vs巨净利对比实锤",
+        "头部连锁案例群+主配角对调金句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85)、PK05(90)、PK06(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "evidence_build",
+      "start_ratio": 0.5153,
+      "end_ratio": 0.585,
+      "start_sec": 850.2,
+      "end_sec": 965.2,
+      "position_label": "51.5%–58.5%(14:10–16:05)",
+      "purpose": "附加收入流与停留时间的真实价值",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "car_wash_margin",
+          "mechanism": "tunnel_wash_membership"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "atm_lottery",
+          "mechanism": "commission_streams"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "ev_charger_costs",
+          "mechanism": "level2_vs_dcfc"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "dwell_time_reveal",
+          "mechanism": "thirty_minute_customer"
+        }
+      ],
+      "required_retention_events": [
+        "car_wash_margin",
+        "atm_lottery_commissions"
+      ],
+      "original_moves": [
+        "隧道洗车毛利常态超50%，会员包月=可预期的经常性收入 + ATM每笔$1-2佣金，无人工无库存 + 彩票5-6%佣金，中出头奖的站点会被本地媒体报道并带来数周销量脉冲 + 充电桩：L2约$3,500+$2,500安装，DC快充$3.5-14万+$2-8万电力配套；联邦$50亿基建项目报销指定走廊最高80% + 关键不在充电收入，在停留时间：充电30分钟的司机买咖啡、吃三明治、逛商店——这是加油站能捕获的最长、最赚钱的顾客访问"
+      ],
+      "abstract_move": "附加收入流与停留时间的真实价值",
+      "replacement_needs": [
+        "多个附加收入流（各带数字）",
+        "会员制=经常性收入的转化",
+        "新业务的真实价值重指（停留时间）"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "evidence_build",
+      "start_ratio": 0.5838,
+      "end_ratio": 0.6455,
+      "start_sec": 963.2,
+      "end_sec": 1065,
+      "position_label": "58.4%–64.6%(16:03–17:45)",
+      "purpose": "运营成本消耗战",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "'让业主失眠的部分'是什么——地下的东西有多严重",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "revenue_profit_gap",
+          "mechanism": "labor_biggest_item"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "utilities_overlooked",
+          "mechanism": "twentythree_k_electricity"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "theft_taxonomy",
+          "mechanism": "driveoffs_internal_skimming"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "pollution_insurance",
+          "mechanism": "underground_is_your_problem"
+        }
+      ],
+      "required_retention_events": [
+        "labor_biggest",
+        "utilities_overlooked"
+      ],
+      "original_moves": [
+        "收入≠利润，这行两者差距巨大 + 人工最大项：24小时站每班多人、7天×52周，便利店平均约20名员工且工资持续上涨 + 水电常被忽略：冷藏柜24小时运转、罩棚灯通宵、3,000平方英尺不断开门——年均电费约$23,000 + 刷卡费不只燃料、店内每笔都抽 + 设备维护无休止：加油机坏/传感器校准/压缩机故障/POS更新 + 偷窃：恶意逃单/员工内盗/读卡器盗刷（全行业数亿美元损失）+ 保险：一般责任+财产+多数生意永远不用想的污染责任险"
+      ],
+      "abstract_move": "运营成本消耗战",
+      "replacement_needs": [
+        "最大成本项及其刚性",
+        "被忽略的公用事业账单",
+        "维护的无休止性",
+        "偷窃分类学与特殊保险"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "reveal",
+      "start_ratio": 0.6444,
+      "end_ratio": 0.7278,
+      "start_sec": 1063.2,
+      "end_sec": 1200.8,
+      "position_label": "64.4%–72.8%(17:43–20:01)",
+      "purpose": "地下隐性负债：随产权转移的环境风险",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "surprise",
+          "strength": 75,
+          "position_ratio": 0.6897,
+          "time_ms": 1137880,
+          "reason": "污染到地下水=清理费数百万：地下负债的量级"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.7004,
+          "time_ms": 1155600,
+          "reason": "买下加油站=可能买下前业主的环境负债"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE41",
+          "event_type": "keeps_owners_up",
+          "mechanism": "buried_tanks_reveal"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "epa_compliance_stack",
+          "mechanism": "double_wall_gauging_vapor"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "release_statistics",
+          "mechanism": "five_eightythree_thousand"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "groundwater_stakes",
+          "mechanism": "millions_for_remediation"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "liability_transfer",
+          "mechanism": "buying_previous_leak"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "sits_in_ground_verdict",
+          "mechanism": "until_someone_pays"
+        }
+      ],
+      "required_retention_events": [
+        "buried_liability",
+        "epa_compliance_stack"
+      ],
+      "original_moves": [
+        "每个加油站地下都埋着数千加仑的储罐 + EPA合规：双层罐+夹层传感器、自动计量、油气回收、交叉核对销量与进油量的统计软件 + 合规成本：检漏$3-8k、旧罐防腐$10-48k、新罐数十万 + 截至2026年3月EPA已记录超58.3万起确认泄漏，5.4万+场地待清理；一旦污染地下水（近半数美国人的饮用水源）清理费可达数百万 + 关键细节：买下加油站=可能买下前业主留下的环境负债；购前评估不可省但也不是保证（有些污染要挖开罐才现形） + 联邦信托基金（每加仑0.1¢税）远不够覆盖 + 宣判：'负债不会消失，它坐在地下，直到有人付钱把它挖走'"
+      ],
+      "abstract_move": "地下隐性负债：随产权转移的环境风险",
+      "replacement_needs": [
+        "合规要求栈",
+        "泄漏统计与清理成本量级",
+        "负债随产权转移的揭示",
+        "购前评估的必要与局限",
+        "'它坐在地下直到有人付钱'宣判"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(75)、PK08(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "evidence_build",
+      "start_ratio": 0.7264,
+      "end_ratio": 0.8009,
+      "start_sec": 1198.5,
+      "end_sec": 1321.5,
+      "position_label": "72.6%–80.1%(19:58–22:01)",
+      "purpose": "地段第一变量与选址清单",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.7959,
+          "time_ms": 1313160,
+          "reason": "地段错了，再多运营卓越也救不回"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "buried_environmental_liability_answer",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE47",
+          "event_type": "location_first",
+          "mechanism": "strip_everything_location"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "five_criteria_checklist",
+          "mechanism": "traffic_access_corner_density_anchors"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "no_u_turn_detail",
+          "mechanism": "median_halves_capture"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "location_verdict",
+          "mechanism": "operational_excellence_cant_fix"
+        }
+      ],
+      "required_retention_events": [
+        "location_first",
+        "volume_chain"
+      ],
+      "original_moves": [
+        "剥掉品牌/商店/咖啡/洗车，成败的第一因素是它坐在地图哪里 + 量级传导链：车流",
+        "进站",
+        "加燃料",
+        "进店 + 专业选址五要素：①日均车流（州交通部公开数据，3-5万/天 vs 5千天壤之别）②进出便利（中央隔离带挡左转=捕获率腰斩；司机不会为加油掉头）③街角朝向（信号灯路口让司机有时间看价格牌并转弯）④竞争密度（1-3英里内站点数，饱和市场分的不只是客人是毛利）⑤周边锚点（高速入口/大雇主/住宅区/快餐群 vs 孤立商业带只能靠油价拉客） + 宣判：地段对了其他都可管理；地段错了，再多运营卓越也救不回"
+      ],
+      "abstract_move": "地段第一变量与选址清单",
+      "replacement_needs": [
+        "'剥掉一切后第一变量'的排序",
+        "量级传导链",
+        "专业选址清单（4-6条可执行标准）",
+        "'地段错了运营救不回'宣判"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(80);回收了前文的悬念 FS10→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "reveal",
+      "start_ratio": 0.7995,
+      "end_ratio": 0.8836,
+      "start_sec": 1319.1,
+      "end_sec": 1457.9,
+      "position_label": "80%–88.4%(21:59–24:18)",
+      "purpose": "完整月度账本+反事实实锤",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "surprise",
+          "strength": 85,
+          "position_ratio": 0.8626,
+          "time_ms": 1423160,
+          "reason": "$46.1万月流水净剩$10,981：每美元不到3¢"
+        },
+        {
+          "peak_id": "PK11",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.877,
+          "time_ms": 1447040,
+          "reason": "反事实实锤：没有商店每月亏$12,500——商店就是生意"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "'那些数字里藏着一个关键细节'——商店到底多重要",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "顶级站点想通了什么而挣扎的没有",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE51",
+          "event_type": "full_ledger_start",
+          "mechanism": "suburban_station_setup"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "gross_profit_stack",
+          "mechanism": "eightyseven_k_on_four_sixtyone"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "expense_stack",
+          "mechanism": "fortytwo_k_expenses"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "net_income_verdict",
+          "mechanism": "ten_nine_eight_one"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "counterfactual_proof",
+          "mechanism": "store_gone_lose_twelve_five"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "store_is_business_verdict",
+          "mechanism": "not_supplement_is"
+        }
+      ],
+      "required_retention_events": [
+        "full_ledger",
+        "three_cents_verdict"
+      ],
+      "original_moves": [
+        "郊区中型品牌站：月泵10万加仑×$3.11=燃料流水$31.1万；燃料毛利$30,000 + 店内销售$15万×35%=毛利$52,500 + 洗车+ATM $4,500",
+        "合计毛利$87,000（总流水$461,000） + 支出：工资$18,500/刷卡费$8,619/水电$6,200/维护$3,800/保险$2,400/税费$1,800/损耗盗窃$1,200=$42,519",
+        "运营利润$44,481 − 月供$25,000 − 折旧$8,500 = 净$10,981/月，即每美元流水剩不到3¢ + 反事实实锤：若店内毛利消失，燃料毛利$30,000盖不住$42,500运营支出——光泵油每月亏$12,500 + 宣判：'商店不是补充这门生意，商店就是这门生意'"
+      ],
+      "abstract_move": "完整月度账本+反事实实锤",
+      "replacement_needs": [
+        "一个完整设定的月度账本（收入/毛利/支出/净利）",
+        "每美元剩余的单位换算落点",
+        "反事实：抽掉利润引擎则月月亏损",
+        "'不是补充，是本体'的强定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85)、PK11(90);打开的悬念 LOOP05→FS14、LOOP07→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK11",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "evidence_build",
+      "start_ratio": 0.8823,
+      "end_ratio": 0.9353,
+      "start_sec": 1455.7,
+      "end_sec": 1543.2,
+      "position_label": "88.2%–93.5%(24:16–25:43)",
+      "purpose": "赢家打法清单",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "counterfactual_store_is_business_proof",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE57",
+          "event_type": "real_food_investment",
+          "mechanism": "wawa_counter_sheetz_kiosk"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "loyalty_multiplier",
+          "mechanism": "three_to_four_visits"
+        },
+        {
+          "event_id": "RE59",
+          "event_type": "break_even_lens",
+          "mechanism": "gallons_plus_inside_sales"
+        }
+      ],
+      "required_retention_events": [
+        "real_food_investment",
+        "restaurant_business_acceptance"
+      ],
+      "original_moves": [
+        "赢家投资真食品：不是烤肠机/微波卷饼，是现做柜台（Wawa三明治/Sheetz数字点单/Casey's每日现做披萨）——它们接受了自己是'碰巧卖燃料的餐饮生意'；预制食品毛利50-60% + 赢家投资技术：App远程启泵/边加油边点单/积分/到店推送，接入忠诚计划的司机每月多来3-4次=每次访问都是高毛利店内交易的机会 + 赢家选有余地的地块：小地块被困死，街角大地块可随社区加洗车/扩店/加泵 + 赢家死磕盈亏平衡：精确知道每月要泵多少加仑+做多少店内销售才能覆盖固定成本，一切运营决策都透过滤镜"
+      ],
+      "abstract_move": "赢家打法清单",
+      "replacement_needs": [
+        "利润品升级（真食品/真服务）",
+        "技术与忠诚度的行为倍数",
+        "扩张余地的选址观",
+        "盈亏平衡点的死磕管理"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS13→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "evidence_build",
+      "start_ratio": 0.9343,
+      "end_ratio": 0.9706,
+      "start_sec": 1541.4,
+      "end_sec": 1601.4,
+      "position_label": "93.4%–97.1%(25:41–26:41)",
+      "purpose": "收益区间与年景摆动",
+      "peaks": [
+        {
+          "peak_id": "PK12",
+          "peak_type": "surprise",
+          "strength": 75,
+          "position_ratio": 0.9651,
+          "time_ms": 1592360,
+          "reason": "好坏年景差$15万：你买下的是波动本身"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "arrangement_dependent_income_range_answer",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "winners_playbook_answer",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE60",
+          "event_type": "income_range",
+          "mechanism": "hundred_to_five_hundred_k"
+        },
+        {
+          "event_id": "RE61",
+          "event_type": "bad_year_stack",
+          "mechanism": "price_war_leak_spike"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "volatility_verdict",
+          "mechanism": "hundred_fifty_k_swing"
+        }
+      ],
+      "required_retention_events": [
+        "income_range",
+        "good_year_math"
+      ],
+      "original_moves": [
+        "经营良好的独立业主：年净利$10-50万——区间之宽来自地段/店内质量/所有权结构/成本管理的巨大差异 + 好年景：强油量+稳定批发价+好商店+无设备故障，郊区站可在$3-4百万流水上净落约$20万 + 坏年景：新对手价格战/设备大修/批发价暴涨传导不及/罐漏触发环境调查——同一站可能亏损或仅保本 + 好坏年景差可达$15万+：'这就是你买加油站时买下的波动'"
+      ],
+      "abstract_move": "收益区间与年景摆动",
+      "replacement_needs": [
+        "真实净利区间及其决定变量",
+        "好年景数字",
+        "坏年景的四连冲击",
+        "摆幅金额='你买下的波动'宣判"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK12(75);回收了前文的悬念 FS02→LOOP02、FS13→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK12",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.9693,
+      "end_ratio": 1,
+      "start_sec": 1599.2,
+      "end_sec": 1649.9,
+      "position_label": "96.9%–100%(26:39–27:30)",
+      "purpose": "成功者特质+场景回收+设施重定义金句",
+      "peaks": [
+        {
+          "peak_id": "PK13",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9938,
+          "time_ms": 1639720,
+          "reason": "'用$4咖啡付账、用$3汽油填满停车场的零售生意'"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_anatomy_plus_retail_redefinition",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE63",
+          "event_type": "operator_traits_verdict",
+          "mechanism": "fuel_brings_store_makes"
+        },
+        {
+          "event_id": "RE64",
+          "event_type": "scene_callback_checklist",
+          "mechanism": "look_past_the_pump"
+        },
+        {
+          "event_id": "RE65",
+          "event_type": "retail_redefinition",
+          "mechanism": "four_dollar_coffee_pays_bills"
+        }
+      ],
+      "required_retention_events": [
+        "operator_traits_verdict",
+        "scene_callback_checklist"
+      ],
+      "original_moves": [
+        "真正成功的运营商不是最会卖燃料的人：燃料带来顾客，商店赚钱；地段决定天花板，运营决定你离天花板多近；地下的环境负债不是理论，是必须计入每次收购的真实财务风险 + 场景回收：下次加油时，看咖啡区多大、有没有洗车、有没有充电桩、布局/预制食品/会员招牌 + 最终重定义：'你站在里面的不是加油站，是一门用$4咖啡付账、用$3汽油填满停车场的零售生意'"
+      ],
+      "abstract_move": "成功者特质+场景回收+设施重定义金句",
+      "replacement_needs": [
+        "成功者特质的三层排比（引流/利润、天花板/接近、风险定价）",
+        "下次路过的观察清单",
+        "'用A付账、用B引流的零售生意'对偶金句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK13(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK13",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

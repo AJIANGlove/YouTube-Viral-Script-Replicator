@@ -1,0 +1,964 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.380Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "lost_world_reveal",
+      "start_ratio": 0,
+      "end_ratio": 0.0504,
+      "start_sec": 0,
+      "end_sec": 70.8,
+      "position_label": "0%–5%(0:00–1:11)",
+      "purpose": "失落世界前提重建：让观众意识到'我们这样的存在曾经不止一种'",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_reveal",
+          "mechanism": "lost_world_premise"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "scale_tease",
+          "mechanism": "coexistence_roster"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "humor_payoff",
+          "mechanism": "pop_culture_aside"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "contrast_downbeat",
+          "mechanism": "only_one_left"
+        }
+      ],
+      "required_retention_events": [
+        "lost_world_premise",
+        "roster_contrast"
+      ],
+      "original_moves": [
+        "从零信息到失落世界前提建立，再到物种名册与调侃，最后落到\"今天只剩一种\""
+      ],
+      "abstract_move": "失落世界前提重建：让观众意识到'我们这样的存在曾经不止一种'",
+      "replacement_needs": [
+        "'曾经不止一种'的明确前提句",
+        "并列物种名册与共存画面",
+        "'如今只剩我们'的反差收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 33762,
+        "hook_type": "lost_world_premise_reveal",
+        "first_stimulus_ms": 745,
+        "first_payoff_ms": 31659,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0026"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "stakes_framing",
+      "start_ratio": 0.0504,
+      "end_ratio": 0.0955,
+      "start_sec": 70.8,
+      "end_sec": 134.1,
+      "position_label": "5%–9.6%(1:11–2:14)",
+      "purpose": "把问题从学术升级为身份问题：答案关乎'我们是谁'",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：其他人类物种到底遭遇了什么，我们是不是凶手（标题\"是否\"问句的显性悬挂）",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "question_framing",
+          "mechanism": "controversy_triad"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "expectation_setting",
+          "mechanism": "honest_answer_promise"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "title_drop",
+          "mechanism": "central_question_explicit"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "stakes_elevation",
+          "mechanism": "identity_implication"
+        }
+      ],
+      "required_retention_events": [
+        "question_framing",
+        "honest_answer_promise",
+        "moral_stakes"
+      ],
+      "original_moves": [
+        "问题争议性定性",
+        "诚实答案承诺",
+        "最戏剧化问句抛出",
+        "道德赌注抬高"
+      ],
+      "abstract_move": "把问题从学术升级为身份问题：答案关乎'我们是谁'",
+      "replacement_needs": [
+        "问题争议性与情感烈度的定性",
+        "'答案比流行版本更复杂'的诚实承诺",
+        "核心问句的显式抛出",
+        "若答案肯定则关乎人性定义的赌注抬高"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP01→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "subject_humanization",
+      "start_ratio": 0.0955,
+      "end_ratio": 0.1347,
+      "start_sec": 134.1,
+      "end_sec": 189.1,
+      "position_label": "9.6%–13.5%(2:14–3:09)",
+      "purpose": "去野蛮化：系统拆除对灭绝对象的'原始人'刻板印象",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "myth_busting",
+          "mechanism": "capability_inventory"
+        }
+      ],
+      "required_retention_events": [
+        "myth_busting",
+        "capability_inventory"
+      ],
+      "original_moves": [
+        "存在时长",
+        "脑容量",
+        "工具工业",
+        "照护伤者",
+        "埋葬死者",
+        "艺术证据的敬意重建"
+      ],
+      "abstract_move": "去野蛮化：系统拆除对灭绝对象的'原始人'刻板印象",
+      "replacement_needs": [
+        "存在时长的量级锚点",
+        "认知与工具能力的证据清单",
+        "照护弱者与埋葬死者的行为证据"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "correlation_reveal",
+      "start_ratio": 0.1347,
+      "end_ratio": 0.153,
+      "start_sec": 189.1,
+      "end_sec": 214.8,
+      "position_label": "13.5%–15.3%(3:09–3:35)",
+      "purpose": "建立醒目的时间相关性：一方到达，另一方随即消失",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.1347,
+          "time_ms": 189141,
+          "reason": "\"我们到达后不久他们消失\"：全片第一个因果怀疑高峰"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "correlation_reveal",
+          "mechanism": "arrival_disappearance_timing"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "pattern_repeat",
+          "mechanism": "geographic_repetition"
+        }
+      ],
+      "required_retention_events": [
+        "correlation_reveal",
+        "pattern_repeat"
+      ],
+      "original_moves": [
+        "消失时间点",
+        "\"相关性醒目\"",
+        "模式在各地重复",
+        "因果假设的初步成形"
+      ],
+      "abstract_move": "建立醒目的时间相关性：一方到达，另一方随即消失",
+      "replacement_needs": [
+        "消失时间点与到达时间点的并置",
+        "'相关性醒目'的直接定性",
+        "模式在整个分布范围内重复的确认"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "epistemic_caution",
+      "start_ratio": 0.153,
+      "end_ratio": 0.1647,
+      "start_sec": 214.8,
+      "end_sec": 231.3,
+      "position_label": "15.3%–16.5%(3:35–3:51)",
+      "purpose": "方法学急刹车：相关不等于因果，压低观众确定性预期",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "epistemic_caution",
+          "mechanism": "correlation_causation_warning"
+        }
+      ],
+      "required_retention_events": [
+        "correlation_causation_warning"
+      ],
+      "original_moves": [
+        "方法学警示",
+        "学科史上被推翻的自信结论",
+        "转入逐一审查机制"
+      ],
+      "abstract_move": "方法学急刹车：相关不等于因果，压低观众确定性预期",
+      "replacement_needs": [
+        "相关不等于因果的显式警示",
+        "学科史上自信结论被推翻的提醒",
+        "转入逐条审查机制的过渡句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "hypothesis_trial",
+      "start_ratio": 0.1647,
+      "end_ratio": 0.2202,
+      "start_sec": 231.3,
+      "end_sec": 309.2,
+      "position_label": "16.5%–22%(3:51–5:09)",
+      "purpose": "审判最流行的戏剧性假说：呈现证据也呈现证据的无力",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "最流行的直接屠杀假说能否被证据支持",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "hypothesis_launch",
+          "mechanism": "most_dramatic_hypothesis"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "evidence_contestation",
+          "mechanism": "attribution_difficulty"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "evidence_verdict",
+          "mechanism": "absence_of_evidence_nuance"
+        }
+      ],
+      "required_retention_events": [
+        "hypothesis_launch",
+        "evidence_contestation",
+        "absence_nuance"
+      ],
+      "original_moves": [
+        "最流行假说登场",
+        "支持证据",
+        "归因困难",
+        "系统性暴力证据缺失",
+        "缺席≠清白"
+      ],
+      "abstract_move": "审判最流行的戏剧性假说：呈现证据也呈现证据的无力",
+      "replacement_needs": [
+        "最流行假说的完整陈述",
+        "支持性证据的公正呈现",
+        "证据归因困难的技术性说明",
+        "缺席不等于清白的原则标注"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "counter_evidence_reveal",
+      "start_ratio": 0.2202,
+      "end_ratio": 0.321,
+      "start_sec": 309.2,
+      "end_sec": 450.7,
+      "position_label": "22%–32.1%(5:09–7:31)",
+      "purpose": "全片中枢反证：用观众自己身体里的证据推翻纯战争叙事",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 90,
+          "position_ratio": 0.2298,
+          "time_ms": 322661,
+          "reason": "\"他们的基因就在你的基因组里\"：最强反直觉揭示，把观众变成证据本身"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "既然存在广泛通婚，消失又该如何解释——通婚与灭绝如何并存",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "evidence_inconclusive_verdict",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "bombshell_reveal",
+          "mechanism": "second_person_dna_anchor"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "scale_number",
+          "mechanism": "percentage_payoff"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "implication_reveal",
+          "mechanism": "war_incompatibility"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_evidence_anchor",
+        "war_narrative_subversion"
+      ],
+      "original_moves": [
+        "互动证据转向",
+        "具身化基因揭示",
+        "比例数字",
+        "反复通婚",
+        "与全面战争不兼容",
+        "偶发接触的关系重估"
+      ],
+      "abstract_move": "全片中枢反证：用观众自己身体里的证据推翻纯战争叙事",
+      "replacement_needs": [
+        "具身化的反直觉硬证据（你体内就有）",
+        "精确比例数字的落地",
+        "该证据与纯战争叙事不兼容的逻辑推导",
+        "接触模式的进一步复杂化（偶发而非融合）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(90);打开的悬念 LOOP03→FS08 跨段;回收了前文的悬念 FS06→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "mechanism_stack",
+      "start_ratio": 0.321,
+      "end_ratio": 0.5039,
+      "start_sec": 607.6,
+      "end_sec": 707.5,
+      "position_label": "32.1%–50.4%(10:08–11:47)",
+      "purpose": "叠加'无需恶意的灭绝机制'：疾病、气候、生态位竞争",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.4837,
+          "time_ms": 679123,
+          "reason": "竞争排斥原理命名：\"不需要杀戮，数学会完成其余\"的机制高潮"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "relationship_reframe",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "mechanism_reveal",
+          "mechanism": "least_discussed_most_significant"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "historical_analogy",
+          "mechanism": "documented_analogue"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "invisible_weapon",
+          "mechanism": "weaponless_death"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "mechanism_tease",
+          "mechanism": "intent_free_competition"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "tech_advantage",
+          "mechanism": "projectile_technology"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "principle_naming",
+          "mechanism": "competitive_exclusion"
+        }
+      ],
+      "required_retention_events": [
+        "disease_mechanism",
+        "climate_stressor",
+        "competitive_exclusion_principle"
+      ],
+      "original_moves": [
+        "共同资源",
+        "社交网络优势",
+        "投射技术优势",
+        "边缘化挤压",
+        "竞争排斥原理命名",
+        "数学完成其余"
+      ],
+      "abstract_move": "叠加'无需恶意的灭绝机制'：疾病、气候、生态位竞争",
+      "replacement_needs": [
+        "至少三种独立机制的逐一展开",
+        "一个来自有记载历史的类比",
+        "每个机制'不留痕迹'或'无需意图'的特性说明",
+        "一个生态学原理的命名与格言式收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80);回收了前文的悬念 FS07→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "comparative_case",
+      "start_ratio": 0.5039,
+      "end_ratio": 0.72,
+      "start_sec": 707.5,
+      "end_sec": 902.6,
+      "position_label": "50.4%–72%(11:47–15:03)",
+      "purpose": "用证据稀缺的对照案例展示答案的地域变奏与未知边界",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.6258,
+          "time_ms": 878602,
+          "reason": "\"消失了，但没有完全消失\"：基因遗产段落的高原意象峰值"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.7182,
+          "time_ms": 1008239,
+          "reason": "\"重复足够多次即为模式而非巧合\"：多案例汇合的定性峰值"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "证据最稀缺的消失者遭遇了什么，我们能否知道",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP05",
+          "tension": "岛屿上的消失者是被取代的还是被环境消灭的",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "两种人类的结合究竟是自愿、暴力还是共处：刻意保持开放，叙事用途是以\"基因只记录繁殖的事实，不记录处境\"标注科学边界，把不可知本身转化为道德不安，为结尾的伦理升格蓄势",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "partial_legacy_answer",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "case_entry",
+          "mechanism": "most_mysterious_case"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "legacy_reveal",
+          "mechanism": "adaptive_gene_legacy"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "haunting_reframe",
+          "mechanism": "not_completely_gone"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "case_shift",
+          "mechanism": "island_case_contrast"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "honest_admission",
+          "mechanism": "we_do_not_know"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "pattern_verdict",
+          "mechanism": "pattern_not_coincidence"
+        }
+      ],
+      "required_retention_events": [
+        "evidence_scarcity_case",
+        "genetic_legacy",
+        "environmental_variation",
+        "honest_unknown"
+      ],
+      "original_moves": [
+        "最神秘案例登场",
+        "指骨牙齿发现",
+        "基因分布",
+        "高原适应遗产",
+        "谱系间通婚",
+        "网络而非树",
+        "未完全消失"
+      ],
+      "abstract_move": "用证据稀缺的对照案例展示答案的地域变奏与未知边界",
+      "replacement_needs": [
+        "一个发现史本身成悬念的案例",
+        "消失者仍在发挥作用的基因遗产证据",
+        "一个环境差异导致机制变奏的案例",
+        "'我们并不确知'的诚实承认",
+        "'重复足够多次即为模式'的汇合定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75)、PK05(75);打开的悬念 LOOP05→FS10、LOOP06(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "taboo_social_detail",
+      "start_ratio": 0.72,
+      "end_ratio": 0.814,
+      "start_sec": 1010.8,
+      "end_sec": 1142.7,
+      "position_label": "72%–81.4%(16:51–19:03)",
+      "purpose": "引入极少被讨论的尖锐细节：结合事件的社会处境",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.8089,
+          "time_ms": 1135568,
+          "reason": "\"在取代他们的过程中吸收了有用之物\"：吸收与灭绝并置的黑暗峰值"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "honest_unknown_with_pattern_verdict",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "taboo_turn",
+          "mechanism": "rarely_discussed_topic"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "uncomfortable_question",
+          "mechanism": "consent_unknown"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "social_fate_unknown",
+          "mechanism": "mixed_individual_fate"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "dark_verdict",
+          "mechanism": "absorption_during_replacement"
+        }
+      ],
+      "required_retention_events": [
+        "taboo_topic_framing",
+        "unanswerable_question"
+      ],
+      "original_moves": [
+        "禁忌话题开启",
+        "混血孩子必然存在",
+        "自愿与否不可知",
+        "基因只记录事实",
+        "社会处境完全未知",
+        "吸收与取代并置"
+      ],
+      "abstract_move": "引入极少被讨论的尖锐细节：结合事件的社会处境",
+      "replacement_needs": [
+        "'极少被讨论'的禁忌预告",
+        "混血个体必然存在且成活的逻辑推导",
+        "自愿与否不可知的证据边界声明",
+        "混血个体社会命运完全未知的留白"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80);回收了前文的悬念 FS09→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "honest_verdict",
+      "start_ratio": 0.814,
+      "end_ratio": 0.8651,
+      "start_sec": 1142.7,
+      "end_sec": 1214.6,
+      "position_label": "81.4%–86.5%(19:03–20:15)",
+      "purpose": "兑现主承诺：对标题问句给出限定性的诚实回答",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 90,
+          "position_ratio": 0.8207,
+          "time_ms": 1152167,
+          "reason": "限定性诚实判决：\"可能是，但不是以你想象的方式\"——主悬念的正式回收"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.8639,
+          "time_ms": 1212824,
+          "reason": "\"他们消失了。我们留下了。\"：极短对照句的情绪封顶"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "qualified_honest_verdict",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "honest_verdict",
+          "mechanism": "qualified_answer"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "stark_contrast",
+          "mechanism": "short_sentence_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "qualified_verdict",
+        "stark_short_sentence"
+      ],
+      "original_moves": [
+        "回归核心问句",
+        "\"可能是，但方式弥散\"的限定判决",
+        "机制重述",
+        "个别直接杀戮可能",
+        "极短对照句收束"
+      ],
+      "abstract_move": "兑现主承诺：对标题问句给出限定性的诚实回答",
+      "replacement_needs": [
+        "核心问句的显式重述",
+        "'可能是，但方式弥散'的限定判决",
+        "弥散性本身更令人不安的反转",
+        "极短对照判决句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(90)、PK08(85);回收了前文的悬念 FS02→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "dual_framing",
+      "start_ratio": 0.8651,
+      "end_ratio": 0.9165,
+      "start_sec": 1214.6,
+      "end_sec": 1286.7,
+      "position_label": "86.5%–91.7%(20:15–21:27)",
+      "purpose": "把安慰版与不安版两种叙事并置对峙，且都不予成全",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "dual_framing",
+          "mechanism": "inconvenient_version"
+        }
+      ],
+      "required_retention_events": [
+        "dual_framing",
+        "evidentiary_neutrality"
+      ],
+      "original_moves": [
+        "安慰版叙事",
+        "不安版叙事",
+        "证据不支持任何一边",
+        "纠缠复杂史的定性"
+      ],
+      "abstract_move": "把安慰版与不安版两种叙事并置对峙，且都不予成全",
+      "replacement_needs": [
+        "安慰版叙事的完整陈述",
+        "不安版叙事的完整陈述",
+        "'证据不明确支持任何一边'的裁判"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.9165,
+      "end_ratio": 0.9758,
+      "start_sec": 1286.7,
+      "end_sec": 1369.9,
+      "position_label": "91.7%–97.6%(21:27–22:50)",
+      "purpose": "认知升格：单一人类世界并非唯一可能的世界，丧失不可逆",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "我们是否该为消失者感到共谋：明示\"科学无法回答\"，叙事用途是把未回答的问题升格为全片主题句（\"最不舒服的问题\"），将回答责任移交观众",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "lost_minds",
+          "mechanism": "other_minds_elegy"
+        }
+      ],
+      "required_retention_events": [
+        "philosophical_escalation",
+        "irretrievable_loss"
+      ],
+      "original_moves": [
+        "共谋感问题",
+        "科学与感受的边界",
+        "单一人类世界并非必然",
+        "其他心灵已消失",
+        "体验不可逆丧失",
+        "炉火意象"
+      ],
+      "abstract_move": "认知升格：单一人类世界并非唯一可能的世界，丧失不可逆",
+      "replacement_needs": [
+        "科学问题向哲学问题的显式转换",
+        "'科学能告诉你发生了什么，不能告诉你作何感受'的边界句",
+        "反事实世界的呈现（曾经存在别种心灵）",
+        "不可逆丧失的具身化意象"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.9758,
+      "end_ratio": 1,
+      "start_sec": 1369.9,
+      "end_sec": 1403.9,
+      "position_label": "97.6%–100%(22:50–23:24)",
+      "purpose": "纪念碑式收尾：把基因事实升格为伦理纪念，以格言句定格",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9794,
+          "time_ms": 1375027,
+          "reason": "基因纪念碑意象：把遗传学事实升格为伦理纪念"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.992,
+          "time_ms": 1392618,
+          "reason": "\"没有其他人了。我们在这里。\"：格言式收束完成全片认知定格"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "monument_reveal",
+          "mechanism": "dna_as_monument"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "aphorism_close",
+          "mechanism": "uncomfortable_question_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "monument_metaphor",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "两条血脉对照",
+        "基因纪念碑",
+        "配不配之问",
+        "科学无法回答",
+        "格言句收束"
+      ],
+      "abstract_move": "纪念碑式收尾：把基因事实升格为伦理纪念，以格言句定格",
+      "replacement_needs": [
+        "两条血脉命运的对照",
+        "基因作为唯一纪念碑的隐喻",
+        "'我们配不配'的不可答之问",
+        "把全片压缩成意象的格言句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85)、PK10(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

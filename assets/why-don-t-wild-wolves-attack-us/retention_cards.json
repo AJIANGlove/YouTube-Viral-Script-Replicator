@@ -1,0 +1,1083 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.409Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "sensory_immersion",
+      "start_ratio": 0,
+      "end_ratio": 0.016,
+      "start_sec": 0,
+      "end_sec": 23,
+      "position_label": "0%–1.6%(0:00–0:23)",
+      "purpose": "捕食者视角的第二人称沉浸：让观众以被观察者身份进入场景",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "mystery_hook",
+          "strength": 70,
+          "position_ratio": 0.0105,
+          "time_ms": 15000,
+          "reason": "'它随后离开，这正是不对劲的地方'：违和节拍完成悬念锚定"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：既然这种猛兽完全有能力攻击人类，为什么它们几乎从不这么做（标题问句的场景化悬挂）",
+          "closes_in": "FS16"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "开场那只正在观察你的捕食者最终去了哪里：刻意保持开放，叙事用途是把抽象问句锚定在观众的身体感受上，结尾以'树林里的动物可能正在看你'的镜像意象回收其情绪而非情节",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "predator_pov_opening"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "mystery_beat",
+          "mechanism": "unexplained_departure"
+        }
+      ],
+      "required_retention_events": [
+        "predator_pov_immersion",
+        "unexplained_departure"
+      ],
+      "original_moves": [
+        "从零信息到捕食者感官场景建立，再到'它离开了，这不对劲'的悬念节拍"
+      ],
+      "abstract_move": "捕食者视角的第二人称沉浸：让观众以被观察者身份进入场景",
+      "replacement_needs": [
+        "感官化的侦测细节（听觉、气味、视线）",
+        "'你'一无所知的对照",
+        "离开动作与'不对劲'的明示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS16、LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "predator_pov_immersion_with_unexplained_departure",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 15000,
+        "evidence_refs": [
+          "C0001",
+          "C0003",
+          "C0004"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "paradox_setup",
+      "start_ratio": 0.016,
+      "end_ratio": 0.056,
+      "start_sec": 23,
+      "end_sec": 79,
+      "position_label": "1.6%–5.6%(0:23–1:19)",
+      "purpose": "能力阅兵与悖论成型：它完全有能力伤害你，却几乎从不这么做",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "攻击确实会发生——究竟在什么条件下会发生",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "paradox_setup",
+          "mechanism": "capability_vs_reality"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "humor_deflation",
+          "mechanism": "triple_negation"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "thesis_plant",
+          "mechanism": "terrible_decision"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "premise_correction",
+          "mechanism": "attacks_do_happen"
+        }
+      ],
+      "required_retention_events": [
+        "capability_parade",
+        "scale_paradox",
+        "triple_negation_reframe",
+        "thesis_plant"
+      ],
+      "original_moves": [
+        "能力阅兵",
+        "人类'结构性未完成'的自嘲",
+        "规模悖论",
+        "三连否定排除民间答案",
+        "机制论点预埋"
+      ],
+      "abstract_move": "能力阅兵与悖论成型：它完全有能力伤害你，却几乎从不这么做",
+      "replacement_needs": [
+        "主体杀伤能力的具体清单",
+        "规模对照：大量人类暴露却几乎无攻击",
+        "三连否定排除流行解释",
+        "一句机制论点预埋：这是理性决策而非仁慈"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "premise_correction",
+      "start_ratio": 0.056,
+      "end_ratio": 0.101,
+      "start_sec": 79,
+      "end_sec": 143,
+      "position_label": "5.6%–10.1%(1:19–2:23)",
+      "purpose": "诚实纠偏：承认攻击存在且罕见，把问题改写为'为何如此罕见'",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.0788,
+          "time_ms": 112000,
+          "reason": "'安慰、简单、且错误'：虚假答案被一句定性击破"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "verdict_stamp",
+          "mechanism": "comforting_simple_false"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "scale_tease",
+          "mechanism": "constant_encounters"
+        }
+      ],
+      "required_retention_events": [
+        "honest_correction",
+        "verdict_stamp",
+        "question_reframe"
+      ],
+      "original_moves": [
+        "攻击史实承认",
+        "疾病成因交代",
+        "'安慰、简单、且错误'定性",
+        "按暴露机会规模重置问题"
+      ],
+      "abstract_move": "诚实纠偏：承认攻击存在且罕见，把问题改写为'为何如此罕见'",
+      "replacement_needs": [
+        "攻击确实发生的事实承认",
+        "历史案例中特殊成因的交代",
+        "对'从不攻击'说法的定性驳斥",
+        "按暴露机会规模重置问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "mechanism_exposition",
+      "start_ratio": 0.101,
+      "end_ratio": 0.177,
+      "start_sec": 143,
+      "end_sec": 252,
+      "position_label": "10.1%–17.7%(2:23–4:12)",
+      "purpose": "建立捕食者的狩猎经济学：成功依赖发现弱点，伤病即是死刑",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "aphorism_stamp",
+          "strength": 70,
+          "position_ratio": 0.154,
+          "time_ms": 219000,
+          "reason": "'捕食者没有病假'：狩猎经济学的金句落点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "mechanism_key",
+          "mechanism": "discovery_is_key"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "research_anchor",
+          "mechanism": "test_more_than_kill"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "stakes_inventory",
+          "mechanism": "prey_fights_back"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "aphorism_stamp",
+          "mechanism": "no_medical_leave"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "cost_benefit_verdict",
+          "mechanism": "kill_without_paying_too_much"
+        }
+      ],
+      "required_retention_events": [
+        "mechanism_cost_benefit_reveal",
+        "research_anchor",
+        "aphorism_stamp"
+      ],
+      "original_moves": [
+        "狩猎方式与身体限制",
+        "研究锚点（测试多于击杀）",
+        "猎物反击代价",
+        "'没有病假'金句",
+        "评估-放弃决策模型"
+      ],
+      "abstract_move": "建立捕食者的狩猎经济学：成功依赖发现弱点，伤病即是死刑",
+      "replacement_needs": [
+        "狩猎方式与身体限制的交代",
+        "研究锚点：测试远多于击杀",
+        "猎物反击的代价清单",
+        "一句成本收益金句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "subject_anomaly",
+      "start_ratio": 0.177,
+      "end_ratio": 0.217,
+      "start_sec": 252,
+      "end_sec": 309,
+      "position_label": "17.7%–21.7%(4:12–5:09)",
+      "purpose": "把人类放进同一公式：身体脆弱，但行为信号完全不可读",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "humor_peak",
+          "strength": 80,
+          "position_ratio": 0.2046,
+          "time_ms": 291000,
+          "reason": "'猎物不会带着亲属、追踪设备和政府表格回来'：远程报复的错位幽默最高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "humor_payoff",
+          "mechanism": "dentist_self_deprecation"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "humor_payoff",
+          "mechanism": "government_form"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "threat_reframe",
+          "mechanism": "visible_portion"
+        }
+      ],
+      "required_retention_events": [
+        "behavior_inventory",
+        "distance_retaliation_reveal",
+        "threat_reframe"
+      ],
+      "original_moves": [
+        "身体弱点自嘲",
+        "异常行为清单（直立、面对、工具、同伴）",
+        "远程报复能力",
+        "'身体只是威胁的可见部分'"
+      ],
+      "abstract_move": "把人类放进同一公式：身体脆弱，但行为信号完全不可读",
+      "replacement_needs": [
+        "人类身体弱点的自嘲式承认",
+        "人类异常行为信号清单（直立、面对、工具、同伴）",
+        "远程报复能力的揭示",
+        "'身体只是威胁的可见部分'的定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "historical_conditioning",
+      "start_ratio": 0.217,
+      "end_ratio": 0.265,
+      "start_sec": 309,
+      "end_sec": 377,
+      "position_label": "21.7%–26.5%(5:09–6:17)",
+      "purpose": "历史选择压力：数百年迫害把'警惕人类'写进种群",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "history_reveal",
+          "mechanism": "persecution_inventory"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "selection_logic",
+          "mechanism": "bold_dies_cautious_breeds"
+        }
+      ],
+      "required_retention_events": [
+        "persecution_inventory",
+        "selection_logic"
+      ],
+      "original_moves": [
+        "迫害方式清单",
+        "分布区萎缩",
+        "大胆者死、谨慎者留的选择逻辑",
+        "遗传与习得双通道",
+        "'深度谨慎倾向'落地"
+      ],
+      "abstract_move": "历史选择压力：数百年迫害把'警惕人类'写进种群",
+      "replacement_needs": [
+        "迫害方式清单",
+        "大胆个体被淘汰、谨慎个体留存的选择逻辑",
+        "遗传与习得双通道说明"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "modern_evidence",
+      "start_ratio": 0.265,
+      "end_ratio": 0.304,
+      "start_sec": 377,
+      "end_sec": 432,
+      "position_label": "26.5%–30.4%(6:17–7:12)",
+      "purpose": "现代研究证据与'隐形邻居'揭示：它一直在场，只是先你一步做决定",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.2989,
+          "time_ms": 425000,
+          "reason": "'你以为没有遭遇，决定在你到达前已经做出'：隐形邻居揭示的寒意峰值"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "被野兽跟随或观察时，你究竟是猎物还是研究对象",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "evidence_reveal",
+          "mechanism": "tracking_negative_response"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "invisibility_reveal",
+          "mechanism": "arriving_after_we_leave"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "chill_payoff",
+          "mechanism": "decision_before_you_arrived"
+        }
+      ],
+      "required_retention_events": [
+        "research_anchor",
+        "invisibility_reveal",
+        "chill_payoff"
+      ],
+      "original_moves": [
+        "追踪研究回避响应",
+        "近距离共存却不可见",
+        "'在你离开后才到来'",
+        "'决定在你到达前已做出'的寒意揭示"
+      ],
+      "abstract_move": "现代研究证据与'隐形邻居'揭示：它一直在场，只是先你一步做决定",
+      "replacement_needs": [
+        "追踪研究的回避响应证据",
+        "近距离共存却不可见的悖论",
+        "'决定在你到达前已做出'的寒意揭示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85);打开的悬念 LOOP03→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "signal_literacy",
+      "start_ratio": 0.304,
+      "end_ratio": 0.374,
+      "start_sec": 432,
+      "end_sec": 532,
+      "position_label": "30.4%–37.4%(7:12–8:52)",
+      "purpose": "信号识字课：拆解人类最易误读的两种信号（跟随与嚎叫）",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "misread_correction",
+          "mechanism": "followed_vs_hunted"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "myth_demystified",
+          "mechanism": "howl_not_attack_call"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "humor_payoff",
+          "mechanism": "family_group_chat"
+        }
+      ],
+      "required_retention_events": [
+        "misread_correction",
+        "warning_sign_inventory",
+        "myth_demystified"
+      ],
+      "original_moves": [
+        "跟随行为的真实功能",
+        "被跟随与被猎杀感觉相同",
+        "警惕行为清单",
+        "嚎叫的通讯本质与距离错觉",
+        "'家庭群聊'类比"
+      ],
+      "abstract_move": "信号识字课：拆解人类最易误读的两种信号（跟随与嚎叫）",
+      "replacement_needs": [
+        "跟随与观察行为的真实功能解释",
+        "人类神经系统的误读机制",
+        "真正值得警惕的行为清单",
+        "嚎叫的通讯本质与距离错觉"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "calm_protocol",
+      "start_ratio": 0.374,
+      "end_ratio": 0.446,
+      "start_sec": 532,
+      "end_sec": 634,
+      "position_label": "37.4%–44.6%(8:52–10:34)",
+      "purpose": "恐慌管理：恐惧如何制造坏决策，冷静如何保存信息",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "behavioral_literacy_and_protocol",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "reframe_verdict",
+          "mechanism": "fearless_wolf_management_problem"
+        }
+      ],
+      "required_retention_events": [
+        "fear_consequence_list",
+        "calm_protocol",
+        "reframe_verdict"
+      ],
+      "original_moves": [
+        "恐慌引发的错误行为",
+        "冷静处置原则",
+        "单次与模式的区分",
+        "'无畏个体等于管理问题'的反转定性",
+        "习惯化铺垫"
+      ],
+      "abstract_move": "恐慌管理：恐惧如何制造坏决策，冷静如何保存信息",
+      "replacement_needs": [
+        "恐慌引发的错误行为清单",
+        "冷静处置的动作原则",
+        "单次行为与行为模式的区分",
+        "'无畏个体等于管理问题'的反转定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS07→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "AD01",
+      "function": "sponsor_read",
+      "start_ratio": 0.446,
+      "end_ratio": 0.461,
+      "start_sec": 634,
+      "end_sec": 656,
+      "position_label": "44.6%–46.1%(10:34–10:56)",
+      "purpose": "",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "by_the_way_transition"
+      ],
+      "original_moves": [
+        "'顺便一提'切入",
+        "课程内容与卖点",
+        "链接引导",
+        "回归正文"
+      ],
+      "abstract_move": "接收自营课程推广信息（非叙事内容）",
+      "replacement_needs": [
+        "能让观众:接收自营课程推广信息（非叙事内容）"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "risk_amplifiers",
+      "start_ratio": 0.461,
+      "end_ratio": 0.601,
+      "start_sec": 656,
+      "end_sec": 854,
+      "position_label": "46.1%–60.1%(10:56–14:14)",
+      "purpose": "风险放大器链条：习惯化、食物条件反射、幼体好奇与疾病如何把罕见变成危险",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "data_anchor",
+          "strength": 75,
+          "position_ratio": 0.6006,
+          "time_ms": 854000,
+          "reason": "核实案例总数与分类构成落地，悬念转为数据画像"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "一只正常警惕的野兽如何被人为养成危险版本",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "causal_chain_reveal",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "conditioning_reveal",
+          "mechanism": "scent_predicts_calories"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "sequence_verdict",
+          "mechanism": "last_event_in_sequence"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "aphorism_stamp",
+          "mechanism": "safest_wolf_verdict"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "threat_reveal",
+          "mechanism": "disease_removes_barrier"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "data_anchor",
+          "mechanism": "verified_case_breakdown"
+        }
+      ],
+      "required_retention_events": [
+        "conditioning_reveal",
+        "sequence_verdict",
+        "aphorism_stamp",
+        "disease_threat_reveal"
+      ],
+      "original_moves": [
+        "习惯化分界",
+        "食物改变气味含义",
+        "'攻击是序列最后一个事件'",
+        "投喂不等于善意金句",
+        "幼体例外",
+        "疾病因素的历史角色"
+      ],
+      "abstract_move": "风险放大器链条：习惯化、食物条件反射、幼体好奇与疾病如何把罕见变成危险",
+      "replacement_needs": [
+        "普通习惯化与危险习惯化的分界",
+        "食物改变气味含义的机制",
+        "'攻击是序列最后一个事件'的揭示",
+        "幼体例外的说明",
+        "疾病因素的历史角色"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "data_anchor",
+      "start_ratio": 0.601,
+      "end_ratio": 0.691,
+      "start_sec": 854,
+      "end_sec": 982,
+      "position_label": "60.1%–69.1%(14:14–16:22)",
+      "purpose": "权威统计坐实：用真实数据给出风险画像，并标出最脆弱的例外人群",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "risk_condition_taxonomy",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "exception_reveal",
+          "mechanism": "children_vulnerability"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "myth_bust",
+          "mechanism": "alpha_military_myth"
+        }
+      ],
+      "required_retention_events": [
+        "data_anchor",
+        "caveat_honesty",
+        "vulnerable_group_exception"
+      ],
+      "original_moves": [
+        "核实案例总数与分类构成",
+        "覆盖局限的诚实声明",
+        "风险条件聚类清单",
+        "儿童例外的体型与机会机制"
+      ],
+      "abstract_move": "权威统计坐实：用真实数据给出风险画像，并标出最脆弱的例外人群",
+      "replacement_needs": [
+        "数据出处与样本量",
+        "分类构成的具体数字",
+        "数据覆盖局限的诚实声明",
+        "脆弱人群例外的机制解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "myth_demolition",
+      "start_ratio": 0.691,
+      "end_ratio": 0.779,
+      "start_sec": 982,
+      "end_sec": 1108,
+      "position_label": "69.1%–77.9%(16:22–18:28)",
+      "purpose": "定点拆除流行文化神话：群体不是军事黑帮，防御不等于捕食",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "humor_peak",
+          "strength": 70,
+          "position_ratio": 0.7286,
+          "time_ms": 1036000,
+          "reason": "'一家人边跑边商量'：群体神话拆除后的记忆点金句"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "aphorism_stamp",
+          "mechanism": "family_agreeing_while_running"
+        }
+      ],
+      "required_retention_events": [
+        "pop_myth_stated",
+        "family_structure_replacement",
+        "defensive_predatory_distinction"
+      ],
+      "original_moves": [
+        "流行文化神话陈述",
+        "真实家庭结构",
+        "个体差异清单",
+        "'一家人边跑边商量'金句",
+        "防御性伤害与捕食性攻击的区分"
+      ],
+      "abstract_move": "定点拆除流行文化神话：群体不是军事黑帮，防御不等于捕食",
+      "replacement_needs": [
+        "流行文化神话的陈述",
+        "真实家庭结构的替换",
+        "个体差异性说明",
+        "防御性伤害与捕食性攻击的区分"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "dog_domestication",
+      "start_ratio": 0.779,
+      "end_ratio": 0.868,
+      "start_sec": 1108,
+      "end_sec": 1234,
+      "position_label": "77.9%–86.8%(18:28–20:34)",
+      "purpose": "驯化物种的双重角色：既是冲突导火索，也是'警惕者如何被驯化'的活证据",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "既然它们如此警惕人类，家犬当初是怎么来的",
+          "closes_in": "FS13"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "饥饿到极点时，它们会不会把人当成最后的选项",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "paradox_resolution",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "paradox_tease",
+          "mechanism": "domestication_contradiction"
+        }
+      ],
+      "required_retention_events": [
+        "conflict_mechanism",
+        "paradox_tease",
+        "paradox_resolution"
+      ],
+      "original_moves": [
+        "狗作为竞争者的冲突机制",
+        "人被卷入的路径",
+        "管控规则正当化",
+        "驯化悖论自问自答",
+        "行为变异度解答",
+        "宠物错位幽默"
+      ],
+      "abstract_move": "驯化物种的双重角色：既是冲突导火索，也是'警惕者如何被驯化'的活证据",
+      "replacement_needs": [
+        "驯化物种作为竞争者引发冲突的机制",
+        "管控规则的正当化",
+        "驯化悖论的自问自答",
+        "行为变异度作为答案"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "fear_psychology",
+      "start_ratio": 0.868,
+      "end_ratio": 0.94,
+      "start_sec": 1234,
+      "end_sec": 1336,
+      "position_label": "86.8%–94%(20:34–22:16)",
+      "purpose": "恐惧心理学收束：饥饿神话拆除加鲜明性偏差揭示，给出'尊重'的中间立场",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.9241,
+          "time_ms": 1314000,
+          "reason": "'恐惧不是电子表格'：恐惧偏差的定性完成认知反转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "qualified_answer",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "aphorism_stamp",
+          "mechanism": "hungry_wolf_cultural_work"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "worldview_shift",
+          "mechanism": "fear_not_spreadsheet"
+        }
+      ],
+      "required_retention_events": [
+        "qualified_answer",
+        "vividness_bias_reveal",
+        "stance_verdict"
+      ],
+      "original_moves": [
+        "饥饿极端情形的条件化回答",
+        "'饥饿神话承担太多文化工作'金句",
+        "鲜明性偏差揭示",
+        "熟悉风险对照",
+        "'尊重动物也尊重罕见性'立场句"
+      ],
+      "abstract_move": "恐惧心理学收束：饥饿神话拆除加鲜明性偏差揭示，给出'尊重'的中间立场",
+      "replacement_needs": [
+        "饥饿极端情形的条件化回答",
+        "恐惧鲜明性偏差的揭示",
+        "熟悉风险与陌生恐惧的对照",
+        "'尊重动物也尊重罕见性'的立场句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(75);回收了前文的悬念 FS13→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS15",
+      "function": "action_protocol",
+      "start_ratio": 0.94,
+      "end_ratio": 0.976,
+      "start_sec": 1336,
+      "end_sec": 1388,
+      "position_label": "94%–97.6%(22:16–23:08)",
+      "purpose": "行动指南：把全部机制压缩为可执行的遭遇清单",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "empowerment_checklist",
+          "mechanism": "you_are_aware_cascade"
+        }
+      ],
+      "required_retention_events": [
+        "checklist_empowerment",
+        "second_person_cascade",
+        "mechanism_callback"
+      ],
+      "original_moves": [
+        "距离与投喂禁令",
+        "姿态与声音动作清单",
+        "'你警觉、你庞大、你难缠'连发确认",
+        "'帮它做出它本就偏好的决定'回扣"
+      ],
+      "abstract_move": "行动指南：把全部机制压缩为可执行的遭遇清单",
+      "replacement_needs": [
+        "保持距离与不投喂的禁令",
+        "遭遇时的姿态与声音动作清单",
+        "第二人称短句连发的自我确认",
+        "'帮它做出它本就偏好的决定'的机制回扣"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.976,
+      "end_ratio": 1,
+      "start_sec": 1388,
+      "end_sec": 1422,
+      "position_label": "97.6%–100%(23:08–23:42)",
+      "purpose": "显式回答标题问句并以镜像意象收束",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "title_callback",
+          "strength": 85,
+          "position_ratio": 0.9761,
+          "time_ms": 1388000,
+          "reason": "'这就是为什么它们通常不攻击我们'：标题问句显式兑现"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.9979,
+          "time_ms": 1419000,
+          "reason": "'它离开不是因为你更强'：镜像意象与逞强否定的最终收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_mechanism_account_and_title_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "title_answer_callback",
+          "mechanism": "ultimate_answer"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "mirrored_image_close",
+          "mechanism": "animal_in_trees"
+        }
+      ],
+      "required_retention_events": [
+        "title_answer_callback",
+        "mirrored_image_close"
+      ],
+      "original_moves": [
+        "'这就是为什么'标题回答",
+        "机制一句话总复述",
+        "谨慎来自历史的定性",
+        "'树林里的动物可能正在看你'镜像收束",
+        "否定逞强式解释"
+      ],
+      "abstract_move": "显式回答标题问句并以镜像意象收束",
+      "replacement_needs": [
+        "'这就是为什么'的标题显式回答",
+        "核心机制的一句话总复述",
+        "回到开场场景的镜像意象",
+        "否定逞强式解释的收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85)、PK10(80);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 80
+        }
+      ]
+    }
+  ]
+}

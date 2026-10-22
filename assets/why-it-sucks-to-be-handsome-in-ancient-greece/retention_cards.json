@@ -1,0 +1,1007 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.443Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.059,
+      "start_sec": 0,
+      "end_sec": 79,
+      "position_label": "0%–5.9%(0:00–1:19)",
+      "purpose": "第二人称沉浸开场：指派观众为被羡慕的当事人，用荒诞信物与致命赌注建立'一步错即万劫不复'的恐惧",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "stakes_reveal",
+          "strength": 70,
+          "position_ratio": 0.0464,
+          "time_ms": 62000,
+          "reason": "开场即亮出'走错一步终身失去权利'的赌注，荒诞画面瞬间变得致命"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：这个被羡慕的身份究竟糟糕到什么程度、走错一步的代价有多严重（标题抱怨式问句的具身化悬挂）",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "开场那只活禽信物究竟是什么、收下它意味着什么",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_identity_assignment"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "threat_tease",
+          "mechanism": "absurd_observer_with_prop"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "stakes_reveal",
+          "mechanism": "one_wrong_move_costs_rights"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "title_drop",
+          "mechanism": "world_naming"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_identity_assignment",
+        "absurd_prop_introduced",
+        "stakes_revealed"
+      ],
+      "original_moves": [
+        "身份指派",
+        "日常场景",
+        "持鸡追求者出现",
+        "走错一步失去权利",
+        "主题世界命名"
+      ],
+      "abstract_move": "第二人称沉浸开场：指派观众为被羡慕的当事人，用荒诞信物与致命赌注建立'一步错即万劫不复'的恐惧",
+      "replacement_needs": [
+        "具体身份与日常场景锚点",
+        "一个荒诞但真实的威胁道具",
+        "走错一步的终身代价清单",
+        "主题世界的一句话命名"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS15、LOOP02→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 70000,
+        "hook_type": "immersive_second_person_absurd_stakes_scene",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 62000,
+        "evidence_refs": [
+          "C0001",
+          "C0007",
+          "C0009"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "myth_busting_setup",
+      "start_ratio": 0.059,
+      "end_ratio": 0.113,
+      "start_sec": 79,
+      "end_sec": 151,
+      "position_label": "5.9%–11.3%(1:19–2:31)",
+      "purpose": "主持人人格亮相并复述流行文化的乌托邦想象，随即用一句现代官僚隐喻将其拆穿",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.0906,
+          "time_ms": 121000,
+          "reason": "乌托邦想象被一句现代官僚隐喻一击拆穿，全片第一个认知翻转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "流行文化描绘的乌托邦想象是否经得起史实检验",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "myth_setup",
+          "mechanism": "pop_culture_utopia_listing"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "myth_busting",
+          "mechanism": "bureaucratic_nightmare_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "utopia_myth_listed",
+        "bureaucratic_nightmare_verdict"
+      ],
+      "original_moves": [
+        "频道契约",
+        "流行滤镜清单",
+        "'官僚噩梦'定性",
+        "要求丢弃现代概念"
+      ],
+      "abstract_move": "主持人人格亮相并复述流行文化的乌托邦想象，随即用一句现代官僚隐喻将其拆穿",
+      "replacement_needs": [
+        "频道人格与观看契约的简短亮相",
+        "流行文化滤镜的具体清单",
+        "一句把真相定性为官僚噩梦的现代隐喻"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75);打开的悬念 LOOP03→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "central_lens_reveal",
+      "start_ratio": 0.113,
+      "end_ratio": 0.165,
+      "start_sec": 151,
+      "end_sec": 220,
+      "position_label": "11.3%–16.5%(2:31–3:40)",
+      "purpose": "揭示该社会解读一切人际关系的单一透镜：支配与服从的二元权力框架",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.1184,
+          "time_ms": 158000,
+          "reason": "支配与服从的单一权力透镜揭示，成为解释全片所有规则的总钥匙"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "myth_demolished",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "central_lens_reveal",
+          "mechanism": "power_binary_framework"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "perspective_shift",
+          "mechanism": "spouse_double_standard"
+        }
+      ],
+      "required_retention_events": [
+        "single_lens_reveal",
+        "binary_rules_explained"
+      ],
+      "original_moves": [
+        "现代范畴不存在",
+        "权力透镜揭示",
+        "二元划分",
+        "顶端豁免与底端限定"
+      ],
+      "abstract_move": "揭示该社会解读一切人际关系的单一透镜：支配与服从的二元权力框架",
+      "replacement_needs": [
+        "现代范畴在古人词汇中不存在的断言",
+        "支配与服从的二元划分",
+        "顶端群体的豁免规则与底端群体的限定名单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80);回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "collateral_perspective",
+      "start_ratio": 0.165,
+      "end_ratio": 0.21,
+      "start_sec": 220,
+      "end_sec": 281,
+      "position_label": "16.5%–21%(3:40–4:41)",
+      "purpose": "切到制度中另一受害群体（配偶）的处境，用双标日常衬托系统的荒谬",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "humor_payoff",
+          "mechanism": "hypothetical_reenactment"
+        }
+      ],
+      "required_retention_events": [
+        "double_standard_scene",
+        "verdict_line"
+      ],
+      "original_moves": [
+        "妻子居家禁锢",
+        "职责清单",
+        "假设重演丈夫挥霍",
+        "'不尊重程度'判词"
+      ],
+      "abstract_move": "切到制度中另一受害群体（配偶）的处境，用双标日常衬托系统的荒谬",
+      "replacement_needs": [
+        "配偶被禁锢的空间与职责细节",
+        "一个丈夫挥霍资源讨好外人的假设重演场景",
+        "一句为双标定性的短判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "system_rationale",
+      "start_ratio": 0.21,
+      "end_ratio": 0.241,
+      "start_sec": 281,
+      "end_sec": 322,
+      "position_label": "21%–24.1%(4:41–5:22)",
+      "purpose": "解释系统为何存在：主线身份处于受保护的过渡阶段，因此全社会为其设计了一套严管规则",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "system_rationale",
+          "mechanism": "protected_transition_phase"
+        }
+      ],
+      "required_retention_events": [
+        "transition_phase_logic",
+        "minefield_verdict"
+      ],
+      "original_moves": [
+        "过渡期定位",
+        "被视为身份象征",
+        "未来公民须受保护",
+        "严管系统与'心理雷区'定性"
+      ],
+      "abstract_move": "解释系统为何存在：主线身份处于受保护的过渡阶段，因此全社会为其设计了一套严管规则",
+      "replacement_needs": [
+        "该身份'不再是孩子也未是成人'的过渡定位",
+        "其外貌被高位者视为身份象征的处境",
+        "社会必须保护其未来公民资格的逻辑"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "arena_exposure",
+      "start_ratio": 0.241,
+      "end_ratio": 0.312,
+      "start_sec": 322,
+      "end_sec": 416,
+      "position_label": "24.1%–31.2%(5:22–6:56)",
+      "purpose": "进入最危险的日常场所，揭示围猎如何公开化、正常化",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "arena_entry",
+          "mechanism": "worst_place_named"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "modern_mapping",
+          "mechanism": "dating_app_verdict"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "behavior_reveal",
+          "mechanism": "public_grading_and_graffiti"
+        }
+      ],
+      "required_retention_events": [
+        "arena_as_hunting_ground",
+        "harassment_inventory",
+        "era_contrast_payoff"
+      ],
+      "original_moves": [
+        "今昔场所对照",
+        "猎场定性",
+        "双方称谓",
+        "品评跟踪涂鸦清单",
+        "时代对照判词"
+      ],
+      "abstract_move": "进入最危险的日常场所，揭示围猎如何公开化、正常化",
+      "replacement_needs": [
+        "今昔同一场所的功能对照",
+        "追求者与追求对象的专属称谓",
+        "公开品评、跟踪与涂鸦式表白的行为清单",
+        "一句'在今天违法、在当时是恭维'的时代对照"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "complicity_reveal",
+      "start_ratio": 0.312,
+      "end_ratio": 0.369,
+      "start_sec": 416,
+      "end_sec": 492,
+      "position_label": "31.2%–36.9%(6:56–8:12)",
+      "purpose": "揭示家庭也是共谋：当事人不能拒绝围猎，因为前途取决于被选中",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "complicity_reveal",
+          "mechanism": "family_wants_you_picked"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "absurd_detail",
+          "mechanism": "armed_bodyguard_gatekeeper"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "callback_payoff",
+          "mechanism": "opening_prop_returns"
+        }
+      ],
+      "required_retention_events": [
+        "family_interest_logic",
+        "bodyguard_absurdity"
+      ],
+      "original_moves": [
+        "不能拒绝",
+        "家庭利益逻辑",
+        "实习类比",
+        "持棍护卫的荒诞职责"
+      ],
+      "abstract_move": "揭示家庭也是共谋：当事人不能拒绝围猎，因为前途取决于被选中",
+      "replacement_needs": [
+        "家庭期待被高位者选中的利益逻辑",
+        "现代实习类比的翻译",
+        "持棍护卫这一荒诞职业的职责细节"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "ritual_absurdity",
+      "start_ratio": 0.369,
+      "end_ratio": 0.445,
+      "start_sec": 492,
+      "end_sec": 594,
+      "position_label": "36.9%–44.5%(8:12–9:54)",
+      "purpose": "回收开场道具：揭示求爱赠礼的古怪规则，并把荒诞感推到极致",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "humor_peak",
+          "strength": 75,
+          "position_ratio": 0.4397,
+          "time_ms": 587000,
+          "reason": "活禽物流荒诞推演与'收下即契约'规则的双重落地，笑点与约束同时兑现"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "收到活禽之后到底该拿它怎么办的物流问题始终没有回答：刻意保持开放，叙事用途是把荒诞感作为贯穿笑点悬挂，并让结尾意象回扣时观众仍记得这份尴尬",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "prop_mystery_explained",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "rule_reveal",
+          "mechanism": "no_luxury_gifts_illegal"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "humor_payoff",
+          "mechanism": "absurd_logistics"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "contract_reveal",
+          "mechanism": "accepting_gift_is_contract"
+        }
+      ],
+      "required_retention_events": [
+        "prop_callback_explained",
+        "gift_rule_reveal",
+        "contract_threshold"
+      ],
+      "original_moves": [
+        "道具回扣",
+        "禁贵重礼的法律理由",
+        "合规信物象征",
+        "物流尴尬推演",
+        "接受即契约"
+      ],
+      "abstract_move": "回收开场道具：揭示求爱赠礼的古怪规则，并把荒诞感推到极致",
+      "replacement_needs": [
+        "开场道具的正式回扣",
+        "禁止贵重礼物的法律理由",
+        "合规信物的象征意义与实物清单",
+        "收到信物后的物流尴尬推演"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75);打开的悬念 LOOP06(不闭合) 跨段;回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "stakes_escalation",
+      "start_ratio": 0.445,
+      "end_ratio": 0.513,
+      "start_sec": 594,
+      "end_sec": 685,
+      "position_label": "44.5%–51.3%(9:54–11:25)",
+      "purpose": "升级赌注：接受契约即被全城监视，社交仪式变成另一种刑罚",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "stakes_escalation",
+          "mechanism": "citywide_microscope"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "setting_subversion",
+          "mechanism": "elegant_party_is_frat_party"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "ordeal_rules",
+          "mechanism": "sober_upright_chair"
+        }
+      ],
+      "required_retention_events": [
+        "surveillance_stakes",
+        "party_ordeal_rules"
+      ],
+      "original_moves": [
+        "预演反驳再推翻",
+        "全城显微镜",
+        "宴会想象与现实落差",
+        "当事人专属禁令"
+      ],
+      "abstract_move": "升级赌注：接受契约即被全城监视，社交仪式变成另一种刑罚",
+      "replacement_needs": [
+        "预演观众反驳再推翻的转折",
+        "全城显微镜式监视的断言",
+        "宴会想象与现实的落差",
+        "当事人专属禁令的行为细节"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "prohibition_core",
+      "start_ratio": 0.513,
+      "end_ratio": 0.595,
+      "start_sec": 685,
+      "end_sec": 794,
+      "position_label": "51.3%–59.5%(11:25–13:14)",
+      "purpose": "亮出全片最反人性的核心禁令：当事人被法律禁止享受这一切",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "core_prohibition",
+          "mechanism": "forbidden_to_enjoy"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "ritual_absurdity",
+          "mechanism": "statue_stare_ritual"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "timer_reveal",
+          "mechanism": "biological_expiry_signal"
+        }
+      ],
+      "required_retention_events": [
+        "enjoyment_ban",
+        "dehumanizing_ritual"
+      ],
+      "original_moves": [
+        "禁止享受的法律定性",
+        "违规标签后果",
+        "仪式动作规范",
+        "身体物化隐喻"
+      ],
+      "abstract_move": "亮出全片最反人性的核心禁令：当事人被法律禁止享受这一切",
+      "replacement_needs": [
+        "禁止表现出享受的法律定性",
+        "违反者的社会性标签后果",
+        "把亲密仪式去人格化的具体动作规范",
+        "一句身体物化的现代隐喻"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "biological_timer",
+      "start_ratio": 0.595,
+      "end_ratio": 0.642,
+      "start_sec": 794,
+      "end_sec": 857,
+      "position_label": "59.5%–64.2%(13:14–14:17)",
+      "purpose": "引入生理倒计时：外貌信号决定资格的生效与失效",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "如果年轻人在规则上犯了错会怎样：假设之问悬挂，直到真实判例给出毁灭性答案",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "ridicule_threat",
+          "mechanism": "theater_mockery"
+        }
+      ],
+      "required_retention_events": [
+        "expiry_signal_rule",
+        "role_inversion"
+      ],
+      "original_moves": [
+        "生理计时器",
+        "到期仪式",
+        "身份反转",
+        "滞留禁忌与文艺嘲讽"
+      ],
+      "abstract_move": "引入生理倒计时：外貌信号决定资格的生效与失效",
+      "replacement_needs": [
+        "资格有效期的身体信号规则",
+        "到期仪式的具体动作",
+        "角色身份瞬间反转的断言",
+        "违规滞留被公开编排嘲讽的代价"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "legal_terror",
+      "start_ratio": 0.642,
+      "end_ratio": 0.77,
+      "start_sec": 857,
+      "end_sec": 1028,
+      "position_label": "64.2%–77%(14:17–17:08)",
+      "purpose": "从荒诞转向恐怖：揭示越线的法律定性、终身惩罚清单与制度的虚伪双标",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.6742,
+          "time_ms": 900000,
+          "reason": "终身惩罚的名称与逐项剥夺权利的清单砸下，恐惧达到顶点"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "humor_peak",
+          "strength": 80,
+          "position_ratio": 0.7416,
+          "time_ms": 990000,
+          "reason": "'先交税再取消你'的制度双标：荒诞笑点与愤怒同时拉满"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "制度一边终身惩罚一边公开征税的双标如何自洽",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "hypocrisy_exposed",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "legal_line_reveal",
+          "mechanism": "greed_crosses_invisible_line"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "penalty_reveal",
+          "mechanism": "rights_stripping_cascade"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "deletion_verdict",
+          "mechanism": "ghost_in_hometown"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "hypocrisy_reveal",
+          "mechanism": "state_tax_on_illegal_job"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "limitless_threat",
+          "mechanism": "no_statute_of_limitations"
+        }
+      ],
+      "required_retention_events": [
+        "invisible_line",
+        "rights_stripping_cascade",
+        "hypocrisy_reveal",
+        "no_statute_threat"
+      ],
+      "original_moves": [
+        "假设犯错",
+        "越线清单",
+        "法律定性",
+        "权利剥夺排比",
+        "征税双标",
+        "无追诉时效"
+      ],
+      "abstract_move": "从荒诞转向恐怖：揭示越线的法律定性、终身惩罚清单与制度的虚伪双标",
+      "replacement_needs": [
+        "越线行为的具体清单",
+        "法律定性与惩罚名称",
+        "逐项剥夺公民权利的排比清单",
+        "制度一边惩罚一边征税的双标细节",
+        "无追诉时效的终身威胁"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85)、PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "case_study_climax",
+      "start_ratio": 0.77,
+      "end_ratio": 0.865,
+      "start_sec": 1028,
+      "end_sec": 1155,
+      "position_label": "77%–86.5%(17:08–19:15)",
+      "purpose": "全片高潮：用一个有名有姓的真实判例，把前面所有假设的恐惧兑现成一个人的毁灭",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 95,
+          "position_ratio": 0.8532,
+          "time_ms": 1139000,
+          "reason": "真实判例：权势人物一个下午被永久毁灭，全片情绪与悬念的最高释放点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "real_case_consequences",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "accusation_reveal",
+          "mechanism": "past_weaponized_in_court"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "verdict_payoff",
+          "mechanism": "destroyed_in_one_afternoon"
+        }
+      ],
+      "required_retention_events": [
+        "real_case_entry",
+        "accusation_maps_rules",
+        "total_ruin_verdict"
+      ],
+      "original_moves": [
+        "当事人权势铺垫",
+        "政敌挖私史",
+        "指控对应规则",
+        "心态即罪名",
+        "判罪毁灭"
+      ],
+      "abstract_move": "全片高潮：用一个有名有姓的真实判例，把前面所有假设的恐惧兑现成一个人的毁灭",
+      "replacement_needs": [
+        "当事人的权势地位铺垫",
+        "政敌避开政见、直挖私史的打法",
+        "指控内容与前文规则的一一对应",
+        "'心态即罪名'的论证逻辑",
+        "一个下午失去一切的结局"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(95);回收了前文的悬念 FS11→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 95
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "counterpoint_twist",
+      "start_ratio": 0.865,
+      "end_ratio": 0.933,
+      "start_sec": 1155,
+      "end_sec": 1245,
+      "position_label": "86.5%–93.3%(19:15–20:45)",
+      "purpose": "反直觉支线：另一个政权把同一套系统武器化，造出战无不胜的军事单位",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9191,
+          "time_ms": 1227000,
+          "reason": "恋人军团击溃不败强权的反直觉支线高潮"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "weaponization_twist",
+          "mechanism": "army_of_couples"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "triumph_payoff",
+          "mechanism": "undefeated_destroyed"
+        }
+      ],
+      "required_retention_events": [
+        "weaponization_reveal",
+        "underdog_triumph"
+      ],
+      "original_moves": [
+        "武器化定性",
+        "精确数字结构",
+        "羞耻驱动逻辑",
+        "不败战绩",
+        "幽默判词"
+      ],
+      "abstract_move": "反直觉支线：另一个政权把同一套系统武器化，造出战无不胜的军事单位",
+      "replacement_needs": [
+        "武器化改造的一句话定性",
+        "单位构成的精确数字结构",
+        "羞耻感驱动战斗力的冷酷逻辑",
+        "击溃不败强权的结果与幽默定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS15",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.933,
+      "end_ratio": 0.981,
+      "start_sec": 1245,
+      "end_sec": 1309,
+      "position_label": "93.3%–98.1%(20:45–21:49)",
+      "purpose": "认知收束：把全部规则汇总为对系统本质的定性——为维持支配结构而设计的高压测试",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.9805,
+          "time_ms": 1309000,
+          "reason": "感恩反转：现代约会烦恼被折算成幸运，完成全片认知收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_system_account_and_verdict",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "synthesis_verdict",
+          "mechanism": "razor_thin_tightrope"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "gratitude_reframe",
+          "mechanism": "could_be_worse"
+        }
+      ],
+      "required_retention_events": [
+        "tightrope_synthesis",
+        "system_verdict"
+      ],
+      "original_moves": [
+        "两难处境复述",
+        "走钢丝比喻",
+        "系统本质定性",
+        "私事小错直连毁灭"
+      ],
+      "abstract_move": "认知收束：把全部规则汇总为对系统本质的定性——为维持支配结构而设计的高压测试",
+      "replacement_needs": [
+        "当事人两难处境的集中复述",
+        "走钢丝比喻的显式使用",
+        "系统服务于权力结构的本质定性",
+        "私事小错与人生毁灭的因果直连"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(80);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.981,
+      "end_ratio": 1,
+      "start_sec": 1309,
+      "end_sec": 1335,
+      "position_label": "98.1%–100%(21:49–22:15)",
+      "purpose": "结尾：把古代苦难折算成对现代同类烦恼的安慰，并用开场意象双重回扣收束",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "callback_close",
+          "mechanism": "opening_prop_and_ritual_callback"
+        }
+      ],
+      "required_retention_events": [
+        "gratitude_reframe",
+        "opening_image_callback"
+      ],
+      "original_moves": [
+        "现代烦恼共情",
+        "本可以更糟反转",
+        "信物与仪式场景回扣"
+      ],
+      "abstract_move": "结尾：把古代苦难折算成对现代同类烦恼的安慰，并用开场意象双重回扣收束",
+      "replacement_needs": [
+        "对现代同类烦恼的点名共情",
+        "'本可以更糟'的感恩反转",
+        "开场威胁道具与仪式场景的回扣画面"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    }
+  ]
+}

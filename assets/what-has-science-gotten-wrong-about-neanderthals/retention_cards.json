@@ -1,0 +1,1017 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.343Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "thesis_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.042,
+      "start_sec": 0,
+      "end_sec": 65.3,
+      "position_label": "0%–4.2%(0:00–1:05)",
+      "purpose": "挑衅断言式开场：宣布权威叙事'几乎凭空发明了'这个对象，并用两幅相反肖像的速览展示摆动幅度",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.0272,
+          "time_ms": 42683,
+          "reason": "'可能在相反方向上同样错了'：全片论点翻转的第一个高点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：权威叙事在这个对象上究竟错在哪里（标题问句的悬挂，开场即以挑衅断言具身化）",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook",
+          "mechanism": "contrarian_thesis"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "humor_payoff",
+          "mechanism": "modern_analogy_humor"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "reversal",
+          "mechanism": "portrait_reversal"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "thesis_turn",
+          "mechanism": "opposite_direction_pivot"
+        }
+      ],
+      "required_retention_events": [
+        "contrarian_thesis",
+        "portrait_reversal"
+      ],
+      "original_moves": [
+        "从零信息到挑衅断言，再到贬低版/美化版肖像对照与'相反方向也错了'的论点预告"
+      ],
+      "abstract_move": "挑衅断言式开场：宣布权威叙事'几乎凭空发明了'这个对象，并用两幅相反肖像的速览展示摆动幅度",
+      "replacement_needs": [
+        "一句否定式挑衅断言",
+        "贬低版与美化版两幅肖像的快速对照",
+        "本片真正论点的一句话预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(75);打开的悬念 LOOP01→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "contrarian_thesis_plus_portrait_reversal",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 28171,
+        "evidence_refs": [
+          "C0001",
+          "C0010",
+          "C0031"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "error_origin",
+      "start_ratio": 0.042,
+      "end_ratio": 0.088,
+      "start_sec": 65.3,
+      "end_sec": 137.5,
+      "position_label": "4.2%–8.8%(1:05–2:18)",
+      "purpose": "错误溯源：回到错误被制造的历史现场，展示当年学界给出的种种荒谬解释",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "核心错误预告：'把整支谱系挤成一个人'究竟是什么意思",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "core_mistake_preview",
+          "mechanism": "essence_compression_tease"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "humor_payoff",
+          "mechanism": "absurd_theory_humor"
+        }
+      ],
+      "required_retention_events": [
+        "historical_anchor",
+        "absurd_early_theory"
+      ],
+      "original_moves": [
+        "发现事件锚点",
+        "时代思想障碍",
+        "病理化解释",
+        "荒诞士兵假说",
+        "奠基性重建登场"
+      ],
+      "abstract_move": "错误溯源：回到错误被制造的历史现场，展示当年学界给出的种种荒谬解释",
+      "replacement_needs": [
+        "关键发现的时间与地点锚点",
+        "当时思想界的接受障碍",
+        "至少一个荒谬到可笑的早期解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "specimen_fallacy",
+      "start_ratio": 0.088,
+      "end_ratio": 0.108,
+      "start_sec": 137.5,
+      "end_sec": 169,
+      "position_label": "8.8%–10.8%(2:18–2:49)",
+      "purpose": "单一标本谬误：揭示整个刻板印象建立在一个不具代表性的个案上",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.0926,
+          "time_ms": 145070,
+          "reason": "奠基标本是年老病者：刻板印象地基被抽空的揭示"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "为什么教科书形象是弯腰驼背的：奠基标本到底出了什么问题",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "specimen_explanation",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "problem_setup",
+          "mechanism": "central_problem_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "unrepresentative_specimen_reveal"
+      ],
+      "original_moves": [
+        "奠基重建内容",
+        "一个大问题的提出",
+        "标本是年老病者的揭示",
+        "直立行走平反"
+      ],
+      "abstract_move": "单一标本谬误：揭示整个刻板印象建立在一个不具代表性的个案上",
+      "replacement_needs": [
+        "奠基性重建的具体内容",
+        "该个案为何不具代表性的证据",
+        "'用一个人代表全体'的谬误点题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "bias_context",
+      "start_ratio": 0.108,
+      "end_ratio": 0.183,
+      "start_sec": 203.8,
+      "end_sec": 287,
+      "position_label": "10.8%–18.3%(3:24–4:47)",
+      "purpose": "偏见机制拆解：指出等级化意识形态如何把'不同'系统性地改写成'低等'",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "humor_payoff",
+          "mechanism": "counterfactual_analogy"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "bias_turn",
+          "mechanism": "different_to_inferior"
+        }
+      ],
+      "required_retention_events": [
+        "ideology_expose",
+        "different_to_inferior_turn"
+      ],
+      "original_moves": [
+        "'不同'变'低等'的转折",
+        "狩猎智慧的正名",
+        "伤病记录的误读与纠偏",
+        "第一错误模式命名"
+      ],
+      "abstract_move": "偏见机制拆解：指出等级化意识形态如何把'不同'系统性地改写成'低等'",
+      "replacement_needs": [
+        "当时流行的等级化世界观",
+        "该对象被安排进的等级位置",
+        "'不同'滑向'低等'的转折点题"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "intelligence_audit",
+      "start_ratio": 0.183,
+      "end_ratio": 0.23,
+      "start_sec": 287,
+      "end_sec": 360.6,
+      "position_label": "18.3%–23%(4:47–6:01)",
+      "purpose": "首轮审计示范：以智力议题演示'夸大说法→证据→限定→温和裁决'的标准循环",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "pattern_naming",
+          "mechanism": "error_pattern_statement"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "moderate_verdict",
+          "mechanism": "honest_conclusion"
+        }
+      ],
+      "required_retention_events": [
+        "quantified_evidence",
+        "moderate_verdict"
+      ],
+      "original_moves": [
+        "错误模式陈述",
+        "脑容量数据",
+        "'脑容量不是封存的智商'",
+        "诚实温和的裁决句"
+      ],
+      "abstract_move": "首轮审计示范：以智力议题演示'夸大说法→证据→限定→温和裁决'的标准循环",
+      "replacement_needs": [
+        "流行夸大说法的陈述",
+        "关键量化证据",
+        "证据能证明与不能证明的边界",
+        "温和裁决句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "technology_audit",
+      "start_ratio": 0.23,
+      "end_ratio": 0.304,
+      "start_sec": 360.6,
+      "end_sec": 475.6,
+      "position_label": "23%–30.4%(6:01–7:56)",
+      "purpose": "技术能力审计：器物证据令人惊叹，但随后用实验考古学自我降级，建立'实物≠心智'规则",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "人工胶是否证明他们拥有'化学工程'级知识",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "methodological_correction",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "tech_reveal",
+          "mechanism": "material_tech_reveal"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "method_correction",
+          "mechanism": "experimental_downgrade"
+        }
+      ],
+      "required_retention_events": [
+        "craft_inventory",
+        "methodological_correction",
+        "artifact_mind_rule"
+      ],
+      "original_moves": [
+        "石器工艺清单",
+        "复合工具",
+        "树脂胶证据",
+        "简单方法实验修正",
+        "实物与心智分离规则"
+      ],
+      "abstract_move": "技术能力审计：器物证据令人惊叹，但随后用实验考古学自我降级，建立'实物≠心智'规则",
+      "replacement_needs": [
+        "具体工艺证据的清单式呈现",
+        "一次把神奇解释降级为朴素解释的实验修正",
+        "实物与心智分离的规则句"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP04。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:人工胶是否证明他们拥有'化学工程'级知识",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "subsistence_audit",
+      "start_ratio": 0.304,
+      "end_ratio": 0.413,
+      "start_sec": 475.6,
+      "end_sec": 598.5,
+      "position_label": "30.4%–41.3%(7:56–9:58)",
+      "purpose": "生存方式审计：从单一食谱的流行形象到多样化真实的修正，示范指标数据的解读陷阱",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.3055,
+          "time_ms": 478556,
+          "reason": "'实物证明行为，心智必须推断'：认识论规则句"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "epistemic_rule",
+          "mechanism": "artifact_mind_separation"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "humor_payoff",
+          "mechanism": "deadpan_understatement"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "evidence_caveat",
+          "mechanism": "metric_blindspot"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "humor_payoff",
+          "mechanism": "modern_analogy_humor"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "humor_payoff",
+          "mechanism": "deadpan_humor"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "transition",
+          "mechanism": "section_transition"
+        }
+      ],
+      "required_retention_events": [
+        "metric_blindspot",
+        "broader_diet_reveal",
+        "moderate_verdict"
+      ],
+      "original_moves": [
+        "用火证据与助燃剂细节",
+        "高营养级指标",
+        "指标盲区",
+        "牙结石与植物证据",
+        "内部差异声明"
+      ],
+      "abstract_move": "生存方式审计：从单一食谱的流行形象到多样化真实的修正，示范指标数据的解读陷阱",
+      "replacement_needs": [
+        "量化指标支撑的流行形象",
+        "该指标的系统性盲区说明",
+        "另一类证据揭示的更广谱系",
+        "内部差异的显式声明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(78)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 78
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "communication_audit",
+      "start_ratio": 0.413,
+      "end_ratio": 0.467,
+      "start_sec": 646.8,
+      "end_sec": 731.1,
+      "position_label": "41.3%–46.7%(10:47–12:11)",
+      "purpose": "语言能力审计：解剖、基因、听觉三路证据汇总后，用对称双向辟谣封顶",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "myth_busting",
+          "mechanism": "gene_myth_correction"
+        }
+      ],
+      "required_retention_events": [
+        "multi_line_evidence",
+        "symmetrical_debunk"
+      ],
+      "original_moves": [
+        "章节转场",
+        "舌骨发现",
+        "语言基因否定",
+        "听觉重建",
+        "对称双向辟谣"
+      ],
+      "abstract_move": "语言能力审计：解剖、基因、听觉三路证据汇总后，用对称双向辟谣封顶",
+      "replacement_needs": [
+        "多条独立证据线的汇总",
+        "对'基因决定论'式解读的显式否定",
+        "对称双向辟谣句（两种极端同样无据）"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "symbolism_audit",
+      "start_ratio": 0.467,
+      "end_ratio": 0.515,
+      "start_sec": 731.1,
+      "end_sec": 807.3,
+      "position_label": "46.7%–51.5%(12:11–13:27)",
+      "purpose": "象征行为审计：装饰物与颜料证据成立，但'象征不是一次性开关'，逐项限定含义",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "symmetrical_debunk",
+          "mechanism": "both_extremes_unsubstantiated"
+        }
+      ],
+      "required_retention_events": [
+        "artifact_inventory",
+        "meaning_caveat"
+      ],
+      "original_moves": [
+        "鹰爪饰物",
+        "颜料与刻痕",
+        "贝壳饰品",
+        "'象征行为成立'",
+        "逐项含义限定"
+      ],
+      "abstract_move": "象征行为审计：装饰物与颜料证据成立，但'象征不是一次性开关'，逐项限定含义",
+      "replacement_needs": [
+        "多件难以用实用解释的象征性器物清单",
+        "'象征行为成立'的肯定句",
+        "每件器物含义的多重替代解释"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "contested_dating_audit",
+      "start_ratio": 0.515,
+      "end_ratio": 0.557,
+      "start_sec": 807.3,
+      "end_sec": 872.5,
+      "position_label": "51.5%–55.7%(13:27–14:33)",
+      "purpose": "未决争议示范：把一个仍在争论中的轰动性定年结论原样呈现，并显式拒绝给出答案",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "他们是否创作了已知最古老的洞穴艺术：定年主张仍在争论中。刻意保持开放——叙事用途是把'未决'本身作为证据等级制度的方法论示范，并用'洞穴拒绝回答'强化诚实不确定性的全片主题",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP05"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "sensational_claim",
+          "mechanism": "dating_claim_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "sensational_claim",
+        "unresolved_verdict"
+      ],
+      "original_moves": [
+        "铀钍定年主张",
+        "轰动效应",
+        "质疑方方法论点",
+        "双方立场",
+        "'洞穴拒绝回答'"
+      ],
+      "abstract_move": "未决争议示范：把一个仍在争论中的轰动性定年结论原样呈现，并显式拒绝给出答案",
+      "replacement_needs": [
+        "轰动性主张与其证据",
+        "质疑方的具体方法论点",
+        "一句'拒绝回答'式的开放裁决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "burial_audit",
+      "start_ratio": 0.557,
+      "end_ratio": 0.607,
+      "start_sec": 872.5,
+      "end_sec": 951.2,
+      "position_label": "55.7%–60.7%(14:33–15:51)",
+      "purpose": "葬礼审计：有意埋葬成立，但宗教含义不成立；用一个著名的浪漫解读及其平凡化拆穿作示范",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.5612,
+          "time_ms": 879104,
+          "reason": "'洞穴拒绝回答'：未决争议示范的方法论高点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "著名的'鲜花葬礼'是否真的发生过：哀悼者放置花卉的浪漫画面是否成立",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "unresolved_verdict",
+          "mechanism": "refusal_to_answer"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "debunk",
+          "mechanism": "mundane_cause"
+        }
+      ],
+      "required_retention_events": [
+        "romantic_image_setup",
+        "mundane_cause_debunk"
+      ],
+      "original_moves": [
+        "有意埋葬证据",
+        "宗教含义拒绝",
+        "鲜花葬礼浪漫叙事",
+        "啮齿动物与蜜蜂拆穿",
+        "冷面判词"
+      ],
+      "abstract_move": "葬礼审计：有意埋葬成立，但宗教含义不成立；用一个著名的浪漫解读及其平凡化拆穿作示范",
+      "replacement_needs": [
+        "支持有意行为的埋藏证据",
+        "对宗教/仪式含义的显式拒绝",
+        "一个浪漫解读被平凡机制拆穿的完整案例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75);打开的悬念 LOOP06→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "care_and_dark_evidence_audit",
+      "start_ratio": 0.607,
+      "end_ratio": 0.699,
+      "start_sec": 951.2,
+      "end_sec": 1094.2,
+      "position_label": "60.7%–69.9%(15:51–18:14)",
+      "purpose": "关怀与黑暗证据并置：重伤存活的照护证据与暴力痕迹证据同时成立，拒绝单方定性",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "黑暗证据如何与温情版本共存：暴力痕迹是否会推翻照护叙事",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "mundane_cause_debunk",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "humor_payoff",
+          "mechanism": "deadpan_verdict"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "care_evidence",
+          "mechanism": "cooperation_inference"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "dark_evidence",
+          "mechanism": "confronting_dark_data"
+        }
+      ],
+      "required_retention_events": [
+        "care_evidence",
+        "dark_evidence_integration",
+        "balance_verdict"
+      ],
+      "original_moves": [
+        "重伤存活",
+        "照护推断",
+        "现代研究个案",
+        "黑暗证据直面",
+        "'与我们一样'的平衡裁决"
+      ],
+      "abstract_move": "关怀与黑暗证据并置：重伤存活的照护证据与暴力痕迹证据同时成立，拒绝单方定性",
+      "replacement_needs": [
+        "重伤个体长期存活的照护证据",
+        "对照护含义的限定（形式、动机、强度不可知）",
+        "暴力痕迹证据的直面呈现",
+        "拒绝物种级定性的平衡句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS13 跨段;回收了前文的悬念 FS11→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "genetic_boundary_collapse",
+      "start_ratio": 0.699,
+      "end_ratio": 0.761,
+      "start_sec": 1094.2,
+      "end_sec": 1191.9,
+      "position_label": "69.9%–76.1%(18:14–19:52)",
+      "purpose": "基因证据颠覆边界：'他们与我们'的清晰界限被 DNA 证据最终摧毁，连分类学词汇都失效",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 82,
+          "position_ratio": 0.7033,
+          "time_ms": 1101634,
+          "reason": "'既能关怀也能暴力，与我们一样'：复杂真实的平衡裁决"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.7119,
+          "time_ms": 1115166,
+          "reason": "基因证据摧毁'他们与我们'的清晰边界"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "integrated_balance",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "balance_verdict",
+          "mechanism": "both_caring_and_violent"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "genetic_reveal",
+          "mechanism": "boundary_collapse"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "humor_payoff",
+          "mechanism": "taxonomy_humor"
+        }
+      ],
+      "required_retention_events": [
+        "genetic_reveal",
+        "percentage_debunk"
+      ],
+      "original_moves": [
+        "基因组的边界消融",
+        "双向基因流动",
+        "分类学词汇失效",
+        "百分比的纠偏",
+        "祖源分布"
+      ],
+      "abstract_move": "基因证据颠覆边界：'他们与我们'的清晰界限被 DNA 证据最终摧毁，连分类学词汇都失效",
+      "replacement_needs": [
+        "混血的量化证据",
+        "双向基因流动的复杂模型",
+        "分类学词汇失效的声明",
+        "流行百分比说法的纠偏"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(82)、PK06(85);回收了前文的悬念 FS12→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 82
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "extinction_reframe",
+      "start_ratio": 0.761,
+      "end_ratio": 0.825,
+      "start_sec": 1191.9,
+      "end_sec": 1292.4,
+      "position_label": "76.1%–82.5%(19:52–21:32)",
+      "purpose": "消亡叙事重构：'更聪明者取代落后者'的流行故事被人口学、气候与运气模型取代",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "他们为何消失：是'更聪明者取代落后者'，还是另有隐情",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "missing_smoking_gun",
+        "reframe_verdict"
+      ],
+      "original_moves": [
+        "流行替代叙事",
+        "'没有凶器'证据缺口",
+        "小种群脆弱性",
+        "吸收式替代",
+        "'历史不是智力考试'"
+      ],
+      "abstract_move": "消亡叙事重构：'更聪明者取代落后者'的流行故事被人口学、气候与运气模型取代",
+      "replacement_needs": [
+        "流行替代叙事的陈述",
+        "'没有凶器'式的证据缺口说明",
+        "小种群的脆弱性机制",
+        "多因素与'吸收式替代'的最终模型"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP08→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "meta_verdict",
+      "start_ratio": 0.825,
+      "end_ratio": 0.895,
+      "start_sec": 1326.6,
+      "end_sec": 1401.9,
+      "position_label": "82.5%–89.5%(22:07–23:22)",
+      "purpose": "元裁决：正面回答标题问句，并把'纠错'重新定义为科学的运行机制，同时警告反向美化",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.8258,
+          "time_ms": 1293607,
+          "reason": "'历史不是智力考试'：消亡叙事重构的情绪高点"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.8545,
+          "time_ms": 1338591,
+          "reason": "'纠错不是失败而是机制'：元教训重建科学信任"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "systematic_error_list_and_meta_lesson",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "multi_factor_verdict",
+          "opened_in": "FS14"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "reframe_verdict",
+          "mechanism": "not_an_intelligence_test"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "title_payoff",
+          "mechanism": "title_question_explicit"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "meta_lesson",
+          "mechanism": "correction_as_mechanism"
+        }
+      ],
+      "required_retention_events": [
+        "title_question_payoff",
+        "meta_lesson",
+        "overcorrection_warning"
+      ],
+      "original_moves": [
+        "今天的危险",
+        "'任何颜料都成艺术'排比警告",
+        "真实成就清单",
+        "'并非几乎是人'的定性"
+      ],
+      "abstract_move": "元裁决：正面回答标题问句，并把'纠错'重新定义为科学的运行机制，同时警告反向美化",
+      "replacement_needs": [
+        "标题问句的显式复现",
+        "错误清单式回答",
+        "'纠错即机制'的元教训",
+        "对美化版简化的一连串排比警告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)、PK08(80);回收了前文的悬念 FS01→LOOP01、FS14→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "worldview_upgrade_and_closure",
+      "start_ratio": 0.895,
+      "end_ratio": 1,
+      "start_sec": 1401.9,
+      "end_sec": 1499.8,
+      "position_label": "89.5%–100%(23:22–25:00)",
+      "purpose": "认知升维与收束：'要求他们通过我们的考试才配尊重'是在重复旧的等级制；以谦逊排比与格言句收尾",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.9789,
+          "time_ms": 1533421,
+          "reason": "'做人从来不止一种方式'：全片世界观最高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "thesis_restatement_as_verdict",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "identity_verdict",
+          "mechanism": "not_almost_human"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "core_mistake_verdict",
+          "mechanism": "variability_into_essence"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "worldview_shift",
+          "mechanism": "many_ways_to_be_human"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "closing_assertion",
+          "mechanism": "comforting_assumption_loss"
+        }
+      ],
+      "required_retention_events": [
+        "hierarchy_critique",
+        "humility_litany",
+        "closing_assertion"
+      ],
+      "original_moves": [
+        "等级制批判",
+        "'把多样性压成本质'的核心错误定性",
+        "内部差异声明",
+        "谦逊排比铺陈"
+      ],
+      "abstract_move": "认知升维与收束：'要求他们通过我们的考试才配尊重'是在重复旧的等级制；以谦逊排比与格言句收尾",
+      "replacement_needs": [
+        "对'按我们的标准衡量价值'的显式批判",
+        "'把多样性压成本质'的核心错误定性",
+        "一组'我们知道X但不知道Y'的谦逊排比",
+        "一句把个案升级为人类自我认知的结尾断言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(90);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

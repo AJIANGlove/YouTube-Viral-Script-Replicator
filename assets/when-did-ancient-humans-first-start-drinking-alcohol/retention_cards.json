@@ -1,0 +1,1044 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.399Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.038,
+      "start_sec": 0,
+      "end_sec": 59,
+      "position_label": "0%–3.8%(0:00–0:59)",
+      "purpose": "第二人称沉浸式开场：让观众以远古身份亲历该物的'意外发现瞬间'",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：标题'何时开始'之问——起点远早于文明、甚至早于我们，到底多早（标题问句的深时悬挂）",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_identity_assignment"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "relief_payoff",
+          "mechanism": "sensory_relief_turn"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "origin_subversion",
+          "mechanism": "way_earlier_claim"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_scenario",
+        "discovery_moment_completed"
+      ],
+      "original_moves": [
+        "从零信息到穿越场景建立，再到发现瞬间完成并点破定性"
+      ],
+      "abstract_move": "第二人称沉浸式开场：让观众以远古身份亲历该物的'意外发现瞬间'",
+      "replacement_needs": [
+        "具体时间尺度锚点与身份指派",
+        "一连串接地气的日常烦恼细节",
+        "发现瞬间的感官变化与情绪转折",
+        "一句点破的祝贺式定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 59000,
+        "hook_type": "immersive_second_person_deep_time_scenario",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 49000,
+        "evidence_refs": [
+          "C0001",
+          "C0006",
+          "C0008"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "mystery_setup",
+      "start_ratio": 0.038,
+      "end_ratio": 0.084,
+      "start_sec": 59,
+      "end_sec": 132,
+      "position_label": "3.8%–8.4%(0:59–2:12)",
+      "purpose": "粉碎常识起点并提出根本问题：该物是毒素，为何全人类都爱它",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.0778,
+          "time_ms": 122000,
+          "reason": "'身体是不是为它而设计？算是吧'：全片第一个机制级答案落地"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "为什么人类会喜欢一种字面意义上的毒素",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "question_hook",
+          "mechanism": "ridiculous_question"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "paradox_reveal",
+          "mechanism": "toxin_paradox"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "pattern_verdict",
+          "mechanism": "three_beat_verdict"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "answer_tease",
+          "mechanism": "designed_for_it"
+        }
+      ],
+      "required_retention_events": [
+        "origin_subversion",
+        "ridiculous_question",
+        "paradox_verdict"
+      ],
+      "original_moves": [
+        "常识起点粉碎",
+        "三连递进排比",
+        "荒谬问题",
+        "毒素悖论",
+        "'这是模式'判词",
+        "核心问题预告答案"
+      ],
+      "abstract_move": "粉碎常识起点并提出根本问题：该物是毒素，为何全人类都爱它",
+      "replacement_needs": [
+        "对常识起点的显式否定与三连递进排比",
+        "一个'听起来荒谬但越想越真'的问题",
+        "悖论事实：有害本质与全民热爱的对照",
+        "'这不是巧合，是模式'的判断句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(70);打开的悬念 LOOP02→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.084,
+      "end_ratio": 0.15,
+      "start_sec": 132,
+      "end_sec": 236,
+      "position_label": "8.4%–15%(2:12–3:56)",
+      "purpose": "用基因与进化机制给出第一层答案，把起源推入数百万年量级",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.1052,
+          "time_ms": 165000,
+          "reason": "关键效率倍数的重复落锤：深时尺度的第一次量化冲击"
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.1453,
+          "time_ms": 228000,
+          "reason": "'我们没有选择喝，是进化推着我们喝'：第一层世界观翻转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "scale_emphasis",
+          "mechanism": "number_echo"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "worldview_verdict",
+          "mechanism": "not_a_choice_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "gene_mechanism",
+        "scale_number_emphasis",
+        "worldview_verdict_line"
+      ],
+      "original_moves": [
+        "基因与酶机制",
+        "千万年前突变",
+        "关键倍数",
+        "气候变迁因果链",
+        "发酵果实生存优势",
+        "'不是选择是进化'判词"
+      ],
+      "abstract_move": "用基因与进化机制给出第一层答案，把起源推入数百万年量级",
+      "replacement_needs": [
+        "具体生物机制与关键倍数数字",
+        "突变发生的环境压力因果链",
+        "生存优势的功能性解释",
+        "一句世界观翻转短判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75)、PK03(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "hypothesis_reveal",
+      "start_ratio": 0.15,
+      "end_ratio": 0.208,
+      "start_sec": 236,
+      "end_sec": 327,
+      "position_label": "15%–20.8%(3:56–5:27)",
+      "purpose": "给出带名字的趣味假说并用现代动物实验镜像人类行为分布",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "趣味假说是否成立：对它气味的偏好是否来自寻找食物的进化优势",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "named_hypothesis",
+          "mechanism": "funny_name_real_science"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "animal_evidence",
+          "mechanism": "modern_primate_study"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "mirror_verdict",
+          "mechanism": "rhetorical_recall"
+        }
+      ],
+      "required_retention_events": [
+        "named_hypothesis",
+        "animal_study_mirror",
+        "rhetorical_recall"
+      ],
+      "original_moves": [
+        "命名假说",
+        "俏皮辩护",
+        "气味信号机制",
+        "现代猴群实验",
+        "饮酒分布镜像",
+        "反问召回"
+      ],
+      "abstract_move": "给出带名字的趣味假说并用现代动物实验镜像人类行为分布",
+      "replacement_needs": [
+        "一个名字自带笑点的正式科学假说",
+        "假说背后的信号-奖赏机制",
+        "现代动物实验证据",
+        "与人类行为分布的镜像对照和反问召回"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS05 跨段;回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "question_escalation",
+      "start_ratio": 0.208,
+      "end_ratio": 0.229,
+      "start_sec": 327,
+      "end_sec": 359,
+      "position_label": "20.8%–22.9%(5:27–5:59)",
+      "purpose": "把问题从'被动接触'升级为'主动制造'，并预告反转：它可能驱动了文明",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "人类何时开始主动制造它（从被动接触到主动生产的升级问）",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "evidence_confirmation",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "question_escalation",
+          "mechanism": "on_purpose_question"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "first_date_drop",
+          "mechanism": "oldest_confirmed_tease"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "sponsor_insert",
+          "mechanism": "cliffhanger_ad_placement"
+        }
+      ],
+      "required_retention_events": [
+        "escalation_question",
+        "flip_tease"
+      ],
+      "original_moves": [
+        "两段式小结",
+        "升级问句",
+        "'可能是驱动力而非副产品'反转预告",
+        "最早确证时间首次落地"
+      ],
+      "abstract_move": "把问题从'被动接触'升级为'主动制造'，并预告反转：它可能驱动了文明",
+      "replacement_needs": [
+        "承上启下的两段式小结",
+        "'何时开始主动制造'的升级问句",
+        "'它可能不是副产品而是驱动力'的反转预告",
+        "最早确证时间的首次落地"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS08 跨段;回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "sponsor_insert",
+      "start_ratio": 0.229,
+      "end_ratio": 0.253,
+      "start_sec": 359,
+      "end_sec": 397,
+      "position_label": "22.9%–25.3%(5:59–6:37)",
+      "purpose": "口播广告插段：在证据链悬念峰值处插入，把商业转化挂在最强好奇点上",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "cliffhanger_ad_placement"
+      ],
+      "original_moves": [
+        "在最早确证刚落地的悬念峰值插入同主题课程口播广告，广告结束句直接续回被中断的残留物分析"
+      ],
+      "abstract_move": "口播广告插段：在证据链悬念峰值处插入，把商业转化挂在最强好奇点上",
+      "replacement_needs": [
+        "与主题强相关的自有产品",
+        "简短的内容清单与行动指令",
+        "回归正文时直接续上中断句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "first_evidence_reveal",
+      "start_ratio": 0.253,
+      "end_ratio": 0.277,
+      "start_sec": 397,
+      "end_sec": 435,
+      "position_label": "25.3%–27.7%(6:37–7:15)",
+      "purpose": "第一层考古证据：给出最早确证时间，并立刻声明'这远不是真正的开始'",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "最早确证时间'可能远不是真正的开始'，真正的起点还要早多少",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "deeper_tease",
+          "mechanism": "not_even_close"
+        }
+      ],
+      "required_retention_events": [
+        "residue_evidence",
+        "deeper_tease"
+      ],
+      "original_moves": [
+        "残留物分析",
+        "多原料配方",
+        "'刻意生产'论证",
+        "与地标的时间对照",
+        "'远不止于此'二次悬挂"
+      ],
+      "abstract_move": "第一层考古证据：给出最早确证时间，并立刻声明'这远不是真正的开始'",
+      "replacement_needs": [
+        "残留物化学分析的证据链",
+        "多原料复合配方的具体细节",
+        "'是刻意生产而非偶遇'的论证",
+        "与著名地标的时间对照制造尺度冲击",
+        "'这可能远不是起点'的转折预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "deeper_evidence_reveal",
+      "start_ratio": 0.277,
+      "end_ratio": 0.316,
+      "start_sec": 435,
+      "end_sec": 496,
+      "position_label": "27.7%–31.6%(7:15–8:16)",
+      "purpose": "第二层考古证据：把起源再前推数千年，且制造者竟是狩猎采集者",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "scale_reveal",
+          "strength": 85,
+          "position_ratio": 0.2976,
+          "time_ms": 467000,
+          "reason": "起源前推到狩猎采集时代并配停顿指令，尺度冲击最高点之一"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "evidence_reveal",
+          "opened_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "deeper_date_reveal",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "excavation_scene",
+          "mechanism": "dig_site_reveal"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "date_pushback",
+          "mechanism": "number_drop_and_pause"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "identity_surprise",
+          "mechanism": "maker_identity_surprise"
+        }
+      ],
+      "required_retention_events": [
+        "date_pushback",
+        "sink_in_beat",
+        "maker_identity_surprise"
+      ],
+      "original_moves": [
+        "发掘现场",
+        "石器残留分析",
+        "新时间深度落锤+停顿指令",
+        "'他们不是农民'身份反转"
+      ],
+      "abstract_move": "第二层考古证据：把起源再前推数千年，且制造者竟是狩猎采集者",
+      "replacement_needs": [
+        "发掘现场的时间地点与器物细节",
+        "残留物分析结论",
+        "新时间深度的重复落锤与停顿指令",
+        "'他们不是农民'的身份反转"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85);回收了前文的悬念 FS05→LOOP04、FS07→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "theory_flip",
+      "start_ratio": 0.316,
+      "end_ratio": 0.363,
+      "start_sec": 496,
+      "end_sec": 570,
+      "position_label": "31.6%–36.3%(8:16–9:30)",
+      "purpose": "全片中枢反转：因果倒置——该物可能驱动了农业而非农业的副产品",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "theory_flip",
+          "strength": 85,
+          "position_ratio": 0.3346,
+          "time_ms": 525000,
+          "reason": "因果倒置：它可能驱动了农业——全片中枢反转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "它是农业的副产品还是农业的驱动力——公认理论是否要被倒置",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "theory_flip",
+          "mechanism": "causality_inversion"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "counter_hypothesis",
+          "mechanism": "named_counter_hypothesis"
+        }
+      ],
+      "required_retention_events": [
+        "dominant_theory_setup",
+        "flip_verdict",
+        "named_counter_hypothesis"
+      ],
+      "original_moves": [
+        "旧理论铺垫",
+        "新证据不可兼容",
+        "'理论完全倒置'判词",
+        "新假说命名与动机解释"
+      ],
+      "abstract_move": "全片中枢反转：因果倒置——该物可能驱动了农业而非农业的副产品",
+      "replacement_needs": [
+        "旧理论的内容与合理性铺垫",
+        "新证据与旧理论的不可兼容点",
+        "'理论完全倒置'的显式判词",
+        "新假说的命名与动机解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85);打开的悬念 LOOP06→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "ritual_world_tour",
+      "start_ratio": 0.363,
+      "end_ratio": 0.479,
+      "start_sec": 570,
+      "end_sec": 752,
+      "position_label": "36.3%–47.9%(9:30–12:32)",
+      "purpose": "跨文明举证：该物在每个早期文明中都与神圣和仪式绑定",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "superlative_fact",
+          "strength": 75,
+          "position_ratio": 0.3773,
+          "time_ms": 592000,
+          "reason": "人类最古老的书面食谱是它的配方：环球举证段的记忆点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "theory_reversal",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "dimension_pivot",
+          "mechanism": "science_to_human_pivot"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "superlative_fact",
+          "mechanism": "oldest_record_flip"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "demystifying_reframe",
+          "mechanism": "gatherings_as_drinking"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "universality_verdict",
+          "mechanism": "never_just_a_drink"
+        }
+      ],
+      "required_retention_events": [
+        "superlative_fact",
+        "world_tour_montage",
+        "universality_verdict"
+      ],
+      "original_moves": [
+        "转向精神维度",
+        "最古老文献超级lative事实",
+        "工业规模配给",
+        "思想家聚会祛魅",
+        "多文明速写",
+        "'从不只是饮品'普世判词"
+      ],
+      "abstract_move": "跨文明举证：该物在每个早期文明中都与神圣和仪式绑定",
+      "replacement_needs": [
+        "多个独立文明的仪式用途速写",
+        "至少一个超级lative事实（如最古老的文献记录）",
+        "把思想家聚会还原为共饮场景的祛魅细节",
+        "普世性收束判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(75);回收了前文的悬念 FS09→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "process_demystify",
+      "start_ratio": 0.479,
+      "end_ratio": 0.558,
+      "start_sec": 752,
+      "end_sec": 875,
+      "position_label": "47.9%–55.8%(12:32–14:35)",
+      "purpose": "原理支线：解释该过程为何简单到必然被反复发现，并补充医药维度",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "vivid_image",
+          "mechanism": "artifact_picture_confirm"
+        }
+      ],
+      "required_retention_events": [
+        "process_demystification",
+        "etymology_payoff"
+      ],
+      "original_moves": [
+        "原理一句话",
+        "自然发生条件",
+        "古人的控制一跃",
+        "早期成品具象画面",
+        "医药用途",
+        "词源揭示"
+      ],
+      "abstract_move": "原理支线：解释该过程为何简单到必然被反复发现，并补充医药维度",
+      "replacement_needs": [
+        "过程的一句话原理与无处不在的自然条件",
+        "古人控制该过程的关键一步",
+        "早期成品形态的具象画面",
+        "医药用途与词源彩蛋"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "escalation_dark_turn",
+      "start_ratio": 0.558,
+      "end_ratio": 0.645,
+      "start_sec": 875,
+      "end_sec": 1012,
+      "position_label": "55.8%–64.5%(14:35–16:52)",
+      "purpose": "强度升级与黑暗面：浓缩技术突破上限，随后直面被武器化的历史",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "dark_turn",
+          "strength": 70,
+          "position_ratio": 0.6399,
+          "time_ms": 1004000,
+          "reason": "'这段历史并不简单，从来如此'：黑暗面承认带来的情绪换挡"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "中段那群远古制造者'值得更多关注'：他们的证据出土语境意味着什么",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "dark_turn",
+          "mechanism": "weaponization_acknowledgment"
+        }
+      ],
+      "required_retention_events": [
+        "technology_escalation",
+        "dark_turn_acknowledgment"
+      ],
+      "original_moves": [
+        "自然上限数字",
+        "浓缩技术演进",
+        "词源串联",
+        "诗意命名",
+        "殖民武器化承认",
+        "'它很复杂'诚实判词"
+      ],
+      "abstract_move": "强度升级与黑暗面：浓缩技术突破上限，随后直面被武器化的历史",
+      "replacement_needs": [
+        "自然上限的数字约束与技术突破",
+        "词源串联（外语词到现代词）",
+        "诗意命名彩蛋",
+        "殖民与苦难的黑暗面显式承认",
+        "拒绝简单化的诚实判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(70);打开的悬念 LOOP07→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "callback_deepening",
+      "start_ratio": 0.645,
+      "end_ratio": 0.713,
+      "start_sec": 1012,
+      "end_sec": 1118,
+      "position_label": "64.5%–71.3%(16:52–18:38)",
+      "purpose": "回收中段埋下的远古文化线索，揭示其与死亡、哀悼的深层绑定",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "callback_deepening",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "explicit_callback",
+          "mechanism": "deserve_more_attention"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "burial_context_reveal",
+          "mechanism": "grave_association"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "geography_pivot",
+          "mechanism": "independent_emergence_question"
+        }
+      ],
+      "required_retention_events": [
+        "explicit_callback",
+        "burial_context_reveal",
+        "grief_reframe"
+      ],
+      "original_moves": [
+        "显式召回",
+        "'第一批'身份清单",
+        "墓葬出土语境",
+        "跨文明哀悼关联",
+        "共饮=共哀定性"
+      ],
+      "abstract_move": "回收中段埋下的远古文化线索，揭示其与死亡、哀悼的深层绑定",
+      "replacement_needs": [
+        "'让我们回到之前提到的…'的显式召回",
+        "该文化的多个'第一批'身份清单",
+        "证据出土于墓葬场景的关键语境",
+        "跨文明的死亡-哀悼关联举证",
+        "把共饮重新定义为共同哀悼的定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS12→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "universality_montage",
+      "start_ratio": 0.713,
+      "end_ratio": 0.786,
+      "start_sec": 1118,
+      "end_sec": 1234,
+      "position_label": "71.3%–78.6%(18:38–20:34)",
+      "purpose": "地理蒙太奇：各大陆独立发明该物，证明它是趋同进化的人类普世现象",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "convergent_verdict",
+          "mechanism": "convergent_cultural_evolution"
+        }
+      ],
+      "required_retention_events": [
+        "geography_montage",
+        "convergent_evolution_verdict"
+      ],
+      "original_moves": [
+        "地理蒙太奇列举",
+        "'彼此无接触'排除",
+        "必然性论证",
+        "与文字/农业的类比",
+        "普世判词"
+      ],
+      "abstract_move": "地理蒙太奇：各大陆独立发明该物，证明它是趋同进化的人类普世现象",
+      "replacement_needs": [
+        "各大陆独立起源的快速列举",
+        "'彼此并无接触'的关键排除",
+        "原料无处不在+机制自然发生的必然性论证",
+        "与其他人类普世发明的类比定性"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "social_function_reveal",
+      "start_ratio": 0.786,
+      "end_ratio": 0.854,
+      "start_sec": 1234,
+      "end_sec": 1340,
+      "position_label": "78.6%–85.4%(20:34–22:20)",
+      "purpose": "社会学收束：共同摄入=信任训练，并把它镜像到观众的现代日常",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "modern_mirror",
+          "mechanism": "we_still_do_this"
+        }
+      ],
+      "required_retention_events": [
+        "social_mechanism_reveal",
+        "modern_mirror_list"
+      ],
+      "original_moves": [
+        "社交药理效应",
+        "脆弱性=信任信号机制",
+        "田野佐证",
+        "'我们今天仍这样做'现代镜像清单"
+      ],
+      "abstract_move": "社会学收束：共同摄入=信任训练，并把它镜像到观众的现代日常",
+      "replacement_needs": [
+        "该物的社交药理效应清单",
+        "共同放下防备=信任信号的机制解释",
+        "当代部落社会的田野佐证",
+        "'我们今天仍这样做'的现代场景镜像清单"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.854,
+      "end_ratio": 1,
+      "start_sec": 1340,
+      "end_sec": 1569,
+      "position_label": "85.4%–100%(22:20–26:09)",
+      "purpose": "显式回答标题问题，完成哲学重构，用开场意象回收与格言句收束全片",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "title_answer_payoff",
+          "strength": 85,
+          "position_ratio": 0.854,
+          "time_ms": 1340000,
+          "reason": "标题问题显式正面回答并附完整时间线复盘，主承诺兑现"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.9337,
+          "time_ms": 1465000,
+          "reason": "'不是我们发现了它，是它找到了我们'：全片哲学重构顶点"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "aphorism_close",
+          "strength": 80,
+          "position_ratio": 0.9981,
+          "time_ms": 1566000,
+          "reason": "开场意象回收后的克制格言句，完成首尾闭环"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "真实起点永远无法被完全记录：化学痕迹会降解、早期器物难以存世——刻意保持开放，叙事用途是把'无法确证'本身转化为深时敬畏，并为'它找到了我们'的哲学升华留白",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "honest_range_answer_plus_timeline_recap",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "title_answer_payoff",
+          "mechanism": "honest_range_answer"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "philosophical_reframe",
+          "mechanism": "it_found_us"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "opening_image_callback",
+          "mechanism": "montage_return_to_opening"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "aphorism_close",
+          "mechanism": "understatement_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "honest_answer_payoff",
+        "philosophical_reframe",
+        "opening_image_callback",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "显式诚实回答",
+        "完整时间线复盘",
+        "与发明叙事对照",
+        "'它找到了我们'重构",
+        "人物蒙太奇回收",
+        "格言句"
+      ],
+      "abstract_move": "显式回答标题问题，完成哲学重构，用开场意象回收与格言句收束全片",
+      "replacement_needs": [
+        "对标题问题的显式诚实回答（区间式）",
+        "完整时间线浓缩复盘",
+        "与'轮子/文字'式发明叙事的对照",
+        "'不是我们发现了它，是它找到了我们'的哲学重构",
+        "回收开场意象的人物蒙太奇与格言短句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)、PK09(90)、PK10(80);打开的悬念 LOOP08(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 80
+        }
+      ]
+    }
+  ]
+}

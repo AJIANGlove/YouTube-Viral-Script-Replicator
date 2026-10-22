@@ -1,0 +1,974 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.291Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "anomaly_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0355,
+      "start_sec": 0.1,
+      "end_sec": 34.8,
+      "position_label": "0%–3.6%(0:00–0:35)",
+      "purpose": "用熟悉消费动作和反常识资金异常建立主问题，并承诺沿账簿逐笔追踪",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.029,
+          "time_ms": 28439,
+          "reason": "跨境金额高于韩国经营盈余，核心标题异常第一次被实质确认"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "一笔10万韩元消费如何沿账簿流动，为何最终流向美国的金额会高于韩国本地盈余",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "familiar_scene_entry",
+          "mechanism": "membership_card_anchor"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "belief_challenge",
+          "mechanism": "common_claim_half_true"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "anomaly_reveal",
+          "mechanism": "cross_border_amount_exceeds_local_profit"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "trace_promise",
+          "mechanism": "unit_payment_ledger_trace"
+        }
+      ],
+      "required_retention_events": [
+        "familiar_scene_anchor",
+        "common_belief_partial_confirmation",
+        "cross_border_anomaly",
+        "ledger_trace_promise"
+      ],
+      "original_moves": [
+        "入口会员卡与会员费常识",
+        "“会员费盈利说只对一半”",
+        "韩国经营盈余小于汇往美国金额",
+        "以10万韩元沿账簿追踪的承诺"
+      ],
+      "abstract_move": "用熟悉消费动作和反常识资金异常建立主问题，并承诺沿账簿逐笔追踪",
+      "replacement_needs": [
+        "入口或付款的熟悉动作",
+        "对流行说法的部分肯定",
+        "本地盈余与跨境流向的异常比较",
+        "统一金额追踪承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(78);打开的悬念 LOOP01→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 78
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "familiar_scene_to_cross_border_anomaly",
+        "first_stimulus_ms": 10120,
+        "first_payoff_ms": 28439,
+        "evidence_refs": [
+          "C0001",
+          "C0006",
+          "C0012",
+          "C0014",
+          "C0016"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "scale_context",
+      "start_ratio": 0.0355,
+      "end_ratio": 0.1133,
+      "start_sec": 34.8,
+      "end_sec": 111.2,
+      "position_label": "3.6%–11.3%(0:35–1:51)",
+      "purpose": "用扩张冲突、销售规模与消费者印象说明该对象为何值得深入查账",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "conflict_detail",
+          "mechanism": "fine_versus_business_scale"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "scale_reveal",
+          "mechanism": "daily_sales_per_store_conversion"
+        }
+      ],
+      "required_retention_events": [
+        "regulation_conflict",
+        "fine_versus_sales_scale",
+        "daily_sales_conversion",
+        "consumer_complaint_contrast"
+      ],
+      "original_moves": [
+        "河南店按原计划开业及罚款争议",
+        "年销7.3万亿、20店粗略日销10亿",
+        "创始人对首尔店与美国商品比例的说法",
+        "美国商品减少的抱怨",
+        "回到10万韩元问题"
+      ],
+      "abstract_move": "用扩张冲突、销售规模与消费者印象说明该对象为何值得深入查账",
+      "replacement_needs": [
+        "扩张或监管冲突",
+        "罚款与营业规模的反差",
+        "可换算的销售规模",
+        "经营者与消费者两种印象"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "gross_margin_reveal",
+      "start_ratio": 0.1133,
+      "end_ratio": 0.1612,
+      "start_sec": 111.2,
+      "end_sec": 158.2,
+      "position_label": "11.3%–16.1%(1:51–2:38)",
+      "purpose": "先给出统一付款单位的第一层分配，再用价格规则轶事解释低毛利纪律",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "new_question",
+          "mechanism": "unit_payment_remainder_question"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "information_payoff",
+          "mechanism": "gross_amount_left_after_product_cost"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "anecdote_reveal",
+          "mechanism": "hotdog_price_rule_anecdote"
+        }
+      ],
+      "required_retention_events": [
+        "unit_cost_reveal",
+        "markup_cap_rule",
+        "price_anecdote",
+        "next_question_setup"
+      ],
+      "original_moves": [
+        "10万韩元中约8.5万为商品成本、约1.5万留在店内",
+        "14%与15%的加价规则",
+        "热狗价格轶事",
+        "引出库存资金疑问"
+      ],
+      "abstract_move": "先给出统一付款单位的第一层分配，再用价格规则轶事解释低毛利纪律",
+      "replacement_needs": [
+        "商品成本与店内余量的第一刀拆分",
+        "可核验的加价上限说法",
+        "能体现价格纪律的短轶事"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "inventory_cash_cycle",
+      "start_ratio": 0.1612,
+      "end_ratio": 0.2602,
+      "start_sec": 158.2,
+      "end_sec": 255.2,
+      "position_label": "16.1%–26%(2:38–4:15)",
+      "purpose": "回答低毛利商家的库存与支付资金问题，把表面利润推进到现金时间差与交易条款",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.196,
+          "time_ms": 192239,
+          "reason": "应付货款高于库存价值，现金时间差从疑问转为可见账面反差"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "低毛利且库存庞大的商家如何预先支付货款",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "cash_cycle_reveal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "new_question",
+          "mechanism": "inventory_financing_gap"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "comparison_reveal",
+          "mechanism": "payables_exceed_inventory"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "mechanism_payoff",
+          "mechanism": "sell_before_supplier_payment"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "cost_lever_reveal",
+          "mechanism": "exclusive_card_fee_control"
+        }
+      ],
+      "required_retention_events": [
+        "inventory_financing_question",
+        "accounts_payable_comparison",
+        "cash_cycle_reveal",
+        "fee_lever_reveal"
+      ],
+      "original_moves": [
+        "先收货后付款的赊购定义",
+        "应付货款高于库存",
+        "先售后付的现金周期",
+        "独家卡合作降低手续费"
+      ],
+      "abstract_move": "回答低毛利商家的库存与支付资金问题，把表面利润推进到现金时间差与交易条款",
+      "replacement_needs": [
+        "库存资金疑问",
+        "赊购术语的日常定义",
+        "库存与应付款对照",
+        "先售后付机制",
+        "支付手续费控制"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 74
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "membership_economics",
+      "start_ratio": 0.2602,
+      "end_ratio": 0.4029,
+      "start_sec": 255.2,
+      "end_sec": 395.2,
+      "position_label": "26%–40.3%(4:15–6:35)",
+      "purpose": "把预付费用从抽象收入转为续费、会员层级、回本阈值与退出规则的消费决策",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "会员费上调是否导致会员离开，预付费用为何仍能持续",
+          "closes_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "普通会员升级为高等级会员是否真的划算",
+          "closes_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP05",
+          "tension": "不收会员费的竞品是否因更高加价而留下更多利润",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "renewal_evidence",
+          "opened_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "break_even_threshold",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "new_question",
+          "mechanism": "fee_hike_retention_question"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "retention_payoff",
+          "mechanism": "renewal_rate_reveal"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "practical_question",
+          "mechanism": "executive_upgrade_break_even_question"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "practical_payoff",
+          "mechanism": "break_even_threshold"
+        }
+      ],
+      "required_retention_events": [
+        "fee_hike_question",
+        "renewal_payoff",
+        "executive_member_value",
+        "break_even_calculation",
+        "refund_risk_reversal"
+      ],
+      "original_moves": [
+        "会员费上调与续费问题",
+        "两档会员与家庭卡",
+        "涨幅比较和竞争者背景",
+        "续费率与高等级会员贡献",
+        "升级盈亏平衡及退出、退款规则"
+      ],
+      "abstract_move": "把预付费用从抽象收入转为续费、会员层级、回本阈值与退出规则的消费决策",
+      "replacement_needs": [
+        "涨价与流失疑问",
+        "会员层级及附加权益",
+        "续费证据",
+        "高等级会员贡献",
+        "升级回本计算",
+        "退出与退款条件"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "comparative_unit_economics",
+      "start_ratio": 0.4029,
+      "end_ratio": 0.4658,
+      "start_sec": 395.2,
+      "end_sec": 456.9,
+      "position_label": "40.3%–46.6%(6:35–7:37)",
+      "purpose": "用同一付款单位比较另一种零售模式，拆穿“加价更高就必然更赚钱”的直觉",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.4501,
+          "time_ms": 441479,
+          "reason": "竞品加价更高却经营盈余更低，推翻以毛利率判断赚钱能力的直觉"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "comparative_unit_economics_reversal",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "comparison_question",
+          "mechanism": "competitor_unit_economics_question"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "worldview_shift",
+          "mechanism": "higher_markup_lower_profit"
+        }
+      ],
+      "required_retention_events": [
+        "same_unit_benchmark",
+        "operating_cost_contrast",
+        "markup_profit_reversal",
+        "comparison_caveat"
+      ],
+      "original_moves": [
+        "无会员费竞品的10万韩元毛利对照",
+        "运营成本差异",
+        "高加价却低经营利润",
+        "财年及合并口径限定"
+      ],
+      "abstract_move": "用同一付款单位比较另一种零售模式，拆穿“加价更高就必然更赚钱”的直觉",
+      "replacement_needs": [
+        "同单位竞品毛利对照",
+        "运营费用对照",
+        "最终经营利润反差",
+        "财年及合并口径限定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(82);回收了前文的悬念 FS05→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 82
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "profit_waterfall",
+      "start_ratio": 0.4658,
+      "end_ratio": 0.53,
+      "start_sec": 456.9,
+      "end_sec": 519.8,
+      "position_label": "46.6%–53%(7:37–8:40)",
+      "purpose": "把统一金额依次分配到人力、许可、运营与税费，给出本地最终盈余的完整瀑布",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.5211,
+          "time_ms": 511159,
+          "reason": "完整成本瀑布落到统一付款单位的最终净利，给后续跨境比较建立基准"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "主对象在统一付款单位中扣除全部成本后究竟留下多少",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "net_profit_waterfall",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "new_question",
+          "mechanism": "costco_net_unit_profit_question"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "information_payoff",
+          "mechanism": "net_profit_2800_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "cost_waterfall",
+        "employee_cost_foreshadow",
+        "royalty_line_item",
+        "net_profit_reveal"
+      ],
+      "original_moves": [
+        "员工、品牌许可、门店运营、利息与税费逐项扣减",
+        "10万韩元净利约2800及年度利润规模"
+      ],
+      "abstract_move": "把统一金额依次分配到人力、许可、运营与税费，给出本地最终盈余的完整瀑布",
+      "replacement_needs": [
+        "员工成本",
+        "品牌或知识许可成本",
+        "门店运营成本",
+        "利息与税费",
+        "经营及最终净利润",
+        "年度规模换算"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "cross_border_cash_reveal",
+      "start_ratio": 0.53,
+      "end_ratio": 0.6211,
+      "start_sec": 519.8,
+      "end_sec": 609.2,
+      "position_label": "53%–62.1%(8:40–10:09)",
+      "purpose": "兑现开场的跨境异常，并在强冲突信息后补足所有权、合法性与会计口径",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 92,
+          "position_ratio": 0.5708,
+          "time_ms": 559839,
+          "reason": "股息与许可费合并后，跨境流向高于本地最终盈余的主承诺得到完整兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "unit_payment_trace_complete",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "anomaly_reveal",
+          "mechanism": "remittance_exceeds_current_profit"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "primary_payoff",
+          "mechanism": "royalty_plus_dividend_total"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "context_correction",
+          "mechanism": "dividend_legality_context"
+        }
+      ],
+      "required_retention_events": [
+        "dividend_profit_reversal",
+        "cross_border_total_payoff",
+        "donation_contrast",
+        "legality_context",
+        "balanced_consumer_verdict"
+      ],
+      "original_moves": [
+        "股息高于当年利润",
+        "股息加许可费约4400流向美国",
+        "历史分配与捐赠对照",
+        "合法性、留存收益与税后口径限定",
+        "会员费与股息同步增长的疑问"
+      ],
+      "abstract_move": "兑现开场的跨境异常，并在强冲突信息后补足所有权、合法性与会计口径",
+      "replacement_needs": [
+        "股息与当年利润对照",
+        "股息加许可费的统一单位汇总",
+        "历史分配趋势",
+        "合法性与留存收益解释",
+        "税后口径",
+        "消费者视角的克制评价"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(92);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 92
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "historical_cashflow_expansion",
+      "start_ratio": 0.6211,
+      "end_ratio": 0.6671,
+      "start_sec": 609.2,
+      "end_sec": 654.3,
+      "position_label": "62.1%–66.7%(10:09–10:54)",
+      "purpose": "用多年趋势验证跨境流向不是一次性异常，并把“多少”推进为“为何全部流向同一主体”",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "为何韩国经营产生的股息会全部流向美国主体",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "trend_question",
+          "mechanism": "historical_pattern_question"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "ownership_question",
+          "mechanism": "why_all_money_to_single_country"
+        }
+      ],
+      "required_retention_events": [
+        "multi_year_trend",
+        "royalty_growth_mechanism",
+        "dividend_variability",
+        "ownership_question"
+      ],
+      "original_moves": [
+        "六年销售、许可费和股息趋势",
+        "业务扩张与跨境资金流同步",
+        "为什么资金全部归向美国主体"
+      ],
+      "abstract_move": "用多年趋势验证跨境流向不是一次性异常，并把“多少”推进为“为何全部流向同一主体”",
+      "replacement_needs": [
+        "多年销售趋势",
+        "随销售自动增长的许可费",
+        "股息的年度波动",
+        "业务扩张与跨境流向的同步关系",
+        "所有权问句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "ownership_history_reveal",
+      "start_ratio": 0.6671,
+      "end_ratio": 0.8057,
+      "start_sec": 654.3,
+      "end_sec": 790.3,
+      "position_label": "66.7%–80.6%(10:54–13:10)",
+      "purpose": "回溯合作、股权与物业关系，回答当前资金归属，并用旧会员资格终止强化关系变化",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.7743,
+          "time_ms": 759480,
+          "reason": "合作、股权与物业历史最终收束为单一股东解释，回答“为何全部流向美国”"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "ownership_history_explanation",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "origin_reveal",
+          "mechanism": "local_partner_origin"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "paradox_reveal",
+          "mechanism": "landlord_and_competitor_relation"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "ownership_payoff",
+          "mechanism": "single_owner_explains_dividend_path"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "symbolic_callback",
+          "mechanism": "lifetime_membership_ended"
+        }
+      ],
+      "required_retention_events": [
+        "local_origin_reversal",
+        "ownership_transfer",
+        "landlord_competitor_paradox",
+        "single_owner_payoff",
+        "lifetime_membership_callback"
+      ],
+      "original_moves": [
+        "最初本地合作与首家店",
+        "危机中股权转移",
+        "地产租赁与竞争关系",
+        "剩余股权和物业出售",
+        "单一美国股东解释股息路径",
+        "终身会员资格终止"
+      ],
+      "abstract_move": "回溯合作、股权与物业关系，回答当前资金归属，并用旧会员资格终止强化关系变化",
+      "replacement_needs": [
+        "本地合作起点",
+        "危机中的股权转移",
+        "地产租赁与竞争关系",
+        "剩余股权和物业交易",
+        "单一股东与股息路径",
+        "旧会员资格终止"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80);回收了前文的悬念 FS09→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "labor_counterface",
+      "start_ratio": 0.8057,
+      "end_ratio": 0.9317,
+      "start_sec": 790.3,
+      "end_sec": 913.8,
+      "position_label": "80.6%–93.2%(13:10–15:14)",
+      "purpose": "把员工从成本表的一项还原为利益相关者，以正反材料呈现低价结构的另一面",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 88,
+          "position_ratio": 0.8487,
+          "time_ms": 832440,
+          "reason": "员工在停车场整理购物车时倒地死亡，双面结构由资金冲突转为生命代价"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 84,
+          "position_ratio": 0.9288,
+          "time_ms": 910959,
+          "reason": "停车场劳动被明确纳入商业结构，消费者视野扩展为利益相关者视野"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "高销售与低价的另一面中，在这家门店工作的人员实际处境如何",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "labor_counterface_with_balanced_evidence",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "stakeholder_turn",
+          "mechanism": "employee_conditions_question"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "positive_detail",
+          "mechanism": "hourly_wage_evidence"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "counterface_reveal",
+          "mechanism": "worker_death_in_parking_lot"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "institutional_detail",
+          "mechanism": "heat_related_work_accident_recognition"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "worldview_verdict",
+          "mechanism": "labor_is_part_of_business"
+        }
+      ],
+      "required_retention_events": [
+        "employee_cost_callback",
+        "positive_wage_evidence",
+        "mandatory_counterpoint",
+        "worker_death_reveal",
+        "labor_worldview_verdict"
+      ],
+      "original_moves": [
+        "员工成本回扣",
+        "薪资与节假日待遇的正面材料",
+        "停车场员工死亡、工伤认定及其他安全事故",
+        "工会与工资协议",
+        "劳动也是低价结构的一部分"
+      ],
+      "abstract_move": "把员工从成本表的一项还原为利益相关者，以正反材料呈现低价结构的另一面",
+      "replacement_needs": [
+        "对员工成本项的回扣",
+        "薪资或福利的正面材料",
+        "明确的反面转向",
+        "伤亡与工伤认定",
+        "其他安全及休息条件争议",
+        "工会与协商进展",
+        "劳动属于商业结构的总结"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(88)、PK08(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 88
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 84
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "integrated_closure",
+      "start_ratio": 0.9317,
+      "end_ratio": 1,
+      "start_sec": 913.8,
+      "end_sec": 980.8,
+      "position_label": "93.2%–100%(15:14–16:21)",
+      "purpose": "回扣开场场景，压缩全片账目与双面判断，给出行动标准后把问题推广并自然接入CTA",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.9597,
+          "time_ms": 941360,
+          "reason": "维持热狗价格与提高会员费形成凝练对照，把双面经营压缩成可复述判断"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "practical_payoff",
+          "strength": 76,
+          "position_ratio": 0.9712,
+          "time_ms": 952639,
+          "reason": "会员升级最终落到可执行消费阈值，全片财务分析转化为个人选择"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "观众续费时究竟应依据什么决定是否保留高等级会员",
+          "closes_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP10",
+          "tension": "其他要求消费者先付费的场所是否也按相似结构运转；该环刻意不回答，叙事用途是把查账视角推广到片外并衔接后续同主题内容",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "actionable_break_even_rule",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP10"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "circular_return",
+          "mechanism": "membership_card_scene_callback"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "recap_payoff",
+          "mechanism": "unit_numbers_reassembled"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "contrast_verdict",
+          "mechanism": "hotdog_price_vs_membership_fee"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "practical_closure",
+          "mechanism": "upgrade_decision_rule"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "open_ended_generalization",
+          "mechanism": "other_prepaid_businesses_question"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "cta_closure",
+          "mechanism": "next_revenue_structure_promise"
+        }
+      ],
+      "required_retention_events": [
+        "opening_scene_callback",
+        "compressed_numeric_recap",
+        "hotdog_fee_contrast",
+        "actionable_threshold",
+        "open_generalization",
+        "aligned_cta"
+      ],
+      "original_moves": [
+        "回到入口会员卡",
+        "统一单位数字重排",
+        "热狗价格与会员费对照",
+        "高等级会员升级判断标准",
+        "预付费商业的普遍化问题",
+        "点赞订阅和下一集收益结构CTA"
+      ],
+      "abstract_move": "回扣开场场景，压缩全片账目与双面判断，给出行动标准后把问题推广并自然接入CTA",
+      "replacement_needs": [
+        "开场场景回扣",
+        "统一单位数字重排",
+        "价格纪律与费用上调对照",
+        "会员升级行动阈值",
+        "对其他预付费场景的开放问题",
+        "内容一致的订阅承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(82)、PK10(76);打开的悬念 LOOP10(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 82
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 76
+        }
+      ]
+    }
+  ]
+}

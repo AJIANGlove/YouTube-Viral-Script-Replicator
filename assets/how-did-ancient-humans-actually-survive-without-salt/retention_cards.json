@@ -1,0 +1,999 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.378Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.0348,
+      "start_sec": 0,
+      "end_sec": 51.3,
+      "position_label": "0%–3.5%(0:00–0:51)",
+      "purpose": "第二人称现代日常痛点开场:让观众在一次\"必需品缺席\"的小灾难中重新感到它的分量",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_everyday_scene"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "humor_payoff",
+          "mechanism": "personification_betrayal"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "punchline_reveal",
+          "mechanism": "mundane_culprit"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "humor_payoff",
+          "mechanism": "emergency_exaggeration"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_pain_scene",
+        "instant_relief_payoff"
+      ],
+      "original_moves": [
+        "从零信息到日常场景建立,再到痛点发生与解决"
+      ],
+      "abstract_move": "第二人称现代日常痛点开场:让观众在一次\"必需品缺席\"的小灾难中重新感到它的分量",
+      "replacement_needs": [
+        "具体日常场景锚点",
+        "缺席引发的连锁尴尬细节",
+        "必需品介入后的即时缓解"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "immersive_second_person_everyday_pain_scene",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 32589,
+        "evidence_refs": [
+          "C0001",
+          "C0017",
+          "C0024"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "counterfactual_pivot",
+      "start_ratio": 0.0348,
+      "end_ratio": 0.0833,
+      "start_sec": 51.3,
+      "end_sec": 122.7,
+      "position_label": "3.5%–8.3%(0:51–2:03)",
+      "purpose": "冻结上一段的体感,把观众抛进\"没有它\"的反事实世界并悬挂主问题",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "title_question",
+          "strength": 75,
+          "position_ratio": 0.0644,
+          "time_ms": 94890,
+          "reason": "主问题\"没有它怎么活下来\"显式悬挂,全片悬念锚点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺:没有这种必需品的古人到底如何活下来(标题\"如何\"问句的显式悬挂)",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "为什么身体把这种物质当作不可选项",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "transition",
+          "mechanism": "feeling_freeze"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "counterfactual_flip",
+          "mechanism": "world_without_it"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "scale_reveal",
+          "mechanism": "majority_of_existence"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "title_question_open",
+          "mechanism": "explicit_main_question"
+        }
+      ],
+      "required_retention_events": [
+        "feeling_freeze",
+        "world_flip",
+        "title_question"
+      ],
+      "original_moves": [
+        "体感定格",
+        "反事实世界清单",
+        "这是人类绝大多数时间的现实",
+        "主问题悬挂",
+        "答案价值承诺"
+      ],
+      "abstract_move": "冻结上一段的体感,把观众抛进\"没有它\"的反事实世界并悬挂主问题",
+      "replacement_needs": [
+        "\"抓住这种感觉\"式的体感定格句",
+        "无矿藏、无贸易路线的反事实世界清单",
+        "主问题问句",
+        "答案价值的承诺句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(75);打开的悬念 LOOP01→FS14、LOOP02→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "necessity_establishment",
+      "start_ratio": 0.0833,
+      "end_ratio": 0.1603,
+      "start_sec": 122.7,
+      "end_sec": 236.2,
+      "position_label": "8.3%–16%(2:03–3:56)",
+      "purpose": "先回答底层\"为什么\":把必需品从口味偏好升级为细胞级生理刚需",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "既然环境中没有它,它必须来自别处——到底来自哪里",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "necessity_argument",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "necessity_reveal",
+          "mechanism": "cellular_level"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "necessity_verdict",
+          "mechanism": "oxygen_analogy"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "pivot",
+          "mechanism": "hidden_in_plain_sight_tease"
+        }
+      ],
+      "required_retention_events": [
+        "function_inventory",
+        "oxygen_level_verdict"
+      ],
+      "original_moves": [
+        "降层转场",
+        "细胞级功能清单",
+        "缺乏后果",
+        "医学风险名",
+        "氧气级定性",
+        "它必须来自别处"
+      ],
+      "abstract_move": "先回答底层\"为什么\":把必需品从口味偏好升级为细胞级生理刚需",
+      "replacement_needs": [
+        "多项生理功能对该物质的依赖清单",
+        "缺乏时的身体崩坏后果",
+        "医学级风险名称",
+        "\"不是可选项\"的定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS04 跨段;回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "core_mechanism_reveal",
+      "start_ratio": 0.1603,
+      "end_ratio": 0.2377,
+      "start_sec": 236.2,
+      "end_sec": 350.2,
+      "position_label": "16%–23.8%(3:56–5:50)",
+      "purpose": "第一层答案揭示:目标物质一直藏在天然食物本身",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "central_reveal",
+          "strength": 85,
+          "position_ratio": 0.1603,
+          "time_ms": 236196,
+          "reason": "中枢揭示:答案一直藏在天然食物本身"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "central_reveal",
+          "mechanism": "food_itself"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "scale_stat",
+          "mechanism": "deep_time_system_worked"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_source_reveal",
+        "modern_contrast"
+      ],
+      "original_moves": [
+        "藏在眼皮底下转向",
+        "天然来源清单",
+        "整食利用佐证",
+        "现代加工对照",
+        "深度时间有效性数据"
+      ],
+      "abstract_move": "第一层答案揭示:目标物质一直藏在天然食物本身",
+      "replacement_needs": [
+        "\"藏在眼皮底下\"的转向句",
+        "天然来源清单",
+        "整食利用的行为佐证",
+        "现代加工剥离该物质的对照",
+        "深度时间跨度内系统有效的数据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(85);回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "internal_conservation",
+      "start_ratio": 0.2377,
+      "end_ratio": 0.3127,
+      "start_sec": 383.1,
+      "end_sec": 460.8,
+      "position_label": "23.8%–31.3%(6:23–7:41)",
+      "purpose": "第二层机制:身体内部的保存系统如何为稀缺环境校准",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "波动与稀缺来临时,身体内部如何应对",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "mechanism_reveal",
+          "mechanism": "conservation_mode"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "verdict",
+          "mechanism": "calibrated_for_scarcity"
+        }
+      ],
+      "required_retention_events": [
+        "emergency_mode_reveal",
+        "scarcity_calibration_verdict"
+      ],
+      "original_moves": [
+        "关键器官角色",
+        "应急保存模式",
+        "激素调节过程",
+        "进化校准背景",
+        "现代过量反向负荷"
+      ],
+      "abstract_move": "第二层机制:身体内部的保存系统如何为稀缺环境校准",
+      "replacement_needs": [
+        "关键器官与激素的保存机制",
+        "稀缺信号触发的调节过程",
+        "该系统的进化形成背景",
+        "现代过量条件下的反向负荷"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP04。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:波动与稀缺来临时,身体内部如何应对",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "behavioral_drive",
+      "start_ratio": 0.3127,
+      "end_ratio": 0.3775,
+      "start_sec": 460.8,
+      "end_sec": 556.2,
+      "position_label": "31.3%–37.8%(7:41–9:16)",
+      "purpose": "第三层机制:专属渴望如何驱动寻找行为,并用跨物种例证坐实其古老性",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "这种特殊渴望会把古人引向哪里",
+          "closes_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "饮食革命制造的缺口会如何改写文明史",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "mechanism_intro",
+          "mechanism": "distinct_appetite"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "cross_species_detail",
+          "mechanism": "butterfly_sweat"
+        }
+      ],
+      "required_retention_events": [
+        "distinct_appetite_reveal",
+        "cross_species_evidence"
+      ],
+      "original_moves": [
+        "渴望机制定义",
+        "大脑定向信号",
+        "跨物种例证串",
+        "古人寻找行为清单",
+        "求生罗盘定性"
+      ],
+      "abstract_move": "第三层机制:专属渴望如何驱动寻找行为,并用跨物种例证坐实其古老性",
+      "replacement_needs": [
+        "该渴望与普通饥饿的区分",
+        "大脑定向信号的形象描写",
+        "多个跨物种寻找该物质的例证",
+        "古人跟随本能的具体寻找行为"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "civilizational_turn",
+      "start_ratio": 0.3775,
+      "end_ratio": 0.448,
+      "start_sec": 556.2,
+      "end_sec": 660.1,
+      "position_label": "37.8%–44.8%(9:16–11:00)",
+      "purpose": "格局换挡:饮食革命制造缺口,把生存问题升级为文明史问题",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "narrative_turn",
+          "strength": 75,
+          "position_ratio": 0.3775,
+          "time_ms": 556170,
+          "reason": "格局从个人生理换挡为文明史"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "image_reveal",
+          "strength": 80,
+          "position_ratio": 0.425,
+          "time_ms": 626175,
+          "reason": "深渊意象与三连身份升格,把物质史写成权力史"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "turn",
+          "mechanism": "civilizational_stakes"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "image_reveal",
+          "mechanism": "chasm_and_pour"
+        }
+      ],
+      "required_retention_events": [
+        "turn_announcement",
+        "chasm_imagery"
+      ],
+      "original_moves": [
+        "格局换挡宣告",
+        "转折事件与年代",
+        "饮食结构变化制造缺口",
+        "深渊意象",
+        "三连身份升格",
+        "遗址时间吻合"
+      ],
+      "abstract_move": "格局换挡:饮食革命制造缺口,把生存问题升级为文明史问题",
+      "replacement_needs": [
+        "转折点事件与其年代量级",
+        "饮食结构变化如何制造缺口",
+        "深渊意象句",
+        "三连身份升格"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75)、PK04(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "commodity_power_montage",
+      "start_ratio": 0.448,
+      "end_ratio": 0.5171,
+      "start_sec": 660.1,
+      "end_sec": 762,
+      "position_label": "44.8%–51.7%(11:00–12:42)",
+      "purpose": "权力史蒙太奇:用词源、基建、税收、革命与抗争证明\"控制它=控制人\"",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "historical_consequence_reveal",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "power_verdict",
+          "mechanism": "control_it_control_vital"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "etymology_reveal",
+          "mechanism": "salary_origin"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "history_link",
+          "mechanism": "tax_revolution"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "recap_verdict",
+          "mechanism": "wars_trace_to_deficit"
+        }
+      ],
+      "required_retention_events": [
+        "etymology_reveal",
+        "revolution_links",
+        "recap_verdict"
+      ],
+      "original_moves": [
+        "权力定性",
+        "词源证据",
+        "基建与城市规划",
+        "盐税引爆革命",
+        "现代抗争符号",
+        "总结性归因回收"
+      ],
+      "abstract_move": "权力史蒙太奇:用词源、基建、税收、革命与抗争证明\"控制它=控制人\"",
+      "replacement_needs": [
+        "词源证据",
+        "最早生产遗址与农业扩张的时间吻合",
+        "基建与城市规划证据",
+        "税收引爆革命的案例",
+        "现代抗争符号案例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS06→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "technique_compensation",
+      "start_ratio": 0.5171,
+      "end_ratio": 0.619,
+      "start_sec": 762,
+      "end_sec": 912,
+      "position_label": "51.7%–61.9%(12:42–15:12)",
+      "purpose": "补充机制层:烹饪方式、发酵与替代物如何帮古人守住矿物质",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "真实低摄入人群的生理到底是什么样子",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "alt_mechanism_reveal",
+          "mechanism": "plant_ash_substitute"
+        }
+      ],
+      "required_retention_events": [
+        "method_contrast",
+        "substitute_reveal"
+      ],
+      "original_moves": [
+        "罕见提及的方面预告",
+        "烹饪方式保留差异",
+        "汤汁优雅解法",
+        "发酵附加层",
+        "替代物原理与多地独立发现"
+      ],
+      "abstract_move": "补充机制层:烹饪方式、发酵与替代物如何帮古人守住矿物质",
+      "replacement_needs": [
+        "不同烹饪方式的矿物质保留差异",
+        "汤汁饮用的优雅解法",
+        "发酵的附加作用",
+        "替代物的生化原理与多地独立发现"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "natural_experiment",
+      "start_ratio": 0.619,
+      "end_ratio": 0.7047,
+      "start_sec": 912,
+      "end_sec": 1038.4,
+      "position_label": "61.9%–70.5%(15:12–17:18)",
+      "purpose": "现代自然实验:用真实低摄入人群的数据验证\"低摄入不等于疾病\"",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "stat_shock",
+          "strength": 85,
+          "position_ratio": 0.6388,
+          "time_ms": 941267,
+          "reason": "摄入量十余倍差距的对照数据冲击"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "case_study_reveal",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "case_intro",
+          "mechanism": "natural_experiment"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "stat_shock",
+          "mechanism": "seventeen_fold_gap"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "result_reveal",
+          "mechanism": "hypertension_absent"
+        }
+      ],
+      "required_retention_events": [
+        "intake_contrast_stat",
+        "caution_beat"
+      ],
+      "original_moves": [
+        "罕见机会预告",
+        "人群与研究背景",
+        "摄入量对比与倍数",
+        "健康结果数据",
+        "谨慎声明",
+        "对\"正常\"定义的质疑"
+      ],
+      "abstract_move": "现代自然实验:用真实低摄入人群的数据验证\"低摄入不等于疾病\"",
+      "replacement_needs": [
+        "人群与研究背景",
+        "摄入量对比数字与倍数",
+        "健康结果数据",
+        "混杂因素的谨慎声明",
+        "对\"正常摄入量\"定义的质疑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85);回收了前文的悬念 FS09→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "deep_time_reframe",
+      "start_ratio": 0.7047,
+      "end_ratio": 0.7862,
+      "start_sec": 1038.4,
+      "end_sec": 1158.4,
+      "position_label": "70.5%–78.6%(17:18–19:18)",
+      "purpose": "深度时间重构:用百分比把\"常态\"与\"例外\"对调,并把尺度个人化",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "deep_time_reframe",
+          "strength": 85,
+          "position_ratio": 0.7259,
+          "time_ms": 1069586,
+          "reason": "百分比结论:绝大部分人类历史没有商品化的它"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "身体能否赶上现代食物环境的变化:刻意保持开放,叙事用途是以\"可能还要再等上千年,而这个假设本身就值得怀疑\"把失配悬念交给观众,强化主题的当代性",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "math_moment",
+          "mechanism": "ninety_six_percent"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "mismatch_verdict",
+          "mechanism": "no_time_to_adapt"
+        }
+      ],
+      "required_retention_events": [
+        "percentage_verdict",
+        "body_personalization"
+      ],
+      "original_moves": [
+        "哲学重量预告",
+        "三段时间对比",
+        "自己算互动",
+        "百分比结论",
+        "你的身体个人化",
+        "失配普遍化"
+      ],
+      "abstract_move": "深度时间重构:用百分比把\"常态\"与\"例外\"对调,并把尺度个人化",
+      "replacement_needs": [
+        "人类史、农业史、商品史的三段时间对比",
+        "百分比结论",
+        "\"你的身体\"同位语个人化",
+        "失配适用于多种营养素的普遍化"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85);打开的悬念 LOOP08(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "modern_mismatch",
+      "start_ratio": 0.7862,
+      "end_ratio": 0.8795,
+      "start_sec": 1158.4,
+      "end_sec": 1295.9,
+      "position_label": "78.6%–88%(19:18–21:36)",
+      "purpose": "反转揭示:古老的保护机制如何被现代食品工业反向利用",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "mechanism_reversal",
+          "strength": 90,
+          "position_ratio": 0.8436,
+          "time_ms": 1242947,
+          "reason": "机制相同、情境灾难性剧变:全片认知最高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "mechanism_reversal",
+          "mechanism": "context_catastrophe"
+        }
+      ],
+      "required_retention_events": [
+        "bliss_point_concept",
+        "mechanism_reversal"
+      ],
+      "original_moves": [
+        "失配普遍化",
+        "工业对奖励机制的研究",
+        "成瘾浓度概念",
+        "古今镜像场景",
+        "机制相同情境剧变",
+        "后果清单"
+      ],
+      "abstract_move": "反转揭示:古老的保护机制如何被现代食品工业反向利用",
+      "replacement_needs": [
+        "工业对味觉奖励机制的研究",
+        "成瘾浓度概念",
+        "古今同一驱动的镜像场景",
+        "保护机制转为健康风险的后果清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "answer_recap",
+      "start_ratio": 0.8795,
+      "end_ratio": 0.9324,
+      "start_sec": 1295.9,
+      "end_sec": 1373.9,
+      "position_label": "88%–93.2%(21:36–22:54)",
+      "purpose": "显式回收主问题:逐条总结\"他们如何活下来\",并接回权力史题眼",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "thesis_verdict",
+          "strength": 85,
+          "position_ratio": 0.9215,
+          "time_ms": 1357779,
+          "reason": "它成为权力因为它一直是生存:题眼句落下"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "title_reask",
+          "mechanism": "explicit_callback_question"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "power_verdict",
+          "mechanism": "it_is_survival"
+        }
+      ],
+      "required_retention_events": [
+        "title_reask",
+        "factor_recap",
+        "power_equation"
+      ],
+      "original_moves": [
+        "主问题重提",
+        "食物来源回收",
+        "保存系统回收",
+        "行为驱动回收",
+        "激素预设回收",
+        "一句归因",
+        "生存即权力题眼"
+      ],
+      "abstract_move": "显式回收主问题:逐条总结\"他们如何活下来\",并接回权力史题眼",
+      "replacement_needs": [
+        "主问题原句重提",
+        "食物来源、保存系统、行为驱动、激素预设的逐条回收",
+        "一句归因:转折事件改变了一切",
+        "生存与权力的等式句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.9324,
+      "end_ratio": 0.9672,
+      "start_sec": 1373.9,
+      "end_sec": 1425.1,
+      "position_label": "93.2%–96.7%(22:54–23:45)",
+      "purpose": "认知反转:控诉对象不是该物质本身,而是剧变的食物环境",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_mechanism_account",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "inversion",
+          "mechanism": "lifesaver_to_risk"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "perspective_flip",
+          "mechanism": "ancestors_appalled"
+        }
+      ],
+      "required_retention_events": [
+        "exoneration",
+        "ancestor_flip"
+      ],
+      "original_moves": [
+        "现代走得太远",
+        "双面身份对照",
+        "显式澄清",
+        "对环境剧变的控诉",
+        "祖先视角倒置",
+        "一生寻找对照"
+      ],
+      "abstract_move": "认知反转:控诉对象不是该物质本身,而是剧变的食物环境",
+      "replacement_needs": [
+        "该物质的双面身份对照",
+        "\"不是它的错\"的显式澄清",
+        "对环境剧变速度的控诉",
+        "祖先视角倒置与一生寻找的对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS02→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "closure",
+      "start_ratio": 0.9672,
+      "end_ratio": 1,
+      "start_sec": 1425.1,
+      "end_sec": 1473.5,
+      "position_label": "96.7%–100%(23:45–24:33)",
+      "purpose": "收束:把观众的日常动作定义为漫长历史的终点,以格言句离场",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "aphorism_close",
+          "strength": 85,
+          "position_ratio": 0.9983,
+          "time_ms": 1470898,
+          "reason": "格言句完成全片收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "everyday_callback",
+          "mechanism": "pour_gesture"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "aphorism_close",
+          "mechanism": "price_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "action_callback",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "一生寻找行为清单",
+        "日常动作回调",
+        "动作承载的时间尺度",
+        "全片主题词串联",
+        "格言收束"
+      ],
+      "abstract_move": "收束:把观众的日常动作定义为漫长历史的终点,以格言句离场",
+      "replacement_needs": [
+        "日常动作回调与定格指令",
+        "该动作承载的时间尺度",
+        "一句超出本片主题的格言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

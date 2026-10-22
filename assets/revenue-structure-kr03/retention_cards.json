@@ -1,0 +1,888 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.322Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "familiar_scene_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0513,
+      "start_sec": 0.1,
+      "end_sec": 57,
+      "position_label": "0%–5.1%(0:00–0:57)",
+      "purpose": "用熟悉的消费异常与流行说法的半截矛盾建立问题意识，再把观看目标收缩为追踪一笔付款的完整流向",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：一笔日常付款如何在各接收方之间分配，经营主体真正留下多少",
+          "closes_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "供应退货与库存责任争议：开场提前点出，后段恢复；当前调查在源文中仍未定责。刻意不关闭是为了让低价的效率解释与负担转移疑问并存，避免把未决问题写成结论",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP02"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "familiar_scene",
+          "mechanism": "everyday_receipt_image"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "rumor_introduction",
+          "mechanism": "folk_margin_claim"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "contradiction",
+          "mechanism": "half_true_half_strange"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "promise_specification",
+          "mechanism": "not_that_story_but_this_payment"
+        }
+      ],
+      "required_retention_events": [
+        "familiar_scene_hook",
+        "rumor_contradiction",
+        "promise_specification"
+      ],
+      "original_moves": [
+        "收银小票的日常体验",
+        "“每件仅留极少金额”的传闻",
+        "高盈利反差与供应退货事件预告",
+        "明确追踪1000韩元的分配与总部留存"
+      ],
+      "abstract_move": "用熟悉的消费异常与流行说法的半截矛盾建立问题意识，再把观看目标收缩为追踪一笔付款的完整流向",
+      "replacement_needs": [
+        "一个可感知的日常异常",
+        "一个流传已久但只部分正确的说法",
+        "反差事实",
+        "明确的逐层追踪承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS12、LOOP02(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "familiar_scene_with_rumor_contradiction",
+        "first_stimulus_ms": 80,
+        "first_payoff_ms": 32040,
+        "evidence_refs": [
+          "C0001",
+          "C0008",
+          "C0013",
+          "C0016",
+          "C0024"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "ledger_baseline",
+      "start_ratio": 0.0513,
+      "end_ratio": 0.1036,
+      "start_sec": 57,
+      "end_sec": 115,
+      "position_label": "5.1%–10.4%(0:57–1:55)",
+      "purpose": "先建立账本的第一项与同口径对照，再把差额扩大为必须解释的机制异常",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.079,
+          "time_ms": 87680,
+          "reason": "同一计价单位的采购差额被放大到年度规模，证明微小单项差额具有系统意义"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "低售价为何还能以更低成本采购，价格与供应机制怎样同时成立",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "first_ledger_item",
+          "mechanism": "procurement_cost_item"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "comparison_reveal",
+          "mechanism": "common_denominator_gap"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "mechanism_question",
+          "mechanism": "cheap_price_cheaper_sourcing"
+        }
+      ],
+      "required_retention_events": [
+        "ledger_baseline",
+        "common_denominator_comparison",
+        "anomaly_question"
+      ],
+      "original_moves": [
+        "采购成本为620韩元",
+        "与另一零售商730韩元同口径比较",
+        "110韩元差额及其年度规模",
+        "低价却更低采购价的机制问题"
+      ],
+      "abstract_move": "先建立账本的第一项与同口径对照，再把差额扩大为必须解释的机制异常",
+      "replacement_needs": [
+        "首个成本分项",
+        "同一计价单位的外部对照",
+        "差额及其规模化意义",
+        "由反差导出的机制问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(74);打开的悬念 LOOP03→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 74
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "price_first_mechanism",
+      "start_ratio": 0.1036,
+      "end_ratio": 0.1792,
+      "start_sec": 115,
+      "end_sec": 199,
+      "position_label": "10.4%–17.9%(1:55–3:19)",
+      "purpose": "揭示先固定价格再反推产品与订单的机制，并在大单规模解释之后主动校准证据强度",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 86,
+          "position_ratio": 0.1193,
+          "time_ms": 132480,
+          "reason": "先定价再让产品适配的顺序反转，替换“低价只是砍价”的旧解释"
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 77,
+          "position_ratio": 0.1414,
+          "time_ms": 157000,
+          "reason": "订单规模与连续生产被连接为单位成本下降的具体机制"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "sequence_reversal",
+          "mechanism": "price_before_product"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "scale_reveal",
+          "mechanism": "order_volume_unit_cost"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "source_caveat",
+          "mechanism": "industry_claim_not_official_statistic"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "new_question",
+          "mechanism": "where_can_factory_exist"
+        }
+      ],
+      "required_retention_events": [
+        "price_first_mechanism",
+        "scale_economics",
+        "source_calibration"
+      ],
+      "original_moves": [
+        "六档价格带",
+        "先定售价再要求产品适配",
+        "百万级订单降低单位成本",
+        "业内说法与未公开数据限定",
+        "工厂在哪的新问题"
+      ],
+      "abstract_move": "揭示先固定价格再反推产品与订单的机制，并在大单规模解释之后主动校准证据强度",
+      "replacement_needs": [
+        "固定价格带",
+        "先定价后适配产品的反向顺序",
+        "订单规模对单位成本的作用",
+        "来源限定与数据边界",
+        "下一层供应问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(86)、PK03(77)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 86
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 77
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "sourcing_tradeoff",
+      "start_ratio": 0.1792,
+      "end_ratio": 0.2705,
+      "start_sec": 199,
+      "end_sec": 300.4,
+      "position_label": "17.9%–27.1%(3:19–5:00)",
+      "purpose": "回答低价供应从哪里来，并把价格主导权的效率收益与生产、设计控制边界放在同一段呈现",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "price_first_sourcing_mechanism_with_tradeoff",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "tradeoff_reveal",
+          "mechanism": "efficiency_design_control_shadow"
+        }
+      ],
+      "required_retention_events": [
+        "sourcing_tradeoff",
+        "design_control_risk",
+        "offshore_sourcing_explain"
+      ],
+      "original_moves": [
+        "国内生产成本对照",
+        "海外采购与供应商主动上门",
+        "相似产品设计争议及回应",
+        "价格主导权伴随生产与设计控制边界"
+      ],
+      "abstract_move": "回答低价供应从哪里来，并把价格主导权的效率收益与生产、设计控制边界放在同一段呈现",
+      "replacement_needs": [
+        "本地与海外成本对照",
+        "采购组织方式",
+        "供应商集聚的反向路径",
+        "相似产品争议及当事方回应",
+        "效率与控制边界的双面结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "operating_cost_ledger",
+      "start_ratio": 0.2705,
+      "end_ratio": 0.3476,
+      "start_sec": 300.4,
+      "end_sec": 386,
+      "position_label": "27.1%–34.8%(5:00–6:26)",
+      "purpose": "开启第二本账，把剩余款项拆到门店运营，并用劳动分工解释最大成本项与一线忙碌现象",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "扣除采购成本后的款项是否就是利润，门店运营还要分走哪些部分",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "section_transition",
+          "mechanism": "remaining_money_not_profit"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "cost_breakdown",
+          "mechanism": "largest_item_first"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "counterintuitive_cost",
+          "mechanism": "labor_as_largest_operating_item"
+        }
+      ],
+      "required_retention_events": [
+        "operating_cost_ledger",
+        "labor_cost_reveal",
+        "workload_reframe"
+      ],
+      "original_moves": [
+        "运营成本280韩元",
+        "人工135韩元为最大项",
+        "专用商品使门店员工承担卸货、陈列与标价",
+        "忙碌与不友善印象被重新解释"
+      ],
+      "abstract_move": "开启第二本账，把剩余款项拆到门店运营，并用劳动分工解释最大成本项与一线忙碌现象",
+      "replacement_needs": [
+        "第二本账的明确转场",
+        "运营成本总额",
+        "人工等分项排序",
+        "与同业劳动分工的对照",
+        "由分工解释日常门店现象"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "overhead_and_visibility_reveal",
+      "start_ratio": 0.3476,
+      "end_ratio": 0.4391,
+      "start_sec": 386,
+      "end_sec": 487.6,
+      "position_label": "34.8%–43.9%(6:26–8:08)",
+      "purpose": "补齐场地、物流与传播成本，用极端费用反差制造中段奖励，再阶段回收前两本账",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.4032,
+          "time_ms": 447680,
+          "reason": "广告与场地费用的极端反差刷新对传播成本的理解"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "operating_cost_itemization",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "attention_pointer",
+          "mechanism": "unusual_expense_item"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "comparison_reveal",
+          "mechanism": "one_unit_advertising_contrast"
+        }
+      ],
+      "required_retention_events": [
+        "overhead_and_visibility_reveal",
+        "variable_rent_explain",
+        "advertising_contrast"
+      ],
+      "original_moves": [
+        "楼层与销售额联动租金",
+        "广告仅1韩元与租金51韩元反差",
+        "门店、报道和用户分享承担可见性",
+        "620与280两项支出阶段回收"
+      ],
+      "abstract_move": "补齐场地、物流与传播成本，用极端费用反差制造中段奖励，再阶段回收前两本账",
+      "replacement_needs": [
+        "空间使用方式",
+        "与经营表现联动的费用安排",
+        "传统广告与场地费用的同口径反差",
+        "门店及用户传播替代机制",
+        "两本账的阶段小结"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80);回收了前文的悬念 FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "ownership_model_detour",
+      "start_ratio": 0.4391,
+      "end_ratio": 0.5668,
+      "start_sec": 487.6,
+      "end_sec": 629.4,
+      "position_label": "43.9%–56.7%(8:08–10:29)",
+      "purpose": "在最终留存答案前厘清门店经营归属，用地区对照和合同细节扩展风险维度，同时阻止过度推断",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.4828,
+          "time_ms": 536080,
+          "reason": "不同地区的经营归属比例反转，扩张结构从抽象分类变为可见模式"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "门店是否都属于总部，直营与加盟结构怎样改变投入、合同与风险理解",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "ownership_model_and_balanced_risk_explanation",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "ownership_question",
+          "mechanism": "who_actually_owns_store"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "pattern_reveal",
+          "mechanism": "regional_ownership_contrast"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "contract_detail",
+          "mechanism": "large_investment_short_term"
+        }
+      ],
+      "required_retention_events": [
+        "ownership_model_detour",
+        "regional_pattern_comparison",
+        "risk_caveat"
+      ],
+      "original_moves": [
+        "直营与加盟数量及地区差异",
+        "不对布局动机下定论",
+        "加盟投入与一年合同",
+        "以解约和监管记录平衡风险判断"
+      ],
+      "abstract_move": "在最终留存答案前厘清门店经营归属，用地区对照和合同细节扩展风险维度，同时阻止过度推断",
+      "replacement_needs": [
+        "经营归属分类",
+        "数量与地区分布对照",
+        "对布局动机的多解限定",
+        "投入与合同期限",
+        "用于平衡判断的反向记录"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 74
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "primary_amount_reveal",
+      "start_ratio": 0.5668,
+      "end_ratio": 0.6443,
+      "start_sec": 629.4,
+      "end_sec": 715.4,
+      "position_label": "56.7%–64.4%(10:29–11:55)",
+      "purpose": "集中兑现标题金额，用同口径同业比较和趋势信息放大答案，再纠正薄利硬撑的旧认知",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 95,
+          "position_ratio": 0.5686,
+          "time_ms": 631399,
+          "reason": "标题金额与开场传闻在此直接对撞，完成全片最强延迟回报"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "总部留下的收益在税后、股东和关联经营路径中继续流向哪里",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "primary_answer",
+          "mechanism": "actual_headquarters_retention"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "rumor_payoff",
+          "mechanism": "tenfold_correction"
+        }
+      ],
+      "required_retention_events": [
+        "primary_amount_reveal",
+        "rumor_correction",
+        "peer_profit_comparison"
+      ],
+      "original_moves": [
+        "总部留存100韩元首次明示",
+        "相对10韩元传闻接近十倍",
+        "同业每1000韩元17韩元对照",
+        "售价未涨而留存增长",
+        "纠正“薄利硬撑”印象"
+      ],
+      "abstract_move": "集中兑现标题金额，用同口径同业比较和趋势信息放大答案，再纠正薄利硬撑的旧认知",
+      "replacement_needs": [
+        "明确的标题答案",
+        "与开场传闻的数字对照",
+        "同一计价单位的同业利润比较",
+        "时间趋势",
+        "对旧印象的显式纠偏"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(95);打开的悬念 LOOP06→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 95
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "profit_destination_trace",
+      "start_ratio": 0.6443,
+      "end_ratio": 0.7217,
+      "start_sec": 715.4,
+      "end_sec": 801.4,
+      "position_label": "64.4%–72.2%(11:55–13:21)",
+      "purpose": "把留存金额继续追到税后、股东与关联采购路径，同时对正常经营解释与追踪必要性保持双重视角",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "destination_question",
+          "mechanism": "where_does_retained_money_go"
+        }
+      ],
+      "required_retention_events": [
+        "profit_destination_trace",
+        "dividend_mapping",
+        "related_party_balance"
+      ],
+      "original_moves": [
+        "税后79韩元",
+        "分红与控股股东流向",
+        "关联采购和包装路径",
+        "同时说明分红与关联交易的正常经营可能性"
+      ],
+      "abstract_move": "把留存金额继续追到税后、股东与关联采购路径，同时对正常经营解释与追踪必要性保持双重视角",
+      "replacement_needs": [
+        "税后口径",
+        "留存收益用途分类",
+        "股东分配及主要接收方",
+        "关联采购路径",
+        "对合法性与效率可能性的平衡限定"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "ownership_history_context",
+      "start_ratio": 0.7217,
+      "end_ratio": 0.7995,
+      "start_sec": 801.4,
+      "end_sec": 887.7,
+      "position_label": "72.2%–80%(13:21–14:48)",
+      "purpose": "用股权历史解释分红争议背景，以高倍回报形成次级峰值，并明确区分时间先后与因果证明",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.7629,
+          "time_ms": 847079,
+          "reason": "长期股权回报的数量跃迁为资金路径增加历史尺度"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "名称与外资误解背后的股权历史是什么，退出前后分配变化能否直接连成因果",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "profit_destination_map_with_history",
+          "opened_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "history_explained_with_causation_caveat",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "history_caveat",
+          "mechanism": "ownership_name_misconception"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "scale_anecdote",
+          "mechanism": "long_term_investment_multiple"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "callback_transition",
+          "mechanism": "unanswered_question_returns"
+        }
+      ],
+      "required_retention_events": [
+        "ownership_history_context",
+        "historical_return_reveal",
+        "causation_caveat"
+      ],
+      "original_moves": [
+        "历史外资持股与股权回购",
+        "130倍回报",
+        "回购后分红上升但拒绝单因果断言",
+        "回到未答供应退货问题"
+      ],
+      "abstract_move": "用股权历史解释分红争议背景，以高倍回报形成次级峰值，并明确区分时间先后与因果证明",
+      "replacement_needs": [
+        "历史持股与投资背景",
+        "公司增长和股权退出",
+        "可量化投资回报",
+        "后续分配变化",
+        "不得由先后直接推出因果的限定",
+        "回到旧问题的转场"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80);回收了前文的悬念 FS08→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "controversy_reframe",
+      "start_ratio": 0.7995,
+      "end_ratio": 0.9181,
+      "start_sec": 887.7,
+      "end_sec": 1019.4,
+      "position_label": "80%–91.8%(14:48–16:59)",
+      "purpose": "回收开场供应事件，把低价机制置于库存风险由谁承担的问题下，并保留调查未定的事实边界",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 79,
+          "position_ratio": 0.8509,
+          "time_ms": 944800,
+          "reason": "处罚与分配规模的并置产生道德张力，且叙述主动限制直接比较"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 84,
+          "position_ratio": 0.91,
+          "time_ms": 1010480,
+          "reason": "早期成本优势被重新分解为效率与负担转移两种来源，提升全片问题层级"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "risk_baseline",
+          "mechanism": "buyout_inventory_risk_baseline"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "moral_comparison",
+          "mechanism": "penalty_scale_with_caveat"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "investigation_caveat",
+          "mechanism": "not_yet_established_wrongdoing"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "worldview_question",
+          "mechanism": "efficiency_or_burden_transfer"
+        }
+      ],
+      "required_retention_events": [
+        "controversy_reframe",
+        "inventory_risk_allocation",
+        "investigation_status_caveat"
+      ],
+      "original_moves": [
+        "买断采购本应由销售方承担库存风险",
+        "季节性商品退货与处罚",
+        "新调查仍未定责",
+        "成本优势中有多少来自负担转移保持开放"
+      ],
+      "abstract_move": "回收开场供应事件，把低价机制置于库存风险由谁承担的问题下，并保留调查未定的事实边界",
+      "replacement_needs": [
+        "正常风险承担的基准解释",
+        "历史退货事件及处理结果",
+        "处罚数字的谨慎比较",
+        "当前调查范围与未定状态",
+        "把早期成本差额重新连接到责任问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(79)、PK09(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 79
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 84
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "receipt_recap_closure",
+      "start_ratio": 0.9181,
+      "end_ratio": 1,
+      "start_sec": 1019.4,
+      "end_sec": 1110.4,
+      "position_label": "91.8%–100%(16:59–18:30)",
+      "purpose": "回到开场物件完成逐项回收，把低价重新定义为价格先行与成本分配系统，再以观察行动和同主题订阅承诺收束",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 91,
+          "position_ratio": 0.9545,
+          "time_ms": 1059840,
+          "reason": "结尾把低价从让利结果重述为价格先行、产品适配与成本分配的系统结果"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "itemized_receipt_recap",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "opening_callback",
+          "mechanism": "receipt_returns"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "final_ledger_payoff",
+          "mechanism": "all_items_and_destination_recap"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "worldview_verdict",
+          "mechanism": "not_discount_but_price_first_fit"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "open_ended_question",
+          "mechanism": "who_absorbs_the_cost"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "closing_cta",
+          "mechanism": "same_topic_subscription"
+        }
+      ],
+      "required_retention_events": [
+        "receipt_recap_closure",
+        "worldview_synthesis",
+        "viewer_action_cta"
+      ],
+      "original_moves": [
+        "回到小票并逐项复盘",
+        "总部100韩元与分红路径",
+        "低价重述为先定价格再适配商品",
+        "成本来源保持追问",
+        "观察行动与订阅 CTA"
+      ],
+      "abstract_move": "回到开场物件完成逐项回收，把低价重新定义为价格先行与成本分配系统，再以观察行动和同主题订阅承诺收束",
+      "replacement_needs": [
+        "开场物件回调",
+        "逐项金额与接收方复述",
+        "否定旧解释后的机制重述",
+        "对成本来源的保留追问",
+        "可执行观察动作",
+        "与内容一致的轻量 CTA"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(91);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 91
+        }
+      ]
+    }
+  ]
+}

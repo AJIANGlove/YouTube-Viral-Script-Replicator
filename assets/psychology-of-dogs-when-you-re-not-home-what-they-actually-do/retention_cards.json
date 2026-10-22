@@ -1,0 +1,945 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.531Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.0819,
+      "start_sec": 0,
+      "end_sec": 57,
+      "position_label": "0%–8.2%(0:00–0:57)",
+      "purpose": "用第三方观察者制造知识缺口，列举观众的默认解释立靶，预告研究揭示真相",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念：摄像头拍到的'你不在时它到底在经历什么'",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "'在你意识到之前就开始了'——到底从何时开始",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hidden_knowledge_claim",
+          "mechanism": "third_party_observer"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "evidence_hints",
+          "mechanism": "domestic_trace_clues"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "assumption_setup",
+          "mechanism": "common_explanations_listed"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "science_tease",
+          "mechanism": "camera_method_reveal"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "premise_statement",
+          "mechanism": "brain_specificity_tease"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_knowledge_gap",
+        "third_party_observer"
+      ],
+      "original_moves": [
+        "邻居视角的隐藏知识 + 回家一切正常的假象 + 生活痕迹证据（沙发垫/地毯/过分安静）+ '无聊/捣乱'假设立靶 + 摄像头研究预告 + '它的大脑里正在发生具体的事'"
+      ],
+      "abstract_move": "用第三方观察者制造知识缺口，列举观众的默认解释立靶，预告研究揭示真相",
+      "replacement_needs": [
+        "一个知情的第三方视角",
+        "观众曾见过的细微证据痕迹",
+        "默认解释三连列举",
+        "'研究人员一直在观察'的预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS14、LOOP02→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "hidden_observer_knowledge_gap",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 66827,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0010",
+          "C0016"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "evidence_build",
+      "start_ratio": 0.0819,
+      "end_ratio": 0.1836,
+      "start_sec": 57,
+      "end_sec": 127.9,
+      "position_label": "8.2%–18.4%(0:57–2:08)",
+      "purpose": "第一层观察证据：量化发现 + 安静假象的第一次打破 + 痛苦的时间循环模式",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 75,
+          "position_ratio": 0.1658,
+          "time_ms": 115439,
+          "reason": "每23-28分钟一个峰值：独处不是逐渐平静而是痛苦循环"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "named_study",
+          "mechanism": "milan_2010_setup"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "quantified_result",
+          "mechanism": "time_anchor"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "repetition_emphasis",
+          "mechanism": "quantified_threat"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "calm_illusion_break",
+          "mechanism": "physiological_contradiction"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "pattern_reveal",
+          "mechanism": "cycle_not_settling"
+        }
+      ],
+      "required_retention_events": [
+        "named_study",
+        "quantified_time_anchor"
+      ],
+      "original_moves": [
+        "2010年米兰大学23只狗居家摄像头研究 + 离开后平均3分15秒开始嚎叫 + 7分钟内出现破坏行为 + 安静≠平静（喘气增加、心率仍高）+ 每23-28分钟一个新峰值：不是平静，是循环"
+      ],
+      "abstract_move": "第一层观察证据：量化发现 + 安静假象的第一次打破 + 痛苦的时间循环模式",
+      "replacement_needs": [
+        "带机构/年份/样本量的观察研究",
+        "精确到秒/分钟的量化发现",
+        "安静表象与生理指标的矛盾",
+        "周期性峰值模式"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "reveal",
+      "start_ratio": 0.1836,
+      "end_ratio": 0.2324,
+      "start_sec": 127.9,
+      "end_sec": 161.8,
+      "position_label": "18.4%–23.2%(2:08–2:42)",
+      "purpose": "对照组对比：正常基线长什么样 + 关键变量揭示",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.2219,
+          "time_ms": 154515,
+          "reason": "差异不在品种/年龄/基因，在'被教会期待什么'：问题被重定义为可改变的学习史"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "关键变量'狗被教会期待什么'如何被改变",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "control_group_contrast",
+          "mechanism": "passive_baseline"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "variable_reveal",
+          "mechanism": "taught_expectation"
+        }
+      ],
+      "required_retention_events": [
+        "control_group_contrast",
+        "quantified_baseline"
+      ],
+      "original_moves": [
+        "瑞典农业大学对照组独处4小时：约97%时间被动休息 + 两组差异不在品种/年龄/基因 + 关键变量=狗被教会期待什么 + 'before we get there'预告"
+      ],
+      "abstract_move": "对照组对比：正常基线长什么样 + 关键变量揭示",
+      "replacement_needs": [
+        "无问题对照组的量化基线",
+        "排除先天因素（品种/年龄/基因）",
+        "关键变量命名 + 延迟兑现预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75);打开的悬念 LOOP03→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "evidence_build",
+      "start_ratio": 0.2324,
+      "end_ratio": 0.2968,
+      "start_sec": 161.8,
+      "end_sec": 206.6,
+      "position_label": "23.2%–29.7%(2:42–3:27)",
+      "purpose": "前置压力：离开之前压力已开始的条件反射机制",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "predeparture_conditioning_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "anticipatory_stress_reveal",
+          "mechanism": "predeparture_onset"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "mechanism_explanation",
+          "mechanism": "backward_conditioning_chain"
+        }
+      ],
+      "required_retention_events": [
+        "named_researchers",
+        "conditioning_mechanism"
+      ],
+      "original_moves": [
+        "1980年代Borchelt与Voith记录并多次复现 + 主人还在家压力反应已开始 + 出门例行程序被反向链接（看手机/穿鞋/看时间）+ 信号含义=我要被独自留下 + 到门口已在喘气/跟随"
+      ],
+      "abstract_move": "前置压力：离开之前压力已开始的条件反射机制",
+      "replacement_needs": [
+        "有姓名的早期研究者与反复复现",
+        "日常例行细节的条件反射链",
+        "信号含义的一句话翻译"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "belief_challenge",
+      "start_ratio": 0.2974,
+      "end_ratio": 0.3525,
+      "start_sec": 207.1,
+      "end_sec": 245.4,
+      "position_label": "29.7%–35.3%(3:27–4:05)",
+      "purpose": "流行建议一：公平复述→证据修正→情感重命名",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.3453,
+          "time_ms": 240420,
+          "reason": "'不是怕你的鞋，是怕你不回来'：全片第一个情感高点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "'钥匙脱敏'这个标准建议到底管不管用",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "myth_correction_plus_emotional_renaming",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "popular_advice_challenge",
+          "mechanism": "evidence_complicated"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "emotional_renaming",
+          "mechanism": "true_fear_named"
+        }
+      ],
+      "required_retention_events": [
+        "popular_advice_challenge",
+        "myth_correction"
+      ],
+      "original_moves": [
+        "流行建议公平复述（随机拿钥匙/穿鞋坐下）+ 巴塞罗那自治大学2014综述：证据更复杂 + 对部分狗反而增加恐惧 + 问题不是钥匙是之后的不确定性 + '不是怕你的鞋，是怕你不回来'"
+      ],
+      "abstract_move": "流行建议一：公平复述→证据修正→情感重命名",
+      "replacement_needs": [
+        "流行建议的公平复述",
+        "综述级证据及其复杂性",
+        "'不是怕X，是怕Y'式重命名落点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "reveal",
+      "start_ratio": 0.3525,
+      "end_ratio": 0.4659,
+      "start_sec": 245.4,
+      "end_sec": 324.4,
+      "position_label": "35.3%–46.6%(4:05–5:24)",
+      "purpose": "纵向研究反直觉发现：致病的不是你以为的环节",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.4018,
+          "time_ms": 279772,
+          "reason": "致病的不是告别而是回家时的愤怒反应（概率×6）：因果被反转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "counterintuitive_finding",
+          "mechanism": "goodbyes_exonerated"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "quantified_stakes",
+          "mechanism": "sixfold_risk"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "mechanism_explanation",
+          "mechanism": "arrival_association"
+        }
+      ],
+      "required_retention_events": [
+        "longitudinal_study",
+        "counterintuitive_finding"
+      ],
+      "original_moves": [
+        "皇家兽医学院Generation Pup追踪145只幼犬 + 情感告别无显著影响 + 回家对破坏表现愤怒的主人",
+        "分离行为概率×6 + 狗把愤怒关联到'你的到达' + 离开与回家两端焦虑相连成循环 + 早期惩罚显著提高发病概率"
+      ],
+      "abstract_move": "纵向研究反直觉发现：致病的不是你以为的环节",
+      "replacement_needs": [
+        "大样本纵向追踪研究",
+        "'告别不致病、回家反应才致病'式反直觉结果",
+        "倍数级量化风险",
+        "关联机制解释（错误对象归因）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "belief_challenge",
+      "start_ratio": 0.4659,
+      "end_ratio": 0.5129,
+      "start_sec": 324.4,
+      "end_sec": 357.1,
+      "position_label": "46.6%–51.3%(5:24–5:57)",
+      "purpose": "流行建议二：最常见的替代方案被证据否定 + '特定的人'重构",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "'养第二只狗'能否解决分离焦虑",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "myth_dismantled",
+          "mechanism": "second_dog_advice"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "specificity_reframe",
+          "mechanism": "specific_person_absence"
+        }
+      ],
+      "required_retention_events": [
+        "myth_dismantling",
+        "quantified_result"
+      ],
+      "original_moves": [
+        "最常见建议=养第二只狗 + 2021年77只狗研究：多狗家庭公狗独处时反而嚎叫更多 + 不是泛化的孤独，是特定人的缺席 + '邻居要度过漫长一周'的干燥幽默收束"
+      ],
+      "abstract_move": "流行建议二：最常见的替代方案被证据否定 + '特定的人'重构",
+      "replacement_needs": [
+        "最常见建议的复述",
+        "反向量化证据",
+        "'不是泛化的X，是特定的Y'重构",
+        "一句后果幽默收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "reveal",
+      "start_ratio": 0.5129,
+      "end_ratio": 0.6056,
+      "start_sec": 357.1,
+      "end_sec": 421.6,
+      "position_label": "51.3%–60.6%(5:57–7:02)",
+      "purpose": "最易漏看的群体 + 经典理论及其现代反转",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.5989,
+          "time_ms": 416980,
+          "reason": "停止吠叫=不再相信行为有用：'安静'被彻底重定义"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "安静、房子完好的狗真的没事吗",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "myth_dismantled_with_study",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "importance_flag",
+          "mechanism": "most_missed_part"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "classic_experiment",
+          "mechanism": "learned_helplessness_intro"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "theory_revision",
+          "mechanism": "passivity_default"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "emotional_renaming",
+          "mechanism": "behavior_matters_belief"
+        }
+      ],
+      "required_retention_events": [
+        "importance_flag",
+        "classic_experiment"
+      ],
+      "original_moves": [
+        "'最常被漏看的部分'重要性预警 + 房子完好、表情如常的假象 + 塞利格曼1960年代电击实验与习得性无助 + 2016年修正：被动是长期无解压力下的默认状态，主动信念才需被建立 + '停止吠叫≠接受，是不再相信行为有用'"
+      ],
+      "abstract_move": "最易漏看的群体 + 经典理论及其现代反转",
+      "replacement_needs": [
+        "完好如初的假象场景",
+        "经典实验与其原始结论",
+        "现代修正：被动是默认、信念需建立",
+        "'没有接受，是不再相信'式重定义"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85);打开的悬念 LOOP06→FS09 跨段;回收了前文的悬念 FS07→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "reveal",
+      "start_ratio": 0.6065,
+      "end_ratio": 0.639,
+      "start_sec": 422.3,
+      "end_sec": 444.9,
+      "position_label": "60.7%–63.9%(7:02–7:25)",
+      "purpose": "生理悖论：指标反向变化 = 系统耗竭",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.6275,
+          "time_ms": 436939,
+          "reason": "最焦虑的狗皮质醇反而更低：压力系统耗竭悖论"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "learned_helplessness_plus_burnout_warning",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "paradox_reveal",
+          "mechanism": "cortisol_burnout"
+        }
+      ],
+      "required_retention_events": [
+        "paradox_reveal",
+        "physiological_evidence"
+      ],
+      "original_moves": [
+        "2019年研究：毛发样本反映数月激素积累 + 严重焦虑狗长期皮质醇低于平静狗 + 不是压力更小，是系统长期运转后烧坏 + '看起来没事的狗可能最需要担心'"
+      ],
+      "abstract_move": "生理悖论：指标反向变化 = 系统耗竭",
+      "replacement_needs": [
+        "长期生理指标测量方法（数月积累）",
+        "重症组指标反而更低的悖论",
+        "'不是压力小，是系统烧坏'的解释",
+        "预警式重命名"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80);回收了前文的悬念 FS08→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "reveal",
+      "start_ratio": 0.64,
+      "end_ratio": 0.7093,
+      "start_sec": 445.6,
+      "end_sec": 493.9,
+      "position_label": "64%–70.9%(7:26–8:14)",
+      "purpose": "跨个体同步：主要压力源来自观众自身",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.6703,
+          "time_ms": 466720,
+          "reason": "人犬皮质醇同步且主人预测狗：观众自身成为变量"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "sync_reveal",
+          "mechanism": "owner_predicts_dog"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "deficit_reframe",
+          "mechanism": "not_from_neutral"
+        }
+      ],
+      "required_retention_events": [
+        "named_study",
+        "sync_reveal"
+      ],
+      "original_moves": [
+        "林雪平大学2019年58对人犬毛发皮质醇测量 + 长期压力水平同步（主人焦虑狗焦虑）+ 方向性判定：主人预测狗，而非反向 + 高压力基线的狗不是从中性开始独处，是从亏欠开始 + 8小时叠加在已积累的一切之上"
+      ],
+      "abstract_move": "跨个体同步：主要压力源来自观众自身",
+      "replacement_needs": [
+        "成对样本的同步测量",
+        "因果方向判定（谁预测谁）",
+        "'不是从中性开始，是从亏欠开始'式重构"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "belief_challenge",
+      "start_ratio": 0.7103,
+      "end_ratio": 0.7827,
+      "start_sec": 494.6,
+      "end_sec": 545,
+      "position_label": "71%–78.3%(8:15–9:05)",
+      "purpose": "产品产业证据清算 + 干预点尺度重构",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.7338,
+          "time_ms": 510899,
+          "reason": "干预点不在那8小时，在另外16小时：问题尺度被翻转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "信息素/补剂/压力衣等抗焦虑产品是否有效",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "'另外16小时'的干预点到底怎么做",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "placebo_controlled_debunk",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "scale_reframe",
+          "mechanism": "other_16_hours"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "product_debunk",
+          "mechanism": "placebo_controlled_evidence"
+        }
+      ],
+      "required_retention_events": [
+        "product_industry_debunk",
+        "placebo_controlled_evidence"
+      ],
+      "original_moves": [
+        "产品产业盘点（信息素扩散器/镇静补剂/压力衣/白噪音）+ Adaptil在最严格安慰剂对照中对吠叫/抓挠/心率无显著改善 + 开电视无效果 + 漏食玩具只能撑几分钟、对重症狗甚至反噬 + 大多数产品在治疗那8小时，干预点是另外16小时"
+      ],
+      "abstract_move": "产品产业证据清算 + 干预点尺度重构",
+      "replacement_needs": [
+        "产品产业盘点",
+        "安慰剂对照级证据（逐项无效或有限）",
+        "可能反噬的警告",
+        "'都在治那8小时，干预点是另外16小时'尺度重构"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80);打开的悬念 LOOP08→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "evidence_build",
+      "start_ratio": 0.7828,
+      "end_ratio": 0.8604,
+      "start_sec": 545,
+      "end_sec": 599.1,
+      "position_label": "78.3%–86%(9:05–9:59)",
+      "purpose": "有效方案一：行为协议、微观步骤与临界点",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "graduated_exposure_protocol",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "solution_reveal",
+          "mechanism": "graduated_exposure"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "training_reframe",
+          "mechanism": "prediction_system_update"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "tipping_point",
+          "mechanism": "forty_minute_threshold"
+        }
+      ],
+      "required_retention_events": [
+        "evidence_based_solution",
+        "incremental_protocol"
+      ],
+      "original_moves": [
+        "有一致证据的是梯度暴露 + 从秒开始：走到门口",
+        "回来",
+        "碰门把",
+        "回来 + 慢到荒谬、不像训练，但目标不是服从而是给预测系统足够重复 + 耐受约40分钟后，进展到4-8小时相对很快 + 临界点不神奇，是证据积累到更新预测的阈值"
+      ],
+      "abstract_move": "有效方案一：行为协议、微观步骤与临界点",
+      "replacement_needs": [
+        "有一致证据的行为方法",
+        "具体到尴尬的小步骤排比",
+        "'感觉像没用但有用'的机制解释",
+        "临界点数字与其不神奇的解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "evidence_build",
+      "start_ratio": 0.8615,
+      "end_ratio": 0.9036,
+      "start_sec": 599.8,
+      "end_sec": 629.1,
+      "position_label": "86.2%–90.4%(10:00–10:29)",
+      "purpose": "有效方案二：重症的医学选项与机制重构",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "graduated_exposure_plus_medication",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "quantified_result",
+          "mechanism": "medication_trial"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "mechanism_reframe",
+          "mechanism": "new_beliefs_capacity"
+        }
+      ],
+      "required_retention_events": [
+        "clinical_trial",
+        "quantified_comparison"
+      ],
+      "original_moves": [
+        "229只狗临床试验：药物+行为矫正73%改善 vs 单行为矫正51% + 治疗组认知偏向从悲观解读转向中性 + 药物不是镇静，是让大脑更有能力形成新信念"
+      ],
+      "abstract_move": "有效方案二：重症的医学选项与机制重构",
+      "replacement_needs": [
+        "大样本临床试验与对照数字",
+        "认知偏向的转变",
+        "'不是镇静，是让大脑更能形成新信念'机制重构"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS11→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.9036,
+      "end_ratio": 0.9599,
+      "start_sec": 629.1,
+      "end_sec": 668.4,
+      "position_label": "90.4%–96%(10:29–11:08)",
+      "purpose": "多年证据总收束：行为问题被重定义为关系问题，愧疚解除",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9503,
+          "time_ms": 661695,
+          "reason": "'开门与关门是同一事件，只是顺序不同'：收束金句"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_research_answer_plus_synthesis",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "synthesis_start",
+          "mechanism": "thirty_years_of_cameras"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "final_verdict",
+          "mechanism": "same_event_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "evidence_stacking_synthesis",
+        "guilt_relief"
+      ],
+      "original_moves": [
+        "三类狗总览（等待/20分钟循环痛苦/假性安静）+ 几乎都不关联你做错了什么 + 玩具与信息素无法解决 + 它们回应的是特定神经系统的缺席 + 双方皮质醇逐月同向校准 + '最难的狗不是训练差，是神经系统还没学会' + '开门与关门是同一事件，只是顺序不同'"
+      ],
+      "abstract_move": "多年证据总收束：行为问题被重定义为关系问题，愧疚解除",
+      "replacement_needs": [
+        "全部行为类型的一句话总览",
+        "'不是你做错了什么'的愧疚解除",
+        "关系/神经系统式重定义",
+        "对称金句收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS15",
+      "function": "closure",
+      "start_ratio": 0.9618,
+      "end_ratio": 1,
+      "start_sec": 669.7,
+      "end_sec": 696.3,
+      "position_label": "96.2%–100%(11:10–11:36)",
+      "purpose": "CTA：评论问题回扣核心机制 + 下一条预告",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "cta",
+          "mechanism": "comment_prompt_next_tease"
+        }
+      ],
+      "required_retention_events": [
+        "comment_prompt_callback",
+        "community_thanks"
+      ],
+      "original_moves": [
+        "订阅请求 + 评论问题回扣核心机制（你的狗会在你拿钥匙前就有迹象吗）+ 首支视频致谢 + 下一条预告：猫"
+      ],
+      "abstract_move": "CTA：评论问题回扣核心机制 + 下一条预告",
+      "replacement_needs": [
+        "回扣核心机制的评论问题",
+        "社区致谢",
+        "下一条主题预告"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    }
+  ]
+}

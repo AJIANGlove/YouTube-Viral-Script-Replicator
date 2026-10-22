@@ -1,0 +1,974 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.402Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.043,
+      "start_sec": 0,
+      "end_sec": 56,
+      "position_label": "0%–4.3%(0:00–0:56)",
+      "purpose": "第二人称具身小场景：让观众在毫无防备的愉快情境中亲历禁忌揭示的瞬间翻转",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "emotional_payoff",
+          "strength": 82,
+          "position_ratio": 0.0164,
+          "time_ms": 22000,
+          "reason": "耳语式禁忌揭示完成开场翻转，观众生理反应被点名"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：为什么多数观众对这件事极度反感却坦然消费同类动物（标题问句的具身化悬挂）",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "开场场景中观众的大脑为何在食物没变的情况下瞬间短路",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_identity_assignment"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "threat_turn",
+          "mechanism": "bait_and_switch_reveal"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "reframe_verdict",
+          "mechanism": "exclusion_triplet"
+        }
+      ],
+      "required_retention_events": [
+        "embodied_scenario",
+        "bait_switch_reveal",
+        "paradox_established"
+      ],
+      "original_moves": [
+        "从愉快的日常场景到耳语式禁忌揭示，再到'食物没变但大脑短路'的悖论成立"
+      ],
+      "abstract_move": "第二人称具身小场景：让观众在毫无防备的愉快情境中亲历禁忌揭示的瞬间翻转",
+      "replacement_needs": [
+        "高度日常的愉快场景与感官细节",
+        "一句耳语式的禁忌揭示",
+        "身体反应的即时白描",
+        "'什么都没变但你全变了'的悖论句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(82);打开的悬念 LOOP01→FS15、LOOP02→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 82
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 56000,
+        "hook_type": "second_person_bait_and_switch_scenario",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 22000,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0005"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "paradox_setup",
+      "start_ratio": 0.043,
+      "end_ratio": 0.079,
+      "start_sec": 56,
+      "end_sec": 103,
+      "position_label": "4.3%–7.9%(0:56–1:43)",
+      "purpose": "否定本能解释：把开场反应定性为文化与历史的产物，并抛出对照悖论立下主问题",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "uncomfortable_truth",
+          "mechanism": "scale_fact_drop"
+        }
+      ],
+      "required_retention_events": [
+        "exclusion_verdicts",
+        "uncomfortable_truth",
+        "main_question"
+      ],
+      "original_moves": [
+        "排除式三连定性",
+        "很多人恰恰在吃的反差事实",
+        "对同类动物双标的主问句",
+        "邀请式换挡"
+      ],
+      "abstract_move": "否定本能解释：把开场反应定性为文化与历史的产物，并抛出对照悖论立下主问题",
+      "replacement_needs": [
+        "对反应的排除式三连定性",
+        "一个'很多人恰恰在做'的反差事实",
+        "与同类事物双标对照的主问句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "premise_calibration",
+      "start_ratio": 0.079,
+      "end_ratio": 0.163,
+      "start_sec": 103,
+      "end_sec": 212,
+      "position_label": "7.9%–16.3%(1:43–3:32)",
+      "purpose": "地理巡礼：用跨区域、跨阶层的消费证据推翻'没人这么做'的隐含前提",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "humor_peak",
+          "strength": 70,
+          "position_ratio": 0.0938,
+          "time_ms": 126000,
+          "reason": "清单末尾的意外地区反转制造全片第一个笑点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "humor_payoff",
+          "mechanism": "geography_whiplash"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "trivia_payoff",
+          "mechanism": "etymology_anecdote"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "stereotype_subversion",
+          "mechanism": "expectation_inversion"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "premise_recalibration",
+          "mechanism": "question_rewrite"
+        }
+      ],
+      "required_retention_events": [
+        "geography_whiplash",
+        "scale_tease",
+        "stereotype_subversion"
+      ],
+      "original_moves": [
+        "多地区清单",
+        "意外地区反转",
+        "规模估计",
+        "具体菜肴与习俗名称",
+        "词源趣闻",
+        "务实饮食文化的定性"
+      ],
+      "abstract_move": "地理巡礼：用跨区域、跨阶层的消费证据推翻'没人这么做'的隐含前提",
+      "replacement_needs": [
+        "多地区清单式呈现，含一个打破刻板印象的意外地区",
+        "至少两个具体的地方菜肴或习俗名称",
+        "规模量级估计及其不确定性标注"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "question_reframe",
+      "start_ratio": 0.163,
+      "end_ratio": 0.177,
+      "start_sec": 212,
+      "end_sec": 230,
+      "position_label": "16.3%–17.7%(3:32–3:50)",
+      "purpose": "问题校准：把标题问句改写为'为何特定文化厌恶而其他文化不然'，为分层拆解定靶",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "究竟是什么力量造成了不同文化之间的分化",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "deep_time_anchor",
+          "mechanism": "first_in_sequence_fact"
+        }
+      ],
+      "required_retention_events": [
+        "premise_recalibration"
+      ],
+      "original_moves": [
+        "显式否定原问句",
+        "改写为文化分化问句",
+        "指向建构力量的探索承诺"
+      ],
+      "abstract_move": "问题校准：把标题问句改写为'为何特定文化厌恶而其他文化不然'，为分层拆解定靶",
+      "replacement_needs": [
+        "对原问句的显式否定与改写",
+        "指向'建构力量'的探索承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "deep_history_foundation",
+      "start_ratio": 0.177,
+      "end_ratio": 0.278,
+      "start_sec": 230,
+      "end_sec": 362,
+      "position_label": "17.7%–27.8%(3:50–6:02)",
+      "purpose": "第一因果层：共同演化史——该对象如何从工具变成伙伴，并给出可科学验证的纽带机制",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.2465,
+          "time_ms": 331000,
+          "reason": "双向化学纽带机制加'不是比喻，是机制'判词，演化层封顶"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "role_reveal",
+          "mechanism": "identity_elevation"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "mechanism_reveal",
+          "mechanism": "bidirectional_bonding_chemistry"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "verdict_payoff",
+          "mechanism": "science_verdict"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "pivot_tease",
+          "mechanism": "layer_limit_tease"
+        }
+      ],
+      "required_retention_events": [
+        "deep_time_anchor",
+        "bonding_mechanism",
+        "science_verdict"
+      ],
+      "original_moves": [
+        "深时锚点",
+        "功能性互赖清单",
+        "双向生理纽带机制",
+        "'独一无二'判词"
+      ],
+      "abstract_move": "第一因果层：共同演化史——该对象如何从工具变成伙伴，并给出可科学验证的纽带机制",
+      "replacement_needs": [
+        "深时锚点与'第一次'的排序事实",
+        "功能性互赖的具体职责清单",
+        "可测量的双向生理纽带机制",
+        "一句'这不是比喻，是机制'的科学背书判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(78)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 78
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "cultural_construction_reveal",
+      "start_ratio": 0.278,
+      "end_ratio": 0.372,
+      "start_sec": 404,
+      "end_sec": 526,
+      "position_label": "27.8%–37.2%(6:44–8:46)",
+      "purpose": "第二因果层：近代建构——揭示禁忌其实很年轻，是被社会运动、阶层趣味与立法主动造出来的",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "若共同演化纽带是普遍的，为何禁忌并不普遍",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "bombshell_reveal",
+          "mechanism": "taboo_recency_reveal"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "historical_shock",
+          "mechanism": "siege_anecdote"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "identity_shift_verdict",
+          "mechanism": "from_to_definition"
+        }
+      ],
+      "required_retention_events": [
+        "taboo_recency_reveal",
+        "historical_shock",
+        "identity_shift_verdict"
+      ],
+      "original_moves": [
+        "'这并不古老'反转",
+        "围城消费反差案例",
+        "宠物化与感性呈现",
+        "身份重定义对照",
+        "未转变文化对照"
+      ],
+      "abstract_move": "第二因果层：近代建构——揭示禁忌其实很年轻，是被社会运动、阶层趣味与立法主动造出来的",
+      "replacement_needs": [
+        "'这并不古老'的反转句",
+        "历史上坦然消费的反差案例",
+        "阶层趣味与感性化呈现的具体细节",
+        "身份重定义的一句式对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "psychological_mechanism",
+      "start_ratio": 0.372,
+      "end_ratio": 0.483,
+      "start_sec": 526,
+      "end_sec": 670,
+      "position_label": "37.2%–48.3%(8:46–11:10)",
+      "purpose": "第三因果层：心理分类——用研究者与机制名解释'厌恶来自分类而非对象本身'",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.4408,
+          "time_ms": 592000,
+          "reason": "'你被分类而非被味道支配'：开场悖论的机制性回收"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.4535,
+          "time_ms": 609000,
+          "reason": "智力对比镜像让观众直面自身双重标准"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mechanism_reveal_callback",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "historical_construction_explanation",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "expert_anchor",
+          "mechanism": "named_researcher_concept"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "mechanism_reveal",
+          "mechanism": "contamination_effect"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "callback_payoff",
+          "mechanism": "opening_scene_callback"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "hypocrisy_mirror",
+          "mechanism": "comparable_intelligence_contrast"
+        }
+      ],
+      "required_retention_events": [
+        "expert_anchor",
+        "mechanism_reveal",
+        "callback_payoff",
+        "hypocrisy_mirror"
+      ],
+      "original_moves": [
+        "心智分类清单",
+        "具名研究者与机制",
+        "关联即污染",
+        "开场回调判词",
+        "智力对比双标",
+        "外包伦理判词"
+      ],
+      "abstract_move": "第三因果层：心理分类——用研究者与机制名解释'厌恶来自分类而非对象本身'",
+      "replacement_needs": [
+        "心智分类清单及其隐蔽性",
+        "具名研究者与机制概念",
+        "关联即污染的实验式描述",
+        "对开场场景的显式回调判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(82)、PK05(75);回收了前文的悬念 FS01→LOOP02、FS06→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 82
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "economic_analysis",
+      "start_ratio": 0.483,
+      "end_ratio": 0.576,
+      "start_sec": 670,
+      "end_sec": 791,
+      "position_label": "48.3%–57.6%(11:10–13:11)",
+      "purpose": "第三至第四因果层之间的经济账：用产出与转化效率解释禁忌为何在农业社会被经济强化",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "thesis_verdict",
+          "mechanism": "outsourced_ethics_verdict"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "inefficiency_reveal",
+          "mechanism": "conversion_pathway_analysis"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "economic_verdict",
+          "mechanism": "alive_vs_eaten_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "inefficiency_reveal",
+        "economic_verdict"
+      ],
+      "original_moves": [
+        "产出对比数字",
+        "能量转化路径分析",
+        "活着更值钱判词",
+        "生存型经济对照",
+        "文化随经济自我维持"
+      ],
+      "abstract_move": "第三至第四因果层之间的经济账：用产出与转化效率解释禁忌为何在农业社会被经济强化",
+      "replacement_needs": [
+        "与主流食用动物的产出对比数字",
+        "能量转化路径的效率分析",
+        "生存型经济中算盘不同的对照"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "counterargument_steelman",
+      "start_ratio": 0.576,
+      "end_ratio": 0.667,
+      "start_sec": 791,
+      "end_sec": 910,
+      "position_label": "57.6%–66.7%(13:11–15:10)",
+      "purpose": "镜像段落：先认真承认对立论据的合理内核，再揭示其选择性适用，把锋芒转向观众自身",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.6552,
+          "time_ms": 880000,
+          "reason": "'愤怒由分类驱动而非苦难驱动'：镜像段落的判词顶点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "反对该行为的福利论据是否自洽，还是另有驱动",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "both_sides_honesty",
+          "mechanism": "hold_two_things_at_once"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "mirror_fact_list",
+          "mechanism": "domestic_practice_inventory"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "outrage_verdict",
+          "mechanism": "category_driven_outrage"
+        }
+      ],
+      "required_retention_events": [
+        "both_sides_honesty",
+        "mirror_fact_list",
+        "outrage_verdict"
+      ],
+      "original_moves": [
+        "福利论据认真呈现",
+        "双向公允句式",
+        "日常参与的对照事实清单",
+        "'愤怒由分类驱动'判词",
+        "诚实收束"
+      ],
+      "abstract_move": "镜像段落：先认真承认对立论据的合理内核，再揭示其选择性适用，把锋芒转向观众自身",
+      "replacement_needs": [
+        "对立论据的认真呈现",
+        "同时持有两个真相的公允句式",
+        "观众日常参与的对照性事实清单",
+        "'这不使其失效，只使其更诚实'的收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(78);打开的悬念 LOOP05→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 78
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "symbolic_layer",
+      "start_ratio": 0.667,
+      "end_ratio": 0.752,
+      "start_sec": 910,
+      "end_sec": 1020,
+      "position_label": "66.7%–75.2%(15:10–17:00)",
+      "purpose": "第五因果层：符号与宗教维度——证明该对象在各文化中'很少是中性的'",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "selective_application_reveal",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "symbolic_inversion",
+          "mechanism": "sacrifice_as_honor"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "constant_verdict",
+          "mechanism": "cross_cultural_constant"
+        }
+      ],
+      "required_retention_events": [
+        "symbolic_inversion",
+        "cross_cultural_constant"
+      ],
+      "original_moves": [
+        "宗教定位清单",
+        "仪式性食用反而是荣耀的反转",
+        "跨文化恒量判词"
+      ],
+      "abstract_move": "第五因果层：符号与宗教维度——证明该对象在各文化中'很少是中性的'",
+      "replacement_needs": [
+        "至少三种不同宗教或传统中的对立定位",
+        "一个'被献祭反而是荣耀'式的反转案例",
+        "跨文化恒量的总结句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS09→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "culture_clash",
+      "start_ratio": 0.752,
+      "end_ratio": 0.819,
+      "start_sec": 1020,
+      "end_sec": 1107,
+      "position_label": "75.2%–81.9%(17:00–18:27)",
+      "purpose": "当代冲突现场：呈现年度争议事件中的双方合理立场，并点破公共话语为何回避复杂性",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "humor_peak",
+          "strength": 72,
+          "position_ratio": 0.8183,
+          "time_ms": 1099000,
+          "reason": "'复杂不产流量'：对公共话语的元层冷嘲"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "年度冲突事件中外部愤怒与当事文化内部分歧孰是孰非",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "hypocrisy_callout",
+          "mechanism": "selective_outrage_critique"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "meta_verdict",
+          "mechanism": "nuance_vs_clicks"
+        }
+      ],
+      "required_retention_events": [
+        "conflict_entry",
+        "hypocrisy_callout",
+        "meta_verdict"
+      ],
+      "original_moves": [
+        "冲突事件呈现",
+        "外部愤怒",
+        "当事文化内部的分歧",
+        "公允批评",
+        "'复杂不产流量'元评论"
+      ],
+      "abstract_move": "当代冲突现场：呈现年度争议事件中的双方合理立场，并点破公共话语为何回避复杂性",
+      "replacement_needs": [
+        "一个国际可见的年度冲突事件",
+        "当事文化内部的分歧呈现",
+        "对选择性愤怒的公允批评",
+        "关于流量与复杂性的元层判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(72);打开的悬念 LOOP06→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 72
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "trend_reveal",
+      "start_ratio": 0.819,
+      "end_ratio": 0.889,
+      "start_sec": 1107,
+      "end_sec": 1198,
+      "position_label": "81.9%–88.9%(18:27–19:58)",
+      "purpose": "趋势揭示：禁忌正在随发展阶段扩散，把'道德觉醒'重新解释为'经济与城市化阶段的输出'",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "developmental_stage_explanation",
+          "opened_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "both_sides_synthesis",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "development_reframe",
+          "mechanism": "stage_of_development_explanation"
+        }
+      ],
+      "required_retention_events": [
+        "generational_shift",
+        "development_reframe"
+      ],
+      "original_moves": [
+        "代际更替证据",
+        "立法与餐馆数量转向",
+        "同一对象的对照意象",
+        "发展阶段重释",
+        "双解读抛出"
+      ],
+      "abstract_move": "趋势揭示：禁忌正在随发展阶段扩散，把'道德觉醒'重新解释为'经济与城市化阶段的输出'",
+      "replacement_needs": [
+        "代际态度更替的具体证据",
+        "城市化与宠物化的同步轨迹",
+        "把禁忌重释为发展阶段产物的判断"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS04→LOOP04、FS11→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.889,
+      "end_ratio": 0.939,
+      "start_sec": 1198,
+      "end_sec": 1262,
+      "position_label": "88.9%–93.9%(19:58–21:02)",
+      "purpose": "认知反转：把答案指向观众自身——禁忌是'你记事之前就被告知的故事'",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.898,
+          "time_ms": 1206000,
+          "reason": "'记事之前就被告知的故事'把答案指向观众自身"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "origin_story_reveal",
+          "mechanism": "childhood_imagery_triplet"
+        }
+      ],
+      "required_retention_events": [
+        "personal_turn",
+        "origin_story_reveal"
+      ],
+      "original_moves": [
+        "贴身宣告",
+        "童年叙事三连意象",
+        "'感觉像本能'机制",
+        "承认真实但指出盲区"
+      ],
+      "abstract_move": "认知反转：把答案指向观众自身——禁忌是'你记事之前就被告知的故事'",
+      "replacement_needs": [
+        "童年叙事的三连意象回溯",
+        "'感觉像本能'的形成机制描述",
+        "承认纽带真实但指出其盲区的双向公允"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "big_question_open",
+      "start_ratio": 0.939,
+      "end_ratio": 0.958,
+      "start_sec": 1262,
+      "end_sec": 1289,
+      "position_label": "93.9%–95.8%(21:02–21:29)",
+      "purpose": "把具体问题升级为开放的元问题：如果一致地应用这些标准，整个系统会变成什么样",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "若一致而非选择性地应用这些判定标准，整个食物系统会变成什么样——刻意保持开放，叙事用途是把终极问题留给观众离场后继续思考，制造'视频结束但问题不结束'的持续回响",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [],
+      "required_retention_events": [
+        "meta_question_hung"
+      ],
+      "original_moves": [
+        "判定标准候选清单",
+        "反事实问句悬挂不答"
+      ],
+      "abstract_move": "把具体问题升级为开放的元问题：如果一致地应用这些标准，整个系统会变成什么样",
+      "replacement_needs": [
+        "判定标准的候选清单",
+        "'若一致应用会怎样'的反事实问句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "closure",
+      "start_ratio": 0.958,
+      "end_ratio": 1,
+      "start_sec": 1289,
+      "end_sec": 1343,
+      "position_label": "95.8%–100%(21:29–22:23)",
+      "purpose": "结尾收束：回收开场道具与意象，给出多因总答案，以双关格言离场",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9711,
+          "time_ms": 1304000,
+          "reason": "栅栏两侧意象把全片的双重标准压缩成一个画面"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.9978,
+          "time_ms": 1340000,
+          "reason": "多因总答案加双关格言完成全片认知收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "multi_causal_answer_recap",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "closure_callback",
+          "mechanism": "prop_callback"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "worldview_shift",
+          "mechanism": "fence_image"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "final_answer",
+          "mechanism": "symmetric_negation_multi_cause_recap"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "aphorism_close",
+          "mechanism": "pun_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "callback_close",
+        "final_answer_recap",
+        "pun_aphorism"
+      ],
+      "original_moves": [
+        "开场道具回收",
+        "栅栏意象",
+        "对称否定加多因清单",
+        "道德通论扩展",
+        "双关格言"
+      ],
+      "abstract_move": "结尾收束：回收开场道具与意象，给出多因总答案，以双关格言离场",
+      "replacement_needs": [
+        "开场道具的显式回收",
+        "'不是因为对也不是因为错'的对称否定加多因清单",
+        "把答案推广为道德通论的扩展句",
+        "与主题双关的祈使格言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85)、PK10(88);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 88
+        }
+      ]
+    }
+  ]
+}

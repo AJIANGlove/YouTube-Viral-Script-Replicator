@@ -1,0 +1,1036 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.349Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.04,
+      "start_sec": 0,
+      "end_sec": 62,
+      "position_label": "0%–4%(0:00–1:02)",
+      "purpose": "第二人称无制度困境沉浸：把观众抛进没有现代机构的远古场景，用缺席清单丈量制度真空",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：没有制度的远古人群到底如何处置违规者（标题问句的具身化悬挂，答案按多级阶段延迟释放）",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_identity_assignment"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "humor_beat",
+          "mechanism": "anachronism_mapping"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "threat_scenario",
+          "mechanism": "violator_scenario_stack"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "direct_question",
+          "mechanism": "non_rhetorical_question"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_second_person_scenario",
+        "anachronism_humor"
+      ],
+      "original_moves": [
+        "从零信息到无制度场景建立，再到违规者困扰堆叠与群体氛围变质"
+      ],
+      "abstract_move": "第二人称无制度困境沉浸：把观众抛进没有现代机构的远古场景，用缺席清单丈量制度真空",
+      "replacement_needs": [
+        "具体年代锚点",
+        "现代机构缺席的排比清单",
+        "逐步升级的违规者困扰场景"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 70000,
+        "hook_type": "immersive_second_person_scenario_plus_direct_question",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 62000,
+        "evidence_refs": [
+          "C0001",
+          "C0002",
+          "C0009"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "thesis_reveal",
+      "start_ratio": 0.04,
+      "end_ratio": 0.084,
+      "start_sec": 62,
+      "end_sec": 130,
+      "position_label": "4%–8.4%(1:02–2:10)",
+      "purpose": "把设问合法化为真实学术问题，抛出反直觉核心论点，并给出全片路线图",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.0644,
+          "time_ms": 100000,
+          "reason": "惩罚冲动不是文明的产物：反直觉核心论点落下"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "路线图预埋：文明到来并把一切正式化之后发生了什么",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "thesis_reveal",
+          "mechanism": "counterintuitive_thesis"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "aphorism_drop",
+          "mechanism": "memorable_reframe_plus_roadmap"
+        }
+      ],
+      "required_retention_events": [
+        "direct_question_hook",
+        "counterintuitive_thesis"
+      ],
+      "original_moves": [
+        "设问合法化",
+        "惩罚冲动先于文明的论点",
+        "正义系统早于城墙",
+        "机制加文明后果的路线图"
+      ],
+      "abstract_move": "把设问合法化为真实学术问题，抛出反直觉核心论点，并给出全片路线图",
+      "replacement_needs": [
+        "直接设问的合法化（这不是修辞问句）",
+        "反直觉核心论点的一句话陈述",
+        "先机制后文明后果的路线图预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(80);打开的悬念 LOOP02→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "context_exposition",
+      "start_ratio": 0.084,
+      "end_ratio": 0.178,
+      "start_sec": 130,
+      "end_sec": 276,
+      "position_label": "8.4%–17.8%(2:10–4:36)",
+      "purpose": "铺设小共同体的社会规则：规模、无隐私、声誉即生存，让惩罚的重量可被理解",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "铺垫段刻意推迟：最古老的资讯网络是什么，稍后揭晓",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "stakes_reveal",
+          "mechanism": "reputation_existential"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "stakes_escalation",
+          "mechanism": "lose_everything_framing"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "expert_anchor",
+          "mechanism": "authority_plus_sample_size"
+        }
+      ],
+      "required_retention_events": [
+        "system_exposition",
+        "reputation_stakes"
+      ],
+      "original_moves": [
+        "群体规模",
+        "无隐私环境",
+        "声誉与生存资源绑定",
+        "互赖即地基"
+      ],
+      "abstract_move": "铺设小共同体的社会规则：规模、无隐私、声誉即生存，让惩罚的重量可被理解",
+      "replacement_needs": [
+        "群体规模与透明度规则",
+        "声誉与生存资源的直接绑定",
+        "互赖即地基的点题句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "expert_anchor",
+      "start_ratio": 0.178,
+      "end_ratio": 0.212,
+      "start_sec": 276,
+      "end_sec": 329,
+      "position_label": "17.8%–21.2%(4:36–5:29)",
+      "purpose": "用一位权威学者与跨文化大样本为后续机制背书，给出反直觉结论",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "concept_naming",
+          "strength": 75,
+          "position_ratio": 0.2117,
+          "time_ms": 329000,
+          "reason": "核心概念命名落地，多级阶段预告开启"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "counterintuitive_verdict",
+          "mechanism": "not_anarchic_but_egalitarian"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "concept_naming",
+          "mechanism": "named_theory_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "expert_authority_anchor",
+        "sample_size_flex"
+      ],
+      "original_moves": [
+        "学者资历与著作",
+        "数十个社会样本",
+        "非无政府、刻意集体平等主义的结论"
+      ],
+      "abstract_move": "用一位权威学者与跨文化大样本为后续机制背书，给出反直觉结论",
+      "replacement_needs": [
+        "学者的资历与代表作",
+        "跨文化样本的规模与覆盖范围",
+        "与主流假设相反的结论句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "concept_naming",
+      "start_ratio": 0.212,
+      "end_ratio": 0.255,
+      "start_sec": 329,
+      "end_sec": 397,
+      "position_label": "21.2%–25.5%(5:29–6:37)",
+      "purpose": "为核心理论命名并用动物界对照校准：常规是强者压制弱者，这里权力倒置",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "inversion_reveal",
+          "mechanism": "power_inversion"
+        }
+      ],
+      "required_retention_events": [
+        "named_concept_reveal",
+        "animal_kingdom_contrast"
+      ],
+      "original_moves": [
+        "概念命名",
+        "灵长类强者通吃的常规",
+        "集体压制个体的倒置",
+        "多级阶段预告"
+      ],
+      "abstract_move": "为核心理论命名并用动物界对照校准：常规是强者压制弱者，这里权力倒置",
+      "replacement_needs": [
+        "核心概念的命名句",
+        "动物界常规支配结构的对照",
+        "权力倒置的一句翻转",
+        "多级阶段的结构预告"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "stage_one_reveal",
+      "start_ratio": 0.255,
+      "end_ratio": 0.36,
+      "start_sec": 397,
+      "end_sec": 559,
+      "position_label": "25.5%–36%(6:37–9:19)",
+      "purpose": "第一级干预揭示：把看似琐碎的日常行为升格为严肃的集体执法工具",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.2606,
+          "time_ms": 405000,
+          "reason": "第一级竟是八卦：琐碎行为被升格为严肃执法工具"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "系统究竟有哪几个清晰一致的阶段，它们如何逐级升级",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "promised_topic_delivery",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "structure_promise",
+          "mechanism": "documented_stages_tease"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "stage_reveal",
+          "mechanism": "trivial_tool_dignified"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "mechanism_explain",
+          "mechanism": "consensus_before_action"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "sensory_detail",
+          "mechanism": "social_temperature_shift"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "verdict_line",
+          "mechanism": "deterrence_without_code"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "stage_reveal",
+          "mechanism": "conditional_stage_announcement"
+        }
+      ],
+      "required_retention_events": [
+        "stage_announcement",
+        "dismissal_preemption"
+      ],
+      "original_moves": [
+        "阶段宣告与防轻视警告",
+        "背地议论的共识建构功能",
+        "跨文化证据",
+        "当事人察觉氛围变化",
+        "无需条文的威慑判决"
+      ],
+      "abstract_move": "第一级干预揭示：把看似琐碎的日常行为升格为严肃的集体执法工具",
+      "replacement_needs": [
+        "阶段宣告句与防轻视警告",
+        "该行为在封闭社群中的真实功能拆解",
+        "跨文化一致性证据",
+        "无需条文即可威慑的判决句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(70);打开的悬念 LOOP04→FS12 跨段;回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "stage_two_reveal",
+      "start_ratio": 0.36,
+      "end_ratio": 0.415,
+      "start_sec": 559,
+      "end_sec": 645,
+      "position_label": "36%–41.5%(9:19–10:45)",
+      "purpose": "第二级干预揭示：公开羞辱作为地位降级仪式，恢复第二人称直接警告",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "second_person_warning",
+          "mechanism": "protection_suspended_notice"
+        }
+      ],
+      "required_retention_events": [
+        "stage_announcement",
+        "second_person_warning"
+      ],
+      "original_moves": [
+        "条件递进宣告",
+        "公开点名的精确含义",
+        "保护暂停、地位降级",
+        "跨文化一致性",
+        "形式各异功能同一"
+      ],
+      "abstract_move": "第二级干预揭示：公开羞辱作为地位降级仪式，恢复第二人称直接警告",
+      "replacement_needs": [
+        "条件递进式阶段宣告",
+        "该仪式向目标传递的精确信息",
+        "跨文化案例清单",
+        "形式各异、功能同一的判决句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "mechanism_case",
+      "start_ratio": 0.415,
+      "end_ratio": 0.468,
+      "start_sec": 645,
+      "end_sec": 727,
+      "position_label": "41.5%–46.8%(10:45–12:07)",
+      "purpose": "配套机制案例：用冒头者被压制的故事展示系统如何主动防止个人积累声望",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "第三级驱逐被预告为真正严重，到底有多严重",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "concept_naming",
+          "mechanism": "leveling_mechanism_reveal"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "case_scene",
+          "mechanism": "boasting_hunter_case"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "reframe_line",
+          "mechanism": "credit_is_power"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "stage_reveal",
+          "mechanism": "conditional_stage_announcement"
+        }
+      ],
+      "required_retention_events": [
+        "named_concept_reveal",
+        "behavioral_case_scene"
+      ],
+      "original_moves": [
+        "机制命名",
+        "夸功者被嘲弄的场景",
+        "食物共享而功劳平分",
+        "争功即争权的本质揭示"
+      ],
+      "abstract_move": "配套机制案例：用冒头者被压制的故事展示系统如何主动防止个人积累声望",
+      "replacement_needs": [
+        "配套机制的术语命名",
+        "一个具体的冒头者场景",
+        "功劳被集体分配的处置方式",
+        "表面争功实为争权的本质揭示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "stage_three_reveal",
+      "start_ratio": 0.468,
+      "end_ratio": 0.523,
+      "start_sec": 727,
+      "end_sec": 813,
+      "position_label": "46.8%–52.3%(12:07–13:33)",
+      "purpose": "第三级干预揭示：用现代城市对照标定驱逐在远古语境中的致命重量",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.5,
+          "time_ms": 777000,
+          "reason": "缓期死刑式换算：现代可承受与远古致命之间的落差顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "stakes_calibration_reveal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "verdict_line",
+          "mechanism": "delayed_death_sentence"
+        }
+      ],
+      "required_retention_events": [
+        "stage_announcement",
+        "modern_vs_ancient_stakes_calibration"
+      ],
+      "original_moves": [
+        "阶段宣告",
+        "现代城市可承受性对照",
+        "独自生存的逐项不可能",
+        "严重性判决句"
+      ],
+      "abstract_move": "第三级干预揭示：用现代城市对照标定驱逐在远古语境中的致命重量",
+      "replacement_needs": [
+        "条件递进式阶段宣告",
+        "现代语境中该惩罚的可承受性",
+        "远古环境中生存依赖的逐项拆解",
+        "缓期死刑式的严重性判决句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85);回收了前文的悬念 FS08→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "escalation_degrees",
+      "start_ratio": 0.523,
+      "end_ratio": 0.58,
+      "start_sec": 813,
+      "end_sec": 901,
+      "position_label": "52.3%–58%(13:33–15:01)",
+      "purpose": "展示同一级内部的刻度化升级与两种结局：改正回归或滑向终局",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "cruelty_detail",
+          "mechanism": "camp_moves_without_you"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "binary_outcome",
+          "mechanism": "correction_or_death"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "stage_reveal",
+          "mechanism": "final_stage_announcement"
+        }
+      ],
+      "required_retention_events": [
+        "degree_ladder",
+        "cruelty_detail"
+      ],
+      "original_moves": [
+        "隐性降温",
+        "正式驱逐",
+        "营地搬迁",
+        "记录案例类型",
+        "改正回归或滑向终局"
+      ],
+      "abstract_move": "展示同一级内部的刻度化升级与两种结局：改正回归或滑向终局",
+      "replacement_needs": [
+        "逐级加重的具体手段清单",
+        "高流动性群体独有的驱逐方式",
+        "改正后被谨慎接纳或滑向终局的二元结局"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "stage_four_reveal",
+      "start_ratio": 0.58,
+      "end_ratio": 0.654,
+      "start_sec": 901,
+      "end_sec": 1017,
+      "position_label": "58%–65.4%(15:01–16:57)",
+      "purpose": "终极制裁揭示：共识决策处死，并拆解集体结构如何把杀戮与谋杀区分开",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.6088,
+          "time_ms": 946000,
+          "reason": "全体共识决策处死：道德震撼的最高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "consensus_reveal",
+          "mechanism": "collective_decision_to_kill"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "logic_reveal",
+          "mechanism": "murder_vs_social_necessity"
+        }
+      ],
+      "required_retention_events": [
+        "stage_announcement",
+        "consensus_kill_reveal"
+      ],
+      "original_moves": [
+        "阶段宣告与学术分量",
+        "全体共识加少数人执行",
+        "个人动手即谋杀的对照",
+        "责任稀释的设计意图"
+      ],
+      "abstract_move": "终极制裁揭示：共识决策处死，并拆解集体结构如何把杀戮与谋杀区分开",
+      "replacement_needs": [
+        "阶段宣告与该发现在学术记录中的分量",
+        "全体共识加少数人执行的流程",
+        "个人动手即谋杀、集体共识即社会必需的区分",
+        "责任被稀释到无人独担的设计意图"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "system_verdict",
+      "start_ratio": 0.654,
+      "end_ratio": 0.712,
+      "start_sec": 1017,
+      "end_sec": 1107,
+      "position_label": "65.4%–71.2%(16:57–18:27)",
+      "purpose": "总结性定性：触发终极制裁的罪名一致性、升级模式，以及完备系统的四要素判决",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.6808,
+          "time_ms": 1058000,
+          "reason": "完备制度定性：四要素判决完成主问题回收"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_mechanism_reveal",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "stage_ladder_reveal",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "system_verdict",
+          "mechanism": "recognizably_a_justice_system"
+        }
+      ],
+      "required_retention_events": [
+        "offense_consistency",
+        "system_verdict"
+      ],
+      "original_moves": [
+        "触发罪名的一致性",
+        "必先升级的模式",
+        "完备制度定性",
+        "四要素判决"
+      ],
+      "abstract_move": "总结性定性：触发终极制裁的罪名一致性、升级模式，以及完备系统的四要素判决",
+      "replacement_needs": [
+        "跨文化一致的触发罪名清单",
+        "必先经过完整升级链的模式证据",
+        "比例、程序、共识、目的四要素判决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85);回收了前文的悬念 FS01→LOOP01、FS06→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "civilization_turn",
+      "start_ratio": 0.712,
+      "end_ratio": 0.797,
+      "start_sec": 1107,
+      "end_sec": 1238,
+      "position_label": "71.2%–79.7%(18:27–20:38)",
+      "purpose": "大时间跳转转折：文明到来并非全面进步，首个法典案例展示意外的温和取向",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "成文法引入了原生系统刻意防止的东西，那究竟是什么",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "温和取向没能延续下去，接下来变成了什么",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "pivot",
+          "mechanism": "fast_forward_turn"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "artifact_anchor",
+          "mechanism": "oldest_code_reveal"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "concrete_detail",
+          "mechanism": "price_list_detail"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "artifact_anchor",
+          "mechanism": "famous_code_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "civilization_pivot",
+        "artifact_anchor"
+      ],
+      "original_moves": [
+        "时间跳转宣告",
+        "制度化引入了新东西的悬念",
+        "最古老法典",
+        "赔偿取向与具体价目",
+        "温和未能延续"
+      ],
+      "abstract_move": "大时间跳转转折：文明到来并非全面进步，首个法典案例展示意外的温和取向",
+      "replacement_needs": [
+        "明确的时间跳转宣告",
+        "制度化并非全面改善的转折预告",
+        "最古老法典的结构与赔偿取向",
+        "温和取向未能延续的悬念句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS14、LOOP07→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "reversal_reveal",
+      "start_ratio": 0.797,
+      "end_ratio": 0.919,
+      "start_sec": 1238,
+      "end_sec": 1428,
+      "position_label": "79.7%–91.9%(20:38–23:48)",
+      "purpose": "第二部法典的报复转向与身份分层揭示：伤害相同、身份不同、判罚不同",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "shock_reveal",
+          "strength": 80,
+          "position_ratio": 0.8378,
+          "time_ms": 1302000,
+          "reason": "父债子偿式镜像惩罚案例的道德冲击"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.8681,
+          "time_ms": 1349000,
+          "reason": "受害者身份决定判罚：全片反转最高点"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9189,
+          "time_ms": 1428000,
+          "reason": "文明把这种逻辑写进法典并称之为正义：冷峻判词"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "刻意保持开放的权衡之问：两种制度究竟孰优孰劣不下终极裁决；叙事用途是把判断权交还观众，维持值得深思的基调，并以双向承认取代站队来增强结尾的可信度",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "ironic_reversal_reveal",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "class_stratification_reveal",
+          "opened_in": "FS13"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "retaliation_principle_reveal",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "principle_reveal",
+          "mechanism": "named_retaliation_principle"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "shock_detail",
+          "mechanism": "mirror_punishment_case"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "core_reveal",
+          "mechanism": "status_determines_response"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "verdict_line",
+          "mechanism": "ironic_naming_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "artifact_anchor",
+        "named_principle_reveal"
+      ],
+      "original_moves": [
+        "法典体量细节",
+        "同态复仇命名",
+        "镜像案例",
+        "身份分层对照",
+        "这正是原生系统要防止之物"
+      ],
+      "abstract_move": "第二部法典的报复转向与身份分层揭示：伤害相同、身份不同、判罚不同",
+      "replacement_needs": [
+        "第二部法典的体量与知名度细节",
+        "同态复仇原则的命名与镜像案例",
+        "同伤不同罚的身份分层对照",
+        "这正是原生系统刻意防止之物的点题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80)、PK08(90)、PK09(85);打开的悬念 LOOP08(不闭合) 跨段;回收了前文的悬念 FS02→LOOP02、FS13→LOOP06、FS13→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS15",
+      "function": "synthesis_weighing",
+      "start_ratio": 0.919,
+      "end_ratio": 0.983,
+      "start_sec": 1428,
+      "end_sec": 1527,
+      "position_label": "91.9%–98.3%(23:48–25:27)",
+      "purpose": "双向权衡：原生系统在若干维度更先进，成文制度也有不可替代的真实收益",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE41",
+          "event_type": "counterintuitive_verdict",
+          "mechanism": "nobody_exempt"
+        }
+      ],
+      "required_retention_events": [
+        "balanced_weighing",
+        "principle_reprise"
+      ],
+      "original_moves": [
+        "总结开启",
+        "原生系统先进维度",
+        "强者不例外",
+        "成文制度收益",
+        "不平等写入规则的代价"
+      ],
+      "abstract_move": "双向权衡：原生系统在若干维度更先进，成文制度也有不可替代的真实收益",
+      "replacement_needs": [
+        "原生系统的先进维度清单",
+        "强者不例外原则的复述强化",
+        "成文制度的真实收益清单",
+        "不平等被写入规则本身的代价确认"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.983,
+      "end_ratio": 1,
+      "start_sec": 1527,
+      "end_sec": 1554,
+      "position_label": "98.3%–100%(25:27–25:54)",
+      "purpose": "意象化格言收束：原生系统拥有后世所有法庭都在试图复制的东西，其余皆基础设施",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "aphorism_close",
+          "strength": 85,
+          "position_ratio": 0.9981,
+          "time_ms": 1551000,
+          "reason": "其余皆基础设施：意象格言完成认知收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE42",
+          "event_type": "aphorism_close",
+          "mechanism": "infrastructure_redefinition"
+        }
+      ],
+      "required_retention_events": [
+        "closing_scene_reprise",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "原生裁决场景回望",
+        "后世复制之物的点明",
+        "基础设施格言收束"
+      ],
+      "abstract_move": "意象化格言收束：原生系统拥有后世所有法庭都在试图复制的东西，其余皆基础设施",
+      "replacement_needs": [
+        "原生裁决场景的收束性回望",
+        "后世制度都在复制之物的点明",
+        "把实体制度降级为基础设施的意象句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

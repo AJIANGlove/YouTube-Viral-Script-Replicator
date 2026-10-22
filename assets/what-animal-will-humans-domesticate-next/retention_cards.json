@@ -1,0 +1,940 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.411Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "scene_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.051,
+      "start_sec": 0,
+      "end_sec": 55,
+      "position_label": "0%–5.1%(0:00–0:55)",
+      "purpose": "现在进行时画面钩子：一个无辜的远端画面 + 未来视角的拟人独白，制造悬念与第一笑",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "humor_peak",
+          "strength": 70,
+          "position_ratio": 0.0288,
+          "time_ms": 31000,
+          "reason": "'What if, friend?'拟人台词与历史先例排比，完成开场第一笑"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.0437,
+          "time_ms": 47000,
+          "reason": "'这件事并没有结束'：全片第一个认知翻转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "隐形画面悬念：开场'某处正有一只动物'的画面指向谁、指向什么时刻",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "present_tense_scene"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "humor_payoff",
+          "mechanism": "anthropomorphism_quote"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "myth_flip",
+          "mechanism": "premise_flip"
+        }
+      ],
+      "required_retention_events": [
+        "present_tense_scene",
+        "future_voice_quote",
+        "historical_rolodex"
+      ],
+      "original_moves": [
+        "现在进行时画面",
+        "未来视角独白",
+        "历史先例排比（狼/野猪/原牛）",
+        "'Milk machine'笑点"
+      ],
+      "abstract_move": "现在进行时画面钩子：一个无辜的远端画面 + 未来视角的拟人独白，制造悬念与第一笑",
+      "replacement_needs": [
+        "现在进行时的远端画面句",
+        "未来视角的拟人化宣言引语",
+        "多个历史成功案例的短句排比",
+        "一个标志性的历史拟人笑点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70)、PK02(75);打开的悬念 LOOP02→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "present_tense_scene_plus_future_voice_quote",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 24000,
+        "evidence_refs": [
+          "C0001",
+          "C0002",
+          "C0004"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "premise_flip",
+      "start_ratio": 0.051,
+      "end_ratio": 0.082,
+      "start_sec": 55,
+      "end_sec": 88,
+      "position_label": "5.1%–8.2%(0:55–1:28)",
+      "purpose": "翻转'该过程早已结束'的默认假设，把话题拉进当下，并显式抛出主问题",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：哪些野生候选者最可能跨过门槛（标题问句的显式悬挂）",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "scale_tease",
+          "mechanism": "pipeline_stages_tease"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "question_setup",
+          "mechanism": "explicit_question"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "definition_reset",
+          "mechanism": "definition_duel"
+        }
+      ],
+      "required_retention_events": [
+        "myth_flip",
+        "explicit_question_setup"
+      ],
+      "original_moves": [
+        "否定'已完成'假设",
+        "现在进行时证据预告",
+        "主问题显式抛出"
+      ],
+      "abstract_move": "翻转'该过程早已结束'的默认假设，把话题拉进当下，并显式抛出主问题",
+      "replacement_needs": [
+        "对'已经完成'假设的直球否定",
+        "此刻正在发生的证据预告（各阶段并存）",
+        "主问题的一句话陈述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP01→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "definition_reset",
+      "start_ratio": 0.082,
+      "end_ratio": 0.126,
+      "start_sec": 88,
+      "end_sec": 135,
+      "position_label": "8.2%–12.6%(1:28–2:15)",
+      "purpose": "纠偏最普遍的概念混淆，建立后文所有判断的术语地基",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "vivid_example",
+          "mechanism": "celebrity_animal_counterexample"
+        }
+      ],
+      "required_retention_events": [
+        "definition_duel",
+        "concrete_counterexample",
+        "one_line_verdict"
+      ],
+      "original_moves": [
+        "常见误解点破",
+        "名熊特例反例",
+        "对仗判决",
+        "基因层面差异三连"
+      ],
+      "abstract_move": "纠偏最普遍的概念混淆，建立后文所有判断的术语地基",
+      "replacement_needs": [
+        "点破观众最普遍的误解",
+        "一个具象的名动物特例反例",
+        "否定-肯定对仗的定义判决句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "anchor_experiment",
+      "start_ratio": 0.126,
+      "end_ratio": 0.179,
+      "start_sec": 135,
+      "end_sec": 192,
+      "position_label": "12.6%–17.9%(2:15–3:12)",
+      "purpose": "用一个经典实验案例给出机制证据：变化如何发生、多快、附带什么意外产物",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.1498,
+          "time_ms": 161000,
+          "reason": "选育实验的意外副产品：性情选择连带外貌巨变"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "判断标准是什么：什么样的动物才有资格成为候选",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "anchor_case_entry",
+          "mechanism": "classic_experiment"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "transformation_reveal",
+          "mechanism": "unexpected_side_effects"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "transition",
+          "mechanism": "criteria_question"
+        }
+      ],
+      "required_retention_events": [
+        "classic_experiment",
+        "unexpected_side_effects",
+        "mechanism_payoff"
+      ],
+      "original_moves": [
+        "实验选择逻辑",
+        "几代内性情巨变",
+        "外貌连带改变清单",
+        "'我们知道该看什么信号'"
+      ],
+      "abstract_move": "用一个经典实验案例给出机制证据：变化如何发生、多快、附带什么意外产物",
+      "replacement_needs": [
+        "实验的选择逻辑一句话",
+        "跨代变化的意外清单",
+        "机制启示的一句话点题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80);打开的悬念 LOOP03→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "criteria_gauntlet",
+      "start_ratio": 0.179,
+      "end_ratio": 0.285,
+      "start_sec": 192,
+      "end_sec": 306,
+      "position_label": "17.9%–28.5%(3:12–5:06)",
+      "purpose": "给出多条准入门标准，每条配一个被淘汰的真实反例，维持判断参与感",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "humor_peak",
+          "strength": 75,
+          "position_ratio": 0.2698,
+          "time_ms": 290000,
+          "reason": "斑马'绝对不干'的拟人判决，标准擂台段最高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "criteria_checklist_established",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "elimination_case",
+          "mechanism": "famous_counterexample"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "humor_payoff",
+          "mechanism": "anthropomorphism_punchline"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "ranking_start",
+          "mechanism": "front_runner_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "numbered_criteria",
+        "elimination_cases",
+        "anthropomorphism_punchline"
+      ],
+      "original_moves": [
+        "标准一+反例",
+        "标准二+反例",
+        "标准三+变异量",
+        "标准四+斑马惨败笑点"
+      ],
+      "abstract_move": "给出多条准入门标准，每条配一个被淘汰的真实反例，维持判断参与感",
+      "replacement_needs": [
+        "三至五条标准的逐条直述",
+        "每条至少一个被淘汰的反例",
+        "一个高热度的拟人化淘汰笑点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75);回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "candidate_front_runner",
+      "start_ratio": 0.285,
+      "end_ratio": 0.324,
+      "start_sec": 306,
+      "end_sec": 348,
+      "position_label": "28.5%–32.4%(5:06–5:48)",
+      "purpose": "抛出学界公认的头号候选，用'已在自发演化'的证据建立巡礼的可信度锚点",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "'下一个会让你意外'的意外候选能否成立",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "evidence_reveal",
+          "mechanism": "self_domestication_evidence"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "verdict_line",
+          "mechanism": "anthropomorphism_verdict"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "surprise_tease",
+          "mechanism": "audience_reaction_anticipation"
+        }
+      ],
+      "required_retention_events": [
+        "front_runner_reveal",
+        "self_domestication_evidence",
+        "one_line_verdict"
+      ],
+      "original_moves": [
+        "领跑者直给",
+        "实验狐狸已成宠物",
+        "城市种群自发适应证据",
+        "拟人裁决"
+      ],
+      "abstract_move": "抛出学界公认的头号候选，用'已在自发演化'的证据建立巡礼的可信度锚点",
+      "replacement_needs": [
+        "领跑者身份直给",
+        "正在发生的自发适应证据",
+        "一句口语化裁决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "candidate_surprise",
+      "start_ratio": 0.324,
+      "end_ratio": 0.415,
+      "start_sec": 348,
+      "end_sec": 446,
+      "position_label": "32.4%–41.5%(5:48–7:26)",
+      "purpose": "用意料之外的候选制造第一个大反转，靠认知能力证据折服观众",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.387,
+          "time_ms": 416000,
+          "reason": "'那不是动物行为，那是室友'：意外候选的证据封顶"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "surprise_candidate_justified",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "awe_fact",
+          "mechanism": "awe_fact_stacking"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "evidence_reveal",
+          "mechanism": "infrastructure_hack_detail"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "verdict_humor",
+          "mechanism": "contrast_verdict"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "meme_entry",
+          "mechanism": "meme_framing"
+        }
+      ],
+      "required_retention_events": [
+        "surprise_tease",
+        "awe_fact_stacking",
+        "contrast_verdict"
+      ],
+      "original_moves": [
+        "意外预告+观众反应预演",
+        "识脸/记仇/送礼证据",
+        "交通 infrastructure 利用",
+        "'室友'判决",
+        "可行性裁决"
+      ],
+      "abstract_move": "用意料之外的候选制造第一个大反转，靠认知能力证据折服观众",
+      "replacement_needs": [
+        "观众反应的显式预演与接住",
+        "三条以上惊人认知能力证据",
+        "基础设施级的行为细节",
+        "一句拟人化判决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80);回收了前文的悬念 FS06→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "candidate_beloved",
+      "start_ratio": 0.415,
+      "end_ratio": 0.505,
+      "start_sec": 446,
+      "end_sec": 543,
+      "position_label": "41.5%–50.5%(7:26–9:03)",
+      "purpose": "接入观众已有好感的网红对象，用打勾清单节奏给出'几乎达标'的爽感",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "humor_peak",
+          "strength": 70,
+          "position_ratio": 0.4921,
+          "time_ms": 529000,
+          "reason": "'豚鼠被施了放大咒'的荒诞比喻笑点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "'这个会让你不舒服'的不适候选能否被说服接受",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "absurd_image",
+          "mechanism": "absurd_footage_image"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "checklist_payoff",
+          "mechanism": "checklist_rhythm"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "humor_payoff",
+          "mechanism": "absurd_comparison"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "discomfort_tease",
+          "mechanism": "audience_reaction_anticipation"
+        }
+      ],
+      "required_retention_events": [
+        "meme_entry",
+        "checklist_rhythm",
+        "absurd_comparison"
+      ],
+      "original_moves": [
+        "网络梗定性",
+        "已部分达标论据",
+        "活体家具画面",
+        "障碍陈述",
+        "打勾清单",
+        "百年预言+体型笑点"
+      ],
+      "abstract_move": "接入观众已有好感的网红对象，用打勾清单节奏给出'几乎达标'的爽感",
+      "replacement_needs": [
+        "网络梗身份定性",
+        "已达标项的清单式打勾节奏",
+        "剩余障碍的如实陈述",
+        "一个体型或外貌笑点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(70);打开的悬念 LOOP05→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "candidate_discomfort",
+      "start_ratio": 0.505,
+      "end_ratio": 0.608,
+      "start_sec": 543,
+      "end_sec": 654,
+      "position_label": "50.5%–60.8%(9:03–10:54)",
+      "purpose": "挑战观众舒适区的不适候选：先承认不适、挽留观众，再重构评价框架，完成全片最大认知拉伸",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.6037,
+          "time_ms": 649000,
+          "reason": "'并非不可能就是每段驯化故事的开端'：不适段落的格言式转化"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "reframe",
+          "mechanism": "purpose_redefinition"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "personality_reveal",
+          "mechanism": "individual_personality_evidence"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "humor_softener",
+          "mechanism": "naming_joke"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "aphorism_beat",
+          "mechanism": "possibility_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "discomfort_acknowledgement",
+        "frame_reframe",
+        "humor_softener",
+        "aphorism_beat"
+      ],
+      "original_moves": [
+        "不适承认与挽留",
+        "框架重构（不只为了宠物）",
+        "养殖产业证据",
+        "个体性格证据",
+        "障碍",
+        "标准对照",
+        "Gerald笑点+格言句"
+      ],
+      "abstract_move": "挑战观众舒适区的不适候选：先承认不适、挽留观众，再重构评价框架，完成全片最大认知拉伸",
+      "replacement_needs": [
+        "对观众抵触的显式承认与挽留",
+        "框架重构（目的再定义）",
+        "已在进行中的产业证据",
+        "个体性证据",
+        "一个亲昵化笑点为不适降级"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "candidate_steady",
+      "start_ratio": 0.608,
+      "end_ratio": 0.685,
+      "start_sec": 654,
+      "end_sec": 736,
+      "position_label": "60.8%–68.5%(10:54–12:16)",
+      "purpose": "回到舒适区的稳健候选，用历史既成事实与现存基础设施证明'已经在路上'",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "discomfort_reframed_into_possibility",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "evidence_reveal",
+          "mechanism": "historical_precedent"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "signal_spotting",
+          "mechanism": "infrastructure_exists"
+        }
+      ],
+      "required_retention_events": [
+        "historical_precedent",
+        "infrastructure_exists"
+      ],
+      "original_moves": [
+        "历史半驯化先例",
+        "郊区鹿的适应信号",
+        "农场与商业链条",
+        "优劣对照",
+        "'已经在做早期阶段'"
+      ],
+      "abstract_move": "回到舒适区的稳健候选，用历史既成事实与现存基础设施证明'已经在路上'",
+      "replacement_needs": [
+        "历史半驯化先例",
+        "当代适应信号",
+        "现存产业基础设施",
+        "剩余障碍一句带过"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS08→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "candidate_long_game",
+      "start_ratio": 0.685,
+      "end_ratio": 0.777,
+      "start_sec": 736,
+      "end_sec": 835,
+      "position_label": "68.5%–77.7%(12:16–13:55)",
+      "purpose": "用'棘手'候选引入时间尺度冲击：一段以世纪计的最慢驯化",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "tricky_case_entry",
+          "mechanism": "difficulty_tease"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "dark_history",
+          "mechanism": "taming_not_domestication_reframe"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "zoom_out",
+          "mechanism": "zoom_out_transition"
+        }
+      ],
+      "required_retention_events": [
+        "dark_history_reframe",
+        "extreme_biological_numbers",
+        "slow_motion_tease"
+      ],
+      "original_moves": [
+        "棘手预告",
+        "役用历史",
+        "残酷真相拆穿",
+        "潜力与约束数字",
+        "'可能已经在缓慢发生'"
+      ],
+      "abstract_move": "用'棘手'候选引入时间尺度冲击：一段以世纪计的最慢驯化",
+      "replacement_needs": [
+        "对被误认历史的拆穿（驯而不化）",
+        "极端生物学约束的具体数字",
+        "正在缓慢发生的线索"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.777,
+      "end_ratio": 0.9,
+      "start_sec": 835,
+      "end_sec": 967,
+      "position_label": "77.7%–90%(13:55–16:07)",
+      "purpose": "跳出清单，把'谁会下一个'升格为'我们会变成谁'：双向改变、文明基石、伦理新责",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.8112,
+          "time_ms": 872000,
+          "reason": "'不只是它们被驯化，我们也改变了'：双向命题完成升格"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "'还有一个几乎没人谈的候选'到底是谁",
+          "closes_in": "FS13"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "新的伦理义务问句刻意不答：叙事用途是把答案交还给观众与未来，让'每次驯化也改变人类'的主题在片尾之后继续发酵",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "worldview_shift",
+          "mechanism": "coevolution_reveal"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "question_reframe",
+          "mechanism": "title_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "coevolution_evidence",
+        "question_reframe",
+        "ethical_open_question"
+      ],
+      "original_moves": [
+        "zoom out",
+        "深层关系定性（非捕食非寄生）",
+        "人类被狗改变的证据",
+        "文明基石排比",
+        "主问题重述",
+        "伦理问句悬置"
+      ],
+      "abstract_move": "跳出清单，把'谁会下一个'升格为'我们会变成谁'：双向改变、文明基石、伦理新责",
+      "replacement_needs": [
+        "显性动机之外的深层关系定性",
+        "双向改变的具体证据",
+        "文明级贡献的排比",
+        "悬置不答的伦理问句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85);打开的悬念 LOOP06→FS13、LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "closure",
+      "start_ratio": 0.9,
+      "end_ratio": 1,
+      "start_sec": 967,
+      "end_sec": 1075,
+      "position_label": "90%–100%(16:07–17:55)",
+      "purpose": "用'最初的物种再次成为候选'完成历史回环，首尾画面呼应，开放式回答收束",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.974,
+          "time_ms": 1047000,
+          "reason": "'就它了，可以进屋'：与开场独白呼应的历史场景复现"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "title_callback",
+          "strength": 85,
+          "position_ratio": 0.9888,
+          "time_ms": 1063000,
+          "reason": "标题问句显式兑现：'所有能准备好的，最终都会'"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "reframed_collective_answer",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "circular_scene_callback",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "identity_reveal",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "identity_reveal",
+          "mechanism": "final_candidate_twist"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "callback_recognition",
+          "mechanism": "sound_familiar_prompt"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "circle_callback",
+          "mechanism": "opening_quote_echo"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "answer_payoff",
+          "mechanism": "open_collective_answer"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "bookend_close",
+          "mechanism": "bookend_scene"
+        }
+      ],
+      "required_retention_events": [
+        "identity_reveal_twist",
+        "circle_callback",
+        "open_answer",
+        "bookend_scene"
+      ],
+      "original_moves": [
+        "最终候选预告",
+        "狼二次驯化论",
+        "'似曾相识'呼应",
+        "首次驯化场景复现",
+        "'全都会'开放回答",
+        "首尾画面回环"
+      ],
+      "abstract_move": "用'最初的物种再次成为候选'完成历史回环，首尾画面呼应，开放式回答收束",
+      "replacement_needs": [
+        "最终候选身份揭晓",
+        "'这一幕似曾相识'的显式呼应",
+        "对历史首次场景的复现叙述",
+        "对标题问句的开放式回答",
+        "与开场同构的画面句收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(90)、PK10(85);回收了前文的悬念 FS02→LOOP01、FS01→LOOP02、FS12→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1006 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.351Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "hypothetical_reconstruction",
+      "start_ratio": 0,
+      "end_ratio": 0.018,
+      "start_sec": 0,
+      "end_sec": 30,
+      "position_label": "0%–1.8%(0:00–0:30)",
+      "purpose": "用一段幽默的想象重建把观众带进'第一次发生'的现场，先给足画面再谈证据",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_hook",
+          "mechanism": "ignorant_protagonist_premise"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "sensory_scene",
+          "mechanism": "sensory_detail_stack"
+        }
+      ],
+      "required_retention_events": [
+        "hypothetical_premise",
+        "sensory_detail_stack"
+      ],
+      "original_moves": [
+        "从悬念前提句到现代行为反衬，再到感官细节堆叠的假说场景"
+      ],
+      "abstract_move": "用一段幽默的想象重建把观众带进'第一次发生'的现场，先给足画面再谈证据",
+      "replacement_needs": [
+        "一个具体可感的假说场景",
+        "用现代行为反衬当事人无知的幽默对照",
+        "感官细节逐句堆叠"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "humorous_hypothetical_reconstruction",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 12000,
+        "evidence_refs": [
+          "C0001",
+          "C0003",
+          "C0005"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "falsifiability_turn",
+      "start_ratio": 0.018,
+      "end_ratio": 0.032,
+      "start_sec": 30,
+      "end_sec": 54,
+      "position_label": "1.8%–3.2%(0:30–0:54)",
+      "purpose": "亲手拆穿自己的开场：承认想象场景可能但无法证实，建立全片'证据至上'的信誉",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "credibility_turn",
+          "mechanism": "self_falsification"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "ambiguity_inventory",
+          "mechanism": "multiple_interpretation_list"
+        }
+      ],
+      "required_retention_events": [
+        "self_falsification",
+        "ambiguity_inventory"
+      ],
+      "original_moves": [
+        "'可能但不可证'降级",
+        "同一实物多重解释的歧义清单"
+      ],
+      "abstract_move": "亲手拆穿自己的开场：承认想象场景可能但无法证实，建立全片'证据至上'的信誉",
+      "replacement_needs": [
+        "对开场假说的明确降级（可能但不可证）",
+        "同一实物对应多重解释的歧义清单"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "question_reframe",
+      "start_ratio": 0.032,
+      "end_ratio": 0.055,
+      "start_sec": 54,
+      "end_sec": 92,
+      "position_label": "3.2%–5.5%(0:54–1:32)",
+      "purpose": "把单一问题拆成多个含义层级的子问题，把标题承诺从'一个日期'改写成'一组答案'",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：标题的'何时首次'问句被拆成多层含义悬挂，观众等待每一层的答案",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "question_reframe",
+          "mechanism": "question_splitting"
+        }
+      ],
+      "required_retention_events": [
+        "question_splitting",
+        "layer_enumeration"
+      ],
+      "original_moves": [
+        "复述原问题",
+        "'哪个发现'拆问",
+        "各层答案可能相隔极久的预告"
+      ],
+      "abstract_move": "把单一问题拆成多个含义层级的子问题，把标题承诺从'一个日期'改写成'一组答案'",
+      "replacement_needs": [
+        "对原问题的显式复述",
+        "至少四个含义层级的枚举式拆问",
+        "各层答案可能相隔极久的预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP01→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "strongest_proof_tease",
+      "start_ratio": 0.055,
+      "end_ratio": 0.065,
+      "start_sec": 92,
+      "end_sec": 109,
+      "position_label": "5.5%–6.5%(1:32–1:49)",
+      "purpose": "预告全片最强证据并刻意延迟：来源卑微出人意料，且先不展开",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.0552,
+          "time_ms": 92000,
+          "reason": "最强证据预告：不出自权威而出自高山墓地的卑微器物，且刻意延迟兑现"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "开场预告的最强证据（高山墓地的炭化容器）是什么、证明了什么",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "proof_tease",
+          "mechanism": "deferred_strongest_proof"
+        }
+      ],
+      "required_retention_events": [
+        "prestige_source_rejection",
+        "deferred_proof_hook"
+      ],
+      "original_moves": [
+        "排除权威来源",
+        "卑微出处意象",
+        "转入背景的桥梁句"
+      ],
+      "abstract_move": "预告全片最强证据并刻意延迟：来源卑微出人意料，且先不展开",
+      "replacement_needs": [
+        "对权威来源的排除式否定",
+        "最强证据的卑微出处意象",
+        "转入背景段的桥梁句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(78);打开的悬念 LOOP02→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 78
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "background_primer",
+      "start_ratio": 0.065,
+      "end_ratio": 0.206,
+      "start_sec": 109,
+      "end_sec": 344,
+      "position_label": "6.5%–20.6%(1:49–5:44)",
+      "purpose": "补齐评估证据所需的背景：对象的特性、起效所需的条件组合，解释'为何相处千年却没有发现'",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.204,
+          "time_ms": 340000,
+          "reason": "'实物不断被找到，意图早已离场'：全片方法论金句"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "humor_beat",
+          "mechanism": "personification_humor"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "chemistry_primer",
+          "mechanism": "activation_condition_reveal"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "humor_beat",
+          "mechanism": "absurdist_hypothetical_detail"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "constraint_reveal",
+          "mechanism": "demanding_combination"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "value_inversion",
+          "mechanism": "utility_vs_experience_contrast"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "aphorism_verdict",
+          "mechanism": "object_vs_intention"
+        }
+      ],
+      "required_retention_events": [
+        "chemistry_primer",
+        "constraint_enumeration",
+        "value_inversion"
+      ],
+      "original_moves": [
+        "生长特性",
+        "特性清单",
+        "化学入门",
+        "苛刻条件组合",
+        "第一层实用价值重估",
+        "证据保存难题"
+      ],
+      "abstract_move": "补齐评估证据所需的背景：对象的特性、起效所需的条件组合，解释'为何相处千年却没有发现'",
+      "replacement_needs": [
+        "对象的存在与生长特性",
+        "起效所需的多条件组合枚举",
+        "'熟悉不等于了解'的判词",
+        "第一层实用价值与体验价值的对照重估"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "deep_time_origin",
+      "start_ratio": 0.206,
+      "end_ratio": 0.297,
+      "start_sec": 344,
+      "end_sec": 495,
+      "position_label": "20.6%–29.7%(5:44–8:15)",
+      "purpose": "用深时模型证据给出起源量级，同时显式标注模型证据的边界",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "传奇人物与精确日期的流传叙事是否可信",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "deep_time_reveal",
+          "mechanism": "genomic_divergence_anchor"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "expectation_deflate",
+          "mechanism": "model_boundary_marking"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "reframing_verdict",
+          "mechanism": "different_job_not_weaker_version"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "list_payoff",
+          "mechanism": "enumeration_with_twist_ending"
+        }
+      ],
+      "required_retention_events": [
+        "deep_time_anchor",
+        "model_boundary_marking",
+        "selection_divergence_logic"
+      ],
+      "original_moves": [
+        "基因组学时间锚点",
+        "'模型估计不等于行为记录'",
+        "选育分化机制",
+        "一语点破价值分工"
+      ],
+      "abstract_move": "用深时模型证据给出起源量级，同时显式标注模型证据的边界",
+      "replacement_needs": [
+        "一个量级级时间锚点（模型性质明确标注）",
+        "'模型估计不等于行为记录'的边界句",
+        "定向选育造成分化的机制解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "legend_debunk",
+      "start_ratio": 0.297,
+      "end_ratio": 0.334,
+      "start_sec": 495,
+      "end_sec": 556,
+      "position_label": "29.7%–33.4%(8:15–9:16)",
+      "purpose": "打假流传最广的传奇叙事与其精确日期，确立'证据等级高于故事好听'的评判标准",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "humor_peak",
+          "strength": 72,
+          "position_ratio": 0.3155,
+          "time_ms": 526000,
+          "reason": "'仿佛有皇家药剂师签字存档处方'：打假讽刺的峰值笑点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "myth_debunked",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "debunk_verdict",
+          "mechanism": "wonderful_story_but_not_record"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "humor_debunk",
+          "mechanism": "anachronism_satire"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "sponsor_insert",
+          "mechanism": "channel_course_ad_read"
+        }
+      ],
+      "required_retention_events": [
+        "legendary_date_tease",
+        "compilation_gap_reveal",
+        "satirical_verdict"
+      ],
+      "original_moves": [
+        "传说呈现",
+        "成书年代证据",
+        "讽刺式判词",
+        "早期文献的真实定位"
+      ],
+      "abstract_move": "打假流传最广的传奇叙事与其精确日期，确立'证据等级高于故事好听'的评判标准",
+      "replacement_needs": [
+        "传说内容与精确日期的呈现",
+        "'成书年代远晚于传说年代'的证据",
+        "一句讽刺式判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(72);回收了前文的悬念 FS06→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 72
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "textual_ambiguity",
+      "start_ratio": 0.334,
+      "end_ratio": 0.37,
+      "start_sec": 556,
+      "end_sec": 589,
+      "position_label": "33.4%–37%(9:16–9:49)",
+      "purpose": "说明文字记录的歧义与迟到：文字出现得晚，且容易事后居功",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "personification_payoff",
+          "mechanism": "writing_takes_credit"
+        }
+      ],
+      "required_retention_events": [
+        "terminology_trap",
+        "personification_payoff"
+      ],
+      "original_moves": [
+        "正文句中途插入口播：课程名称、内容量、附赠资料、引导链接；末 cue 尾句回归正文"
+      ],
+      "abstract_move": "说明文字记录的歧义与迟到：文字出现得晚，且容易事后居功",
+      "replacement_needs": [
+        "术语与实物对应的不确定性",
+        "传抄编辑导致的失真",
+        "'文字迟来'的拟人化判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "first_physical_evidence",
+      "start_ratio": 0.37,
+      "end_ratio": 0.435,
+      "start_sec": 617,
+      "end_sec": 725,
+      "position_label": "37%–43.5%(10:17–12:05)",
+      "purpose": "呈上第一份高规格实物证据：逼近'故意使用'但刻意留一道缝",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "第一份实物证据能否证明'故意使用'——能证明收集与珍视，使用方式留缝",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "partial_proof_and_handoff",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "evidence_arrival",
+          "mechanism": "preservation_miracle"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "scale_detail",
+          "mechanism": "quantified_cache"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "limit_marking",
+          "mechanism": "boundary_marking_with_humor"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "suspense_transition",
+          "mechanism": "next_site_handoff"
+        }
+      ],
+      "required_retention_events": [
+        "quantified_cache",
+        "processing_traces",
+        "boundary_marking",
+        "suspense_handoff"
+      ],
+      "original_moves": [
+        "保存奇迹",
+        "数量具体化",
+        "加工痕迹",
+        "墓主身份推测",
+        "能与不能的边界",
+        "悬念移交"
+      ],
+      "abstract_move": "呈上第一份高规格实物证据：逼近'故意使用'但刻意留一道缝",
+      "replacement_needs": [
+        "保存条件造就的证据奇迹",
+        "数量的具体化呈现",
+        "加工痕迹的细节",
+        "能与不能证明的边界标注",
+        "通往下一证据的悬念交接句"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP03。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:第一份实物证据能否证明'故意使用'——能证明收集与珍视，使用方式留缝",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "central_reveal",
+      "start_ratio": 0.435,
+      "end_ratio": 0.537,
+      "start_sec": 725,
+      "end_sec": 896,
+      "position_label": "43.5%–53.7%(12:05–14:56)",
+      "purpose": "全片中枢：化学验证的量化证据把'故意'钉死，并现场重建操作场景",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "evidence_reveal",
+          "strength": 92,
+          "position_ratio": 0.4691,
+          "time_ms": 782000,
+          "reason": "十件容器九件检出、横跨八座墓：量化复现证据把'故意'钉死，全片证据顶点"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.4883,
+          "time_ms": 814000,
+          "reason": "'房间本身就是烟具'：场景重建判词，开场预告在此兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "chemically_verified_evidence_reveal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "method_reveal",
+          "mechanism": "instrumental_chemistry_reveal"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "replication_proof",
+          "mechanism": "quantified_replication"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "reconstruction_payoff",
+          "mechanism": "scene_reconstruction_aphorism"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "inevitability_argument",
+          "mechanism": "impossibility_elimination"
+        }
+      ],
+      "required_retention_events": [
+        "instrumental_method_reveal",
+        "quantified_replication_proof",
+        "scene_reconstruction",
+        "impossibility_elimination"
+      ],
+      "original_moves": [
+        "遗址与海拔",
+        "容器与烧石",
+        "仪器方法与降解产物逻辑",
+        "多样本复现",
+        "场景重建",
+        "排除论证",
+        "知识定性"
+      ],
+      "abstract_move": "全片中枢：化学验证的量化证据把'故意'钉死，并现场重建操作场景",
+      "replacement_needs": [
+        "现代仪器方法的命名",
+        "降解产物的化学逻辑",
+        "多样本复现的量化证据",
+        "'意外不可能复现这么多次'的排除论证",
+        "操作场景的具象重建"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(92)、PK05(85);回收了前文的悬念 FS04→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 92
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "function_analysis",
+      "start_ratio": 0.537,
+      "end_ratio": 0.574,
+      "start_sec": 896,
+      "end_sec": 957,
+      "position_label": "53.7%–57.4%(14:56–15:57)",
+      "purpose": "回答'为什么在这个场合用'：从化学事实转向人类学功能推演",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "epistemic_aphorism",
+          "mechanism": "analysis_vs_experience_boundary"
+        }
+      ],
+      "required_retention_events": [
+        "function_enumeration",
+        "epistemic_aphorism"
+      ],
+      "original_moves": [
+        "场合功能枚举",
+        "烟雾的空间改造",
+        "仪式功能推演",
+        "'能分析成分不能访谈体验'边界",
+        "仪式与乐趣共存"
+      ],
+      "abstract_move": "回答'为什么在这个场合用'：从化学事实转向人类学功能推演",
+      "replacement_needs": [
+        "场合功能的枚举推演",
+        "'能分析成分、不能访谈体验'的边界句",
+        "仪式与乐趣可以共存的澄清"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "independent_corroboration",
+      "start_ratio": 0.574,
+      "end_ratio": 0.626,
+      "start_sec": 957,
+      "end_sec": 1043,
+      "position_label": "57.4%–62.6%(15:57–17:23)",
+      "purpose": "异地独立文献佐证：旁观者记录与考古实物互证，把孤点连成网络",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "humor_peak",
+          "strength": 68,
+          "position_ratio": 0.5897,
+          "time_ms": 983000,
+          "reason": "'以误解了一半对话的自信'：史料批判与幽默合一"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "corroboration_arrival",
+          "mechanism": "independent_textual_corroboration"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "source_criticism_humor",
+          "mechanism": "outsider_confidence_satire"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "transmission_aphorism",
+          "mechanism": "light_seed_fast_evening"
+        }
+      ],
+      "required_retention_events": [
+        "outsider_account",
+        "material_corroboration",
+        "single_origin_suspension"
+      ],
+      "original_moves": [
+        "外来观察者记录",
+        "观察者可靠性折扣",
+        "实物印证",
+        "'相似不等于同源'警示",
+        "传播成本意象"
+      ],
+      "abstract_move": "异地独立文献佐证：旁观者记录与考古实物互证，把孤点连成网络",
+      "replacement_needs": [
+        "外来观察者记录及其可靠性折扣",
+        "考古实物对记录的印证",
+        "'相似不等于同源'的警示",
+        "传播成本轻盈化的意象句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(68)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 68
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "scope_expansion_with_debunk",
+      "start_ratio": 0.626,
+      "end_ratio": 0.709,
+      "start_sec": 1043,
+      "end_sec": 1182,
+      "position_label": "62.6%–70.9%(17:23–19:42)",
+      "purpose": "扩大地理范围同时密集打假：语词证据的陷阱、夸张宣称的降级、官方记录的滞后",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "worldview_shift",
+          "mechanism": "official_record_lag"
+        }
+      ],
+      "required_retention_events": [
+        "claim_demotion_streak",
+        "linguistic_trap_verdict",
+        "official_record_lag_reveal"
+      ],
+      "original_moves": [
+        "多地区宣称",
+        "语词证据陷阱",
+        "夸张宣称降级",
+        "'证据已足够无须夸大'训诫",
+        "官方记录滞后点题"
+      ],
+      "abstract_move": "扩大地理范围同时密集打假：语词证据的陷阱、夸张宣称的降级、官方记录的滞后",
+      "replacement_needs": [
+        "若干流传宣称的逐一降级",
+        "语词学证据不可靠的判词",
+        "'证据已经足够，无须夸大'式训诫",
+        "官方记录滞后于民间实践的点题"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "mechanism_paths_and_diffusion",
+      "start_ratio": 0.709,
+      "end_ratio": 0.849,
+      "start_sec": 1182,
+      "end_sec": 1415,
+      "position_label": "70.9%–84.9%(19:42–23:35)",
+      "purpose": "推演'最初如何被发现'的多条可行路径，并说明传播网络如何让发现多点发生",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "那么它究竟是如何被发现的——机制层面的答案",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "multi_path_mechanism_reveal",
+          "opened_in": "FS14"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "tradition_threshold",
+          "mechanism": "remember_repeat_convince_list"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "humor_beat",
+          "mechanism": "delayed_onset_inner_voice"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "title_answer",
+          "mechanism": "conditional_answer_ladder"
+        }
+      ],
+      "required_retention_events": [
+        "multi_path_enumeration",
+        "tradition_threshold_list",
+        "decentralized_network_framing"
+      ],
+      "original_moves": [
+        "路径一意外",
+        "传统所需环节",
+        "路径二功能副产品",
+        "路径三选育",
+        "路径四文化接触",
+        "无中心传播网络",
+        "全球化后续"
+      ],
+      "abstract_move": "推演'最初如何被发现'的多条可行路径，并说明传播网络如何让发现多点发生",
+      "replacement_needs": [
+        "至少三条机制路径的并列推演",
+        "每条路径的约束条件",
+        "'意外变成传统'所需环节清单",
+        "传播网络无中心、无开幕式的刻画"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP05。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:那么它究竟是如何被发现的——机制层面的答案",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "layered_answer",
+      "start_ratio": 0.849,
+      "end_ratio": 0.916,
+      "start_sec": 1415,
+      "end_sec": 1527,
+      "position_label": "84.9%–91.6%(23:35–25:27)",
+      "purpose": "兑现标题：按问题的每一层含义给出分层回答，并声明'最早可见不等于最早发生'",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "title_callback",
+          "strength": 88,
+          "position_ratio": 0.8866,
+          "time_ms": 1478000,
+          "reason": "标题问题以分层条件句兑现，并声明'最早可见不等于最早发生'"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_conditional_answer",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "humility_verdict",
+          "mechanism": "earliest_visible_not_first_event"
+        }
+      ],
+      "required_retention_events": [
+        "conditional_answer_ladder",
+        "title_question_callback",
+        "survivorship_bias_warning"
+      ],
+      "original_moves": [
+        "重提标题问题",
+        "逐层条件式回答",
+        "最可靠证据点名",
+        "'最早可见不等于最早发生'",
+        "样本偏差警示"
+      ],
+      "abstract_move": "兑现标题：按问题的每一层含义给出分层回答，并声明'最早可见不等于最早发生'",
+      "replacement_needs": [
+        "逐层对照回答的结构",
+        "最可靠证据的显式点名",
+        "样本偏差的方法论警示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(88);回收了前文的悬念 FS03→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 88
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure_sequence",
+      "start_ratio": 0.916,
+      "end_ratio": 1,
+      "start_sec": 1527,
+      "end_sec": 1667,
+      "position_label": "91.6%–100%(25:27–27:47)",
+      "purpose": "认知升级收束：发现不是瞬间而是序列，传承者比第一人更重要，以意象句收尾",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.9982,
+          "time_ms": 1664000,
+          "reason": "结尾意象句呼应开场：他们早已结束实验，清楚地知道该带什么去葬礼"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "'第一个发现者是谁'被显式声明为永远不可考：刻意保持开放，叙事用途是把价值从'第一人'转移到'传承链'，呼应'发现是序列而非瞬间'的收束主题",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "emotional_payoff",
+          "mechanism": "second_person_reversal"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "tenderness_beat",
+          "mechanism": "intimate_residue_reading"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "aphorism_close",
+          "mechanism": "callback_image_close"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_reversal",
+        "sequence_verdict",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "用途全景清单",
+        "'等待再次被 discovery'拟人化",
+        "无日期无记录者的白描",
+        "'第二个人更重要'反转",
+        "仪式场景温情收束",
+        "序列定性",
+        "意象句收尾"
+      ],
+      "abstract_move": "认知升级收束：发现不是瞬间而是序列，传承者比第一人更重要，以意象句收尾",
+      "replacement_needs": [
+        "从'物'到'实践'到'记忆'的升级链条",
+        "'第二个人更重要'的反转判词",
+        "把全片压缩成一个意象的收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(90);打开的悬念 LOOP06(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

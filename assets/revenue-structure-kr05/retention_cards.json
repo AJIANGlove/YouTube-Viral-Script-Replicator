@@ -1,0 +1,1029 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.318Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "paradox_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.1034,
+      "start_sec": 0,
+      "end_sec": 89.6,
+      "position_label": "0%–10.3%(0:00–1:30)",
+      "purpose": "用熟悉的日常扣款与反常经营现象建立核心矛盾，提前展示分配异常的利害关系",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.0571,
+          "time_ms": 49480,
+          "reason": "分配超过同期盈余的预览第一次把“亏损”与“可分配收益”直接对撞"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 84,
+          "position_ratio": 0.0814,
+          "time_ms": 70600,
+          "reason": "官方答复被用于说明所有者分配与公共补偿相连，钱流问题升级为规则问题"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "亏损业务与收购兴趣之间的反常",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "everyday_entry",
+          "mechanism": "familiar_payment_sound"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "partial_payoff",
+          "mechanism": "fare_below_cost"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "scale_reveal",
+          "mechanism": "accumulated_public_subsidy"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "new_question",
+          "mechanism": "loss_business_acquisition_anomaly"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "numeric_reveal",
+          "mechanism": "distribution_exceeds_surplus"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "enforcement_reveal",
+          "mechanism": "rule_without_recent_penalty"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "attributed_admission",
+          "mechanism": "official_statement_reframes_dividend_source"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "mechanism_tease",
+          "mechanism": "prewritten_return_position"
+        }
+      ],
+      "required_retention_events": [
+        "everyday_entry",
+        "cost_gap",
+        "scale_reveal",
+        "ownership_anomaly",
+        "mechanism_tease"
+      ],
+      "original_moves": [
+        "刷卡扣款",
+        "实付低于成本且由公共资金补足",
+        "投资机构收购",
+        "超额分配与缺少处罚",
+        "收益已预先写入成本表"
+      ],
+      "abstract_move": "用熟悉的日常扣款与反常经营现象建立核心矛盾，提前展示分配异常的利害关系",
+      "replacement_needs": [
+        "日常支付入口与实付成本差额",
+        "公共补偿的规模事实",
+        "反直觉的收购与分配现象",
+        "初步机制预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(82)、PK02(84);打开的悬念 LOOP02→FS02 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 82
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 84
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "everyday_payment_anomaly_with_hidden_return_position",
+        "first_stimulus_ms": 40,
+        "first_payoff_ms": 8599,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0013"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "investigation_contract",
+      "start_ratio": 0.1034,
+      "end_ratio": 0.1682,
+      "start_sec": 89.6,
+      "end_sec": 145.8,
+      "position_label": "10.3%–16.8%(1:30–2:26)",
+      "purpose": "把开场的反常现象整理成可追踪的问题，并明确全片的钱流调查契约",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "单位标准收益很小与全年实际盈余之间的尺度差",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "高薪报道、劳动者表述、城市解释、企业与工会数字之间的争议",
+          "closes_in": null
+        },
+        {
+          "loop_id": "LOOP01",
+          "tension": "追踪一笔日常扣款的完整分配路径与受益位置",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "partial_mechanism_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP04"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "investigation_contract",
+          "mechanism": "trace_one_payment"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "baseline_reveal",
+          "mechanism": "discounted_real_fare"
+        }
+      ],
+      "required_retention_events": [
+        "dual_question",
+        "narrator_annotation",
+        "trace_contract",
+        "account_pooling"
+      ],
+      "original_moves": [
+        "实际盈余与劳动报酬两问",
+        "成本表最末项",
+        "正式追踪一笔扣款",
+        "共同账户、折扣、平均实付与成本差额"
+      ],
+      "abstract_move": "把开场的反常现象整理成可追踪的问题，并明确全片的钱流调查契约",
+      "replacement_needs": [
+        "两个待回答的量化问题",
+        "叙述者注意到的关键账目位置",
+        "明确的钱流追踪承诺",
+        "统一收付与折扣后的差额"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS10、LOOP04(不闭合)、LOOP01→FS12 跨段;回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "public_value_context",
+      "start_ratio": 0.1682,
+      "end_ratio": 0.2111,
+      "start_sec": 145.8,
+      "end_sec": 183,
+      "position_label": "16.8%–21.1%(2:26–3:03)",
+      "purpose": "解释补偿制度为何存在，避免后续批判被误读为对公共服务与合理盈利的否定",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "context_turn",
+          "mechanism": "pre_reform_problem"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "balanced_qualification",
+          "mechanism": "public_value_caveat"
+        }
+      ],
+      "required_retention_events": [
+        "historical_problem",
+        "rule_origin",
+        "public_value_caveat"
+      ],
+      "original_moves": [
+        "按票自负导致热门线路集中与冷门地区服务不稳",
+        "统一管理线路并补偿差额",
+        "公共运营方式",
+        "服务覆盖与低价可及性的正面限定"
+      ],
+      "abstract_move": "解释补偿制度为何存在，避免后续批判被误读为对公共服务与合理盈利的否定",
+      "replacement_needs": [
+        "旧规则下的服务不均问题",
+        "规则变更的公共目的",
+        "制度收益的平衡限定"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "cost_breakdown",
+      "start_ratio": 0.2111,
+      "end_ratio": 0.2954,
+      "start_sec": 183,
+      "end_sec": 256,
+      "position_label": "21.1%–29.5%(3:03–4:16)",
+      "purpose": "把抽象成本拆成可比较的项目份额，并用巨大反差重新激活投资悖论",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "单位收益很小与稳定性很高之间的差异",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "evidence_build",
+          "mechanism": "standard_cost_table"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "share_reveal",
+          "mechanism": "labor_share_largest"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "new_term",
+          "mechanism": "appropriate_return_item"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "renewed_paradox",
+          "mechanism": "small_unit_return_vs_acquisition"
+        }
+      ],
+      "required_retention_events": [
+        "cost_inventory",
+        "share_contrast",
+        "renewed_question",
+        "answer_location_tease"
+      ],
+      "original_moves": [
+        "标准成本表",
+        "劳动、能源、车辆、管理等份额",
+        "经营收益单位份额很小",
+        "劳动与经营份额悬殊",
+        "再次追问收购理由",
+        "答案在项目位置"
+      ],
+      "abstract_move": "把抽象成本拆成可比较的项目份额，并用巨大反差重新激活投资悖论",
+      "replacement_needs": [
+        "成本项目清单",
+        "劳动与经营份额的量化对照",
+        "微小单位份额引出的投资悖论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "guaranteed_return_reveal",
+      "start_ratio": 0.2954,
+      "end_ratio": 0.3893,
+      "start_sec": 256,
+      "end_sec": 337.5,
+      "position_label": "29.5%–38.9%(4:16–5:37)",
+      "purpose": "揭示收益作为成本项预先存在的因果机制，并用类比和约束条件完成核心解释",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.3209,
+          "time_ms": 278120,
+          "reason": "收入减少只扩大补偿而收益项目保留，并以账本类比完成全片核心因果重构"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "answer_location",
+          "mechanism": "position_over_amount"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "causal_payoff",
+          "mechanism": "loss_does_not_erase_return"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "analogy_payoff",
+          "mechanism": "restaurant_ledger_analogy"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "scale_aftershock",
+          "mechanism": "subsidy_and_financing_scale"
+        }
+      ],
+      "required_retention_events": [
+        "position_reveal",
+        "subsidy_feedback",
+        "ledger_analogy",
+        "constraint_caveat",
+        "scale_aftershock"
+      ],
+      "original_moves": [
+        "收益不是收完费用后的剩余",
+        "它与工资等一同列入成本",
+        "收入越少补偿越大而收益项目保留",
+        "餐馆账本类比",
+        "考核约束",
+        "公共性交换",
+        "补偿与融资规模"
+      ],
+      "abstract_move": "揭示收益作为成本项预先存在的因果机制，并用类比和约束条件完成核心解释",
+      "replacement_needs": [
+        "收益作为成本项而非剩余项的规则",
+        "收入减少时补偿如何变化的因果链",
+        "生活化账本类比",
+        "约束条件与公共性说明",
+        "补偿规模后果"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(88)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 88
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "acquisition_logic",
+      "start_ratio": 0.3893,
+      "end_ratio": 0.4571,
+      "start_sec": 337.5,
+      "end_sec": 396.2,
+      "position_label": "38.9%–45.7%(5:37–6:36)",
+      "purpose": "用投资方逻辑与收购方说法解释稳定性如何被识别，同时保留服务后果和降本叙事的对照",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.4075,
+          "time_ms": 353199,
+          "reason": "投资吸引力被归结为补偿带来的稳定收益与较低亏损顾虑，收购问题得到明确答案"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "causal_mechanism_plus_attributed_explanation",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "actor_question",
+          "mechanism": "who_read_the_table_first"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "authority_payoff",
+          "mechanism": "stable_return_low_loss_explanation"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "consequence_reveal",
+          "mechanism": "service_frequency_reduction"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "counterpoint",
+          "mechanism": "buyer_cost_cutting_claim"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "new_question",
+          "mechanism": "where_did_savings_go"
+        }
+      ],
+      "required_retention_events": [
+        "actor_reveal",
+        "authority_explanation",
+        "service_consequence",
+        "fair_counterpoint",
+        "new_asset_question"
+      ],
+      "original_moves": [
+        "谁最早看懂成本表",
+        "投资与转售逻辑",
+        "报告中的稳定收益与低亏损顾虑",
+        "服务频次变化",
+        "收购方称降低管理成本",
+        "承认可能性但追问余款去向",
+        "资产转向"
+      ],
+      "abstract_move": "用投资方逻辑与收购方说法解释稳定性如何被识别，同时保留服务后果和降本叙事的对照",
+      "replacement_needs": [
+        "投资方对稳定性的判断",
+        "服务变化的另一面相",
+        "收购方降本说法",
+        "节省所得去向的新问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80);回收了前文的悬念 FS04→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "asset_extraction_escalation",
+      "start_ratio": 0.4571,
+      "end_ratio": 0.5905,
+      "start_sec": 396.2,
+      "end_sec": 511.9,
+      "position_label": "45.7%–59.1%(6:36–8:32)",
+      "purpose": "把调查从成本表内扩展到资产变现与分配，并用规则执行缺口升级矛盾",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 89,
+          "position_ratio": 0.5122,
+          "time_ms": 443960,
+          "reason": "巨额分配与同期盈余的反差叠加叙述者“以为读错”的反应，形成数字震撼"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 78,
+          "position_ratio": 0.5835,
+          "time_ms": 505759,
+          "reason": "扣分并不等于可直接禁止分配，规则存在与规则有效被明确区分"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "节省所得与资产出售是否改变公共服务资源的位置",
+          "closes_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "规则文本存在与直接执行能力之间的落差",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "asset_conversion_and_resource_shift",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "asset_reveal",
+          "mechanism": "land_sale_then_distribution"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "scale_contrast",
+          "mechanism": "dividend_dwarfs_net_surplus"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "consequence_synthesis",
+          "mechanism": "private_cash_public_resource"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "anomaly_reinforcement",
+          "mechanism": "loss_year_distribution"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "enforcement_payoff",
+          "mechanism": "score_penalty_cannot_block_distribution"
+        }
+      ],
+      "required_retention_events": [
+        "land_reveal",
+        "asset_to_dividend",
+        "numeric_disbelief",
+        "public_resource_shift",
+        "enforcement_gap"
+      ],
+      "original_moves": [
+        "停放土地也有成本补偿",
+        "出售资产后分配",
+        "更大规模案例与盈余对照",
+        "私人资产变现而经营资源转入公共土地",
+        "规则修订",
+        "亏损年度仍分配",
+        "扣分存在但缺少直接禁止手段"
+      ],
+      "abstract_move": "把调查从成本表内扩展到资产变现与分配，并用规则执行缺口升级矛盾",
+      "replacement_needs": [
+        "经营资产的费用补偿规则",
+        "资产变现与分配案例",
+        "公共服务资源迁移后果",
+        "规则修订与执行边界"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(89)、PK06(78);打开的悬念 LOOP07→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 89
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 78
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "labor_perspective",
+      "start_ratio": 0.5905,
+      "end_ratio": 0.7261,
+      "start_sec": 511.9,
+      "end_sec": 629.4,
+      "position_label": "59.1%–72.6%(8:32–10:29)",
+      "purpose": "明确批判对象不是一线劳动者，并用薪酬构成、劳动者表述和职业入口校准观众的情绪方向",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 83,
+          "position_ratio": 0.6482,
+          "time_ms": 561839,
+          "reason": "首末班劳动日常对高薪报道作出人的回应，情绪从数字冲突转向具体处境"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "enforcement_boundary_explained",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "scope_reset",
+          "mechanism": "not_the_frontline_worker"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "headline_complication",
+          "mechanism": "pay_includes_extra_work_allowances"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "humanizing_testimony",
+          "mechanism": "first_and_last_shift_voice"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "competing_account",
+          "mechanism": "city_hours_counterclaim"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "numeric_conflict",
+          "mechanism": "company_union_pay_gap"
+        }
+      ],
+      "required_retention_events": [
+        "scope_reset",
+        "headline_pay_challenge",
+        "worker_voice",
+        "competing_accounts",
+        "entry_bottleneck"
+      ],
+      "original_moves": [
+        "明确关键不在司机",
+        "成本最大份额引出工资问题",
+        "入职与平均薪酬",
+        "额外劳动津贴",
+        "劳动者对高薪报道的陌生感",
+        "城市、企业与工会的不同口径",
+        "职业入口低薪与人力缺口"
+      ],
+      "abstract_move": "明确批判对象不是一线劳动者，并用薪酬构成、劳动者表述和职业入口校准观众的情绪方向",
+      "replacement_needs": [
+        "责任对象的范围校准",
+        "薪酬构成与额外劳动津贴",
+        "劳动者一手表述与多方数字争议",
+        "职业入口与人力缺口"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(83);回收了前文的悬念 FS07→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 83
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "rule_conflict",
+      "start_ratio": 0.7261,
+      "end_ratio": 0.8262,
+      "start_sec": 629.4,
+      "end_sec": 716.1,
+      "position_label": "72.6%–82.6%(10:29–11:56)",
+      "purpose": "把停工危机还原为具体计算口径冲突，并说明劳动成本如何再次联动公共补偿",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 76,
+          "position_ratio": 0.7648,
+          "time_ms": 662959,
+          "reason": "两种工时除数把复杂劳资争议压缩成可理解的公式与年度差额"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "劳动成本责任在企业与公共补偿之间的联动",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "formula_and_feedback_explained",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "conflict_escalation",
+          "mechanism": "pay_formula_to_strike_risk"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "formula_reveal",
+          "mechanism": "two_hourly_wage_denominators"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "responsibility_question",
+          "mechanism": "employer_duty_meets_subsidy_feedback"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "dueling_estimates",
+          "mechanism": "union_challenges_total_cost"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "return_to_main_question",
+          "mechanism": "annual_profit_question_reopens"
+        }
+      ],
+      "required_retention_events": [
+        "strike_stakes",
+        "legal_rule",
+        "formula_contrast",
+        "responsibility_feedback",
+        "dueling_estimates"
+      ],
+      "original_moves": [
+        "第二次停工风险",
+        "定期奖金计入时薪的裁判",
+        "两种工时除数",
+        "单位与年度差额",
+        "企业负担义务与补偿扩大",
+        "双方成本总额争议",
+        "通勤不安",
+        "年年重复的工资冲突"
+      ],
+      "abstract_move": "把停工危机还原为具体计算口径冲突，并说明劳动成本如何再次联动公共补偿",
+      "replacement_needs": [
+        "停工风险与争议起点",
+        "两种计算口径及其结果",
+        "支付责任与公共补偿的联动",
+        "双方成本主张与公众影响"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(76)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 76
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "aggregate_reckoning",
+      "start_ratio": 0.8262,
+      "end_ratio": 0.9238,
+      "start_sec": 716.1,
+      "end_sec": 800.7,
+      "position_label": "82.6%–92.4%(11:56–13:21)",
+      "purpose": "把单位份额聚合成年度尺度，完成标准收益、实际盈余、分配和公共投入的总账对照",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 90,
+          "position_ratio": 0.8542,
+          "time_ms": 740440,
+          "reason": "实际盈余、分配与公共投入在同一段完成尺度对照，兑现公司总账并制造后段最大信息冲击"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "局部案例与更大范围同向趋势之间的关系",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "aggregate_numeric_answer",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE41",
+          "event_type": "aggregate_payoff",
+          "mechanism": "actual_surplus_near_double_standard"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "scale_reveal",
+          "mechanism": "distribution_and_public_input_together"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "supporting_reveal",
+          "mechanism": "additional_cost_headroom"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "moral_qualification",
+          "mechanism": "profit_itself_not_wrong"
+        }
+      ],
+      "required_retention_events": [
+        "aggregate_answer",
+        "actual_vs_standard",
+        "distribution_scale",
+        "audit_support",
+        "profit_caveat"
+      ],
+      "original_moves": [
+        "单位收益聚合为年度标准收益",
+        "实际盈余接近翻倍",
+        "分配超过预定收益",
+        "公共投入尺度",
+        "审计发现额外计费空间",
+        "资产变现补充",
+        "承认经营与盈利必要性",
+        "重申预定收益和额外分配"
+      ],
+      "abstract_move": "把单位份额聚合成年度尺度，完成标准收益、实际盈余、分配和公共投入的总账对照",
+      "replacement_needs": [
+        "单位收益到整体收益的聚合",
+        "标准收益与实际盈余对照",
+        "分配与公共投入尺度",
+        "审计与资产收益补充",
+        "经营盈利正当性的限定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(90);打开的悬念 LOOP09→FS11 跨段;回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "scale_expansion",
+      "start_ratio": 0.9238,
+      "end_ratio": 0.9522,
+      "start_sec": 800.7,
+      "end_sec": 825.4,
+      "position_label": "92.4%–95.2%(13:21–13:45)",
+      "purpose": "用跨地域同向趋势证明问题不是孤例，再把宏观总账压回观众下一次日常支付",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 86,
+          "position_ratio": 0.9434,
+          "time_ms": 817760,
+          "reason": "标题问题在“明早再次支付”的自身场景中回归，宏观机制重新变成个人经验"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "cross_region_scale_confirmation",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE45",
+          "event_type": "scale_expansion",
+          "mechanism": "not_a_single_city_story"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "title_callback",
+          "mechanism": "next_morning_payment_question"
+        }
+      ],
+      "required_retention_events": [
+        "geographic_expansion",
+        "inverse_trend",
+        "title_question_return"
+      ],
+      "original_moves": [
+        "不限于单一城市",
+        "更大范围公共投入上升而使用人数下降",
+        "部分地区补偿超过票款",
+        "明早再次支付时究竟为谁而用",
+        "回到刷卡瞬间"
+      ],
+      "abstract_move": "用跨地域同向趋势证明问题不是孤例，再把宏观总账压回观众下一次日常支付",
+      "replacement_needs": [
+        "跨地域同方向数据",
+        "投入与使用量反向变化",
+        "标题问句的再次点名"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(86);回收了前文的悬念 FS10→LOOP09。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 86
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "callback_closure",
+      "start_ratio": 0.9522,
+      "end_ratio": 1,
+      "start_sec": 825.4,
+      "end_sec": 866.8,
+      "position_label": "95.2%–100%(13:45–14:27)",
+      "purpose": "复现开场动作，压缩回收钱流与收益位置，再以劳动者的具体日常完成情绪落点",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "emotional_payoff",
+          "strength": 87,
+          "position_ratio": 0.9896,
+          "time_ms": 857800,
+          "reason": "首末班的具象劳动日常收束全片，把结构判断落在对人的辨认与尊重上"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP10",
+          "tension": "从单一案例向其他系统的可迁移联想",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "money_flow_map_with_compressed_callback",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP10"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE47",
+          "event_type": "compressed_payoff",
+          "mechanism": "return_position_recap"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "open_ending_tease",
+          "mechanism": "cross_domain_generalization_question"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "human_closure",
+          "mechanism": "frontline_daily_life_image"
+        }
+      ],
+      "required_retention_events": [
+        "opening_callback",
+        "compressed_answer",
+        "cross_domain_open_loop",
+        "human_closure"
+      ],
+      "original_moves": [
+        "再次听到扣款声",
+        "劳动份额最大与经营单位收益很小",
+        "收益在客流下降和亏损时仍保留",
+        "这种优先位置或许不限于本行业",
+        "首末班劳动日常收束"
+      ],
+      "abstract_move": "复现开场动作，压缩回收钱流与收益位置，再以劳动者的具体日常完成情绪落点",
+      "replacement_needs": [
+        "开场日常动作复现",
+        "成本份额与保障机制压缩回收",
+        "跨领域开放问句",
+        "劳动者具象收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(87);打开的悬念 LOOP10(不闭合) 跨段;回收了前文的悬念 FS02→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 87
+        }
+      ]
+    }
+  ]
+}

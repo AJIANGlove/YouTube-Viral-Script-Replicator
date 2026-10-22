@@ -37,6 +37,7 @@ flowchart LR
 ```
 .
 ├── app/                    生成平台（Node.js，零第三方依赖）
+│   ├── voices/             频道声音设定（每个频道一份 JSON）
 │   ├── server.js           HTTP 服务（API + 静态页）
 │   ├── lib/                管线与各检查模块
 │   ├── prompts/            现行提示词（生产用，单一来源）
@@ -84,12 +85,13 @@ flowchart LR
 
 阶段 1-8 的完整定义、字段规范与验收清单见 `docs/`：
 
-- `爆款文案逆向工程系统_阶段1-8工作流_重构版_v1.0.docx`（原件）
+- `爆款文案逆向工程系统_阶段1-8工作流_重构版_v1.1.docx`（现行版：阶段 8 增加留存卡输出，见文档开头「v1.1 修订说明」）
+- `爆款文案逆向工程系统_阶段1-8工作流_重构版_v1.0.docx`（原件，留档）
 - `extracted_workflow.txt`（同一份内容的纯文本版，1252 行）
 
 ### 资产包结构
 
-`assets/<slug>/` 下固定 5 个文件：
+`assets/<slug>/` 下固定 6 个文件，外加 v1.1 的留存卡：
 
 ```
 framework.json   机制层
@@ -98,7 +100,10 @@ style.json       表达层
 examples.json    样本层
 meta.json        资产元信息（asset_bundle_id、来源、状态）
 source.srt       源字幕
+retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_retention_cards.js 生成，可人工修改）
 ```
+
+`assets/_library/` 是全部留存卡汇总出的留存功能替换库（按高峰类型归类），由 `node app/bin/build_retention_cards.js --library` 重建，不是资产。
 
 ---
 

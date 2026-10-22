@@ -1,0 +1,762 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.550Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.02,
+      "start_sec": 0.1,
+      "end_sec": 25.5,
+      "position_label": "0%–2%(0:00–0:25)",
+      "purpose": "用第二人称沉浸式场景把观众直接放进远古情境，制造具身代入感",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "把'祖先第一次故意吸烟'具象化，制造对起源机制的期待",
+          "closes_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "主问题：人类究竟何时、如何开始吸烟（标题承诺）",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_scene"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "humor_micro_payoff",
+          "mechanism": "anachronism_contrast"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "new_question",
+          "mechanism": "curiosity_gap"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "topic_announcement",
+          "mechanism": "explicit_promise"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_scene",
+        "anachronism_humor",
+        "first_curiosity_gap"
+      ],
+      "original_moves": [
+        "从零信息到建立场景与'某个祖先产生念头'的悬念"
+      ],
+      "abstract_move": "用第二人称沉浸式场景把观众直接放进远古情境，制造具身代入感",
+      "replacement_needs": [
+        "一个可感官化的远古场景",
+        "至少一处现代物品对照制造的幽默反差"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS04、LOOP02→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "immersive_second_person_scene",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 6066,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0010",
+          "C0011"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "promise_setup",
+      "start_ratio": 0.02,
+      "end_ratio": 0.05,
+      "start_sec": 26.1,
+      "end_sec": 63.7,
+      "position_label": "2%–5%(0:26–1:04)",
+      "purpose": "显性宣布主题并立刻重构标题承诺：问题不是你以为的那个问题",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "'欲望先于文明、证据疯狂'的反差命题需要证据兑现",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "belief_challenge",
+          "mechanism": "assumption_subversion"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "hype_claim",
+          "mechanism": "evidence_tease"
+        }
+      ],
+      "required_retention_events": [
+        "topic_announcement",
+        "belief_challenge"
+      ],
+      "original_moves": [
+        "主题宣告 + 排除法澄清 + 核心反差命题（吸烟欲望先于文明）"
+      ],
+      "abstract_move": "显性宣布主题并立刻重构标题承诺：问题不是你以为的那个问题",
+      "replacement_needs": [
+        "主题宣告句",
+        "排除法澄清（'不是X，不是Y'）",
+        "核心反差命题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.05,
+      "end_ratio": 0.1,
+      "start_sec": 64.9,
+      "end_sec": 134.9,
+      "position_label": "5%–10%(1:05–2:15)",
+      "purpose": "建立最深时间锚点：用最早的相关史前证据奠定'古老'的量级感",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "evidence_anchoring",
+          "mechanism": "deep_time_anchor"
+        }
+      ],
+      "required_retention_events": [
+        "deepest_time_anchor"
+      ],
+      "original_moves": [
+        "用火考古证据 + 远古人类长期暴露于烟的必然性"
+      ],
+      "abstract_move": "建立最深时间锚点：用最早的相关史前证据奠定'古老'的量级感",
+      "replacement_needs": [
+        "一个带具体数字量级的考古/史前证据",
+        "拟人化或幽默化的古人描写"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "reveal",
+      "start_ratio": 0.1,
+      "end_ratio": 0.19,
+      "start_sec": 134.9,
+      "end_sec": 250.1,
+      "position_label": "10%–19%(2:15–4:10)",
+      "purpose": "第一次重大揭示：给出'真正的起源机制'这一反直觉解释",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "humor_reveal_combo",
+          "strength": 75,
+          "position_ratio": 0.16,
+          "time_ms": 210200,
+          "reason": "大脑拟人化幽默与'愉快意外起源说'揭示叠加，全片第一个情绪高点"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "scale_leap",
+          "strength": 70,
+          "position_ratio": 0.1763,
+          "time_ms": 231566,
+          "reason": "从一次偶然到万亿产业的尺度跃迁，放大主题意义"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "pattern_interrupt",
+          "mechanism": "meta_transition_signal"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "information_reveal",
+          "mechanism": "counterintuitive_reveal"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "humor_peak",
+          "mechanism": "personification"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "scale_leap",
+          "mechanism": "magnitude_zoom"
+        }
+      ],
+      "required_retention_events": [
+        "first_major_reveal",
+        "humor_peak",
+        "scale_leap"
+      ],
+      "original_moves": [
+        "燃烧植物释放精神活性化合物 + 内源性受体系统 + '意外成瘾'起源说 + 尺度跃迁到万亿产业"
+      ],
+      "abstract_move": "第一次重大揭示：给出'真正的起源机制'这一反直觉解释",
+      "replacement_needs": [
+        "一个反直觉的因果机制解释",
+        "支撑该机制的科学事实",
+        "尺度跃迁式的意义放大"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(75)、PK02(70);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evidence_build",
+      "start_ratio": 0.19,
+      "end_ratio": 0.27,
+      "start_sec": 250.9,
+      "end_sec": 353.3,
+      "position_label": "19%–27%(4:11–5:53)",
+      "purpose": "严谨性校准：区分强弱主张，用硬考古证据落地，并处理'证据缺失'问题",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "没有更早证据是否等于没有更早行为",
+          "closes_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "古代史料记载是否可信的悬念",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "immediate_logical_answer",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "rigor_reset",
+          "mechanism": "epistemic_calibration"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "evidence_reveal",
+          "mechanism": "hard_archaeology"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "new_question",
+          "mechanism": "epistemic_question"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "anecdote_open",
+          "mechanism": "historical_anecdote"
+        }
+      ],
+      "required_retention_events": [
+        "rigor_reset",
+        "hard_evidence",
+        "absence_of_evidence_reasoning"
+      ],
+      "original_moves": [
+        "严谨性声明 + 帕米尔墓葬硬证据 + 有机物保存偏差解释 + '缺席的证据不等于缺席'"
+      ],
+      "abstract_move": "严谨性校准：区分强弱主张，用硬考古证据落地，并处理'证据缺失'问题",
+      "replacement_needs": [
+        "一处元叙述严谨性声明",
+        "一项硬考古证据（时间+地点+遗物）",
+        "对证据保存偏差的解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "evidence_build",
+      "start_ratio": 0.27,
+      "end_ratio": 0.31,
+      "start_sec": 353.7,
+      "end_sec": 410.5,
+      "position_label": "27%–31%(5:54–6:50)",
+      "purpose": "文献轶事印证：用古代文字记载+后世考古平反构成'被怀疑的证人被证明诚实'的故事弧",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "anecdote_with_vindication_payoff"
+      ],
+      "original_moves": [
+        "古代文献轶事 + 后世考古验证 + 翻案式收束"
+      ],
+      "abstract_move": "文献轶事印证：用古代文字记载+后世考古平反构成'被怀疑的证人被证明诚实'的故事弧",
+      "replacement_needs": [
+        "一段生动的古代文献记载",
+        "后世考古对该记载的验证",
+        "翻案式收束句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "context_expansion",
+      "start_ratio": 0.31,
+      "end_ratio": 0.42,
+      "start_sec": 411.5,
+      "end_sec": 553.2,
+      "position_label": "31%–42%(6:51–9:13)",
+      "purpose": "切换到观众最熟悉的对象，重建其与主题的关联，并引入'原本用途与今不同'的新维度",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "vindication",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "payoff_line",
+          "mechanism": "vindication"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "anecdote_open",
+          "mechanism": "historical_anecdote"
+        }
+      ],
+      "required_retention_events": [
+        "familiar_object_reframe"
+      ],
+      "original_moves": [
+        "烟草的地理隔离 + 欧洲接触史 + 美洲原住民神圣语境 + 日常化是欧洲近代发明"
+      ],
+      "abstract_move": "切换到观众最熟悉的对象，重建其与主题的关联，并引入'原本用途与今不同'的新维度",
+      "replacement_needs": [
+        "观众默认联想对象的正面处理",
+        "其原始文化语境的还原",
+        "古今用途对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS05→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "reveal",
+      "start_ratio": 0.42,
+      "end_ratio": 0.46,
+      "start_sec": 554,
+      "end_sec": 605.6,
+      "position_label": "42%–46%(9:14–10:06)",
+      "purpose": "第二次重大揭示：抛出'大多数人从未听说'的最新/最老证据，把已知时间线再次推前",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.4295,
+          "time_ms": 564166,
+          "reason": "一万两千年前灶坑烟草种子，全片最强的时间线推前揭示"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "'大多数人从未听说的最老证据'预告",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "new_question",
+          "mechanism": "curiosity_gap"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "information_reveal",
+          "mechanism": "timeline_pushback"
+        }
+      ],
+      "required_retention_events": [
+        "timeline_pushback_reveal"
+      ],
+      "original_moves": [
+        "一万两千年前灶坑中的烟草种子，时间线大幅推前"
+      ],
+      "abstract_move": "第二次重大揭示：抛出'大多数人从未听说'的最新/最老证据，把已知时间线再次推前",
+      "replacement_needs": [
+        "一项近年考古发现（年份+地点+遗物细节）",
+        "该发现对既有时间线的冲击说明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(85);打开的悬念 LOOP05→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.46,
+      "end_ratio": 0.6,
+      "start_sec": 606,
+      "end_sec": 790.9,
+      "position_label": "46%–60%(10:06–13:11)",
+      "purpose": "提出统摄性理论框架：把单点事实升级为关于人性普遍驱动力的假说",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.5134,
+          "time_ms": 674333,
+          "reason": "'第四驱动力'假说把主题从单点事实升级为普遍人性框架"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "'听起来很野但被严肃对待'的假说预告",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "evidence_cascade",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "archaeological_reveal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "new_question",
+          "mechanism": "curiosity_gap"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "humor_peak",
+          "mechanism": "absurd_animal_anecdote"
+        }
+      ],
+      "required_retention_events": [
+        "named_hypothesis",
+        "cross_species_evidence",
+        "humor_peak"
+      ],
+      "original_moves": [
+        "intoxication hypothesis 假说 + 跨物种佐证 + 试错式知识积累与口述传承"
+      ],
+      "abstract_move": "提出统摄性理论框架：把单点事实升级为关于人性普遍驱动力的假说",
+      "replacement_needs": [
+        "一个有名有姓的学术假说",
+        "跨物种或跨文化的佐证",
+        "对前文字时代知识传承方式的反思"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80);打开的悬念 LOOP06→FS10 跨段;回收了前文的悬念 FS02→LOOP03、FS08→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "evidence_build",
+      "start_ratio": 0.6,
+      "end_ratio": 0.72,
+      "start_sec": 791.9,
+      "end_sec": 949.3,
+      "position_label": "60%–72%(13:12–15:49)",
+      "purpose": "补充被忽视的维度：展示该行为在实用/医疗体系中的跨文明普遍性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "explanatory_framework",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "topic_expansion",
+          "mechanism": "dimension_rotation"
+        }
+      ],
+      "required_retention_events": [
+        "cross_civilization_evidence",
+        "modern_echo"
+      ],
+      "original_moves": [
+        "古埃及/古希腊/古印度/古中国医学用烟证据 + 吸入给药逻辑 + 现代吸入剂的呼应"
+      ],
+      "abstract_move": "补充被忽视的维度：展示该行为在实用/医疗体系中的跨文明普遍性",
+      "replacement_needs": [
+        "至少三个不同文明的平行证据",
+        "一个反直觉但合逻辑的解释",
+        "与现代的呼应（该逻辑的存活形态）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS09→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.72,
+      "end_ratio": 0.79,
+      "start_sec": 950.3,
+      "end_sec": 1034.8,
+      "position_label": "72%–79%(15:50–17:15)",
+      "purpose": "第二次世界观升级：从物质层面上升到社会功能层面，解释行为为何有生存价值",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "topic_expansion",
+          "mechanism": "dimension_rotation"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "tone_shift",
+          "mechanism": "conflict_introduction"
+        }
+      ],
+      "required_retention_events": [
+        "social_function_renaming"
+      ],
+      "original_moves": [
+        "群体凝聚的进化价值 + 共享仪式的神经科学印证 + '烟雾圈是基础设施'的重命名"
+      ],
+      "abstract_move": "第二次世界观升级：从物质层面上升到社会功能层面，解释行为为何有生存价值",
+      "replacement_needs": [
+        "群体动力学或进化心理学论证",
+        "现代科学的印证",
+        "一句高度凝练的重命名式判断"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "conflict_escalation",
+      "start_ratio": 0.79,
+      "end_ratio": 0.89,
+      "start_sec": 1035.7,
+      "end_sec": 1163.7,
+      "position_label": "79%–89%(17:16–19:24)",
+      "purpose": "引入道德冲突：古老神圣传统被现代工业体系异化的灾难性转折",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "conflict_climax",
+          "strength": 80,
+          "position_ratio": 0.8787,
+          "time_ms": 1154200,
+          "reason": "萨满与烟草高管的道德鸿沟对照，古今冲突顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "title_callback",
+          "mechanism": "direct_question_return"
+        }
+      ],
+      "required_retention_events": [
+        "modern_corruption_contrast"
+      ],
+      "original_moves": [
+        "烟草全球商品化时间压缩史 + 烟草业隐瞒与成瘾工程 + 萨满与高管的古今对照"
+      ],
+      "abstract_move": "引入道德冲突：古老神圣传统被现代工业体系异化的灾难性转折",
+      "replacement_needs": [
+        "现代化/工业化转折的时间压缩叙述",
+        "具体的异化事实清单",
+        "一组强烈的古今对照意象"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "closure",
+      "start_ratio": 0.89,
+      "end_ratio": 1,
+      "start_sec": 1163.7,
+      "end_sec": 1313.5,
+      "position_label": "89%–100%(19:24–21:53)",
+      "purpose": "回收标题问题：以诚实的不确定性作答，把问题重构为更深认知，并用诗意蒙太奇呼应开场完成情绪闭环",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9213,
+          "time_ms": 1210166,
+          "reason": "'那不是成瘾，是智慧'完成全片价值重命名"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_closure",
+          "strength": 75,
+          "position_ratio": 0.9647,
+          "time_ms": 1267100,
+          "reason": "'火、烟、呼吸'诗意收束，观众经验与十万年人类史连接"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "honest_uncertainty_reframe",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "value_renaming",
+          "mechanism": "reframe_payoff"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "emotional_closure",
+          "mechanism": "poetic_montage"
+        }
+      ],
+      "required_retention_events": [
+        "title_callback",
+        "honest_uncertainty_answer",
+        "poetic_callback"
+      ],
+      "original_moves": [
+        "标题问题直接回收 + 诚实不确定性 + '那不是成瘾是智慧'的价值重命名 + 诗意蒙太奇呼应开场"
+      ],
+      "abstract_move": "回收标题问题：以诚实的不确定性作答，把问题重构为更深认知，并用诗意蒙太奇呼应开场完成情绪闭环",
+      "replacement_needs": [
+        "对标题问题的直接回收与诚实回答",
+        "一句价值重命名（把负面标签替换为中性/正面的人性解释）",
+        "对前文多个章节的意象回调",
+        "把观众当下经验与远古场景连接的最终句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85)、PK07(75);回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 75
+        }
+      ]
+    }
+  ]
+}

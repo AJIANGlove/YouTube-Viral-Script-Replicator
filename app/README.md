@@ -34,7 +34,8 @@ node app/server.js
 
 - **写前分析**(`lib/analysis.js` + `prompts/analysis.md`):写稿前先跑一次 LLM,产出结论、候选标题、论点卡、事实表(带年份和时效)、模块取舍、留存地图、钩子候选。任务停在「待确认分析」,在详情页核对(可直接改 JSON、补资料重跑),点「确认并开始写稿」后才进入四步;确认后的分析通过 `{{analysis}}` 注入 step1-4。
 - **赛道证据卡**(`prompts/track_cards.md`):按赛道/选题关键词自动挑一张,告诉分析该找哪类证据。
-- **留存卡**(`lib/retention.js`):从 timeline.json 的高峰、悬念按位置挂到 framework 各段;`node bin/build_retention_cards.js [资产id] [--ai]` 可预生成 `assets/<id>/retention_cards.json`(`--ai` 额外让模型补每段的抽象动作和替换条件),不生成也能跑。
+- **留存卡 7 项**(`lib/retention.js`):段与位置、持有的高峰、悬念、原片做法、抽象动作、替换条件、可删性。前三项程序从 timeline.json 对齐;后三项文字初稿取自拆解阶段已有字段,`--ai` 可用 `prompts/retention_card.md` 重写;可删性按规则判定。存在 `assets/<id>/retention_cards.json`(可人工改,程序以文件为准)。`node bin/build_retention_cards.js [资产id] [--ai] [--force] [--library]`。
+- **频道声音设定**(`lib/voice.js`,`voices/<名字>.json`):语体、称呼观众、自称、风格、固定用语。设置页可用 AI 起草(`prompts/voice_draft.md`)后人工确认保存;建任务时选择,默认按频道名自动匹配;注入写前分析、step2、step4 的 `{{voice}}`。
 - **留存检查**(蓝图之后):对照原片高峰是否被章节 `carries_peaks` 接住、第一个甜头秒数、高峰最大间隔;只对确认过分析的任务反馈重试,仍不合格不置失败,结果显示在详情页。
 - **稿件检查 K1-K5**(写稿完成后自动,或详情页手动):标题与结论、旧数据、数字/年份不一致、凑节拍段落、篇幅与数字密度。程序先算篇幅、密度、年份混用、旧事实,模型再找问题;只有 K3 允许自动改(原句在 V1 中恰好出现一次才替换,改前版本存 `final_script_before_check`),其余标「待选择」或「仅提示」。
 - 不勾选时与原流程完全一致。

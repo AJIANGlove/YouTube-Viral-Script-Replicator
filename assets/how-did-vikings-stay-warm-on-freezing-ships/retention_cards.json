@@ -1,0 +1,1052 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.358Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.032,
+      "start_sec": 0,
+      "end_sec": 45,
+      "position_label": "0%–3.2%(0:00–0:45)",
+      "purpose": "第二人称沉浸式困境开场：让观众以身体感受代替背景介绍，并用'绘画省略了这一幕'完成第一次祛魅",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.0259,
+          "time_ms": 36000,
+          "reason": "标题问句显式抛出，并以'诚实答案'契约锁定观看理由"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：他们究竟如何在冰封船上保暖（标题问句的显式悬挂）",
+          "closes_in": "FS16"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "浪漫绘画/传说省略了什么：被美化的叙事与真实处境之间的落差",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "triple_negation_environment_sketch"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "sensory_hardship",
+          "mechanism": "second_person_body_detail"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "myth_contrast",
+          "mechanism": "romantic_image_deflation"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "title_question",
+          "mechanism": "explicit_question_pose"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_hardship_scene",
+        "romantic_image_deflation",
+        "title_question_posed"
+      ],
+      "original_moves": [
+        "三连否定环境白描",
+        "体感细节",
+        "绘画祛魅",
+        "标题问句显式抛出"
+      ],
+      "abstract_move": "第二人称沉浸式困境开场：让观众以身体感受代替背景介绍，并用'绘画省略了这一幕'完成第一次祛魅",
+      "replacement_needs": [
+        "三连否定式的环境白描",
+        "感官化的身体感受细节",
+        "浪漫画面与真实处境的第一次对照",
+        "标题问句的显式登场"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(75);打开的悬念 LOOP01→FS16、LOOP02→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 45000,
+        "hook_type": "immersive_second_person_hardship_scene",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 36000,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0006"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "thesis_roadmap",
+      "start_ratio": 0.032,
+      "end_ratio": 0.058,
+      "start_sec": 45,
+      "end_sec": 81,
+      "position_label": "3.2%–5.8%(0:45–1:21)",
+      "purpose": "立下诚实答案契约：先给完整答案路线图，再否定天赋体质神话，把悬念从'答案是什么'转移到'系统如何运作'",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "contract_offer",
+          "mechanism": "honest_answer_contract"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "myth_busting",
+          "mechanism": "innate_toughness_denial"
+        }
+      ],
+      "required_retention_events": [
+        "honest_answer_contract",
+        "innate_toughness_denial"
+      ],
+      "original_moves": [
+        "诚实答案契约",
+        "路线图概览",
+        "天赋神话否定",
+        "同一套物理规则总纲"
+      ],
+      "abstract_move": "立下诚实答案契约：先给完整答案路线图，再否定天赋体质神话，把悬念从'答案是什么'转移到'系统如何运作'",
+      "replacement_needs": [
+        "答案路线图的一句话概览",
+        "对天赋体质神话的否定",
+        "同一套规则适用于所有人的平等化声明"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "avoidance_principle",
+      "start_ratio": 0.058,
+      "end_ratio": 0.112,
+      "start_sec": 81,
+      "end_sec": 156,
+      "position_label": "5.8%–11.2%(1:21–2:36)",
+      "purpose": "第一防御因子反直觉化：最有效的策略是'尽量不在场'，用季节选择与航线纪律完成第一层祛魅",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "humor_peak",
+          "strength": 70,
+          "position_ratio": 0.082,
+          "time_ms": 114000,
+          "reason": "'在房子里迎接风暴'：常识反转笑点确立回避策略"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "humor_payoff",
+          "mechanism": "common_sense_reversal"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "principle_verdict",
+          "mechanism": "skill_redefinition"
+        }
+      ],
+      "required_retention_events": [
+        "seasonal_avoidance_reveal",
+        "not_acting_as_skill_verdict"
+      ],
+      "original_moves": [
+        "拆除'常年巡航'想象",
+        "季节窗口史料佐证",
+        "常识反转笑点",
+        "'何时不出航也是技术'定性"
+      ],
+      "abstract_move": "第一防御因子反直觉化：最有效的策略是'尽量不在场'，用季节选择与航线纪律完成第一层祛魅",
+      "replacement_needs": [
+        "季节窗口的史料佐证",
+        "一句常识反转式笑点",
+        "回避策略的专业性定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "constraint_exposition",
+      "start_ratio": 0.112,
+      "end_ratio": 0.143,
+      "start_sec": 156,
+      "end_sec": 199,
+      "position_label": "11.2%–14.3%(2:36–3:19)",
+      "purpose": "解释为何载具本身不提供庇护：用设计取舍清单让观众接受'住在天气里'的硬约束",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "constraint_verdict",
+          "mechanism": "aphorism_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "design_tradeoff_list",
+        "living_inside_weather_verdict"
+      ],
+      "original_moves": [
+        "设计目标清单",
+        "加顶的工程代价",
+        "'船员住在天气里'判词",
+        "衣物成为第一庇护所"
+      ],
+      "abstract_move": "解释为何载具本身不提供庇护：用设计取舍清单让观众接受'住在天气里'的硬约束",
+      "replacement_needs": [
+        "设计目标与取舍清单",
+        "取消庇护的工程学理由",
+        "一句总结性判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "material_mechanism",
+      "start_ratio": 0.143,
+      "end_ratio": 0.244,
+      "start_sec": 199,
+      "end_sec": 339,
+      "position_label": "14.3%–24.4%(3:19–5:39)",
+      "purpose": "核心材料与穿法系统的机制讲解：先给材料原理，再给流行说法的夸大校准，再给动态管理规则与反噬警告",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "material_intro",
+          "mechanism": "single_word_verdict"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "calibration",
+          "mechanism": "exaggeration_calibration"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "margin_verdict",
+          "mechanism": "aphorism_verdict"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "danger_warning",
+          "mechanism": "time_flip_consequence"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "humor_payoff",
+          "mechanism": "body_personification"
+        }
+      ],
+      "required_retention_events": [
+        "material_physics_explain",
+        "exaggeration_calibration",
+        "sweat_danger_warning"
+      ],
+      "original_moves": [
+        "材料机制",
+        "夸大校准",
+        "'余量即生命'判词",
+        "分层系统",
+        "汗液反噬警告",
+        "主动管理纪律"
+      ],
+      "abstract_move": "核心材料与穿法系统的机制讲解：先给材料原理，再给流行说法的夸大校准，再给动态管理规则与反噬警告",
+      "replacement_needs": [
+        "材料保温的物理机制",
+        "流行说法的夸大与边界校准",
+        "分层动态管理的操作规则",
+        "汗液反噬的机理警告"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "craft_labor_reveal",
+      "start_ratio": 0.244,
+      "end_ratio": 0.313,
+      "start_sec": 339,
+      "end_sec": 436,
+      "position_label": "24.4%–31.3%(5:39–7:16)",
+      "purpose": "把视线从穿戴者转向生产者：揭示每件织物背后的巨量隐性劳动，完成第一次价值反转",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.3012,
+          "time_ms": 419000,
+          "reason": "'武器赢得海报，纺锤赢得文明'：隐性劳动的价值反转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "value_reversal",
+          "mechanism": "parallel_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_labor_reveal",
+        "value_reversal_aphorism"
+      ],
+      "original_moves": [
+        "外层工艺校准",
+        "皮草印象祛魅",
+        "纺织劳动链条",
+        "'武器与纺锤'判词"
+      ],
+      "abstract_move": "把视线从穿戴者转向生产者：揭示每件织物背后的巨量隐性劳动，完成第一次价值反转",
+      "replacement_needs": [
+        "外层工艺的校准",
+        "奢侈品印象的祛魅",
+        "生产链条的劳动量呈现",
+        "一句价值反转判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "extremity_shelter_calibration",
+      "start_ratio": 0.313,
+      "end_ratio": 0.387,
+      "start_sec": 436,
+      "end_sec": 539,
+      "position_label": "31.3%–38.7%(7:16–8:59)",
+      "purpose": "末端防护与载具微庇护：先给生理机制与装备清单，再对流行装备印象做证据级证伪降级",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "著名的'盾墙加热器'是否真的成立",
+          "closes_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "湿鞋困境能否解决，脚趾能否保住",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "expectation_calibrated",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "mechanism_explain",
+          "mechanism": "body_mechanism_with_humor"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "stakes_raise",
+          "mechanism": "functional_toes_stakes"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "expectation_subversion",
+          "mechanism": "popular_gear_myth_demotion"
+        }
+      ],
+      "required_retention_events": [
+        "extremity_physiology",
+        "popular_gear_myth_demotion"
+      ],
+      "original_moves": [
+        "末端生理机制",
+        "防护装备清单",
+        "湿鞋困境",
+        "船体微庇护",
+        "盾墙加热器证伪"
+      ],
+      "abstract_move": "末端防护与载具微庇护：先给生理机制与装备清单，再对流行装备印象做证据级证伪降级",
+      "replacement_needs": [
+        "末端失温的生理机制",
+        "具体防护装备清单",
+        "流行装备印象的证据级证伪"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "collective_heat_cycle",
+      "start_ratio": 0.387,
+      "end_ratio": 0.487,
+      "start_sec": 539,
+      "end_sec": 678,
+      "position_label": "38.7%–48.7%(8:59–11:18)",
+      "purpose": "把热源从物件转向人本身：体温共享、劳动产热与轮班制度构成第二层系统，并用现代实验证据佐证",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.3875,
+          "time_ms": 539000,
+          "reason": "'船上最简单的热源是其他船员'：从物到人的视角切换"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "睡眠时产热下降且失去警觉，这一最危险时刻如何度过",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "information_reveal",
+          "mechanism": "simplest_source_reveal"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "verdict_pair",
+          "mechanism": "twin_aphorism"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "humor_payoff",
+          "mechanism": "self_deprecating_mechanism"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "cycle_reveal",
+          "mechanism": "interest_metaphor"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "evidence_anchor",
+          "mechanism": "modern_experiment_evidence"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "danger_flag",
+          "mechanism": "sleep_danger_flag"
+        }
+      ],
+      "required_retention_events": [
+        "shared_body_heat_reveal",
+        "labor_heat_cycle",
+        "watch_system_logic",
+        "modern_experiment_evidence"
+      ],
+      "original_moves": [
+        "体温共享",
+        "共享的边界",
+        "劳动产热循环",
+        "轮班制度",
+        "现代复原航行佐证",
+        "睡眠危险"
+      ],
+      "abstract_move": "把热源从物件转向人本身：体温共享、劳动产热与轮班制度构成第二层系统，并用现代实验证据佐证",
+      "replacement_needs": [
+        "体温共享的机制与边界",
+        "劳动产热的冷热循环",
+        "轮班制度的组织逻辑",
+        "现代实验证据的佐证"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75);打开的悬念 LOOP07→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "land_based_shelter",
+      "start_ratio": 0.507,
+      "end_ratio": 0.595,
+      "start_sec": 705,
+      "end_sec": 827,
+      "position_label": "50.7%–59.5%(11:45–13:47)",
+      "purpose": "把庇护从载具扩展到岸上：干燥储存、机会主义遮蔽与'撤退不是失败'的策略正名",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "观众最期待的答案：能不能在船上生火",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "有机物装备已从考古记录中消失，具体储存方式无从确证：刻意保持开放，叙事用途是以史料缺口展示证据纪律，并与结尾'大海吞没失败样本'的幸存者偏差主题互文",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "mitigation_reveal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "aphorism_payoff",
+          "mechanism": "parallel_aphorism"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "humor_payoff",
+          "mechanism": "absurdist_risk_image"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "strategy_verdict",
+          "mechanism": "strategy_rehabilitation"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "expected_answer",
+          "mechanism": "expectation_invocation"
+        }
+      ],
+      "required_retention_events": [
+        "dry_storage_aphorism",
+        "opportunistic_shelter",
+        "ashore_as_strategy_verdict"
+      ],
+      "original_moves": [
+        "寝具与干储",
+        "干湿对仗判词",
+        "帐篷证据与风阻风险",
+        "靠岸休整清单",
+        "航线链式结构"
+      ],
+      "abstract_move": "把庇护从载具扩展到岸上：干燥储存、机会主义遮蔽与'撤退不是失败'的策略正名",
+      "replacement_needs": [
+        "干燥储存的对仗判词",
+        "临时遮蔽的机会主义用法与风险",
+        "靠岸休整的清单式呈现",
+        "航线链式结构揭示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS10、LOOP08(不闭合) 跨段;回收了前文的悬念 FS08→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "expected_answer_subversion",
+      "start_ratio": 0.595,
+      "end_ratio": 0.655,
+      "start_sec": 827,
+      "end_sec": 911,
+      "position_label": "59.5%–65.5%(13:47–15:11)",
+      "purpose": "对观众最期待的答案先复述预期再逐条证伪，并用一句反转判词给出真实替代方案",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "humor_peak",
+          "strength": 75,
+          "position_ratio": 0.6147,
+          "time_ms": 855000,
+          "reason": "'机动性极佳的葬礼火堆'：黑色幽默处死'船上生火'的预期答案"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "mitigation_reveal",
+          "opened_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "expected_answer_subverted",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "dark_humor",
+          "mechanism": "disaster_reframe_image"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "reversal_verdict",
+          "mechanism": "comparative_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "expected_answer_subverted",
+        "risk_list",
+        "reversal_verdict"
+      ],
+      "original_moves": [
+        "预期答案显式唤起",
+        "风险清单",
+        "黑色幽默画面",
+        "证据强度标注",
+        "岸上生火与烘干风险"
+      ],
+      "abstract_move": "对观众最期待的答案先复述预期再逐条证伪，并用一句反转判词给出真实替代方案",
+      "replacement_needs": [
+        "预期答案的显式复述",
+        "逐条风险清单",
+        "一个荒诞化的黑色幽默画面",
+        "证据强度标注与真实替代方案"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(75);回收了前文的悬念 FS07→LOOP04、FS09→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "metabolic_fuel_correction",
+      "start_ratio": 0.655,
+      "end_ratio": 0.743,
+      "start_sec": 911,
+      "end_sec": 1033,
+      "position_label": "65.5%–74.3%(15:11–17:13)",
+      "purpose": "热量代谢层：食物作为燃料的机制讲解，并对烈酒御寒的流行误解做生理学证伪",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "烈酒到底能不能御寒",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "myth_correction",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "humor_payoff",
+          "mechanism": "pragmatism_personification"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "myth_correction",
+          "mechanism": "demotion_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "metabolic_fuel_explain",
+        "alcohol_myth_correction"
+      ],
+      "original_moves": [
+        "代谢机制",
+        "补给清单与脂肪能量密度",
+        "进食节奏",
+        "烈酒错觉证伪",
+        "淡水警告"
+      ],
+      "abstract_move": "热量代谢层：食物作为燃料的机制讲解，并对烈酒御寒的流行误解做生理学证伪",
+      "replacement_needs": [
+        "代谢产热机制",
+        "补给品清单与能量密度逻辑",
+        "烈酒错觉的生理学证伪",
+        "淡水与脱水警告"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP06。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:烈酒到底能不能御寒",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "cultural_knowledge_capstone",
+      "start_ratio": 0.743,
+      "end_ratio": 0.781,
+      "start_sec": 1033,
+      "end_sec": 1087,
+      "position_label": "74.3%–78.1%(17:13–18:07)",
+      "purpose": "系统最高点：天气识读作为'文化技术'收束知识层，并用一句角色台词完成经验的人格化封顶",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.7699,
+          "time_ms": 1071000,
+          "reason": "'最重要的保暖衣物是说不出发的船长'：知识层人格化封顶"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "capstone_line",
+          "mechanism": "character_line_capstone"
+        }
+      ],
+      "required_retention_events": [
+        "reading_litany",
+        "character_line_capstone"
+      ],
+      "original_moves": [
+        "识读对象排比",
+        "代际传承机制",
+        "'最重要的保暖装备是经验决策者'判词"
+      ],
+      "abstract_move": "系统最高点：天气识读作为'文化技术'收束知识层，并用一句角色台词完成经验的人格化封顶",
+      "replacement_needs": [
+        "识读对象的排比清单",
+        "代际传承机制",
+        "一句角色台词式判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "survivorship_bias_reveal",
+      "start_ratio": 0.781,
+      "end_ratio": 0.853,
+      "start_sec": 1087,
+      "end_sec": 1187,
+      "position_label": "78.1%–85.3%(18:07–19:47)",
+      "purpose": "代价揭示：即使决策完美也会失败，并用幸存者偏差点破'成功即安全'的错觉",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.8483,
+          "time_ms": 1180000,
+          "reason": "'大海留下了失败的版本'：幸存者偏差揭示抬高全片代价"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "myth_busting",
+          "mechanism": "success_safety_equation_denial"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "bias_reveal",
+          "mechanism": "survivorship_bias_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "failure_mode_list",
+        "survivorship_bias_reveal"
+      ],
+      "original_moves": [
+        "失败模式清单",
+        "落水绝境约束",
+        "现代复原对照",
+        "幸存者偏差显式点破"
+      ],
+      "abstract_move": "代价揭示：即使决策完美也会失败，并用幸存者偏差点破'成功即安全'的错觉",
+      "replacement_needs": [
+        "失败模式清单",
+        "极端处境的绝望约束",
+        "现代复原实验的对照",
+        "幸存者偏差的显式点破"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "system_synthesis",
+      "start_ratio": 0.853,
+      "end_ratio": 0.886,
+      "start_sec": 1187,
+      "end_sec": 1233,
+      "position_label": "85.3%–88.6%(19:47–20:33)",
+      "purpose": "答案兑现第一层：逐项回扣全部因子，声明'每种防御都不完整，合起来才是系统'",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.8821,
+          "time_ms": 1227000,
+          "reason": "'每种防御都不完整，合起来才是系统'：答案第一层兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "synthesis",
+          "mechanism": "system_declaration"
+        }
+      ],
+      "required_retention_events": [
+        "factor_recap_litany",
+        "system_declaration"
+      ],
+      "original_moves": [
+        "无单一秘诀声明",
+        "全因子排比回扣",
+        "系统合成判词"
+      ],
+      "abstract_move": "答案兑现第一层：逐项回扣全部因子，声明'每种防御都不完整，合起来才是系统'",
+      "replacement_needs": [
+        "全因子排比回扣",
+        "单一秘诀不存在的显式声明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS15",
+      "function": "preparation_collective_reframe",
+      "start_ratio": 0.886,
+      "end_ratio": 0.934,
+      "start_sec": 1233,
+      "end_sec": 1299,
+      "position_label": "88.6%–93.4%(20:33–21:39)",
+      "purpose": "认知反转：把答案从航程扩展到出发前数月的安静劳动，并把孤胆英雄叙事反转为集体协作",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9281,
+          "time_ms": 1291000,
+          "reason": "'孤胆英雄是现代幻想'：集体主义认知反转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "thesis_elevation",
+          "mechanism": "discipline_over_toughness"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "worldview_shift",
+          "mechanism": "lone_hero_denial"
+        }
+      ],
+      "required_retention_events": [
+        "preparation_labor_chain",
+        "lone_hero_denial"
+      ],
+      "original_moves": [
+        "出发前劳动链条排比",
+        "失能个体危及全员",
+        "分工协作排比",
+        "英雄叙事显式否定"
+      ],
+      "abstract_move": "认知反转：把答案从航程扩展到出发前数月的安静劳动，并把孤胆英雄叙事反转为集体协作",
+      "replacement_needs": [
+        "出发前劳动链条的排比",
+        "失能个体危及全员的机制",
+        "分工协作的排比呈现",
+        "英雄叙事的显式否定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "myth_coda_closure",
+      "start_ratio": 0.934,
+      "end_ratio": 1,
+      "start_sec": 1299,
+      "end_sec": 1391,
+      "position_label": "93.4%–100%(21:39–23:11)",
+      "purpose": "双层收束：先以'后来的故事打磨了航程'回扣开场的绘画祛魅，再显式重答标题问句并以三连意象定格",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9978,
+          "time_ms": 1388000,
+          "reason": "三连意象定格：生存看起来像层层衣物、像劳作、像彼此保命的三十人"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_system_answer",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "myth_reality_reconciliation",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "myth_coda",
+          "mechanism": "story_polish_callback"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "closing_image",
+          "mechanism": "triplet_image_close"
+        }
+      ],
+      "required_retention_events": [
+        "myth_polish_callback",
+        "title_question_reanswer",
+        "triplet_image_close"
+      ],
+      "original_moves": [
+        "到达狼狈反差",
+        "叙事打磨点题",
+        "标题问句显式重答",
+        "来源排比",
+        "三连意象收束"
+      ],
+      "abstract_move": "双层收束：先以'后来的故事打磨了航程'回扣开场的绘画祛魅，再显式重答标题问句并以三连意象定格",
+      "replacement_needs": [
+        "到达后的狼狈与'他们到了'的反差",
+        "叙事打磨机制的点题回扣",
+        "标题问句的显式重答与降级式答案",
+        "三连意象的定格收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(90);回收了前文的悬念 FS01→LOOP01、FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1044 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.429Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "mystery_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.018,
+      "start_sec": 0,
+      "end_sec": 29,
+      "position_label": "0%–1.8%(0:00–0:29)",
+      "purpose": "标题问句+直觉预期建立：先给一句反直觉答案勾子，再逐步还原大众推理让预期显得不可避免",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：标题的是否问句究竟如何回答（开场给压缩版答案悬挂完整版）",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook",
+          "mechanism": "counterintuitive_answer_tease"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "expectation_build",
+          "mechanism": "intuition_walkthrough_with_humor"
+        }
+      ],
+      "required_retention_events": [
+        "counterintuitive_answer_tease",
+        "expectation_build",
+        "evidence_entrance_turn"
+      ],
+      "original_moves": [
+        "反直觉答案预告",
+        "直觉逻辑分步还原",
+        "'证据登场'转折"
+      ],
+      "abstract_move": "标题问句+直觉预期建立：先给一句反直觉答案勾子，再逐步还原大众推理让预期显得不可避免",
+      "replacement_needs": [
+        "标题问句的压缩回答与反差强调",
+        "大众直觉的分步还原",
+        "证据登场的转折句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 29000,
+        "hook_type": "counterintuitive_answer_tease_plus_expectation_setup",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 29000,
+        "evidence_refs": [
+          "C0001",
+          "C0003",
+          "C0004"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "data_reveal",
+      "start_ratio": 0.018,
+      "end_ratio": 0.041,
+      "start_sec": 29,
+      "end_sec": 66,
+      "position_label": "1.8%–4.1%(0:29–1:06)",
+      "purpose": "大样本量化答案前置：用一项大规模实证研究的震撼数字兑现开场勾子",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.0231,
+          "time_ms": 37000,
+          "reason": "大样本中极端案例仅一例：全片第一个数据震撼点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "pivot",
+          "mechanism": "evidence_entrance"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "data_reveal",
+          "mechanism": "large_sample_rarity_count"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "scale_bound",
+          "mechanism": "percentage_ceiling_translation"
+        }
+      ],
+      "required_retention_events": [
+        "scale_data_reveal",
+        "rarity_count",
+        "plain_language_translation"
+      ],
+      "original_moves": [
+        "研究规模",
+        "极端案例仅一例",
+        "比例上限的口语翻译"
+      ],
+      "abstract_move": "大样本量化答案前置：用一项大规模实证研究的震撼数字兑现开场勾子",
+      "replacement_needs": [
+        "研究规模数字",
+        "极端案例的罕见计数",
+        "比例上限的口语化翻译"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "question_reframe",
+      "start_ratio": 0.041,
+      "end_ratio": 0.057,
+      "start_sec": 66,
+      "end_sec": 92,
+      "position_label": "4.1%–5.7%(1:06–1:32)",
+      "purpose": "问题升级：答案已知，悬念切换为'他们是如何做到的'",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "没有现代技术条件的小型社群究竟如何避免禁忌结合",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "question_reframe",
+          "mechanism": "better_question"
+        }
+      ],
+      "required_retention_events": [
+        "better_question_raised",
+        "missing_tech_inventory"
+      ],
+      "original_moves": [
+        "'他们努力避免'反差",
+        "更好的问题提出",
+        "缺失技术条件清单"
+      ],
+      "abstract_move": "问题升级：答案已知，悬念切换为'他们是如何做到的'",
+      "replacement_needs": [
+        "旧问题终结句",
+        "更好的问题的显式提出",
+        "当事者缺乏现代技术条件的清单式强调"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "premise_correction",
+      "start_ratio": 0.057,
+      "end_ratio": 0.097,
+      "start_sec": 92,
+      "end_sec": 155,
+      "position_label": "5.7%–9.7%(1:32–2:35)",
+      "purpose": "前提纠正：区分'生活单位小'与'社会世界大'，拆掉直觉的地基",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.0574,
+          "time_ms": 92000,
+          "reason": "'营地很小，社会世界不小'：直觉地基被拆"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "premise_flip",
+          "mechanism": "camp_vs_social_world"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "scale_contrast",
+          "mechanism": "dozens_vs_hundreds"
+        }
+      ],
+      "required_retention_events": [
+        "premise_flip",
+        "network_scale_contrast"
+      ],
+      "original_moves": [
+        "前提纠正宣告",
+        "营地内外流动描述",
+        "几十人vs数百人网络对照"
+      ],
+      "abstract_move": "前提纠正：区分'生活单位小'与'社会世界大'，拆掉直觉的地基",
+      "replacement_needs": [
+        "对直觉前提的显式纠正宣告",
+        "生活单位规模与社交网络规模的数字对照",
+        "人口规模不等于生活单位规模的点题句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "movement_evidence",
+      "start_ratio": 0.097,
+      "end_ratio": 0.167,
+      "start_sec": 155,
+      "end_sec": 268,
+      "position_label": "9.7%–16.7%(2:35–4:28)",
+      "purpose": "流动证据蒙太奇：物的流动证明人的流动，婚姻迁居制度作为流动机制",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "emotional_payoff",
+          "strength": 70,
+          "position_ratio": 0.1005,
+          "time_ms": 161000,
+          "reason": "'他们需要访客'：一句判决完成机制定调"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "verdict_line",
+          "mechanism": "short_aphorism_verdict"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "evidence_montage",
+          "mechanism": "escalating_exchange_list"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "humor_beat",
+          "mechanism": "in_laws_evaluation_tease"
+        }
+      ],
+      "required_retention_events": [
+        "evidence_montage",
+        "escalating_exchange_list",
+        "side_effect_verdict"
+      ],
+      "original_moves": [
+        "'需要的是访客'判决",
+        "物质证据清单",
+        "交换升级清单",
+        "迁居制度多样性",
+        "副产品定性"
+      ],
+      "abstract_move": "流动证据蒙太奇：物的流动证明人的流动，婚姻迁居制度作为流动机制",
+      "replacement_needs": [
+        "物质遗存流动的证据清单",
+        "交换内容的升级清单（不只是物，还有人与关系）",
+        "婚姻迁居制度的多样性说明",
+        "一句机制定性判决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "case_study",
+      "start_ratio": 0.167,
+      "end_ratio": 0.249,
+      "start_sec": 268,
+      "end_sec": 399,
+      "position_label": "16.7%–24.9%(4:28–6:39)",
+      "purpose": "典型案例深挖：一个理应无法避免的极端小群体，证据却显示相反",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.1948,
+          "time_ms": 312000,
+          "reason": "两类遗传标记的反差线索揭示女性迁入，案例反转预期"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.2459,
+          "time_ms": 394000,
+          "reason": "书本'散句vs整章'类比把抽象遗传指标变成画面"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "这个极端封闭的小群体似乎'注定'近亲繁殖，他们怎么躲过的",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "clue_resolution",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "thesis_line",
+          "mechanism": "side_effect_verdict"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "case_entry",
+          "mechanism": "extreme_condition_setup"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "clue_reveal",
+          "mechanism": "genetic_marker_contrast"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "case_payoff",
+          "mechanism": "paired_verdict_lines"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "distinction",
+          "mechanism": "background_vs_close_union"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "analogy",
+          "mechanism": "book_chapter_visualization"
+        }
+      ],
+      "required_retention_events": [
+        "extreme_condition_setup",
+        "genetic_clue_contrast",
+        "paired_verdict_lines"
+      ],
+      "original_moves": [
+        "案例极端条件铺垫",
+        "两类遗传标记对照线索",
+        "对仗判决",
+        "背景亲缘与近亲结合的区分"
+      ],
+      "abstract_move": "典型案例深挖：一个理应无法避免的极端小群体，证据却显示相反",
+      "replacement_needs": [
+        "案例的极端封闭条件铺垫",
+        "两类遗传标记的对照线索",
+        "'单位小、池子大'的对仗判决句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80)、PK05(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "mechanism_explain",
+      "start_ratio": 0.249,
+      "end_ratio": 0.298,
+      "start_sec": 399,
+      "end_sec": 477,
+      "position_label": "24.9%–29.8%(6:39–7:57)",
+      "purpose": "生物机制讲解+迷思破除：风险的真实机制与流行想象的纠正",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "myth_bust",
+          "mechanism": "statistical_not_guaranteed"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "humor_verdict",
+          "mechanism": "personification_wit"
+        }
+      ],
+      "required_retention_events": [
+        "analogy_visualization",
+        "myth_busting",
+        "statistical_not_guaranteed"
+      ],
+      "original_moves": [
+        "风险机制",
+        "书本章节类比",
+        "'统计而非必然'定性",
+        "夸张形象破除",
+        "拟人化判决"
+      ],
+      "abstract_move": "生物机制讲解+迷思破除：风险的真实机制与流行想象的纠正",
+      "replacement_needs": [
+        "机制的可视化类比",
+        "风险是统计性而非必然性的定性",
+        "对流行文化夸张形象的显式破除",
+        "一句拟人化冷幽默判决"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "psychology_layer",
+      "start_ratio": 0.298,
+      "end_ratio": 0.36,
+      "start_sec": 477,
+      "end_sec": 577,
+      "position_label": "29.8%–36%(7:57–9:37)",
+      "purpose": "心理机制层：童年熟悉性厌恶作为内置的粗略规则",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "psych_rule",
+          "mechanism": "second_person_example"
+        }
+      ],
+      "required_retention_events": [
+        "named_effect",
+        "second_person_example",
+        "punchline_verdict"
+      ],
+      "original_moves": [
+        "机制命名",
+        "通俗解释",
+        "不可靠性边界",
+        "生活化例句",
+        "跨文化支撑",
+        "拟人化判决"
+      ],
+      "abstract_move": "心理机制层：童年熟悉性厌恶作为内置的粗略规则",
+      "replacement_needs": [
+        "机制的通俗命名与一句话解释",
+        "机制不可靠性的边界说明",
+        "生活化的第二人称例句",
+        "跨文化证据的一句话支撑"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "kinship_culture_layer",
+      "start_ratio": 0.36,
+      "end_ratio": 0.478,
+      "start_sec": 577,
+      "end_sec": 766,
+      "position_label": "36%–47.8%(9:37–12:46)",
+      "purpose": "文化制度层：亲属分类系统与婚姻规则如何精细管理禁忌",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "humor_peak",
+          "strength": 70,
+          "position_ratio": 0.3602,
+          "time_ms": 577000,
+          "reason": "'极强的氛围排斥'俏皮判决：心理机制段落的笑点落点"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.4632,
+          "time_ms": 742000,
+          "reason": "'婚姻成了基础设施'：文化制度段的概念升级"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "aphorism",
+          "mechanism": "punchline_verdict"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "system_reveal",
+          "mechanism": "kinship_obligation_inventory"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "concept_elevate",
+          "mechanism": "infrastructure_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "kinship_precision",
+        "degree_explainer",
+        "infrastructure_verdict"
+      ],
+      "original_moves": [
+        "亲属词汇精细度",
+        "分类决定义务清单",
+        "口播插入",
+        "亲等度数科普",
+        "交错规则",
+        "'婚姻即基础设施'"
+      ],
+      "abstract_move": "文化制度层：亲属分类系统与婚姻规则如何精细管理禁忌",
+      "replacement_needs": [
+        "亲属词汇精细度的展示",
+        "分类决定义务与禁忌的清单",
+        "亲等度数的快速科普",
+        "婚姻即基础设施的升级定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(70)、PK07(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 70
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "settlement_shift",
+      "start_ratio": 0.478,
+      "end_ratio": 0.553,
+      "start_sec": 766,
+      "end_sec": 886,
+      "position_label": "47.8%–55.3%(12:46–14:46)",
+      "purpose": "历史变奏：定居与财产如何改写婚姻规则",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "evidence_reveal",
+          "mechanism": "pedigree_reconstruction"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "aphorism_pair",
+          "mechanism": "paired_negative_aphorisms"
+        }
+      ],
+      "required_retention_events": [
+        "property_motive_list",
+        "paired_aphorisms"
+      ],
+      "original_moves": [
+        "定居新动机清单",
+        "谱系重建证据",
+        "进口配偶机制",
+        "居住/血缘对仗句"
+      ],
+      "abstract_move": "历史变奏：定居与财产如何改写婚姻规则",
+      "replacement_needs": [
+        "定居带来的新控制动机清单",
+        "谱系重建的实证证据",
+        "居住与血缘不一致的对仗判决句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "exception_cases",
+      "start_ratio": 0.553,
+      "end_ratio": 0.659,
+      "start_sec": 886,
+      "end_sec": 1056,
+      "position_label": "55.3%–65.9%(14:46–17:36)",
+      "purpose": "极端例外审计：高规格墓葬中的极端个案，沉重揭示与证据边界并行",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.6042,
+          "time_ms": 968000,
+          "reason": "'保存了丑闻，删除了证词'：证据边界的格言式定格"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.6298,
+          "time_ms": 1009000,
+          "reason": "谱系重建推出全片最沉重结论，并以伦理句收束"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "'然后还有例外'：高规格墓葬中的极端反常个案究竟是什么",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "极端个案究竟是自愿、被强迫还是被默许，永远无从知晓：刻意保持开放，叙事用途是以'史前保存了丑闻却删除了证词'强化证据伦理与情感重量",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "case_reveal",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "exception_reveal",
+          "mechanism": "prestige_location_contrast"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "aphorism",
+          "mechanism": "evidence_boundary_statement"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "grim_reveal",
+          "mechanism": "pedigree_grim_conclusion"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "moral_boundary",
+          "mechanism": "consent_ethics_line"
+        }
+      ],
+      "required_retention_events": [
+        "exception_tease",
+        "grim_specific_reveal",
+        "evidence_boundary_statement"
+      ],
+      "original_moves": [
+        "例外预告",
+        "案例一规格与反常",
+        "案例二更沉重揭示",
+        "证据边界二分句",
+        "稀有性强调"
+      ],
+      "abstract_move": "极端例外审计：高规格墓葬中的极端个案，沉重揭示与证据边界并行",
+      "replacement_needs": [
+        "案例一的规格与反常定位",
+        "案例二的更沉重揭示",
+        "证据边界二分句（记录事实、不记录情境）",
+        "伦理措辞的显式自我约束",
+        "稀有性的强调"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)、PK09(85);打开的悬念 LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "rarity_audit",
+      "start_ratio": 0.659,
+      "end_ratio": 0.722,
+      "start_sec": 1056,
+      "end_sec": 1157,
+      "position_label": "65.9%–72.2%(17:36–19:17)",
+      "purpose": "稀有性与采样偏差审计：主动交代数据局限，结论依然压倒性成立",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "罕见计数会不会只是采样与保存偏差造成的假象",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "caveat_resolution",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "number_audit",
+          "mechanism": "upper_bound_restatement"
+        }
+      ],
+      "required_retention_events": [
+        "sampling_bias_inventory",
+        "overwhelming_pattern_verdict"
+      ],
+      "original_moves": [
+        "比例上限重申",
+        "保存偏差清单",
+        "反事实承认",
+        "'模式依然压倒性'判决"
+      ],
+      "abstract_move": "稀有性与采样偏差审计：主动交代数据局限，结论依然压倒性成立",
+      "replacement_needs": [
+        "比例上限数字的重申",
+        "保存与采样偏差的清单",
+        "反事实可能性的承认",
+        "模式依然成立的判决"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP05。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:罕见计数会不会只是采样与保存偏差造成的假象",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "elite_inversion",
+      "start_ratio": 0.722,
+      "end_ratio": 0.81,
+      "start_sec": 1157,
+      "end_sec": 1298,
+      "position_label": "72.2%–81%(19:17–21:38)",
+      "purpose": "权力特例：统治者如何把禁忌转化为特权",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "既然规则普遍有效，为什么有些精英反其道而行",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "motive_reveal",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "pivot_question",
+          "mechanism": "elite_exception_question"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "humor_image",
+          "mechanism": "absurd_anachronism_image"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "material_analysis",
+          "mechanism": "elite_cost_buffer_contrast"
+        }
+      ],
+      "required_retention_events": [
+        "pivot_question",
+        "power_motive_analysis",
+        "absurd_image_humor"
+      ],
+      "original_moves": [
+        "转折问句",
+        "权力动机解释",
+        "荒诞图像类比",
+        "物质承受对照",
+        "回溯诊断谨慎"
+      ],
+      "abstract_move": "权力特例：统治者如何把禁忌转化为特权",
+      "replacement_needs": [
+        "转折问句与一句话答案",
+        "权力动机的机制解释",
+        "一句荒诞图像类比制造冷幽默",
+        "物质承受能力的对照",
+        "回溯诊断的谨慎声明"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP06。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:既然规则普遍有效，为什么有些精英反其道而行",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "defense_stack",
+      "start_ratio": 0.81,
+      "end_ratio": 0.871,
+      "start_sec": 1298,
+      "end_sec": 1395,
+      "position_label": "81%–87.1%(21:38–23:15)",
+      "purpose": "防线叠加：普通人的多重防御如何协同，以及系统何时失效",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "system_reveal",
+          "mechanism": "gossip_quality_control"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "nuance",
+          "mechanism": "rational_crisis_choice"
+        }
+      ],
+      "required_retention_events": [
+        "stacked_defenses_list",
+        "gossip_quality_control"
+      ],
+      "original_moves": [
+        "防线清单罗列",
+        "社会记忆与八卦质控",
+        "失效场景清单",
+        "危机选择的理性化"
+      ],
+      "abstract_move": "防线叠加：普通人的多重防御如何协同，以及系统何时失效",
+      "replacement_needs": [
+        "多重防线的清单式罗列",
+        "社会记忆与八卦的质控功能",
+        "系统失效场景清单",
+        "危机选择的理性化解释"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "synthesis",
+      "start_ratio": 0.871,
+      "end_ratio": 0.949,
+      "start_sec": 1395,
+      "end_sec": 1521,
+      "position_label": "87.1%–94.9%(23:15–25:21)",
+      "purpose": "综合：嵌套圈层结构作为总答案，'问题本身问反了'完成认知翻转",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mechanism_synthesis",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "synthesis",
+          "mechanism": "nested_circles_verdict"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "inversion",
+          "mechanism": "question_inversion"
+        }
+      ],
+      "required_retention_events": [
+        "nested_circles_synthesis",
+        "question_inversion",
+        "case_callback_montage"
+      ],
+      "original_moves": [
+        "平衡困境",
+        "嵌套圈层清单",
+        "生存优势定性",
+        "问题翻转句",
+        "案例回巡"
+      ],
+      "abstract_move": "综合：嵌套圈层结构作为总答案，'问题本身问反了'完成认知翻转",
+      "replacement_needs": [
+        "嵌套圈层的层级清单",
+        "生存优势的定性句",
+        "'问题问反了'的翻转句",
+        "关键案例的一句话回巡"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS03→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.949,
+      "end_ratio": 1,
+      "start_sec": 1521,
+      "end_sec": 1602,
+      "position_label": "94.9%–100%(25:21–26:42)",
+      "purpose": "收束：逐字回扣标题问句给出分层回答，以意象格言收束全片",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "aphorism_close",
+          "strength": 85,
+          "position_ratio": 0.9981,
+          "time_ms": 1599000,
+          "reason": "'家族树不至于长成圆圈'：意象格言完成全片收束"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "危机与胁迫造成的个案几乎注定无法被考古学找回：刻意保持开放，叙事用途是承认证据边界，让结论保持谦逊",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "direct_layered_title_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "title_answer",
+          "mechanism": "direct_layered_answer"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "aphorism_close",
+          "mechanism": "image_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "title_callback_answer",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "标题逐字回扣",
+        "分层回答清单",
+        "错误图像纠正",
+        "意象格言收束"
+      ],
+      "abstract_move": "收束：逐字回扣标题问句给出分层回答，以意象格言收束全片",
+      "replacement_needs": [
+        "标题问句的逐字回扣与分层回答",
+        "错误图像的显式纠正",
+        "一句把主题压缩成意象的格言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85);打开的悬念 LOOP08(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

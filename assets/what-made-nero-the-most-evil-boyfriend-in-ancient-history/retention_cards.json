@@ -1,0 +1,842 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.462Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.03,
+      "start_sec": 0,
+      "end_sec": 26,
+      "position_label": "0%–3%(0:00–0:26)",
+      "purpose": "痛点镜像开场：用观众自己的现代约会抱怨建立共鸣 baseline",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.0299,
+          "time_ms": 26000,
+          "reason": "'你的恋爱生活其实是天堂'完成开场预期反转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：他凭什么配得上'史上最差伴侣'的称号（标题问句的悬念悬挂）",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "modern_pain_mirror"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "relatability_build",
+          "mechanism": "screenshot_analysis_detail"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "premise_inversion",
+          "mechanism": "paradise_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "modern_pain_mirror",
+        "premise_inversion_question"
+      ],
+      "original_moves": [
+        "从零信息到第二人称刷手机场景，再到'有毒荒漠'定性与反转设问"
+      ],
+      "abstract_move": "痛点镜像开场：用观众自己的现代约会抱怨建立共鸣 baseline",
+      "replacement_needs": [
+        "第二人称日常场景",
+        "三个以上具体可感的现代约会抱怨细节",
+        "'这一切其实是天堂'的反转设问"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 26000,
+        "hook_type": "modern_pain_mirror_premise_inversion",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 26000,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0005"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "premise_inversion",
+      "start_ratio": 0.03,
+      "end_ratio": 0.078,
+      "start_sec": 26,
+      "end_sec": 68,
+      "position_label": "3%–7.8%(0:26–1:08)",
+      "purpose": "抛出超级反派：用夸张比喻预告其分手方式，以'欢迎来到'句式点题并锁定主角",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "title_callback",
+          "strength": 80,
+          "position_ratio": 0.0587,
+          "time_ms": 51000,
+          "reason": "点题句落下，'史上最差伴侣'定性生效，主角登场"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "开场比喻预告的极端分手方式具体意味着什么",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "superlative_tease",
+          "mechanism": "champion_of_toxic"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "threat_metaphor",
+          "mechanism": "federal_delete_metaphor"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "title_drop",
+          "mechanism": "welcome_to_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "superlative_tease",
+        "title_drop"
+      ],
+      "original_moves": [
+        "天堂反转",
+        "有毒关系冠军预告",
+        "现代比喻式分手预告",
+        "点题句与最高级定性"
+      ],
+      "abstract_move": "抛出超级反派：用夸张比喻预告其分手方式，以'欢迎来到'句式点题并锁定主角",
+      "replacement_needs": [
+        "'有毒关系冠军'式的排名悬念",
+        "用现代事务比喻预告极端分手手段",
+        "点题句与最高级定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80);打开的悬念 LOOP02→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "community_ritual",
+      "start_ratio": 0.078,
+      "end_ratio": 0.096,
+      "start_sec": 68,
+      "end_sec": 83,
+      "position_label": "7.8%–9.6%(1:08–1:23)",
+      "purpose": "频道品牌仪式：用固定口号与互动号召建立陪伴感与同温层身份",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "community_ritual",
+          "mechanism": "channel_brand_cta"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "context_reframe",
+          "mechanism": "modern_love_concept_discard"
+        }
+      ],
+      "required_retention_events": [
+        "channel_brand_ritual"
+      ],
+      "original_moves": [
+        "频道内容定位声明",
+        "拿饮品点赞订阅号召",
+        "正式开讲"
+      ],
+      "abstract_move": "频道品牌仪式：用固定口号与互动号召建立陪伴感与同温层身份",
+      "replacement_needs": [
+        "频道内容定位的一句话声明",
+        "轻松的饮品/点赞/订阅号召"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "context_reframe",
+      "start_ratio": 0.096,
+      "end_ratio": 0.177,
+      "start_sec": 83,
+      "end_sec": 154,
+      "position_label": "9.6%–17.7%(1:23–2:34)",
+      "purpose": "制度认知重框：要求观众扔掉现代爱情观，用现代商业概念翻译古代婚姻制度",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "concept_mapping",
+          "mechanism": "marriage_as_merger"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "stakes_mapping",
+          "mechanism": "top_tier_marriage_as_ipo"
+        }
+      ],
+      "required_retention_events": [
+        "institution_mapping",
+        "stakes_quantification"
+      ],
+      "original_moves": [
+        "否定现代浪漫观",
+        "婚姻=企业并购映射",
+        "女儿=资产的规则",
+        "顶层联姻=上市的赌注量化"
+      ],
+      "abstract_move": "制度认知重框：要求观众扔掉现代爱情观，用现代商业概念翻译古代婚姻制度",
+      "replacement_needs": [
+        "对现代浪漫观念的显式否定",
+        "古代婚姻的商业概念映射",
+        "顶层联姻的赌注量化"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "threat_profiling",
+      "start_ratio": 0.177,
+      "end_ratio": 0.224,
+      "start_sec": 154,
+      "end_sec": 195,
+      "position_label": "17.7%–22.4%(2:34–3:15)",
+      "purpose": "人格画像：用'被宠坏的继承人'模型解释主角为何是心理意义上的危险伴侣",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "character_intro",
+          "mechanism": "spoiled_heir_verdict"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "nightmare_setup",
+          "mechanism": "mediocrity_protected_by_law"
+        }
+      ],
+      "required_retention_events": [
+        "character_verdict",
+        "legal_immunity_premise"
+      ],
+      "original_moves": [
+        "年少继位",
+        "继承财富人格判词",
+        "才华错觉三连",
+        "制度性免责点题",
+        "案例阶梯预告"
+      ],
+      "abstract_move": "人格画像：用'被宠坏的继承人'模型解释主角为何是心理意义上的危险伴侣",
+      "replacement_needs": [
+        "年少继位与继承财富的设定",
+        "自我膨胀的才华错觉",
+        "制度性免责的一句话点题"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "case_one_escalation",
+      "start_ratio": 0.224,
+      "end_ratio": 0.445,
+      "start_sec": 195,
+      "end_sec": 387,
+      "position_label": "22.4%–44.5%(3:15–6:27)",
+      "purpose": "第一案例：政治联姻妻子的陷害与清除，建立'baseline'级恶行",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "humor_peak",
+          "strength": 75,
+          "position_ratio": 0.3211,
+          "time_ms": 279000,
+          "reason": "荒诞栽赃指控被现代类比拆解，笑点与愤怒同发"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.4235,
+          "time_ms": 368000,
+          "reason": "第一案例以最黑暗的分手方式收束，'这只是基线'判词落下"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "case_one_murder_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "case_launch",
+          "mechanism": "phase_labeling"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "perfect_victim_setup",
+          "mechanism": "modern_icon_analogy"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "absurd_accusation",
+          "mechanism": "anachronism_mockery"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "loyalty_payoff",
+          "mechanism": "servant_defiance"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "public_backlash",
+          "mechanism": "riots_for_exile"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "modern_mapping",
+          "mechanism": "engagement_jealousy"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "horror_payoff",
+          "mechanism": "breakup_worst_case"
+        }
+      ],
+      "required_retention_events": [
+        "perfect_victim_setup",
+        "absurd_accusation",
+        "murder_payoff",
+        "baseline_verdict"
+      ],
+      "original_moves": [
+        "完美受害者人设",
+        "冷落与公开羞辱",
+        "荒诞栽赃",
+        "忠仆抗刑",
+        "强制离婚放逐",
+        "民众暴动",
+        "嫉妒杀人",
+        "'基线'判词"
+      ],
+      "abstract_move": "第一案例：政治联姻妻子的陷害与清除，建立'baseline'级恶行",
+      "replacement_needs": [
+        "完美受害者人设与民众爱戴",
+        "荒诞的栽赃指控与其失败",
+        "绕过制度的强制放逐",
+        "民众反弹引发的嫉妒动机",
+        "清除行动与'基线'判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75)、PK04(90);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "case_two_escalation",
+      "start_ratio": 0.445,
+      "end_ratio": 0.701,
+      "start_sec": 387,
+      "end_sec": 609,
+      "position_label": "44.5%–70.1%(6:27–10:09)",
+      "purpose": "第二案例：'我能改变他'的新任伴侣无视红旗，最终被冲动暴力毁灭",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.5328,
+          "time_ms": 463000,
+          "reason": "为逃避谈话而打造的陷阱工程揭示，荒诞与恐怖叠加"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 95,
+          "position_ratio": 0.6364,
+          "time_ms": 553000,
+          "reason": "日常争吵引发致命暴力：全片最黑暗的爆发点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "'我能改变他'的新任伴侣能否成为例外",
+          "closes_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "针对至亲的陷阱计划是否得手始终未交代：刻意保持开放，叙事用途是作为'危险人格红旗证据'服务恋爱主线，支线结果悬置以维持主线节奏，并给观众留下自行考证与评论讨论的钩子",
+          "closes_in": null
+        },
+        {
+          "loop_id": "LOOP05",
+          "tension": "'他需要她回来'——他会用什么方式填补亡妻的位置",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "red_flag_payoff_death",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP04"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "phase_transition",
+          "mechanism": "new_partner_entry"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "dramatic_irony",
+          "mechanism": "i_can_fix_him"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "red_flag_reveal",
+          "mechanism": "family_assassination_plan"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "absurd_scheme",
+          "mechanism": "overengineered_trap"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "calm_before_storm",
+          "mechanism": "normal_argument"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "horror_climax",
+          "mechanism": "metaphor_brake_then_burst"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "narcissism_verdict",
+          "mechanism": "broken_toy_grief"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "dystopia_tease",
+          "mechanism": "final_phase_label"
+        }
+      ],
+      "required_retention_events": [
+        "archetype_callout",
+        "red_flag_catalog",
+        "sudden_violence_burst",
+        "narcissism_verdict"
+      ],
+      "original_moves": [
+        "胜利者假象",
+        "原型台词与红旗清单",
+        "弑母游艇支线",
+        "怀孕巩固地位",
+        "日常导火索",
+        "致命爆发",
+        "自恋式悲痛"
+      ],
+      "abstract_move": "第二案例：'我能改变他'的新任伴侣无视红旗，最终被冲动暴力毁灭",
+      "replacement_needs": [
+        "'我能改变他'的原型台词与红旗清单",
+        "一桩暴露危险人格的支线大事件",
+        "极度日常的导火索与致命爆发",
+        "'弄坏心爱玩具'式的悲痛定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85)、PK06(95);打开的悬念 LOOP04(不闭合)、LOOP05→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 95
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "case_three_escalation",
+      "start_ratio": 0.701,
+      "end_ratio": 0.839,
+      "start_sec": 609,
+      "end_sec": 729,
+      "position_label": "70.1%–83.9%(10:09–12:09)",
+      "purpose": "第三案例：身份抹除式替身——把无辜者改造成亡妻的合法配偶",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.7883,
+          "time_ms": 685000,
+          "reason": "旁观者视角的强制仪式恐怖：被迫服从的合规噩梦"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "面对荒诞仪式，在场权贵中是否有人敢不服从",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "dystopian_replacement_reveal",
+          "opened_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "compliance_horror_answer",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "identity_erasure",
+          "mechanism": "unexpected_lookalike"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "body_horror",
+          "mechanism": "forced_transformation"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "perspective_shift",
+          "mechanism": "bystander_pov_terror"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "compliance_horror",
+          "mechanism": "laugh_and_die_threat"
+        }
+      ],
+      "required_retention_events": [
+        "identity_erasure",
+        "bystander_perspective_drop",
+        "compliance_horror"
+      ],
+      "original_moves": [
+        "失控预告",
+        "全城猎捕替身",
+        "少年反转",
+        "强制身份改造",
+        "国婚仪式",
+        "议员视角恐惧空投",
+        "惩罚威胁",
+        "制度化承认"
+      ],
+      "abstract_move": "第三案例：身份抹除式替身——把无辜者改造成亡妻的合法配偶",
+      "replacement_needs": [
+        "寻找替身的猎捕行动",
+        "违背当事人意志的身份改造",
+        "强制围观的仪式场面",
+        "第二人称旁观者恐惧空投与惩罚威胁"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(90);回收了前文的悬念 FS07→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "absurdity_peak",
+      "start_ratio": 0.839,
+      "end_ratio": 0.904,
+      "start_sec": 729,
+      "end_sec": 786,
+      "position_label": "83.9%–90.4%(12:09–13:06)",
+      "purpose": "荒诞顶点：角色互换仪式把制度亵渎推到极致，用一句定性句盖章",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.8665,
+          "time_ms": 753000,
+          "reason": "角色互换婚礼画面：荒诞升级的认知顶点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "主角的荒诞行径会不会、以及何时遭到清算",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "role_reversal",
+          "mechanism": "visual_inversion"
+        }
+      ],
+      "required_retention_events": [
+        "role_reversal",
+        "verdict_line"
+      ],
+      "original_moves": [
+        "角色互换预告",
+        "第二场婚礼",
+        "新娘面纱画面",
+        "史家见证细节",
+        "'私人剧场'总判词"
+      ],
+      "abstract_move": "荒诞顶点：角色互换仪式把制度亵渎推到极致，用一句定性句盖章",
+      "replacement_needs": [
+        "主角反向扮演仪式角色",
+        "历史学家见证视角的引用",
+        "一句'私人剧场'式的总判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85);打开的悬念 LOOP07→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "downfall_payoff",
+      "start_ratio": 0.904,
+      "end_ratio": 0.961,
+      "start_sec": 786,
+      "end_sec": 835,
+      "position_label": "90.4%–96.1%(13:06–13:55)",
+      "purpose": "报应释放：体系性反叛、懦弱逃亡与自欺式临终金句",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9425,
+          "time_ms": 819000,
+          "reason": "自欺式临终金句：至死不悟的人格封顶"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "downfall_and_delusional_final_words",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "downfall_turn",
+          "mechanism": "consequences_arrive"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "collapse_payoff",
+          "mechanism": "euphemistic_death"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "delusional_final_words",
+          "mechanism": "self_victimization_quote"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "callback",
+          "mechanism": "daily_scene_return"
+        }
+      ],
+      "required_retention_events": [
+        "consequences_arrive",
+        "delusional_final_words"
+      ],
+      "original_moves": [
+        "蔑视追上他",
+        "多阶层反叛",
+        "懦弱逃亡",
+        "婉语式自裁",
+        "临终金句",
+        "自恋人格封顶"
+      ],
+      "abstract_move": "报应释放：体系性反叛、懦弱逃亡与自欺式临终金句",
+      "replacement_needs": [
+        "多阶层同时反叛的崩塌链条",
+        "与此前嚣张反差的懦弱表现",
+        "一句暴露自恋本质的临终金句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);回收了前文的悬念 FS09→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "closure",
+      "start_ratio": 0.961,
+      "end_ratio": 1,
+      "start_sec": 835,
+      "end_sec": 869,
+      "position_label": "96.1%–100%(13:55–14:29)",
+      "purpose": "感恩反转收束：召回开场场景，用阶梯复述兑现标题问句，让观众对现状释怀",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.9873,
+          "time_ms": 858000,
+          "reason": "阶梯复述加感恩反转：观众对自身恋爱烦恼释怀"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_case_ladder_recap",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "recap_ladder",
+          "mechanism": "escalation_recap"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "gratitude_reframe",
+          "mechanism": "could_be_worse_close"
+        }
+      ],
+      "required_retention_events": [
+        "recap_ladder",
+        "gratitude_reframe_close"
+      ],
+      "original_moves": [
+        "咖啡馆场景召回",
+        "阶梯排比复述",
+        "感恩反转收束句"
+      ],
+      "abstract_move": "感恩反转收束：召回开场场景，用阶梯复述兑现标题问句，让观众对现状释怀",
+      "replacement_needs": [
+        "观众日常抱怨场景的召回",
+        "全部案例压缩成一句的升级排比复述",
+        "'你的处境其实没那么糟'的感恩反转句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(80);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 80
+        }
+      ]
+    }
+  ]
+}

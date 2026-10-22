@@ -1,0 +1,1060 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.446Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.026,
+      "start_sec": 0,
+      "end_sec": 31,
+      "position_label": "0%–2.6%(0:00–0:31)",
+      "purpose": "零铺垫第二人称困境堆叠：不说身份名，直接把法律剥夺、居住、收入、顶头上司四条残酷事实连发砸下",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_rights_stripped"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "absurd_reveal",
+          "mechanism": "ultimate_boss_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_identity_assignment",
+        "misery_fact_stack",
+        "involuntary_reversal"
+      ],
+      "original_moves": [
+        "从零信息到四条残酷事实连发，再到'你从未申请过这份工作'的反转"
+      ],
+      "abstract_move": "零铺垫第二人称困境堆叠：不说身份名，直接把法律剥夺、居住、收入、顶头上司四条残酷事实连发砸下",
+      "replacement_needs": [
+        "权利被剥夺的具体法律事实",
+        "居住与收入的具象落差",
+        "一个荒诞到可笑的顶层压榨者揭示",
+        "'并非自愿'的反转句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 31000,
+        "hook_type": "second_person_misery_stack",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 24000,
+        "evidence_refs": [
+          "C0001",
+          "C0003",
+          "C0004"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "myth_demolition",
+      "start_ratio": 0.026,
+      "end_ratio": 0.078,
+      "start_sec": 31,
+      "end_sec": 92,
+      "position_label": "2.6%–7.8%(0:31–1:32)",
+      "purpose": "先立后拆流行文化滤镜，并给出本片的使命宣言",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.0493,
+          "time_ms": 58000,
+          "reason": "'流行文化骗了你'：滤镜拆除判决，全片第一个认知翻转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：这个身份的生活到底糟到什么程度、为什么永远逃不掉（标题问句的具身化悬挂）",
+          "closes_in": "FS16"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "流行文化呈现的那种奢华生活是否真实存在",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "myth_demolition",
+          "mechanism": "direct_lie_accusation"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "mission_statement",
+          "mechanism": "strip_away_promise"
+        }
+      ],
+      "required_retention_events": [
+        "pop_culture_catalog",
+        "myth_demolition_verdict",
+        "mission_statement"
+      ],
+      "original_moves": [
+        "流行文化画面清单",
+        "一句否定判决",
+        "现实清单",
+        "使命宣言"
+      ],
+      "abstract_move": "先立后拆流行文化滤镜，并给出本片的使命宣言",
+      "replacement_needs": [
+        "影视流行文化营造的奢华画面清单",
+        "一句直接的否定判决",
+        "本片使命宣言与行进方向"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(70);打开的悬念 LOOP01→FS16、LOOP02→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "workplace_reveal",
+      "start_ratio": 0.078,
+      "end_ratio": 0.156,
+      "start_sec": 92,
+      "end_sec": 184,
+      "position_label": "7.8%–15.6%(1:32–3:04)",
+      "purpose": "揭示工作场所：用命名词源与考古遗存把空间感官化",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "evidence_reveal",
+          "strength": 70,
+          "position_ratio": 0.1037,
+          "time_ms": 122000,
+          "reason": "火山灰封存的遗址让残酷断言获得考古级实物证据"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "naming_reveal",
+          "mechanism": "degrading_etymology"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "evidence_anchor",
+          "mechanism": "archaeological_time_capsule"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "sensory_immersion",
+          "mechanism": "smell_stack"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "object_reveal",
+          "mechanism": "stone_bed_mattress"
+        }
+      ],
+      "required_retention_events": [
+        "degrading_etymology",
+        "archaeological_anchor",
+        "sensory_immersion"
+      ],
+      "original_moves": [
+        "场所命名与词源",
+        "火山灰时间胶囊",
+        "无窗嗅觉地狱",
+        "砖台床垫"
+      ],
+      "abstract_move": "揭示工作场所：用命名词源与考古遗存把空间感官化",
+      "replacement_needs": [
+        "场所的官方命名及其侮辱性词源",
+        "一处保存至今的考古证据锚点",
+        "嗅觉与空间尺度的感官地狱白描",
+        "睡眠设施的物化细节"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "economics_reveal",
+      "start_ratio": 0.156,
+      "end_ratio": 0.212,
+      "start_sec": 184,
+      "end_sec": 249,
+      "position_label": "15.6%–21.2%(3:04–4:09)",
+      "purpose": "揭示收入真相：用原始货币到现代货币的三连换算制造荒诞冲击",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.1939,
+          "time_ms": 228000,
+          "reason": "身体与尊严被换算成一杯劣酒、一条面包与几枚硬币的三连锚定"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "处境如此糟糕，为什么还会有人做这行",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "price_reveal",
+          "mechanism": "graffiti_price_list"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "conversion_shock",
+          "mechanism": "modern_money_anchor"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "volume_escalation",
+          "mechanism": "dozens_of_clients"
+        }
+      ],
+      "required_retention_events": [
+        "price_evidence",
+        "triple_anchor_conversion",
+        "volume_verdict"
+      ],
+      "original_moves": [
+        "涂鸦证据",
+        "原始货币金额",
+        "三连换算",
+        "每天几十位客人的走量结论"
+      ],
+      "abstract_move": "揭示收入真相：用原始货币到现代货币的三连换算制造荒诞冲击",
+      "replacement_needs": [
+        "价格证据的实物来源",
+        "原始货币金额",
+        "日常等价物与现代货币换算",
+        "客流量的走量结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75);打开的悬念 LOOP03→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "motive_question",
+      "start_ratio": 0.212,
+      "end_ratio": 0.232,
+      "start_sec": 249,
+      "end_sec": 273,
+      "position_label": "21.2%–23.2%(4:09–4:33)",
+      "purpose": "替观众问出'为什么有人愿意做这行'，再以统计数字当场否定'自愿'前提",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.2253,
+          "time_ms": 265000,
+          "reason": "压倒性比例的非自愿统计：'无人自愿'击碎全片最大误解"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "rhetorical_pivot",
+          "mechanism": "anachronistic_job_question"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "bombshell_reveal",
+          "mechanism": "coercion_statistic"
+        }
+      ],
+      "required_retention_events": [
+        "rhetorical_pivot",
+        "coercion_statistic"
+      ],
+      "original_moves": [
+        "错位反问",
+        "'无人自愿'否定",
+        "压倒性比例统计揭示"
+      ],
+      "abstract_move": "替观众问出'为什么有人愿意做这行'，再以统计数字当场否定'自愿'前提",
+      "replacement_needs": [
+        "一个现代求职词汇的错位反问",
+        "'无人自愿'的直接否定",
+        "压倒性比例的统计揭示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "origin_pipeline_reveal",
+      "start_ratio": 0.232,
+      "end_ratio": 0.319,
+      "start_sec": 273,
+      "end_sec": 375,
+      "position_label": "23.2%–31.9%(4:33–6:15)",
+      "purpose": "揭示把人送入该行业的两条外部管道，并引入中间压榨者角色",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "把人送进这个行业的三条管道分别是什么",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "coercion_statistic_reveal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "pipeline_reveal",
+          "mechanism": "war_machine_exposition"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "pipeline_reveal",
+          "mechanism": "pirate_human_cargo"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "villain_introduction",
+          "mechanism": "despised_middleman"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "tease",
+          "mechanism": "third_pipeline_tease"
+        }
+      ],
+      "required_retention_events": [
+        "pipeline_one",
+        "pipeline_two",
+        "middleman_introduction"
+      ],
+      "original_moves": [
+        "军事扩张人口掠夺",
+        "海上劫掠贩卖",
+        "中间人登场定性",
+        "第三条管道预告"
+      ],
+      "abstract_move": "揭示把人送入该行业的两条外部管道，并引入中间压榨者角色",
+      "replacement_needs": [
+        "军事扩张的人口掠夺机制",
+        "海上劫掠的人口贩卖机制",
+        "中间压榨者的社会定性与其虚伪处境",
+        "第三条管道的悬念预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS08 跨段;回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "darkest_origin_reveal",
+      "start_ratio": 0.319,
+      "end_ratio": 0.412,
+      "start_sec": 375,
+      "end_sec": 485,
+      "position_label": "31.9%–41.2%(6:15–8:05)",
+      "purpose": "揭示最黑暗的第三条管道：合法化的弃婴机制与捕食者的长线投资逻辑",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.392,
+          "time_ms": 461000,
+          "reason": "'这不是善举，是长线投资'：弃婴管道的判词完成全片最重道德重击"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "ritual_detail",
+          "mechanism": "infant_acceptance_ritual"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "predator_reveal",
+          "mechanism": "dawn_patrol"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "darkest_verdict",
+          "mechanism": "charity_to_investment_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "exposure_ritual",
+        "predator_patrol",
+        "investment_verdict"
+      ],
+      "original_moves": [
+        "父权绝对规则",
+        "弃婴流程合法化",
+        "黎明巡逻捡回婴儿",
+        "'不是善举，是投资'判词"
+      ],
+      "abstract_move": "揭示最黑暗的第三条管道：合法化的弃婴机制与捕食者的长线投资逻辑",
+      "replacement_needs": [
+        "原生家庭内部的绝对权力规则",
+        "弃婴仪式的具体流程与合法性",
+        "捕食者巡逻捡回婴儿的冷静操作",
+        "'这不是善举，是投资'的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "no_escape_reveal",
+      "start_ratio": 0.412,
+      "end_ratio": 0.503,
+      "start_sec": 485,
+      "end_sec": 592,
+      "position_label": "41.2%–50.3%(8:05–9:52)",
+      "purpose": "击碎赎身幻想：揭示永久性法律烙印如何把受害者变成非人",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.4549,
+          "time_ms": 535000,
+          "reason": "与边缘职业并列归入'非人'：永久烙印的法律后果全面展开"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "攒够钱买回自由能否开启正常人生",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "full_enumeration",
+          "opened_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "legal_trap_reveal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "hope_crushed",
+          "mechanism": "direct_refusal"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "legal_brand_reveal",
+          "mechanism": "permanent_stigma_naming"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "category_shock",
+          "mechanism": "non_person_category"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "future_erasure",
+          "mechanism": "marriage_ban"
+        }
+      ],
+      "required_retention_events": [
+        "hope_crushed",
+        "permanent_stigma",
+        "rights_stripped_sequence"
+      ],
+      "original_moves": [
+        "赎身希望",
+        "一句击碎",
+        "烙印命名与翻译",
+        "非人归类",
+        "作证权诉讼权丧失",
+        "婚姻禁令"
+      ],
+      "abstract_move": "击碎赎身幻想：揭示永久性法律烙印如何把受害者变成非人",
+      "replacement_needs": [
+        "赎身希望的建立与当场击碎",
+        "永久法律烙印的命名与翻译",
+        "与另两类'非人'职业的并列归类",
+        "婚姻禁令对未来的封死"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(75);回收了前文的悬念 FS06→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "humiliation_branding",
+      "start_ratio": 0.503,
+      "end_ratio": 0.557,
+      "start_sec": 592,
+      "end_sec": 655,
+      "position_label": "50.3%–55.7%(9:52–10:55)",
+      "purpose": "揭示公开羞辱机制：用强制着装把身份烙印穿在身上",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "政府是否会放过这份微薄收入",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "clothing_ban",
+          "mechanism": "respectable_dress_criminalized"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "branding_verdict",
+          "mechanism": "forced_cross_dressing_logic"
+        }
+      ],
+      "required_retention_events": [
+        "clothing_ban",
+        "visual_branding_verdict"
+      ],
+      "original_moves": [
+        "服饰身份执念",
+        "体面服饰禁令",
+        "强制异性服饰的羞辱逻辑",
+        "路人皆知的后果"
+      ],
+      "abstract_move": "揭示公开羞辱机制：用强制着装把身份烙印穿在身上",
+      "replacement_needs": [
+        "该社会对服饰身份的执念铺垫",
+        "体面服饰的禁令",
+        "强制穿着异性服饰的羞辱逻辑",
+        "路人一眼识别且免责的后果"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "state_predation_reveal",
+      "start_ratio": 0.557,
+      "end_ratio": 0.677,
+      "start_sec": 655,
+      "end_sec": 796,
+      "position_label": "55.7%–67.7%(10:55–13:16)",
+      "purpose": "揭示国家层面的掠夺：讽刺桥接引出税收机器，并用终身追缴条款击穿'熬出头'幻想",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "scale_verdict",
+          "strength": 80,
+          "position_ratio": 0.6156,
+          "time_ms": 724000,
+          "reason": "国家被定性为最大的中间压榨者，税制规模冲击兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "state_predation_reveal",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "sarcastic_bridge",
+          "mechanism": "rhetorical_yes_no_reversal"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "mechanism_reveal",
+          "mechanism": "daily_tax_per_transaction"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "scale_verdict",
+          "mechanism": "biggest_middleman_verdict"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "clause_reveal",
+          "mechanism": "lifetime_tax_clause"
+        }
+      ],
+      "required_retention_events": [
+        "sarcastic_bridge",
+        "tax_mechanism",
+        "lifetime_clause",
+        "scale_verdict"
+      ],
+      "original_moves": [
+        "讽刺桥接",
+        "嗜钱统治者",
+        "按单抽成税制",
+        "最大压榨者定性",
+        "退休条款",
+        "延续数百年的规模结论"
+      ],
+      "abstract_move": "揭示国家层面的掠夺：讽刺桥接引出税收机器，并用终身追缴条款击穿'熬出头'幻想",
+      "replacement_needs": [
+        "'至少政府不碰你的钱？错了'的讽刺桥接",
+        "嗜钱统治者的登场定性",
+        "按单笔交易额每日抽成的税制机制",
+        "终身追缴的退休条款",
+        "税制延续数百年的规模结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80);回收了前文的悬念 FS09→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "hierarchy_descent",
+      "start_ratio": 0.677,
+      "end_ratio": 0.778,
+      "start_sec": 796,
+      "end_sec": 915,
+      "position_label": "67.7%–77.8%(13:16–15:15)",
+      "purpose": "沿行业层级向下：揭示注册层级之下更惨的街头层级与其生存恐怖环境",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "hierarchy_drop",
+          "mechanism": "below_registered_tier"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "location_horror",
+          "mechanism": "tomb_workplace"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "survival_horror",
+          "mechanism": "no_rescue_expendability"
+        }
+      ],
+      "required_retention_events": [
+        "street_tier_drop",
+        "extreme_workplace",
+        "survival_horror"
+      ],
+      "original_moves": [
+        "等级框架",
+        "注册层级的相对体面",
+        "街头层级",
+        "墓穴工作场所",
+        "贫民窟白描",
+        "无救援高死亡率"
+      ],
+      "abstract_move": "沿行业层级向下：揭示注册层级之下更惨的街头层级与其生存恐怖环境",
+      "replacement_needs": [
+        "行业严格等级的框架说明",
+        "街头层级的无遮蔽工作场所清单",
+        "最臭名昭著贫民窟的环境白描",
+        "无救援、高死亡率的生存恐怖"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "scope_expansion",
+      "start_ratio": 0.778,
+      "end_ratio": 0.826,
+      "start_sec": 915,
+      "end_sec": 971,
+      "position_label": "77.8%–82.6%(15:15–16:11)",
+      "purpose": "横向纠偏：点明剥削不分性别，男性从业者承受同一管道与同一烙印",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "爬到行业顶层是否意味着体面与逃脱",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "scope_expansion",
+          "mechanism": "equal_opportunity_exploitation"
+        }
+      ],
+      "required_retention_events": [
+        "gender_correction",
+        "same_pipeline_same_stigma"
+      ],
+      "original_moves": [
+        "显式纠偏",
+        "同一管道同一中间人",
+        "同一法律后果",
+        "性别文化下的额外羞辱",
+        "顶层悬念"
+      ],
+      "abstract_move": "横向纠偏：点明剥削不分性别，男性从业者承受同一管道与同一烙印",
+      "replacement_needs": [
+        "对默认性别视角的显式纠偏",
+        "同一来源管道与同一中间人",
+        "同一法律烙印在另一性别身上的后果",
+        "该社会性别文化下的额外羞辱"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "top_tier_subversion",
+      "start_ratio": 0.826,
+      "end_ratio": 0.873,
+      "start_sec": 971,
+      "end_sec": 1027,
+      "position_label": "82.6%–87.3%(16:11–17:07)",
+      "purpose": "揭开行业顶层的幻象：丝绒牢笼仍是牢笼",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.8529,
+          "time_ms": 1003000,
+          "reason": "'丝绒牢笼仍是牢笼'：顶层幻象拆穿，完成层级全图景"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "partial_truth_subverted",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "top_tier_reveal",
+          "mechanism": "luxury_catalog_exists"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "reversal_verdict",
+          "mechanism": "velvet_cage_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "luxury_catalog",
+        "velvet_cage_verdict"
+      ],
+      "original_moves": [
+        "顶层奢华清单",
+        "才情展示",
+        "'丝绒牢笼仍是牢笼'",
+        "财产属性逐项确认",
+        "可被打回底层"
+      ],
+      "abstract_move": "揭开行业顶层的幻象：丝绒牢笼仍是牢笼",
+      "replacement_needs": [
+        "顶层从业者的奢华表象清单",
+        "'丝绒牢笼仍是牢笼'的反转判词",
+        "财产属性的逐项确认",
+        "可被随时打回底层的脆性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(75);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "scale_zoom_out",
+      "start_ratio": 0.873,
+      "end_ratio": 0.934,
+      "start_sec": 1027,
+      "end_sec": 1098,
+      "position_label": "87.3%–93.4%(17:07–18:18)",
+      "purpose": "拉远到文明尺度：对照帝国被铭记的荣光与被掩盖的血泪，并指控历史书写者的沉默",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "top_tier_subversion",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "scale_zoom_out",
+          "mechanism": "glory_vs_lubricant_contrast"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "accusation",
+          "mechanism": "historian_silence"
+        }
+      ],
+      "required_retention_events": [
+        "glory_vs_lubricant",
+        "historian_silence"
+      ],
+      "original_moves": [
+        "系统全景",
+        "荣光清单对照血泪润滑",
+        "著名史家集体沉默",
+        "唯一证据来源引出"
+      ],
+      "abstract_move": "拉远到文明尺度：对照帝国被铭记的荣光与被掩盖的血泪，并指控历史书写者的沉默",
+      "replacement_needs": [
+        "帝国被铭记之物的清单",
+        "血泪润滑机器的对照句",
+        "著名史家集体沉默的指控",
+        "唯一实物证据来源的引出"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS12→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "humanization_payoff",
+      "start_ratio": 0.934,
+      "end_ratio": 0.981,
+      "start_sec": 1098,
+      "end_sec": 1154,
+      "position_label": "93.4%–98.1%(18:18–19:14)",
+      "purpose": "情感落点：用遗存上亲手刻下的名字把统计数字还原成人",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9481,
+          "time_ms": 1115000,
+          "reason": "墙面真实刻名逐一念出：统计数字还原成人，情感最高释放点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "墙上这些刻名主人的完整生平已无从考证：刻意保持开放，叙事用途是让'史书沉默'具象化——我们永远无法知道她们的故事，刻名成为她们存在过的唯一证据，无法闭合的遗憾本身即是情感落点",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "humanization_payoff",
+          "mechanism": "real_names_carved"
+        }
+      ],
+      "required_retention_events": [
+        "real_names_reveal",
+        "existence_proof_verdict"
+      ],
+      "original_moves": [
+        "遗存现场引导",
+        "刻名列举",
+        "权利否定清单",
+        "'向虚空呐喊'定性",
+        "幽灵低语意象"
+      ],
+      "abstract_move": "情感落点：用遗存上亲手刻下的名字把统计数字还原成人",
+      "replacement_needs": [
+        "实物遗存的具体位置与质地",
+        "若干真实刻名的列举",
+        "'她们不能著书、不能立法'式权利清单否定",
+        "刻名行为作为'向虚空呐喊'的定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(90);打开的悬念 LOOP08(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.981,
+      "end_ratio": 1,
+      "start_sec": 1154,
+      "end_sec": 1176,
+      "position_label": "98.1%–100%(19:14–19:36)",
+      "purpose": "结尾收束：指令观众从此看穿滤镜，用呼应开场意象的格言句盖章",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "title_callback",
+          "strength": 85,
+          "position_ratio": 0.9898,
+          "time_ms": 1164000,
+          "reason": "观看指令加呼应开场意象的格言句：全片认知收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_system_account_and_callback",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE40",
+          "event_type": "callback_close",
+          "mechanism": "viewing_instruction_and_callback"
+        }
+      ],
+      "required_retention_events": [
+        "viewing_instruction",
+        "callback_aphorism"
+      ],
+      "original_moves": [
+        "下次观影的观看指令",
+        "视线引向阴影人群",
+        "呼应开场意象的格言收束"
+      ],
+      "abstract_move": "结尾收束：指令观众从此看穿滤镜，用呼应开场意象的格言句盖章",
+      "replacement_needs": [
+        "下次再看同类影视作品时的观看指令",
+        "把视线引向阴影中人群的引导句",
+        "呼应开场核心意象的格言式收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85);回收了前文的悬念 FS02→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

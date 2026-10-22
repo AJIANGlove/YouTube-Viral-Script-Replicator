@@ -1,0 +1,1082 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.400Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "familiarity_flip_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0543,
+      "start_sec": 0,
+      "end_sec": 79,
+      "position_label": "0%–5.4%(0:00–1:19)",
+      "purpose": "把日常习惯陌生化：先描述其荒诞本质，再用'常规名单 vs 禁忌名单'的反差抛出核心问题",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "taboo_contrast",
+          "strength": 75,
+          "position_ratio": 0.0247,
+          "time_ms": 36000,
+          "reason": "常规名单逐一点头后两个禁忌选项被干脆否决，开场反差峰"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "title_callback",
+          "strength": 80,
+          "position_ratio": 0.046,
+          "time_ms": 67000,
+          "reason": "标题问题显式抛出并预告答案方向重置，主悬念挂起"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：为什么偏偏这两个同样产奶的候选从来没有形成产业（标题问句的悬挂，并预告'答案与奶存不存在无关'）",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook_assertion",
+          "mechanism": "familiarity_estrangement"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "taboo_contrast",
+          "mechanism": "normal_list_vs_forbidden_list"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "logic_lock",
+          "mechanism": "no_force_field_argument"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "core_question",
+          "mechanism": "question_plus_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "familiarity_estrangement",
+        "taboo_contrast_list",
+        "core_question_thrown"
+      ],
+      "original_moves": [
+        "陌生化白描",
+        "常规名单肯定",
+        "禁忌名单否定",
+        "科学等价性逻辑锁",
+        "核心问题抛出并预告答案方向"
+      ],
+      "abstract_move": "把日常习惯陌生化：先描述其荒诞本质，再用'常规名单 vs 禁忌名单'的反差抛出核心问题",
+      "replacement_needs": [
+        "对日常行为的陌生化白描",
+        "常规选项的肯定名单与禁忌选项的否定名单并列",
+        "一句'科学本质上两者等价'的逻辑锁",
+        "核心问题显式抛出与答案方向预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(75)、PK02(80);打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "everyday_familiarity_flip",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 36000,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0005"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "surface_answer_rejection",
+      "start_ratio": 0.0543,
+      "end_ratio": 0.1641,
+      "start_sec": 79,
+      "end_sec": 239,
+      "position_label": "5.4%–16.4%(1:19–3:59)",
+      "purpose": "第一候选入场：先否定最直觉的简单解释（有毒、没营养），再揭示真正的物理采集障碍",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.1195,
+          "time_ms": 174000,
+          "reason": "十到二十秒泌乳窗口揭示，把日常动作改写成极限操作"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "既然第一候选的奶本身没毒没害，为什么连一杯都收集不到",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "simple_answer_rejected",
+          "mechanism": "safety_hypothesis_dismissed"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "contrast_setup",
+          "mechanism": "bred_for_job_history"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "barrier_reveal",
+          "mechanism": "tiny_time_window"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "verdict_line",
+          "mechanism": "speed_round_metaphor"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "humor_payoff",
+          "mechanism": "piglet_perspective_gag"
+        }
+      ],
+      "required_retention_events": [
+        "simple_answer_rejected",
+        "bred_contrast",
+        "physical_barrier_verdict"
+      ],
+      "original_moves": [
+        "营养价值肯定",
+        "无毒结论",
+        "奶牛千年选育对照",
+        "多乳头与极短泌乳窗口揭示",
+        "'生物速度回合'定性"
+      ],
+      "abstract_move": "第一候选入场：先否定最直觉的简单解释（有毒、没营养），再揭示真正的物理采集障碍",
+      "replacement_needs": [
+        "候选的营养或安全性先被肯定",
+        "对照组被长期人工选育的历史",
+        "候选物理结构的逐项障碍清单",
+        "一个压缩障碍的定性比喻句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75);打开的悬念 LOOP02→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "economics_filter",
+      "start_ratio": 0.1641,
+      "end_ratio": 0.2301,
+      "start_sec": 239,
+      "end_sec": 335,
+      "position_label": "16.4%–23%(3:59–5:35)",
+      "purpose": "区分'技术上可行'与'商业上可行'：用效率问题清单完成判决",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.2253,
+          "time_ms": 328000,
+          "reason": "'可再生肉类订阅'金句点破奶畜经济本质"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "anatomy_and_efficiency_verdict",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "efficiency_barrage",
+          "mechanism": "question_list_then_verdict"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "aphorism_payoff",
+          "mechanism": "modern_subscription_analogy"
+        }
+      ],
+      "required_retention_events": [
+        "sample_vs_scale",
+        "efficiency_barrage",
+        "failure_verdict"
+      ],
+      "original_moves": [
+        "研究采样 vs 产业规模区分",
+        "效率六连问",
+        "'同时挂掉好几题'判决",
+        "奶畜=可再生订阅金句"
+      ],
+      "abstract_move": "区分'技术上可行'与'商业上可行'：用效率问题清单完成判决",
+      "replacement_needs": [
+        "科研采样与产业规模的明确区分",
+        "连续反问式的效率问题清单",
+        "一句'同时挂掉多题'的判决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(70);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "alternate_path_reveal",
+      "start_ratio": 0.2301,
+      "end_ratio": 0.2555,
+      "start_sec": 335,
+      "end_sec": 372,
+      "position_label": "23%–25.6%(5:35–6:12)",
+      "purpose": "揭示候选走上了另一条经济路径：它在别的用途上太优秀，没有人有动机改造它",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "verdict_line",
+          "mechanism": "obvious_product_verdict"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "absurd_image",
+          "mechanism": "negotiating_with_anatomy"
+        }
+      ],
+      "required_retention_events": [
+        "alternate_strength_list",
+        "obvious_product_verdict"
+      ],
+      "original_moves": [
+        "肉畜优势清单",
+        "'明显的农产品就是猪'判决",
+        "挤奶画面荒诞化劝退"
+      ],
+      "abstract_move": "揭示候选走上了另一条经济路径：它在别的用途上太优秀，没有人有动机改造它",
+      "replacement_needs": [
+        "一句把第一用途本质压缩成现代概念的金句",
+        "候选在第二用途上的优势清单",
+        "'有了它，明显的产品就是它自己'式判决"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS_AD",
+      "function": "sponsorship_insert",
+      "start_ratio": 0.2555,
+      "end_ratio": 0.2747,
+      "start_sec": 372,
+      "end_sec": 400,
+      "position_label": "25.6%–27.5%(6:12–6:40)",
+      "purpose": "",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [],
+      "original_moves": [
+        "课程产品口播（内容、时长、优惠码），与正题无关"
+      ],
+      "abstract_move": "接收频道课程推广的口播信息",
+      "replacement_needs": [
+        "能让观众:接收频道课程推广的口播信息"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "temperament_barrier",
+      "start_ratio": 0.2747,
+      "end_ratio": 0.3022,
+      "start_sec": 400,
+      "end_sec": 440,
+      "position_label": "27.5%–30.2%(6:40–7:20)",
+      "purpose": "补上软性障碍：社会结构与性情门槛，说明产业需要的是'觉得无聊'而非'制造危险'的对象",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "temperament_verdict",
+          "mechanism": "boring_vs_emergency_contrast"
+        }
+      ],
+      "required_retention_events": [
+        "social_structure_contrast",
+        "temperament_verdict"
+      ],
+      "original_moves": [
+        "野猪社会结构对照",
+        "母猪危险性",
+        "日常近距离接触的要求",
+        "'急诊室'对照判决"
+      ],
+      "abstract_move": "补上软性障碍：社会结构与性情门槛，说明产业需要的是'觉得无聊'而非'制造危险'的对象",
+      "replacement_needs": [
+        "候选野生祖先的社会结构对照",
+        "候选攻击性或危险性的具体说明",
+        "一句'要的是无聊、不是急诊'式对照判决"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "parallel_case_breakdown",
+      "start_ratio": 0.3022,
+      "end_ratio": 0.3977,
+      "start_sec": 440,
+      "end_sec": 579,
+      "position_label": "30.2%–39.8%(7:20–9:39)",
+      "purpose": "第二候选对称拆解：沿用同一检查清单（体型、产量、饲料经济学、解剖），节奏与第一候选呼应",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "第二候选会不会比第一候选更有戏",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "candidate_entry",
+          "mechanism": "then_there_is_the_second"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "scale_gap",
+          "mechanism": "room_full_visualization"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "key_insight",
+          "mechanism": "grass_in_milk_out"
+        }
+      ],
+      "required_retention_events": [
+        "second_candidate_entry",
+        "scale_gap",
+        "feed_deadlock",
+        "screaming_business_plan"
+      ],
+      "original_moves": [
+        "狗案例入场",
+        "营养肯定",
+        "产量级差对照",
+        "饲料经济死结",
+        "解剖不适配",
+        "'商业计划尖叫'判决"
+      ],
+      "abstract_move": "第二候选对称拆解：沿用同一检查清单（体型、产量、饲料经济学、解剖），节奏与第一候选呼应",
+      "replacement_needs": [
+        "第二候选的入场过渡句",
+        "产量级差的直观对照",
+        "饲料转化逻辑的死结揭示",
+        "一句拟人化判决句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "selection_history_contrast",
+      "start_ratio": 0.3977,
+      "end_ratio": 0.4313,
+      "start_sec": 579,
+      "end_sec": 628,
+      "position_label": "39.8%–43.1%(9:39–10:28)",
+      "purpose": "用选育史对照解释差距的来源：对照组围绕该用途被改造了上千年，候选被改造的方向完全相反",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "既然理论上可以重新选育一个适合的物种，为什么没人这么做",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "verdict_line",
+          "mechanism": "screaming_business_plan"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "rhetorical_turn",
+          "mechanism": "theoretically_yes_but_why"
+        }
+      ],
+      "required_retention_events": [
+        "selection_goal_contrast",
+        "why_not_question"
+      ],
+      "original_moves": [
+        "泌乳期对照",
+        "牛的选育目标",
+        "狗的反向选育清单",
+        "'理论上可以。那为什么？'反问"
+      ],
+      "abstract_move": "用选育史对照解释差距的来源：对照组围绕该用途被改造了上千年，候选被改造的方向完全相反",
+      "replacement_needs": [
+        "对照组选育目标的时间深度",
+        "候选被选育方向的反向清单",
+        "'我们可以开始，但为什么'式反问"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "niche_logic_reveal",
+      "start_ratio": 0.4313,
+      "end_ratio": 0.4622,
+      "start_sec": 628,
+      "end_sec": 673,
+      "position_label": "43.1%–46.2%(10:28–11:13)",
+      "purpose": "揭示生态位竞争逻辑：新选项必须解决一个现有选项解决不了的问题，否则没有入场券",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "humor_peak",
+          "strength": 80,
+          "position_ratio": 0.4567,
+          "time_ms": 665000,
+          "reason": "荒诞产品想象接两字否决判决，笑点与结案合一"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "未来是否会出现一个新的产奶物种：刻意保持开放，叙事用途是把判断标准锚定在经济学与生态位而非永恒定律上，给观众留下'条件改变、结论就可能改变'的思考出口",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "absurd_verdict",
+          "mechanism": "overpriced_novelty_then_two_word_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "niche_rule",
+        "occupied_niche_list",
+        "absurd_product_verdict"
+      ],
+      "original_moves": [
+        "独特优势规则",
+        "现有奶畜生态位名单",
+        "荒诞产品想象",
+        "'人类拒绝了'判决"
+      ],
+      "abstract_move": "揭示生态位竞争逻辑：新选项必须解决一个现有选项解决不了的问题，否则没有入场券",
+      "replacement_needs": [
+        "新选项必须有独特优势的规则陈述",
+        "现有选项各占据什么生态位的列举",
+        "候选产品的荒诞化想象",
+        "一句两字级否决判决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80);打开的悬念 LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "culture_layer_reveal",
+      "start_ratio": 0.4622,
+      "end_ratio": 0.5357,
+      "start_sec": 673,
+      "end_sec": 780,
+      "position_label": "46.2%–53.6%(11:13–13:00)",
+      "purpose": "加入文化层：情感距离与宗教禁忌如何把'可行'变成'不可想'，同时点破文化边界的人造性",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "对候选的厌恶与距离感从何而来，它是天然的还是人造的",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "economics_verdict",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "culture_detail",
+          "mechanism": "companion_life_texture"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "distinction_deconstructed",
+          "mechanism": "invented_distinction_reveal"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "culture_limit_verdict",
+          "mechanism": "culture_cannot_save_economics"
+        }
+      ],
+      "required_retention_events": [
+        "emotional_distance",
+        "constructed_distinction",
+        "culture_limit_verdict"
+      ],
+      "original_moves": [
+        "伴侣动物地位",
+        "宠物/牲畜心理距离",
+        "人造区分点破",
+        "宗教禁忌陈述",
+        "文化边界判决",
+        "'文化训练味觉'"
+      ],
+      "abstract_move": "加入文化层：情感距离与宗教禁忌如何把'可行'变成'不可想'，同时点破文化边界的人造性",
+      "replacement_needs": [
+        "候选在人类生活中的情感地位描写",
+        "'同类区分其实是人造的'的点破",
+        "宗教或地域禁忌的客观陈述",
+        "文化作用的边界判决句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS15 跨段;回收了前文的悬念 FS06→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "digestion_myth_busting",
+      "start_ratio": 0.5357,
+      "end_ratio": 0.5927,
+      "start_sec": 780,
+      "end_sec": 863,
+      "position_label": "53.6%–59.3%(13:00–14:23)",
+      "purpose": "破除第一层迷思：消化限制不是针对候选的特例，文化甚至反向改写了人类自身生理",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "evolution_reveal",
+          "mechanism": "culture_drives_evolution"
+        }
+      ],
+      "required_retention_events": [
+        "lactase_evolution_reveal",
+        "fermentation_workaround",
+        "food_changed_people"
+      ],
+      "original_moves": [
+        "乳糖机制",
+        "乳糖耐受进化",
+        "发酵替代方案",
+        "'食物改变了人'",
+        "问题不专属于候选"
+      ],
+      "abstract_move": "破除第一层迷思：消化限制不是针对候选的特例，文化甚至反向改写了人类自身生理",
+      "replacement_needs": [
+        "消化机制的简明解释",
+        "人类群体适应性进化的揭示",
+        "替代加工方案的存在",
+        "'食物改变了人'式总结句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "similarity_myth_busting",
+      "start_ratio": 0.5927,
+      "end_ratio": 0.66,
+      "start_sec": 863,
+      "end_sec": 961,
+      "position_label": "59.3%–66%(14:23–16:01)",
+      "purpose": "破除第二层迷思：常规选项并非因为'成分最接近'被选中，方便管理才是真标准",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.6188,
+          "time_ms": 901000,
+          "reason": "'劫持配方奶粉'定性完成视角重构，迷思破除段顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "myth_negation",
+          "mechanism": "similarity_myth_busted"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "reframe_verdict",
+          "mechanism": "hijacked_baby_formula"
+        }
+      ],
+      "required_retention_events": [
+        "similarity_myth_negation",
+        "baby_formula_verdict",
+        "diversity_list"
+      ],
+      "original_moves": [
+        "流行观点显式否定",
+        "各物种配方定制例证",
+        "'进化婴儿配方奶粉'定性",
+        "奶畜多样性名单"
+      ],
+      "abstract_move": "破除第二层迷思：常规选项并非因为'成分最接近'被选中，方便管理才是真标准",
+      "replacement_needs": [
+        "对流行观点的显式否定",
+        "多个物种配方各为其幼崽定制的例证",
+        "一句把本质压缩成日常概念的定性句",
+        "实际被选选项的多样性名单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "deep_history_reveal",
+      "start_ratio": 0.66,
+      "end_ratio": 0.7191,
+      "start_sec": 961,
+      "end_sec": 1047,
+      "position_label": "66%–71.9%(16:01–17:27)",
+      "purpose": "历史纵深：答案不是品鉴选择的结果，而是'已在管理的动物上意外发现的次级价值'",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "concept_reveal",
+          "mechanism": "secondary_products_revolution"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "coevolution_verdict",
+          "mechanism": "long_project_framing"
+        }
+      ],
+      "required_retention_events": [
+        "secondary_products_revolution",
+        "archaeological_evidence",
+        "coevolution_project_verdict"
+      ],
+      "original_moves": [
+        "否定逐一品尝想象",
+        "次级产品革命",
+        "陶器脂质考古证据",
+        "共同进化项目定性",
+        "候选'从未获得那个项目'"
+      ],
+      "abstract_move": "历史纵深：答案不是品鉴选择的结果，而是'已在管理的动物上意外发现的次级价值'",
+      "replacement_needs": [
+        "否定'逐一品尝后挑选'的浪漫想象",
+        "次级产品革命的概念揭示",
+        "考古学证据的权威加持",
+        "共同进化项目式定性句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "counterfactual_test",
+      "start_ratio": 0.7191,
+      "end_ratio": 0.7644,
+      "start_sec": 1047,
+      "end_sec": 1113,
+      "position_label": "71.9%–76.4%(17:27–18:33)",
+      "purpose": "反事实思想实验：因果循环揭示（难采所以没选育、没选育所以难采），再检验'强行改造'的可行性，最后指出激励缺失",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.7253,
+          "time_ms": 1056000,
+          "reason": "鸡生蛋循环因果点破路径锁定机制"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "loop_reveal",
+          "mechanism": "chicken_egg_causality"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "feasibility_proof",
+          "mechanism": "intra_species_range"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "principle_verdict",
+          "mechanism": "cheapest_path_principle"
+        }
+      ],
+      "required_retention_events": [
+        "chicken_egg_loop",
+        "breeding_feasibility_proof",
+        "cheapest_path_principle"
+      ],
+      "original_moves": [
+        "鸡生蛋循环揭示",
+        "改造可行性例证（肉鸡、吉娃娃与大丹）",
+        "激励反问",
+        "最便宜路径原则"
+      ],
+      "abstract_move": "反事实思想实验：因果循环揭示（难采所以没选育、没选育所以难采），再检验'强行改造'的可行性，最后指出激励缺失",
+      "replacement_needs": [
+        "鸡生蛋式循环因果的显式揭示",
+        "改造可行性的物种内反差例证",
+        "'为什么不'的激励反问",
+        "最便宜成功路径的原则句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "secondary_factors_stack",
+      "start_ratio": 0.7644,
+      "end_ratio": 0.875,
+      "start_sec": 1113,
+      "end_sec": 1228,
+      "position_label": "76.4%–87.5%(18:33–20:28)",
+      "purpose": "次级因素堆叠：福利、安全、加工与繁殖策略逐一过堂，每个都先承认再化解或加码，防止'单一原因'误读",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "incentive_absence_answer",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "humor_payoff",
+          "mechanism": "financing_options_gag"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "metaphor_verdict",
+          "mechanism": "exits_vs_cafeteria"
+        }
+      ],
+      "required_retention_events": [
+        "welfare_complication",
+        "safety_deflection",
+        "cheese_cost_gag",
+        "plumbing_verdict"
+      ],
+      "original_moves": [
+        "生态位已满",
+        "动物福利复杂度",
+        "公关灾难",
+        "安全因素化解为系统缺失",
+        "奶酪浓缩推算",
+        "分期付款笑点"
+      ],
+      "abstract_move": "次级因素堆叠：福利、安全、加工与繁殖策略逐一过堂，每个都先承认再化解或加码，防止'单一原因'误读",
+      "replacement_needs": [
+        "动物福利的现实复杂度",
+        "安全因素的'不独特'化解论证",
+        "加工放大器（浓缩即更贵）的推算",
+        "繁殖策略差异的对照比喻判决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS07→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.875,
+      "end_ratio": 0.9402,
+      "start_sec": 1311,
+      "end_sec": 1369,
+      "position_label": "87.5%–94%(21:51–22:49)",
+      "purpose": "认知反转：零星尝试不等于传统，传统缺席处厌恶填空；用匿名化重述实验证明'正常'只是习惯",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9059,
+          "time_ms": 1319000,
+          "reason": "匿名化重述实验让观众亲耳听到'正常'变怪异，认知反转顶点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "历史上到底有没有人尝过这些候选",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "culture_formation_explanation",
+          "opened_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "anecdote_vs_tradition_distinction",
+          "opened_in": "FS15"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "honest_concession",
+          "mechanism": "human_nature_gag"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "estrangement_experiment",
+          "mechanism": "anonymous_process_narration"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "culture_verdict",
+          "mechanism": "mouth_before_rational"
+        }
+      ],
+      "required_retention_events": [
+        "anecdote_vs_tradition",
+        "estrangement_experiment",
+        "mouth_is_cultural_verdict"
+      ],
+      "original_moves": [
+        "厌恶填空机制",
+        "匿名化重述实验",
+        "食物分类的童年习得",
+        "跨地域相对性例证",
+        "'嘴先讲文化'定性"
+      ],
+      "abstract_move": "认知反转：零星尝试不等于传统，传统缺席处厌恶填空；用匿名化重述实验证明'正常'只是习惯",
+      "replacement_needs": [
+        "历史上零星尝试的承认与传统定义",
+        "厌恶填补空白的机制揭示",
+        "匿名化重述日常的陌生化实验",
+        "食物分类是童年习得的结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85);回收了前文的悬念 FS09→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "synthesis_closure",
+      "start_ratio": 0.9402,
+      "end_ratio": 1,
+      "start_sec": 1369,
+      "end_sec": 1456,
+      "position_label": "94%–100%(22:49–24:16)",
+      "purpose": "显式回收标题问题：资格清单汇总、各选项定位一句话总结，三连短句格言收束全片",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "title_callback",
+          "strength": 85,
+          "position_ratio": 0.9402,
+          "time_ms": 1369000,
+          "reason": "标题问题逐字重述并开答，主悬念开始回收"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9979,
+          "time_ms": 1453000,
+          "reason": "三连短句格言收束全片，情绪与信息的双重封顶"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "multi_factor_synthesis_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "title_callback",
+          "mechanism": "question_restated_answer_begun"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "qualification_checklist",
+          "mechanism": "useful_animal_criteria"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "final_verdict",
+          "mechanism": "not_impossible_but_outcompeted"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "aphorism_close",
+          "mechanism": "triadic_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "title_question_callback",
+        "qualification_checklist",
+        "triadic_aphorism"
+      ],
+      "original_moves": [
+        "标题问题逐字重述",
+        "资格清单",
+        "各物种定位一句话总结",
+        "'不是本质不行'最终定性",
+        "三连格言收束"
+      ],
+      "abstract_move": "显式回收标题问题：资格清单汇总、各选项定位一句话总结，三连短句格言收束全片",
+      "replacement_needs": [
+        "标题问题的逐字重述与直接回答",
+        "合格选项的资格清单",
+        "'不是本质不行、而是被多重因素淘汰'的最终定性",
+        "三连短句格言收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85)、PK10(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 // 留存卡 / 替换库 / 留存检查 / 稿件检查的程序部分(确定性,不调 LLM)
-// 留存卡:按 timeline.normalized_pattern 的位置比例,把 peak_points、open_loops 挂到 framework 的每个结构段上(流程 A1 的程序部分)
+// 留存卡:按 timeline.normalized_pattern 的位置比例,把 peak_points、open_loops、retention_events 挂到每个结构段上,补齐 7 项(流程 A1)
 // 替换库:汇总全部资产的留存卡,按高峰类型列出"同一个留存动作在别的资产里用什么内容完成"(流程 A3 的程序部分)
 // 留存检查:蓝图每章声明 carries_peaks 后,核对高峰承接数、第一个甜头秒数、相邻高峰最大间隔(流程 B⑪)
 // 稿件数据:稿中数字与年份、每章数字密度、片长对比、事实时效(流程 B⑬ 新增,供稿件检查 K2/K3/K5 使用)
@@ -23,52 +23,158 @@ function numberTokens(text) {
   return String(text || '').split(/\s+/).filter(w => /\d/.test(w));
 }
 
-// ---------- A1:留存卡 ----------
+// ---------- A1:留存卡(7 项) ----------
+// 一张卡 = 段与位置 / 持有的高峰 / 悬念 / 原片做法 / 抽象动作 / 替换条件 / 可删性
+// 前三项由程序从 timeline 对出;后三项的初稿取自拆解阶段 AI 已写好的字段(原片做法 ← observed_segments.information_move,
+// 抽象动作 ← structure_pattern.purpose,替换条件 ← structure_pattern.required_payload),可删性按规则判定。
+// 资产目录里的 retention_cards.json(--ai 润色或人工改过)优先于程序初稿。
+const CARD_VERSION = '1.1';
+
+const fmtSec = sec => {
+  if (sec == null || isNaN(sec)) return '';
+  const s = Math.round(sec);
+  return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+};
+
+// "A → B → C" / "A;B" 形式拆成动作列表;拆不开就整句一条
+function splitMoves(text) {
+  const t = String(text || '').trim();
+  if (!t) return [];
+  const parts = t.split(/\s*(?:→|->|⇒|;|;)\s*/).map(x => x.trim()).filter(Boolean);
+  return parts.length ? parts : [t];
+}
+
+// 时间点归段:落在多个段里(边界重叠)时归开始位置更靠后的那段;落在段与段的空隙里时归前一段
+function segmentIndexOf(ratio, pattern) {
+  if (ratio == null || isNaN(ratio) || !pattern.length) return -1;
+  let idx = -1;
+  pattern.forEach((p, i) => { if (p.start_ratio <= ratio + 1e-9) idx = i; });
+  return idx === -1 ? 0 : idx;
+}
+
+// observed_segments 不一定带 stage_id:按 stage_id → 同序号 → 位置重叠最多 依次匹配
+function matchObserved(pattern, observed) {
+  return pattern.map((p, i) => {
+    const byId = observed.find(o => o.stage_id && o.stage_id === p.stage_id);
+    if (byId) return byId;
+    if (observed.length === pattern.length) return observed[i];
+    let best = null, bestOv = 0;
+    observed.forEach(o => {
+      const ov = Math.min(p.end_ratio, o.end_ratio) - Math.max(p.start_ratio, o.start_ratio);
+      if (ov > bestOv) { bestOv = ov; best = o; }
+    });
+    return best;
+  });
+}
+
 function buildCards(frameworkText, timelineText) {
   const fw = dataOf(parse(frameworkText));
   const tl = dataOf(parse(timelineText));
   const stages = fw.structure_pattern || [];
-  const pattern = tl.normalized_pattern || [];
+  const pattern = (tl.normalized_pattern || []).slice().sort((a, b) => a.start_ratio - b.start_ratio);
   const durMs = (tl.duration_profile || {}).observed_duration_ms || 0;
   const peaks = tl.peak_points || [];
   const loops = tl.open_loops || [];
+  const events = tl.retention_events || [];
+  const observed = matchObserved(pattern, tl.observed_segments || []);
   const ratioOfMs = ms => (durMs && ms != null ? ms / durMs : null);
-  const inRange = (r, p, isLast) => r != null && r >= p.start_ratio && (r < p.end_ratio || (isLast && r <= p.end_ratio));
+  const segOfMs = ms => segmentIndexOf(ratioOfMs(ms), pattern);
 
-  return pattern.map((p, i) => {
-    const isLast = i === pattern.length - 1;
+  const cards = pattern.map((p, i) => {
     const st = stages.find(s => s.stage_id === p.stage_id) || {};
-    const card = {
+    const ob = observed[i] || {};
+    const startSec = ob.start_ms != null ? ob.start_ms / 1000 : (durMs ? p.start_ratio * durMs / 1000 : null);
+    const endSec = ob.end_ms != null ? ob.end_ms / 1000 : (durMs ? p.end_ratio * durMs / 1000 : null);
+    const myPeaks = peaks.filter(pk => segmentIndexOf(pk.position_ratio != null ? pk.position_ratio : ratioOfMs(pk.time_ms), pattern) === i);
+    const opened = loops.filter(l => segOfMs(l.open_ms) === i);
+    const closed = loops.filter(l => l.close_ms != null && segOfMs(l.close_ms) === i);
+    const needs = (st.required_payload && st.required_payload.length) ? st.required_payload.slice()
+      : (st.exit_condition ? ['能做到:' + st.exit_condition] : (ob.viewer_goal ? ['能让观众:' + ob.viewer_goal] : (p.required_retention_events || [])));
+    return {
       stage_id: p.stage_id,
-      function: p.function || st.function || '',
-      purpose: st.purpose || '',
+      // ① 段与位置
+      function: p.function || st.function || ob.primary_function || '',
       start_ratio: p.start_ratio,
       end_ratio: p.end_ratio,
-      required_retention_events: p.required_retention_events || [],
-      peaks: peaks.filter(pk => inRange(pk.position_ratio, p, isLast)).map(pk => ({
+      start_sec: startSec != null ? Math.round(startSec * 10) / 10 : null,
+      end_sec: endSec != null ? Math.round(endSec * 10) / 10 : null,
+      position_label: Math.round(p.start_ratio * 1000) / 10 + '%–' + Math.round(p.end_ratio * 1000) / 10 + '%' +
+        (startSec != null ? '(' + fmtSec(startSec) + '–' + fmtSec(endSec) + ')' : ''),
+      purpose: st.purpose || '',
+      // ② 持有的高峰
+      peaks: myPeaks.map(pk => ({
         peak_id: pk.peak_id, peak_type: pk.peak_type, strength: pk.strength,
         position_ratio: pk.position_ratio, time_ms: pk.time_ms, reason: pk.reason
       })),
-      loops_opened: loops.filter(l => inRange(ratioOfMs(l.open_ms), p, isLast)).map(l => ({ loop_id: l.loop_id, tension: l.tension_function })),
-      loops_closed: loops.filter(l => inRange(ratioOfMs(l.close_ms), p, isLast)).map(l => ({ loop_id: l.loop_id, payoff_type: l.payoff_type })),
-      loops_open_ended: loops.filter(l => l.close_ms == null && inRange(ratioOfMs(l.open_ms), p, isLast)).map(l => l.loop_id)
+      // ③ 悬念(开、合、跨段)
+      loops_opened: opened.map(l => ({ loop_id: l.loop_id, tension: l.tension_function, closes_in: l.close_ms != null ? (pattern[segOfMs(l.close_ms)] || {}).stage_id || null : null })),
+      loops_closed: closed.map(l => ({ loop_id: l.loop_id, payoff_type: l.payoff_type, opened_in: (pattern[segOfMs(l.open_ms)] || {}).stage_id || null })),
+      loops_open_ended: opened.filter(l => l.close_ms == null).map(l => l.loop_id),
+      retention_events: events.filter(e => segmentIndexOf(e.position_ratio != null ? e.position_ratio : ratioOfMs(e.time_ms), pattern) === i)
+        .map(e => ({ event_id: e.event_id, event_type: e.event_type, mechanism: e.mechanism })),
+      required_retention_events: p.required_retention_events || [],
+      // ④ 原片做法 ⑤ 抽象动作 ⑥ 替换条件(初稿,来自拆解阶段;--ai 可重写)
+      original_moves: splitMoves(ob.information_move),
+      abstract_move: st.purpose || ob.viewer_goal || '',
+      replacement_needs: needs,
+      // ⑦ 可删性(下面统一判定)
+      deletability: '',
+      deletability_reason: '',
+      merge_keep: '',
+      loss_if_deleted: []
     };
-    if (i === 0 && tl.hook_window) card.hook = tl.hook_window;
-    return card;
   });
+
+  cards.forEach((c, i) => {
+    const crossOpen = c.loops_opened.filter(l => l.closes_in !== c.stage_id);   // 这里开、别处合或不合
+    const crossClose = c.loops_closed.filter(l => l.opened_in !== c.stage_id);   // 别处开、这里合
+    const inner = c.loops_opened.filter(l => l.closes_in === c.stage_id);
+    c.loss_if_deleted = c.peaks.map(p => ({ peak_id: p.peak_id, strength: p.strength }));
+    const why = [];
+    if (i === 0) why.push('开场钩子段');
+    if (c.peaks.length) why.push('持有高峰 ' + c.peaks.map(p => p.peak_id + '(' + p.strength + ')').join('、'));
+    if (crossOpen.length) why.push('打开的悬念 ' + crossOpen.map(l => l.loop_id + (l.closes_in ? '→' + l.closes_in : '(不闭合)')).join('、') + ' 跨段');
+    if (crossClose.length) why.push('回收了前文的悬念 ' + crossClose.map(l => (l.opened_in || '?') + '→' + l.loop_id).join('、'));
+    if (why.length) {
+      c.deletability = '不可删';
+      c.deletability_reason = why.join(';') + '。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。';
+    } else if (inner.length) {
+      c.deletability = '可并入';
+      c.deletability_reason = '没有高峰,只有段内小悬念 ' + inner.map(l => l.loop_id).join('、') + '。';
+      c.merge_keep = '内容可以删,但相邻段要补一个小问答:' + inner.map(l => l.tension).filter(Boolean).join(';');
+    } else {
+      c.deletability = '可删';
+      c.deletability_reason = '没有高峰,也不开合任何悬念,删掉不丢爆点。';
+    }
+  });
+  if (cards.length && tl.hook_window) cards[0].hook = tl.hook_window;
+  return cards;
 }
 
-// 程序卡片为准;资产目录里有 retention_cards.json 时并入 AI 补写的 abstract_action / replace_when
+// 资产目录的 retention_cards.json 里可编辑的字段(--ai 润色或人工改过的版本优先)
+const EDITABLE = ['original_moves', 'abstract_move', 'replacement_needs', 'deletability', 'deletability_reason', 'merge_keep'];
+
 function cardsForAsset(asset) {
   if (!asset || !asset.framework || !asset.timeline) return [];
   const cards = buildCards(asset.framework, asset.timeline);
   const saved = parse(asset.retention_cards || '');
   const extra = {};
   (Array.isArray(saved) ? saved : (saved && saved.cards) || []).forEach(c => { if (c && c.stage_id) extra[c.stage_id] = c; });
-  return cards.map(c => ({ ...c, abstract_action: (extra[c.stage_id] || {}).abstract_action || '', replace_when: (extra[c.stage_id] || {}).replace_when || '' }));
+  return cards.map(c => {
+    const e = extra[c.stage_id];
+    if (!e) return c;
+    const out = { ...c };
+    EDITABLE.forEach(k => { if (e[k] != null && e[k] !== '' && !(Array.isArray(e[k]) && !e[k].length)) out[k] = e[k]; });
+    // 兼容 1.0 版文件的字段名
+    if (e.abstract_action && !e.abstract_move) out.abstract_move = e.abstract_action;
+    if (e.replace_when && !e.replacement_needs) out.replacement_needs = [e.replace_when];
+    if (e.ai_refined) out.ai_refined = true;
+    return out;
+  });
 }
 
 // ---------- A3:替换库(全部资产汇总,进程内缓存) ----------
+// 按高峰类型归类:同一类高峰在别的资产里由什么抽象动作完成、需要哪类事实
 let libraryCache = null;
 function buildLibrary(force) {
   if (libraryCache && !force) return libraryCache;
@@ -79,7 +185,10 @@ function buildLibrary(force) {
     for (const c of cardsForAsset(asset)) {
       for (const pk of c.peaks) {
         const key = pk.peak_type || 'other';
-        (lib[key] = lib[key] || []).push({ asset_id: a.id, stage_function: c.function, strength: pk.strength, reason: pk.reason });
+        (lib[key] = lib[key] || []).push({
+          asset_id: a.id, stage_id: c.stage_id, stage_function: c.function, strength: pk.strength, reason: pk.reason,
+          abstract_move: c.abstract_move, replacement_needs: c.replacement_needs
+        });
       }
     }
   }
@@ -94,20 +203,27 @@ function librarySummary(perType, maxTypes) {
   const n = perType || 6;
   const types = Object.keys(lib).sort((a, b) => lib[b].length - lib[a].length).slice(0, maxTypes || 8);
   return types.map(k => '- ' + k + ':\n' + lib[k].slice(0, n).map(x =>
-    '  · [' + x.stage_function + '] ' + x.reason + '(' + x.asset_id + ')').join('\n')).join('\n');
+    '  · [' + x.stage_function + '] 动作:' + (x.abstract_move || x.reason) + ';需要:' + (x.replacement_needs || []).join('、') + '(' + x.asset_id + ')').join('\n')).join('\n');
 }
 
-// 写进提示词的留存地图:每段一行
+// 写进提示词的留存地图:每段一张卡(7 项)
 function cardsSummary(cards) {
   return cards.map(c => {
-    const pk = c.peaks.length ? c.peaks.map(p => p.peak_id + '(' + p.peak_type + ',强度' + p.strength + ',位置' + p.position_ratio + '):' + p.reason).join(';') : '无高峰';
+    const pk = c.peaks.length ? c.peaks.map(p => p.peak_id + '(' + p.peak_type + ',强度' + p.strength + '):' + p.reason).join(';') : '无';
     const lo = [
-      c.loops_opened.length ? '开:' + c.loops_opened.map(l => l.loop_id).join('/') : '',
-      c.loops_closed.length ? '合:' + c.loops_closed.map(l => l.loop_id).join('/') : '',
-      c.loops_open_ended.length ? '明示未闭合:' + c.loops_open_ended.join('/') : ''
-    ].filter(Boolean).join(',');
-    const act = c.abstract_action ? ';留存动作:' + c.abstract_action + (c.replace_when ? '(可替换为:' + c.replace_when + ')' : '') : '';
-    return '- ' + c.stage_id + ' ' + c.function + '(' + c.start_ratio + '–' + c.end_ratio + '):' + pk + (lo ? ';悬念 ' + lo : '') + act;
+      c.loops_opened.length ? '开 ' + c.loops_opened.map(l => l.loop_id + (l.closes_in && l.closes_in !== c.stage_id ? '→' + l.closes_in : '')).join('/') : '',
+      c.loops_closed.length ? '合 ' + c.loops_closed.map(l => l.loop_id).join('/') : '',
+      c.loops_open_ended.length ? '明示未闭合 ' + c.loops_open_ended.join('/') : ''
+    ].filter(Boolean).join(',') || '无';
+    return [
+      '- ' + c.stage_id + ' ' + c.function + ' ' + (c.position_label || (c.start_ratio + '–' + c.end_ratio)),
+      '  高峰:' + pk,
+      '  悬念:' + lo,
+      '  原片做法:' + (c.original_moves || []).join(' → '),
+      '  抽象动作:' + (c.abstract_move || ''),
+      '  替换条件:' + (c.replacement_needs || []).join(';'),
+      '  可删性:' + c.deletability + '——' + c.deletability_reason + (c.merge_keep ? ' ' + c.merge_keep : '')
+    ].join('\n');
   }).join('\n');
 }
 
@@ -251,4 +367,4 @@ function scriptStats(script, opts) {
   };
 }
 
-module.exports = { countWords, numberTokens, buildCards, cardsForAsset, buildLibrary, librarySummary, cardsSummary, hookContract, checkBlueprintRetention, chapterBodies, sourceDensityMax, scriptStats };
+module.exports = { CARD_VERSION, countWords, numberTokens, buildCards, cardsForAsset, buildLibrary, librarySummary, cardsSummary, hookContract, checkBlueprintRetention, chapterBodies, sourceDensityMax, scriptStats };

@@ -1,0 +1,942 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.371Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "immersive_scene_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.047,
+      "start_sec": 0,
+      "end_sec": 73,
+      "position_label": "0%–4.7%(0:00–1:13)",
+      "purpose": "第二人称日常场景沉浸开场：让观众以主人身份目睹反常行为，并用玩笑式悬念与剧透承诺锁留存",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "hook_promise",
+          "strength": 80,
+          "position_ratio": 0.0289,
+          "time_ms": 46000,
+          "reason": "'作死'玩笑悬念与剧透式承诺双重锁定，全片主问题悬挂"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：极端天气下坚持该反常行为到底是犯傻还是有道理（标题'为什么'问句的具身化悬挂）",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "它到底知不知道热？知道了为什么还要去晒",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "picture_this_directive"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "scene_completion",
+          "mechanism": "sensory_behavior_detail"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "hook_question",
+          "mechanism": "death_wish_tease_and_spoiler"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "preview_list",
+          "mechanism": "mechanism_teaser_list"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "question_signpost",
+          "mechanism": "common_question_first"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_scene",
+        "hook_question",
+        "spoiler_promise"
+      ],
+      "original_moves": [
+        "零信息",
+        "极端天气场景建立",
+        "反常行为白描",
+        "作死悬念",
+        "剧透式承诺与机制预告清单"
+      ],
+      "abstract_move": "第二人称日常场景沉浸开场：让观众以主人身份目睹反常行为，并用玩笑式悬念与剧透承诺锁留存",
+      "replacement_needs": [
+        "感官化的极端环境场景细节",
+        "反常行为的白描与主人的本能反应",
+        "'作死'式玩笑悬念",
+        "剧透式承诺与机制预告清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80);打开的悬念 LOOP01→FS15、LOOP02→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 73000,
+        "hook_type": "immersive_second_person_scene_with_spoiler_promise",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 46000,
+        "evidence_refs": [
+          "C0001",
+          "C0006",
+          "C0007"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "obvious_question_answer",
+      "start_ratio": 0.047,
+      "end_ratio": 0.073,
+      "start_sec": 73,
+      "end_sec": 113,
+      "position_label": "4.7%–7.3%(1:13–1:53)",
+      "purpose": "抛出'所有人都会先问的常识问题'并给短答案，再把问题升级为更复杂的系统",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "short_answer_payoff",
+          "mechanism": "direct_answer"
+        }
+      ],
+      "required_retention_events": [
+        "common_question",
+        "short_answer"
+      ],
+      "original_moves": [
+        "常识问题抛出",
+        "短答案落地",
+        "'远比简单等式复杂'的升级断言"
+      ],
+      "abstract_move": "抛出'所有人都会先问的常识问题'并给短答案，再把问题升级为更复杂的系统",
+      "replacement_needs": [
+        "以观众口吻提出的常识问句",
+        "一句直接短答案",
+        "复杂度升级断言"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "mechanism_contrast",
+      "start_ratio": 0.073,
+      "end_ratio": 0.116,
+      "start_sec": 113,
+      "end_sec": 179,
+      "position_label": "7.3%–11.6%(1:53–2:59)",
+      "purpose": "用人类自身机制作对照，讲清目标物种核心生理机制的根本差异",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.0768,
+          "time_ms": 122000,
+          "reason": "人宠散热机制对照：全片第一个机制落差揭示"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "该行为怎么可能是调温策略的一部分",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "mechanism_contrast",
+          "mechanism": "cross_species_cooling_contrast"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "counterintuitive_tease",
+          "mechanism": "strategy_not_mistake"
+        }
+      ],
+      "required_retention_events": [
+        "cooling_contrast",
+        "strategy_tease"
+      ],
+      "original_moves": [
+        "人类出汗机制",
+        "目标物种汗腺局限",
+        "喘气蒸发机制",
+        "'反常行为是策略一部分'的反常识预告"
+      ],
+      "abstract_move": "用人类自身机制作对照，讲清目标物种核心生理机制的根本差异",
+      "replacement_needs": [
+        "人类机制的熟悉锚点",
+        "目标物种机制的对照性局限",
+        "替代机制的工作原理",
+        "反常行为属于策略的反常识预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(70);打开的悬念 LOOP03→FS04 跨段;回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "sampling_error_correction",
+      "start_ratio": 0.116,
+      "end_ratio": 0.16,
+      "start_sec": 179,
+      "end_sec": 247,
+      "position_label": "11.6%–16%(2:59–4:07)",
+      "purpose": "指出观众的观察只是随机抽样而非全貌，用完整行为循环纠正误判",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.1441,
+          "time_ms": 229000,
+          "reason": "抽样错觉纠正：问题不在行为而在你的观察方式"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "perception_reframe",
+          "mechanism": "not_full_picture"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "sampling_correction",
+          "mechanism": "window_glance_fallacy"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "origin_pivot",
+          "mechanism": "evolutionary_transition"
+        }
+      ],
+      "required_retention_events": [
+        "perception_reframe"
+      ],
+      "original_moves": [
+        "自我监测能力断言",
+        "日光-阴凉循环行为揭示",
+        "窗口随机一瞥的误看纠正"
+      ],
+      "abstract_move": "指出观众的观察只是随机抽样而非全貌，用完整行为循环纠正误判",
+      "replacement_needs": [
+        "目标物种自我监测能力的断言",
+        "完整行为循环模式的揭示",
+        "观察者随机抽样的错觉点破"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80);回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evolutionary_origin",
+      "start_ratio": 0.16,
+      "end_ratio": 0.22,
+      "start_sec": 247,
+      "end_sec": 340,
+      "position_label": "16%–22%(4:07–5:40)",
+      "purpose": "回溯野生祖先的生存环境，解释本能的来历与为何留存至今",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "与温度无关的那重隐性功能到底是什么、如何运作（中途被广告打断，广告后由机制揭示回收）",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "humor_beat",
+          "mechanism": "ancient_software_metaphor"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "humor_beat",
+          "mechanism": "modern_life_contrast"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "function_pivot",
+          "mechanism": "not_purely_about_x"
+        }
+      ],
+      "required_retention_events": [
+        "ancestor_backstory",
+        "instinct_persistence"
+      ],
+      "original_moves": [
+        "进化史转场",
+        "野生祖先环境挑战",
+        "行为调温的生存价值",
+        "现代个体体内的古老本能"
+      ],
+      "abstract_move": "回溯野生祖先的生存环境，解释本能的来历与为何留存至今",
+      "replacement_needs": [
+        "进化史转场",
+        "祖先环境的具体挑战",
+        "该行为的生存价值推导",
+        "驯化后本能留存的现代化表述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "hidden_function_pivot",
+      "start_ratio": 0.22,
+      "end_ratio": 0.23,
+      "start_sec": 356,
+      "end_sec": 399,
+      "position_label": "22%–23%(5:56–6:39)",
+      "purpose": "一句'这不只是为了表层目的'开启与温度无关的隐性功能线",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "function_pivot"
+      ],
+      "original_moves": [
+        "主线在句中中断",
+        "课程口播与优惠码",
+        "主线在同一 cue 内接续"
+      ],
+      "abstract_move": "一句'这不只是为了表层目的'开启与温度无关的隐性功能线",
+      "replacement_needs": [
+        "先扬后抑的转折句",
+        "隐性功能的正式点名"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "biological_necessity_reveal",
+      "start_ratio": 0.23,
+      "end_ratio": 0.332,
+      "start_sec": 399,
+      "end_sec": 556,
+      "position_label": "23%–33.2%(6:39–9:16)",
+      "purpose": "揭示隐性功能的机制路径与生存价值，并给出现代条件下的弱化说明",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.2555,
+          "time_ms": 406000,
+          "reason": "广告后主线接续：隐性功能的摄入机制因果链揭晓"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "mechanism_reveal",
+          "mechanism": "ingestion_chain"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "question_signpost",
+          "mechanism": "viewer_voice_question"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "reframe_beat",
+          "mechanism": "internal_calculation_metaphor"
+        }
+      ],
+      "required_retention_events": [
+        "mechanism_chain",
+        "survival_advantage"
+      ],
+      "original_moves": [
+        "机制因果链揭示",
+        "健康作用清单",
+        "本能不因炎热关闭",
+        "现代饮食的弱化补丁",
+        "本能与现代便利的落差笑点"
+      ],
+      "abstract_move": "揭示隐性功能的机制路径与生存价值，并给出现代条件下的弱化说明",
+      "replacement_needs": [
+        "机制路径的因果链白描",
+        "该功能的健康作用清单",
+        "本能不因极端条件关闭的解释",
+        "现代替代品已部分覆盖但该本能依然运行的落差"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80);回收了前文的悬念 FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "posture_technique_decode",
+      "start_ratio": 0.332,
+      "end_ratio": 0.429,
+      "start_sec": 556,
+      "end_sec": 706,
+      "position_label": "33.2%–42.9%(9:16–11:46)",
+      "purpose": "把看似随意的姿势与身体特征解码为精妙技术动作，顺带拆穿一个流行养护误区",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "myth_bust",
+          "strength": 75,
+          "position_ratio": 0.4097,
+          "time_ms": 651000,
+          "reason": "流行养护做法被判定适得其反：中段情绪拐点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "流行的剃毛养护做法是帮忙还是帮倒忙",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "section_pivot",
+          "mechanism": "surface_positioning_transition"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "technique_decode",
+          "mechanism": "posture_not_random"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "counterintuitive_reveal",
+          "mechanism": "fur_insulates_against_heat"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "myth_bust",
+          "mechanism": "well_meaning_backfire"
+        }
+      ],
+      "required_retention_events": [
+        "posture_decode",
+        "myth_bust"
+      ],
+      "original_moves": [
+        "姿势解码",
+        "皮毛双向隔热的反常识揭示",
+        "剃毛误区拆穿",
+        "紫外线附加风险"
+      ],
+      "abstract_move": "把看似随意的姿势与身体特征解码为精妙技术动作，顺带拆穿一个流行养护误区",
+      "replacement_needs": [
+        "经典姿势的技术性解码",
+        "身体特征双向调节功能的反常识揭示",
+        "流行养护误区的拆穿",
+        "误区背后额外风险的补充"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(75);打开的悬念 LOOP05→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "variation_mapping",
+      "start_ratio": 0.429,
+      "end_ratio": 0.516,
+      "start_sec": 706,
+      "end_sec": 841,
+      "position_label": "42.9%–51.6%(11:46–14:01)",
+      "purpose": "用品种、体型、颜色等变量说明同一环境对不同个体意味着不同风险",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "myth_bust_explanation",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "section_pivot",
+          "mechanism": "variation_transition"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "contrast_payoff",
+          "mechanism": "extreme_case_pair"
+        }
+      ],
+      "required_retention_events": [
+        "variation_contrast"
+      ],
+      "original_moves": [
+        "品种差异总起",
+        "冷热气候品种极端对照",
+        "体型与表面积规律",
+        "毛色吸热差异"
+      ],
+      "abstract_move": "用品种、体型、颜色等变量说明同一环境对不同个体意味着不同风险",
+      "replacement_needs": [
+        "差异变量的总起",
+        "两个极端案例的对照",
+        "至少两类差异维度（体型、颜色等）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS08→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "risk_boundary",
+      "start_ratio": 0.516,
+      "end_ratio": 0.607,
+      "start_sec": 841,
+      "end_sec": 982,
+      "position_label": "51.6%–60.7%(14:01–16:22)",
+      "purpose": "明确本能的失效边界：列出真实风险与脆弱群体，语气转为严肃",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "risk_turn",
+          "strength": 70,
+          "position_ratio": 0.5374,
+          "time_ms": 854000,
+          "reason": "'本能强大但并非免疫'的边界校正，语气由轻快转严肃"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "risk_turn",
+          "mechanism": "not_flawless_system"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "vulnerable_list",
+          "mechanism": "mechanism_based_risk_groups"
+        }
+      ],
+      "required_retention_events": [
+        "risk_turn",
+        "vulnerable_list"
+      ],
+      "original_moves": [
+        "风险转折",
+        "中暑风险命名",
+        "短鼻品种机制",
+        "老幼胖与基础疾病逐层加码",
+        "主动监控结论"
+      ],
+      "abstract_move": "明确本能的失效边界：列出真实风险与脆弱群体，语气转为严肃",
+      "replacement_needs": [
+        "风险转折的让步句式",
+        "真实风险的明确命名",
+        "脆弱群体的分层清单及其机制原因",
+        "主动监控与干预的结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "secondary_comfort_functions",
+      "start_ratio": 0.607,
+      "end_ratio": 0.706,
+      "start_sec": 982,
+      "end_sec": 1134,
+      "position_label": "60.7%–70.6%(16:22–18:54)",
+      "purpose": "补充舒适、情绪与节律等次级功能层，让解释体系更完整并增加温情",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "日照对该物种情绪的确切作用机制研究仍有限：刻意保持开放，叙事用途是显式标注科学证据边界以维持整体可信度，并把观察空间留给观众与自己的宠物",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "section_pivot",
+          "mechanism": "comfort_dimension_transition"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "emotional_payoff",
+          "mechanism": "warmth_therapy_reveal"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "honesty_beat",
+          "mechanism": "research_gap_caveat"
+        }
+      ],
+      "required_retention_events": [
+        "comfort_reveal",
+        "research_caveat"
+      ],
+      "original_moves": [
+        "舒适维度转场",
+        "关节舒缓的温情动机",
+        "情绪放松",
+        "昼夜节律",
+        "研究缺口显式标注"
+      ],
+      "abstract_move": "补充舒适、情绪与节律等次级功能层，让解释体系更完整并增加温情",
+      "replacement_needs": [
+        "舒适与感官维度转场",
+        "对特定群体的温情动机揭示",
+        "情绪与节律层面的功能",
+        "研究证据缺口的诚实标注"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "evolutionary_mismatch",
+      "start_ratio": 0.706,
+      "end_ratio": 0.807,
+      "start_sec": 1134,
+      "end_sec": 1290,
+      "position_label": "70.6%–80.7%(18:54–21:30)",
+      "purpose": "解释本能为何没有为现代极端环境校准，确立人类干预的正当性",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "为什么本能不能在危险高温时自动关闭",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "question_signpost",
+          "mechanism": "instinct_limit_question"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "mechanism_reveal",
+          "mechanism": "calibration_gap"
+        }
+      ],
+      "required_retention_events": [
+        "mismatch_answer"
+      ],
+      "original_moves": [
+        "'本能为何不自动关闭'的直接提问",
+        "进化错配解释",
+        "驯化与个体经验的叠加层"
+      ],
+      "abstract_move": "解释本能为何没有为现代极端环境校准，确立人类干预的正当性",
+      "replacement_needs": [
+        "'本能为何不自动关闭'的直接提问",
+        "进化错配的因果解释",
+        "驯化与个体经验对本能的叠加影响"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP06。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:为什么本能不能在危险高温时自动关闭",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "practical_action_guide",
+      "start_ratio": 0.807,
+      "end_ratio": 0.889,
+      "start_sec": 1290,
+      "end_sec": 1417,
+      "position_label": "80.7%–88.9%(21:30–23:37)",
+      "purpose": "给出可操作的观察信号清单与处置动作，把知识转化为能力",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "section_pivot",
+          "mechanism": "practical_transition"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "checklist_payoff",
+          "mechanism": "warning_sign_inventory"
+        }
+      ],
+      "required_retention_events": [
+        "warning_checklist"
+      ],
+      "original_moves": [
+        "实操转场",
+        "危险信号清单",
+        "处置动作",
+        "环境支持条件",
+        "地面烫伤的独立风险"
+      ],
+      "abstract_move": "给出可操作的观察信号清单与处置动作，把知识转化为能力",
+      "replacement_needs": [
+        "正常行为与危险信号的区分清单",
+        "具体处置动作",
+        "环境支持条件",
+        "一个独立于体温之外的附加风险细节"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "synthesis_reframe",
+      "start_ratio": 0.889,
+      "end_ratio": 0.953,
+      "start_sec": 1417,
+      "end_sec": 1517,
+      "position_label": "88.9%–95.3%(23:37–25:17)",
+      "purpose": "全局综合：双向否定两种极端误读，给出'多目标平衡计算'的整合框架，并点破人类以己度物的投射偏差",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.8999,
+          "time_ms": 1430000,
+          "reason": "双向否定极端误读，'多目标本能计算'整合框架落地"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "synthesis",
+          "mechanism": "zoom_out_perspective"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "worldview_shift",
+          "mechanism": "projection_critique"
+        }
+      ],
+      "required_retention_events": [
+        "dual_negation",
+        "projection_critique"
+      ],
+      "original_moves": [
+        "全局综合",
+        "双向否定两种极端误读",
+        "多目标清单",
+        "人类投射偏差批评"
+      ],
+      "abstract_move": "全局综合：双向否定两种极端误读，给出'多目标平衡计算'的整合框架，并点破人类以己度物的投射偏差",
+      "replacement_needs": [
+        "对'犯傻'与'完美策略'两种极端误读的双向否定",
+        "多目标清单式综合",
+        "人类投射自身舒适标准的认知偏差批评"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS15",
+      "function": "closure_callback",
+      "start_ratio": 0.953,
+      "end_ratio": 1,
+      "start_sec": 1517,
+      "end_sec": 1589,
+      "position_label": "95.3%–100%(25:17–26:29)",
+      "purpose": "回到开场场景逐条回扣机制清单，保留安全提醒，以时间尺度对照收束全片",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9981,
+          "time_ms": 1586000,
+          "reason": "古老本能对照现代热浪的时间尺度收束句，完成全片认知闭环"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_mechanism_account_and_reframe",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "callback",
+          "mechanism": "opening_scene_return"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "aphorism_close",
+          "mechanism": "evolutionary_timescale_close"
+        }
+      ],
+      "required_retention_events": [
+        "callback",
+        "aphoristic_close"
+      ],
+      "original_moves": [
+        "回到开场场景",
+        "机制清单逐条回扣",
+        "安全提醒保留",
+        "认知反转定性",
+        "时间尺度收尾"
+      ],
+      "abstract_move": "回到开场场景逐条回扣机制清单，保留安全提醒，以时间尺度对照收束全片",
+      "replacement_needs": [
+        "对开场场景的直接回扣",
+        "机制清单的逐条复述",
+        "安全提醒的保留",
+        "'古老本能对照现代环境'的收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

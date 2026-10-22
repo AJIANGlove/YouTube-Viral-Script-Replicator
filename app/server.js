@@ -8,6 +8,7 @@ const { validateBundle, summarize } = require('./lib/validate');
 const { parseSrt } = require('./lib/srt');
 const pipeline = require('./lib/pipeline');
 const analysis = require('./lib/analysis');
+const voice = require('./lib/voice');
 const topics = require('./lib/topics');
 const fingerprint = require('./lib/fingerprint');
 const description = require('./lib/description');
@@ -459,7 +460,9 @@ const server = http.createServer(async (req, res) => {
         // 写前分析(新流程):先跑分析,人工确认后才写稿;track 用于挑赛道证据卡,materials 是人工提供的参考资料
         pre_analysis: !!body.pre_analysis,
         track: typeof body.track === 'string' ? body.track.trim() : '',
-        materials: typeof body.materials === 'string' ? body.materials.trim() : ''
+        materials: typeof body.materials === 'string' ? body.materials.trim() : '',
+        // 频道声音设定:'__auto__' 按频道名匹配(默认) / '__none__' 不用 / 设定名
+        voice_name: typeof body.voice_name === 'string' ? body.voice_name : voice.AUTO
       });
       if (run.pre_analysis) {
         analysis.runAnalysis(run.id).catch(e => {
@@ -536,6 +539,27 @@ const server = http.createServer(async (req, res) => {
       if ((r.steps || {}).script_check && r.steps.script_check.status === 'running') return send(res, 409, { error: '稿件检查进行中' });
       analysis.runScriptCheck(r.id).catch(() => {});
       return send(res, 200, { ok: true, id: r.id });
+    }
+
+    // ---------- 频道声音设定(流程 A4):列表 / 读取 / 保存(即人工确认)/ 删除 / AI 起草 ----------
+    if (url === '/api/voices' && method === 'GET') return send(res, 200, voice.listVoices());
+    if (url === '/api/voices' && method === 'POST') {
+      const body = await readBody(req);
+      const err = voice.voiceShapeError(body.voice);
+      if (err) return send(res, 400, { error: '声音设定不合格: ' + err });
+      return send(res, 200, voice.saveVoice(body.voice));
+    }
+    if (url === '/api/voices/draft' && method === 'POST') {
+      const body = await readBody(req);
+      try { return send(res, 200, await voice.draftVoice(body)); }
+      catch (e) { return send(res, 500, { error: '起草失败: ' + e.message }); }
+    }
+    const voiceMatch = url.match(/^\/api\/voices\/([^/]+)$/);
+    if (voiceMatch && (method === 'GET' || method === 'DELETE')) {
+      const name = decodeURIComponent(voiceMatch[1]);
+      if (method === 'DELETE') { voice.deleteVoice(name); return send(res, 200, { ok: true }); }
+      const v = voice.getVoice(name);
+      return v ? send(res, 200, v) : send(res, 404, { error: '没有这个声音设定' });
     }
 
     // 赛道证据卡列表(供重新分析时手动指定)

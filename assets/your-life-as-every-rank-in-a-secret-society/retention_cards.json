@@ -1,0 +1,930 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.478Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.098,
+      "start_sec": 0,
+      "end_sec": 164,
+      "position_label": "0%–9.8%(0:00–2:44)",
+      "purpose": "局外人校园+留堂深谈+眼睛卡片+周四的决定",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 85,
+          "position_ratio": 0.0558,
+          "time_ms": 93360,
+          "reason": "你被注意到了：没有名字没有地址，只有那只眼睛"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.0808,
+          "time_ms": 135200,
+          "reason": "这张卡片感觉像第一件选择你的东西"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念：这张卡片承诺的一切，汇率到底是多少",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "level_card_drop",
+          "mechanism": "the_seeker_chapter"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "class_marker",
+          "mechanism": "watches_more_than_car"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "card_offer",
+          "mechanism": "eye_triangle_circle"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "chosen_feeling",
+          "mechanism": "first_thing_chose_you"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "decision_verdict",
+          "mechanism": "waited_whole_life_door"
+        }
+      ],
+      "required_retention_events": [
+        "level_card_drop",
+        "scholarship_outsider"
+      ],
+      "original_moves": [
+        "章节卡：Level one, the seeker + 局外人定格：19岁、小城大学大二、老楼真常春藤；父亲开了30年货车，母亲夜里打扫办公室；你靠奖学金和运气进来；其他同学戴比你车还贵的表、聊避暑别墅和老姓氏；你低头做事 + 唯一的证明：你比年级任何人都用功——成绩是你拥有的最好的东西，是你挣得座位的唯一证明；大多数夜晚独自在图书馆吃饭；你告诉自己孤独是逃离的代价 + 留堂：一位白发教授请你留下（你差点挂掉他的课）；他办公室满是你读不了的语言的书，给你倒了一杯棕色的东西；他问的问题与成绩无关——你到底相信什么？你想成为谁？你觉得世界公平吗？你太累演不动了，照实回答 + 「你被注意到了」：他只说微笑，把一张小卡片滑过桌面——没有名字、没有你认得的地址，只有压进纸里的符号：三角形里一只眼睛，外面一个圆；周四午夜，一个人来，别告诉任何人；然后他像什么都没发生一样换了话题 + 三夜无眠：你在黑暗的校园里走得心跳如鼓，把卡片翻了一百次；你想到父亲回家时一身的柴油味、母亲开裂的双手、富学生轻松的表——这张卡片感觉像第一件选择你的东西；你盯着那只眼睛直到它仿佛回瞪你；你把唯一的好衬衫熨了两遍 + 判词：你身上每个理智的部分都说把卡扔掉，但你等这样一扇门等了一辈子；周四夜里，你去了"
+      ],
+      "abstract_move": "局外人校园+留堂深谈+眼睛卡片+周四的决定",
+      "replacement_needs": [
+        "章节卡+局外人定格",
+        "父母磨损细节",
+        "成绩=唯一证明",
+        "教授的棕色酒与真问题",
+        "你被注意到了",
+        "眼睛卡片",
+        "父母与富学生的闪回",
+        "第一件选择你的东西",
+        "理智vs等待判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(85)、PK02(80);打开的悬念 LOOP01→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 164000,
+        "hook_type": "outsider_campus_then_card_with_eye",
+        "first_stimulus_ms": 160,
+        "first_payoff_ms": 93360,
+        "evidence_refs": [
+          "C0001",
+          "C0009",
+          "C0038",
+          "C0055"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "evidence_build",
+      "start_ratio": 0.098,
+      "end_ratio": 0.204,
+      "start_sec": 164,
+      "end_sec": 341.3,
+      "position_label": "9.8%–20.4%(2:44–5:41)",
+      "purpose": "入会仪式（盲fold/刀刃/兄弟）+伺候与读房+看不见的考试",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.1836,
+          "time_ms": 307039,
+          "reason": "你通过了一场你从未看见的测试"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "level_transition",
+          "mechanism": "the_novice"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "ritual",
+          "mechanism": "blade_on_chest"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "initiation_payoff",
+          "mechanism": "call_you_brother"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "servitude_detail",
+          "mechanism": "polish_brass_last_leave"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "invisible_test",
+          "mechanism": "passed_never_saw"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "world_verdict",
+          "mechanism": "rooms_run_world"
+        }
+      ],
+      "required_retention_events": [
+        "three_knocks_robed",
+        "blade_on_chest"
+      ],
+      "original_moves": [
+        "Level two, the novice + 无字石楼：没有招牌，一盏小灯；你照卡片说的敲三下；黑袍人一言不发放你进去；空气里是蜡烛蜡和旧纸味；长廊挂满严肃男人的肖像，尽头是圆形房间——12个披袍人围坐，教授在其中，但在这里他不跟你打招呼，他完全是另一个人 + 仪式规程：一个声音问你是否自愿前来（是），问你能否终生守密（又是）——你其实不知道自己在答应什么；蒙眼、在黑暗中被引向前、复诵他们让你复诵的话、向看不见的脸宣誓忠诚；一柄刀轻轻抵在你裸露的胸口；一个声音告诉你你的沉默值多少钱 + 盲fold摘下：他们叫你兄弟——你是新手，组织的最低一级 + 学会它是什么：会社存在了200年，没有你可以念出声的名字；你学它的握手、口令与无声手势，背下墙上每一个符号；每月两次午夜聚会，坐后排一言不发；长老离开后你打扫大厅、擦亮铜器、码椅子扫地，早到晚退 + 读房课：你背下每个人坐哪，学会谁握着实权、谁只是假装；学会进房之前先读房；看一根挑起的眉毛结束一场长辩论；你开始模仿年长者的举止 + 看不见的考试：一个兄弟用一个漫不经心的秘密试你——他丢下一个名字看你的脸；你什么都没给，事后也只字不提；一周后他对你点头；你意识到你通过了一场你从未看见的测试；你渴望那个点头胜过渴望睡眠 + 同化：你开始穿得像兄弟们，也开始想得像他们；旧的你每周变得更安静——你不确定现在还认不认得他，也不确定想不想认得；朋友问你周四去哪，你撒了个流畅的谎，它容易得让你害怕 + 判词：世界是由你本不该进入的房间运转的——你刚刚踏进了其中一间"
+      ],
+      "abstract_move": "入会仪式（盲fold/刀刃/兄弟）+伺候与读房+看不见的考试",
+      "replacement_needs": [
+        "无字石楼与敲三下",
+        "两问两答",
+        "盲fold与刀刃",
+        "叫你兄弟",
+        "200年与无名",
+        "伺候规程（擦亮/码椅/早晚）",
+        "读房课",
+        "眉毛结束辩论",
+        "漫不经心的秘密测试",
+        "渴望点头",
+        "旧的你在变安静",
+        "周四的流畅谎言",
+        "房间运转世界判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.204,
+      "end_ratio": 0.2936,
+      "start_sec": 341.3,
+      "end_sec": 491,
+      "position_label": "20.4%–29.4%(5:41–8:11)",
+      "purpose": "照顾机制铺开太顺的路+安静的货币+安排感很重的婚姻",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.2138,
+          "time_ms": 357680,
+          "reason": "你从没申请过的工作：组织照顾自己人"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "教授种下的这条路通向哪里（他会成为他吗）",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "这段安排感很重的婚姻会走到哪里",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "care_mechanism",
+          "mechanism": "job_never_applied"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "quiet_currency",
+          "mechanism": "handshake_opens_door"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "wife_marker",
+          "mechanism": "gala_marriage"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "cleared_path",
+          "mechanism": "cases_get_easier"
+        }
+      ],
+      "required_retention_events": [
+        "job_never_applied",
+        "order_takes_care_own"
+      ],
+      "original_moves": [
+        "Level three, the brother + 两年试炼后：烛光中升为正式成员，手抖个不停；同年春天大学毕业；教授终于在日光下握你的手——他说真正的工作现在才开始 + 照顾机制：几周内他给你弄到一家律所的工作——你从没申请过，从没听说他们在招人；一位高级合伙人戴着你的戒指；你明白了：组织照顾自己人 + 你23岁，职业已经飞快：城市分会更大更富——银行家、法官、拥有报纸的人；他们把你当注定要升的弟弟；一位年长的兄弟每周带你午餐，教你用哪把叉、奉承哪些人——他在塑造你，你们都知道；你由他去，因为课真的有效 + 会员资格是一种安静的货币：一次握手打开钱打不开的门；一句耳语让问题在开始之前结束 + 慈善舞会上的她：她父亲原来也是成员（你认识她时不知道；后来你怀疑那次相遇是不是安排——你决定无所谓，因为你爱她）；她锐利、温暖、善良，看得穿所有人除了你；你们一年内结婚；你父母僵硬地坐在他们永远负担不起的婚礼上——母亲哭着觉得自己渺小，父亲穿着借来的西装不停问谁付的花钱；你说一个朋友拿了折扣 + 案子变得容易：证人改了口，对手庭前和解；你告诉自己你就是能干——内心深处你知道是组织在清路；你赢了一场本该不可能的案子，对方律师干脆不再回电话；你从不问为什么 + 每月寄钱回家：父亲问钱哪来的，你说加薪了——是真的，但不是全部的真相；全部的真相住在一栋没有招牌的楼里；你每场会议都到，投票小事，学那些从不被写下的名字；你忠诚、有用、正在爬升"
+      ],
+      "abstract_move": "照顾机制铺开太顺的路+安静的货币+安排感很重的婚姻",
+      "replacement_needs": [
+        "黎明正式成员",
+        "日光下的握手",
+        "没申请过的工作",
+        "高级合伙人的戒指",
+        "午餐塑造课",
+        "安静的货币",
+        "慈善舞会的她",
+        "借来的西装婚礼",
+        "案子变容易",
+        "加薪不是全部真相"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80);打开的悬念 LOOP03→FS09、LOOP04→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "conflict_escalation",
+      "start_ratio": 0.2936,
+      "end_ratio": 0.3832,
+      "start_sec": 491,
+      "end_sec": 641,
+      "position_label": "29.4%–38.3%(8:11–10:41)",
+      "purpose": "守门人：不留指纹的业务+信任即监狱+失宠课",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.3463,
+          "time_ms": 579279,
+          "reason": "那份信任是你的保护，也是你的监狱；知道得越多越不自由"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "他会把女儿养成什么——她会怎样",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "daughter_marker",
+          "mechanism": "named_after_mother"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "arrangements",
+          "mechanism": "permit_one_day"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "prison_knowledge",
+          "mechanism": "know_more_less_free"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "fall_lesson",
+          "mechanism": "rival_falls"
+        }
+      ],
+      "required_retention_events": [
+        "warden_door_keeper",
+        "daughter_named_mother"
+      ],
+      "original_moves": [
+        "Level four, the warden + 29岁首次任职：会内选举你为 warden——会议秩序的看守；仪式时你守门、教导新新手；你站在当年那个披袍人站过的位置，放受惊的年轻人进来，在他们发抖的手里看见自己的过去 + 女儿出生：你抱着她，妻子睡着；你胸口有什么裂开；你用母亲的名字给她命名；你承诺保护她不受一切伤害——你还看不见这话里的反讽；你第一次想你在把她养进什么里，但疑虑很小，你把它锁起来 + 真正的业务：不只是仪式与晚宴——是人情、债务与安静的安排：兄弟需要批文，一个电话，一天内批了；兄弟的儿子被捕，指控悄悄消失；一个对头发现他的生意被审计到毁掉；没有人承认过任何事；组织不留指纹 + 信使与黑话：你开始为长老们传话；你学会说听起来不是那个意思的话；你怀揣能毁掉大人物的秘密——那份信任是你的保护，也是你的监狱；你背下希望自己能忘记的秘密：你知道得越多，越不自由 + 夜间电话人：你学会哪些法官欠组织人情、哪些记者会埋掉报道；你成了那个在夜里给人打电话的人——你很擅长，而这让你害怕 + 失宠课：一个兄弟开始缺席、当众质疑一个决定；一年内他消失了，再没人提他的名字；你不用人教就吸收了这课：你再不缺席，再不当众质疑 + 报酬间接来：钱通过你从没收过的费用和董事会席位到来；妻子不再问钱从哪来——她享受房子与舒适；你告诉自己人人都受益，你几乎信了；你看着睡着的女儿，把其余的推开了"
+      ],
+      "abstract_move": "守门人：不留指纹的业务+信任即监狱+失宠课",
+      "replacement_needs": [
+        "守门人职位",
+        "女儿出生与命名",
+        "看不见的反讽",
+        "人情/债务/安排三件套",
+        "不留指纹",
+        "保护与监狱判词",
+        "夜间电话人",
+        "失宠课（消失+再不缺席）",
+        "妻子不再问"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80);打开的悬念 LOOP02→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "conflict_escalation",
+      "start_ratio": 0.3832,
+      "end_ratio": 0.4855,
+      "start_sec": 641,
+      "end_sec": 812.1,
+      "position_label": "38.3%–48.6%(10:41–13:32)",
+      "purpose": "会长：权力卸妆（私人号码）+两个你+组织埋葬了他",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.4513,
+          "time_ms": 755000,
+          "reason": "一个不断失败的父亲，一个从不失败的会长"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.4812,
+          "time_ms": 804880,
+          "reason": "葬礼上30个男人做同一个手势：是组织埋葬了他"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "level_transition",
+          "mechanism": "the_master"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "daughter_question",
+          "mechanism": "ring_strange_eye"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "power_definition",
+          "mechanism": "private_number_favor"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "two_men",
+          "mechanism": "father_fails_master_never"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "professor_death",
+          "mechanism": "order_buried_him"
+        }
+      ],
+      "required_retention_events": [
+        "carved_chair",
+        "daughter_finds_ring"
+      ],
+      "original_moves": [
+        "Level five, the master + 36岁当选 lodge 会长：你坐上中央的雕花椅——两个世纪的男人坐过你坐的位置；你戴上职位的领圈与宝石；你领那些你曾在后排看过的仪式；你决定谁被接纳、谁被拒 + 女儿的戒指：她七岁，什么都好奇；一天早晨她发现你那枚沉重的戒指，问那只奇怪的眼睛是什么——你说那只是老头们的俱乐部；她才7岁就不信你；她聪明，远比你当年聪明；那份聪明让你有点怕：你想知道她有一天会弄明白什么 + 市重量级玩家：你掌管分会的钱与决定；市议员想要你能交付的选票，开发商想要你能变出来的批文；你提的要求从不写下来；真正的权力从不 loud——真正的权力是一个私人号码和一笔欠着的人情 + 你看见组织如何塑造一座城：市长在公众投票前几年就被选定；一桩丑闻被留到正确的时刻引爆；一个年轻人被培养成官员，不知道谁在引导他；你在甜点上决定未来 + 处理走偏的兄弟：一个成员在派对上说得太自由——你去拜访他，提醒他的誓言；他道歉，事情了结；你从不威胁，不需要：威胁被每个戴戒指的人理解 + 女儿的质问：她问你为什么从不在家吃晚饭；你许下你不会守的承诺；你为了一个不紧急的紧急会议错过她的校园剧——会议没什么要紧，组织只想看你会不会来；你来了，你恨自己，同时也感到归属的安静颤栗 + 判词：你现在是两个人了——一个不断失败的父亲，一个从不失败的会长；你不再知道哪个是真的 + 教授最后一课：他很老了，出席最后一次会议看你主持；他说你已超越他，他那双耐心的老眼睛里有泪；一个月后他去世；葬礼上30个男人做同一个无声手势——你意识到是组织埋葬了他，不是他的家人；你短暂地想：谁会埋葬你"
+      ],
+      "abstract_move": "会长：权力卸妆（私人号码）+两个你+组织埋葬了他",
+      "replacement_needs": [
+        "雕花椅与领圈",
+        "女儿发现戒指（7岁不信）",
+        "选票与批文",
+        "权力卸妆（私人号码+欠着的人情）",
+        "市长提前几年选定",
+        "从不威胁",
+        "错过校园剧=一次测试",
+        "两个你判词",
+        "教授的泪与葬礼手势",
+        "谁会埋葬你"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85)、PK07(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "evidence_build",
+      "start_ratio": 0.4855,
+      "end_ratio": 0.574,
+      "start_sec": 812.1,
+      "end_sec": 960.2,
+      "position_label": "48.6%–57.4%(13:32–16:00)",
+      "purpose": "大机器全貌：王朝时间观+父亲的墓前陌生",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.5582,
+          "time_ms": 933680,
+          "reason": "在自己的血亲面前，你觉得自己像个陌生人"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "dynasty_time",
+          "mechanism": "measures_in_dynasties"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "father_grave",
+          "mechanism": "stranger_over_blood"
+        }
+      ],
+      "required_retention_events": [
+        "above_the_machine",
+        "not_evil_power_protecting"
+      ],
+      "original_moves": [
+        "Level six, the provincial grand officer + 44岁升入 grand chapter：监管几个州的几十个分会；你是不断出差的官员——不再坐一个房间，而是巡视许多；地方会长向你鞠躬；你纠正仪式、审查财务、调解几十年的分会宿怨 + 机器的全貌：组织比你想象的大得多——根在银行、法院与州议会；它为对的年轻人提供奖学金，悄悄毁掉与它作对的人；你从上面看见整台机器：它不完全是恶——它是权力在一代代地自我保护 + 王朝时间观：你见到服役40年的官员，他们谈几十年像别人谈周末；组织不用年丈量时间，用王朝；你见到祖父就坐过理事会的人，他把组织称为家族生意——你意识到那正是它的本质，你也开始那样思考：你规划十年后才兑现的棋，不再指望看到自己工作的完成；这就是组织如何延续，这也是它如何把你整个吞下 + 家的账：一个月跑六个州，忘记自己睡在哪间酒店；打电话回家，女儿不接——她十几岁了，她在生气；她说你从来不在场，她是对的，而你无法解释为什么——你不能告诉她那些没有招牌的房间 + 妻子在舒适的房子里变得遥远：你们共享一个生活，却很少共享一段对话；你喝教授当年给你倒的那种棕色酒——味道不再一样了，什么都不一样了 + 父亲的墓：他去年冬天死在那栋小房子里，睡梦中，至死不知道你成了什么；你穿着比他的车还贵的大衣站在他墓前，在自己的血亲面前觉得自己像个陌生人；你想在墓前把一切都告诉父亲，想让他知道他的儿子有分量——但那些话对他将毫无意义；母亲问那些陌生的男人是谁，你说同事；她看着他们做那个无声手势；当晚你开车回一场会议——工作不等待，连哀悼也不等；你正在学会爬升的真正价格"
+      ],
+      "abstract_move": "大机器全貌：王朝时间观+父亲的墓前陌生",
+      "replacement_needs": [
+        "巡视几十分会",
+        "机器全貌（银行/法院/州议会）",
+        "不完全是恶=权力自我保护",
+        "王朝时间观",
+        "十年棋与吞下你",
+        "女儿不接与愤怒",
+        "棕色酒味道变了",
+        "父亲的墓与大衣",
+        "血亲前的陌生人",
+        "工作不等哀悼"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "conflict_escalation",
+      "start_ratio": 0.574,
+      "end_ratio": 0.6879,
+      "start_sec": 960.2,
+      "end_sec": 1150.6,
+      "position_label": "57.4%–68.8%(16:00–19:11)",
+      "purpose": "内环：可见性即死亡+无顶设计+无感觉的危机处理",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.6296,
+          "time_ms": 1053120,
+          "reason": "组织不想公开统治：可见性就是死亡"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.6606,
+          "time_ms": 1105000,
+          "reason": "你批准时毫无感觉——没有感觉才是重点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "level_transition",
+          "mechanism": "inner_council"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "deepest_secret",
+          "mechanism": "visibility_is_death"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "crisis_textbook",
+          "mechanism": "journalist_promoted"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "void_verdict",
+          "mechanism": "feeling_nothing_point"
+        }
+      ],
+      "required_retention_events": [
+        "watched_thirty_years",
+        "no_rituals_real_decisions"
+      ],
+      "original_moves": [
+        "Level seven, the inner council + 52岁被召到一个你不知道存在的地方：grand chapter 之上还有一个理事会——12个人在秘密中引导整个组织；他们看了你30年；他们给你一个空位；你没等他们问完就接受了 + 内环的形态：不在任何 lodge 聚会，在私人庄园和上锁的图书馆；这里没有做样子的仪式——这里做真正的决定 + 顶层业务：跨境移动资金、把成员放进政府与董事会、通过塑造写法律的人来塑造法律；两百年如此；你读到比国家还老的行动档案：被扭转的选举、被建起的财富、被安静安排的战争——你明白历史 mostly 是给公众看的故事；你与给总统当顾问的男人同坐，他们谈国家像你当年谈分会；你看见自己的旧世界有多小 + 你的影响力 portfolio：监管组织的海外分支，安排正式地从未发生的会面，在绝不可能公开见面的对手之间斡旋 + 最深的秘密：组织不想公开统治——公开统治招来反抗；组织只想保持不可见；可见性，他们反复说，就是死亡 + 没有顶：你知道理事会之上还有名字——你知道的名字之上永远还有名字；你怀疑组织没有单一的顶峰：这样，没有哪一次死亡能把它拉下来 + 危机处理（教科书式）：一个记者接近了——他有文件、名字和日期；你不威胁他，那是业余活；他的编辑收到一份慷慨的报价，报道被悄悄杀死，记者被升职让他忙起来；他永远不知道自己最好的作品为什么消失了；你批准这个方案时毫无感觉——你意识到，没有感觉才是重点 + 你曾经是个什么都感觉的男孩；你想知道他是哪一年死的——你在任何日历上都找不到那一年 + 黑窗里的倒影：你看见父亲疲惫的脸回看你——他为小得多的赌注把自己熬干；你想知道你们俩到底有多不同 + 女儿已成年远走：她有了一个你从未抱过的孩子；她不再回你的电话；你用这个家换了这张桌子；有些夜里你想你是不是选错了——然后早晨来了，工作把你拉回去"
+      ],
+      "abstract_move": "内环：可见性即死亡+无顶设计+无感觉的危机处理",
+      "replacement_needs": [
+        "看了你30年",
+        "空位即答",
+        "无仪式的真决定",
+        "历史是给公众的故事",
+        "影响力portfolio",
+        "可见性即死亡",
+        "永远有更高的名字（无顶）",
+        "记者被升职的教科书处理",
+        "没有感觉才是重点",
+        "父亲疲惫的脸在窗里",
+        "用家换桌子"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(80)、PK10(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.6879,
+      "end_ratio": 0.7817,
+      "start_sec": 1150.6,
+      "end_sec": 1307.5,
+      "position_label": "68.8%–78.2%(19:11–21:48)",
+      "purpose": "神话顶端：公众政治vs会社棋盘+空椅子+统治世界失去自己",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.7543,
+          "time_ms": 1261840,
+          "reason": "她的椅子保持原样：沉默是你最接近陪伴的东西"
+        },
+        {
+          "peak_id": "PK12",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.776,
+          "time_ms": 1298000,
+          "reason": "他从未握过大权，但从未孤独过一次；你统治了世界，失去了自己的"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "died_while_abroad_empty_chair_answer",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "level_transition",
+          "mechanism": "grandmaster"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "chessboard",
+          "mechanism": "public_politics_orders_chess"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "wife_death",
+          "mechanism": "empty_chair"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "daughter_line",
+          "mechanism": "sorry_not_for_you"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "father_contrast",
+          "mechanism": "never_once_alone"
+        }
+      ],
+      "required_retention_events": [
+        "everyone_obeys_mark",
+        "senator_quiet_room"
+      ],
+      "original_moves": [
+        "Level eight, the grandmaster + 60岁当选理事会之首：整个组织的 grandmaster；你坐在一个多数人以为是神话的会社的顶端；你的话引导12个人，通过他们引导数千人；没有王冠没有公开头衔——你级别的唯一标志是每个人都服从 + 幕后的权力：你指挥一个比任何政府都老的网络；你能把一位参议员召进安静的房间，用一个电话让一笔财富沉没，一夜之间把一个无名者抬进权力；你全部从帘子后面完成；你的名字不出现在任何记录里 + 你管理组织庞大的隐藏财富：决定资助哪些事业、碾碎哪些；决定哪些 seeker 被招募、哪些被放过；你什么都不签，却决定一切 + 秩序间的秩序：你秘密会见其他会社的 grandmaster——世界上有许多这样的会社；他们竞争、合作、划分影响力；一个世纪没有过公开战争：战争在市场、法院和选举里打；公众看见政治，会社们看见棋盘 + 三条古老规则：保持隐藏、保持耐心、永远不让公众看见棋盘——你一生都在执行这三条；你动一枚棋子，一个政府换手；再动一枚，一条法律被改写；没有人能追到你 + 你握着比从未见过的总统们更大的权力——然后回到一座空石头房子：吃厨师留下的晚饭；坐在一张为20人打造的长桌前；你是唯一坐过那里的人 + 妻子两年前去世：你在国外没能赶回来；你把她葬在一群戴戒指的男人中间；她的椅子你保持原样，挪不动自己；你有时对着空椅子说话，告诉它你的一天——回答你的沉默是你最接近陪伴的东西 + 女儿没来葬礼：她只来了一行字，说她抱歉——但不是为你；你读了数不清多少遍 + 你想到父亲会怎么说这一切：他开货车，睡在妻子身边；他从未握过比他的送货路线更大的权力——但他从未孤独过一次；你统治了世界，失去了自己的"
+      ],
+      "abstract_move": "神话顶端：公众政治vs会社棋盘+空椅子+统治世界失去自己",
+      "replacement_needs": [
+        "唯一的标志是服从",
+        "召参议员/沉财富/抬无名者",
+        "什么都不签决定一切",
+        "会社间的秩序与棋盘",
+        "三条古老规则",
+        "动棋子换政府",
+        "20人长桌一个人",
+        "空椅子的陪伴",
+        "女儿的一行字（不是为你）",
+        "父亲从未孤独的对照",
+        "统治世界失去自己"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(85)、PK12(90);回收了前文的悬念 FS03→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK12",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.7817,
+      "end_ratio": 0.8801,
+      "start_sec": 1307.5,
+      "end_sec": 1472.2,
+      "position_label": "78.2%–88%(21:48–24:32)",
+      "purpose": "建筑师：无塔尖大教堂+成为教授+空白卡片",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "you_have_become_the_professor_answer",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "cathedral",
+          "mechanism": "no_spire"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "become_professor",
+          "mechanism": "forgive_and_envy"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "blank_card_reach",
+          "mechanism": "let_her_keep_life"
+        }
+      ],
+      "required_retention_events": [
+        "architect_next_century",
+        "cathedral_no_spire"
+      ],
+      "original_moves": [
+        "Level nine, the architect + 69岁退后一步：你不退休——没有人真正从这退休；你成为比 grandmaster 更稀有的东西：组织未来的建筑师；你为它设计下一个世纪的航向 + 大教堂建造者：你不再管日常运营，你设计你走后别人会遵循的规则；你改写仪式让未来世代绑得更紧；你决定组织如何挺过即将到来的时代——如何躲开摄像头与互联网（现在秘密会以从未有过的方式泄漏）；你在旧的秘密里造新的保密层，造彼此不知道对方存在的小组，确保没有哪一次泄漏能暴露整体 + 你像一个建大教堂的人一样思考：你永远看不到它完工；你想起之前所有的建造者——每个人都在同一座无尽大教堂上加建了一点；没人见过塔尖，你也不会 + 你写你成灰后才会被念出的仪式，把指令藏进只有未来才读得懂的符号；你想起建造了组织的先人们——他们是一本几乎没人打开的书里的名字；你很快也会是这样一个名字；你想会不会有人记得你曾是一个男人——大概不会；而这正是组织想要的 + 你成了教授：你现在只和最长的成员见面，用做了几十年的符号说话；慢慢你意识到你成了他——那双耐心眼睛的老人，那个有一张卡片可给的人；你开始寻找自己的 seeker + 你注视一个年轻的奖学金学生：她贫穷、出色、饥饿，就像当年的你；她每晚独自在图书馆吃饭；你感到那古老的循环的拉力；你认真地想了一瞬要不要走开，要不要让她保住她普通的人生；然后你想起也有人给过你那张卡片，你想起你曾多想被选中；你还是伸手去拿一张空白的小卡片；你的手没有像教授那样抖过；你完全理解他了——你原谅他，也嫉妒他 + 女儿50岁了：你们多年没说话；你的孙子长大了，不认识你的脸；你几乎活得比所有知道你真名的人都久；你坐在一座装满秘密与沉默的图书馆里；你塑造了那个塑造了你的组织——而现在你再没什么可塑造的了"
+      ],
+      "abstract_move": "建筑师：无塔尖大教堂+成为教授+空白卡片",
+      "replacement_needs": [
+        "退后不退休",
+        "设计下一个世纪",
+        "躲摄像头与互联网",
+        "大教堂与塔尖",
+        "书里的名字",
+        "成为教授（原谅与嫉妒）",
+        "注视新的奖学金学生",
+        "想让她保住普通人生的一瞬",
+        "还是伸手拿卡片",
+        "没什么可塑造"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "closure",
+      "start_ratio": 0.8801,
+      "end_ratio": 0.9643,
+      "start_sec": 1472.2,
+      "end_sec": 1613,
+      "position_label": "88%–96.4%(24:32–26:53)",
+      "purpose": "隐匿者：11年未寄的信+汇率判词+同一枚戒指",
+      "peaks": [
+        {
+          "peak_id": "PK13",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9161,
+          "time_ms": 1532400,
+          "reason": "你从不拆开那封信：那样就结束了；这句话你说了11年"
+        },
+        {
+          "peak_id": "PK14",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9466,
+          "time_ms": 1583440,
+          "reason": "组织给了承诺的一切，悄悄拿走了其余的一切"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "那封写给女儿的信会不会寄出（故意不关闭：只要信还封着，对话就没完）",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "gave_everything_promised_took_everything_else_answer",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "stranger_and_unsent_letter_answer",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP05"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "sealed_letter",
+          "mechanism": "conversation_not_over"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "exchange_verdict",
+          "mechanism": "gave_promised_took_rest"
+        }
+      ],
+      "required_retention_events": [
+        "legend_still_breathing",
+        "last_one_remembers"
+      ],
+      "original_moves": [
+        "Level 10, the unseen + 80岁：你不再出席会议——不再需要；组织按你设计的方式自行运转；你是从未见过你的人耳语的名字，一个不存在的会社里的活传奇；年轻成员听着关于建筑师的故事，不知道主角还在呼吸 + 石屋独老：远离城市的石屋，墙里装着两个世纪的秘密，现在也装着你的；凌晨三点醒来睡不着，你走过寒冷的长廊看死去男人们的肖像——你认识其中一些，埋葬了其中一些；你是最后一个记得他们真正样子的人；你死后，连那份记忆也会走 + 不会有公众读到的葬礼，不会有刻进任何公共石头的名字 + 那封信：女儿50岁，对你是陌生人；多年前你给她写过一封信，从没寄出；它仍躺在抽屉里，封着，未读；最糟的夜晚你把它拿出来握着；你从不拆开——因为那样就结束了；只要它还封着，那场对话就还没完；你告诉自己明天就寄——这句话你说了11年 + 唯一的剩余：你从未见过的孙子已经长大；在某个地方，你的一片正在过一种你看不见的生活——那单独的一片，是组织唯一没有拿走的东西 + 你想起那个靠奖学金和运气进来的男孩：他相信一扇门能改变一生——他是对的，只是不是他希望的方式；你想起教授、那杯棕色的酒、那只眼睛卡片；你想知道那个老人临终时是否也感到这种空洞 + 汇率判词：组织给了它承诺的一切——权力、舒适、知识与世界之上的座位；它悄悄地拿走了其余的一切作为交换 + 你握着被拇指磨光滑的戒指：三角形里一只眼睛，外面一个圆——和第一夜的是同一枚"
+      ],
+      "abstract_move": "隐匿者：11年未寄的信+汇率判词+同一枚戒指",
+      "replacement_needs": [
+        "活传奇仍在呼吸",
+        "最后记得他们的人",
+        "无公共石头",
+        "11年未寄的信",
+        "封存即未完",
+        "唯一没被拿走的一片",
+        "男孩与门的回望",
+        "汇率判词",
+        "同一枚磨光滑的戒指"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK13(90)、PK14(85);打开的悬念 LOOP05(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01、FS04→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK13",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK14",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "closure",
+      "start_ratio": 0.9643,
+      "end_ratio": 1,
+      "start_sec": 1613,
+      "end_sec": 1672.8,
+      "position_label": "96.4%–100%(26:53–27:53)",
+      "purpose": "循环回收：你可以警告——你不会",
+      "peaks": [
+        {
+          "peak_id": "PK15",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.9792,
+          "time_ms": 1638000,
+          "reason": "你可以警告他们——你不会；没有人警告过你"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE41",
+          "event_type": "warn_choice",
+          "mechanism": "could_warn_will_not"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "circular_close",
+          "mechanism": "everything_and_no_one"
+        }
+      ],
+      "required_retention_events": [
+        "circular_callback",
+        "blank_card_watching"
+      ],
+      "original_moves": [
+        "循环回收：今晚某处，一个年轻的奖学金学生正在独自学习；他们觉得不属于任何地方；他们在等一扇终于让他们进去的门；一位老成员正注视着他们，手里拿着一张空白的小卡片 + 他们不知道自己将被献上什么；不知道承诺里藏着的价格；你可以警告他们，如果你想——你不会；没有人警告过你 + 而且看看你爬了多远：多高，又多孤独 + 他们会说 yes，因为他们饥饿，就像你当年一样；那只眼睛会注视他们，如同注视过你；他们会升起，会领导，会抵达这里——独自，在一座有一切却没有人的石头房子里 + 他们会想明白——They always do + 收束：The cycle continues"
+      ],
+      "abstract_move": "循环回收：你可以警告——你不会",
+      "replacement_needs": [
+        "下一个饥饿的学生",
+        "空白卡片在注视",
+        "可以警告但不会",
+        "没有人警告过你",
+        "多高多孤独",
+        "眼睛注视下一个人",
+        "循环判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK15(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK15",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

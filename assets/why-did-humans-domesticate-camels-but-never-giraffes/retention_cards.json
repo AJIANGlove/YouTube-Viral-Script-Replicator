@@ -1,0 +1,1041 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.419Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "mystery_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.023,
+      "start_sec": 0,
+      "end_sec": 33,
+      "position_label": "0%–2.3%(0:00–0:33)",
+      "purpose": "第一秒用视觉类比玩笑抛出悖论双方的对照，再落成标题问句",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "hook",
+          "strength": 70,
+          "position_ratio": 0.0155,
+          "time_ms": 22000,
+          "reason": "视觉类比玩笑+悖论问句，前30秒抓住注意力"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：既然能驯化难搞的大型沙漠动物，为什么从不驯化更高的那个（标题悖论问句的悬置）",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook",
+          "mechanism": "visual_paradox_joke"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "question_drop",
+          "mechanism": "title_paradox_question"
+        }
+      ],
+      "required_retention_events": [
+        "visual_paradox_joke",
+        "title_question_drop"
+      ],
+      "original_moves": [
+        "从零信息到双候选对照画面，再到标题悖论问句成立"
+      ],
+      "abstract_move": "第一秒用视觉类比玩笑抛出悖论双方的对照，再落成标题问句",
+      "replacement_needs": [
+        "一句把两个候选压进同一画面的类比玩笑",
+        "双方表面条件的对比",
+        "标题悖论问句的抛出"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 33000,
+        "hook_type": "visual_paradox_joke_plus_title_question",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 22000,
+        "evidence_refs": [
+          "C0001",
+          "C0004"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "thesis_reframe",
+      "start_ratio": 0.023,
+      "end_ratio": 0.039,
+      "start_sec": 33,
+      "end_sec": 56,
+      "position_label": "2.3%–3.9%(0:33–0:56)",
+      "purpose": "立即重框定问题：胜负不在捕获能力，而在多代繁殖控制的净收益",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "驯服与驯化到底差在哪，落选者是否真的'没法接近'",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "reframe",
+          "mechanism": "thesis_reframe"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "concept_split",
+          "mechanism": "taming_vs_domestication"
+        }
+      ],
+      "required_retention_events": [
+        "thesis_reframe",
+        "direction_tease"
+      ],
+      "original_moves": [
+        "问题重定义",
+        "两个评判变量",
+        "'A解决燃眉之急，B制造新麻烦'的方向预告"
+      ],
+      "abstract_move": "立即重框定问题：胜负不在捕获能力，而在多代繁殖控制的净收益",
+      "replacement_needs": [
+        "对问题本身的重新定义",
+        "评判标准的两个变量（繁殖控制与收益）",
+        "一句话预告双方结论方向"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "concept_calibration",
+      "start_ratio": 0.039,
+      "end_ratio": 0.079,
+      "start_sec": 56,
+      "end_sec": 112,
+      "position_label": "3.9%–7.9%(0:56–1:52)",
+      "purpose": "切开两个最易混淆的概念（驯服与驯化），用反例清单排除'从没试过'的误解",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "concept_calibration",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "myth_busting",
+          "mechanism": "capture_history_montage"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "question_refinement",
+          "mechanism": "self_sustaining_population"
+        }
+      ],
+      "required_retention_events": [
+        "concept_split",
+        "myth_busting",
+        "question_refinement"
+      ],
+      "original_moves": [
+        "概念定义",
+        "大象/斑马旁证",
+        "落选者被捕获展示史",
+        "问题精修为'为何没有自持驯化种群'"
+      ],
+      "abstract_move": "切开两个最易混淆的概念（驯服与驯化），用反例清单排除'从没试过'的误解",
+      "replacement_needs": [
+        "两个概念的操作性定义",
+        "至少两个'可驯服但未驯化'的旁证",
+        "落选者曾被人类捕获与展示的史实",
+        "问题重述句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "context_setup",
+      "start_ratio": 0.079,
+      "end_ratio": 0.128,
+      "start_sec": 112,
+      "end_sec": 182,
+      "position_label": "7.9%–12.8%(1:52–3:02)",
+      "purpose": "给出成功候选的驯化时空背景，并打破'有用就立即驯化'的直觉",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "成功方到底提供了什么，让人类在特定环境下非它不可",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "comparative_disqualification",
+          "mechanism": "until_clauses"
+        }
+      ],
+      "required_retention_events": [
+        "archaeology_texture",
+        "latecomer_surprise"
+      ],
+      "original_moves": [
+        "两个种类分化",
+        "考古时空锚点",
+        "'并非有用就立即驯化'的前提铺设"
+      ],
+      "abstract_move": "给出成功候选的驯化时空背景，并打破'有用就立即驯化'的直觉",
+      "replacement_needs": [
+        "成功候选的种类分化与时空锚点",
+        "它在驯化序列中的迟到者位置",
+        "'不是立即驯化所有候选'的铺垫句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "capability_reveal",
+      "start_ratio": 0.128,
+      "end_ratio": 0.21,
+      "start_sec": 182,
+      "end_sec": 299,
+      "position_label": "12.8%–21%(3:02–4:59)",
+      "purpose": "成功方价值论证：生理适应清单+多用途回报+贸易网络放大，确立'非凡回报'",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.1883,
+          "time_ms": 268000,
+          "reason": "'非凡的投资回报'：成功方价值清单的收束判决"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "落选者能比现有家畜更好地解决什么问题",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "humor_payoff",
+          "mechanism": "workplace_metaphor"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "pivot_reveal",
+          "mechanism": "critical_feature_callout"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "verdict",
+          "mechanism": "roi_verdict"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "pivot_question",
+          "mechanism": "rhetorical_question_turn"
+        }
+      ],
+      "required_retention_events": [
+        "comparative_disqualification",
+        "capability_inventory",
+        "roi_verdict",
+        "network_amplification"
+      ],
+      "original_moves": [
+        "传统家畜失格排比",
+        "生理适应清单",
+        "载货关键特性",
+        "多用途回报",
+        "贸易网络放大"
+      ],
+      "abstract_move": "成功方价值论证：生理适应清单+多用途回报+贸易网络放大，确立'非凡回报'",
+      "replacement_needs": [
+        "与传统家畜的对照式失格排比",
+        "环境适应机制的清单式呈现",
+        "一物多用的回报清单",
+        "贸易网络放大效应"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75);打开的悬念 LOOP04→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "elimination_round",
+      "start_ratio": 0.21,
+      "end_ratio": 0.263,
+      "start_sec": 299,
+      "end_sec": 374,
+      "position_label": "21%–26.3%(4:59–6:14)",
+      "purpose": "第一轮用途排除：落选者在肉、奶、纤维、骑乘上被现有家畜与自身解剖逐一否决",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "humor_peak",
+          "strength": 80,
+          "position_ratio": 0.2467,
+          "time_ms": 351000,
+          "reason": "'需要另一台叉车的叉车'：装卸困境论证的第一个情绪爆点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "capability_inventory_payoff",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "elimination_volley",
+          "mechanism": "rapid_use_case_dismissal"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "humor_payoff",
+          "mechanism": "absurdist_engineering_analogy"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "contrast_beat",
+          "mechanism": "kneeling_feature_contrast"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "promo_insert",
+          "mechanism": "self_promo_course"
+        }
+      ],
+      "required_retention_events": [
+        "elimination_volley",
+        "anatomy_constraint",
+        "absurdist_engineering_analogy"
+      ],
+      "original_moves": [
+        "反问转场",
+        "用途连击否决",
+        "解剖不适配分析",
+        "叉车类比笑点",
+        "成功方跪姿对照"
+      ],
+      "abstract_move": "第一轮用途排除：落选者在肉、奶、纤维、骑乘上被现有家畜与自身解剖逐一否决",
+      "replacement_needs": [
+        "转向落选者的反问转场",
+        "各用途被现有选项快速否决的连击",
+        "形体解剖不适配的具体分析",
+        "成功方对照特征的反衬"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80);回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "cost_analysis",
+      "start_ratio": 0.263,
+      "end_ratio": 0.401,
+      "start_sec": 485,
+      "end_sec": 571,
+      "position_label": "26.3%–40.1%(8:05–9:31)",
+      "purpose": "饲养成本线：食性生态推导出基建噩梦，繁殖速度推导出回报周期问题",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.3865,
+          "time_ms": 550000,
+          "reason": "'这可能就是核心原因'：第一轮排除法的总裁决"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "elimination_verdict",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "reframe",
+          "mechanism": "vertical_access_problem"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "thought_experiment",
+          "mechanism": "second_person_herd_scenario"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "humor_payoff",
+          "mechanism": "institution_scale_analogy"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "variable_elimination",
+          "mechanism": "payoff_question_raise"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "verdict",
+          "mechanism": "central_reason_verdict"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "opportunity_cost",
+          "mechanism": "awkward_substitute_framing"
+        }
+      ],
+      "required_retention_events": [
+        "thought_experiment",
+        "infrastructure_chain",
+        "quantified_comparison",
+        "variable_elimination",
+        "central_reason_verdict"
+      ],
+      "original_moves": [
+        "选育流程",
+        "落选者繁殖量化",
+        "成功方同样慢的对照",
+        "变量排除",
+        "回报问题显式化",
+        "核心原因判决"
+      ],
+      "abstract_move": "饲养成本线：食性生态推导出基建噩梦，繁殖速度推导出回报周期问题",
+      "replacement_needs": [
+        "落选者食性特化与人为饲喂的冲突",
+        "围栏、栏舍、运输、兽医的基建成本连锁",
+        "繁殖周期的量化对比",
+        "机会成本概念的引入"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80);回收了前文的悬念 FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "rule_generalization",
+      "start_ratio": 0.401,
+      "end_ratio": 0.435,
+      "start_sec": 571,
+      "end_sec": 619,
+      "position_label": "40.1%–43.5%(9:31–10:19)",
+      "purpose": "第一次升维：从个案提炼'在位者优势'规律，解释为何多数食草动物从未被驯化",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.4245,
+          "time_ms": 604000,
+          "reason": "全片中枢规律：新物种必须有重大优势才能取代在位系统"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "elimination_volley",
+          "mechanism": "edible_species_list"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "rule_reveal",
+          "mechanism": "incumbent_advantage_rule"
+        }
+      ],
+      "required_retention_events": [
+        "edible_species_volley",
+        "incumbent_rule_reveal"
+      ],
+      "original_moves": [
+        "'笨拙的更高替代品'定性",
+        "可食用物种连击清单",
+        "在位者优势规律",
+        "个案回收"
+      ],
+      "abstract_move": "第一次升维：从个案提炼'在位者优势'规律，解释为何多数食草动物从未被驯化",
+      "replacement_needs": [
+        "'可食用但未驯化'的物种连击清单",
+        "在位者优势规律的显式表述",
+        "把个案装回规律的回收句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "risk_analysis",
+      "start_ratio": 0.435,
+      "end_ratio": 0.513,
+      "start_sec": 619,
+      "end_sec": 730,
+      "position_label": "43.5%–51.3%(10:19–12:10)",
+      "purpose": "性情与管理风险线：打破'温顺巨兽'想象，建立'可靠容忍日常流程'的驯化门槛",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "danger_reveal",
+          "mechanism": "predator_injury_detail"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "humor_payoff",
+          "mechanism": "myth_busting_metaphor"
+        }
+      ],
+      "required_retention_events": [
+        "myth_busting",
+        "danger_reveal",
+        "routine_tolerance_inventory"
+      ],
+      "original_moves": [
+        "温柔想象破除",
+        "踢击与体重风险",
+        "应激与麻醉难题",
+        "日常容忍清单",
+        "成功方暴躁但可控对照"
+      ],
+      "abstract_move": "性情与管理风险线：打破'温顺巨兽'想象，建立'可靠容忍日常流程'的驯化门槛",
+      "replacement_needs": [
+        "流行印象的破除",
+        "体重与防御攻击的具体风险",
+        "家畜须容忍的日常流程清单",
+        "成功方同样暴躁但可控的对照"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "social_ecology",
+      "start_ratio": 0.513,
+      "end_ratio": 0.598,
+      "start_sec": 730,
+      "end_sec": 851,
+      "position_label": "51.3%–59.8%(12:10–14:11)",
+      "purpose": "社会结构与采食景观线：群居可控性与植被分布决定放牧可行性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "humor_payoff",
+          "mechanism": "self_deprecation_analogy"
+        }
+      ],
+      "required_retention_events": [
+        "breeding_control_contrast",
+        "social_structure_contrast",
+        "fairness_concession"
+      ],
+      "original_moves": [
+        "繁殖管理可操作性对照",
+        "松散社群 vs 紧密群居",
+        "公平性让步",
+        "采食景观分布否决集中放牧"
+      ],
+      "abstract_move": "社会结构与采食景观线：群居可控性与植被分布决定放牧可行性",
+      "replacement_needs": [
+        "落选者松散社群与家畜紧密群居的对照",
+        "繁殖管理可操作性的对照",
+        "采食景观分布对集中放牧的否决",
+        "'并非不可能、只是更难'的公平性让步"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "specialization_verdict",
+      "start_ratio": 0.598,
+      "end_ratio": 0.65,
+      "start_sec": 851,
+      "end_sec": 925,
+      "position_label": "59.8%–65%(14:11–15:25)",
+      "purpose": "生理特化判决：落选者的整个身体围绕单一适应组织，无法改写成工作动物",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "落选者能不能至少当肉用动物",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "curiosity_tease",
+          "mechanism": "weirdest_system_tease"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "verdict",
+          "mechanism": "machine_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "extreme_physiology_detail",
+        "mirror_contrast",
+        "machine_verdict"
+      ],
+      "original_moves": [
+        "血压与循环特化",
+        "饮水姿势的笨拙与脆弱",
+        "成功方饮水效率对照",
+        "特化判决",
+        "肉用问句开启"
+      ],
+      "abstract_move": "生理特化判决：落选者的整个身体围绕单一适应组织，无法改写成工作动物",
+      "replacement_needs": [
+        "一项极端生理机制的细节呈现",
+        "日常动作（如饮水）的笨拙化描写",
+        "成功方同一动作的高效对照",
+        "'这不是通用零件而是专用机器'的判决句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "secondary_elimination",
+      "start_ratio": 0.65,
+      "end_ratio": 0.733,
+      "start_sec": 925,
+      "end_sec": 1043,
+      "position_label": "65%–73.3%(15:25–17:23)",
+      "purpose": "第二轮假设证伪：肉用与奶用假设各开一条短闭环，并以多用途对照收束",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "humor_peak",
+          "strength": 75,
+          "position_ratio": 0.7098,
+          "time_ms": 1010000,
+          "reason": "'止步于同行评审之前'：奶用假设证伪的冷面笑点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "落选者能不能至少当奶用动物",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "hypothesis_refuted",
+          "opened_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "hypothesis_refuted",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "humor_payoff",
+          "mechanism": "academic_understatement"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "verdict",
+          "mechanism": "multipurpose_gold"
+        }
+      ],
+      "required_retention_events": [
+        "hypothesis_refutation",
+        "efficiency_comparison",
+        "multipurpose_verdict"
+      ],
+      "original_moves": [
+        "肉用假设",
+        "效率证伪",
+        "奶用假设",
+        "挤奶危险否决",
+        "成功方奶用对照",
+        "多用途定性"
+      ],
+      "abstract_move": "第二轮假设证伪：肉用与奶用假设各开一条短闭环，并以多用途对照收束",
+      "replacement_needs": [
+        "肉用假设的问句开场与效率证伪",
+        "奶用假设的问句开场与操作性否决",
+        "成功方在同一维度的高分对照",
+        "多用途价值的定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(75);回收了前文的悬念 FS11→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "geography_factor",
+      "start_ratio": 0.733,
+      "end_ratio": 0.801,
+      "start_sec": 1043,
+      "end_sec": 1140,
+      "position_label": "73.3%–80.1%(17:23–19:00)",
+      "purpose": "地理与时机维度：驯化发生在特定人群与特定野生种群的相遇点，且成功方能改写人类地理",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.7934,
+          "time_ms": 1129000,
+          "reason": "'改变人类在地理上能做的事'对'只改变栏舍高度'：全片最锋利的一句对照"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "contrast_payoff",
+          "mechanism": "transformation_vs_stable_height"
+        }
+      ],
+      "required_retention_events": [
+        "geographic_reframe",
+        "network_transformation",
+        "stable_height_punchline"
+      ],
+      "original_moves": [
+        "'不是从全球清单挑选'纠偏",
+        "落选者分布区时机不利",
+        "成功者改写贸易与定居网络",
+        "对照嘲讽句"
+      ],
+      "abstract_move": "地理与时机维度：驯化发生在特定人群与特定野生种群的相遇点，且成功方能改写人类地理",
+      "replacement_needs": [
+        "'物种不是从全球清单里挑选'的视角纠偏",
+        "落选者分布区的时机不利分析",
+        "成功者对贸易、定居与军事网络的改造",
+        "一句对照式嘲讽收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.801,
+      "end_ratio": 0.861,
+      "start_sec": 1140,
+      "end_sec": 1225,
+      "position_label": "80.1%–86.1%(19:00–20:25)",
+      "purpose": "第二次升维：击碎'驯化奖励最惊艳动物'的误解，确立'奖励最合作的生物系统'",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "现代人类如果铁了心，能不能完成这项驯化",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "misconception_callout",
+          "mechanism": "hidden_misconception_reveal"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "humor_payoff",
+          "mechanism": "appearance_analogy"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "dictum",
+          "mechanism": "evolution_inside_economies"
+        }
+      ],
+      "required_retention_events": [
+        "misconception_callout",
+        "triple_reversal_examples",
+        "economies_dictum"
+      ],
+      "original_moves": [
+        "隐藏误解点名",
+        "老虎/斑马/水牛三组反转对照",
+        "多变量对齐公式",
+        "经济体门槛加深",
+        "现代问句开启"
+      ],
+      "abstract_move": "第二次升维：击碎'驯化奖励最惊艳动物'的误解，确立'奖励最合作的生物系统'",
+      "replacement_needs": [
+        "对问题本身隐藏误解的点名",
+        "至少三组反转对照案例",
+        "多变量对齐的胜出公式",
+        "'进化实验发生在经济体之内'的定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "counterfactual_test",
+      "start_ratio": 0.861,
+      "end_ratio": 0.936,
+      "start_sec": 1225,
+      "end_sec": 1332,
+      "position_label": "86.1%–93.6%(20:25–22:12)",
+      "purpose": "双重反事实检验：现代技术能否做到（能，但没有动机）；炫耀性驯养为何不等于驯化",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.9255,
+          "time_ms": 1317000,
+          "reason": "国王与农夫的双视角对照：驯化决定权落在生产者问题上"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "生物学上可行的落选者驯化是否终有一日发生：刻意保持开放，叙事用途是把答案从'不可能'修正为'无动机'，强化'驯化是经济选择而非能力测试'的主题，并给观众留下未来推测空间",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "counterfactual_verdict",
+          "opened_in": "FS14"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "verdict",
+          "mechanism": "nobody_needed_verdict"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "contrast_payoff",
+          "mechanism": "king_farmer_duality"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "title_callback",
+          "mechanism": "explicit_question_answer"
+        }
+      ],
+      "required_retention_events": [
+        "fairness_concession",
+        "incentive_veto",
+        "prestige_vs_utility_split"
+      ],
+      "original_moves": [
+        "可行性承认",
+        "经济动机否决",
+        "保育顾虑",
+        "'没人需要的落选者'判决",
+        "国王与农夫双视角对照"
+      ],
+      "abstract_move": "双重反事实检验：现代技术能否做到（能，但没有动机）；炫耀性驯养为何不等于驯化",
+      "replacement_needs": [
+        "现代可行性的公平性承认",
+        "经济动机与保育顾虑的双重否决",
+        "炫耀性动物与生产性动物的功能区分",
+        "统治者与生产者双视角的对照引语"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80);打开的悬念 LOOP08(不闭合) 跨段;回收了前文的悬念 FS14→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "title_payoff_closure",
+      "start_ratio": 0.936,
+      "end_ratio": 1,
+      "start_sec": 1332,
+      "end_sec": 1423,
+      "position_label": "93.6%–100%(22:12–23:43)",
+      "purpose": "显式回收标题问句，给出完整答案清单，再以镜像格言收束全片",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.9979,
+          "time_ms": 1420000,
+          "reason": "'总有一个会被录用'：镜像格言完成全片认知收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_comparative_account",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "aphorism_close",
+          "mechanism": "mirror_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "title_question_callback",
+        "balance_sheet_recap",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "标题问句原句回收",
+        "双方得失对账清单",
+        "'从没失败而是从没值得'定性",
+        "认知升维",
+        "镜像格言收束"
+      ],
+      "abstract_move": "显式回收标题问句，给出完整答案清单，再以镜像格言收束全片",
+      "replacement_needs": [
+        "标题问句的原句复读与正面回答",
+        "双方得失方程的清单式对账",
+        "'从没失败过，而是从没值得过'的定性",
+        "镜像对照的格言句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

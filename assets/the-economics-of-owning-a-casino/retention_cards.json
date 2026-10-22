@@ -1,0 +1,758 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.545Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.044,
+      "start_sec": 0.3,
+      "end_sec": 42.7,
+      "position_label": "0%–4.4%(0:00–0:43)",
+      "purpose": "用第二人称幻想开场，立刻抛出核心悖论并承诺完整解答",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "paradox_hook",
+          "strength": 85,
+          "position_ratio": 0.0109,
+          "time_ms": 10700,
+          "reason": "保证盈利与反复破产的核心悖论并置"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悖论：数学保证赚钱的行业为何经营者照样破产",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_hook",
+          "mechanism": "second_person_fantasy"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "central_paradox",
+          "mechanism": "guaranteed_profit_vs_bankruptcy"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "answer_promise",
+          "mechanism": "explicit_deliverable"
+        }
+      ],
+      "required_retention_events": [
+        "central_paradox",
+        "answer_promise"
+      ],
+      "original_moves": [
+        "开店幻想 + 唯一保证盈利的行业 + 最聪明的人也破产 + 全片预告"
+      ],
+      "abstract_move": "用第二人称幻想开场，立刻抛出核心悖论并承诺完整解答",
+      "replacement_needs": [
+        "开店幻想复述",
+        "'唯一数学保证赚钱的行业'与'最聪明的人也破产'的并置",
+        "全片内容预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(85);打开的悬念 LOOP01→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 85
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "fantasy_premise_plus_paradox",
+        "first_stimulus_ms": 266,
+        "first_payoff_ms": 6900,
+        "evidence_refs": [
+          "C0001",
+          "C0006",
+          "C0009",
+          "C0013"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "context_expansion",
+      "start_ratio": 0.044,
+      "end_ratio": 0.098,
+      "start_sec": 45.2,
+      "end_sec": 95.5,
+      "position_label": "4.4%–9.8%(0:45–1:36)",
+      "purpose": "用三档规模建立入场价格带，说明它们本质是三种不同生意",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "tier_price_ladder",
+          "mechanism": "three_sizes"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "landmark_price",
+          "mechanism": "record_project_anchor"
+        }
+      ],
+      "required_retention_events": [
+        "tier_price_ladder"
+      ],
+      "original_moves": [
+        "区域小场/中型物业/大道旗舰三档价格与形态"
+      ],
+      "abstract_move": "用三档规模建立入场价格带，说明它们本质是三种不同生意",
+      "replacement_needs": [
+        "三档规模各自的价格与形态",
+        "每档一个真实项目锚点"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.098,
+      "end_ratio": 0.176,
+      "start_sec": 95.8,
+      "end_sec": 172.3,
+      "position_label": "9.8%–17.6%(1:36–2:52)",
+      "purpose": "揭示入场之外的隐性门票：牌照与地缘政治",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "hidden_ticket",
+          "mechanism": "license_as_lottery"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "absurd_detail",
+          "mechanism": "geopolitical_anecdote"
+        }
+      ],
+      "required_retention_events": [
+        "license_and_geopolitics"
+      ],
+      "original_moves": [
+        "牌照成本两端 + 特许经营配额 + 荒诞地缘案例"
+      ],
+      "abstract_move": "揭示入场之外的隐性门票：牌照与地缘政治",
+      "replacement_needs": [
+        "牌照成本的两个极端案例",
+        "特许经营权配额制案例",
+        "一个荒诞但真实的地缘案例"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "reveal",
+      "start_ratio": 0.176,
+      "end_ratio": 0.305,
+      "start_sec": 173.2,
+      "end_sec": 298.5,
+      "position_label": "17.6%–30.5%(2:53–4:59)",
+      "purpose": "拆解收益引擎的数学机制：用极简例子演示规则优势，再展示如何被微调放大",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.239,
+          "time_ms": 234200,
+          "reason": "硬币加镍演示让规则优势彻底可视化"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "钱到底从哪来",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "new_question",
+          "mechanism": "money_source_question"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "mechanism_reframe",
+          "mechanism": "rules_rigged_not_cards"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "lived_math_demo",
+          "mechanism": "nickel_on_coin_flip"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "rule_tweak_reveal",
+          "mechanism": "double_zero_doubling"
+        }
+      ],
+      "required_retention_events": [
+        "lived_math_demo",
+        "edge_mechanics"
+      ],
+      "original_moves": [
+        "硬币加镍演示 + 轮盘赔付差 + 双零优势翻倍"
+      ],
+      "abstract_move": "拆解收益引擎的数学机制：用极简例子演示规则优势，再展示如何被微调放大",
+      "replacement_needs": [
+        "一个生活化的零优势对局改造成微优势的演示",
+        "一个真实游戏的优势来源拆解",
+        "一个微调规则翻倍优势的案例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80);打开的悬念 LOOP02→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "reveal",
+      "start_ratio": 0.305,
+      "end_ratio": 0.36,
+      "start_sec": 298.7,
+      "end_sec": 352.9,
+      "position_label": "30.5%–36%(4:59–5:53)",
+      "purpose": "指出真正的利润主力品类及其反直觉定价：越便宜的产品优势越高",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.3319,
+          "time_ms": 325200,
+          "reason": "奶奶是整栋楼最赚钱的顾客的人物化反转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "counterintuitive_rule",
+          "mechanism": "cheaper_is_harsher"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "personified_contrast",
+          "mechanism": "grandma_vs_millionaire"
+        }
+      ],
+      "required_retention_events": [
+        "counterintuitive_pricing"
+      ],
+      "original_moves": [
+        "老虎机优势区间 + 便士机最狠 + 奶奶是楼里最赚钱的顾客 + 年度规模"
+      ],
+      "abstract_move": "指出真正的利润主力品类及其反直觉定价：越便宜的产品优势越高",
+      "replacement_needs": [
+        "主力品类的优势区间",
+        "'越便宜越狠'的反直觉规则",
+        "最不起眼顾客成为最赚钱顾客的人物化对照",
+        "年度规模数字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "evidence_build",
+      "start_ratio": 0.36,
+      "end_ratio": 0.407,
+      "start_sec": 353.2,
+      "end_sec": 398.8,
+      "position_label": "36%–40.7%(5:53–6:39)",
+      "purpose": "行为工程：空间与时间感知如何被设计来延长数学的作用时间",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "environmental_reveal",
+          "mechanism": "missing_windows_clocks"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "design_reveal",
+          "mechanism": "exit_path_engineering"
+        }
+      ],
+      "required_retention_events": [
+        "environmental_design"
+      ],
+      "original_moves": [
+        "无窗无钟 + 地毯视线引导 + 出口动线 + 工程化沉浸的目标"
+      ],
+      "abstract_move": "行为工程：空间与时间感知如何被设计来延长数学的作用时间",
+      "replacement_needs": [
+        "至少三个空间设计细节",
+        "'不是赢你一次，是留你到数学生效'的目标陈述"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "evidence_build",
+      "start_ratio": 0.407,
+      "end_ratio": 0.456,
+      "start_sec": 399,
+      "end_sec": 446.6,
+      "position_label": "40.7%–45.6%(6:39–7:27)",
+      "purpose": "数据化留客系统：把顾客变成可计算的理论损失，返利是投资不是慷慨",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "mechanism_reveal",
+          "mechanism": "theoretical_loss_tracking"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "reframe",
+          "mechanism": "comp_as_investment"
+        }
+      ],
+      "required_retention_events": [
+        "comp_as_investment"
+      ],
+      "original_moves": [
+        "会员卡追踪 + 理论损失计算 + 返利比例与年度总额 + '不是亏损是投资'"
+      ],
+      "abstract_move": "数据化留客系统：把顾客变成可计算的理论损失，返利是投资不是慷慨",
+      "replacement_needs": [
+        "追踪机制与理论损失的计算演示",
+        "返利比例与年度总额",
+        "'不是亏损，是投资'的定性"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "reveal",
+      "start_ratio": 0.456,
+      "end_ratio": 0.535,
+      "start_sec": 447.1,
+      "end_sec": 524.4,
+      "position_label": "45.6%–53.5%(7:27–8:44)",
+      "purpose": "客群金字塔顶端：极少数顾客贡献极大部分收入，接待成本因而合理化，并给出全片收益公式",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.5163,
+          "time_ms": 505800,
+          "reason": "接待成本对预期损失的冷酷合理化"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "whale_reveal",
+          "mechanism": "concentration_ratio"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "rationalization_reveal",
+          "mechanism": "hosting_cost_math"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "formula_payoff",
+          "mechanism": "four_variable_model"
+        }
+      ],
+      "required_retention_events": [
+        "whale_economics",
+        "formula_payoff"
+      ],
+      "original_moves": [
+        "0.1%顾客=25%收入 + 具名输赢案例 + 接待成本合理化 + 收益公式交付"
+      ],
+      "abstract_move": "客群金字塔顶端：极少数顾客贡献极大部分收入，接待成本因而合理化，并给出全片收益公式",
+      "replacement_needs": [
+        "顶端客群的收入占比",
+        "一个具名的输赢案例与'数学终究会赢'的收尾",
+        "接待成本对预期损失的合理化换算",
+        "四变量收益公式"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "conflict_escalation",
+      "start_ratio": 0.535,
+      "end_ratio": 0.671,
+      "start_sec": 525,
+      "end_sec": 657.7,
+      "position_label": "53.5%–67.1%(8:45–10:58)",
+      "purpose": "损益表下方的肉搏：人力、税负、行业特有的隐性成本逐项拆解",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.6599,
+          "time_ms": 646500,
+          "reason": "'数学保证顶线，线下全是肉搏'的全片判词"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "老板自己为什么还会亏",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mechanism_plus_formula",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "new_question",
+          "mechanism": "owner_loss_question"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "retention_ratio",
+          "mechanism": "topline_to_net"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "tax_contrast",
+          "mechanism": "jurisdiction_ladder"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "hidden_cost_reveal",
+          "mechanism": "cash_logistics"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "verdict_line",
+          "mechanism": "fist_fight_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "below_the_line_anatomy"
+      ],
+      "original_moves": [
+        "留存比例 + 人力税负 + 监控/牌/现金/醉酒责任等行业特有成本 + 肉搏斗判词"
+      ],
+      "abstract_move": "损益表下方的肉搏：人力、税负、行业特有的隐性成本逐项拆解",
+      "replacement_needs": [
+        "顶线到净利的留存比例",
+        "人力与税负的量级与地区差异",
+        "至少四项行业特有的隐性成本",
+        "'数学保证顶线，线下全是肉搏'的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80);打开的悬念 LOOP03→FS10 跨段;回收了前文的悬念 FS04→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "conflict_escalation",
+      "start_ratio": 0.671,
+      "end_ratio": 0.805,
+      "start_sec": 660.7,
+      "end_sec": 788.6,
+      "position_label": "67.1%–80.5%(11:01–13:09)",
+      "purpose": "死因归纳：用著名崩塌案例提炼两三条反复出现的致命错误",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.7672,
+          "time_ms": 751600,
+          "reason": "24亿变每美元3美分的全片最强数字反差"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "反复出现的致命错误是什么",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "below_the_line_anatomy",
+          "opened_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "fatal_patterns_with_cases",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "collapse_case",
+          "mechanism": "debt_structure_death"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "humor",
+          "mechanism": "absurd_analogy"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "residual_shock",
+          "mechanism": "cents_on_dollar"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "lesson_line",
+          "mechanism": "demand_first_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "fatal_pattern_cases"
+      ],
+      "original_moves": [
+        "债务结构致死案例 + 市场错配致死案例两则 + 可复述教训"
+      ],
+      "abstract_move": "死因归纳：用著名崩塌案例提炼两三条反复出现的致命错误",
+      "replacement_needs": [
+        "债务结构致命案例（金额、利率、违约时间线）",
+        "市场错配致命案例（至少两个，含残值对比）",
+        "每条死因的一句可复述教训"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85);回收了前文的悬念 FS09→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.805,
+      "end_ratio": 0.875,
+      "start_sec": 792.3,
+      "end_sec": 857.3,
+      "position_label": "80.5%–87.5%(13:12–14:17)",
+      "purpose": "悖论综合：把全片收束为'保证的收入对赌不保证的其他一切'的行业本质",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.868,
+          "time_ms": 850333,
+          "reason": "'保证的收入对赌不保证的其他一切'悖论解决"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "predictability_contrast",
+          "mechanism": "bakery_vs_casino"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "essence_verdict",
+          "mechanism": "guaranteed_vs_unguaranteed"
+        }
+      ],
+      "required_retention_events": [
+        "paradox_resolution"
+      ],
+      "original_moves": [
+        "顶线可预测性对照 + 优势只在规模时间下成立 + 行业本质对仗定性"
+      ],
+      "abstract_move": "悖论综合：把全片收束为'保证的收入对赌不保证的其他一切'的行业本质",
+      "replacement_needs": [
+        "与其他行业顶线可预测性的对照",
+        "优势为何只在规模与时间下成立",
+        "行业本质的一句对仗定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "closure",
+      "start_ratio": 0.875,
+      "end_ratio": 1,
+      "start_sec": 862.5,
+      "end_sec": 979.7,
+      "position_label": "87.5%–100%(14:22–16:20)",
+      "purpose": "给出两种规模的真实盈利情景，用行业身份反转（其实不是你以为的生意）和格言句收束",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.9384,
+          "time_ms": 919400,
+          "reason": "大道赌场'已经不是赌场'的身份反转"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9977,
+          "time_ms": 977466,
+          "reason": "'庄家永远赢——确保你是庄家'的格言顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "paradox_resolution",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "scenario_numbers",
+          "mechanism": "small_scenario"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "identity_reversal",
+          "mechanism": "barely_a_casino"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "aphorism_close",
+          "mechanism": "house_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "dual_scenario",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "小场/大场双情景 + '主业已不是表面主业'反转 + 传奇财富案例 + 格言收束"
+      ],
+      "abstract_move": "给出两种规模的真实盈利情景，用行业身份反转（其实不是你以为的生意）和格言句收束",
+      "replacement_needs": [
+        "小规模与大规模两个真实情景（投入、收入、净利、回本周期）",
+        "大规模情景的收入结构反转（主业已不是表面主业）",
+        "传奇财富案例",
+        "格言式收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(75)、PK09(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

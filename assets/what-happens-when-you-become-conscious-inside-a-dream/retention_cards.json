@@ -1,0 +1,1038 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.356Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0.0001,
+      "end_ratio": 0.0364,
+      "start_sec": 0.1,
+      "end_sec": 47.6,
+      "position_label": "0%–3.6%(0:00–0:48)",
+      "purpose": "第二人称沉浸开场：用日常场景中的不可能细节让观众零铺垫'进入'现象内部",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.0342,
+          "time_ms": 44672,
+          "reason": "现象正式命名 lucid dream，全片概念锚点落下"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion",
+          "mechanism": "second_person_identity_assignment"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "absurd_detail",
+          "mechanism": "impossibility_list"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "realization_turn",
+          "mechanism": "wait_this_is_unrealistic"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "concept_naming",
+          "mechanism": "phenomenon_named"
+        }
+      ],
+      "required_retention_events": [
+        "immersive_scene",
+        "impossibility_list",
+        "realization_turn"
+      ],
+      "original_moves": [
+        "日常场景",
+        "三连不可能细节",
+        "觉察念头",
+        "世界未变但意义全变"
+      ],
+      "abstract_move": "第二人称沉浸开场：用日常场景中的不可能细节让观众零铺垫'进入'现象内部",
+      "replacement_needs": [
+        "日常场景锚点",
+        "三连不可能细节的排比",
+        "一句'这不现实'的觉察念头"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "immersive_second_person_impossibility_scene",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 26000,
+        "evidence_refs": [
+          "C0001",
+          "C0021",
+          "C0037",
+          "C0041"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "concept_definition",
+      "start_ratio": 0.0364,
+      "end_ratio": 0.0662,
+      "start_sec": 47.6,
+      "end_sec": 86.4,
+      "position_label": "3.6%–6.6%(0:48–1:26)",
+      "purpose": "为现象正式命名，用生理状态锚定其真实性，并显式抛出标题问句",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：当你在梦中获得清醒意识时到底会发生什么（标题问句的显式悬挂，全片逐层作答）",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "title_question",
+          "mechanism": "title_contract_restated"
+        }
+      ],
+      "required_retention_events": [
+        "concept_naming",
+        "title_question_drop"
+      ],
+      "original_moves": [
+        "命名 lucid dream",
+        "REM 与肌肉麻痹",
+        "创造者兼唯一知情者",
+        "标题问句"
+      ],
+      "abstract_move": "为现象正式命名，用生理状态锚定其真实性，并显式抛出标题问句",
+      "replacement_needs": [
+        "现象的正式名称与一句话定义",
+        "睡眠阶段与肌肉麻痹等生理锚点",
+        "'既是创造者又是唯一知情者'的定性",
+        "标题问句的显式复述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "common_sense_subversion",
+      "start_ratio": 0.0662,
+      "end_ratio": 0.1118,
+      "start_sec": 86.4,
+      "end_sec": 146,
+      "position_label": "6.6%–11.2%(1:26–2:26)",
+      "purpose": "第一个反直觉反转：普通状态早已是有意识的体验，缺的不是意识而是觉察",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.0837,
+          "time_ms": 109273,
+          "reason": "普通梦缺的不是意识而是觉察：第一常识反转收口"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "subversion",
+          "mechanism": "common_sense_subversion"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "humor_payoff",
+          "mechanism": "dry_understatement"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "gap_verdict",
+          "mechanism": "insight_gap_naming"
+        }
+      ],
+      "required_retention_events": [
+        "first_surprise",
+        "insight_gap_verdict"
+      ],
+      "original_moves": [
+        "第一个惊喜",
+        "感官情绪俱全的证据",
+        "缺的是 insight",
+        "现实检测下线"
+      ],
+      "abstract_move": "第一个反直觉反转：普通状态早已是有意识的体验，缺的不是意识而是觉察",
+      "replacement_needs": [
+        "普通状态下感官与情绪同样真实的证据清单",
+        "缺失要素的一句话点题",
+        "现实检测功能下线的具体表现"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "trigger_catalog",
+      "start_ratio": 0.1118,
+      "end_ratio": 0.1488,
+      "start_sec": 146,
+      "end_sec": 194.3,
+      "position_label": "11.2%–14.9%(2:26–3:14)",
+      "purpose": "列出触发觉察的典型线索，并把这种觉察正式命名为元认知行为",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "trigger_inventory",
+          "mechanism": "impossibility_triggers"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "philosophical_turn",
+          "mechanism": "self_and_world_constructs"
+        }
+      ],
+      "required_retention_events": [
+        "trigger_inventory",
+        "metacognition_defined"
+      ],
+      "original_moves": [
+        "破绽清单",
+        "无触发自觉",
+        "元认知命名",
+        "自我与世界同为建构"
+      ],
+      "abstract_move": "列出触发觉察的典型线索，并把这种觉察正式命名为元认知行为",
+      "replacement_needs": [
+        "显式破绽触发的清单",
+        "无触发自发觉察的并存说明",
+        "元认知术语的通俗定义",
+        "'大脑构建了自我与世界，又让自我发现两者都是建构'的哲学化定性"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "verification_arc",
+      "start_ratio": 0.1488,
+      "end_ratio": 0.2017,
+      "start_sec": 194.3,
+      "end_sec": 263.4,
+      "position_label": "14.9%–20.2%(3:14–4:23)",
+      "purpose": "先陈列科学界的合理怀疑，再用一项巧妙的信号实验证明把轶事升级为已验证事实",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.1926,
+          "time_ms": 251568,
+          "reason": "眼动信号从梦内发出：轶事升级为已验证事实的全片枢纽"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "主观报告无法被科学检验的怀疑如何被打破",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "method_reveal",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "skepticism",
+          "mechanism": "scientific_doubt_inventory"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "design_reveal",
+          "mechanism": "eye_signal_loophole"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "proof_payoff",
+          "mechanism": "message_from_within"
+        }
+      ],
+      "required_retention_events": [
+        "skepticism_inventory",
+        "signal_proof",
+        "verified_status"
+      ],
+      "original_moves": [
+        "怀疑理由清单",
+        "肌肉麻痹但眼肌可用",
+        "约定信号",
+        "实验室确认",
+        "已验证状态"
+      ],
+      "abstract_move": "先陈列科学界的合理怀疑，再用一项巧妙的信号实验证明把轶事升级为已验证事实",
+      "replacement_needs": [
+        "怀疑论的合理理由清单",
+        "利用生理漏洞设计的信号方案",
+        "实验室记录确认的证据链",
+        "'从有趣故事变成已验证状态'的定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "mechanism_exposition",
+      "start_ratio": 0.2017,
+      "end_ratio": 0.2518,
+      "start_sec": 263.4,
+      "end_sec": 328.8,
+      "position_label": "20.2%–25.2%(4:23–5:29)",
+      "purpose": "给出神经机制解释：不是全脑醒来，而是混合状态下部分执行功能被恢复",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "mechanism_verdict",
+          "mechanism": "hybrid_state"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "boundary_verdict",
+          "mechanism": "just_enough_executive_function"
+        }
+      ],
+      "required_retention_events": [
+        "hybrid_state",
+        "executive_function_boundary"
+      ],
+      "original_moves": [
+        "最奇怪的时钟",
+        "混合状态定性",
+        "前额叶顶叶清单",
+        "只恢复刚够用的执行功能"
+      ],
+      "abstract_move": "给出神经机制解释：不是全脑醒来，而是混合状态下部分执行功能被恢复",
+      "replacement_needs": [
+        "混合状态的明确定性",
+        "相关脑区与功能清单",
+        "'只恢复刚刚够用的执行功能'的边界句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "core_analogy",
+      "start_ratio": 0.2518,
+      "end_ratio": 0.2678,
+      "start_sec": 328.8,
+      "end_sec": 349.6,
+      "position_label": "25.2%–26.8%(5:29–5:50)",
+      "purpose": "用一个核心类比把抽象机制一次讲透，并为'觉察不等于控制'埋下伏笔",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "insight_peak",
+          "strength": 75,
+          "position_ratio": 0.2648,
+          "time_ms": 345836,
+          "reason": "导演登台类比：机制被一次讲透"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "知道自己在做梦是否就获得了对梦的全权控制",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "analogy_payoff",
+          "mechanism": "theater_without_director"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "analogy_turn",
+          "mechanism": "director_on_stage"
+        }
+      ],
+      "required_retention_events": [
+        "analogy_delivered"
+      ],
+      "original_moves": [
+        "失控剧院类比",
+        "导演登台",
+        "觉察不等于关团"
+      ],
+      "abstract_move": "用一个核心类比把抽象机制一次讲透，并为'觉察不等于控制'埋下伏笔",
+      "replacement_needs": [
+        "一个可画面化的失控系统类比",
+        "觉察者在类比中的登场方式",
+        "类比与机制的一一对应收口"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75);打开的悬念 LOOP03→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "capability_boundary",
+      "start_ratio": 0.2678,
+      "end_ratio": 0.3197,
+      "start_sec": 349.6,
+      "end_sec": 417.5,
+      "position_label": "26.8%–32%(5:50–6:58)",
+      "purpose": "划清能力边界：觉察是洞察，控制是另一项且不可靠的技能，并解释期望对体验的支配作用",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "verdict_peak",
+          "strength": 75,
+          "position_ratio": 0.2847,
+          "time_ms": 371720,
+          "reason": "觉察与控制的对仗界定，能力边界封顶"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "boundary_verdict",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "boundary_verdict",
+          "mechanism": "awareness_vs_control_aphorism"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "humor_payoff",
+          "mechanism": "expectation_monster_clue"
+        }
+      ],
+      "required_retention_events": [
+        "boundary_verdict",
+        "expectation_rule"
+      ],
+      "original_moves": [
+        "两种亲历者对照",
+        "一句话对仗界定",
+        "期望支配",
+        "间接策略更优"
+      ],
+      "abstract_move": "划清能力边界：觉察是洞察，控制是另一项且不可靠的技能，并解释期望对体验的支配作用",
+      "replacement_needs": [
+        "觉察与控制的一句话对仗界定",
+        "两种亲历者处境的对照",
+        "期望支配体验的规则与例证",
+        "间接策略优于硬拗的操作性结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(75);回收了前文的悬念 FS07→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "perception_deepening",
+      "start_ratio": 0.3197,
+      "end_ratio": 0.3671,
+      "start_sec": 417.5,
+      "end_sec": 479.4,
+      "position_label": "32%–36.7%(6:58–7:59)",
+      "purpose": "把体验的真实性推向极致：清醒感知本身也是预测，故该体验更接近真实感知而非想象",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "reality_verdict",
+          "mechanism": "closer_to_perception_than_imagination"
+        }
+      ],
+      "required_retention_events": [
+        "predictive_processing",
+        "reality_verdict"
+      ],
+      "original_moves": [
+        "预测加工理论",
+        "外部校正缺失",
+        "平滑追踪眼动证据",
+        "体验即真实"
+      ],
+      "abstract_move": "把体验的真实性推向极致：清醒感知本身也是预测，故该体验更接近真实感知而非想象",
+      "replacement_needs": [
+        "清醒感知同为预测模型的揭示",
+        "外部校正缺失后预测即世界的推论",
+        "一项支持性实验证据"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "fragility_problem",
+      "start_ratio": 0.3671,
+      "end_ratio": 0.4834,
+      "start_sec": 479.4,
+      "end_sec": 555.1,
+      "position_label": "36.7%–48.3%(7:59–9:15)",
+      "purpose": "揭示状态的脆弱性：兴奋会惊醒、沉浸会反噬觉察，并给出维稳技巧与证据强度的诚实标注",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "humor_payoff",
+          "mechanism": "beginner_three_second_wakeup"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "paradox_reveal",
+          "mechanism": "stability_relapse_paradox"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "callback_humor",
+          "mechanism": "flying_accountant_dog_callback"
+        }
+      ],
+      "required_retention_events": [
+        "beginner_failure",
+        "stabilization_tips",
+        "relapse_paradox"
+      ],
+      "original_moves": [
+        "首次觉察的情绪冲击",
+        "3秒醒来的挫败",
+        "维稳技巧",
+        "证据稀缺标注",
+        "反噬悖论"
+      ],
+      "abstract_move": "揭示状态的脆弱性：兴奋会惊醒、沉浸会反噬觉察，并给出维稳技巧与证据强度的诚实标注",
+      "replacement_needs": [
+        "新手因兴奋秒醒的普遍挫败",
+        "情绪与身体注意打破边界的机制",
+        "维稳技巧清单",
+        "'证据稀缺但原理可信'的校准句",
+        "'越逼真越容易再次迷失'的反噬悖论"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "frontier_experiment",
+      "start_ratio": 0.4834,
+      "end_ratio": 0.5404,
+      "start_sec": 631.2,
+      "end_sec": 705.7,
+      "position_label": "48.3%–54%(10:31–11:46)",
+      "purpose": "展示研究前沿奇观：与状态中的人进行双向实时问答",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.5002,
+          "time_ms": 653127,
+          "reason": "双向实时问答与信号入梦细节：前沿实验奇观"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "frontier_reveal",
+          "mechanism": "real_time_qa_with_sleepers"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "spectacle_detail",
+          "mechanism": "signal_incorporation"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "honest_limitation",
+          "mechanism": "tunnel_phone_metaphor"
+        }
+      ],
+      "required_retention_events": [
+        "two_way_communication",
+        "honest_limitation"
+      ],
+      "original_moves": [
+        "实时问答设计",
+        "算术题答对",
+        "信号被编入情节（车载收音机）",
+        "隧道电话式稳定性",
+        "活实验空间"
+      ],
+      "abstract_move": "展示研究前沿奇观：与状态中的人进行双向实时问答",
+      "replacement_needs": [
+        "实时问答实验的设计",
+        "外部信号被编入内部情节的奇观细节",
+        "连接稳定性的诚实定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS12",
+      "function": "myth_busting",
+      "start_ratio": 0.5404,
+      "end_ratio": 0.5718,
+      "start_sec": 705.7,
+      "end_sec": 746.7,
+      "position_label": "54%–57.2%(11:46–12:27)",
+      "purpose": "公开拆穿流传最广的民俗夸张：状态内的时间并不膨胀",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "民俗所说\"几分钟睡眠包含数年体验\"是否为真",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "myth_falsified",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "myth_stated",
+          "mechanism": "folk_time_dilation_claim"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "myth_busted",
+          "mechanism": "no_second_life_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "myth_stated",
+        "myth_falsified"
+      ],
+      "original_moves": [
+        "民俗说法复述",
+        "电影类比让步",
+        "计时对照",
+        "无第二人生证据",
+        "模仿过去比生成每秒更容易"
+      ],
+      "abstract_move": "公开拆穿流传最广的民俗夸张：状态内的时间并不膨胀",
+      "replacement_needs": [
+        "民俗夸张说法的忠实复述",
+        "计时任务的对照实验",
+        "'没有证据支持第二人生'的拆穿句"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP04。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:民俗所说\"几分钟睡眠包含数年体验\"是否为真",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "adjacent_phenomena",
+      "start_ratio": 0.5718,
+      "end_ratio": 0.6907,
+      "start_sec": 746.7,
+      "end_sec": 902,
+      "position_label": "57.2%–69.1%(12:27–15:02)",
+      "purpose": "对照两个相邻现象：身体与状态的分裂、假醒的套层错觉，并提炼出'确定感也是大脑的产物'的警示",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.614,
+          "time_ms": 801803,
+          "reason": "睡眠瘫痪恐怖场景：全片情绪最不安的段落"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.6734,
+          "time_ms": 879334,
+          "reason": "确定感只是大脑产生的一种感觉：元教训点题"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "split_reveal",
+          "mechanism": "body_split"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "threat_scene",
+          "mechanism": "sleep_paralysis_horror"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "illusion_reveal",
+          "mechanism": "false_awakening"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "meta_lesson",
+          "mechanism": "confidence_is_a_feeling"
+        }
+      ],
+      "required_retention_events": [
+        "phenomena_contrast",
+        "meta_lesson"
+      ],
+      "original_moves": [
+        "身体分裂感",
+        "睡眠瘫痪恐怖细节",
+        "假醒套层",
+        "无嵌套世界",
+        "确定感元教训"
+      ],
+      "abstract_move": "对照两个相邻现象：身体与状态的分裂、假醒的套层错觉，并提炼出'确定感也是大脑的产物'的警示",
+      "replacement_needs": [
+        "身体分裂感的具身化呈现",
+        "相邻恐怖现象的区别与联系",
+        "假醒套层错觉的拆解",
+        "'确定感是一种感觉'的元教训点题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(75)、PK08(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "practice_and_risk",
+      "start_ratio": 0.6907,
+      "end_ratio": 0.7769,
+      "start_sec": 902,
+      "end_sec": 1014.6,
+      "position_label": "69.1%–77.7%(15:02–16:55)",
+      "purpose": "给出可操作的诱发与验证方法，同时诚实标注风险与禁忌人群",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "humor_payoff",
+          "mechanism": "sleep_deprivation_irony"
+        }
+      ],
+      "required_retention_events": [
+        "method_inventory",
+        "risk_calibration"
+      ],
+      "original_moves": [
+        "现实检测清单",
+        "习惯大于测试",
+        "梦日记与记忆诱发",
+        "无保证声明",
+        "药物风险",
+        "禁忌人群"
+      ],
+      "abstract_move": "给出可操作的诱发与验证方法，同时诚实标注风险与禁忌人群",
+      "replacement_needs": [
+        "现实检测习惯的方法清单",
+        "'习惯比单次测试更重要'的原理句",
+        "干扰睡眠与药物干预的风险警示",
+        "禁忌人群的显式提示"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS15",
+      "function": "application_limits",
+      "start_ratio": 0.7769,
+      "end_ratio": 0.8803,
+      "start_sec": 1014.6,
+      "end_sec": 1149.6,
+      "position_label": "77.7%–88%(16:55–19:10)",
+      "purpose": "校准应用预期：治疗与练习有初步证据但有限，且状态无法产出大脑里没有的信息",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "睡眠能否被用作训练工具",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "治疗应用与稳定诱发的长期疗效尚未有定论：刻意保持开放，叙事用途是以\"研究样本小、成功不稳定\"的坦诚校准观众预期，并把\"这个领域仍在探索中\"的余韵留到片尾",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "qualified_verdict",
+          "opened_in": "FS15"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "boundary_humor",
+          "mechanism": "engine_mechanic_analogy"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "dialectic_verdict",
+          "mechanism": "oracle_subverted"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "worldview_shift",
+          "mechanism": "facts_stop_ruling"
+        }
+      ],
+      "required_retention_events": [
+        "qualified_verdict",
+        "information_boundary"
+      ],
+      "original_moves": [
+        "治疗证据与局限",
+        "训练工具之问",
+        "无反馈则不可学新技",
+        "修发动机类比",
+        "信息边界",
+        "神谕拆穿与辩证收口"
+      ],
+      "abstract_move": "校准应用预期：治疗与练习有初步证据但有限，且状态无法产出大脑里没有的信息",
+      "replacement_needs": [
+        "治疗应用的初步证据与样本局限",
+        "技能练习的可与不可",
+        "'不能给出你从未拥有的信息'的信息论边界",
+        "'答案是自产的但有心理意义'的辩证收口"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS16",
+      "function": "philosophical_closure",
+      "start_ratio": 0.8803,
+      "end_ratio": 1,
+      "start_sec": 1149.6,
+      "end_sec": 1239,
+      "position_label": "88%–100%(19:10–20:39)",
+      "purpose": "升维收束：现象的科学价值在于分离'体验真实'与'知道自己在体验什么'，以格言句结束",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.9043,
+          "time_ms": 1180848,
+          "reason": "不可能海滩：明知建构仍全然真实的感官化升维"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.9927,
+          "time_ms": 1296278,
+          "reason": "否定-肯定格言收束全片，标题问句升维回收"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "如果问梦中角色\"你知道自己是虚构的吗\"会发生什么",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_mechanism_account_and_aphorism",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "mechanism_explanation",
+          "opened_in": "FS16"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "sensory_scene",
+          "mechanism": "impossible_beach"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "humility_beat",
+          "mechanism": "grounded_by_nonexistent_power"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "stakes_reminder",
+          "mechanism": "one_unforgettable_fact"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "aphorism_close",
+          "mechanism": "negation_affirmation_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "consciousness_verdict",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "科学价值定性",
+        "两种真实分离",
+        "不可能海滩场景",
+        "询问角色是否知道自己是虚构",
+        "意识自我控制权之小"
+      ],
+      "abstract_move": "升维收束：现象的科学价值在于分离'体验真实'与'知道自己在体验什么'，以格言句结束",
+      "replacement_needs": [
+        "现象对意识研究的独特价值定性",
+        "一个感官化的'明知是建构仍全然真实'场景",
+        "状态终结与记忆脆弱的提醒",
+        "把全片压缩成一对否定-肯定句的格言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(80)、PK10(90);回收了前文的悬念 FS02→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

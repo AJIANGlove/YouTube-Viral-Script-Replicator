@@ -1,0 +1,586 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T06:33:57.542Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.086,
+      "start_sec": 0,
+      "end_sec": 56.5,
+      "position_label": "0%–8.6%(0:00–0:56)",
+      "purpose": "第一层（最底层）：第二人称少年处境，展示诱饵（尊重、归属）与入门测试（沉默与跑腿）",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "层级天梯本身：每一级是什么样，最顶层是什么",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "他能不能进去、考验是什么",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "level_hook",
+          "mechanism": "rank_and_age_anchor"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "bait_visualization",
+          "mechanism": "respect_and_money_display"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "rule_reveal",
+          "mechanism": "exist_dont_ask"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "test_reveal",
+          "mechanism": "zero_money_silence_test"
+        }
+      ],
+      "required_retention_events": [
+        "bait_and_test"
+      ],
+      "original_moves": [
+        "层级名+年龄 + 诱饵具象化 + 跑腿守规矩的测试期"
+      ],
+      "abstract_move": "第一层（最底层）：第二人称少年处境，展示诱饵（尊重、归属）与入门测试（沉默与跑腿）",
+      "replacement_needs": [
+        "层级名与年龄锚点",
+        "诱饵的具象化（有钱、有尊重、众人让路）",
+        "入门规则的展示（不索取、只存在、守口如瓶）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS08、LOOP02→FS02 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "immediate_second_person_drop",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 0,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0010"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "conflict_escalation",
+      "start_ratio": 0.086,
+      "end_ratio": 0.18,
+      "start_sec": 56.5,
+      "end_sec": 117.9,
+      "position_label": "8.6%–18%(0:56–1:58)",
+      "purpose": "入会仪式：用身体考验完成从外人到家人的过渡",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "intensity_peak",
+          "strength": 80,
+          "position_ratio": 0.1255,
+          "time_ms": 82000,
+          "reason": "倒数与身体感受交替的入会考验沉浸顶点"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.1511,
+          "time_ms": 98760,
+          "reason": "'欢迎回家'的接纳时刻，全片唯一纯粹的暖点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "initiation_ordeal_payoff",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "level_transition",
+          "mechanism": "rank_promotion_signal"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "ordeal_setup",
+          "mechanism": "circle_of_13"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "ordeal_peak",
+          "mechanism": "countdown_body_narrative"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "belonging_payoff",
+          "mechanism": "welcome_home"
+        }
+      ],
+      "required_retention_events": [
+        "initiation_ordeal",
+        "belonging_payoff"
+      ],
+      "original_moves": [
+        "围圈考验规则 + 倒数身体叙事 + 接纳与新名字"
+      ],
+      "abstract_move": "入会仪式：用身体考验完成从外人到家人的过渡",
+      "replacement_needs": [
+        "仪式的规则与过程（不能还手、不能出声）",
+        "倒数计时的身体叙事",
+        "'欢迎回家'式接纳落点与新名字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(80)、PK02(75);回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.18,
+      "end_ratio": 0.28,
+      "start_sec": 117.9,
+      "end_sec": 182.9,
+      "position_label": "18%–28%(1:58–3:03)",
+      "purpose": "第一份真正的工作：职责细节、第一笔收入、与规则的死亡价码",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "income_reveal",
+          "mechanism": "wage_mom_contrast"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "rule_stakes",
+          "mechanism": "snitch_death_rule"
+        }
+      ],
+      "required_retention_events": [
+        "first_job_ledger"
+      ],
+      "original_moves": [
+        "送货流程 + 周收入与消费 + 被捕与守规矩条款 + 暴力差事"
+      ],
+      "abstract_move": "第一份真正的工作：职责细节、第一笔收入、与规则的死亡价码",
+      "replacement_needs": [
+        "工作流程的具象步骤",
+        "周收入与消费对比（超过母亲数日工资）",
+        "被捕与守规矩的代价条款"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "evidence_build",
+      "start_ratio": 0.28,
+      "end_ratio": 0.406,
+      "start_sec": 182.9,
+      "end_sec": 265.2,
+      "position_label": "28%–40.6%(3:03–4:25)",
+      "purpose": "中层管理：地盘、抽成、纪律执法，以及'被系统标记'的不可逆",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "dark_reveal",
+          "strength": 75,
+          "position_ratio": 0.3511,
+          "time_ms": 229480,
+          "reason": "执法三档递进收于'有时他消失了'"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "有没有出路",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "prison_badge",
+          "mechanism": "time_served_as_honor"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "discipline_spectrum",
+          "mechanism": "conversation_beating_disappears"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "no_exit_reveal",
+          "mechanism": "coffin_or_rat"
+        }
+      ],
+      "required_retention_events": [
+        "management_power",
+        "marked_forever"
+      ],
+      "original_moves": [
+        "坐牢立功 + 地盘抽成纪律 + 收入跃升 + 数据库标记与出路关闭"
+      ],
+      "abstract_move": "中层管理：地盘、抽成、纪律执法，以及'被系统标记'的不可逆",
+      "replacement_needs": [
+        "管理职责（地盘、摊位、税收、纪律）",
+        "收入跃升与物质生活清单",
+        "数据库标记与'无法离开'的定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75);打开的悬念 LOOP03→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "conflict_escalation",
+      "start_ratio": 0.406,
+      "end_ratio": 0.536,
+      "start_sec": 265.2,
+      "end_sec": 350.3,
+      "position_label": "40.6%–53.6%(4:25–5:50)",
+      "purpose": "地方首领：生杀大权与全天候被害妄想同步抵达",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "dark_reveal",
+          "strength": 70,
+          "position_ratio": 0.5276,
+          "time_ms": 344840,
+          "reason": "连枕边人都不能信的偏执顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "authority_reveal",
+          "mechanism": "greenlit_power"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "paranoia_detail",
+          "mechanism": "trust_no_one_girlfriend"
+        }
+      ],
+      "required_retention_events": [
+        "power_peak_paranoia"
+      ],
+      "original_moves": [
+        "号令权与收入 + 三面威胁 + 睡眠枪支不信任任何人"
+      ],
+      "abstract_move": "地方首领：生杀大权与全天候被害妄想同步抵达",
+      "replacement_needs": [
+        "命令权（定人生死）与收入",
+        "野心者、敌对者、联邦机构的三面威胁",
+        "睡眠、枪支、不信任任何人的细节"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 70
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "evidence_build",
+      "start_ratio": 0.536,
+      "end_ratio": 0.702,
+      "start_sec": 350.3,
+      "end_sec": 458.6,
+      "position_label": "53.6%–70.2%(5:50–7:39)",
+      "purpose": "区域首脑：企业化运作、洗钱与影子生活，邻居眼中的'成功商人'",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.7016,
+          "time_ms": 458560,
+          "reason": "'你是强大的，但你不自由'的定性"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "age_marker",
+          "mechanism": "ancient_at_30"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "double_life",
+          "mechanism": "successful_businessman_mask"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "inversion_verdict",
+          "mechanism": "powerful_not_free"
+        }
+      ],
+      "required_retention_events": [
+        "corporate_double_life"
+      ],
+      "original_moves": [
+        "供应链定价财务 + 洗钱通道 + 邻居眼中的成功商人 + 监听规避与狱中上线"
+      ],
+      "abstract_move": "区域首脑：企业化运作、洗钱与影子生活，邻居眼中的'成功商人'",
+      "replacement_needs": [
+        "供应链、定价、财务的 corporate 运作",
+        "洗钱通道清单",
+        "对外的守法商人伪装与监听规避"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.702,
+      "end_ratio": 0.821,
+      "start_sec": 458.6,
+      "end_sec": 536.4,
+      "position_label": "70.2%–82.1%(7:39–8:56)",
+      "purpose": "狱中掌权：监狱不是终点而是权力主场，'街上你很强，里面你是王'",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.7322,
+          "time_ms": 478600,
+          "reason": "'街上你很强，里面你是王'的权力倒置"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "power_inversion",
+          "mechanism": "king_inside"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "prison_economy",
+          "mechanism": "contraband_channels"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "remote_power",
+          "mechanism": "hit_by_phone_call"
+        }
+      ],
+      "required_retention_events": [
+        "power_freedom_inversion"
+      ],
+      "original_moves": [
+        "狱中权力结构 + 监狱经济 + 对外遥控 + '强大但不自由'"
+      ],
+      "abstract_move": "狱中掌权：监狱不是终点而是权力主场，'街上你很强，里面你是王'",
+      "replacement_needs": [
+        "狱中权力结构与监狱经济",
+        "对外遥控（探视、腐败看守、电话）",
+        "'你是强大的，但你不自由'的定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS08",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.821,
+      "end_ratio": 0.927,
+      "start_sec": 536.4,
+      "end_sec": 605.6,
+      "position_label": "82.1%–92.7%(8:56–10:06)",
+      "purpose": "神话层：创始人级别不可抵达，把组织史讲成宗教",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.9156,
+          "time_ms": 598400,
+          "reason": "神话层封顶：你只是他们军队里的一个兵"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_ladder_plus_mythology_ceiling",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "origin_myth",
+          "mechanism": "deportation_irony"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "ceiling_verdict",
+          "mechanism": "never_reach_mythology"
+        }
+      ],
+      "required_retention_events": [
+        "mythology_ceiling"
+      ],
+      "original_moves": [
+        "组织起源与扩散 + 幽灵般的创始人 + '你永远到不了这层'"
+      ],
+      "abstract_move": "神话层：创始人级别不可抵达，把组织史讲成宗教",
+      "replacement_needs": [
+        "组织起源与扩散简史",
+        "幽灵般的最高层（无社交、不见人、层层代理）",
+        "'你永远到不了这一层，他们只是神话'的封顶句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(75);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "closure",
+      "start_ratio": 0.927,
+      "end_ratio": 1,
+      "start_sec": 605.6,
+      "end_sec": 653.5,
+      "position_label": "92.7%–100%(10:06–10:54)",
+      "purpose": "循环收束：中年的你回到起点街角，看到当年的自己",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9834,
+          "time_ms": 642640,
+          "reason": "街角新人与循环继续，全片宿命顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "no_exit_cycle_verdict",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "no_exit_verdict",
+          "mechanism": "too_late_mother"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "circular_callback",
+          "mechanism": "new_kid_on_corner"
+        }
+      ],
+      "required_retention_events": [
+        "circular_callback"
+      ],
+      "original_moves": [
+        "一生账本总括 + 母亲的泪 + 没有退休计划 + 街角新人与循环"
+      ],
+      "abstract_move": "循环收束：中年的你回到起点街角，看到当年的自己",
+      "replacement_needs": [
+        "一生账本的总括（中弹、杀人、入狱、赚过也失去）",
+        "母亲的泪与'没有退休计划'",
+        "街角新人与'循环继续'的最终句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(90);回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}
