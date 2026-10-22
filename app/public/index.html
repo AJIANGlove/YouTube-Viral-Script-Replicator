@@ -446,7 +446,7 @@
         <label style="margin-top:6px">参考资料(选填 · 写前分析用:粘贴你查到的数据、报道、链接摘要,AI 只能用这里和它已知的事实)</label>
         <textarea id="gen-materials" rows="4" style="width:100%;box-sizing:border-box" placeholder="例如:2024 年韩国美发店平均月营业额 …(来源:统计厅)"></textarea>
         <label style="margin-top:6px">频道声音设定(语体、称呼、风格;在「设置」页管理)</label>
-        <select id="gen-voice"><option value="__auto__">自动:按所选频道名匹配</option><option value="__none__">不使用</option></select>
+        <select id="gen-voice"><option value="__auto__">自动:按所选频道名匹配(未选频道时等于不使用)</option><option value="__none__">不使用</option></select>
       </div>
       <div style="margin-top:12px; display:flex; align-items:center; gap:14px">
         <button class="primary" id="btn-run" onclick="createRun()">开始生成(约 3-8 分钟)</button>
@@ -1487,7 +1487,7 @@ async function loadVoiceOptions() {
   const keep = sel.value;
   try {
     const list = await api('/api/voices');
-    sel.innerHTML = '<option value="__auto__">自动:按所选频道名匹配</option><option value="__none__">不使用</option>' +
+    sel.innerHTML = '<option value="__auto__">自动:按所选频道名匹配(未选频道时等于不使用)</option><option value="__none__">不使用</option>' +
       list.map(v => `<option value="${esc(v.name).replace(/"/g, '&quot;')}">${esc(v.name)}${v.confirmed === false ? '(未确认)' : ''}</option>`).join('');
     if ([...sel.options].some(o => o.value === keep)) sel.value = keep;
   } catch (e) {}
