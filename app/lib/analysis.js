@@ -103,6 +103,27 @@ function acceptedGaps(a) {
   return ((a && a.retention_map) || []).filter(r => /接受弱化/.test(r.status || '')).map(r => r.source_peak);
 }
 
+// 前端编辑分析时要用的对照数据:原片高峰集合 + 第一个甜头秒数(用于"钩子晚于原片"提示与 PK 编号校验)
+// 只读资产,不落盘;资产或 timeline 缺失时返回空结构,绝不抛错
+function analysisContext(assetId) {
+  const out = { peaks: [], source_first_payoff_sec: null };
+  try {
+    const asset = store.getAsset(assetId);
+    const tl = dataOf(parse(asset && asset.timeline));
+    out.peaks = (tl.peak_points || []).map(p => ({
+      peak_id: p.peak_id, peak_type: p.peak_type || '', strength: p.strength,
+      time_ms: p.time_ms, position_ratio: p.position_ratio
+    }));
+    const first = (tl.hook_window || {}).first_payoff_ms;
+    out.source_first_payoff_sec = first != null ? Math.round(first / 100) / 10 : null;
+  } catch (e) { /* 忽略:前端退化为不做这两项校验 */ }
+  return out;
+}
+
+function cloneJson(v) {
+  try { return JSON.parse(JSON.stringify(v)); } catch (e) { return null; }
+}
+
 // 分析 JSON 的最低结构要求;返回错误说明或 null
 function analysisShapeError(a) {
   if (!a || typeof a !== 'object') return '不是 JSON 对象';
@@ -230,6 +251,32 @@ function applyK3(script, issues) {
 // 稿件检查只针对 V1(写稿产物);强化开头生成 V2 后 final_script 会变成 V2,所以优先取 script_v1
 function v1Text(run) { return run.script_v1 || run.final_script || ''; }
 
+// 稿件数据统计(片长/密度/数字与年份/事实时效);输入输出与 runScriptCheck 里原来那段一致
+function scriptProgramStats(run) {
+  const asset = store.getAsset(run.asset_id);
+  if (!asset) return null;
+  return retention.scriptStats(v1Text(run), {
+    timeline: asset.timeline, framework: asset.framework, srt: asset.srt, facts: (run.analysis || {}).facts
+  });
+}
+
+// "采用某个选项"的落地:find 必须在稿中恰好出现一次,否则不动;改完结构不合格也不动
+function applyOptionExact(script, find, replace) {
+  const text = String(script || '');
+  const f = String(find || '');
+  const rep = String(replace == null ? '' : replace);
+  if (!f.trim()) return { ok: false, reason: '原句为空' };
+  // 章节标签行是结构锚点,不允许被改掉
+  if (/\[\s*CH\d+\s*\|/.test(f) || /\[\s*CH\d+\s*\|/.test(rep)) return { ok: false, reason: '改动涉及章节标签行' };
+  const n = text.split(f).length - 1;
+  if (n === 0) return { ok: false, reason: '原句在稿子里找不到(可能已被改过)' };
+  if (n > 1) return { ok: false, reason: '原句在稿子里出现 ' + n + ' 次,无法确定改哪一处' };
+  const after = text.replace(f, rep);
+  const structErr = checks.chapterStructureError(after);
+  if (structErr) return { ok: false, reason: '改完章节结构不合格:' + structErr };
+  return { ok: true, text: after };
+}
+
 async function runScriptCheck(runId) {
   const pipeline = require('./pipeline');
   const run = store.getRun(runId);
@@ -240,9 +287,7 @@ async function runScriptCheck(runId) {
   run.steps = { ...(run.steps || {}), script_check: { status: 'running', started_at: new Date().toISOString() } };
   store.saveRun(run);
   try {
-    const stats = retention.scriptStats(v1Text(run), {
-      timeline: asset.timeline, framework: asset.framework, srt: asset.srt, facts: (run.analysis || {}).facts
-    });
+    const stats = scriptProgramStats(run);
     let messages = [{ role: 'user', content: buildCheckPrompt(run, asset, stats) }];
     let r = await callWithLog(run, cfg, messages, '稿件检查');
     let rep = parseJsonLoose(r.content);
@@ -278,4 +323,8 @@ async function runScriptCheck(runId) {
   }
 }
 
-module.exports = { loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, acceptedGaps, analysisShapeError, runAnalysis, buildCheckPrompt, applyK3, runScriptCheck };
+module.exports = {
+  loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, acceptedGaps,
+  analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
+  applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck
+};

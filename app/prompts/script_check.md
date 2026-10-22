@@ -25,10 +25,14 @@ K5 篇幅和密度：根据程序检查结果，指出片长差距和数字过�
 - 只有 K3 的状态可以是“已修改”，其余只能是“待选择”或“仅提示”。
 - quote 和 before 必须从成稿逐字复制，复制不出来的问题不许报。
 - 没有问题的类别不要硬编问题。
+- 每个 option 必须尽量给出可直接落地的 apply：apply.find 从成稿逐字复制且在全稿中只出现一次，apply.replace 是想换成的文字（允许空串，表示删掉这句）；二者都不能包含 [CHxx | …] 章节标签行。
+- 确实无法用“替换一句话”完成的选项，写 "apply": null，并在 manual_reason 说明为什么必须人工改。例如：K1 的备选标题（标题不在正文里）、K2 的补料、K4 的换内容、K5 的补料或压缩，一律 null。
+- 同一个问题的多个 option 只能有一个能被采用，不要给两个互相冲突的 apply。
 
 只输出 JSON（禁止代码围栏和任何解释）：
 {
   "issues": [
-    {"id": "I01", "type": "K1|K2|K3|K4|K5", "location": "", "quote": "", "problem": "", "status": "已修改|待选择|仅提示", "before": "", "after": "", "basis": [], "affects_peaks": [], "options": []}
+    {"id": "I01", "type": "K1|K2|K3|K4|K5", "location": "", "quote": "", "problem": "", "status": "已修改|待选择|仅提示", "before": "", "after": "", "basis": [], "affects_peaks": [],
+     "options": [{"label": "", "apply": {"find": "", "replace": ""}, "manual_reason": ""}]}
   ]
 }

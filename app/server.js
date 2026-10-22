@@ -482,10 +482,13 @@ const server = http.createServer(async (req, res) => {
     const runMatch = url.match(/^\/api\/runs\/([\w-]+)$/);
     if (runMatch && method === 'GET') {
       const r = store.getRun(runMatch[1]);
-      return r ? send(res, 200, r) : send(res, 404, { error: '任务不存在' });
+      if (!r) return send(res, 404, { error: '任务不存在' });
+      // 编辑分析用的对照数据(原片高峰、第一个甜头),只随响应返回,不落盘
+      r.analysis_context = analysis.analysisContext(r.asset_id);
+      return send(res, 200, r);
     }
 
-    // ---------- 写前分析:人工确认 / 重新分析 ----------
+    // ---------- 写前分析:人工确认 / 保存修改 / 重新分析 ----------
     // 确认:可带上人工编辑过的 analysis(整份 JSON),确认后进入四步写稿
     const anConfirmMatch = url.match(/^\/api\/runs\/([\w-]+)\/analysis\/confirm$/);
     if (anConfirmMatch && method === 'POST') {
@@ -496,6 +499,7 @@ const server = http.createServer(async (req, res) => {
       if (body.analysis != null) {
         const shapeErr = analysis.analysisShapeError(body.analysis);
         if (shapeErr) return send(res, 400, { error: '分析结果不合格: ' + shapeErr });
+        if (r.analysis && !r.analysis_original) r.analysis_original = analysis.cloneJson(r.analysis);
         r.analysis = body.analysis;
         r.analysis_edited = true;
       }
@@ -508,6 +512,25 @@ const server = http.createServer(async (req, res) => {
         if (rr) { rr.status = 'failed'; rr.error = '管线异常: ' + e.message; store.saveRun(rr); }
       });
       return send(res, 200, { ok: true, id: r.id });
+    }
+
+    // 保存修改(不写稿):只覆盖 analysis,不碰 status、不点火管线
+    const anUpdateMatch = url.match(/^\/api\/runs\/([\w-]+)\/analysis\/update$/);
+    if (anUpdateMatch && method === 'POST') {
+      const body = await readBody(req);
+      const r = store.getRun(anUpdateMatch[1]);
+      if (!r) return send(res, 404, { error: '任务不存在' });
+      if (r.status !== 'awaiting_review' || r.analysis_confirmed) {
+        return send(res, 400, { error: '仅待确认且未确认的任务可保存分析(当前: ' + r.status + ')' });
+      }
+      const shapeErr = analysis.analysisShapeError(body.analysis);
+      if (shapeErr) return send(res, 400, { error: '分析结果不合格: ' + shapeErr });
+      if (r.analysis && !r.analysis_original) r.analysis_original = analysis.cloneJson(r.analysis);
+      r.analysis = body.analysis;
+      r.analysis_edited = true;
+      r.analysis_saved_at = new Date().toISOString();
+      store.saveRun(r);
+      return send(res, 200, { ok: true, id: r.id, analysis: r.analysis, analysis_saved_at: r.analysis_saved_at });
     }
 
     // 重新分析:可补充参考资料(materials)、指定赛道证据卡(track_card_name)
@@ -539,6 +562,90 @@ const server = http.createServer(async (req, res) => {
       if ((r.steps || {}).script_check && r.steps.script_check.status === 'running') return send(res, 409, { error: '稿件检查进行中' });
       analysis.runScriptCheck(r.id).catch(() => {});
       return send(res, 200, { ok: true, id: r.id });
+    }
+
+    // 采用某个检查选项:只替换一次,失败一字不改;option_index=-1 表示用该条的 before/after(K3 改失败的存量)
+    const scApplyMatch = url.match(/^\/api\/runs\/([\w-]+)\/script-check\/apply$/);
+    if (scApplyMatch && method === 'POST') {
+      const body = await readBody(req);
+      const r = store.getRun(scApplyMatch[1]);
+      if (!r) return send(res, 404, { error: '任务不存在' });
+      if (r.status !== 'done') return send(res, 400, { error: '仅已完成的任务可改稿(当前: ' + r.status + ')' });
+      if (r.script_v2) return send(res, 400, { error: '已生成 V2,V1 已锁定;请在 V2 上重跑检查' });
+      if ((r.steps || {}).script_check && r.steps.script_check.status === 'running') return send(res, 409, { error: '稿件检查进行中,稍后再试' });
+      const sc = r.script_check;
+      if (!sc || !Array.isArray(sc.issues)) return send(res, 400, { error: '还没有检查结果' });
+      const idx = Number(body.issue_index);
+      const it = sc.issues[idx];
+      if (!it) return send(res, 404, { error: '问题不存在' });
+      if (it.status !== '待选择') return send(res, 409, { error: '该问题已处理过,不能重复采用' });
+
+      const oi = Number(body.option_index);
+      let apply = null, label = '';
+      if (oi === -1) {
+        if (!it.before || !it.after) return send(res, 400, { error: '该问题没有可直接应用的改法,请用复制' });
+        apply = { find: it.before, replace: it.after };
+        label = 'K3 改法';
+      } else {
+        const opt = (it.options || [])[oi];
+        apply = opt && typeof opt === 'object' ? opt.apply : null;
+        label = opt ? (typeof opt === 'string' ? opt : (opt.label || '')) : '';
+      }
+      if (!apply || typeof apply.find !== 'string') return send(res, 400, { error: '该选项没有结构化改法,请用「复制」手动改' });
+      if (String(apply.find).length > 4000 || String(apply.replace || '').length > 4000) return send(res, 400, { error: '单条改动过长' });
+
+      const src = analysis.v1Text(r);
+      const applied = analysis.applyOptionExact(src, apply.find, apply.replace || '');
+      if (!applied.ok) return send(res, 409, { error: applied.reason + ',未做任何改动。请用「复制」手动改' });
+
+      if (!r.script_check_before_adopt) r.script_check_before_adopt = src;
+      sc.adoptions = [...(sc.adoptions || []), {
+        at: new Date().toISOString(), issue_index: idx, issue_id: it.id, option_index: oi,
+        label, find: apply.find, replace: apply.replace || '',
+        before_text: src, after_text: applied.text
+      }].slice(-50);
+
+      if (r.script_v1) r.script_v1 = applied.text; else r.final_script = applied.text;
+      it.status = '已采用';
+      it.applied = true;
+      it.adopted = true;
+      it.applied_option = oi;
+      it.applied_at = new Date().toISOString();
+      it.before = apply.find;
+      it.after = apply.replace || '';
+      ['compliance_scans', 'opening_scans', 'descriptions'].forEach(k => { if (r[k] && r[k].v1) r[k].v1.stale = true; });
+      sc.applied = sc.issues.filter(i => i.applied).length;
+      sc.pending = sc.issues.filter(i => i.status === '待选择').length;
+      sc.program = analysis.scriptProgramStats(r) || sc.program;
+      sc.adopted_at = new Date().toISOString();
+      sc.stale_after_adopt = true; // 稿子已变:建议重新检查
+      store.saveRun(r);
+      return send(res, 200, { ok: true, applied: it.id, label, program: sc.program, applied_count: sc.applied, pending: sc.pending });
+    }
+
+    // 撤销"最后一次采用":只在当前稿仍等于那次改动后的文本时才允许,不猜
+    const scUndoMatch = url.match(/^\/api\/runs\/([\w-]+)\/script-check\/undo$/);
+    if (scUndoMatch && method === 'POST') {
+      const r = store.getRun(scUndoMatch[1]);
+      if (!r) return send(res, 404, { error: '任务不存在' });
+      if (r.status !== 'done') return send(res, 400, { error: '仅已完成的任务可撤销' });
+      if (r.script_v2) return send(res, 400, { error: '已生成 V2,V1 已锁定' });
+      const sc = r.script_check;
+      const list = (sc && sc.adoptions) || [];
+      const last = list[list.length - 1];
+      if (!last) return send(res, 400, { error: '没有可撤销的采用' });
+      if (analysis.v1Text(r) !== last.after_text) return send(res, 409, { error: '稿子在这次采用之后又被改过,无法安全撤销' });
+      if (r.script_v1) r.script_v1 = last.before_text; else r.final_script = last.before_text;
+      const it = sc.issues && sc.issues[last.issue_index];
+      if (it) { it.status = '待选择'; it.applied = false; it.adopted = false; delete it.applied_option; delete it.applied_at; }
+      sc.adoptions = list.slice(0, -1);
+      sc.applied = sc.issues.filter(i => i.applied).length;
+      sc.pending = sc.issues.filter(i => i.status === '待选择').length;
+      sc.program = analysis.scriptProgramStats(r) || sc.program;
+      if (!sc.adoptions.length) sc.stale_after_adopt = false;
+      ['compliance_scans', 'opening_scans', 'descriptions'].forEach(k => { if (r[k] && r[k].v1) r[k].v1.stale = true; });
+      store.saveRun(r);
+      return send(res, 200, { ok: true, undone: last.issue_id, applied_count: sc.applied, pending: sc.pending });
     }
 
     // ---------- 频道声音设定(流程 A4):列表 / 读取 / 保存(即人工确认)/ 删除 / AI 起草 ----------

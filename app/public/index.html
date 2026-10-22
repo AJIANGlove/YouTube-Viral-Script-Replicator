@@ -141,6 +141,31 @@
   .an-bad { background: #fef2f2; }
   .an-sec { font-weight: 600; font-size: 13px; margin: 12px 0 4px; }
   .an-json { width: 100%; min-height: 220px; font-family: ui-monospace, monospace; font-size: 12px; }
+  .an-edit-input { width: 100%; font: inherit; font-size: 12px; padding: 3px 5px; border: 1px solid #d1d5db; border-radius: 4px; box-sizing: border-box; background: #fff; }
+  .an-edit-input:focus { outline: 2px solid #bfdbfe; border-color: #93c5fd; }
+  .an-edit-input.an-invalid { border-color: #dc2626; background: #fef2f2; }
+  .an-edit-input.an-mono { font-family: ui-monospace, monospace; }
+  .an-errbar { font-size: 12px; border-radius: 6px; padding: 6px 10px; margin: 4px 0 10px; background: #f9fafb; color: #4b5563; }
+  .an-errbar.has-err { background: #fef2f2; color: #b91c1c; }
+  .an-errbar.has-warn { background: #fffbeb; color: #b45309; }
+  .an-err { color: #b91c1c; font-size: 11px; line-height: 1.4; }
+  .an-pick { display: block; border: 1px solid #e5e7eb; border-radius: 6px; padding: 6px 8px; margin: 4px 0; cursor: pointer; font-size: 13px; line-height: 1.55; }
+  .an-pick:hover { border-color: #93c5fd; }
+  .an-pick.on { border-color: #2563eb; background: #eff6ff; }
+  .an-pick.bad { border-color: #fca5a5; background: #fef2f2; }
+  .an-pick input[type=radio] { margin-right: 6px; }
+  .an-opbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+  .an-dirty { color: #b45309; font-weight: 600; }
+  .an-btn { padding: 3px 9px; font-size: 12px; border-radius: 5px; cursor: pointer; background: #fff; border: 1px solid #d1d5db; color: #374151; }
+  .an-btn:hover { border-color: #9ca3af; }
+  .an-btn.on { background: #2563eb; border-color: #2563eb; color: #fff; }
+  .an-btn.del { color: #b91c1c; border-color: #fca5a5; }
+  .an-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .an-grp { display: inline-flex; gap: 3px; flex-wrap: wrap; }
+  .sc-opt { display: flex; gap: 8px; align-items: flex-start; justify-content: space-between; padding: 5px 0; border-top: 1px dashed #e5e7eb; }
+  .sc-opt-line { flex: 1 1 auto; }
+  .sc-opt.adopted { color: #047857; }
+  .sc-opt-tools { flex: 0 0 auto; display: flex; gap: 4px; }
   .sc-item { border: 1px solid #e5e7eb; border-left-width: 4px; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; font-size: 13px; line-height: 1.6; }
   .sc-item.s-done { border-left-color: #10b981; }
   .sc-item.s-pick { border-left-color: #f59e0b; }
@@ -1396,7 +1421,10 @@ async function retryRunById(id) {
   loadRuns();
 }
 
-function openRun(id) { currentRunId = id; anRenderedKey = null; resetDetailTitleCopyFeedback(); fpState = null; cpState = null; Object.keys(descPending).forEach(k => delete descPending[k]); document.getElementById('fp-panel').classList.add('hidden'); document.getElementById('cp-panel').classList.add('hidden'); document.getElementById('fp-popover').classList.add('hidden'); showView('detail'); }
+function openRun(id) {
+  if (anEdit && anEdit.dirty && anEdit.runId !== id && !confirm('当前分析的修改还没保存，切换任务会丢弃。继续？')) return;
+  if (anEdit && anEdit.runId !== id) anEdit = null;
+  currentRunId = id; anRenderedKey = null; resetDetailTitleCopyFeedback(); fpState = null; cpState = null; Object.keys(descPending).forEach(k => delete descPending[k]); document.getElementById('fp-panel').classList.add('hidden'); document.getElementById('cp-panel').classList.add('hidden'); document.getElementById('fp-popover').classList.add('hidden'); showView('detail'); }
 
 async function loadRunDetail() {
   const r = await api('/api/runs/' + currentRunId);
@@ -1553,7 +1581,10 @@ async function deleteVoice() {
 }
 
 // ---------- 写前分析(流程 B②-⑨)/ 留存检查(B⑪)/ 稿件检查(B⑭ K1-K5) ----------
-let anRenderedKey = null; // 分析面板只在任务状态或分析内容变化时重绘,避免轮询冲掉正在编辑的 JSON
+let anRenderedKey = null; // 分析面板只在任务状态变化时重绘;草稿脏时绝不重建,避免轮询冲掉输入
+let anEdit = null;        // 待确认分析的可编辑副本(见 anInitEditor)
+let anValidateTimer = null;
+let scApplying = null;    // 稿件检查"采用/撤销"请求期间的锁,防重复点击
 
 function anTable(head, rows) {
   if (!rows.length) return '<div class="hint">(无)</div>';
@@ -1561,6 +1592,16 @@ function anTable(head, rows) {
 }
 
 function anIds(ids) { return (ids || []).join(', '); }
+
+function escAttr(s) { return esc(String(s == null ? '' : s)).replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+function anClone(v) { try { return JSON.parse(JSON.stringify(v)); } catch (e) { return null; } }
+function anGetPath(o, p) { return String(p).split('.').reduce((x, k) => (x == null ? undefined : x[k]), o); }
+function anSetPath(o, p, v) {
+  const ks = String(p).split('.'), last = ks.pop();
+  let t = o;
+  for (const k of ks) { if (t[k] == null) t[k] = /^\d+$/.test(k) ? [] : {}; t = t[k]; }
+  t[last] = v;
+}
 
 function analysisHtml(a) {
   const t = a.title || {};
@@ -1602,65 +1643,512 @@ function analysisHtml(a) {
   return html;
 }
 
+// ---------- 可编辑分析面板(待确认态) ----------
+// 设计:所有编辑只写 anEdit.draft(不重渲染,保持焦点) -> 同步进 JSON 文本域 -> 显式点保存/确认才提交
+function anInitEditor(r) {
+  const analysis = r.analysis || {};
+  anEdit = {
+    runId: r.id,
+    base: anClone(analysis) || {},
+    draft: anClone(analysis) || {},
+    original: r.analysis_original ? anClone(r.analysis_original) : null,
+    history: [],
+    dirty: false,
+    jsonDirty: false,
+    materials: r.materials || '',
+    ctx: r.analysis_context || { peaks: [], source_first_payoff_sec: null },
+    issues: []
+  };
+}
+
+function anSnapshot(path) {
+  if (!anEdit) return;
+  const now = Date.now();
+  const top = anEdit.history[anEdit.history.length - 1];
+  if (top && top.path === path && now - top.at < 1500) { top.at = now; return; }
+  anEdit.history.push({ path, at: now, data: anClone(anEdit.draft) });
+  if (anEdit.history.length > 60) anEdit.history.shift();
+}
+
+function anSyncJson() {
+  const ta = document.getElementById('an-json');
+  if (ta && anEdit) ta.value = JSON.stringify(anEdit.draft, null, 2);
+}
+
+function anMarkDirty() {
+  if (!anEdit) return;
+  anEdit.dirty = true;
+  anSyncJson();
+  anScheduleValidate();
+  const st = document.getElementById('an-status');
+  if (st) { st.className = 'hint an-dirty'; st.textContent = '有未保存的修改'; }
+}
+
+function anRepaintRows() {
+  if (!anEdit) return;
+  document.querySelectorAll('#an-panel tr[data-an-row]').forEach(tr => {
+    const kind = tr.dataset.anRow, i = Number(tr.dataset.anI), d = anEdit.draft;
+    let cls = '';
+    if (kind === 'facts') { const f = (d.facts || [])[i] || {}; cls = /时效风险/.test(f.freshness || '') ? 'an-bad' : (/待查|估算|假设/.test(f.kind || '') ? 'an-warn' : ''); }
+    if (kind === 'modules') { const m = (d.modules || [])[i] || {}; cls = /删除/.test(m.decision || '') ? 'an-warn' : ''; }
+    if (kind === 'retention') { const m = (d.retention_map || [])[i] || {}; cls = /缺口/.test(m.status || '') ? 'an-warn' : ''; }
+    tr.className = cls;
+  });
+}
+
+function anRepaintPicks() {
+  if (!anEdit) return;
+  const d = anEdit.draft, t = d.title || {}, h = d.hook || {};
+  document.querySelectorAll('#an-panel [data-an-pick="title"]').forEach(el => {
+    el.closest('.an-pick').classList.toggle('on', el.dataset.anValue === t.final_title);
+    el.checked = el.dataset.anValue === t.final_title || (el.dataset.anValue === '__custom__' && !(t.candidates || []).includes(t.final_title));
+  });
+  document.querySelectorAll('#an-panel [data-an-pick="hook"]').forEach(el => {
+    const on = Number(el.dataset.anIdx) === Number(h.chosen || 0);
+    el.closest('.an-pick').classList.toggle('on', on);
+    el.checked = on;
+  });
+}
+
+function anSetText(el) {
+  if (!anEdit || !el.dataset.anPath) return;
+  anSnapshot(el.dataset.anPath);
+  let v = el.value;
+  if (el.dataset.anType === 'num') v = v === '' ? null : Number(v);
+  anSetPath(anEdit.draft, el.dataset.anPath, v);
+  if (el.dataset.anPath === 'title.final_title') anRepaintPicks();
+  anMarkDirty();
+}
+
+function anSetSelect(el) {
+  if (!anEdit || !el.dataset.anPath) return;
+  anSnapshot(el.dataset.anPath);
+  anSetPath(anEdit.draft, el.dataset.anPath, el.value);
+  anRepaintRows();
+  anMarkDirty();
+}
+
+function anPickTitle(el) {
+  if (!anEdit) return;
+  const v = el.dataset.anValue;
+  if (v === '__custom__') {
+    const inp = document.getElementById('an-title-custom');
+    if (inp) { inp.focus(); inp.select(); }
+    anRepaintPicks();
+    return;
+  }
+  anSnapshot('title.final_title');
+  anSetPath(anEdit.draft, 'title.final_title', v);
+  const inp = document.getElementById('an-title-custom');
+  if (inp) inp.value = v;
+  anRepaintPicks();
+  anMarkDirty();
+}
+
+function anPickHook(el) {
+  if (!anEdit) return;
+  anSnapshot('hook.chosen');
+  anEdit.draft.hook = anEdit.draft.hook || {};
+  anEdit.draft.hook.chosen = Number(el.dataset.anIdx);
+  anRepaintPicks();
+  anMarkDirty();
+}
+
+function anSetDecision(i, v) {
+  if (!anEdit) return;
+  anSnapshot('modules.' + i + '.decision');
+  anSetPath(anEdit.draft, 'modules.' + i + '.decision', v);
+  document.querySelectorAll('#an-panel [data-an-dec="' + i + '"]').forEach(b => b.classList.toggle('on', b.dataset.anVal === v));
+  anRepaintRows();
+  anMarkDirty();
+}
+
+function anAddFact() {
+  if (!anEdit) return;
+  const facts = anEdit.draft.facts || (anEdit.draft.facts = []);
+  let max = 0;
+  facts.forEach(f => { const m = /^F(\d+)$/.exec(String(f.id || '')); if (m) max = Math.max(max, Number(m[1])); });
+  anSnapshot('facts');
+  facts.push({ id: 'F' + String(max + 1).padStart(2, '0'), slot: '', content: '', kind: '待查', source: '', year: '', region: '', freshness: '近3年' });
+  anRenderEditor();
+  anMarkDirty();
+}
+
+function anDeleteFact(i) {
+  if (!anEdit) return;
+  const f = (anEdit.draft.facts || [])[i] || {};
+  if (!confirm('删除事实 ' + (f.id || '') + '？写稿时就不会再用它。')) return;
+  anSnapshot('facts');
+  anEdit.draft.facts.splice(i, 1);
+  anRenderEditor();
+  anMarkDirty();
+}
+
+function anJsonInput() {
+  if (!anEdit) return;
+  anEdit.jsonDirty = true;
+  const st = document.getElementById('an-json-state');
+  if (st) st.textContent = 'JSON 已手改，还没同步到上面的表格 —— 点「应用到表格」生效。';
+}
+
+function anApplyJsonToTable() {
+  if (!anEdit) return;
+  const ta = document.getElementById('an-json');
+  let v = null;
+  try { v = JSON.parse(ta.value); } catch (e) { alert('JSON 格式有误：' + e.message); return; }
+  if (!v || typeof v !== 'object' || Array.isArray(v)) { alert('最外层必须是一个对象'); return; }
+  anEdit.draft = v;
+  anEdit.jsonDirty = false;
+  anEdit.dirty = true;
+  anRenderEditor();
+  anMarkDirty();
+  const st = document.getElementById('an-json-state');
+  if (st) st.textContent = '已应用到表格。表格改动也会实时写进这份 JSON。';
+}
+
+function anUndo() {
+  if (!anEdit || !anEdit.history.length) { alert('没有可撤销的步骤'); return; }
+  const h = anEdit.history.pop();
+  anEdit.draft = h.data;
+  anEdit.dirty = true;
+  anRenderEditor();
+  anMarkDirty();
+}
+
+function anRestoreOriginal() {
+  if (!anEdit) return;
+  const src = anEdit.original || anEdit.base;
+  if (!src) { alert('没有可恢复的版本'); return; }
+  if (!confirm('恢复成模型原始分析？当前修改会被覆盖（可再点「撤销上一步」找回）。')) return;
+  anSnapshot('restore');
+  anEdit.draft = anClone(src);
+  anEdit.dirty = true;
+  anRenderEditor();
+  anMarkDirty();
+}
+
+function anValidateIssues() {
+  const out = [];
+  const d = anEdit && anEdit.draft;
+  const push = (path, msg, level) => out.push({ path, msg, level });
+  if (!d || typeof d !== 'object') { push('', '分析内容不是对象', 'block'); return out; }
+  ['verdict', 'title', 'thesis_card', 'facts', 'modules', 'retention_map', 'hook'].forEach(k => { if (d[k] == null) push(k, '缺少字段 ' + k, 'block'); });
+  if (!Array.isArray(d.facts) || !d.facts.length) push('facts', '事实表不能为空', 'block');
+  else {
+    const seen = {};
+    d.facts.forEach((f, i) => {
+      if (!String(f.content || '').trim()) push('facts.' + i + '.content', '第 ' + (i + 1) + ' 条内容为空', 'block');
+      if (!String(f.id || '').trim()) push('facts.' + i + '.id', '第 ' + (i + 1) + ' 条编号为空', 'block');
+      else if (seen[f.id]) push('facts.' + i + '.id', '编号 ' + f.id + ' 重复', 'block');
+      else seen[f.id] = 1;
+      if (!['事实', '估算', '假设', '待查', ''].includes(f.kind)) push('facts.' + i + '.kind', '第 ' + (i + 1) + ' 条类型不合法', 'block');
+      if (!f.kind) push('facts.' + i + '.kind', '第 ' + (i + 1) + ' 条没标类型', 'warn');
+      if (!['近3年', '时效风险', '不适用', ''].includes(f.freshness)) push('facts.' + i + '.freshness', '第 ' + (i + 1) + ' 条时效不合法', 'block');
+      if (!f.freshness) push('facts.' + i + '.freshness', '第 ' + (i + 1) + ' 条没标时效', 'warn');
+      if (!String(f.source || '').trim()) push('facts.' + i + '.source', '第 ' + (i + 1) + ' 条没有来源', 'warn');
+      if (!String(f.year || '').trim()) push('facts.' + i + '.year', '第 ' + (i + 1) + ' 条没有年份', 'warn');
+      if (!String(f.region || '').trim()) push('facts.' + i + '.region', '第 ' + (i + 1) + ' 条没有地区', 'warn');
+    });
+  }
+  if (!['可以写', '调整后可写', '换框架'].includes(d.verdict)) push('verdict', '结论值不合法', 'block');
+  if (!d.title || !String(d.title.final_title || '').trim()) push('title.final_title', '标题为空', 'block');
+  (d.modules || []).forEach((m, i) => { if (!['保留', '换内容保功能', '并入', '删除', ''].includes(m.decision)) push('modules.' + i + '.decision', '第 ' + (i + 1) + ' 段处理方式不合法', 'block'); });
+  (d.retention_map || []).forEach((m, i) => { if (!['承担', '缺口-补料', '缺口-接受弱化', ''].includes(m.status)) push('retention_map.' + i + '.status', '第 ' + (i + 1) + ' 个高峰状态不合法', 'block'); });
+  const cands = ((d.hook || {}).candidates) || [];
+  if (!cands.length) push('hook.candidates', '没有钩子候选', 'block');
+  else {
+    const c = Number((d.hook || {}).chosen);
+    if (!Number.isInteger(c) || c < 0 || c >= cands.length) push('hook.chosen', '钩子选择的序号越界', 'block');
+  }
+  const peaks = (anEdit.ctx && anEdit.ctx.peaks) || [];
+  if (peaks.length) {
+    const set = new Set(peaks.map(p => p.peak_id));
+    (d.retention_map || []).forEach((m, i) => { if (m.source_peak && !set.has(m.source_peak)) push('retention_map.' + i + '.source_peak', '原片里没有 ' + m.source_peak, 'warn'); });
+  }
+  const sf = (anEdit.ctx || {}).source_first_payoff_sec;
+  cands.forEach((c, i) => {
+    const v = Number(c.first_payoff_sec);
+    if (sf != null && isFinite(v) && v > sf + 0.5) push('hook.' + i, '第 ' + (i + 1) + ' 个钩子的甜头在 ' + v + ' 秒，晚于原片 ' + sf + ' 秒', 'warn');
+  });
+  const ids = new Set((d.facts || []).map(f => f.id));
+  const refs = [];
+  (d.ledger || []).forEach(l => (l.fact_ids || []).forEach(x => refs.push(x)));
+  (d.modules || []).forEach(m => (m.fact_ids || []).forEach(x => refs.push(x)));
+  (d.retention_map || []).forEach(m => (m.fact_ids || []).forEach(x => refs.push(x)));
+  [...new Set(refs)].forEach(x => { if (x && !ids.has(x)) push('', '有地方引用了已删除的 ' + x, 'warn'); });
+  if (d.verdict === '换框架') push('verdict', '判为「换框架」仍确认的话，会按当前框架照写', 'warn');
+  return out;
+}
+
+function anValidateNow() {
+  if (!anEdit) return [];
+  const issues = anValidateIssues();
+  anEdit.issues = issues;
+  document.querySelectorAll('#an-panel .an-invalid').forEach(e => e.classList.remove('an-invalid'));
+  issues.forEach(i => {
+    if (!i.path) return;
+    const el = document.querySelector('#an-panel [data-an-path="' + i.path + '"]');
+    if (el) el.classList.add('an-invalid');
+  });
+  const bad = issues.filter(i => i.level === 'block');
+  const warn = issues.filter(i => i.level === 'warn');
+  const bar = document.getElementById('an-errbar');
+  if (bar) {
+    if (bad.length) {
+      bar.className = 'an-errbar has-err';
+      bar.innerHTML = '<b>还有 ' + bad.length + ' 项必须处理：</b>' + bad.slice(0, 4).map(i => esc(i.msg)).join('；') + (bad.length > 4 ? ' …' : '');
+    } else if (warn.length) {
+      bar.className = 'an-errbar has-warn';
+      bar.innerHTML = '<b>' + warn.length + ' 项提醒：</b>' + warn.slice(0, 3).map(i => esc(i.msg)).join('；') + (warn.length > 3 ? ' …' : '');
+    } else {
+      bar.className = 'an-errbar';
+      bar.textContent = '✓ 没有必须处理的问题，可以直接确认。';
+    }
+  }
+  return issues;
+}
+
+function anScheduleValidate() {
+  clearTimeout(anValidateTimer);
+  anValidateTimer = setTimeout(() => { anValidateNow(); }, 300);
+}
+
+function anApplyDraftToControls() {
+  if (!anEdit) return;
+  document.querySelectorAll('#an-panel [data-an-path]').forEach(el => {
+    const v = anGetPath(anEdit.draft, el.dataset.anPath);
+    el.value = v == null ? '' : v;
+  });
+  anRepaintPicks();
+  anRepaintRows();
+  anSyncJson();
+}
+
+function anEditorShell() {
+  const d = anEdit.draft, t = d.title || {}, th = d.thesis_card || {}, h = d.hook || {}, ctx = anEdit.ctx || {};
+  const dirBad = /相反|部分/.test(t.framework_direction_match || '');
+  const cands = (t.candidates || []).filter(Boolean);
+  const isCustom = !cands.includes(t.final_title);
+  const sel = (path, opts, cur) => `<select class="an-edit-input" data-an-path="${path}" onchange="anSetSelect(this)">` +
+    opts.map(v => `<option value="${escAttr(v)}"${v === cur ? ' selected' : ''}>${v === '' ? '未标' : esc(v)}</option>`).join('') + '</select>';
+
+  let html = `<h2>⓪ 写前分析 · 待你确认</h2>
+  <div class="hint">表格里直接改，改完可以「保存修改」稍后再确认；黄底=估算/待查/缺口，红底=超过 3 年的旧数据。</div>
+  <div id="an-errbar" class="an-errbar"></div>`;
+
+  html += `<div class="an-sec">结论</div>
+    <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap">
+      ${sel('verdict', ['可以写', '调整后可写', '换框架'], d.verdict)}
+      <span class="hint" style="margin:2px 0 0;flex:1 1 320px">${esc(d.verdict_reason || '')}</span>
+    </div>`;
+
+  html += `<div class="an-sec">标题</div>
+    <div class="hint" style="margin:0 0 4px">与框架方向：<b class="${dirBad ? 'an-dirty' : ''}">${esc(t.framework_direction_match || '未判')}</b>${t.title_type ? ' · ' + esc(t.title_type) : ''}${dirBad ? '（建议核对后再写）' : ''}</div>
+    ${cands.map(c => `<label class="an-pick${c === t.final_title ? ' on' : ''}"><input type="radio" name="an-title" data-an-pick="title" data-an-value="${escAttr(c)}" onchange="anPickTitle(this)"${c === t.final_title ? ' checked' : ''}>${esc(c)}</label>`).join('')}
+    <label class="an-pick${isCustom ? ' on' : ''}"><input type="radio" name="an-title" data-an-pick="title" data-an-value="__custom__" onchange="anPickTitle(this)"${isCustom ? ' checked' : ''}>自己写：</label>
+    <input class="an-edit-input" id="an-title-custom" data-an-path="title.final_title" oninput="anSetText(this)" placeholder="在这里填你想要的标题">
+    <div class="hint" style="margin-top:4px">观众想知道：${esc(t.viewer_question || '')} → 期待：${esc(t.expected_answer_direction || '')}</div>`;
+
+  html += `<div class="an-sec">论点卡</div>
+    <div class="hint" style="margin:0 0 2px">原有认知</div><textarea class="an-edit-input" rows="2" data-an-path="thesis_card.viewer_belief" oninput="anSetText(this)"></textarea>
+    <div class="hint" style="margin:6px 0 2px">真相</div><textarea class="an-edit-input" rows="2" data-an-path="thesis_card.truth" oninput="anSetText(this)"></textarea>
+    <div class="hint" style="margin:6px 0 2px">一句话论点</div><textarea class="an-edit-input" rows="2" data-an-path="thesis_card.one_line_thesis" oninput="anSetText(this)"></textarea>
+    <div class="hint" style="margin:6px 0 2px">结尾落点</div><textarea class="an-edit-input" rows="2" data-an-path="thesis_card.ending_landing" oninput="anSetText(this)"></textarea>`;
+
+  html += `<div class="an-sec">事实表（写稿只能用这些）</div>
+  <table class="an-table"><tr><th>编号</th><th>类型</th><th>内容</th><th>来源</th><th>年份</th><th>地区</th><th>时效</th><th></th></tr>
+  ${(d.facts || []).map((f, i) => {
+    const cls = /时效风险/.test(f.freshness || '') ? 'an-bad' : (/待查|估算|假设/.test(f.kind || '') ? 'an-warn' : '');
+    return `<tr data-an-row="facts" data-an-i="${i}" class="${cls}">
+      <td><input class="an-edit-input an-mono" style="width:56px" data-an-path="facts.${i}.id" oninput="anSetText(this)"></td>
+      <td>${sel('facts.' + i + '.kind', ['事实', '估算', '假设', '待查'], f.kind)}</td>
+      <td><textarea class="an-edit-input" rows="2" data-an-path="facts.${i}.content" oninput="anSetText(this)"></textarea></td>
+      <td><input class="an-edit-input" data-an-path="facts.${i}.source" oninput="anSetText(this)"></td>
+      <td><input class="an-edit-input" style="width:66px" data-an-path="facts.${i}.year" oninput="anSetText(this)"></td>
+      <td><input class="an-edit-input" style="width:72px" data-an-path="facts.${i}.region" oninput="anSetText(this)"></td>
+      <td>${sel('facts.' + i + '.freshness', ['近3年', '时效风险', '不适用', ''], f.freshness)}</td>
+      <td><button class="an-btn del" onclick="anDeleteFact(${i})">删除</button></td>
+    </tr>`;
+  }).join('')}</table>
+  <div><button class="an-btn" onclick="anAddFact()">+ 新增一条事实</button></div>`;
+
+  const notFound = ((d.search_log) || []).filter(s => /没找到/.test(s.result || ''));
+  if (notFound.length) html += `<div class="an-sec">没找到的资料</div>` + anTable(['想找', '说明'],
+    notFound.map(s => `<tr class="an-warn"><td>${esc(s.looked_for)}</td><td>${esc(s.note)}</td></tr>`));
+  if ((d.ledger || []).length) html += `<div class="an-sec">账本（只读）</div>` + anTable(['项目', '数值', '事实'],
+    d.ledger.map(l => `<tr><td>${esc(l.item)}</td><td>${esc(l.value)}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`));
+
+  html += `<div class="an-sec">模块取舍</div>
+  <table class="an-table"><tr><th>原片段</th><th>处理</th><th>留存作用</th><th>理由（可改）</th><th>事实</th><th>时长</th></tr>
+  ${(d.modules || []).map((m, i) => `<tr data-an-row="modules" data-an-i="${i}" class="${/删除/.test(m.decision || '') ? 'an-warn' : ''}">
+    <td>${esc(m.segment)}</td>
+    <td><div class="an-grp">${['保留', '换内容保功能', '并入', '删除'].map(v => `<button class="an-btn${m.decision === v ? ' on' : ''}" data-an-dec="${i}" data-an-val="${v}" onclick="anSetDecision(${i},'${v}')">${esc(v)}</button>`).join('')}</div></td>
+    <td>${esc(m.retention_role)}</td>
+    <td><textarea class="an-edit-input" rows="2" data-an-path="modules.${i}.reason" oninput="anSetText(this)"></textarea></td>
+    <td>${esc(anIds(m.fact_ids))}</td>
+    <td>${esc(m.duration)}</td>
+  </tr>`).join('')}</table>`;
+
+  html += `<div class="an-sec">留存地图（原片高峰由谁承担）</div>
+  <table class="an-table"><tr><th>高峰</th><th>原片段</th><th>新章节</th><th>事实</th><th>状态</th></tr>
+  ${(d.retention_map || []).map((m, i) => `<tr data-an-row="retention" data-an-i="${i}" class="${/缺口/.test(m.status || '') ? 'an-warn' : ''}">
+    <td>${esc(m.source_peak)}</td><td>${esc(m.source_segment)}</td><td>${esc(m.new_chapter_hint)}</td><td>${esc(anIds(m.fact_ids))}</td>
+    <td>${sel('retention_map.' + i + '.status', ['承担', '缺口-补料', '缺口-接受弱化', ''], m.status)}</td>
+  </tr>`).join('')}</table>
+  <div class="hint" style="margin-top:-4px">选「缺口-接受弱化」的高峰不计入留存检查的及格线。</div>`;
+
+  html += `<div class="an-sec">钩子候选（选一个当开场）</div><div class="hint">合约：${esc(h.contract || '')}</div>
+  ${(h.candidates || []).map((c, i) => {
+    const v = Number(c.first_payoff_sec), sf = ctx.source_first_payoff_sec;
+    const bad = sf != null && isFinite(v) && v > sf + 0.5;
+    const on = i === Number(h.chosen || 0);
+    return `<label class="an-pick${on ? ' on' : ''}${bad ? ' bad' : ''}">
+      <input type="radio" name="an-hook" data-an-pick="hook" data-an-idx="${i}" onchange="anPickHook(this)"${on ? ' checked' : ''}>
+      <b>${i + 1}.</b> ${esc(c.text)}
+      <span class="hint" style="margin:0">· 第一个甜头 ${esc(c.first_payoff_sec)} 秒${bad ? '（晚于原片 ' + esc(sf) + ' 秒）' : ''} · 事实 ${esc(anIds(c.fact_ids))}</span>
+    </label>`;
+  }).join('')}`;
+
+  if (d.estimated_duration) html += `<div class="hint">预计时长：${esc(d.estimated_duration)}</div>`;
+  if ((d.risks || []).length) html += `<div class="an-sec">风险</div><div style="font-size:13px">${d.risks.map(x => '· ' + esc(x)).join('<br>')}</div>`;
+
+  html += `<div class="an-opbar">
+    <button class="primary" onclick="confirmAnalysis()">确认并开始写稿</button>
+    <button class="an-btn" onclick="anSaveAnalysis()">保存修改（不写稿）</button>
+    <button class="an-btn" onclick="anUndo()">撤销上一步</button>
+    <button class="an-btn" onclick="anRestoreOriginal()">恢复原始版本</button>
+    <span class="hint" id="an-status" style="margin:0"></span>
+  </div>`;
+
+  html += `<details style="margin-top:10px"><summary style="cursor:pointer">高级：直接编辑 JSON</summary>
+    <div class="hint" id="an-json-state" style="margin:4px 0">表格改动会实时写进下面这份 JSON；也可以在下面改完点「应用到表格」。</div>
+    <textarea class="an-json" id="an-json" oninput="anJsonInput()"></textarea>
+    <div class="an-opbar"><button class="an-btn" onclick="anApplyJsonToTable()">应用到表格</button></div>
+  </details>`;
+  html += anRerunBox(anEdit.materials);
+  return html;
+}
+
+function anRenderEditor() {
+  const el = document.getElementById('an-panel');
+  if (!el || !anEdit) return;
+  el.innerHTML = anEditorShell();
+  anApplyDraftToControls();
+  anValidateNow();
+}
+
 function renderAnalysisPanel(r) {
   const el = document.getElementById('an-panel');
   const st = (r.steps || {}).analysis || {};
-  const key = [r.id, r.status, r.analysis_confirmed, st.finished_at, st.status].join('|');
-  if (!r.pre_analysis && !r.analysis) { el.classList.add('hidden'); anRenderedKey = null; return; }
+  if (!r.pre_analysis && !r.analysis) { el.classList.add('hidden'); anRenderedKey = null; anEdit = null; return; }
   el.classList.remove('hidden');
-  if (key === anRenderedKey) return;
-  anRenderedKey = key;
+  if (anEdit && anEdit.runId !== r.id) anEdit = null;
+  if (r.analysis_confirmed || r.status !== 'awaiting_review') anEdit = null;
+
+  const key = [r.id, r.status, r.analysis_confirmed, st.finished_at, st.status].join('|');
+
   if (r.status === 'analyzing') {
+    if (key === anRenderedKey) return;
+    anRenderedKey = key;
     el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">AI 正在查事实、定论点和留存地图,通常 1-3 分钟…</div>`;
     return;
   }
   if (!r.analysis) {
+    if (key === anRenderedKey) return;
+    anRenderedKey = key;
     el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">还没有分析结果${r.error ? '(' + esc(r.error) + ')' : ''}。</div>
-      ${['failed', 'cancelled', 'awaiting_review'].includes(r.status) && !r.analysis_confirmed ? anRerunBox(r) : ''}`;
+      ${['failed', 'cancelled', 'awaiting_review'].includes(r.status) && !r.analysis_confirmed ? anRerunBox(r.materials) : ''}`;
     return;
   }
   if (r.analysis_confirmed) {
+    if (key === anRenderedKey) return;
+    anRenderedKey = key;
     el.innerHTML = `<details><summary style="cursor:pointer"><b>⓪ 写前分析(已确认${r.analysis_edited ? ',人工改过' : ''} · ${fmtTime(r.analysis_confirmed_at)})</b></summary>${analysisHtml(r.analysis)}</details>`;
     return;
   }
-  el.innerHTML = `<h2>⓪ 写前分析 · 待你确认</h2>
-    <div class="hint">黄色是估算/待查/缺口,红色是超过 3 年的旧数据。核对后点「确认并开始写稿」;要改就展开下面的 JSON 直接改。</div>
-    ${analysisHtml(r.analysis)}
-    <details style="margin-top:10px"><summary style="cursor:pointer">编辑分析 JSON</summary>
-      <textarea class="an-json" id="an-json">${esc(JSON.stringify(r.analysis, null, 2))}</textarea>
-    </details>
-    <div style="margin-top:10px;display:flex;gap:10px;align-items:center">
-      <button class="primary" onclick="confirmAnalysis()">确认并开始写稿</button>
-      <span class="hint" id="an-status" style="margin-top:0"></span>
-    </div>
-    ${anRerunBox(r)}`;
+  // 待确认:草稿脏时轮询只刷新提示,绝不重建 DOM
+  if (anEdit && anEdit.dirty) { anUpdateStatusOnly(); return; }
+  if (key === anRenderedKey && anEdit) return;
+  anRenderedKey = key;
+  anInitEditor(r);
+  anRenderEditor();
 }
 
-function anRerunBox(r) {
+// 轮询期间只刷新提示条,不动输入框
+function anUpdateStatusOnly() {
+  const st = document.getElementById('an-status');
+  if (st && anEdit && anEdit.dirty && !st.textContent) { st.className = 'hint an-dirty'; st.textContent = '有未保存的修改'; }
+}
+
+function anRerunBox(materials) {
   return `<details style="margin-top:10px"><summary style="cursor:pointer">补充资料后重新分析</summary>
-    <textarea id="an-materials" rows="4" style="width:100%">${esc(r.materials || '')}</textarea>
+    <textarea id="an-materials" rows="4" style="width:100%">${esc(materials || '')}</textarea>
     <button style="margin-top:6px" onclick="rerunAnalysis()">重新分析</button></details>`;
+}
+
+// 手改 JSON 但尚未应用时,提交前先把它读进来
+function anFlushJson() {
+  if (!anEdit || !anEdit.jsonDirty) return null;
+  const ta = document.getElementById('an-json');
+  try {
+    const v = JSON.parse(ta.value);
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return '最外层必须是一个对象';
+    anEdit.draft = v;
+    anEdit.jsonDirty = false;
+    return null;
+  } catch (e) { return 'JSON 格式有误：' + e.message; }
+}
+
+async function anSaveAnalysis() {
+  const status = document.getElementById('an-status');
+  if (!anEdit) return;
+  const je = anFlushJson();
+  if (je) { if (status) status.textContent = je; return; }
+  const bad = anValidateIssues().filter(i => i.level === 'block');
+  if (bad.length) {
+    anValidateNow();
+    alert('还有 ' + bad.length + ' 项必须处理：\n' + bad.slice(0, 6).map(i => '· ' + i.msg).join('\n'));
+    return;
+  }
+  try {
+    await api('/api/runs/' + currentRunId + '/analysis/update', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ analysis: anEdit.draft })
+    });
+    anEdit.base = anClone(anEdit.draft);
+    anEdit.dirty = false;
+    if (status) { status.className = 'hint'; status.textContent = '已保存 ' + new Date().toLocaleTimeString() + '（还没开始写稿）'; }
+  } catch (e) { if (status) status.textContent = '保存失败：' + e.message; }
 }
 
 async function confirmAnalysis() {
   const status = document.getElementById('an-status');
-  const body = {};
-  const ta = document.getElementById('an-json');
-  if (ta && ta.value.trim() !== JSON.stringify((lastRunDetail || {}).analysis, null, 2)) {
-    try { body.analysis = JSON.parse(ta.value); }
-    catch (e) { status.textContent = 'JSON 格式有误:' + e.message; return; }
+  if (!anEdit) { if (status) status.textContent = '面板未就绪，请刷新页面'; return; }
+  const je = anFlushJson();
+  if (je) { if (status) status.textContent = je; return; }
+  const issues = anValidateIssues();
+  const bad = issues.filter(i => i.level === 'block');
+  if (bad.length) {
+    anValidateNow();
+    alert('还有 ' + bad.length + ' 项必须处理：\n' + bad.slice(0, 6).map(i => '· ' + i.msg).join('\n'));
+    return;
   }
+  const warn = issues.filter(i => i.level === 'warn');
+  if (warn.length && !confirm('还有 ' + warn.length + ' 项提醒：\n' + warn.slice(0, 5).map(i => '· ' + i.msg).join('\n') + '\n\n仍要确认并开始写稿吗？')) return;
+  const body = {};
+  if (anEdit.dirty) body.analysis = anEdit.draft;
   try {
     await api('/api/runs/' + currentRunId + '/analysis/confirm', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    anEdit = null;
     anRenderedKey = null;
     loadRunDetail();
-  } catch (e) { status.textContent = '确认失败:' + e.message; }
+  } catch (e) { if (status) status.textContent = '确认失败：' + e.message; }
 }
 
 async function rerunAnalysis() {
   const m = document.getElementById('an-materials');
   try {
     await api('/api/runs/' + currentRunId + '/analysis/rerun', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ materials: m ? m.value : '' }) });
+    anEdit = null;
     anRenderedKey = null;
     loadRunDetail();
   } catch (e) { alert('重新分析失败:' + e.message); }
@@ -1705,19 +2193,91 @@ function renderScriptCheck(r) {
   if ((p.mixed_year_chapters || []).length) stats.push('同段混用年份:' + p.mixed_year_chapters.map(x => x.id + '(' + x.years.join('/') + ')').join(', '));
   if ((p.stale_facts || []).length) stats.push('超过 3 年的事实:' + p.stale_facts.map(f => (f.id || '') + (f.year ? '(' + f.year + ')' : '')).join(', '));
   html += `<div class="hint" style="line-height:1.8">${fmtTime(sc.at)} · 已自动修改 ${sc.applied || 0} 处 · 待你选择 ${sc.pending || 0} 处${r.final_script_before_check ? ' · 改前版本已留档' : ''}<br>${stats.join('<br>')}</div>`;
-  const items = (sc.issues || []).map(it => {
+  const adoptN = (sc.adoptions || []).length;
+  if (adoptN || sc.stale_after_adopt) {
+    html += `<div class="an-opbar" style="margin:4px 0 8px">
+      ${adoptN ? `<span class="hint" style="margin:0">已采用 ${adoptN} 处</span><button class="an-btn" onclick="undoScriptAdopt(this)">撤销上次采用</button>` : ''}
+      ${sc.stale_after_adopt ? '<span class="hint" style="margin:0;color:#b45309">稿子已改，建议重新检查一次</span>' : ''}
+    </div>`;
+  }
+  const canAdopt = r.status === 'done' && !r.script_v2 && st.status !== 'running';
+  const items = (sc.issues || []).map((it, idx) => {
     const cls = it.applied ? 's-done' : (it.status === '待选择' ? 's-pick' : 's-note');
-    const tag = it.applied ? '✅ 已修改' : (it.status === '待选择' ? '🟡 待选择' : '⚪ 仅提示');
+    const tag = it.adopted ? '✅ 已采用' : (it.applied ? '✅ 已修改' : (it.status === '待选择' ? '🟡 待选择' : '⚪ 仅提示'));
     let body = `<div class="sc-head">${tag} · ${esc(it.type)} ${esc(SC_TYPE[it.type] || '')} · ${esc(it.location || '')}</div>`;
     if (it.quote) body += `<div>原文:「${esc(it.quote)}」</div>`;
     if (it.problem) body += `<div>问题:${esc(it.problem)}</div>`;
     if (it.applied) body += `<div>改动:<del>${esc(it.before)}</del> → <ins>${esc(it.after)}</ins></div>`;
     if (it.basis) body += `<div class="hint" style="margin-top:0">依据:${esc(it.basis)}</div>`;
     if ((it.affects_peaks || []).length) body += `<div class="hint" style="margin-top:0">影响高峰:${esc(it.affects_peaks.join(', '))}</div>`;
-    if ((it.options || []).length) body += `<div>可选:${it.options.map((o, i) => '<br>' + (i + 1) + '. ' + esc(typeof o === 'string' ? o : JSON.stringify(o))).join('')}</div>`;
+    const opts = it.options || [];
+    if (opts.length) body += scOptionsHtml(it, idx, canAdopt);
+    else if (it.status === '待选择' && it.before && it.after) {
+      body += `<div class="sc-opt"><div class="sc-opt-line">可直接套用这条改法</div>
+        <div class="sc-opt-tools"><button class="an-btn" ${canAdopt && !scApplying ? '' : 'disabled'} onclick="adoptScriptOption(${idx},-1,this)">采用</button></div></div>`;
+    }
     return `<div class="sc-item ${cls}">${body}</div>`;
   });
   el.innerHTML = html + (items.length ? items.join('') : '<div class="hint">没发现问题。</div>');
+}
+
+// 选项行:有结构化 apply 的给「采用」,否则给「复制」;旧数据(options 是字符串)只有复制
+function scOptionsHtml(it, issueIdx, canAdopt) {
+  const locked = !canAdopt || scApplying || it.status !== '待选择' || it.adopted;
+  return (it.options || []).map((o, oi) => {
+    const label = typeof o === 'string' ? o : (o.label || '');
+    const apply = o && typeof o === 'object' ? o.apply : null;
+    const canDo = !!(apply && apply.find);
+    const reason = o && typeof o === 'object' ? o.manual_reason : '';
+    return `<div class="sc-opt">
+      <div class="sc-opt-line">${oi + 1}. ${esc(label)}${canDo ? '' : (reason ? `<span class="hint" style="margin:0">（需人工改：${esc(reason)}）</span>` : `<span class="hint" style="margin:0">（不能自动套用）</span>`)}</div>
+      <div class="sc-opt-tools">
+        ${canDo ? `<button class="an-btn" ${locked ? 'disabled' : ''} onclick="adoptScriptOption(${issueIdx},${oi},this)">采用</button>` : ''}
+        <button class="an-btn" onclick="copyIssueOption(${issueIdx},${oi})">复制</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function adoptScriptOption(issueIdx, optIdx, btn) {
+  if (scApplying) return;
+  scApplying = issueIdx + ':' + optIdx;
+  if (btn) { btn.disabled = true; btn.textContent = '应用中…'; }
+  try {
+    await api('/api/runs/' + currentRunId + '/script-check/apply', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ issue_index: issueIdx, option_index: optIdx })
+    });
+    scApplying = null;
+    loadRunDetail();
+  } catch (e) {
+    scApplying = null;
+    alert('采用失败：' + e.message);
+    loadRunDetail();
+  }
+}
+
+async function undoScriptAdopt(btn) {
+  if (scApplying) return;
+  if (!confirm('撤销上一次采用？稿子会恢复到那次修改之前。')) return;
+  scApplying = 'undo';
+  if (btn) { btn.disabled = true; btn.textContent = '撤销中…'; }
+  try {
+    await api('/api/runs/' + currentRunId + '/script-check/undo', { method: 'POST' });
+    scApplying = null;
+    loadRunDetail();
+  } catch (e) { scApplying = null; alert('撤销失败：' + e.message); loadRunDetail(); }
+}
+
+function copyIssueOption(issueIdx, optIdx) {
+  const sc = (lastRunDetail || {}).script_check || {};
+  const it = (sc.issues || [])[issueIdx];
+  if (!it) return;
+  const o = (it.options || [])[optIdx];
+  const label = typeof o === 'string' ? o : (o && o.label) || '';
+  const apply = o && typeof o === 'object' ? o.apply : null;
+  const text = apply && apply.replace != null ? apply.replace : label;
+  legacyCopy(text);
 }
 
 async function runScriptCheckNow() {
