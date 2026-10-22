@@ -1,12 +1,12 @@
 {
   "version": "1.1",
-  "generated_at": "2026-10-22T07:42:10.913Z",
-  "source": "program",
+  "generated_at": "2026-10-22T12:21:58.187Z",
+  "source": "program + ai",
   "field_sources": {
     "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
-    "original_moves": "timeline.observed_segments.information_move",
-    "abstract_move": "framework.structure_pattern.purpose",
-    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
     "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
   },
   "cards": [
@@ -56,13 +56,15 @@
         "first_attempt_suspense"
       ],
       "original_moves": [
-        "从零信息到场景建立 + 第一次尝试的悬念"
+        "用第二人称把观众放进一万年前的洞穴场景，描述可感官化的日常细节",
+        "插入现代物品对照制造幽默感",
+        "预演一个违反直觉的'第一次尝试'瞬间但不给答案"
       ],
-      "abstract_move": "第二人称沉浸式远古场景，并在场景中预演'第一次发现'的悬念瞬间",
+      "abstract_move": "第二人称沉浸式场景建立 + 现代对照幽默 + 悬置一个违反生存直觉的行为瞬间",
       "replacement_needs": [
-        "可感官化的远古日常场景",
-        "至少一处现代物品对照幽默",
-        "一个违反生存直觉的'第一次尝试'瞬间"
+        "一个可感官化的远古或陌生场景",
+        "至少一处与当代经验形成反差的细节",
+        "一个看起来不合理但后续会解释的行为或现象"
       ],
       "deletability": "不可删",
       "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -80,7 +82,8 @@
           "C0022",
           "C0024"
         ]
-      }
+      },
+      "ai_refined": true
     },
     {
       "stage_id": "FS02",
@@ -106,17 +109,19 @@
         "civilization_scale_leap"
       ],
       "original_moves": [
-        "尝试者历史地位的夸张抬升 + 文明要素排比"
+        "用夸张修辞把开场的尝试者抬升到历史级地位",
+        "用排比句式列举该尝试对后世文明要素的影响"
       ],
-      "abstract_move": "把一次偶然尝试的意义拉到文明级别，制造量级预期",
+      "abstract_move": "主体地位的夸张式抬升 + 影响范围的文明要素排比",
       "replacement_needs": [
-        "对该尝试者历史地位的夸张式抬升",
-        "文明要素排比清单"
+        "对主体历史地位或影响力的夸张表述",
+        "一组可排比的文明要素或后世成果"
       ],
       "deletability": "可删",
       "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS03",
@@ -159,17 +164,19 @@
         "direction_tease"
       ],
       "original_moves": [
-        "标题问题显式悬挂 + 答案方向预告"
+        "用原句复述标题中的核心问题",
+        "预告答案方向：比预期更早，且起源不在预期主体"
       ],
-      "abstract_move": "原句抛出标题问题并预告答案方向（'比你想的更早，而且不始于人类'）",
+      "abstract_move": "标题问题的显式悬挂 + 反直觉的答案方向预告",
       "replacement_needs": [
-        "标题问题的显式复述",
-        "答案方向的反直觉预告"
+        "标题问题的可复述版本",
+        "一个打破常识预期的时间或主体维度预告"
       ],
       "deletability": "不可删",
       "deletability_reason": "打开的悬念 LOOP02→FS15、LOOP03→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS04",
@@ -228,13 +235,17 @@
         "named_hypothesis"
       ],
       "original_moves": [
-        "ADH4酶证据 + 假说命名 + 发酵果实-卡路里-选择的完整逻辑链"
+        "给出一个具体的生物机制证据及其出现年代",
+        "命名一个学术假说",
+        "用自然选择逻辑串联机制-行为-优势的完整链条",
+        "用'你被进化选中'完成自我赦免式认知升级"
       ],
-      "abstract_move": "第一层时间纵深揭示：生物学根基（酶/基因/感官偏好）远早于人类本身",
+      "abstract_move": "生物机制证据 + 时间纵深 + 命名假说 + 选择逻辑链 + 认知升级句",
       "replacement_needs": [
-        "一个具体的生物机制证据及其出现年代",
-        "一个有名有姓的学术假说",
-        "自然选择逻辑链条"
+        "一个可追溯的生物或物理机制及其出现时间",
+        "一个有名有姓的学术假说或理论",
+        "一条从机制到行为到优势的因果链条",
+        "一句将个体行为归因于更大系统的认知升级表述"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK01(80)、PK02(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -248,7 +259,8 @@
           "peak_id": "PK02",
           "strength": 80
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS05",
@@ -285,17 +297,20 @@
         "experimental_validation"
       ],
       "original_moves": [
-        "灵长类野外研究数据 + 代谢物证据 + 每日摄入量当量"
+        "引用野外观察研究的数据",
+        "引用代谢物分析的证据",
+        "给出具体的摄入量或浓度当量"
       ],
-      "abstract_move": "用现代田野实验证明假说不是空谈",
+      "abstract_move": "至少两项独立的田野或实验研究 + 具体的量化数据",
       "replacement_needs": [
-        "至少两项独立的野外/实验研究",
-        "具体数据（浓度、摄入量当量）"
+        "至少两项独立的实验或观察研究",
+        "可比较的量化数据（浓度、频率、当量等）"
       ],
       "deletability": "不可删",
       "deletability_reason": "回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS06",
@@ -321,17 +336,19 @@
         "accidental_to_deliberate_shift"
       ],
       "original_moves": [
-        "两阶段差异界定 + 跃迁所需认知能力拆解"
+        "界定前后两个阶段的本质差异（被动接触 vs 主动制造）",
+        "拆解从一阶段到另一阶段所需的认知能力"
       ],
-      "abstract_move": "完成从'被动接触'到'主动制造'的叙事换挡，强调这一跃迁需要类科学的认知能力",
+      "abstract_move": "两阶段的本质差异界定 + 跃迁所需认知能力拆解",
       "replacement_needs": [
-        "对前后两个阶段本质差异的界定",
-        "对跃迁所需认知能力的拆解"
+        "对前后两个阶段本质差异的清晰界定",
+        "对完成跃迁所需认知或技术能力的分解说明"
       ],
       "deletability": "可删",
       "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS07",
@@ -383,13 +400,17 @@
         "predates_civilization_marker"
       ],
       "original_moves": [
-        "遗址与人群还原 + 化学分析 + 工艺流程 + '早于农业'强调"
+        "给出考古遗址的时间、地点、人群、遗物",
+        "说明化学分析手段",
+        "还原具体的工艺流程",
+        "显式强调该证据早于常识中的起点"
       ],
-      "abstract_move": "第二层反差揭示：最早的有意生产证据，且早于农业",
+      "abstract_move": "考古证据的完整呈现 + 工艺流程还原 + 时间线倒错强调",
       "replacement_needs": [
-        "一处考古遗址（时间、地点、人群、遗物、分析手段）",
-        "工艺流程的具体还原",
-        "'早于农业'的显式强调"
+        "一处有时间地点人群遗物的考古或历史证据",
+        "该证据的分析手段或验证方法",
+        "具体的技术或工艺流程细节",
+        "一个'早于预期'的显式强调"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK03(85);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -399,7 +420,8 @@
           "peak_id": "PK03",
           "strength": 85
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS08",
@@ -453,13 +475,16 @@
         "sacred_pivot"
       ],
       "original_moves": [
-        "争议双方呈现 + 第一性原理推演 + '时间线已定，争论仍活' + 神圣定性"
+        "公平呈现学术争议的双方观点",
+        "用第一性原理推演动机",
+        "用'时间线已定，争论仍活'式句子收束",
+        "给出神圣性的定性"
       ],
-      "abstract_move": "引入并展开核心学术争议，把证据升级为对文明动因的追问",
+      "abstract_move": "争议双方呈现 + 第一性原理推演 + 未闭合的悬念收束 + 初步定性",
       "replacement_needs": [
-        "争议双方观点的公平呈现",
-        "第一性原理式的动机推演",
-        "'时间线已确定，争论仍活着'式的收束句"
+        "一个尚未定论的学术或实践争议及双方观点",
+        "对动机或原因的第一性原理推演",
+        "一句承认不确定性但保留张力的收束句"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK04(75);打开的悬念 LOOP04(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -469,7 +494,8 @@
           "peak_id": "PK04",
           "strength": 75
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS09",
@@ -506,18 +532,21 @@
         "multi_site_parallel_evidence"
       ],
       "original_moves": [
-        "东亚混合发酵 + 高加索葡萄酒 + 东亚曲霉工艺及其未断传承"
+        "给出第一个地理隔离的证据及其独特工艺",
+        "给出第二个地理隔离的证据及其独特配方",
+        "给出第三个证据并强调其传承未断"
       ],
-      "abstract_move": "地理扩散证据：多个互不接触的文明在同一时间窗口独立发明",
+      "abstract_move": "至少三个地理隔离的平行证据 + 各自独特的技术细节 + 至少一条传承线索",
       "replacement_needs": [
-        "至少三个地理上隔离的平行证据",
-        "每个证据的独特工艺或配方细节",
-        "至少一条'古今未断传承'的线索"
+        "至少三个地理上隔离的独立证据",
+        "每个证据的独特工艺、配方或实现方式",
+        "至少一条'古今传承未断'的线索"
       ],
       "deletability": "不可删",
       "deletability_reason": "打开的悬念 LOOP05→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS10",
@@ -558,12 +587,13 @@
         "convergent_invention_verdict"
       ],
       "original_moves": [
-        "独立发明逻辑推理 + '发酵好奇物种'定性句"
+        "显式推理独立发明的逻辑",
+        "给出一句物种级或人性级的高度凝练定性"
       ],
-      "abstract_move": "从地理分布推出普遍人性结论：该行为是人类反复独立抵达的必然",
+      "abstract_move": "独立发明逻辑的显式推理 + 普遍人性或物种级定性句",
       "replacement_needs": [
-        "独立发明逻辑的显式推理",
-        "一句高度凝练的物种级定性"
+        "对'多地独立发明'逻辑的显式表述",
+        "一句将行为归因于物种或人性本质的定性句"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK05(80);回收了前文的悬念 FS09→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -573,7 +603,8 @@
           "peak_id": "PK05",
           "strength": 80
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS11",
@@ -623,18 +654,22 @@
         "modern_recreation_payoff"
       ],
       "original_moves": [
-        "配给制度 + 酿造女神与赞美诗配方 + 三千年后的复刻实验 + 七十种分类"
+        "给出作为工资或配给的制度化事实",
+        "给出专属神祇及赞美诗中的配方",
+        "展示文献与实物的互证",
+        "给出分类系统的规模"
       ],
-      "abstract_move": "制度化案例：该物质如何被编织进经济、宗教与文字系统",
+      "abstract_move": "制度化事实 + 神格化证据 + 文献实物互证 + 系统化规模",
       "replacement_needs": [
-        "作为工资/配给的制度化事实",
-        "神格化证据（专属神祇）",
-        "文献与实物互证"
+        "该物质或行为被纳入经济或行政系统的证据",
+        "宗教或文化中的神格化或仪式化证据",
+        "文献记载与实物遗存的互相验证"
       ],
       "deletability": "可并入",
       "deletability_reason": "没有高峰,只有段内小悬念 LOOP06。",
       "merge_keep": "内容可以删,但相邻段要补一个小问答:赞美诗中的酿造配方是否真的可行",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS12",
@@ -669,13 +704,15 @@
         "absurd_law_humor_peak"
       ],
       "original_moves": [
-        "法典条款 + 惩罚细节 + 点题判词"
+        "引用一部著名古代法典中的相关条款",
+        "画面化呈现惩罚细节",
+        "用一句点题判词收束"
       ],
-      "abstract_move": "用荒诞法规细节制造幽默峰值，同时强化'制度化'论点",
+      "abstract_move": "古代法规的具体条款 + 荒诞惩罚细节的画面化 + 点题判词",
       "replacement_needs": [
-        "一部著名古代法典中的相关条款",
-        "惩罚细节的画面化呈现",
-        "一句点题的判词"
+        "一部著名古代法典或规章中的相关条款",
+        "惩罚或规制的具体细节",
+        "一句带有幽默感的点题收束"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -685,7 +722,8 @@
           "peak_id": "PK06",
           "strength": 80
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS13",
@@ -721,18 +759,22 @@
         "functional_differentiation_case"
       ],
       "original_moves": [
-        "劳工配给与饮水安全 + 精英葡萄酒与随葬 + 最古老的酒标 + 神祇归属"
+        "展示劳动者配给与公共卫生的实用维度",
+        "展示精英阶层的声望与随葬维度",
+        "给出实物证据的细节（标签、封缄）",
+        "说明神祇归属"
       ],
-      "abstract_move": "补充对照文明案例，展示同一物质的阶层分工与公共卫生功能",
+      "abstract_move": "阶层分工的实用与声望维度 + 实物证据细节 + 宗教归属",
       "replacement_needs": [
-        "劳动者配给与公共卫生的实用维度",
-        "精英与祭祀的声望维度",
-        "实物证据细节（标签、封缄）"
+        "该物质在不同阶层的不同功能或用途",
+        "实物遗存的具体细节（标记、封装、工艺等）",
+        "宗教或文化系统中的归属关系"
       ],
       "deletability": "可删",
       "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS14",
@@ -752,18 +794,21 @@
         "sacred_thread_synthesis"
       ],
       "original_moves": [
-        "跨案例共性蒙太奇 + 意识状态的意义解释 + '不是为了忘记，而是为了标记'终极定性"
+        "用蒙太奇手法回收所有案例的共性",
+        "解释为何最早形态都与神圣绑定",
+        "用否定-肯定对仗给出终极定性"
       ],
-      "abstract_move": "全片综合：回收所有案例的共性——最早形态皆与神圣绑定，给出终极定性",
+      "abstract_move": "跨案例共性回收 + 神圣绑定的意义解释 + 否定-肯定对仗的终极定性",
       "replacement_needs": [
-        "跨案例共性蒙太奇",
-        "对'为何与神圣绑定'的解释",
-        "否定-肯定对仗的终极判断句"
+        "多个案例中反复出现的共同特征",
+        "对该共性背后原因或意义的解释",
+        "一句用否定-肯定对仗结构的终极定性句"
       ],
       "deletability": "可删",
       "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS15",
@@ -810,13 +855,15 @@
         "layered_direct_answer"
       ],
       "original_moves": [
-        "标题问题原句回收 + 生物层/生产层/扩散层的答案复述"
+        "原句回收标题问题",
+        "按时间层级组织答案：生物层、生产层、扩散层",
+        "再次确认关键数字"
       ],
-      "abstract_move": "原句回收标题问题，给出分层的完整直接答案",
+      "abstract_move": "标题问题原句回收 + 分层级的完整答案复述 + 关键数据确认",
       "replacement_needs": [
-        "标题问题的原句回收",
-        "按时间层级组织的答案复述",
-        "关键数字的再次确认"
+        "标题问题的原句或同义复述",
+        "按时间或逻辑层级组织的答案结构",
+        "关键时间点或数字的再次确认"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK07(75);回收了前文的悬念 FS03→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -826,7 +873,8 @@
           "peak_id": "PK07",
           "strength": 75
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS16",
@@ -867,13 +915,15 @@
         "persona_cta"
       ],
       "original_moves": [
-        "观众手中酒杯与远古洞穴的意象连接 + 格言收束 + 人格化CTA"
+        "用意象把观众当下经验连接回开场场景",
+        "用一句格言式句子完成情绪顶点",
+        "用人格化CTA自然退场"
       ],
-      "abstract_move": "诗意闭环与退场：把观众手中的当下接回开场场景，以格言句收束并自然过渡到CTA",
+      "abstract_move": "当下与开场的意象闭环 + 格言式情绪顶点 + 人格化CTA",
       "replacement_needs": [
-        "观众当下经验与远古场景的连接意象",
-        "一句格言式收束",
-        "与全片基调一致的人格化CTA"
+        "一个连接观众当下与开场场景的意象",
+        "一句格言式或诗意的收束句",
+        "一个与全片基调一致的自然退场方式"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK08(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -883,7 +933,8 @@
           "peak_id": "PK08",
           "strength": 85
         }
-      ]
+      ],
+      "ai_refined": true
     }
   ]
 }

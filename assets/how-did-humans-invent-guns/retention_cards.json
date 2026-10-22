@@ -1,12 +1,12 @@
 {
   "version": "1.1",
-  "generated_at": "2026-10-22T07:42:10.344Z",
-  "source": "program",
+  "generated_at": "2026-10-22T10:15:06.971Z",
+  "source": "program + ai",
   "field_sources": {
     "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
-    "original_moves": "timeline.observed_segments.information_move",
-    "abstract_move": "framework.structure_pattern.purpose",
-    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
     "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
   },
   "cards": [
@@ -54,13 +54,15 @@
         "explosion_payoff"
       ],
       "original_moves": [
-        "从零信息到起源场景建立，再到意外爆炸完成"
+        "锚定具体年代与地点，建立历史场景",
+        "声明行动者的原始目标：追求娱乐烟火而非武器",
+        "呈现意外爆炸的戏剧性瞬间，狼狈细节完成反差"
       ],
-      "abstract_move": "意外起源开场：呈现一群追求与最终产物完全相反目标的人及其失败瞬间",
+      "abstract_move": "用追求目标A的人意外创造出完全相反的目标B产物，通过失败瞬间的戏剧性细节完成开场反差",
       "replacement_needs": [
-        "具体年代与地点锚点",
-        "行动者的原始目标声明",
-        "意外发生的戏剧性瞬间"
+        "具体的时间与地点锚点",
+        "行动者声明的原始目标",
+        "意外发生的戏剧性瞬间及其可视化细节"
       ],
       "deletability": "不可删",
       "deletability_reason": "开场钩子段;持有高峰 PK01(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -82,7 +84,8 @@
           "C0002",
           "C0005"
         ]
-      }
+      },
+      "ai_refined": true
     },
     {
       "stage_id": "FS02",
@@ -129,15 +132,15 @@
         "title_question_explicit"
       ],
       "original_moves": [
-        "意外产物的量级顶到最高",
-        "主问句显式落下",
-        "路线图预告"
+        "将意外产物的历史量级顶到最高点",
+        "显式抛出主问句：从意外到统治的路径",
+        "快节奏预告整条演化路线图"
       ],
-      "abstract_move": "立项：把产物的历史量级顶到最高，显式提出主问句并预告路线图",
+      "abstract_move": "把意外产物定性为历史顶级存在，抛出从起点到终点的主问句，用路线图预告制造悬念",
       "replacement_needs": [
-        "产物的历史地位定性",
-        "从起点到终点的主问句",
-        "路线图的快节奏预告"
+        "产物在历史中的量级定性",
+        "连接起点与终点的主问句",
+        "路线图的快节奏预告要素"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK02(75);打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -147,7 +150,8 @@
           "peak_id": "PK02",
           "strength": 75
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS03",
@@ -191,20 +195,21 @@
         "ratio_specifics"
       ],
       "original_moves": [
-        "元说明",
-        "配比与氧化机制",
-        "膨胀气体一句点题"
+        "元说明：为何必须先理解原理",
+        "呈现组成与配比的最简化结构",
+        "用一句话点题核心机制：膨胀气体推动"
       ],
-      "abstract_move": "原理打底：用最简化的机制解释，声明理解它才能理解后续一切",
+      "abstract_move": "用元说明声明理解基础原理是后续一切的前提，给出最简化的组成与核心机制，用一句话点题",
       "replacement_needs": [
         "为何先讲原理的元说明",
-        "组成与配比的最简化呈现",
-        "核心机制的一句点题"
+        "最简化的组成与配比结构",
+        "核心机制的一句话点题"
       ],
       "deletability": "可并入",
       "deletability_reason": "没有高峰,只有段内小悬念 LOOP02。",
       "merge_keep": "内容可以删,但相邻段要补一个小问答:为什么理解基础原理就能解释后续一切演化",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS04",
@@ -236,21 +241,22 @@
         "origin_echo"
       ],
       "original_moves": [
-        "两用暗示",
-        "烟火庆典清单",
-        "起源呼应",
-        "军方介入转折"
+        "暗示技术的两用性质",
+        "清单式呈现最初的无害娱乐用途：烟火庆典",
+        "呼应起源场景，展示普通人如何日常接触它",
+        "用军方介入完成转折"
       ],
-      "abstract_move": "和平用途期：展示该技术最初的无害娱乐用途，强化反差",
+      "abstract_move": "展示技术最初的无害用途，用清单式呈现与起源呼应强化反差，铺垫军用化转折",
       "replacement_needs": [
         "最初用途的清单式呈现",
-        "该用途与起源场景的呼应",
+        "该用途与起源场景的呼应点",
         "普通人接触它的日常方式"
       ],
       "deletability": "可删",
       "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS05",
@@ -308,15 +314,15 @@
         "battlefield_proof_scene"
       ],
       "original_moves": [
-        "极简构造",
-        "实战验证",
-        "心理冲击分析"
+        "描述首个武器形态的极简构造",
+        "用具体战役验证武器有效性：围城战",
+        "分析新武器对旧兵种的心理冲击"
       ],
-      "abstract_move": "军用化转折：首个武器形态诞生并经实战验证，心理冲击被单独强调",
+      "abstract_move": "呈现首个武器形态的极简构造，用实战验证其有效性，单独强调对旧秩序的心理冲击",
       "replacement_needs": [
         "首个武器形态的极简构造描述",
-        "具体战役的实战验证",
-        "对旧兵种的心理冲击分析"
+        "具体战役的实战验证场景",
+        "对旧兵种心理冲击的分析"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK03(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -326,7 +332,8 @@
           "peak_id": "PK03",
           "strength": 75
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS06",
@@ -384,13 +391,13 @@
         "failure_mode_detail"
       ],
       "original_moves": [
-        "加速声明",
-        "弹丸化概念跃迁",
-        "材料失效",
-        "新形态诞生",
-        "规模放大"
+        "声明后续进入加速迭代期",
+        "呈现弹丸化的概念跃迁",
+        "白描上一代材料的具体失效方式",
+        "展示新材料催生的成熟形态",
+        "呈现向上放大的变体"
       ],
-      "abstract_move": "材料与结构迭代链：每一代改进都直指上一代的具体物理缺陷",
+      "abstract_move": "用渐进式改良链条，每一代改进都直指上一代的具体物理缺陷，新材料催生形态跃迁，规模向上放大",
       "replacement_needs": [
         "渐进式改良的第一步",
         "上一代材料的具体失效方式",
@@ -405,7 +412,8 @@
           "peak_id": "PK04",
           "strength": 80
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS07",
@@ -459,12 +467,12 @@
         "modern_analogy_wit"
       ],
       "original_moves": [
-        "遭遇战",
-        "吸收转折句",
-        "投递系统类比",
-        "支线分叉声明"
+        "呈现征服者遭遇该技术的战役",
+        "用转折句点明吸收而非排斥的选择",
+        "用投递系统类比定性传播机制",
+        "声明技术支线分叉的存在"
       ],
-      "abstract_move": "征服者吸收与搬运：征服者吸收而非排斥该技术，无意识充当跨洲传播载体",
+      "abstract_move": "征服者遭遇技术后做出吸收而非排斥的反直觉选择，用类比定性其无意识传播机制，声明支线分叉",
       "replacement_needs": [
         "征服者遭遇该技术的战役",
         "吸收而非排斥的转折句",
@@ -479,7 +487,8 @@
           "peak_id": "PK05",
           "strength": 80
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS08",
@@ -506,12 +515,12 @@
         "resemblance_evidence"
       ],
       "original_moves": [
-        "多路线传播",
-        "同类迁移对照",
-        "传承证据",
-        "旧秩序版图"
+        "呈现多路线并行的传播路径",
+        "用同时期其他技术的迁移对照",
+        "展示两地造物高度相似的传承证据",
+        "铺垫接收地旧秩序已存续的时长"
       ],
-      "abstract_move": "接收地格局铺垫：技术抵达新大陆，落在即将被它颠覆的旧秩序版图上",
+      "abstract_move": "技术抵达新大陆，用多路线传播与同类技术对照，展示传承证据，落在即将被颠覆的旧秩序版图上",
       "replacement_needs": [
         "多路线并行的传播路径",
         "同时期其他技术同类迁移的对照",
@@ -521,7 +530,8 @@
       "deletability": "可删",
       "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS09",
@@ -577,17 +587,17 @@
         "fortification_fall"
       ],
       "original_moves": [
-        "笨拙仿制白描",
-        "城墙失效",
-        "精英兵种被中和",
-        "建筑形态革命"
+        "白描接收地早期仿制品的笨拙",
+        "展示防御工事失效的证据",
+        "呈现廉价武器中和毕生训练精英的反差",
+        "展示建筑形态被迫改变的革命"
       ],
-      "abstract_move": "颠覆证据链：旧秩序的象征物在新技术面前逐一崩塌",
+      "abstract_move": "用证据链逐一击溃旧秩序象征物：笨拙仿制、工事失效、精英被廉价武器中和、建筑形态革命",
       "replacement_needs": [
         "接收地早期仿制品的笨拙白描",
         "防御工事失效的证据",
         "精英兵种被廉价武器中和的反差",
-        "建筑形态被迫改变"
+        "建筑形态被迫改变的案例"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -597,7 +607,8 @@
           "peak_id": "PK06",
           "strength": 80
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS10",
@@ -645,12 +656,12 @@
         "mechanism_elegance"
       ],
       "original_moves": [
-        "操作两难白描",
-        "机构原理",
-        "历史首次定性",
-        "精准质变"
+        "白描上一代操作的两难困境",
+        "解释新机构的工作原理",
+        "给出该装置的历史首次定性",
+        "呈现精准度的质变"
       ],
-      "abstract_move": "关键机构化跃迁：把核心操作从手工协调中解放出来的机械装置",
+      "abstract_move": "白描手工操作的两难困境，呈现机械装置如何解放核心操作，给出历史首次定性，展示精准度质变",
       "replacement_needs": [
         "上一代操作的两难白描",
         "新机构的工作原理",
@@ -665,7 +676,8 @@
           "peak_id": "PK07",
           "strength": 85
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS11",
@@ -701,12 +713,12 @@
         "craftsmanship_reversal"
       ],
       "original_moves": [
-        "各文明采纳清单",
-        "精修反超",
-        "原创地引进改良版",
-        "闭环定性"
+        "清单式呈现各文明采纳案例",
+        "展示某地精修后反超的口碑",
+        "呈现原创地引进改良版的对策动机",
+        "用反讽定性历史闭环"
       ],
-      "abstract_move": "全球采纳与回流：技术传遍各文明并被精修，最终回流原创地形成历史闭环",
+      "abstract_move": "技术传遍各文明并被精修，某地反超原创地，原创地回流引进改良版，用反讽定性历史闭环",
       "replacement_needs": [
         "各文明采纳的具体案例",
         "某地精修后反超的口碑",
@@ -721,7 +733,8 @@
           "peak_id": "PK08",
           "strength": 75
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS12",
@@ -754,12 +767,12 @@
         "reload_vulnerability"
       ],
       "original_moves": [
-        "重量代价",
-        "装填脆弱性",
-        "组合战术主导",
-        "未跟进对照"
+        "呈现武器升级的重量代价",
+        "白描装填空窗的脆弱性",
+        "展示配套兵种保护的必然性",
+        "用非欧军队未跟进的对照"
       ],
-      "abstract_move": "战术协同演化：武器自身缺陷催生配套兵种与编队体系",
+      "abstract_move": "武器自身缺陷催生配套兵种与编队体系，用代价、脆弱性、组合必然性、未跟进对照完成战术演化",
       "replacement_needs": [
         "武器升级的重量代价",
         "装填空窗的脆弱性",
@@ -769,7 +782,8 @@
       "deletability": "不可删",
       "deletability_reason": "打开的悬念 LOOP07→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS13",
@@ -817,13 +831,13 @@
         "intermediate_solution"
       ],
       "original_moves": [
-        "缺陷清单",
-        "中间方案",
-        "成本约束",
-        "终极方案",
-        "优势清单"
+        "清单式列举旧机制的缺陷",
+        "呈现中间方案的原理与适用兵种",
+        "展示成本约束阻碍普及的因果",
+        "呈现终极方案的发明者与年代",
+        "列举终极方案的优势清单"
       ],
-      "abstract_move": "点火机制接力淘汰：中间方案因成本约束无法普及，终极方案完成一统",
+      "abstract_move": "列举旧机制缺陷，呈现中间方案因成本约束无法普及，终极方案完成一统并列举优势",
       "replacement_needs": [
         "旧机制缺陷的清单式列举",
         "中间方案的原理与适用兵种",
@@ -833,7 +847,8 @@
       "deletability": "不可删",
       "deletability_reason": "回收了前文的悬念 FS12→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS14",
@@ -871,13 +886,13 @@
         "small_fix_big_effect"
       ],
       "original_moves": [
-        "两世纪统治清单",
-        "旧配件缺陷",
-        "微改动",
-        "组织革命命名",
-        "心理威慑"
+        "清单式呈现两世纪统治期跨越的重大冲突",
+        "白描旧配件的具体缺陷",
+        "展示新配件的微小结构改动",
+        "命名组织级革命并展示影响",
+        "单独强调心理威慑的独立价值"
       ],
-      "abstract_move": "统治期与组合革命：成熟技术加配件组合兼并多种战场职能，引发组织级革命",
+      "abstract_move": "成熟技术统治期跨越重大冲突，配件微改动引发组织级革命，心理威慑获得独立价值",
       "replacement_needs": [
         "统治期跨越的重大冲突清单",
         "旧配件的具体缺陷",
@@ -888,7 +903,8 @@
       "deletability": "不可删",
       "deletability_reason": "打开的悬念 LOOP08→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS15",
@@ -935,12 +951,12 @@
         "cascade_verdict"
       ],
       "original_moves": [
-        "统治终结锚点",
-        "新机制原理",
-        "点名式淘汰",
-        "全链最后一棒定位"
+        "锚定统治期终结的时间点",
+        "解释新机制的工作原理",
+        "点名式淘汰全部前代机制",
+        "定位该节点为全链最后一棒"
       ],
-      "abstract_move": "过时瀑布：终极点火创新让所有前代机制在短时间内集体过时",
+      "abstract_move": "锚定统治终结时间，呈现终极点火创新的原理，点名式淘汰全部前代，定位为全链最后一棒",
       "replacement_needs": [
         "统治期终结的时间锚点",
         "新机制的工作原理",
@@ -955,7 +971,8 @@
           "peak_id": "PK09",
           "strength": 85
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS16",
@@ -1007,13 +1024,14 @@
         "three_factor_verdict"
       ],
       "original_moves": [
-        "全弧俯瞰",
-        "三因素定性",
-        "无天才时刻否定",
-        "接力者清单",
-        "格言收束"
+        "一带而过后续加速",
+        "俯瞰全弧线给出一句话总结",
+        "用三因素主题定性",
+        "显式否定无天才时刻",
+        "清单式回望接力者",
+        "用格言句呼应开场完成收束"
       ],
-      "abstract_move": "全弧回望与定性：俯瞰整个弧线，给出主题定性并以格言句收束",
+      "abstract_move": "俯瞰全弧线给出主题定性，显式否定天才时刻，清单回望接力者，用呼应开场的格言句收束",
       "replacement_needs": [
         "后续加速的一带而过",
         "全弧线的一句话俯瞰",
@@ -1030,7 +1048,8 @@
           "peak_id": "PK10",
           "strength": 90
         }
-      ]
+      ],
+      "ai_refined": true
     }
   ]
 }

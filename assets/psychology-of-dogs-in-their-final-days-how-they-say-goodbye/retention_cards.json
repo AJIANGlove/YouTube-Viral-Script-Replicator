@@ -1,12 +1,12 @@
 {
   "version": "1.1",
-  "generated_at": "2026-10-22T07:42:10.813Z",
-  "source": "program",
+  "generated_at": "2026-10-22T12:07:06.126Z",
+  "source": "program + ai",
   "field_sources": {
     "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
-    "original_moves": "timeline.observed_segments.information_move",
-    "abstract_move": "framework.structure_pattern.purpose",
-    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
     "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
   },
   "cards": [
@@ -72,11 +72,17 @@
       ],
       "required_retention_events": "先让观众感到被理解（那些问题你也问过），再承诺这趟不会只会更痛",
       "original_moves": [
-        "告别行为场景 + 常见误读预告 + 内心问题连珠 + 情感契约重构 + 核心答案预告"
+        "用宠物离世场景建立情感代入",
+        "预告常见误读：它们知道吗、会恐惧吗、我做错了吗",
+        "连珠抛出观众内心真实问题",
+        "重构契约：这不是煽情，是给答案",
+        "预告核心答案：它们不知道会死，但知道有重要的事"
       ],
-      "abstract_move": "视频开始",
+      "abstract_move": "高代入场景 + 误读预告 + 内心问题连发 + 契约重构 + 反直觉答案预告",
       "replacement_needs": [
-        "能做到:一个高代入度的告别行为场景,至少四个内心问题,对常见误读的预告,安慰契约的显式声明,核心答案的预告句"
+        "一个目标受众有强烈情感记忆的具体场景",
+        "三到五个该场景下观众真实的内心疑问",
+        "一个打破常见认知的核心答案预告句"
       ],
       "deletability": "不可删",
       "deletability_reason": "开场钩子段;持有高峰 PK01(80);打开的悬念 LOOP01→FS09、LOOP02→FS09、LOOP03→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -98,7 +104,8 @@
           "C0009",
           "C0022"
         ]
-      }
+      },
+      "ai_refined": true
     },
     {
       "stage_id": "FS02",
@@ -116,16 +123,21 @@
       "retention_events": [],
       "required_retention_events": "把恐惧问题转化为智识好奇——观众第一次松一口气",
       "original_moves": [
-        "研究引用 + 死亡概念的最小定义 + 人类独特性对照 + 更立即更诚实的替代描述"
+        "引用哲学研究给死亡概念做最小定义",
+        "用人类独特性对照显示对象的不同",
+        "提供更立即更诚实的替代描述"
       ],
-      "abstract_move": "核心问题已抛出",
+      "abstract_move": "概念的学术定义 + 对照显示差异 + 提供更诚实的描述",
       "replacement_needs": [
-        "能做到:一条带年份机构的哲学/科学研究,概念分层辨析,人类独特性的对照,更诚实的替代性描述"
+        "一个带机构和年份的学术研究或定义",
+        "一个对照组来显示差异",
+        "一个更贴近实际的替代描述"
       ],
       "deletability": "可删",
       "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS03",
@@ -158,11 +170,16 @@
       ],
       "required_retention_events": "用\"超能力\"式证据把悲伤话题短暂点亮为惊叹",
       "original_moves": [
-        "嗅觉受体数字 + 癌症检测研究（准确率）+ 自身化学签名分析 + \"它们感知得到故障\""
+        "给出嗅觉受体的数量级数据",
+        "引用癌症检测研究及99%准确率",
+        "解释自身化学签名的监测逻辑",
+        "推论：它们感知得到自己身体的故障"
       ],
-      "abstract_move": "感知层答案已建立",
+      "abstract_move": "能力数量级 + 惊人准确率研究 + 自我监测推论 + 感知结论",
       "replacement_needs": [
-        "能做到:受体数量级,至少两项检测研究（含准确率）,自身监测的逻辑推论"
+        "一个显示能力规模的数量级数据",
+        "一到两项带准确率或成功率的应用研究",
+        "一个从能力到自我监测的逻辑推论"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK02(76)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -172,7 +189,8 @@
           "peak_id": "PK02",
           "strength": 76
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS04",
@@ -215,11 +233,18 @@
       ],
       "required_retention_events": "最痛的误会被解开——躲你不是拒绝你，是护着你",
       "original_moves": [
-        "两种行为的常见误读 + 奠基性研究（全力以赴）+ 狼群进化起源 + 就医信号的边界 + \"那是信任\"判词"
+        "列出两种相反行为及其常见误读",
+        "引用奠基性研究证明是全力以赴而非放弃",
+        "追溯狼群进化起源解释行为",
+        "划出就医信号的边界",
+        "下判词：那是信任"
       ],
-      "abstract_move": "它们感知得到变化已确立",
+      "abstract_move": "误读行为呈现 + 奠基研究翻转 + 进化溯源 + 边界划定 + 重释判词",
       "replacement_needs": [
-        "能做到:两种相反行为及其误读,一条奠基性研究,进化起源叙事,就医信号的边界提示,信任判词"
+        "两种容易被误读的相反行为",
+        "一项翻转常见认知的奠基性研究",
+        "一个进化或起源层面的解释",
+        "一个信号边界的使用提示"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK03(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -229,7 +254,8 @@
           "peak_id": "PK03",
           "strength": 84
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS05",
@@ -284,11 +310,17 @@
       ],
       "required_retention_events": "那个最后的微笑不需要在科学与爱之间二选一",
       "original_moves": [
-        "回光现象素描 + 编目研究 + 伽马波终末爆发 + \"科学可以是解释，意义可以是真的\"双修句"
+        "描绘回光返照的典型场景",
+        "引用编目研究证实现象普遍存在",
+        "揭示伽马波终末爆发的神经机制",
+        "给出双修句：科学可以是解释，意义可以是真的"
       ],
-      "abstract_move": "行为已被重释",
+      "abstract_move": "神秘现象素描 + 编目研究证实 + 神经机制揭示 + 科学与意义双修",
       "replacement_needs": [
-        "能做到:回光的典型场景,编目研究,神经科学的终末爆发证据,双修句"
+        "一个被广泛观察但缺乏解释的现象描述",
+        "一项系统编目或统计研究",
+        "一个神经或生理层面的机制解释",
+        "一句调和科学解释与人文意义的双修句"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK04(82)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -298,7 +330,8 @@
           "peak_id": "PK04",
           "strength": 82
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS06",
@@ -339,16 +372,23 @@
       ],
       "required_retention_events": "愧疚被证据一寸寸卸下",
       "original_moves": [
-        "决策的正名 + 时间机制数字 + 死后反应≠痛苦 + 压力标记研究 + \"安乐死对它们没有意义\"判词"
+        "为该决策正名",
+        "给出时间机制的数字",
+        "祛魅：死后反应不等于痛苦",
+        "引用压力标记研究",
+        "下判词：安乐死对它们没有意义"
       ],
-      "abstract_move": "面临或背负该决策的观众被点名",
+      "abstract_move": "决策正名 + 时间机制数字 + 反应祛魅 + 压力研究 + 无意义判词",
       "replacement_needs": [
-        "能做到:决策的正名句,时间机制数字,死后反应的祛魅,压力标记研究,概念无意义判词"
+        "一个时间或剂量的机制数字",
+        "一项关于压力或痛苦标记的研究",
+        "一个祛除误解的判词"
       ],
       "deletability": "可并入",
       "deletability_reason": "没有高峰,只有段内小悬念 LOOP04。",
       "merge_keep": "内容可以删,但相邻段要补一个小问答:安乐死愧疚：它受苦了吗、它知道吗、我做错了吗",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS07",
@@ -386,11 +426,16 @@
       ],
       "required_retention_events": "全片的哭泣点——但流的是被需要的泪",
       "original_moves": [
-        "fMRI尾状核研究 + \"不是食物不是狗，是你\" + 最后几秒的感官注册 + \"你是它们最后体验到的美好\"顶点判词"
+        "引用fMRI尾状核研究",
+        "用排比强调：不是食物不是同类，是你",
+        "描述最后几秒的感官注册",
+        "给出顶点判词：你是它们最后体验到的美好"
       ],
-      "abstract_move": "过程已被祛魅",
+      "abstract_move": "脑成像研究 + 排比排除其他 + 最后感官描述 + 情感顶点判词",
       "replacement_needs": [
-        "能做到:一项fMRI研究（部位+对照刺激）,单词句排比,最后感官注册的描述,顶点判词"
+        "一项脑成像或神经活动研究",
+        "一个对照刺激的排比排除",
+        "一个最后时刻感官或认知状态的描述"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK05(95)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -400,7 +445,8 @@
           "peak_id": "PK05",
           "strength": 95
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS08",
@@ -450,11 +496,17 @@
       ],
       "required_retention_events": "你不必再为\"为一只狗哭成这样\"道歉",
       "original_moves": [
-        "丧失的重量 + 悲伤障碍数据 + 预期性悲伤 + 被剥夺的哀悼 + 母婴脑扫描 + 悲伤的生理学本质"
+        "承认丧失的重量",
+        "给出悲伤障碍的百分比数据",
+        "命名预期性悲伤和被剥夺的哀悼",
+        "引用母婴脑扫描研究",
+        "给出判词：依恋回路不检查物种"
       ],
-      "abstract_move": "告别已完成或即将到来",
+      "abstract_move": "丧失承认 + 悲伤数据 + 被剥夺命名 + 依恋回路研究 + 合法性判词",
       "replacement_needs": [
-        "能做到:至少两项悲伤研究（含百分比）,被剥夺的哀悼的命名与机制,依恋回路不查物种的证据,荣誉判词"
+        "一到两项悲伤的流行病学或持续时间数据",
+        "一个被社会剥夺或否认的悲伤类型命名",
+        "一项证明依恋机制不分对象的神经研究"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK06(86)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -464,7 +516,8 @@
           "peak_id": "PK06",
           "strength": 86
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS09",
@@ -513,11 +566,18 @@
       ],
       "required_retention_events": "哭着被治愈——悲伤被保留，但被重新命名为爱",
       "original_moves": [
-        "科学总结三否定 + 神经肖像 + \"最爱的体验/不是诗是数据\" + 你给了它们好的生活 + 悲伤是爱与被爱的比例成本"
+        "用三个否定总结科学发现",
+        "描绘神经层面的关系肖像",
+        "给出判词：你是它们最爱的体验，这不是诗是数据",
+        "正名你给了它们好的生活",
+        "收尾：悲伤是爱与被爱的比例成本"
       ],
-      "abstract_move": "全部证据已交付",
+      "abstract_move": "三否定科学总结 + 神经肖像 + 诗与数据判词 + 正名福利史 + 比例成本收尾",
       "replacement_needs": [
-        "能做到:三否定总结,神经肖像描述,诗与数据判词,福利史的正名,比例成本收尾句"
+        "三个推翻常见认知的科学否定",
+        "一个从神经或生理角度重构的关系描述",
+        "一个正名历史贡献的句子",
+        "一个悲伤作为代价的比例或成本表述"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK07(90);回收了前文的悬念 FS01→LOOP01、FS01→LOOP02、FS01→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -527,7 +587,8 @@
           "peak_id": "PK07",
           "strength": 90
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS10",
@@ -545,16 +606,18 @@
       "retention_events": [],
       "required_retention_events": "把余味引导向评论区互助而非硬转化",
       "original_moves": [
-        "评论互动CTA + 下期见"
+        "邀请评论区分享",
+        "预告下期"
       ],
-      "abstract_move": "元命题已交付",
+      "abstract_move": "互动邀请 + 延续承诺",
       "replacement_needs": [
-        "能做到:一句邀请分享的号召"
+        "一句邀请观众分享体验或想法的行动号召"
       ],
       "deletability": "可删",
       "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     }
   ]
 }

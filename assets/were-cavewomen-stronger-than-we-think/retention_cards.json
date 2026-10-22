@@ -1,12 +1,12 @@
 {
   "version": "1.1",
-  "generated_at": "2026-10-22T07:42:10.245Z",
-  "source": "program",
+  "generated_at": "2026-10-22T10:00:08.822Z",
+  "source": "program + ai",
   "field_sources": {
     "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
-    "original_moves": "timeline.observed_segments.information_move",
-    "abstract_move": "framework.structure_pattern.purpose",
-    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
     "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
   },
   "cards": [
@@ -73,11 +73,11 @@
         "stereotype_target_lock"
       ],
       "original_moves": [
-        "具体研究锚点",
-        "现代生活化尴尬翻译",
-        "三连强调",
-        "假两难调侃",
-        "刻板印象点名"
+        "用2023年剑桥大学研究抛出反差结论：史前女性骨骼强度超现代精英赛艇手",
+        "用现代生活化翻译放大尴尬感：这意味着你的祖母比你强壮得多",
+        "三连否定强调砸实反差：这不是夸张，不是比喻，是字面事实",
+        "假两难调侃收紧钩子：要么存在秘密古代健身连锁，要么我们对史前女性的刻板印象完全错了",
+        "点名将被摧毁的目标刻板印象：柔弱、被动、待在洞穴里的形象"
       ],
       "abstract_move": "用一项具体研究的反差结论在开头击穿直觉，并点名将要摧毁的刻板印象",
       "replacement_needs": [
@@ -111,7 +111,8 @@
           "C0004",
           "C0005"
         ]
-      }
+      },
+      "ai_refined": true
     },
     {
       "stage_id": "FS02",
@@ -148,10 +149,10 @@
         "institutional_authority_anchor"
       ],
       "original_moves": [
-        "拆解邀请",
-        "机构与样本锚点",
-        "对照组清单",
-        "终身负荷模式发现"
+        "用'让我们拆开这个研究'式邀请句引导进入细节",
+        "给出机构与样本规模的权威锚点：剑桥团队、数百具骨骼、跨越数千年",
+        "列出对照组清单：现代久坐人群、业余运动者、精英运动员",
+        "指向关键发现：终身负荷模式刻在骨密度与附着点上"
       ],
       "abstract_move": "解剖核心研究：团队、样本、对照组与关键发现细节，建立可信度地基",
       "replacement_needs": [
@@ -163,7 +164,8 @@
       "deletability": "可删",
       "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS03",
@@ -200,9 +202,9 @@
         "outlier_to_baseline_flip"
       ],
       "original_moves": [
-        "命名科学原理",
-        "遗存=行为记录的比喻",
-        "从个体异常到群体基线的推理"
+        "命名科学原理：Wolff定律——骨骼按负荷重塑",
+        "用'遗存是终身行为记录'的比喻让原理可感",
+        "从个体异常推理到群体基线：如果一个人强壮可能偶然，整个群体强壮就是生活方式"
       ],
       "abstract_move": "讲清让证据可读的科学原理：身体组织会按负荷重塑，遗存即终身行为记录",
       "replacement_needs": [
@@ -213,7 +215,8 @@
       "deletability": "可删",
       "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS04",
@@ -266,11 +269,11 @@
         "stereotype_reach_evidence"
       ],
       "original_moves": [
-        "崩塌预告",
-        "旧模型命名",
-        "两分分工白描",
-        "传播载体清单",
-        "一经检验即崩塌"
+        "用'一经严格检验即崩塌'预告旧叙事的命运",
+        "给旧模型命名：'男性狩猎-女性采集'模型",
+        "白描模型内容：男人追逐猛犸象，女人采摘浆果",
+        "列出传播载体清单：博物馆立体模型、教科书插图、纪录片场景",
+        "转向句：这个模型在流行文化中无处不在，但一经严格检验就开始崩塌"
       ],
       "abstract_move": "把旧叙事正式点名：给出模型名称、内容与其在流行文化中的渗透史",
       "replacement_needs": [
@@ -282,7 +285,8 @@
       "deletability": "不可删",
       "deletability_reason": "打开的悬念 LOOP02→FS08、LOOP03→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS05",
@@ -345,10 +349,12 @@
         "modern_benchmark_flip"
       ],
       "original_moves": [
-        "单任务深潜",
-        "具身动作细节",
-        "民族志旁证",
-        "现代化定性收束，三条支线同构重复"
+        "第一条支线以口头转场开场：'先看研磨'",
+        "描述具身动作细节：每天数小时跪姿或蹲姿用手持石器研磨谷物",
+        "引入民族志旁证：当代传统社会记录每日研磨5-6小时",
+        "用现代化定性收束：这相当于每天多小时抗阻训练",
+        "第二条支线：负重行走采集，负荷20-30公斤，相当于全程负重徒步",
+        "第三条支线：处理兽皮，需要持续强力拉伸与刮削，肩臂负荷极大"
       ],
       "abstract_move": "用三项日常重劳动（研磨、负重、处理材料）把抽象数据翻译成体感，并逐条用现代运动参照定性",
       "replacement_needs": [
@@ -365,7 +371,8 @@
           "peak_id": "PK03",
           "strength": 75
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS06",
@@ -418,10 +425,10 @@
         "percentage_reveal"
       ],
       "original_moves": [
-        "颠覆预告",
-        "个案年代与随葬证据",
-        "复查旧数据",
-        "30-50% 比例揭示"
+        "用'更颠覆的发现'预告标志案例",
+        "给出个案的年代与场景锚点：秘鲁9000年前猎人墓葬，随葬狩猎工具全套",
+        "揭示个案与身份的强绑定证据：骨骼鉴定为年轻女性",
+        "抛出复查旧数据后的规模比例：回查后发现猎人墓葬中女性占比30-50%"
       ],
       "abstract_move": "抛出颠覆性标志案例：一个具体遗存个案推翻默认假设，并用百分比把个案升级为规模",
       "replacement_needs": [
@@ -437,7 +444,8 @@
           "peak_id": "PK04",
           "strength": 85
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS07",
@@ -483,10 +491,11 @@
         "bias_source_reveal"
       ],
       "original_moves": [
-        "学界震动",
-        "默认假设逐字示众",
-        "现代鉴定方法纠错",
-        "偏见来源的时代复盘"
+        "用'考古学界震动'定性反应",
+        "逐字示众默认假设：'有狩猎工具=男性'，用极短句盖章'就是这么简单'",
+        "说明纠正方法的技术性：现代骨骼鉴定与DNA分析",
+        "定性错误的系统性：错误长期存在于整个学科",
+        "复盘偏见来源的时代背景：19-20世纪解读者把自己时代的性别分工投射到史前"
       ],
       "abstract_move": "复盘偏见形成机制：旧默认假设逐字示众，指认其来源是解读者的文化投射",
       "replacement_needs": [
@@ -503,7 +512,8 @@
           "peak_id": "PK05",
           "strength": 75
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS08",
@@ -535,9 +545,9 @@
         "living_counterexample"
       ],
       "original_moves": [
-        "当代群体引入",
-        "多重责任并行的行为记录",
-        "分工务实灵活的总结"
+        "引入当代群体：坦桑尼亚Hadza狩猎采集群体的田野记录",
+        "描述多重责任并行的细节：女性既采集又参与小型猎物狩猎，并承担育儿",
+        "总结分工灵活务实：分工按当日条件与需求调整，而非性别刚性分配"
       ],
       "abstract_move": "引入当代传统社会平行例证，证明分工的灵活性而非性别刚性",
       "replacement_needs": [
@@ -548,7 +558,8 @@
       "deletability": "不可删",
       "deletability_reason": "回收了前文的悬念 FS04→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS09",
@@ -579,10 +590,10 @@
         "erased_evidence"
       ],
       "original_moves": [
-        "隐性付出命名",
-        "与其他劳动叠加",
-        "无现代保障条件下的耐受",
-        "一生多次重复"
+        "命名被抹去的付出：孕期与哺乳期的身体负荷",
+        "描写与其他劳动叠加：在没有现代医疗、营养补充、产假的条件下，还要继续研磨、负重、采集",
+        "现代参照下的难以企及感：这是现代精英运动员在最佳支持条件下都难以企及的耐受",
+        "指出一生多次重复：平均每位女性经历多次"
       ],
       "abstract_move": "揭示被流行叙事整体抹去的隐性身体付出，放大重估幅度",
       "replacement_needs": [
@@ -593,7 +604,8 @@
       "deletability": "可删",
       "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS10",
@@ -626,9 +638,9 @@
         "cross_site_consistency"
       ],
       "original_moves": [
-        "新证据类型原理",
-        "跨遗址一致性发现",
-        "与旧刻板预测的对照"
+        "一句话解释新证据类型原理：肌肉附着点痕迹反映长期重复动作",
+        "指出跨遗址跨时段的一致性发现：从欧洲到美洲、从旧石器到新石器",
+        "与旧刻板预测对照：如果旧模型正确，附着点模式应该有明显性别差异，但实际发现是高度重叠"
       ],
       "abstract_move": "引入第二类独立证据（附着点痕迹）与主证据相互印证",
       "replacement_needs": [
@@ -639,7 +651,8 @@
       "deletability": "不可删",
       "deletability_reason": "打开的悬念 LOOP05→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS11",
@@ -675,10 +688,10 @@
         "measured_verdict"
       ],
       "original_moves": [
-        "暂停声明",
-        "反驳公平化",
-        "承认变量与个体差异",
-        "核心结论不变的克制收束"
+        "显式暂停声明：'这里需要暂停并回答一个公平的问题'",
+        "公平化表述反驳：是不是矫枉过正了？是不是在说史前女性比男性更强壮？",
+        "承认个体差异与环境变量：个体差异存在，营养与生存压力也是变量",
+        "克制收束核心结论不变：但证据清楚表明，史前女性的日常体力负荷被系统性低估"
       ],
       "abstract_move": "第一次预埋反驳：主动暂停，承认'是否矫枉过正'是公平问题，给出克制答案",
       "replacement_needs": [
@@ -695,7 +708,8 @@
           "peak_id": "PK06",
           "strength": 65
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS12",
@@ -746,10 +760,10 @@
         "institutional_self_correction"
       ],
       "original_moves": [
-        "方法论史引入",
-        "旧工具缺失",
-        "新工具清单",
-        "自我纠错定性"
+        "引入方法论史：这些发现之所以是新的，是因为工具是新的",
+        "说明旧方法的能力缺失：早期考古学缺乏精确骨骼鉴定与生物力学分析工具",
+        "列出新工具清单：同位素分析、微磨损痕迹、3D骨密度扫描、DNA测序",
+        "鼓励性定性：这是科学在纠正自身，而不是推翻科学"
       ],
       "abstract_move": "讲述方法论进步史：旧研究缺工具，新工具让科学自我纠错",
       "replacement_needs": [
@@ -760,7 +774,8 @@
       "deletability": "不可删",
       "deletability_reason": "打开的悬念 LOOP07(不闭合) 跨段;回收了前文的悬念 FS10→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS13",
@@ -780,10 +795,10 @@
         "honesty_boundary"
       ],
       "original_moves": [
-        "相关性提醒",
-        "两个问题切分",
-        "各自证据类型",
-        "核心反证不变"
+        "用'相关性提醒'引入边界标注：体力负荷数据不直接等于社会地位",
+        "显式切分两个问题：劳动分工是一个问题，权力与决策权是另一个问题",
+        "列出各自所需证据类型：后者需要墓葬等级、资源分配、艺术表征等证据",
+        "确认核心反证不变：但本片的核心——体力负荷的重估——证据充分"
       ],
       "abstract_move": "显式标注证据边界：体力负荷不等于社会地位，分开的问题需要分开的证据",
       "replacement_needs": [
@@ -794,7 +809,8 @@
       "deletability": "可删",
       "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS14",
@@ -832,10 +848,10 @@
         "progress_paradox"
       ],
       "original_moves": [
-        "技艺劳动强度",
-        "视觉戏剧性偏差吐槽",
-        "农业加重负荷论点",
-        "权衡句"
+        "描述技艺劳动强度细节：陶器制作需持续揉泥、拉坯，纺织需长时间手臂重复动作",
+        "吐槽视觉戏剧性偏差：陶器和纺织品在博物馆里看起来精致，但制作过程是重体力劳动",
+        "抛出农业转型加重负荷的反直觉论点：农业革命后女性负荷不是减轻而是加重",
+        "给出权衡句：农业带来定居与食物稳定，但代价是更高强度的研磨与处理劳动"
       ],
       "abstract_move": "扩展证据版图：技艺生产与农业转型两条新线，并揭示'进步反而加重负荷'的反转",
       "replacement_needs": [
@@ -846,7 +862,8 @@
       "deletability": "不可删",
       "deletability_reason": "打开的悬念 LOOP06→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS15",
@@ -898,11 +915,11 @@
         "deepest_assumption_flip"
       ],
       "original_moves": [
-        "反驳引入",
-        "证据精度极限承认",
-        "交叉验证方法",
-        "核心稳健确认",
-        "两性差距历史化"
+        "公平认领反驳：另一个公平问题——证据精度的极限在哪里？",
+        "说明多证据交叉验证方法：骨密度+附着点+同位素+民族志，相互印证",
+        "确认核心结论稳健：即使承认精度极限，体力负荷被系统性低估这一点依然稳健",
+        "抛出两性差距历史化数据：现代两性力量差距约40-50%，但史前证据显示差距可能仅20-30%",
+        "翻转'天定'假设：我们以为是生物常数的东西，其实也是历史变量"
       ],
       "abstract_move": "第二次预埋反驳并顺势深化：承认证据精度极限后，把'能力差距'本身也历史化",
       "replacement_needs": [
@@ -919,7 +936,8 @@
           "peak_id": "PK07",
           "strength": 80
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS16",
@@ -975,17 +993,17 @@
         "personified_evidence_close"
       ],
       "original_moves": [
-        "现实叙述改变",
-        "当下关切桥",
-        "标题直答",
-        "排比 recap",
-        "证据拟人化收束"
+        "铺垫现实文化影响：这些发现已经开始改变博物馆展陈与教科书叙述",
+        "搭建'为何重要'的现实关切桥：因为我们今天对能力的假设，依然部分建立在这些旧叙事上",
+        "显式回收标题问句并直答：史前女性真的那么强壮吗？是的，而且可能比我们想象的更强壮",
+        "排比式recap：证据来自骨骼、来自附着点、来自跨文化一致性",
+        "证据拟人化收束意象：证据一直在那里，只是在等待有人愿意认真看，愿意质疑我们以为理所当然的假设"
       ],
       "abstract_move": "结尾三段释放：现实文化影响铺垫—标题问句显式回收并给出不含糊答案—意象化格言收束",
       "replacement_needs": [
         "研究影响现实叙述的落地（展陈、教材）",
         "'为何重要'的现实关切桥",
-        "标题问句的直答与排比式 recap",
+        "标题问句的直答与排比式recap",
         "把证据拟人化的收束意象"
       ],
       "deletability": "不可删",
@@ -1000,7 +1018,8 @@
           "peak_id": "PK09",
           "strength": 85
         }
-      ]
+      ],
+      "ai_refined": true
     }
   ]
 }

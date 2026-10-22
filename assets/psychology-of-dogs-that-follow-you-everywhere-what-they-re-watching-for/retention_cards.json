@@ -1,12 +1,12 @@
 {
   "version": "1.1",
-  "generated_at": "2026-10-22T07:42:10.805Z",
-  "source": "program",
+  "generated_at": "2026-10-22T12:06:28.194Z",
+  "source": "program + ai",
   "field_sources": {
     "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
-    "original_moves": "timeline.observed_segments.information_move",
-    "abstract_move": "framework.structure_pattern.purpose",
-    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
     "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
   },
   "cards": [
@@ -53,11 +53,16 @@
       ],
       "required_retention_events": "先让观众点头\"我家就是这样\"，再告诉他们想错了——悬念由此产生",
       "original_moves": [
-        "直播态场景钩子 + 两种大众解释 + \"都沾边但都不对\"的悬念 + 科学描述将改变一切"
+        "呈现一个正在进行的日常场景",
+        "并置两种大众解释",
+        "用'都沾边但都不对'悬置判词",
+        "承诺科学答案将改变看法"
       ],
-      "abstract_move": "视频开始",
+      "abstract_move": "日常行为现象 + 常见解释并置 + 都不对的悬置 + 科学改变认知的承诺",
       "replacement_needs": [
-        "能做到:一个此刻进行时的日常场景,两种大众解释的并置,\"都不对\"的悬置判词,科学答案将改变看法的承诺"
+        "一个此刻进行时的具体现象",
+        "两种对立或互补的民间解释",
+        "一个推翻两者的悬念设置"
       ],
       "deletability": "不可删",
       "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS08、LOOP02→FS02、LOOP03→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -74,7 +79,8 @@
           "C0009",
           "C0027"
         ]
-      }
+      },
+      "ai_refined": true
     },
     {
       "stage_id": "FS02",
@@ -129,11 +135,19 @@
       ],
       "required_retention_events": "第一层答案先卸下\"我的狗是不是有病\"的担忧",
       "original_moves": [
-        "行为命名（Velcro dogs）+ 诊断式误读的悬置 + 维也纳解谜实验 + 主人特异性 + 安全基地效应 + 非焦虑症证据"
+        "给行为命名（Velcro dogs）",
+        "诊断式误读悬置",
+        "引入一个设计明确的实验",
+        "呈现对照变量（主人vs陌生人）",
+        "用类比增加代入感",
+        "给出非病理性证据"
       ],
-      "abstract_move": "悬念已立",
+      "abstract_move": "行为学名 + 误诊悬置 + 对照实验 + 日常类比 + 非病理证据 + 核心重释（转变态度）",
       "replacement_needs": [
-        "能做到:行为的学名,一个\"看似简单\"的实验设计,对照变量（主人/陌生人）,类比（游乐场边的孩子）,非病理性证据"
+        "行为的科学命名或分类",
+        "一个具有对照变量的实验设计",
+        "一个生活化的类比场景",
+        "推翻常见误解的数据或观察"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK01(85);打开的悬念 LOOP05→FS07 跨段;回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -143,7 +157,8 @@
           "peak_id": "PK01",
           "strength": 85
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS03",
@@ -195,11 +210,18 @@
       ],
       "required_retention_events": "把\"黏人\"翻译成\"咨询在线\"——同一行为，完全不同的意义",
       "original_moves": [
-        "参照性注视实验（风扇/83%）+ 情绪信息驱动行为 + 两篇论文互证 + 跟随=保持咨询在线 + \"是连接不是需要\""
+        "设置一个具象的实验道具（风扇）",
+        "呈现关键的百分比数据",
+        "展示表情驱动行为的对照",
+        "解释视觉通道的物理机制",
+        "用'连接而非需要'重新判词"
       ],
-      "abstract_move": "安全基地已建立",
+      "abstract_move": "具象实验 + 显著比例数据 + 情感驱动证明 + 物理机制揭示 + 判词转换（重新定义关系本质）",
       "replacement_needs": [
-        "能做到:一个具象的实验道具（风扇）,关键百分比,表情驱动行为的对照,视觉通道的机制解释,连接/需要判词"
+        "一个可视化的实验装置或场景",
+        "一个支撑核心观点的比例数据",
+        "表明因果关系的对照观察",
+        "机制层面的解释（感官、物理或结构）"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK02(78)、PK03(80);打开的悬念 LOOP04→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -213,7 +235,8 @@
           "peak_id": "PK03",
           "strength": 80
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS04",
@@ -243,16 +266,22 @@
       ],
       "required_retention_events": "用冰箱和外套三个小问题让观众笑着被说服",
       "original_moves": [
-        "多人家庭的跟随偏好 + 非情感偏好的证据 + 三个生活化提问 + 跟随=追踪事件概率"
+        "展示多人家庭的真实观察",
+        "提供非情感偏好的证据",
+        "抛出三个生活化问题",
+        "总结为'事件概率追踪'机制"
       ],
-      "abstract_move": "信息源机制已建立",
+      "abstract_move": "多元观察 + 一致性证据 + 生活化问题递进 + 机制通用性确认",
       "replacement_needs": [
-        "能做到:多人家庭的观察,一致性与事件预测机制,生活化问题三连,概率追踪判词"
+        "多个主体或场景中的一致观察",
+        "排除单一解释的对照证据",
+        "能引发共鸣的生活场景提问"
       ],
       "deletability": "不可删",
       "deletability_reason": "回收了前文的悬念 FS03→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS05",
@@ -276,16 +305,22 @@
       ],
       "required_retention_events": "把跟随从\"依赖\"升格为\"策略\"——误读再少一层",
       "original_moves": [
-        "新空间中的可见跟随 + 模仿非必要步骤实验 + 跟随=导航策略而非服从"
+        "展示新环境中的行为升级",
+        "设计一个反直觉的实验",
+        "证明对已有经验者依然成立",
+        "总结为'导航策略'而非'服从'"
       ],
-      "abstract_move": "跟随的信息功能已建立",
+      "abstract_move": "环境变化中的行为升级 + 反直觉实验 + 普适性验证 + 机制重新定义",
       "replacement_needs": [
-        "能做到:新环境中的行为升级,模仿非必要步骤的反直觉发现,对已有经验者依然成立的细节,导航策略判词"
+        "变化条件下的新行为表现",
+        "违背直觉的实验发现",
+        "跨群体或场景的验证数据"
       ],
       "deletability": "可删",
       "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS06",
@@ -318,11 +353,18 @@
       ],
       "required_retention_events": "最深的答案要让人感到宿命般的温柔：这不是习惯，是架构",
       "original_moves": [
-        "\"这一切都不是偶然\"宣告 + 普林斯顿基因发现 + 人类同源疾病的对照 + 狼没有而狗有 + 为亲近而选择的育种史"
+        "宣告'这一切都不是偶然'",
+        "引入基因层发现（名称+机构+年份）",
+        "呈现人类同源综合征对照",
+        "突出狼/狗的差异",
+        "交代育种选择的历史重定向"
       ],
-      "abstract_move": "行为与认知机制已备",
+      "abstract_move": "必然性宣告 + 遗传学发现 + 人类同源对标 + 物种差异对比 + 选择演化史",
       "replacement_needs": [
-        "能做到:基因发现（名称+机构+年份）,人类同源综合征的对照,狼/狗差异,育种选择的重新定向"
+        "一个确切的遗传学或演化发现",
+        "人类中的相应现象或疾病",
+        "物种间的对比数据或差异",
+        "选择压力或育种历史的证据"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK04(86)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -332,7 +374,8 @@
           "peak_id": "PK04",
           "strength": 86
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS07",
@@ -381,11 +424,17 @@
       ],
       "required_retention_events": "给完安慰再给边界——既不放任焦虑，也不制造焦虑",
       "original_moves": [
-        "Tufts反直觉发现 + 跟随≠分离焦虑 + 清晰的区分线（能休息/无法脱离）+ \"你的狗没有问题\""
+        "呈现一个反直觉的临床发现",
+        "区分两种对立的神经系统状态",
+        "给出可操作的判断线（你在家时能否休息）",
+        "用'你的行为没有问题'完成救赎判词"
       ],
-      "abstract_move": "最深答案已交付",
+      "abstract_move": "反直觉的临床发现 + 两种神经状态区分 + 可操作判断标准 + 无问题的救赎判词",
       "replacement_needs": [
-        "能做到:一个反直觉的临床发现,两种神经系统的区分,可操作的判断线（你在家时能否休息）,无问题判词"
+        "一个颠覆常见认知的研究发现",
+        "能区分两种现象的明确标准",
+        "可被大众执行的判断方法",
+        "去污名化或正常化的结论"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK05(82);回收了前文的悬念 FS01→LOOP03、FS02→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -395,7 +444,8 @@
           "peak_id": "PK05",
           "strength": 82
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS08",
@@ -439,11 +489,17 @@
       ],
       "required_retention_events": "让那个熟悉的身影从此自带光环——重释的终点是珍视",
       "original_moves": [
-        "开场场景回收 + 三重机制总结 + 基因类比的温柔化 + \"最高赞美\"判词"
+        "逐点回收开场场景",
+        "压缩总结三重机制",
+        "用温柔化的类比升格行为",
+        "给出'最高赞美'的终极判词"
       ],
-      "abstract_move": "机制与边界已备",
+      "abstract_move": "开场场景首尾呼应 + 多重机制总结 + 温柔化重新评价 + 最高赞美的终极重释",
       "replacement_needs": [
-        "能做到:开场场景的逐点回收,三重机制的压缩总结,温柔化的基因类比,最高赞美判词"
+        "开场现象的递进式回收点",
+        "不同层面机制的压缩总结",
+        "能升格日常行为的温柔类比",
+        "一个终极的正向判词"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK06(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -453,7 +509,8 @@
           "peak_id": "PK06",
           "strength": 90
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS09",
@@ -471,16 +528,20 @@
       "retention_events": [],
       "required_retention_events": "用提问把观众的故事变成下一波流量",
       "original_moves": [
-        "订阅评论CTA + 提问互动 + 系列首集回引"
+        "抛出一个低门槛的互动问题",
+        "引导订阅和评论",
+        "回引系列首集"
       ],
-      "abstract_move": "重释已完成",
+      "abstract_move": "低门槛互动问题 + 行动号召 + 系列关联回引",
       "replacement_needs": [
-        "能做到:一个低门槛互动问题,系列首集的回引"
+        "一个能激发观众参与的问题",
+        "对系列其他内容的联动或预告"
       ],
       "deletability": "可删",
       "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     }
   ]
 }

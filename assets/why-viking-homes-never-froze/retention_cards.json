@@ -1,12 +1,12 @@
 {
   "version": "1.1",
-  "generated_at": "2026-10-22T07:42:10.928Z",
-  "source": "program",
+  "generated_at": "2026-10-22T12:24:04.425Z",
+  "source": "program + ai",
   "field_sources": {
     "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
-    "original_moves": "timeline.observed_segments.information_move",
-    "abstract_move": "framework.structure_pattern.purpose",
-    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
     "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
   },
   "cards": [
@@ -61,13 +61,15 @@
         "myth_inversion"
       ],
       "original_moves": [
-        "反事实开场 + 阴冷刻板印象铺陈 + '这个画面是错的'反转宣告"
+        "用反事实假设开场：没有X、没有Y，却胜过Z",
+        "铺陈刻板印象的视觉画面：阴冷、荒凉、简陋",
+        "宣告画面反转：这个合情合理的印象是错的"
       ],
-      "abstract_move": "用反事实假设开场制造认知缺口，随即铺陈刻板印象画面并宣告其为错",
+      "abstract_move": "反事实悬念 + 刻板印象视觉化 + 印象推翻",
       "replacement_needs": [
-        "反事实假设（没有X、没有Y，却胜过Z）",
-        "刻板印象的画面化铺陈",
-        "'这个画面合情合理，但它是错的'式反转宣告"
+        "一个足够反直觉的对比前提（资源少却结果好）",
+        "一组强烈的刻板印象视觉素材",
+        "一个直接的否定宣告来打破预期"
       ],
       "deletability": "不可删",
       "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS12、LOOP02→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -84,7 +86,8 @@
           "C0013",
           "C0014"
         ]
-      }
+      },
+      "ai_refined": true
     },
     {
       "stage_id": "FS02",
@@ -120,13 +123,15 @@
         "meta_principle"
       ],
       "original_moves": [
-        "排除魔法论 + 系统性预告 + '冬季不是要征服的敌人，是要管理的条件' + 思维转向"
+        "三连否定排除：不靠魔法、不靠硬扛、不靠堆资源",
+        "提出对仗式元原则：不问造热，问保热",
+        "系统性预告：接下来会看到每个元素如何协同"
       ],
-      "abstract_move": "排除魔法式解释，提出全片元原则：思维从'造更多'转向'失更少'",
+      "abstract_move": "排除错误思路 + 思维范式转向 + 系统性预期设置",
       "replacement_needs": [
-        "否定三连排除（不靠魔法/硬扛/堆资源）",
-        "元原则对仗句（不是X，而是Y）",
-        "系统性预告（每个元素协同）"
+        "三个常见的错误认知来依次推翻",
+        "一对对仗的原则对比句",
+        "对后续证据体系的宏观预告"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK01(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -136,7 +141,8 @@
           "peak_id": "PK01",
           "strength": 85
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS03",
@@ -187,12 +193,15 @@
         "subsystem_form_and_airflow"
       ],
       "original_moves": [
-        "共同体聚热 + 船形导风 + 航海知识上岸"
+        "解释共同体聚集如何产生热力学优势",
+        "展示外形曲线的导风设计",
+        "追溯这个设计的知识来源：航海学"
       ],
-      "abstract_move": "子系统一：整体形态——居住共同体本身作为能源，外形作为气流设计",
+      "abstract_move": "群体作用机制 + 形态设计逻辑 + 知识溯源",
       "replacement_needs": [
-        "共同体聚集的热力学解释",
-        "外形曲线的导风逻辑与知识来源（航海）"
+        "一个群体聚集产生的物理或系统优势",
+        "外形/结构与功能之间的因果关系",
+        "这个设计背后的知识领域或原理来源"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK02(75);回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -202,7 +211,8 @@
           "peak_id": "PK02",
           "strength": 75
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS04",
@@ -233,18 +243,21 @@
         "subsystem_material_physics"
       ],
       "original_moves": [
-        "木材稀缺 + 两米草皮墙 + 静止空气隔热 + 房屋长进土地"
+        "说明材料稀缺的背景约束",
+        "展示就地材料的隔热原理",
+        "揭示结构随时间自我强化的细节"
       ],
-      "abstract_move": "子系统二：材料——就地材料的热物理特性与'房子长进土地'的活结构",
+      "abstract_move": "约束条件 + 原理转化 + 动态演化",
       "replacement_needs": [
-        "材料稀缺背景",
-        "静止空气隔热原理",
-        "结构随时间自我强化的细节"
+        "一个硬约束条件（资源稀缺、地理、成本）",
+        "将约束转化为优势的物理或系统原理",
+        "结构在时间维度上的自我完善机制"
       ],
       "deletability": "可删",
       "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS05",
@@ -289,13 +302,15 @@
         "subsystem_energy_with_conversion"
       ],
       "original_moves": [
-        "牲畜入室 + '粗陋实为精密'反转 + 电暖器换算 + 高差导热气流"
+        "展示看似粗陋的做法，宣告其实为精密",
+        "用现代参照系换算：一单位生物体=多单位现代设备",
+        "解释高差如何被动引导能量流向"
       ],
-      "abstract_move": "子系统三：能源——生物体作为永不熄灭的供热系统，建筑引导热量流向",
+      "abstract_move": "粗陋与精密的反转 + 现代对标定量化 + 被动设计的智慧",
       "replacement_needs": [
-        "'看似粗陋实为精密'的显式反转",
-        "现代参照系换算（一头牲口=几台电暖器）",
-        "高差引导热气流的被动设计"
+        "一个显得原始但蕴含精密的做法",
+        "一个现代换算来量化其效能",
+        "一个几何或物理设计来被动实现目标"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK03(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -305,7 +320,8 @@
           "peak_id": "PK03",
           "strength": 75
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS06",
@@ -350,13 +366,15 @@
         "enemy_redefinition"
       ],
       "original_moves": [
-        "'冷不死人风致命' + 无窗的功能性解释 + 低矮入口 + 前厅气闸"
+        "提出原则句：真正的敌人不是X而是Y",
+        "解释为什么不采用直觉方案的功能理由",
+        "展示早期的替代方案及其工作机制"
       ],
-      "abstract_move": "子系统四：气流——真正的敌人是风而不是冷，开口即弱点",
+      "abstract_move": "问题重新定义 + 直觉方案否定 + 替代方案展示",
       "replacement_needs": [
-        "'冷不死人，风才致命'的原则句",
-        "无窗的功能性解释（不是不会，是不愿）",
-        "缓冲前厅的早期气闸设计"
+        "一个颠覆直觉的问题重新定义",
+        "说明为什么常见方案不适用的功能原因",
+        "一个更早期或更巧妙的解决方案"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK04(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -366,7 +384,8 @@
           "peak_id": "PK04",
           "strength": 70
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS07",
@@ -404,19 +423,23 @@
         "paradox_suspension"
       ],
       "original_moves": [
-        "十米长火塘 + 石材蓄热 + 泥炭燃料 + 社会中心 + 无烟囱悖论"
+        "展示中央热源的尺度与蓄热材料",
+        "说明燃料替代的现实选择",
+        "揭示热源的多功能与社会中心地位",
+        "抛出无烟囱悖论制造悬念"
       ],
-      "abstract_move": "子系统五：热源——长火塘的热储能设计与无烟囱悖论",
+      "abstract_move": "尺度设计 + 资源替代 + 功能多义性 + 悖论悬念",
       "replacement_needs": [
-        "中央火塘的尺度与石材蓄热",
-        "燃料替代（泥炭）",
-        "火塘的多功能与社会中心地位",
-        "无烟囱悖论悬念"
+        "一个系统中枢元素的尺度与材料设计",
+        "现实约束下的资源替代选择",
+        "该元素承载的多重功能与社会意义",
+        "一个需要后续解答的逻辑悖论"
       ],
       "deletability": "不可删",
       "deletability_reason": "打开的悬念 LOOP03→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
       "merge_keep": "",
-      "loss_if_deleted": []
+      "loss_if_deleted": [],
+      "ai_refined": true
     },
     {
       "stage_id": "FS08",
@@ -468,13 +491,15 @@
         "conscious_tradeoff"
       ],
       "original_moves": [
-        "烟雾保温毯 + 烟灰防腐 + 可调通风口 + '舒适让位于生存'"
+        "揭示看似有害的副产品被转化为资源",
+        "解释这个副产品的多重功能价值",
+        "说明调节机制与权衡决策"
       ],
-      "abstract_move": "悖论解答：烟雾是被管理的资源（保温层+防腐剂），代价被有意识地权衡",
+      "abstract_move": "悖论解答：副产品资源化 + 多功能挖掘 + 自觉权衡",
       "replacement_needs": [
-        "烟雾保温层机制",
-        "烟灰防腐的附带功能",
-        "可调通风口与'舒适让位于生存'的自觉权衡"
+        "对前文悖论的直接解答机制",
+        "不利因素如何被转化为多重价值",
+        "使用者的有意识权衡与取舍"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK05(75);回收了前文的悬念 FS07→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -484,7 +509,8 @@
           "peak_id": "PK05",
           "strength": 75
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS09",
@@ -524,13 +550,15 @@
         "mass_as_insulation"
       ],
       "original_moves": [
-        "树皮防水+草皮保温 + '重量即保温' + 自我修护活层"
+        "展示多层构造与各层的功能分工",
+        "提出反转观念：重量本身就是保温",
+        "揭示自我修护机制如何运作"
       ],
-      "abstract_move": "子系统六：屋顶——数吨重量作为保温与锚固，自我修护的活层",
+      "abstract_move": "分层设计 + 属性反转 + 动态自愈",
       "replacement_needs": [
-        "多层构造（树皮防水+草皮保温）",
-        "'重量即保温'的反转",
-        "自我修护机制"
+        "一个多层系统中各层的功能分工",
+        "一个看似消极的属性如何变成资产",
+        "系统在自然条件下的自我修复能力"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK06(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -540,7 +568,8 @@
           "peak_id": "PK06",
           "strength": 70
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS10",
@@ -586,13 +615,15 @@
         "threat_as_resource_reversal"
       ],
       "original_moves": [
-        "雪的隔热物理 + '被埋实为被保护' + 村庄没入雪中的画面"
+        "解释最大威胁的隔热物理原理",
+        "展示画面反转：被埋实为被保护",
+        "呈现电影化的视觉高峰画面"
       ],
-      "abstract_move": "最终反转：最大的威胁（雪）被当作最后的保温材料",
+      "abstract_move": "最大威胁的反转 + 物理原理证实 + 视觉化高峰",
       "replacement_needs": [
-        "雪的隔热物理",
-        "'看似被埋实为被保护'的画面反转",
-        "村庄没入雪中的电影化画面"
+        "一个看似致命的自然力的隔热原理",
+        "视觉上的画面反转效果",
+        "一个强有力的视觉顶点"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK07(75);打开的悬念 LOOP04→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -602,7 +633,8 @@
           "peak_id": "PK07",
           "strength": 75
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS11",
@@ -655,14 +687,17 @@
         "systems_montage"
       ],
       "original_moves": [
-        "标题问题回收 + '温暖不是被制造，是被保存' + 子系统排比蒙太奇 + '不是对抗自然，是与之对齐'"
+        "直接回收开篇的标题问题",
+        "用对仗格言重述全片元原则",
+        "用排比蒙太奇重放所有子系统",
+        "呈现与现代方案的对比启示"
       ],
-      "abstract_move": "元原则回收：用排比蒙太奇重放全部子系统，给出'不是对抗自然，而是与之对齐'的总定性",
+      "abstract_move": "问题回收 + 原则格言化 + 系统排比总结 + 当代启示",
       "replacement_needs": [
-        "标题问题的直接回收",
-        "元原则的格言化重述",
-        "子系统排比蒙太奇",
-        "与现代能耗的对照"
+        "开篇问题的直接回应与定性",
+        "一句格言式的原则总结",
+        "对全部证据系统的排比式快速回顾",
+        "对当代或现实的对照启示"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK08(90);回收了前文的悬念 FS10→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -672,7 +707,8 @@
           "peak_id": "PK08",
           "strength": 90
         }
-      ]
+      ],
+      "ai_refined": true
     },
     {
       "stage_id": "FS12",
@@ -713,12 +749,15 @@
         "quiet_question_close"
       ],
       "original_moves": [
-        "遗产三连定性 + 指向当下的开放提问"
+        "用三连定性框架：不是X，不是Y，而是Z",
+        "指向当下的开放式提问",
+        "用静默与留白完成全片闭合"
       ],
-      "abstract_move": "把历史智慧定性为人类遗产，用静默提问接回当下",
+      "abstract_move": "历史定性 + 当代对接 + 静默提问",
       "replacement_needs": [
-        "'不是传说，不是神话，是遗产'式三连定性",
-        "一个指向当下的开放提问"
+        "一个三层递进的定性框架来最终定义主题",
+        "一个指向观众当下处境的开放提问",
+        "用提问而非陈述来完成全片收尾"
       ],
       "deletability": "不可删",
       "deletability_reason": "持有高峰 PK09(80);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
@@ -728,7 +767,8 @@
           "peak_id": "PK09",
           "strength": 80
         }
-      ]
+      ],
+      "ai_refined": true
     }
   ]
 }
