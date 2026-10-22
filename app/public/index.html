@@ -132,6 +132,22 @@
   .badge-failed { background: #fee2e2; color: #b91c1c; }
   .badge-cancelled { background: #f3f4f6; color: #6b7280; }
   .badge-queued { background: #fef3c7; color: #b45309; }
+  .badge-analyzing { background: #ede9fe; color: #6d28d9; }
+  .badge-awaiting_review { background: #ffedd5; color: #c2410c; }
+  .an-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 6px 0 10px; }
+  .an-table th, .an-table td { border: 1px solid #e5e7eb; padding: 4px 6px; text-align: left; vertical-align: top; }
+  .an-table th { background: #f9fafb; white-space: nowrap; }
+  .an-warn { background: #fff7ed; }
+  .an-bad { background: #fef2f2; }
+  .an-sec { font-weight: 600; font-size: 13px; margin: 12px 0 4px; }
+  .an-json { width: 100%; min-height: 220px; font-family: ui-monospace, monospace; font-size: 12px; }
+  .sc-item { border: 1px solid #e5e7eb; border-left-width: 4px; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; font-size: 13px; line-height: 1.6; }
+  .sc-item.s-done { border-left-color: #10b981; }
+  .sc-item.s-pick { border-left-color: #f59e0b; }
+  .sc-item.s-note { border-left-color: #9ca3af; }
+  .sc-item .sc-head { font-weight: 600; }
+  .sc-item del { color: #b91c1c; }
+  .sc-item ins { color: #047857; text-decoration: none; }
   .runs-empty { text-align: center; color: #9ca3af; font-size: 13px; padding: 36px 0; }
   .op-btn { padding: 3px 10px; font-size: 12px; border-radius: 5px; cursor: pointer; background: #fff; border: 1px solid #d1d5db; color: #374151; }
   .op-btn:hover { border-color: #9ca3af; }
@@ -422,6 +438,14 @@
         <div><label>视频目的(时长)</label><input type="text" id="gen-goal" value="10分钟"></div>
       </div>
       <div id="topics-result"></div>
+      <div style="margin-top:8px">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="checkbox" id="gen-pre-analysis" checked style="width:auto">
+          先做写前分析(查事实、定论点和留存地图,人工确认后再写稿;写完自动跑稿件检查)
+        </label>
+        <label style="margin-top:6px">参考资料(选填 · 写前分析用:粘贴你查到的数据、报道、链接摘要,AI 只能用这里和它已知的事实)</label>
+        <textarea id="gen-materials" rows="4" style="width:100%;box-sizing:border-box" placeholder="例如:2024 年韩国美发店平均月营业额 …(来源:统计厅)"></textarea>
+      </div>
       <div style="margin-top:12px; display:flex; align-items:center; gap:14px">
         <button class="primary" id="btn-run" onclick="createRun()">开始生成(约 3-8 分钟)</button>
         <span class="hint" id="gen-status" style="margin-top:0"></span>
@@ -487,6 +511,8 @@
       <div class="steps" id="detail-steps"></div>
       <div id="detail-error" class="err-list"></div>
     </div>
+    <div class="card hidden" id="an-panel"></div>
+    <div class="card hidden" id="ret-panel"></div>
     <div id="detail-scripts" class="script-grid">
       <div class="script-col">
         <div class="card hidden" id="detail-final-card">
@@ -563,6 +589,7 @@
     <div class="card hidden" id="cp-panel"></div>
     <div class="card hidden" id="or-panel"></div>
     <div id="fp-popover" class="fp-popover hidden"></div>
+    <div class="card hidden" id="sc-panel"></div>
     <div class="card hidden" id="detail-fact-card">
       <h2>⚠ 待人工核实的事实断言</h2>
       <div class="fact" id="detail-fact"></div>
@@ -861,7 +888,11 @@ async function createRun() {
       target_country: document.getElementById('gen-country').value,
       target_audience: document.getElementById('gen-aud').value,
       video_goal: document.getElementById('gen-goal').value
-    }
+    },
+    // 写前分析(流程 B②-⑨):开启后任务先停在「待确认分析」,确认后才写稿
+    pre_analysis: document.getElementById('gen-pre-analysis').checked,
+    track: document.getElementById('gen-track').value.trim(),
+    materials: document.getElementById('gen-materials').value.trim()
   };
   document.getElementById('btn-run').disabled = true;
   try {
@@ -870,6 +901,7 @@ async function createRun() {
     selectedAsset = null;
     document.getElementById('gen-topic').value = '';
     document.getElementById('gen-track').value = '';
+    document.getElementById('gen-materials').value = '';
     setChannelSelection(null); // 下一个任务重新选频道
     clearTopics(); // 内部已重置按钮文案与禁用态,无需再调 onTrackChange
     renderGenAssetList();
@@ -1018,8 +1050,8 @@ function setTrack(v) {
 }
 
 // ---------- 任务 ----------
-const STEP_LABELS = { blueprint: '① 蓝图', script: '② 脚本', audit: '③ 审核', optimized: '④ 优化', opening_boost: '⑤ 强化开头' };
-const STATUS_LABELS = { queued: '排队中', running: '生成中', done: '完成', failed: '失败', cancelled: '已取消' };
+const STEP_LABELS = { analysis: '⓪ 写前分析', blueprint: '① 蓝图', script: '② 脚本', audit: '③ 审核', optimized: '④ 优化', opening_boost: '⑤ 强化开头', script_check: '⑥ 稿件检查' };
+const STATUS_LABELS = { analyzing: '写前分析中', awaiting_review: '待确认分析', queued: '排队中', running: '生成中', done: '完成', failed: '失败', cancelled: '已取消' };
 const LANG_LABELS = { English: '英语', Hindi: '印地语', Spanish: '西班牙语', Portuguese: '葡萄牙语', Japanese: '日语', Korean: '韩语', Indonesian: '印尼语', German: '德语', French: '法语', Vietnamese: '越南语', Arabic: '阿拉伯语', Chinese: '中文' };
 const COUNTRY_LABELS = { US: '美国', IN: '印度', BR: '巴西', MX: '墨西哥', JP: '日本', KR: '韩国', ID: '印尼', DE: '德国', GB: '英国', FR: '法国', VN: '越南', SA: '沙特' };
 
@@ -1048,7 +1080,11 @@ function viralIcon(filled, cls) {
 }
 
 function runOpsCell(r) {
-  if (r.status === 'queued' || r.status === 'running') {
+  if (r.status === 'awaiting_review') {
+    return `<button class="op-btn" onclick="event.stopPropagation();openRun('${r.id}')">去确认</button> `
+      + `<button class="op-btn danger" onclick="event.stopPropagation();cancelRunById('${r.id}')">取消</button>`;
+  }
+  if (r.status === 'queued' || r.status === 'running' || r.status === 'analyzing') {
     return `<button class="op-btn danger" onclick="event.stopPropagation();cancelRunById('${r.id}')">取消</button>`;
   }
   if (r.status === 'failed' || r.status === 'cancelled') {
@@ -1335,7 +1371,7 @@ async function retryRunById(id) {
   loadRuns();
 }
 
-function openRun(id) { currentRunId = id; resetDetailTitleCopyFeedback(); fpState = null; cpState = null; Object.keys(descPending).forEach(k => delete descPending[k]); document.getElementById('fp-panel').classList.add('hidden'); document.getElementById('cp-panel').classList.add('hidden'); document.getElementById('fp-popover').classList.add('hidden'); showView('detail'); }
+function openRun(id) { currentRunId = id; anRenderedKey = null; resetDetailTitleCopyFeedback(); fpState = null; cpState = null; Object.keys(descPending).forEach(k => delete descPending[k]); document.getElementById('fp-panel').classList.add('hidden'); document.getElementById('cp-panel').classList.add('hidden'); document.getElementById('fp-popover').classList.add('hidden'); showView('detail'); }
 
 async function loadRunDetail() {
   const r = await api('/api/runs/' + currentRunId);
@@ -1343,7 +1379,9 @@ async function loadRunDetail() {
   document.getElementById('detail-sub').textContent =
     `${r.asset_name || r.asset_id} · ${STATUS_LABELS[r.status] || r.status} · 创建于 ${fmtTime(r.created_at)}`;
   const stepKeys = ['blueprint', 'script', 'audit', 'optimized'];
+  if (r.pre_analysis || (r.steps || {}).analysis) stepKeys.unshift('analysis');
   if (r.boost_opening || (r.steps || {}).opening_boost) stepKeys.push('opening_boost');
+  if (r.analysis_confirmed || (r.steps || {}).script_check) stepKeys.push('script_check');
   document.getElementById('detail-steps').innerHTML = stepKeys.map((k, i) => {
     const s = (r.steps || {})[k] || {};
     const cls = s.status === 'done' ? 'done' : (s.status === 'running' ? 'running' : (s.status === 'failed' ? 'failed' : ''));
@@ -1355,6 +1393,10 @@ async function loadRunDetail() {
     (r.error ? '错误: ' + esc(r.error) : '') +
     ((r.status === 'failed' || r.status === 'cancelled')
       ? ' <button class="primary" style="margin-left:8px" onclick="retryRun()">续跑此任务</button>' : '');
+
+  renderAnalysisPanel(r);
+  renderRetentionCheck(r);
+  renderScriptCheck(r);
 
   lastRunDetail = r; // 供指纹/商业化高亮重渲染
   const v1Text = r.script_v1 || r.final_script;
@@ -1410,6 +1452,181 @@ async function loadRunDetail() {
   }
   document.getElementById('detail-fact-card').classList.toggle('hidden', !facts.length);
   document.getElementById('detail-fact').textContent = facts.join('\n');
+}
+
+// ---------- 写前分析(流程 B②-⑨)/ 留存检查(B⑪)/ 稿件检查(B⑭ K1-K5) ----------
+let anRenderedKey = null; // 分析面板只在任务状态或分析内容变化时重绘,避免轮询冲掉正在编辑的 JSON
+
+function anTable(head, rows) {
+  if (!rows.length) return '<div class="hint">(无)</div>';
+  return `<table class="an-table"><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr>${rows.join('')}</table>`;
+}
+
+function anIds(ids) { return (ids || []).join(', '); }
+
+function analysisHtml(a) {
+  const t = a.title || {};
+  const th = a.thesis_card || {};
+  const h = a.hook || {};
+  let html = `<div class="an-sec">结论:${esc(a.verdict || '')}</div><div class="hint">${esc(a.verdict_reason || '')}</div>`;
+  // 标题(K1 的前置):候选标题 + 与框架方向是否一致
+  const dirBad = /相反|部分/.test(t.framework_direction_match || '');
+  html += `<div class="an-sec">标题</div>
+    <div class="${dirBad ? 'an-warn' : ''}" style="font-size:13px;line-height:1.7">
+      定稿:<b>${esc(t.final_title || '')}</b>(${esc(t.title_type || '')} · 与框架方向:${esc(t.framework_direction_match || '')})<br>
+      观众想知道:${esc(t.viewer_question || '')} → 期待:${esc(t.expected_answer_direction || '')}
+      ${t.fix ? `<br>调整建议:${esc(t.fix)}` : ''}
+      ${(t.candidates || []).length ? `<br>候选:${t.candidates.map(c => esc(c)).join(' / ')}` : ''}
+    </div>`;
+  html += `<div class="an-sec">论点卡</div><div style="font-size:13px;line-height:1.7">
+    原有认知:${esc(th.viewer_belief || '')}<br>真相:${esc(th.truth || '')}<br>
+    一句话论点:<b>${esc(th.one_line_thesis || '')}</b><br>结尾落点:${esc(th.ending_landing || '')}
+    ${th.differs_from_source_conclusion ? `<br>和原片结论的差别:${esc(th.differs_from_source_conclusion)}` : ''}</div>`;
+  // 事实表:待查/估算标黄,时效风险标红(人工重点核对)
+  html += `<div class="an-sec">事实表(写稿只能用这些)</div>` + anTable(['编号', '类型', '内容', '来源', '年份', '地区', '时效'],
+    (a.facts || []).map(f => {
+      const cls = /时效风险/.test(f.freshness || '') ? 'an-bad' : (/待查|估算|假设/.test(f.kind || '') ? 'an-warn' : '');
+      return `<tr class="${cls}"><td>${esc(f.id)}</td><td>${esc(f.kind)}</td><td>${esc(f.content)}</td><td>${esc(f.source)}</td><td>${esc(f.year)}</td><td>${esc(f.region)}</td><td>${esc(f.freshness)}</td></tr>`;
+    }));
+  const notFound = (a.search_log || []).filter(s => /没找到/.test(s.result || ''));
+  if (notFound.length) html += `<div class="an-sec">没找到的资料</div>` + anTable(['想找', '说明'],
+    notFound.map(s => `<tr class="an-warn"><td>${esc(s.looked_for)}</td><td>${esc(s.note)}</td></tr>`));
+  if ((a.ledger || []).length) html += `<div class="an-sec">账本</div>` + anTable(['项目', '数值', '事实'],
+    a.ledger.map(l => `<tr><td>${esc(l.item)}</td><td>${esc(l.value)}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`));
+  html += `<div class="an-sec">模块取舍</div>` + anTable(['原片段', '处理', '留存作用', '理由', '事实', '时长'],
+    (a.modules || []).map(m => `<tr class="${/删除/.test(m.decision || '') ? 'an-warn' : ''}"><td>${esc(m.segment)}</td><td>${esc(m.decision)}</td><td>${esc(m.retention_role)}</td><td>${esc(m.reason)}</td><td>${esc(anIds(m.fact_ids))}</td><td>${esc(m.duration)}</td></tr>`));
+  html += `<div class="an-sec">留存地图(原片高峰由谁承担)</div>` + anTable(['高峰', '原片段', '新章节', '事实', '状态'],
+    (a.retention_map || []).map(r => `<tr class="${/缺口/.test(r.status || '') ? 'an-warn' : ''}"><td>${esc(r.source_peak)}</td><td>${esc(r.source_segment)}</td><td>${esc(r.new_chapter_hint)}</td><td>${esc(anIds(r.fact_ids))}</td><td>${esc(r.status)}</td></tr>`));
+  html += `<div class="an-sec">钩子候选</div><div class="hint">合约:${esc(h.contract || '')}</div>` + anTable(['', '开头', '事实', '第一个甜头(秒)'],
+    (h.candidates || []).map((c, i) => `<tr class="${i === (h.chosen || 0) ? 'an-warn' : ''}"><td>${i === (h.chosen || 0) ? '✓ 选定' : i + 1}</td><td>${esc(c.text)}</td><td>${esc(anIds(c.fact_ids))}</td><td>${esc(c.first_payoff_sec)}</td></tr>`));
+  if (a.estimated_duration) html += `<div class="hint">预计时长:${esc(a.estimated_duration)}</div>`;
+  if ((a.risks || []).length) html += `<div class="an-sec">风险</div><div style="font-size:13px">${a.risks.map(x => '· ' + esc(x)).join('<br>')}</div>`;
+  return html;
+}
+
+function renderAnalysisPanel(r) {
+  const el = document.getElementById('an-panel');
+  const st = (r.steps || {}).analysis || {};
+  const key = [r.id, r.status, r.analysis_confirmed, st.finished_at, st.status].join('|');
+  if (!r.pre_analysis && !r.analysis) { el.classList.add('hidden'); anRenderedKey = null; return; }
+  el.classList.remove('hidden');
+  if (key === anRenderedKey) return;
+  anRenderedKey = key;
+  if (r.status === 'analyzing') {
+    el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">AI 正在查事实、定论点和留存地图,通常 1-3 分钟…</div>`;
+    return;
+  }
+  if (!r.analysis) {
+    el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">还没有分析结果${r.error ? '(' + esc(r.error) + ')' : ''}。</div>
+      ${['failed', 'cancelled', 'awaiting_review'].includes(r.status) && !r.analysis_confirmed ? anRerunBox(r) : ''}`;
+    return;
+  }
+  if (r.analysis_confirmed) {
+    el.innerHTML = `<details><summary style="cursor:pointer"><b>⓪ 写前分析(已确认${r.analysis_edited ? ',人工改过' : ''} · ${fmtTime(r.analysis_confirmed_at)})</b></summary>${analysisHtml(r.analysis)}</details>`;
+    return;
+  }
+  el.innerHTML = `<h2>⓪ 写前分析 · 待你确认</h2>
+    <div class="hint">黄色是估算/待查/缺口,红色是超过 3 年的旧数据。核对后点「确认并开始写稿」;要改就展开下面的 JSON 直接改。</div>
+    ${analysisHtml(r.analysis)}
+    <details style="margin-top:10px"><summary style="cursor:pointer">编辑分析 JSON</summary>
+      <textarea class="an-json" id="an-json">${esc(JSON.stringify(r.analysis, null, 2))}</textarea>
+    </details>
+    <div style="margin-top:10px;display:flex;gap:10px;align-items:center">
+      <button class="primary" onclick="confirmAnalysis()">确认并开始写稿</button>
+      <span class="hint" id="an-status" style="margin-top:0"></span>
+    </div>
+    ${anRerunBox(r)}`;
+}
+
+function anRerunBox(r) {
+  return `<details style="margin-top:10px"><summary style="cursor:pointer">补充资料后重新分析</summary>
+    <textarea id="an-materials" rows="4" style="width:100%">${esc(r.materials || '')}</textarea>
+    <button style="margin-top:6px" onclick="rerunAnalysis()">重新分析</button></details>`;
+}
+
+async function confirmAnalysis() {
+  const status = document.getElementById('an-status');
+  const body = {};
+  const ta = document.getElementById('an-json');
+  if (ta && ta.value.trim() !== JSON.stringify((lastRunDetail || {}).analysis, null, 2)) {
+    try { body.analysis = JSON.parse(ta.value); }
+    catch (e) { status.textContent = 'JSON 格式有误:' + e.message; return; }
+  }
+  try {
+    await api('/api/runs/' + currentRunId + '/analysis/confirm', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    anRenderedKey = null;
+    loadRunDetail();
+  } catch (e) { status.textContent = '确认失败:' + e.message; }
+}
+
+async function rerunAnalysis() {
+  const m = document.getElementById('an-materials');
+  try {
+    await api('/api/runs/' + currentRunId + '/analysis/rerun', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ materials: m ? m.value : '' }) });
+    anRenderedKey = null;
+    loadRunDetail();
+  } catch (e) { alert('重新分析失败:' + e.message); }
+}
+
+function renderRetentionCheck(r) {
+  const el = document.getElementById('ret-panel');
+  const c = r.checks && r.checks.retention;
+  if (!c) { el.classList.add('hidden'); return; }
+  el.classList.remove('hidden');
+  const pct = x => x == null ? '—' : Math.round(x * 100) + '%';
+  el.innerHTML = `<h2>${c.ok ? '✓' : '⚠'} 留存检查(蓝图)</h2>
+    <div style="font-size:13px;line-height:1.8">
+      高峰承接:<b>${c.caught}/${c.expected}</b>(原片共 ${c.total_peaks} 个${(c.accepted_gaps || []).length ? ',接受弱化 ' + c.accepted_gaps.join(', ') : ''})<br>
+      第一个甜头:${c.first_payoff_sec == null ? '未标注' : c.first_payoff_sec + ' 秒'}(原片 ${c.source_first_payoff_sec == null ? '—' : c.source_first_payoff_sec + ' 秒'})<br>
+      高峰最大间隔:${pct(c.max_gap_ratio)}(原片 ${pct(c.source_max_gap_ratio)})
+      ${(c.missing || []).length ? `<br><span style="color:#b91c1c">没接住:${c.missing.map(esc).join(', ')}</span>` : ''}
+      ${(c.issues || []).length ? `<br>问题:${c.issues.map(esc).join(';')}` : ''}
+    </div>`;
+}
+
+const SC_TYPE = { K1: '标题与结论', K2: '旧数据', K3: '数字/年份', K4: '凑节拍段落', K5: '篇幅与密度' };
+
+function renderScriptCheck(r) {
+  const el = document.getElementById('sc-panel');
+  const st = (r.steps || {}).script_check || {};
+  const sc = r.script_check;
+  const canRun = r.status === 'done' && (r.script_v1 || r.final_script);
+  if (!sc && !st.status && !canRun) { el.classList.add('hidden'); return; }
+  el.classList.remove('hidden');
+  const btn = canRun && st.status !== 'running'
+    ? `<button onclick="runScriptCheckNow()">${sc ? '重新检查' : '稿件检查'}</button>` : '';
+  let html = `<div style="display:flex;align-items:center;gap:10px"><h2 style="margin:0">⑥ 稿件检查</h2>${btn}
+    ${st.status === 'running' ? '<span class="hint" style="margin-top:0">检查中…</span>' : ''}
+    ${st.status === 'failed' ? `<span class="hint" style="margin-top:0;color:#b91c1c">失败:${esc(st.error || '')}</span>` : ''}</div>`;
+  if (!sc) { el.innerHTML = html + '<div class="hint">查 5 类问题:标题和结论对不上、旧数据、数字和年份不一致、凑节拍段落、篇幅和数字密度。</div>'; return; }
+  const p = sc.program || {};
+  const L = p.length || {};
+  const stats = [];
+  if (L.est_sec) stats.push(`预计 ${Math.round(L.est_sec / 60 * 10) / 10} 分钟(建议 ${L.recommended_min_sec ? Math.round(L.recommended_min_sec / 60) : '—'}-${L.recommended_max_sec ? Math.round(L.recommended_max_sec / 60) : '—'} 分钟)${L.too_short ? ' <b style="color:#b91c1c">偏短</b>' : ''}`);
+  if ((p.dense_chapters || []).length) stats.push(`数字太密:${p.dense_chapters.join(', ')}(原片最密 ${p.source_density_max}/百词,上限 ${p.density_limit})`);
+  if ((p.mixed_year_chapters || []).length) stats.push('同段混用年份:' + p.mixed_year_chapters.map(x => x.id + '(' + x.years.join('/') + ')').join(', '));
+  if ((p.stale_facts || []).length) stats.push('超过 3 年的事实:' + p.stale_facts.map(f => (f.id || '') + (f.year ? '(' + f.year + ')' : '')).join(', '));
+  html += `<div class="hint" style="line-height:1.8">${fmtTime(sc.at)} · 已自动修改 ${sc.applied || 0} 处 · 待你选择 ${sc.pending || 0} 处${r.final_script_before_check ? ' · 改前版本已留档' : ''}<br>${stats.join('<br>')}</div>`;
+  const items = (sc.issues || []).map(it => {
+    const cls = it.applied ? 's-done' : (it.status === '待选择' ? 's-pick' : 's-note');
+    const tag = it.applied ? '✅ 已修改' : (it.status === '待选择' ? '🟡 待选择' : '⚪ 仅提示');
+    let body = `<div class="sc-head">${tag} · ${esc(it.type)} ${esc(SC_TYPE[it.type] || '')} · ${esc(it.location || '')}</div>`;
+    if (it.quote) body += `<div>原文:「${esc(it.quote)}」</div>`;
+    if (it.problem) body += `<div>问题:${esc(it.problem)}</div>`;
+    if (it.applied) body += `<div>改动:<del>${esc(it.before)}</del> → <ins>${esc(it.after)}</ins></div>`;
+    if (it.basis) body += `<div class="hint" style="margin-top:0">依据:${esc(it.basis)}</div>`;
+    if ((it.affects_peaks || []).length) body += `<div class="hint" style="margin-top:0">影响高峰:${esc(it.affects_peaks.join(', '))}</div>`;
+    if ((it.options || []).length) body += `<div>可选:${it.options.map((o, i) => '<br>' + (i + 1) + '. ' + esc(typeof o === 'string' ? o : JSON.stringify(o))).join('')}</div>`;
+    return `<div class="sc-item ${cls}">${body}</div>`;
+  });
+  el.innerHTML = html + (items.length ? items.join('') : '<div class="hint">没发现问题。</div>');
+}
+
+async function runScriptCheckNow() {
+  try {
+    await api('/api/runs/' + currentRunId + '/script-check', { method: 'POST' });
+    loadRunDetail();
+  } catch (e) { alert('稿件检查失败:' + e.message); }
 }
 
 // V1文案:展示时去掉 "Optimized Script" 标题行;复制时再去除章节标签行

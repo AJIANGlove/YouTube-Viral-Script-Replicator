@@ -7,6 +7,7 @@ const store = require('./lib/store');
 const { validateBundle, summarize } = require('./lib/validate');
 const { parseSrt } = require('./lib/srt');
 const pipeline = require('./lib/pipeline');
+const analysis = require('./lib/analysis');
 const topics = require('./lib/topics');
 const fingerprint = require('./lib/fingerprint');
 const description = require('./lib/description');
@@ -454,8 +455,19 @@ const server = http.createServer(async (req, res) => {
           target_audience: (body.audience || {}).target_audience || '',
           video_goal: (body.audience || {}).video_goal || '10分钟'
         },
-        prompt_version: 'v3'
+        prompt_version: 'v3',
+        // 写前分析(新流程):先跑分析,人工确认后才写稿;track 用于挑赛道证据卡,materials 是人工提供的参考资料
+        pre_analysis: !!body.pre_analysis,
+        track: typeof body.track === 'string' ? body.track.trim() : '',
+        materials: typeof body.materials === 'string' ? body.materials.trim() : ''
       });
+      if (run.pre_analysis) {
+        analysis.runAnalysis(run.id).catch(e => {
+          const r = store.getRun(run.id);
+          if (r) { r.status = 'failed'; r.error = '写前分析异常: ' + e.message; store.saveRun(r); }
+        });
+        return send(res, 200, { ok: true, id: run.id });
+      }
       // 异步执行,不阻塞响应(多任务并发)
       pipeline.runGeneration(run.id).catch(e => {
         const r = store.getRun(run.id);
@@ -468,6 +480,67 @@ const server = http.createServer(async (req, res) => {
     if (runMatch && method === 'GET') {
       const r = store.getRun(runMatch[1]);
       return r ? send(res, 200, r) : send(res, 404, { error: '任务不存在' });
+    }
+
+    // ---------- 写前分析:人工确认 / 重新分析 ----------
+    // 确认:可带上人工编辑过的 analysis(整份 JSON),确认后进入四步写稿
+    const anConfirmMatch = url.match(/^\/api\/runs\/([\w-]+)\/analysis\/confirm$/);
+    if (anConfirmMatch && method === 'POST') {
+      const body = await readBody(req);
+      const r = store.getRun(anConfirmMatch[1]);
+      if (!r) return send(res, 404, { error: '任务不存在' });
+      if (r.status !== 'awaiting_review') return send(res, 400, { error: '仅待确认分析的任务可确认(当前: ' + r.status + ')' });
+      if (body.analysis != null) {
+        const shapeErr = analysis.analysisShapeError(body.analysis);
+        if (shapeErr) return send(res, 400, { error: '分析结果不合格: ' + shapeErr });
+        r.analysis = body.analysis;
+        r.analysis_edited = true;
+      }
+      r.analysis_confirmed = true;
+      r.analysis_confirmed_at = new Date().toISOString();
+      r.status = 'queued';
+      store.saveRun(r);
+      pipeline.runGeneration(r.id).catch(e => {
+        const rr = store.getRun(r.id);
+        if (rr) { rr.status = 'failed'; rr.error = '管线异常: ' + e.message; store.saveRun(rr); }
+      });
+      return send(res, 200, { ok: true, id: r.id });
+    }
+
+    // 重新分析:可补充参考资料(materials)、指定赛道证据卡(track_card_name)
+    const anRerunMatch = url.match(/^\/api\/runs\/([\w-]+)\/analysis\/rerun$/);
+    if (anRerunMatch && method === 'POST') {
+      const body = await readBody(req);
+      const r = store.getRun(anRerunMatch[1]);
+      if (!r) return send(res, 404, { error: '任务不存在' });
+      if (!['awaiting_review', 'failed', 'cancelled'].includes(r.status) || r.analysis_confirmed) {
+        return send(res, 400, { error: '仅未确认分析、且待确认/失败/已取消的任务可重新分析(当前: ' + r.status + ')' });
+      }
+      if (typeof body.materials === 'string') r.materials = body.materials.trim();
+      if (typeof body.track_card_name === 'string') r.track_card_name = body.track_card_name || null;
+      r.pre_analysis = true;
+      store.saveRun(r);
+      analysis.runAnalysis(r.id).catch(e => {
+        const rr = store.getRun(r.id);
+        if (rr) { rr.status = 'failed'; rr.error = '写前分析异常: ' + e.message; store.saveRun(rr); }
+      });
+      return send(res, 200, { ok: true, id: r.id });
+    }
+
+    // 稿件检查(K1–K5):任意已完成任务可手动(重新)检查;新流程任务在写稿后自动跑一次
+    const scMatch = url.match(/^\/api\/runs\/([\w-]+)\/script-check$/);
+    if (scMatch && method === 'POST') {
+      const r = store.getRun(scMatch[1]);
+      if (!r) return send(res, 404, { error: '任务不存在' });
+      if (r.status !== 'done' || !(r.script_v1 || r.final_script)) return send(res, 400, { error: '仅已完成的任务可检查(当前: ' + r.status + ')' });
+      if ((r.steps || {}).script_check && r.steps.script_check.status === 'running') return send(res, 409, { error: '稿件检查进行中' });
+      analysis.runScriptCheck(r.id).catch(() => {});
+      return send(res, 200, { ok: true, id: r.id });
+    }
+
+    // 赛道证据卡列表(供重新分析时手动指定)
+    if (url === '/api/track-cards' && method === 'GET') {
+      return send(res, 200, analysis.loadTrackCards().map(c => ({ name: c.name, keywords: c.keywords })));
     }
 
     // ---------- 推送视频:存草稿 / 自动生视频 ----------
@@ -513,17 +586,17 @@ const server = http.createServer(async (req, res) => {
     if (cancelMatch && method === 'POST') {
       const r = store.getRun(cancelMatch[1]);
       if (!r) return send(res, 404, { error: '任务不存在' });
-      if (r.status === 'queued') {
+      if (r.status === 'queued' || r.status === 'awaiting_review') {
         r.status = 'cancelled';
         store.saveRun(r);
         return send(res, 200, { ok: true, id: r.id, status: 'cancelled' });
       }
-      if (r.status === 'running') {
+      if (r.status === 'running' || r.status === 'analyzing') {
         r.cancel_requested = true;
         store.saveRun(r);
         return send(res, 200, { ok: true, id: r.id, status: 'cancelling' });
       }
-      return send(res, 400, { error: '仅排队中/生成中的任务可取消(当前: ' + r.status + ')' });
+      return send(res, 400, { error: '仅排队中/分析中/待确认/生成中的任务可取消(当前: ' + r.status + ')' });
     }
 
     // ---------- 开头强化(外挂功能,不影响生成管线) ----------
@@ -580,6 +653,14 @@ const server = http.createServer(async (req, res) => {
         delete r.error;
         delete r.cancel_requested;
         store.saveRun(r);
+        return send(res, 200, { ok: true, id: r.id });
+      }
+      // 新流程任务停在写前分析(未确认)时,重试 = 重新分析,不能跳过人工确认直接写稿
+      if (r.pre_analysis && !r.analysis_confirmed) {
+        analysis.runAnalysis(r.id).catch(e => {
+          const rr = store.getRun(r.id);
+          if (rr) { rr.status = 'failed'; rr.error = '写前分析异常: ' + e.message; store.saveRun(rr); }
+        });
         return send(res, 200, { ok: true, id: r.id });
       }
       pipeline.runGeneration(r.id).catch(e => {

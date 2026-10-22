@@ -28,6 +28,16 @@ YouTube爆款内容结构导演(Viral Blueprint Architect)。
 
 事实纪律:
 information_goal 只描述"需要什么类型的事实",禁止编造具体年份、遗址、人名、研究名称。
+有【写前分析】时:information_goal 写明本章用哪些事实编号(F01…),并填进 fact_ids;不得使用事实表以外的数字和案例。
+
+写前分析(有则必须遵守,优先级高于 Framework 的原片内容):
+- 论点卡的一句话论点和结尾落点决定全片方向;标题用 final_title。
+- 模块取舍:决定为"删除"的段不写;"并入"的段把功能交给相邻章;"换内容保功能"的段用指定事实完成同一个留存动作。
+- 留存地图:每个标为"承担"的原片高峰(PKxx)必须落在某一章,写进该章 carries_peaks;"缺口-接受弱化"的不必承担。
+- 钩子:开场按选定的钩子候选写,顶层 hook.first_payoff_sec 写第一个甜头落在第几秒,不得晚于开场契约。
+
+【写前分析】
+{{analysis}}
 
 输入:
 
@@ -58,7 +68,11 @@ information_goal 只描述"需要什么类型的事实",禁止编造具体年份
       "retention_goal": "",
       "word_budget": 0,
       "open_loop": { "open": "", "close": "" },
-      "originality_constraint": ""
+      "originality_constraint": "",
+      "carries_peaks": [],
+      "fact_ids": []
     }
-  ]
+  ],
+  "hook": { "chosen_text": "", "first_payoff_sec": 0 }
 }
+没有【写前分析】时,carries_peaks 按 Timeline 的 peak_points 位置比例填写,fact_ids 留空数组,hook 按 Timeline 的 hook_window 填写。

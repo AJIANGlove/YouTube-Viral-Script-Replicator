@@ -16,6 +16,9 @@ Original Script:
 Audit Result:
 {{audit}}
 
+写前分析(事实表;有则修改时不得引入事实表以外的数字、年份、人名、案例):
+{{analysis}}
+
 Blueprint问题:修改对应章节。
 如果是Framework问题:修复叙事逻辑。
 如果是Timeline问题:增加信息刺激 / Open Loop / 情绪变化。

@@ -24,6 +24,9 @@ YouTube爆款脚本执行写手(Viral Script Writer)。
 【Examples】
 {{examples}}
 
+【写前分析(论点卡、事实表、钩子;有则必须遵守)】
+{{analysis}}
+
 要求:
 - 严格按 Blueprint 的章节顺序与时间范围写作。
 - 每章开头标注 [CHxx | time_range | function]。
@@ -32,4 +35,6 @@ YouTube爆款脚本执行写手(Viral Script Writer)。
 - 严禁与 Examples 的 example_text 出现 6 词以上的连续重合(style.language_patterns 的公式句式不受此限)。
 - 蓝图 originality_constraint 中列出的元素禁止使用。
 - 遵守 style.forbidden_style 与每条 example 的 negative_instruction。
+- 有写前分析时:稿中的数字、年份、人名、案例只能来自事实表,类型为"假设"的必须在稿中明说是假设;同一个量全文只用一个口径,做比较的数据必须同一年份。
+- 开场按蓝图 hook.chosen_text 写,第一个甜头不晚于 hook.first_payoff_sec。
 - 只输出脚本文本,不要解释。

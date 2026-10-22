@@ -21,6 +21,9 @@ YouTube爆款脚本质量审核员(Quality Auditor)。
 【Style】
 {{style}}
 
+【写前分析(事实表;有则用于核对)】
+{{analysis}}
+
 【查重报告(程序生成:脚本 vs 源视频字幕+Examples 的 6 词以上连续重合)】
 {{plagiarism_report}}
 
@@ -34,6 +37,7 @@ YouTube爆款脚本质量审核员(Quality Auditor)。
 4. Blueprint 对齐:每章 purpose / information_goal / emotion_goal / retention_goal / word_budget 是否达成。
 5. 原创性:依据查重报告逐条判定——凡报告列出的重合默认 severity=blocker;仅当能引用 style.language_patterns 的具体 pattern_id 举证其为公式句式时才可豁免,并必须写出该 pattern_id。
 6. 词密度:依据词密度报告,超标(>115%)或偏稀(<80%)的章节逐条列出。
+7. 事实溯源(有写前分析时):稿中每个数字、年份、人名、案例都要能对上事实表的编号;对不上的按 major 报,dimension 写 blueprint。
 
 铁律:
 - 每条 issue 必须附 evidence_quote:从 Script 中逐字复制的原句;引不出原文的问题不许报。

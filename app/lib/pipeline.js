@@ -8,6 +8,8 @@ const https = require('https');
 const store = require('./store');
 const checks = require('./checks');
 const textnorm = require('./textnorm');
+const retention = require('./retention');
+const analysis = require('./analysis');
 
 const CONFIG_PATH = path.join(__dirname, '..', 'config.json');
 
@@ -87,6 +89,7 @@ function fillTemplate(tpl, ctx, tools) {
     .replaceAll('{{opening_anchor}}', ctx.opening_anchor || '(空)')
     .replaceAll('{{chapters}}', ctx.chapters || '(未指定)')
     .replaceAll('{{chapter_rules}}', ctx.chapter_rules || '')
+    .replaceAll('{{analysis}}', ctx.analysis || '(无写前分析,按原流程执行)')
     .replaceAll('{{plagiarism_report}}', plag)
     .replaceAll('{{density_report}}', dens);
 }
@@ -270,7 +273,9 @@ async function runGeneration(runId) {
   const audienceStr = JSON.stringify(run.audience, null, 2);
   const ctx = {
     framework: asset.framework, timeline: asset.timeline, style: asset.style, examples: asset.examples,
-    topic: run.topic, audience: audienceStr
+    topic: run.topic, audience: audienceStr,
+    // 写前分析经人工确认后才注入四步提示词(未确认/旧任务按原流程)
+    analysis: run.analysis_confirmed ? analysis.analysisBrief(run.analysis) : null
   };
   const tools = checks.makeRefTools({ examples: asset.examples, srt: asset.srt, timeline: asset.timeline });
 
@@ -370,6 +375,24 @@ async function runGeneration(runId) {
           gate = checks.checkBlueprint(content, tools, (run.audience || {}).video_goal);
         }
         if (gate && gate.duration.ok === false) throw new Error('Step 1 重试后仍不合格: ' + gate.duration.detail);
+
+        // 留存检查(流程 B⑪):蓝图每章的 carries_peaks 对照原片高峰、第一个甜头秒数、相邻高峰最大间隔。
+        // 只对确认过写前分析的任务反馈重试;仍不合格不置失败,结果写进 run.checks.retention 交人工终审
+        let ret = retention.checkBlueprintRetention(content, asset.timeline, analysis.acceptedGaps(run.analysis));
+        for (let retry = 1; run.analysis_confirmed && !ret.ok && retry <= GATE_MAX_RETRIES - 1; retry++) {
+          run.steps.blueprint.gate_retry = { reason: '留存检查: ' + ret.issues.join(';'), attempt: retry };
+          store.saveRun(run);
+          const feedback = '蓝图的留存检查不合格:' + ret.issues.join(';') + '。请按写前分析的留存地图,把每个应承担的高峰编号写进对应章节的 carries_peaks,' +
+            '在顶层 hook.first_payoff_sec 写明第一个甜头的秒数(不晚于 ' + (ret.source_first_payoff_sec || '原片') + ' 秒),相邻高峰不要隔得比原片更远;其余要求不变,重新输出完整 JSON(禁止代码围栏)。';
+          messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];
+          const r2 = await callLlm(messages, 'Step 1 留存重试');
+          const c2 = checks.stripFence(r2.content.trim());
+          const g2 = checks.checkBlueprint(c2, tools, (run.audience || {}).video_goal);
+          if (g2.duration.ok === false) break; // 留存重试把时长弄坏了:保留上一版蓝图
+          r = r2; content = c2; gate = g2;
+          ret = retention.checkBlueprintRetention(content, asset.timeline, analysis.acceptedGaps(run.analysis));
+        }
+        run.checks = { ...(run.checks || {}), retention: ret };
       }
 
       // Step 3 JSON 闸门:输出无法解析为 JSON 时自动反馈重试(最多 GATE_MAX_RETRIES 次)
@@ -547,10 +570,17 @@ async function runGeneration(runId) {
   }
 
   run.outputs = outputs;
-  run.status = 'done';
   run.current_step = 4;
-  run.finished_at = new Date().toISOString();
   store.saveRun(run);
+
+  // 稿件检查(流程 B⑬⑭):仅新流程任务自动跑;失败不影响成稿,结果在 run.script_check
+  if (run.analysis_confirmed) await analysis.runScriptCheck(runId);
+
+  const done = store.getRun(runId) || run;
+  done.status = 'done';
+  done.current_step = 4;
+  done.finished_at = new Date().toISOString();
+  store.saveRun(done);
 }
 
 module.exports = { loadConfig, saveConfig, resolveProvider, loadTweakConfig, buildRequest, postJson, probeProvider, runGeneration, fillTemplate, loadTemplates, llmCall, parseSSE, isRetryable };

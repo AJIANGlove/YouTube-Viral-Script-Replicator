@@ -49,7 +49,8 @@ function getAsset(id) {
     timeline: read('timeline.json'),
     style: read('style.json'),
     examples: read('examples.json'),
-    srt: read('source.srt')
+    srt: read('source.srt'),
+    retention_cards: read('retention_cards.json') // 可选:tools/build_retention_cards.js 生成(含 AI 补的动作说明)
   };
 }
 
