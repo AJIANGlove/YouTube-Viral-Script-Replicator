@@ -988,12 +988,28 @@ server.listen(PORT, HOST, () => {
 
   // 启动恢复:上次进程退出(重启/崩溃)时被中断的任务会永久卡在"生成中",此处自动接管,从断点步骤续跑(已完成步骤的产物已落盘,不重复调用)。
   // 前提:单实例运行(多实例共用同一数据目录会重复调用且 run 文件有写竞争);用户已点取消的任务尊重意图不接管
-  const orphans = store.listRuns().filter(r => r.status === 'running' && !r.cancel_requested);
+  const orphans = store.listRuns().filter(r => (r.status === 'running' || r.status === 'analyzing') && !r.cancel_requested);
   for (const r of orphans) {
+    // 写前分析没有断点产物:接管 = 重跑一次分析(停在 awaiting_review,不会自动写稿)
+    if (r.status === 'analyzing') {
+      console.log(`接管中断的写前分析: ${r.id} (${r.topic || ''})`);
+      analysis.runAnalysis(r.id).catch(e => {
+        const rr = store.getRun(r.id);
+        if (rr) { rr.status = 'failed'; rr.error = '写前分析异常: ' + e.message; store.saveRun(rr); }
+      });
+      continue;
+    }
     console.log(`接管中断任务: ${r.id} (${r.topic || ''})`);
     pipeline.runGeneration(r.id).catch(e => {
       const rr = store.getRun(r.id);
       if (rr) { rr.status = 'failed'; rr.error = '管线异常: ' + e.message; store.saveRun(rr); }
     });
+  }
+  // 分析中已请求取消但进程已退出:没有活着的调用会来落实这个标记,直接落成已取消(否则永久卡在"分析中",界面无出口)
+  for (const r of store.listRuns().filter(x => x.status === 'analyzing' && x.cancel_requested)) {
+    r.status = 'cancelled';
+    r.steps = { ...(r.steps || {}), analysis: { ...((r.steps || {}).analysis || {}), status: 'failed' } };
+    store.saveRun(r);
+    console.log(`取消中断的写前分析: ${r.id}`);
   }
 });

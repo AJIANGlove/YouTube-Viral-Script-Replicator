@@ -155,13 +155,14 @@ function checkBlueprintRetention(blueprintText, timelineText, accepted) {
   }
 
   // 相邻高峰最大间隔:按占全片比例比较,允许 2 个百分点误差
+  // 基准必须用"同一组高峰"算:已标"缺口-接受弱化"的高峰两边都不算,否则接受弱化后新稿必然超差(自相矛盾)
   const gapRatio = (times, dur) => {
     const t = [...times].sort((a, b) => a - b);
     let g = 0, prev = 0;
     for (const x of t) { g = Math.max(g, x - prev); prev = x; }
     return dur ? g / dur : 0;
   };
-  const srcGap = gapRatio(srcPeaks.map(p => p.time_ms / 1000), durSrc);
+  const srcGap = gapRatio(expected.map(p => p.time_ms / 1000), durSrc);
   const newGap = gapRatio(Object.values(carried).map(x => x.sec), total);
   const gapOk = !caught.length || newGap <= srcGap + 0.02;
   if (!gapOk) issues.push('相邻高峰最大间隔占全片 ' + Math.round(newGap * 100) + '%,原片 ' + Math.round(srcGap * 100) + '%');

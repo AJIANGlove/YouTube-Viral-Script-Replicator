@@ -1117,7 +1117,7 @@ function videoStatusCell(v) {
 // 3 秒轮询只在数据指纹变化时重绘,避免打断输入、翻页和滚动。
 const RUNS_PAGE_SIZES = [20, 50, 100];
 const VIDEO_STATUS_LABELS = { none: '未推送', draft: '草稿', running: '生产中', paused: '已暂停', completed: '已完成', failed: '失败' };
-const RUNS_STATUS_ORDER = ['done', 'running', 'queued', 'failed', 'cancelled'];
+const RUNS_STATUS_ORDER = ['done', 'awaiting_review', 'analyzing', 'running', 'queued', 'failed', 'cancelled'];
 const RUN_ENDED = s => ['done', 'failed', 'cancelled'].includes(s);
 const runsFilter = { q: '', status: [], lang: [], video: [], viral: false, range: 'all', page: 1, page_size: 50 };
 let runsData = null;
