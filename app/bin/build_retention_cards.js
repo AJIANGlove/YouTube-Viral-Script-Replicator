@@ -19,6 +19,28 @@ const force = args.includes('--force');
 const withLibrary = args.includes('--library');
 const only = args.find(a => !a.startsWith('--'));
 
+// 从模型输出里抠出 JSON 数组:先直接解析;失败则把字符串内部的裸控制字符(换行/回车/制表符)转义后再试。
+// 实测:模型偶尔会在 original_moves 的字符串里输出裸换行,JSON.parse 直接报 Bad control character。
+function parseLenientArray(text) {
+  const s = checks.stripFence(String(text || '').trim());
+  const a = s.indexOf('['), b = s.lastIndexOf(']');
+  if (a === -1 || b <= a) return null;
+  const body = s.slice(a, b + 1);
+  try { return JSON.parse(body); } catch (e) { /* 走修复分支 */ }
+  let out = '', inStr = false, esc = false;
+  for (const ch of body) {
+    if (esc) { out += ch; esc = false; continue; }
+    if (ch === '\\') { out += ch; esc = true; continue; }
+    if (ch === '"') { inStr = !inStr; out += ch; continue; }
+    if (inStr && (ch === '\n' || ch === '\r' || ch === '\t')) {
+      out += ch === '\n' ? '\\n' : (ch === '\r' ? '\\r' : '\\t');
+      continue;
+    }
+    out += ch;
+  }
+  try { return JSON.parse(out); } catch (e) { return null; }
+}
+
 async function aiNotes(asset, cards) {
   const cfg = pipeline.loadConfig();
   if (!cfg || !cfg.api_key) throw new Error('未配置 API Key');
@@ -28,11 +50,19 @@ async function aiNotes(asset, cards) {
   const tpl = fs.readFileSync(path.join(__dirname, '..', 'prompts', 'retention_card.md'), 'utf-8')
     .replace('{{structure}}', structure)
     .replace('{{cards}}', retention.cardsSummary(cards));
-  const r = await pipeline.llmCall(cfg, [{ role: 'user', content: tpl }], '留存卡 ' + asset.id);
-  const s = checks.stripFence(r.content.trim());
-  const m = s.match(/\[[\s\S]*\]/);
-  const arr = m ? JSON.parse(m[0]) : null;
-  if (!Array.isArray(arr)) throw new Error('输出不是 JSON 数组');
+  let messages = [{ role: 'user', content: tpl }];
+  let r = await pipeline.llmCall(cfg, messages, '留存卡 ' + asset.id);
+  let arr = parseLenientArray(r.content);
+  // 仍解析不出时,带着原始输出反馈重试一次(常见原因:字符串里的裸换行、代码围栏、缺方括号)
+  for (let retry = 1; !Array.isArray(arr) && retry <= 1; retry++) {
+    messages = [...messages, { role: 'assistant', content: r.content }, {
+      role: 'user',
+      content: '上一次输出不是合法 JSON 数组。请只输出 JSON 数组,禁止代码围栏和解释;字符串内部不要出现裸换行(需要换行时用空格),每个 stage_id 与初稿一一对应。'
+    }];
+    r = await pipeline.llmCall(cfg, messages, '留存卡重试 ' + asset.id);
+    arr = parseLenientArray(r.content);
+  }
+  if (!Array.isArray(arr)) throw new Error('输出不是 JSON 数组(已重试一次)');
   return arr;
 }
 
@@ -55,9 +85,13 @@ function writeLibrary() {
 (async () => {
   const ids = only ? [only] : store.listAssets().filter(a => !a.broken && !a.id.startsWith('_')).map(a => a.id);
   let okN = 0;
-  for (const id of ids) {
+  const tAll = Date.now();
+  for (let i = 0; i < ids.length; i++) {
+    const id = ids[i];
+    const tOne = Date.now();
+    const tag = '[' + (i + 1) + '/' + ids.length + '] ';
     const asset = store.getAsset(id);
-    if (!asset || !asset.framework || !asset.timeline) { console.log('跳过(缺 framework/timeline): ' + id); continue; }
+    if (!asset || !asset.framework || !asset.timeline) { console.log(tag + '跳过(缺 framework/timeline): ' + id); continue; }
     // --force 时从程序初稿重来;否则保留文件里已有的 AI 润色或人工修改
     let cards = force ? retention.buildCards(asset.framework, asset.timeline) : retention.cardsForAsset(asset);
     let refined = cards.some(c => c.ai_refined);
@@ -78,7 +112,7 @@ function writeLibrary() {
           };
         });
         refined = true;
-      } catch (e) { console.log('AI 润色失败(仍写入程序版): ' + id + ' — ' + e.message); }
+      } catch (e) { console.log(tag + 'AI 润色失败(仍写入程序版): ' + id + ' — ' + e.message); }
     }
     const out = {
       version: retention.CARD_VERSION,
@@ -96,9 +130,10 @@ function writeLibrary() {
     fs.writeFileSync(path.join(store.ASSETS_ROOT, id, 'retention_cards.json'), JSON.stringify(out, null, 2), 'utf-8');
     const peaks = cards.reduce((n, c) => n + c.peaks.length, 0);
     const del = ['不可删', '可并入', '可删'].map(k => k + ' ' + cards.filter(c => c.deletability === k).length).join(' / ');
-    console.log('✓ ' + id + ':' + cards.length + ' 段,' + peaks + ' 个高峰,' + del);
+    console.log(tag + '✓ ' + id + ':' + cards.length + ' 段,' + peaks + ' 个高峰,' + del +
+      ' (' + Math.round((Date.now() - tOne) / 1000) + 's' + (refined ? ', ai' : '') + ')');
     okN++;
   }
-  console.log('完成 ' + okN + '/' + ids.length);
+  console.log('完成 ' + okN + '/' + ids.length + '，总耗时 ' + Math.round((Date.now() - tAll) / 60000) + ' 分钟');
   if (withLibrary) writeLibrary();
 })();
