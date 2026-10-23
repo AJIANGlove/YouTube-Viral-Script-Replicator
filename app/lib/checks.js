@@ -317,9 +317,13 @@ function stripTrailingJunk(text) {
 function extractFinalScript(optText) {
   const headMatch = optText.match(/^\s*(?:#{1,6}\s*)?change\s*log\s*[*:：]*\s*$/im);
   const arrMatch = optText.match(/\[\s*\{[\s\S]*"before"[\s\S]*\}\s*\]/);
+  // Change Log 数组没写完(输出被截断,没有收尾的 ]),上面两个都匹配不到:按「独占一行的 [ + 下一行是 location/before 键」切。
+  // 实测 run_a2f108398c13:Step 4 在 Change Log 中途断流,半截 JSON 和中文修改理由整段混进终稿,CH13 多出 700 多词
+  const openArr = optText.match(/^[ \t]*\[[ \t]*\r?\n\s*\{\s*"(?:location|before|after|reason)"/m);
   let cut = -1;
   if (headMatch) cut = headMatch.index;
   if (arrMatch && (cut === -1 || arrMatch.index < cut)) cut = arrMatch.index;
+  if (openArr && (cut === -1 || openArr.index < cut)) cut = openArr.index;
   const body = cut === -1 ? optText : optText.slice(0, cut);
   const cleaned = stripTrailingJunk(body.replace(/[`\s]*$/, '').replace(/\n?\s*[-–—*_]{3,}\s*$/, '').trim());
   return stripLeadingPreamble(cleaned).text;

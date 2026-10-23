@@ -664,5 +664,5 @@ module.exports = {
   loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, acceptedGaps,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,
-  frameworkVars, fillVars, getTarget, setTarget, needsList, mergeAdjust, runAutoAdjust, reviseItem, auditTitle
+  frameworkVars, fillVars, callJson, getTarget, setTarget, needsList, mergeAdjust, runAutoAdjust, reviseItem, auditTitle
 };
