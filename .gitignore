@@ -3,7 +3,7 @@ app/config.json
 app/data/video_binding.json
 
 # ===== 运行时产物 =====
-app/data/logs/
+# 运行日志按约定入库（见 app/data/logs/：失败样本、留存卡批处理、探针输出）
 app/data/step4_recovery/
 app/data/preview-video-btn.png
 app/data/preview-runs-list.png
@@ -33,3 +33,5 @@ Desktop.ini
 .DS_Store
 node_modules/
 *.log
+# 例外：项目运行日志需要入库
+!app/data/logs/*.log

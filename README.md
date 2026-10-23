@@ -44,7 +44,8 @@ flowchart LR
 │   ├── bin/                留存卡批量构建 CLI
 │   ├── prompts/            现行提示词（生产用，单一来源）
 │   ├── public/             前端 SPA
-│   ├── data/runs/          52 条生成记录
+│   ├── data/runs/          56 条生成记录（含每步 attempts 与校验明细）
+│   ├── data/logs/          运行日志（失败样本、留存卡批处理、探针输出）
 │   └── config.example.json 配置结构示例（不含真实 Key）
 ├── assets/                 180 个四层资产包，每包含原始 SRT 与留存卡
 ├── baselines/              v1-v3 历史基线（提示词快照 + 产物 + 归因）
@@ -114,7 +115,12 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 
 `app/lib/pipeline.js` 顺序执行四步，每步都把上一步产物 + 对应资产层喂给模型：
 
-0. **写前分析（可选，建任务时勾选）**：写稿前先判断「新题目能不能用这个框架写」，产出结论、候选标题、论点卡、事实表（带年份与时效）、模块取舍、留存地图、钩子候选。任务停在「待确认分析」，人工核对（可直接改 JSON 或补资料重跑）后确认，分析结果通过 `{{analysis}}` 注入下面四步。
+0. **写前分析（可选，建任务时勾选）**：写稿前先判断「新题目能不能用这个框架写」，产出结论、候选标题、论点卡、事实表（带年份与时效）、模块取舍、留存地图、钩子候选。任务停在「待确认分析」，人工核对（可直接改表格或补资料重跑）后确认，分析结果通过 `{{analysis}}` 注入下面四步。
+   - 结论分三种：可以写 / 调整后可写（框架不动，只调题目侧）/ 换框架，并给出 `adjustments` 调整清单与 `reframe_reasons`。
+   - **AI 先调整**（`prompts/adjust.md`）：补待查、改论点卡、为不可删段与高峰找事实、补候选标题；改动标蓝并记录依据（查到 / 估算 / 记忆待核 / 推理），可一键恢复。
+   - **我的意见**（`prompts/revise.md`）：只重做提意见的那一行，返回改前改后，人工点采用才写入。
+   - **标题审核**（`prompts/title_audit.md`）：自写标题先过审，通过后同步观众问题与期待方向。
+   - **联网搜索**（`lib/search.js`）：AI 先列查询词（`prompts/adjust_queries.md`），程序检索取前 N 条，AI 只能按结果填并带链接与日期。
 1. **Blueprint**：只做结构映射，不创作新结构；每章必须有功能、目标、Open Loop。
 2. **Script**：按蓝图逐章施工；资产优先级为 Blueprint > Examples > Style > Audience Context。
 3. **Audit**：逐项对照四层资产找偏差，结论必须引用证据；不依赖模型记忆。
@@ -144,7 +150,8 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 
 | 模块 | 作用 |
 |---|---|
-| 写前分析 | 写稿前判定题目与框架是否匹配，产出论点卡、事实表、留存地图与钩子候选，人工确认后才进入四步 |
+| 写前分析 | 写稿前判定题目与框架是否匹配，产出论点卡、事实表、留存地图与钩子候选；支持 AI 先调整、逐行修订、标题审核，人工确认后才进入四步 |
+| 联网搜索 | 按写前分析列出的查询词检索（渠道适配器，当前接 DeepSeek），只允许模型引用检索结果并附链接与日期 |
 | 稿件检查 | 按 K1-K5 检查成稿的问题，只提出问题、不改写风格，结果可一键采用 |
 | 留存卡 | 每段 7 项（段与位置、持有的高峰、悬念、原片做法、抽象动作、替换条件、可删性），前三项程序对齐、后三项可 AI 重写，落在 `assets/<id>/retention_cards.json` |
 | 频道声音 | 语体、称呼观众、自称、风格、固定用语，注入写前分析与 step2 / step4 |
@@ -163,7 +170,11 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 
 | 文件 | 用途 | 行数 |
 |---|---|---|
-| `analysis.md` | 写前分析（题目与框架匹配、论点卡、事实表） | 85 |
+| `analysis.md` | 写前分析（题目与框架匹配、论点卡、事实表） | 100 |
+| `adjust.md` | AI 先调整（补待查、改论点、找事实、补标题） | 76 |
+| `adjust_queries.md` | 生成联网搜索查询词 | 20 |
+| `revise.md` | 按人工意见只重做一行 | 28 |
+| `title_audit.md` | 自写标题审核 | 26 |
 | `step1.md` | Blueprint 生成 | 77 |
 | `step2.md` | 脚本施工 | 43 |
 | `step3.md` | 质量审核 | 65 |
@@ -179,6 +190,8 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `opening_retention_check.md` | 开头留存检查 | 120 |
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
+
+合计 19 份 `.md`（1163 行）+ `fingerprints.json` 模式库。
 
 ### 历史版本
 
@@ -225,7 +238,20 @@ node app/server.js
 - `new_source/`：待拆解的新字幕。
 - `claude-优化方案/`：外部补丁包与原始材料，非本仓库产物。
 - `app/voices/*.json`：本机频道声音配置，只保留 `_template.json`。
-- `app/data/logs/`、`.workbuddy/`：运行时日志与内部工作区。
+- `.workbuddy/`：内部工作区。
+
+**运行日志（已入库）**：
+
+`app/data/logs/` 按约定公开，用于复现问题与核对批处理结果：
+
+| 文件 | 内容 |
+|---|---|
+| `retention_ai_20261022.log` | 留存卡 AI 润色的逐资产进度与失败回退记录（179 个资产） |
+| `compliance_fail_*.txt` | 商业化检查被模型拒绝时的原始返回（失败样本） |
+| `opening_fail_*.txt` | 开头留存检查失败时的原始返回 |
+| `probes/*.txt` | 开头留存检查的模型原始输出（按 run + 版本存） |
+
+每个任务的 `attempts`、`checks`、`steps` 明细在 `app/data/runs/<id>.json` 内，与日志互为补充。
 
 **版权**：
 
