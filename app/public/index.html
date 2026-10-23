@@ -174,7 +174,16 @@
   .rv-row.flagged { border-color: #fca5a5; }
   .rv-row.dropped { background: #fafafa; border-style: dashed; }
   .rv-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 10px; background: #f9fafb; font-size: 13px; flex-wrap: wrap; }
-  .rv-grid { display: grid; grid-template-columns: 1fr 0.75fr 1fr; }
+  .rv-grid { display: grid; grid-template-columns: 0.6fr 1fr; }
+  .rv-grid.two { grid-template-columns: 1fr 1fr; }
+  .rv-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 4px; }
+  .rv-tab { padding: 4px 12px; border-radius: 14px; border: 1px solid #fca5a5; background: #fff; color: #dc2626; font-size: 13px; cursor: pointer; }
+  .rv-tab.on { background: #dc2626; color: #fff; }
+  .rv-del { background: #fee2e2; color: #991b1b; text-decoration: line-through; }
+  .rv-ins { background: #dcfce7; color: #166534; }
+  .rv-issue { font-size: 12px; margin: 2px 0; }
+  .rv-issue b { color: #b91c1c; }
+  .rv-same { font-size: 12px; color: #6b7280; padding: 4px 10px; }
   .rv-grid > div { padding: 8px 10px; font-size: 13px; line-height: 1.65; border-top: 1px solid #f3f4f6; min-width: 0; }
   .rv-grid > div + div { border-left: 1px solid #f3f4f6; }
   .rv-col-title { font-size: 11px; color: #6b7280; margin-bottom: 4px; font-weight: 600; }
@@ -1196,7 +1205,7 @@ function setTrack(v) {
 }
 
 // ---------- 任务 ----------
-const STEP_LABELS = { analysis: '⓪ 写前分析', blueprint: '① 蓝图', script: '② 脚本', audit: '③ 审核', optimized: '④ 优化', opening_boost: '⑤ 强化开头', script_check: '⑥ 稿件检查' };
+const STEP_LABELS = { analysis: '⓪ 写前分析', blueprint: '① 蓝图', script: '② 脚本', audit: '③ 审核', optimized: '④ 优化', opening_boost: '⑤ 强化开头', script_check: '⑥ 稿件检查', draft_check: '⑦ 初稿检查→二稿', final_review: '⑧ 终审→终稿' };
 const STATUS_LABELS = { analyzing: '写前分析中', awaiting_review: '待确认分析', queued: '排队中', running: '生成中', done: '完成', failed: '失败', cancelled: '已取消' };
 const LANG_LABELS = { English: '英语', Hindi: '印地语', Spanish: '西班牙语', Portuguese: '葡萄牙语', Japanese: '日语', Korean: '韩语', Indonesian: '印尼语', German: '德语', French: '法语', Vietnamese: '越南语', Arabic: '阿拉伯语', Chinese: '中文' };
 const COUNTRY_LABELS = { US: '美国', IN: '印度', BR: '巴西', MX: '墨西哥', JP: '日本', KR: '韩国', ID: '印尼', DE: '德国', GB: '英国', FR: '法国', VN: '越南', SA: '沙特' };
@@ -1538,6 +1547,7 @@ async function loadRunDetail() {
   if (r.pre_analysis || (r.steps || {}).analysis) stepKeys.unshift('analysis');
   if (r.boost_opening || (r.steps || {}).opening_boost) stepKeys.push('opening_boost');
   if (r.analysis_confirmed || (r.steps || {}).script_check) stepKeys.push('script_check');
+  if (r.draft_first || (r.steps || {}).draft_check) stepKeys.push('draft_check', 'final_review');
   document.getElementById('detail-steps').innerHTML = stepKeys.map((k, i) => {
     const s = (r.steps || {})[k] || {};
     const cls = s.status === 'done' ? 'done' : (s.status === 'running' ? 'running' : (s.status === 'failed' ? 'failed' : ''));
@@ -1620,7 +1630,7 @@ let rvState = null;
 
 function rvKeyOf(r) {
   const s = r.script_v1 || r.final_script || '';
-  return [r.id, r.status, s.length, s.slice(-80), JSON.stringify(r.review || {}).length, JSON.stringify((r.steps || {}).review_zh || {}), JSON.stringify(((r.analysis || {}).facts) || []).length].join('|');
+  return [r.id, r.status, s.length, s.slice(-80), JSON.stringify(r.review || {}).length, JSON.stringify((r.steps || {}).review_zh || {}), JSON.stringify((r.steps || {}).draft_check || {}), JSON.stringify((r.steps || {}).final_review || {}), JSON.stringify(((r.analysis || {}).facts) || []).length].join('|');
 }
 
 function rvEditing() {
@@ -1637,7 +1647,7 @@ async function renderReviewPanel(r) {
   if (!rvState || rvState.runId !== r.id) rvState = { runId: r.id, open: !!r.draft_first, key: null, view: null, busy: {}, panel: {}, onlyFlags: false, err: '', msg: {} };
   if (!(hasScript && r.status === 'done')) {
     const step = r.status === 'analyzing' ? '写前分析' : r.status === 'awaiting_review' ? 'AI 先调整(查资料、补事实、定取舍)' : (r.status === 'failed' || r.status === 'cancelled') ? '' : '写稿';
-    el.innerHTML = `<h2 class="v13">逐段对照审稿</h2><div class="hint v13">${step ? 'AI 正在一键生成,现在在「' + step + '」。写完后在这里逐段对照原片审稿,不需要你先审事实表和模块取舍。' : '任务没有写完,续跑后再审稿。'}</div>`;
+    el.innerHTML = `<h2 class="v13">审稿:初稿 → 二稿 → 终稿</h2><div class="hint v13">${step ? 'AI 正在一键生成,现在在「' + step + '」。写完初稿后会自动检查出二稿、再终审出终稿,这里会逐章展示改前改后。' : '任务没有写完,续跑后再审稿。'}</div>`;
     return;
   }
   if (!rvState.open) {
@@ -1661,12 +1671,6 @@ function rvToggleFlags() { rvState.onlyFlags = !rvState.onlyFlags; rvDraw(); }
 function rvFactChip(f, ch) {
   const tip = [f.kind, f.why, f.source, f.year].filter(Boolean).join(' · ');
   return `<span class="rv-chip ${f.state}" title="${escAttr(tip)}" onclick="rvOpenFact('${f.id}','${ch}')">${esc(f.id)} ${esc(String(f.content || '').slice(0, 28))}${f.content && f.content.length > 28 ? '…' : ''}</span>`;
-}
-
-function rvSourceCell(srcs) {
-  if (!srcs.length) return '<div class="rv-col-title">原片</div><div class="hint">(没找到对应的原片段)</div>';
-  return srcs.map(s => `<div class="rv-col-title">原片 ${esc(s.stage_id)} · ${esc(s.position_label || '')}</div>
-    <div class="rv-text rv-src">${esc(s.text || '(这段原片没有字幕)')}</div>${s.zh ? `<div class="rv-zh rv-src">${esc(s.zh)}</div>` : ''}`).join('<hr style="border:0;border-top:1px solid #f3f4f6">');
 }
 
 function rvTemplateCell(row) {
@@ -1696,7 +1700,6 @@ function rvRowHtml(row) {
         <button class="an-btn v13" onclick="rvCompress('${row.id}')" title="这段在本题里撑不住:只留一两句过渡,把悬念交给下一章">压成过渡</button>
         ${hist ? `<button class="an-btn v13" onclick="rvTogglePanel('${row.id}','hist')">看上一版</button><button class="an-btn v13" onclick="rvUndo('${row.id}')">撤回</button>` : ''}`}</span></div>
     <div class="rv-grid">
-      <div>${rvSourceCell(row.source)}</div>
       <div>${rvTemplateCell(row)}</div>
       <div><div class="rv-col-title">AI 新稿</div><div class="rv-text">${esc(row.text)}</div>
         ${row.zh ? `<div class="rv-zh">${esc(row.zh)}</div>` : (rvState.view.translating ? '<div class="rv-zh">中文对照翻译中…</div>' : '')}</div>
@@ -1716,7 +1719,7 @@ function rvRowHtml(row) {
 
 function rvDroppedHtml(d) {
   return `<div class="rv-row dropped"><div class="rv-head"><span><b>${esc(d.stage_id)}</b> ${esc(d.position_label || '')} · ${esc(d.function || '')} · <span class="v13">新稿没有章节承接(${esc(d.decision)})</span></span></div>
-    <div class="rv-grid"><div>${rvSourceCell([d])}</div><div><div class="rv-col-title">模板</div><div>留存作用:${esc(d.abstract_move || '—')}</div>
+    <div class="rv-grid"><div><div class="rv-col-title">模板</div><div>留存作用:${esc(d.abstract_move || '—')}</div>
       <div>可删性:${esc(d.deletability || '')}</div>${d.reason ? `<div>AI 的理由:${esc(d.reason)}</div>` : ''}</div><div class="hint">(已删除或并入相邻章)</div></div></div>`;
 }
 
@@ -1746,10 +1749,25 @@ function rvDraw() {
   const ratio = s.ratio ? Math.round(s.ratio * 100) + '%' : '—';
   const redList = s.red_facts.length ? s.red_facts.map(id => { const f = v.facts.find(x => x.id === id); return f ? rvFactChip(f, (v.rows.find(r => r.facts.some(x => x.id === id)) || {}).id || '') : ''; }).join('') : '';
   const rows = v.rows.filter(r => !rvState.onlyFlags || r.flags.length || r.facts.some(f => f.state === 'red'));
-  el.innerHTML = `<h2 style="display:flex;justify-content:space-between;align-items:center"><span class="v13">逐段对照审稿</span>
+  const diffs = v.diffs || [];
+  if (!rvState.tab || (rvState.tab !== 'current' && !diffs.some(d => d.key === rvState.tab))) rvState.tab = diffs.length ? diffs[diffs.length - 1].key : 'current';
+  const passLine = rvPassLine(v);
+  const tabs = `<div class="rv-tabs">${diffs.map(d => `<button class="rv-tab${rvState.tab === d.key ? ' on' : ''}" onclick="rvSetTab('${d.key}')">${esc(d.from)} → ${esc(d.to)}(改了 ${d.chapters.filter(c => c.changed).length} 章)</button>`).join('')}
+    <button class="rv-tab${rvState.tab === 'current' ? ' on' : ''}" onclick="rvSetTab('current')">当前稿逐章审</button></div>`;
+  if (rvState.tab !== 'current') {
+    el.innerHTML = `<h2 style="display:flex;justify-content:space-between;align-items:center"><span class="v13">审稿:初稿 → 二稿 → 终稿</span>
+      <span><button class="an-btn v13" onclick="rvTranslate()" ${v.translating ? 'disabled' : ''}>${v.translating ? '中文对照翻译中…' : '补齐中文对照'}</button></span></h2>
+      ${passLine}${tabs}
+      ${v.zh_error ? `<div class="err-list">中文对照翻译失败:${esc(v.zh_error)}</div>` : ''}
+      ${rvState.err ? `<div class="err-list">${esc(rvState.err)}</div>` : ''}
+      ${rvDiffHtml(diffs.find(d => d.key === rvState.tab), v.translating)}`;
+    return;
+  }
+  el.innerHTML = `<h2 style="display:flex;justify-content:space-between;align-items:center"><span class="v13">审稿:当前稿逐章审</span>
       <span><button class="an-btn v13" onclick="rvToggleFlags()">${rvState.onlyFlags ? '显示全部章节' : '只看有问题的章节'}</button>
       <button class="an-btn v13" onclick="rvTranslate()" ${v.translating ? 'disabled' : ''}>${v.translating ? '中文对照翻译中…' : '补齐中文对照'}</button>
       ${lastRunDetail && !lastRunDetail.draft_first ? '<button class="an-btn" onclick="rvToggleOpen()">收起</button>' : ''}</span></h2>
+    ${passLine}${tabs}
     <div class="rv-bar v13">
       <span>篇幅 <b>${s.words}</b>${s.budget ? ' / 预算 ' + s.budget + ' 词(' + ratio + ')' : ' 词'}</span>
       <span>已通过 <b>${s.passed}/${s.chapters}</b> 章</span>
@@ -1763,6 +1781,69 @@ function rvDraw() {
     ${rvState.err ? `<div class="err-list">${esc(rvState.err)}</div>` : ''}
     ${rows.map(rvRowHtml).join('')}
     ${v.dropped.length && !rvState.onlyFlags ? '<div class="an-sec v13">原片里没有被承接的段</div>' + v.dropped.map(rvDroppedHtml).join('') : ''}`;
+}
+
+function rvSetTab(t) { rvState.tab = t; rvDraw(); }
+
+const RV_PASS_NAMES = { check: '初稿检查 → 二稿', final: '终审 → 终稿' };
+function rvPassLine(v) {
+  const p = v.passes || {};
+  const one = k => {
+    const st = p[k];
+    const txt = !st ? '没跑' : st.status === 'running' ? '<span class="rv-busy">进行中…</span>' : st.status === 'failed' ? '<span class="err-list">失败:' + esc(st.error || '') + '</span>'
+      : '完成(' + (st.issues || 0) + ' 个问题,改了 ' + (st.changed || 0) + ' 章)';
+    const busy = st && st.status === 'running';
+    return `<span>${RV_PASS_NAMES[k]}:${txt} ${busy ? '' : `<button class="an-btn v13" onclick="rvRunPass('${k}')">${st ? '重跑' : '开始'}</button>`}</span>`;
+  };
+  return `<div class="rv-bar v13">${one('check')}${one('final')}</div>`;
+}
+
+async function rvRunPass(kind) {
+  const msg = kind === 'check' ? '重跑初稿检查?会基于当前稿重新出二稿,然后接着跑终审。' : '重跑终审?会基于当前稿重新出终稿。';
+  if (!confirm(msg)) return;
+  try { await rvPost('pass', { kind }); } catch (e) { rvState.err = e.message; }
+  rvState.key = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
+}
+
+// 逐词对比:按空白切词做 LCS,改前标删除、改后标新增
+function rvDiffPair(a, b) {
+  const ta = String(a || '').split(/(\s+)/), tb = String(b || '').split(/(\s+)/);
+  const n = ta.length, m = tb.length;
+  if (n * m > 1500000) return { a: esc(a), b: esc(b) };
+  const dp = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) dp[i][j] = ta[i] === tb[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+  let i = 0, j = 0, oa = '', ob = '';
+  while (i < n && j < m) {
+    if (ta[i] === tb[j]) { oa += esc(ta[i]); ob += esc(tb[j]); i++; j++; }
+    else if (dp[i + 1][j] >= dp[i][j + 1]) { oa += /^\s+$/.test(ta[i]) ? esc(ta[i]) : '<span class="rv-del">' + esc(ta[i]) + '</span>'; i++; }
+    else { ob += /^\s+$/.test(tb[j]) ? esc(tb[j]) : '<span class="rv-ins">' + esc(tb[j]) + '</span>'; j++; }
+  }
+  for (; i < n; i++) oa += /^\s+$/.test(ta[i]) ? esc(ta[i]) : '<span class="rv-del">' + esc(ta[i]) + '</span>';
+  for (; j < m; j++) ob += /^\s+$/.test(tb[j]) ? esc(tb[j]) : '<span class="rv-ins">' + esc(tb[j]) + '</span>';
+  return { a: oa, b: ob };
+}
+
+function rvIssueHtml(x) {
+  return `<div class="rv-issue"><b>[${esc(x.category)}]</b> ${esc(x.problem)}${x.quote ? '<br><span class="hint">原句:' + esc(x.quote) + '</span>' : ''}${x.fix ? '<br><span class="hint">改法:' + esc(x.fix) + '</span>' : ''}</div>`;
+}
+
+function rvDiffHtml(d, translating) {
+  if (!d) return '<div class="hint">还没有版本对比。</div>';
+  const changed = d.chapters.filter(c => c.changed);
+  const pending = translating ? '<div class="rv-zh">中文对照翻译中…</div>' : '';
+  return `<div class="hint v13">${esc(d.from)} → ${esc(d.to)}:查出 ${d.chapters.reduce((n, c) => n + c.issues.length, 0) + d.general_issues.length} 个问题,改了 ${changed.length} 章。左边是改前,右边是改后;<span class="rv-del">红色删除线</span>是删掉的,<span class="rv-ins">绿色</span>是新加的。</div>
+    ${d.general_issues.length ? `<div class="rv-row flagged"><div class="rv-head"><b>全篇问题</b></div><div class="rv-foot">${d.general_issues.map(rvIssueHtml).join('')}</div></div>` : ''}
+    ${d.chapters.map(c => {
+      if (!c.changed) return `<div class="rv-same">${esc(c.id)} ${esc(c.range)} · ${esc(c.fn)} · 未修改${c.issues.length ? '(' + c.issues.length + ' 个问题没改)' : ''}</div>`;
+      const df = rvDiffPair(c.before, c.after);
+      return `<div class="rv-row flagged"><div class="rv-head"><span><b>${esc(c.id)}</b> ${esc(c.range)} · ${esc(c.fn)}</span></div>
+        ${c.issues.length ? `<div class="rv-foot">${c.issues.map(rvIssueHtml).join('')}</div>` : ''}
+        <div class="rv-grid two">
+          <div><div class="rv-col-title">改前(${esc(d.from)})</div><div class="rv-text">${df.a}</div>${c.zh_before ? `<div class="rv-zh">${esc(c.zh_before)}</div>` : pending}</div>
+          <div><div class="rv-col-title">改后(${esc(d.to)})</div><div class="rv-text">${df.b}</div>${c.zh_after ? `<div class="rv-zh">${esc(c.zh_after)}</div>` : pending}</div>
+        </div></div>`;
+    }).join('')}`;
 }
 
 function rvTogglePanel(ch, which) { rvState.panel[ch] = rvState.panel[ch] === which ? '' : which; rvDraw(); }

@@ -159,6 +159,29 @@ function chapterFlags(ch, ctx) {
   return flags;
 }
 
+// 相邻两版逐章对比:改前/改后正文、中文、这一章的问题
+function versionDiffs(state) {
+  const vs = arr(state.versions);
+  const out = [];
+  for (let i = 1; i < vs.length; i++) {
+    const before = Object.fromEntries(scriptChapters(vs[i - 1].text).map(c => [c.id, c]));
+    const issues = arr(vs[i].issues);
+    out.push({
+      key: vs[i].key, from: vs[i - 1].label, to: vs[i].label, at: vs[i].at,
+      general_issues: issues.filter(x => !/^CH/.test(x.chapter)),
+      chapters: scriptChapters(vs[i].text).map(c => {
+        const b = before[c.id] || { text: '' };
+        return {
+          id: c.id, fn: c.fn, range: c.range, changed: b.text !== c.text,
+          before: b.text, after: c.text, zh_before: zhOf(state, b.text), zh_after: zhOf(state, c.text),
+          issues: issues.filter(x => x.chapter === c.id)
+        };
+      })
+    });
+  }
+  return out;
+}
+
 // ---------- 视图 ----------
 function buildView(run, asset) {
   const script = currentScript(run);
@@ -212,14 +235,13 @@ function buildView(run, asset) {
         return {
           stage_id: id, function: s.function, position_label: s.position_label, abstract_move: s.abstract_move,
           deletability: s.deletability, peaks: s.peaks, text: s.text,
-          zh: ((state.zh || {}).source || {})[id] || '',
           decision: m ? m.decision : '', reason: m ? (m.reason || '') : ''
         };
       }),
       facts: factIds.map(id => factView(facts.find(f => f.id === id), marks)),
       status: st.status || '待审',
       history: arr(st.history).map(h => ({ at: h.at, note: h.note || '', by: h.by || '', text: h.text })),
-      zh: (((state.zh || {}).script || {})[c.id] || {}).hash === hash(c.text) ? state.zh.script[c.id].text : '',
+      zh: zhOf(state, c.text),
       last_reply: st.last_reply || ''
     };
     row.isLast = i === chs.length - 1;
@@ -232,7 +254,7 @@ function buildView(run, asset) {
     const m = modOf(s.stage_id);
     return {
       stage_id: s.stage_id, function: s.function, position_label: s.position_label, abstract_move: s.abstract_move,
-      deletability: s.deletability, peaks: s.peaks, text: s.text, zh: ((state.zh || {}).source || {})[s.stage_id] || '',
+      deletability: s.deletability, peaks: s.peaks, text: s.text,
       decision: m ? m.decision : '没有章节承接', reason: m ? (m.reason || '') : ''
     };
   });
@@ -243,6 +265,9 @@ function buildView(run, asset) {
   const budget = rows.reduce((n, r) => n + (r.budget || 0), 0);
   return {
     run_id: run.id, status: run.status, target_language: lang,
+    passes: { check: (run.steps || {}).draft_check || null, final: (run.steps || {}).final_review || null },
+    versions: arr(state.versions).map(v => ({ key: v.key, label: v.label, at: v.at, issues: arr(v.issues), changed: arr(v.changed), truncated: !!v.truncated })),
+    diffs: versionDiffs(state),
     translating: ((run.steps || {}).review_zh || {}).status === 'running',
     zh_error: ((run.steps || {}).review_zh || {}).error || '',
     rows, dropped,
@@ -274,6 +299,8 @@ function getView(runId) {
 }
 
 // ---------- 翻译(中文对照) ----------
+// 译文按原文的 hash 存(review.zh.byHash):同一段文字不管出现在初稿、二稿还是终稿里,只翻一次。
+// 输入输出都用 ===编号=== 分段的纯文本,不要求模型输出 JSON(长篇韩文塞进 JSON 字符串,模型常漏转义,实测「输出不是合法 JSON」)
 function needsZh(text) {
   const t = String(text || '');
   const han = (t.match(/[㐀-鿿]/g) || []).length;
@@ -281,55 +308,82 @@ function needsZh(text) {
   return other > han;
 }
 
-async function translateMap(run, cfg, items, label) {
+// ===KEY=== 分段文本 → { KEY: 内容 };没有收尾的最后一段(输出被截断)丢掉
+function parseBlocks(text, truncated) {
   const out = {};
-  const keys = Object.keys(items).filter(k => needsZh(items[k]));
-  let batch = {}, size = 0;
+  const re = /^===\s*([A-Za-z0-9_]+)\s*===\s*$/gm;
+  const marks = [];
+  let m;
+  while ((m = re.exec(String(text || ''))) !== null) marks.push({ key: m[1].toUpperCase(), start: m.index, end: m.index + m[0].length });
+  marks.forEach((k, i) => {
+    if (k.key === 'END') return;
+    const next = marks[i + 1];
+    if (!next && truncated) return;
+    out[k.key] = String(text).slice(k.end, next ? next.start : undefined).trim();
+  });
+  return out;
+}
+
+async function rawCall(run, cfg, prompt, label) {
+  return an().callWithLog(run, cfg, [{ role: 'user', content: prompt }], label);
+}
+
+async function translateTexts(run, cfg, texts, label) {
+  const out = {};
+  const items = [...new Set(texts.filter(t => t && needsZh(t)))];
+  let batch = [], size = 0;
   const flush = async () => {
-    if (!Object.keys(batch).length) return;
-    const prompt = an().fillVars(readPrompt('translate.md'), { items_json: JSON.stringify(batch) });
-    const res = await an().callJson(run, cfg, prompt, label, o => typeof o === 'object' && !Array.isArray(o));
-    Object.keys(batch).forEach(k => { if (typeof res[k] === 'string') out[k] = res[k]; });
-    batch = {}; size = 0;
+    if (!batch.length) return;
+    const keyed = {};
+    batch.forEach((t, i) => { keyed['T' + (i + 1)] = t; });
+    const prompt = an().fillVars(readPrompt('translate.md'), { items: Object.keys(keyed).map(k => '===' + k + '===\n' + keyed[k]).join('\n') });
+    let r = await rawCall(run, cfg, prompt, label);
+    let got = parseBlocks(r.content, r.stopReason === 'max_tokens');
+    // 漏了的段单独再翻一次
+    for (const k of Object.keys(keyed).filter(k => !got[k])) {
+      const r2 = await rawCall(run, cfg, an().fillVars(readPrompt('translate.md'), { items: '===' + k + '===\n' + keyed[k] }), label + '补翻');
+      Object.assign(got, parseBlocks(r2.content, r2.stopReason === 'max_tokens'));
+    }
+    Object.keys(keyed).forEach(k => { if (got[k]) out[hash(keyed[k])] = got[k]; });
+    batch = []; size = 0;
   };
-  for (const k of keys) {
-    if (size + items[k].length > TRANSLATE_BATCH_CHARS) await flush();
-    batch[k] = items[k]; size += items[k].length;
+  for (const t of items) {
+    if (size + t.length > TRANSLATE_BATCH_CHARS) await flush();
+    batch.push(t); size += t.length;
   }
   await flush();
   return out;
 }
 
-// 原片段的译文全资产共用,按资产缓存在 run 里一份即可(原片不变)
-async function translateRun(runId, onlyChapters) {
+function zhOf(state, text) {
+  const z = (state && state.zh) || {};
+  return (z.byHash || {})[hash(text)] || '';
+}
+
+// 要翻的:当前稿每一章 + 各版本改过的章节(改前和改后)
+function textsToTranslate(run) {
+  const texts = scriptChapters(currentScript(run)).map(c => c.text);
+  const vs = arr((run.review || {}).versions);
+  for (let i = 1; i < vs.length; i++) {
+    const before = Object.fromEntries(scriptChapters(vs[i - 1].text).map(c => [c.id, c.text]));
+    scriptChapters(vs[i].text).forEach(c => { if (before[c.id] !== c.text) texts.push(c.text, before[c.id] || ''); });
+  }
+  const have = ((run.review || {}).zh || {}).byHash || {};
+  return texts.filter(t => t && !have[hash(t)]);
+}
+
+async function translateRun(runId) {
   const cfg = pl().loadConfig();
   let run = store.getRun(runId);
   if (!run || !cfg || !cfg.api_key) return;
-  const asset = store.getAsset(run.asset_id);
-  if (!asset) return;
   run.steps = { ...(run.steps || {}), review_zh: { status: 'running', started_at: new Date().toISOString() } };
   store.saveRun(run);
   try {
-    const review = run.review || {};
-    const zh = review.zh || { source: {}, script: {} };
-    zh.source = zh.source || {}; zh.script = zh.script || {};
-    if (!onlyChapters) {
-      const srcItems = {};
-      sourceSegments(asset).forEach(s => { if (s.text && !zh.source[s.stage_id]) srcItems[s.stage_id] = s.text; });
-      Object.assign(zh.source, await translateMap(run, cfg, srcItems, '原片中文对照'));
-    }
-    const chItems = {};
-    scriptChapters(currentScript(run)).forEach(c => {
-      if (onlyChapters && !onlyChapters.includes(c.id)) return;
-      if ((zh.script[c.id] || {}).hash !== hash(c.text)) chItems[c.id] = c.text;
-    });
-    const tr = await translateMap(run, cfg, chItems, '新稿中文对照');
+    const tr = await translateTexts(run, cfg, textsToTranslate(run), '中文对照');
     const fresh = store.getRun(runId) || run;
-    const fz = ((fresh.review || {}).zh) || { source: {}, script: {} };
-    fz.source = { ...(fz.source || {}), ...zh.source };
-    fz.script = fz.script || {};
-    Object.keys(tr).forEach(k => { fz.script[k] = { hash: hash(chItems[k]), text: tr[k] }; });
-    fresh.review = { ...(fresh.review || {}), zh: fz };
+    fresh.review = fresh.review || {};
+    fresh.review.zh = fresh.review.zh || {};
+    fresh.review.zh.byHash = { ...(fresh.review.zh.byHash || {}), ...tr };
     fresh.steps = { ...(fresh.steps || {}), review_zh: { status: 'done', finished_at: new Date().toISOString() } };
     if (run.attempts) fresh.attempts = run.attempts;
     store.saveRun(fresh);
@@ -338,6 +392,125 @@ async function translateRun(runId, onlyChapters) {
     fresh.steps = { ...(fresh.steps || {}), review_zh: { status: 'failed', error: e.message } };
     store.saveRun(fresh);
   }
+}
+
+// ---------- 初稿检查 → 二稿,终审 → 终稿 ----------
+// 两遍都是:模型先列问题清单,再只重写有问题的章节(整章正文);程序换进稿子、校验章节结构,存成新版本。
+// 版本存在 review.versions(初稿 / 二稿 / 终稿),页面按相邻两版逐章对比。
+const PASSES = {
+  check: { label: '二稿', step: 'draft_check', prompt: 'draft_check.md', title: '初稿检查' },
+  final: { label: '终稿', step: 'final_review', prompt: 'final_review.md', title: '终审' }
+};
+const ISSUE_RE = /^\s*[-*•]\s*\[(CH\d+|全篇|全片|ALL)\]\s*\[([^\]]+)\]\s*(.+)$/i;
+
+function parseIssues(text) {
+  return String(text || '').split('\n').map(l => {
+    const m = l.match(ISSUE_RE);
+    if (!m) return null;
+    const parts = m[3].split(/\s*[｜|]\s*/);
+    const pick = re => (parts.find(p => re.test(p)) || '').replace(re, '').trim();
+    return {
+      chapter: /^CH/i.test(m[1]) ? m[1].toUpperCase() : '全篇', category: m[2].trim(),
+      problem: parts[0].trim(), quote: pick(/^原句[::]\s*/), fix: pick(/^改法[::]\s*/)
+    };
+  }).filter(Boolean);
+}
+
+function chapterMap(run, asset) {
+  const view = buildView(run, asset);
+  return view.rows.map(r => {
+    const tpl = r.source.map(s => s.stage_id + ' ' + (s.function || '') + ':' + (s.abstract_move || '') + (s.peaks.length ? '(持有高峰 ' + s.peaks.map(p => p.peak_id + ' ' + (p.peak_type || '')).join('、') + ')' : '') + (s.decision ? ';分析时的处理:' + s.decision : '')).join(' / ');
+    return '- ' + r.id + ' ' + r.range + ' ' + r.fn + (r.budget ? ' 预算 ' + r.budget + ' 词,现 ' + r.words + ' 词' : '') + '\n  模板:' + (tpl || '(无)') +
+      (r.purpose ? '\n  蓝图目标:' + r.purpose : '') +
+      (r.flags.length ? '\n  程序查出:' + r.flags.map(f => f.type + '「' + f.text.slice(0, 120) + '」').join(';') : '');
+  }).join('\n');
+}
+
+function programFindings(run, asset) {
+  const v = buildView(run, asset);
+  const s = v.summary;
+  const out = [];
+  if (s.ledger_mismatches.length) out.push('账本对不上(程序按公式重算):' + s.ledger_mismatches.join(';'));
+  if (s.thesis_contradicts.length) out.push('反转被事实推翻:' + s.thesis_contradicts.join('、') + (s.thesis_note ? '(' + s.thesis_note + ')' : ''));
+  if (s.red_facts.length) out.push('稿里用到但没有出处的事实:' + s.red_facts.join('、') + '(要么删掉这句,要么改成不依赖它的说法)');
+  if (s.budget) out.push('篇幅:' + s.words + ' 词,预算 ' + s.budget + ' 词');
+  const len = (run.checks || {}).length;
+  if (len && !len.ok) out.push('篇幅超标:' + len.detail);
+  return out.join('\n') || '(无)';
+}
+
+async function runPass(runId, kind) {
+  const P = PASSES[kind];
+  const cfg = pl().loadConfig();
+  let { run, asset } = loadRunAsset(runId);
+  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
+  const base = currentScript(run);
+  if (!base) throw Object.assign(new Error('稿子还没写好'), { status: 400 });
+  run.steps = { ...(run.steps || {}), [P.step]: { status: 'running', started_at: new Date().toISOString() } };
+  run.review = run.review || {};
+  // 第一遍之前把当前稿存成初稿
+  if (!arr(run.review.versions).length) run.review.versions = [{ key: 'd1', label: '初稿', at: new Date().toISOString(), text: base, issues: [] }];
+  store.saveRun(run);
+  try {
+    const a = run.analysis || {};
+    const aud = run.audience || {};
+    const prompt = an().fillVars(readPrompt(P.prompt), {
+      today: pl().todayStr(),
+      topic: run.topic,
+      title: ((a.title || {}).final_title) || run.topic,
+      target_language: aud.target_language || '',
+      target_country: aud.target_country || '',
+      video_goal: aud.video_goal || '',
+      voice: voice.voiceBrief(voice.voiceForRun(run)) || '(未设定)',
+      analysis: run.analysis ? an().analysisBrief(a) : '(无写前分析)',
+      chapter_map: chapterMap(run, asset),
+      program_findings: programFindings(run, asset),
+      script: base
+    });
+    const r = await rawCall(run, cfg, prompt, P.title);
+    const blocks = parseBlocks(r.content, r.stopReason === 'max_tokens');
+    const issues = parseIssues(blocks.ISSUES || r.content.split(/^===\s*CH\d+/m)[0]);
+    let next = base;
+    const changed = [];
+    for (const ch of scriptChapters(base)) {
+      const t = blocks[ch.id];
+      if (!t) continue;
+      const clean = t.replace(/^\s*\[CH\d+[^\]]*\]\s*\n?/, '').trim(); // 模型偶尔把标签行带进来
+      if (!clean || clean === ch.text) continue;
+      const tryNext = replaceChapter(next, ch.id, clean);
+      if (tryNext && !checks.chapterStructureError(tryNext)) { next = tryNext; changed.push(ch.id); }
+    }
+    const fresh = store.getRun(runId) || run;
+    if (currentScript(fresh) !== base) throw new Error('这一遍运行期间稿子被改过,结果没有保存,请重跑');
+    fresh.review = fresh.review || {};
+    const versions = arr(fresh.review.versions).length ? fresh.review.versions : [{ key: 'd1', label: '初稿', at: new Date().toISOString(), text: base, issues: [] }];
+    // 重跑同一遍:替换掉旧的同名版本及其后的版本
+    const keep = versions.filter(v => v.key === 'd1' || (kind === 'final' && v.key === 'd2'));
+    keep.push({ key: kind === 'check' ? 'd2' : 'd3', label: P.label, at: new Date().toISOString(), text: next, issues, changed, truncated: r.stopReason === 'max_tokens' });
+    fresh.review.versions = keep;
+    if (changed.length) {
+      writeScript(fresh, next);
+      changed.forEach(id => { const st = chapterState(fresh, id); st.status = '待审'; st.history = [...arr(st.history), { at: new Date().toISOString(), note: P.title, by: kind, text: scriptChapters(base).find(c => c.id === id).text }].slice(-HISTORY_MAX); });
+    }
+    fresh.steps = { ...(fresh.steps || {}), [P.step]: { status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString(), issues: issues.length, changed: changed.length } };
+    if (run.attempts) fresh.attempts = run.attempts;
+    store.saveRun(fresh);
+    return { ok: true, issues: issues.length, changed };
+  } catch (e) {
+    const fresh = store.getRun(runId) || run;
+    fresh.steps = { ...(fresh.steps || {}), [P.step]: { status: 'failed', error: e.message } };
+    store.saveRun(fresh);
+    throw e;
+  }
+}
+
+// 初稿检查 → 终审 → 翻译;某一遍失败不影响已有稿子,页面上可以单独重跑
+async function runPasses(runId, from) {
+  const order = from === 'final' ? ['final'] : ['check', 'final'];
+  for (const k of order) {
+    try { await runPass(runId, k); } catch (e) { break; }
+  }
+  await translateRun(runId);
 }
 
 // ---------- 一键生成 ----------
@@ -361,17 +534,21 @@ async function runDraftFirst(runId) {
   store.saveRun(run);
   await pl().runGeneration(runId);
   run = store.getRun(runId);
-  if (run && run.status === 'done') await translateRun(runId);
+  if (run && run.status === 'done') await runPasses(runId);
 }
 
-// 续跑(重试 / 重启接管):还没写稿就从头跑一键生成;已经在写稿就接着写,写完补翻译
+// 续跑(重试 / 重启接管):还没写稿就从头跑一键生成;已经在写稿就接着写,写完补二稿、终稿和翻译
 async function resumeDraftFirst(runId) {
   const run = store.getRun(runId);
   if (!run) return;
   if (!run.analysis_confirmed) return runDraftFirst(runId);
-  await pl().runGeneration(runId);
+  if (run.status !== 'done') await pl().runGeneration(runId);
   const done = store.getRun(runId);
-  if (done && done.status === 'done') await translateRun(runId);
+  if (!done || done.status !== 'done') return;
+  const st = done.steps || {};
+  if ((st.draft_check || {}).status !== 'done') return runPasses(runId);
+  if ((st.final_review || {}).status !== 'done') return runPasses(runId, 'final');
+  await translateRun(runId);
 }
 
 // ---------- 人工处理 ----------
@@ -457,9 +634,8 @@ async function rewriteChapter(runId, chId, note, opts) {
   st.last_reply = out.reply || '';
   writeScript(fresh, next);
   if (typeof out.zh === 'string' && out.zh.trim()) {
-    fresh.review.zh = fresh.review.zh || { source: {}, script: {} };
-    fresh.review.zh.script = fresh.review.zh.script || {};
-    fresh.review.zh.script[chId] = { hash: hash(text), text: out.zh.trim() };
+    fresh.review.zh = fresh.review.zh || {};
+    fresh.review.zh.byHash = { ...(fresh.review.zh.byHash || {}), [hash(text)]: out.zh.trim() };
   }
   if (run.attempts) fresh.attempts = run.attempts;
   store.saveRun(fresh);
@@ -492,4 +668,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { parseBlocks, parseIssues, runPass, runPasses, PASSES, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
