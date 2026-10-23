@@ -94,6 +94,9 @@ function writeScript(run, text) {
   if (run.script_v1) run.script_v1 = text; else run.final_script = text;
   // V1 文案已变:这一版的扫描与简介缓存过期
   ['compliance_scans', 'opening_scans', 'descriptions'].forEach(k => { if (run[k] && run[k].v1) run[k].v1.stale = true; });
+  // 稿件检查的结论基于旧稿:标过期(详情页沿用既有提示「稿子已改,建议重新检查一次」)。
+  // 留存检查不标:它跑在 Step1 蓝图上(carries_peaks 结构),单章重写不动蓝图
+  if (run.script_check) run.script_check.stale_after_adopt = true;
 }
 
 // ---------- 事实 ----------
@@ -697,6 +700,7 @@ function selectedFixes(run) {
 function startFinal(runId, body) {
   const run = store.getRun(runId);
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  if (passBusy(runId)) throw Object.assign(new Error('有审稿正在跑,等它跑完再终审'), { status: 409 });
   if (((run.steps || {}).final_review || {}).status === 'running') throw Object.assign(new Error('终审正在进行'), { status: 400 });
   const au = (run.review || {}).audit;
   if (au) {
@@ -709,17 +713,31 @@ function startFinal(runId, body) {
 }
 
 // 初稿检查 → 二稿审稿报告 → 停下等人选;人选完再终审 → 翻译。某一遍失败不影响已有稿子,页面上可以单独重跑
+// 并发守卫:同一任务同一时刻只许一个 pass 在跑(连点重跑/终审会并发烧 LLM 并竞争写 run 文件)。
+// 用进程内集合而不是 run 文件里的 running 状态:进程重启后集合自然清空,崩溃留下的假 running 不会挡续跑
+const passRunning = new Set();
+function passBusy(runId) { return passRunning.has(runId); }
 async function runPasses(runId, from) {
-  const order = from === 'final' ? ['final'] : from === 'audit' ? ['audit'] : ['check', 'audit'];
-  for (const k of order) {
-    try { if (k === 'audit') await runReverseAudit(runId); else await runPass(runId, k); } catch (e) { break; }
-  }
-  await translateRun(runId);
+  if (passRunning.has(runId)) throw Object.assign(new Error('有审稿正在跑,等它跑完再重跑'), { status: 409 });
+  passRunning.add(runId);
+  try {
+    const order = from === 'final' ? ['final'] : from === 'audit' ? ['audit'] : ['check', 'audit'];
+    for (const k of order) {
+      try { if (k === 'audit') await runReverseAudit(runId); else await runPass(runId, k); } catch (e) { break; }
+    }
+    await translateRun(runId);
+  } finally { passRunning.delete(runId); }
 }
 
 // ---------- 一键生成 ----------
 async function runDraftFirst(runId) {
   await an().runAnalysis(runId);
+  return finishDraftFirst(runId);
+}
+
+// 分析之后的部分:AI 先调整 → 自动确认 → 点火写初稿 → 初稿检查出二稿 → 二稿审稿报告 → 停下等人选 → 中文对照。
+// 单独抽出是为了重启接管:分析已完成、调整被中断的任务从这里续跑,不重复调用分析(见 resumeDraftFirst)
+async function finishDraftFirst(runId) {
   let run = store.getRun(runId);
   if (!run || run.status !== 'awaiting_review') return; // 分析失败或已取消
   try {
@@ -730,7 +748,12 @@ async function runDraftFirst(runId) {
     store.saveRun(run);
   }
   run = store.getRun(runId);
-  if (!run || run.cancel_requested) { if (run) { run.status = 'cancelled'; store.saveRun(run); } return; }
+  // 取消接口对 awaiting_review 是直接落 cancelled(不打 cancel_requested 标记):两种痕迹都要查,
+  // 否则用户在 AI 调整期间点了取消,这里会把已取消的任务重新写成 queued 并点火写稿
+  if (!run || run.cancel_requested || run.status === 'cancelled') {
+    if (run && run.status !== 'cancelled') { run.status = 'cancelled'; store.saveRun(run); }
+    return;
+  }
   run.analysis_confirmed = true;
   run.analysis_auto_confirmed = true;
   run.analysis_confirmed_at = new Date().toISOString();
@@ -741,11 +764,14 @@ async function runDraftFirst(runId) {
   if (run && run.status === 'done') await runPasses(runId);
 }
 
-// 续跑(重试 / 重启接管):还没写稿就从头跑一键生成;已经在写稿就接着写,写完补二稿、终稿和翻译
+// 续跑(重试 / 重启接管):分析没跑完就从头跑一键生成;分析跑完但调整被中断,从调整续跑;已经在写稿就接着写,写完补二稿、终稿和翻译
 async function resumeDraftFirst(runId) {
   const run = store.getRun(runId);
   if (!run) return;
-  if (!run.analysis_confirmed) return runDraftFirst(runId);
+  if (!run.analysis_confirmed) {
+    if (run.status === 'awaiting_review' && run.analysis) return finishDraftFirst(runId);
+    return runDraftFirst(runId);
+  }
   if (run.status !== 'done') await pl().runGeneration(runId);
   const done = store.getRun(runId);
   if (!done || done.status !== 'done') return;
@@ -873,4 +899,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

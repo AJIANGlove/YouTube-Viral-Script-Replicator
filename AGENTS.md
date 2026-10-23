@@ -27,7 +27,17 @@
 2. **`app/lib/review.js` `finishDraftFirst` 取消防复活**：取消接口对 `awaiting_review` 是直接落 `cancelled`（不打 `cancel_requested` 标记），原 `runDraftFirst` 只查标记，会把调整期间被取消的任务重新写成 `queued` 并点火写稿。现在两种痕迹都查。
 3. **draft_first 任务屏蔽分析面板人工操作**：前端 `renderAnalysisPanel` 对 draft_first 只给只读视图（不渲染确认/保存/重跑/调整入口，`anRerunBox` 条件加 `!r.draft_first`）；服务端 `/analysis/confirm`、`/analysis/update`、`/analysis/rerun`、`/analysis/(auto-adjust|revise|title-audit)` 对 draft_first 一律 409。否则调整窗口期点「确认」会与一键生成并发双点火。
 4. **`writeScript` 标 `script_check.stale_after_adopt`**：单章重写/压成过渡/撤回后，稿件检查卡沿用既有「稿子已改」提示。留存检查**不标**——它跑在 Step1 蓝图上，单章重写不动蓝图。
-5. **原片译文资产级缓存**（`app/data/source_zh.json`，已入 `.gitignore`，第三方字幕衍生译文不进公开仓库）：`translateRun` 按 asset_id+分段指纹查缓存，只翻缺失段；指纹不同自动作废。上游原实现是每个 run 各翻一遍原片。
+5. ~~**原片译文资产级缓存**~~（v1.3 曾加，**v1.6 起移除**）：v1.6 去掉了原片段中文对照、翻译改为按文本哈希（同任务内自动去重），资产级缓存失去作用对象。`app/data/source_zh.json` 与 `.gitignore` 对应两条已删。
 
 恢复方式：见本段所属提交（feature/draft-first-v1.3 上 v1.3 两个 `git am` 提交之后的那一个）。
+
+## 本地修补（v1.6 二稿审稿报告合并后，合并上游补丁时不要弄丢）
+
+上游 v1.6 累计包（`v1.6二稿审稿报告.zip`，0001–0005）**不含**这几处；其中 1–4 是从 v1.3 自修适配重打（上游 v1.4/v1.5 重写了同区域代码，每次合并都要确认仍在）：
+
+1. **接管/防复活/面板屏蔽/stale 标记**＝上一节 1–4 条在 v1.6 代码上的适配重打（`finishDraftFirst` 尾部改为 `runPasses`；其余位置相同）。
+2. **`/review/pass` 并发守卫（`review.passBusy`）**：进程内 Set，任一 pass（初稿检查/审稿报告/终审）在跑就 409。用进程内集合而非 run 文件的 running 状态——进程重启后集合自然清空，崩溃留下的假 running 不会挡续跑。`startFinal` 同样先查它。
+3. **启动时的崩溃 passes 处理**：状态停在 `done` 的卡住任务（`draft_check`/`reverse_audit` 卡 running）对 draft_first 自动 `resumeDraftFirst` 续跑（只补检查和报告）；卡在 `final_review` 的、及非 draft_first 任务手动重跑被中断的，把假 running 落成 failed（可在审稿页手动重跑）——**终审绝不自动跑**。
+
+恢复方式：见本段所属提交（feature/draft-first-v1.6 上合并提交之后的那一个）。
 

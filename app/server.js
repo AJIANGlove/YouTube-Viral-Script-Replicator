@@ -582,6 +582,8 @@ const server = http.createServer(async (req, res) => {
           if (action === 'fact') return send(res, 200, await review.updateFact(id, body.id, body.patch || {}));
           if (action === 'pass') {
             // 重跑初稿检查(会接着出审稿报告)、只重跑审稿报告或只重跑终审;后台跑,页面轮询看进度
+            // 并发守卫:同一任务有 pass 在跑就拒(连点会并发烧 LLM 并竞争写 run 文件)
+            if (review.passBusy(id)) return send(res, 409, { error: '有审稿正在跑,等它跑完再重跑' });
             const kind = ['final', 'audit'].includes(body.kind) ? body.kind : 'check';
             review.runPasses(id, kind).catch(() => {});
             return send(res, 200, { ok: true });
@@ -1252,5 +1254,24 @@ server.listen(PORT, HOST, () => {
     r.steps = { ...(r.steps || {}), analysis: { ...((r.steps || {}).analysis || {}), status: 'failed' } };
     store.saveRun(r);
     console.log(`取消中断的写前分析: ${r.id}`);
+  }
+  // 崩溃于审稿 pass(初稿检查/审稿报告/终审)的任务:状态是 done,上面的孤儿接管够不着。
+  // 先写后改任务卡在初稿检查/审稿报告的,自动续跑(resumeDraftFirst 只补这两遍,绝不自动跑终审);
+  // 卡在终审的、以及非一键生成任务手动重跑时被中断的:把假 running 落成 failed,页面上可手动重跑
+  for (const r of store.listRuns().filter(x => x.status === 'done')) {
+    const st = r.steps || {};
+    const stuck = ['draft_check', 'reverse_audit', 'final_review'].filter(k => (st[k] || {}).status === 'running');
+    if (!stuck.length) continue;
+    if (r.draft_first && !r.cancel_requested && !stuck.includes('final_review')) {
+      console.log(`接管中断的审稿(${stuck.join('/')}): ${r.id} (${r.topic || ''})`);
+      review.resumeDraftFirst(r.id).catch(e => {
+        const rr = store.getRun(r.id);
+        if (rr) { rr.steps = { ...(rr.steps || {}), [stuck[0]]: { status: 'failed', error: '审稿续跑异常: ' + e.message } }; store.saveRun(rr); }
+      });
+    } else {
+      stuck.forEach(k => { r.steps[k] = { ...r.steps[k], status: 'failed', error: '进程重启中断,可在审稿页重跑' }; });
+      store.saveRun(r);
+      console.log(`审稿中断落成失败(可重跑): ${r.id} (${stuck.join('/')})`);
+    }
   }
 });
