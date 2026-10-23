@@ -93,6 +93,9 @@ function writeScript(run, text) {
   if (run.script_v1) run.script_v1 = text; else run.final_script = text;
   // V1 文案已变:这一版的扫描与简介缓存过期
   ['compliance_scans', 'opening_scans', 'descriptions'].forEach(k => { if (run[k] && run[k].v1) run[k].v1.stale = true; });
+  // 稿件检查的结论基于旧稿:标过期(详情页沿用既有提示「稿子已改,建议重新检查一次」)。
+  // 留存检查不标:它跑在 Step1 蓝图上(carries_peaks 结构),单章重写不动蓝图
+  if (run.script_check) run.script_check.stale_after_adopt = true;
 }
 
 // ---------- 事实 ----------
@@ -291,7 +294,21 @@ async function translateMap(run, cfg, items, label) {
   return out;
 }
 
-// 原片段的译文全资产共用,按资产缓存在 run 里一份即可(原片不变)
+// ---------- 原片译文缓存(资产级) ----------
+// 同一原片换题重跑时,原片段译文不必整片重翻:按 asset_id 缓存在 data/source_zh.json(本机运行时缓存,不入库)。
+// fingerprint 是全部分段文本的指纹;资产内容变了(重建留存卡等)指纹不同,旧缓存自动作废
+const SOURCE_ZH_FILE = path.join(__dirname, '..', 'data', 'source_zh.json');
+function loadSourceZh() {
+  try { const j = JSON.parse(fs.readFileSync(SOURCE_ZH_FILE, 'utf-8')); return (j && j.assets) || {}; } catch (e) { return {}; }
+}
+function saveSourceZh(assetId, fingerprint, zh) {
+  const assets = loadSourceZh();
+  assets[assetId] = { fingerprint, zh, at: new Date().toISOString() };
+  const tmp = SOURCE_ZH_FILE + '.tmp';
+  fs.writeFileSync(tmp, JSON.stringify({ version: 1, assets }), 'utf-8');
+  fs.renameSync(tmp, SOURCE_ZH_FILE);
+}
+
 async function translateRun(runId, onlyChapters) {
   const cfg = pl().loadConfig();
   let run = store.getRun(runId);
@@ -305,9 +322,22 @@ async function translateRun(runId, onlyChapters) {
     const zh = review.zh || { source: {}, script: {} };
     zh.source = zh.source || {}; zh.script = zh.script || {};
     if (!onlyChapters) {
+      // 原片译文先查资产级缓存:本 run 没有但同资产别的 run 翻过的,直接回填;只翻两头都没有的段
+      const segs = sourceSegments(asset);
+      const fp = hash(segs.map(s => s.stage_id + ':' + s.text).join('\n'));
+      const cache = loadSourceZh()[run.asset_id];
+      const cacheHit = cache && cache.fingerprint === fp ? (cache.zh || {}) : {};
       const srcItems = {};
-      sourceSegments(asset).forEach(s => { if (s.text && !zh.source[s.stage_id]) srcItems[s.stage_id] = s.text; });
-      Object.assign(zh.source, await translateMap(run, cfg, srcItems, '原片中文对照'));
+      segs.forEach(s => {
+        if (!s.text || zh.source[s.stage_id]) return;
+        if (cacheHit[s.stage_id]) { zh.source[s.stage_id] = cacheHit[s.stage_id]; return; }
+        srcItems[s.stage_id] = s.text;
+      });
+      if (Object.keys(srcItems).length) {
+        const tr = await translateMap(run, cfg, srcItems, '原片中文对照');
+        Object.assign(zh.source, tr);
+        try { saveSourceZh(run.asset_id, fp, { ...cacheHit, ...tr }); } catch (e) {}
+      }
     }
     const chItems = {};
     scriptChapters(currentScript(run)).forEach(c => {
@@ -334,6 +364,12 @@ async function translateRun(runId, onlyChapters) {
 // ---------- 一键生成 ----------
 async function runDraftFirst(runId) {
   await an().runAnalysis(runId);
+  return finishDraftFirst(runId);
+}
+
+// 分析之后的部分:AI 先调整 → 自动确认 → 点火写稿 → 中文对照。
+// 单独抽出是为了重启接管:分析已完成、调整被中断的任务从这里续跑,不重复调用分析(见 resumeDraftFirst)
+async function finishDraftFirst(runId) {
   let run = store.getRun(runId);
   if (!run || run.status !== 'awaiting_review') return; // 分析失败或已取消
   try {
@@ -344,7 +380,12 @@ async function runDraftFirst(runId) {
     store.saveRun(run);
   }
   run = store.getRun(runId);
-  if (!run || run.cancel_requested) { if (run) { run.status = 'cancelled'; store.saveRun(run); } return; }
+  // 取消接口对 awaiting_review 是直接落 cancelled(不打 cancel_requested 标记):两种痕迹都要查,
+  // 否则用户在 AI 调整期间点了取消,这里会把已取消的任务重新写成 queued 并点火写稿
+  if (!run || run.cancel_requested || run.status === 'cancelled') {
+    if (run && run.status !== 'cancelled') { run.status = 'cancelled'; store.saveRun(run); }
+    return;
+  }
   run.analysis_confirmed = true;
   run.analysis_auto_confirmed = true;
   run.analysis_confirmed_at = new Date().toISOString();
@@ -355,11 +396,14 @@ async function runDraftFirst(runId) {
   if (run && run.status === 'done') await translateRun(runId);
 }
 
-// 续跑(重试 / 重启接管):还没写稿就从头跑一键生成;已经在写稿就接着写,写完补翻译
+// 续跑(重试 / 重启接管):分析没跑完就从头跑一键生成;分析跑完但调整被中断,从调整续跑;已经在写稿就接着写,写完补翻译
 async function resumeDraftFirst(runId) {
   const run = store.getRun(runId);
   if (!run) return;
-  if (!run.analysis_confirmed) return runDraftFirst(runId);
+  if (!run.analysis_confirmed) {
+    if (run.status === 'awaiting_review' && run.analysis) return finishDraftFirst(runId);
+    return runDraftFirst(runId);
+  }
   await pl().runGeneration(runId);
   const done = store.getRun(runId);
   if (done && done.status === 'done') await translateRun(runId);

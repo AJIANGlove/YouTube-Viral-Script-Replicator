@@ -506,6 +506,7 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const r = store.getRun(anConfirmMatch[1]);
       if (!r) return send(res, 404, { error: '任务不存在' });
+      if (r.draft_first) return send(res, 409, { error: '先写后改任务由 AI 自动确认并写稿,无需人工确认' });
       if (r.status !== 'awaiting_review') return send(res, 400, { error: '仅待确认分析的任务可确认(当前: ' + r.status + ')' });
       if (body.analysis != null) {
         const shapeErr = analysis.analysisShapeError(body.analysis);
@@ -531,6 +532,7 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const r = store.getRun(anUpdateMatch[1]);
       if (!r) return send(res, 404, { error: '任务不存在' });
+      if (r.draft_first) return send(res, 409, { error: '先写后改任务的分析由 AI 自动调整,不支持人工保存修改' });
       if (r.status !== 'awaiting_review' || r.analysis_confirmed) {
         return send(res, 400, { error: '仅待确认且未确认的任务可保存分析(当前: ' + r.status + ')' });
       }
@@ -550,6 +552,7 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const r = store.getRun(anRerunMatch[1]);
       if (!r) return send(res, 404, { error: '任务不存在' });
+      if (r.draft_first) return send(res, 409, { error: '先写后改任务请用「重试」续跑,不支持重新分析' });
       if (!['awaiting_review', 'failed', 'cancelled'].includes(r.status) || r.analysis_confirmed) {
         return send(res, 400, { error: '仅未确认分析、且待确认/失败/已取消的任务可重新分析(当前: ' + r.status + ')' });
       }
@@ -593,6 +596,9 @@ const server = http.createServer(async (req, res) => {
     if (anAdjustMatch && method === 'POST') {
       const body = await readBody(req);
       const [, id, action] = anAdjustMatch;
+      const r = store.getRun(id);
+      if (!r) return send(res, 404, { error: '任务不存在' });
+      if (r.draft_first) return send(res, 409, { error: '先写后改任务由 AI 自动调整,无需人工干预分析' });
       try {
         if (action === 'auto-adjust') return send(res, 200, await analysis.runAutoAdjust(id, body.analysis, { search: body.search }));
         if (action === 'revise') return send(res, 200, await analysis.reviseItem(id, body.analysis, body.target, body.note, { search: body.search }));
@@ -1205,7 +1211,8 @@ server.listen(PORT, HOST, () => {
 
   // 启动恢复:上次进程退出(重启/崩溃)时被中断的任务会永久卡在"生成中",此处自动接管,从断点步骤续跑(已完成步骤的产物已落盘,不重复调用)。
   // 前提:单实例运行(多实例共用同一数据目录会重复调用且 run 文件有写竞争);用户已点取消的任务尊重意图不接管
-  const orphans = store.listRuns().filter(r => (r.status === 'running' || r.status === 'analyzing') && !r.cancel_requested);
+  // 一键生成的「AI 先调整」阶段状态停在 awaiting_review(联网搜索时可长达数分钟),进程死在这里同样没人接,一并接管
+  const orphans = store.listRuns().filter(r => (r.status === 'running' || r.status === 'analyzing' || (r.status === 'awaiting_review' && r.draft_first)) && !r.cancel_requested);
   for (const r of orphans) {
     // 一键生成:还没写稿就从头跑,写稿中断就接着写
     if (r.draft_first) {
@@ -1231,8 +1238,8 @@ server.listen(PORT, HOST, () => {
       if (rr) { rr.status = 'failed'; rr.error = '管线异常: ' + e.message; store.saveRun(rr); }
     });
   }
-  // 分析中已请求取消但进程已退出:没有活着的调用会来落实这个标记,直接落成已取消(否则永久卡在"分析中",界面无出口)
-  for (const r of store.listRuns().filter(x => x.status === 'analyzing' && x.cancel_requested)) {
+  // 分析中(含一键生成的调整窗口)已请求取消但进程已退出:没有活着的调用会来落实这个标记,直接落成已取消(否则永久卡住,界面无出口)
+  for (const r of store.listRuns().filter(x => (x.status === 'analyzing' || (x.status === 'awaiting_review' && x.draft_first)) && x.cancel_requested)) {
     r.status = 'cancelled';
     r.steps = { ...(r.steps || {}), analysis: { ...((r.steps || {}).analysis || {}), status: 'failed' } };
     store.saveRun(r);
