@@ -36,6 +36,12 @@ node app/server.js
 - **赛道证据卡**(`prompts/track_cards.md`):按赛道/选题关键词自动挑一张,告诉分析该找哪类证据。
 - **留存卡 7 项**(`lib/retention.js`):段与位置、持有的高峰、悬念、原片做法、抽象动作、替换条件、可删性。前三项程序从 timeline.json 对齐;后三项文字初稿取自拆解阶段已有字段,`--ai` 可用 `prompts/retention_card.md` 重写;可删性按规则判定。存在 `assets/<id>/retention_cards.json`(可人工改,程序以文件为准)。`node bin/build_retention_cards.js [资产id] [--ai] [--force] [--library]`。
 - **频道声音设定**(`lib/voice.js`,`voices/<名字>.json`):语体、称呼观众、自称、风格、固定用语。设置页可用 AI 起草(`prompts/voice_draft.md`)后人工确认保存;建任务时选择,默认按频道名自动匹配;注入写前分析、step2、step4 的 `{{voice}}`。
+- **写前分析审核辅助(v1.2)**:
+  - 结论三种定义写进提示词:可以写 / 调整后可写(框架不动,只调题目侧:改标题、改论点、补料、换内容保功能、删段)/ 换框架;同时输出 `adjustments` 调整清单和 `reframe_reasons`,界面在结论下逐项列出,点一项跳到对应位置。
+  - 「AI 先调整」(`POST /api/runs/:id/analysis/auto-adjust`,`prompts/adjust.md`):补待查、改论点卡、给不可删段和高峰找事实、补候选标题;改过的格子标蓝,记在 `analysis.ai_marks`(依据:查到 / 估算 / 记忆待核 / 推理)。
+  - 「我的意见」(`POST /api/runs/:id/analysis/revise`,`prompts/revise.md`):只重做一行,返回改前改后,人点采用才写进草稿。
+  - 标题:可复制的改标题提示词;自写标题「审核」(`POST /api/runs/:id/analysis/title-audit`,`prompts/title_audit.md`),通过后更新观众问题和期待方向。
+  - 联网搜索(`lib/search.js`,渠道适配器,当前接 DeepSeek `POST /v1/tools/search`):设置页选渠道、开关;AI 先列查询词(`prompts/adjust_queries.md`),程序搜索取前 N 条,AI 只能按结果填并带链接和日期。配置在 `config.json` 的 `search` 块(`provider` + 每家独立的 `channels.<id>.api_key`),Key 默认用 `providers.<同名渠道>`。新增渠道在 `ADAPTERS` 里加一项(路径/鉴权/请求体/返回字段映射)。
 - **留存检查**(蓝图之后):对照原片高峰是否被章节 `carries_peaks` 接住、第一个甜头秒数、高峰最大间隔;只对确认过分析的任务反馈重试,仍不合格不置失败,结果显示在详情页。
 - **稿件检查 K1-K5**(写稿完成后自动,或详情页手动):标题与结论、旧数据、数字/年份不一致、凑节拍段落、篇幅与数字密度。程序先算篇幅、密度、年份混用、旧事实,模型再找问题;只有 K3 允许自动改(原句在 V1 中恰好出现一次才替换,改前版本存 `final_script_before_check`),其余标「待选择」或「仅提示」。
 - 不勾选时与原流程完全一致。

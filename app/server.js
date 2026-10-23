@@ -8,6 +8,7 @@ const { validateBundle, summarize } = require('./lib/validate');
 const { parseSrt } = require('./lib/srt');
 const pipeline = require('./lib/pipeline');
 const analysis = require('./lib/analysis');
+const search = require('./lib/search');
 const voice = require('./lib/voice');
 const topics = require('./lib/topics');
 const fingerprint = require('./lib/fingerprint');
@@ -551,6 +552,51 @@ const server = http.createServer(async (req, res) => {
         if (rr) { rr.status = 'failed'; rr.error = '写前分析异常: ' + e.message; store.saveRun(rr); }
       });
       return send(res, 200, { ok: true, id: r.id });
+    }
+
+    // ---------- 写前分析审核辅助(v1.2):AI 先调整 / 我的意见 / 标题审核 ----------
+    // 三个都是同步接口(等模型返回再响应,通常 0.5–3 分钟);都不改任务状态
+    const anAdjustMatch = url.match(/^\/api\/runs\/([\w-]+)\/analysis\/(auto-adjust|revise|title-audit)$/);
+    if (anAdjustMatch && method === 'POST') {
+      const body = await readBody(req);
+      const [, id, action] = anAdjustMatch;
+      try {
+        if (action === 'auto-adjust') return send(res, 200, await analysis.runAutoAdjust(id, body.analysis, { search: body.search }));
+        if (action === 'revise') return send(res, 200, await analysis.reviseItem(id, body.analysis, body.target, body.note, { search: body.search }));
+        return send(res, 200, await analysis.auditTitle(id, body.analysis, body.title));
+      } catch (e) {
+        return send(res, e.status || 500, { error: e.message });
+      }
+    }
+
+    // 联网搜索设置(渠道适配器,当前接 DeepSeek):开关、渠道、每个查询取几条;Key 默认用同名渠道的 Key
+    if (url === '/api/search-settings' && method === 'GET') {
+      return send(res, 200, search.searchStatus());
+    }
+    if (url === '/api/search-settings' && method === 'POST') {
+      const body = await readBody(req);
+      const cfg = pipeline.loadConfig();
+      if (!cfg) return send(res, 400, { error: '还没有 config.json,请先保存一次主设置' });
+      const prev = cfg.search || {};
+      const wanted = search.channels().some(c => c.id === body.provider) ? body.provider : (prev.provider || 'deepseek');
+      cfg.search = { ...prev, provider: wanted };
+      if (typeof body.enabled === 'boolean') cfg.search.enabled = body.enabled;
+      if (body.count != null) cfg.search.count = Math.min(Math.max(Number(body.count) || 5, 1), 10);
+      // 每个渠道单独存 Key(换渠道不会把上一家的 Key 覆盖掉);顶层 api_key 保留,兼容旧配置
+      if (typeof body.api_key === 'string' && body.api_key.trim()) {
+        cfg.search.channels = { ...(prev.channels || {}) };
+        cfg.search.channels[wanted] = { ...(cfg.search.channels[wanted] || {}), api_key: body.api_key.trim() };
+        cfg.search.api_key = body.api_key.trim();
+      }
+      pipeline.saveConfig(cfg);
+      return send(res, 200, search.searchStatus(cfg));
+    }
+    if (url === '/api/search-settings/test' && method === 'POST') {
+      const body = await readBody(req);
+      try {
+        const r = await search.webSearch(body.query || '서울 최저임금 2026', null);
+        return send(res, 200, { ok: true, ...r });
+      } catch (e) { return send(res, 400, { ok: false, error: e.message }); }
     }
 
     // 稿件检查(K1–K5):任意已完成任务可手动(重新)检查;新流程任务在写稿后自动跑一次

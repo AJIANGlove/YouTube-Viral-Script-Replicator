@@ -162,6 +162,36 @@
   .an-btn.del { color: #b91c1c; border-color: #fca5a5; }
   .an-btn:disabled { opacity: .5; cursor: not-allowed; }
   .an-grp { display: inline-flex; gap: 3px; flex-wrap: wrap; }
+  /* v1.2 新加的界面一律红字;AI 改过的格子标蓝 */
+  .v12, .an-btn.v12 { color: #dc2626; }
+  .an-btn.v12 { border-color: #fca5a5; }
+  .an-aibar { border: 1px dashed #fca5a5; border-radius: 6px; padding: 6px 8px; margin: 6px 0 8px; }
+  .an-adj { border: 1px solid #fecaca; background: #fff; border-radius: 6px; padding: 6px 8px; margin: 6px 0; font-size: 12px; line-height: 1.6; }
+  .an-adj.bad { background: #fef2f2; }
+  .an-adj-item { cursor: pointer; padding: 1px 2px; border-radius: 3px; }
+  .an-adj-item:hover { background: #fee2e2; }
+  .an-badge { display: inline-block; font-size: 11px; border-radius: 9px; padding: 0 6px; margin-left: 4px; }
+  .an-badge.ai { background: #dbeafe; color: #1d4ed8; }
+  .an-badge.man { background: #fee2e2; color: #b91c1c; }
+  .an-ai-field, .an-edit-input.an-ai-field { color: #1d4ed8 !important; background: #eff6ff !important; border-color: #93c5fd !important; }
+  .an-ai-row > td:first-child { box-shadow: inset 3px 0 0 #2563eb; }
+  .an-ai-cell { color: #1d4ed8; background: #eff6ff; }
+  .an-ai-note { color: #1d4ed8; font-size: 11px; line-height: 1.45; margin-top: 2px; }
+  .an-ai-note a { color: #1d4ed8; }
+  .an-table select.an-edit-input { min-width: 70px; }
+  .an-aux { margin-top: 3px; font-size: 12px; color: #6b7280; }
+  .an-btn.v12 { white-space: nowrap; }
+  .an-op .an-table td { color: #374151; }
+  .an-op .an-table td.an-ai-cell { color: #1d4ed8; }
+  .an-op { border: 1px dashed #fca5a5; border-radius: 6px; padding: 6px 8px; margin: 4px 0; background: #fff; }
+  .an-audit { font-size: 12px; border-radius: 6px; padding: 5px 8px; margin-top: 4px; }
+  .an-audit.ok { background: #f0fdf4; }
+  .an-audit.bad { background: #fef2f2; }
+  .an-flash { outline: 3px solid #f59e0b !important; outline-offset: 1px; }
+  .an-wgrp { margin: 2px 0; }
+  .an-wgrp summary { cursor: pointer; }
+  .an-wline { padding-left: 14px; }
+  .an-wline a { color: inherit; text-decoration: underline; cursor: pointer; margin-right: 6px; }
   .sc-opt { display: flex; gap: 8px; align-items: flex-start; justify-content: space-between; padding: 5px 0; border-top: 1px dashed #e5e7eb; }
   .sc-opt-line { flex: 1 1 auto; }
   .sc-opt.adopted { color: #047857; }
@@ -644,6 +674,22 @@
         <button class="primary" onclick="saveVoice()">保存(确认)</button>
         <button class="ghost" onclick="deleteVoice()">删除当前</button>
         <span class="hint" id="voice-status" style="margin-top:0"></span>
+      </div>
+    </div>
+    <div class="card v12" id="search-card">
+      <h2 class="v12">联网搜索(写前分析的「AI 先调整」「我的意见」用)</h2>
+      <div style="font-size:12px;line-height:1.7">用搜索服务的接口:AI 先列查询词,程序去搜,每个查询取权威、较新的前几条,AI 只能按搜到的内容填,并写上链接和日期;搜不到的标「估算」或「记忆待核」。<br>
+        Key 默认用「主流程 API 配置」里同名渠道的 Key,也可以在这里单独填。联网搜索按次计费(价格以服务商定价页为准),一次「AI 先调整」最多 8 次查询,一次「我的意见」最多 4 次。</div>
+      <div class="grid" style="margin-top:6px">
+        <div><label class="v12"><input type="checkbox" id="srch-enabled" style="width:auto"> 打开联网搜索</label></div>
+        <div><label class="v12">搜索渠道</label><select id="srch-provider" onchange="srchProviderChanged()"></select></div>
+        <div><label class="v12">每个查询取几条(1–10)</label><input type="number" id="srch-count" min="1" max="10" value="5"></div>
+        <div><label class="v12">当前渠道单独的 Key(可不填)</label><input type="password" id="srch-key" placeholder="留空 = 用同名渠道的 Key"></div>
+      </div>
+      <div style="margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button class="primary" onclick="saveSearchSettings()">保存</button>
+        <button class="ghost" onclick="testSearch()">测试搜索</button>
+        <span class="hint v12" id="srch-status" style="margin-top:0"></span>
       </div>
     </div>
     <div class="card">
@@ -1608,6 +1654,12 @@ function analysisHtml(a) {
   const th = a.thesis_card || {};
   const h = a.hook || {};
   let html = `<div class="an-sec">结论:${esc(a.verdict || '')}</div><div class="hint">${esc(a.verdict_reason || '')}</div>`;
+  const adjList = Array.isArray(a.adjustments) ? a.adjustments.filter(x => x && typeof x === 'object') : [];
+  const reframeList = Array.isArray(a.reframe_reasons) ? a.reframe_reasons.filter(Boolean) : [];
+  if (adjList.length) html += `<div class="an-adj v12"><b>调整清单：共 ${adjList.length} 项</b>${adjList.map((x, i) => `<div>${anNum(i)} <b>${esc(x.type || '')}</b> ${esc(anTargetLabel(x.target || ''))}${(Array.isArray(x.segments) ? x.segments : []).length ? '（影响 ' + esc((Array.isArray(x.segments) ? x.segments : []).join('/')) + '）' : ''}：${esc(x.reason || '')}${x.status ? ' · ' + esc(x.status) : ''}</div>`).join('')}</div>`;
+  if (reframeList.length) html += `<div class="an-adj v12 bad"><b>换框架的原因</b>${reframeList.map((r, i) => `<div>${anNum(i)} ${esc(r)}</div>`).join('')}</div>`;
+  const aiN = Object.keys(a.ai_marks || {}).length;
+  if (aiN) html += `<div class="hint v12">其中 ${aiN} 处由 AI 调整或按人工意见重做（依据见确认前的表格）。</div>`;
   // 标题(K1 的前置):候选标题 + 与框架方向是否一致
   const dirBad = /相反|部分/.test(t.framework_direction_match || '');
   html += `<div class="an-sec">标题</div>
@@ -1625,7 +1677,7 @@ function analysisHtml(a) {
   html += `<div class="an-sec">事实表(写稿只能用这些)</div>` + anTable(['编号', '类型', '内容', '来源', '年份', '地区', '时效'],
     (a.facts || []).map(f => {
       const cls = /时效风险/.test(f.freshness || '') ? 'an-bad' : (/待查|估算|假设/.test(f.kind || '') ? 'an-warn' : '');
-      return `<tr class="${cls}"><td>${esc(f.id)}</td><td>${esc(f.kind)}</td><td>${esc(f.content)}</td><td>${esc(f.source)}</td><td>${esc(f.year)}</td><td>${esc(f.region)}</td><td>${esc(f.freshness)}</td></tr>`;
+      return `<tr class="${cls}"><td>${esc(f.id)}</td><td>${esc(f.kind)}</td><td>${esc(f.content)}${f.method ? '<div class="hint" style="margin:0">算法：' + esc(f.method) + '</div>' : ''}</td><td>${esc(f.source)}</td><td>${esc(f.year)}</td><td>${esc(f.region)}</td><td>${esc(f.freshness)}</td></tr>`;
     }));
   const notFound = (a.search_log || []).filter(s => /没找到/.test(s.result || ''));
   if (notFound.length) html += `<div class="an-sec">没找到的资料</div>` + anTable(['想找', '说明'],
@@ -1643,6 +1695,437 @@ function analysisHtml(a) {
   return html;
 }
 
+// ---------- v1.2:调整清单 / AI 先调整 / 我的意见 / 标题提示词与审核(界面上的新部分一律红字 .v12) ----------
+const AN_NUM = '①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳';
+const AN_FIELD_LABELS = {
+  id: '编号', slot: '事实槽', content: '内容', kind: '类型', source: '来源', url: '链接', year: '年份', region: '地区', freshness: '时效', method: '算法',
+  viewer_belief: '原有认知', truth: '真相', one_line_thesis: '一句话论点', ending_landing: '结尾落点', differs_from_source_conclusion: '和原片结论的差别',
+  decision: '处理', retention_role: '留存作用', reason: '理由', fact_ids: '事实', research_tasks: '补料任务', duration: '时长',
+  new_chapter_hint: '新章节', status: '状态', source_segment: '原片段', source_peak: '高峰', candidates: '候选', chosen: '选定', why: '理由', contract: '合约',
+  final_title: '标题', viewer_question: '观众想知道', expected_answer_direction: '期待方向', title_type: '标题类型', framework_direction_match: '与框架方向'
+};
+let anSearchStatus = null;
+
+function anNum(i) { return i < AN_NUM.length ? AN_NUM[i] : '(' + (i + 1) + ')'; }
+function anTargetLabel(t) {
+  const [k, id] = String(t || '').split(/\.(.+)/);
+  const name = { title: '标题', thesis_card: '论点卡', hook: '钩子', facts: '事实 ', modules: '段 ', retention_map: '高峰 ' }[k];
+  return name ? name + (id || '') : String(t || '');
+}
+function anSafeUrl(u) { return /^https?:\/\//i.test(String(u || '')) ? String(u) : ''; }
+
+function anGetTarget(d, t) {
+  const [k, id] = String(t || '').split(/\.(.+)/);
+  if (!d) return null;
+  if (['title', 'thesis_card', 'hook'].includes(k)) return d[k] || null;
+  if (k === 'facts') return (d.facts || []).find(f => f.id === id) || null;
+  if (k === 'modules') return (d.modules || []).find(m => m.segment === id) || null;
+  if (k === 'retention_map') return (d.retention_map || []).find(m => m.source_peak === id) || null;
+  return null;
+}
+function anSetTarget(d, t, item) {
+  if (!item || typeof item !== 'object' || Array.isArray(item)) return;
+  const [k, id] = String(t || '').split(/\.(.+)/);
+  if (['title', 'thesis_card', 'hook'].includes(k)) {
+    const old = (d[k] && typeof d[k] === 'object' && !Array.isArray(d[k])) ? d[k] : {};
+    d[k] = { ...old, ...item };
+    if (k === 'hook') {
+      const c = d[k].candidates, n = Number(d[k].chosen);
+      if (Array.isArray(c) && !(Number.isInteger(n) && n >= 0 && n < c.length)) d[k].chosen = 0;
+    }
+    return;
+  }
+  const key = { facts: 'id', modules: 'segment', retention_map: 'source_peak' }[k];
+  if (!key) return;
+  const arr = Array.isArray(d[k]) ? d[k] : (d[k] = []);
+  const i = arr.findIndex(x => x && x[key] === id);
+  if (i >= 0) arr[i] = { ...arr[i], ...item, [key]: id };
+  else arr.push({ ...item, [key]: id });
+}
+// 某个 target 在草稿里对应的输入框路径前缀(用来把 AI 改过的字段标蓝)
+function anTargetPathPrefix(d, t) {
+  const [k, id] = String(t || '').split(/\.(.+)/);
+  if (['title', 'thesis_card', 'hook'].includes(k)) return k + '.';
+  const key = { facts: 'id', modules: 'segment', retention_map: 'source_peak' }[k];
+  if (!key) return null;
+  const i = (d[k] || []).findIndex(x => x[key] === id);
+  return i >= 0 ? k + '.' + i + '.' : null;
+}
+
+function anSeg(stageId) { return ((anEdit && anEdit.ctx && anEdit.ctx.segments) || []).find(s => s.stage_id === stageId) || null; }
+
+// 调整项的跳转落点
+function anAdjJumpTarget(x) {
+  const t = String(x.target || '').trim();
+  if (/^(title|thesis_card|hook)$/.test(t)) return t;
+  let m = /^(facts|modules|retention_map)\.([A-Za-z]+\d+)/.exec(t);
+  if (m) return m[1] + '.' + m[2];
+  if ((m = /\b(F\d+)/.exec(t))) return 'facts.' + m[1];
+  if ((m = /\b(FS\d+)/.exec(t))) return 'modules.' + m[1];
+  if ((m = /\b(PK\d+)/.exec(t))) return 'retention_map.' + m[1];
+  const f0 = Array.isArray(x.fact_ids) ? x.fact_ids[0] : null;
+  if (f0) return 'facts.' + f0;
+  const s0 = Array.isArray(x.segments) ? x.segments[0] : null;
+  if (s0) return 'modules.' + s0;
+  const p0 = Array.isArray(x.peaks) ? x.peaks[0] : null;
+  if (p0) return 'retention_map.' + p0;
+  if (x.type === '改标题') return 'title';
+  if (x.type === '改论点') return 'thesis_card';
+  return '';
+}
+
+function anJump(t) {
+  if (!t) return;
+  const el = document.querySelector('#an-panel [data-an-target="' + CSS.escape(t) + '"]');
+  if (!el) { alert('在表格里找不到 ' + anTargetLabel(t) + '(可能已被删掉或改了编号)'); return; }
+  let p = el.closest('details');
+  while (p) { p.open = true; p = p.parentElement ? p.parentElement.closest('details') : null; }
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.classList.add('an-flash');
+  setTimeout(() => el.classList.remove('an-flash'), 1800);
+}
+function anJumpPath(p) {
+  const el = p && document.querySelector('#an-panel [data-an-path="' + CSS.escape(p) + '"]');
+  if (el) {
+    const row = el.closest('[data-an-target]');
+    if (row) { anJump(row.dataset.anTarget); setTimeout(() => el.focus({ preventScroll: true }), 400); return; }
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.focus({ preventScroll: true });
+    return;
+  }
+  if (p && /^(title|thesis_card|hook|facts\.|modules\.|retention_map\.)/.test(p)) anJump(p);
+}
+
+// 结论下面的「调整清单」:类型 + 位置 + 影响的段和高峰 + 理由,点一项跳过去
+function anAdjustmentsHtml(d) {
+  const list = v => (Array.isArray(v) ? v : []);
+  const adj = list(d.adjustments).filter(x => x && typeof x === 'object');
+  const reasons = list(d.reframe_reasons).filter(Boolean);
+  const prog = anProgramAdjustProblems(d);
+  let h = `<details class="v12" style="margin:4px 0 6px"><summary style="cursor:pointer;font-size:12px">三种结论分别是什么意思</summary>
+    <div style="font-size:12px;line-height:1.7;padding:4px 0 0 4px">
+      <b>可以写</b>：框架直接用，不用调整。<br>
+      <b>调整后可写</b>：框架不动，保留核心机制和所有「不可删」段，只调题目这一侧：改标题、改论点、补料、换内容保功能、删段（只能删「可删 / 可并入」的段），可以是其中一项或几项。<br>
+      <b>换框架</b>：只有改框架本身才写得了，比如必须删「不可删」段、去掉必须保留的机制，或者标题方向和框架相反且救不回来。</div></details>`;
+  if (adj.length) {
+    const kinds = {};
+    adj.forEach(x => { kinds[x.type || '其他'] = (kinds[x.type || '其他'] || 0) + 1; });
+    h += `<div class="an-adj v12"><div style="font-weight:600;margin-bottom:2px">调整清单：共 ${adj.length} 项（${Object.entries(kinds).map(([k, n]) => esc(k) + ' ' + n).join('，')}）· 点一项跳到对应位置</div>` +
+      adj.map((x, i) => {
+        const jt = anAdjJumpTarget(x);
+        const facts = list(x.fact_ids), segs = list(x.segments), peaks = list(x.peaks);
+        const where = facts.length > 1 && /^facts\./.test(x.target || '') ? '事实 ' + facts.join('/')
+          : [x.target ? anTargetLabel(x.target) : '', facts.length > 1 ? '事实 ' + facts.join('/') : ''].filter(Boolean).join(' · ');
+        const aff = [segs.length ? '影响 ' + segs.join('/') : '', peaks.length ? '高峰 ' + peaks.join('/') : ''].filter(Boolean).join(' · ');
+        const badge = x.status ? `<span class="an-badge ${/AI/.test(x.status) ? 'ai' : 'man'}">${esc(x.status)}</span>` : '';
+        const tip = x.type === '改标题' ? ` <button class="an-btn v12" onclick="event.stopPropagation();anCopyTitlePrompt(this)">复制标题提示词</button>` : '';
+        return `<div class="an-adj-item" data-t="${escAttr(jt)}" onclick="anJump(this.dataset.t)">${anNum(i)} <b>${esc(x.type || '调整')}</b> ${esc(where)}${aff ? '（' + esc(aff) + '）' : ''}：${esc(x.reason || '')} ${badge}${x.note ? ' <span class="hint" style="margin:0">' + esc(x.note) + '</span>' : ''}${tip}</div>`;
+      }).join('') + '</div>';
+  } else if (d.verdict === '调整后可写') {
+    h += `<div class="an-adj v12">结论是「调整后可写」，但没有列出调整清单。可以点上面的「AI 先调整」让 AI 补上，或者重新分析。</div>`;
+  }
+  if (d.verdict === '换框架' || reasons.length) {
+    h += `<div class="an-adj v12 bad"><div style="font-weight:600">换框架的原因${reasons.length ? '：共 ' + reasons.length + ' 条' : '（模型没写，建议重新分析）'}</div>${reasons.map((r, i) => `<div>${anNum(i)} ${esc(r)}</div>`).join('')}</div>`;
+  }
+  if (prog.length) {
+    h += `<div class="an-adj v12 bad"><div style="font-weight:600">程序发现和结论定义冲突的地方</div>${prog.map(p => `<div class="an-adj-item" data-t="${escAttr(p.target)}" onclick="anJump(this.dataset.t)">· ${esc(p.msg)}</div>`).join('')}</div>`;
+  }
+  return h;
+}
+
+// 可删性规则(留存卡程序判定)对模块取舍的硬约束
+function anProgramAdjustProblems(d) {
+  const out = [];
+  (d.modules || []).forEach(m => {
+    const s = anSeg(m.segment);
+    if (s && s.deletability === '不可删' && /删除/.test(m.decision || '')) out.push({ target: 'modules.' + m.segment, msg: m.segment + ' 在留存卡上是「不可删」（' + (s.peaks.length ? '持有 ' + s.peaks.join('/') : '开场段或有跨段悬念') + '），却被标成删除：要么改成保留 / 换内容保功能，要么结论改成换框架' });
+    if (s && s.deletability === '可并入' && /删除/.test(m.decision || '')) out.push({ target: 'modules.' + m.segment, msg: m.segment + ' 是「可并入」段：删内容可以，但相邻段要补一个小问答，建议改成「并入」' });
+  });
+  return out;
+}
+
+// ---------- 蓝色 AI 标记 ----------
+function anMarkHtml(t) {
+  const m = ((anEdit && anEdit.draft.ai_marks) || {})[t];
+  if (!m) return '';
+  const fields = Array.isArray(m.fields) ? m.fields : [];
+  const ev = (Array.isArray(m.evidence) ? m.evidence : []).map(e => {
+    const u = anSafeUrl(e && e.url);
+    return u ? `<a href="${escAttr(u)}" target="_blank" rel="noopener noreferrer">${esc(e.site || e.title || u)}${e.date ? ' ' + esc(e.date) : ''}</a>` : '';
+  }).filter(Boolean).join('、');
+  const who = m.by === 'revise' ? '按你的意见改' : (m.by === 'audit' ? '标题审核后更新' : 'AI 改');
+  return `<div class="an-ai-note">${who} · <b>${esc(m.basis || '')}</b>${fields.length ? '（' + fields.map(f => esc(AN_FIELD_LABELS[f] || f)).join('、') + '）' : ''}：${esc(m.reason || '')}${ev ? ' · 出处：' + ev : ''}</div>`;
+}
+
+function anPaintAiFields() {
+  if (!anEdit) return;
+  const d = anEdit.draft;
+  document.querySelectorAll('#an-panel .an-ai-field').forEach(e => e.classList.remove('an-ai-field'));
+  Object.entries(d.ai_marks || {}).forEach(([t, m]) => {
+    const pre = anTargetPathPrefix(d, t);
+    if (!pre) return;
+    (Array.isArray(m && m.fields) ? m.fields : []).forEach(f => {
+      const el = document.querySelector('#an-panel [data-an-path="' + CSS.escape(pre + f) + '"]');
+      if (el) el.classList.add('an-ai-field');
+    });
+  });
+}
+
+// ---------- AI 先调整 ----------
+function anAiToolbar() {
+  const st = anSearchStatus;
+  const canSearch = !!(st && st.ready);
+  const on = canSearch && anEdit.useSearch !== false;
+  return `<div class="an-aibar v12">
+    <button class="an-btn v12" id="an-auto-btn" onclick="anAutoAdjust()"${anEdit.busy ? ' disabled' : ''}>${anEdit.busy ? 'AI 正在调整…' : 'AI 先调整'}</button>
+    <label style="display:inline;font-weight:normal;font-size:12px"><input type="checkbox" id="an-use-search" style="width:auto" onchange="anEdit.useSearch=this.checked"${on ? ' checked' : ''}${canSearch ? '' : ' disabled'}> 联网搜索${st && st.provider_name ? '（' + esc(st.provider_name) + '）' : ''}${st ? (canSearch ? '' : '：' + (st.enabled ? '缺 ' + esc(st.provider_name || '搜索') + ' Key' : '没开，在设置页打开')) : '：读取中'}</label>
+    <span class="hint" id="an-auto-status" style="margin:0">${esc(anEdit.autoMsg || '')}</span>
+    <div style="font-size:12px;margin-top:4px">AI 会补「待查」和空格、改论点卡、给「不可删」段和高峰找事实、补候选标题。改过的格子<span class="an-ai-field" style="padding:0 3px">标蓝</span>，下面写依据：查到 / 估算 / 记忆待核 / 推理。每一处你都要看一遍，不满意就点那一行的「我的意见」。</div>
+  </div>`;
+}
+
+async function anLoadSearchStatus() {
+  try { anSearchStatus = await api('/api/search-settings'); } catch (e) { anSearchStatus = { ready: false, enabled: false }; }
+  const box = document.querySelector('#an-panel .an-aibar');
+  if (box && anEdit) box.outerHTML = anAiToolbar();
+}
+
+async function anAutoAdjust() {
+  if (!anEdit || anEdit.busy) return;
+  const je = anFlushJson();
+  if (je) { alert(je); return; }
+  const useSearch = !!(document.getElementById('an-use-search') || {}).checked;
+  anEdit.busy = true;
+  anEdit.autoMsg = useSearch ? 'AI 正在列查询词、联网搜索、再改表格，通常 1–4 分钟。等待期间别改表格，结果会覆盖。' : 'AI 正在改表格，通常 1–3 分钟。等待期间别改表格，结果会覆盖。';
+  anRenderEditor();
+  try {
+    const r = await api('/api/runs/' + currentRunId + '/analysis/auto-adjust', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ analysis: anEdit.draft, search: useSearch })
+    });
+    anSnapshot('auto-adjust');
+    anEdit.beforeAdjust = anClone(anEdit.draft); // 服务端把调整前的这版存成了 analysis_before_adjust
+    anEdit.draft = r.analysis;
+    anEdit.base = anClone(r.analysis);
+    anEdit.dirty = false;
+    const failed = (r.queries || []).filter(q => q.error).length;
+    anEdit.autoMsg = 'AI 改了 ' + r.changed + ' 处（已标蓝并保存）' + (r.searched ? '，联网查询 ' + r.queries.length + ' 次' + (failed ? '（' + failed + ' 次出错）' : '') : '，没有联网') + '。想退回点「撤销上一步」。';
+  } catch (e) {
+    anEdit.autoMsg = 'AI 先调整失败：' + e.message;
+  }
+  anEdit.busy = false;
+  anRenderEditor();
+}
+
+// ---------- 我的意见:只重做一行 ----------
+function anOpinionBtn(t) {
+  return `<button class="an-btn v12" style="margin-top:3px" data-t="${escAttr(t)}" onclick="anToggleOpinion(this.dataset.t)">我的意见</button>`;
+}
+function anToggleOpinion(t) {
+  if (!anEdit) return;
+  anEdit.opinions = anEdit.opinions || {};
+  const o = anEdit.opinions[t] || (anEdit.opinions[t] = { note: '', open: false });
+  o.open = !o.open;
+  anRenderEditor();
+  if (o.open) setTimeout(() => { const ta = document.querySelector('#an-panel [data-an-op-note="' + CSS.escape(t) + '"]'); if (ta) ta.focus(); }, 0);
+}
+function anOpinionBox(t) {
+  const o = ((anEdit && anEdit.opinions) || {})[t];
+  if (!o || !o.open) return '';
+  const ph = /^facts\./.test(t) ? '例如：首尔烫发 4000 韩元不对。仍然写首尔，价格用东京的烫发价换成美元，再换成韩元' : '写下你觉得哪里不对、想怎么改';
+  return `<div class="an-op v12">
+    <div style="font-size:12px;margin-bottom:3px">对 <b>${esc(anTargetLabel(t))}</b> 的意见（AI 只重做这一行，改完先给你看前后对比，你点「采用」才会写进表格）：</div>
+    <textarea class="an-edit-input" rows="2" data-an-op-note="${escAttr(t)}" oninput="anEdit.opinions[this.dataset.anOpNote].note=this.value" placeholder="${escAttr(ph)}">${esc(o.note || '')}</textarea>
+    <div class="an-opbar" style="margin-top:4px">
+      <button class="an-btn v12" data-t="${escAttr(t)}" onclick="anRunOpinion(this.dataset.t)"${o.busy ? ' disabled' : ''}>${o.busy ? 'AI 正在重做…' : '按意见重做'}</button>
+      <span class="hint" style="margin:0">${anSearchStatus && anSearchStatus.ready ? '会按上面的「联网搜索」开关先查资料' : '没开联网：只能按意见推算或凭记忆，数字会标「估算」或「记忆待核」'}</span>
+    </div>
+    ${o.error ? `<div class="an-err">${esc(o.error)}</div>` : ''}
+    ${o.result ? anDiffHtml(t, o.result) : ''}
+  </div>`;
+}
+async function anRunOpinion(t) {
+  const o = anEdit && (anEdit.opinions || {})[t];
+  if (!o) return;
+  if (!String(o.note || '').trim()) { alert('先写下你的意见'); return; }
+  const je = anFlushJson();
+  if (je) { alert(je); return; }
+  o.busy = true; o.error = ''; o.result = null;
+  anRenderEditor();
+  try {
+    const useSearch = !!(document.getElementById('an-use-search') || {}).checked;
+    o.result = await api('/api/runs/' + currentRunId + '/analysis/revise', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ analysis: anEdit.draft, target: t, note: o.note, search: useSearch })
+    });
+  } catch (e) { o.error = '重做失败：' + e.message; }
+  o.busy = false;
+  anRenderEditor();
+}
+function anFmtVal(v) {
+  if (v == null || v === '') return '<span class="hint" style="margin:0">(空)</span>';
+  if (Array.isArray(v)) return esc(v.map(x => typeof x === 'object' ? JSON.stringify(x) : x).join('；'));
+  if (typeof v === 'object') return esc(JSON.stringify(v));
+  return esc(v);
+}
+function anDiffHtml(t, r) {
+  const b = r.before || {}, a = r.after || {};
+  const keys = [...new Set([...Object.keys(b), ...Object.keys(a)])].filter(k => JSON.stringify(b[k]) !== JSON.stringify(a[k]));
+  const m = r.mark || {};
+  const ev = (Array.isArray(m.evidence) ? m.evidence : []).map(e => { const u = anSafeUrl(e && e.url); return u ? `<a href="${escAttr(u)}" target="_blank" rel="noopener noreferrer">${esc(e.site || e.title || u)}${e.date ? ' ' + esc(e.date) : ''}</a>` : ''; }).filter(Boolean).join('、');
+  return `<div style="margin-top:6px;font-size:12px">
+    ${r.reply ? `<div style="margin-bottom:3px">${esc(r.reply)}</div>` : ''}
+    <div>依据：<b>${esc(m.basis || '')}</b>${m.reason ? '，' + esc(m.reason) : ''}${ev ? ' · 出处：' + ev : ''}${r.searched ? '' : '（这次没有联网）'}</div>
+    ${keys.length ? `<table class="an-table"><tr><th>字段</th><th>改前</th><th>改后</th></tr>${keys.map(k => `<tr><td>${esc(AN_FIELD_LABELS[k] || k)}</td><td>${anFmtVal(b[k])}</td><td class="an-ai-cell">${anFmtVal(a[k])}</td></tr>`).join('')}</table>` : '<div class="hint">AI 没有改动任何字段。</div>'}
+    <div class="an-opbar" style="margin-top:2px">
+      <button class="an-btn v12" data-t="${escAttr(t)}" onclick="anAcceptOpinion(this.dataset.t)"${keys.length ? '' : ' disabled'}>采用</button>
+      <button class="an-btn" data-t="${escAttr(t)}" onclick="anRejectOpinion(this.dataset.t)">不采用</button>
+    </div></div>`;
+}
+function anAcceptOpinion(t) {
+  const o = anEdit && (anEdit.opinions || {})[t];
+  if (!o || !o.result) return;
+  anSnapshot('opinion.' + t);
+  anSetTarget(anEdit.draft, t, anClone(o.result.after));
+  anEdit.draft.ai_marks = anEdit.draft.ai_marks || {};
+  anEdit.draft.ai_marks[t] = o.result.mark;
+  delete anEdit.opinions[t];
+  anRenderEditor();
+  anMarkDirty();
+  anJump(t);
+}
+function anRejectOpinion(t) {
+  const o = anEdit && (anEdit.opinions || {})[t];
+  if (!o) return;
+  o.result = null;
+  anRenderEditor();
+}
+
+// ---------- 标题:可复制提示词 + 自写标题审核 ----------
+function anTitlePrompt(d) {
+  const t = d.title || {}, th = d.thesis_card || {}, fw = (anEdit && anEdit.ctx && anEdit.ctx.framework) || {};
+  const tc = fw.title_contract || {};
+  const adj = (Array.isArray(d.adjustments) ? d.adjustments : []).find(x => x && x.type === '改标题');
+  const want = (adj && adj.reason) || t.fix || ('和框架方向一致（现在是：' + (t.framework_direction_match || '未判') + '）');
+  const lang = (anEdit && anEdit.lang) || '';
+  return [
+    '请帮我改写一个 YouTube 视频标题，给我 10 个候选。',
+    '',
+    '【原标题】' + (t.final_title || ''),
+    '【视频题目】' + ((anEdit && anEdit.topic) || ''),
+    lang ? '【标题语言】' + lang : null,
+    '【要改成什么样】' + want,
+    t.title_type ? '【现在的标题类型】' + t.title_type : null,
+    tc.title_formula ? '【框架的标题公式（照这个结构写，换成我的题目）】' + tc.title_formula : null,
+    fw.core_engine ? '【框架的核心承诺（标题必须朝这个方向）】' + fw.core_engine : null,
+    '【观众点进来最想知道的问题】' + (t.viewer_question || ''),
+    '【观众期待的答案方向】' + (t.expected_answer_direction || ''),
+    th.one_line_thesis ? '【视频的一句话论点（标题不能承诺视频给不了的东西）】' + th.one_line_thesis : null,
+    '',
+    '要求：',
+    '1. ' + (lang ? '用' + lang + '写，' : '') + '符合 YouTube 习惯，每个不超过 60 个字符；',
+    '2. 让观众产生的问题正好是视频要回答的问题，方向和框架核心承诺一致；',
+    '3. 要有反差、具体的数或者悬念，但不能夸大到视频兑现不了；',
+    '4. 每个候选后面用中文写一句：它是什么类型（例如揭穿型、结果悬念型）、观众看到会想知道什么。'
+  ].filter(x => x != null).join('\n');
+}
+async function anCopyTitlePrompt(btn) {
+  if (!anEdit) return;
+  const text = anTitlePrompt(anEdit.draft);
+  const ta = document.getElementById('an-title-prompt');
+  if (ta) ta.value = text;
+  try { await navigator.clipboard.writeText(text); }
+  catch (e) { if (ta) { ta.select(); document.execCommand('copy'); } }
+  if (btn) { const old = btn.textContent; btn.textContent = '已复制'; setTimeout(() => { btn.textContent = old; }, 1500); }
+}
+function anTitleNeedsFix(d) {
+  const t = d.title || {};
+  return /相反|部分/.test(t.framework_direction_match || '') || (Array.isArray(d.adjustments) ? d.adjustments : []).some(x => x && x.type === '改标题');
+}
+function anTitleToolsHtml(d) {
+  const t = d.title || {};
+  const cands = (t.candidates || []).filter(Boolean);
+  const isCustom = !cands.includes(t.final_title);
+  const au = t.audit && t.audit.title === t.final_title ? t.audit : null;
+  let h = `<div class="v12" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px">
+    <button class="an-btn v12" onclick="anAuditTitle()"${anEdit.titleBusy ? ' disabled' : ''}>${anEdit.titleBusy ? '审核中…' : '审核这个标题'}</button>
+    <span style="font-size:12px">${isCustom ? '自己写的标题要审核：看它和这个框架能不能对上' : '也可以审核当前选中的标题'}</span></div>`;
+  if (au) {
+    h += `<div class="an-audit ${au.ok ? 'ok' : 'bad'} v12"><b>${au.ok ? '可以用' : '不能用'}</b>：${esc(au.reason || '')}
+      ${au.ok ? '<br>已按这个标题更新「观众想知道」和「期待方向」。' : ''}
+      ${!au.ok && au.fix ? `<br>改法：${esc(au.fix)} <button class="an-btn v12" data-v="${escAttr(au.fix)}" onclick="anUseTitle(this.dataset.v)">用这个改法</button>` : ''}</div>`;
+  } else if (isCustom && t.final_title) {
+    h += `<div class="v12" style="font-size:12px">这个标题还没审核。</div>`;
+  }
+  h += `<details class="v12" style="margin-top:4px"${anTitleNeedsFix(d) ? ' open' : ''}><summary style="cursor:pointer;font-size:12px">复制提示词，拿去其他 AI 生成更多标题，挑好的填回「自己写」${anTitleNeedsFix(d) ? '（这个标题需要改）' : ''}</summary>
+    <textarea class="an-edit-input" id="an-title-prompt" rows="9" readonly style="margin-top:4px;font-size:12px">${esc(anTitlePrompt(d))}</textarea>
+    <button class="an-btn v12" style="margin-top:3px" onclick="anCopyTitlePrompt(this)">复制提示词</button></details>`;
+  return h;
+}
+function anUseTitle(v) {
+  if (!anEdit) return;
+  anSnapshot('title.final_title');
+  anSetPath(anEdit.draft, 'title.final_title', v);
+  anRenderEditor();
+  anMarkDirty();
+}
+async function anAuditTitle() {
+  if (!anEdit || anEdit.titleBusy) return;
+  const title = String(((anEdit.draft.title || {}).final_title) || '').trim();
+  if (!title) { alert('标题是空的'); return; }
+  anEdit.titleBusy = true;
+  anRenderEditor();
+  try {
+    const r = await api('/api/runs/' + currentRunId + '/analysis/title-audit', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ analysis: anEdit.draft, title })
+    });
+    anSnapshot('title.audit');
+    const t = anEdit.draft.title || (anEdit.draft.title = {});
+    t.audit = { title, ok: !!r.ok, verdict: r.verdict, reason: r.reason || '', fix: r.fix || '', at: new Date().toISOString() };
+    if (r.ok) {
+      const fields = [];
+      ['viewer_question', 'expected_answer_direction', 'title_type', 'framework_direction_match'].forEach(k => { if (r[k] && r[k] !== t[k]) { t[k] = r[k]; fields.push(k); } });
+      anEdit.draft.ai_marks = anEdit.draft.ai_marks || {};
+      anEdit.draft.ai_marks.title = { fields, basis: '推理', reason: '自写标题审核通过，按新标题更新', by: 'audit', evidence: [], at: new Date().toISOString() };
+    }
+    anMarkDirty();
+  } catch (e) { alert('标题审核失败：' + e.message); }
+  anEdit.titleBusy = false;
+  anRenderEditor();
+}
+
+// ---------- 删事实:先数引用 ----------
+function anFactRefs(d, id) {
+  const refs = [];
+  const list = v => (Array.isArray(v) ? v : []);
+  list(d.ledger).forEach(l => { if (list(l.fact_ids).includes(id)) refs.push('账本「' + (l.item || '') + '」'); });
+  list(d.modules).forEach(m => { if (list(m.fact_ids).includes(id)) refs.push('段 ' + m.segment); });
+  list(d.retention_map).forEach(m => { if (list(m.fact_ids).includes(id)) refs.push('高峰 ' + m.source_peak); });
+  list((d.hook || {}).candidates).forEach((c, i) => { if (list(c.fact_ids).includes(id)) refs.push('钩子 ' + (i + 1) + (i === Number((d.hook || {}).chosen || 0) ? '(已选定)' : '')); });
+  list(d.adjustments).forEach(x => { if (list(x.fact_ids).includes(id)) refs.push('调整清单「' + (x.type || '调整') + (x.target ? ' ' + x.target : '') + '」'); });
+  return refs;
+}
+function anDropRefs(d, ids) {
+  const list = v => (Array.isArray(v) ? v : []);
+  const drop = a => list(a).filter(x => !ids.has(x));
+  list(d.ledger).forEach(l => { if (l.fact_ids) l.fact_ids = drop(l.fact_ids); });
+  list(d.modules).forEach(m => { if (m.fact_ids) m.fact_ids = drop(m.fact_ids); });
+  list(d.retention_map).forEach(m => { if (m.fact_ids) m.fact_ids = drop(m.fact_ids); });
+  list((d.hook || {}).candidates).forEach(c => { if (c.fact_ids) c.fact_ids = drop(c.fact_ids); });
+  list(d.adjustments).forEach(x => { if (x.fact_ids) x.fact_ids = drop(x.fact_ids); });
+}
+function anCleanRefs() {
+  if (!anEdit) return;
+  const d = anEdit.draft, ids = new Set((Array.isArray(d.facts) ? d.facts : []).map(f => f.id));
+  const dangling = new Set();
+  const list = v => (Array.isArray(v) ? v : []);
+  [...list(d.ledger), ...list(d.modules), ...list(d.retention_map), ...list((d.hook || {}).candidates), ...list(d.adjustments)].forEach(x => list(x.fact_ids).forEach(y => { if (y && !ids.has(y)) dangling.add(y); }));
+  if (!dangling.size) return;
+  anSnapshot('clean-refs');
+  anDropRefs(d, dangling);
+  anRenderEditor();
+  anMarkDirty();
+}
+
 // ---------- 可编辑分析面板(待确认态) ----------
 // 设计:所有编辑只写 anEdit.draft(不重渲染,保持焦点) -> 同步进 JSON 文本域 -> 显式点保存/确认才提交
 function anInitEditor(r) {
@@ -1657,8 +2140,16 @@ function anInitEditor(r) {
     jsonDirty: false,
     materials: r.materials || '',
     ctx: r.analysis_context || { peaks: [], source_first_payoff_sec: null },
-    issues: []
+    issues: [],
+    topic: r.topic || '',
+    lang: (r.audience || {}).target_language || '',
+    opinions: {},
+    useSearch: true,
+    busy: false,
+    autoMsg: '',
+    beforeAdjust: r.analysis_before_adjust ? anClone(r.analysis_before_adjust) : null
   };
+  if (!anSearchStatus) anLoadSearchStatus();
 }
 
 function anSnapshot(path) {
@@ -1692,6 +2183,7 @@ function anRepaintRows() {
     if (kind === 'facts') { const f = (d.facts || [])[i] || {}; cls = /时效风险/.test(f.freshness || '') ? 'an-bad' : (/待查|估算|假设/.test(f.kind || '') ? 'an-warn' : ''); }
     if (kind === 'modules') { const m = (d.modules || [])[i] || {}; cls = /删除/.test(m.decision || '') ? 'an-warn' : ''; }
     if (kind === 'retention') { const m = (d.retention_map || [])[i] || {}; cls = /缺口/.test(m.status || '') ? 'an-warn' : ''; }
+    if (tr.dataset.anTarget && (d.ai_marks || {})[tr.dataset.anTarget]) cls += ' an-ai-row';
     tr.className = cls;
   });
 }
@@ -1716,7 +2208,11 @@ function anSetText(el) {
   let v = el.value;
   if (el.dataset.anType === 'num') v = v === '' ? null : Number(v);
   anSetPath(anEdit.draft, el.dataset.anPath, v);
-  if (el.dataset.anPath === 'title.final_title') anRepaintPicks();
+  if (el.dataset.anPath === 'title.final_title') {
+    anRepaintPicks();
+    const tools = document.getElementById('an-title-tools');
+    if (tools) tools.innerHTML = anTitleToolsHtml(anEdit.draft);
+  }
   anMarkDirty();
 }
 
@@ -1742,6 +2238,8 @@ function anPickTitle(el) {
   const inp = document.getElementById('an-title-custom');
   if (inp) inp.value = v;
   anRepaintPicks();
+  const tools = document.getElementById('an-title-tools');
+  if (tools) tools.innerHTML = anTitleToolsHtml(anEdit.draft); // 换标题后审核结论要跟着换,别留着上一个标题的
   anMarkDirty();
 }
 
@@ -1756,6 +2254,9 @@ function anPickHook(el) {
 
 function anSetDecision(i, v) {
   if (!anEdit) return;
+  const seg = anSeg(((anEdit.draft.modules || [])[i] || {}).segment);
+  if (v === '删除' && seg && seg.deletability === '不可删' &&
+    !confirm(seg.stage_id + ' 在留存卡上是「不可删」' + (seg.peaks.length ? '（持有 ' + seg.peaks.join('/') + '）' : '') + '。\n删掉它就等于改框架，按定义结论应是「换框架」。\n建议改成「换内容保功能」。仍要标成删除吗？')) return;
   anSnapshot('modules.' + i + '.decision');
   anSetPath(anEdit.draft, 'modules.' + i + '.decision', v);
   document.querySelectorAll('#an-panel [data-an-dec="' + i + '"]').forEach(b => b.classList.toggle('on', b.dataset.anVal === v));
@@ -1777,9 +2278,15 @@ function anAddFact() {
 function anDeleteFact(i) {
   if (!anEdit) return;
   const f = (anEdit.draft.facts || [])[i] || {};
-  if (!confirm('删除事实 ' + (f.id || '') + '？写稿时就不会再用它。')) return;
+  const refs = f.id ? anFactRefs(anEdit.draft, f.id) : [];
+  const msg = refs.length
+    ? '事实 ' + f.id + ' 有 ' + refs.length + ' 处引用：' + refs.join('、') + '。\n删除后会一并去掉这些地方对 ' + f.id + ' 的引用' + (refs.some(x => /钩子/.test(x)) ? '；钩子文字里的数字要你自己改' : '') + '。\n确定删除吗？'
+    : '删除事实 ' + (f.id || '') + '？写稿时就不会再用它。';
+  if (!confirm(msg)) return;
   anSnapshot('facts');
   anEdit.draft.facts.splice(i, 1);
+  if (refs.length && !(anEdit.draft.facts || []).some(x => x.id === f.id)) anDropRefs(anEdit.draft, new Set([f.id]));
+  if (anEdit.draft.ai_marks) delete anEdit.draft.ai_marks['facts.' + f.id];
   anRenderEditor();
   anMarkDirty();
 }
@@ -1815,9 +2322,19 @@ function anUndo() {
   anMarkDirty();
 }
 
+// 服务端存了最近一次「AI 先调整」之前的版本:刷新页面后内存里的撤销栈没了,用这个回去
+function anRestoreBeforeAdjust() {
+  if (!anEdit || !anEdit.beforeAdjust) return;
+  if (!confirm('恢复成最近一次「AI 先调整」之前的版本？当前修改会被覆盖（可再点「撤销上一步」找回）。')) return;
+  anSnapshot('restore-before-adjust');
+  anEdit.draft = anClone(anEdit.beforeAdjust);
+  anEdit.dirty = true;
+  anRenderEditor();
+  anMarkDirty();
+}
+
 function anRestoreOriginal() {
-  if (!anEdit) return;
-  const src = anEdit.original || anEdit.base;
+  if (!anEdit) return;  const src = anEdit.original || anEdit.base;
   if (!src) { alert('没有可恢复的版本'); return; }
   if (!confirm('恢复成模型原始分析？当前修改会被覆盖（可再点「撤销上一步」找回）。')) return;
   anSnapshot('restore');
@@ -1827,57 +2344,98 @@ function anRestoreOriginal() {
   anMarkDirty();
 }
 
+// 校验:block=必须处理(保存/确认会被拦下);warn=提醒(按 cat 分组、按 kind 合并,核心证据在前)
+// 核心证据 = 选定钩子、承担高峰的留存地图、账本里用到的事实
+const AN_WARN_ORDER = ['核心证据', '结论与调整', '标题', '钩子与高峰', '其他事实', '其他'];
 function anValidateIssues() {
   const out = [];
   const d = anEdit && anEdit.draft;
-  const push = (path, msg, level) => out.push({ path, msg, level });
-  if (!d || typeof d !== 'object') { push('', '分析内容不是对象', 'block'); return out; }
-  ['verdict', 'title', 'thesis_card', 'facts', 'modules', 'retention_map', 'hook'].forEach(k => { if (d[k] == null) push(k, '缺少字段 ' + k, 'block'); });
-  if (!Array.isArray(d.facts) || !d.facts.length) push('facts', '事实表不能为空', 'block');
+  const push = (path, msg, level, cat, kind, label) => out.push({ path, msg: msg || ((label ? label + '：' : '') + kind), level, cat: cat || '其他', kind: kind || msg, label: label || '' });
+  const blk = (path, msg) => push(path, msg, 'block', '必须处理', msg, '');
+  if (!d || typeof d !== 'object') { blk('', '分析内容不是对象'); return out; }
+  // 手改 JSON 可能把数组写成对象;类型不对就停在这里,别让下面的 forEach/filter 崩掉整页
+  const badArr = ['facts', 'modules', 'retention_map', 'ledger', 'adjustments'].filter(k => d[k] != null && !Array.isArray(d[k]));
+  if (badArr.length) { badArr.forEach(k => blk(k, k + ' 必须是数组')); return out; }
+  ['verdict', 'title', 'thesis_card', 'facts', 'modules', 'retention_map', 'hook'].forEach(k => { if (d[k] == null) blk(k, '缺少字段 ' + k); });
+  const core = new Set();
+  const hk = d.hook || {}, chosen = (((Array.isArray(hk.candidates) ? hk.candidates : []))[Number(hk.chosen || 0)]) || {};
+  (Array.isArray(chosen.fact_ids) ? chosen.fact_ids : []).forEach(x => core.add(x));
+  (Array.isArray(d.retention_map) ? d.retention_map : []).filter(m => m && m.status === '承担').forEach(m => (Array.isArray(m.fact_ids) ? m.fact_ids : []).forEach(x => core.add(x)));
+  (Array.isArray(d.ledger) ? d.ledger : []).forEach(l => (Array.isArray(l.fact_ids) ? l.fact_ids : []).forEach(x => core.add(x)));
+  if (!Array.isArray(d.facts) || !d.facts.length) blk('facts', '事实表不能为空');
   else {
     const seen = {};
     d.facts.forEach((f, i) => {
-      if (!String(f.content || '').trim()) push('facts.' + i + '.content', '第 ' + (i + 1) + ' 条内容为空', 'block');
-      if (!String(f.id || '').trim()) push('facts.' + i + '.id', '第 ' + (i + 1) + ' 条编号为空', 'block');
-      else if (seen[f.id]) push('facts.' + i + '.id', '编号 ' + f.id + ' 重复', 'block');
+      const lab = f.id || ('第 ' + (i + 1) + ' 条');
+      const cat = core.has(f.id) ? '核心证据' : '其他事实';
+      const w = (field, kind) => push('facts.' + i + '.' + field, null, 'warn', cat, kind, lab);
+      if (!String(f.content || '').trim()) blk('facts.' + i + '.content', lab + ' 内容为空');
+      if (!String(f.id || '').trim()) blk('facts.' + i + '.id', '第 ' + (i + 1) + ' 条编号为空');
+      else if (seen[f.id]) blk('facts.' + i + '.id', '编号 ' + f.id + ' 重复');
       else seen[f.id] = 1;
-      if (!['事实', '估算', '假设', '待查', ''].includes(f.kind)) push('facts.' + i + '.kind', '第 ' + (i + 1) + ' 条类型不合法', 'block');
-      if (!f.kind) push('facts.' + i + '.kind', '第 ' + (i + 1) + ' 条没标类型', 'warn');
-      if (!['近3年', '时效风险', '不适用', ''].includes(f.freshness)) push('facts.' + i + '.freshness', '第 ' + (i + 1) + ' 条时效不合法', 'block');
-      if (!f.freshness) push('facts.' + i + '.freshness', '第 ' + (i + 1) + ' 条没标时效', 'warn');
-      if (!String(f.source || '').trim()) push('facts.' + i + '.source', '第 ' + (i + 1) + ' 条没有来源', 'warn');
-      if (!String(f.year || '').trim()) push('facts.' + i + '.year', '第 ' + (i + 1) + ' 条没有年份', 'warn');
-      if (!String(f.region || '').trim()) push('facts.' + i + '.region', '第 ' + (i + 1) + ' 条没有地区', 'warn');
+      if (!['事实', '估算', '假设', '待查', ''].includes(f.kind)) blk('facts.' + i + '.kind', lab + ' 类型不合法');
+      if (!['近3年', '时效风险', '不适用', ''].includes(f.freshness)) blk('facts.' + i + '.freshness', lab + ' 时效不合法');
+      if (f.kind === '待查') w('kind', '还是「待查」');
+      if (!f.kind) w('kind', '没标类型');
+      if (f.kind === '估算' && !String(f.method || '').trim()) w('method', '估算没写算法');
+      const mk = ((d.ai_marks || {})['facts.' + f.id]) || {};
+      if (mk.basis === '记忆待核') w('content', '模型凭记忆填的，待核实');
+      if (f.freshness === '时效风险') w('freshness', '数据超过 3 年');
+      if (!f.freshness) w('freshness', '没标时效');
+      if (!String(f.source || '').trim()) w('source', '没有来源');
+      if (!String(f.year || '').trim()) w('year', '没有年份');
+      if (!String(f.region || '').trim()) w('region', '没有地区');
     });
   }
-  if (!['可以写', '调整后可写', '换框架'].includes(d.verdict)) push('verdict', '结论值不合法', 'block');
-  if (!d.title || !String(d.title.final_title || '').trim()) push('title.final_title', '标题为空', 'block');
-  (d.modules || []).forEach((m, i) => { if (!['保留', '换内容保功能', '并入', '删除', ''].includes(m.decision)) push('modules.' + i + '.decision', '第 ' + (i + 1) + ' 段处理方式不合法', 'block'); });
-  (d.retention_map || []).forEach((m, i) => { if (!['承担', '缺口-补料', '缺口-接受弱化', ''].includes(m.status)) push('retention_map.' + i + '.status', '第 ' + (i + 1) + ' 个高峰状态不合法', 'block'); });
-  const cands = ((d.hook || {}).candidates) || [];
-  if (!cands.length) push('hook.candidates', '没有钩子候选', 'block');
+  if (!['可以写', '调整后可写', '换框架'].includes(d.verdict)) blk('verdict', '结论值不合法');
+  if (!d.title || !String(d.title.final_title || '').trim()) blk('title.final_title', '标题为空');
+  (d.modules || []).forEach((m, i) => { if (!['保留', '换内容保功能', '并入', '删除', ''].includes(m.decision)) blk('modules.' + i + '.decision', (m.segment || '第 ' + (i + 1) + ' 段') + ' 处理方式不合法'); });
+  (d.retention_map || []).forEach((m, i) => { if (!['承担', '缺口-补料', '缺口-接受弱化', ''].includes(m.status)) blk('retention_map.' + i + '.status', (m.source_peak || '第 ' + (i + 1) + ' 个高峰') + ' 状态不合法'); });
+  const cands = hk.candidates || [];
+  if (!cands.length) blk('hook.candidates', '没有钩子候选');
   else {
-    const c = Number((d.hook || {}).chosen);
-    if (!Number.isInteger(c) || c < 0 || c >= cands.length) push('hook.chosen', '钩子选择的序号越界', 'block');
+    const c = Number(hk.chosen);
+    if (!Number.isInteger(c) || c < 0 || c >= cands.length) blk('hook.chosen', '钩子选择的序号越界');
   }
+  // 引用失效:保存时必须处理(面板上有「一键去掉失效引用」)
+  const ids = new Set((d.facts || []).map(f => f.id));
+  const where = {};
+  (d.ledger || []).forEach(l => (l.fact_ids || []).forEach(x => (where[x] = where[x] || []).push('账本')));
+  (d.modules || []).forEach(m => (m.fact_ids || []).forEach(x => (where[x] = where[x] || []).push('段 ' + m.segment)));
+  (d.retention_map || []).forEach(m => (m.fact_ids || []).forEach(x => (where[x] = where[x] || []).push('高峰 ' + m.source_peak)));
+  cands.forEach((c, i) => (c.fact_ids || []).forEach(x => (where[x] = where[x] || []).push('钩子 ' + (i + 1))));
+  Object.keys(where).forEach(x => { if (x && !ids.has(x)) out.push({ path: '', msg: '引用了不存在的 ' + x + '（' + [...new Set(where[x])].join('、') + '）', level: 'block', cat: '必须处理', kind: '引用失效', label: x }); });
+  // 结论与调整清单
+  const adj = Array.isArray(d.adjustments) ? d.adjustments.filter(x => x && typeof x === 'object') : [];
+  if (d.verdict === '可以写' && adj.length) push('verdict', '结论是「可以写」，但调整清单里还有 ' + adj.length + ' 项', 'warn', '结论与调整', '结论和调整清单对不上', '');
+  if (d.verdict === '调整后可写' && !adj.length) push('verdict', '结论是「调整后可写」，但没有调整清单', 'warn', '结论与调整', '缺调整清单', '');
+  if (d.verdict === '换框架') push('verdict', '判为「换框架」仍确认的话，会按当前框架照写', 'warn', '结论与调整', '判为换框架', '');
+  adj.forEach(x => { if (/需人工/.test(x.status || '')) push(anAdjJumpTarget(x), null, 'warn', '结论与调整', '调整清单需人工处理', (x.type || '') + ' ' + anTargetLabel(x.target || '')); });
+  anProgramAdjustProblems(d).forEach(p => push(p.target, p.msg, 'warn', '结论与调整', /不可删/.test(p.msg) ? '不可删段被标成删除' : '可并入段被直接删除', p.target.split('.')[1]));
+  // 标题
+  const t = d.title || {};
+  const isCustom = t.final_title && !(t.candidates || []).includes(t.final_title);
+  if (isCustom && !(t.audit && t.audit.title === t.final_title)) push('title.final_title', '自己写的标题还没审核', 'warn', '标题', '自写标题没审核', '');
+  if (t.audit && t.audit.title === t.final_title && !t.audit.ok) push('title.final_title', '标题审核结果是「不能用」', 'warn', '标题', '标题审核没通过', '');
+  if (/相反/.test(t.framework_direction_match || '')) push('title.final_title', '标题方向和框架相反', 'warn', '标题', '标题方向和框架相反', '');
+  // 钩子与高峰
   const peaks = (anEdit.ctx && anEdit.ctx.peaks) || [];
   if (peaks.length) {
     const set = new Set(peaks.map(p => p.peak_id));
-    (d.retention_map || []).forEach((m, i) => { if (m.source_peak && !set.has(m.source_peak)) push('retention_map.' + i + '.source_peak', '原片里没有 ' + m.source_peak, 'warn'); });
+    (d.retention_map || []).forEach((m, i) => { if (m.source_peak && !set.has(m.source_peak)) push('retention_map.' + i + '.status', null, 'warn', '钩子与高峰', '原片里没有这个高峰', m.source_peak); });
   }
+  (d.retention_map || []).forEach((m, i) => { if (m.status === '缺口-补料') push('retention_map.' + i + '.status', null, 'warn', '钩子与高峰', '高峰还缺事实（缺口-补料）', m.source_peak); });
   const sf = (anEdit.ctx || {}).source_first_payoff_sec;
   cands.forEach((c, i) => {
     const v = Number(c.first_payoff_sec);
-    if (sf != null && isFinite(v) && v > sf + 0.5) push('hook.' + i, '第 ' + (i + 1) + ' 个钩子的甜头在 ' + v + ' 秒，晚于原片 ' + sf + ' 秒', 'warn');
+    if (sf != null && isFinite(v) && v > sf + 0.5) push('hook', '第 ' + (i + 1) + ' 个钩子的甜头在 ' + v + ' 秒，晚于原片 ' + sf + ' 秒', 'warn', '钩子与高峰', '钩子甜头晚于原片 ' + sf + ' 秒', '钩子 ' + (i + 1));
   });
-  const ids = new Set((d.facts || []).map(f => f.id));
-  const refs = [];
-  (d.ledger || []).forEach(l => (l.fact_ids || []).forEach(x => refs.push(x)));
-  (d.modules || []).forEach(m => (m.fact_ids || []).forEach(x => refs.push(x)));
-  (d.retention_map || []).forEach(m => (m.fact_ids || []).forEach(x => refs.push(x)));
-  [...new Set(refs)].forEach(x => { if (x && !ids.has(x)) push('', '有地方引用了已删除的 ' + x, 'warn'); });
-  if (d.verdict === '换框架') push('verdict', '判为「换框架」仍确认的话，会按当前框架照写', 'warn');
   return out;
+}
+
+function anIssueLink(i) {
+  const lab = i.label || '查看';
+  return i.path ? `<a data-p="${escAttr(i.path)}" onclick="anJumpPath(this.dataset.p)">${esc(lab)}</a>` : `<span>${esc(lab)}</span>`;
 }
 
 function anValidateNow() {
@@ -1887,23 +2445,31 @@ function anValidateNow() {
   document.querySelectorAll('#an-panel .an-invalid').forEach(e => e.classList.remove('an-invalid'));
   issues.forEach(i => {
     if (!i.path) return;
-    const el = document.querySelector('#an-panel [data-an-path="' + i.path + '"]');
-    if (el) el.classList.add('an-invalid');
+    const el = document.querySelector('#an-panel [data-an-path="' + CSS.escape(i.path) + '"]');
+    if (el && i.level === 'block') el.classList.add('an-invalid');
   });
   const bad = issues.filter(i => i.level === 'block');
   const warn = issues.filter(i => i.level === 'warn');
   const bar = document.getElementById('an-errbar');
   if (bar) {
+    let h = '';
     if (bad.length) {
-      bar.className = 'an-errbar has-err';
-      bar.innerHTML = '<b>还有 ' + bad.length + ' 项必须处理：</b>' + bad.slice(0, 4).map(i => esc(i.msg)).join('；') + (bad.length > 4 ? ' …' : '');
-    } else if (warn.length) {
-      bar.className = 'an-errbar has-warn';
-      bar.innerHTML = '<b>' + warn.length + ' 项提醒：</b>' + warn.slice(0, 3).map(i => esc(i.msg)).join('；') + (warn.length > 3 ? ' …' : '');
-    } else {
-      bar.className = 'an-errbar';
-      bar.textContent = '✓ 没有必须处理的问题，可以直接确认。';
+      h += '<div><b>还有 ' + bad.length + ' 项必须处理：</b>' + bad.map(i => i.path ? `<a class="v12" style="cursor:pointer;text-decoration:underline" data-p="${escAttr(i.path)}" onclick="anJumpPath(this.dataset.p)">${esc(i.msg)}</a>` : esc(i.msg)).join('；') +
+        (bad.some(i => i.kind === '引用失效') ? ' <button class="an-btn v12" onclick="anCleanRefs()">一键去掉失效引用</button>' : '') + '</div>';
     }
+    if (warn.length) {
+      const groups = {};
+      warn.forEach(i => { const g = groups[i.cat] || (groups[i.cat] = {}); (g[i.kind] = g[i.kind] || []).push(i); });
+      h += `<div class="v12" style="margin-top:${bad.length ? 6 : 0}px"><b>${warn.length} 项提醒，已按类型合并（核心证据在前，点编号跳过去）：</b></div>` +
+        AN_WARN_ORDER.filter(c => groups[c]).map(c => {
+          const kinds = groups[c];
+          const n = Object.values(kinds).reduce((s, a) => s + a.length, 0);
+          return `<details class="an-wgrp v12"${c === '核心证据' || c === '结论与调整' ? ' open' : ''}><summary><b>${esc(c)}</b>（${n}）${c === '核心证据' ? '：钩子、高峰、账本用到的事实，最先核对' : ''}</summary>` +
+            Object.entries(kinds).map(([k, arr]) => `<div class="an-wline">${esc(k)}${arr.some(x => x.label) ? '：' + arr.map(anIssueLink).join('') : (arr[0].msg !== k ? '：' + esc(arr[0].msg) : '')}</div>`).join('') + '</details>';
+        }).join('');
+    }
+    bar.className = 'an-errbar' + (bad.length ? ' has-err' : (warn.length ? ' has-warn' : ''));
+    bar.innerHTML = h || '✓ 没有必须处理的问题，可以直接确认。';
   }
   return issues;
 }
@@ -1921,6 +2487,7 @@ function anApplyDraftToControls() {
   });
   anRepaintPicks();
   anRepaintRows();
+  anPaintAiFields();
   anSyncJson();
 }
 
@@ -1934,41 +2501,53 @@ function anEditorShell() {
 
   let html = `<h2>⓪ 写前分析 · 待你确认</h2>
   <div class="hint">表格里直接改，改完可以「保存修改」稍后再确认；黄底=估算/待查/缺口，红底=超过 3 年的旧数据。</div>
-  <div id="an-errbar" class="an-errbar"></div>`;
+  <div id="an-errbar" class="an-errbar"></div>
+  ${anAiToolbar()}`;
+  const opRow = (t, cols) => { const b = anOpinionBox(t); return b ? `<tr class="an-op-row"><td colspan="${cols}">${b}</td></tr>` : ''; };
 
   html += `<div class="an-sec">结论</div>
     <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap">
       ${sel('verdict', ['可以写', '调整后可写', '换框架'], d.verdict)}
       <span class="hint" style="margin:2px 0 0;flex:1 1 320px">${esc(d.verdict_reason || '')}</span>
-    </div>`;
+    </div>
+    ${anAdjustmentsHtml(d)}`;
 
-  html += `<div class="an-sec">标题</div>
+  const aiTitles = new Set(t.ai_added || []);
+  html += `<div data-an-target="title"><div class="an-sec">标题</div>
     <div class="hint" style="margin:0 0 4px">与框架方向：<b class="${dirBad ? 'an-dirty' : ''}">${esc(t.framework_direction_match || '未判')}</b>${t.title_type ? ' · ' + esc(t.title_type) : ''}${dirBad ? '（建议核对后再写）' : ''}</div>
-    ${cands.map(c => `<label class="an-pick${c === t.final_title ? ' on' : ''}"><input type="radio" name="an-title" data-an-pick="title" data-an-value="${escAttr(c)}" onchange="anPickTitle(this)"${c === t.final_title ? ' checked' : ''}>${esc(c)}</label>`).join('')}
+    ${cands.map(c => `<label class="an-pick${c === t.final_title ? ' on' : ''}"><input type="radio" name="an-title" data-an-pick="title" data-an-value="${escAttr(c)}" onchange="anPickTitle(this)"${c === t.final_title ? ' checked' : ''}>${aiTitles.has(c) ? '<span class="an-ai-cell">' + esc(c) + '</span> <span class="an-badge ai">AI 补的</span>' : esc(c)}</label>`).join('')}
     <label class="an-pick${isCustom ? ' on' : ''}"><input type="radio" name="an-title" data-an-pick="title" data-an-value="__custom__" onchange="anPickTitle(this)"${isCustom ? ' checked' : ''}>自己写：</label>
     <input class="an-edit-input" id="an-title-custom" data-an-path="title.final_title" oninput="anSetText(this)" placeholder="在这里填你想要的标题">
-    <div class="hint" style="margin-top:4px">观众想知道：${esc(t.viewer_question || '')} → 期待：${esc(t.expected_answer_direction || '')}</div>`;
+    <div class="hint" style="margin-top:4px">观众想知道：${esc(t.viewer_question || '')} → 期待：${esc(t.expected_answer_direction || '')}</div>
+    ${anMarkHtml('title')}
+    <div id="an-title-tools">${anTitleToolsHtml(d)}</div></div>`;
 
-  html += `<div class="an-sec">论点卡</div>
+  html += `<div data-an-target="thesis_card"><div class="an-sec">论点卡 ${anOpinionBtn('thesis_card')}</div>
+    ${anMarkHtml('thesis_card')}
     <div class="hint" style="margin:0 0 2px">原有认知</div><textarea class="an-edit-input" rows="2" data-an-path="thesis_card.viewer_belief" oninput="anSetText(this)"></textarea>
     <div class="hint" style="margin:6px 0 2px">真相</div><textarea class="an-edit-input" rows="2" data-an-path="thesis_card.truth" oninput="anSetText(this)"></textarea>
     <div class="hint" style="margin:6px 0 2px">一句话论点</div><textarea class="an-edit-input" rows="2" data-an-path="thesis_card.one_line_thesis" oninput="anSetText(this)"></textarea>
-    <div class="hint" style="margin:6px 0 2px">结尾落点</div><textarea class="an-edit-input" rows="2" data-an-path="thesis_card.ending_landing" oninput="anSetText(this)"></textarea>`;
+    <div class="hint" style="margin:6px 0 2px">结尾落点</div><textarea class="an-edit-input" rows="2" data-an-path="thesis_card.ending_landing" oninput="anSetText(this)"></textarea>
+    ${anOpinionBox('thesis_card')}</div>`;
 
   html += `<div class="an-sec">事实表（写稿只能用这些）</div>
   <table class="an-table"><tr><th>编号</th><th>类型</th><th>内容</th><th>来源</th><th>年份</th><th>地区</th><th>时效</th><th></th></tr>
   ${(d.facts || []).map((f, i) => {
     const cls = /时效风险/.test(f.freshness || '') ? 'an-bad' : (/待查|估算|假设/.test(f.kind || '') ? 'an-warn' : '');
-    return `<tr data-an-row="facts" data-an-i="${i}" class="${cls}">
+    const ft = 'facts.' + f.id;
+    return `<tr data-an-row="facts" data-an-i="${i}" data-an-target="${escAttr(ft)}" class="${cls}">
       <td><input class="an-edit-input an-mono" style="width:56px" data-an-path="facts.${i}.id" oninput="anSetText(this)"></td>
       <td>${sel('facts.' + i + '.kind', ['事实', '估算', '假设', '待查'], f.kind)}</td>
-      <td><textarea class="an-edit-input" rows="2" data-an-path="facts.${i}.content" oninput="anSetText(this)"></textarea></td>
-      <td><input class="an-edit-input" data-an-path="facts.${i}.source" oninput="anSetText(this)"></td>
+      <td><textarea class="an-edit-input" rows="2" data-an-path="facts.${i}.content" oninput="anSetText(this)"></textarea>
+        <input class="an-edit-input an-aux" data-an-path="facts.${i}.method" oninput="anSetText(this)" placeholder="算法（估算必填）：怎么算出来的">
+        ${anMarkHtml(ft)}</td>
+      <td><input class="an-edit-input" data-an-path="facts.${i}.source" oninput="anSetText(this)">
+        <input class="an-edit-input an-aux" data-an-path="facts.${i}.url" oninput="anSetText(this)" placeholder="链接 https://"></td>
       <td><input class="an-edit-input" style="width:66px" data-an-path="facts.${i}.year" oninput="anSetText(this)"></td>
       <td><input class="an-edit-input" style="width:72px" data-an-path="facts.${i}.region" oninput="anSetText(this)"></td>
       <td>${sel('facts.' + i + '.freshness', ['近3年', '时效风险', '不适用', ''], f.freshness)}</td>
-      <td><button class="an-btn del" onclick="anDeleteFact(${i})">删除</button></td>
-    </tr>`;
+      <td><button class="an-btn del" onclick="anDeleteFact(${i})">删除</button><br>${anOpinionBtn(ft)}</td>
+    </tr>${opRow(ft, 8)}`;
   }).join('')}</table>
   <div><button class="an-btn" onclick="anAddFact()">+ 新增一条事实</button></div>`;
 
@@ -1979,25 +2558,27 @@ function anEditorShell() {
     d.ledger.map(l => `<tr><td>${esc(l.item)}</td><td>${esc(l.value)}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`));
 
   html += `<div class="an-sec">模块取舍</div>
-  <table class="an-table"><tr><th>原片段</th><th>处理</th><th>留存作用</th><th>理由（可改）</th><th>事实</th><th>时长</th></tr>
-  ${(d.modules || []).map((m, i) => `<tr data-an-row="modules" data-an-i="${i}" class="${/删除/.test(m.decision || '') ? 'an-warn' : ''}">
-    <td>${esc(m.segment)}</td>
+  <table class="an-table"><tr><th>原片段</th><th>处理</th><th>留存作用</th><th>理由（可改）</th><th>事实</th><th>时长</th><th></th></tr>
+  ${(d.modules || []).map((m, i) => { const mt = 'modules.' + m.segment, sg = anSeg(m.segment); return `<tr data-an-row="modules" data-an-i="${i}" data-an-target="${escAttr(mt)}" class="${/删除/.test(m.decision || '') ? 'an-warn' : ''}">
+    <td>${esc(m.segment)}${sg ? `<div class="v12" style="font-size:11px;white-space:nowrap">${esc(sg.deletability)}</div>` : ''}</td>
     <td><div class="an-grp">${['保留', '换内容保功能', '并入', '删除'].map(v => `<button class="an-btn${m.decision === v ? ' on' : ''}" data-an-dec="${i}" data-an-val="${v}" onclick="anSetDecision(${i},'${v}')">${esc(v)}</button>`).join('')}</div></td>
     <td>${esc(m.retention_role)}</td>
-    <td><textarea class="an-edit-input" rows="2" data-an-path="modules.${i}.reason" oninput="anSetText(this)"></textarea></td>
+    <td><textarea class="an-edit-input" rows="2" data-an-path="modules.${i}.reason" oninput="anSetText(this)"></textarea>${anMarkHtml(mt)}</td>
     <td>${esc(anIds(m.fact_ids))}</td>
     <td>${esc(m.duration)}</td>
-  </tr>`).join('')}</table>`;
+    <td>${anOpinionBtn(mt)}</td>
+  </tr>${opRow(mt, 7)}`; }).join('')}</table>`;
 
   html += `<div class="an-sec">留存地图（原片高峰由谁承担）</div>
-  <table class="an-table"><tr><th>高峰</th><th>原片段</th><th>新章节</th><th>事实</th><th>状态</th></tr>
-  ${(d.retention_map || []).map((m, i) => `<tr data-an-row="retention" data-an-i="${i}" class="${/缺口/.test(m.status || '') ? 'an-warn' : ''}">
-    <td>${esc(m.source_peak)}</td><td>${esc(m.source_segment)}</td><td>${esc(m.new_chapter_hint)}</td><td>${esc(anIds(m.fact_ids))}</td>
+  <table class="an-table"><tr><th>高峰</th><th>原片段</th><th>新章节</th><th>事实</th><th>状态</th><th></th></tr>
+  ${(d.retention_map || []).map((m, i) => { const rt = 'retention_map.' + m.source_peak; return `<tr data-an-row="retention" data-an-i="${i}" data-an-target="${escAttr(rt)}" class="${/缺口/.test(m.status || '') ? 'an-warn' : ''}">
+    <td>${esc(m.source_peak)}</td><td>${esc(m.source_segment)}</td><td>${esc(m.new_chapter_hint)}${anMarkHtml(rt)}</td><td>${esc(anIds(m.fact_ids))}</td>
     <td>${sel('retention_map.' + i + '.status', ['承担', '缺口-补料', '缺口-接受弱化', ''], m.status)}</td>
-  </tr>`).join('')}</table>
+    <td>${anOpinionBtn(rt)}</td>
+  </tr>${opRow(rt, 6)}`; }).join('')}</table>
   <div class="hint" style="margin-top:-4px">选「缺口-接受弱化」的高峰不计入留存检查的及格线。</div>`;
 
-  html += `<div class="an-sec">钩子候选（选一个当开场）</div><div class="hint">合约：${esc(h.contract || '')}</div>
+  html += `<div data-an-target="hook"><div class="an-sec">钩子候选（选一个当开场） ${anOpinionBtn('hook')}</div><div class="hint">合约：${esc(h.contract || '')}</div>${anMarkHtml('hook')}
   ${(h.candidates || []).map((c, i) => {
     const v = Number(c.first_payoff_sec), sf = ctx.source_first_payoff_sec;
     const bad = sf != null && isFinite(v) && v > sf + 0.5;
@@ -2007,7 +2588,7 @@ function anEditorShell() {
       <b>${i + 1}.</b> ${esc(c.text)}
       <span class="hint" style="margin:0">· 第一个甜头 ${esc(c.first_payoff_sec)} 秒${bad ? '（晚于原片 ' + esc(sf) + ' 秒）' : ''} · 事实 ${esc(anIds(c.fact_ids))}</span>
     </label>`;
-  }).join('')}`;
+  }).join('')}${anOpinionBox('hook')}</div>`;
 
   if (d.estimated_duration) html += `<div class="hint">预计时长：${esc(d.estimated_duration)}</div>`;
   if ((d.risks || []).length) html += `<div class="an-sec">风险</div><div style="font-size:13px">${d.risks.map(x => '· ' + esc(x)).join('<br>')}</div>`;
@@ -2017,6 +2598,7 @@ function anEditorShell() {
     <button class="an-btn" onclick="anSaveAnalysis()">保存修改（不写稿）</button>
     <button class="an-btn" onclick="anUndo()">撤销上一步</button>
     <button class="an-btn" onclick="anRestoreOriginal()">恢复原始版本</button>
+    ${anEdit.beforeAdjust ? '<button class="an-btn v12" onclick="anRestoreBeforeAdjust()">恢复 AI 调整前</button>' : ''}
     <span class="hint" id="an-status" style="margin:0"></span>
   </div>`;
 
@@ -2133,7 +2715,9 @@ async function confirmAnalysis() {
     return;
   }
   const warn = issues.filter(i => i.level === 'warn');
-  if (warn.length && !confirm('还有 ' + warn.length + ' 项提醒：\n' + warn.slice(0, 5).map(i => '· ' + i.msg).join('\n') + '\n\n仍要确认并开始写稿吗？')) return;
+  const wg = {};
+  warn.forEach(i => { wg[i.cat] = (wg[i.cat] || 0) + 1; });
+  if (warn.length && !confirm('还有 ' + warn.length + ' 项提醒：\n' + AN_WARN_ORDER.filter(c => wg[c]).map(c => '· ' + c + ' ' + wg[c] + ' 项').join('\n') + '\n\n仍要确认并开始写稿吗？')) return;
   const body = {};
   if (anEdit.dirty) body.analysis = anEdit.draft;
   try {
@@ -3446,7 +4030,65 @@ function bindProviderModelLinkage(providerDivId, modelDivId, modelRadioName) {
   });
 }
 
+// 联网搜索设置(v1.2)
+function srchProviderName(st) {
+  const s = st || anSearchStatus || {};
+  const hit = (Array.isArray(s.channels) ? s.channels : []).find(c => c.id === s.provider);
+  return (hit && hit.name) || s.provider_name || s.provider || 'DeepSeek';
+}
+function srchRenderProviders(st) {
+  const sel = document.getElementById('srch-provider');
+  if (!sel) return;
+  const list = Array.isArray(st.channels) ? st.channels : [];
+  sel.innerHTML = list.map(c => `<option value="${escAttr(c.id)}"${c.id === st.provider ? ' selected' : ''}>${esc(c.name)}</option>`).join('');
+}
+function srchStatusText(extra) {
+  const el = document.getElementById('srch-status');
+  if (!el) return;
+  const st = anSearchStatus || {};
+  el.textContent = extra || (st.ready ? ('已打开,可以用(' + srchProviderName(st) + ')') : (st.enabled ? ('已打开,但没有可用的 ' + srchProviderName(st) + ' Key') : '没打开'));
+}
+function srchProviderChanged() {
+  const sel = document.getElementById('srch-provider');
+  if (!sel || !anSearchStatus) return;
+  anSearchStatus.provider = sel.value;
+  srchStatusText('已切换渠道,点「保存」后生效');
+}
+async function loadSearchSettings() {
+  try {
+    const st = await api('/api/search-settings');
+    anSearchStatus = st;
+    document.getElementById('srch-enabled').checked = !!st.enabled;
+    document.getElementById('srch-count').value = st.count || 5;
+    srchRenderProviders(st);
+    srchStatusText();
+  } catch (e) { const el = document.getElementById('srch-status'); if (el) el.textContent = '读取失败:' + e.message; }
+}
+async function saveSearchSettings() {
+  const body = {
+    enabled: document.getElementById('srch-enabled').checked,
+    count: Number(document.getElementById('srch-count').value) || 5,
+    provider: (document.getElementById('srch-provider') || {}).value || undefined
+  };
+  const k = document.getElementById('srch-key').value.trim();
+  if (k) body.api_key = k;
+  try {
+    await api('/api/search-settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    document.getElementById('srch-key').value = '';
+    await loadSearchSettings();
+  } catch (e) { srchStatusText('保存失败:' + e.message); }
+}
+async function testSearch() {
+  const st = document.getElementById('srch-status');
+  st.textContent = '搜索中…（按已保存的渠道测试）';
+  try {
+    const r = await api('/api/search-settings/test', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+    st.textContent = '能用:「' + r.query + '」搜到 ' + r.results.length + ' 条' + (r.results[0] ? ',第一条 ' + r.results[0].title : '');
+  } catch (e) { st.textContent = '搜索失败:' + e.message; }
+}
+
 async function loadSettings() {
+  loadSearchSettings();
   await loadVideoBinding(); // 视频网站绑定状态与会话有效性由此刷新
   const cfg = await api('/api/settings');
   settingsCache = cfg;
