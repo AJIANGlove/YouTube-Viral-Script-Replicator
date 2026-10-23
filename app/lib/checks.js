@@ -1,6 +1,34 @@
 // 确定性校验:查重 / 词密度 / 总时长 / 引用存在性 / 交付性
-const normWords = t => (t || '').toLowerCase().replace(/[^a-z0-9\s']/g, ' ').split(/\s+/).filter(Boolean);
-const ngrams = (w, n) => { const o = []; for (let i = 0; i + n <= w.length; i++) o.push(w.slice(i, i + n).join(' ')); return o; };
+// 分词按 Unicode 字母/数字切,不再只认 a-z:旧写法把韩文、中文、日文整段滤掉,
+// 韩文稿 1,703 词只数出 369 词,词密度全判「偏稀」、6 词查重永远查不到(实测 run_a2f108398c13)。
+const normWords = t => (t || '').toLowerCase().replace(/[^\p{L}\p{N}\s']/gu, ' ').split(/\s+/).filter(Boolean);
+const ngrams = (w, n, sep) => { const o = []; const j = sep == null ? ' ' : sep; for (let i = 0; i + n <= w.length; i++) o.push(w.slice(i, i + n).join(j)); return o; };
+const CJK_CHAR = /[\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff]/g;
+const HANGUL_CHAR = /[\uac00-\ud7af\u1100-\u11ff\u3130-\u318f]/g;
+
+// 语言无关的词数:有空格的语言按空白切分(韩语按语节);中文/日文按字符数 ÷ 2 估算
+function countWords(text) {
+  const t = String(text || '');
+  const cjk = (t.match(CJK_CHAR) || []).length;
+  const tokens = t.split(/\s+/).filter(w => /[\p{L}\p{N}]/u.test(w));
+  if (cjk > tokens.length * 2) return Math.round(cjk / 2);
+  return tokens.length;
+}
+
+// 查重的单位:拉丁字母语言按词(连续 6 词);韩文、中文、日文按字(去掉空格和标点后连续 12 个字)。
+// 韩文一个语节常带助词,照抄的原句往往只有 4–5 个语节(如「판돈보다 남의 가게에서 받을 월급」),按词数查不出来。
+const OVERLAP_WORDS = 6;
+const OVERLAP_CHARS = 12;
+function overlapMode(text) {
+  const t = String(text || '');
+  const asian = (t.match(CJK_CHAR) || []).length + (t.match(HANGUL_CHAR) || []).length;
+  const latin = (t.match(/[A-Za-z\u00c0-\u024f\u0400-\u04ff]/g) || []).length;
+  return asian > latin ? 'chars' : 'words';
+}
+function overlapTokens(text, mode) {
+  if (mode === 'chars') return Array.from(String(text || '').toLowerCase().replace(/[^\p{L}\p{N}]/gu, ''));
+  return normWords(text);
+}
 const stripFence = t => { const s = (t || '').trim(); const m = s.match(/^```(?:json|JSON)?\s*\n?([\s\S]*?)\n?```\s*$/); return m ? m[1].trim() : s; };
 // 从任意文本里捞第一个可解析的 JSON 对象:跳过围栏错位与前后解说,按花括号配平(字符串内的括号不计数)。
 // 仅在直接 JSON.parse 失败时作兜底;返回 null 表示文本里没有完整对象(典型为被 max_tokens 截断)。
@@ -36,7 +64,7 @@ function parseChapters(script) {
   const re = /\[CH(\d+) \| (\d+:\d+(?::\d+)?)\s*[-–—]\s*(\d+:\d+(?::\d+)?) \| ([^\]]+)\]\s*\n([\s\S]*?)(?=\n\[CH|\s*$)/g;
   const out = []; let m;
   while ((m = re.exec(script)) !== null) {
-    out.push({ ch: m[1], start: m[2], end: m[3], fn: m[4].trim(), words: normWords(m[5]).length, secs: toSec(m[3]) - toSec(m[2]) });
+    out.push({ ch: m[1], start: m[2], end: m[3], fn: m[4].trim(), words: countWords(m[5]), secs: toSec(m[3]) - toSec(m[2]) });
   }
   return out;
 }
@@ -60,9 +88,42 @@ function makeRefTools(asset) {
   const refText = ex + '\n' + (asset.srt || '');
   let tw = 149;
   try { tw = JSON.parse(asset.timeline).data.subtitle_metrics.average_words_per_minute || 149; } catch (e) {}
-  const refSet = new Set(ngrams(normWords(refText), 6));
+  // 两种单位的参照集按需各建一次
+  const refSets = {};
+  const refSetOf = mode => refSets[mode] || (refSets[mode] = new Set(ngrams(overlapTokens(refText, mode), mode === 'chars' ? OVERLAP_CHARS : OVERLAP_WORDS, mode === 'chars' ? '' : ' ')));
 
-  const findOverlaps = (text, n = 6) => [...new Set(ngrams(normWords(text), n).filter(g => refSet.has(g)))];
+  // 返回与参照(examples + 原片字幕)重合的最长连续片段,已合并相邻命中,不再需要 collapseHits
+  const findOverlaps = text => {
+    const mode = overlapMode(text);
+    const n = mode === 'chars' ? OVERLAP_CHARS : OVERLAP_WORDS;
+    const sep = mode === 'chars' ? '' : ' ';
+    // 按字查时记下每个字在原文里的位置,输出原文片段(带空格和标点),方便人对照
+    const src = String(text || '');
+    let toks, pos = null;
+    if (mode === 'chars') {
+      toks = []; pos = [];
+      const lower = src.toLowerCase();
+      for (let i = 0; i < lower.length;) {
+        const ch = String.fromCodePoint(lower.codePointAt(i));
+        if (/[\p{L}\p{N}]/u.test(ch)) { toks.push(ch); pos.push(i); }
+        i += ch.length;
+      }
+    } else toks = overlapTokens(src, mode);
+    const ref = refSetOf(mode);
+    const hit = new Array(toks.length).fill(false);
+    for (let i = 0; i + n <= toks.length; i++) {
+      if (ref.has(toks.slice(i, i + n).join(sep))) for (let k = i; k < i + n; k++) hit[k] = true;
+    }
+    const runs = [];
+    for (let i = 0; i < toks.length;) {
+      if (!hit[i]) { i++; continue; }
+      let j = i;
+      while (j < toks.length && hit[j]) j++;
+      runs.push(pos ? src.slice(pos[i], pos[j - 1] + toks[j - 1].length).replace(/\s+/g, ' ').trim() : toks.slice(i, j).join(sep));
+      i = j;
+    }
+    return [...new Set(runs)];
+  };
 
   const densityLines = script => {
     const chs = parseChapters(script);
@@ -88,7 +149,7 @@ function goalSeconds(videoGoal) {
 
 // Step1: 蓝图查重 + 总时长
 function checkBlueprint(text, tools, videoGoal) {
-  const overlaps = collapseHits(tools.findOverlaps(text));
+  const overlaps = tools.findOverlaps(text);
   const result = { plagiarism: overlaps, duration: { ok: null, detail: '' } };
   // 极短输出兜底:合法蓝图 JSON(8+ 章、每章 10 个字段)不可能低于 500 字符,低于即判不合格(防上游异常响应)
   const len = (text || '').trim().length;
@@ -115,7 +176,7 @@ function checkBlueprint(text, tools, videoGoal) {
 // Step2: 查重 + 词密度
 function checkScript(text, tools) {
   return {
-    plagiarism: collapseHits(tools.findOverlaps(text)),
+    plagiarism: tools.findOverlaps(text),
     density: tools.densityLines(text)
   };
 }
@@ -264,4 +325,4 @@ function extractFinalScript(optText) {
   return stripLeadingPreamble(cleaned).text;
 }
 
-module.exports = { normWords, ngrams, stripFence, extractJsonObject, toSec, fmt, parseChapters, chapterStructureError, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };
+module.exports = { normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, toSec, fmt, parseChapters, chapterStructureError, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };

@@ -76,3 +76,5 @@ information_goal 只描述"需要什么类型的事实",禁止编造具体年份
   "hook": { "chosen_text": "", "first_payoff_sec": 0 }
 }
 没有【写前分析】时,carries_peaks 按 Timeline 的 peak_points 位置比例填写,fact_ids 留空数组,hook 按 Timeline 的 hook_window 填写。
+
+今天的日期:{{today}}(法定数字如最低工资、税率、补贴标准,一律用今天所在年份的现行值;旧年份的数只能标明年份作对比)

@@ -9,6 +9,7 @@ const pl = () => require('./pipeline');
 const SEARCH_TIMEOUT_MS = 60 * 1000;
 const MAX_QUERIES = 8;
 const SUMMARY_MAX = 700;
+const QUOTE_MAX = 240; // 落盘的原文摘录长度
 const DEFAULT_PROVIDER = 'deepseek';
 
 const ADAPTERS = {
@@ -130,7 +131,7 @@ function resolveEvidence(refs, batches) {
   (batches || []).forEach(b => (Array.isArray(b.results) ? b.results : []).forEach(r => { all[r.ref] = r; }));
   return (Array.isArray(refs) ? refs : []).map(x => typeof x === 'string' ? all[x] : (x && all[x.ref]) || null)
     .filter(Boolean).filter((r, i, arr) => arr.findIndex(x => x.url === r.url) === i)
-    .map(r => ({ ref: r.ref, title: r.title, url: r.url, date: r.date, site: r.site }));
+    .map(r => ({ ref: r.ref, title: r.title, url: r.url, date: r.date, site: r.site, quote: String(r.summary || '').replace(/\s+/g, ' ').slice(0, QUOTE_MAX) }));
 }
 
-module.exports = { searchConfig, searchStatus, channels, ADAPTERS, webSearch, runQueries, resultsBrief, resolveEvidence, MAX_QUERIES };
+module.exports = { searchConfig, searchStatus, channels, ADAPTERS, webSearch, runQueries, resultsBrief, resolveEvidence, MAX_QUERIES, QUOTE_MAX };

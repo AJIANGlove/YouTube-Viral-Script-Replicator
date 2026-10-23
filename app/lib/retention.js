@@ -9,14 +9,8 @@ const checks = require('./checks');
 const parse = t => { try { return typeof t === 'string' ? JSON.parse(t) : (t || null); } catch (e) { return null; } };
 const dataOf = j => (j && j.data) || j || {};
 
-// 语言无关的词数:有空格的语言按空白切分(韩语按语节);中文/日文按字符数 ÷ 2 估算
-function countWords(text) {
-  const t = String(text || '');
-  const cjk = (t.match(/[぀-ヿ㐀-鿿]/g) || []).length;
-  const tokens = t.split(/\s+/).filter(w => /[\p{L}\p{N}]/u.test(w));
-  if (cjk > tokens.length * 2) return Math.round(cjk / 2);
-  return tokens.length;
-}
+// 语言无关的词数(实现在 checks,写稿闸门和稿件检查用同一个口径)
+const countWords = checks.countWords;
 
 // 含数字的"词"(数字密度的分子)
 function numberTokens(text) {

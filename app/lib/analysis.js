@@ -55,6 +55,7 @@ function frameworkVars(run, asset) {
     : pickTrackCard(run.track, run.topic, asset);
   const structure = (fw.structure_pattern || []).map(s => '- ' + s.stage_id + ' ' + s.function + ':' + (s.purpose || '')).join('\n');
   const vars = {
+    today: require('./pipeline').todayStr(),
     topic: run.topic,
     target_language: aud.target_language || '',
     target_country: aud.target_country || '',
@@ -99,8 +100,10 @@ function analysisBrief(a) {
   const th = a.thesis_card || {};
   out.push('论点卡:原有认知=' + (th.viewer_belief || '') + ';真相=' + (th.truth || '') + ';一句话论点=' + (th.one_line_thesis || '') + ';结尾落点=' + (th.ending_landing || ''));
   out.push('事实表(只能用这些;[估算] 的数在稿中要说明是估算、怎么算的,[待查] 的数不要写成确定的事实):\n' + (a.facts || []).map(f => '- ' + f.id + ' [' + (f.kind || '') + '] ' + (f.content || '') + '(' + [f.source, f.year, f.region].filter(Boolean).join(',') + ')' + (f.method ? ' 算法:' + f.method : '')).join('\n'));
-  if ((a.ledger || []).length) out.push('账本:\n' + a.ledger.map(l => '- ' + l.item + ' = ' + l.value + (l.fact_ids && l.fact_ids.length ? '(' + l.fact_ids.join(',') + ')' : '')).join('\n'));
-  out.push('模块取舍:\n' + (a.modules || []).map(m => '- ' + m.segment + ' ' + m.decision + ':' + (m.reason || '') + (m.fact_ids && m.fact_ids.length ? '(' + m.fact_ids.join(',') + ')' : '')).join('\n'));
+  const stale = a.stale || {};
+  const staleTag = (arr, key) => (Array.isArray(arr) && arr.includes(key) ? '(依据的事实已更新,这一行的数作废,按事实表重算)' : '');
+  if ((a.ledger || []).length) out.push('账本:\n' + a.ledger.map(l => '- ' + l.item + ' = ' + l.value + (l.fact_ids && l.fact_ids.length ? '(' + l.fact_ids.join(',') + ')' : '') + staleTag(stale.ledger, l.item)).join('\n'));
+  out.push('模块取舍(「保留」只保留功能和节奏,内容用本题事实):\n' + (a.modules || []).map(m => '- ' + m.segment + ' ' + m.decision + ':' + (m.reason || '') + (m.fact_ids && m.fact_ids.length ? '(' + m.fact_ids.join(',') + ')' : '') + staleTag(stale.modules, m.segment)).join('\n'));
   out.push('留存地图:\n' + (a.retention_map || []).map(r => '- ' + r.source_peak + '(' + (r.source_segment || '') + ')→' + (r.new_chapter_hint || '') + ' ' + r.status + (r.fact_ids && r.fact_ids.length ? '(' + r.fact_ids.join(',') + ')' : '')).join('\n'));
   const h = a.hook || {};
   const chosen = (h.candidates || [])[h.chosen || 0];
@@ -449,10 +452,11 @@ async function planAndSearch(run, cfg, vars, a, needs, note, maxQ) {
   const q = parseJsonLoose(r.content);
   const queries = (Array.isArray(q && q.queries) ? q.queries : []).filter(x => x && x.query).slice(0, maxQ);
   const batches = await search.runQueries(queries, run.topic);
-  // 落盘的只是检索账本:不存 summary(单次最多 8×5 条 ×700 字,20 次能把 run 文件撑到几百 KB)
+  // 落盘的是检索账本:摘要只留前 QUOTE_MAX 字作原文出处(全文 700 字 ×40 条 ×20 次会把 run 文件撑到几百 KB),
+  // 人核实时能看到「这个数原文怎么写的」,不用再去搜
   const ledger = batches.map(b => ({
     query: b.query, target: b.target || '', error: b.error || null,
-    hits: (Array.isArray(b.results) ? b.results : []).map(x => ({ ref: x.ref, title: x.title, url: x.url, date: x.date, site: x.site }))
+    hits: (Array.isArray(b.results) ? b.results : []).map(x => ({ ref: x.ref, title: x.title, url: x.url, date: x.date, site: x.site, quote: String(x.summary || '').replace(/\s+/g, ' ').slice(0, search.QUOTE_MAX) }))
   }));
   run.search_runs = [...(Array.isArray(run.search_runs) ? run.search_runs : []), { at: new Date().toISOString(), note: note || '', batches: ledger }].slice(-20);
   return batches;
@@ -514,6 +518,19 @@ function mergeAdjust(a, out, batches) {
   list(out.facts).forEach(f => f && f.id && apply('facts.' + f.id, f));
   list(out.modules).forEach(m => m && m.segment && apply('modules.' + m.segment, m));
   list(out.retention_map).forEach(m => m && m.source_peak && apply('retention_map.' + m.source_peak, m));
+  // 账本整张替换(adjust.md 要求给完整新账本):旧实现不收账本,改了事实以后账本还是旧数,写稿照旧数算账(实测 run_a2f108398c13)
+  const changedFacts = list(out.facts).filter(f => f && f.id).map(f => f.id);
+  if (list(out.ledger).length) {
+    a.ledger = list(out.ledger).filter(l => l && typeof l === 'object' && !Array.isArray(l));
+    markChange(a, 'ledger', changeFor('ledger').target ? changeFor('ledger') : { fields: ['ledger'], basis: '估算', reason: '事实更新后重算账本' }, batches);
+    n++;
+  }
+  // 模型没重算的:账本行、模块里引用了改过的事实 → 标记作废,写稿时按事实表重算
+  const touches = x => list(x && x.fact_ids).some(id => changedFacts.includes(id));
+  a.stale = {
+    ledger: list(out.ledger).length ? [] : list(a.ledger).filter(touches).map(l => l.item),
+    modules: list(a.modules).filter(m => touches(m) && !list(out.modules).some(o => o && o.segment === m.segment)).map(m => m.segment)
+  };
   if (out.thesis_card && typeof out.thesis_card === 'object' && !Array.isArray(out.thesis_card)) apply('thesis_card', out.thesis_card);
   if (out.hook && typeof out.hook === 'object' && !Array.isArray(out.hook) && Array.isArray(out.hook.candidates) && out.hook.candidates.length) apply('hook', out.hook);
   const addTitles = list(out.title_candidates_add).filter(t => typeof t === 'string' && t && !list((a.title || {}).candidates).includes(t));
