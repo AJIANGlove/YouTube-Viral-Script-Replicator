@@ -566,7 +566,7 @@ const server = http.createServer(async (req, res) => {
 
     // ---------- 先写后改:逐段对照审稿 ----------
     // GET 视图(每次按当前稿子现算);POST status/undo 立即返回;rewrite/fact 等模型返回再响应(单章约 0.5–2 分钟)
-    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate))?$/);
+    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass))?$/);
     if (rvMatch) {
       const [, id, action] = rvMatch;
       try {
@@ -577,6 +577,12 @@ const server = http.createServer(async (req, res) => {
           if (action === 'undo') return send(res, 200, review.undo(id, body.chapter));
           if (action === 'rewrite') return send(res, 200, await review.rewriteChapter(id, body.chapter, body.compress ? (body.note || review.COMPRESS_NOTE) : body.note, { compress: !!body.compress }));
           if (action === 'fact') return send(res, 200, await review.updateFact(id, body.id, body.patch || {}));
+          if (action === 'pass') {
+            // 重跑初稿检查(会接着跑终审)或只重跑终审;后台跑,页面轮询看进度
+            const kind = body.kind === 'final' ? 'final' : 'check';
+            review.runPasses(id, kind).catch(() => {});
+            return send(res, 200, { ok: true });
+          }
           if (action === 'translate') {
             review.translateRun(id).catch(() => {});
             return send(res, 200, { ok: true });
