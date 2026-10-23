@@ -11,6 +11,7 @@ const store = require('./store');
 const checks = require('./checks');
 const retention = require('./retention');
 const voice = require('./voice');
+const { HEDGE_RE } = require('./compliance');
 
 const pl = () => require('./pipeline');
 const an = () => require('./analysis');
@@ -93,9 +94,6 @@ function writeScript(run, text) {
   if (run.script_v1) run.script_v1 = text; else run.final_script = text;
   // V1 文案已变:这一版的扫描与简介缓存过期
   ['compliance_scans', 'opening_scans', 'descriptions'].forEach(k => { if (run[k] && run[k].v1) run[k].v1.stale = true; });
-  // 稿件检查的结论基于旧稿:标过期(详情页沿用既有提示「稿子已改,建议重新检查一次」)。
-  // 留存检查不标:它跑在 Step1 蓝图上(carries_peaks 结构),单章重写不动蓝图
-  if (run.script_check) run.script_check.stale_after_adopt = true;
 }
 
 // ---------- 事实 ----------
@@ -144,6 +142,10 @@ function chapterFlags(ch, ctx) {
     if (han.length) flags.push({ type: '汉字残留', text: han.join('、') });
   }
   for (const w of ctx.lintTerms) if (ch.text.includes(w)) flags.push({ type: '翻译腔', text: w });
+  const sentences = ch.text.split(/(?<=[.?!。!?])\s+|\n+/).map(x => x.trim()).filter(Boolean);
+  const hedges = sentences.filter(x => HEDGE_RE.test(x));
+  if (hedges.length) flags.push({ type: '免责插句', text: hedges.map(x => x.slice(0, 60)).join(' / ') });
+  if (ch.isLast && sentences.length && HEDGE_RE.test(sentences[sentences.length - 1]) ) flags.push({ type: '结尾', text: '最后一句是免责/中性说法,不是结尾落点判断' });
   const unknown = [...new Set(numberTokensOf(ch.text).filter(n => !ctx.knownNumbers.has(n)))];
   if (unknown.length) flags.push({ type: '数字不在事实表', text: unknown.slice(0, 8).join('、') });
   // 同一个数第 4 次(含)以后出现才算重复:开场的锚点数(如单价)前后呼应两三次是正常的;年份不算
@@ -155,6 +157,29 @@ function chapterFlags(ch, ctx) {
     else if (r < 0.6) flags.push({ type: '篇幅', text: ch.words + ' 词,预算 ' + ch.budget + '(只有 ' + Math.round(r * 100) + '%)' });
   }
   return flags;
+}
+
+// 相邻两版逐章对比:改前/改后正文、中文、这一章的问题
+function versionDiffs(state) {
+  const vs = arr(state.versions);
+  const out = [];
+  for (let i = 1; i < vs.length; i++) {
+    const before = Object.fromEntries(scriptChapters(vs[i - 1].text).map(c => [c.id, c]));
+    const issues = arr(vs[i].issues);
+    out.push({
+      key: vs[i].key, from: vs[i - 1].label, to: vs[i].label, at: vs[i].at,
+      general_issues: issues.filter(x => !/^CH/.test(x.chapter)),
+      chapters: scriptChapters(vs[i].text).map(c => {
+        const b = before[c.id] || { text: '' };
+        return {
+          id: c.id, fn: c.fn, range: c.range, changed: b.text !== c.text,
+          before: b.text, after: c.text, zh_before: zhOf(state, b.text), zh_after: zhOf(state, c.text),
+          issues: issues.filter(x => x.chapter === c.id)
+        };
+      })
+    });
+  }
+  return out;
 }
 
 // ---------- 视图 ----------
@@ -210,16 +235,16 @@ function buildView(run, asset) {
         return {
           stage_id: id, function: s.function, position_label: s.position_label, abstract_move: s.abstract_move,
           deletability: s.deletability, peaks: s.peaks, text: s.text,
-          zh: ((state.zh || {}).source || {})[id] || '',
           decision: m ? m.decision : '', reason: m ? (m.reason || '') : ''
         };
       }),
       facts: factIds.map(id => factView(facts.find(f => f.id === id), marks)),
       status: st.status || '待审',
       history: arr(st.history).map(h => ({ at: h.at, note: h.note || '', by: h.by || '', text: h.text })),
-      zh: (((state.zh || {}).script || {})[c.id] || {}).hash === hash(c.text) ? state.zh.script[c.id].text : '',
+      zh: zhOf(state, c.text),
       last_reply: st.last_reply || ''
     };
+    row.isLast = i === chs.length - 1;
     row.flags = chapterFlags(row, ctx);
     return row;
   });
@@ -229,7 +254,7 @@ function buildView(run, asset) {
     const m = modOf(s.stage_id);
     return {
       stage_id: s.stage_id, function: s.function, position_label: s.position_label, abstract_move: s.abstract_move,
-      deletability: s.deletability, peaks: s.peaks, text: s.text, zh: ((state.zh || {}).source || {})[s.stage_id] || '',
+      deletability: s.deletability, peaks: s.peaks, text: s.text,
       decision: m ? m.decision : '没有章节承接', reason: m ? (m.reason || '') : ''
     };
   });
@@ -240,6 +265,10 @@ function buildView(run, asset) {
   const budget = rows.reduce((n, r) => n + (r.budget || 0), 0);
   return {
     run_id: run.id, status: run.status, target_language: lang,
+    passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null },
+    audit: state.audit ? { ...state.audit, stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
+    versions: arr(state.versions).map(v => ({ key: v.key, label: v.label, at: v.at, issues: arr(v.issues), changed: arr(v.changed), truncated: !!v.truncated })),
+    diffs: versionDiffs(state),
     translating: ((run.steps || {}).review_zh || {}).status === 'running',
     zh_error: ((run.steps || {}).review_zh || {}).error || '',
     rows, dropped,
@@ -248,7 +277,10 @@ function buildView(run, asset) {
     summary: {
       chapters: rows.length, passed: rows.filter(r => r.status === '通过').length,
       flags: rows.reduce((n, r) => n + r.flags.length, 0),
-      red_facts: redFacts, words, budget, ratio: budget ? Math.round(words / budget * 100) / 100 : null
+      red_facts: redFacts, words, budget, ratio: budget ? Math.round(words / budget * 100) / 100 : null,
+      ledger_mismatches: an().verifyLedger(arr(a.ledger)).mismatches,
+      thesis_contradicts: arr((a.thesis_check || {}).contradicts),
+      thesis_note: (a.thesis_check || {}).note || ''
     }
   };
 }
@@ -268,6 +300,8 @@ function getView(runId) {
 }
 
 // ---------- 翻译(中文对照) ----------
+// 译文按原文的 hash 存(review.zh.byHash):同一段文字不管出现在初稿、二稿还是终稿里,只翻一次。
+// 输入输出都用 ===编号=== 分段的纯文本,不要求模型输出 JSON(长篇韩文塞进 JSON 字符串,模型常漏转义,实测「输出不是合法 JSON」)
 function needsZh(text) {
   const t = String(text || '');
   const han = (t.match(/[㐀-鿿]/g) || []).length;
@@ -275,82 +309,82 @@ function needsZh(text) {
   return other > han;
 }
 
-async function translateMap(run, cfg, items, label) {
+// ===KEY=== 分段文本 → { KEY: 内容 };没有收尾的最后一段(输出被截断)丢掉
+function parseBlocks(text, truncated) {
   const out = {};
-  const keys = Object.keys(items).filter(k => needsZh(items[k]));
-  let batch = {}, size = 0;
+  const re = /^===\s*([A-Za-z0-9_]+)\s*===\s*$/gm;
+  const marks = [];
+  let m;
+  while ((m = re.exec(String(text || ''))) !== null) marks.push({ key: m[1].toUpperCase(), start: m.index, end: m.index + m[0].length });
+  marks.forEach((k, i) => {
+    if (k.key === 'END') return;
+    const next = marks[i + 1];
+    if (!next && truncated) return;
+    out[k.key] = String(text).slice(k.end, next ? next.start : undefined).trim();
+  });
+  return out;
+}
+
+async function rawCall(run, cfg, prompt, label) {
+  return an().callWithLog(run, cfg, [{ role: 'user', content: prompt }], label);
+}
+
+async function translateTexts(run, cfg, texts, label) {
+  const out = {};
+  const items = [...new Set(texts.filter(t => t && needsZh(t)))];
+  let batch = [], size = 0;
   const flush = async () => {
-    if (!Object.keys(batch).length) return;
-    const prompt = an().fillVars(readPrompt('translate.md'), { items_json: JSON.stringify(batch) });
-    const res = await an().callJson(run, cfg, prompt, label, o => typeof o === 'object' && !Array.isArray(o));
-    Object.keys(batch).forEach(k => { if (typeof res[k] === 'string') out[k] = res[k]; });
-    batch = {}; size = 0;
+    if (!batch.length) return;
+    const keyed = {};
+    batch.forEach((t, i) => { keyed['T' + (i + 1)] = t; });
+    const prompt = an().fillVars(readPrompt('translate.md'), { items: Object.keys(keyed).map(k => '===' + k + '===\n' + keyed[k]).join('\n') });
+    let r = await rawCall(run, cfg, prompt, label);
+    let got = parseBlocks(r.content, r.stopReason === 'max_tokens');
+    // 漏了的段单独再翻一次
+    for (const k of Object.keys(keyed).filter(k => !got[k])) {
+      const r2 = await rawCall(run, cfg, an().fillVars(readPrompt('translate.md'), { items: '===' + k + '===\n' + keyed[k] }), label + '补翻');
+      Object.assign(got, parseBlocks(r2.content, r2.stopReason === 'max_tokens'));
+    }
+    Object.keys(keyed).forEach(k => { if (got[k]) out[hash(keyed[k])] = got[k]; });
+    batch = []; size = 0;
   };
-  for (const k of keys) {
-    if (size + items[k].length > TRANSLATE_BATCH_CHARS) await flush();
-    batch[k] = items[k]; size += items[k].length;
+  for (const t of items) {
+    if (size + t.length > TRANSLATE_BATCH_CHARS) await flush();
+    batch.push(t); size += t.length;
   }
   await flush();
   return out;
 }
 
-// ---------- 原片译文缓存(资产级) ----------
-// 同一原片换题重跑时,原片段译文不必整片重翻:按 asset_id 缓存在 data/source_zh.json(本机运行时缓存,不入库)。
-// fingerprint 是全部分段文本的指纹;资产内容变了(重建留存卡等)指纹不同,旧缓存自动作废
-const SOURCE_ZH_FILE = path.join(__dirname, '..', 'data', 'source_zh.json');
-function loadSourceZh() {
-  try { const j = JSON.parse(fs.readFileSync(SOURCE_ZH_FILE, 'utf-8')); return (j && j.assets) || {}; } catch (e) { return {}; }
-}
-function saveSourceZh(assetId, fingerprint, zh) {
-  const assets = loadSourceZh();
-  assets[assetId] = { fingerprint, zh, at: new Date().toISOString() };
-  const tmp = SOURCE_ZH_FILE + '.tmp';
-  fs.writeFileSync(tmp, JSON.stringify({ version: 1, assets }), 'utf-8');
-  fs.renameSync(tmp, SOURCE_ZH_FILE);
+function zhOf(state, text) {
+  const z = (state && state.zh) || {};
+  return (z.byHash || {})[hash(text)] || '';
 }
 
-async function translateRun(runId, onlyChapters) {
+// 要翻的:当前稿每一章 + 各版本改过的章节(改前和改后)
+function textsToTranslate(run) {
+  const texts = scriptChapters(currentScript(run)).map(c => c.text);
+  const vs = arr((run.review || {}).versions);
+  for (let i = 1; i < vs.length; i++) {
+    const before = Object.fromEntries(scriptChapters(vs[i - 1].text).map(c => [c.id, c.text]));
+    scriptChapters(vs[i].text).forEach(c => { if (before[c.id] !== c.text) texts.push(c.text, before[c.id] || ''); });
+  }
+  const have = ((run.review || {}).zh || {}).byHash || {};
+  return texts.filter(t => t && !have[hash(t)]);
+}
+
+async function translateRun(runId) {
   const cfg = pl().loadConfig();
   let run = store.getRun(runId);
   if (!run || !cfg || !cfg.api_key) return;
-  const asset = store.getAsset(run.asset_id);
-  if (!asset) return;
   run.steps = { ...(run.steps || {}), review_zh: { status: 'running', started_at: new Date().toISOString() } };
   store.saveRun(run);
   try {
-    const review = run.review || {};
-    const zh = review.zh || { source: {}, script: {} };
-    zh.source = zh.source || {}; zh.script = zh.script || {};
-    if (!onlyChapters) {
-      // 原片译文先查资产级缓存:本 run 没有但同资产别的 run 翻过的,直接回填;只翻两头都没有的段
-      const segs = sourceSegments(asset);
-      const fp = hash(segs.map(s => s.stage_id + ':' + s.text).join('\n'));
-      const cache = loadSourceZh()[run.asset_id];
-      const cacheHit = cache && cache.fingerprint === fp ? (cache.zh || {}) : {};
-      const srcItems = {};
-      segs.forEach(s => {
-        if (!s.text || zh.source[s.stage_id]) return;
-        if (cacheHit[s.stage_id]) { zh.source[s.stage_id] = cacheHit[s.stage_id]; return; }
-        srcItems[s.stage_id] = s.text;
-      });
-      if (Object.keys(srcItems).length) {
-        const tr = await translateMap(run, cfg, srcItems, '原片中文对照');
-        Object.assign(zh.source, tr);
-        try { saveSourceZh(run.asset_id, fp, { ...cacheHit, ...tr }); } catch (e) {}
-      }
-    }
-    const chItems = {};
-    scriptChapters(currentScript(run)).forEach(c => {
-      if (onlyChapters && !onlyChapters.includes(c.id)) return;
-      if ((zh.script[c.id] || {}).hash !== hash(c.text)) chItems[c.id] = c.text;
-    });
-    const tr = await translateMap(run, cfg, chItems, '新稿中文对照');
+    const tr = await translateTexts(run, cfg, textsToTranslate(run), '中文对照');
     const fresh = store.getRun(runId) || run;
-    const fz = ((fresh.review || {}).zh) || { source: {}, script: {} };
-    fz.source = { ...(fz.source || {}), ...zh.source };
-    fz.script = fz.script || {};
-    Object.keys(tr).forEach(k => { fz.script[k] = { hash: hash(chItems[k]), text: tr[k] }; });
-    fresh.review = { ...(fresh.review || {}), zh: fz };
+    fresh.review = fresh.review || {};
+    fresh.review.zh = fresh.review.zh || {};
+    fresh.review.zh.byHash = { ...(fresh.review.zh.byHash || {}), ...tr };
     fresh.steps = { ...(fresh.steps || {}), review_zh: { status: 'done', finished_at: new Date().toISOString() } };
     if (run.attempts) fresh.attempts = run.attempts;
     store.saveRun(fresh);
@@ -361,15 +395,331 @@ async function translateRun(runId, onlyChapters) {
   }
 }
 
+// ---------- 初稿检查 → 二稿,终审 → 终稿 ----------
+// 两遍都是:模型先列问题清单,再只重写有问题的章节(整章正文);程序换进稿子、校验章节结构,存成新版本。
+// 版本存在 review.versions(初稿 / 二稿 / 终稿),页面按相邻两版逐章对比。
+const PASSES = {
+  check: { label: '二稿', step: 'draft_check', prompt: 'draft_check.md', title: '初稿检查' },
+  final: { label: '终稿', step: 'final_review', prompt: 'final_review.md', title: '终审' }
+};
+const ISSUE_RE = /^\s*[-*•]\s*\[(CH\d+|全篇|全片|ALL)\]\s*\[([^\]]+)\]\s*(.+)$/i;
+
+function parseIssues(text) {
+  return String(text || '').split('\n').map(l => {
+    const m = l.match(ISSUE_RE);
+    if (!m) return null;
+    const parts = m[3].split(/\s*[｜|]\s*/);
+    const pick = re => (parts.find(p => re.test(p)) || '').replace(re, '').trim();
+    return {
+      chapter: /^CH/i.test(m[1]) ? m[1].toUpperCase() : '全篇', category: m[2].trim(),
+      problem: parts[0].trim(), quote: pick(/^原句[:：]\s*/), fix: pick(/^改法[:：]\s*/)
+    };
+  }).filter(Boolean);
+}
+
+function chapterMap(run, asset) {
+  const view = buildView(run, asset);
+  return view.rows.map(r => {
+    const tpl = r.source.map(s => s.stage_id + ' ' + (s.function || '') + ':' + (s.abstract_move || '') + (s.peaks.length ? '(持有高峰 ' + s.peaks.map(p => p.peak_id + ' ' + (p.peak_type || '')).join('、') + ')' : '') + (s.decision ? ';分析时的处理:' + s.decision : '')).join(' / ');
+    return '- ' + r.id + ' ' + r.range + ' ' + r.fn + (r.budget ? ' 预算 ' + r.budget + ' 词,现 ' + r.words + ' 词' : '') + '\n  模板:' + (tpl || '(无)') +
+      (r.purpose ? '\n  蓝图目标:' + r.purpose : '') +
+      (r.flags.length ? '\n  程序查出:' + r.flags.map(f => f.type + '「' + f.text.slice(0, 120) + '」').join(';') : '');
+  }).join('\n');
+}
+
+function programFindings(run, asset) {
+  const v = buildView(run, asset);
+  const s = v.summary;
+  const out = [];
+  if (s.ledger_mismatches.length) out.push('账本对不上(程序按公式重算):' + s.ledger_mismatches.join(';'));
+  if (s.thesis_contradicts.length) out.push('反转被事实推翻:' + s.thesis_contradicts.join('、') + (s.thesis_note ? '(' + s.thesis_note + ')' : ''));
+  if (s.red_facts.length) out.push('稿里用到但没有出处的事实:' + s.red_facts.join('、') + '(要么删掉这句,要么改成不依赖它的说法)');
+  if (s.budget) out.push('篇幅:' + s.words + ' 词,预算 ' + s.budget + ' 词');
+  const len = (run.checks || {}).length;
+  if (len && !len.ok) out.push('篇幅超标:' + len.detail);
+  return out.join('\n') || '(无)';
+}
+
+async function runPass(runId, kind) {
+  const P = PASSES[kind];
+  const cfg = pl().loadConfig();
+  let { run, asset } = loadRunAsset(runId);
+  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
+  const start = currentScript(run);
+  if (!start) throw Object.assign(new Error('稿子还没写好'), { status: 400 });
+  // 重跑终审(比如换了一组审稿意见):终稿之后没人动过稿子,就从二稿重新改,不在旧终稿上叠改
+  const vByKey = Object.fromEntries(arr((run.review || {}).versions).map(v => [v.key, v]));
+  const base = kind === 'final' && vByKey.d2 && vByKey.d3 && vByKey.d3.text === start ? vByKey.d2.text : start;
+  run.steps = { ...(run.steps || {}), [P.step]: { status: 'running', started_at: new Date().toISOString() } };
+  run.review = run.review || {};
+  // 第一遍之前把当前稿存成初稿
+  if (!arr(run.review.versions).length) run.review.versions = [{ key: 'd1', label: '初稿', at: new Date().toISOString(), text: base, issues: [] }];
+  store.saveRun(run);
+  try {
+    const a = run.analysis || {};
+    const aud = run.audience || {};
+    const prompt = an().fillVars(readPrompt(P.prompt), {
+      today: pl().todayStr(),
+      topic: run.topic,
+      title: ((a.title || {}).final_title) || run.topic,
+      target_language: aud.target_language || '',
+      target_country: aud.target_country || '',
+      video_goal: aud.video_goal || '',
+      voice: voice.voiceBrief(voice.voiceForRun(run)) || '(未设定)',
+      analysis: run.analysis ? an().analysisBrief(a) : '(无写前分析)',
+      chapter_map: chapterMap(run, asset),
+      program_findings: programFindings(run, asset),
+      selected_fixes: kind === 'final' ? selectedFixes(run) : '',
+      script: base
+    });
+    const r = await rawCall(run, cfg, prompt, P.title);
+    const blocks = parseBlocks(r.content, r.stopReason === 'max_tokens');
+    const issues = parseIssues(blocks.ISSUES || r.content.split(/^===\s*CH\d+/m)[0]);
+    let next = base;
+    const changed = [];
+    for (const ch of scriptChapters(base)) {
+      const t = blocks[ch.id];
+      if (!t) continue;
+      const clean = t.replace(/^\s*\[CH\d+[^\]]*\]\s*\n?/, '').trim(); // 模型偶尔把标签行带进来
+      if (!clean || clean === ch.text) continue;
+      const tryNext = replaceChapter(next, ch.id, clean);
+      if (tryNext && !checks.chapterStructureError(tryNext)) { next = tryNext; changed.push(ch.id); }
+    }
+    const fresh = store.getRun(runId) || run;
+    if (currentScript(fresh) !== start) throw new Error('这一遍运行期间稿子被改过,结果没有保存,请重跑');
+    fresh.review = fresh.review || {};
+    const versions = arr(fresh.review.versions).length ? fresh.review.versions : [{ key: 'd1', label: '初稿', at: new Date().toISOString(), text: base, issues: [] }];
+    // 重跑同一遍:替换掉旧的同名版本及其后的版本
+    const keep = versions.filter(v => v.key === 'd1' || (kind === 'final' && v.key === 'd2'));
+    keep.push({ key: kind === 'check' ? 'd2' : 'd3', label: P.label, at: new Date().toISOString(), text: next, issues, changed, truncated: r.stopReason === 'max_tokens' });
+    fresh.review.versions = keep;
+    if (next !== start) writeScript(fresh, next);
+    if (changed.length) {
+      changed.forEach(id => { const st = chapterState(fresh, id); st.status = '待审'; st.history = [...arr(st.history), { at: new Date().toISOString(), note: P.title, by: kind, text: scriptChapters(base).find(c => c.id === id).text }].slice(-HISTORY_MAX); });
+    }
+    fresh.steps = { ...(fresh.steps || {}), [P.step]: { status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString(), issues: issues.length, changed: changed.length } };
+    if (kind === 'check') { delete fresh.steps.final_review; delete fresh.steps.reverse_audit; if (fresh.review.audit) fresh.review.audit = null; }
+    if (kind === 'final' && fresh.review.audit) fresh.review.audit.used_selection = (fresh.review.audit.selection || null);
+    if (run.attempts) fresh.attempts = run.attempts;
+    store.saveRun(fresh);
+    return { ok: true, issues: issues.length, changed };
+  } catch (e) {
+    const fresh = store.getRun(runId) || run;
+    fresh.steps = { ...(fresh.steps || {}), [P.step]: { status: 'failed', error: e.message } };
+    store.saveRun(fresh);
+    throw e;
+  }
+}
+
+// ---------- 二稿逆向工程审稿(终审前) ----------
+// 把原片标题、原文案、拆解框架、新题目、新标题和二稿交给模型,按用户的审稿提示词出完整报告(赛道、评分、迁移对照、
+// 逐段问题 P01…、深层问题、P0/P1/P2、三种修改路线)。报告末尾附一段 ===SCORE=== / ===ISSUES=== / ===ROUTE=== 清单给程序读。
+// 报告出来后流程停住:人在页面上勾选要改的问题、选修改路线,再带着这些去终审。
+const AUDIT_ISSUE_RE = /^\s*[-*•]\s*\[(P\d+)\]\s*\[([SABC])[级]?\]\s*\[(P[012])\]\s*\[([^\]]+)\]\s*(.+)$/i;
+const AUDIT_MAX_ROUNDS = 4; // 报告很长,被 max_tokens 截断就接着写,最多续 3 次
+const ROUTE_NAMES = { A: '最小修改', B: '结构优化', C: '深度重构' };
+
+function parseAuditIssues(text) {
+  return String(text || '').split('\n').map(l => {
+    const m = l.match(AUDIT_ISSUE_RE);
+    if (!m) return null;
+    const parts = m[5].split(/\s*[｜|]\s*/);
+    return {
+      id: m[1].toUpperCase().replace(/^P(\d)$/, 'P0$1'), severity: m[2].toUpperCase(), priority: m[3].toUpperCase(),
+      chapter: /^CH/i.test(m[4].trim()) ? m[4].trim().toUpperCase() : '全篇',
+      type: (parts[0] || '').trim(), problem: (parts[1] || '').trim(),
+      direction: (parts.find((p, i) => i > 1 && /^修改方向[:：]/.test(p)) || parts[2] || '').replace(/^修改方向[:：]\s*/, '').trim()
+    };
+  }).filter(Boolean);
+}
+
+// 报告里每个「问题编号:P01」小节的全文(给终审用,里面有原文位置、为什么不好、修改方向、示范修改)
+function auditSections(report) {
+  const out = {};
+  const re = /^#{1,6}\s*\**\s*问题编号\s*[:：]\s*(P\d+)/gim;
+  const marks = [];
+  let m;
+  while ((m = re.exec(report)) !== null) marks.push({ id: m[1].toUpperCase(), index: m.index, after: m.index + m[0].length, level: (m[0].match(/^#+/) || ['##'])[0].length });
+  marks.forEach((k, i) => {
+    let end = i + 1 < marks.length ? marks[i + 1].index : report.length;
+    // 最后一个问题之后是「深层问题」等大标题:截到下一个同级或更高级的标题
+    if (i + 1 === marks.length) {
+      const nx = report.slice(k.after).search(new RegExp('^#{1,' + k.level + '}\\s', 'm'));
+      if (nx >= 0) end = k.after + nx;
+    }
+    out[k.id] = report.slice(k.index, end).trim();
+  });
+  return out;
+}
+
+// 报告里三种修改路线各自的说明
+function routeSections(report) {
+  const out = {};
+  const re = /^#{1,6}\s*(?:方案|路线)?\s*([ABC])\s*[.．、:：]\s*(最小修改|结构优化|深度重构)?/gm;
+  const marks = [];
+  let m;
+  while ((m = re.exec(report)) !== null) marks.push({ id: m[1], index: m.index, after: m.index + m[0].length, level: (m[0].match(/^#+/) || [''])[0].length });
+  marks.forEach(k => {
+    const nx = report.slice(k.after).search(new RegExp('^#{1,' + k.level + '}\\s', 'm'));
+    const end = nx >= 0 ? k.after + nx : report.length;
+    if (!out[k.id]) out[k.id] = report.slice(k.index, end).trim();
+  });
+  return out;
+}
+
+// 问题小节里某个字段的内容:「**问题类型:** xxx」同一行,或者标题下一行
+function auditField(section, name) {
+  const lines = section.split('\n');
+  const i = lines.findIndex(l => l.replace(/\*+/g, '').trim().startsWith(name));
+  if (i < 0) return '';
+  const same = lines[i].replace(/\*+/g, '').trim().slice(name.length).replace(/^[\s:：]+/, '').trim();
+  if (same) return same;
+  const next = lines.slice(i + 1).find(l => l.trim());
+  return next ? next.replace(/\*+/g, '').replace(/^\s*[-*•]\s*/, '').trim() : '';
+}
+
+function sourceTitle(asset) {
+  const m = asset.meta || {};
+  return [m.source_title, m.source_title_zh ? '(中文:' + m.source_title_zh + ')' : ''].filter(Boolean).join(' ') || m.name || asset.id;
+}
+
+function sourceScript(asset) {
+  const cues = srtCues(asset.srt);
+  if (!cues.length) return '(没有原片字幕,无法提供完整原文案)';
+  // 停顿超过 1.5 秒另起一段,方便模型定位
+  let out = '', last = null;
+  cues.forEach(c => { out += (last == null ? '' : c.sec - last > 1.5 ? '\n' : ' ') + c.text; last = c.sec; });
+  return out.trim();
+}
+
+function frameworkText(asset) {
+  const fw = dataOf(parse(asset.framework));
+  return Object.keys(fw).length ? JSON.stringify(fw, null, 1) : '(没有拆解框架)';
+}
+
+// 长输出:被 max_tokens 截断就让模型接着写,拼起来
+async function callLong(run, cfg, prompt, label) {
+  let messages = [{ role: 'user', content: prompt }];
+  let text = '', r = null, secs = 0;
+  for (let round = 0; round < AUDIT_MAX_ROUNDS; round++) {
+    r = await an().callWithLog(run, cfg, messages, round ? label + '续写' + round : label);
+    text += r.content;
+    secs += r.secs || 0;
+    if (r.stopReason !== 'max_tokens') return { content: text, secs, truncated: false };
+    messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: '输出被截断了。从你上一条最后一个字接着往下写,不要重复已经写过的内容,不要重新开头,最后照样输出 ===SCORE=== 那段清单。' }];
+  }
+  return { content: text, secs, truncated: true };
+}
+
+async function runReverseAudit(runId) {
+  const cfg = pl().loadConfig();
+  let { run, asset } = loadRunAsset(runId);
+  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
+  const cur = currentScript(run);
+  if (!cur) throw Object.assign(new Error('稿子还没写好'), { status: 400 });
+  // 已经终审过、之后没人动过稿子:审的仍是二稿
+  const vByKey = Object.fromEntries(arr((run.review || {}).versions).map(v => [v.key, v]));
+  const base = vByKey.d2 && vByKey.d3 && vByKey.d3.text === cur ? vByKey.d2.text : cur;
+  run.steps = { ...(run.steps || {}), reverse_audit: { status: 'running', started_at: new Date().toISOString() } };
+  store.saveRun(run);
+  try {
+    const a = run.analysis || {};
+    const aud = run.audience || {};
+    const prompt = an().fillVars(readPrompt('reverse_audit.md'), {
+      today: pl().todayStr(),
+      target_language: aud.target_language || '',
+      target_country: aud.target_country || '',
+      video_goal: aud.video_goal || '',
+      source_title: sourceTitle(asset),
+      source_script: sourceScript(asset),
+      framework: frameworkText(asset),
+      topic: run.topic,
+      title: ((a.title || {}).final_title) || run.topic,
+      analysis: run.analysis ? an().analysisBrief(a) : '(无写前分析)',
+      script: base
+    });
+    const r = await callLong(run, cfg, prompt, '二稿审稿');
+    const cut = r.content.search(/^===\s*SCORE\s*===\s*$/m);
+    const report = (cut >= 0 ? r.content.slice(0, cut) : r.content).trim();
+    const blocks = cut >= 0 ? parseBlocks(r.content.slice(cut), false) : {};
+    const sections = auditSections(report);
+    let issues = parseAuditIssues(blocks.ISSUES || '');
+    // 清单没出来(截断或模型漏写):从报告的 P 小节里兜底取编号和严重程度
+    if (!issues.length) {
+      issues = Object.keys(sections).map(id => {
+        const s = sections[id];
+        const sev = (s.match(/严重程度[^SABC]{0,20}([SABC])\s*级?/) || [])[1] || 'B';
+        return { id, severity: sev, priority: sev === 'S' ? 'P0' : sev === 'A' ? 'P1' : 'P2', chapter: (s.match(/CH\d+/i) || ['全篇'])[0].toUpperCase(), type: auditField(s, '问题类型'), problem: auditField(s, '为什么不好').slice(0, 120), direction: auditField(s, '修改方向').slice(0, 120) };
+      });
+    }
+    issues.forEach(x => { x.detail = sections[x.id] || ''; });
+    const score = Number((String(blocks.SCORE || '').match(/\d+(?:\.\d+)?/) || [])[0] || (report.match(/总分[^\d\n]{0,10}(\d+(?:\.\d+)?)/) || [])[1]) || null;
+    const routeLine = String(blocks.ROUTE || '');
+    const recommended = ((routeLine.match(/\b([ABC])\b/) || routeLine.match(/([ABC])/) || [])[1]) || '';
+    const fresh = store.getRun(runId) || run;
+    fresh.review = fresh.review || {};
+    fresh.review.audit = {
+      at: new Date().toISOString(), base_hash: hash(base), report, score, issues,
+      routes: routeSections(report), recommended, route_reason: routeLine.replace(/^[^|｜]*[|｜]\s*/, '').trim(),
+      truncated: r.truncated, selection: null
+    };
+    fresh.steps = { ...(fresh.steps || {}), reverse_audit: { status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString(), issues: issues.length, score } };
+    if (run.attempts) fresh.attempts = run.attempts;
+    store.saveRun(fresh);
+    return { ok: true, issues: issues.length, score };
+  } catch (e) {
+    const fresh = store.getRun(runId) || run;
+    fresh.steps = { ...(fresh.steps || {}), reverse_audit: { status: 'failed', error: e.message } };
+    store.saveRun(fresh);
+    throw e;
+  }
+}
+
+// 人选中的问题 + 路线 → 终审提示词里的「人工确认要改的问题」
+function selectedFixes(run) {
+  const au = (run.review || {}).audit;
+  const sel = au && au.selection;
+  if (!sel) return '(无。这一遍按常规终审。)';
+  const picked = arr(au.issues).filter(x => arr(sel.ids).includes(x.id));
+  const out = [];
+  if (sel.route && ROUTE_NAMES[sel.route]) {
+    out.push('修改路线:' + sel.route + ' ' + ROUTE_NAMES[sel.route] + (au.routes && au.routes[sel.route] ? '\n' + au.routes[sel.route] : ''));
+  }
+  if (sel.note) out.push('人工补充意见:' + sel.note);
+  if (picked.length) {
+    out.push('要改的问题(' + picked.length + ' 条):');
+    picked.forEach(x => out.push(x.detail || ('## 问题编号:' + x.id + '\n[' + x.severity + '级 / ' + x.priority + '] ' + x.chapter + ' ' + x.type + ':' + x.problem + '\n修改方向:' + x.direction)));
+  }
+  return out.join('\n\n') || '(无。这一遍按常规终审。)';
+}
+
+// 人确认审稿意见后开始终审:存下选择,后台跑终审和翻译
+function startFinal(runId, body) {
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  if (((run.steps || {}).final_review || {}).status === 'running') throw Object.assign(new Error('终审正在进行'), { status: 400 });
+  const au = (run.review || {}).audit;
+  if (au) {
+    const ids = arr(body.ids).map(String).filter(id => arr(au.issues).some(x => x.id === id));
+    au.selection = { ids, route: ROUTE_NAMES[body.route] ? body.route : '', note: String(body.note || '').trim().slice(0, 2000), at: new Date().toISOString() };
+    store.saveRun(run);
+  }
+  runPasses(runId, 'final').catch(() => {});
+  return { ok: true };
+}
+
+// 初稿检查 → 二稿审稿报告 → 停下等人选;人选完再终审 → 翻译。某一遍失败不影响已有稿子,页面上可以单独重跑
+async function runPasses(runId, from) {
+  const order = from === 'final' ? ['final'] : from === 'audit' ? ['audit'] : ['check', 'audit'];
+  for (const k of order) {
+    try { if (k === 'audit') await runReverseAudit(runId); else await runPass(runId, k); } catch (e) { break; }
+  }
+  await translateRun(runId);
+}
+
 // ---------- 一键生成 ----------
 async function runDraftFirst(runId) {
   await an().runAnalysis(runId);
-  return finishDraftFirst(runId);
-}
-
-// 分析之后的部分:AI 先调整 → 自动确认 → 点火写稿 → 中文对照。
-// 单独抽出是为了重启接管:分析已完成、调整被中断的任务从这里续跑,不重复调用分析(见 resumeDraftFirst)
-async function finishDraftFirst(runId) {
   let run = store.getRun(runId);
   if (!run || run.status !== 'awaiting_review') return; // 分析失败或已取消
   try {
@@ -380,12 +730,7 @@ async function finishDraftFirst(runId) {
     store.saveRun(run);
   }
   run = store.getRun(runId);
-  // 取消接口对 awaiting_review 是直接落 cancelled(不打 cancel_requested 标记):两种痕迹都要查,
-  // 否则用户在 AI 调整期间点了取消,这里会把已取消的任务重新写成 queued 并点火写稿
-  if (!run || run.cancel_requested || run.status === 'cancelled') {
-    if (run && run.status !== 'cancelled') { run.status = 'cancelled'; store.saveRun(run); }
-    return;
-  }
+  if (!run || run.cancel_requested) { if (run) { run.status = 'cancelled'; store.saveRun(run); } return; }
   run.analysis_confirmed = true;
   run.analysis_auto_confirmed = true;
   run.analysis_confirmed_at = new Date().toISOString();
@@ -393,20 +738,22 @@ async function finishDraftFirst(runId) {
   store.saveRun(run);
   await pl().runGeneration(runId);
   run = store.getRun(runId);
-  if (run && run.status === 'done') await translateRun(runId);
+  if (run && run.status === 'done') await runPasses(runId);
 }
 
-// 续跑(重试 / 重启接管):分析没跑完就从头跑一键生成;分析跑完但调整被中断,从调整续跑;已经在写稿就接着写,写完补翻译
+// 续跑(重试 / 重启接管):还没写稿就从头跑一键生成;已经在写稿就接着写,写完补二稿、终稿和翻译
 async function resumeDraftFirst(runId) {
   const run = store.getRun(runId);
   if (!run) return;
-  if (!run.analysis_confirmed) {
-    if (run.status === 'awaiting_review' && run.analysis) return finishDraftFirst(runId);
-    return runDraftFirst(runId);
-  }
-  await pl().runGeneration(runId);
+  if (!run.analysis_confirmed) return runDraftFirst(runId);
+  if (run.status !== 'done') await pl().runGeneration(runId);
   const done = store.getRun(runId);
-  if (done && done.status === 'done') await translateRun(runId);
+  if (!done || done.status !== 'done') return;
+  const st = done.steps || {};
+  if ((st.draft_check || {}).status !== 'done') return runPasses(runId);
+  // 终审要等人看完审稿报告再跑,这里只补审稿报告(旧任务已经终审过的不补)
+  if ((st.reverse_audit || {}).status !== 'done' && (st.final_review || {}).status !== 'done') return runPasses(runId, 'audit');
+  await translateRun(runId);
 }
 
 // ---------- 人工处理 ----------
@@ -492,9 +839,8 @@ async function rewriteChapter(runId, chId, note, opts) {
   st.last_reply = out.reply || '';
   writeScript(fresh, next);
   if (typeof out.zh === 'string' && out.zh.trim()) {
-    fresh.review.zh = fresh.review.zh || { source: {}, script: {} };
-    fresh.review.zh.script = fresh.review.zh.script || {};
-    fresh.review.zh.script[chId] = { hash: hash(text), text: out.zh.trim() };
+    fresh.review.zh = fresh.review.zh || {};
+    fresh.review.zh.byHash = { ...(fresh.review.zh.byHash || {}), [hash(text)]: out.zh.trim() };
   }
   if (run.attempts) fresh.attempts = run.attempts;
   store.saveRun(fresh);
@@ -527,4 +873,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

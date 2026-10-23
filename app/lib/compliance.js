@@ -48,6 +48,9 @@ function dumpFailure(content, stopReason) {
 
 // 命中过滤:原句必须是全文精确子串(否则替换必然失败,直接丢弃该条);summary 缺失字段给安全默认值
 // 解析顺序:直接解析(stripFence)→ 花括号配平捞完整对象(容忍解说文字/围栏错位)→ 失败则落盘并抛错
+// 免责/软化句式(韩/英/日/中)
+const HEDGE_RE = /단정(하기|할 수|짓기)[^.?!\n]{0,6}(어렵|없|보다)|(적용|해석|확정|일반화)하기(는|가) 어렵|일반화(하기|할 수)[^.?!\n]{0,6}(어렵|없)|(매장|지역|브랜드|계약)[^.?!\n]{0,12}(마다|별로)[^.?!\n]{0,12}(다릅니다|다르다|달라질 수)|달라질 수 있(습니다|어)|보기는 어렵|may vary|varies by|hard to generali[sz]e|cannot be generali[sz]ed|一概には言え|断定はでき|因(店|地|人)而异|不能一概而论|难以一概|不宜一概/i;
+
 function parseResult(content, script, stopReason) {
   let obj = null;
   try {
@@ -106,9 +109,22 @@ function parseResult(content, script, stopReason) {
       status: 'pending'
     });
   }
-  // 高风险在前,同级按文中先后顺序
+  // 免责/软化句守卫:建议只是加一句「다만…단정하기 어렵다」之类的免责,采纳会打断节奏、削弱结论(实测一篇韩文稿被采纳后多出 9 句免责,
+  // 结尾的落点句也被换成免责声明)。这类建议不删,标出来排到最后,由人决定;全稿最后一句同样只提示不建议改
+  const lastLine = (script.trim().split(/\n/).filter(l => l.trim() && !/^\s*\[CH\d+/.test(l)).pop() || '').trim();
+  hits.forEach(h => {
+    if (HEDGE_RE.test(h.suggestion) && !HEDGE_RE.test(h.original)) {
+      h.hedge = true;
+      h.reason = '⚠ 这条建议是在加免责句,采纳会打断节奏、削弱结论,一般不建议采纳。' + h.reason;
+    }
+    if (lastLine && (lastLine.includes(h.original) || h.original.includes(lastLine))) {
+      h.protected = true;
+      h.reason = '⚠ 这是全稿最后一句(结尾落点),改之前想清楚。' + h.reason;
+    }
+  });
+  // 高风险在前,同级按文中先后顺序;免责类和结尾句排最后
   hits.forEach(h => { h._pos = script.indexOf(h.original); });
-  hits.sort((a, b) => (SEV_RANK[a.severity] - SEV_RANK[b.severity]) || (a._pos - b._pos));
+  hits.sort((a, b) => ((a.hedge || a.protected ? 1 : 0) - (b.hedge || b.protected ? 1 : 0)) || (SEV_RANK[a.severity] - SEV_RANK[b.severity]) || (a._pos - b._pos));
   hits.forEach((h, i) => { h.id = 'h' + (i + 1); delete h._pos; });
   return { summary, hits };
 }
@@ -133,4 +149,4 @@ async function detect(cfg, script, targetLanguage) {
   };
 }
 
-module.exports = { TYPES, TYPE_NAMES, requireTargetLanguage, parseResult, detect };
+module.exports = { HEDGE_RE, TYPES, TYPE_NAMES, requireTargetLanguage, parseResult, detect };
