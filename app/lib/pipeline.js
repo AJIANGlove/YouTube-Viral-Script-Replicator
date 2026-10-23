@@ -69,15 +69,21 @@ function loadTemplates() {
   return [1, 2, 3, 4, 5].map(i => fs.readFileSync(path.join(dir, 'step' + i + '.md'), 'utf-8'));
 }
 
+// 今天的日期写进提示词:模型不知道今天是哪年,会把旧年份的法定数字(最低工资等)当成现行值
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
 function fillTemplate(tpl, ctx, tools) {
   const script = ctx.script || '';
+  const hits = script ? tools.findOverlaps(script) : [];
   const plag = script
-    ? (checks.collapseHits(tools.findOverlaps(script)).length
-        ? checks.collapseHits(tools.findOverlaps(script)).slice(0, 30).map(g => '- "' + g + '"').join('\n')
-        : '无 6 词以上连续重合。')
+    ? (hits.length ? hits.slice(0, 30).map(g => '- "' + g + '"').join('\n') : '无连续重合(英文等按 6 词、韩中日按 12 字计)。')
     : '(空)';
   const dens = script ? tools.densityLines(script).lines.join('\n') : '(空)';
   return tpl
+    .replaceAll('{{today}}', todayStr())
     .replaceAll('{{framework}}', ctx.framework || '(未加载)')
     .replaceAll('{{timeline}}', ctx.timeline || '(未加载)')
     .replaceAll('{{style}}', ctx.style || '(未加载)')
@@ -259,6 +265,22 @@ async function probeProvider(cfg) {
 }
 
 // 主流程(异步,不阻塞 HTTP)
+// 篇幅:全稿词数对比蓝图 word_budget 合计(蓝图没写预算时按目标时长 × 语速)。上限 115%
+const LENGTH_MAX_RATIO = 1.15;
+function lengthCheck(script, blueprint, audience, wpm) {
+  let budget = 0;
+  try { budget = (JSON.parse(checks.stripFence(blueprint || '')).chapters || []).reduce((n, c) => n + (Number(c.word_budget) || 0), 0); } catch (e) {}
+  if (!budget) {
+    const goal = checks.goalSeconds((audience || {}).video_goal);
+    budget = goal && wpm ? Math.round(goal * wpm / 60) : 0;
+  }
+  if (!budget) return null;
+  const words = checks.parseChapters(script || '').reduce((n, c) => n + c.words, 0);
+  const ratio = Math.round(words / budget * 100) / 100;
+  const ok = ratio <= LENGTH_MAX_RATIO;
+  return { words, budget, ratio, ok, detail: words + ' 词,预算 ' + budget + ' 词(' + Math.round(ratio * 100) + '%' + (ok ? '' : ',超过上限 ' + Math.round(LENGTH_MAX_RATIO * 100) + '%') + ')' };
+}
+
 async function runGeneration(runId) {
   const run = store.getRun(runId);
   if (!run) return;
@@ -543,6 +565,23 @@ async function runGeneration(runId) {
           structErr = checks.chapterStructureError(checks.extractFinalScript(content));
           if (structErr) throw new Error('Step 4 章节结构不合格: ' + structErr);
         }
+        // Step 4 篇幅闸门:优化只修问题,不许把稿子撑大。实测韩文稿因词数统计失效被判「偏稀」,
+        // 优化把 7,785 字撑到 16,959 字(预算的 184%)。超出预算 115% 反馈压缩一次;仍超标不置失败,结果写进 checks 交人工
+        let len = lengthCheck(checks.extractFinalScript(content), ctx.blueprint, run.audience, tools.targetWpm);
+        if (len && !len.ok) {
+          run.steps.optimized.gate_retry = { reason: len.detail, attempt: 1 };
+          store.saveRun(run);
+          const feedback = '终稿篇幅不合格:' + len.detail + '。请在不改章节标签和时间范围的前提下删减到预算的 90%–110%:' +
+            '先删重复的观点和数字、空泛的感叹和过渡,不要删事实、悬念和高峰。只输出一份完整终稿,格式要求不变。';
+          messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];
+          const r2 = await callLlm(messages, 'Step 4 篇幅重试');
+          const c2 = textnorm.normalizeChapterTags(r2.content.trim());
+          if (!checks.chapterStructureError(checks.extractFinalScript(c2))) {
+            r = r2; content = c2;
+            len = lengthCheck(checks.extractFinalScript(content), ctx.blueprint, run.audience, tools.targetWpm);
+          }
+        }
+        run.checks = { ...(run.checks || {}), length: len };
       }
 
       outputs['step' + step] = content;
@@ -588,4 +627,4 @@ async function runGeneration(runId) {
   store.saveRun(done);
 }
 
-module.exports = { loadConfig, saveConfig, resolveProvider, loadTweakConfig, buildRequest, postJson, probeProvider, runGeneration, fillTemplate, loadTemplates, llmCall, parseSSE, isRetryable };
+module.exports = { lengthCheck, todayStr, loadConfig, saveConfig, resolveProvider, loadTweakConfig, buildRequest, postJson, probeProvider, runGeneration, fillTemplate, loadTemplates, llmCall, parseSSE, isRetryable };
