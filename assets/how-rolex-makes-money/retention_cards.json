@@ -1,0 +1,1070 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T07:57:46.968Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "paradox_hook_contract",
+      "start_ratio": 0,
+      "end_ratio": 0.0947,
+      "start_sec": 0.3,
+      "end_sec": 68.4,
+      "position_label": "0%–9.5%(0:00–1:08)",
+      "purpose": "用巨额收入与拒绝销售的矛盾开场，给观众一个可现场验证的测试，以市场份额佐证反常，最后明示核心答案将在结尾揭晓",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "worldview_shift",
+          "strength": 78,
+          "position_ratio": 0.0539,
+          "time_ms": 38923,
+          "reason": "拒绝被重构为“刻意为之”：门店没有故障，公司正在做它要做的事"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "悖论核心问题与结尾答案契约，悬挂全片",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "所有权反常与商业常识之间的落差",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "paradox_hook",
+          "mechanism": "revenue_refusal_contradiction"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "scenario_invitation",
+          "mechanism": "second_person_store_test"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "paradox_escalation",
+          "mechanism": "full_price_rejection"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "reframe_payoff",
+          "mechanism": "malfunction_to_intention"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "mechanism_law",
+          "mechanism": "scarcity_desire_feedback"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "core_question",
+          "mechanism": "rich_by_rejecting_customers"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "delayed_answer_tease",
+          "mechanism": "end_of_video_answer_contract"
+        }
+      ],
+      "required_retention_events": [
+        "paradox_hook",
+        "second_person_scenario",
+        "rejection_escalation",
+        "reframe_payoff",
+        "delayed_answer_contract"
+      ],
+      "original_moves": [
+        "亮出年收入百亿美元量级的巨额数字",
+        "邀请观众现场走进门店测试能否买到热门款",
+        "呈现全额付款却被拒绝、有货不卖的现场细节",
+        "用三分之一市场份额证明这不是偶然故障",
+        "给出越难买越想要的稀缺-渴望正相关规律",
+        "明示核心问题答案将在结尾揭晓"
+      ],
+      "abstract_move": "巨额收入与拒绝交易的悖论开场 → 可现场复现的验证测试 → 市场份额数据把异常定性为系统行为 → 稀缺-渴望规律句点明方向 → 核心答案位置预告",
+      "replacement_needs": [
+        "一个可量化的巨额收入或市场规模数据",
+        "一个观众可亲身验证的拒绝购买场景",
+        "一个市场地位数据（份额、排名、覆盖率）证明反常是常态",
+        "一个稀缺与欲望关系的机制性表述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(78);打开的悬念 LOOP01→FS11、LOOP02→FS02 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 78
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "revenue_paradox_plus_interactive_test",
+        "first_stimulus_ms": 280,
+        "first_payoff_ms": 38923,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0019"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "ownership_anomaly_reveal",
+      "start_ratio": 0.0934,
+      "end_ratio": 0.1928,
+      "start_sec": 67.5,
+      "end_sec": 139.2,
+      "position_label": "9.3%–19.3%(1:07–2:19)",
+      "purpose": "给出第一层机制线索：反常的所有权/治理结构如何免除增长压力，使牺牲短期收入保护品牌成为可行选择，并把公司目的从利润改写为渴望",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.1478,
+          "time_ms": 106755,
+          "reason": "“基金会不需要它增长，只需要它保持自己”——公司目的被整体反转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "不缺钱与人为稀缺之间的矛盾",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "governance_motive_reframe",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "anomaly_reveal",
+          "mechanism": "nobody_owns_company"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "succession_reveal",
+          "mechanism": "founder_left_to_foundation"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "motive_inversion",
+          "mechanism": "remain_not_grow"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "superpower_reframe",
+          "mechanism": "fireable_actions_allowed"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "purpose_reframe",
+          "mechanism": "desire_over_profit"
+        }
+      ],
+      "required_retention_events": [
+        "ownership_anomaly",
+        "foundation_succession",
+        "motive_inversion",
+        "desire_over_profit"
+      ],
+      "original_moves": [
+        "揭示无人真正拥有、无法买入股权的所有权事实",
+        "讲述创始人遗赠基金会的由来情节",
+        "转述利润流向公益的限定条件",
+        "点明基金会不需增长只需延续的动机反转",
+        "列举免于增长压力的沉默超能力清单",
+        "对照普通公司目的，将该公司目的从利润改写为渴望"
+      ],
+      "abstract_move": "反常所有权结构揭示 → 控制权归属的历史由来 → 利润去向的制度限定 → 动机从增长反转为延续 → 公司目的从利润重写为渴望",
+      "replacement_needs": [
+        "一个免除股东压力的所有权或治理结构事实",
+        "一个控制权归属的由来故事或制度设计",
+        "一个利润去向或分配机制的明确限定",
+        "一个普通商业逻辑与该主体目的的对照句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(82);打开的悬念 LOOP03→FS04 跨段;回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "scarcity_myth_busting",
+      "start_ratio": 0.1915,
+      "end_ratio": 0.2631,
+      "start_sec": 138.3,
+      "end_sec": 190.1,
+      "position_label": "19.2%–26.3%(2:18–3:10)",
+      "purpose": "追问既然不缺钱为何制造稀缺；先复述流行解释，再用产能证据拆穿，把稀缺重新定性为主动维持的供需差",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.2162,
+          "time_ms": 156169,
+          "reason": "“手工产能不足”的流行故事被年产约110万只的事实击穿"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "new_question",
+          "mechanism": "why_impossible_to_get"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "myth_bust",
+          "mechanism": "handmade_story_vs_million_output"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "reframe_turn",
+          "mechanism": "scarcity_as_choice"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "mechanism_naming",
+          "mechanism": "waiting_list_as_advertising"
+        }
+      ],
+      "required_retention_events": [
+        "why_scarcity_question",
+        "myth_busting",
+        "choice_reframe",
+        "waiting_list_as_advertising"
+      ],
+      "original_moves": [
+        "抛出既然不缺钱为何难买的反问",
+        "复述手工制作、产能不足的流行解释",
+        "用年产约110万只与高度自动化的产能证据拆穿神话",
+        "把稀缺定性为选择而非能力限制",
+        "给出需求领先供给一步的机制句",
+        "将等待名单命名为广告"
+      ],
+      "abstract_move": "承接上段的追问 → 复述流行解释 → 用产能证据击穿流行故事 → 稀缺重新定性为主动选择 → 供需差被命名为营销工具",
+      "replacement_needs": [
+        "一个广为流传的解释或误解",
+        "一个拆穿该解释的产能、规模或效率证据",
+        "一个将稀缺从被动定性为主动的机制性表述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "queue_as_product",
+      "start_ratio": 0.2618,
+      "end_ratio": 0.3415,
+      "start_sec": 189.1,
+      "end_sec": 246.6,
+      "position_label": "26.2%–34.2%(3:09–4:07)",
+      "purpose": "把抽象稀缺落成零售端的具体规则：热门款不卖给陌生人，先买入门款攒资格，把购买仪式化为资格游戏",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.3325,
+          "time_ms": 240168,
+          "reason": "“排队不是系统故障，队伍就是产品”——把负面体验重命名为核心产品"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "“不碰市场”与“完全控制”的并存悖论",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_answer_plus_aphorism",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "concrete_inventory",
+          "mechanism": "hero_models_and_prices"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "relationship_gate",
+          "mechanism": "known_customer_requirement"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "qualification_loop",
+          "mechanism": "spend_to_earn_right_to_spend"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "aphorism_payoff",
+          "mechanism": "the_line_is_the_product"
+        }
+      ],
+      "required_retention_events": [
+        "hero_model_inventory",
+        "known_customer_gate",
+        "qualification_game",
+        "line_is_product_aphorism"
+      ],
+      "original_moves": [
+        "列举店内热门款与具体价格清单",
+        "说明熟客优先、陌生人被拒的门槛规则",
+        "揭示先买入门款换取再买热门款权利的逻辑",
+        "总结为花钱换取再花钱的权利",
+        "将购买仪式化为资格游戏",
+        "给出队伍就是产品的格言句"
+      ],
+      "abstract_move": "抽象稀缺落为具体零售规则 → 陌生人被拒、熟客优先的门槛 → 先消费换资格的递进逻辑 → 负面体验重命名为核心产品",
+      "replacement_needs": [
+        "一个热门品类与价格的具体清单",
+        "一个陌生人被拒、需先消费攒资格的门槛规则",
+        "一个将负面等待体验重新命名为产品的判断句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(88);打开的悬念 LOOP04→FS06 跨段;回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "secondary_market_reveal",
+      "start_ratio": 0.3402,
+      "end_ratio": 0.4534,
+      "start_sec": 245.7,
+      "end_sec": 327.5,
+      "position_label": "34%–45.3%(4:06–5:27)",
+      "purpose": "揭示稀缺催生的二级市场：品牌不参与却完全控制；价差证据把商品重定义为资产，极端拍卖案例把该信息推到顶点",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 83,
+          "position_ratio": 0.4375,
+          "time_ms": 315956,
+          "reason": "名人表拍卖1780万美元，把“表即资产”推到极端尺度"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "new_domain",
+          "mechanism": "secondary_market_controlled"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "numeric_gap_reveal",
+          "mechanism": "list_vs_secondary_price"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "category_redefinition",
+          "mechanism": "not_watch_but_asset"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "extreme_proof",
+          "mechanism": "auction_record"
+        }
+      ],
+      "required_retention_events": [
+        "secondary_market_paradox",
+        "price_gap_reveal",
+        "asset_redefinition",
+        "auction_extreme_proof"
+      ],
+      "original_moves": [
+        "点出品牌未创造却受控的二级市场悖论",
+        "呈现入手即升值的场景",
+        "对照同一对象的公价与二手价接近翻倍",
+        "描述炒卖产业在价差中繁荣的生态",
+        "将商品重新命名为资产",
+        "用名人表拍卖1780万美元的极端案例推到尺度顶点",
+        "总结为几十年免费广告"
+      ],
+      "abstract_move": "揭示品牌未参与却控制的二级市场 → 价差证据将商品重新定性为资产 → 极端拍卖案例把信息推到顶点",
+      "replacement_needs": [
+        "一个公价与转售价的对照数据",
+        "一个二级市场规模或炒卖生态的描述",
+        "一个极端拍卖或溢价案例把资产属性推到顶点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(83)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 83
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "channel_control_escalation",
+      "start_ratio": 0.4521,
+      "end_ratio": 0.5088,
+      "start_sec": 326.5,
+      "end_sec": 367.5,
+      "position_label": "45.2%–50.9%(5:27–6:07)",
+      "purpose": "讲述品牌如何介入流通环节：认证二手商品、收购零售渠道，完成对入手价与出手价的双端控制",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.5011,
+          "time_ms": 361909,
+          "reason": "入手价与出手价双端控制完成，机制版图闭合"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "常识规则（价高则需求降）即将被打破的预告",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "control_completion_answer",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "strategy_turn",
+          "mechanism": "intervention_begins"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "acquisition_surprise",
+          "mechanism": "retailer_acquired"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "control_completion",
+          "mechanism": "entry_and_exit_price"
+        }
+      ],
+      "required_retention_events": [
+        "intervention_turn",
+        "acquisition_surprise",
+        "dual_price_control"
+      ],
+      "original_moves": [
+        "指出免费广告还不够",
+        "揭示数十亿美元在品牌之外的市场流转事实",
+        "讲述官方认证二手商品的介入动作",
+        "讲述收购大型零售商的意外事件",
+        "总结为入手价与出手价双端控制完成"
+      ],
+      "abstract_move": "巨额交易在品牌外流转的事实 → 官方介入认证二手的动作 → 收购零售渠道的升级事件 → 双端价格控制完成的闭合",
+      "replacement_needs": [
+        "一个二级市场交易额或规模数据",
+        "一个品牌介入流通环节的动作（认证、回购、收购）",
+        "一个双端控制完成的总结性判断"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80);打开的悬念 LOOP05→FS07 跨段;回收了前文的悬念 FS04→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "pricing_power_reveal",
+      "start_ratio": 0.5075,
+      "end_ratio": 0.575,
+      "start_sec": 366.5,
+      "end_sec": 415.3,
+      "position_label": "50.7%–57.5%(6:07–6:55)",
+      "purpose": "揭示反常识定价权：持续提价而需求不减甚至增长，因为提价强化了符号而非削弱价值；以市场独占尺度收尾",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 86,
+          "position_ratio": 0.5273,
+          "time_ms": 380831,
+          "reason": "提价不吓跑买家反而安抚买家，价格-需求直觉被翻转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "counterintuitive_rule_reveal",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "rule_break_tease",
+          "mechanism": "rule_you_were_taught"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "counterintuitive_reveal",
+          "mechanism": "higher_price_reassures"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "dominance_scale",
+          "mechanism": "third_of_market_alone"
+        }
+      ],
+      "required_retention_events": [
+        "rule_break_tease",
+        "price_reassurance_reveal",
+        "dominance_scale"
+      ],
+      "original_moves": [
+        "预告接下来打破从小被教的规则",
+        "呈现几乎年年谨慎提价的持续事实",
+        "对照普通产品价高则少卖的需求弹性规律",
+        "给出提价即安抚买家的机制句",
+        "指出反复提价需求仍增的现象",
+        "用独占约三分之一市场、超过身后品牌之和的尺度收尾",
+        "补充行业跟随它定价的从属地位"
+      ],
+      "abstract_move": "打破常识的预告 → 持续提价的事实 → 普通商品规律对照 → 提价与需求关系被翻转 → 市场独占尺度证据",
+      "replacement_needs": [
+        "一个持续提价的事实或频率描述",
+        "一个提价后需求不减甚至增长的证据",
+        "一个市场独占地位的量化数据（份额、排名、倍数）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(86);回收了前文的悬念 FS06→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "vertical_integration_reveal",
+      "start_ratio": 0.5737,
+      "end_ratio": 0.6537,
+      "start_sec": 414.4,
+      "end_sec": 472.1,
+      "position_label": "57.4%–65.4%(6:54–7:52)",
+      "purpose": "回答定价权的地基：先控制成本；对照组装商模式，展示从原料到成品的全链自造，使成本只取决于自己",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 81,
+          "position_ratio": 0.6419,
+          "time_ms": 463607,
+          "reason": "全链自控后“成本仅为售价零头”的落差揭示利润结构"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "定价权成立但成因未明的悬念",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "structural_cause_answer",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "foundation_question",
+          "mechanism": "pricing_needs_cost_control"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "category_contrast",
+          "mechanism": "brands_as_assemblers"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "integration_reveal",
+          "mechanism": "manufactures_everything_itself"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "visible_half_turn",
+          "mechanism": "the_half_you_see"
+        }
+      ],
+      "required_retention_events": [
+        "cost_foundation_question",
+        "assembler_contrast",
+        "full_chain_integration",
+        "margin_implication"
+      ],
+      "original_moves": [
+        "抛出要控制价格先控制成本的过渡问句",
+        "对照多数品牌只是组装商的行业模式",
+        "列举自建铸造厂、自炼金属、自造零件的全链事实",
+        "总结为全链掌控、成本仅取决于自己",
+        "揭示成本仅为售价零头的利润结构落差"
+      ],
+      "abstract_move": "定价权地基的过渡问句 → 组装商模式对照 → 全链自造事实清单 → 成本自控因果 → 成本与售价落差揭示利润结构",
+      "replacement_needs": [
+        "一个行业通用模式（外包、组装）的对照",
+        "一个从原料到成品全链自控的事实清单",
+        "一个成本与售价比例的落差数据或定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(81)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 81
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "flywheel_synthesis",
+      "start_ratio": 0.6524,
+      "end_ratio": 0.7113,
+      "start_sec": 471.2,
+      "end_sec": 513.7,
+      "position_label": "65.2%–71.1%(7:51–8:34)",
+      "purpose": "展示营销端如何让符号绑定成功，再把各环节复述为互相保护的飞轮，并指出所有零件守护同一个百年建成且脆弱的东西",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "flywheel_recap",
+          "mechanism": "cycle_continues"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "fragility_tease",
+          "mechanism": "each_piece_protects_one_thing"
+        }
+      ],
+      "required_retention_events": [
+        "status_placement",
+        "flywheel_recap",
+        "fragility_tease"
+      ],
+      "original_moves": [
+        "揭示看得见的那一半：重金投放成功场合",
+        "话术呈现产品作为登顶证明的符号绑定",
+        "复述飞轮四环节：自控成本、限制供给、绑定地位、基金会保护",
+        "判断每个部件保护其余部件形成系统",
+        "指出一切建立在百年建成的脆弱之物上",
+        "预告真正的产品从来不是实物"
+      ],
+      "abstract_move": "符号投放与成功绑定 → 各环节复述为互相保护的飞轮 → 所有零件守护同一个百年建成且脆弱的东西 → 真实产品预告",
+      "replacement_needs": [
+        "一个符号投放的场合或场景描述",
+        "一个各环节互相保护的系统性判断",
+        "一个百年建成且脆弱的悬念性表述"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "origin_proof_montage",
+      "start_ratio": 0.7099,
+      "end_ratio": 0.8542,
+      "start_sec": 512.7,
+      "end_sec": 617,
+      "position_label": "71%–85.4%(8:33–10:17)",
+      "purpose": "用编年史证据链回答信念从何而来：时代偏见、创始人下注、关键发明、极端环境实测与早期名人背书连发，证明共识是工程结果",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 79,
+          "position_ratio": 0.7597,
+          "time_ms": 548729,
+          "reason": "横渡海峡后表仍在运转，实证故事的画面性落点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "核心物已被暗示为信念类资产，但来源尚未证明",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "historical_evidence_chain",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "origin_question",
+          "mechanism": "where_did_belief_come_from"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "historical_proof",
+          "mechanism": "first_waterproof_case"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "demonstration_story",
+          "mechanism": "channel_swim"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "proof_result",
+          "mechanism": "emerged_still_functioning"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "historical_proof",
+          "mechanism": "everest_summit"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "historical_proof",
+          "mechanism": "deepest_ocean_point"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "consensus_reveal",
+          "mechanism": "work_done_before_birth"
+        }
+      ],
+      "required_retention_events": [
+        "origin_question",
+        "historical_proof_chain",
+        "demonstration_payoff",
+        "consensus_reveal"
+      ],
+      "original_moves": [
+        "抛出信念从何而来的起源反问",
+        "呈现腕表曾被看作脆弱之物的时代偏见",
+        "讲述创始人下注的决策情节",
+        "揭示防水表壳关键发明",
+        "讲述横渡海峡实测与头版广告、早期名人背书故事",
+        "指出手册从未改变的定性",
+        "连发登顶珠峰、深潜海底等极端环境壮举",
+        "总结每个故事都说同一句话",
+        "判断观众出生时工作已完成、共识先于个体",
+        "点明信念无法一夜买到"
+      ],
+      "abstract_move": "起源反问 → 时代偏见与创始人下注 → 关键发明 → 极端环境实测与早期背书连发 → 共识是百年工程结果的判断",
+      "replacement_needs": [
+        "一个时代偏见与创始人下注的由来情节",
+        "一个关键发明或技术突破",
+        "一个极端环境实测故事及画面性落点",
+        "一个共识先于观众、无法速成的判断句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(79)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 79
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "core_answer_reveal",
+      "start_ratio": 0.8538,
+      "end_ratio": 0.9313,
+      "start_sec": 616.7,
+      "end_sec": 672.6,
+      "position_label": "85.4%–93.1%(10:17–11:13)",
+      "purpose": "兑现开场契约：用排除法命名真正售卖的商品（不是功能而是信念），复述所有机制如何保护它，并压缩回答“如何赚钱”",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 92,
+          "position_ratio": 0.8643,
+          "time_ms": 624232,
+          "reason": "“它卖的是信念”——开场承诺的“那一样东西”正式命名，全片最大认知奖励"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "delayed_core_answer_with_elimination_naming",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE44",
+          "event_type": "answer_setup",
+          "mechanism": "not_in_telling_time_business"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "core_answer",
+          "mechanism": "sells_belief"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "consolidation",
+          "mechanism": "belief_most_valuable_protected"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "compressed_answer",
+          "mechanism": "how_money_actually_made"
+        }
+      ],
+      "required_retention_events": [
+        "elimination_naming",
+        "belief_reveal",
+        "protection_recap",
+        "compressed_answer"
+      ],
+      "original_moves": [
+        "用剥离一切的排除法开场",
+        "否定报时功能生意（手机免费且更好）",
+        "命名卖的是亿万人共享的信念",
+        "具象描述信念意味着成功、品味与保值、无需言说",
+        "判断信念是最宝贵财产",
+        "复述柜台拒绝、受控供给、转售价值、基金会都在保护它",
+        "压缩回答如何赚钱：建造渴望、步步保护、永不枯竭"
+      ],
+      "abstract_move": "排除法命名真正售卖的商品不是功能而是信念 → 信念内容的具象描述 → 全机制保护清单回扣 → 如何赚钱的压缩答案",
+      "replacement_needs": [
+        "一个排除功能后的真实商品命名",
+        "一个信念或符号内容的具象描述",
+        "一个全机制如何保护该信念的回扣清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(92);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 92
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "callback_reframe_open_question",
+      "start_ratio": 0.9301,
+      "end_ratio": 0.9758,
+      "start_sec": 671.8,
+      "end_sec": 704.8,
+      "position_label": "93%–97.6%(11:12–11:45)",
+      "purpose": "回到开场的观看场景完成回环，用最终命名重构观众所见，再把一个关于自身欲望来源的开放问句留给观众",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "emotional_payoff",
+          "strength": 87,
+          "position_ratio": 0.9474,
+          "time_ms": 684272,
+          "reason": "“不是表，是史上零售最成功的欲望机器”完成最终重命名与情绪落点"
+        },
+        {
+          "peak_id": "PK12",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.9675,
+          "time_ms": 698777,
+          "reason": "问题被反转给观众自身：多少欲望是别人教会的"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "从单一品牌案例扩展到观众自身欲望来源的哲学反问",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE48",
+          "event_type": "opening_callback",
+          "mechanism": "next_time_behind_glass"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "redefinition_payoff",
+          "mechanism": "desire_machine_named"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "open_question",
+          "mechanism": "taught_to_desire"
+        }
+      ],
+      "required_retention_events": [
+        "opening_callback",
+        "desire_machine_naming",
+        "philosophical_open_question"
+      ],
+      "original_moves": [
+        "回到开场的观看场景：下次看到玻璃柜后的标价时",
+        "给出最终总结性命名：不是表，是史上零售最成功的欲望机器",
+        "复述所有权悖论：不属于任何人、不向任何人负责",
+        "回扣靠说不而年年更富的反常",
+        "抛向观众的开放问句：真正的问题是还有多少欲望是别人教会的"
+      ],
+      "abstract_move": "回到开场场景完成回环 → 最终总结性命名重构观众所见 → 所有权悖论复述 → 关于自身欲望来源的开放问句留给观众",
+      "replacement_needs": [
+        "一个回到开场场景的回环设计",
+        "一个最终总结性命名句",
+        "一个抛向观众自身的开放性追问"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(87)、PK12(80);打开的悬念 LOOP08(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 87
+        },
+        {
+          "peak_id": "PK12",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "cta_outro",
+      "start_ratio": 0.9746,
+      "end_ratio": 1,
+      "start_sec": 703.9,
+      "end_sec": 722.3,
+      "position_label": "97.5%–100%(11:44–12:02)",
+      "purpose": "以与内容奖励挂钩的礼貌请求完成互动收尾",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE51",
+          "event_type": "cta",
+          "mechanism": "like_subscribe"
+        }
+      ],
+      "required_retention_events": [
+        "content_linked_cta"
+      ],
+      "original_moves": [
+        "挂钩内容惊喜度的点赞请求",
+        "订阅请求",
+        "简短告别"
+      ],
+      "abstract_move": "以内容奖励挂钩的礼貌请求完成互动收尾",
+      "replacement_needs": [
+        "一个挂钩内容质量的点赞请求",
+        "一个订阅或关注请求"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

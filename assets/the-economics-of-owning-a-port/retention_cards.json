@@ -1,0 +1,931 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:27:16.362Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "paradox_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.02,
+      "start_sec": 0.1,
+      "end_sec": 26,
+      "position_label": "0%–2%(0:00–0:26)",
+      "purpose": "用价值数十亿却一箱不占有的核心悖论建立好奇缺口，并点名金钱来源问题",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "worldview_shift",
+          "strength": 78,
+          "position_ratio": 0.0058,
+          "time_ms": 7545,
+          "reason": "拥有者一只箱子都不占有，所有权直觉在开场第一分钟被直接翻转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "所有权反常与真实收入机制之间的缺口",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "familiar_scene_entry",
+          "mechanism": "scaled_yard_imagery"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "ownership_anomaly",
+          "mechanism": "owns_none_of_the_boxes"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "new_question",
+          "mechanism": "where_does_money_come_from"
+        }
+      ],
+      "required_retention_events": [
+        "scale_reveal",
+        "ownership_anomaly",
+        "new_question"
+      ],
+      "original_moves": [
+        "用堆场规模画面建立高价值资产的视觉锚点",
+        "揭示反常事实：拥有者一只箱子都不占有",
+        "直接抛出开放问题：钱从哪里来"
+      ],
+      "abstract_move": "用高价值场景与所有权悖论制造认知裂缝，再用未回答的收入来源问题将裂缝转化为必须填补的好奇缺口",
+      "replacement_needs": [
+        "一个可量化的高价值资产或规模指标",
+        "一个违反常识的所有权或占有关系",
+        "一个指向收入来源或商业逻辑的开放式问句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(78);打开的悬念 LOOP01→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 78
+        }
+      ],
+      "hook": {
+        "start_ms": 100,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.100",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "ownership_anomaly_with_early_partial_payoff",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 28836,
+        "evidence_refs": [
+          "C0001",
+          "C0006",
+          "C0014",
+          "C0017"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "core_answer_reveal",
+      "start_ratio": 0.0193,
+      "end_ratio": 0.0369,
+      "start_sec": 25.1,
+      "end_sec": 48,
+      "position_label": "1.9%–3.7%(0:25–0:48)",
+      "purpose": "立即给出全片核心重构——卖的不是货而是通行与速度，并用收费站类比固定该图景",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.0222,
+          "time_ms": 28836,
+          "reason": "“卖通行与速度”加收费站类比，第一层答案在开场内即兑现"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "轻资产收费站印象与重资产高杠杆现实之间的落差",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "causal_payoff",
+          "mechanism": "selling_access_not_goods"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "analogy_payoff",
+          "mechanism": "toll_booth_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "causal_payoff",
+        "analogy_payoff",
+        "scale_reveal"
+      ],
+      "original_moves": [
+        "否定表面商品：不卖货物本身",
+        "给出核心重构：卖的是通行、速度与可靠性",
+        "用收费站类比把抽象答案具象化",
+        "陈述全球经济对该通行的依赖性"
+      ],
+      "abstract_move": "用否定句破除表面认知，立即给出反直觉的真实商品定义，再用日常类比锁定新图景，最后陈述该商品的系统级必要性",
+      "replacement_needs": [
+        "一个对表面商品的明确否定",
+        "一个重新定义商品本质的反直觉答案",
+        "一个日常场景类比来固化新认知",
+        "一个说明该商品系统级地位的必要性陈述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(82);打开的悬念 LOOP02→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "transaction_trace",
+      "start_ratio": 0.0361,
+      "end_ratio": 0.0672,
+      "start_sec": 47,
+      "end_sec": 87.5,
+      "position_label": "3.6%–6.7%(0:47–1:27)",
+      "purpose": "沿一只箱子的物理旅程逐站拆出多重收费链，把抽象答案转成可见的现金流",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "tracking_device",
+          "mechanism": "follow_one_container"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "compressed_verdict",
+          "mechanism": "one_box_many_invoices"
+        }
+      ],
+      "required_retention_events": [
+        "journey_device",
+        "payment_chain",
+        "compressed_verdict"
+      ],
+      "original_moves": [
+        "追踪单个单位的完整物理旅程",
+        "在旅程每个节点标出付款主体",
+        "列举四类不同的付费方",
+        "总结每一步都产生收费的结构"
+      ],
+      "abstract_move": "沿单个单位的可见路径逐站标注付费主体与付费动作，把抽象的收入模式转化为多点抽成的可见现金流地图",
+      "replacement_needs": [
+        "一个可追踪的单位完整流程（分步骤）",
+        "每个步骤对应的付款主体类型",
+        "多点收费的位置与触发条件总结"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "capex_barrier",
+      "start_ratio": 0.0665,
+      "end_ratio": 0.1143,
+      "start_sec": 86.5,
+      "end_sec": 148.7,
+      "position_label": "6.7%–11.4%(1:27–2:29)",
+      "purpose": "反转视角到建设端，用造地、岸壁、巨型吊机的单价建立天文级进入门槛",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.111,
+          "time_ms": 144385,
+          "reason": "首箱起吊前账单已达数十亿，建设门槛的尺度冲击"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "perspective_flip",
+          "mechanism": "before_earning_a_single_dollar"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "unit_price_reveal",
+          "mechanism": "crane_price_range"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "aggregate_scale",
+          "mechanism": "billions_before_first_container"
+        }
+      ],
+      "required_retention_events": [
+        "perspective_flip",
+        "unit_price_reveal",
+        "aggregate_scale"
+      ],
+      "original_moves": [
+        "将视角从收费链反转到建设端",
+        "列举填海造地的必要性与成本",
+        "给出单台设备与单位基础设施的价格",
+        "汇总系统与基建清单",
+        "得出首单位处理前已花费数十亿的总账"
+      ],
+      "abstract_move": "反转到建设视角，用单项基础设施与关键设备的天文单价逐项累加，在业务开始前就完成进入门槛的数量级冲击",
+      "replacement_needs": [
+        "核心基础设施的必要性说明",
+        "关键设备或设施的单价数据",
+        "多项成本的清单与累加逻辑",
+        "在业务启动前的总投资量级"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "value_reframe",
+      "start_ratio": 0.1136,
+      "end_ratio": 0.156,
+      "start_sec": 147.8,
+      "end_sec": 202.9,
+      "position_label": "11.4%–15.6%(2:28–3:23)",
+      "purpose": "回答投资悖论：港口真正出售的商品是时间，用船舶闲置成本解释速度溢价",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.124,
+          "time_ms": 161295,
+          "reason": "“真正的产品是时间”把港口从地产与钢铁重构为时间商品"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "巨额前置投入与延迟回报之间的投资悖论",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "value_reframe_plus_arithmetic",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "renewed_question",
+          "mechanism": "why_spend_before_earning"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "value_reframe",
+          "mechanism": "the_product_is_time"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "idle_cost_math",
+          "mechanism": "ship_value_and_daily_loss"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "causal_payoff",
+          "mechanism": "one_day_saved_value"
+        }
+      ],
+      "required_retention_events": [
+        "renewed_question",
+        "value_reframe",
+        "idle_cost_math",
+        "premium_logic"
+      ],
+      "original_moves": [
+        "抛出投资悖论：为何有人愿意先花数十亿",
+        "给出答案重构：真正的产品是时间",
+        "量化客户资产的闲置成本（船价与日损）",
+        "计算提速一天即返还的价值",
+        "推导客户愿为速度支付溢价的逻辑"
+      ],
+      "abstract_move": "用悖论提问引入，再用商品重新定义回答，接着量化客户资产的时间成本，最后推导出节省时间即返还价值因此客户愿付溢价的完整链条",
+      "replacement_needs": [
+        "客户持有的高价值资产及其闲置成本",
+        "时间节省带来的可量化价值返还",
+        "按时间单位放大后的溢价支付意愿逻辑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "revenue_anatomy",
+      "start_ratio": 0.1552,
+      "end_ratio": 0.2278,
+      "start_sec": 202,
+      "end_sec": 296.4,
+      "position_label": "15.5%–22.8%(3:22–4:56)",
+      "purpose": "回到单箱付款链并展开收入解剖：装卸、靠泊、堆存、冷藏、转运与租仓的组合生意",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "payment_chain",
+          "mechanism": "importer_pays_demurrage"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "inventory_turn",
+          "mechanism": "several_businesses_in_one_location"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "portfolio_logic",
+          "mechanism": "streams_behave_differently"
+        }
+      ],
+      "required_retention_events": [
+        "payment_chain",
+        "inventory_release",
+        "portfolio_logic"
+      ],
+      "original_moves": [
+        "回到单箱付款链重新拆解",
+        "列举六类不同收入流",
+        "指出各类收入的利润率差异",
+        "判断健康运营需要收入组合而非单一依赖"
+      ],
+      "abstract_move": "回到单次交易的付款链进行二次拆解，列举多条并行收入流及其利润差异，最后明确组合而非单一的必要性",
+      "replacement_needs": [
+        "单次交易可拆解出的多条收入流类型",
+        "不同收入流的利润率对比",
+        "组合收入必要性的判断依据"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "operational_physics",
+      "start_ratio": 0.2271,
+      "end_ratio": 0.3286,
+      "start_sec": 295.5,
+      "end_sec": 427.5,
+      "position_label": "22.7%–32.9%(4:55–7:08)",
+      "purpose": "用吊机工时与堆场利用率阈值说明这门生意的运营物理学：资产只有运转才值钱",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 76,
+          "position_ratio": 0.3156,
+          "time_ms": 410645,
+          "reason": "堆场利用率临界点的量化阈值，是运营段最可带走的信息工具"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "channel_cta",
+          "mechanism": "midroll_subscribe_prompt"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "idle_asset_cost",
+          "mechanism": "crane_only_valuable_when_working"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "metric_reveal",
+          "mechanism": "moves_per_hour"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "threshold_reveal",
+          "mechanism": "yard_capacity_turning_point"
+        }
+      ],
+      "required_retention_events": [
+        "idle_asset_cost",
+        "efficiency_metric",
+        "threshold_reveal"
+      ],
+      "original_moves": [
+        "插入订阅引导",
+        "陈述关键设备闲置即烧钱的成本结构",
+        "给出装卸效率的量化指标与行业基准",
+        "指出堆场过空或过满的代价",
+        "给出堆场利用率的量化临界点"
+      ],
+      "abstract_move": "用设备闲置成本建立运营压力，引入效率量化指标与基准，再指出资源利用率的双向代价，最后给出可操作的量化临界阈值",
+      "replacement_needs": [
+        "关键资产的闲置成本或运转压力",
+        "核心效率指标及其行业基准",
+        "资源利用率的量化临界点或安全区间"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(76)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "cascade_and_windfall",
+      "start_ratio": 0.3279,
+      "end_ratio": 0.3999,
+      "start_sec": 426.6,
+      "end_sec": 520.3,
+      "position_label": "32.8%–40%(7:07–8:40)",
+      "purpose": "展示拥堵的级联破坏与反直觉暴利：让所有人痛苦的混乱反而让港口赚钱",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 88,
+          "position_ratio": 0.3756,
+          "time_ms": 488693,
+          "reason": "拥堵期创纪录利润率与客户受苦并置，全片核心矛盾的情绪爆点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "客户受苦与运营商暴利并存的核心矛盾",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "cascade_failure",
+          "mechanism": "storm_delay_compounds"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "fine_math",
+          "mechanism": "daily_storage_fines"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "contradiction_reveal",
+          "mechanism": "record_margins_during_congestion"
+        }
+      ],
+      "required_retention_events": [
+        "cascade_failure",
+        "fine_math",
+        "contradiction_reveal",
+        "scale_contrast"
+      ],
+      "original_moves": [
+        "展示延误如何在多系统间级联放大",
+        "列举滞留触发的日计罚款金额区间",
+        "揭示拥堵期创纪录的利润率数据",
+        "并置客户受苦与港口纪录利润的矛盾画面"
+      ],
+      "abstract_move": "展示负面事件的多系统级联破坏链，量化其触发的惩罚性费用，再揭示混乱期反而创造纪录收益的反直觉现实，最后用矛盾并置制造情绪张力",
+      "replacement_needs": [
+        "负面事件的多系统级联放大路径",
+        "事件触发的惩罚性费用区间",
+        "混乱或负面期的反常高收益数据",
+        "收益方与受损方的矛盾对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(88);打开的悬念 LOOP04→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "pricing_and_margins",
+      "start_ratio": 0.3992,
+      "end_ratio": 0.4854,
+      "start_sec": 519.4,
+      "end_sec": 631.5,
+      "position_label": "39.9%–48.5%(8:39–10:32)",
+      "purpose": "用长期合约、同价装卸与增值业务利润率回答港口如何把混乱转化为稳定现金流",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.4265,
+          "time_ms": 554890,
+          "reason": "芯片与废纸同价装卸直接违反价格直觉，重构“货值与收费”的关系"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "pricing_structure_answer",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "contract_certainty",
+          "mechanism": "long_term_volume_commitments"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "flat_fee_surprise",
+          "mechanism": "same_fee_regardless_of_contents"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "margin_map",
+          "mechanism": "reefer_and_specialty_margins"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "land_reveal",
+          "mechanism": "land_quietly_most_valuable"
+        }
+      ],
+      "required_retention_events": [
+        "contract_certainty",
+        "flat_fee_surprise",
+        "margin_map",
+        "land_reveal"
+      ],
+      "original_moves": [
+        "解释长期合约如何换取货量确定性",
+        "揭示高价值与低价值货物同价装卸的事实",
+        "说明按物理属性而非货值计费的逻辑",
+        "强调货量重于货值的商业选择",
+        "列举增值服务的高利润率区间",
+        "补充滨水土地的稀缺升值逻辑"
+      ],
+      "abstract_move": "用长期交易换确定性的机制，揭示违反价格直觉的同价事实，解释背后的计费逻辑与战略选择，再列举高利润附加项与资产升值路径",
+      "replacement_needs": [
+        "长期合约换确定性的机制说明",
+        "违反价格直觉的同价或定价事实",
+        "高利润率的附加业务或服务区间",
+        "相关资产的稀缺性或升值逻辑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80);回收了前文的悬念 FS08→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "ownership_and_costs",
+      "start_ratio": 0.4846,
+      "end_ratio": 0.6362,
+      "start_sec": 630.6,
+      "end_sec": 827.7,
+      "position_label": "48.5%–63.6%(10:31–13:48)",
+      "purpose": "铺陈所有权模式与永不停止的成本面：疏浚、全天候运转、人工杠杆与自动化两难",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "ownership_models",
+          "mechanism": "owner_operator_model"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "recurring_cost",
+          "mechanism": "dredging_depth_requirement"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "labor_leverage",
+          "mechanism": "labor_share_of_costs"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "automation_dilemma",
+          "mechanism": "automation_tradeoff"
+        }
+      ],
+      "required_retention_events": [
+        "ownership_models",
+        "recurring_cost",
+        "labor_leverage",
+        "automation_dilemma"
+      ],
+      "original_moves": [
+        "对比地主-运营模式与英美两种所有权结构",
+        "陈述地理位置不可复制的天然护城河",
+        "列举疏浚的单价与年年回购的永续性",
+        "说明24小时运转的工厂属性",
+        "给出人工占比与罢工的杠杆作用",
+        "解释渐进自动化而非激进替代的两难"
+      ],
+      "abstract_move": "对比两种所有权模式，陈述位置不可复制性，列举永续性成本项目，说明全天候运转的资源消耗，揭示人力杠杆与自动化替代的两难",
+      "replacement_needs": [
+        "两种所有权或运营模式的对比",
+        "不可复制的位置或资源属性",
+        "永续性成本项目及其单价",
+        "全天候运转的人力或能源占比",
+        "人力杠杆与自动化替代的矛盾"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "risk_and_moat",
+      "start_ratio": 0.6354,
+      "end_ratio": 0.9272,
+      "start_sec": 826.7,
+      "end_sec": 1206.4,
+      "position_label": "63.5%–92.7%(13:47–20:06)",
+      "purpose": "先付后收的现金流错配、固定成本杠杆算术、客户联盟反噬与位置/网络效应护城河、政府角色",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 91,
+          "position_ratio": 0.708,
+          "time_ms": 921172,
+          "reason": "量跌25%抹掉九成以上利润的算术演示，是全片量化强度最高点"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 79,
+          "position_ratio": 0.7925,
+          "time_ms": 1031063,
+          "reason": "海陆运费百倍级差距把“位置护城河”从口号变成算术"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "analogy_stress_test_with_leverage_math",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "cash_flow_mismatch",
+          "mechanism": "sixty_to_ninety_day_terms"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "leverage_math",
+          "mechanism": "volume_drop_wipes_profit"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "customer_threat",
+          "mechanism": "alliance_relocation_risk"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "vertical_integration",
+          "mechanism": "carriers_own_terminals"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "geography_moat",
+          "mechanism": "sea_freight_cost_gap"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "network_effect",
+          "mechanism": "ecosystem_lock_in"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "government_layer",
+          "mechanism": "national_security_review"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "public_spillover",
+          "mechanism": "regional_multiplier"
+        }
+      ],
+      "required_retention_events": [
+        "cash_flow_mismatch",
+        "leverage_math",
+        "customer_threat",
+        "geography_moat",
+        "network_effect",
+        "public_spillover"
+      ],
+      "original_moves": [
+        "揭示先付后收的现金流时间错配",
+        "演示量跌25%如何抹掉九成以上利润的算术",
+        "列举客户集中度与垂直整合的反噬威胁",
+        "用海陆运费百倍级差距量化地理护城河",
+        "说明网络效应的累积优势",
+        "补充政府审查与区域外溢的战略价值"
+      ],
+      "abstract_move": "揭示现金流错配风险，用固定成本杠杆算术演示量跌对利润的放大摧毁，列举客户反噬威胁，再用运输成本数量级差距与网络效应量化护城河，最后补充政府角色",
+      "replacement_needs": [
+        "现金流时间错配的结构说明",
+        "固定成本杠杆下量跌对利润的放大算术",
+        "客户集中或垂直整合的反噬威胁",
+        "地理或网络优势的量化证据（成本差距、网络效应）",
+        "政府或战略层面的角色与价值"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(91)、PK09(79);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 91
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 79
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "synthesis_closure",
+      "start_ratio": 0.9265,
+      "end_ratio": 1,
+      "start_sec": 1205.5,
+      "end_sec": 1301.1,
+      "position_label": "92.7%–100%(20:05–21:41)",
+      "purpose": "定义收购的真正标的（咽喉要道控制权），以可靠性收束世界观，再衔接频道固定 CTA",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 89,
+          "position_ratio": 0.9522,
+          "time_ms": 1238914,
+          "reason": "“最值钱的商品是可靠性”完成结尾世界观升级，主承诺在此闭合"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "片尾延伸到频道其他内容的好奇心",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_mechanism_answer_with_compressed_callback",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP05"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE41",
+          "event_type": "definition_reveal",
+          "mechanism": "control_of_choke_point"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "worldview_shift",
+          "mechanism": "reliability_is_the_product"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "compressed_verdict",
+          "mechanism": "power_from_dependence"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "cta_transition",
+          "mechanism": "guide_in_description"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "cta_close",
+          "mechanism": "like_subscribe_share_thanks"
+        }
+      ],
+      "required_retention_events": [
+        "definition_reveal",
+        "worldview_shift",
+        "compressed_verdict",
+        "cta_close"
+      ],
+      "original_moves": [
+        "否定表面收购标的（设备或土地）",
+        "重新定义真实标的为咽喉要道控制权",
+        "陈述前置成本与全球波动的对冲关系",
+        "定性为地理与货量的杠杆赌注",
+        "用可靠性世界观句收束全片",
+        "衔接描述区指南与订阅分享CTA"
+      ],
+      "abstract_move": "用否定句排除表面标的，重新定义真实收购物为系统控制权，陈述其对冲波动的机制，定性为杠杆赌注，最后用世界观升级句闭合承诺并衔接行动号召",
+      "replacement_needs": [
+        "对表面标的的否定与真实标的的重新定义",
+        "前置成本对冲系统波动的机制",
+        "将投资定性为杠杆赌注的判断",
+        "一个收束全片的世界观升级陈述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(89);打开的悬念 LOOP05(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 89
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

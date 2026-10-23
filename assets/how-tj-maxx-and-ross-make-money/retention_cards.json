@@ -1,0 +1,1107 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T07:53:27.362Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "price_tag_paradox_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0844,
+      "start_sec": 0.2,
+      "end_sec": 96.5,
+      "position_label": "0%–8.4%(0:00–1:37)",
+      "purpose": "用一件吊牌同时印着对比价与售价的熟悉商品建立价格悖论,并以公司规模与核心问句锁定全片调查方向",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "numeric_reveal",
+          "strength": 72,
+          "position_ratio": 0.0418,
+          "time_ms": 47839,
+          "reason": "公司年营收与三倍于知名百货的对照第一次把一件低价夹克升级为产业规模问题"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "吊牌上的低价与巨大产业规模之间的因果缺口",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "everyday_entry",
+          "mechanism": "familiar_store_scene"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "price_gap_reveal",
+          "mechanism": "dual_price_tag"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "definition_flip_tease",
+          "mechanism": "store_own_definition"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "scale_reveal",
+          "mechanism": "revenue_multiple"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "core_question",
+          "mechanism": "origin_and_profit_question"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "channel_intro",
+          "mechanism": "channel_contract"
+        }
+      ],
+      "required_retention_events": [
+        "everyday_object_entry",
+        "price_gap",
+        "definition_flip_tease",
+        "scale_reveal",
+        "core_question"
+      ],
+      "original_moves": [
+        "在门店展示一件夹克的吊牌,上面同时印着对比价与实际售价,差额形成视觉冲击",
+        "说明商家自己定义对比价,不必有真实成交",
+        "抛出公司年营收数字,并与知名百货对照,营收是对手的三倍",
+        "提出核心问句:这些便宜商品从哪来、谁在赚钱",
+        "频道自我介绍"
+      ],
+      "abstract_move": "用一个日常可见的价格矛盾建立认知冲突,再用规模对比把个体商品问题升级为产业级谜题,最后用核心问句锁定全片调查方向",
+      "replacement_needs": [
+        "一个消费者可直接观察到的价格矛盾或定价悖论",
+        "公司与行业标杆的规模对比数据",
+        "一个贯穿全片的核心问句,指向商业模式的来源与利润分配"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(72);打开的悬念 LOOP01→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 72
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "dual_price_tag_gap_with_money_origin_question",
+        "first_stimulus_ms": 7338,
+        "first_payoff_ms": 36381,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0014",
+          "C0024",
+          "C0034"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "purchase_and_viewer_contract",
+      "start_ratio": 0.0844,
+      "end_ratio": 0.1336,
+      "start_sec": 96.5,
+      "end_sec": 152.8,
+      "position_label": "8.4%–13.4%(1:37–2:33)",
+      "purpose": "完成购买动作并给出首个情绪奖励,随后把观众评论与订阅请求嵌入叙事,再预告法律冲突",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "emotional_payoff",
+          "strength": 68,
+          "position_ratio": 0.0948,
+          "time_ms": 108432,
+          "reason": "\"省下金额只是感觉、没人真的给过他钱\"拆穿赢感,完成首个认知反转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "消费者默认的实售含义与商家自定义估算口径之间的冲突",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "symbolic_payoff",
+          "mechanism": "felt_savings_not_cash"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "court_tease",
+          "mechanism": "lawsuit_forward_reference"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "participatory_prompt",
+          "mechanism": "comment_number_template"
+        }
+      ],
+      "required_retention_events": [
+        "symbolic_payoff",
+        "court_tease",
+        "participatory_prompt",
+        "subscribe_cta"
+      ],
+      "original_moves": [
+        "完成收银台扫码,确认购买价格",
+        "拆解省下的金额:没人真的给过你钱,只是一个心理感受",
+        "宣称第二行数字是全场最有力量的东西",
+        "预告法庭上的争议",
+        "抛出评论区问题模板,邀请观众互动",
+        "请求订阅与点赞"
+      ],
+      "abstract_move": "完成承诺动作后立刻拆穿其心理机制,用认知反转给出首个情绪奖励,再把互动请求嵌入叙事,最后用法律冲突预告维持悬念",
+      "replacement_needs": [
+        "一个可执行的承诺动作及其结果确认",
+        "对该动作背后心理机制的反直觉拆解",
+        "一个法律、监管或公开争议的预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(68);打开的悬念 LOOP02→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 68
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "anchor_price_legal_reckoning",
+      "start_ratio": 0.1327,
+      "end_ratio": 0.238,
+      "start_sec": 151.9,
+      "end_sec": 272.3,
+      "position_label": "13.3%–23.8%(2:32–4:32)",
+      "purpose": "用两起诉讼与监管口径判定对比价的法律位置,再引入锚点概念解释第二行数字的心理功能",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "numeric_reveal",
+          "strength": 74,
+          "position_ratio": 0.1778,
+          "time_ms": 203404,
+          "reason": "和解金额与赔付形式把价签争议落成可感知的法律代价"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "concept_reveal",
+          "strength": 78,
+          "position_ratio": 0.2225,
+          "time_ms": 254572,
+          "reason": "\"锚\"概念命名加先后顺序示例,给观众一个可复用的解释框架"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "legal_outcome_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "lawsuit_reveal",
+          "mechanism": "class_action"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "ruling_turn",
+          "mechanism": "judge_allows_case"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "settlement_reveal",
+          "mechanism": "settlement_amount"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "settlement_reveal",
+          "mechanism": "second_chain_settlement"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "concept_naming",
+          "mechanism": "anchor_term"
+        }
+      ],
+      "required_retention_events": [
+        "lawsuit_reveal",
+        "regulatory_rule",
+        "settlement_number",
+        "concept_naming"
+      ],
+      "original_moves": [
+        "列举加州对该公司的诉讼,同年另一连锁也被诉类似问题",
+        "引述监管规则:对比价须基于真实成交价格",
+        "法官放行诉讼,公司最终和解,和解金额与赔付形式公开",
+        "对手同样和解并改用其他措辞",
+        "引入锚点概念,解释第二行数字的心理功能,并用先后顺序示例说明"
+      ],
+      "abstract_move": "用两起诉讼与监管规则判定争议行为的法律位置,再用和解金额让法律代价变得可感知,最后引入一个可复用的概念框架解释心理机制",
+      "replacement_needs": [
+        "两起或多起同类诉讼的时间、对象与结果",
+        "监管规则或行业标准对争议行为的明确要求",
+        "一个命名清晰的概念框架,附带可迁移的示例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(74)、PK04(78);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 74
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "buyer_network_sourcing",
+      "start_ratio": 0.2371,
+      "end_ratio": 0.3417,
+      "start_sec": 271.3,
+      "end_sec": 390.9,
+      "position_label": "23.7%–34.2%(4:31–6:31)",
+      "purpose": "回答\"这些人是谁、从哪找到低价货\",把低价来源还原为庞大的采购网络与他人失误的库存",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "低价事实存在但供给路径不可见",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "role_and_method_answer",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "scale_reveal",
+          "mechanism": "buyer_network_size"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "mechanism_reframe",
+          "mechanism": "hunting_other_peoples_problems"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "information_reveal",
+          "mechanism": "sourcing_channel_list"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "expert_verdict",
+          "mechanism": "analyst_quote"
+        }
+      ],
+      "required_retention_events": [
+        "scale_reveal",
+        "mechanism_reframe",
+        "sourcing_list",
+        "expert_verdict"
+      ],
+      "original_moves": [
+        "公开采购团队规模与供应商网络数字",
+        "对比全年采购与季节性采购,强调经验即产品",
+        "列举低价来源:暖冬导致取消订单、品牌方尾货、过季库存",
+        "解释品牌方为何愿意出手:自己打折会损害品牌形象",
+        "补充特殊生产线的存在"
+      ],
+      "abstract_move": "用团队规模与网络数字回答供给来源问题,再把低价还原为他人失误与时机错配的结果,最后用品牌方动机解释为何愿意低价转移库存",
+      "replacement_needs": [
+        "采购网络或供应链的规模数字",
+        "供给来源的具体清单,包含失误类型与时机错配情景",
+        "上游供应方转移库存的动机或约束"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP03。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:低价事实存在但供给路径不可见",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "model_stress_test",
+      "start_ratio": 0.3411,
+      "end_ratio": 0.4038,
+      "start_sec": 390.3,
+      "end_sec": 461.9,
+      "position_label": "34.1%–40.4%(6:30–7:42)",
+      "purpose": "用供应链中断年份检验模式弱点:没有失误库存时货架变空;再用当下反转说明该模式如何随周期回暖",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "vulnerability_reveal",
+          "strength": 76,
+          "position_ratio": 0.3411,
+          "time_ms": 390260,
+          "reason": "模式必须依赖他人犯错加中断年份事实,改变观众对模式稳定性的默认假设"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "模式顺畅运转与其供给前提之间的依赖关系",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "vulnerability_reveal",
+          "mechanism": "model_needs_mistakes"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "contrast_reveal",
+          "mechanism": "index_vs_stock_divergence"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "inversion_reveal",
+          "mechanism": "panic_as_shopping_season"
+        }
+      ],
+      "required_retention_events": [
+        "vulnerability_reveal",
+        "contrast_reveal",
+        "inversion_reveal"
+      ],
+      "original_moves": [
+        "明示模式必须依赖他人犯错才能运转",
+        "引用供应链中断年份:工厂停摆、船运受阻,品牌全价也能卖完",
+        "对比该年份货架变空与股指表现的反差",
+        "转向当下:管理层称取消订单正在增多",
+        "反转逻辑:他人恐慌时正是自己的采购季"
+      ],
+      "abstract_move": "用极端年份的供给事实检验模式弱点,再用货架与股指的对比让脆弱性可感知,最后用当下反转说明模式如何随外部周期波动而回暖",
+      "replacement_needs": [
+        "一个模式弱点的明确陈述",
+        "极端年份或压力测试情景下的供给事实",
+        "当下反转的管理层表态或数据证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(76);打开的悬念 LOOP04→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "inventory_timing_gamble",
+      "start_ratio": 0.4029,
+      "end_ratio": 0.4419,
+      "start_sec": 461,
+      "end_sec": 505.6,
+      "position_label": "40.3%–44.2%(7:41–8:26)",
+      "purpose": "解释买下却不立刻上架的跨季囤货机制:用仓储赌未来季节,以春天价格买冬天货架",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "购入与上架之间的时间差尚未解释",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "stress_test_answer",
+          "opened_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "inventory_timing_answer",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "mechanism_tease",
+          "mechanism": "packaway_tease"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "timing_payoff",
+          "mechanism": "november_at_april_price"
+        }
+      ],
+      "required_retention_events": [
+        "mechanism_tease",
+        "offseason_scenario",
+        "timing_payoff"
+      ],
+      "original_moves": [
+        "说明部分货物买下后进仓库等待,而非立刻上架",
+        "引入行业称谓",
+        "举例:春天买冬衣,等到冬天再卖",
+        "给出囤货占库存比重与期限数字",
+        "明示这是赌博,赌的是尚未到来的季节",
+        "对比全价店的提前预测需求模式"
+      ],
+      "abstract_move": "解释跨时间套利机制:买下后不立刻售出,而是用仓储空间赌未来季节,再用占比与期限数字让赌博性质变得可感知,最后与常规模式对比突出差异",
+      "replacement_needs": [
+        "跨时间操作的机制描述与行业称谓",
+        "反季节买入的具体情景",
+        "囤货占比、期限或规模数字",
+        "与常规预测模式的对比"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "treasure_hunt_store_design",
+      "start_ratio": 0.4411,
+      "end_ratio": 0.5213,
+      "start_sec": 504.6,
+      "end_sec": 596.4,
+      "position_label": "44.1%–52.1%(8:25–9:56)",
+      "purpose": "把叙事者买不到同款的经历升级为门店体验机制:稀缺陈列、高频上新与寻宝感替代促销和优惠券",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.4771,
+          "time_ms": 545845,
+          "reason": "\"看到就买、明天可能没了\"与紧迫感替代促销的陈述把门店体验解释为心理引擎"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "个人缺货体验与门店设计意图之间的关系",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "scarcity_design_answer",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "story_return",
+          "mechanism": "same_jacket_gone"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "concept_naming",
+          "mechanism": "treasure_hunt_term"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "mechanism_shift",
+          "mechanism": "urgency_replaces_discounts"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "insider_decode",
+          "mechanism": "tag_color_code"
+        }
+      ],
+      "required_retention_events": [
+        "story_return",
+        "concept_naming",
+        "urgency_substitution",
+        "insider_decode"
+      ],
+      "original_moves": [
+        "讲述叙述者回访时同款已售罄的小故事",
+        "揭示门店设计:每码只有一件,高频上新",
+        "命名为寻宝体验,顾客无清单逛店",
+        "陈述行为逻辑:看到就买,否则明天可能没了",
+        "说明紧迫感替代了促销与优惠券",
+        "解释红黄标签的内部含义与清仓时点"
+      ],
+      "abstract_move": "用叙述者亲身经历作为门店体验的证据,再揭示稀缺陈列与高频上新的设计,最后用紧迫感替代促销的陈述解释心理引擎如何驱动购买",
+      "replacement_needs": [
+        "一个亲身经历的稀缺证据或回访故事",
+        "门店陈列与上新频率的设计事实",
+        "稀缺感如何替代传统促销手段的机制说明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "checkout_and_cost_engineering",
+      "start_ratio": 0.5207,
+      "end_ratio": 0.5662,
+      "start_sec": 595.7,
+      "end_sec": 647.7,
+      "position_label": "52.1%–56.6%(9:56–10:48)",
+      "purpose": "拆解收银排队动线与门店硬件的成本工程:排队两旁小商品、简朴卖场、无电商,一切为压低单笔销售成本",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "checkout_design",
+          "mechanism": "queue_impulse_gauntlet"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "no_ecommerce_reveal",
+          "mechanism": "no_online_store"
+        }
+      ],
+      "required_retention_events": [
+        "checkout_design",
+        "footprint_numbers",
+        "no_ecommerce_reveal"
+      ],
+      "original_moves": [
+        "揭示收银动线设计:排队两旁摆放小商品",
+        "说明等待时产生额外消费",
+        "描述卖场简朴与选址策略",
+        "给出门店平均面积与数量",
+        "说明仓库直送模式",
+        "强调对手完全没有网店,是极端选择",
+        "总结:一切为压低单笔销售成本"
+      ],
+      "abstract_move": "拆解收银动线与门店硬件的成本工程:排队动线捕获额外消费,简朴选址与无电商决策共同压低单笔成本,最后用成本含义统一解释所有设计",
+      "replacement_needs": [
+        "收银动线或顾客路径的具体设计",
+        "门店硬件、选址或渠道的极端选择",
+        "单笔成本或运营效率的优化逻辑"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "unit_economics_reckoning",
+      "start_ratio": 0.5653,
+      "end_ratio": 0.6633,
+      "start_sec": 646.7,
+      "end_sec": 758.8,
+      "position_label": "56.5%–66.3%(10:47–12:39)",
+      "purpose": "把开场那件商品的售价拆成各方份额,与全价零售商同口径对照,再聚合为年度利润与股东回报的总账",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "numeric_reveal",
+          "strength": 84,
+          "position_ratio": 0.584,
+          "time_ms": 668124,
+          "reason": "单笔售价税前税后利润落到具体小额数字,完成\"便宜也能赚钱\"的单位经济顿悟"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "numeric_reveal",
+          "strength": 88,
+          "position_ratio": 0.6315,
+          "time_ms": 722440,
+          "reason": "三家年度利润并排加股东回报数字,把单位经济聚合成年度尺度的高潮对照"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "低价与盈利能否共存的直觉冲突",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "\"最奇怪的部分\"预告与未知起源之间的悬念",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "unit_economics_answer",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "transition",
+          "mechanism": "money_behind_jacket"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "numeric_reveal",
+          "mechanism": "gross_margin_share"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "numeric_reveal",
+          "mechanism": "unit_profit_after_tax"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "contrast_reveal",
+          "mechanism": "full_price_profit_contrast"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "aggregate_reckoning",
+          "mechanism": "annual_profit_table"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "category_verdict",
+          "mechanism": "industry_superlative"
+        }
+      ],
+      "required_retention_events": [
+        "money_transition",
+        "margin_reveal",
+        "unit_profit_reveal",
+        "macys_contrast",
+        "aggregate_reckoning",
+        "category_verdict"
+      ],
+      "original_moves": [
+        "拆解每美元留存份额,说明排除项口径",
+        "逐项分配单笔售价:商品成本、运营成本、税前税后利润",
+        "给出对手几乎相同的利润数字",
+        "对比员工规模",
+        "用全价店的同价对照:全价店利润更低",
+        "聚合年度利润与股东回报数字",
+        "补充节日季同店增长事实",
+        "行业定性"
+      ],
+      "abstract_move": "把单笔售价拆成可见的成本与利润份额,再与竞争对手同口径对照证明低价也能赚钱,最后把单位经济聚合成年度总账,用规模数字完成高潮对照",
+      "replacement_needs": [
+        "单笔售价的逐项成本与利润分配",
+        "竞争对手的同口径利润对比",
+        "年度利润、股东回报或增长数字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(84)、PK08(88);打开的悬念 LOOP08→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 84
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "copycat_origin_empire",
+      "start_ratio": 0.6625,
+      "end_ratio": 0.7723,
+      "start_sec": 757.9,
+      "end_sec": 883.6,
+      "position_label": "66.3%–77.2%(12:38–14:44)",
+      "purpose": "用起源故事给出叙事奖励:行业老大起家于模仿对手,最终买下对手,并逐步并购成多品牌帝国",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "narrative_twist",
+          "strength": 80,
+          "position_ratio": 0.7028,
+          "time_ms": 804020,
+          "reason": "复制者多年后买下整个原创公司,完成起源故事的身份反转高潮"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "origin_story_answer",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "origin_tease",
+          "mechanism": "started_as_a_copy"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "narrative_twist",
+          "mechanism": "copy_surpasses_original"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "narrative_twist",
+          "mechanism": "buying_former_rival"
+        }
+      ],
+      "required_retention_events": [
+        "origin_tease",
+        "copy_surpasses",
+        "acquisition_reversal",
+        "empire_scale"
+      ],
+      "original_moves": [
+        "宣称最奇怪的部分:起家于复制",
+        "讲述原创者开店与拒绝收购的故事",
+        "复制者挖走最佳买手,自建翻版",
+        "首批门店开业",
+        "复制者超越原创者,更名与掌权",
+        "多年后复制者买下整个原创公司",
+        "说明两者现由同一部门运营",
+        "列举连续并购与海外改名原因",
+        "给出门店总数与扩张空间"
+      ],
+      "abstract_move": "用起源故事的身份反转给出叙事奖励:后来者从复制起家,最终买下原创者,再用连续并购与规模数字说明如何从单一品牌演变为多品牌帝国",
+      "replacement_needs": [
+        "原创者与复制者的身份反转故事",
+        "复制者收购原创者的时间与结局",
+        "多品牌并购清单与门店规模数字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(80);回收了前文的悬念 FS09→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "challenger_rise_history",
+      "start_ratio": 0.7715,
+      "end_ratio": 0.8587,
+      "start_sec": 882.6,
+      "end_sec": 982.4,
+      "position_label": "77.2%–85.9%(14:43–16:22)",
+      "purpose": "对照讲述挑战者从百货店转型的历史与当下加速势头:新客群、销售跳涨与关税退款",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "contrast_reveal",
+          "strength": 82,
+          "position_ratio": 0.8405,
+          "time_ms": 961520,
+          "reason": "客流一升一降与\"最重要的故事\"宣言叠加,把竞争数据升华为行业判断"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "历史地位与当下增长数据之间的反差",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "contrast_reveal",
+          "mechanism": "challenger_different_origin"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "numeric_reveal",
+          "mechanism": "ipo_price"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "momentum_reveal",
+          "mechanism": "sales_jump"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "contrast_reveal",
+          "mechanism": "foot_traffic_divergence"
+        }
+      ],
+      "required_retention_events": [
+        "challenger_origin",
+        "ipo_reveal",
+        "momentum_reveal",
+        "traffic_contrast"
+      ],
+      "original_moves": [
+        "强调挑战者起点完全不同:百货店易主与扩张",
+        "投资者买下并转型折扣",
+        "三年内开设百店,上市",
+        "说明店名即卖点",
+        "对比客群定位差异:更低收入群体",
+        "宣称曾经的小弟如今最急",
+        "列举近期销售与利润跳涨数字",
+        "对照客流:一升一降",
+        "补充关税退款与新客群跨度",
+        "宣言:这是最重要的故事"
+      ],
+      "abstract_move": "对照讲述挑战者的起源与转型路径,再用三年扩张与上市事实建立加速感,最后用客流此消彼长与销售跳涨数字叠加最重要的故事宣言,把竞争数据升华为行业判断",
+      "replacement_needs": [
+        "挑战者的起源与转型路径",
+        "扩张速度、上市或规模事实",
+        "客流、销售或利润的此消彼长对比数字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(82);打开的悬念 LOOP09→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "worldview_synthesis",
+      "start_ratio": 0.8583,
+      "end_ratio": 0.932,
+      "start_sec": 981.9,
+      "end_sec": 1066.2,
+      "position_label": "85.8%–93.2%(16:22–17:46)",
+      "purpose": "把全部机制升华为消费世界观转变:折扣店不再是省钱者的专利;并用\"买夹克还是买节省\"重构观众自我认知",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "actionable_payoff",
+          "strength": 86,
+          "position_ratio": 0.9293,
+          "time_ms": 1063113,
+          "reason": "拇指遮住对比价的规则加开场商品结局,把全片机制压缩成可执行动作"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP10",
+          "tension": "商品实体与心理账本之间的同一性疑问",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "current_momentum_answer",
+          "opened_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP10",
+          "payoff_type": "self_reframe_answer",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE43",
+          "event_type": "thesis_statement",
+          "mechanism": "most_important_story"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "aphorism",
+          "mechanism": "department_vs_discount_line"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "closing_question",
+          "mechanism": "jacket_or_savings_question"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "fairness_caveat",
+          "mechanism": "buyer_not_a_fool"
+        }
+      ],
+      "required_retention_events": [
+        "thesis_statement",
+        "aphorism",
+        "closing_question",
+        "fairness_caveat"
+      ],
+      "original_moves": [
+        "宣称最重要的故事:客群已变",
+        "用对句总结:百货定价让人焦虑,折扣让人释然",
+        "列举全价店萎缩与关店事实",
+        "说明对比价更难核实,且全价店留下库存",
+        "提及第三竞争者存在",
+        "抛出只有观众能回答的问句:买夹克还是买节省",
+        "说明店同时卖两件商品:实物与心理感受",
+        "强调数字在做真实的工作",
+        "限定:不说明买家是傻瓜",
+        "结论:钱在收银前已赚走"
+      ],
+      "abstract_move": "把全部机制升华为消费世界观转变:客群扩大改变了行业位置,再用全价店萎缩事实证实转变,最后用买商品还是买心理感受的重构问句让观众反思自我认知",
+      "replacement_needs": [
+        "客群扩大或消费观念转变的核心判断",
+        "传统模式萎缩的事实证据",
+        "一个重构观众自我认知的问句,指向商品与心理的双重购买"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(86);回收了前文的悬念 FS11→LOOP09。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "thumb_rule_callback_close",
+      "start_ratio": 0.9311,
+      "end_ratio": 1,
+      "start_sec": 1065.2,
+      "end_sec": 1144,
+      "position_label": "93.1%–100%(17:45–19:04)",
+      "purpose": "回收开场商品给出可执行的看价签动作,完成主承诺闭合,再以纠错邀请、来源透明与关注请求收尾",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP11",
+          "tension": "叙述者主动让渡裁判权,承诺用后续视频回应",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_mechanism_answer_plus_decision_rule",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP11"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE47",
+          "event_type": "actionable_rule",
+          "mechanism": "thumb_on_tag_rule"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "story_resolution",
+          "mechanism": "narrator_kept_jacket"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "correction_invitation",
+          "mechanism": "insider_comment_call"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "transparency_pointer",
+          "mechanism": "sources_on_website"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "ending_cta",
+          "mechanism": "subscribe_and_end_card"
+        }
+      ],
+      "required_retention_events": [
+        "actionable_rule",
+        "story_resolution",
+        "correction_invitation",
+        "transparency_pointer",
+        "ending_cta"
+      ],
+      "original_moves": [
+        "给出可执行规则:拇指遮住对比价,只看愿意支付的价格",
+        "说明愿意支付即是好交易",
+        "讲述叙述者留下夹克的结局",
+        "说明对比价对其无意义",
+        "邀请从业者纠错",
+        "公开数据来源网站",
+        "推广课程与社群",
+        "请求关注与结束卡"
+      ],
+      "abstract_move": "回收开场商品给出可执行的判断规则,用叙述者结局完成承诺闭合,再以纠错邀请与数据来源透明建立可信度,最后用关注请求与结束卡收尾",
+      "replacement_needs": [
+        "一个可执行的判断规则或行动指南",
+        "开场商品或承诺的结局",
+        "数据来源、纠错邀请或关注请求"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP11(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

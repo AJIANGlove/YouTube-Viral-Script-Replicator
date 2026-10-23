@@ -1,0 +1,1247 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:09:08.560Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "belief_setup_reversal",
+      "start_ratio": 0,
+      "end_ratio": 0.0663,
+      "start_sec": 0.1,
+      "end_sec": 79.9,
+      "position_label": "0%–6.6%(0:00–1:20)",
+      "purpose": "复述目标受众对这类消费的默认信念并用第二人称代入场景,随即直接否定,给出第一层机制作为部分兑现,并用行业内引语坐实",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "worldview_shift",
+          "strength": 70,
+          "position_ratio": 0.0234,
+          "time_ms": 28220,
+          "reason": "“Unfortunately, he's wrong.”一句推翻观众刚代入的占便宜信念,完成开场反转"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 76,
+          "position_ratio": 0.0386,
+          "time_ms": 46591,
+          "reason": "“你每睡过一次早餐生意就变好,而且可测量”给出首个具体反直觉回报"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "belief_setup",
+          "mechanism": "familiar_belief_entry"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "scene_immersion",
+          "mechanism": "second_person_projection"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "ironic_setup",
+          "mechanism": "inner_voice_trap"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "belief_reversal",
+          "mechanism": "direct_contradiction"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "mechanism_tease",
+          "mechanism": "usage_gap_preview"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "first_payoff",
+          "mechanism": "counterintuitive_fact"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "authority_quote",
+          "mechanism": "insider_confirmation"
+        }
+      ],
+      "required_retention_events": [
+        "familiar_belief_entry",
+        "second_person_projection",
+        "inner_voice_trap",
+        "direct_contradiction",
+        "usage_gap_preview",
+        "counterintuitive_fact",
+        "insider_confirmation"
+      ],
+      "original_moves": [
+        "复述观众对全包度假村的默认信念：你在占便宜、让对方亏本",
+        "用泳池场景让观众代入消费者视角并想象内心窃喜",
+        "直接否定：从业者说'他错了'",
+        "给出第一层机制：你买了使用权但实际使用量远低于承诺量",
+        "用酒店业引语坐实：你每睡过一次早餐生意就变好，而且可测量"
+      ],
+      "abstract_move": "复述目标受众认为自己占便宜的默认信念并用场景代入 + 直接否定完成反转 + 给出承诺量与实际使用量之差的第一层机制 + 用从业者引语坐实",
+      "replacement_needs": [
+        "一个目标受众对该消费普遍持有的'我占便宜'信念的具象场景",
+        "一个直接否定该信念的从业者视角或行业事实",
+        "一个承诺量与实际使用量之差的可测量机制",
+        "一句从业者引语或行业公式佐证该机制"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70)、PK02(76)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 76
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "familiar_belief_reversal_with_core_mystery_tease",
+        "first_stimulus_ms": 28220,
+        "first_payoff_ms": 50940,
+        "evidence_refs": [
+          "C0001",
+          "C0013",
+          "C0024"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "core_question_contract",
+      "start_ratio": 0.0663,
+      "end_ratio": 0.0977,
+      "start_sec": 79.9,
+      "end_sec": 117.7,
+      "position_label": "6.6%–9.8%(1:20–1:58)",
+      "purpose": "把反转升级为全片核心谜题:同一定价模式在两种形态中结局相反,承诺找到唯一差别并宣告全片探索路线",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题机制承诺与全片逐层兑现之间的主悬念",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "同模式相反结局的对照悬念,全片核心谜题",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP05",
+          "tension": "对照案例的失败原因,为核心答案提供反向验证",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "investigation_contract",
+          "mechanism": "explicit_question"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "contrast_setup",
+          "mechanism": "dying_reference_business"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "scale_reveal",
+          "mechanism": "big_money_signal"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "core_mystery_open",
+          "mechanism": "one_difference_tease"
+        }
+      ],
+      "required_retention_events": [
+        "explicit_question",
+        "dying_reference_business",
+        "big_money_signal",
+        "one_difference_tease"
+      ],
+      "original_moves": [
+        "抛出核心疑问：还剩一个问题",
+        "展示对照事实：自助餐同样策略却在消亡",
+        "展示相反结局：度假村屡创纪录、数十亿投入",
+        "点明悖论：同样的赌注相反的结果",
+        "承诺答案就在眼前并宣告全片探索该问题"
+      ],
+      "abstract_move": "将开场反转升级为全片核心谜题：同一定价模式在两种形态中结局相反 + 用规模证据抬高利害关系 + 承诺唯一差别就在观众眼前 + 宣告全片探索路线",
+      "replacement_needs": [
+        "一个同模式但结局相反的对照形态及其衰退证据",
+        "一个目标形态规模扩张的量化证据（投资额、增速、市场占有率）",
+        "一句'差别就在你眼前'式的悬念句",
+        "一个明确承诺全片探索该问题的宣告句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP01→FS15、LOOP02→FS08、LOOP05→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "pooled_math_explanation",
+      "start_ratio": 0.0977,
+      "end_ratio": 0.2014,
+      "start_sec": 117.7,
+      "end_sec": 242.8,
+      "position_label": "9.8%–20.1%(1:58–4:03)",
+      "purpose": "先排除观众最直觉的反驳(重度使用者会不会拖垮模式),用平均数算计与计价基础给出公式级答案和可复述类比",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.1411,
+          "time_ms": 170072,
+          "reason": "“低使用者补贴高使用者,这就是全部真相,这就是整个商业模式”给出公式级答案"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "character_vignette",
+          "mechanism": "heavy_user_scene"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "formula_payoff",
+          "mechanism": "subsidy_formula"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "analogy_payoff",
+          "mechanism": "insurance_reframe"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "pricing_reveal",
+          "mechanism": "per_person_pricing"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "structural_formula",
+          "mechanism": "cost_revenue_split"
+        }
+      ],
+      "required_retention_events": [
+        "heavy_user_scene",
+        "subsidy_formula",
+        "insurance_reframe",
+        "per_person_pricing",
+        "cost_revenue_split"
+      ],
+      "original_moves": [
+        "展示观众最直觉的反驳：重度使用者会拖垮模式",
+        "给出公式级答案：低使用者补贴高使用者，这就是全部真相",
+        "用跨行业类比重命名：带海滩的保险公司",
+        "拆解计价基础错配：按人头收费 vs 按房间固定成本",
+        "点明设计初衷：为情侣家庭设计而非单身派对"
+      ],
+      "abstract_move": "排除观众最直觉的反驳（重度使用者拖垮模式） + 给出交叉补贴的公式级答案 + 用跨行业类比重命名 + 拆解计价单位与固定成本的错配结构",
+      "replacement_needs": [
+        "一个观众最可能担心的反驳点（某类用户会拖垮模式）",
+        "一个交叉补贴或平均数算计的行业公式",
+        "一个跨行业类比（保险、健身卡、流媒体等）用于重命名该模式",
+        "一个计价单位与固定成本的错配结构拆解"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(78)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "audience_participation_interlude",
+      "start_ratio": 0.2014,
+      "end_ratio": 0.2303,
+      "start_sec": 242.8,
+      "end_sec": 277.6,
+      "position_label": "20.1%–23%(4:03–4:38)",
+      "purpose": "在机制链条中插入共谋式互动:让观众自曝私密经历并引导评论与关注,再以明确转场句回归正题",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "共谋式自曝邀请,评论驱动的参与环",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "direct_address",
+          "mechanism": "complicity_question"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "engagement_cta",
+          "mechanism": "comment_subscribe_prompt"
+        }
+      ],
+      "required_retention_events": [
+        "complicity_question",
+        "comment_subscribe_prompt"
+      ],
+      "original_moves": [
+        "用共谋式反问让观众自曝：你敢承认自己为回本做过什么吗",
+        "列举具体而轻微越轨的行为清单：续瓶、四份甜点、纸巾装糕点",
+        "声明不评判并引导评论：去评论区说说你干过什么",
+        "引导关注点赞",
+        "明确转场句回归正题：回到房间"
+      ],
+      "abstract_move": "用共谋式反问让观众自曝私密回本行为 + 列举具体而轻微越轨的清单 + 不评判声明与评论引导 + 明确转场句回归正题",
+      "replacement_needs": [
+        "一个让观众自曝私密经历的共谋式反问句",
+        "一个具体而轻微越轨的行为清单（3-5项）",
+        "一个不评判声明与评论区引导",
+        "一个明确回归正题的转场句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "demand_forecasting_reveal",
+      "start_ratio": 0.2303,
+      "end_ratio": 0.2997,
+      "start_sec": 277.6,
+      "end_sec": 361.2,
+      "position_label": "23%–30%(4:38–6:01)",
+      "purpose": "证明供给方在消费者行动之前已掌握需求,把观众感知到的慷慨重命名为精准预测",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "contrast_framing",
+          "mechanism": "restaurant_unpredictability"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "numeric_reveal",
+          "mechanism": "prebooked_demand_proof"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "reframe_payoff",
+          "mechanism": "generosity_is_prognosis"
+        }
+      ],
+      "required_retention_events": [
+        "restaurant_unpredictability",
+        "prebooked_demand_proof",
+        "generosity_is_prognosis"
+      ],
+      "original_moves": [
+        "展示对照行业无法预测需求：普通餐馆不知道谁会来",
+        "揭示目标形态提前掌握需求：提前数月知道人数结构",
+        "给出量化证据：季度未开始已88%预订",
+        "列举运营后果：按托盘采购、按床位排班",
+        "重命名观众感知：慷慨等于极好的预测"
+      ],
+      "abstract_move": "展示对照行业无法预知需求 + 揭示目标形态提前数月掌握需求的先知性 + 给出预订率量化证据 + 列举采购排班等运营后果 + 将慷慨重命名为精准预测",
+      "replacement_needs": [
+        "一个无法预测需求的对照行业",
+        "一个目标形态提前掌握需求的预订先知性证据（时间跨度、预订率）",
+        "一个采购、排班、库存等运营后果清单",
+        "一句将'慷慨'重命名为'预测'的命题句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "bar_cost_engineering",
+      "start_ratio": 0.2997,
+      "end_ratio": 0.3761,
+      "start_sec": 361.2,
+      "end_sec": 453.4,
+      "position_label": "30%–37.6%(6:01–7:33)",
+      "purpose": "拆解高频消费点的成本工程:廉价填充与双层定价,并揭示不显眼的物理限量(排队/产能)如何替代人工拒绝",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.3374,
+          "time_ms": 406752,
+          "reason": "“无限畅饮正因为它便宜,慷慨与成本是同一个决定”把观众对“慷慨”的感知重构为成本设计"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.3636,
+          "time_ms": 438254,
+          "reason": "“一个吧台、四名员工、三百客人”揭示隐形限量:没人需要说不,房间替他们限制你"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "component_reveal",
+          "mechanism": "house_brand_spirits"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "cost_reveal",
+          "mechanism": "cheap_fillers_big_glass"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "principle_payoff",
+          "mechanism": "generosity_equals_cost"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "secondary_function_reveal",
+          "mechanism": "drink_fills_stomach"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "hidden_constraint",
+          "mechanism": "single_bar_queue_limit"
+        }
+      ],
+      "required_retention_events": [
+        "house_brand_spirits",
+        "cheap_fillers_big_glass",
+        "generosity_equals_cost",
+        "drink_fills_stomach",
+        "single_bar_queue_limit"
+      ],
+      "original_moves": [
+        "拆解高频消费点内容物成本：自有品牌加廉价填充物",
+        "揭示双层定价：品牌酒另收费",
+        "给出原则句：无限正因为便宜，慷慨与成本是同一个决定",
+        "揭示消费品第二层功能：大杯占胃",
+        "揭示物理性硬限量：一个吧台四名员工三百客人，房间替他们说不"
+      ],
+      "abstract_move": "拆解高频消费点的成本工程（廉价填充加双层定价） + 给出'慷慨与成本是同一决定'式原则句 + 揭示消费品第二层隐藏功能 + 揭示物理性硬限量（排队或产能）如何替代人工拒绝",
+      "replacement_needs": [
+        "一个高频消费点内容物的成本拆解（自有品牌、填充物、双层定价）",
+        "一句'慷慨与成本是同一决定'式的原则句",
+        "一个消费品的第二层隐藏功能（占胃、占时间、占精力）",
+        "一个物理性硬限量机制（排队、产能、座位）如何替代人工拒绝"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(82)、PK05(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 82
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "buffet_tactics_recap",
+      "start_ratio": 0.3761,
+      "end_ratio": 0.4168,
+      "start_sec": 453.4,
+      "end_sec": 502.5,
+      "position_label": "37.6%–41.7%(7:33–8:22)",
+      "purpose": "快速复盘对照形态的全套控本手法,利用观众已有认知建立熟悉感,并指出关键差别引线",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "detail_scan",
+          "mechanism": "buffet_tactics_recap"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "pivot_tease",
+          "mechanism": "differentiation_setup"
+        }
+      ],
+      "required_retention_events": [
+        "buffet_tactics_recap",
+        "differentiation_setup"
+      ],
+      "original_moves": [
+        "用引导式清点复盘对照形态控本手法：小盘子、碳水前置、肉类把守、小夹子",
+        "指认互文：这些手法在这里同样运转",
+        "点出关键差别引线：差别在于你付费进入的地方"
+      ],
+      "abstract_move": "用引导式清点快速复盘对照形态的全套控本手法 + 利用观众已有认知建立互文熟悉感 + 点出关键差别引线（发生在你已付费进入的地方）",
+      "replacement_needs": [
+        "一个对照形态控本手法的引导式清点清单（3-5项）",
+        "一句与前文对照形态分析的互文指认句",
+        "一句'发生在你已付费进入的地方'式的差异引线"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "captive_market_reveal",
+      "start_ratio": 0.4168,
+      "end_ratio": 0.5133,
+      "start_sec": 502.5,
+      "end_sec": 618.7,
+      "position_label": "41.7%–51.3%(8:22–10:19)",
+      "purpose": "兑现全片核心答案:同一供给被放进消费者整段时间离不开的位置,不靠强制而靠结构;连“离开”本身都被定价并纳入库存;并用一句前向悬念把机制挂到结尾",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 95,
+          "position_ratio": 0.4168,
+          "time_ms": 502492,
+          "reason": "“自助餐有一扇门”给出全片核心答案:同样的把戏放进你离不开的地理位置,主悬念在此闭合"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 88,
+          "position_ratio": 0.4846,
+          "time_ms": 584139,
+          "reason": "“连你的出逃都是库存的一部分”以黑色幽默式反转完成逃逸闭环,寒意与顿悟叠加"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "把核心机制标记为结尾答案的钥匙,建立前向期待",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "core_differentiator_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "core_answer",
+          "mechanism": "captive_market_reveal"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "mechanism_explain",
+          "mechanism": "geographic_captivity"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "enemy_reveal",
+          "mechanism": "daytrip_priced_against"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "inversion_payoff",
+          "mechanism": "escape_is_inventory"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "thesis_payoff",
+          "mechanism": "unlimited_is_fence"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "loop_forward",
+          "mechanism": "fence_explains_ending"
+        }
+      ],
+      "required_retention_events": [
+        "captive_market_reveal",
+        "geographic_captivity",
+        "daytrip_priced_against",
+        "escape_is_inventory",
+        "unlimited_is_fence",
+        "fence_explains_ending"
+      ],
+      "original_moves": [
+        "给出全片核心答案：自助餐有一扇门",
+        "点明对照形态失败原因：客人吃完就把钱花到别处",
+        "揭示目标形态结构优势：把同一供给放进离不开的地理位置",
+        "揭示出口被再销售：一日游被定价、出逃也是库存",
+        "给出命题句：无限量的部分是围栏，连你的出逃都是库存的一部分",
+        "用前向悬念句把机制挂到结尾：记住这道围栏"
+      ],
+      "abstract_move": "给出核心答案（对照形态有出口，目标形态无出口） + 揭示同一供给被放进消费者整段时间离不开的结构位置 + 揭示出口被重新定价并自家销售的闭环 + 给出'无限量即围栏'式命题句 + 用前向悬念句把机制挂到结尾",
+      "replacement_needs": [
+        "一个一句话核心答案（对照形态有出口，目标形态结构封闭）",
+        "一个结构封闭而非强制的地理或时间位置机制说明",
+        "一个出口被重新定价并自家销售的闭环证据",
+        "一句'唯一供应商'或'无限量即围栏'式的命题句",
+        "一句指向结尾的前向悬念句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(95)、PK07(88);打开的悬念 LOOP04→FS15 跨段;回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 95
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "scale_history_tease",
+      "start_ratio": 0.5133,
+      "end_ratio": 0.538,
+      "start_sec": 618.7,
+      "end_sec": 648.6,
+      "position_label": "51.3%–53.8%(10:19–10:49)",
+      "purpose": "用起源简陋与当代规模的极短对照重新抬高利害关系,明确承诺确切数字稍后兑现,先把视线导向销售层",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "被明确推迟的规模证据,测试观众对延迟回报的耐心",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "history_hook",
+          "mechanism": "tents_origin_tease"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "deferred_payoff_notice",
+          "mechanism": "figures_promised_later"
+        }
+      ],
+      "required_retention_events": [
+        "tents_origin_tease",
+        "figures_promised_later"
+      ],
+      "original_moves": [
+        "给出起源场景：1950年海滩帐篷",
+        "点明平价初心：为怕被账单吓到的人而建",
+        "预告当代巨额结果：今天数十亿支票",
+        "明确延迟承诺：确切数字稍后给",
+        "宣告路径：先说销售，围栏本身不赚钱"
+      ],
+      "abstract_move": "用起源年份与简陋形态的具象对照重新抬高利害关系 + 预告当代巨额结果 + 明确延迟数字承诺稍后兑现 + 宣告先把视线导向销售层",
+      "replacement_needs": [
+        "一个起源年份与简陋形态的具象场景（帐篷、小店、作坊等）",
+        "一个平价或普惠初心的动机说明",
+        "一个当代巨额交易或规模的预告（数十亿、跨国收购、市场占有率）",
+        "一句'确切数字稍后给，先说销售'的路径宣告句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "upsell_inventory_exposure",
+      "start_ratio": 0.538,
+      "end_ratio": 0.6473,
+      "start_sec": 648.6,
+      "end_sec": 780.3,
+      "position_label": "53.8%–64.7%(10:49–13:00)",
+      "purpose": "逐项清点封闭场景内的第二次销售与成本转嫁,最后点破消费者自身的共谋(只读到“全包”一词)",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "upsell_reveal",
+          "mechanism": "bracelet_tiers_first_day"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "surcharge_map",
+          "mechanism": "spa_restaurant_excluded"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "hidden_sales",
+          "mechanism": "excursion_desk_sells_exit"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "cost_shift_reveal",
+          "mechanism": "tips_excluded_payroll_shift"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "complicity_reveal",
+          "mechanism": "you_only_read_inclusive"
+        }
+      ],
+      "required_retention_events": [
+        "bracelet_tiers_first_day",
+        "spa_restaurant_excluded",
+        "excursion_desk_sells_exit",
+        "tips_excluded_payroll_shift",
+        "you_only_read_inclusive"
+      ],
+      "original_moves": [
+        "清点分级与升级销售：手环分级与首日升级",
+        "清点附加费地图：好餐厅附加费",
+        "清点体验价目表：SPA、水上运动",
+        "清点更多柜台销售：品酒、摄影、出游、婚礼",
+        "揭示成本转嫁：小费不含在内、工资成本转嫁客人",
+        "点破消费者共谋：都印在条款里，你只读到'全包'两个字"
+      ],
+      "abstract_move": "逐项清点封闭场景内的第二次销售与分级体系 + 清点附加费地图（餐饮、服务、体验） + 清点唯一出口的再销售 + 揭示成本向消费者的转嫁 + 点破条款共谋（你只读到'全包'）",
+      "replacement_needs": [
+        "一个分级与升级销售清单（手环、会员等级、座位区等）",
+        "一个附加费地图（餐饮、服务、体验类，3-5项）",
+        "一个唯一出口的再销售项目",
+        "一个成本向消费者转嫁的条款或惯例",
+        "一句点破消费者自身共谋的收束句（只读到某个词）"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "prepaid_spending_psychology",
+      "start_ratio": 0.6473,
+      "end_ratio": 0.7243,
+      "start_sec": 780.3,
+      "end_sec": 873.1,
+      "position_label": "64.7%–72.4%(13:00–14:33)",
+      "purpose": "解释预付如何钝化价格感、停留时长如何提高客值,用行业指标和行为规律句让观众对号入座",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 81,
+          "position_ratio": 0.6735,
+          "time_ms": 811891,
+          "reason": "“钱二月就离了账户,80 不再像 80”把预付心理机制落到每个观众的经验上"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE42",
+          "event_type": "metric_reveal",
+          "mechanism": "total_guest_value"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "psychology_payoff",
+          "mechanism": "prepaid_price_numbness"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "stay_length_logic",
+          "mechanism": "longer_stay_more_valuable"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "behavioral_payoff",
+          "mechanism": "boat_trip_day_six"
+        }
+      ],
+      "required_retention_events": [
+        "total_guest_value",
+        "prepaid_price_numbness",
+        "longer_stay_more_valuable",
+        "boat_trip_day_six"
+      ],
+      "original_moves": [
+        "点明行业指标：'全包'一词落地前已改变消费习惯，总客值",
+        "给出行为对照：预付客人现场花更多",
+        "揭示心理机制：钱二月离账户，80不再像80",
+        "给出停留时长与价值的双原因：漏餐多加可售天数多",
+        "用行为规律句收束：第一天没人订船票第六天都订了"
+      ],
+      "abstract_move": "点明行业度量指标 + 揭示预付如何钝化价格感的心理机制（钱已离账户） + 给出停留时长与客值正相关的双原因（漏餐多加可售天数多） + 用行为规律的机智句收束",
+      "replacement_needs": [
+        "一个行业度量指标（总客值、人均消费、复购率等）",
+        "一个预付钝化价格感的心理机制拆解",
+        "一个停留时长与价值正相关的双原因（漏餐率加可售机会）",
+        "一句行为规律的机智收束句（第一天vs后几天）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(81)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 81
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "real_product_reframe",
+      "start_ratio": 0.7243,
+      "end_ratio": 0.775,
+      "start_sec": 873.1,
+      "end_sec": 934.2,
+      "position_label": "72.4%–77.5%(14:33–15:34)",
+      "purpose": "回答“为什么没人觉得被宰”:消费者买走的不是实物而是免于做决定,把真正产品命名为抽象概念(确定性)",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.7334,
+          "time_ms": 884048,
+          "reason": "“他们买走的从来不是食物,而是免于做决定”完成全片第二次世界观升级"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE46",
+          "event_type": "paradox_reopen",
+          "mechanism": "nobody_feels_robbed"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "product_reframe",
+          "mechanism": "lack_of_decisions"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "thesis_line",
+          "mechanism": "certainty_as_product"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "compressed_answer",
+          "mechanism": "week_without_calculations"
+        }
+      ],
+      "required_retention_events": [
+        "nobody_feels_robbed",
+        "lack_of_decisions",
+        "certainty_as_product",
+        "week_without_calculations"
+      ],
+      "original_moves": [
+        "重现悖论：没人觉得被宰",
+        "给出命题：他们买走的从来不是食物，而是免于做决定",
+        "展示对照方案的焦虑：普通假期充满金钱焦虑",
+        "将真正产品命名为抽象概念：确定性是美妙的产品",
+        "用三连短句压缩：生产极便宜、人们愿付高价、卖的是一周不用计算"
+      ],
+      "abstract_move": "重现'没人觉得被宰'的悖论 + 给出'买走的不是实物而是免于做决定'的命题 + 展示普通替代方案的焦虑对照 + 将真正产品命名为抽象概念（确定性） + 用三连短句压缩（生产成本低、溢价高、本质是免于计算）",
+      "replacement_needs": [
+        "一个'没人觉得被宰'的悖论重现",
+        "一句'买走的不是实物而是免于做决定'的命题句",
+        "一个普通替代方案的焦虑对照场景",
+        "一个抽象概念命名真正产品（确定性、便利、省心等）",
+        "一组三连短句压缩（生产成本、溢价、本质）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "model_fragility_exposure",
+      "start_ratio": 0.775,
+      "end_ratio": 0.8407,
+      "start_sec": 934.2,
+      "end_sec": 1013.4,
+      "position_label": "77.5%–84.1%(15:34–16:53)",
+      "purpose": "展示模式的另一面:成本刚性、收入波动与降价陷阱,同一套数学在半满时会反噬,维持论证的公平性",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 79,
+          "position_ratio": 0.8352,
+          "time_ms": 1006833,
+          "reason": "“满房时数学很美妙,半满时同一套数学会反过来对付你”以对仗句给出模式风险的紧张高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE50",
+          "event_type": "fragility_turn",
+          "mechanism": "always_ready_fixed_cost"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "stakes_reveal",
+          "mechanism": "average_as_lifeline"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "discount_trap",
+          "mechanism": "same_access_lower_price"
+        }
+      ],
+      "required_retention_events": [
+        "always_ready_fixed_cost",
+        "average_as_lifeline",
+        "same_access_lower_price"
+      ],
+      "original_moves": [
+        "展示刚性成本：一切必须时刻就绪",
+        "给出成本与收入的对照：成本刚性收入波动",
+        "点明平均数从巧技变命脉",
+        "揭示降价陷阱：降价客人拿到同样无限使用权",
+        "用对仗句收束：满房时数学很美妙，半满时同一套数学会反过来对付你"
+      ],
+      "abstract_move": "展示全时段就绪的刚性成本清单 + 给出成本刚性与收入波动的对照 + 点明平均数从巧技变命脉 + 揭示降价陷阱的因果链 + 用'满与半满'对仗式收束句完成风险警示",
+      "replacement_needs": [
+        "一个全时段就绪的刚性成本清单（人力、设施、库存等）",
+        "一个成本刚性与收入波动的对照",
+        "一个降价陷阱的因果链（降价但成本不变、使用权不变）",
+        "一句'满与半满'式的对仗收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(79)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 79
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "origin_and_scale_payoff",
+      "start_ratio": 0.8407,
+      "end_ratio": 0.9135,
+      "start_sec": 1013.4,
+      "end_sec": 1101.2,
+      "position_label": "84.1%–91.4%(16:53–18:21)",
+      "purpose": "兑现延迟的数字承诺:起源故事与当代巨额交易、增速对照一次性交付,验证模式生命力",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.8739,
+          "time_ms": 1053397,
+          "reason": "27 亿美元收购约百家酒店、业务一夜翻倍:延迟约 7.6 分钟的数字承诺在此兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "deferred_numeric_payoff",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE53",
+          "event_type": "history_payoff",
+          "mechanism": "origin_story_1950"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "deal_payoff",
+          "mechanism": "acquisition_numbers_delivered"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "growth_contrast",
+          "mechanism": "sector_outperforms_group"
+        }
+      ],
+      "required_retention_events": [
+        "origin_story_1950",
+        "acquisition_numbers_delivered",
+        "sector_outperforms_group"
+      ],
+      "original_moves": [
+        "给出起源故事：1950年Gerard Blitz马略卡帐篷",
+        "追溯更早渊源：英国30年代度假营",
+        "点明初心：从来不是奢侈点子",
+        "兑现数字承诺：2021年Hyatt 27亿美元购Apple Leisure约100家酒店",
+        "给出战略效果：业务翻倍、120+度假村",
+        "展示行业跟进：Marriott、Hilton跟进",
+        "给出增速对照：预订+7%销售+9% vs 集团1-3%"
+      ],
+      "abstract_move": "给出起源的具体场景与平价初心 + 兑现延迟的数字承诺（巨额收购对象与战略效果） + 展示行业跟进 + 给出增速对照数字验证模式生命力 + 用'简陋起源到最成功单元'的首尾对照句收束",
+      "replacement_needs": [
+        "一个起源的具体场景（人物、地点、年份、简陋形态）",
+        "一个平价或普惠初心的动机说明",
+        "一个当代巨额收购的对象、金额、战略效果",
+        "一个行业跟进与增速对照数字（预订率、销售额增速 vs 行业平均）",
+        "一句'简陋起源到最成功单元'的首尾对照收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(85);回收了前文的悬念 FS09→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "synthesis_and_open_judgment",
+      "start_ratio": 0.9135,
+      "end_ratio": 0.966,
+      "start_sec": 1101.2,
+      "end_sec": 1164.5,
+      "position_label": "91.4%–96.6%(18:21–19:24)",
+      "purpose": "压缩复述同一策略与最终答案(对照形态败于消费者有“别处”),一次性闭合多条悬念环,再把价值判断以开放反问交还观众,并以叙述者不确定性声明收束",
+      "peaks": [
+        {
+          "peak_id": "PK12",
+          "peak_type": "worldview_shift",
+          "strength": 92,
+          "position_ratio": 0.9446,
+          "time_ms": 1138660,
+          "reason": "“自助餐的问题从来不是食物……度假村消灭了别处”一次性闭合自助餐衰亡环与围栏环,完成最终因果重构"
+        },
+        {
+          "peak_id": "PK13",
+          "peak_type": "emotional_payoff",
+          "strength": 84,
+          "position_ratio": 0.9595,
+          "time_ms": 1156587,
+          "reason": "“七天里世界上恰好只有一家商店,而你就住在里面”把全部机制压回观众自身处境,形成收尾情绪高点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "价值二选一判断,激发观众在评论区表态",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_mechanism_chain_with_final_synthesis",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "forward_reference_fulfilled",
+          "opened_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "retrospective_causal_answer",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE56",
+          "event_type": "synthesis_question",
+          "mechanism": "same_strategy_verdict_request"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "final_answer",
+          "mechanism": "no_elsewhere_synthesis"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "closing_question",
+          "mechanism": "value_dilemma_handover"
+        },
+        {
+          "event_id": "RE59",
+          "event_type": "narrator_humility",
+          "mechanism": "uncertainty_statement"
+        }
+      ],
+      "required_retention_events": [
+        "same_strategy_verdict_request",
+        "no_elsewhere_synthesis",
+        "value_dilemma_handover",
+        "uncertainty_statement"
+      ],
+      "original_moves": [
+        "压缩复述同一策略",
+        "给出最终答案：自助餐的问题从来不是食物而是客人有'别处'",
+        "完成因果重构：度假村消灭了别处",
+        "将全部机制压回观众处境：七天里世界上恰好只有一家商店，而你就住在里面",
+        "抛出价值判断反问：最划算还是最贵的一周？",
+        "用叙述者不确定性声明收束：我知道自己的倾向但不确定是对的"
+      ],
+      "abstract_move": "压缩复述同一策略 + 给出'问题从来不是表面原因而是消费者有别处'的最终答案 + 完成'目标形态消灭了别处'的因果重构 + 将全部机制压回观众自身处境 + 以价值二选一的开放反问交还判断 + 用叙述者不确定性声明收束",
+      "replacement_needs": [
+        "一句同一策略的压缩复述",
+        "一句'问题从来不是表面原因而是消费者有别处'的最终答案",
+        "一句'目标形态消灭了别处'的因果重构",
+        "一句将全部机制压回观众自身处境的句子",
+        "一个价值二选一的开放反问（最划算vs最贵）",
+        "一句叙述者不确定性声明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK12(92)、PK13(84);打开的悬念 LOOP06(不闭合) 跨段;回收了前文的悬念 FS02→LOOP01、FS08→LOOP04、FS02→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK12",
+          "strength": 92
+        },
+        {
+          "peak_id": "PK13",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closing_cta",
+      "start_ratio": 0.966,
+      "end_ratio": 1,
+      "start_sec": 1164.5,
+      "end_sec": 1205.5,
+      "position_label": "96.6%–100%(19:24–20:05)",
+      "purpose": "回收开场互动环(答案在评论区),推荐同模式相关内容形成互文闭环,预告下期并引导关注,轻快告别",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE60",
+          "event_type": "comment_redirect",
+          "mechanism": "pastries_callback"
+        },
+        {
+          "event_id": "RE61",
+          "event_type": "cross_promo",
+          "mechanism": "related_video_pointer"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "subscribe_close",
+          "mechanism": "next_video_tease"
+        }
+      ],
+      "required_retention_events": [
+        "pastries_callback",
+        "related_video_pointer",
+        "next_video_tease"
+      ],
+      "original_moves": [
+        "回收开场互动环：去读评论，糕点答案比预期更糟",
+        "推荐同模式相关内容：自助餐视频，同样的数学但它输了",
+        "预告下期",
+        "引导关注",
+        "告别与结束卡"
+      ],
+      "abstract_move": "回收开场互动环（评论区价值预告） + 推荐同模式相关内容形成互文闭环 + 预告下期 + 引导关注 + 轻快告别",
+      "replacement_needs": [
+        "一个回收开场互动环的评论区价值预告",
+        "一个同模式相关内容的交叉推荐（对照形态或同类案例）",
+        "一个下期预告",
+        "一个关注引导",
+        "一句简短告别"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

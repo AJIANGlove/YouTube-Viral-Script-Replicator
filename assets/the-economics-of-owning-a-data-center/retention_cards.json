@@ -1,0 +1,1104 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:37:03.912Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.0175,
+      "start_sec": 0,
+      "end_sec": 26,
+      "position_label": "0%–1.8%(0:00–0:26)",
+      "purpose": "用第二人称拥有幻想开场，立刻以'其实一点也不简单'反转，并预告先行者因一张没预见的账单而崩溃",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "direct_reversal",
+          "strength": 70,
+          "position_ratio": 0.0053,
+          "time_ms": 7920,
+          "reason": "'并不简单，一点也不'的反转是全片第一个情绪钩子"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "收租幻觉与复杂现实之间的主张力",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_hook",
+          "mechanism": "second_person_premise"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "direct_reversal",
+          "mechanism": "simplicity_inversion"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "stakes_tease",
+          "mechanism": "collapse_warning"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_premise",
+        "simplicity_inversion"
+      ],
+      "original_moves": [
+        "用第二人称描述观众拥有数据中心的幻想场景",
+        "直接反转：'并不简单，一点也不'",
+        "预告先行者在这个生意里悄悄亏了十年",
+        "点明崩溃源头是一张没有预见到的账单"
+      ],
+      "abstract_move": "用第二人称拥有幻想开场 + 立刻以强硬否定词反转 + 预告先行者长期亏损 + 归因到单一未预见变量",
+      "replacement_needs": [
+        "一个观众认为简单或理想化的拥有场景",
+        "一个可以用'一点也不'直接否定的反转点",
+        "一个先行者长期亏损的事实",
+        "一个导致崩溃的单一隐藏成本或账单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_premise_with_simplicity_inversion",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 24120,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0013"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "essence_reframe",
+      "start_ratio": 0.0163,
+      "end_ratio": 0.0478,
+      "start_sec": 24.1,
+      "end_sec": 70.8,
+      "position_label": "1.6%–4.8%(0:24–1:11)",
+      "purpose": "推翻观众的直觉图像，把生意本质重新定义为工业级转换机器，并给出'真正的产品'判词",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "先决条件被大多数人忽略的悬念",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "essence_reframe",
+          "mechanism": "power_conversion_machine"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "verdict_line",
+          "mechanism": "real_product_is_power"
+        }
+      ],
+      "required_retention_events": [
+        "category_correction",
+        "essence_reframe"
+      ],
+      "original_moves": [
+        "明确否定观众脑中的直觉图像（建筑物）",
+        "重新定义生意本质为工业级转换机器",
+        "描述副产品（热量）与全天候运转特征",
+        "给出判词：真正的产品是可靠交付，而非设备本身",
+        "强调这个区别就是整门生意的核心"
+      ],
+      "abstract_move": "否定直觉图像 + 用工业机器类比重新定义本质 + 揭示真正产品是交付能力而非实物 + 判词：这个区别决定整门生意",
+      "replacement_needs": [
+        "一个观众的直觉图像及其明确否定",
+        "一个工业级转换或生产过程的类比",
+        "一个'真正产品'的重新定义（从实物到能力）",
+        "一个判词：这个区别是生意的全部"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "constraint_reveal",
+      "start_ratio": 0.0467,
+      "end_ratio": 0.1078,
+      "start_sec": 69.2,
+      "end_sec": 159.7,
+      "position_label": "4.7%–10.8%(1:09–2:40)",
+      "purpose": "揭示第一性问题是关键投入的获取权而非建筑设备，用等待时长与协议价值证明稀缺，并展示提前锁定者的溢价",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.0697,
+          "time_ms": 103320,
+          "reason": "'不是五到七个月，是五到七年'，单位重复制造的首个数字冲击"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "scarce_input_agreement_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "core_question",
+          "mechanism": "power_access_question"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "market_scale_context",
+          "mechanism": "largest_market_anchor"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "number_shock",
+          "mechanism": "years_not_months_repetition"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "asset_reframe",
+          "mechanism": "paper_over_building"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "number_juxtaposition",
+          "mechanism": "grid_connection_value_multiple"
+        }
+      ],
+      "required_retention_events": [
+        "single_question_focus",
+        "market_scale_anchor"
+      ],
+      "original_moves": [
+        "揭示花钱前的唯一问题：关键投入的获取权",
+        "说明接入基础设施的层级结构",
+        "用最成熟市场的规模锚点建立参照",
+        "揭示等待时长：不是五到七个月，是五到七年（单位重复强调）",
+        "重新定义协议才是真正的资产",
+        "展示提前锁定者的价值倍数"
+      ],
+      "abstract_move": "揭示第一性问题是获取权而非设备 + 用时间单位重复制造数字冲击 + 重新定义协议为真正资产 + 展示提前锁定的溢价倍数",
+      "replacement_needs": [
+        "一个关键投入的稀缺性证明（等待时长或配额）",
+        "一个时间尺度的单位重复强调（月到年的反转）",
+        "一个协议或权利的资产化定义",
+        "一个提前锁定的价值倍数或溢价"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(82);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "evidence_build",
+      "start_ratio": 0.1066,
+      "end_ratio": 0.1655,
+      "start_sec": 158,
+      "end_sec": 245.3,
+      "position_label": "10.7%–16.6%(2:38–4:05)",
+      "purpose": "说明选址逻辑与常规地产完全相反：四要素决定成败，便宜土地反而是陷阱，政策与投入价格差换算成年度价值",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "rule_reveal",
+          "mechanism": "four_factor_location_rule"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "warning_line",
+          "mechanism": "cheap_land_trap"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "incentive_math",
+          "mechanism": "tax_exemption_savings"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "price_contrast",
+          "mechanism": "regional_power_price_gap"
+        }
+      ],
+      "required_retention_events": [
+        "contrast_pairs",
+        "four_factor_rule"
+      ],
+      "original_moves": [
+        "对比数据中心选址逻辑与常规地产的完全相反",
+        "列出选址四要素清单（电力、气候、政策、接入）",
+        "揭示便宜土地反而是陷阱的机制",
+        "把政策激励换算成年度价值",
+        "对照不同区域的投入价格及年度价值差异"
+      ],
+      "abstract_move": "对比逻辑与常规完全相反 + 列出决定性要素清单 + 揭示低成本输入反而是陷阱的机制 + 把外部条件换算成年度价值",
+      "replacement_needs": [
+        "一个与常规逻辑相反的选择标准",
+        "一个决定成败的要素清单（三到四项）",
+        "一个低成本输入毁掉经济性的机制",
+        "一个政策或外部条件的年度价值换算"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "cost_breakdown",
+      "start_ratio": 0.1645,
+      "end_ratio": 0.2983,
+      "start_sec": 243.8,
+      "end_sec": 442,
+      "position_label": "16.5%–29.8%(4:04–7:22)",
+      "purpose": "叫停错误类比，给出三档建造量级阶梯与成本份额结构，以形象化判词定性，并以'还没赚到一块钱'收尾",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.1821,
+          "time_ms": 269919,
+          "reason": "'恰好有屋顶的电厂'把成本结构压缩成一句画面感判词"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "造价未知与错误类比之间的落差",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "cost_magnitude_ladder",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "category_correction",
+          "mechanism": "not_a_warehouse_stop"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "ratio_flip",
+          "mechanism": "shell_share_inversion"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "metaphor_verdict",
+          "mechanism": "power_plant_with_roof"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "scale_numbers",
+          "mechanism": "build_cost_ladder"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "stakes_reason",
+          "mechanism": "thirty_second_lawsuit"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "tension_pivot",
+          "mechanism": "zero_revenue_moment"
+        }
+      ],
+      "required_retention_events": [
+        "category_correction",
+        "cost_ladder"
+      ],
+      "original_moves": [
+        "叫停观众的错误类比（普通建筑）",
+        "揭示壳体与系统成本份额的反转：壳体只占20%",
+        "给出三档建造量级阶梯（小中大型项目造价）",
+        "解剖最大成本项及其内部构成",
+        "用形象化判词定性：'恰好有屋顶的电厂'",
+        "解释冗余存在的原因",
+        "以'还没赚到一块钱'的零收入时刻点题"
+      ],
+      "abstract_move": "叫停错误类比 + 揭示成本结构份额反转 + 给出量级阶梯 + 用形象化判词压缩本质 + 以零收入时刻点题风险",
+      "replacement_needs": [
+        "一个错误类比及其明确叫停",
+        "一个成本结构份额的反直觉反转",
+        "一个三档量级的造价阶梯",
+        "一个形象化判词压缩成本结构本质"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(78)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "risk_reframe",
+      "start_ratio": 0.2967,
+      "end_ratio": 0.3333,
+      "start_sec": 439.8,
+      "end_sec": 494,
+      "position_label": "29.7%–33.3%(7:20–8:14)",
+      "purpose": "把风险从建造成本重新定位到开业后的空置与债务：建造成本只是入场券，利息不等人",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.3192,
+          "time_ms": 473080,
+          "reason": "空置也在烧钱的利息换算，把风险从抽象变成每月账单"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "建完不等于赚钱的反直觉",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "risk_reframe",
+          "mechanism": "price_of_entry_verdict"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "debt_math",
+          "mechanism": "interest_accrues_regardless"
+        }
+      ],
+      "required_retention_events": [
+        "risk_reframe",
+        "interest_accrual_math"
+      ],
+      "original_moves": [
+        "给出判词：造价不是风险，只是入场券",
+        "重新定位真正风险：开业后的空置即慢性财务灾难",
+        "给出借贷利率区间",
+        "把利息按月累积换算成具体数字",
+        "强调填满大楼的紧迫性"
+      ],
+      "abstract_move": "判词：建造成本只是入场券 + 重新定位真正风险为开业后空置 + 把利息按时间单位换算成具体账单 + 强调填满的紧迫性",
+      "replacement_needs": [
+        "一个'入场券'判词，把建造成本与真正风险分离",
+        "一个开业后空置的持续成本",
+        "一个借贷利息的按时间单位换算",
+        "一个填满或启动的紧迫性时间窗口"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80);打开的悬念 LOOP04→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "business_model_reveal",
+      "start_ratio": 0.3323,
+      "end_ratio": 0.4091,
+      "start_sec": 492.4,
+      "end_sec": 606.2,
+      "position_label": "33.2%–40.9%(8:12–10:06)",
+      "purpose": "拆解两种收入模式的经济学差异，并把长期合约重新定义为融资工具",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "contract_reframe",
+          "mechanism": "contracts_as_financing_instruments"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "mid_video_cta",
+          "mechanism": "subscribe_like_request"
+        }
+      ],
+      "required_retention_events": [
+        "business_model_contrast",
+        "contract_as_financing"
+      ],
+      "original_moves": [
+        "拆解零售模式：单位价格与高获客成本",
+        "拆解批发模式：更低单价但长租期",
+        "重新定义长期合约为准保证收入流",
+        "把合约作为融资工具，换算成利率",
+        "判词：长约是最值钱的资产"
+      ],
+      "abstract_move": "拆解两种收入模式的经济学差异（单价、期限、获客成本）+ 重新定义长期合约为融资工具 + 换算成利率 + 判词：合约是最值钱资产",
+      "replacement_needs": [
+        "两种收入模式的价格与期限对比",
+        "一个长期合约等于准保证收入流的定性",
+        "一个合约作为融资工具的利率换算",
+        "一个判词：合约是最值钱的资产"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "conflict_escalation",
+      "start_ratio": 0.4079,
+      "end_ratio": 0.4777,
+      "start_sec": 604.5,
+      "end_sec": 707.9,
+      "position_label": "40.8%–47.8%(10:05–11:48)",
+      "purpose": "揭示批发模式的隐藏危险——客户集中度，用跨行业历史同构加深，最终以混合结构给出解法",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.427,
+          "time_ms": 632840,
+          "reason": "'全靠一个客户不离开'点破满租报表的脆弱"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "完美报表与单一客户依赖之间的反差",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "hidden_danger",
+          "mechanism": "customer_concentration_tease"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "scenario_reveal",
+          "mechanism": "single_customer_dependency"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "historical_pattern",
+          "mechanism": "real_estate_history_rhyme"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "resolution_line",
+          "mechanism": "hybrid_model_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_danger_tease",
+        "single_customer_dependency"
+      ],
+      "original_moves": [
+        "中段订阅CTA",
+        "预告批发模式的隐藏危险",
+        "对照单一客户满租的光鲜与脆弱",
+        "演示到期不续租的崩溃场景",
+        "用跨行业历史同构加深（零售商场、企业软件）",
+        "给出混合结构解法"
+      ],
+      "abstract_move": "预告隐藏危险 + 对照光鲜报表与脆弱本质 + 演示单一客户离开的崩溃场景 + 用跨行业历史同构加深 + 给出混合结构解法",
+      "replacement_needs": [
+        "一个单一客户集中度的光鲜与脆弱对照",
+        "一个到期不续的崩溃场景",
+        "一个跨行业的历史同构案例",
+        "一个混合结构或分散化解法"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(78);打开的悬念 LOOP05→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.4764,
+      "end_ratio": 0.548,
+      "start_sec": 706,
+      "end_sec": 812.1,
+      "position_label": "47.6%–54.8%(11:46–13:32)",
+      "purpose": "把最大运营成本项机制化：引入行业效率指标，演示指标改善如何直接变成年度利润，并以第一杠杆判词收束",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "concentration_risk_plus_hybrid_resolution",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "opex_share",
+          "mechanism": "power_dominates_opex"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "range_reveal",
+          "mechanism": "pue_spectrum"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "savings_math",
+          "mechanism": "pue_reduction_to_bottom_line"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "lever_verdict",
+          "mechanism": "most_important_lever"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "topic_turn",
+          "mechanism": "ai_economics_turn"
+        }
+      ],
+      "required_retention_events": [
+        "metric_definition",
+        "range_reveal"
+      ],
+      "original_moves": [
+        "揭示最大运营成本项占运营支出的比例区间",
+        "引入行业效率指标的定义与计算方法",
+        "给出理论极限与现实区间",
+        "演示指标改善的年度节省换算",
+        "判词：这不是费用，是第一杠杆"
+      ],
+      "abstract_move": "揭示最大运营成本项占比 + 引入效率指标 + 给出理论极限与现实区间 + 演示改善如何直接变成年度利润 + 判词：这是杠杆不是费用",
+      "replacement_needs": [
+        "一个最大运营成本项的占比区间",
+        "一个行业效率指标的定义与计算",
+        "一个指标改善的年度节省换算",
+        "一个判词：这是杠杆不是费用"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS08→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "demand_shift",
+      "start_ratio": 0.5467,
+      "end_ratio": 0.6456,
+      "start_sec": 810.2,
+      "end_sec": 956.8,
+      "position_label": "54.7%–64.6%(13:30–15:57)",
+      "purpose": "引入新需求浪潮的双面效应：密度阶梯抬高造价，同时也抬高收入单价；把是否值得明示为无人能确定回答的开放问题并定性为赌注",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "史无前例的需求与无人能答的长期性之间",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "density_shock",
+          "mechanism": "rack_density_ladder"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "cost_contrast",
+          "mechanism": "ai_vs_conventional_cost"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "open_question",
+          "mechanism": "ai_premium_uncertainty"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "bet_verdict",
+          "mechanism": "it_is_a_bet"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "numbers_turn",
+          "mechanism": "run_the_numbers"
+        }
+      ],
+      "required_retention_events": [
+        "density_shock",
+        "cost_contrast"
+      ],
+      "original_moves": [
+        "确认新需求真实且史无前例（AI转向）",
+        "揭示新旧设备的密度阶梯差异",
+        "计算冷却与结构改造成本",
+        "对照新旧造价的倍数差异",
+        "揭示收入单价同步抬升",
+        "明示开放设问：值得吗？",
+        "定性为赌注"
+      ],
+      "abstract_move": "确认新需求真实且史无前例 + 揭示密度阶梯抬高造价 + 同时揭示收入单价抬升 + 明示开放问题：值得吗？+ 定性为赌注",
+      "replacement_needs": [
+        "一个新需求浪潮的真实性与史无前例性确认",
+        "一个新旧设备或标准的密度或强度阶梯",
+        "一个新旧造价的倍数对照",
+        "一个收入单价同步抬升的事实",
+        "一个明示的开放设问并定性为赌注"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "worked_example",
+      "start_ratio": 0.6444,
+      "end_ratio": 0.7373,
+      "start_sec": 954.9,
+      "end_sec": 1092.6,
+      "position_label": "64.4%–73.7%(15:55–18:13)",
+      "purpose": "用一个中型项目的完整财务推演把前面所有变量落到净现金流，展示薄 margin，用利用率阶梯演示敏感性，并给出全片目标函数判词",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.7,
+          "time_ms": 1037319,
+          "reason": "两亿投入换一两百万净现金流，全片最强反差回报"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "margin_reveal",
+          "mechanism": "thin_margin_punchline"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "sensitivity_demo",
+          "mechanism": "occupancy_drop_ladder"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "goal_verdict",
+          "mechanism": "full_building_long_lease"
+        }
+      ],
+      "required_retention_events": [
+        "worked_pnl",
+        "thin_margin_punchline"
+      ],
+      "original_moves": [
+        "预告用中型项目完整推演",
+        "列出完整财务账目（造价、杠杆、利率、收入、电费、其他成本、经营利润、利息、净现金流）",
+        "给出薄margin判词：两亿投入换一两百万净现金流",
+        "用利用率敏感性阶梯演示风险",
+        "给出全片目标函数判词：满楼、长约、优质客户"
+      ],
+      "abstract_move": "用完整财务推演把所有变量落到净现金流 + 揭示投入与回报的薄margin反差 + 用利用率阶梯演示敏感性 + 给出目标函数判词",
+      "replacement_needs": [
+        "一个完整的财务推演（投入、收入、成本、利润、净现金流）",
+        "一个投入与净回报的薄margin反差数字",
+        "一个利用率或关键参数的敏感性阶梯",
+        "一个目标函数判词（满足哪些条件才能赢）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "tradeoff_analysis",
+      "start_ratio": 0.7362,
+      "end_ratio": 0.7805,
+      "start_sec": 1091,
+      "end_sec": 1156.6,
+      "position_label": "73.6%–78.1%(18:11–19:17)",
+      "purpose": "用行业正式分级制度展示可靠性升级的边际成本，以及客户纸面要求与价格面前真实选择的落差",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "机制成立与条件链断裂之间",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "worked_example_plus_goal_verdict",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE42",
+          "event_type": "cost_tradeoff",
+          "mechanism": "tier_upgrade_price"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "quiet_truth",
+          "mechanism": "paper_demand_price_acceptance"
+        }
+      ],
+      "required_retention_events": [
+        "tier_system",
+        "cost_tradeoff"
+      ],
+      "original_moves": [
+        "引入行业正式分级制度",
+        "定义最高等级的冗余配置",
+        "换算等级跃迁的每单位成本与项目级总价",
+        "揭示客户纸面要求与价格面前实际选择的反差",
+        "警告错建高等级的代价"
+      ],
+      "abstract_move": "引入正式分级制度 + 展示可靠性升级的边际成本 + 揭示纸面要求与实际选择的反差 + 警告错建代价",
+      "replacement_needs": [
+        "一个行业正式分级制度及最高等级定义",
+        "一个等级跃迁的边际成本换算",
+        "一个纸面要求与实际选择的反差事实",
+        "一个错建高等级的代价警告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS14 跨段;回收了前文的悬念 FS06→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "failure_case_study",
+      "start_ratio": 0.7795,
+      "end_ratio": 0.8217,
+      "start_sec": 1155.1,
+      "end_sec": 1217.7,
+      "position_label": "78%–82.2%(19:15–20:18)",
+      "purpose": "用一轮真实的行业失败潮归纳模型崩坏的条件链，提炼资产属性教训，并警告经济性恶化速度",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.7946,
+          "time_ms": 1177520,
+          "reason": "折价出售与法拍的失败潮事实，把机制反读为失败路径"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE44",
+          "event_type": "model_break_turn",
+          "mechanism": "when_the_model_breaks"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "failure_facts",
+          "mechanism": "vacancy_discount_foreclosure"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "lesson_verdict",
+          "mechanism": "illiquid_asset_lesson"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "sponsor_cta",
+          "mechanism": "description_guide_pointer"
+        }
+      ],
+      "required_retention_events": [
+        "failure_wave",
+        "vacancy_facts"
+      ],
+      "original_moves": [
+        "交代失败潮的背景假设（投机建设）",
+        "揭示需求没有跟进的事实",
+        "给出空置率与年限",
+        "揭示折价出售与法拍的结局",
+        "限定教训：不是行业不好",
+        "提炼资产属性判词",
+        "警告经济性恶化速度"
+      ],
+      "abstract_move": "用真实失败潮归纳模型崩坏的条件链 + 揭示折价与法拍结局 + 限定教训范围 + 提炼资产属性判词 + 警告恶化速度",
+      "replacement_needs": [
+        "一轮真实的行业失败潮背景与结局",
+        "一个需求没有跟进或假设错误的事实",
+        "一个空置率、折价或法拍的具体数据",
+        "一个资产属性判词（什么样的资产会崩溃）",
+        "一个经济性恶化速度的警告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.82,
+      "end_ratio": 1,
+      "start_sec": 1215.2,
+      "end_sec": 1482,
+      "position_label": "82%–100%(20:15–24:42)",
+      "purpose": "拉到行业当前时刻与终局：瓶颈从需求转向供给，真正的生意是控制稀缺投入，以本质压缩句和十年级开放问题收束，最后才是订阅 CTA",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.8445,
+          "time_ms": 1251560,
+          "reason": "单财年资本开支锚点，需求量级达到全片最大尺度"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9529,
+          "time_ms": 1412160,
+          "reason": "'生意=控制稀缺基础设施'的世界观升维"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9823,
+          "time_ms": 1455720,
+          "reason": "'不是服务器不是建筑，是兆瓦'+十年级开放问题，双重收束顶点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "行业经济学升维为十年级经济问题",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_economics_synthesis_verdict",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "failure_wave_cases_plus_asset_lesson",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE48",
+          "event_type": "era_turn",
+          "mechanism": "unprecedented_moment"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "capex_scale",
+          "mechanism": "single_year_capex_anchor"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "bottleneck_shift",
+          "mechanism": "demand_to_supply_flip"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "equation_verdict",
+          "mechanism": "unchanged_financial_equation"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "winners_verdict",
+          "mechanism": "container_not_business"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "scarcity_verdict",
+          "mechanism": "scarce_infrastructure_control"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "projection_stat",
+          "mechanism": "ai_power_share_projection"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "final_essence",
+          "mechanism": "megawatts_not_servers"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "open_question_close",
+          "mechanism": "megawatt_control_question"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "ending_cta",
+          "mechanism": "like_subscribe_thanks"
+        }
+      ],
+      "required_retention_events": [
+        "capex_scale",
+        "bottleneck_shift"
+      ],
+      "original_moves": [
+        "赞助CTA",
+        "揭示史无前例的需求量级与单财年资本开支锚点",
+        "定性瓶颈从需求转向供给",
+        "列出两大供给瓶颈的具体等待时长",
+        "揭示既有者与新建者的盈亏不对称",
+        "重申不变的基本财务方程",
+        "演示全变量同时反向的崩溃路径",
+        "列出赢家的四项真实工作",
+        "重新定义最稀缺之物",
+        "给出需求占比预测",
+        "本质压缩句：生意=控制稀缺基础设施",
+        "十年级开放问题",
+        "订阅CTA"
+      ],
+      "abstract_move": "揭示史无前例需求量级 + 定性瓶颈从需求转向供给 + 揭示既有者与新建者不对称 + 列出赢家真实工作 + 重新定义最稀缺之物 + 本质压缩句 + 十年级开放问题",
+      "replacement_needs": [
+        "一个史无前例的需求量级与资本开支锚点",
+        "一个瓶颈从需求转向供给的定性",
+        "两个供给瓶颈的具体等待时长",
+        "一个既有者与新建者的盈亏不对称事实",
+        "一个全变量同时反向的崩溃路径",
+        "一个赢家的真实工作清单（三到四项）",
+        "一个最稀缺之物的重新定义",
+        "一个本质压缩句",
+        "一个十年级开放问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(82)、PK09(85)、PK10(90);打开的悬念 LOOP08(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01、FS12→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 82
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

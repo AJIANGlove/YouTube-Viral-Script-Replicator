@@ -1,0 +1,1187 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:40:16.142Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.0383,
+      "start_sec": 0.1,
+      "end_sec": 56,
+      "position_label": "0%–3.8%(0:00–0:56)",
+      "purpose": "用第二人称幻想复述建立代入，随即以失败率数据与归因重定向制造核心悖论",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.0126,
+          "time_ms": 18441,
+          "reason": "五年50-74%转手率+六分之一首年倒闭，把标题的平静名词短语瞬间转为高失败悖论"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：拥有一家咖啡馆的完整经济学是什么——为什么看似简单却高失败，钱到底从哪来到哪去",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "“咖啡本身几乎不扮演角色”——那这门生意真正在卖什么",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_hook",
+          "mechanism": "second_person_ownership_fantasy"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "counterfactual_foil",
+          "mechanism": "if_it_were_simple_everyone_would_succeed"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "failure_stat_reveal",
+          "mechanism": "five_year_ownership_churn"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "survival_stat_reveal",
+          "mechanism": "first_year_mortality"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "fairness_reframe",
+          "mechanism": "not_because_owners_are_stupid"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "perspective_reframe",
+          "mechanism": "outside_vs_inside_business"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "mechanism_tease",
+          "mechanism": "coffee_plays_almost_no_role"
+        }
+      ],
+      "required_retention_events": [
+        "ownership_fantasy_entry",
+        "counterfactual_foil",
+        "failure_rate_paradox",
+        "attribution_redirect",
+        "mechanism_tease"
+      ],
+      "original_moves": [
+        "用第二人称描绘拥有咖啡店的理想场景",
+        "用反事实论证：如果真的简单，应该随处可见成功案例",
+        "抛出五年50-74%转手率和六分之一首年倒闭的量化失败证据",
+        "明确归因：失败不是因为经营者愚蠢",
+        "预告真正的核心问题在于产品角色的误解"
+      ],
+      "abstract_move": "第二人称理想场景建立代入 + 反事实归谬打破幻觉 + 失败率区间数据建立悖论 + 归因重定向排除常见解释 + 核心谜题预告",
+      "replacement_needs": [
+        "一个可以用第二人称描述的拥有/经营幻想场景",
+        "一个高失败率或转手率的量化区间数据",
+        "一个排除表层归因（如能力、努力）的重定向解释",
+        "一个关于核心误解或隐藏机制的悬念预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(82);打开的悬念 LOOP01→FS14、LOOP03→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 82
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "ownership_fantasy_with_failure_rate_reversal",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 18441,
+        "evidence_refs": [
+          "C0001",
+          "C0011",
+          "C0020",
+          "C0027"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "entry_cost_barrier",
+      "start_ratio": 0.0377,
+      "end_ratio": 0.0993,
+      "start_sec": 55.1,
+      "end_sec": 145.1,
+      "position_label": "3.8%–9.9%(0:55–2:25)",
+      "purpose": "用观众最可能先查的入场数字给出第一次实质奖励，并把门槛大头定位到看不见的改造",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.0463,
+          "time_ms": 67686,
+          "reason": "首个数字奖励：8-30万美元开店区间与核心都市超50万，建立“入场即重资产”的尺度"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "开一家店到底要多少钱——观众“第一个会搜的数字”",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "first_number_payoff",
+          "mechanism": "opening_cost_range"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "scale_jump",
+          "mechanism": "elite_market_threshold"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "problem_pivot",
+          "mechanism": "spaces_not_designed_as_cafes"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "cost_rate_reveal",
+          "mechanism": "fitout_rate_per_sqft"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "threshold_reveal",
+          "mechanism": "before_any_machine_bought"
+        }
+      ],
+      "required_retention_events": [
+        "first_number_payoff",
+        "scale_jump",
+        "problem_pivot",
+        "cost_rate_reveal"
+      ],
+      "original_moves": [
+        "给出开店总成本区间8-30万美元作为首个实质数字奖励",
+        "标出顶级市场（纽约、旧金山）的超50万美元上限",
+        "引入改造类行业术语",
+        "列举不合规项清单（管道、通风、电力）",
+        "给出单位面积改造费率"
+      ],
+      "abstract_move": "用观众最先查询的入场数字给出首次信息奖励 + 顶级市场上限建立尺度 + 引入专业术语 + 用不合规清单揭示隐藏门槛 + 单位费率量化看不见的大头",
+      "replacement_needs": [
+        "一个入场总成本的量化区间",
+        "一个顶级市场或极端情况的上限数字",
+        "一个改造、合规或准入类的专业术语",
+        "一个隐藏投入项的清单或单位费率"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(74);打开的悬念 LOOP02→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "startup_cost_itemization",
+      "start_ratio": 0.0986,
+      "end_ratio": 0.1634,
+      "start_sec": 144.1,
+      "end_sec": 238.7,
+      "position_label": "9.9%–16.3%(2:24–3:59)",
+      "purpose": "逐项摊开入场成本结构，并以最容易被忽略却最致命的资金储备项回收",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "itemization_start",
+          "mechanism": "opening_cost_structure_list"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "fatal_omission_reveal",
+          "mechanism": "working_capital_reserve"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "failure_mechanism_payoff",
+          "mechanism": "full_house_still_closes"
+        }
+      ],
+      "required_retention_events": [
+        "itemization",
+        "fatal_omission_reveal",
+        "failure_mechanism_payoff"
+      ],
+      "original_moves": [
+        "逐项列举七项入场成本：租赁押金、设备、装修、系统、证照、库存、营销",
+        "指出最容易被忽略的运营资金储备",
+        "用满座却倒闭的现金流死因场景回收"
+      ],
+      "abstract_move": "逐项摊开入场成本结构 + 标出最易遗漏的资金储备项 + 用极端悖论场景（满负荷仍倒闭）揭示致命后果",
+      "replacement_needs": [
+        "一个可逐项列举的入场成本清单（至少五项）",
+        "一个最易被忽略但致命的资金储备或缓冲项",
+        "一个悖论场景：表面繁荣但因缺乏该项而失败"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "location_logic_reframe",
+      "start_ratio": 0.1628,
+      "end_ratio": 0.2624,
+      "start_sec": 237.8,
+      "end_sec": 383.3,
+      "position_label": "16.3%–26.2%(3:58–6:23)",
+      "purpose": "提出第一个反直觉原则（为核心位置多付费几乎总是对的）并用机制兑现，再给行业标尺与地段模式",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.1818,
+          "time_ms": 265570,
+          "reason": "“为忙碌街角多付租金几乎总是对的”反直觉原则+“租金=预付获客”机制，完成选址认知重构"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "为什么为忙碌街角多付租金反而几乎总是对的",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "itemized_entry_cost_answer",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "counterintuitive_principle_answer",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "topic_shift",
+          "mechanism": "forget_coffee_most_important_decision"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "counterintuitive_claim",
+          "mechanism": "pay_more_for_busy_corner"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "mechanism_payoff",
+          "mechanism": "rent_as_prepaid_customer_acquisition"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "industry_rule_reveal",
+          "mechanism": "space_cost_6_to_10_percent_rule"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "pattern_synthesis",
+          "mechanism": "location_revenue_rhythms"
+        }
+      ],
+      "required_retention_events": [
+        "topic_shift",
+        "counterintuitive_claim",
+        "mechanism_payoff",
+        "industry_rule_reveal",
+        "pattern_synthesis"
+      ],
+      "original_moves": [
+        "宣称选址是最重要的决策",
+        "提出反直觉原则：为忙碌街角多付租金几乎总是对的",
+        "用机制解释：租金等于预付获客成本",
+        "给出行业标尺：空间成本应占预测收入的比例",
+        "对照多类地段的收入节奏差异"
+      ],
+      "abstract_move": "反直觉主张（为核心位置多付费总是对的）+ 机制兑现（成本等于预付获客）+ 行业标尺量化合理比例 + 地段模式对照收入节奏",
+      "replacement_needs": [
+        "一个核心位置与普通位置的成本对比设定",
+        "一个反直觉的多付费原则",
+        "一个机制解释：成本等于某种预付或转化",
+        "一个行业标尺：成本占收入的合理比例区间"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(82);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "equipment_dependency_reveal",
+      "start_ratio": 0.2618,
+      "end_ratio": 0.3459,
+      "start_sec": 382.4,
+      "end_sec": 505.3,
+      "position_label": "26.2%–34.6%(6:22–8:25)",
+      "purpose": "拆解核心设备的真实价格与隐藏依赖，把保养与停机风险折算成财务威胁",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.307,
+          "time_ms": 448543,
+          "reason": "水垢12-18个月毁掉2.5万美元机器：隐藏的化学变量变成直接财务威胁"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "assumption_challenge",
+          "mechanism": "espresso_machine_true_price"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "price_reveal",
+          "mechanism": "machine_8k_to_35k"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "hidden_factor_reveal",
+          "mechanism": "espresso_is_98_percent_water"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "threat_reveal",
+          "mechanism": "scale_destroys_machine_in_12_18_months"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "insurance_payoff",
+          "mechanism": "ro_system_as_best_insurance"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "downtime_stakes",
+          "mechanism": "no_service_contract_no_revenue"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "scene_shift",
+          "mechanism": "walk_up_to_counter_latte"
+        }
+      ],
+      "required_retention_events": [
+        "assumption_challenge",
+        "price_reveal",
+        "hidden_factor_reveal",
+        "threat_reveal",
+        "insurance_payoff",
+        "downtime_stakes"
+      ],
+      "original_moves": [
+        "给出核心设备真实价格区间",
+        "揭示配套设备追加后的总价",
+        "指出隐藏投入变量：水质等原料之外的介质",
+        "解释隐性损耗机理：水垢12-18个月毁掉2.5万美元机器",
+        "给出低成本防御性投入和年度维护预算",
+        "量化停机风险"
+      ],
+      "abstract_move": "核心设备真实价格拆解 + 隐藏变量揭示（原料外介质）+ 隐性损耗机理与毁损周期折算成财务威胁 + 防御性投入与维护预算",
+      "replacement_needs": [
+        "一个核心设备或资产的真实价格区间",
+        "一个隐藏的依赖变量（介质、环境、配套）",
+        "一个隐性损耗机理及其导致的毁损周期或财务后果",
+        "一个低成本防御性投入或维护预算"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(78)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "unit_economics_breakdown",
+      "start_ratio": 0.3452,
+      "end_ratio": 0.4289,
+      "start_sec": 504.4,
+      "end_sec": 626.6,
+      "position_label": "34.5%–42.9%(8:24–10:27)",
+      "purpose": "把招牌单品的毛利幻觉逐项减到真实净利判决，并给出保本线",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.4121,
+          "time_ms": 601983,
+          "reason": "5美元拿铁只剩约85美分/17%净利，80%毛利幻觉被逐项成本栈击碎，全片核心爆点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "一美元原料卖五美元、80%毛利，为什么不人人都暴富",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "unit_economics_verdict",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "margin_illusion_hook",
+          "mechanism": "why_isnt_everyone_rich"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "cost_stack_start",
+          "mechanism": "bean_cost_48_cents"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "true_profit_verdict",
+          "mechanism": "85_cents_17_percent_net"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "breakeven_reveal",
+          "mechanism": "25k_per_month_833_per_day"
+        }
+      ],
+      "required_retention_events": [
+        "scene_shift",
+        "margin_illusion_hook",
+        "cost_stack_subtraction",
+        "true_profit_verdict",
+        "breakeven_reveal"
+      ],
+      "original_moves": [
+        "呈现表面售价与原料价的毛利幻觉：80%毛利",
+        "逐项列举原料成本栈",
+        "逐项列举七项运营成本：人工、租金、能耗、手续费、折旧、杂项",
+        "给出真实净利判决：5美元拿铁只剩约85美分/17%",
+        "计算周期保本线"
+      ],
+      "abstract_move": "毛利幻觉呈现 + 原料成本栈逐项减法 + 运营成本栈逐项减法 + 真实净利判决（比例与绝对值对撞）+ 保本线量化",
+      "replacement_needs": [
+        "一个表面售价与原料价的毛利幻觉数据",
+        "一个可逐项列举的原料成本栈",
+        "一个可逐项列举的运营成本栈（至少五项）",
+        "一个真实净利判决：绝对值与比例的对撞"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "product_redefinition",
+      "start_ratio": 0.4282,
+      "end_ratio": 0.4954,
+      "start_sec": 625.6,
+      "end_sec": 723.7,
+      "position_label": "42.8%–49.5%(10:26–12:04)",
+      "purpose": "兑现开场核心悬念：把产品从表面商品重定义为空间/体验，并给出效率管理工具",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.4291,
+          "time_ms": 626912,
+          "reason": "“你卖的不是咖啡，是空间”兑现开场核心悬念，产品定义被重构"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "product_redefinition_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "product_redefinition",
+          "mechanism": "you_sell_space_not_coffee"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "concept_anchor",
+          "mechanism": "third_place_concept"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "behavior_proof",
+          "mechanism": "paying_5_50_for_60_cent_drink"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "efficiency_problem_reveal",
+          "mechanism": "laptop_occupies_four_seat_table"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "management_toolkit",
+          "mechanism": "table_wifi_outlet_design"
+        }
+      ],
+      "required_retention_events": [
+        "product_redefinition",
+        "concept_anchor",
+        "behavior_proof",
+        "efficiency_problem_reveal",
+        "management_toolkit"
+      ],
+      "original_moves": [
+        "宣言：你卖的不是咖啡，是空间",
+        "引入支撑概念的理论锚点",
+        "给出顾客行为证据：长时间占座低消费",
+        "计算低效占用的机会成本账",
+        "提供空间/体验效率管理工具"
+      ],
+      "abstract_move": "产品重定义宣言兑现开场悬念 + 理论锚点支撑 + 顾客行为证据 + 低效占用的机会成本量化 + 效率管理工具给出",
+      "replacement_needs": [
+        "一个产品重定义宣言：表面商品实为空间/体验/时间",
+        "一个支撑概念的理论框架或行业锚点",
+        "一个顾客行为证据：占用与消费的不匹配",
+        "一个低效占用的机会成本账或效率管理工具"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(88);回收了前文的悬念 FS01→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "food_margin_lever",
+      "start_ratio": 0.4947,
+      "end_ratio": 0.5598,
+      "start_sec": 722.8,
+      "end_sec": 817.9,
+      "position_label": "49.5%–56%(12:03–13:38)",
+      "purpose": "证明附加品类是存活与繁荣的分水岭：组合消费把单客毛利近乎翻倍，同时给出损耗纪律",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 79,
+          "position_ratio": 0.5154,
+          "time_ms": 752980,
+          "reason": "饮品+糕点组合账单毛利近乎翻倍，食物从点缀升级为利润杠杆"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "lever_pivot",
+          "mechanism": "food_as_survival_vs_thriving"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "gross_math_reveal",
+          "mechanism": "combo_check_nearly_doubles_profit"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "term_introduction",
+          "mechanism": "food_add_on_ratio_40_vs_15"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "spoilage_tension",
+          "mechanism": "croissant_unusable_by_tomorrow"
+        }
+      ],
+      "required_retention_events": [
+        "lever_pivot",
+        "gross_math_reveal",
+        "term_introduction",
+        "spoilage_tension"
+      ],
+      "original_moves": [
+        "定位附加品类为战略层级决策",
+        "对照主品与附加品的毛利",
+        "计算组合账单毛利近乎翻倍",
+        "引入附加率行业术语并标出差距",
+        "对照主品耐存与附加品易腐",
+        "给出按实际数据调整库存的纪律"
+      ],
+      "abstract_move": "附加品类战略定位 + 主品与附加品毛利对照 + 组合账单毛利翻倍量化 + 附加率术语与差距 + 耐存与易腐对照 + 库存纪律",
+      "replacement_needs": [
+        "一个主品与附加品的毛利对照",
+        "一个组合消费的毛利翻倍数据",
+        "一个附加率或渗透率的行业术语与差距",
+        "一个主品与附加品在损耗或库存管理上的对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(79)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 79
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "labor_cost_management",
+      "start_ratio": 0.5598,
+      "end_ratio": 0.6539,
+      "start_sec": 817.9,
+      "end_sec": 955.3,
+      "position_label": "56%–65.4%(13:38–15:55)",
+      "purpose": "把人工定位成最大且最易失控的成本项，封死自动化退路后给出排班与留人杠杆",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE41",
+          "event_type": "largest_cost_reveal",
+          "mechanism": "labor_25_to_35_percent"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "geography_contrast",
+          "mechanism": "seattle_19_97_vs_7_25"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "automation_limit",
+          "mechanism": "barista_cannot_be_replaced_by_software"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "scheduling_payoff",
+          "mechanism": "labor_cost_reduction_15_20_percent"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "turnover_cost_reveal",
+          "mechanism": "replacement_cost_1500_3000"
+        }
+      ],
+      "required_retention_events": [
+        "largest_cost_reveal",
+        "geography_contrast",
+        "automation_limit",
+        "scheduling_payoff",
+        "turnover_cost_reveal"
+      ],
+      "original_moves": [
+        "给出人工成本占比区间与地域差异",
+        "论证核心岗位不可自动化",
+        "给出按客流节奏排班的可量化杠杆",
+        "量化流失替换成本",
+        "得出结论：早期投资员工更便宜"
+      ],
+      "abstract_move": "人工成本占比与地域差定位 + 不可自动化论证封死退路 + 排班杠杆量化 + 流失成本量化 + 投资员工结论",
+      "replacement_needs": [
+        "一个人工成本占比区间及地域差异数据",
+        "一个核心岗位不可自动化或替代的论证",
+        "一个按需求节奏优化的可量化杠杆",
+        "一个流失或替换成本的量化"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "hidden_cost_inventory",
+      "start_ratio": 0.6533,
+      "end_ratio": 0.7472,
+      "start_sec": 954.4,
+      "end_sec": 1091.6,
+      "position_label": "65.3%–74.7%(15:54–18:12)",
+      "purpose": "清点新手模型缺席的隐性成本，并聚合成净利率量级的侵蚀冲击",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE46",
+          "event_type": "hidden_costs_pivot",
+          "mechanism": "forgotten_8_to_12_items"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "subscription_reveal",
+          "mechanism": "software_stack_300_1000_per_month"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "legal_risk_reveal",
+          "mechanism": "music_licensing_infringement"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "waste_physics",
+          "mechanism": "two_to_five_percent_inventory_loss"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "erosion_aggregate",
+          "mechanism": "hidden_costs_5k_to_8k_margin_gap"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_costs_pivot",
+        "subscription_reveal",
+        "legal_risk_reveal",
+        "waste_physics",
+        "erosion_aggregate"
+      ],
+      "original_moves": [
+        "列举被遗忘的隐性成本项",
+        "量化交易手续费及其年累计",
+        "列举强制软件订阅栈",
+        "列举版权/合规类许可",
+        "解释库存损耗的不可消除归因",
+        "量化商业能耗",
+        "聚合年度合计并对标净利率档位差"
+      ],
+      "abstract_move": "新手模型缺席的隐性成本清单 + 逐项量化（手续费、订阅、许可、损耗、能耗）+ 年度聚合成净利率档位级侵蚀",
+      "replacement_needs": [
+        "一个隐性成本清单（至少四项）",
+        "一个单项的年累计量化数据",
+        "一个聚合后的年度总额",
+        "一个对标：聚合侵蚀等于净利率的档位差"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "aggregate_pnl_reality",
+      "start_ratio": 0.7465,
+      "end_ratio": 0.8637,
+      "start_sec": 1090.6,
+      "end_sec": 1261.8,
+      "position_label": "74.7%–86.4%(18:11–21:02)",
+      "purpose": "把全部成本项汇入单一年度损益表，揭晓真实净利与经营者实际所得，定性收入与财富之别，并量化年景波动",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 87,
+          "position_ratio": 0.7797,
+          "time_ms": 1139073,
+          "reason": "50万美元营收门店净营业利润仅5万美元/10%，前十段成本一次性汇入总账"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 82,
+          "position_ratio": 0.8507,
+          "time_ms": 1242758,
+          "reason": "好年景与坏年景约10万美元落差且几乎不受店主控制，风险被归因到开业前决策"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "一家经营良好的店一年到底给店主留下多少",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "如果单店只是收入而非财富，那从收入走向财富的路径是什么",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "aggregate_numeric_answer",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE51",
+          "event_type": "aggregate_pnl_start",
+          "mechanism": "well_run_500k_cafe_pnl"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "net_profit_verdict",
+          "mechanism": "50k_10_percent_net"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "owner_income_reveal",
+          "mechanism": "owner_salary_and_total_income"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "payback_reveal",
+          "mechanism": "three_to_five_year_payback"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "definition_flip",
+          "mechanism": "income_generation_not_wealth"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "swing_reveal",
+          "mechanism": "good_year_bad_year_100k_gap"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "predecision_reveal",
+          "mechanism": "risk_taken_before_first_latte"
+        }
+      ],
+      "required_retention_events": [
+        "aggregate_pnl_start",
+        "net_profit_verdict",
+        "owner_income_reveal",
+        "payback_reveal",
+        "definition_flip",
+        "swing_reveal",
+        "predecision_reveal"
+      ],
+      "original_moves": [
+        "呈现代表性年营收的完整损益表",
+        "揭晓真实净利判决：50万美元营收仅5万美元/10%净利",
+        "计算经营者市场化报酬与总收入",
+        "给出投入回本周期",
+        "定性：收入生成非财富创造",
+        "量化好/坏年景落差约10万美元",
+        "归因：风险在开业前已承担"
+      ],
+      "abstract_move": "完整损益表汇总前十段成本 + 真实净利与经营者所得揭晓 + 回本周期量化 + 收入与财富定性区分 + 年景波动量化 + 风险归因到开业前决策",
+      "replacement_needs": [
+        "一个代表性年营收的完整损益表",
+        "一个真实净利判决：绝对值与比例的对撞",
+        "一个经营者实际所得与市场化报酬的对比",
+        "一个好/坏年景的量化落差及其不可控归因"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(87)、PK09(82);打开的悬念 LOOP07→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 87
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "scale_threshold",
+      "start_ratio": 0.863,
+      "end_ratio": 0.8968,
+      "start_sec": 1260.8,
+      "end_sec": 1310.2,
+      "position_label": "86.3%–89.7%(21:01–21:50)",
+      "purpose": "拆除浪漫化日常想象，提出单店收入与规模化财富的分水岭，用固定成本摊薄解释网络诞生",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE58",
+          "event_type": "owner_reality",
+          "mechanism": "six_am_to_seven_pm_operator"
+        },
+        {
+          "event_id": "RE59",
+          "event_type": "threshold_reveal",
+          "mechanism": "one_shop_income_scaled_wealth"
+        },
+        {
+          "event_id": "RE60",
+          "event_type": "scaling_logic",
+          "mechanism": "second_location_fixed_cost_spread"
+        }
+      ],
+      "required_retention_events": [
+        "owner_reality",
+        "threshold_reveal",
+        "scaling_logic"
+      ],
+      "original_moves": [
+        "拆除浪漫化想象：列举经营者真实多角色日常",
+        "提出分水岭句：单店=收入、规模化=财富",
+        "解释第二家店的固定成本摊薄机制",
+        "给出网络诞生的递增逻辑"
+      ],
+      "abstract_move": "真实日常拆除浪漫想象 + 单店与规模化的收入/财富分水岭定性 + 固定成本摊薄机制解释第二家店 + 网络诞生的递增逻辑",
+      "replacement_needs": [
+        "一个经营者真实多角色日常清单",
+        "一个单店与规模化的分水岭定性句",
+        "一个固定成本摊薄或边际改善的机制",
+        "一个网络或规模效应的递增逻辑"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "vertical_integration_path",
+      "start_ratio": 0.8962,
+      "end_ratio": 0.9492,
+      "start_sec": 1309.3,
+      "end_sec": 1386.7,
+      "position_label": "89.6%–94.9%(21:49–23:07)",
+      "purpose": "用纵向整合改写单位成本并把成本中心变收入中心，以同构品牌案例归纳规模化公式，归因于“首店当原型”",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.9244,
+          "time_ms": 1350510,
+          "reason": "三个真实品牌的同构规模化路径（含近5亿美元收购案）证明“首店=原型”公式的现实结局"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE61",
+          "event_type": "vertical_integration_reveal",
+          "mechanism": "roasting_green_beans_economics"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "brand_case_reveal",
+          "mechanism": "starbucks_blue_bottle_intelligentsia"
+        },
+        {
+          "event_id": "RE63",
+          "event_type": "mindset_verdict",
+          "mechanism": "prototype_not_ultimate_goal"
+        }
+      ],
+      "required_retention_events": [
+        "vertical_integration_reveal",
+        "brand_case_reveal",
+        "mindset_verdict"
+      ],
+      "original_moves": [
+        "解释纵向整合对单位成本的改写",
+        "说明成本中心变收入中心",
+        "列举三个同构品牌路径案例（含近5亿美元收购）",
+        "归纳公式：验证模型→强化品牌→门店与制造→出售",
+        "归因：首店当原型而非终点"
+      ],
+      "abstract_move": "纵向整合改写单位成本 + 成本中心变收入中心 + 多个同构品牌案例证明路径 + 规模化公式归纳 + 首店当原型归因",
+      "replacement_needs": [
+        "一个纵向整合对单位成本的改写机制",
+        "一个成本中心变收入中心的转化案例",
+        "至少两个同构品牌路径案例（含退出数据）",
+        "一个规模化公式：从首店到出售的阶段"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "thesis_compression_closure",
+      "start_ratio": 0.9486,
+      "end_ratio": 1,
+      "start_sec": 1385.8,
+      "end_sec": 1460.9,
+      "position_label": "94.9%–100%(23:06–24:21)",
+      "purpose": "压缩全片论点为一句重定义，如实复述令人失望的数学与失败根源，以有条件的肯定与最终重定义完成情绪回收",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "emotional_payoff",
+          "strength": 86,
+          "position_ratio": 0.9931,
+          "time_ms": 1450783,
+          "reason": "“卖的是人们不想离开的地方”收束全片，把经营者身份从做咖啡重定义为经营空间体验"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_cost_structure_plus_thesis_reframe",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "scaling_path_answer",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE64",
+          "event_type": "thesis_restate",
+          "mechanism": "not_a_coffee_business"
+        },
+        {
+          "event_id": "RE65",
+          "event_type": "math_compression",
+          "mechanism": "less_than_a_dollar_per_5_transaction"
+        },
+        {
+          "event_id": "RE66",
+          "event_type": "failure_root_verdict",
+          "mechanism": "buying_lifestyle_getting_operations_problem"
+        },
+        {
+          "event_id": "RE67",
+          "event_type": "conditional_hope",
+          "mechanism": "steady_income_15_20_30_years"
+        },
+        {
+          "event_id": "RE68",
+          "event_type": "final_reframe",
+          "mechanism": "selling_a_place_people_dont_want_to_leave"
+        }
+      ],
+      "required_retention_events": [
+        "thesis_restate",
+        "math_compression",
+        "failure_root_verdict",
+        "conditional_hope",
+        "final_reframe"
+      ],
+      "original_moves": [
+        "压缩全片多要素为一句重述",
+        "压缩单位交易净利为一句",
+        "复述回本现实",
+        "归因失败根源",
+        "给出长期稳定的条件句",
+        "最终重定义：卖的是人们不想离开的地方"
+      ],
+      "abstract_move": "多要素压缩句重述全片 + 单位净利压缩句 + 回本现实如实复述 + 失败根源归因 + 长期条件句 + 最终重定义完成情绪回收",
+      "replacement_needs": [
+        "一个压缩全片论点的重述句",
+        "一个单位交易净利的压缩句",
+        "一个失败根源的归因",
+        "一个最终重定义：经营者身份或产品本质的诗意收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(86);回收了前文的悬念 FS01→LOOP01、FS11→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

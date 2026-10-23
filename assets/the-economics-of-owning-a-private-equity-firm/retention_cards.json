@@ -1,0 +1,1148 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:26:21.809Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.0401,
+      "start_sec": 0.2,
+      "end_sec": 59.7,
+      "position_label": "0%–4%(0:00–1:00)",
+      "purpose": "用第二人称拥有幻想复述朴素模型并逐句击碎，抛出'最赚钱vs几乎没人变富'双重悬念",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "belief_challenge",
+          "strength": 78,
+          "position_ratio": 0.0057,
+          "time_ms": 8000,
+          "reason": "'那句话几乎没有一句是真的'：朴素模型被一句话击碎"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.0155,
+          "time_ms": 21760,
+          "reason": "'利润是别人钱下注换来的绩效奖金'：全片核心重构"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "朴素模型几乎每个分句都不成立——这门生意真实的钱流到底是什么",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "既然是最赚钱的生意之一，为什么几乎没人靠它真正变富",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "财富到底从哪来：三台引擎如何运转与分钱",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_hook",
+          "mechanism": "second_person_premise"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "direct_reversal",
+          "mechanism": "sentence_level_myth_bust"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "myth_correction",
+          "mechanism": "three_clause_correction"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "core_reframe",
+          "mechanism": "performance_bonus_reframe"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "stakes_tease",
+          "mechanism": "lucrative_vs_rarely_rich"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "new_question",
+          "mechanism": "fortune_source_question"
+        }
+      ],
+      "required_retention_events": [
+        "sentence_level_myth_bust",
+        "stakes_tease"
+      ],
+      "original_moves": [
+        "用第二人称让观众想象拥有一家私募股权基金的情景",
+        "复述朴素模型：投资好公司→公司增值→获得利润",
+        "逐句击碎：'几乎没有一句是真的'",
+        "重新定性：利润实际是用别人的钱下注换来的绩效奖金",
+        "抛出双重悬念：为什么是最赚钱的行业 + 为什么几乎没人因此变富"
+      ],
+      "abstract_move": "用拥有幻想激活观众代入，复述直觉模型后逐句反转击碎，将核心收益重新定性为另一种性质，同时抛出正反两极的矛盾悬念",
+      "replacement_needs": [
+        "一个观众熟悉的朴素因果链（做某事→产生某结果→获得回报）",
+        "一个对该因果链的逐句反转证据",
+        "一个将核心收益重新定性的判词",
+        "一对看似矛盾的极端事实（最好 vs 最少受益）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(78)、PK02(85);打开的悬念 LOOP01→FS14、LOOP02→FS14、LOOP03→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 78
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 85
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_premise_with_sentence_level_myth_bust",
+        "first_stimulus_ms": 240,
+        "first_payoff_ms": 11840,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0012"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "mechanism_map",
+      "start_ratio": 0.0401,
+      "end_ratio": 0.0631,
+      "start_sec": 56.4,
+      "end_sec": 93.5,
+      "position_label": "4%–6.3%(0:56–1:34)",
+      "purpose": "给出多引擎地图作为全片导航，并预告'投资平平也赚钱'的反常识后果",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "mechanism_map",
+          "mechanism": "three_engines_named"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "counterintuitive_claim",
+          "mechanism": "flat_year_wealth"
+        }
+      ],
+      "required_retention_events": [
+        "engine_map_roadmap"
+      ],
+      "original_moves": [
+        "列出三个赚钱引擎：管理费、超额分成、杠杆",
+        "标注核心引擎的位置和作用",
+        "预告反常识后果：投资表现平平也能赚钱"
+      ],
+      "abstract_move": "给出多个并行机制的全景地图作为导航，标注各机制位置，预告其中一个反直觉的后果",
+      "replacement_needs": [
+        "多个并行运作的子机制清单",
+        "各机制在整体中的位置标注",
+        "一个违反常识的后果预告"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "structure_map",
+      "start_ratio": 0.0631,
+      "end_ratio": 0.1204,
+      "start_sec": 88.8,
+      "end_sec": 173.4,
+      "position_label": "6.3%–12%(1:29–2:53)",
+      "purpose": "纠正'卖产品'的误读为'卖承诺'，用法律实体分层展示风险隔离与经营者绝缘",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "belief_challenge",
+          "mechanism": "sells_a_promise"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "structure_map",
+          "mechanism": "four_rooms"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "firewall_reveal",
+          "mechanism": "bankruptcy_containment"
+        }
+      ],
+      "required_retention_events": [
+        "belief_challenge",
+        "legal_firewall"
+      ],
+      "original_moves": [
+        "纠正常见误读：卖的不是产品而是承诺",
+        "展示四层法律实体结构",
+        "演示破产隔离机制如何运作",
+        "给出判词：经营者与风险完全绝缘"
+      ],
+      "abstract_move": "纠正对核心交易物的误读，用分层结构展示风险如何被隔离和转移，以绝缘判词收束",
+      "replacement_needs": [
+        "一个对交易物本质的常见误读及纠正",
+        "一个多层级结构用于展示责任或风险的分割",
+        "一个隔离或转移机制的演示",
+        "一个描述责任归属的判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "stakeholder_motivation",
+      "start_ratio": 0.1204,
+      "end_ratio": 0.1895,
+      "start_sec": 169.5,
+      "end_sec": 271,
+      "position_label": "12%–19%(2:50–4:31)",
+      "purpose": "点名出资人阵容并回答锁定之问：溢价、控制、免于短期考核三条理由",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 65,
+          "position_ratio": 0.1808,
+          "time_ms": 254560,
+          "reason": "'十年锁定是地基'：资金端逻辑的总判词"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "出资人为何愿意把上亿资金锁定 10-12 年",
+          "closes_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP05",
+          "tension": "管理费这台引擎如何运转，能不能让人变富",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "three_reason_rationale",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "stakeholder_roster",
+          "mechanism": "lp_roster"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "new_question",
+          "mechanism": "lockup_question"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "mechanism_reveal",
+          "mechanism": "illiquidity_premium"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "contrast_reveal",
+          "mechanism": "outright_control"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "freedom_reveal",
+          "mechanism": "no_quarterly_pressure"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "foundation_verdict",
+          "mechanism": "lockup_foundation"
+        }
+      ],
+      "required_retention_events": [
+        "rationale_triad",
+        "foundation_verdict"
+      ],
+      "original_moves": [
+        "列出出资人阵容：养老金、捐赠基金、主权基金、超高净值个人",
+        "提出锁定之问：为什么接受十年锁定",
+        "给出三条理由：长期溢价、规避短期压力、控制权考量",
+        "以'地基'判词定性这种资金端安排"
+      ],
+      "abstract_move": "点名参与者阵容，提出一个看似不合理的约束条件之问，给出多条隐藏动机作为答案，以判词定性其结构作用",
+      "replacement_needs": [
+        "一个参与者类型清单",
+        "一个看似不合理的约束条件",
+        "多条解释该约束为何被接受的隐藏动机",
+        "一个定性该安排在整体中作用的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(65);打开的悬念 LOOP05→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 65
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.1895,
+      "end_ratio": 0.2662,
+      "start_sec": 266.7,
+      "end_sec": 376.6,
+      "position_label": "19%–26.6%(4:27–6:17)",
+      "purpose": "拆固定费用引擎：计费基数、阶梯下调、去向清单与'保本钱'定性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "fee_mechanics_plus_break_even_verdict",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "fee_mechanics",
+          "mechanism": "committed_not_invested"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "number_demo",
+          "mechanism": "billion_fund_fee"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "reframe",
+          "mechanism": "break_even_money"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "mid_video_cta",
+          "mechanism": "subscribe_tease"
+        }
+      ],
+      "required_retention_events": [
+        "fee_mechanics_demo",
+        "break_even_verdict"
+      ],
+      "original_moves": [
+        "说明固定费用按承诺资本而非实际投资额收取",
+        "用十亿美元基金演示每年两千万费用",
+        "展示费率阶梯下调机制",
+        "列出费用去向清单",
+        "定性为'保本钱'",
+        "设置章节边界CTA"
+      ],
+      "abstract_move": "拆解第一个收益引擎：揭示计费基数与实际业绩脱钩，用具体数字演示规模，展示调节机制，列出资金去向，以保障性质定性",
+      "replacement_needs": [
+        "一个计费基数与业绩脱钩的机制",
+        "一个具体规模的年度数字演示",
+        "一个费率调节或阶梯机制",
+        "一个资金去向或用途清单",
+        "一个定性该收益保障性质的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS04→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "mechanism_reveal",
+      "start_ratio": 0.2662,
+      "end_ratio": 0.3603,
+      "start_sec": 374.7,
+      "end_sec": 509.3,
+      "position_label": "26.6%–36%(6:15–8:29)",
+      "purpose": "拆超额分成引擎：分配顺序的严格步骤、门槛线与两种口径之争",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "超额分成按什么顺序分钱",
+          "closes_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "欧式与美式瀑布之争及 clawback 风险",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "waterfall_four_step_sequence",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "mechanism_reveal",
+          "mechanism": "two_and_twenty"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "rule_sequence",
+          "mechanism": "waterfall_step_one"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "rule_sequence",
+          "mechanism": "hurdle_floor"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "rule_sequence",
+          "mechanism": "catchup_and_split"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "structure_contrast",
+          "mechanism": "european_vs_american"
+        }
+      ],
+      "required_retention_events": [
+        "numbered_rule_sequence"
+      ],
+      "original_moves": [
+        "给出行业简称口径'2 and 20'",
+        "拆解分配瀑布四步骤：还本金→优先回报→追赶→分成",
+        "说明门槛回报率的设定",
+        "对比欧式（整体）与美式（逐笔）两种计算口径",
+        "警告追回条款风险"
+      ],
+      "abstract_move": "拆解第二个收益引擎：给出行业简称，展示严格的分配顺序步骤，说明门槛线设定，对比两种计算口径及其风险差异",
+      "replacement_needs": [
+        "一个行业内的简化口径或术语",
+        "一个严格分配顺序的多步骤流程",
+        "一个触发条件或门槛线的设定",
+        "两种计算或执行口径的对比及风险差异"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "worked_example",
+      "start_ratio": 0.3603,
+      "end_ratio": 0.4496,
+      "start_sec": 507.2,
+      "end_sec": 634.6,
+      "position_label": "36%–45%(8:27–10:35)",
+      "purpose": "搭建贯穿示例交易，用同一涨幅/跌幅对称演示杠杆的放大与清零",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.4181,
+          "time_ms": 588480,
+          "reason": "同一 50% 涨幅被杠杆放大成股本金约 2.25 倍"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.4393,
+          "time_ms": 618399,
+          "reason": "40% 下跌即股本金清零：杠杆对称杀伤力"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "杠杆如何把同一涨幅放大成数倍股本收益，代价是什么",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "structure_contrast_resolution",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "scenario_setup",
+          "mechanism": "example_company"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "leverage_reveal",
+          "mechanism": "sixty_forty_structure"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "multiplier_demo",
+          "mechanism": "leverage_upside_math"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "symmetry_warning",
+          "mechanism": "leverage_downside_math"
+        }
+      ],
+      "required_retention_events": [
+        "symmetric_upside_downside_demo"
+      ],
+      "original_moves": [
+        "设定示例公司及其估值",
+        "设定60%债务40%股本的资本结构",
+        "演示上行情景：50%涨幅被放大为股本金约2.25倍回报",
+        "演示下行情景：40%跌幅即股本金清零",
+        "给出判词：债务不创造价值，只是放大输赢"
+      ],
+      "abstract_move": "搭建贯穿示例，设定杠杆结构，用同一幅度的涨跌对称演示放大效应与归零风险，以机制判词收束",
+      "replacement_needs": [
+        "一个可量化的示例标的及其结构设定",
+        "一个杠杆或放大机制的参数",
+        "一对对称的上行放大与下行归零演示",
+        "一个描述机制本质的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85)、PK05(80);打开的悬念 LOOP08→FS08 跨段;回收了前文的悬念 FS06→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "tactic_inventory",
+      "start_ratio": 0.4496,
+      "end_ratio": 0.4874,
+      "start_sec": 632.9,
+      "end_sec": 687.8,
+      "position_label": "45%–48.7%(10:33–11:28)",
+      "purpose": "承认'堆债躺平'批评，给出真正做大价值的运营杠杆清单",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "symmetric_upside_downside_demo",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "criticism_acknowledged",
+          "mechanism": "pile_debt_coast"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "tactic_inventory",
+          "mechanism": "operational_levers"
+        }
+      ],
+      "required_retention_events": [
+        "lever_inventory"
+      ],
+      "original_moves": [
+        "承认'堆债躺平'的批评",
+        "列出运营杠杆清单：增收、降本、并购整合、管理层更换",
+        "说明倍数套利机制"
+      ],
+      "abstract_move": "承认对机制的常见批评，给出真正创造价值的操作清单，说明其中的套利或转化机制",
+      "replacement_needs": [
+        "一个对机制的常见批评",
+        "一个真正创造价值的操作手段清单",
+        "一个套利或价值转化机制的说明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS07→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "worked_example",
+      "start_ratio": 0.4874,
+      "end_ratio": 0.6361,
+      "start_sec": 686.1,
+      "end_sec": 898.4,
+      "position_label": "48.7%–63.6%(11:26–14:58)",
+      "purpose": "把示例交易跑完持有期：运营改善、还债、退出路径、退出数学与分成实算",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 90,
+          "position_ratio": 0.6295,
+          "time_ms": 886079,
+          "reason": "瀑布实算：发起方单笔约 2450 万 carry，'整个商业模式就在这一笔交易里'"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "示例公司五年后卖出能赚多少，发起人能分多少",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "five_year_run",
+          "mechanism": "example_build"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "constraint_reveal",
+          "mechanism": "paper_gains_verdict"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "exit_routes",
+          "mechanism": "four_ways_out"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "payoff_numbers",
+          "mechanism": "exit_math"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "waterfall_applied",
+          "mechanism": "carry_numbers"
+        }
+      ],
+      "required_retention_events": [
+        "exit_math",
+        "waterfall_numbers_payoff"
+      ],
+      "original_moves": [
+        "展示五年持有期的运营改善量化路径",
+        "强调'纸面收益不养养老金'，必须退出变现",
+        "列出四条退出路径及各自约束",
+        "计算退出时的回报倍数",
+        "按瀑布顺序实算各方分成",
+        "给出判词：整个商业模式就在这一笔交易里"
+      ],
+      "abstract_move": "把示例跑完完整周期：量化改善路径、说明变现约束、列出退出选项、计算最终回报、实算分配结果，以全貌判词收束",
+      "replacement_needs": [
+        "一个量化的改善或增长路径",
+        "一个变现或退出的约束条件",
+        "多条退出路径及各自限制",
+        "一个最终回报的完整计算",
+        "一个宣称该示例已展示完整模式的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(90);打开的悬念 LOOP09→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "conflict_escalation",
+      "start_ratio": 0.6361,
+      "end_ratio": 0.6896,
+      "start_sec": 895.4,
+      "end_sec": 972.4,
+      "position_label": "63.6%–69%(14:55–16:12)",
+      "purpose": "反转视角：百里挑一的交易漏斗与各类隐性成本，回扣固定费用的存在理由",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP10",
+          "tension": "漂亮分成背后的交易管道有多残酷，2% 管理费为何存在",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_map_full_math_payoff",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "exit_math_plus_waterfall_numbers",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "funnel_reveal",
+          "mechanism": "hundred_to_one"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "cost_reveal",
+          "mechanism": "broken_deal_costs"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "cost_stack",
+          "mechanism": "why_fee_exists"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "symmetry_thesis",
+          "mechanism": "reverse_mechanism"
+        }
+      ],
+      "required_retention_events": [
+        "funnel_countdown_numbers"
+      ],
+      "original_moves": [
+        "展示交易漏斗：100个看→20个深入→5个报价→1个成交",
+        "列出各类隐性成本：尽调、法律、告吹成本",
+        "说明告吹成本归属于发起方",
+        "说明募资成本",
+        "回扣固定费用的存在理由"
+      ],
+      "abstract_move": "反转视角：展示极低的成功转化率与多层隐性成本，说明成本归属，回扣前文被质疑机制的存在理由",
+      "replacement_needs": [
+        "一个极低转化率的漏斗数据",
+        "多项隐性成本的类型及区间",
+        "一个成本归属或风险承担的说明",
+        "一个回扣前文机制存在理由的论证"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP10→FS11 跨段;回收了前文的悬念 FS01→LOOP03、FS09→LOOP09。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "failure_case_study",
+      "start_ratio": 0.6896,
+      "end_ratio": 0.7695,
+      "start_sec": 970.7,
+      "end_sec": 1085.8,
+      "position_label": "69%–77%(16:11–18:06)",
+      "purpose": "用具名崩塌案例展示机制反向杀伤力，以'只放大不分辨'判词收束",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.7467,
+          "time_ms": 1051039,
+          "reason": "具名案例反转：沉船的是债务不是零售生意本身"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.764,
+          "time_ms": 1075440,
+          "reason": "'杠杆只放大，不分辨'：全片机制判词顶点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP11",
+          "tension": "机制反向运转时会发生什么（具名失败案例）",
+          "closes_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP12",
+          "tension": "发起方已收费离场与公司沉没、大规模失业之间的公平性张力",
+          "closes_in": null
+        },
+        {
+          "loop_id": "LOOP13",
+          "tension": "既然如此残酷，机构为何还年复一年把钱投进来",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP10",
+          "payoff_type": "funnel_math_plus_cost_absorption",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP12"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE42",
+          "event_type": "case_numbers",
+          "mechanism": "debt_loaded_case"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "collapse_outcome",
+          "mechanism": "bankruptcy_numbers"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "counterintuitive_reveal",
+          "mechanism": "debt_not_retail"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "moral_reveal",
+          "mechanism": "fees_collected_insulated"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "verdict_line",
+          "mechanism": "only_multiplies"
+        }
+      ],
+      "required_retention_events": [
+        "named_collapse_case",
+        "aphorism_verdict"
+      ],
+      "original_moves": [
+        "给出具名失败案例及其收购结构",
+        "对比利息支出与转型所需资金",
+        "展示崩塌规模：破产、关店、失业数字",
+        "反转归因：沉船的是债务而非零售生意本身",
+        "对比费用方的安全离场",
+        "给出机制判词：杠杆只放大，不分辨"
+      ],
+      "abstract_move": "用具名案例展示机制反向杀伤力：对比成本吞噬与机会丧失、展示崩塌规模、反转归因为机制而非业务、对比参与者命运、以机制判词收束",
+      "replacement_needs": [
+        "一个具名失败案例及其结构参数",
+        "一个成本对比：固定支出 vs 机会成本",
+        "一个崩塌规模的量化展示",
+        "一个归因反转：机制而非业务",
+        "一个参与者命运对比",
+        "一个描述机制中立性的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)、PK08(85);打开的悬念 LOOP11→FS12、LOOP12(不闭合)、LOOP13→FS12 跨段;回收了前文的悬念 FS10→LOOP10。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "income_stack_reveal",
+      "start_ratio": 0.7695,
+      "end_ratio": 0.8646,
+      "start_sec": 1083.1,
+      "end_sec": 1219.1,
+      "position_label": "77%–86.5%(18:03–20:19)",
+      "purpose": "回答行业为何持续吸金（业绩离散度），拆从业者收入层级与所有者断层",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.8588,
+          "time_ms": 1208880,
+          "reason": "被动出资人与公司所有者的收益断层='这门生意存在的全部理由'"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP11",
+          "payoff_type": "named_case_verdict",
+          "opened_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP13",
+          "payoff_type": "dispersion_reveal",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE47",
+          "event_type": "new_question",
+          "mechanism": "why_keep_pouring"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "dispersion_reveal",
+          "mechanism": "manager_dispersion"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "access_economics",
+          "mechanism": "track_record_asset"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "income_stack",
+          "mechanism": "four_income_layers"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "scale_contrast",
+          "mechanism": "lp_vs_gp_gap"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "duality_reveal",
+          "mechanism": "best_model"
+        }
+      ],
+      "required_retention_events": [
+        "dispersion_reveal",
+        "income_stack"
+      ],
+      "original_moves": [
+        "展示行业业绩离散度数据：头部与尾部差距",
+        "定性头部席位为'入场券资产'",
+        "拆解从业者收入四层级",
+        "对比被动出资人与公司所有者的收益断层",
+        "给出判词：这是这门生意存在的全部理由"
+      ],
+      "abstract_move": "揭示业绩极端分化的数据，定性头部位置为稀缺资产，拆解参与者收入层级，对比出资者与操作者的收益断层，以存在理由判词收束",
+      "replacement_needs": [
+        "一个业绩或收益的极端离散数据",
+        "一个稀缺位置或资格的定性",
+        "一个参与者收入或地位的层级清单",
+        "一个出资者与操作者的收益断层对比",
+        "一个宣称该断层为整个机制存在理由的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(80);回收了前文的悬念 FS11→LOOP11、FS11→LOOP13。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.8646,
+      "end_ratio": 0.9401,
+      "start_sec": 1217,
+      "end_sec": 1325.4,
+      "position_label": "86.5%–94%(20:17–22:05)",
+      "purpose": "综合模式双面性：正转是顶级商业模式，反转则悄然消亡，双情景对照",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE53",
+          "event_type": "reverse_mechanics",
+          "mechanism": "model_in_reverse"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "dual_scenarios",
+          "mechanism": "optimistic_vs_realistic"
+        }
+      ],
+      "required_retention_events": [
+        "duality_reveal",
+        "dual_scenarios"
+      ],
+      "original_moves": [
+        "列出正转三要素：技能、纪律、运气",
+        "列出反转三要素：误判、过度杠杆、时机不利",
+        "对比乐观情景与现实情景",
+        "给出双情景判词：两种人生"
+      ],
+      "abstract_move": "综合模式双面性：列出成功所需要素、列出失败触发要素、对比两极情景、以双情景判词收束",
+      "replacement_needs": [
+        "一个成功所需的多要素清单",
+        "一个失败触发的多要素清单",
+        "一个正反两极情景的对照",
+        "一个描述双面性的对照判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.9401,
+      "end_ratio": 1,
+      "start_sec": 1323.3,
+      "end_sec": 1407.6,
+      "position_label": "94%–100%(22:03–23:28)",
+      "purpose": "以本质判词收束主承诺（不是挑赢家而是结构风险），再接变现与互动 CTA",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9401,
+          "time_ms": 1323280,
+          "reason": "'真实形状'综合：固定费托底+全额对赌"
+        },
+        {
+          "peak_id": "PK11",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9589,
+          "time_ms": 1349760,
+          "reason": "身份重构：外人看是挑赢家，内行看是结构风险"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_model_synthesis_verdict",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "brutal_pipeline_plus_duality_synthesis",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE55",
+          "event_type": "synthesis",
+          "mechanism": "real_shape"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "worldview_shift",
+          "mechanism": "structuring_not_picking"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "stakes_verdict",
+          "mechanism": "right_vs_wrong_once"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "closing_cta",
+          "mechanism": "guide_like_subscribe"
+        }
+      ],
+      "required_retention_events": [
+        "synthesis_verdict",
+        "identity_reframe"
+      ],
+      "original_moves": [
+        "综合判词：固定费托底 + 全额对赌的真实形状",
+        "身份重构：外人看是挑赢家，内行看是结构风险",
+        "对比成败量级",
+        "引流CTA：指向深度指南",
+        "互动CTA：点赞订阅致谢"
+      ],
+      "abstract_move": "给出综合本质判词收束核心承诺，重构观众对参与者身份的认知，对比成败量级，接入变现与互动",
+      "replacement_needs": [
+        "一个综合多个机制的本质判词",
+        "一个从外部视角到内部视角的身份重构",
+        "一个成败量级的对比",
+        "一个引流或变现CTA",
+        "一个互动CTA"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85)、PK11(85);回收了前文的悬念 FS01→LOOP01、FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK11",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

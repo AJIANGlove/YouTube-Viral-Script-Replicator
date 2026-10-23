@@ -1,0 +1,1169 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T09:05:10.701Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "scene_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.0491,
+      "start_sec": 0,
+      "end_sec": 97.4,
+      "position_label": "0%–4.9%(0:00–1:37)",
+      "purpose": "进入一个具体的历史现场，并接受\"这不是某一个村，而是大多数人真实生活的那种村\"的典型性声明",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "premise_reveal",
+          "strength": 70,
+          "position_ratio": 0.0122,
+          "time_ms": 24297,
+          "reason": "编年史家的一笔记录：水手带来\"别的东西\"，全片问题确立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：这场宏观灾难抵达一个普通社区时究竟发生了什么（标题追问的悬挂）",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook",
+          "mechanism": "scene_entry_anchor"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "premise_tease",
+          "mechanism": "chronicler_tease"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "micro_payoff",
+          "mechanism": "disease_reveal"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "scale_tease",
+          "mechanism": "year_of_spread"
+        }
+      ],
+      "required_retention_events": [
+        "scene_entry_anchor",
+        "chronicler_tease",
+        "typicality_claim"
+      ],
+      "original_moves": [
+        "用季节与港口锚定具体时空（1348年6月，意大利南部港口梅西纳）",
+        "引入编年史家的悬念记录：水手带来'别的东西'",
+        "预告疾病沿商路蔓延一年的地理尺度",
+        "声明这不是某一个村，而是大多数人真实生活的那种村",
+        "白描共同体亲密性：同一个洗礼池、同一场婚礼、同一片墓地"
+      ],
+      "abstract_move": "用权威记录者视角投下悬念 + 明示灾难的传播尺度 + 声明观察对象的典型性而非特例",
+      "replacement_needs": [
+        "一个具体时空锚点（季节/日期 + 地点 + 标志性抵达物或事件）",
+        "一个权威记录者留下的悬念式描述",
+        "一个灾难蔓延的地理或时间尺度",
+        "一个典型性声明，说明观察对象代表的是普遍情况而非个例",
+        "若干共同体日常亲密性的具体细节"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 149908,
+        "hook_type": "documentary_scene_entry_with_evidence_manifesto_and_question_barrage",
+        "first_stimulus_ms": 24297,
+        "first_payoff_ms": 31242,
+        "evidence_refs": [
+          "C0001",
+          "C0017",
+          "C0023",
+          "C0088",
+          "C0092",
+          "C0099"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "premise_hook",
+      "start_ratio": 0.0491,
+      "end_ratio": 0.0854,
+      "start_sec": 97.4,
+      "end_sec": 169.5,
+      "position_label": "4.9%–8.5%(1:37–2:50)",
+      "purpose": "接受\"接下来不是传说\"的史料宣言，并带着标题追问与四个子问题进入正片",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.0529,
+          "time_ms": 104970,
+          "reason": "\"不是传说，而是逐行记录在册\"：证据宣言把猎奇升级为信史"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "四连子问题：谁照护病人、谁安葬死者、谁收割庄稼、幸存者的世界为何不再一样",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "turn",
+          "mechanism": "illness_struck"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "evidence_manifesto",
+          "mechanism": "not_a_legend"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "title_question",
+          "mechanism": "title_restated"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "question_barrage",
+          "mechanism": "four_questions"
+        }
+      ],
+      "required_retention_events": [
+        "evidence_manifesto",
+        "question_barrage_contract"
+      ],
+      "original_moves": [
+        "用转折句宣告题材降临：'不是传说，而是逐行记录在册'",
+        "列举四类证据来源：法庭名册、主教登记、编年史、考古土壤",
+        "将标题问题显式化：'一个普通村庄如何经历黑死病'",
+        "连抛四个子问题挂出主悬念：它如何到达、杀死多少人、为何如此致命、改变了什么",
+        "插入订阅引导"
+      ],
+      "abstract_move": "用证据来源清单把题材从传说升级为可考信史 + 显式抛出标题问题 + 挂出多个子问题作为主悬念",
+      "replacement_needs": [
+        "一个题材降临的转折句（从模糊到确凿）",
+        "三到四类证据来源，覆盖不同类型档案或物证",
+        "一个标题问题的显式表述",
+        "三到四个具体子问题，构成观众对后续内容的期待"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75);打开的悬念 LOOP02→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "world_before_context",
+      "start_ratio": 0.0854,
+      "end_ratio": 0.1683,
+      "start_sec": 169.5,
+      "end_sec": 334,
+      "position_label": "8.5%–16.8%(2:50–5:34)",
+      "purpose": "看到灾难前日常世界的完整基线：人口压力、旧创伤、基层制度与对善终的信仰，并记住一个被点名的琐碎制度细节",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.1554,
+          "time_ms": 308506,
+          "reason": "琐碎的葬礼税让今天的历史学家能够数清死者：伏笔即方法论"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "开场埋下的伏笔：一项琐碎的葬礼税制度细节为何\"对本故事至关重要\"",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "context_data",
+          "mechanism": "population_estimate"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "trauma_context",
+          "mechanism": "famine_backstory"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "plant",
+          "mechanism": "heriot_introduced"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "plant_payoff",
+          "mechanism": "count_the_dead"
+        }
+      ],
+      "required_retention_events": [
+        "population_baseline",
+        "manorial_system",
+        "planted_detail_callback_setup"
+      ],
+      "original_moves": [
+        "设定人口与资源压力基线：英格兰四到五百万人口，可耕地已达极限",
+        "交代此前创伤背景：1315-1322大饥荒，1319牲畜大疫",
+        "白描庄园制度运作方式：农民依附于庄园、劳役换土地",
+        "点出一个琐碎制度细节：葬礼税（heriot），并说明其史料价值",
+        "阐述精神信仰对善终方式的要求：临终圣礼的重量"
+      ],
+      "abstract_move": "建立灾难前世界的完整基线 + 埋下一个看似琐碎但对后续计数至关重要的制度伏笔",
+      "replacement_needs": [
+        "一个人口与资源压力的基线数据（人口规模、资源上限）",
+        "一到两个此前创伤事件作为背景",
+        "基层制度运作方式的白描（土地、劳役、身份关系）",
+        "一个琐碎但可量化的制度细节，并点明其史料价值",
+        "一个精神信仰或文化习俗对重要仪式的要求"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(70);打开的悬念 LOOP06→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "knowledge_contrast",
+      "start_ratio": 0.1683,
+      "end_ratio": 0.2602,
+      "start_sec": 334,
+      "end_sec": 516.5,
+      "position_label": "16.8%–26%(5:34–8:36)",
+      "purpose": "同时持有两套解释：当时人相信什么、现代科学知道什么，并回到当事人只能看见的表象世界",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.2269,
+          "time_ms": 450439,
+          "reason": "从六百多年前的受害者遗骸中重建病原体基因组：现代科学定因"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "传播途径的科学争议（啮齿动物跳蚤还是人体寄生蚤虱、肺型空气传播）刻意保持开放：叙事用途是示范证据纪律，并把镜头切回当事人能看见的世界",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP04"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "pivot",
+          "mechanism": "what_did_they_know"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "era_belief",
+          "mechanism": "planetary_conjunction"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "modern_lens",
+          "mechanism": "genome_entry"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "honest_open",
+          "mechanism": "transmission_debate"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "perspective_shift",
+          "mechanism": "what_they_saw"
+        }
+      ],
+      "required_retention_events": [
+        "era_belief_system",
+        "modern_science_lens",
+        "honest_open_question"
+      ],
+      "original_moves": [
+        "追溯消息沿商路传播的方式与命名考据",
+        "引用权威机构的解释文本：巴黎大学的星象-瘴气解释，以及教会的神罚解释",
+        "说明两套解释在当时并行不悖",
+        "给出现代科学的病因证据：从遗骸中重建鼠疫耶尔森菌基因组",
+        "说明传播机制在科学界仍有争议（跳蚤vs人际）",
+        "视角回落：回到当事人只能看见的表象世界"
+      ],
+      "abstract_move": "同时持有当时人的解释与现代科学的解释 + 明示现代科学内部仍有争议的开放性 + 视角回落到当事人的有限认知",
+      "replacement_needs": [
+        "消息传播的方式与命名的考据",
+        "当时权威机构的解释文本（包含自然-超自然双轨）",
+        "现代科学的病因定性证据",
+        "一个现代科学内部仍在争论的开放性问题",
+        "一个视角回落句，强调当事人只能看见什么"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75);打开的悬念 LOOP04(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "arrival_mechanism",
+      "start_ratio": 0.2602,
+      "end_ratio": 0.3108,
+      "start_sec": 516.5,
+      "end_sec": 616.8,
+      "position_label": "26%–31.1%(8:36–10:17)",
+      "purpose": "看清灾难进入社区的通道：一张由短途出行织成的连接网，以及拦截为何注定失败",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 65,
+          "position_ratio": 0.2993,
+          "time_ms": 594005,
+          "reason": "\"It didn't work.\"两个字落下：前现代一切拦截的宿命"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "containment_attempt",
+          "mechanism": "travel_ban_try"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "dry_verdict",
+          "mechanism": "it_didnt_work"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "thesis_beat",
+          "mechanism": "by_road_landing"
+        }
+      ],
+      "required_retention_events": [
+        "connectivity_web",
+        "containment_failure_verdict",
+        "mechanism_landing_line"
+      ],
+      "original_moves": [
+        "给出扩散的地理路径",
+        "白描村庄与外界的连接网：集市、磨坊、教堂、法庭",
+        "描述一次具体的拦截尝试",
+        "用两个字判决失败：'It didn't work.'",
+        "落点句：'像一切货物一样沿公路而来'"
+      ],
+      "abstract_move": "白描社区与外部世界的日常连接网 + 展示一次具体拦截尝试的失败 + 用机制性落点句说明灾难为何不可阻挡",
+      "replacement_needs": [
+        "灾难扩散的地理路径",
+        "社区与外部世界的连接网白描（若干日常出行原因）",
+        "一次具体的拦截或隔离尝试",
+        "拦截失败的证据或判决",
+        "一个机制性落点句（说明灾难如何嵌入日常系统）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(65)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 65
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "stakes_immersion",
+      "start_ratio": 0.3108,
+      "end_ratio": 0.365,
+      "start_sec": 616.8,
+      "end_sec": 724.5,
+      "position_label": "31.1%–36.5%(10:17–12:05)",
+      "purpose": "与一个普通家庭同处一室，看清居所的防护漏洞与病症的残酷进程",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "ominous_detail",
+          "mechanism": "rats_and_fleas"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "symptom_onset",
+          "mechanism": "first_signs"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "mortality_gradient",
+          "mechanism": "pneumonic_fatal"
+        }
+      ],
+      "required_retention_events": [
+        "household_portrait",
+        "ominous_detail",
+        "symptom_progression"
+      ],
+      "original_moves": [
+        "画出一个普通家庭的成员构成",
+        "描述居所结构：木骨泥墙、茅草顶、储粮方式",
+        "埋伏笔：这样的居所对媒介生物'也很舒适'",
+        "白描症状与命名由来：淋巴结肿胀、皮下出血、'黑死病'",
+        "说明不同病型的生存梯度：腺鼠疫50%、肺鼠疫95%、败血症100%"
+      ],
+      "abstract_move": "让观众与一个普通家庭同处一室 + 揭示居所结构中对媒介生物友好的漏洞 + 白描症状的残酷进程与生存梯度",
+      "replacement_needs": [
+        "一个普通家庭的成员画像",
+        "居所的结构、材料与储物方式",
+        "居所对传播媒介有利的结构性伏笔",
+        "症状白描与命名由来",
+        "不同病型或阶段的生存梯度数据"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "care_system",
+      "start_ratio": 0.365,
+      "end_ratio": 0.4158,
+      "start_sec": 724.5,
+      "end_sec": 825.4,
+      "position_label": "36.5%–41.6%(12:05–13:45)",
+      "purpose": "理解制度性医疗缺位下的民间照护与善终仪式，以及神父职责如何把自己变成高危人群",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "vacuum_reveal",
+          "mechanism": "no_clinic_no_doctor"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "measured_verdict",
+          "mechanism": "smart_response"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "value_reveal",
+          "mechanism": "soul_over_body"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "exposure_setup",
+          "mechanism": "priest_duty_exposure"
+        }
+      ],
+      "required_retention_events": [
+        "medical_vacuum",
+        "balanced_verdict",
+        "spiritual_priority_reveal"
+      ],
+      "original_moves": [
+        "列举专业医疗的三重缺位：诊所、医院、医生",
+        "白描民间照护的构成：家庭成员、邻里",
+        "引用当时医学建议文本，并给出双向限定评价（避免瘴气但无法阻断真实传播）",
+        "揭示价值排序：灵魂重于身体",
+        "描述善终仪式流程：告解、圣餐、临终涂油",
+        "说明神父挨家挨户执行仪式的暴露机制"
+      ],
+      "abstract_move": "揭示制度性专业力量的缺位 + 白描民间照护的构成 + 揭示信仰价值排序如何把关键执行者推向高危境地",
+      "replacement_needs": [
+        "专业力量的缺位清单（设施、人员、技术）",
+        "民间照护的构成",
+        "当时的应对建议文本，并评价其有效性",
+        "一个信仰或文化价值排序的揭示",
+        "关键执行者因执行职责而暴露的机制"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "institutional_strain",
+      "start_ratio": 0.4158,
+      "end_ratio": 0.4744,
+      "start_sec": 825.4,
+      "end_sec": 941.6,
+      "position_label": "41.6%–47.4%(13:45–15:42)",
+      "purpose": "从主教登记册读出制度承压：神职大量死亡，一份书面规则调整成为全片最惊人的文件",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.457,
+          "time_ms": 907111,
+          "reason": "高级主教书面调整最重要圣礼：允许向平信徒甚至妇女告解，制度崩解的纸上证据"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "data_reveal",
+          "mechanism": "four_of_ten"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "institutional_break",
+          "mechanism": "confess_to_woman"
+        }
+      ],
+      "required_retention_events": [
+        "clergy_mortality_data",
+        "written_rule_change",
+        "superlative_document_verdict"
+      ],
+      "original_moves": [
+        "从主教登记册读出数据：从平稳到激增",
+        "给出神职人员死亡率：约四成有俸圣职死亡",
+        "举例岗位更替失序：一年换两任",
+        "引出一份书面文件：主教允许向平信徒甚至妇女告解",
+        "定性这份文件：'全片最惊人的文件'",
+        "说明临终告解者可能是配偶或邻居"
+      ],
+      "abstract_move": "从官方记录读出关键执行者的大量死亡 + 展示一份权威机构书面调整核心规则的文件 + 用最惊人的定性强化冲击",
+      "replacement_needs": [
+        "官方登记数据揭示关键执行者的死亡率",
+        "岗位更替失序的具体细节",
+        "一份权威机构书面调整核心规则的文件",
+        "对这份文件的定性判决（强调其冲击性或罕见性）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "dignity_reveal",
+      "start_ratio": 0.4744,
+      "end_ratio": 0.5608,
+      "start_sec": 941.6,
+      "end_sec": 1113.1,
+      "position_label": "47.4%–56.1%(15:42–18:33)",
+      "purpose": "看完安葬秩序如何承压，并在考古细节中见证\"不是混乱而是体面\"，随后接受中场重钩",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.5253,
+          "time_ms": 1042674,
+          "reason": "\"让研究者震撼的不是混乱，而是体面\"：灾难中的人性坚守峰值"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "中场重钩：这场灾难对社区做的最惊人的事，发生在死亡停止之后",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "question_transition",
+          "mechanism": "burial_question"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "archaeology_entry",
+          "mechanism": "mass_grave_found"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "emotional_peak",
+          "mechanism": "care_not_chaos"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "mid_rehook",
+          "mechanism": "most_amazing_after"
+        }
+      ],
+      "required_retention_events": [
+        "burial_process_baseline",
+        "mass_grave_reveal",
+        "care_not_chaos_reversal",
+        "mid_story_rehook"
+      ],
+      "original_moves": [
+        "白描常态安葬流程",
+        "说明集群死亡对流程的挤压",
+        "介绍应急墓地与新祝圣地的设立",
+        "给出集体墓考古细节：48人，过半儿童，仍按头脚朝向安放",
+        "反转句：'让研究者震撼的不是混乱，而是体面'",
+        "对照弃逃叙事与坚守证据",
+        "中场重钩与订阅引导"
+      ],
+      "abstract_move": "白描常态流程 + 展示流程承压 + 用考古细节揭示体面而非混乱的反转 + 对照流行叙事与证据 + 中场重钩",
+      "replacement_needs": [
+        "常态流程的白描",
+        "集群事件对流程的挤压",
+        "应急安排的设立",
+        "考古或档案细节揭示秩序维持的证据",
+        "一个反转判决句（非预期的正向发现）",
+        "流行叙事与实际证据的对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(90);打开的悬念 LOOP03→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "death_accounting",
+      "start_ratio": 0.5608,
+      "end_ratio": 0.6525,
+      "start_sec": 1113.1,
+      "end_sec": 1295.2,
+      "position_label": "56.1%–65.3%(18:33–21:35)",
+      "purpose": "看枯燥的管理文书如何把灾难变成可计数的事实：三个有名有姓的数据个案与总体死亡区间",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.6196,
+          "time_ms": 1229930,
+          "reason": "十二户主要佃农全部死于同一季：构成村庄根基的家庭整体消失"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "planted_detail_callback",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "data_reveal",
+          "mechanism": "forty_percent_males"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "shock_number",
+          "mechanism": "all_twelve_tenants"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "trust_verdict",
+          "mechanism": "dry_documents_trusted"
+        }
+      ],
+      "required_retention_events": [
+        "court_records_shift",
+        "registry_case_ladder",
+        "mortality_range_verdict"
+      ],
+      "original_moves": [
+        "白描庄园法庭的日常职能：土地纠纷、继承、琐事",
+        "说明记录内容从琐事变为死亡",
+        "给出三个档案个案：长名单、约四成死亡、十二户主要佃农全灭",
+        "判决枯燥文书的可信性：方法论上可靠",
+        "给出总体死亡区间：三分之一到一半",
+        "说明地区不均：有的村损失轻微，有的接近全灭"
+      ],
+      "abstract_move": "白描基层管理机构的日常职能 + 展示记录内容的转变 + 给出多个有名有姓的数据个案 + 用方法论判决建立可信性 + 给出总体区间与地区不均",
+      "replacement_needs": [
+        "基层管理机构的日常职能白描",
+        "记录内容从琐事变为灾难事件的转变",
+        "两到三个有名有姓的数据个案（其中一个需有强冲击性）",
+        "枯燥文书可信性的方法论判决",
+        "总体死亡区间与地区不均的说明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80);回收了前文的悬念 FS03→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "aftermath_tableau",
+      "start_ratio": 0.6525,
+      "end_ratio": 0.7019,
+      "start_sec": 1295.2,
+      "end_sec": 1393.3,
+      "position_label": "65.3%–70.2%(21:35–23:13)",
+      "purpose": "站在灾后的田野里：农耕历法不等人，空置的土地与静默的房屋，供需关系悄然反转",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.6971,
+          "time_ms": 1383755,
+          "reason": "\"现在他可以挑了\"：劳动力稀缺把祖辈求之不得的机会递给幸存者"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "turn",
+          "mechanism": "earth_kept_calendar"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "tableau",
+          "mechanism": "roaming_livestock"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "reversal_beat",
+          "mechanism": "now_he_choose"
+        }
+      ],
+      "required_retention_events": [
+        "agricultural_calendar_turn",
+        "abandonment_tableau",
+        "supply_demand_reversal"
+      ],
+      "original_moves": [
+        "用转折句说明大地保持自己的历法",
+        "引用当时见证者的荒凉描写",
+        "排比空置与静默的意象：田地、房屋、村庄",
+        "反转句：从前等一辈子才有的机会，现在他可以挑了",
+        "说明邻庄也在提供更好条件竞争劳动力"
+      ],
+      "abstract_move": "用自然历法不等人的转折建立紧迫性 + 排比荒凉意象 + 用供需反转揭示幸存者获得的新机会",
+      "replacement_needs": [
+        "一个自然或外部系统不等人的转折句",
+        "当时见证者的荒凉描写",
+        "空置与静默的意象排比",
+        "一个供需关系反转的具体表现（从前求之不得，现在可以挑）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "consequence_chain",
+      "start_ratio": 0.7019,
+      "end_ratio": 0.7755,
+      "start_sec": 1393.3,
+      "end_sec": 1539.3,
+      "position_label": "70.2%–77.6%(23:13–25:39)",
+      "purpose": "看到劳动力稀缺如何顶开工资、法律为何压不住算术，以及几十年尺度上的社会结构松动",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.7372,
+          "time_ms": 1463308,
+          "reason": "立法改变不了基本算术：人少地多，工资在罚单的缝隙里上涨"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE40",
+          "event_type": "arithmetic_verdict",
+          "mechanism": "could_not_change"
+        }
+      ],
+      "required_retention_events": [
+        "wage_shift",
+        "legislation_failure_verdict",
+        "structural_transformation"
+      ],
+      "original_moves": [
+        "描述工资博弈与幸存者自悟身价",
+        "说明立法压制的快速出台：《劳工法令》1349",
+        "判决句：'立法改变不了基本算术'",
+        "说明租金货币化与身份松动的长期后果",
+        "举例后续群体性事件作为深远证据：1381农民起义"
+      ],
+      "abstract_move": "展示幸存者自悟身价与权力方压制的博弈 + 用改变不了基本算术的判决句揭示结构性力量 + 给出几十年尺度的后续证据",
+      "replacement_needs": [
+        "劳动力稀缺导致的价格或待遇博弈",
+        "权力方压制的立法或政策",
+        "一个结构性力量压倒规则的判决句",
+        "长期后果的说明（制度松动、身份变化）",
+        "后续群体性事件作为深远影响的证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "myth_correction",
+      "start_ratio": 0.7755,
+      "end_ratio": 0.8113,
+      "start_sec": 1539.3,
+      "end_sec": 1610.2,
+      "position_label": "77.6%–81.1%(25:39–26:50)",
+      "purpose": "修正\"整村被抹去\"的流行印象：真相是削弱与长衰退，而非一击摧毁",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE41",
+          "event_type": "myth_correction",
+          "mechanism": "complicated_truth"
+        }
+      ],
+      "required_retention_events": [
+        "myth_correction_turn",
+        "large_sample_reattribution",
+        "nuanced_verdict"
+      ],
+      "original_moves": [
+        "显式引用流行说法：'整村被抹去'",
+        "转向句：'真相更复杂也更有趣'",
+        "举例确实被清空的个案",
+        "引用大样本研究：废弃主因是后来的羊毛经济而非黑死病",
+        "定性：一击摧毁罕见，长衰退常见"
+      ],
+      "abstract_move": "显式引用流行说法 + 用真相更复杂的转向句过渡 + 给出个案与大样本研究的对照 + 用罕见与常见的定性修正印象",
+      "replacement_needs": [
+        "一个流行说法的显式引用",
+        "一个真相更复杂的转向句",
+        "一个符合流行说法的个案",
+        "一个大样本研究对主要原因的重定",
+        "一个罕见与常见的定性判决"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "survivor_voice",
+      "start_ratio": 0.8113,
+      "end_ratio": 0.8673,
+      "start_sec": 1610.2,
+      "end_sec": 1721.5,
+      "position_label": "81.1%–86.7%(26:50–28:41)",
+      "purpose": "听见罕见的当事人直接声音，并接受灾难并未终结：反复回袭压制了人口恢复",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.8434,
+          "time_ms": 1673988,
+          "reason": "\"不想让发生的事被遗忘\"：无名者在石塔里留下的静默留言"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "刻字作者不可考（教士、砌匠还是识字的农民）刻意保持开放：叙事用途是保留普通人声音的神秘性与证据诚实",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP05"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE42",
+          "event_type": "survivor_voice",
+          "mechanism": "tower_inscription"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "recurrence_reveal",
+          "mechanism": "plague_returns"
+        }
+      ],
+      "required_retention_events": [
+        "direct_testimony_artifact",
+        "recurrence_sequence",
+        "population_recovery_scale"
+      ],
+      "original_moves": [
+        "说明普通人声音的稀缺性",
+        "引出一处刻字证物：石塔刻字，内容'惨痛暴烈、只剩穷人见证'",
+        "开放处理：作者不可考",
+        "定性：'不想让发生的事被遗忘'",
+        "给出三次回袭的时间序列：1361、1369、1375",
+        "定位人口恢复尺度：数世纪未恢复"
+      ],
+      "abstract_move": "说明直接声音的稀缺性 + 引出一处刻痕类证物及其内容 + 开放作者身份 + 用不想被遗忘的定性强化情感 + 给出反复回袭的时间序列与恢复尺度",
+      "replacement_needs": [
+        "当事人直接声音的稀缺性说明",
+        "一处刻痕、书信或实物类直接证物及其内容",
+        "作者不可考的开放处理",
+        "灾难反复回袭的时间序列",
+        "人口或系统恢复尺度的定位（多久未恢复）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(80);打开的悬念 LOOP05(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "legacy_bridge",
+      "start_ratio": 0.8673,
+      "end_ratio": 0.9317,
+      "start_sec": 1721.5,
+      "end_sec": 1849.2,
+      "position_label": "86.7%–93.2%(28:41–30:49)",
+      "purpose": "理解灾难为何如此致命、它如何在代际间做出选择，以及哪些制度遗产从这场经验里长出来",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE44",
+          "event_type": "selectivity_reveal",
+          "mechanism": "prior_stress_bones"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "legacy_reveal",
+          "mechanism": "quarantine_etymology"
+        }
+      ],
+      "required_retention_events": [
+        "selectivity_research_reveal",
+        "institutional_legacy_etymology",
+        "modern_treatability_contrast"
+      ],
+      "original_moves": [
+        "抛出归因问句：'为何如此致命'",
+        "给出部分答案：无细菌学说",
+        "引用骨骼证据：曾营养不良者更易死，非随机选择",
+        "追溯隔离制度的词源与扩散：quarantine从威尼斯40天隔离",
+        "标注后续大疫锚点：1665伦敦、1720马赛",
+        "对照当代可治性：抗生素时代"
+      ],
+      "abstract_move": "抛出归因问句 + 给出部分答案与体质选择性证据 + 追溯制度遗产的词源与扩散 + 标注后续锚点与当代对照",
+      "replacement_needs": [
+        "一个归因问句",
+        "体质或结构性选择性的研究证据",
+        "一个制度遗产的词源与扩散",
+        "后续类似事件的锚点",
+        "当代技术或制度的对照"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.9317,
+      "end_ratio": 1,
+      "start_sec": 1849.2,
+      "end_sec": 1984.9,
+      "position_label": "93.2%–100%(30:49–33:05)",
+      "purpose": "带着逐问回收的完整答案、韧性命题与一句格言式落点离场",
+      "peaks": [
+        {
+          "peak_id": "PK12",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9954,
+          "time_ms": 1975675,
+          "reason": "以王国与大陆的尺度被记住，却在一屋一田间被经历：全片命题落点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "four_part_recap_and_resilience_thesis",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "question_by_question_recap",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "resilience_thesis_reveal",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE46",
+          "event_type": "recap_start",
+          "mechanism": "so_what_happened"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "thesis_reveal",
+          "mechanism": "most_amazing_part"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "modernity_perspective",
+          "mechanism": "strikingly_new"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "aphorism_close",
+          "mechanism": "kingdoms_vs_house_field"
+        }
+      ],
+      "required_retention_events": [
+        "title_recall_recap",
+        "resilience_thesis",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "显式召回标题问句",
+        "逐句回收四个子问题：如何到达、杀死多少、为何致命、改变了什么",
+        "蒙太奇：社区没有终结，继续婚配、继续耕种",
+        "命题定性：'最惊人的不是死亡数字，而是他们继续了'",
+        "相对化现代安全感",
+        "订阅引导",
+        "格言收束：'以王国与大陆的尺度被记住，却在一屋一田间被经历'"
+      ],
+      "abstract_move": "显式召回标题问句 + 逐句回收子问题 + 用继续的蒙太奇反转最惊人的定性 + 相对化现代安全感 + 用宏观与微观对照的格言收束",
+      "replacement_needs": [
+        "标题问句的显式召回",
+        "子问题逐句回收",
+        "社区或系统没有终结的延续蒙太奇",
+        "一个最惊人的不是X而是Y的命题定性",
+        "现代安全感的相对化",
+        "一个宏观记忆与微观经历对照的格言落点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK12(85);回收了前文的悬念 FS01→LOOP01、FS02→LOOP02、FS09→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK12",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

@@ -1,0 +1,1102 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:21:18.535Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.0341,
+      "start_sec": 0.1,
+      "end_sec": 49.5,
+      "position_label": "0%–3.4%(0:00–0:50)",
+      "purpose": "用第二人称拥有者幻想开场，立刻点破\"这画面几乎全错\"，再用\"分发免费vs行业集中\"的悖论与规模数字建立主缺口",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "paradox_hook",
+          "strength": 85,
+          "position_ratio": 0.0154,
+          "time_ms": 22341,
+          "reason": "免费分发与行业集中的核心悖论并置，全片张力之源"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.0339,
+          "time_ms": 49333,
+          "reason": "第一答案把整门生意重构为投资基金，认知地基被替换"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悖论：分发几乎免费，为何三巨头仍控制整个行业、巨额收入流向谁",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "厂牌到底在做什么生意",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_hook",
+          "mechanism": "second_person_fantasy"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "central_paradox",
+          "mechanism": "free_distribution_vs_concentration"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "scale_numbers",
+          "mechanism": "industry_size_anchor"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "core_reframe",
+          "mechanism": "label_as_investment_fund"
+        }
+      ],
+      "required_retention_events": [
+        "central_paradox",
+        "scale_numbers"
+      ],
+      "original_moves": [
+        "用第二人称让观众想象自己开唱片厂牌、签音乐人、发专辑",
+        "立刻用'几乎完全错误'推翻刚才的想象画面",
+        "连续提问：为什么音乐免费分发，行业却被少数公司控制",
+        "给出音乐行业的年度规模数字（430亿美元）锚定讨论范围"
+      ],
+      "abstract_move": "第二人称拥有者幻想开场 + 立刻用判词推翻 + 用表面免费与实际集中的悖论连问建立认知缺口 + 行业规模数字锚定",
+      "replacement_needs": [
+        "一个让观众代入拥有者角色的具体场景",
+        "一个'免费/开放/去中心化'与'高度集中/寡头垄断'之间的明显悖论",
+        "一个锚定行业规模的权威数字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(85)、PK02(85);打开的悬念 LOOP01→FS14、LOOP02→FS02 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 85
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "fantasy_premise_plus_paradox",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 49333,
+        "evidence_refs": [
+          "C0001",
+          "C0010",
+          "C0027",
+          "C0035",
+          "C0051"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "core_reframe",
+      "start_ratio": 0.0341,
+      "end_ratio": 0.1075,
+      "start_sec": 48.5,
+      "end_sec": 156.2,
+      "position_label": "3.4%–10.8%(0:49–2:36)",
+      "purpose": "交付第一答案：这门生意是投人而非投公司的投资基金，并用创投失败分布数学证明分散是生存前提",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "厂牌如何决定下注哪个无名艺人",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "core_reframe",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "portfolio_math",
+          "mechanism": "vc_failure_distribution"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "metaphor_verdict",
+          "mechanism": "coin_toss_metaphor"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "capital_allocation",
+          "mechanism": "annual_investment_scale"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "mid_cta",
+          "mechanism": "subscribe_request"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "new_question",
+          "mechanism": "scouting_question"
+        }
+      ],
+      "required_retention_events": [
+        "core_reframe",
+        "vc_math_demo"
+      ],
+      "original_moves": [
+        "给出第一答案：唱片公司本质是投资基金，投的是人而非公司",
+        "引入创业投资失败分布数学：多数亏损、少数打平、一个覆盖全部",
+        "用'全押一个人=抛硬币'的隐喻说明孤注一掷的致命风险",
+        "给出唱片公司年度投资规模数字（每年50–100位音乐人）",
+        "定性为'组合经理'而非传统意义的'唱片公司'"
+      ],
+      "abstract_move": "交付重构答案：这门生意的本质是投资组合而非单次押注 + 用失败分布数学证明分散是生存前提 + 隐喻强化风险 + 规模数字锚定 + 重新定性",
+      "replacement_needs": [
+        "一个把行业重构为'投资/分散/组合管理'的类比或定义",
+        "一个支撑'必须分散'的失败率或成功率分布数据",
+        "一个年度投资规模或投资数量的数字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS03 跨段;回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.1075,
+      "end_ratio": 0.2175,
+      "start_sec": 155.3,
+      "end_sec": 316.1,
+      "position_label": "10.8%–21.8%(2:35–5:16)",
+      "purpose": "拆解选人机制：数据扫描提前标记、噪声与信号之分、人机结合判断与数据规模护城河",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "mechanism_define",
+          "mechanism": "information_advantage"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "named_tool",
+          "mechanism": "data_scouting_tools"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "capability_reveal",
+          "mechanism": "early_flag_window"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "counterintuitive_rule",
+          "mechanism": "viral_vs_fandom"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "race_dynamics",
+          "mechanism": "signing_race"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "human_filter",
+          "mechanism": "algorithm_plus_instinct"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "data_moat",
+          "mechanism": "catalog_data_advantage"
+        }
+      ],
+      "required_retention_events": [
+        "noise_vs_signal"
+      ],
+      "original_moves": [
+        "先承认传统靠直觉的'星探'模式",
+        "引入数据扫描工具（Chartmetric等）作为信息优势来源",
+        "说明工具能提前几个月标记拐点，建立时间优势",
+        "区分噪声（短期波动）与信号（持续增长），定义判据",
+        "说明人机结合：机器扫描+人工判断",
+        "以数据规模和工具生态为护城河收束"
+      ],
+      "abstract_move": "拆解选人机制：从直觉到数据 + 具名工具建立可信度 + 提前量建立优势 + 噪声与信号判据建立门槛 + 人机结合程序 + 数据护城河",
+      "replacement_needs": [
+        "一个具名的数据工具或信息系统",
+        "一个可量化的提前量（时间、阶段）",
+        "一个区分噪声与真实信号的判据",
+        "一个数据规模或工具生态的护城河描述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "evidence_build",
+      "start_ratio": 0.2175,
+      "end_ratio": 0.2731,
+      "start_sec": 315.2,
+      "end_sec": 396.9,
+      "position_label": "21.8%–27.3%(5:15–6:37)",
+      "purpose": "用逐月现金流时间线展示\"先出后进\"的错配：发行前大额支出、发行日零进账、平台回款延迟",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "签约后钱到底怎么流、为何创作者热销却拿不到钱",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "model_break",
+          "mechanism": "expectation_puncture"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "money_ladder",
+          "mechanism": "prerelease_spend"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "cash_flow_reveal",
+          "mechanism": "payout_delay"
+        }
+      ],
+      "required_retention_events": [
+        "money_timeline_ladder"
+      ],
+      "original_moves": [
+        "展示发行前逐月支出阶梯：录音、混音、母带、营销",
+        "说明发行日当天进账为零",
+        "说明平台回款延迟45–90天",
+        "对照账面盈利与现金压力的反差"
+      ],
+      "abstract_move": "用时间线展示'先出后进'的现金流错配：发行前大额支出阶梯 + 发行日零进账事实 + 回款延迟区间 + 账面与现金的对照",
+      "replacement_needs": [
+        "一个逐阶段的支出时间线或支出项清单",
+        "一个关键时点（发行日/上线日/交付日）的零进账或低进账事实",
+        "一个回款延迟的时间区间",
+        "一个账面盈利与现金压力的对照场景"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "reveal",
+      "start_ratio": 0.2731,
+      "end_ratio": 0.3514,
+      "start_sec": 396,
+      "end_sec": 510.6,
+      "position_label": "27.3%–35.1%(6:36–8:31)",
+      "purpose": "拆解回收机制，用同一作品两种流水演示\"经营者盈利而创作者归零是系统设计\"",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.3396,
+          "time_ms": 493578,
+          "reason": "同一首歌两种结果的冷酷演算，创作者归零而厂牌仍盈利"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.3485,
+          "time_ms": 506506,
+          "reason": "'这不是系统失败，这就是系统的全片判词"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "mechanism_plus_verdict",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "key_term",
+          "mechanism": "recoupment_basics"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "worked_example",
+          "mechanism": "royalty_split_demo"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "counterfactual",
+          "mechanism": "half_revenue_case"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "verdict_line",
+          "mechanism": "system_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "worked_example",
+        "system_verdict"
+      ],
+      "original_moves": [
+        "定义关键术语'未回收余额'（recoupable balance）",
+        "用同一首歌的实际流水演算双方实得：厂牌盈利、音乐人归零",
+        "做反事实演算：流水减半时厂牌仍盈利、音乐人负债更多",
+        "给出判词：'这不是系统失败，这就是系统'"
+      ],
+      "abstract_move": "拆解回收机制 + 用同一作品两种流水情景演算 + 得出'经营者盈利而创作者归零是设计而非失败'的判词",
+      "replacement_needs": [
+        "一个关键术语或机制的定义",
+        "一个完整的双方实得演算（需要真实数字）",
+        "一个反事实演算（流水减半或翻倍）",
+        "一个定性判词：这是设计，不是失败"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80)、PK04(85);回收了前文的悬念 FS04→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "conflict_escalation",
+      "start_ratio": 0.3514,
+      "end_ratio": 0.4196,
+      "start_sec": 509.7,
+      "end_sec": 609.7,
+      "position_label": "35.1%–42%(8:30–10:10)",
+      "purpose": "用具名破产案例为机制配上真人代价，并揭示交叉抵押的静默机制",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.359,
+          "time_ms": 521760,
+          "reason": "热销数千万张的巨星破产，机制后果获得真人名字"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "卖出数千万张唱片的巨星为何会破产",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "named_case_mechanism",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "collapse_case",
+          "mechanism": "star_bankruptcy"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "mechanism_reveal",
+          "mechanism": "cross_collateralization"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "mechanism_reveal",
+          "mechanism": "debt_pooling"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "timing_verdict",
+          "mechanism": "signed_before_understood"
+        }
+      ],
+      "required_retention_events": [
+        "named_collapse_case"
+      ],
+      "original_moves": [
+        "给出具名破产案例：某巨星销售数千万张唱片却破产，银行账户余额极低",
+        "归因：'答案在合同里'",
+        "展示交叉抵押机制：多张专辑的债务进入同一个债务池",
+        "给出时点判词：'等到明白时合同已签'"
+      ],
+      "abstract_move": "用具名案例为机制配上真人代价 + 归因到合同 + 揭示交叉抵押的静默机制 + 时点判词",
+      "replacement_needs": [
+        "一个具名的破产或失败案例（销量与结局的反差）",
+        "一个交叉抵押或债务池机制的演示",
+        "一个'签约时不知道/等到明白时已晚'的时点判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "reveal",
+      "start_ratio": 0.4196,
+      "end_ratio": 0.4683,
+      "start_sec": 608.8,
+      "end_sec": 680.6,
+      "position_label": "42%–46.8%(10:09–11:21)",
+      "purpose": "把一笔大额流水逐层过瀑布，得出经营者实留不到头条数字一半",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.4601,
+          "time_ms": 668636,
+          "reason": "千万级流水过瀑布后实留不到一半的头条免疫时刻"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "一笔千万级流水经过层层分流后厂牌真正留下多少",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "waterfall_reveal",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "waterfall_start",
+          "mechanism": "hit_revenue_anatomy"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "platform_cut",
+          "mechanism": "distribution_take"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "waterfall_result",
+          "mechanism": "retained_share"
+        }
+      ],
+      "required_retention_events": [
+        "revenue_waterfall"
+      ],
+      "original_moves": [
+        "从一笔千万级流水数字开始",
+        "第一层：平台抽成（Spotify/Apple Music）",
+        "第二层：词曲版权方分流",
+        "第三层：母带所有权池再扣点与分成",
+        "得出实留金额，对照'不到头条数字一半'"
+      ],
+      "abstract_move": "把一笔大额流水逐层过瀑布 + 每层扣除都具名或有比例 + 得出实留不到头条数字一半的对照",
+      "replacement_needs": [
+        "一笔具体的大额流水数字",
+        "至少三层扣除（平台、中间方、再分成）的比例或机制",
+        "一个实留金额与头条数字的对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "reveal",
+      "start_ratio": 0.4683,
+      "end_ratio": 0.5588,
+      "start_sec": 679.7,
+      "end_sec": 812,
+      "position_label": "46.8%–55.9%(11:20–13:32)",
+      "purpose": "揭示真正资产：受数十年版权保护、现金流可预测、以年收入倍数交易的权利库",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "为何厂牌如此痴迷于所有权、真正值钱的是什么",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "asset_value_reveal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "turn_signal",
+          "mechanism": "weird_turn_tease"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "asset_reveal",
+          "mechanism": "copyright_duration"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "licensing_range",
+          "mechanism": "sync_income_range"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "counterintuitive_data",
+          "mechanism": "vinyl_revival"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "valuation_reveal",
+          "mechanism": "catalog_multiple"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "named_case",
+          "mechanism": "masters_sale"
+        }
+      ],
+      "required_retention_events": [
+        "asset_reframe",
+        "catalog_multiple"
+      ],
+      "original_moves": [
+        "说明版权保护期长达数十年（作者终身+70年）",
+        "说明授权收入与实体收入的区间范围",
+        "对照新作品（高风险冒险）与老目录（可定价现金流）",
+        "给出目录交易倍数区间（年收入的10–30倍）"
+      ],
+      "abstract_move": "揭示真正资产：受长期保护 + 现金流可预测 + 新作品与老目录的风险对照 + 交易倍数区间",
+      "replacement_needs": [
+        "一个保护期或生命周期的时间跨度",
+        "一个收入区间或现金流的可预测性描述",
+        "一个交易倍数或估值区间"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP07。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:为何厂牌如此痴迷于所有权、真正值钱的是什么",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "conflict_escalation",
+      "start_ratio": 0.5588,
+      "end_ratio": 0.6494,
+      "start_sec": 811.1,
+      "end_sec": 943.7,
+      "position_label": "55.9%–64.9%(13:31–15:44)",
+      "purpose": "用具名所有权争夺案展示行业合同被改写，再给出\"最大成功=最不赚钱资产\"的权力反转",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.6356,
+          "time_ms": 923615,
+          "reason": "'最大的成功变成最不赚钱的资产的权力反转判词"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "既然所有权如此重要，是否每个厂牌都想永远拥有每份权利",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "counter_move",
+          "mechanism": "rerecording_response"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "power_inversion",
+          "mechanism": "royalty_renegotiation"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "verdict_line",
+          "mechanism": "success_becomes_liability"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "named_case",
+          "mechanism": "royalty_securitization"
+        }
+      ],
+      "required_retention_events": [
+        "power_inversion"
+      ],
+      "original_moves": [
+        "给出具名所有权争夺案（泰勒·斯威夫特等）",
+        "说明争夺案后行业合同条款被改写",
+        "展示重谈判机制：分成率跃升、权利归还",
+        "给出判词：'最大的成功变成最不赚钱的资产'"
+      ],
+      "abstract_move": "用具名争夺案展示行业合同被改写 + 重谈判机制（分成率跃升与权利归还）+ 权力反转判词",
+      "replacement_needs": [
+        "一个具名的所有权争夺或重谈判案例",
+        "一个合同条款的行业性改写或重谈判机制",
+        "一个'最大成功=最不赚钱资产'的权力反转判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85);打开的悬念 LOOP08→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "evidence_build",
+      "start_ratio": 0.6494,
+      "end_ratio": 0.7166,
+      "start_sec": 942.8,
+      "end_sec": 1041.4,
+      "position_label": "64.9%–71.7%(15:43–17:21)",
+      "purpose": "展示权利库金融化与交易结构光谱：从全资持有到纯发行服务，风险在光谱上自由定价",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "spectrum_reveal",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE41",
+          "event_type": "deal_spectrum",
+          "mechanism": "joint_venture_split"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "deal_spectrum",
+          "mechanism": "distribution_only"
+        }
+      ],
+      "required_retention_events": [
+        "deal_spectrum"
+      ],
+      "original_moves": [
+        "给出具名版税证券化案例（大卫·鲍伊债券等）",
+        "说明机构化收购逻辑：现金流枯燥但可预测",
+        "列出三类交易结构：全资持有、联合持有、纯发行服务",
+        "给出判词：'没有唯一答案，只有风险光谱'"
+      ],
+      "abstract_move": "展示权利库金融化 + 具名证券化案例 + 三类交易结构与风险让渡 + 光谱判词",
+      "replacement_needs": [
+        "一个具名的证券化或机构收购案例",
+        "至少两到三类交易结构与风险分配的对照",
+        "一个'没有唯一答案，只有光谱'的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS09→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "evidence_build",
+      "start_ratio": 0.7166,
+      "end_ratio": 0.7732,
+      "start_sec": 1040.5,
+      "end_sec": 1123.6,
+      "position_label": "71.7%–77.3%(17:20–18:44)",
+      "purpose": "揭示注意力成本的无保证属性：预算逐级加码却买不到命中，追加投入只扩大未回收余额",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "亲手搭一个厂牌：这门生意到底是不是一笔好投资",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE43",
+          "event_type": "risk_verdict",
+          "mechanism": "marketing_uncertainty"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "essence_line",
+          "mechanism": "uncontrollable_hit"
+        }
+      ],
+      "required_retention_events": [
+        "no_guarantee_verdict"
+      ],
+      "original_moves": [
+        "说明注意力稀缺与竞争",
+        "给出两档营销预算数字（低档与高档）",
+        "给出判词：'买注意力买不到命中'",
+        "展示追加预算的反效果：未回收余额扩大",
+        "对照固定成本与不可控收入"
+      ],
+      "abstract_move": "揭示注意力成本的无保证属性 + 两档预算数字 + '买不到命中'判词 + 追加投入扩大风险的演示 + 固定成本与不可控收入对照",
+      "replacement_needs": [
+        "两档营销或获客预算的数字",
+        "一个'买注意力买不到命中'的判词或机制",
+        "一个追加投入扩大风险的演示",
+        "一个固定成本与不可控收入的对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP09→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "reveal",
+      "start_ratio": 0.7732,
+      "end_ratio": 0.8725,
+      "start_sec": 1122.6,
+      "end_sec": 1268,
+      "position_label": "77.3%–87.3%(18:43–21:08)",
+      "purpose": "用一笔启动资金做完整组合算术：预留开销、分散多位创作者、应用幂律分布，对照孤注一掷的两种结局",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.8217,
+          "time_ms": 1194144,
+          "reason": "分散组合三年净利加整批权利库的完整算术回报"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE45",
+          "event_type": "scenario_start",
+          "mechanism": "portfolio_build"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "power_law_result",
+          "mechanism": "hit_covers_portfolio"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "scenario_result",
+          "mechanism": "diversified_outcome"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "stakes_verdict",
+          "mechanism": "survival_vs_closure"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "alternative_path",
+          "mechanism": "niche_label"
+        }
+      ],
+      "required_retention_events": [
+        "scenario_arithmetic"
+      ],
+      "original_moves": [
+        "从一笔启动资金开始，分配预留与可投金额",
+        "展示分散情景：投多位创作者，应用幂律分布",
+        "得出分散结果：三年净利+整批权利库",
+        "对照集中情景：孤注一掷的两种结局（大赢或倒闭）",
+        "给出判词：'生存还是倒闭'"
+      ],
+      "abstract_move": "用一笔启动资金做完整组合算术 + 分散与集中双情景 + 应用幂律分布 + 净利与权利库双重结果 + 生存倒闭对照判词",
+      "replacement_needs": [
+        "一笔启动资金与分配方案",
+        "一个幂律分布的应用或成功率假设",
+        "一个净利与资产的双重结果",
+        "一个集中情景的两种极端结局对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "evidence_build",
+      "start_ratio": 0.8725,
+      "end_ratio": 0.9422,
+      "start_sec": 1267.1,
+      "end_sec": 1369.2,
+      "position_label": "87.3%–94.2%(21:07–22:49)",
+      "purpose": "补充利基小路的信任机制，再揭示头部玩家用权利库现金流自我强化的飞轮",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE50",
+          "event_type": "flywheel_reveal",
+          "mechanism": "big_three_flywheel"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "synthesis_question",
+          "mechanism": "paradox_resolution_setup"
+        }
+      ],
+      "required_retention_events": [
+        "flywheel_reveal"
+      ],
+      "original_moves": [
+        "说明利基小路的信任机制",
+        "说明厂牌名追随与实体消费倾向",
+        "给出头部三巨头合计份额数字（70%+）",
+        "展示飞轮四步循环：权利库→现金流→再投资→更多权利库"
+      ],
+      "abstract_move": "补充利基小路的信任机制 + 厂牌名追随与实体消费 + 头部份额数字 + 飞轮循环",
+      "replacement_needs": [
+        "一个利基信任机制或忠诚消费的描述",
+        "一个头部合计份额或集中度数字",
+        "一个自我强化飞轮的四步循环"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.9422,
+      "end_ratio": 0.9751,
+      "start_sec": 1368.3,
+      "end_sec": 1417,
+      "position_label": "94.2%–97.5%(22:48–23:37)",
+      "purpose": "正式解答悖论：旧垄断已死，新垄断由风投、注意力经济与跨国法律机器构成；表面产品是诱饵，权利库才是被出售的商品",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9562,
+          "time_ms": 1389615,
+          "reason": "'音乐是诱饵的行业本质定性，悖论的正式解答"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "paradox_resolution",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE52",
+          "event_type": "essence_verdict",
+          "mechanism": "music_as_lure"
+        }
+      ],
+      "required_retention_events": [
+        "paradox_resolution",
+        "essence_verdict"
+      ],
+      "original_moves": [
+        "回到开场总设问：为什么免费分发却高度集中",
+        "宣布旧垄断（实体分销）已死",
+        "列出新垄断三要素：风投逻辑、注意力经济、跨国法律机器",
+        "给出定性判词：'音乐是诱饵'",
+        "定义真正出售物：可预测现金流的权利库"
+      ],
+      "abstract_move": "正式解答开场悖论 + 旧垄断之死 + 新垄断三要素 + '表面产品是诱饵'定性 + 真正出售物定义",
+      "replacement_needs": [
+        "一个旧垄断之死的描述",
+        "新垄断的三个支柱或要素",
+        "一个'表面产品是诱饵'的定性判词",
+        "一个真正出售物或真正资产的定义"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "closure",
+      "start_ratio": 0.9751,
+      "end_ratio": 1,
+      "start_sec": 1416.1,
+      "end_sec": 1453.2,
+      "position_label": "97.5%–100%(23:36–24:13)",
+      "purpose": "用条件式判词回答\"是否好投资\"，否定路径对照后以格言收束并完成频道CTA",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9921,
+          "time_ms": 1441677,
+          "reason": "格言顶点：把全片压缩成一句可带走的话"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "verdict_plus_aphorism",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE53",
+          "event_type": "final_verdict",
+          "mechanism": "conditional_endorsement"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "aphorism_close",
+          "mechanism": "catalog_aphorism"
+        }
+      ],
+      "required_retention_events": [
+        "conditional_verdict",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "提出最终设问：这是不是好投资",
+        "给出条件式肯定判词：如果你懂数学、有耐心、能接受……",
+        "给出否定路径对照：如果你想押宝一个人……",
+        "给出格言收束句：对仗句式，把全片压缩成一句可带走的话",
+        "完成频道CTA：点赞订阅"
+      ],
+      "abstract_move": "用条件式判词回答'是否好投资' + 否定路径对照 + 对仗格言收束 + 频道CTA",
+      "replacement_needs": [
+        "一个条件式肯定判词（如果你……）",
+        "一个否定路径对照（如果你……）",
+        "一个对仗格言收束句",
+        "一个频道CTA"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(90);回收了前文的悬念 FS11→LOOP09。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

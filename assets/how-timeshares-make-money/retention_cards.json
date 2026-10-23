@@ -1,0 +1,1322 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T07:54:47.384Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "collapse_hook_case_contract",
+      "start_ratio": 0,
+      "end_ratio": 0.0502,
+      "start_sec": 0.4,
+      "end_sec": 59.7,
+      "position_label": "0%–5%(0:00–1:00)",
+      "purpose": "用同一资产的价格崩塌建立案件，排除变量，重命名产品，并宣布证据分部与结尾裁决的契约",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.0194,
+          "time_ms": 23070,
+          "reason": "同一楼盘、同一单元、同一周排除全部变量后，两万多美元的落差只能归因于机制本身"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.0304,
+          "time_ms": 36171,
+          "reason": "“不是一次性度假而是永久订阅的账单”加“无钟房间”意象，产品被整体重命名"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "庭审契约把全片组织为取证过程，裁决与收据悬挂至结尾",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "price_collapse_hook",
+          "mechanism": "purchase_vs_resale_gap"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "variable_elimination",
+          "mechanism": "same_unit_same_week"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "product_reframe",
+          "mechanism": "bill_you_subscribe_forever"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "roadmap_contract",
+          "mechanism": "four_parts_plus_receipt_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "price_collapse",
+        "variable_elimination",
+        "product_reframe",
+        "case_roadmap_contract"
+      ],
+      "original_moves": [
+        "展示平均购买价与二手平台一美元残值的极端对照",
+        "用同一楼盘、同一单元、同一周排除全部变量",
+        "将产品重命名为'永久订阅的账单'而非'一次性度假'",
+        "用'无钟房间'意象具象化设计意图",
+        "预告四部分证据结构与结尾裁决"
+      ],
+      "abstract_move": "用同一标的物在不同时点的价格崩塌建立调查案件 + 排除全部外部变量将落差归因于机制本身 + 用一句话重新定义产品本质 + 宣布分段证据地图与最终裁决的叙事契约",
+      "replacement_needs": [
+        "同一标的物购入价与当前残值的极端价差数据",
+        "可排除外部变量的对照条件（同型号/同批次/同规格/同时间）",
+        "一句重新定义产品本质的金句",
+        "证据分几部分、结尾给什么结论的路线图预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(82)、PK02(85);打开的悬念 LOOP01→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 82
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 85
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "price_collapse_plus_case_contract",
+        "first_stimulus_ms": 399,
+        "first_payoff_ms": 36171,
+        "evidence_refs": [
+          "C0001",
+          "C0008",
+          "C0012"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "bait_economics_reveal",
+      "start_ratio": 0.0502,
+      "end_ratio": 0.1628,
+      "start_sec": 59.7,
+      "end_sec": 193.7,
+      "position_label": "5%–16.3%(1:00–3:14)",
+      "purpose": "拆开免费或低价诱饵的真实成本归属，用头部主体数字证明获客支出占比，并交代目标客户的筛选规则",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.1103,
+          "time_ms": 131219,
+          "reason": "头部公司每美元销售额近六成先花在营销与销售上，且早于任何一间房的建成"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "报价承诺时长与被刻意标注的“same old phrase”之间的落差",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "section_begin",
+          "mechanism": "nobody_walks_in_alone"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "offer_concrete",
+          "mechanism": "cheap_nights_plus_points"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "true_cost_reveal",
+          "mechanism": "marketing_budget_not_generosity"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "numeric_contrast",
+          "mechanism": "marketing_ratio_before_rooms"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "pre_spent_math",
+          "mechanism": "thirteen_five_already_spent"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "qualification_filter",
+          "mechanism": "couple_income_age_recency_rules"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "target_inversion",
+          "mechanism": "fundable_before_lunch"
+        }
+      ],
+      "required_retention_events": [
+        "offer_concrete",
+        "true_cost_accounting",
+        "marketing_ratio",
+        "qualification_filter",
+        "target_inversion"
+      ],
+      "original_moves": [
+        "拆解免费或低价诱饵报价的真实组成",
+        "核算对方为每个到场者实际支出的成本",
+        "对照头部公司季度销售额与营销及销售费用",
+        "揭示每美元销售额近六成先花在获客上",
+        "将慷慨重新定性为预算分配",
+        "交代目标客户的资格筛选规则",
+        "点明目标是可快速放款的人群"
+      ],
+      "abstract_move": "拆解诱饵的成本归属与支付主体 + 用头部主体的财报数字证明获客支出在收入中的占比 + 将表面慷慨重新定性为预算策略 + 揭示目标客户的筛选标准",
+      "replacement_needs": [
+        "诱饵的表面报价与对方实付成本的拆解",
+        "头部主体销售额与获客/营销费用的对照数据",
+        "目标客户的资格筛选规则或条件"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(84);打开的悬念 LOOP03→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "prediction_quiz_payoff",
+      "start_ratio": 0.162,
+      "end_ratio": 0.2585,
+      "start_sec": 192.7,
+      "end_sec": 307.4,
+      "position_label": "16.2%–25.9%(3:13–5:07)",
+      "purpose": "就关键转化率发起打赌并预告答案倒计时，用规模数字给出答案与补贴数学，揭示老客户/复购的位置，命名第一个机制",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 86,
+          "position_ratio": 0.2075,
+          "time_ms": 246763,
+          "reason": "打赌答案兑现：八对夫妇各花一千美元空手离开，两对签约者替全部十对买单"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "口头打赌加评论邀约，并明示“答案约90秒后到达”的截止承诺",
+          "closes_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "评论征集把单一案例扩张为社区证词库",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "quiz_answer_with_subsidy_math",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "prediction_quiz",
+          "mechanism": "write_down_before_answer"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "deadline_tease",
+          "mechanism": "answer_in_ninety_seconds"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "scale_numbers",
+          "mechanism": "tours_times_average_sale"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "quiz_answer",
+          "mechanism": "two_out_of_ten_sign"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "subsidy_math",
+          "mechanism": "losers_paid_by_winners"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "repeat_customer_reveal",
+          "mechanism": "owner_update_presentation"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "mechanism_law",
+          "mechanism": "cheapest_customer_said_yes"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "mechanism_naming",
+          "mechanism": "free_vacations_not_free"
+        }
+      ],
+      "required_retention_events": [
+        "prediction_quiz",
+        "comment_bet",
+        "deadline_answer",
+        "loser_subsidy_math",
+        "repeat_customer_reveal",
+        "mechanism_naming"
+      ],
+      "original_moves": [
+        "就关键转化率发起打赌并邀请观众在评论区下注",
+        "预告90秒后公布答案",
+        "给出场次与场均销售额的规模数字",
+        "揭示约六分之一的签约转化率",
+        "演算八对夫妇补贴两对签约者的失败成本分摊数学",
+        "揭示老客户在业主更新会中的复购位置",
+        "命名第一个机制"
+      ],
+      "abstract_move": "就关键转化率发起预测并设定答案倒计时 + 用规模数字给出反直觉的低转化率答案 + 演算失败者成本由成功者覆盖的补贴数学 + 揭示老客户/复购在流程中的位置 + 命名第一个机制",
+      "replacement_needs": [
+        "可发起打赌的关键转化率或成功率",
+        "支撑答案的规模数字与转化率数据",
+        "失败成本如何由成功者分摊的数学演算",
+        "老客户或复购客群在何处出现的揭示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(86);打开的悬念 LOOP08(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "scripted_room_choreography",
+      "start_ratio": 0.2577,
+      "end_ratio": 0.419,
+      "start_sec": 306.5,
+      "end_sec": 498.3,
+      "position_label": "25.8%–41.9%(5:07–8:18)",
+      "purpose": "按时间刻度复盘销售场景的完整脚本，逐步揭示每个环节的设计意图与价格降级阶梯，并揭示承诺时长与实际时长的落差",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.3764,
+          "time_ms": 447696,
+          "reason": "“见过两对夫妇在此刻让步——这就是房间被设计的那一分钟”，脚本高潮被点名"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 83,
+          "position_ratio": 0.4076,
+          "time_ms": 484839,
+          "reason": "90分钟承诺实测为3小时40分，早埋时长悬念以“自带三明治”的干幽默回收"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "锚点、救生索、经理特惠、安慰奖的逐降级悬念",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "measured_time_reveal_with_dry_humor",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "scripted_price_descent_reveal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "aphorism_rule",
+          "mechanism": "clock_is_the_product"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "process_step",
+          "mechanism": "registration_is_worksheet"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "process_step",
+          "mechanism": "model_villa_not_for_sale"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "worksheet_reveal",
+          "mechanism": "circled_thirty_year_cost"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "pattern_proof",
+          "mechanism": "three_states_same_circle"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "process_step",
+          "mechanism": "credit_check_before_price"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "anchor_reveal",
+          "mechanism": "thirty_one_thousand_anchor"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "pressure_escalation",
+          "mechanism": "manager_folder_today_only"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "designed_moment",
+          "mechanism": "minute_the_room_was_designed_for"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "consolation_trap",
+          "mechanism": "sample_pack_is_deposit"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "time_dilation_reveal",
+          "mechanism": "ninety_minutes_became_three_hours_forty"
+        }
+      ],
+      "required_retention_events": [
+        "minute_ledger",
+        "worksheet_reveal",
+        "credit_before_price",
+        "anchor_descent",
+        "today_only_pressure",
+        "consolation_trap",
+        "time_dilation_reveal"
+      ],
+      "original_moves": [
+        "揭示无钟房间本身就是产品设计",
+        "展示登记表即痛点数据采集工具",
+        "复盘遗产视频、样板房非售品等脚本环节",
+        "演示三十年花费数字如何被制造出来",
+        "揭示信用审查先于价格报价的顺序设计",
+        "展示锚点价格、救生索降级、经理特惠三级价格阶梯",
+        "点明安慰奖即下次邀约的定金",
+        "揭示90分钟承诺实测为3小时40分钟",
+        "用'自带三明治'的干幽默回收时长悬念"
+      ],
+      "abstract_move": "按时间刻度逐步复盘销售场景的完整脚本 + 揭示每个环节的设计意图与数据采集目的 + 展示资质审查先于报价的顺序设计 + 拆解锚点-降级-限时的三级价格阶梯 + 揭示承诺时长与实际时长的巨大落差",
+      "replacement_needs": [
+        "按时间顺序的销售流程清单",
+        "痛点数字或需求数据如何被制造或采集的过程",
+        "资质审查先于报价的顺序证据",
+        "锚点-降级-限时的多级价格阶梯",
+        "承诺时长与实际时长的对照数据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85)、PK06(83);回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 83
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "scale_proof_and_tease",
+      "start_ratio": 0.4182,
+      "end_ratio": 0.462,
+      "start_sec": 497.4,
+      "end_sec": 549.5,
+      "position_label": "41.8%–46.2%(8:17–9:10)",
+      "purpose": "命名流程段机制，用行业规模数字证明其普遍性，并预告下一层更糟",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "段落末尾的预告式悬念换挡",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "mechanism_naming",
+          "mechanism": "nothing_improvised"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "industry_scale",
+          "mechanism": "ten_billion_a_year"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "aphorism_payoff",
+          "mechanism": "factory_with_fruit_stand"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "worse_layer_tease",
+          "mechanism": "paper_worse_than_room"
+        }
+      ],
+      "required_retention_events": [
+        "mechanism_naming",
+        "industry_scale",
+        "factory_aphorism",
+        "testimony_solicitation",
+        "worse_tease"
+      ],
+      "original_moves": [
+        "命名前一段流程为第二个机制",
+        "给出整个行业的规模数字",
+        "用工厂意象将流程具象化定性",
+        "征集观众关于价格的证词",
+        "预告下一层纸面上更糟的内容"
+      ],
+      "abstract_move": "命名前一段流程的机制 + 用行业规模数字证明该机制的普遍性 + 用具象意象定性该流程 + 预告下一层更糟的内容",
+      "replacement_needs": [
+        "该流程或机制的命名句",
+        "证明该机制普遍存在的行业规模数字",
+        "将该机制具象化的定性意象",
+        "下一层更糟内容的预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "multiplication_reframe",
+      "start_ratio": 0.4613,
+      "end_ratio": 0.5047,
+      "start_sec": 548.6,
+      "end_sec": 600.3,
+      "position_label": "46.1%–50.5%(9:09–10:00)",
+      "purpose": "拆解产权话术：同一资产被按份重复出售，用乘法演算揭示总价远超市价，命名乘法机制",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.4757,
+          "time_ms": 565840,
+          "reason": "一套房按52周卖出约一百二十万美元，“卖一次是销售、卖52次是这门生意”完成乘法重构"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "worse_layer_confirmation",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "jargon_reframe",
+          "mechanism": "real_estate_narrowest_sense"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "multiplication_math",
+          "mechanism": "sell_one_unit_52_times"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "mechanism_naming",
+          "mechanism": "selling_52_times"
+        }
+      ],
+      "required_retention_events": [
+        "jargon_reframe",
+        "multiplication_math",
+        "market_price_contrast",
+        "mechanism_naming",
+        "price_not_the_point_tease"
+      ],
+      "original_moves": [
+        "限定产权话术的最窄承认范围",
+        "演算同一资产按52周重复出售的乘法",
+        "对照乘法总价与正常市价",
+        "命名'卖一次是销售、卖52次是这门生意'的乘法机制",
+        "预告购买价将被降级为次要问题"
+      ],
+      "abstract_move": "限定话术的最窄承认边界 + 演算同一资产被按份重复出售的乘法 + 对照乘法总价与正常市价的巨大差距 + 命名乘法机制 + 预告价格本身不是重点",
+      "replacement_needs": [
+        "话术中可被限定的最窄承认范围",
+        "同一资产按份额或时段重复出售的乘法演算",
+        "乘法总价与正常市价的对照数据",
+        "命名乘法机制的金句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(90);回收了前文的悬念 FS05→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "recurring_fee_reveal",
+      "start_ratio": 0.5039,
+      "end_ratio": 0.601,
+      "start_sec": 599.3,
+      "end_sec": 714.8,
+      "position_label": "50.4%–60.1%(9:59–11:55)",
+      "purpose": "揭示持续费用才是生意本体：费率单边上涨、按户聚合的年度规模、持有成本折算，以及内部积分的单边定价货币机制",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.5839,
+          "time_ms": 694537,
+          "reason": "固定积分对变动价目：“一种逐年持有更少的缓慢方式”，积分体系方向性贬值被点破"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "reframe_turn",
+          "mechanism": "purchase_price_is_entry_fee"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "numeric_reveal",
+          "mechanism": "fee_escalation_17_percent"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "aggregate_math",
+          "mechanism": "seventy_seven_thousand_per_unit"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "owner_side_math",
+          "mechanism": "two_hundred_eleven_per_night"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "currency_reveal",
+          "mechanism": "points_as_issued_currency"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "unanswerable_question",
+          "mechanism": "nobody_knows_point_value"
+        }
+      ],
+      "required_retention_events": [
+        "entry_fee_reframe",
+        "fee_escalation",
+        "per_unit_aggregate",
+        "owner_side_math",
+        "points_currency",
+        "unanswerable_question"
+      ],
+      "original_moves": [
+        "将入场费重构为次要，持续费用才是生意本体",
+        "展示费率与单边上涨幅度",
+        "按户聚合计算年度费用规模",
+        "折算每晚实际持有成本",
+        "揭示内部积分的货币机制",
+        "对照固定积分与变动价目：逐年持有更少",
+        "展示无人能答出积分真实价值的定价黑箱场面"
+      ],
+      "abstract_move": "将入场费重构为次要、持续费用才是本体 + 展示费率单边上涨与按户聚合的年度规模 + 折算持有成本 + 揭示内部货币的单边定价机制 + 对照固定额度与变动价目的方向性贬值",
+      "replacement_needs": [
+        "入场费与持续费用的重构关系",
+        "费率、涨幅与按户聚合的年度规模数据",
+        "持有成本的折算方式",
+        "内部货币的发行、定价、改值机制",
+        "固定额度对变动价目导致方向性贬值的证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(82)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "perpetuity_risk_reveal",
+      "start_ratio": 0.6002,
+      "end_ratio": 0.6482,
+      "start_sec": 713.8,
+      "end_sec": 770.9,
+      "position_label": "60%–64.8%(11:54–12:51)",
+      "purpose": "展示费用的风险归属与时间深度：突发事件成本由持有方均摊，条款永久有效并可传给下一代，而退出选项存在却不被告知",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 86,
+          "position_ratio": 0.6232,
+          "time_ms": 741239,
+          "reason": "契约永久有效、费用传给子女，“不只是修辞”把不安升级为跨代束缚"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE44",
+          "event_type": "special_assessment",
+          "mechanism": "roof_letter_shared_cost"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "risk_inversion",
+          "mechanism": "check_never_flows_back"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "perpetuity_reveal",
+          "mechanism": "fee_passes_to_children"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "hidden_escape_hatch",
+          "mechanism": "children_can_reject_in_writing"
+        }
+      ],
+      "required_retention_events": [
+        "special_assessment",
+        "risk_inversion",
+        "perpetuity_reveal",
+        "inheritance_trap",
+        "hidden_escape_hatch"
+      ],
+      "original_moves": [
+        "展示突发事件的特殊摊派场景",
+        "揭示风险成本由持有方均摊而非对方承担",
+        "点明支票只向一个方向流动",
+        "揭示契约条款永久有效",
+        "展示费用可传给下一代子女",
+        "揭示退出选项存在但不被主动告知"
+      ],
+      "abstract_move": "展示突发事件成本的风险归属反转 + 揭示条款永久有效且可代际传递 + 点明退出选项存在却不被告知",
+      "replacement_needs": [
+        "突发事件或特殊摊派的成本归属场景",
+        "风险归属反转的证据",
+        "契约永久有效与代际传递的条款",
+        "被隐藏的退出选项及其不被提及的证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(86)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "financing_spread_reveal",
+      "start_ratio": 0.6474,
+      "end_ratio": 0.7023,
+      "start_sec": 770,
+      "end_sec": 835.3,
+      "position_label": "64.7%–70.2%(12:50–13:55)",
+      "purpose": "拆解融资层：当场放贷且贷款先于报价，用融资利率与放贷利率的利差揭示第三重盈利，命名“一次签字多笔销售”",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "information_reveal",
+          "strength": 87,
+          "position_ratio": 0.675,
+          "time_ms": 802868,
+          "reason": "低于5%融资、15%放贷、数十亿美元贷款组合：签字本身被揭示为第三重销售"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "贷款层闭合后预告仍有未揭示的收入层",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE48",
+          "event_type": "document_turn",
+          "mechanism": "second_document_loan"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "order_reveal",
+          "mechanism": "loan_offered_before_price"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "securitization_reveal",
+          "mechanism": "loans_sold_to_investors"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "spread_math",
+          "mechanism": "borrow_under_five_lend_fifteen"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "mechanism_naming",
+          "mechanism": "three_sales_one_signature"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "layer_tease",
+          "mechanism": "fare_has_not_arrived_yet"
+        }
+      ],
+      "required_retention_events": [
+        "loan_before_price",
+        "rate_reveal",
+        "securitization_contrast",
+        "spread_math",
+        "triple_sale_naming"
+      ],
+      "original_moves": [
+        "揭示当场放贷且贷款先于报价的顺序",
+        "给出约15%的放贷利率",
+        "对照4.69%的证券化融资利率",
+        "演算利差与数十亿美元贷款组合规模",
+        "命名'三笔销售一次签字'：签字本身是第三重销售"
+      ],
+      "abstract_move": "揭示当场放贷且贷款先于报价的顺序设计 + 对照放贷利率与融资利率的巨大利差 + 演算利差与贷款组合规模 + 命名签字本身为第三重销售",
+      "replacement_needs": [
+        "当场放贷与贷款先于报价的顺序证据",
+        "放贷利率与融资利率的对照数据",
+        "利差与贷款组合规模的演算",
+        "多笔销售一次签字的命名句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(87);打开的悬念 LOOP06→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 87
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "idle_asset_resale_reveal",
+      "start_ratio": 0.7015,
+      "end_ratio": 0.7364,
+      "start_sec": 834.4,
+      "end_sec": 875.9,
+      "position_label": "70.2%–73.6%(13:54–14:36)",
+      "purpose": "揭示闲置份额被再次变现：空置部分由经营方出租获利，持有方付了三层钱却不独占使用权，官网直订反证产权幻觉",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "idle_week_rental_reveal",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE54",
+          "event_type": "occupancy_gap",
+          "mechanism": "eighty_percent_occupancy"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "rental_reveal",
+          "mechanism": "resort_rents_empty_weeks"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "direct_booking_proof",
+          "mechanism": "same_room_on_website"
+        }
+      ],
+      "required_retention_events": [
+        "occupancy_gap",
+        "rental_reveal",
+        "triple_charge",
+        "direct_booking_proof"
+      ],
+      "original_moves": [
+        "预告还有费用未被揭示",
+        "揭示入住率缺口导致的空置周数",
+        "演算空置周被对外出租的收入规模",
+        "对照持有方已付的三层费用",
+        "用官网直订价格反证产权幻觉"
+      ],
+      "abstract_move": "揭示空置部分的入住率缺口 + 演算空置份额被对外出租的收入规模 + 对照持有方已付的多层费用却不独占使用权 + 用官方渠道直订价格反证产权幻觉",
+      "replacement_needs": [
+        "空置率缺口或入住率数据",
+        "空置部分被对外出租的收入规模",
+        "持有方已付的多层费用对照",
+        "官方渠道直订价格等反证产权幻觉的证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS09→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "exit_market_asymmetry",
+      "start_ratio": 0.7361,
+      "end_ratio": 0.8244,
+      "start_sec": 875.5,
+      "end_sec": 980.5,
+      "position_label": "73.6%–82.4%(14:36–16:20)",
+      "purpose": "拆解退出：取消窗口短且不被提及，残值市场崩塌且卖方在付费逃离，官方渠道只卖不收，命名“控制唯一高价渠道”的机制",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "emotional_payoff",
+          "strength": 88,
+          "position_ratio": 0.7716,
+          "time_ms": 917732,
+          "reason": "曾值两万美元的周挂牌一美元甚至免费，卖家是在付费摆脱账单，与开场价格崩塌闭环"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "取消期限短且房间里无人提及，退出问题贯穿第四部分证据",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE57",
+          "event_type": "section_begin",
+          "mechanism": "exit_deadline_not_mentioned"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "deadline_windows",
+          "mechanism": "state_day_windows"
+        },
+        {
+          "event_id": "RE59",
+          "event_type": "resale_price_reveal",
+          "mechanism": "twenty_thousand_to_one_dollar"
+        },
+        {
+          "event_id": "RE60",
+          "event_type": "seller_motive_reframe",
+          "mechanism": "paying_to_escape_bill"
+        },
+        {
+          "event_id": "RE61",
+          "event_type": "counter_asymmetry",
+          "mechanism": "counter_never_buys"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "mechanism_naming",
+          "mechanism": "controls_only_high_price_place"
+        }
+      ],
+      "required_retention_events": [
+        "deadline_windows",
+        "resale_price_collapse",
+        "seller_motive_reframe",
+        "counter_asymmetry",
+        "mechanism_naming"
+      ],
+      "original_moves": [
+        "列出取消窗口的期限清单",
+        "追问期限后资产的转售价值",
+        "展示二手平台挂牌一美元甚至免费的残值崩塌",
+        "揭示卖家是在付费摆脱账单而非变现资产",
+        "给出千万家庭的持有规模",
+        "揭示官方柜台只卖不收的不对称",
+        "命名'控制唯一高价渠道'的第四个机制",
+        "与开场价格崩塌形成闭环"
+      ],
+      "abstract_move": "列出取消窗口短且不被提及的证据 + 揭示残值市场崩塌至一元甚至免费 + 揭示卖方在付费逃离而非变现 + 给出持有规模 + 揭示官方渠道只卖不收的不对称 + 命名控制唯一高价渠道的机制 + 与开场价格崩塌形成闭环",
+      "replacement_needs": [
+        "取消窗口的期限清单与不被主动提及的证据",
+        "残值市场崩塌的挂牌价格数据",
+        "卖方付费逃离而非变现的动机反转证据",
+        "持有规模数据",
+        "官方渠道只卖不收的不对称证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(88);打开的悬念 LOOP07→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "second_layer_extraction",
+      "start_ratio": 0.8236,
+      "end_ratio": 0.8989,
+      "start_sec": 979.5,
+      "end_sec": 1069.2,
+      "position_label": "82.4%–89.9%(16:20–17:49)",
+      "purpose": "揭示第二层抽取与围绕退出长出的产业：优先购买权套利、残值按合同运转的定性、收费退出骗局与司法案例，以及被隐藏的免费退出通道",
+      "peaks": [
+        {
+          "peak_id": "PK12",
+          "peak_type": "worldview_shift",
+          "strength": 89,
+          "position_ratio": 0.8396,
+          "time_ms": 998555,
+          "reason": "“一美元挂牌不是市场失灵，而是市场按合同所写运转”——全片题眼"
+        },
+        {
+          "peak_id": "PK13",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.891,
+          "time_ms": 1059693,
+          "reason": "“出口一直免费，只是不在文件夹里”——免费回收计划揭示带来罕见的好消息反转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE63",
+          "event_type": "rofr_reveal",
+          "mechanism": "right_of_first_refusal"
+        },
+        {
+          "event_id": "RE64",
+          "event_type": "arbitrage_reveal",
+          "mechanism": "step_in_and_resell"
+        },
+        {
+          "event_id": "RE65",
+          "event_type": "reframe_payoff",
+          "mechanism": "market_functioning_as_written"
+        },
+        {
+          "event_id": "RE66",
+          "event_type": "exit_scam_rule",
+          "mechanism": "they_are_the_bill"
+        },
+        {
+          "event_id": "RE67",
+          "event_type": "enforcement_case",
+          "mechanism": "attorney_general_settlement"
+        },
+        {
+          "event_id": "RE68",
+          "event_type": "free_exit_program",
+          "mechanism": "resort_takeback_exists"
+        },
+        {
+          "event_id": "RE69",
+          "event_type": "hidden_payoff",
+          "mechanism": "exit_was_free_all_along"
+        }
+      ],
+      "required_retention_events": [
+        "rofr_reveal",
+        "market_as_written",
+        "exit_scam_rule",
+        "enforcement_case",
+        "hidden_free_exit"
+      ],
+      "original_moves": [
+        "揭示优先购买权条款",
+        "演示优先购买权如何截住转售并套利",
+        "给出'市场按合同所写运转'的定性——全片题眼",
+        "揭示围绕退出长出的收费产业",
+        "展示退出骗局的司法案例与检察长和解",
+        "揭示免费回收计划及其条件",
+        "点明'出口一直免费，只是不在文件夹里'——罕见的好消息反转"
+      ],
+      "abstract_move": "揭示优先购买权条款如何截住再转售并套利 + 给出残值按合同运转而非市场失灵的定性 + 揭示围绕退出长出的收费产业与司法案例 + 揭示被隐藏的免费退出通道 + 点明出口一直免费但不被告知",
+      "replacement_needs": [
+        "优先购买权条款与再售套利的机制",
+        "市场按合同运转而非失灵的定性句",
+        "围绕退出的收费产业规则与司法案例",
+        "被隐藏的免费退出计划及其条件",
+        "出口一直免费但不被告知的揭示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK12(89)、PK13(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK12",
+          "strength": 89
+        },
+        {
+          "peak_id": "PK13",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "receipt_verdict_callback",
+      "start_ratio": 0.8981,
+      "end_ratio": 0.9538,
+      "start_sec": 1068.2,
+      "end_sec": 1134.4,
+      "position_label": "89.8%–95.4%(17:48–18:54)",
+      "purpose": "不复述而打印收据：逐项回扣开场与中段全部关键数字，给出总结句与一句话裁定",
+      "peaks": [
+        {
+          "peak_id": "PK14",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9047,
+          "time_ms": 1075980,
+          "reason": "收据逐项打印，开场与中段的全部关键数字在一页收据中归位，认知闭合达到最大"
+        },
+        {
+          "peak_id": "PK15",
+          "peak_type": "worldview_shift",
+          "strength": 91,
+          "position_ratio": 0.9388,
+          "time_ms": 1116533,
+          "reason": "裁定句：它卖的不是海边的一周，而是下一张账单——主承诺以一句话兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "hidden_free_exit_reveal",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE70",
+          "event_type": "verdict_turn",
+          "mechanism": "print_the_receipt"
+        },
+        {
+          "event_id": "RE71",
+          "event_type": "receipt_montage",
+          "mechanism": "itemized_callback"
+        },
+        {
+          "event_id": "RE72",
+          "event_type": "receipt_montage",
+          "mechanism": "itemized_callback_continues"
+        },
+        {
+          "event_id": "RE73",
+          "event_type": "total_line",
+          "mechanism": "vacation_you_cant_leave"
+        },
+        {
+          "event_id": "RE74",
+          "event_type": "ruling_statement",
+          "mechanism": "sells_next_bill_not_week"
+        },
+        {
+          "event_id": "RE75",
+          "event_type": "personal_rule",
+          "mechanism": "never_sign_in_room_without_clock"
+        }
+      ],
+      "required_retention_events": [
+        "receipt_montage",
+        "total_line",
+        "ruling_statement"
+      ],
+      "original_moves": [
+        "以收据格式逐项打印开场与中段的全部关键数字",
+        "给出总结句",
+        "给出一句话裁定：卖的不是产品而是下一张账单"
+      ],
+      "abstract_move": "不复述而以收据格式逐项回扣开场与中段全部关键数字 + 给出总结句 + 给出一句话裁定将主承诺兑现",
+      "replacement_needs": [
+        "可逐项回扣的开场与中段关键数字清单",
+        "总结句",
+        "一句话裁定句兑现主承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK14(90)、PK15(91);回收了前文的悬念 FS11→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK14",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK15",
+          "strength": 91
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "rule_cta_outro",
+      "start_ratio": 0.953,
+      "end_ratio": 1,
+      "start_sec": 1133.5,
+      "end_sec": 1189.4,
+      "position_label": "95.3%–100%(18:53–19:49)",
+      "purpose": "给出可带走的个人规则，征集知情者证词并以传播理由请求互动，引导同频道续集，以开场细节回扣收尾",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "频道内交叉引流的续集钩子",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "receipt_verdict_callback",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP09"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE76",
+          "event_type": "witness_solicitation",
+          "mechanism": "owners_sellers_comment"
+        },
+        {
+          "event_id": "RE77",
+          "event_type": "playlist_tease",
+          "mechanism": "sibling_video_same_logic"
+        },
+        {
+          "event_id": "RE78",
+          "event_type": "window_callback",
+          "mechanism": "ten_day_window_i_am_waiting"
+        }
+      ],
+      "required_retention_events": [
+        "personal_rule",
+        "witness_solicitation",
+        "like_with_reason",
+        "playlist_tease",
+        "window_callback"
+      ],
+      "original_moves": [
+        "给出可带走的个人规则",
+        "征集知情者在评论区提供证词",
+        "附上点赞的传播理由",
+        "引导观众查看同频道播放列表",
+        "以开场取消窗口细节回扣收尾"
+      ],
+      "abstract_move": "给出可带走的个人规则 + 征集知情者证词 + 附理由请求互动以传播 + 引导同频道续集 + 以开场细节回扣收尾",
+      "replacement_needs": [
+        "可带走的个人规则或行动建议",
+        "征集知情者证词的邀请",
+        "附传播理由的互动请求",
+        "可回扣的开场细节"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP09(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

@@ -1,0 +1,1023 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:52:34.508Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "margin_ladder_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0381,
+      "start_sec": 0,
+      "end_sec": 62.2,
+      "position_label": "0%–3.8%(0:00–1:02)",
+      "purpose": "用一双熟悉球鞋的真实制造成本与逐级加价阶梯建立价格锚点，再引入几乎相同的仿品成本与售价，把“缺口”命名为五千亿美元产业的引擎",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.035,
+          "time_ms": 57120,
+          "reason": "价格落差被命名为五千亿美元产业的引擎，且规模被称已超过正品行业，开场悬念升级为产业级冲击"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "price_ladder_entry",
+          "mechanism": "familiar_product_cost_anchor"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "markup_ladder",
+          "mechanism": "retail_to_resale_escalation"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "mirror_product_intro",
+          "mechanism": "near_identical_copy_intro"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "scale_reveal",
+          "mechanism": "gap_named_as_industry_engine"
+        }
+      ],
+      "required_retention_events": [
+        "familiar_product_anchor",
+        "price_ladder",
+        "mirror_product_contrast",
+        "scale_reveal"
+      ],
+      "original_moves": [
+        "用一双知名球鞋的制造成本（25美元）建立锚点",
+        "展示批发、零售、转售的逐级加价阶梯（30→150→200美元）",
+        "引入仿品工厂的成本与售价对照（同样25美元成本，售价50美元）",
+        "将价格缺口命名为五千亿美元产业的引擎，并称规模已超过正品行业"
+      ],
+      "abstract_move": "用熟悉商品的真实制造成本建立价格锚点 + 展示逐级加价阶梯 + 引入几乎相同成本的替代品售价 + 将价格缺口命名为超越原产业规模的新产业引擎",
+      "replacement_needs": [
+        "一个观众熟悉的商品的真实制造成本",
+        "该商品从制造到最终消费者的逐级加价数据",
+        "替代品（仿品/平替）的成本与售价对照",
+        "替代品产业规模数据，需大到足以形成产业级冲击"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 85
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "price_ladder_then_mirror_product_tease",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 28880,
+        "evidence_refs": [
+          "C0001",
+          "C0010",
+          "C0019"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "scale_reveal",
+      "start_ratio": 0.0381,
+      "end_ratio": 0.0657,
+      "start_sec": 62.2,
+      "end_sec": 107.2,
+      "position_label": "3.8%–6.6%(1:02–1:47)",
+      "purpose": "用产业规模、品类占比与组织化预告确认题材份量，并以“25美元工厂鞋如何变成保真平台上的150美元购买”提出全片核心问题",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题承诺的产业运转图与“拦不住”之谜",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "“不是你会想象的样子”的预告与真实组织化程度之间的落差",
+          "closes_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "走私规模预告与“如何做到”之间的信息缺口",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "category_rank_reveal",
+          "mechanism": "biggest_counterfeit_category"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "sophistication_tease",
+          "mechanism": "industrial_grade_operation_tease"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "central_question",
+          "mechanism": "how_cheap_copy_becomes_pricey_platform_purchase"
+        }
+      ],
+      "required_retention_events": [
+        "scale_reveal",
+        "category_rank",
+        "sophistication_tease",
+        "central_question"
+      ],
+      "original_moves": [
+        "给出产业规模超越正品行业的对照数据（假货五千亿对比正品四千亿）",
+        "确认假货中该品类占比最大",
+        "预告组织化运作（自有工厂、质检、分级、物流）",
+        "预告跨境规模（22个集装箱无人察觉）",
+        "提出核心问题：25美元工厂鞋如何变成保真平台上150美元的购买"
+      ],
+      "abstract_move": "用产业规模对照确认题材份量 + 给出品类占比 + 预告组织化与跨境规模 + 以价格转换提出核心问题",
+      "replacement_needs": [
+        "替代品产业规模超越原产业的对照数据",
+        "该品类在替代品市场中的占比",
+        "组织化运作的预告要素（工厂、质检、物流等）",
+        "跨境流通规模的具体预告",
+        "明确的核心问题句（从低价到高价的转换路径）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP01→FS10、LOOP02→FS05、LOOP03→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "core_thesis_reveal",
+      "start_ratio": 0.0657,
+      "end_ratio": 0.1155,
+      "start_sec": 107.2,
+      "end_sec": 188.5,
+      "position_label": "6.6%–11.6%(1:47–3:08)",
+      "purpose": "先走查合法供应链五步作为基线，再给出全片论题——假货链条镜像合法链条，唯一差别是授权——并以“影子供应链”隐喻命名",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.0972,
+          "time_ms": 158640,
+          "reason": "“合法与非法供应链的唯一差别是授权”以一句话重构观众对假货的全部想象"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "legitimate_chain_walkthrough",
+          "mechanism": "five_step_baseline"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "core_thesis_reveal",
+          "mechanism": "only_difference_is_permission"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "shadow_chain_metaphor",
+          "mechanism": "shadow_supply_chain_naming"
+        }
+      ],
+      "required_retention_events": [
+        "legitimate_chain_walkthrough",
+        "mirror_thesis",
+        "minimal_pair_contrast",
+        "metaphor_naming"
+      ],
+      "original_moves": [
+        "走查合法供应链五步（设计→生产→运输→分销→销售）",
+        "展示假货链条同样五步、使用同样港口",
+        "给出论题：唯一差别是授权",
+        "用影子供应链隐喻命名",
+        "给出鉴定成本规模与后果"
+      ],
+      "abstract_move": "建立合法流程基线 + 展示替代流程完全镜像基线 + 用最小差异句重构观众认知 + 用隐喻命名 + 给出验证成本后果",
+      "replacement_needs": [
+        "合法流程的完整步骤走查",
+        "替代流程与合法流程的逐步对照",
+        "一个能重构认知的最小差异论题句",
+        "一个准确的隐喻或命名",
+        "验证成本规模数据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(88)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "mechanism_walkthrough",
+      "start_ratio": 0.1155,
+      "end_ratio": 0.262,
+      "start_sec": 188.5,
+      "end_sec": 427.4,
+      "position_label": "11.6%–26.2%(3:08–7:07)",
+      "purpose": "按“逆向工程→生产→运输→分销→销售”五站逐站走查影子链条，让观众获得一张完整的运转地图，并以五步回收句封合",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.1498,
+          "time_ms": 244400,
+          "reason": "生产中心被揭示为一座数千家企业、数十万工人的产业城市，小作坊想象被击碎"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "step1_reverse_engineering",
+          "mechanism": "teardown_and_bribed_samples"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "production_hub_reveal",
+          "mechanism": "manufacturing_city_scale"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "grading_system_intro",
+          "mechanism": "tier_system_like_restaurant_rating"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "tier_cost_reveal",
+          "mechanism": "top_and_low_tier_costs"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "step3_shipping",
+          "mechanism": "mislabeled_containers"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "small_parcel_method",
+          "mechanism": "under_threshold_parcels"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "distribution_reveal",
+          "mechanism": "fakes_enter_same_marketplace"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "shadow_chain_recap",
+          "mechanism": "five_step_cycle_recap"
+        }
+      ],
+      "required_retention_events": [
+        "step_by_step_walkthrough",
+        "reverse_engineering_detail",
+        "shipping_methods",
+        "distribution_reveal",
+        "cycle_recap"
+      ],
+      "original_moves": [
+        "第一站：逆向工程取样（贿赂工厂工人获取样品）",
+        "第二站：生产中心揭示（莆田数千家企业、数十万工人）并预告分级",
+        "第三站：两种运输方式（集装箱伪报与小包裹）",
+        "第四站：分销进入鉴定平台",
+        "第五站：买家心态（知假买假与不知情）与资金回流",
+        "用五步回收句封合"
+      ],
+      "abstract_move": "按流程逐站展示替代链条运转 + 在关键站给出规模冲击 + 展示跨境方式 + 展示进入正规渠道的路径 + 展示终端环节 + 用回收句封合",
+      "replacement_needs": [
+        "替代品源头获取方式（逆向工程或其他）",
+        "生产中心的产业规模数据（企业数量、从业人数等）",
+        "跨境流通的具体方式（至少两种）",
+        "进入正规分销渠道的路径",
+        "终端消费者的不同心态与资金流向",
+        "流程回收句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(82)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "inside_machine_detail",
+      "start_ratio": 0.262,
+      "end_ratio": 0.4055,
+      "start_sec": 427.4,
+      "end_sec": 661.5,
+      "position_label": "26.2%–40.6%(7:07–11:01)",
+      "purpose": "兑现“几乎没人谈论的部分”：进入生产中心的昼夜场景、技师背景与三级分级体系，用各层成本售价与菜单类比讲清分级经济学",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.382,
+          "time_ms": 623160,
+          "reason": "顶级仿品能穿透专门设计的鉴定系统，威胁从街边升级到保真平台"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "“几乎没人谈论的部分”预告与内部细节之间的缺口",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "five_step_mirror_walkthrough_recap",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "insider_tease_cta",
+          "mechanism": "inside_machine_tease"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "setting_reveal",
+          "mechanism": "day_night_contrast_scene"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "night_market_reveal",
+          "mechanism": "after_dark_logistics"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "expertise_reveal",
+          "mechanism": "trained_on_real_lines"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "tier_breakdown",
+          "mechanism": "three_tier_inventory"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "tier_pricing_reveal",
+          "mechanism": "mid_and_top_tier_price_points"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "authentication_threat",
+          "mechanism": "god_tier_passes_authentication"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "grading_economics",
+          "mechanism": "margin_at_every_tier"
+        }
+      ],
+      "required_retention_events": [
+        "insider_tease",
+        "midroll_cta",
+        "day_night_scene",
+        "expertise_reveal",
+        "tier_inventory",
+        "margin_per_tier"
+      ],
+      "original_moves": [
+        "发出内部预告并请求订阅",
+        "展示昼夜场景反差（白天空城，夜晚运转）",
+        "揭示技师背景（来自合法产线）",
+        "给出三级分级的成本与售价清单",
+        "定性每层都有巨大毛利",
+        "用菜单类比讲清分级经济学"
+      ],
+      "abstract_move": "兑现深入预告 + 用场景反差建立神秘感 + 揭示专业人员背景 + 用分级成本售价清单展示经济学 + 用类比降低理解门槛",
+      "replacement_needs": [
+        "生产中心内部的场景对照（隐蔽性标志）",
+        "从业人员的专业背景来源",
+        "至少三级分级体系的成本与售价数据",
+        "每层毛利率数据",
+        "一个能类比分级经济学的日常概念"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80);打开的悬念 LOOP04→FS06 跨段;回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "documented_case_reveal",
+      "start_ratio": 0.4055,
+      "end_ratio": 0.5506,
+      "start_sec": 661.5,
+      "end_sec": 898.2,
+      "position_label": "40.6%–55.1%(11:01–14:58)",
+      "purpose": "用有案可查的走私网络案件与小包裹法规漏洞解释跨境流通为何拦不住，并以扣押金额与产业规模的对照量化执法失效",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 83,
+          "position_ratio": 0.4303,
+          "time_ms": 702040,
+          "reason": "联邦起诉书案件的金额与集装箱数量给出全片第一个有案可查的尺度冲击"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "保真承诺与顶级仿品穿透力之间的悖论",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "documented_case_plus_regulatory_loophole",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "inside_machine_detail_with_tier_economics",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "documented_case",
+          "mechanism": "federal_complaint_case"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "concealment_detail",
+          "mechanism": "fictitious_companies_and_mislabeled_manifests"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "sting_reveal",
+          "mechanism": "containers_let_through_on_purpose"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "loophole_reveal",
+          "mechanism": "de_minimis_exemption_explained"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "loophole_exploit_contrast",
+          "mechanism": "ten_thousand_parcels_vs_one_container"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "loophole_closure_news",
+          "mechanism": "loophole_closed_but_containers_remain"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "seizure_math",
+          "mechanism": "seizure_vs_industry_scale"
+        }
+      ],
+      "required_retention_events": [
+        "documented_case",
+        "sting_detail",
+        "loophole_reveal",
+        "loophole_closure_news",
+        "seizure_math"
+      ],
+      "original_moves": [
+        "用财富500强级物流换挡",
+        "给出有案可查的走私网络案件（4.72亿美元与22集装箱）",
+        "展示假公司与储物单元的分销手法",
+        "给出海关放线细节",
+        "解释小包裹法规漏洞（321条款）",
+        "说明漏洞关闭时间（2025年8月）但集装箱方法仍在",
+        "用扣押金额对照产业规模（127M对500B）"
+      ],
+      "abstract_move": "用大公司级别类比升级认知 + 给出有案可查的案件与规模数据 + 展示分销隐蔽手法 + 解释监管漏洞机制 + 说明漏洞修补与替代方法 + 用执法成果对照产业规模量化失效",
+      "replacement_needs": [
+        "一个有公开记录的案件，包含金额与规模数据",
+        "分销环节的隐蔽手法（假公司、储物单元等）",
+        "一个具体的法规漏洞机制",
+        "漏洞修补时间与替代方法仍存在的证据",
+        "执法扣押金额与产业规模的对照数据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(83);打开的悬念 LOOP05→FS08 跨段;回收了前文的悬念 FS02→LOOP03、FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 83
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "stakeholder_cost_mapping",
+      "start_ratio": 0.5506,
+      "end_ratio": 0.7037,
+      "start_sec": 898.2,
+      "end_sec": 1148,
+      "position_label": "55.1%–70.4%(14:58–19:08)",
+      "purpose": "把代价分层映射到品牌损失、鉴定行业、被骗买家与整个市场信任四层，用准确率数学与“做对一切的买家”完成同理重构",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 86,
+          "position_ratio": 0.6141,
+          "time_ms": 1001920,
+          "reason": "99.95%的准确率被换算成“数千双假货被认证为真”，数学祛魅完成"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 84,
+          "position_ratio": 0.6635,
+          "time_ms": 1082360,
+          "reason": "做对了一切的买家仍然收到假货，受害者从抽象品牌变成观众自己"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "platform_paradox",
+          "mechanism": "guaranteed_real_platform"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "brand_loss_quantified",
+          "mechanism": "counterfeit_share_and_lost_revenue"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "authentication_industry",
+          "mechanism": "industry_exists_because_fakes_are_good"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "rejection_numbers",
+          "mechanism": "rejections_and_accuracy_rate"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "uncomfortable_math",
+          "mechanism": "tiny_error_rate_times_huge_volume"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "residual_gap_reveal",
+          "mechanism": "almost_all_vs_all_gap"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "victim_reframe",
+          "mechanism": "buyer_did_everything_right"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "trust_collapse_risk",
+          "mechanism": "resale_market_depends_on_trust"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "cost_summary",
+          "mechanism": "cost_runs_every_direction"
+        }
+      ],
+      "required_retention_events": [
+        "platform_paradox",
+        "brand_loss_numbers",
+        "accuracy_math",
+        "buyer_reframe",
+        "trust_collapse",
+        "cost_summary"
+      ],
+      "original_moves": [
+        "提出保真平台悖论",
+        "量化品牌损失（10%销量与数十亿美元）",
+        "揭示鉴定行业存在的前提（假货威胁）",
+        "用准确率数学制造不安（99.95%意味着数千双假货被认证）",
+        "重构受害者：做对一切的买家仍被骗",
+        "展示信任收缩机制",
+        "汇总代价四向流动"
+      ],
+      "abstract_move": "提出正规渠道悖论 + 量化各方损失 + 揭示衍生产业存在前提 + 用准确率数学祛魅 + 将受害者从抽象转为观众自己 + 展示信任收缩 + 汇总多方代价",
+      "replacement_needs": [
+        "正规渠道或认证平台的悖论",
+        "品牌或原产业的损失量化数据",
+        "衍生验证产业的存在前提",
+        "验证准确率数据及其反向换算（误判数量）",
+        "终端消费者尽责仍受损的场景重构"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(86)、PK07(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 86
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "enforcement_math_check",
+      "start_ratio": 0.7037,
+      "end_ratio": 0.8143,
+      "start_sec": 1148,
+      "end_sec": 1328.4,
+      "position_label": "70.4%–81.4%(19:08–22:08)",
+      "purpose": "呈现品牌的法律反击与去标仍侵权的判例，再用判决金额、扣押规模与产业规模的数学对照说明执法为何失效",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.7512,
+          "time_ms": 1225480,
+          "reason": "去标仍侵权的判例把商标保护边界扩展到设计本身，法律后果升级"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 82,
+          "position_ratio": 0.7853,
+          "time_ms": 1281160,
+          "reason": "“执法是水桶，问题是大海”用具象比喻给执法失效一锤定音"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "法律反击的亮相对照产业规模之间的悬念",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "multi_layer_cost_mapping",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE43",
+          "event_type": "legal_response",
+          "mechanism": "lawsuits_and_platform_liability"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "verdict_reveal",
+          "mechanism": "major_verdict_and_trade_dress_precedent"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "verdict_vs_scale",
+          "mechanism": "headline_vs_industry_math"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "bucket_ocean_metaphor",
+          "mechanism": "enforcement_bucket_problem_ocean"
+        }
+      ],
+      "required_retention_events": [
+        "legal_response",
+        "precedent_reveal",
+        "verdict_vs_scale",
+        "bucket_ocean_metaphor",
+        "capacity_unchanged"
+      ],
+      "original_moves": [
+        "展示品牌诉讼与平台担责案例",
+        "给出千万级判决与去标仍侵权先例（trade dress）",
+        "用判决金额对照产业规模（千万对五千亿）",
+        "用水桶与大海比喻执法失效",
+        "给出结论：产能仍在原地"
+      ],
+      "abstract_move": "展示法律反击与判例边界扩展 + 用判决金额对照产业规模 + 用具象比喻给执法失效定性 + 给出产能不减的结论",
+      "replacement_needs": [
+        "品牌或平台的法律反击案例与判决金额",
+        "一个扩展法律保护边界的判例",
+        "判决金额与产业规模的对照数据",
+        "一个能类比执法无力的具象比喻",
+        "产能或供给能力不减的证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(78)、PK09(82);打开的悬念 LOOP06→FS09 跨段;回收了前文的悬念 FS06→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 78
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "causal_inversion_reveal",
+      "start_ratio": 0.8143,
+      "end_ratio": 0.9559,
+      "start_sec": 1328.4,
+      "end_sec": 1559.4,
+      "position_label": "81.4%–95.6%(22:08–25:59)",
+      "purpose": "用“谁训练了这些工人”的自问引出全片最大反转：产能与技能正是受害品牌代工体系留下的，并以引述悖论与“你在对抗自己培养的劳动力”完成归因重构",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 92,
+          "position_ratio": 0.8209,
+          "time_ms": 1339200,
+          "reason": "“训练这些工人的正是此刻蒙受损失的公司”——全片最大归因反转"
+        },
+        {
+          "peak_id": "PK11",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.9023,
+          "time_ms": 1471960,
+          "reason": "“鞋是原创的，假的只是品牌”用引述悖论颠覆真假定义，同手同机同技能完成证据闭环"
+        },
+        {
+          "peak_id": "PK12",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9522,
+          "time_ms": 1553480,
+          "reason": "“品牌不只是没能阻止假货，而是亲手建了它运转的工厂地基”把反转钉死"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "产能起源的自问与“答案即受害公司”之间的反转",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "enforcement_asymmetry_math",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE47",
+          "event_type": "twist_tease",
+          "mechanism": "unexpected_turn_origin_question"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "culpability_reveal",
+          "mechanism": "same_companies_trained_the_workers"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "origin_history",
+          "mechanism": "contract_hub_for_real_brands"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "offshoring_shift",
+          "mechanism": "production_moved_infrastructure_stayed"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "ecosystem_pivot",
+          "mechanism": "ecosystem_did_not_disappear_it_pivoted"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "sourced_paradox_quote",
+          "mechanism": "shoes_original_brands_fake"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "enforcement_reframe",
+          "mechanism": "fighting_workforce_you_created"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "inversion_summary",
+          "mechanism": "brands_built_factory_floor"
+        }
+      ],
+      "required_retention_events": [
+        "twist_tease",
+        "culpability_reveal",
+        "origin_history",
+        "offshoring_shift",
+        "ecosystem_pivot",
+        "sourced_paradox_quote",
+        "inversion_summary"
+      ],
+      "original_moves": [
+        "用转向预告与自问换挡（谁训练了这些工人）",
+        "给出答案：受害公司自己",
+        "展示代工史与产线外迁（越南、印尼）",
+        "揭示基础设施与技能留在原地",
+        "定性生态转向而非消失",
+        "引述有来源的悖论（鞋是原创的，假的只是品牌）",
+        "给出归因反转总结句（对抗自己培养的劳动力、品牌亲手建了工厂地基）"
+      ],
+      "abstract_move": "用自问引出归因反转 + 答案直指受害方自己 + 展示历史决策与后果 + 揭示能力留存而用途转向 + 用引述悖论颠覆定义 + 用归因总结句完成认知重构",
+      "replacement_needs": [
+        "一个能引向归因反转的自问",
+        "受害方的历史决策（外包、外迁等）",
+        "基础设施或能力留存的证据",
+        "能力转向而非消失的定性",
+        "一个有来源的悖论引述",
+        "归因反转的总结句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(92)、PK11(88)、PK12(90);打开的悬念 LOOP07→FS10 跨段;回收了前文的悬念 FS08→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 92
+        },
+        {
+          "peak_id": "PK11",
+          "strength": 88
+        },
+        {
+          "peak_id": "PK12",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "callback_closure",
+      "start_ratio": 0.9559,
+      "end_ratio": 1,
+      "start_sec": 1559.4,
+      "end_sec": 1631.4,
+      "position_label": "95.6%–100%(25:59–27:11)",
+      "purpose": "用“假货生意就是这样赚钱的”直接回收标题问题，以归因清单与三因并列压缩全片，留下结构性反问后发出与内容一致的互动号召",
+      "peaks": [
+        {
+          "peak_id": "PK13",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.987,
+          "time_ms": 1610200,
+          "reason": "“动机、基建、需求在第一双假鞋出厂前就已齐备”以三因并列完成全片世界观收束"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "从单一产业向所有高溢价产业的结构性反问",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "compressed_recap_with_causal_attribution",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "causal_inversion_answer",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE55",
+          "event_type": "title_recap",
+          "mechanism": "so_thats_how_they_make_money"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "reflective_open_question",
+          "mechanism": "could_it_avoid_own_shadow"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "three_cause_synthesis",
+          "mechanism": "incentive_infrastructure_demand"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "engagement_cta",
+          "mechanism": "comment_subscribe_next_pattern"
+        }
+      ],
+      "required_retention_events": [
+        "title_recap",
+        "compressed_answer",
+        "enforcement_afterthought",
+        "reflective_open_question",
+        "three_cause_synthesis",
+        "engagement_cta"
+      ],
+      "original_moves": [
+        "用标题问题直接回收（假货生意就是这样赚钱的）",
+        "压缩复述缺口建成产业",
+        "给出四方各就各位的归因清单（品牌设计、工厂训练、物流承运、互联网建市场）",
+        "回声扣押与判决只是零头",
+        "留下结构性开放反问（更难的问题）",
+        "用三因并列收束（动机、基建、需求在第一双假鞋出厂前就已齐备）",
+        "发出评论与订阅号召"
+      ],
+      "abstract_move": "直接回收核心问题 + 压缩复述全片逻辑 + 给出多方归因清单 + 回声执法失效 + 留下更难反问 + 用多因并列完成世界观收束 + 发出互动号召",
+      "replacement_needs": [
+        "标题问题的直接回收句",
+        "全片核心逻辑的压缩复述",
+        "多方各自角色的归因清单（至少三方）",
+        "执法成果只是零头的回声",
+        "一个结构性的开放反问",
+        "至少三因并列的收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK13(85);打开的悬念 LOOP08(不闭合) 跨段;回收了前文的悬念 FS02→LOOP01、FS09→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK13",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

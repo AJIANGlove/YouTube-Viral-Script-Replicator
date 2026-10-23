@@ -1,0 +1,1461 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:55:07.341Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "immersive_anomaly_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0599,
+      "start_sec": 0,
+      "end_sec": 92.8,
+      "position_label": "0%–6%(0:00–1:33)",
+      "purpose": "用观众自以为熟悉的街边场景建立“我懂这是什么”的错误直觉，再用一笔可量化的小额交易案例给出首次利率冲击，完成视角翻转并预告隐藏故事",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.0353,
+          "time_ms": 54680,
+          "reason": "“300% 年化且完全合法”把开场微型案例推成首个数字爆点，标题的“实际上”获得硬证据"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.0519,
+          "time_ms": 80440,
+          "reason": "“货架上的不是产品，你才是”完成全片第一次视角翻转，观众从旁观者变成局中人"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "表象零售与真实盈利机器之间的身份落差",
+          "closes_in": "FS13"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "“ merchandise 会讲故事”的预告与故事内容之间的悬念",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "scene_entry",
+          "mechanism": "immediate_immersion"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "perspective_flip",
+          "mechanism": "industry_guided_gaze"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "mini_case_payoff",
+          "mechanism": "loan_not_sale"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "legal_rate_shock",
+          "mechanism": "state_law_monthly_rate"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "metaphor_reframe",
+          "mechanism": "rent_on_own_ring"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "annualized_math_payoff",
+          "mechanism": "three_hundred_pct_apr"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "scale_reveal",
+          "mechanism": "national_footprint"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "revenue_source_reframe",
+          "mechanism": "not_guitar_sales"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "product_redefinition",
+          "mechanism": "you_are_the_product"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "hidden_story_tease",
+          "mechanism": "merchandise_story"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_scene_entry",
+        "mini_case_payoff",
+        "annualized_math_payoff",
+        "scale_reveal",
+        "product_redefinition",
+        "hidden_story_tease"
+      ],
+      "original_moves": [
+        "用第二人称带观众走进街边旧货店，让观众以为自己懂这是什么",
+        "给出一笔具体的金戒指典当案例：$200 借款，月息 25%",
+        "把月费滚动成年化数字：一年 $600，等于 300% APR",
+        "抛出行业规模数字：3855 家店，45 亿美元年营收",
+        "用'货架上的不是产品，你才是'翻转观众视角",
+        "预告货架背后有隐藏故事"
+      ],
+      "abstract_move": "用观众认为日常的场景建立错误安全感 + 用一笔小额案例完成首次费用换算冲击 + 用规模数字证明这不是个例 + 用视角翻转句把观众从旁观者变成局中人 + 预告表象之下有隐藏机制",
+      "replacement_needs": [
+        "一个观众自以为熟悉的日常场景或业态",
+        "一笔可量化的小额交易案例，带可换算的费用结构",
+        "一个证明规模的行业数字（门店数、营收、覆盖范围）",
+        "一个完成视角翻转的判断句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(85)、PK02(88);打开的悬念 LOOP01→FS13、LOOP02→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 88
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_scene_immersion_with_industry_perspective_flip",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 26040,
+        "evidence_refs": [
+          "C0001",
+          "C0013",
+          "C0016"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "business_redefinition",
+      "start_ratio": 0.0599,
+      "end_ratio": 0.1404,
+      "start_sec": 92.8,
+      "end_sec": 217.4,
+      "position_label": "6%–14%(1:33–3:37)",
+      "purpose": "把行业从表面零售重新定义为抵押放贷机构，讲清零审核、双赢结构与理想客户画像",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 86,
+          "position_ratio": 0.0599,
+          "time_ms": 92760,
+          "reason": "“典当行是银行，仅此而已”用极短判断句完成行业身份重定义"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.1044,
+          "time_ms": 161720,
+          "reason": "还钱赚利息、不还赚货的双赢分支首次揭示机器无输面"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "redefinition_question",
+          "mechanism": "what_is_it_really"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "redefinition_payoff",
+          "mechanism": "it_is_a_bank"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "analogy_beat",
+          "mechanism": "payday_lender_hostage"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "differentiation_setup",
+          "mechanism": "unlike_any_lending"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "no_underwriting_reveal",
+          "mechanism": "collateral_only_underwriting"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "win_either_way_reveal",
+          "mechanism": "heads_i_win_tails_i_win"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "loan_to_value_math",
+          "mechanism": "lend_fraction_of_resale"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "ideal_customer_reveal",
+          "mechanism": "rolling_loan_profile"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "attention_directive",
+          "mechanism": "pay_attention"
+        }
+      ],
+      "required_retention_events": [
+        "redefinition_payoff",
+        "analogy_beat",
+        "no_underwriting_reveal",
+        "win_either_way_reveal",
+        "loan_to_value_math",
+        "ideal_customer_reveal"
+      ],
+      "original_moves": [
+        "提出'这是什么'的追问",
+        "给出一句话重定义：'典当行是银行，仅此而已'",
+        "用发薪日贷款做生活化类比",
+        "讲清零审核机制：不查收入信用，抵押物即风控",
+        "说明放款折扣数学：按转售价打折放款",
+        "揭示双赢分支：还钱赚利息，不还赚货",
+        "描绘理想客户画像并给出注意力指令"
+      ],
+      "abstract_move": "用极短判断句完成行业身份重定义 + 用生活化类比降低理解门槛 + 讲清风控机制的零成本本质 + 用数学展示放款折扣 + 揭示无论客户履约与否经营方都盈利的结构 + 描绘目标客户画像",
+      "replacement_needs": [
+        "一个可类比的生活化金融产品",
+        "一个零审核或近零成本的风控机制",
+        "一个支撑折扣或定价的数学关系",
+        "一个证明双赢或无输面的分支逻辑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(86)、PK04(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 86
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "regulatory_gap_reveal",
+      "start_ratio": 0.1404,
+      "end_ratio": 0.2514,
+      "start_sec": 217.4,
+      "end_sec": 389.3,
+      "position_label": "14%–25.1%(3:37–6:29)",
+      "purpose": "区分两类交易通道，展示申报体系纸面严密与执行时差的落差，把悬念锁定在审查空窗期",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.1925,
+          "time_ms": 298120,
+          "reason": "禁止规避的专项立法反向证明规避曾普遍存在，纸面监管被戳破"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "申报体系纸面严密与批处理时差之间的漏洞",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "complication_tease",
+          "mechanism": "more_than_one_way"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "holding_window_rules",
+          "mechanism": "redemption_window"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "police_reporting_system",
+          "mechanism": "daily_electronic_reporting"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "channel_split",
+          "mechanism": "buy_transaction"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "regulation_divergence",
+          "mechanism": "looser_buy_rules"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "workaround_law_reveal",
+          "mechanism": "structuring_ban_backfire"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "theory_vs_practice",
+          "mechanism": "airtight_on_paper"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "batch_review_reveal",
+          "mechanism": "days_or_weeks_lag"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "timing_gap_thesis",
+          "mechanism": "gap_makes_it_work"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "gap_question",
+          "mechanism": "what_happens_in_gap"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "mid_roll_cta",
+          "mechanism": "subscribe_numbers_wild"
+        }
+      ],
+      "required_retention_events": [
+        "complication_tease",
+        "channel_split",
+        "workaround_law_reveal",
+        "batch_review_reveal",
+        "timing_gap_thesis",
+        "gap_question",
+        "mid_roll_cta"
+      ],
+      "original_moves": [
+        "区分两种进店方式：典当与买断",
+        "说明持有期与警方申报规则",
+        "指出买断通道的规则更松",
+        "用华盛顿州禁止规避的专项立法反向证明规避曾普遍存在",
+        "对比纸面严密与批量审查的现实落差",
+        "锁定空窗期让一切成立的论点",
+        "抛出空窗期之问并要求订阅换挡"
+      ],
+      "abstract_move": "区分两类交易通道并说明规则差异 + 用禁止规避的立法反向证明漏洞真实存在 + 对比纸面监管与执行时差的落差 + 锁定监管空窗期为悬念核心",
+      "replacement_needs": [
+        "两类交易通道或业务类型，规则松紧不同",
+        "一个禁止规避或堵漏的专项立法，反向证明漏洞曾存在",
+        "一个批量审查或执行时差的现实机制",
+        "一个监管空窗期或审查盲区"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(78);打开的悬念 LOOP04→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "interest_rate_reality",
+      "start_ratio": 0.2514,
+      "end_ratio": 0.314,
+      "start_sec": 389.3,
+      "end_sec": 486.2,
+      "position_label": "25.1%–31.4%(6:29–8:06)",
+      "purpose": "把费用从话术口径换算为真实年化成本，用多档对照揭示合法上限的掠夺性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "predatory_math_turn",
+          "mechanism": "price_tag_turn"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "state_cap_comparison",
+          "mechanism": "three_state_ladder"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "legality_emphasis",
+          "mechanism": "all_of_it_legal"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "framing_expose",
+          "mechanism": "monthly_fee_not_apr"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "annualization_math",
+          "mechanism": "five_pct_becomes_sixty"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "desperation_blindspot",
+          "mechanism": "no_math_in_desperation"
+        }
+      ],
+      "required_retention_events": [
+        "predatory_math_turn",
+        "state_cap_comparison",
+        "legality_emphasis",
+        "framing_expose",
+        "annualization_math",
+        "desperation_blindspot"
+      ],
+      "original_moves": [
+        "点明利率才是价格标签",
+        "给出 40 州月息上限的背景",
+        "列举伊利诺伊 3%、纽约 4%、佐治亚 25% 的阶梯对照",
+        "强调全部合法",
+        "揭示'月费'话术",
+        "用 5% → 60%、15% → 180% 的年化换算完成冲击",
+        "说明绝望者不算账的心理"
+      ],
+      "abstract_move": "把费用从话术口径换算为真实成本 + 用多档对照展示全区间费率 + 用年化换算完成认知冲击 + 说明目标群体不计算的心理",
+      "replacement_needs": [
+        "一个法定上限或行业标准",
+        "多档费率对照，覆盖低中高区间",
+        "一个换算公式，把话术口径转为真实成本",
+        "一个解释目标群体不计算的心理机制"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "win_win_machine_reveal",
+      "start_ratio": 0.314,
+      "end_ratio": 0.3862,
+      "start_sec": 486.2,
+      "end_sec": 598,
+      "position_label": "31.4%–38.6%(8:06–9:58)",
+      "purpose": "用利润率结构与公开财报证明经营方无论客户履约与否都盈利，并把主业锁定为利息而非零售",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 86,
+          "position_ratio": 0.3477,
+          "time_ms": 538440,
+          "reason": "上市公司财报对照：利息 5.05 亿且增 16%，货架被证实为副业"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "machine_turn",
+          "mechanism": "closer_to_machine"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "interest_margin_reveal",
+          "mechanism": "eightyfive_ninetyfive_margin"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "default_path_reveal",
+          "mechanism": "sell_two_three_x"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "no_lose_conclusion",
+          "mechanism": "shop_always_wins"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "redemption_rate_reveal",
+          "mechanism": "eightyfive_pct_redeem"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "public_filings_reveal",
+          "mechanism": "segment_financials"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "interest_line_scale",
+          "mechanism": "half_billion_interest"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "profit_mix_reveal",
+          "mechanism": "profit_mix_inversion"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "side_hustle_line",
+          "mechanism": "shelves_as_side_hustle"
+        }
+      ],
+      "required_retention_events": [
+        "machine_turn",
+        "interest_margin_reveal",
+        "default_path_reveal",
+        "no_lose_conclusion",
+        "redemption_rate_reveal",
+        "public_filings_reveal",
+        "profit_mix_reveal",
+        "side_hustle_line"
+      ],
+      "original_moves": [
+        "转向机器化视角",
+        "给出利息利润率 85-95% 的数字",
+        "给出违约转售 2-3 倍利润率的数字",
+        "得出'无输面'结论",
+        "用 85% 赎回率推导",
+        "用上市公司财报对照",
+        "指出利息 5.05 亿且增 16%，占 37% 营收但占 64% 毛利",
+        "收束为'货架是副业'的判断"
+      ],
+      "abstract_move": "用利润率结构证明履约与违约都盈利 + 用赎回率推导机器无输面 + 用公开财报对照锁定主业为利息而非零售",
+      "replacement_needs": [
+        "履约与违约两个分支的利润率数据",
+        "一个赎回率或复购率推导",
+        "一个公开财报或行业报告，支撑营收结构对照",
+        "一个'副业'判断的收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(86)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "melt_pipeline_reveal",
+      "start_ratio": 0.3862,
+      "end_ratio": 0.4703,
+      "start_sec": 598,
+      "end_sec": 728.3,
+      "position_label": "38.6%–47%(9:58–12:08)",
+      "purpose": "回答遗留物去向：贵金属不进货架而进熔化管道，以折扣收购与精炼流程完成不可追溯揭示",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 84,
+          "position_ratio": 0.4559,
+          "time_ms": 705960,
+          "reason": "熔化即消失：无编号、无来历、无法追溯，管道被揭示为证据终点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "利息是主业之后遗留物品去向不明",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE46",
+          "event_type": "leftover_question",
+          "mechanism": "unredeemed_goods"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "gold_share_reveal",
+          "mechanism": "mostly_gold"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "pipeline_reveal",
+          "mechanism": "gold_to_pipeline"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "melt_value_discount",
+          "mechanism": "fifty_pct_of_melt"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "urgency_monopoly",
+          "mechanism": "no_comparison_shopping"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "refiner_process",
+          "mechanism": "fire_assay"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "untraceability_reveal",
+          "mechanism": "melted_is_gone"
+        }
+      ],
+      "required_retention_events": [
+        "leftover_question",
+        "gold_share_reveal",
+        "pipeline_reveal",
+        "melt_value_discount",
+        "urgency_monopoly",
+        "refiner_process",
+        "untraceability_reveal"
+      ],
+      "original_moves": [
+        "提出遗留物去向之问",
+        "给出黄金占比数字",
+        "指出黄金不进货架而进管道",
+        "用熔化值折扣对照说明急迫性垄断",
+        "描述精炼炉流程",
+        "得出熔化即消失、无编号无来历、无法追溯的结论"
+      ],
+      "abstract_move": "回答遗留物去向 + 给出核心品类占比 + 揭示核心品类不进零售而进不可逆管道 + 用折扣对照说明急迫性垄断 + 描述管道流程 + 得出不可追溯结论",
+      "replacement_needs": [
+        "一个核心品类的占比数据",
+        "一个不可逆的处理管道或流程",
+        "一个折扣对照，支撑急迫性垄断",
+        "一个证明不可追溯的机制描述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(84);打开的悬念 LOOP03→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "case_study_escalation",
+      "start_ratio": 0.4703,
+      "end_ratio": 0.5348,
+      "start_sec": 728.3,
+      "end_sec": 828.2,
+      "position_label": "47%–53.5%(12:08–13:48)",
+      "purpose": "用具名被盗熔毁案把空窗期与熔化管道落成具体损失，并以研究预告升级为系统命题",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 88,
+          "position_ratio": 0.5056,
+          "time_ms": 782880,
+          "reason": "通知到达前收藏品已被熔毁，$50,000 变成几百美元废料，不可逆损失具象化"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "mechanism_answer_melt_pipeline",
+          "opened_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "named_case_demonstration",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE53",
+          "event_type": "named_case_entry",
+          "mechanism": "walters_coins"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "tv_connection",
+          "mechanism": "famous_shop_link"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "collection_details",
+          "mechanism": "numismatic_value"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "notification_lag_payoff",
+          "mechanism": "melted_before_flag"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "gap_thesis_payoff",
+          "mechanism": "pipeline_runs_through_gap"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "research_tease",
+          "mechanism": "peer_reviewed_theft_link"
+        }
+      ],
+      "required_retention_events": [
+        "named_case_entry",
+        "tv_connection",
+        "collection_details",
+        "notification_lag_payoff",
+        "gap_thesis_payoff",
+        "research_tease"
+      ],
+      "original_moves": [
+        "给出具名被盗案例：钱币收藏",
+        "说明三次交易经手",
+        "关联知名店铺或电视节目",
+        "指出通知到达前收藏品已被熔毁",
+        "用 $50,000 变成几百美元废料的反差完成价值毁灭具象化",
+        "点题'空窗期是管道通道'",
+        "预告研究升级为系统命题"
+      ],
+      "abstract_move": "用具名受害者案例把空窗期与不可逆管道落成具体损失 + 用多次交易与知名店铺增强真实性 + 用通知与毁灭的时间差完成不可逆具象化 + 用价值毁灭反差完成情绪冲击 + 点题空窗期为管道通道 + 预告升级为系统命题",
+      "replacement_needs": [
+        "一个具名受害者案例，带偷窃或丢失细节",
+        "多次交易或知名店铺，增强真实性",
+        "通知与毁灭的时间差",
+        "价值毁灭的对比数字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(88);回收了前文的悬念 FS06→LOOP03、FS03→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "customer_debt_trap",
+      "start_ratio": 0.5348,
+      "end_ratio": 0.6631,
+      "start_sec": 828.2,
+      "end_sec": 1026.8,
+      "position_label": "53.5%–66.3%(13:48–17:07)",
+      "purpose": "纠正顾客刻板印象，用第二人称陷阱演练展示续借循环，反驳行业叙事并升级为犯罪预告",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.6412,
+          "time_ms": 992960,
+          "reason": "85% 赎回率被重读为“陷阱有效”，行业最爱引用的指标被翻转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "销赃者刻板印象与 underbanked 现实之间的反差",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "升级预告制造的罪名悬念",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "profile_answer",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE59",
+          "event_type": "relevance_pivot",
+          "mechanism": "why_it_matters_to_you"
+        },
+        {
+          "event_id": "RE60",
+          "event_type": "customer_question",
+          "mechanism": "who_walks_in"
+        },
+        {
+          "event_id": "RE61",
+          "event_type": "stereotype_correction",
+          "mechanism": "not_stolen_laptop_guy"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "underbanked_profile",
+          "mechanism": "system_doesnt_want"
+        },
+        {
+          "event_id": "RE63",
+          "event_type": "cycle_start",
+          "mechanism": "you_need_300"
+        },
+        {
+          "event_id": "RE64",
+          "event_type": "rollover_math",
+          "mechanism": "owe_360"
+        },
+        {
+          "event_id": "RE65",
+          "event_type": "perpetual_month_trap",
+          "mechanism": "another_sixty"
+        },
+        {
+          "event_id": "RE66",
+          "event_type": "sunk_time_trap",
+          "mechanism": "six_months_360"
+        },
+        {
+          "event_id": "RE67",
+          "event_type": "annual_trap_math",
+          "mechanism": "year_720"
+        },
+        {
+          "event_id": "RE68",
+          "event_type": "shop_perspective_flip",
+          "mechanism": "shops_view"
+        },
+        {
+          "event_id": "RE69",
+          "event_type": "walkaway_margin",
+          "mechanism": "sell_900_make_600"
+        },
+        {
+          "event_id": "RE70",
+          "event_type": "industry_framing",
+          "mechanism": "serving_underbanked"
+        },
+        {
+          "event_id": "RE71",
+          "event_type": "trap_proof",
+          "mechanism": "proof_trap_works"
+        },
+        {
+          "event_id": "RE72",
+          "event_type": "survival_explanation",
+          "mechanism": "customers_cant_leave"
+        },
+        {
+          "event_id": "RE73",
+          "event_type": "escalation_cta",
+          "mechanism": "predatory_to_criminal"
+        }
+      ],
+      "required_retention_events": [
+        "customer_question",
+        "stereotype_correction",
+        "underbanked_profile",
+        "cycle_start",
+        "annual_trap_math",
+        "industry_framing",
+        "trap_proof",
+        "escalation_cta"
+      ],
+      "original_moves": [
+        "用'与你何干'完成关联转向",
+        "提出'谁走进来'之问",
+        "纠正刻板印象：不是瘾君子",
+        "给出真实画像：被银行拒之门外的人",
+        "用 $300 陷阱演练展示续借循环",
+        "从店主视角复盘陷阱",
+        "反驳行业话术",
+        "把 85% 赎回率重读为'陷阱有效'",
+        "预告从掠夺升级到犯罪"
+      ],
+      "abstract_move": "纠正目标客户的刻板印象 + 用第二人称陷阱演练展示续借循环 + 从经营方视角复盘陷阱有效性 + 反驳行业叙事 + 把行业最爱引用的指标翻转为陷阱证据 + 预告升级为犯罪",
+      "replacement_needs": [
+        "一个需纠正的刻板印象",
+        "一个真实客户画像",
+        "一笔小额借款的陷阱演练，带续借循环",
+        "一个行业最爱引用的指标，可重读为陷阱证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(82);打开的悬念 LOOP06→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "criminal_case_escalation",
+      "start_ratio": 0.6631,
+      "end_ratio": 0.7349,
+      "start_sec": 1026.8,
+      "end_sec": 1137.9,
+      "position_label": "66.3%–73.5%(17:07–18:58)",
+      "purpose": "用联邦级案件展示销赃管道的完整运作：零售盗窃、低价收货、平台转售、规模与罪名",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.6962,
+          "time_ms": 1078000,
+          "reason": "四年 1900 万美元赃物，并被告知赃物来自“你本月可能购物的店”，规模冲击个人化"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "federal_case_reveal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE74",
+          "event_type": "legality_boundary",
+          "mechanism": "inside_the_law"
+        },
+        {
+          "event_id": "RE75",
+          "event_type": "federal_case_entry",
+          "mechanism": "federal_indictment"
+        },
+        {
+          "event_id": "RE76",
+          "event_type": "booster_pipeline",
+          "mechanism": "retail_theft_chain"
+        },
+        {
+          "event_id": "RE77",
+          "event_type": "resale_arbitrage",
+          "mechanism": "pennies_to_retail"
+        },
+        {
+          "event_id": "RE78",
+          "event_type": "scale_of_fence",
+          "mechanism": "nineteen_million"
+        },
+        {
+          "event_id": "RE79",
+          "event_type": "federal_charges",
+          "mechanism": "conspiracy_money_laundering"
+        },
+        {
+          "event_id": "RE80",
+          "event_type": "not_isolated_turn",
+          "mechanism": "stops_being_funny"
+        },
+        {
+          "event_id": "RE81",
+          "event_type": "fence_typology",
+          "mechanism": "level_one_fence"
+        }
+      ],
+      "required_retention_events": [
+        "legality_boundary",
+        "federal_case_entry",
+        "booster_pipeline",
+        "resale_arbitrage",
+        "scale_of_fence",
+        "federal_charges",
+        "not_isolated_turn",
+        "fence_typology"
+      ],
+      "original_moves": [
+        "划出法律界线",
+        "给出联邦起诉案例",
+        "说明三店布局",
+        "描述零售盗窃链行话",
+        "说明低价收货电商转售套利",
+        "给出 $19M 规模与四年时间跨度",
+        "给出联邦罪名",
+        "用'不再好笑'收束语气",
+        "定性为一级销赃者"
+      ],
+      "abstract_move": "用联邦级案件把掠夺升级为犯罪 + 展示多点布局 + 描述完整盗窃链与转售套利 + 用规模与时间跨度完成冲击 + 给出罪名与执法介入 + 用语气收束完成定性",
+      "replacement_needs": [
+        "一个联邦级或跨区域案件",
+        "多点布局或网络结构",
+        "完整盗窃链或转售套利描述",
+        "规模与时间跨度数字",
+        "罪名与执法介入"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85);回收了前文的悬念 FS08→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "pattern_and_research_setup",
+      "start_ratio": 0.7349,
+      "end_ratio": 0.8163,
+      "start_sec": 1137.9,
+      "end_sec": 1264,
+      "position_label": "73.5%–81.6%(18:58–21:04)",
+      "purpose": "说明模式为何天然为销赃创造条件，回顾防线补丁并回环开篇案件，以行业辩护与研究者登场形成对垒",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "行业叙事与研究证据之间的对垒",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE82",
+          "event_type": "model_creates_conditions",
+          "mechanism": "conditions_by_design"
+        },
+        {
+          "event_id": "RE83",
+          "event_type": "recovery_burden",
+          "mechanism": "victim_must_find"
+        },
+        {
+          "event_id": "RE84",
+          "event_type": "holding_period_patchwork",
+          "mechanism": "thirty_to_120_days"
+        },
+        {
+          "event_id": "RE85",
+          "event_type": "case_callback",
+          "mechanism": "gold_in_furnace"
+        },
+        {
+          "event_id": "RE86",
+          "event_type": "systemic_claim",
+          "mechanism": "not_individual_bad_choices"
+        },
+        {
+          "event_id": "RE87",
+          "event_type": "industry_version",
+          "mechanism": "industry_self_defense"
+        },
+        {
+          "event_id": "RE88",
+          "event_type": "researcher_credibility",
+          "mechanism": "journal_credentials"
+        }
+      ],
+      "required_retention_events": [
+        "model_creates_conditions",
+        "recovery_burden",
+        "holding_period_patchwork",
+        "case_callback",
+        "systemic_claim",
+        "industry_version",
+        "researcher_credibility"
+      ],
+      "original_moves": [
+        "限定范围为模式而非个别坏店",
+        "说明模式为何天然为销赃创造条件",
+        "给出对窃贼的价值主张",
+        "说明受害者自证负担",
+        "列举各州持有期等防线补丁",
+        "回环开篇案件",
+        "提出不止个别坏店的系统命题",
+        "陈述行业版本",
+        "以研究者登场形成对垒"
+      ],
+      "abstract_move": "限定范围为模式而非个别 + 说明模式为何天然创造条件 + 给出对不法者的价值主张 + 说明受害者自证负担 + 列举防线补丁 + 回环开篇案件 + 提出系统命题 + 以行业辩护与研究者登场形成对垒",
+      "replacement_needs": [
+        "模式为何天然创造条件的机制说明",
+        "对不法者的价值主张",
+        "受害者自证负担或举证难度",
+        "防线补丁清单（持有期、审查、申报等）",
+        "研究者资历或研究背景"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "causal_evidence_reveal",
+      "start_ratio": 0.8163,
+      "end_ratio": 0.8917,
+      "start_sec": 1264,
+      "end_sec": 1380.8,
+      "position_label": "81.6%–89.2%(21:04–23:01)",
+      "purpose": "用大样本数据、类别隔离对照与自然实验把“密度-犯罪”关系推进到机制性因果，并命名反馈回路",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "information_reveal",
+          "strength": 87,
+          "position_ratio": 0.8194,
+          "time_ms": 1268760,
+          "reason": "每多一店县增 6 起、州增 36 起财产盗窃，相关性首次量化"
+        },
+        {
+          "peak_id": "PK12",
+          "peak_type": "information_reveal",
+          "strength": 88,
+          "position_ratio": 0.8373,
+          "time_ms": 1296600,
+          "reason": "仅财产犯罪上升、暴力与盗车不动，对照隔离把相关压缩到机制类别"
+        },
+        {
+          "peak_id": "PK13",
+          "peak_type": "worldview_shift",
+          "strength": 92,
+          "position_ratio": 0.8836,
+          "time_ms": 1368200,
+          "reason": "金价自然实验+机械逻辑链+“改变了让犯罪值得做的数学”，全片最大因果重构并命名反馈回路"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "peer_reviewed_causal_rebuttal",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE89",
+          "event_type": "dataset_scope",
+          "mechanism": "2200_counties_50_states"
+        },
+        {
+          "event_id": "RE90",
+          "event_type": "per_shop_finding",
+          "mechanism": "six_more_thefts"
+        },
+        {
+          "event_id": "RE91",
+          "event_type": "density_finding",
+          "mechanism": "ten_pct_density"
+        },
+        {
+          "event_id": "RE92",
+          "event_type": "control_isolation",
+          "mechanism": "only_property_theft"
+        },
+        {
+          "event_id": "RE93",
+          "event_type": "natural_experiment",
+          "mechanism": "gold_price_surge"
+        },
+        {
+          "event_id": "RE94",
+          "event_type": "mechanical_logic",
+          "mechanism": "incentive_chain"
+        },
+        {
+          "event_id": "RE95",
+          "event_type": "math_change_conclusion",
+          "mechanism": "changed_the_math"
+        }
+      ],
+      "required_retention_events": [
+        "dataset_scope",
+        "per_shop_finding",
+        "density_finding",
+        "control_isolation",
+        "natural_experiment",
+        "mechanical_logic",
+        "math_change_conclusion"
+      ],
+      "original_moves": [
+        "给出数据规模：2200 县 50 州",
+        "给出单位增量发现：每多一店县增 6 起、州增 36 起财产盗窃",
+        "说明密度弹性",
+        "用类别对照隔离：仅财产犯罪上升，暴力与盗车不动",
+        "给出金价自然实验",
+        "给出机械逻辑链",
+        "用'改变了让犯罪值得做的数学'完成因果重构",
+        "命名反馈回路"
+      ],
+      "abstract_move": "用大样本数据把相关性量化 + 用单位增量发现建立密度关系 + 用类别对照隔离把相关压缩到特定机制 + 用自然实验与机械逻辑链完成因果重构 + 命名反馈回路",
+      "replacement_needs": [
+        "大样本数据规模（县、州、年份）",
+        "单位增量发现，建立密度关系",
+        "类别对照隔离，仅特定类别上升",
+        "自然实验或外生冲击",
+        "机械逻辑链，完成因果重构"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(87)、PK12(88)、PK13(92);回收了前文的悬念 FS10→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 87
+        },
+        {
+          "peak_id": "PK12",
+          "strength": 88
+        },
+        {
+          "peak_id": "PK13",
+          "strength": 92
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "systemic_synthesis",
+      "start_ratio": 0.8917,
+      "end_ratio": 0.9398,
+      "start_sec": 1380.8,
+      "end_sec": 1455.3,
+      "position_label": "89.2%–94%(23:01–24:15)",
+      "purpose": "扩展回路的现实增长指标，指出逐件合法而整机有害的合法性悖论，并保留对行业说法的有限承认",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "evidence_chain_payoff_feedback_loop",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE96",
+          "event_type": "loop_expansion",
+          "mechanism": "deeper_market"
+        },
+        {
+          "event_id": "RE97",
+          "event_type": "loop_feedback",
+          "mechanism": "more_theft_more_supply"
+        },
+        {
+          "event_id": "RE98",
+          "event_type": "growth_metrics",
+          "mechanism": "industry_growth_2024"
+        },
+        {
+          "event_id": "RE99",
+          "event_type": "all_legal_paradox",
+          "mechanism": "every_piece_legal"
+        },
+        {
+          "event_id": "RE100",
+          "event_type": "machine_synthesis",
+          "mechanism": "assembled_machine"
+        },
+        {
+          "event_id": "RE101",
+          "event_type": "fair_caveat",
+          "mechanism": "partly_true_but"
+        }
+      ],
+      "required_retention_events": [
+        "loop_expansion",
+        "growth_metrics",
+        "all_legal_paradox",
+        "machine_synthesis",
+        "fair_caveat"
+      ],
+      "original_moves": [
+        "扩展反馈回路到现实",
+        "给出行业增长指标回环",
+        "预告几乎无法修复",
+        "列举全合法零件清单",
+        "合成组装后果三件套",
+        "有限承认行业说法"
+      ],
+      "abstract_move": "扩展回路到现实增长指标 + 指出逐件合法而整机有害的悖论 + 预告不可修复 + 保留对行业说法的有限承认",
+      "replacement_needs": [
+        "回路扩展到现实的增长指标",
+        "全合法零件清单",
+        "组装后果的三件套合成",
+        "对行业说法的有限承认或克制限定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "callback_closure",
+      "start_ratio": 0.9398,
+      "end_ratio": 1,
+      "start_sec": 1455.3,
+      "end_sec": 1548.5,
+      "position_label": "94%–100%(24:15–25:48)",
+      "purpose": "回到开场场景，用分层压缩复述回答标题，以现实钩子收尾并完成本地化互动与下期预告",
+      "peaks": [
+        {
+          "peak_id": "PK14",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.974,
+          "time_ms": 1508160,
+          "reason": "标题最终回答（三重否定+熔炉意象）与“多数人仍以为是吉他店”的反差完成认知与情绪双回收"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "系列化内容预告",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_mechanism_answer_with_scene_callback",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE102",
+          "event_type": "street_callback",
+          "mechanism": "walk_past_glass_case"
+        },
+        {
+          "event_id": "RE103",
+          "event_type": "compressed_recap",
+          "mechanism": "loan_recap"
+        },
+        {
+          "event_id": "RE104",
+          "event_type": "melt_image_callback",
+          "mechanism": "anonymous_bar"
+        },
+        {
+          "event_id": "RE105",
+          "event_type": "sign_vs_model",
+          "mechanism": "sign_says_vs_model_says"
+        },
+        {
+          "event_id": "RE106",
+          "event_type": "gold_price_urgency",
+          "mechanism": "loop_runs_hotter"
+        },
+        {
+          "event_id": "RE107",
+          "event_type": "title_answer",
+          "mechanism": "how_they_make_money"
+        },
+        {
+          "event_id": "RE108",
+          "event_type": "scale_callback",
+          "mechanism": "cheap_guitar_myth"
+        },
+        {
+          "event_id": "RE109",
+          "event_type": "comment_prompt",
+          "mechanism": "neighborhood_prompt"
+        },
+        {
+          "event_id": "RE110",
+          "event_type": "next_business_tease",
+          "mechanism": "next_under_the_hood"
+        }
+      ],
+      "required_retention_events": [
+        "street_callback",
+        "compressed_recap",
+        "melt_image_callback",
+        "sign_vs_model",
+        "gold_price_urgency",
+        "title_answer",
+        "scale_callback",
+        "engagement_cta"
+      ],
+      "original_moves": [
+        "回到开场街景",
+        "压缩复述利息机器",
+        "加入熔化副业句",
+        "压缩研究结论",
+        "用金价更热作为现实钩子",
+        "用三重否定式回答标题",
+        "用'多数人仍以为是吉他店'完成认知反差",
+        "给出评论与订阅号召"
+      ],
+      "abstract_move": "回到开场场景完成回环 + 用分层压缩复述机制 + 加入不可逆管道副业句 + 压缩研究结论 + 用现实钩子收尾 + 用三重否定式回答标题 + 用认知反差完成情绪收束 + 给出互动号召",
+      "replacement_needs": [
+        "开场场景回环",
+        "分层机制压缩复述（主业、副业、研究结论）",
+        "现实钩子（价格、增长、趋势）",
+        "三重否定式或反差式标题回答",
+        "认知反差收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK14(90);打开的悬念 LOOP08(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK14",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

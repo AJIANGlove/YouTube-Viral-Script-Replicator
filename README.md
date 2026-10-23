@@ -17,7 +17,8 @@ flowchart LR
     B --> C["framework.json / timeline.json<br/>style.json / examples.json"]
   end
   subgraph 复现侧
-    N["新主题 + Audience Context"] --> D["Step1 Blueprint"]
+    N["新主题 + Audience Context"] --> N2["写前分析<br/>（可选）"]
+    N2 --> D["Step1 Blueprint"]
     C --> D
     D --> E["Step2 Script"]
     E --> F["Step3 Audit"]
@@ -37,16 +38,17 @@ flowchart LR
 ```
 .
 ├── app/                    生成平台（Node.js，零第三方依赖）
-│   ├── voices/             频道声音设定（每个频道一份 JSON）
+│   ├── voices/             频道声音设定（仅模板入库）
 │   ├── server.js           HTTP 服务（API + 静态页）
 │   ├── lib/                管线与各检查模块
+│   ├── bin/                留存卡批量构建 CLI
 │   ├── prompts/            现行提示词（生产用，单一来源）
 │   ├── public/             前端 SPA
-│   ├── data/runs/          50 条生成记录
+│   ├── data/runs/          52 条生成记录
 │   └── config.example.json 配置结构示例（不含真实 Key）
-├── assets/                 127 个四层资产包，每包含原始 SRT
+├── assets/                 180 个四层资产包，每包含原始 SRT 与留存卡
 ├── baselines/              v1-v3 历史基线（提示词快照 + 产物 + 归因）
-├── docs/                   阶段 1-8 工作流文档（docx + 文本版）
+├── docs/                   阶段 1-8 工作流文档（v1.1 docx + 文本版 + 使用流程）
 └── AGENTS.md               SRT 入库前置质检约定
 ```
 
@@ -88,6 +90,7 @@ flowchart LR
 - `爆款文案逆向工程系统_阶段1-8工作流_重构版_v1.1.docx`（现行版：阶段 8 增加留存卡输出，见文档开头「v1.1 修订说明」）
 - `爆款文案逆向工程系统_阶段1-8工作流_重构版_v1.0.docx`（原件，留档）
 - `extracted_workflow.txt`（同一份内容的纯文本版，1252 行）
+- `使用流程_v1.1.html`（从建任务到出稿的操作路径，配 `images/` 下 16 张截图，浏览器直接打开）
 
 ### 资产包结构
 
@@ -111,10 +114,13 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 
 `app/lib/pipeline.js` 顺序执行四步，每步都把上一步产物 + 对应资产层喂给模型：
 
+0. **写前分析（可选，建任务时勾选）**：写稿前先判断「新题目能不能用这个框架写」，产出结论、候选标题、论点卡、事实表（带年份与时效）、模块取舍、留存地图、钩子候选。任务停在「待确认分析」，人工核对（可直接改 JSON 或补资料重跑）后确认，分析结果通过 `{{analysis}}` 注入下面四步。
 1. **Blueprint**：只做结构映射，不创作新结构；每章必须有功能、目标、Open Loop。
 2. **Script**：按蓝图逐章施工；资产优先级为 Blueprint > Examples > Style > Audience Context。
 3. **Audit**：逐项对照四层资产找偏差，结论必须引用证据；不依赖模型记忆。
 4. **Optimization**：Preservation Editing，只修问题、不重写；输出 Change Log。
+
+成稿后可跑**稿件检查**（`lib/analysis.js` + `prompts/script_check.md`），按 K1-K5 找问题：只找问题、不加新内容，结果支持一键采用。
 
 ### 内置质量闸门
 
@@ -134,10 +140,14 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 
 归一化只在入库边界做一次（`lib/textnorm.js`），各解析器保持严格。
 
-### 六个外挂模块
+### 可选步骤与外挂模块
 
 | 模块 | 作用 |
 |---|---|
+| 写前分析 | 写稿前判定题目与框架是否匹配，产出论点卡、事实表、留存地图与钩子候选，人工确认后才进入四步 |
+| 稿件检查 | 按 K1-K5 检查成稿的问题，只提出问题、不改写风格，结果可一键采用 |
+| 留存卡 | 每段 7 项（段与位置、持有的高峰、悬念、原片做法、抽象动作、替换条件、可删性），前三项程序对齐、后三项可 AI 重写，落在 `assets/<id>/retention_cards.json` |
+| 频道声音 | 语体、称呼观众、自称、风格、固定用语，注入写前分析与 step2 / step4 |
 | 指纹检测与替换 | 检测「俗见反转 / 泛称主语 / 无人告知 / 转折拐杖」四类爆款声音指纹，逐条改写，产出 V1.5 / V2.5 |
 | YouTube 商业化检查 | 按目标语言检查可口播性、敏感表述与商业化风险，逐条定位替换 |
 | 开头留存检查 | 锁定前 60 秒，检查现象/冲突/本质与价值承诺，两个 10 分制评分 + 可定位命中 |
@@ -153,11 +163,16 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 
 | 文件 | 用途 | 行数 |
 |---|---|---|
-| `step1.md` | Blueprint 生成 | 63 |
-| `step2.md` | 脚本施工 | 34 |
-| `step3.md` | 质量审核 | 61 |
-| `step4.md` | 终稿优化 | 40 |
+| `analysis.md` | 写前分析（题目与框架匹配、论点卡、事实表） | 85 |
+| `step1.md` | Blueprint 生成 | 77 |
+| `step2.md` | 脚本施工 | 43 |
+| `step3.md` | 质量审核 | 65 |
+| `step4.md` | 终稿优化 | 46 |
 | `step5.md` | 开头逐句仿写（强化开头） | 27 |
+| `script_check.md` | 稿件检查 K1-K5 | 38 |
+| `retention_card.md` | 留存卡后三项文字重写 | 15 |
+| `track_cards.md` | 赛道卡（各赛道的必备事实与查证路径） | 34 |
+| `voice_draft.md` | 频道声音设定起草 | 20 |
 | `fingerprint_detect.md` | 爆款声音指纹检测与改写 | 42 |
 | `fingerprints.json` | 指纹模式库（各语言正则 + 结构判定要点） | — |
 | `compliance_check.md` | YouTube 商业化检查 | 285 |
@@ -208,6 +223,8 @@ node app/server.js
 - `app/data/video_binding.json`：视频站账号、密码与 token。
 - `tools/`：SRT 质检、批处理、校验与迁移脚本（未随仓库发布，README 中出现的 `tools/xxx` 路径因此不可用）。
 - `new_source/`：待拆解的新字幕。
+- `claude-优化方案/`：外部补丁包与原始材料，非本仓库产物。
+- `app/voices/*.json`：本机频道声音配置，只保留 `_template.json`。
 - `app/data/logs/`、`.workbuddy/`：运行时日志与内部工作区。
 
 **版权**：

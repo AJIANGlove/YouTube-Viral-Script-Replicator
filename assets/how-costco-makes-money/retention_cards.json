@@ -1,0 +1,1545 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:02:41.514Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "character_anecdote_paradox_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0419,
+      "start_sec": 0.3,
+      "end_sec": 67.6,
+      "position_label": "0%–4.2%(0:00–1:08)",
+      "purpose": "以一个普通消费者的一次日常采购开场:短清单、入场资格查验、反常低价单品、失控账单与一件无用商品的喜剧反差,最后点破\"先付入场费再消费,谁占了上风\"的悖论,并预告有一个关键数字能解开它",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "emotional_payoff",
+          "strength": 74,
+          "position_ratio": 0.0267,
+          "time_ms": 42967,
+          "reason": "没有皮划艇却买了桨的幽默反常,把\"失控购物\"落到一件具体商品上"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题机制承诺与全片八机制逐层兑现之间的主悬念",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "悖论开场的价值判断弧:顾客与商家谁受益",
+          "closes_in": "FS16"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "开场无用商品之谜:计划外消费如何发生",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "开场价格反常之谜:四十年不变的低价如何成立",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "character_entry",
+          "mechanism": "everyday_list_entry"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "threshold_ritual",
+          "mechanism": "card_gate_check"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "price_anomaly",
+          "mechanism": "frozen_hotdog_price"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "overshoot_reveal",
+          "mechanism": "cart_total_vs_list"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "comic_anomaly",
+          "mechanism": "useless_kayak_paddle"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "fee_paradox",
+          "mechanism": "paying_for_the_right_to_buy"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "answer_tease",
+          "mechanism": "figure_that_solves_it"
+        }
+      ],
+      "required_retention_events": [
+        "character_entry",
+        "threshold_ritual",
+        "frozen_price_anomaly",
+        "comic_overshoot",
+        "useless_item_gag",
+        "fee_paradox",
+        "answer_tease"
+      ],
+      "original_moves": [
+        "四件清单开场,建立日常购物场景",
+        "验卡进门,点明入场资格门槛",
+        "$1.50 热狗展示反常低价",
+        "$240 失控账单与皮划艇桨形成幽默反差",
+        "抛出悖论:先付年费才能消费,谁占便宜",
+        "预告有一个关键数字能解开悖论"
+      ],
+      "abstract_move": "日常场景开场 + 入场资格仪式 + 反常低价单品 + 失控账单与无用商品的喜剧反差 + 入场费悖论点破 + 答案数字预告",
+      "replacement_needs": [
+        "一个需要入场资格的日常消费场景",
+        "一个反常低价的具体商品事实",
+        "一件失控购物中的无用商品",
+        "一个入场费与消费关系的悖论表述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(74);打开的悬念 LOOP01→FS15、LOOP02→FS16、LOOP06→FS09、LOOP07→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 74
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "character_anecdote_paradox_with_frozen_price",
+        "first_stimulus_ms": 30495,
+        "first_payoff_ms": 66609,
+        "evidence_refs": [
+          "C0001",
+          "C0013",
+          "C0026"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "profit_position_reframe",
+      "start_ratio": 0.0414,
+      "end_ratio": 0.0613,
+      "start_sec": 66.6,
+      "end_sec": 98.8,
+      "position_label": "4.1%–6.1%(1:07–1:39)",
+      "purpose": "兑现开场预告:给出入场费收入的规模数字,与表面主营业务利润对照,声明该对照来自真实账目而非修辞;随即完成全片核心重构——表面业务不是主业,入场资格才是",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.0579,
+          "time_ms": 93330,
+          "reason": "会费利润超过商品本身+\"不是商店,是订阅\"的双重反转,击穿默认框架"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "scale_reveal",
+          "mechanism": "membership_fee_total"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "profit_flip",
+          "mechanism": "cards_beat_purchases"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "category_reframe",
+          "mechanism": "subscription_with_parking"
+        }
+      ],
+      "required_retention_events": [
+        "scale_reveal",
+        "profit_flip",
+        "evidence_claim",
+        "category_reframe"
+      ],
+      "original_moves": [
+        "给出 $5.3B 会费收入规模",
+        "与商品利润对照,会费利润更高",
+        "声明数据来自真实损益表",
+        "完成重构:不是商店而是订阅+停车场"
+      ],
+      "abstract_move": "兑现预告数字 + 两条收入线利润对照 + 账目证据声明 + 主体身份重构(从表面业务到资格订阅)",
+      "replacement_needs": [
+        "入场费的规模数字",
+        "入场费与表面业务利润的对照数据",
+        "数据来源的可信性声明",
+        "一个重新定义主体身份的重构句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(88)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "roadmap_deferred_payoff_contract",
+      "start_ratio": 0.0607,
+      "end_ratio": 0.0846,
+      "start_sec": 97.8,
+      "end_sec": 136.3,
+      "position_label": "6.1%–8.5%(1:38–2:16)",
+      "purpose": "宣告全片路线图:若干机制共同支撑该系统;明确延迟兑现契约——留到结尾的两个具体数字;并预告一个\"同一模式、更低配置\"的竞品对照",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "路线图预告的第二个延迟数字:低价单品与巨额上游投资之间的落差",
+          "closes_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "路线图预告的第一个延迟数字:单次会费与终身价值之间的尺度差",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "路线图预告的竞品对照悬念",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "roadmap",
+          "mechanism": "eight_mechanisms_inventory"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "deferred_contract",
+          "mechanism": "two_figures_stay_until_end"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "competitor_tease",
+          "mechanism": "same_machine_lowest_settings"
+        }
+      ],
+      "required_retention_events": [
+        "mechanism_inventory",
+        "deferred_payoff_contract",
+        "competitor_tease"
+      ],
+      "original_moves": [
+        "宣告八个机制共同支撑系统",
+        "承诺两个延迟到结尾的具体数字",
+        "预告一个同模式低配置竞品对照"
+      ],
+      "abstract_move": "机制数量与清单宣告 + 延迟兑现契约(两个数字) + 竞品对照预告",
+      "replacement_needs": [
+        "支撑系统的机制数量",
+        "两个留到结尾兑现的具体数字承诺",
+        "一个同模式竞品的对照预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS12、LOOP04→FS15、LOOP08→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "audience_participation_interlude",
+      "start_ratio": 0.084,
+      "end_ratio": 0.1051,
+      "start_sec": 135.4,
+      "end_sec": 169.3,
+      "position_label": "8.4%–10.5%(2:15–2:49)",
+      "purpose": "机制链启动前的互动间歇:把观众分成两种消费类型,引导评论区自报类型与金额,并用一句冷面挑战收束,随后以段落标题词回归正题",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "观众自我归类的参与钩子",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP09"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "self_typing",
+          "mechanism": "two_types_of_shoppers"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "comment_prompt",
+          "mechanism": "report_type_and_amount"
+        }
+      ],
+      "required_retention_events": [
+        "self_typing",
+        "comment_prompt",
+        "deadpan_challenge"
+      ],
+      "original_moves": [
+        "把观众分成两类消费者画像",
+        "引导评论区自报类型与金额",
+        "用小票挑战收束互动",
+        "以段落标题回归正题"
+      ],
+      "abstract_move": "消费者分类画像 + 评论区自报引导 + 冷面挑战收束 + 回归正题",
+      "replacement_needs": [
+        "两种消费类型的画像",
+        "引导观众评论自曝的设问",
+        "一个冷面挑战的收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP09(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "membership_fee_engine",
+      "start_ratio": 0.1045,
+      "end_ratio": 0.2358,
+      "start_sec": 168.4,
+      "end_sec": 379.8,
+      "position_label": "10.5%–23.6%(2:48–6:20)",
+      "purpose": "第一机制(入场费):规模×均价构成巨额收入,成本近零且提前到账,占总利润约一半——表面业务按成本价销售依然盈利;补充递延确认的账目细节并挂前向悬念;用续费率与同业对照、涨价无损事实论证护城河;收尾于入场资格执法争议与叙述者\"理解但恼火\"的个人拍",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.1393,
+          "time_ms": 224423,
+          "reason": "营业利润一半来自会费,开场悖论获得数字级答案"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.1709,
+          "time_ms": 275208,
+          "reason": "92.3% 续费率与同业对照,护城河第一次量化"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "账目细节的前向悬念:\"稍后以更大方式重现\"",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP11",
+          "tension": "\"人们觉得无礼的部分\":规则合理性与被冒犯感之间的争议",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP11"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "section_marker",
+          "mechanism": "fee_section_start"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "scale_reveal",
+          "mechanism": "households_pay_threshold"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "math_chain",
+          "mechanism": "average_fee_times_households"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "cost_structure",
+          "mechanism": "near_zero_cost_items"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "advance_profit",
+          "mechanism": "pure_profit_in_advance"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "profit_share_reveal",
+          "mechanism": "half_of_operating_profit"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "counterfactual",
+          "mechanism": "sell_at_cost_still_profit"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "accounting_detail",
+          "mechanism": "fee_as_liability"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "forward_hook",
+          "mechanism": "reappears_bigger_later"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "renewal_reveal",
+          "mechanism": "renewal_rate_numbers"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "benchmark_contrast",
+          "mechanism": "gyms_streaming_comparison"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "stickiness_reveal",
+          "mechanism": "price_increase_no_exodus"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "fee_reframe",
+          "mechanism": "not_a_toll_renews_itself"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "controversy_tease",
+          "mechanism": "part_people_find_rude"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "enforcement_reframe",
+          "mechanism": "borrowed_card_steals_entrance"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "personal_beat",
+          "mechanism": "scanned_understood_annoyed"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "mid_cta",
+          "mechanism": "subscribe_before_price_tags"
+        }
+      ],
+      "required_retention_events": [
+        "scale_math",
+        "cost_near_zero",
+        "profit_share_reveal",
+        "counterfactual",
+        "accounting_detail",
+        "forward_hook",
+        "renewal_benchmark",
+        "price_increase_stickiness",
+        "enforcement_controversy",
+        "personal_beat",
+        "mid_cta"
+      ],
+      "original_moves": [
+        "规模×均价构成巨额会费收入",
+        "成本近零且提前到账",
+        "会费占总利润约一半",
+        "按成本价卖商品依然盈利的反事实",
+        "补充递延确认的账目细节并挂前向钩",
+        "92.3% 续费率与同业对照",
+        "涨价无损事实",
+        "借卡=偷入口的执法争议",
+        "叙述者个人被扫卡的恼火"
+      ],
+      "abstract_move": "规模×均价收入链 + 近零成本与提前到账 + 利润占比揭示 + 成本价反事实 + 账目细节与前向钩 + 续费率同业对照 + 涨价无损护城河 + 执法争议与个人情绪",
+      "replacement_needs": [
+        "入场费的规模、均价、收入构成",
+        "成本结构与提前到账的时间差",
+        "利润占比数据",
+        "续费率与同业的对照数据",
+        "涨价后的续费表现",
+        "执法或资格争议的具体场景"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(85)、PK04(82);打开的悬念 LOOP05→FS11、LOOP11(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "margin_cap_rule",
+      "start_ratio": 0.2354,
+      "end_ratio": 0.3351,
+      "start_sec": 379.2,
+      "end_sec": 539.7,
+      "position_label": "23.5%–33.5%(6:19–9:00)",
+      "purpose": "第二机制(加价上限):内部约定固定的低加价率,超越需特批;规则不成文、源于创始人把上限当\"抵御诱惑的屋顶\";用同口径毛利对照与单件商品对照验证;核心机制是采购让利必须自动流向消费者;最后点破陷阱——该上限只有靠入场费的第二收入才可持续,普通同行无法复制",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 86,
+          "position_ratio": 0.3003,
+          "time_ms": 483684,
+          "reason": "\"没人需要决定慷慨,规则替他们花钱\"——让利从美德重构为自动机制"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "section_marker",
+          "mechanism": "limit_section_start"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "cap_reveal",
+          "mechanism": "fourteen_fifteen_percent_cap"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "unwritten_rule",
+          "mechanism": "habit_not_law_verifiable"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "margin_contrast",
+          "mechanism": "gross_margin_vs_walmart"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "item_contrast",
+          "mechanism": "forty_dollar_item_compare"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "founder_logic",
+          "mechanism": "temptation_roof_culture"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "mechanism_payoff",
+          "mechanism": "savings_forced_to_shelf"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "rule_automation",
+          "mechanism": "rule_spends_money_for_them"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "trap_identification",
+          "mechanism": "the_catch_is_the_fee"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "moat_logic",
+          "mechanism": "supermarket_would_close"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "mechanism_summary",
+          "mechanism": "revenue_differently_act_differently"
+        }
+      ],
+      "required_retention_events": [
+        "cap_reveal",
+        "unwritten_rule",
+        "margin_contrast",
+        "founder_logic",
+        "passthrough_mechanism",
+        "trap_identification",
+        "uncopyable_moat",
+        "mechanism_summary"
+      ],
+      "original_moves": [
+        "14%/15% 固定加价上限",
+        "规则不成文,源于创始人的屋顶比喻",
+        "11.1% 与竞品毛利率对照",
+        "单件商品价格对照验证",
+        "让利自动传导给消费者的机制",
+        "点破陷阱:上限依赖入场费第二收入",
+        "普通超市学不来"
+      ],
+      "abstract_move": "固定加价率上限 + 不成文起源与屋顶比喻 + 同口径毛利对照 + 单件价格验证 + 让利自动传导机制 + 上限依赖第二收入的陷阱 + 同行不可复制",
+      "replacement_needs": [
+        "固定的低加价率数字",
+        "规则起源的故事或比喻",
+        "与同业的毛利率对照",
+        "让利如何自动流向消费者的机制",
+        "该上限依赖第二收入才可持续的逻辑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(86)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "curated_shortlist_leverage",
+      "start_ratio": 0.3345,
+      "end_ratio": 0.3785,
+      "start_sec": 538.8,
+      "end_sec": 609.5,
+      "position_label": "33.5%–37.9%(8:59–10:10)",
+      "purpose": "第三机制(极短选品清单):与同业 SKU 数量级对照;每个品类只有一个赢家;换到供应商视角说明赢得货架=年度最佳、失去=年度最差,因此供货价与众不同——\"清单不是限制,是谈判位置\"",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.3605,
+          "time_ms": 580580,
+          "reason": "供应商视角的最好/最差一天,把短清单重命名为谈判武器"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE44",
+          "event_type": "section_marker",
+          "mechanism": "shortlist_section_start"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "winner_rule",
+          "mechanism": "category_winner_loser_absent"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "supplier_stakes",
+          "mechanism": "best_day_worst_day"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "position_reframe",
+          "mechanism": "shortlist_as_negotiation_position"
+        }
+      ],
+      "required_retention_events": [
+        "sku_contrast",
+        "winner_loser_rule",
+        "supplier_stakes",
+        "position_reframe"
+      ],
+      "original_moves": [
+        "12 万 vs 4 千 SKU 数量级对照",
+        "每个品类只有一个赢家在货架",
+        "换到供应商视角看输赢",
+        "赢得货架=最好的一天,失去=最差的一天",
+        "把短清单重命名为谈判位置"
+      ],
+      "abstract_move": "SKU 数量级对照 + 品类赢家规则 + 供应商视角切换 + 输赢赌注的最好/最差一天 + 短清单重命名为谈判武器",
+      "replacement_needs": [
+        "选品规模与同业的数量级对照",
+        "品类赢家的竞争规则",
+        "供应商视角的输赢后果",
+        "一个把限制重命名为优势的句子"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "frictionless_operations_urgency",
+      "start_ratio": 0.3779,
+      "end_ratio": 0.4413,
+      "start_sec": 608.6,
+      "end_sec": 710.8,
+      "position_label": "37.8%–44.1%(10:09–11:51)",
+      "purpose": "极短清单的运营后果:一连串成本减法(整托上架、无货架整理、快速流转、无附加服务、无广告);采购员对单一品类负责;再以轮换库存制造\"现在不买就没有\"的稀缺,并回收开场那件无用商品的悬念——没人强迫,也没人需要强迫",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 78,
+          "position_ratio": 0.4339,
+          "time_ms": 698900,
+          "reason": "kayak 悬念闭合:\"没人强迫他,也没人需要强迫他\"的自我辨认"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE48",
+          "event_type": "cost_subtraction",
+          "mechanism": "operations_savings_list"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "buyer_focus",
+          "mechanism": "one_product_must_be_right"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "scarcity_reveal",
+          "mechanism": "rotation_no_next_month"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "callback_payoff",
+          "mechanism": "kayak_paddle_closed"
+        }
+      ],
+      "required_retention_events": [
+        "cost_subtraction",
+        "buyer_focus",
+        "rotation_scarcity",
+        "callback_payoff"
+      ],
+      "original_moves": [
+        "运营减法清单:整托上架、无整理、快速流转、无附加服务、无广告",
+        "采购员对单一品类负责",
+        "轮换库存制造稀缺",
+        "没有下个月的紧迫感",
+        "回收开场皮划艇桨悬念:没人强迫也没人需要强迫"
+      ],
+      "abstract_move": "运营减法清单 + 单一品类采购责任 + 轮换稀缺机制 + 时间紧迫感 + 开场无用商品悬念闭合",
+      "replacement_needs": [
+        "一连串成本减法的运营事实",
+        "轮换库存的稀缺机制",
+        "回收开场无用商品悬念的场景"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(78)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "private_label_threat",
+      "start_ratio": 0.4407,
+      "end_ratio": 0.5336,
+      "start_sec": 709.8,
+      "end_sec": 859.4,
+      "position_label": "44.1%–53.4%(11:50–14:19)",
+      "purpose": "第四机制(自有品牌):份额与规模的同业对照;与大牌同厂但不点名的默契;核心是对品牌的威胁式报价——不给这个价,旁边就摆贴牌同款且更便宜;自有品牌享有略高加价余地与配方控制权;叙述者以亲身换用作证;补充断供代价与胜负手(货架规模),收束为\"长了牙齿的选项清单\"",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 84,
+          "position_ratio": 0.4758,
+          "time_ms": 766420,
+          "reason": "威胁式报价揭示自有品牌不是产品线而是谈判武器"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "behavior_mechanism_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE52",
+          "event_type": "section_marker",
+          "mechanism": "label_section_start"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "brand_contrast",
+          "mechanism": "bigger_than_nike_900_buildings"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "threat_reveal",
+          "mechanism": "price_or_own_label_twin"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "label_reframe",
+          "mechanism": "not_product_line_but_threat"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "personal_testimony",
+          "mechanism": "switched_no_difference"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "cost_caveat",
+          "mechanism": "copied_brands_may_walk"
+        }
+      ],
+      "required_retention_events": [
+        "label_scale",
+        "brand_contrast",
+        "threat_offer",
+        "quality_testimony",
+        "cost_caveat",
+        "teeth_reframe"
+      ],
+      "original_moves": [
+        "28% 份额 $75B 规模,比 Nike 还大",
+        "1995 起源,与大牌同厂但不点名的默契",
+        "威胁式报价:不给这个价,旁边摆贴牌同款且便宜 20%",
+        "自有品牌享有 15% 加价余地与配方控制",
+        "叙述者亲身换用洗涤剂 testimony",
+        "断供风险与 8100 万户货架规模胜负手",
+        "收束为'长了牙齿的选项清单'"
+      ],
+      "abstract_move": "份额与规模同业对照 + 同厂不点名默契 + 威胁式报价与同货架低价 + 加价余地与配方控制 + 亲身换用 testimony + 断供代价与货架规模胜负手 + 牙齿清单重命名",
+      "replacement_needs": [
+        "自有品牌的份额与规模对照",
+        "与大牌同厂但不点名的默契",
+        "威胁式报价的具体机制",
+        "亲身换用的 testimony",
+        "断供的代价与货架规模的胜负手"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(84);回收了前文的悬念 FS01→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "operating_expense_gap",
+      "start_ratio": 0.5334,
+      "end_ratio": 0.6342,
+      "start_sec": 859.1,
+      "end_sec": 1021.5,
+      "position_label": "53.3%–63.4%(14:19–17:01)",
+      "purpose": "第五机制(费用率):运营费用率的同口径对照——差距本身就是生意;毛利减费用的残差算术再次指向入场费大头;人均产出对照解释高薪的可持续性(流失率才是隐形成本);损耗控制与空间设计、线上占比低等运营事实;叙述者对入口查验完成态度反转",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 83,
+          "position_ratio": 0.5396,
+          "time_ms": 869137,
+          "reason": "9% vs 21% 费用率对照,\"这个差距就是这门生意\""
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE58",
+          "event_type": "section_marker",
+          "mechanism": "expenses_section_start"
+        },
+        {
+          "event_id": "RE59",
+          "event_type": "expense_gap",
+          "mechanism": "nine_vs_twentyone_percent"
+        },
+        {
+          "event_id": "RE60",
+          "event_type": "residual_math",
+          "mechanism": "two_percent_residual_fee_bulk"
+        },
+        {
+          "event_id": "RE61",
+          "event_type": "productivity_contrast",
+          "mechanism": "sales_per_employee_compare"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "wage_logic",
+          "mechanism": "high_wage_not_charity"
+        },
+        {
+          "event_id": "RE63",
+          "event_type": "shrinkage_design",
+          "mechanism": "receipt_check_open_floor"
+        },
+        {
+          "event_id": "RE64",
+          "event_type": "online_surprise",
+          "mechanism": "seven_percent_online"
+        },
+        {
+          "event_id": "RE65",
+          "event_type": "attitude_reversal",
+          "mechanism": "insulting_to_discount"
+        }
+      ],
+      "required_retention_events": [
+        "expense_gap",
+        "residual_math",
+        "productivity_contrast",
+        "wage_logic",
+        "shrinkage_design",
+        "online_share_surprise",
+        "attitude_reversal"
+      ],
+      "original_moves": [
+        "9% vs 21% 运营费用率对照",
+        "毛利减费用的残差算术指向会费大头",
+        "人均产出对照解释高薪可持续",
+        "流失率才是隐形成本",
+        "损耗控制与建筑空间设计",
+        "线上占比 7% 对照",
+        "叙述者对入口查验完成态度反转"
+      ],
+      "abstract_move": "费用率同口径对照 + 残差算术与利润大头归属 + 人均产出与高薪逻辑 + 损耗控制与空间设计 + 线上占比对照 + 态度反转",
+      "replacement_needs": [
+        "运营费用率与同业的对照数据",
+        "残差算术推导出利润大头的归属",
+        "人均产出与薪资的对照",
+        "损耗控制或空间设计的运营事实",
+        "叙述者态度反转的场景"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(83)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 83
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "cash_conversion_engine",
+      "start_ratio": 0.6336,
+      "end_ratio": 0.7082,
+      "start_sec": 1020.5,
+      "end_sec": 1140.7,
+      "position_label": "63.4%–70.8%(17:01–19:01)",
+      "purpose": "第六机制(现金流):库存周期短于付款周期,中间的浮存乘上规模成为巨额无息资金——\"融资方是供应商\"的重命名;回收早段\"入场费提前到账\"的伏笔,形成双向浮存;现金流直接支撑扩张与资产自有;以\"看不见的最重要\"元评论收束",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 87,
+          "position_ratio": 0.6529,
+          "time_ms": 1051641,
+          "reason": "\"给门店融资的是番茄酱公司\"——现金流段最强重构"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "mechanism_callback_expanded",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE66",
+          "event_type": "section_marker",
+          "mechanism": "cashflow_section_start"
+        },
+        {
+          "event_id": "RE67",
+          "event_type": "float_math",
+          "mechanism": "sell_28_pay_30"
+        },
+        {
+          "event_id": "RE68",
+          "event_type": "supplier_financing",
+          "mechanism": "ketchup_company_finances_store"
+        },
+        {
+          "event_id": "RE69",
+          "event_type": "turns_contrast",
+          "mechanism": "thirteen_turns_two_days"
+        },
+        {
+          "event_id": "RE70",
+          "event_type": "callback_payoff",
+          "mechanism": "membership_float_two_directions"
+        },
+        {
+          "event_id": "RE71",
+          "event_type": "asset_funding",
+          "mechanism": "cashflow_builds_owns_land"
+        },
+        {
+          "event_id": "RE72",
+          "event_type": "meta_comment",
+          "mechanism": "least_interesting_most_important"
+        }
+      ],
+      "required_retention_events": [
+        "float_math",
+        "supplier_financing_reframe",
+        "turns_contrast",
+        "callback_payoff",
+        "asset_funding",
+        "invisibility_meta"
+      ],
+      "original_moves": [
+        "28 天卖出 vs 30 天付款的账期错配",
+        "两天差×规模=巨额浮存",
+        "把浮存重命名为'供应商给门店融资'",
+        "13 次库存周转与同业对照",
+        "回收早段会费提前到账伏笔,形成双向浮存",
+        "现金流直接支撑扩张与资产自有",
+        "以'看不见的最重要'元评论收束"
+      ],
+      "abstract_move": "账期错配与浮存量级 + 供应商融资重命名 + 周转对照 + 伏笔回收形成双向浮存 + 现金流支撑扩张 + 看不见机制的元评论",
+      "replacement_needs": [
+        "库存周期与付款周期的账期错配数据",
+        "浮存规模的计算",
+        "一个重命名融资方的句子",
+        "库存周转与同业的对照",
+        "现金流支撑扩张的事实"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(87);回收了前文的悬念 FS05→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 87
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "loss_leader_renewal_engine",
+      "start_ratio": 0.708,
+      "end_ratio": 0.803,
+      "start_sec": 1140.3,
+      "end_sec": 1293.3,
+      "position_label": "70.8%–80.3%(19:00–21:33)",
+      "purpose": "第七机制(亏本引流品):低价入口商品规模与价差,用\"入场费÷价差\"的回本算术让观众自己算清;动线设计让消费必经门店;招牌低价单品多年不涨,公司自曝年度亏损却不涨价、反而逆向投资上游产能(兑现预告的数字);回收开场低价单品悬念;把引流品重命名为\"续费成本\"——只为续费时答案是不假思索的肯定;叙述者给出个人 verdict",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "emotional_payoff",
+          "strength": 91,
+          "position_ratio": 0.759,
+          "time_ms": 1222459,
+          "reason": "为守住 $4.99 烤鸡而建 $450M 养鸡厂:延迟数字兑现与价值逆转叠加,全片情感最高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "deferred_numeric_reveal",
+          "opened_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "loss_leader_function_reveal",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE73",
+          "event_type": "section_marker",
+          "mechanism": "gas_section_start"
+        },
+        {
+          "event_id": "RE74",
+          "event_type": "gas_scale",
+          "mechanism": "stations_tenth_of_sales"
+        },
+        {
+          "event_id": "RE75",
+          "event_type": "gas_math",
+          "mechanism": "fee_divided_by_savings"
+        },
+        {
+          "event_id": "RE76",
+          "event_type": "placement_design",
+          "mechanism": "gas_inside_lot_no_accident"
+        },
+        {
+          "event_id": "RE77",
+          "event_type": "sacrifice_commitment",
+          "mechanism": "chicken_price_cfo_admission"
+        },
+        {
+          "event_id": "RE78",
+          "event_type": "factory_reveal",
+          "mechanism": "chicken_factory_investment"
+        },
+        {
+          "event_id": "RE79",
+          "event_type": "agriculture_defense",
+          "mechanism": "retailer_enters_agriculture"
+        },
+        {
+          "event_id": "RE80",
+          "event_type": "callback_payoff",
+          "mechanism": "hotdog_same_job_miniature"
+        },
+        {
+          "event_id": "RE81",
+          "event_type": "purpose_reframe",
+          "mechanism": "not_money_but_come_back"
+        },
+        {
+          "event_id": "RE82",
+          "event_type": "renewal_cost_reframe",
+          "mechanism": "renewal_costs_not_marketing"
+        },
+        {
+          "event_id": "RE83",
+          "event_type": "personal_verdict",
+          "mechanism": "chicken_is_winning"
+        }
+      ],
+      "required_retention_events": [
+        "gas_math",
+        "placement_design",
+        "sacrifice_commitment",
+        "factory_reveal",
+        "agriculture_defense",
+        "hotdog_callback",
+        "renewal_cost_reframe",
+        "personal_verdict"
+      ],
+      "original_moves": [
+        "加油站规模与价差展示引流品规模",
+        "入场费÷价差的回本算术让观众自己算",
+        "动线设计让消费必经门店",
+        "烤鸡多年不涨价且公司自曝年度亏损",
+        "为守住价格投资 $450M 养鸡厂,兑现延迟数字",
+        "回收开场热狗悬念",
+        "把引流品重命名为'续费成本'",
+        "叙述者给出个人 verdict:鸡肉在赢"
+      ],
+      "abstract_move": "引流品规模与价差 + 回本算术 + 动线设计 + 价格承诺与亏损自曝 + 逆向投资兑现延迟数字 + 开场悬念回收 + 续费成本重命名 + 个人 verdict",
+      "replacement_needs": [
+        "低价入口商品的规模与价差",
+        "回本算术的计算逻辑",
+        "动线设计的事实",
+        "价格承诺与亏损的自曝",
+        "逆向投资上游的具体数字",
+        "一个把引流品重命名为续费成本的句子"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(91);回收了前文的悬念 FS03→LOOP03、FS01→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 91
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "membership_upgrade_math",
+      "start_ratio": 0.8024,
+      "end_ratio": 0.8613,
+      "start_sec": 1292.4,
+      "end_sec": 1387.3,
+      "position_label": "80.2%–86.1%(21:32–23:07)",
+      "purpose": "第八机制(资格升级):同一入场资格以更高价二次销售,近半会员自愿翻倍;回报是比例返现与几乎触不到的上限;诚实算账——回本临界点换算成每周预算后真的划算,\"而这正是它有效的原因\";升级者占比与消费贡献严重不对等;返现被重命名为\"把全部消费搬过来的理由\"",
+      "peaks": [
+        {
+          "peak_id": "PK12",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.847,
+          "time_ms": 1364214,
+          "reason": "48% 户数贡献 74% 销售,升级机制的行为锁定被数字坐实"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE84",
+          "event_type": "section_marker",
+          "mechanism": "improvement_section_start"
+        },
+        {
+          "event_id": "RE85",
+          "event_type": "twin_sale",
+          "mechanism": "same_membership_twice"
+        },
+        {
+          "event_id": "RE86",
+          "event_type": "cap_math",
+          "mechanism": "reward_cap_unreachable"
+        },
+        {
+          "event_id": "RE87",
+          "event_type": "honest_math",
+          "mechanism": "break_even_weekly_budget"
+        },
+        {
+          "event_id": "RE88",
+          "event_type": "share_contrast",
+          "mechanism": "executive_share_of_sales"
+        },
+        {
+          "event_id": "RE89",
+          "event_type": "lock_in_reframe",
+          "mechanism": "two_percent_not_discount"
+        }
+      ],
+      "required_retention_events": [
+        "twin_sale",
+        "cap_math",
+        "honest_math",
+        "share_contrast",
+        "reframe_lock_in"
+      ],
+      "original_moves": [
+        "同一入场资格以更高价二次销售",
+        "3070 万户自愿翻倍升级",
+        "返现上限与几乎触不到的触顶金额",
+        "回本临界点换算成每周预算后真的划算",
+        "诚实让步:'而这正是它有效的原因'",
+        "48% 户数贡献 74% 销售的占比对照",
+        "把 2% 返现重命名为'把全部消费搬过来的理由'"
+      ],
+      "abstract_move": "资格二次销售 + 升级规模与占比 + 返现上限与触顶金额 + 周预算回本算术 + 诚实让步句 + 占比与贡献对照 + 返现行为锁定重命名",
+      "replacement_needs": [
+        "升级资格的规模与占比",
+        "返现机制的上限与触顶金额",
+        "回本临界点换算成日常预算的算术",
+        "升级者占比与消费贡献的对照数据",
+        "一个诚实让步的句子"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK12(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK12",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "competitor_calibration",
+      "start_ratio": 0.8607,
+      "end_ratio": 0.9084,
+      "start_sec": 1386.3,
+      "end_sec": 1463.1,
+      "position_label": "86.1%–90.8%(23:06–24:23)",
+      "purpose": "兑现竞品预告:同模式竞品的规模、单店产出、利润率与披露口径逐项对照;给出\"同一理念、一半杠杆\"的判断,并把差距归因于续费率;以竞品跟随涨价的时间差收束",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE90",
+          "event_type": "benchmark_start",
+          "mechanism": "sams_same_machine_weaker"
+        },
+        {
+          "event_id": "RE91",
+          "event_type": "per_store_contrast",
+          "mechanism": "revenue_per_warehouse_compare"
+        },
+        {
+          "event_id": "RE92",
+          "event_type": "leverage_gap",
+          "mechanism": "same_idea_half_leverage"
+        },
+        {
+          "event_id": "RE93",
+          "event_type": "follower_timeline",
+          "mechanism": "fee_increase_decade_late"
+        }
+      ],
+      "required_retention_events": [
+        "benchmark_scale",
+        "per_store_contrast",
+        "margin_contrast",
+        "leverage_gap",
+        "follower_timeline"
+      ],
+      "original_moves": [
+        "兑现竞品预告:同一机器更低挡位",
+        "规模与单店产出对照",
+        "利润率对照",
+        "披露口径差异",
+        "给出'一半杠杆'的判断并归因续费率差距",
+        "以涨价跟随时间差收束"
+      ],
+      "abstract_move": "竞品规模对照 + 单店产出对照 + 利润率对照 + 披露口径差异 + 杠杆差距判断与归因 + 跟随时间差",
+      "replacement_needs": [
+        "同模式竞品的规模对照",
+        "单店产出与利润率的对照",
+        "披露口径的差异",
+        "杠杆差距的判断与归因逻辑"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "verdict_synthesis",
+      "start_ratio": 0.908,
+      "end_ratio": 0.9644,
+      "start_sec": 1462.4,
+      "end_sec": 1553.4,
+      "position_label": "90.8%–96.4%(24:22–25:53)",
+      "purpose": "以问代结:用续费率折算会员终身贡献,兑现延迟数字;判断生意的哪一半真正重要——提前到账、零成本的那一半,其余一切机制都为保护续费而存在;最终重构为\"会员制公司经营着一家极好的表面业务\";叙述者以\"协议清晰\"表达接受,并给出可迁移的个人判断规则",
+      "peaks": [
+        {
+          "peak_id": "PK13",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.9435,
+          "time_ms": 1519620,
+          "reason": "\"会员制公司经营着一家极好的商店\"最终重构,主承诺闭合"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_mechanism_chain_with_final_reframe",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "deferred_numeric_answer",
+          "opened_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "benchmark_comparison_answer",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE94",
+          "event_type": "ending_turn",
+          "mechanism": "question_instead_of_summary"
+        },
+        {
+          "event_id": "RE95",
+          "event_type": "lifetime_payoff",
+          "mechanism": "thirteen_years_fee_total"
+        },
+        {
+          "event_id": "RE96",
+          "event_type": "synthesis_answer",
+          "mechanism": "half_arrives_in_advance"
+        },
+        {
+          "event_id": "RE97",
+          "event_type": "compressed_recap",
+          "mechanism": "everything_protects_renewal"
+        },
+        {
+          "event_id": "RE98",
+          "event_type": "final_reframe",
+          "mechanism": "membership_company_good_store"
+        },
+        {
+          "event_id": "RE99",
+          "event_type": "acceptance_beat",
+          "mechanism": "legible_agreement_acceptance"
+        },
+        {
+          "event_id": "RE100",
+          "event_type": "personal_rule",
+          "mechanism": "read_entrance_price_first"
+        }
+      ],
+      "required_retention_events": [
+        "ending_question",
+        "lifetime_value_payoff",
+        "compressed_recap",
+        "final_reframe",
+        "legibility_acceptance",
+        "personal_rule"
+      ],
+      "original_moves": [
+        "以问代结:哪一半生意真正重要",
+        "用续费率折算会员终身贡献 $800-1700,兑现延迟数字",
+        "判断提前到账、零成本的一半才重要",
+        "压缩复述所有机制都为保护续费而存在",
+        "最终重构:'会员制公司经营着一家极好的商店'",
+        "叙述者以'协议清晰'表达接受",
+        "给出可迁移的个人判断规则"
+      ],
+      "abstract_move": "以问代结装置 + 终身价值数字兑现 + 利润两半判断 + 机制压缩复述 + 最终主体重构 + 透明度评价 + 个人规则",
+      "replacement_needs": [
+        "终身价值的计算与数字",
+        "利润两半的判断逻辑",
+        "所有机制保护续费的压缩复述",
+        "一个最终重构主体的句子",
+        "一个透明度评价与个人规则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK13(90);回收了前文的悬念 FS01→LOOP01、FS03→LOOP04、FS03→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK13",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closing_cta_loop",
+      "start_ratio": 0.9642,
+      "end_ratio": 1,
+      "start_sec": 1552.9,
+      "end_sec": 1610.6,
+      "position_label": "96.4%–100%(25:53–26:51)",
+      "purpose": "回收评论预测环并引导关注点赞;用一个\"同形式、相反判决\"的对照推荐相关内容形成互文闭环,简短道别",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP10",
+          "tension": "基于片中两次涨价间隔规律的预测邀请",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "value_verdict_with_personal_rule",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP10"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE101",
+          "event_type": "cta",
+          "mechanism": "subscribe_like_prompt"
+        },
+        {
+          "event_id": "RE102",
+          "event_type": "comment_recall",
+          "mechanism": "predict_next_increase"
+        },
+        {
+          "event_id": "RE103",
+          "event_type": "cross_reference",
+          "mechanism": "timeshare_opposite_verdict"
+        },
+        {
+          "event_id": "RE104",
+          "event_type": "playlist_closure",
+          "mechanism": "money_playlist_farewell"
+        }
+      ],
+      "required_retention_events": [
+        "cta",
+        "comment_loop_recall",
+        "cross_reference",
+        "farewell"
+      ],
+      "original_moves": [
+        "引导关注点赞",
+        "回收涨价预测评论环",
+        "推荐一个'同形式、相反判决'的对照内容",
+        "提及播放清单",
+        "简短道别"
+      ],
+      "abstract_move": "关注点赞引导 + 评论预测环召回 + 反向对照交叉推荐 + 简短道别",
+      "replacement_needs": [
+        "评论预测环的召回",
+        "一个同形式反向判决的对照推荐",
+        "简短道别句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP10(不闭合) 跨段;回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

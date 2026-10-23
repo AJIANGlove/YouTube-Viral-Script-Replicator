@@ -1,0 +1,1021 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:01:23.773Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "paradox_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.067,
+      "start_sec": 0.2,
+      "end_sec": 48.6,
+      "position_label": "0%–6.7%(0:00–0:49)",
+      "purpose": "用观众刚买过的一餐便饭与\"几乎不赚钱\"的反常并置建立核心悖论，预告业内人的忏悔式答案，锁定\"招牌单品不赚钱那钱从哪来\"的主问题",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "curiosity_gap",
+          "strength": 72,
+          "position_ratio": 0.0412,
+          "time_ms": 29859,
+          "reason": "业内人忏悔预告制造双层好奇缺口：不在这门生意，那在哪门生意"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺环：标题问句的完整答案",
+          "closes_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "忏悔悬念子环：预告一个荒谬但真实的答案",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "everyday_entry",
+          "mechanism": "familiar_price_itemization"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "paradox_statement",
+          "mechanism": "near_zero_profit_claim"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "scale_contrast",
+          "mechanism": "trillion_industry_vs_item_loss"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "new_question",
+          "mechanism": "missing_profit_source"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "authority_tease",
+          "mechanism": "insider_confession_preview"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "transformation_promise",
+          "mechanism": "perception_shift_pledge"
+        }
+      ],
+      "required_retention_events": [
+        "everyday_price_entry",
+        "paradox_statement",
+        "scale_contrast",
+        "central_question",
+        "insider_confession_tease",
+        "transformation_promise"
+      ],
+      "original_moves": [
+        "展示观众熟悉的5美元汉堡及其价格标签",
+        "逐项列出食材成本：牛肉、面包、蔬菜、调味料",
+        "计算得出单品几乎无利润甚至亏本",
+        "对比单品亏损与万亿级行业规模的反差",
+        "抛出核心问句：既然不赚钱那钱从哪来",
+        "预告业内人的忏悔式答案：不在这门生意",
+        "承诺将改变观众对整个行业的认知"
+      ],
+      "abstract_move": "用观众刚体验过的日常消费场景与逐项成本拆解后的亏损结论制造反常，再用行业规模放大矛盾，抛出核心悖论问句，预告内部人士将揭示隐藏逻辑，承诺认知颠覆",
+      "replacement_needs": [
+        "一个观众熟悉且近期有消费体验的日常产品或服务及其价格",
+        "该产品的可拆解成本构成，计算后显示微利或亏损",
+        "该行业的规模数据，与单品亏损形成反差",
+        "一个来自业内核心角色的反直觉表态或原话预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(72);打开的悬念 LOOP01→FS12、LOOP02→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 72
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "everyday_purchase_paradox_with_insider_confession_tease",
+        "first_stimulus_ms": 239,
+        "first_payoff_ms": 55268,
+        "evidence_refs": [
+          "C0001",
+          "C0013",
+          "C0029"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "bait_pricing_reveal",
+      "start_ratio": 0.0657,
+      "end_ratio": 0.1507,
+      "start_sec": 47.6,
+      "end_sec": 109.2,
+      "position_label": "6.6%–15.1%(0:48–1:49)",
+      "purpose": "揭示菜单板工程学：招牌单品被故意定成便宜诱饵，预算菜单负责把人带进门并完成价格锚定，第一层机制落地",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "第一层子环：菜单工程",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "mechanism_tease",
+          "mechanism": "engineered_menu_board"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "belief_challenge",
+          "mechanism": "star_item_as_bait"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "numeric_reveal",
+          "mechanism": "ingredient_cost_share"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "mechanism_reveal",
+          "mechanism": "loss_leader_door_opener"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "motive_reframe",
+          "mechanism": "anchor_not_friendliness"
+        }
+      ],
+      "required_retention_events": [
+        "mechanism_tease",
+        "belief_challenge",
+        "numeric_reveal",
+        "motive_reframe"
+      ],
+      "original_moves": [
+        "声明菜单上的每个价格都不是偶然",
+        "揭示招牌单品被故意定位为便宜诱饵",
+        "给出食材成本占售价约30%的数字",
+        "说明预算菜单的定价接近成本",
+        "点明这是价格锚定机制而非友善行为"
+      ],
+      "abstract_move": "声明表面定价背后有设计，揭示低价产品的诱饵角色，用成本占比数据证明接近成本定价，点明这是心理机制而非善意",
+      "replacement_needs": [
+        "一个表面友好实则有策略意图的定价或呈现方式",
+        "该产品的成本占比或利润空间数据",
+        "定价背后的心理或行为机制名称或原理",
+        "该机制如何影响后续消费决策的说明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "margin_engine_reveal",
+      "start_ratio": 0.1494,
+      "end_ratio": 0.2672,
+      "start_sec": 108.3,
+      "end_sec": 193.6,
+      "position_label": "14.9%–26.7%(1:48–3:14)",
+      "purpose": "展示利润真正所在的附加品与一句标准化追加问句：饮料、薯条、咖啡的高毛利与套餐升级话术，并以小结完成第一层闭环",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.1683,
+          "time_ms": 121966,
+          "reason": "25-40 美分成本卖 3 美元、毛利可超 1000%，全片首个强数字冲击"
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.2259,
+          "time_ms": 163721,
+          "reason": "全行业最重要的一句话是一句追加问句，话术机制被点名"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "cost_reveal",
+          "mechanism": "beverage_mostly_water"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "numeric_contrast",
+          "mechanism": "extreme_margin_claim"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "superlative_reveal",
+          "mechanism": "most_profitable_square_meter"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "phrase_reveal",
+          "mechanism": "industry_defining_question"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "reframe",
+          "mechanism": "conveyor_belt_not_shortcut"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "layer_closure",
+          "mechanism": "first_layer_summary"
+        }
+      ],
+      "required_retention_events": [
+        "cost_reveal",
+        "extreme_margin",
+        "superlative_reveal",
+        "phrase_reveal",
+        "layer_summary"
+      ],
+      "original_moves": [
+        "指出大杯饮料几乎全是水和糖浆",
+        "对比25-40美分成本与3美元售价",
+        "给出毛利可超1000%的数字冲击",
+        "列举薯条、咖啡等附加品遵循同一模式",
+        "揭示全行业最重要的一句话是'要不要升级套餐'",
+        "说明这句追加问句的转化功能",
+        "小结第一层利润机制"
+      ],
+      "abstract_move": "展示附加品的成本与售价对比，用超高毛利数字制造冲击，泛化到多个同类产品，揭示一句标准化话术的转化功能，小结利润来源的第一层",
+      "replacement_needs": [
+        "一个或多个附加品的成本与售价对比数据",
+        "毛利率或利润倍数的量化表达",
+        "一句标准化话术或操作及其转化效果数据",
+        "该话术在全行业或多场景的普遍性证明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(78)、PK03(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 78
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "volume_machine_reveal",
+      "start_ratio": 0.2658,
+      "end_ratio": 0.4228,
+      "start_sec": 192.6,
+      "end_sec": 306.4,
+      "position_label": "26.6%–42.3%(3:13–5:06)",
+      "purpose": "把叙事从毛利升级到规模：窗口占比、秒级计时、自助点餐机追加销售、优惠券换数据与忠诚度计划，论证门店是一台吞吐机器",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "第二层子环：规模机器",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "layer_summary",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "new_constraint",
+          "mechanism": "margin_needs_volume"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "numeric_reveal",
+          "mechanism": "window_sales_share"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "process_reveal",
+          "mechanism": "second_level_stopwatch"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "scale_math",
+          "mechanism": "lane_throughput_arithmetic"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "design_reveal",
+          "mechanism": "dining_room_as_decoration"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "motive_reframe",
+          "mechanism": "kiosk_true_purpose"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "numeric_reveal",
+          "mechanism": "screen_order_lift"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "trade_reveal",
+          "mechanism": "coupons_for_data_exchange"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "identity_reframe",
+          "mechanism": "programmed_customers"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "expectation_setup",
+          "mechanism": "most_profitable_business_claim"
+        }
+      ],
+      "required_retention_events": [
+        "new_constraint",
+        "window_share",
+        "stopwatch_math",
+        "kiosk_motive",
+        "data_trade",
+        "programmed_customers"
+      ],
+      "original_moves": [
+        "转折：高毛利必须配合规模才有意义",
+        "给出约70%销售经窗口完成的占比",
+        "用秒表计时展示单车道吞吐算术",
+        "说明双车道与餐厅装饰化策略",
+        "揭示点餐机让订单金额提升20-30%",
+        "说明优惠券换取数据的机制",
+        "展示忠诚度计划的程序化运作",
+        "推论：门店是最赚钱的机器"
+      ],
+      "abstract_move": "用转折引入规模前提，给出主渠道占比，用时间单位计算吞吐量，展示空间优化策略，揭示自动化工具的订单增幅数据，说明数据换取与忠诚度机制，推论出效率结论",
+      "replacement_needs": [
+        "主要销售渠道的占比数据",
+        "以时间单位（秒、分钟）计算的吞吐量或处理能力",
+        "自动化或自助工具对订单金额或转化率的提升数据",
+        "数据采集与用户留存机制的运作方式"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS05 跨段;回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "twist_margin_reveal",
+      "start_ratio": 0.4216,
+      "end_ratio": 0.4697,
+      "start_sec": 305.5,
+      "end_sec": 340.4,
+      "position_label": "42.2%–47%(5:06–5:40)",
+      "purpose": "用显式转折推翻刚建立的推论：门店每美元只留下个位数美分，逐项成本拆解证明门店是薄利生意",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.4275,
+          "time_ms": 309788,
+          "reason": "转折标记+门店只留 6-9 美分，推翻刚建立的\"最赚钱\"推论"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "中段升级环：把主问题从产品利润升级为分配结构",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "mechanism_inventory_summary",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "twist_reveal",
+          "mechanism": "thin_store_margin_twist"
+        }
+      ],
+      "required_retention_events": [
+        "twist_marker",
+        "thin_margin_number",
+        "cost_inventory"
+      ],
+      "original_moves": [
+        "用显式转折标记推翻前一段推论",
+        "揭示门店每美元只留6-9美分",
+        "逐项拆解成本：食材约30、工资约30、水电保险维修",
+        "得出个位数毛利率的结论",
+        "限定：只能靠巨大流量存活"
+      ],
+      "abstract_move": "用转折标记推翻刚建立的推论，揭示执行层留存的极低份额，逐项拆解成本构成证明薄利，给出个位数比例结论，限定生存条件",
+      "replacement_needs": [
+        "执行层或门店每单位收入的实际留存份额数据",
+        "成本构成的逐项拆解及各项占比",
+        "最终利润率或留存比例的量化结论",
+        "该模式依赖的前提条件（流量、规模、频次）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(84);打开的悬念 LOOP05→FS10 跨段;回收了前文的悬念 FS04→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "ownership_reframe",
+      "start_ratio": 0.4684,
+      "end_ratio": 0.4875,
+      "start_sec": 339.4,
+      "end_sec": 353.3,
+      "position_label": "46.8%–48.8%(5:39–5:53)",
+      "purpose": "提出\"本片真正的问题\"：谁在变富；并用所有权反转把调查推向结构上层",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "question_escalation",
+          "mechanism": "real_question_who_gets_rich"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "ownership_reframe",
+          "mechanism": "brand_does_not_own_store"
+        }
+      ],
+      "required_retention_events": [
+        "question_escalation",
+        "ownership_reframe"
+      ],
+      "original_moves": [
+        "声明本片真正的问题是什么",
+        "抛出问句：谁在变富",
+        "反问：谁真正拥有本地门店",
+        "否定表层答案：几乎必然不是品牌方"
+      ],
+      "abstract_move": "声明真正问题，抛出利益归属问句，用所有权反问引导，否定表面答案并暗示结构上层",
+      "replacement_needs": [
+        "一个从表面利润转向利益归属的问句",
+        "一个关于所有权或控制权归属的反问",
+        "对表层答案的明确否定",
+        "暗示调查方向转向结构上层的信号"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "franchise_terms_reveal",
+      "start_ratio": 0.4865,
+      "end_ratio": 0.6602,
+      "start_sec": 352.6,
+      "end_sec": 478.4,
+      "position_label": "48.7%–66%(5:53–7:58)",
+      "purpose": "拆解加盟机制：极高进入门槛与现金要求、无控制权、按销售额而非利润抽成的不对称结构，再用加盟商收入带校准预期并预告\"游艇的钱在别处\"",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.6204,
+          "time_ms": 449549,
+          "reason": "按销售额而非利润抽成+正反都赢，不对称结构摊牌"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "barrier_reveal",
+          "mechanism": "brutal_entry_cost"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "irony_reveal",
+          "mechanism": "audition_to_pay"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "control_reveal",
+          "mechanism": "ownership_without_control"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "fee_reveal",
+          "mechanism": "royalty_off_the_top"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "wording_reveal",
+          "mechanism": "sales_not_profits"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "asymmetry_reveal",
+          "mechanism": "house_wins_both_sides"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "expectation_calibration",
+          "mechanism": "franchisee_income_band"
+        }
+      ],
+      "required_retention_events": [
+        "entry_barrier",
+        "no_control",
+        "royalty_off_top",
+        "sales_not_profits",
+        "asymmetry_reveal",
+        "income_calibration"
+      ],
+      "original_moves": [
+        "给出九成以上门店是加盟的占比",
+        "列出百万级进入成本与现金要求",
+        "说明选拔与培训的高门槛",
+        "对比买到的品牌使用权与买不到的控制权",
+        "揭示按销售额而非利润抽成的结构",
+        "点明正反都赢的不对称性",
+        "校准加盟商收入带：体面但买不起游艇",
+        "预告游艇的钱在别处"
+      ],
+      "abstract_move": "给出参与模式占比，列出极高进入门槛与资金要求，对比获得权利与失去控制权，揭示按收入而非利润分成的不对称结构，校准执行者收入预期，预告上层收益在别处",
+      "replacement_needs": [
+        "参与模式（加盟、代理、合伙）的占比数据",
+        "进入门槛的资金、资质或时间要求",
+        "分成结构的计算口径及其不对称性说明",
+        "执行者实际收入范围或中位数数据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "rent_model_reveal",
+      "start_ratio": 0.6589,
+      "end_ratio": 0.7989,
+      "start_sec": 477.5,
+      "end_sec": 578.9,
+      "position_label": "65.9%–79.9%(7:57–9:39)",
+      "purpose": "揭示\"大多数人从未听过的部分\"：品牌方持有土地与楼宇，租金按销售额抽取且与加盟协议绑定；租金偿还物业、物业升值、失败时资产留存，乘以数万门店后面具掉落",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 88,
+          "position_ratio": 0.7712,
+          "time_ms": 558816,
+          "reason": "数万门店乘法后面具掉落：租金收入超过抽成"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "租金子环：核心揭示的预告",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "bill_tease",
+          "mechanism": "biggest_bill_rent"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "structure_reveal",
+          "mechanism": "corporation_owns_site"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "numeric_reveal",
+          "mechanism": "rent_share_of_sales"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "lock_in_reveal",
+          "mechanism": "linked_contracts"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "asset_reveal",
+          "mechanism": "rent_finances_property"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "downside_asymmetry",
+          "mechanism": "failure_keeps_assets"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "scale_reveal",
+          "mechanism": "mask_falls_off"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "authority_payoff",
+          "mechanism": "founder_origin_quote"
+        }
+      ],
+      "required_retention_events": [
+        "bill_tease",
+        "land_ownership",
+        "rent_percent",
+        "linked_contracts",
+        "asset_appreciation",
+        "failure_asymmetry",
+        "scale_multiplication"
+      ],
+      "original_moves": [
+        "预告最大账单即将揭晓",
+        "揭示公司持有土地与楼宇",
+        "说明永久租金为销售额8-15%",
+        "点明租约与加盟协议绑定",
+        "说明租金用于偿还物业且物业升值",
+        "揭示失败时资产归属于公司",
+        "用数万门店乘法放大",
+        "得出租金收入超过抽成的结论"
+      ],
+      "abstract_move": "预告最大收入来源，揭示上层持有核心资产，说明永久租金按收入百分比抽取且与协议绑定，说明资产养护与增值机制，揭示失败时归属，用规模乘法放大，得出租金超过分成的结论",
+      "replacement_needs": [
+        "上层持有的核心资产类型及其规模",
+        "租金或使用费的计算口径（按收入百分比、固定额）",
+        "资产增值或回报的双重机制说明",
+        "规模化后该收入与分成收入的对比数据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(88);打开的悬念 LOOP06→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "origin_quote_payoff",
+      "start_ratio": 0.7976,
+      "end_ratio": 0.8391,
+      "start_sec": 578,
+      "end_sec": 608,
+      "position_label": "79.8%–83.9%(9:38–10:08)",
+      "purpose": "用模式发明者的原话兑现开场预告的忏悔：\"不在这门食物的生意，而在地产生意\"，并把招牌单品的真实功能重定义为让租客有能力付租，用数字证明今天仍如此运转",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 93,
+          "position_ratio": 0.8056,
+          "time_ms": 583756,
+          "reason": "模式发明者原话兑现开场预告：不在食品行业，在地产行业"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "origin_quote_confirmation",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "scale_reveal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE46",
+          "event_type": "function_reframe",
+          "mechanism": "hamburger_enables_rent"
+        }
+      ],
+      "required_retention_events": [
+        "origin_quote",
+        "read_it_again_emphasis",
+        "function_reframe",
+        "still_true_proof"
+      ],
+      "original_moves": [
+        "介绍模式发明者身份",
+        "引用原话：不在食品行业，在地产行业",
+        "强调指令：再读一遍",
+        "重定义招牌单品的真实工作是让租客有能力付租",
+        "用数字证明机制至今仍如此运转"
+      ],
+      "abstract_move": "引入模式发明者或核心角色身份，引用其原话揭示真实业务性质，用强调指令加深印象，重定义低价产品的真实功能，用当前数据证明机制延续至今",
+      "replacement_needs": [
+        "模式设计者、发明者或核心决策者的身份及其权威性",
+        "其关于业务性质的原话或核心表态",
+        "对前文产品或策略真实功能的重定义",
+        "当前数据证明该机制仍在运作"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(93);回收了前文的悬念 FS01→LOOP02、FS08→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 93
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "industry_generalization",
+      "start_ratio": 0.8377,
+      "end_ratio": 0.9321,
+      "start_sec": 607.1,
+      "end_sec": 675.4,
+      "position_label": "83.8%–93.2%(10:07–11:15)",
+      "purpose": "先用门店留个位数美分、上层公司留约46美分的对照兑现\"谁变富\"，再把同一手册泛化到整个行业：竞争的不是更好的产品，而是最忙街角上的租客",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.8441,
+          "time_ms": 611668,
+          "reason": "门店 6-9 美分对公司约 46 美分，\"谁变富\"闭环"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "margin_contrast_answer",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE47",
+          "event_type": "margin_contrast",
+          "mechanism": "store_vs_corporation_split"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "generalization",
+          "mechanism": "same_manual_everywhere"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "competition_reframe",
+          "mechanism": "tenants_on_busy_corners"
+        }
+      ],
+      "required_retention_events": [
+        "margin_contrast",
+        "industry_generalization",
+        "competition_reframe"
+      ],
+      "original_moves": [
+        "对比门店留6-9美分与公司留约46美分",
+        "用科技巨头级利润率作比喻",
+        "声明全行业使用同一手册",
+        "列举其他连锁品牌例证",
+        "说明它们遵循同一逻辑",
+        "重定义竞争对象：不是更好的产品而是租客资格"
+      ],
+      "abstract_move": "对比执行层与上层留存份额闭合利益归属问题，用行业对比放大利润率，声明全行业使用同一模式，列举其他案例验证，重定义竞争本质",
+      "replacement_needs": [
+        "执行层与上层留存份额的量化对比",
+        "上层利润率与其他高利润行业的对比",
+        "同一模式在其他品牌或领域的例证",
+        "对竞争本质或行业目标的重定义"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85);回收了前文的悬念 FS05→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "money_flow_callback",
+      "start_ratio": 0.9308,
+      "end_ratio": 0.9741,
+      "start_sec": 674.5,
+      "end_sec": 705.9,
+      "position_label": "93.1%–97.4%(11:14–11:46)",
+      "purpose": "回到开场那笔订单，逐项复述钱的去向，并以\"你以为在买午餐，其实在为别人付租\"完成身份重构",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 87,
+          "position_ratio": 0.9603,
+          "time_ms": 695904,
+          "reason": "你以为在买午餐，其实在为别人付租：身份重构落点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE50",
+          "event_type": "title_callback",
+          "mechanism": "follow_the_money_recap"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "identity_reframe",
+          "mechanism": "paying_rent_not_lunch"
+        }
+      ],
+      "required_retention_events": [
+        "title_callback",
+        "money_flow_recap",
+        "identity_reframe"
+      ],
+      "original_moves": [
+        "指令：回到开场的5美元订单",
+        "逐项复述钱的去向",
+        "指出风险承担者只剩几美分",
+        "给出身份重构句：你以为在买午餐，其实在为别人付租"
+      ],
+      "abstract_move": "回到开场的消费场景，逐项复述资金流向，点明风险与回报的不对称分配，用对比句完成消费者身份重构",
+      "replacement_needs": [
+        "回到开场场景的明确指令",
+        "资金在各层级分配的逐项复述",
+        "风险承担者与收益者的不匹配说明",
+        "一个'你以为…其实…'结构的身份重构句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(87)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 87
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "competence_close_cta",
+      "start_ratio": 0.9729,
+      "end_ratio": 1,
+      "start_sec": 705,
+      "end_sec": 724.6,
+      "position_label": "97.3%–100%(11:45–12:05)",
+      "purpose": "用\"你比厨房里大多数人都懂这门生意\"给予能力奖励，再以与内容呼应的幽默CTA与订阅承诺收尾",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 70,
+          "position_ratio": 0.9817,
+          "time_ms": 711407,
+          "reason": "点赞是这个行业唯一免费的东西：幽默 CTA 完成情绪回收"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "频道级开放环",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "money_flow_recap_with_identity_reframe",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE52",
+          "event_type": "competence_reward",
+          "mechanism": "understand_better_than_staff"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "dry_humor_cta",
+          "mechanism": "only_free_thing"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "open_ending_tease",
+          "mechanism": "channel_promise"
+        }
+      ],
+      "required_retention_events": [
+        "competence_reward",
+        "humor_cta",
+        "channel_tease"
+      ],
+      "original_moves": [
+        "确认观众能力：你比厨房里大多数人都懂这门生意",
+        "幽默CTA：点赞是这个行业唯一免费的东西",
+        "订阅承诺：频道将持续揭示类似内容",
+        "告别"
+      ],
+      "abstract_move": "用知识优势确认观众能力，用与主题呼应的幽默话术引导互动，给出频道级内容承诺，完成告别",
+      "replacement_needs": [
+        "一个确认观众获得认知优势的表述",
+        "一个与主题内容呼应的幽默互动理由",
+        "频道内容方向或价值的简短承诺",
+        "自然的告别用语"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(70);打开的悬念 LOOP07(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

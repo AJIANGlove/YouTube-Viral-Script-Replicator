@@ -1,0 +1,912 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T07:52:05.405Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "loss_accusation_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0261,
+      "start_sec": 0.1,
+      "end_sec": 12.3,
+      "position_label": "0%–2.6%(0:00–0:12)",
+      "purpose": "用第二人称损失指控直接开场：点明日常采购内容在缩水、价格不变，并抛出“这是有名字的策略”制造首个好奇缺口",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "开场指控抛出“它有名字”但暂不给名字",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_type": "problem_statement",
+          "mechanism": "second_person_loss_alert"
+        },
+        {
+          "event_type": "paradox_tease",
+          "mechanism": "same_price_less_content_with_naming_tease"
+        }
+      ],
+      "required_retention_events": [
+        "personal_loss_alert",
+        "paradox_tease",
+        "naming_tease"
+      ],
+      "original_moves": [
+        "用第二人称指控观众的日常采购正在缩水",
+        "列举三种日常商品同盒同价内容却变少的悖论",
+        "声明这不是意外而是有意策略",
+        "抛出'这个策略有专门名字'制造机制悬念"
+      ],
+      "abstract_move": "用第二人称损失指控直接切入观众日常体验 + 列举多个同价少量的悖论实例 + 将现象定性为系统性策略而非偶然 + 抛出'它有名字'的机制预告制造好奇缺口",
+      "replacement_needs": [
+        "一组观众日常会遇到的采购品类实例",
+        "能证明'价格不变但内容减少'悖论的对比事实",
+        "一个将现象定性为有意设计而非偶然的判断依据",
+        "一个预告机制命名或底层逻辑的悬念钩子"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_loss_alert_with_deferred_countermeasure_tease",
+        "first_stimulus_ms": 112,
+        "first_payoff_ms": 4045,
+        "evidence_refs": [
+          "C0001",
+          "C0003",
+          "C0005",
+          "C0015"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "participatory_proof",
+      "start_ratio": 0.0242,
+      "end_ratio": 0.0661,
+      "start_sec": 11.4,
+      "end_sec": 31.2,
+      "position_label": "2.4%–6.6%(0:11–0:31)",
+      "purpose": "把指控转成观众今晚可做的居家实验，让观众亲手产生证据，并用“有人受雇决定空气多少”把抽象策略人格化",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.0441,
+          "time_ms": 20804,
+          "reason": "居家实验结果揭示袋中一半以上是空气，标题指控第一次变成观众亲眼所见的证据"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_type": "participation_contract",
+          "mechanism": "home_test_invitation"
+        },
+        {
+          "event_type": "visual_proof_payoff",
+          "mechanism": "air_ratio_reveal"
+        },
+        {
+          "event_type": "agent_reveal",
+          "mechanism": "paid_to_decide_air"
+        }
+      ],
+      "required_retention_events": [
+        "participation_test",
+        "visual_proof",
+        "agent_reveal"
+      ],
+      "original_moves": [
+        "邀请观众今晚在家做一个可复现的实验",
+        "给出倒空包装袋的命令式动作指令",
+        "揭示视觉冲击结果：内容不及袋底且超过一半是空气",
+        "点明有人受雇决定空气比例且不希望你做这个实验",
+        "完成从指控到观众亲手产生证据的转换"
+      ],
+      "abstract_move": "将抽象指控转化为观众当晚可执行的居家实验 + 用命令式动作序列降低执行门槛 + 给出视觉冲击的实验结果 + 将抽象策略人格化为'有人决定且不想你发现'",
+      "replacement_needs": [
+        "一个观众能在家中立即复现的简单实验指令",
+        "实验会产生的视觉或数字冲击结果",
+        "将抽象机制人格化的表述（谁在做决定、谁不想被发现）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "retention_promise",
+      "start_ratio": 0.065,
+      "end_ratio": 0.0845,
+      "start_sec": 30.6,
+      "end_sec": 39.8,
+      "position_label": "6.5%–8.5%(0:31–0:40)",
+      "purpose": "在开头窗口末尾抛出全片主环：结尾将展示“他们唯一不能缩水的数字”，把留存契约钉在片尾",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "开头 30 秒立约，答案被明确推迟到片尾且“藏在货架明处”",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_type": "deferred_payoff_promise",
+          "mechanism": "unshrinkable_number_tease"
+        }
+      ],
+      "required_retention_events": [
+        "deferred_payoff_promise"
+      ],
+      "original_moves": [
+        "发出明确的留存到结尾的请求",
+        "承诺结尾将展示'唯一不能缩水的数字'",
+        "给出线索：这个数字藏在货架明处且能击败整个系统",
+        "把留存契约钉在片尾形成主环"
+      ],
+      "abstract_move": "在开头窗口末尾发出明确留存请求 + 抛出全片主环悬念：一个唯一不能被操纵的关键数字 + 给出位置暗示但不揭示答案 + 将防御方案悬念钉在片尾",
+      "replacement_needs": [
+        "一个能完成全片主环的核心防御工具或数字的预告",
+        "该工具位置或性质的定位暗示（藏在明处、公开可见等）",
+        "该工具能对抗系统的能力承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "mechanism_explanation",
+      "start_ratio": 0.0828,
+      "end_ratio": 0.1867,
+      "start_sec": 39,
+      "end_sec": 88,
+      "position_label": "8.3%–18.7%(0:39–1:28)",
+      "purpose": "切换到公司视角解释“涨价与缩量两个旋钮”的取舍逻辑，说明为什么缩量更安全，并以行业术语命名完成开场小环的兑现",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.1773,
+          "time_ms": 83569,
+          "reason": "行业术语命名兑现开场“它有名字”的小环，观众获得识别机制的概念工具"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "naming_reveal_with_mechanism",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_type": "perspective_shift",
+          "mechanism": "company_side_two_knobs"
+        },
+        {
+          "event_type": "mechanism_contrast",
+          "mechanism": "price_noticed_grams_forgotten"
+        },
+        {
+          "event_type": "naming_payoff",
+          "mechanism": "industry_term_reveal"
+        },
+        {
+          "event_type": "generalization_turn",
+          "mechanism": "see_them_everywhere"
+        }
+      ],
+      "required_retention_events": [
+        "perspective_shift",
+        "knob_dichotomy",
+        "contrast_explanation",
+        "naming_payoff"
+      ],
+      "original_moves": [
+        "切换到公司视角设定成本上升的处境",
+        "抛出两个旋钮：涨价或缩量",
+        "解释涨价危险因为价格会被记住和比较",
+        "解释缩量安全因为规格容易被遗忘",
+        "给出行业术语命名和企业内部叫法",
+        "兑现开场'它有名字'的小环"
+      ],
+      "abstract_move": "切换到实施方视角解释两难处境 + 提出两个应对选项的取舍框架 + 用不对称记忆解释为何一个选项更安全 + 以行业术语命名完成机制揭示 + 兑现开场悬念",
+      "replacement_needs": [
+        "实施方面临的处境或压力设定",
+        "两个应对选项的对比框架",
+        "解释为何一个选项比另一个更隐蔽或安全的不对称机制",
+        "机制的行业术语或正式命名"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(70);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "trick_catalog",
+      "start_ratio": 0.1847,
+      "end_ratio": 0.4338,
+      "start_sec": 87,
+      "end_sec": 204.4,
+      "position_label": "18.5%–43.4%(1:27–3:24)",
+      "purpose": "用“命名标签→品牌实例→一句定性”的三拍节奏展示机制的四种变体与长期尺度，并以一次国际事件及其反转提供段落情绪高点",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "emotional_payoff",
+          "strength": 76,
+          "position_ratio": 0.2821,
+          "time_ms": 132926,
+          "reason": "公众愤怒两年后逼回原状的罕见反转，目录段的唯一希望高点同时强调稀缺"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.3223,
+          "time_ms": 151881,
+          "reason": "“他们算出你不会发现的数量”把缩量从市场现象改写为精确计算过的设计"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.3813,
+          "time_ms": 179699,
+          "reason": "数十年尺度从数百到几十的跨度对比叠加“把解决方案卖回来”的讽刺，形成目录段最强反差"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "目录段中“这曾造成国际事件”的事件型悬念",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "anecdote_resolution_with_rarity_point",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_type": "case_reveal",
+          "mechanism": "same_bottle_trick"
+        },
+        {
+          "event_type": "case_reveal",
+          "mechanism": "redesign_trick"
+        },
+        {
+          "event_type": "escalation_anecdote",
+          "mechanism": "space_trick_international_incident"
+        },
+        {
+          "event_type": "reversal_payoff",
+          "mechanism": "public_anger_reversal"
+        },
+        {
+          "event_type": "insider_admission",
+          "mechanism": "calculated_unnoticeable_count"
+        },
+        {
+          "event_type": "incremental_shrink_timeline",
+          "mechanism": "size_staircase"
+        },
+        {
+          "event_type": "long_term_scale_reveal",
+          "mechanism": "decades_shrink_with_resale_irony"
+        },
+        {
+          "event_type": "detection_sign",
+          "mechanism": "new_look_check_weight"
+        }
+      ],
+      "required_retention_events": [
+        "trick_label_catalog",
+        "brand_case_reveal",
+        "escalation_anecdote",
+        "reversal_payoff",
+        "long_term_scale"
+      ],
+      "original_moves": [
+        "用同瓶诡计标签展示第一种变体并给出品牌实例",
+        "用换新诡计标签展示第二种变体并给出对照",
+        "用间距诡计标签引入国际事件实例",
+        "揭示该事件公众愤怒两年后逼回原状的罕见反转",
+        "用隐形减量标签展示第四种变体",
+        "用冰淇淋阶梯式缩量展示计算精度",
+        "用卫生纸数十年从数百到几十的跨度展示长期尺度",
+        "给出'新外观'包装更换的警示信号"
+      ],
+      "abstract_move": "用'命名标签→品牌实例→一句定性'的三拍节奏展示机制的多种变体 + 以一次公众愤怒导致反转的罕见事件提供情绪高点 + 用阶梯式缩量揭示精确计算的设计意图 + 用数十年跨度证明机制的长期性和累积效应 + 给出识别信号",
+      "replacement_needs": [
+        "四种以上机制变体的命名标签与对应实例",
+        "每种变体的品牌前后对照或实施证据",
+        "一个罕见的公众反击成功并逼迫反转的轶事",
+        "一个数十年尺度的累积对比数据",
+        "一个可操作的警示识别信号"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(76)、PK04(82)、PK05(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 76
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 82
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "price_psychology",
+      "start_ratio": 0.4318,
+      "end_ratio": 0.5062,
+      "start_sec": 203.5,
+      "end_sec": 238.5,
+      "position_label": "43.2%–50.6%(3:23–3:59)",
+      "purpose": "解释零售为何死守心理价位：价格数字被保护、内容成为牺牲品，并以“接下来这部分才真正应该让你不安”完成向升级段的转场",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "价格心理段末尾的升级预告",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_type": "psychology_reveal",
+          "mechanism": "magic_price_numbers"
+        },
+        {
+          "event_type": "mechanism_link",
+          "mechanism": "price_protected_product_sacrificed"
+        },
+        {
+          "event_type": "escalation_tease",
+          "mechanism": "part_that_should_bother_you"
+        }
+      ],
+      "required_retention_events": [
+        "psychology_reveal",
+        "magic_number",
+        "mechanism_link",
+        "escalation_tease"
+      ],
+      "original_moves": [
+        "列举多个心理价位数字",
+        "解释越线会吓跑买家",
+        "指出成本上升时死保价格数字",
+        "得出内容成为牺牲品的因果",
+        "举例收银台旁商品数十年不涨价但持续变轻",
+        "抛出'接下来才是真正该不安的部分'转场预告"
+      ],
+      "abstract_move": "引入心理价位机制解释为何价格被保护 + 说明越线的买家反应后果 + 推导出价格固定则内容必须牺牲的因果链 + 用长期不涨价但持续缩量的实例证实 + 以升级预告完成向更严重维度的转场",
+      "replacement_needs": [
+        "一组心理价位数字或阈值的清单",
+        "越过阈值会触发的买家行为或市场反应",
+        "价格被保护导致其他维度牺牲的因果推理",
+        "一个长期价格不变但其他维度持续削弱的实例",
+        "一个向更严重或更隐蔽维度升级的转场预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "irreversibility_and_legal_reality",
+      "start_ratio": 0.5042,
+      "end_ratio": 0.6408,
+      "start_sec": 237.6,
+      "end_sec": 302,
+      "position_label": "50.4%–64.1%(3:58–5:02)",
+      "purpose": "给出全片两个关键升级判断：缩量是只进不退的棘轮；诉讼通常败诉因为重量一直印在标签上——“法律假设你读标签，商业模式假设你不读”",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.6341,
+          "time_ms": 298831,
+          "reason": "“法律假设你读标签，商业模式假设你不读，它们都对”完成中段最强世界观重构"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "诉讼存在与胜诉稀少之间的反差追问",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "mechanism_escalation_answer",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_type": "irreversibility_reveal",
+          "mechanism": "ratchet_one_direction"
+        },
+        {
+          "event_type": "callback_rarity",
+          "mechanism": "reversal_rarity_point"
+        },
+        {
+          "event_type": "legal_term_reveal",
+          "mechanism": "slack_fill_term"
+        },
+        {
+          "event_type": "verdict_explanation",
+          "mechanism": "law_vs_business_model_symmetry"
+        }
+      ],
+      "required_retention_events": [
+        "irreversibility_reveal",
+        "callback_rarity",
+        "legal_term_reveal",
+        "ironic_symmetry"
+      ],
+      "original_moves": [
+        "给出棘轮判断：缩量只朝一个方向进行",
+        "指出经济危机后缩量不恢复",
+        "点明回调案例因罕见而闻名",
+        "引入消费者诉讼与包装空隙的法律术语",
+        "揭示企业通常胜诉因为重量一直印在包装角落",
+        "给出金句：法律假设你读标签商业模式假设你不读且两者都对"
+      ],
+      "abstract_move": "给出棘轮单向性判断：机制只进不退 + 用回调案例的罕见性证实单向性 + 引入法律维度解释为何诉讼通常败诉 + 揭示透明度悖论：信息公开但位置隐蔽 + 以对称金句完成世界观重构",
+      "replacement_needs": [
+        "机制的单向性判断及支撑证据（危机后不恢复、回调罕见等）",
+        "法律或制度层面企业免责的依据",
+        "信息透明但难以被察觉的悖论实例",
+        "一个总结法律与商业模式双重假设的对称金句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(88);打开的悬念 LOOP05→FS08 跨段;回收了前文的悬念 FS06→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "quality_shrink_escalation",
+      "start_ratio": 0.6388,
+      "end_ratio": 0.7197,
+      "start_sec": 301,
+      "end_sec": 339.1,
+      "position_label": "63.9%–72%(5:01–5:39)",
+      "purpose": "引入“更黑暗的表亲”：包装不能再缩时就缩配方与质量，并指出两种缩水的检测不对称——秤可以立刻发现，味蕾要数月后才察觉",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.6905,
+          "time_ms": 325395,
+          "reason": "同名同价同质外观下产品悄悄变差，把机制从数量扩展到更难察觉的质量维度"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "机制讲完后自然产生的“谁盯着他们”之问",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "causal_answer_with_ironic_symmetry",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_type": "darker_cousin_reveal",
+          "mechanism": "quality_shrink_naming"
+        },
+        {
+          "event_type": "quality_examples",
+          "mechanism": "same_name_worse_product"
+        },
+        {
+          "event_type": "detection_asymmetry",
+          "mechanism": "scale_now_palate_months_later"
+        }
+      ],
+      "required_retention_events": [
+        "darker_cousin",
+        "quality_examples",
+        "detection_asymmetry"
+      ],
+      "original_moves": [
+        "命名'更黑暗的表亲'：质量缩水",
+        "指出包装不能再缩时就缩配料和质量",
+        "列举同名同价但配方变差的实例：汁更少袋更薄豆更少",
+        "点明同名同价同外观下产品悄悄变差",
+        "对比检测不对称：秤立刻能测出数量缩水但味蕾要数月后才察觉质量下降"
+      ],
+      "abstract_move": "引入质量维度作为数量维度的升级版 + 说明当一个维度到极限时转向另一个维度 + 列举同名同价但质量悄悄下降的实例清单 + 揭示检测不对称：一个维度可立即测量另一个需长期感知",
+      "replacement_needs": [
+        "质量缩水的命名或定性",
+        "同名同价但质量或配方悄悄降低的实例清单",
+        "两种维度在检测时间或检测难度上的不对称对比"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(78);打开的悬念 LOOP06→FS09 跨段;回收了前文的悬念 FS07→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "watchdog_and_public_awareness",
+      "start_ratio": 0.7179,
+      "end_ratio": 0.8147,
+      "start_sec": 338.3,
+      "end_sec": 383.9,
+      "position_label": "71.8%–81.5%(5:38–6:24)",
+      "purpose": "回答“谁在发现这些事”：引入民间标签侦探作为证据人格化，引用企业回应并即刻反驳，再用公众比例与流行文化吐槽完成社会验证",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 72,
+          "position_ratio": 0.8099,
+          "time_ms": 381679,
+          "reason": "流行文化角色也抱怨的冷幽默节拍，用社会验证释放累积愤怒"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "公众觉醒之后对制度回应的期待",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "character_reveal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_type": "character_reveal",
+          "mechanism": "watchdog_profile"
+        },
+        {
+          "event_type": "corporate_quote_rebuke",
+          "mechanism": "official_line_then_rebuttal"
+        },
+        {
+          "event_type": "social_proof_with_humor",
+          "mechanism": "majority_noticed_plus_pop_culture_beat"
+        }
+      ],
+      "required_retention_events": [
+        "character_reveal",
+        "corporate_quote_rebuke",
+        "social_proof",
+        "humor_beat"
+      ],
+      "original_moves": [
+        "回答'谁在发现这些事'",
+        "引入退休消费者保护律师作为民间监督者",
+        "描述其方法论：记忆对照标签如侦探比对指纹",
+        "说明其在网站发布对照证据",
+        "引用企业回应说辞并即刻反驳",
+        "给出公众察觉比例数据",
+        "引入流行文化角色也抱怨的冷幽默节拍完成社会验证"
+      ],
+      "abstract_move": "引入民间监督者作为证据来源人格化 + 描述其方法论和证据发布方式 + 引用实施方的辩护说辞并即刻反驳 + 用公众察觉比例完成规模验证 + 以流行文化吐槽提供幽默节拍和社会验证",
+      "replacement_needs": [
+        "一个民间监督者或证据发现者的人物揭示与工作方法",
+        "该监督者发布证据的方式或平台",
+        "企业的辩护说辞及其反驳",
+        "公众察觉或受影响的比例数据",
+        "流行文化或社会共识的验证实例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(72);打开的悬念 LOOP07→FS10 跨段;回收了前文的悬念 FS08→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 72
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "institutional_response_and_limits",
+      "start_ratio": 0.8135,
+      "end_ratio": 0.9135,
+      "start_sec": 383.3,
+      "end_sec": 430.5,
+      "position_label": "81.4%–91.4%(6:23–7:10)",
+      "purpose": "先给制度反击的希望：超市警示标签奏效并升级为法律与罚款；再给执行落差的冷水：检查中几乎没人贴标签，缩水并未停止",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 77,
+          "position_ratio": 0.8458,
+          "time_ms": 398557,
+          "reason": "供应商愤怒证明警示标签奏效并升级为法律，制度反击达到希望高点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "法律奏效的希望与早期检查几乎无人合规之间的落差",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "institutional_response_payoff",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_type": "counterattack_reveal",
+          "mechanism": "warning_labels_worked"
+        },
+        {
+          "event_type": "policy_escalation",
+          "mechanism": "law_fines_and_followers"
+        },
+        {
+          "event_type": "sobering_reality",
+          "mechanism": "enforcement_gap"
+        }
+      ],
+      "required_retention_events": [
+        "counterattack_reveal",
+        "policy_escalation",
+        "sobering_reality"
+      ],
+      "original_moves": [
+        "声明'有地方在反击'",
+        "举例超市警示标签案例",
+        "指出供应商愤怒说明警示标签奏效",
+        "说明立法跟进并设置罚款",
+        "列举更多国家跟进的趋势",
+        "给出冷水：早期检查中几乎无人贴标签",
+        "指出规则新执行稀且缩水并未停止"
+      ],
+      "abstract_move": "先给制度反击的希望：主动警示措施奏效并升级为法律 + 用实施方的愤怒反应证明措施有效 + 列举立法与罚则跟进 + 再给执行落差的冷水：检查中几乎无人合规 + 说明机制并未停止",
+      "replacement_needs": [
+        "一个零售商或机构主动警示的案例",
+        "实施方愤怒或抵制作为措施奏效的证据",
+        "立法或罚则跟进的进展",
+        "执法检查中合规率极低的落差数据",
+        "机制并未停止的现状判断"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(77);打开的悬念 LOOP08(不闭合) 跨段;回收了前文的悬念 FS09→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 77
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "defense_payoff",
+      "start_ratio": 0.9115,
+      "end_ratio": 0.9871,
+      "start_sec": 429.5,
+      "end_sec": 465.2,
+      "position_label": "91.2%–98.7%(7:10–7:45)",
+      "purpose": "兑现开头主环：货架边缘的单位比价是唯一不能缩水的数字；用排他式断言完成世界观重构，给出三秒动作协议，并以“系统赌你没在看，现在你在看了”完成身份翻转",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 93,
+          "position_ratio": 0.9436,
+          "time_ms": 444645,
+          "reason": "排他式断言“其他都会说谎、单位比价不会”兑现开头主环，全片信息与情绪最高点"
+        },
+        {
+          "peak_id": "PK11",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9803,
+          "time_ms": 461977,
+          "reason": "“系统赌你没在看，现在你在看了”完成身份翻转，情绪从无力落到掌控"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "deferred_actionable_defense_reveal",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_type": "solution_reveal",
+          "mechanism": "unit_price_cannot_lie"
+        },
+        {
+          "event_type": "action_protocol",
+          "mechanism": "three_seconds_vs_months_design"
+        },
+        {
+          "event_type": "worldview_closure",
+          "mechanism": "system_bet_identity_flip"
+        }
+      ],
+      "required_retention_events": [
+        "solution_reveal",
+        "parallel_negation_aphorism",
+        "action_protocol",
+        "identity_flip"
+      ],
+      "original_moves": [
+        "劝告'别等标签或法律救你'",
+        "揭示主环答案：货架边缘单位比价是唯一不能缩水的数字",
+        "给出排他式断言金句：其他都会说谎它不会",
+        "给出三步动作协议：忽略包装正面读货架标签对比单位价格",
+        "对比三秒动作与对手数月设计成本的反差",
+        "以'系统赌你没在看现在你在看了'完成身份翻转"
+      ],
+      "abstract_move": "兑现主环答案：唯一不能被操纵的关键数字 + 以排他式断言完成世界观重构 + 给出可立即执行的三步动作协议 + 对比动作成本与对手设计成本的反差 + 以'现在你在看了'完成从被动受害者到主动识别者的身份翻转",
+      "replacement_needs": [
+        "主环答案：一个唯一不能被操纵的防御工具或数字",
+        "一个排他式断言金句总结其可靠性",
+        "一个可立即执行的三步动作协议",
+        "动作成本与对手设计成本的反差对比",
+        "一个完成身份翻转的收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(93)、PK11(85);回收了前文的悬念 FS03→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 93
+        },
+        {
+          "peak_id": "PK11",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "cta_signoff",
+      "start_ratio": 0.9855,
+      "end_ratio": 1,
+      "start_sec": 464.4,
+      "end_sec": 471.2,
+      "position_label": "98.6%–100%(7:44–7:51)",
+      "purpose": "以“如果这改变了你的购物方式”为条件发出点赞订阅请求，用频道式收尾句结束，不添加新信息",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_type": "cta_signoff",
+          "mechanism": "content_bound_cta"
+        }
+      ],
+      "required_retention_events": [
+        "cta",
+        "signoff"
+      ],
+      "original_moves": [
+        "以'如果这改变了你的购物方式'为条件发出点赞请求",
+        "说明订阅会有帮助",
+        "用'下期见'频道式收尾"
+      ],
+      "abstract_move": "将点赞订阅请求与内容效果绑定 + 用简短频道式收尾结束全片 + 不添加新信息",
+      "replacement_needs": [
+        "一个与内容效果或观众行为改变绑定的互动请求",
+        "简短的频道式收尾"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

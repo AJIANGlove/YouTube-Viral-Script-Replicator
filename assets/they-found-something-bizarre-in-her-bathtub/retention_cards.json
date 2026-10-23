@@ -1,0 +1,1084 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T09:11:54.227Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "flashforward_teaser",
+      "start_ratio": 0,
+      "end_ratio": 0.0146,
+      "start_sec": 0,
+      "end_sec": 28.3,
+      "position_label": "0%–1.5%(0:00–0:28)",
+      "purpose": "冷开场闪前预告:从故事后段截取一个动作中的高压场景,不点名人物身份,制造\"她是谁、那两样东西是什么\"的全片级悬念",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "hook_tease",
+          "strength": 75,
+          "position_ratio": 0.0001,
+          "time_ms": 259,
+          "reason": "动作中的冷开场:颤抖的手、神秘电话、两样物品,全片问题确立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "冷开场:颤抖的女人是谁、被恳求处理掉的两样东西是什么、为何她宁可报警——全片级闪前悬念,结尾悄然闭环(女人=凶手女友,物品=工鞋)且刻意不点破",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook",
+          "mechanism": "flashforward_teaser"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "stakes_tease",
+          "mechanism": "unnamed_items"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "moral_choice",
+          "mechanism": "refusal_and_911"
+        }
+      ],
+      "required_retention_events": [
+        "flashforward_teaser",
+        "withheld_identity",
+        "moral_choice_tease"
+      ],
+      "original_moves": [
+        "时间点+动作中开场",
+        "神秘电话",
+        "两样物品",
+        "拒绝并报警"
+      ],
+      "abstract_move": "冷开场闪前预告:从故事后段截取一个动作中的高压场景,不点名人物身份,制造\"她是谁、那两样东西是什么\"的全片级悬念",
+      "replacement_needs": [
+        "一个发生在故事后段的高压抉择瞬间",
+        "两件未说明用途的具体物品",
+        "一个恳求处理掉它们的神秘来电",
+        "主人公拒绝并报警的抉择"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(75);打开的悬念 LOOP02→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "flashforward_cold_open_teaser",
+        "first_stimulus_ms": 259,
+        "first_payoff_ms": 23186,
+        "evidence_refs": [
+          "C0001",
+          "C0008",
+          "C0012"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "channel_intro_cta",
+      "start_ratio": 0.0146,
+      "end_ratio": 0.0255,
+      "start_sec": 28.3,
+      "end_sec": 49.5,
+      "position_label": "1.5%–2.6%(0:28–0:49)",
+      "purpose": "故事外的频道欢迎与互动请求:用一句频道定位(专讲奇异黑暗神秘故事)和一个小玩笑完成点赞CTA,再宣布正片开始",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "channel_cta",
+          "mechanism": "positioning_plus_gag"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "story_anchor",
+          "mechanism": "date_place_person"
+        }
+      ],
+      "required_retention_events": [
+        "channel_positioning",
+        "like_cta_gag",
+        "explicit_story_start"
+      ],
+      "original_moves": [
+        "故事暂停",
+        "频道定位宣言",
+        "点赞请求+一个玩笑",
+        "正式宣布开始"
+      ],
+      "abstract_move": "故事外的频道欢迎与互动请求:用一句频道定位(专讲奇异黑暗神秘故事)和一个小玩笑完成点赞CTA,再宣布正片开始",
+      "replacement_needs": [
+        "频道内容定位的一句话宣言",
+        "点赞/订阅请求",
+        "一个与CTA绑定的自嘲式玩笑",
+        "明确的正片开始宣告"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "victim_ordinary_world",
+      "start_ratio": 0.0255,
+      "end_ratio": 0.1077,
+      "start_sec": 49.5,
+      "end_sec": 209.3,
+      "position_label": "2.6%–10.8%(0:49–3:29)",
+      "purpose": "受害者日常世界建立:用温暖的白描让观众喜欢上受害者,同时埋下关键环境细节(正在施工的玻璃露台),观众此时不知道它的意义",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "detail_plant",
+          "mechanism": "vulnerability_seed"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "wrongness_signal",
+          "mechanism": "no_show_alarm"
+        }
+      ],
+      "required_retention_events": [
+        "time_anchor",
+        "ordinary_world_detail",
+        "vulnerability_seed"
+      ],
+      "original_moves": [
+        "日期地点人物锚点",
+        "家庭关系网",
+        "独居寡居背景",
+        "社区生活",
+        "房屋装修细节",
+        "周末独处入睡"
+      ],
+      "abstract_move": "受害者日常世界建立:用温暖的白描让观众喜欢上受害者,同时埋下关键环境细节(正在施工的玻璃露台),观众此时不知道它的意义",
+      "replacement_needs": [
+        "日期/地点/人物/年龄的开场锚点",
+        "家庭关系与独居背景",
+        "受害者的热爱与社区角色",
+        "一个日后成为关键的环境变化细节(装修)",
+        "她独处入睡的安静收尾"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "discovery_scene",
+      "start_ratio": 0.1077,
+      "end_ratio": 0.1798,
+      "start_sec": 209.3,
+      "end_sec": 349.5,
+      "position_label": "10.8%–18%(3:29–5:50)",
+      "purpose": "发现者视角的恐怖逼近:完全靠感官异常(不该有的水、不该有的声音)把观众一步步引到浴室门口,看到内容的一瞬被扣留",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "withheld_reveal",
+          "strength": 80,
+          "position_ratio": 0.1767,
+          "time_ms": 343528,
+          "reason": "尖叫与内容扣留:发现场景的情绪爆点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺:浴缸里那个\"离奇的东西\"到底是什么、现场为何如此矛盾(标题钩子的悬挂)",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "sensory_dread",
+          "mechanism": "buzzing_above"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "withheld_reveal",
+          "mechanism": "scream_cut"
+        }
+      ],
+      "required_retention_events": [
+        "sensory_dread_buildup",
+        "wrongness_accumulation",
+        "withheld_reveal"
+      ],
+      "original_moves": [
+        "同事来电起疑",
+        "友人驱车查看",
+        "门口水迹",
+        "无人应答",
+        "楼上嗡鸣声",
+        "循声上楼",
+        "尖叫(内容扣留)"
+      ],
+      "abstract_move": "发现者视角的恐怖逼近:完全靠感官异常(不该有的水、不该有的声音)把观众一步步引到浴室门口,看到内容的一瞬被扣留",
+      "replacement_needs": [
+        "一个\"她绝不会迟到\"的反常信号",
+        "门口不该出现的水迹",
+        "楼上传来无法解释的嗡鸣",
+        "声音的逐级逼近",
+        "看到现场后的尖叫与内容扣留"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80);打开的悬念 LOOP01→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "crime_scene_walkthrough",
+      "start_ratio": 0.1798,
+      "end_ratio": 0.2991,
+      "start_sec": 349.5,
+      "end_sec": 581.4,
+      "position_label": "18%–29.9%(5:50–9:41)",
+      "purpose": "现场走查与异常目录:把标题承诺的\"离奇浴缸现场\"兑现为具体画面,同时显式声明核心矛盾——吹风机指向意外,而残暴伤痕指向谋杀",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "shock_reveal",
+          "strength": 80,
+          "position_ratio": 0.2527,
+          "time_ms": 491234,
+          "reason": "\"面目全非\":受害者惨状与\"大概是房主\"疑点同时落地"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.2818,
+          "time_ms": 547741,
+          "reason": "浴缸吹风机与残暴伤痕的矛盾:标题承诺兑现并升级为伪装谜题"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "谁杀了她:从发现尸体起悬挂的 whodunit 主悬念,贯穿全部嫌疑人过堂",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "为什么只能说\"大概是房主\":身份无法确认的第一疑点",
+          "closes_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP05",
+          "tension": "吹风机到底意味着什么:意外/自杀的表象与残暴伤痕之间的矛盾,要求一个机制性解释",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "无强行闯入:凶手是怎么进去的",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "bizarre_scene_reveal_plus_staging_verdict",
+          "opened_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "anomaly_explanation_face_unrecognizable",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "first_anomaly",
+          "mechanism": "probably_the_owner"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "gore_reveal",
+          "mechanism": "blood_soaked_bedroom"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "anomaly_explained",
+          "mechanism": "unrecognizable_face"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "title_payoff",
+          "mechanism": "hairdryer_in_tub"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "contradiction_flag",
+          "mechanism": "accident_vs_savagery"
+        }
+      ],
+      "required_retention_events": [
+        "anomaly_catalog",
+        "gore_reveal",
+        "contradiction_flagging"
+      ],
+      "original_moves": [
+        "警探到场",
+        "\"大概是房主\"的疑点",
+        "无强行闯入",
+        "卧室血迹",
+        "尸体无法辨认",
+        "浴缸+吹风机+积水",
+        "意外/自杀与暴行的矛盾定性"
+      ],
+      "abstract_move": "现场走查与异常目录:把标题承诺的\"离奇浴缸现场\"兑现为具体画面,同时显式声明核心矛盾——吹风机指向意外,而残暴伤痕指向谋杀",
+      "replacement_needs": [
+        "\"大概是他/她\"的身份不确定细节及其解释",
+        "无强行闯入事实",
+        "卧室血量与被剥走的床单",
+        "浴缸中的日用品(吹风机)作为\"离奇物\"",
+        "意外伪装与暴力痕迹的矛盾判决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80)、PK04(80);打开的悬念 LOOP03→FS15、LOOP05→FS14、LOOP06→FS09 跨段;回收了前文的悬念 FS04→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "sponsor_message",
+      "start_ratio": 0.2991,
+      "end_ratio": 0.3224,
+      "start_sec": 581.4,
+      "end_sec": 626.7,
+      "position_label": "29.9%–32.2%(9:41–10:27)",
+      "purpose": "中段广告:紧贴一个强揭示节拍之后插入,主持人以本人身份推介周边产品,不打断任何悬置中的悬念",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "sponsor_break",
+          "mechanism": "midroll_after_peak"
+        }
+      ],
+      "required_retention_events": [
+        "host_bookend",
+        "sponsor_after_strong_beat"
+      ],
+      "original_moves": [
+        "主持人出镜",
+        "产品介绍",
+        "购买指引",
+        "回到故事"
+      ],
+      "abstract_move": "中段广告:紧贴一个强揭示节拍之后插入,主持人以本人身份推介周边产品,不打断任何悬置中的悬念",
+      "replacement_needs": [
+        "主持人本人出镜",
+        "产品卖点一句话",
+        "购买方式"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS07",
+      "function": "motive_elimination_suspect_profiling",
+      "start_ratio": 0.3224,
+      "end_ratio": 0.4149,
+      "start_sec": 626.7,
+      "end_sec": 806.5,
+      "position_label": "32.2%–41.5%(10:27–13:26)",
+      "purpose": "动机排除与嫌疑人画像:用\"财物未动/无人恨她\"两步排除法把侦查方向收窄到\"有暴力史的陌生人\",并立刻抛出两个高度吻合的嫌疑人",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "两个高度吻合画像的嫌疑人(对门前科杀人犯+本地性犯罪者)是不是凶手:双线红鲱鱼,直至DNA匹配真凶才被隐式洗清",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "stakes_raise",
+          "mechanism": "sexual_assault_confirmed"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "motive_elimination",
+          "mechanism": "robbery_ruled_out"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "suspect_doubling",
+          "mechanism": "not_one_but_two"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "red_herring",
+          "mechanism": "literal_murderer_next_door"
+        }
+      ],
+      "required_retention_events": [
+        "evidence_based_elimination",
+        "profile_narrowing",
+        "red_herring_introduction"
+      ],
+      "original_moves": [
+        "身份确认+性侵证据",
+        "劫财排除(财物未动)",
+        "仇杀假设",
+        "无人恨她的反证",
+        "画像:有暴力前科",
+        "一下给出两个名字",
+        "前科杀人犯就住对面"
+      ],
+      "abstract_move": "动机排除与嫌疑人画像:用\"财物未动/无人恨她\"两步排除法把侦查方向收窄到\"有暴力史的陌生人\",并立刻抛出两个高度吻合的嫌疑人",
+      "replacement_needs": [
+        "法医新证据(性侵)抬高恶性",
+        "未动财物排除劫财",
+        "熟人仇杀假设被\"无人恨她\"反证",
+        "陌生人暴力画像",
+        "两个符合画像的本地名字及其危险履历"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "suspect_interview_behavioral_read",
+      "start_ratio": 0.4149,
+      "end_ratio": 0.4989,
+      "start_sec": 806.5,
+      "end_sec": 969.8,
+      "position_label": "41.5%–49.9%(13:26–16:10)",
+      "purpose": "嫌疑人过堂之一:用大量行为白描(僵硬、张望、抢白)让观众自行怀疑,再用侦探的经验法则(\"重罪犯不会这么痛快交证据\")当场降温",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "behavioral_twist",
+          "mechanism": "eager_blood_consent"
+        }
+      ],
+      "required_retention_events": [
+        "behavioral_reading",
+        "nervous_vs_guilty_distinction",
+        "detective_inner_verdict"
+      ],
+      "original_moves": [
+        "性犯罪者住所",
+        "开门瞬间僵硬",
+        "左右张望",
+        "抢白否认",
+        "怕妻子看见的恐慌",
+        "爽快同意验血",
+        "侦探心证:太配合反而不像凶手"
+      ],
+      "abstract_move": "嫌疑人过堂之一:用大量行为白描(僵硬、张望、抢白)让观众自行怀疑,再用侦探的经验法则(\"重罪犯不会这么痛快交证据\")当场降温",
+      "replacement_needs": [
+        "开门瞬间的身体语言",
+        "被问话者的恐慌性抢白",
+        "一个合理化解释(怕家人误会)",
+        "配合采集证据的动作",
+        "侦探基于经验的内心判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS09",
+      "function": "crime_scene_revisit_entry_reveal",
+      "start_ratio": 0.4989,
+      "end_ratio": 0.6323,
+      "start_sec": 969.8,
+      "end_sec": 1229.1,
+      "position_label": "49.9%–63.2%(16:10–20:29)",
+      "purpose": "现场重访与入口揭示:把\"无强行闯入\"的悬置问题兑现为第三段埋下的装修细节——房子其实有一个洞;嫌疑池随之重写为\"知道这个洞的人\"",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.5942,
+          "time_ms": 1155107,
+          "reason": "防水布后的门洞:房子对知情者完全开放,全案侦破方向扭转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "entry_route_discovery_hole_in_wall",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "suspicion_escalation",
+          "mechanism": "vanished_after_murder"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "entry_reveal",
+          "mechanism": "hole_in_the_wall"
+        }
+      ],
+      "required_retention_events": [
+        "reasoning_aloud",
+        "overlooked_clue_revisit",
+        "entry_reveal"
+      ],
+      "original_moves": [
+        "前科犯失踪消息",
+        "夜返现场",
+        "熟人作案假设的漏洞",
+        "陌生人不会赌前门",
+        "绕到屋后",
+        "施工中的露台空窗框",
+        "掀开防水布:一个洞",
+        "两组人知道这个洞"
+      ],
+      "abstract_move": "现场重访与入口揭示:把\"无强行闯入\"的悬置问题兑现为第三段埋下的装修细节——房子其实有一个洞;嫌疑池随之重写为\"知道这个洞的人\"",
+      "replacement_needs": [
+        "侦探出声推理:陌生人不会赌未锁的前门",
+        "绕到屋后查看的动作",
+        "第三段装修细节的回扣(空窗框/防水布/无门门洞)",
+        "\"房子对知情者完全开放\"的定性",
+        "知情者两组人:对面前科犯与施工队"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85);回收了前文的悬念 FS05→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "suspect_alibi_verification",
+      "start_ratio": 0.6323,
+      "end_ratio": 0.7195,
+      "start_sec": 1229.1,
+      "end_sec": 1398.6,
+      "position_label": "63.2%–72%(20:29–23:19)",
+      "purpose": "嫌疑人过堂之二:展示程序化的不在场证明核验,同时点破\"伴侣证词不足信\"的侦查纪律;物证鞋印首次出现",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP10",
+          "tension": "现场旁的独特鞋印是不是凶手的:物证悬念,答案反讽——不是真凶的,属于另一个人(其归属叙事刻意不再展开,以反讽服务于\"藏证反杀\"主题)",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "suspect_pool_reframe",
+          "mechanism": "twenty_three_workers"
+        }
+      ],
+      "required_retention_events": [
+        "alibi_checking",
+        "physical_evidence_scan",
+        "partner_alibi_doubt"
+      ],
+      "original_moves": [
+        "23名施工队员名单",
+        "逐一问话开始",
+        "案发夜行踪",
+        "无时间戳证据",
+        "女友电话留证",
+        "检查手部伤痕",
+        "侦探心证:伴侣会撒谎,嫌疑仍在"
+      ],
+      "abstract_move": "嫌疑人过堂之二:展示程序化的不在场证明核验,同时点破\"伴侣证词不足信\"的侦查纪律;物证鞋印首次出现",
+      "replacement_needs": [
+        "施工队规模与逐一问话决定",
+        "现场发现的独特鞋印物证",
+        "被问话者的案发夜行踪陈述",
+        "侦探对体表伤痕的观察",
+        "\"伴侣会为爱人撒谎\"的经验法则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP10→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "suspect_timeline_gap_flag",
+      "start_ratio": 0.7195,
+      "end_ratio": 0.7779,
+      "start_sec": 1398.6,
+      "end_sec": 1512.1,
+      "position_label": "72%–77.8%(23:19–25:12)",
+      "purpose": "嫌疑人过堂之三(关键):以转述方式给出一条看似琐碎的时间线,显式标出其中无人作证的空档;诸多随口细节(次日清晨远行、女友家)当时看似闲笔",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "第二名施工队员午夜到清晨的无人作证空档里在做什么",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "alibi_gap_flag",
+          "mechanism": "unaccounted_hours"
+        }
+      ],
+      "required_retention_events": [
+        "timeline_relay",
+        "alibi_gap_flag",
+        "casual_detail_planting"
+      ],
+      "original_moves": [
+        "副警探转述问话",
+        "傍晚独自在家",
+        "21点邻家喝酒",
+        "午夜回家打电话入睡",
+        "次晨驱车一个半小时去女友家",
+        "证人证实两端",
+        "中间空白无人作证",
+        "但\"看起来很配合\""
+      ],
+      "abstract_move": "嫌疑人过堂之三(关键):以转述方式给出一条看似琐碎的时间线,显式标出其中无人作证的空档;诸多随口细节(次日清晨远行、女友家)当时看似闲笔",
+      "replacement_needs": [
+        "被转述的完整案发夜时间线",
+        "两端有证人、中间有空档的结构",
+        "次日清晨远赴女友家的细节",
+        "\"看起来很配合\"的表象评语",
+        "侦探注意力仍在前科犯身上的错位"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP08→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "red_herring_interrogation",
+      "start_ratio": 0.7779,
+      "end_ratio": 0.845,
+      "start_sec": 1512.1,
+      "end_sec": 1642.6,
+      "position_label": "77.8%–84.5%(25:12–27:23)",
+      "purpose": "红鲱鱼对峙:全片嫌疑最重的人被拉到台前正面对质,他的平静与全面配合构成强烈的行为悬念,把观众的怀疑推到顶点",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "谁要改口供、要改什么:换挡悬念,叙事不交代姓名,直接以重建段作答——改口供的内容被吸收进\"基于证词与证据的重建\"",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "faceoff",
+          "mechanism": "calm_interrogation"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "cliffhanger_pivot",
+          "mechanism": "changing_story_tease"
+        }
+      ],
+      "required_retention_events": [
+        "interrogation_faceoff",
+        "calm_as_tell",
+        "cooperation_surprise"
+      ],
+      "original_moves": [
+        "全部23名工人问话完毕且多有硬不在场证明",
+        "鞋印无人能对",
+        "前科犯被缉拿到案",
+        "异常平静",
+        "\"我在监狱里学过教训了\"",
+        "爽快答应验血与测谎",
+        "侦探意外"
+      ],
+      "abstract_move": "红鲱鱼对峙:全片嫌疑最重的人被拉到台前正面对质,他的平静与全面配合构成强烈的行为悬念,把观众的怀疑推到顶点",
+      "replacement_needs": [
+        "施工队23人问话与鞋印比对均无结果",
+        "审讯室里的身体语言白描(后仰、跷腿)",
+        "一句自辩台词",
+        "对验血+测谎的一口答应",
+        "侦探对配合度的意外"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP09→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "cliffhanger_pivot",
+      "start_ratio": 0.845,
+      "end_ratio": 0.8567,
+      "start_sec": 1642.6,
+      "end_sec": 1665.3,
+      "position_label": "84.5%–85.7%(27:23–27:45)",
+      "purpose": "悬念换挡:在最大红鲱鱼悬而未决时,用\"有人要改口供\"一句话把叙事猛地扳向答案段,以硬切制造落差",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "cliffhanger_pivot",
+        "story_change_tease",
+        "hard_cut"
+      ],
+      "original_moves": [
+        "电话铃响",
+        "前台通报",
+        "此人之前谈过话",
+        "现在要改口供",
+        "硬切"
+      ],
+      "abstract_move": "悬念换挡:在最大红鲱鱼悬而未决时,用\"有人要改口供\"一句话把叙事猛地扳向答案段,以硬切制造落差",
+      "replacement_needs": [
+        "一个打断性的电话",
+        "\"此人此前谈过话\"的限定",
+        "\"要改口供\"的信息",
+        "不作任何解释的硬切"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "crime_reconstruction",
+      "start_ratio": 0.8567,
+      "end_ratio": 0.9369,
+      "start_sec": 1665.3,
+      "end_sec": 1821.2,
+      "position_label": "85.7%–93.7%(27:45–30:21)",
+      "purpose": "犯罪重建:显式声明\"基于证词与证据的重建\"后,把全案按凶手行动线完整重演;此前所有异常(无闯入、血迹分布、床单失踪、浴缸吹风机、时间线空档、次晨远行)逐一归位",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.883,
+          "time_ms": 1716359,
+          "reason": "重建段袭击全程:全片恐怖峰值,所有碎片归位"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 90,
+          "position_ratio": 0.9364,
+          "time_ms": 1820289,
+          "reason": "点名时刻:凶手就是\"看起来很配合\"的那名施工队员"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "staging_mechanism_reconstruction",
+          "opened_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "narrative_pivot_into_reconstruction",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "mode_shift",
+          "mechanism": "labeled_reconstruction"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "horror_beat",
+          "mechanism": "something_broke"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "staging_reveal",
+          "mechanism": "disguise_as_accident"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "unmasking",
+          "mechanism": "killer_named"
+        }
+      ],
+      "required_retention_events": [
+        "labeled_reconstruction",
+        "second_person_immersion_avoided",
+        "staging_reveal"
+      ],
+      "original_moves": [
+        "显式重建声明",
+        "凌晨潜入空窗框",
+        "掀布入洞",
+        "上楼",
+        "卧室袭击",
+        "殴打扼颈性侵",
+        "决定伪装成意外",
+        "拖入浴缸开水投吹风机",
+        "带走床单原路离开",
+        "当晨驱车去女友父母家"
+      ],
+      "abstract_move": "犯罪重建:显式声明\"基于证词与证据的重建\"后,把全案按凶手行动线完整重演;此前所有异常(无闯入、血迹分布、床单失踪、浴缸吹风机、时间线空档、次晨远行)逐一归位",
+      "replacement_needs": [
+        "重建性质的显式声明",
+        "凶手潜入路径对入口揭示的回扣",
+        "袭击过程的克制白描",
+        "伪装成意外的完整步骤(浴缸/水/吹风机/床单)",
+        "行动线与早前嫌疑时间线的逐点吻合"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(90)、PK07(90);回收了前文的悬念 FS05→LOOP05、FS12→LOOP09。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS15",
+      "function": "killer_unmasking_downfall",
+      "start_ratio": 0.9369,
+      "end_ratio": 0.985,
+      "start_sec": 1821.2,
+      "end_sec": 1914.6,
+      "position_label": "93.7%–98.5%(30:21–31:55)",
+      "purpose": "点名与覆灭链:凶手身份一次性揭晓;他的覆灭由自己导演——主动藏证反而引爆女友怀疑,而鞋印反讽地属于别人;真正定罪的是他自己爽快交出的血样;冷开场的女人与两样物品在此悄然闭环",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "irony_twist",
+          "strength": 85,
+          "position_ratio": 0.9712,
+          "time_ms": 1887852,
+          "reason": "鞋印根本不是他的:掩饰行为自我反杀的反讽峰值"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "forensic_payoff",
+          "strength": 85,
+          "position_ratio": 0.9807,
+          "time_ms": 1906350,
+          "reason": "亲手交出的血样=完美匹配DNA:铁证收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "flashforward_identity_and_items_reveal_implicit",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "killer_identity_reveal",
+          "opened_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "red_herrings_cleared_by_dna_match",
+          "opened_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "alibi_gap_filled_by_reconstruction",
+          "opened_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP10",
+          "payoff_type": "ironic_non_match_twist",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "irony_twist",
+          "mechanism": "prints_matched_someone_else"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "forensic_payoff",
+          "mechanism": "dna_perfect_match"
+        }
+      ],
+      "required_retention_events": [
+        "unmasking",
+        "coverup_backfire",
+        "irony_twist"
+      ],
+      "original_moves": [
+        "点名:凶手是第二名施工队员",
+        "他让女友把工鞋藏去父母家",
+        "女友回想他\"宿醉\"般的状态起疑",
+        "女友把鞋交给警方",
+        "反讽:鞋印本就不是他的",
+        "真正致命的是他爽快报出的血样",
+        "DNA完美匹配"
+      ],
+      "abstract_move": "点名与覆灭链:凶手身份一次性揭晓;他的覆灭由自己导演——主动藏证反而引爆女友怀疑,而鞋印反讽地属于别人;真正定罪的是他自己爽快交出的血样;冷开场的女人与两样物品在此悄然闭环",
+      "replacement_needs": [
+        "一句直接的点名句",
+        "藏鞋指令与其反常性",
+        "女友从配合到怀疑到举报的心理线",
+        "\"鞋印根本不是他的\"的反讽反转",
+        "自由交出的血样与完美匹配的DNA",
+        "冷开场场景的隐式兑现(女人=女友,两样物品=鞋)"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)、PK09(85);回收了前文的悬念 FS01→LOOP02、FS05→LOOP03、FS07→LOOP07、FS11→LOOP08、FS10→LOOP10。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS16",
+      "function": "verdict_closure_cta",
+      "start_ratio": 0.985,
+      "end_ratio": 1,
+      "start_sec": 1914.6,
+      "end_sec": 1943.8,
+      "position_label": "98.5%–100%(31:55–32:24)",
+      "purpose": "判决与收尾:用罪名与刑期完成正义闭环,随后主持人致谢、邀评并引流罪案片单",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "verdict",
+          "mechanism": "life_without_parole"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "outro_cta",
+          "mechanism": "comments_playlist"
+        }
+      ],
+      "required_retention_events": [
+        "verdict_sentence",
+        "host_outro",
+        "playlist_cta"
+      ],
+      "original_moves": [
+        "一级谋杀+一级性侵罪名成立",
+        "终身监禁不得假释",
+        "致谢",
+        "评论邀请",
+        "罪案片单引流",
+        "道别"
+      ],
+      "abstract_move": "判决与收尾:用罪名与刑期完成正义闭环,随后主持人致谢、邀评并引流罪案片单",
+      "replacement_needs": [
+        "罪名与刑期的明确交代",
+        "致谢与评论邀请",
+        "同类型片单引流",
+        "固定道别语"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    }
+  ]
+}

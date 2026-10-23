@@ -1,0 +1,1234 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:19:40.276Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.0399,
+      "start_sec": 0.1,
+      "end_sec": 55.7,
+      "position_label": "0%–4%(0:00–0:56)",
+      "purpose": "用第二人称拥有幻想开局，随即用资产现实三连击（永远碰不到、无法上门维修、从启用第一天开始倒计时）击碎幻想，再用市场规模证明\"里面确实有人在赚钱\"，悬挂\"真实成本+没人告诉你的事\"主问题",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "reality_contrast_hook",
+          "strength": 80,
+          "position_ratio": 0.014,
+          "time_ms": 19580,
+          "reason": "开场幻想被\"永远碰不到、无法维修、从发射当天死亡\"的资产现实击穿"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "看似送上天就收钱的生意与\"没人告诉你的事\"之间的张力",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_hook",
+          "mechanism": "second_person_fantasy"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "reality_contrast",
+          "mechanism": "untouchable_unrepairable_asset"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "mortality_reveal",
+          "mechanism": "countdown_clock"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "market_size_hook",
+          "mechanism": "space_economy_scale"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "central_question",
+          "mechanism": "cost_and_hidden_truth"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_fantasy",
+        "fantasy_shattering_triplets",
+        "market_size_hook",
+        "central_question"
+      ],
+      "original_moves": [
+        "用第二人称描绘拥有轨道资产的幻想",
+        "用三个物理事实击碎幻想：永远碰不到、无法上门维修、从发射当天开始倒计时",
+        "用$415-429B市场规模与$300B卫星份额证明这是真实生意",
+        "悬挂主问题：真实成本是多少，没人告诉你的那件事是什么"
+      ],
+      "abstract_move": "用第二人称拥有幻想开局，立即用资产的物理特性三连击击穿幻想，再用市场规模证明里面有人在赚钱，悬挂成本与隐藏真相的双重主问题",
+      "replacement_needs": [
+        "一个让人产生拥有幻想的资产描述",
+        "三个颠覆幻想的物理或时间约束",
+        "一个证明市场真实存在的规模数字",
+        "一个关于成本或隐藏真相的悬念问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80);打开的悬念 LOOP01→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_fantasy_plus_asset_reality_contrast",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 19580,
+        "evidence_refs": [
+          "C0001",
+          "C0039",
+          "C0057",
+          "C0070"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "context_expansion",
+      "start_ratio": 0.0399,
+      "end_ratio": 0.1069,
+      "start_sec": 55.7,
+      "end_sec": 149.2,
+      "position_label": "4%–10.7%(0:56–2:29)",
+      "purpose": "把\"价格\"拆成两个世界：定制级重资产（天价、多年手工制造）与量产级快消式资产（单价低几个数量级、需成规模部署并定期更换），揭示\"没有单一价格，一个名词下藏着两种生意\"",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.0924,
+          "time_ms": 129004,
+          "reason": "\"没人说的第一件事\"：没有单一价格，一个名词下藏着两种生意"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "标题级问题\"价格\"与一个名词下两种生意之间的张力",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "dual_business_taxonomy",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "first_price_anchor",
+          "mechanism": "geo_price_and_timeline"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "new_approach_contrast",
+          "mechanism": "constellation_unit_price"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "hidden_truth_reveal",
+          "mechanism": "no_single_price"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "stakes_warning",
+          "mechanism": "wrong_path_wrong_company"
+        }
+      ],
+      "required_retention_events": [
+        "price_ladder",
+        "old_vs_new_contrast",
+        "hidden_truth_reveal",
+        "stakes_warning"
+      ],
+      "original_moves": [
+        "揭示定制级资产：$200-400M单价、3-5年手工制造周期",
+        "对比量产级资产：$500K-$15M单价、3-5年更换周期",
+        "揭示没有单一价格，一个名词下藏着两种生意",
+        "警告选错路径等于建错公司"
+      ],
+      "abstract_move": "把价格拆成两个数量级悬殊的世界：重资产定制路径与快消式量产路径，揭示同一个名词下藏着两种生意，选错等于建错公司",
+      "replacement_needs": [
+        "定制级资产的价格与制造周期",
+        "量产级资产的单价与更换周期",
+        "两种路径在商业模式上的本质差异",
+        "选错路径的后果警示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "belief_challenge",
+      "start_ratio": 0.1069,
+      "end_ratio": 0.1407,
+      "start_sec": 149.2,
+      "end_sec": 196.3,
+      "position_label": "10.7%–14.1%(2:29–3:16)",
+      "purpose": "拆除\"用户想要硬件本身\"的幻觉：用户买的是硬件能交付的服务，硬件只是生产工具；以\"爱硬件胜过客户问题\"的判词收束",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "硬件拥有幻想与\"人们为服务付费\"之间的认知张力",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "belief_reframe",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "belief_challenge",
+          "mechanism": "users_dont_want_hardware"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "verdict_line",
+          "mechanism": "hardware_over_problem_warning"
+        }
+      ],
+      "required_retention_events": [
+        "belief_challenge",
+        "use_case_montage",
+        "production_tool_reframe",
+        "verdict_line"
+      ],
+      "original_moves": [
+        "挑战认知：没人想买轨道硬件本身",
+        "用真实使用场景排比说明用户买的是服务",
+        "重构：硬件只是生产工具",
+        "以爱硬件胜过客户问题的判词收束"
+      ],
+      "abstract_move": "拆除用户想要硬件本身的幻觉，用使用场景排比证明用户买的是服务，重构硬件为生产工具，以爱硬件胜过客户问题的判词收束",
+      "replacement_needs": [
+        "一个挑战硬件拥有幻想的认知反转",
+        "真实使用场景排比",
+        "生产工具与最终产品的区分",
+        "一个关于技术迷恋陷阱的判词"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP03。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:硬件拥有幻想与\"人们为服务付费\"之间的认知张力",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "evidence_build",
+      "start_ratio": 0.1407,
+      "end_ratio": 0.2001,
+      "start_sec": 196.3,
+      "end_sec": 279.2,
+      "position_label": "14.1%–20%(3:16–4:39)",
+      "purpose": "建立制造之外的隐藏成本栈：地面配套、许可审批、环境验证、提前且不可退的付款；用真实资本开支锚点量化，并以\"这些都不是收入\"收束",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "cost_stack_reveal",
+          "mechanism": "beyond_manufacturing"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "real_capex_anchor",
+          "mechanism": "kuiper_ast_capex"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "verdict_line",
+          "mechanism": "none_of_that_is_revenue"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_cost_stack",
+        "regulatory_maze",
+        "real_capex_anchor",
+        "verdict_line"
+      ],
+      "original_moves": [
+        "列举地面配套、频谱、落地权、测试、预付款等隐藏成本栈",
+        "用Kuiper $16-20B与AST单季$610M锚定资本开支规模",
+        "以这些都不是收入的判词收束"
+      ],
+      "abstract_move": "建立制造之外的隐藏成本栈：地面配套、许可审批、环境验证、提前且不可退的付款，用真实资本开支锚点量化，以这些都不是收入收束",
+      "replacement_needs": [
+        "地面配套与审批的成本类别清单",
+        "环境验证与预付款的规则",
+        "真实资本开支的数量级锚点",
+        "一个强调成本不产生收入的判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evidence_build",
+      "start_ratio": 0.2001,
+      "end_ratio": 0.258,
+      "start_sec": 279.2,
+      "end_sec": 360.1,
+      "position_label": "20%–25.8%(4:39–6:00)",
+      "purpose": "讲准入革命：可复用技术把单位准入成本打下超过一个量级，催生规模化部署思路与资本涌入；指出双刃效应——便宜准入对你的竞争对手同样成立",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.227,
+          "time_ms": 316770,
+          "reason": "发射价格崩塌超90%，全行业入场资格被改写"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "chapter_transition",
+          "mechanism": "launch_economics"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "historical_price_anchor",
+          "mechanism": "era_50000_per_kg"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "price_collapse_reveal",
+          "mechanism": "reusable_90pct_drop"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "double_edge_warning",
+          "mechanism": "symmetric_cheap_access"
+        }
+      ],
+      "required_retention_events": [
+        "historical_price_anchor",
+        "price_collapse_reveal",
+        "industry_democratization",
+        "double_edge_warning"
+      ],
+      "original_moves": [
+        "给出历史价格锚：1990年代$50,000/kg",
+        "揭示可复用技术把价格打到$3,500/kg，降幅超90%",
+        "说明降价催生工业级元件与风投涌入",
+        "补刀：便宜准入对竞争对手同样成立"
+      ],
+      "abstract_move": "讲准入革命：可复用技术把单位准入成本打下超过一个量级，催生规模化部署思路与资本涌入，指出双刃效应——便宜准入对竞争对手同样成立",
+      "replacement_needs": [
+        "历史准入成本的价格锚点",
+        "技术突破导致的数量级降幅",
+        "降价引发的制造思路与资本结构变化",
+        "便宜准入的对称性警示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "evidence_build",
+      "start_ratio": 0.258,
+      "end_ratio": 0.2949,
+      "start_sec": 360.1,
+      "end_sec": 411.7,
+      "position_label": "25.8%–29.5%(6:00–6:52)",
+      "purpose": "揭示硬件之外的文书层稀缺资产：位置与频率许可像天空中的房地产，稀缺、审批耗时多年、长期锁定，是任何对手都无法轻易复制的资产",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "paperwork_reframe",
+          "mechanism": "real_estate_in_sky"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "uncopiable_asset",
+          "mechanism": "spectrum_documents"
+        }
+      ],
+      "required_retention_events": [
+        "paperwork_reframe",
+        "scarcity_reveal",
+        "uncopiable_asset"
+      ],
+      "original_moves": [
+        "用天空房地产重构轨道位置与频谱",
+        "说明GEO槽位稀缺、申请多年、锁定数十年",
+        "指出频谱文件不可复制",
+        "以不可复制资产判词收束"
+      ],
+      "abstract_move": "揭示硬件之外的文书层稀缺资产：位置与频率许可像天空中的房地产，稀缺、审批耗时多年、长期锁定，是任何对手都无法轻易复制的资产",
+      "replacement_needs": [
+        "位置或频率的稀缺性类比",
+        "审批的年限与锁定周期",
+        "文书资产的不可复制性",
+        "一个关于隐形壁垒的判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "reveal",
+      "start_ratio": 0.2949,
+      "end_ratio": 0.3731,
+      "start_sec": 411.7,
+      "end_sec": 520.7,
+      "position_label": "29.5%–37.3%(6:52–8:41)",
+      "purpose": "揭示收入侧第二个陷阱：资产在位不自动赚钱——空置即浪费、产出不可储存，真正的技能是\"装满\"而非建造；补刀谜语：技术完好的资产也会因市场前进而投资失败",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.3214,
+          "time_ms": 448526,
+          "reason": "\"真正的技能不是造卫星，是装满卫星\"的行业本质重构"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 78,
+          "position_ratio": 0.3699,
+          "time_ms": 516231,
+          "reason": "\"物理资产没有失败，市场离开了它\"的过时判词"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "\"上天即赚钱\"的直觉与空转成本刚性之间的张力",
+          "closes_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP05",
+          "tension": "技术完好与投资失败并存的反常",
+          "closes_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "巨额前置资本开支与零收入之间的张力",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "utilization_skill_reframe",
+          "opened_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "obsolescence_explanation",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "trap_tease",
+          "mechanism": "second_trap"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "analogy_demo",
+          "mechanism": "hotel_analogy"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "skill_reframe",
+          "mechanism": "filling_not_building"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "riddle_tease",
+          "mechanism": "brilliant_failure_riddle"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "obsolescence_verdict",
+          "mechanism": "market_left_it"
+        }
+      ],
+      "required_retention_events": [
+        "trap_tease",
+        "analogy_demo",
+        "skill_reframe",
+        "riddle_tease",
+        "obsolescence_verdict"
+      ],
+      "original_moves": [
+        "预告第二陷阱",
+        "用酒店类比说明空置即浪费",
+        "说明产出不可储存",
+        "重构：真正的技能是装满而非建造",
+        "抛出谜语：技术完好的资产被市场前进抛下"
+      ],
+      "abstract_move": "揭示收入侧第二个陷阱：资产在位不自动赚钱，空置即浪费、产出不可储存，真正的技能是装满而非建造，补刀谜语：技术完好的资产也会因市场前进而投资失败",
+      "replacement_needs": [
+        "一个关于空置成本的类比",
+        "产出不可储存的特性",
+        "装满而非建造的技能重构",
+        "一个技术完好但市场过时的谜语"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80)、PK05(78);打开的悬念 LOOP06→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "evidence_build",
+      "start_ratio": 0.3731,
+      "end_ratio": 0.4294,
+      "start_sec": 520.7,
+      "end_sec": 599.3,
+      "position_label": "37.3%–42.9%(8:41–9:59)",
+      "purpose": "拆解无收入阶段的融资结构与利率陷阱：四类资金来源、资本涌入热度、资本成本翻倍推翻盈亏平衡，\"资金先于收入耗尽\"是最常见死因",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "成本侧压迫之后对收入形态的期待",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "financing_stack_plus_interest_trap",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "financing_question",
+          "mechanism": "finance_before_income"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "capital_inflow_numbers",
+          "mechanism": "vc_11b_total_23b"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "trap_tease",
+          "mechanism": "cost_of_capital_catch"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "interest_rate_trap",
+          "mechanism": "break_even_rises"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "verdict_line",
+          "mechanism": "funds_ran_out"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "cta_interruption",
+          "mechanism": "mid_roll_subscribe"
+        }
+      ],
+      "required_retention_events": [
+        "financing_stack",
+        "capital_inflow_numbers",
+        "interest_rate_trap",
+        "verdict_line",
+        "mid_roll_cta"
+      ],
+      "original_moves": [
+        "拆解四类融资渠道：风投、债务、政府、战略投资",
+        "用2025年$11B风投、$23B+总投资展示资本涌入",
+        "说明资本成本翻倍推翻盈亏平衡",
+        "以资金先于收入耗尽是最常见死因收束"
+      ],
+      "abstract_move": "拆解无收入阶段的融资结构与利率陷阱：四类资金来源、资本涌入热度、资本成本翻倍推翻盈亏平衡，资金先于收入耗尽是最常见死因",
+      "replacement_needs": [
+        "融资渠道的类别清单",
+        "资本涌入的规模数字",
+        "利率变化对盈亏平衡的影响",
+        "一个关于资金耗尽的死因判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS09 跨段;回收了前文的悬念 FS07→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "reveal",
+      "start_ratio": 0.4294,
+      "end_ratio": 0.5113,
+      "start_sec": 599.3,
+      "end_sec": 713.7,
+      "position_label": "42.9%–51.1%(9:59–11:54)",
+      "purpose": "兑现现金流形态：建成后近零边际成本使生意呈订阅模式；用成熟运营商的真实利润率与锚定合同展示终局形态，并指出大客户/政府资金依赖的双刃",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "subscription_model_plus_case_numbers",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "chapter_transition",
+          "mechanism": "cashflow_subscription"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "operator_dream",
+          "mechanism": "near_zero_marginal_cost"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "modern_case_numbers",
+          "mechanism": "iridium_872m_60pct"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "anchor_contract",
+          "mechanism": "dod_110m_per_year"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "government_double_edge",
+          "mechanism": "procurement_risk"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "concentration_risk",
+          "mechanism": "single_customer_dependence"
+        }
+      ],
+      "required_retention_events": [
+        "subscription_reframe",
+        "operator_dream",
+        "modern_case_numbers",
+        "anchor_contract",
+        "government_double_edge"
+      ],
+      "original_moves": [
+        "用近零边际成本重构为订阅生意",
+        "用现代铱星$872M收入、60%经营利润率展示终局形态",
+        "说明$110M/年国防合同锚定现金流",
+        "补刀：政府采购慢且可取消，集中度风险"
+      ],
+      "abstract_move": "兑现现金流形态：建成后近零边际成本使生意呈订阅模式，用成熟运营商的真实利润率与锚定合同展示终局形态，指出大客户政府资金依赖的双刃",
+      "replacement_needs": [
+        "近零边际成本的订阅模式重构",
+        "成熟运营商的收入与利润率数字",
+        "锚定合同的规模与周期",
+        "大客户集中度风险的双刃警示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS08→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "conflict_escalation",
+      "start_ratio": 0.5113,
+      "end_ratio": 0.5942,
+      "start_sec": 713.7,
+      "end_sec": 829.3,
+      "position_label": "51.1%–59.4%(11:54–13:49)",
+      "purpose": "升级冲突：装满率取决于竞争对手的定价，头部玩家可主动降价换量绞杀小玩家；资产规模从技术决策变为财务决策，规模同时放大每一项成本",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.5244,
+          "time_ms": 731874,
+          "reason": "头部玩家降价三分之一换四倍用户的定价绞杀演示"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "稳定现金流形态与\"装满率取决于对手定价\"之间的张力",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "competitor_price_dependence_reveal",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "twist_tease",
+          "mechanism": "recurring_revenue_twist"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "competitor_price_cut",
+          "mechanism": "starlink_99_to_66"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "scale_reframe",
+          "mechanism": "size_becomes_financial"
+        }
+      ],
+      "required_retention_events": [
+        "twist_tease",
+        "competitor_price_cut",
+        "scale_tradeoff"
+      ],
+      "original_moves": [
+        "预告转折",
+        "说明Starlink从$99降到$66换四倍用户",
+        "指出小运营商无防",
+        "对比GEO半秒延迟与低轨千百颗协同",
+        "补刀：规模放大所有成本"
+      ],
+      "abstract_move": "升级冲突：装满率取决于竞争对手的定价，头部玩家可主动降价换量绞杀小玩家，资产规模从技术决策变为财务决策，规模同时放大每一项成本",
+      "replacement_needs": [
+        "头部玩家降价换量的具体数字",
+        "小玩家无防御能力的机制",
+        "规模的技术优势与成本权衡",
+        "规模放大所有成本的补刀"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(78)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "conflict_escalation",
+      "start_ratio": 0.5942,
+      "end_ratio": 0.6857,
+      "start_sec": 829.3,
+      "end_sec": 957,
+      "position_label": "59.4%–68.6%(13:49–15:57)",
+      "purpose": "用著名崩塌-重生案例归因：技术奇迹死于建设期内地面市场消失（时机与价格，而非硬件失效）；资产以造价零头转手后在新定位下重生，得出\"同样的硬件两种命运\"",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.6156,
+          "time_ms": 859230,
+          "reason": "$5B技术奇迹仅1万用户、不到一年违约的崩塌反差"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.6506,
+          "time_ms": 907972,
+          "reason": "$5B网络以$25M转手、约每美元半美分，全片最强残值反差"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "技术奇迹与闪电破产并存的反常",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "case_lesson_identity_reframe",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE41",
+          "event_type": "chapter_transition",
+          "mechanism": "people_story"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "case_scale_anchor",
+          "mechanism": "iridium_5b_build"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "collapse_reveal",
+          "mechanism": "default_1_5b_10k_users"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "collapse_question",
+          "mechanism": "why_collapse_in_a_year"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "resale_shock",
+          "mechanism": "five_b_to_25m"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "lesson_verdict",
+          "mechanism": "same_hardware_two_fates"
+        }
+      ],
+      "required_retention_events": [
+        "named_case_study",
+        "collapse_reveal",
+        "resale_shock",
+        "lesson_verdict"
+      ],
+      "original_moves": [
+        "说明$5B建66星的规模",
+        "揭示首批用户10个月后违约$1.5B、仅1万用户的反差",
+        "归因：败因是市场消失而非硬件失效",
+        "说明$25M转手、约每美元半美分的残值",
+        "以同样的硬件两种命运收束"
+      ],
+      "abstract_move": "用著名崩塌重生案例归因：技术奇迹死于建设期内地面市场消失，时机与价格而非硬件失效，资产以造价零头转手后在新定位下重生，得出同样的硬件两种命运",
+      "replacement_needs": [
+        "案例的建设规模与时间线",
+        "违约与用户数的巨大反差",
+        "败因是时机与价格的归因",
+        "残值转手价格与重生的对比"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)、PK08(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "conflict_escalation",
+      "start_ratio": 0.6857,
+      "end_ratio": 0.8218,
+      "start_sec": 957,
+      "end_sec": 1146.9,
+      "position_label": "68.6%–82.2%(15:57–19:07)",
+      "purpose": "转向物理失效维度：单点机械失效可瞬间抹去大部分资产价值且无处维修；行业以专门保险市场与自我保险策略对冲；再叠加轨道/环境拥堵成本",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.7103,
+          "time_ms": 991282,
+          "reason": "天线未展开：$700M资产秒级失去90%容量"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP10",
+          "tension": "同一门生意两种结果分布之间的张力",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE47",
+          "event_type": "chapter_transition",
+          "mechanism": "physical_failure"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "failure_reveal",
+          "mechanism": "antenna_not_open"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "capacity_loss_reveal",
+          "mechanism": "ninety_pct_lost"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "market_response",
+          "mechanism": "dedicated_insurance_market"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "insurance_pricing",
+          "mechanism": "15_20_to_4_8"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "self_insurance_shift",
+          "mechanism": "mega_constellation_self_insure"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "congestion_numbers",
+          "mechanism": "active_11500_satellites"
+        }
+      ],
+      "required_retention_events": [
+        "named_case_study",
+        "failure_reveal",
+        "insurance_market",
+        "self_insurance_shift",
+        "congestion_cost"
+      ],
+      "original_moves": [
+        "说明Viasat $700M天线未展开",
+        "揭示失90%容量的瞬间失效",
+        "说明$420M索赔",
+        "展示保险费率从15-20%降到4-8%",
+        "说明巨型星座转向自我保险",
+        "补刀：11,500颗在轨与30万次避碰"
+      ],
+      "abstract_move": "转向物理失效维度：单点机械失效可瞬间抹去大部分资产价值且无处维修，行业以专门保险市场与自我保险策略对冲，再叠加轨道环境拥堵成本",
+      "replacement_needs": [
+        "单点失效案例与容量损失比例",
+        "保险索赔的规模",
+        "保险费率的变化",
+        "自我保险转向与拥堵成本"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(82);打开的悬念 LOOP10→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "reveal",
+      "start_ratio": 0.8218,
+      "end_ratio": 0.9071,
+      "start_sec": 1146.9,
+      "end_sec": 1266.1,
+      "position_label": "82.2%–90.7%(19:07–21:06)",
+      "purpose": "把全片变量压缩成并排双情景压测：好情景给出完整盈利数字链，更常发生的坏情景叠加推迟、降价、部分失效与成本刚性；收束为\"差别是利润与破产的全部差别\"",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.8926,
+          "time_ms": 1245744,
+          "reason": "\"不是10-20%，是利润与破产的全部差别\"的分布判词"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP10",
+          "payoff_type": "dual_scenario_stress_test",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE54",
+          "event_type": "scenario_setup",
+          "mechanism": "two_scenarios"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "good_scenario_numbers",
+          "mechanism": "revenue_200m_profit_100m"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "bad_scenario_stack",
+          "mechanism": "delays_pricecuts_failure"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "spread_verdict",
+          "mechanism": "profit_vs_bankruptcy"
+        }
+      ],
+      "required_retention_events": [
+        "dual_scenario",
+        "scenario_numbers",
+        "downside_stack",
+        "spread_verdict"
+      ],
+      "original_moves": [
+        "给出好情景：$1.5B星座、三年$200M收入、$100M+利润、十年回本",
+        "给出坏情景：推迟+降价+失效叠加",
+        "补刀：成本刚性",
+        "以不是10-20%，是利润与破产的全部差别收束"
+      ],
+      "abstract_move": "把全片变量压缩成并排双情景压测：好情景给出完整盈利数字链，更常发生的坏情景叠加推迟、降价、部分失效与成本刚性，收束为差别是利润与破产的全部差别",
+      "replacement_needs": [
+        "好情景的完整盈利数字链",
+        "坏情景的多重叠加因素",
+        "成本刚性的补刀",
+        "利润与破产分布的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85);回收了前文的悬念 FS12→LOOP10。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.9071,
+      "end_ratio": 1,
+      "start_sec": 1266.1,
+      "end_sec": 1395.7,
+      "position_label": "90.7%–100%(21:06–23:16)",
+      "purpose": "收束：交付\"同一硬件按所处环节有三种估值倍数\"的最后一课，回收终极问题给出分层裁决——持久价值在合同、许可、渠道关系与装满纪律；以天地对仗判词与CTA收束",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.937,
+          "time_ms": 1307797,
+          "reason": "同一硬件三种估值倍数（1.5-3x/6-10x/10-20x）的价值分层"
+        },
+        {
+          "peak_id": "PK12",
+          "peak_type": "curiosity_resolution",
+          "strength": 80,
+          "position_ratio": 0.9665,
+          "time_ms": 1348963,
+          "reason": "终极问题回收：\"值不值得做完全取决于你在哪一层\""
+        },
+        {
+          "peak_id": "PK13",
+          "peak_type": "emotional_payoff",
+          "strength": 88,
+          "position_ratio": 0.9854,
+          "time_ms": 1375252,
+          "reason": "\"卫星带你入轨，真正赚钱的事都发生在地面\"的天地对收束"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP11",
+          "tension": "硬件相同与估值悬殊并存的反常",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_anatomy_plus_segment_verdict",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP11",
+          "payoff_type": "valuation_multiple_ladder",
+          "opened_in": "FS14"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE58",
+          "event_type": "pre_wrap_cta",
+          "mechanism": "guide_in_description"
+        },
+        {
+          "event_id": "RE59",
+          "event_type": "final_lesson_tease",
+          "mechanism": "same_hardware_different_value"
+        },
+        {
+          "event_id": "RE60",
+          "event_type": "valuation_multiples",
+          "mechanism": "hardware_1_5_to_3x"
+        },
+        {
+          "event_id": "RE61",
+          "event_type": "valuation_multiples",
+          "mechanism": "connectivity_6_to_10x"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "valuation_multiples",
+          "mechanism": "data_10_to_20x"
+        },
+        {
+          "event_id": "RE63",
+          "event_type": "multiple_verdict",
+          "mechanism": "signal_decides_multiple"
+        },
+        {
+          "event_id": "RE64",
+          "event_type": "final_question",
+          "mechanism": "is_it_good_business"
+        },
+        {
+          "event_id": "RE65",
+          "event_type": "closing_verdict",
+          "mechanism": "orbit_vs_earth"
+        },
+        {
+          "event_id": "RE66",
+          "event_type": "closing_cta",
+          "mechanism": "like_and_subscribe"
+        },
+        {
+          "event_id": "RE67",
+          "event_type": "sign_off",
+          "mechanism": "see_you_next_video"
+        }
+      ],
+      "required_retention_events": [
+        "pre_wrap_cta",
+        "valuation_ladder",
+        "multiple_verdict",
+        "final_verdict",
+        "closing_cta"
+      ],
+      "original_moves": [
+        "给出三层估值倍数：1.5-3x/6-10x/10-20x",
+        "揭示倍数取决于信号去向",
+        "给出分层裁决：持久价值在合同、许可、渠道关系与装满纪律",
+        "以入轨在天上、赚钱在地面的天地对收束",
+        "CTA告别"
+      ],
+      "abstract_move": "收束：交付同一硬件按所处环节有三种估值倍数的最后一课，回收终极问题给出分层裁决，持久价值在合同、许可、渠道关系与装满纪律，以天地对仗判词与CTA收束",
+      "replacement_needs": [
+        "三层估值倍数的具体数字",
+        "倍数差异的决定因素",
+        "持久价值所在的分层裁决",
+        "一个天地对仗或空间对仗的收束判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(82)、PK12(80)、PK13(88);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 82
+        },
+        {
+          "peak_id": "PK12",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK13",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

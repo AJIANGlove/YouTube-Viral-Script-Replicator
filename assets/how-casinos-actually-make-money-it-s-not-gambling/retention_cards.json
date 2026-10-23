@@ -1,0 +1,1362 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:05:06.332Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "paradox_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0339,
+      "start_sec": 0.1,
+      "end_sec": 46.8,
+      "position_label": "0%–3.4%(0:00–0:47)",
+      "purpose": "用「唯一能在你进门前就知道你会输多少的生意」这一确定性悖论开场，并用单一赌局简例立即演示固定抽成",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.0114,
+          "time_ms": 15709,
+          "reason": "首轮数学演示：每注固定留下的金额被直接算出，兑现开场「他早知道」的主张"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.0283,
+          "time_ms": 39103,
+          "reason": "「一侧是运气，另一侧是算术」完成首次概念重命名"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题否定式承诺与全片机制拆解之间的长线张力",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook_claim",
+          "mechanism": "certainty_paradox"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "first_numeric_payoff",
+          "mechanism": "fixed_expectation_demo"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "aphorism_reframe",
+          "mechanism": "gambling_vs_arithmetic"
+        }
+      ],
+      "required_retention_events": [
+        "certainty_paradox",
+        "immediate_numeric_demo",
+        "aphorism_reframe"
+      ],
+      "original_moves": [
+        "用「唯一能在你进门前就知道你会输多少的生意」确立确定性悖论",
+        "用轮盘赌单一赌局邀请观众代入计算",
+        "演示每注固定被留下的金额（5.26%）",
+        "用「一侧是运气，另一侧是算术」完成概念重命名"
+      ],
+      "abstract_move": "用确定性悖论主张开场 + 单一简例立即演示固定抽成机制 + 用对偶警句完成概念重命名",
+      "replacement_needs": [
+        "一个「结果确定性与过程不确定性共存」的悖论主张",
+        "一个可代入计算的单一简例，能演示固定抽成或固定损耗",
+        "一句对偶式的概念重命名警句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(78)、PK02(74);打开的悬念 LOOP01→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 78
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 74
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "certainty_paradox_with_immediate_numeric_demo",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 15709,
+        "evidence_refs": [
+          "C0001",
+          "C0002",
+          "C0007"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "scale_reveal",
+      "start_ratio": 0.0333,
+      "end_ratio": 0.0712,
+      "start_sec": 45.9,
+      "end_sec": 98.3,
+      "position_label": "3.3%–7.1%(0:46–1:38)",
+      "purpose": "用收入构成数据推翻「主业是赌博」的默认认知，并把真正答案收紧为「只卖一种特定商品」的核心悬念",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 86,
+          "position_ratio": 0.0394,
+          "time_ms": 54393,
+          "reason": "收入构成数据推翻「主业是赌博」的默认认知，完成首次尺度反转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "否定酒店答案后留下的商品空缺",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "belief_challenge",
+          "mechanism": "not_main_business"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "numeric_reveal",
+          "mechanism": "revenue_split"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "thesis_reframe",
+          "mechanism": "moving_away_from_gambling"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "curiosity_gap_open",
+          "mechanism": "one_specific_thing"
+        }
+      ],
+      "required_retention_events": [
+        "belief_challenge",
+        "numeric_reveal",
+        "wrong_answer_elimination",
+        "core_tease"
+      ],
+      "original_moves": [
+        "主张赌场主业不是赌博",
+        "用 26.1% vs 73.9% 的收入构成数据推翻默认认知",
+        "把悖论升级为「数学上不会输却在远离主业」",
+        "否定酒店等表层答案",
+        "预告真正答案是「一种特定商品」"
+      ],
+      "abstract_move": "用收入构成比例数据推翻主业默认认知 + 把悖论升级为远离优势的反常 + 否定表层答案并收紧为单一商品悬念",
+      "replacement_needs": [
+        "一个支撑主业反转的收入构成比例数据",
+        "一个「拥有优势却不依赖它」的悖论升级",
+        "一个否定表层答案并预告唯一商品的收紧动作"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(86);打开的悬念 LOOP02→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "engagement_break",
+      "start_ratio": 0.0705,
+      "end_ratio": 0.0912,
+      "start_sec": 97.3,
+      "end_sec": 125.9,
+      "position_label": "7.1%–9.1%(1:37–2:06)",
+      "purpose": "用与主题强相关的个人经历问题邀请评论，并植入点赞订阅，把悬念等待期转为参与期",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP13",
+          "tension": "个人经历与行业期望之间的对照",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP13"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "engagement_break",
+          "mechanism": "comment_prompt"
+        }
+      ],
+      "required_retention_events": [
+        "direct_question",
+        "self_disclosure_prompt",
+        "cta"
+      ],
+      "original_moves": [
+        "提问观众是否去过赌场",
+        "追问是否真的带走了盈利还是还回去了",
+        "邀请评论分享",
+        "请求点赞订阅"
+      ],
+      "abstract_move": "用与主题强相关的个人经历提问 + 追问结果真实性 + 邀请评论 + 植入点赞订阅",
+      "replacement_needs": [
+        "一个与主题强相关的个人经历提问",
+        "一个对「是否真的获得预期结果」的追问",
+        "评论邀请与点赞订阅请求"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP13(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "core_mechanism_reveal",
+      "start_ratio": 0.0907,
+      "end_ratio": 0.1551,
+      "start_sec": 125.1,
+      "end_sec": 214.1,
+      "position_label": "9.1%–15.5%(2:05–3:34)",
+      "purpose": "拆解庄家优势的税率阶梯与收入公式，把唯一可利用变量锁定为时间，完成「卖的是分钟」的核心重命名",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 93,
+          "position_ratio": 0.1433,
+          "time_ms": 197739,
+          "reason": "核心揭示：行业真正购买的商品是用户分钟数，全片论证由此重组"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "单局波动与长期确定之间的表象矛盾",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "core_product_naming",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "revenue_equation",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "section_transition",
+          "mechanism": "edge_section_start"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "inventory_reveal",
+          "mechanism": "edge_ladder"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "aphorism",
+          "mechanism": "donation_fine_print"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "equation_reveal",
+          "mechanism": "revenue_formula"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "core_reveal",
+          "mechanism": "time_is_the_product"
+        }
+      ],
+      "required_retention_events": [
+        "edge_ladder",
+        "equation_reveal",
+        "variable_isolation",
+        "core_reveal"
+      ],
+      "original_moves": [
+        "列出各游戏的庄家优势税率阶梯（1.4%、2.7%、5.3%）",
+        "说明单局可输金额有限定",
+        "展示收入公式：优势 × 注额 × 频率",
+        "把唯一可利用变量孤立为时间",
+        "揭示「尽可能便宜地买你的分钟」即核心商品是分钟"
+      ],
+      "abstract_move": "列出优势税率阶梯 + 说明单局限定 + 用公式孤立唯一可控变量 + 完成核心重命名：商品是时间而非输赢",
+      "replacement_needs": [
+        "一个优势或抽成的税率阶梯",
+        "一个收入公式，能孤立出唯一可控变量",
+        "一个「真正售卖的是时间而非表面商品」的核心重命名"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(93);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 93
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "slot_machine_economics",
+      "start_ratio": 0.1545,
+      "end_ratio": 0.267,
+      "start_sec": 213.2,
+      "end_sec": 368.5,
+      "position_label": "15.5%–26.7%(3:33–6:08)",
+      "purpose": "证明若商品是分钟则完美设备是机器而非牌桌，并用回收机制、速度与价格错觉拆解机器经济",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.261,
+          "time_ms": 360207,
+          "reason": "同地段数据对照显示「看似最便宜的机器实际最贵」"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "名义单价与真实注额之间的落差",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "transition",
+          "mechanism": "perfect_device"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "scale_reveal",
+          "mechanism": "industry_scale"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "image_reframe",
+          "mechanism": "chairs_facing_screens"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "mechanism_explain",
+          "mechanism": "hold_and_recycling"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "numeric_reveal",
+          "mechanism": "spins_per_hour"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "price_inversion",
+          "mechanism": "penny_machine"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "numeric_contrast",
+          "mechanism": "cheapest_is_priciest"
+        }
+      ],
+      "required_retention_events": [
+        "device_superiority",
+        "scale_reveal",
+        "recycling_mechanism",
+        "speed_math",
+        "price_inversion"
+      ],
+      "original_moves": [
+        "推理若商品是分钟则完美设备是机器而非牌桌",
+        "用行业规模数据对照机器份额（$35B，70%）",
+        "解释留存率与钱的循环回收机制",
+        "用每小时局数计算单位时间亏损（每小时 $120）",
+        "用一分钱机器的价格错觉揭示回报率反转",
+        "得出「看似最便宜的机器实际最贵」"
+      ],
+      "abstract_move": "从商品定义推导完美设备 + 用规模数据证明设备主导 + 用回收机制与速度数学拆解单位时间成本 + 用价格错觉揭示反转",
+      "replacement_needs": [
+        "一个从商品定义推导设备优越性的逻辑",
+        "一个行业规模与设备份额的对照数据",
+        "一个回收机制或速度数学计算",
+        "一个「看似最便宜实际最贵」的价格错觉与反转"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(82);打开的悬念 LOOP04→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "loss_disguise_engineering",
+      "start_ratio": 0.2663,
+      "end_ratio": 0.3348,
+      "start_sec": 367.5,
+      "end_sec": 462.1,
+      "position_label": "26.6%–33.5%(6:08–7:42)",
+      "purpose": "揭示多线投注与庆祝反馈如何把亏损伪装成胜利，用实验证明机器被设计为延长可忍受的亏损",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.2972,
+          "time_ms": 410208,
+          "reason": "实验证明伪装胜利的生理反应接近真实胜利"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "庆祝反馈与净亏损并存的反常",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "numeric_inversion_answer",
+          "opened_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "experiment_verdict",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "mechanism_reveal",
+          "mechanism": "losses_disguised_as_wins"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "experiment_evidence",
+          "mechanism": "skin_conductance"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "experiment_payoff",
+          "mechanism": "soundtrack_fix"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "design_thesis",
+          "mechanism": "bearable_losing"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "metric_naming",
+          "mechanism": "time_on_device"
+        }
+      ],
+      "required_retention_events": [
+        "disguised_win_mechanic",
+        "experiment_evidence",
+        "design_thesis",
+        "metric_naming"
+      ],
+      "original_moves": [
+        "解释多线投注机制",
+        "指出赢少于注额仍庆祝的现象",
+        "引用研究命名与生理测量证据（伪装胜利接近真实胜利反应）",
+        "用音效纠正对照实验证明设计有意",
+        "定性设计目标为延长可忍受的亏损",
+        "命名行业停留指标"
+      ],
+      "abstract_move": "解释机制如何把亏损伪装成胜利 + 用实验证据证明生理反应接近真实胜利 + 用对照实验证明有意设计 + 定性设计目标",
+      "replacement_needs": [
+        "一个把亏损伪装成胜利的机制",
+        "一个研究证据，证明伪装产生接近真实的生理或心理反应",
+        "一个对照实验，证明设计有意而非巧合",
+        "一个设计目标的重新定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(84);回收了前文的悬念 FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "environment_design",
+      "start_ratio": 0.3341,
+      "end_ratio": 0.4093,
+      "start_sec": 461.2,
+      "end_sec": 565,
+      "position_label": "33.4%–40.9%(7:41–9:25)",
+      "purpose": "把镜头从机器拉到房间，用两代设计哲学的对照证明「舒适比压迫购买更多时间」",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.3881,
+          "time_ms": 535720,
+          "reason": "两种设计哲学对照得出「舒适比压迫购买更多时长」"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "两代设计哲学方向相反却瞄准同一目标",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "广泛流传的都市传说与消防、经济现实之间的冲突",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "spatial_transition",
+          "mechanism": "look_at_the_room"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "authority_intro",
+          "mechanism": "design_rules_origin"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "design_rules",
+          "mechanism": "maze_no_clocks"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "counter_design",
+          "mechanism": "opposite_philosophy"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "quotable_verdict",
+          "mechanism": "trapped_feeling"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "comparative_conclusion",
+          "mechanism": "comfort_buys_time"
+        }
+      ],
+      "required_retention_events": [
+        "spatial_transition",
+        "dueling_design_philosophies",
+        "quotable_verdict",
+        "comfort_conclusion"
+      ],
+      "original_moves": [
+        "用空间尺度转场把镜头从机器拉到房间",
+        "列出旧派设计规则清单及其调研来源",
+        "列出新派逐项反转的设计清单",
+        "指出两派在优化哪种情绪上的争执",
+        "得出「舒适比压迫购买更多时间」的对照结论"
+      ],
+      "abstract_move": "用空间转场扩大尺度 + 列出旧派规则清单 + 列出新派反转清单 + 指出情绪优化之争 + 得出对照结论",
+      "replacement_needs": [
+        "一个空间或尺度转场",
+        "一个旧派规则清单及其来源",
+        "一个新派逐项反转的清单",
+        "一个两代哲学的对照结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80);打开的悬念 LOOP06→FS08、LOOP07→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "myth_debunk_and_friction_removal",
+      "start_ratio": 0.4087,
+      "end_ratio": 0.4793,
+      "start_sec": 564.1,
+      "end_sec": 661.6,
+      "position_label": "40.9%–47.9%(9:24–11:02)",
+      "purpose": "先证伪流传传闻并给出出处建立可信度，再拆解免费酒水与筹码链条如何消除起身与花钱的痛感",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "慷慨福利与精确计量之间的表象矛盾",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "comparative_case_verdict",
+          "opened_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "myth_debunk_with_origin",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "myth_debunk",
+          "mechanism": "oxygen_rumor"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "source_trace",
+          "mechanism": "rumor_origin"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "redefinition_aphorism",
+          "mechanism": "drinks_are_rent"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "friction_psychology",
+          "mechanism": "chips_layers"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "trio_summary",
+          "mechanism": "hold_keep_prevent"
+        }
+      ],
+      "required_retention_events": [
+        "myth_debunk",
+        "source_trace",
+        "redefinition_aphorism",
+        "friction_layer_chain",
+        "trio_summary"
+      ],
+      "original_moves": [
+        "点名流传传闻并逐条证伪",
+        "追溯传闻出处",
+        "把免费酒水重新命名为租金",
+        "拆解现金痛感与筹码分层链条",
+        "用三件套小结"
+      ],
+      "abstract_move": "点名传闻并逐条证伪 + 追溯出处建立可信度 + 重新命名免费品 + 拆解去痛感链条 + 小结组合手段",
+      "replacement_needs": [
+        "一个流传传闻及其逐条证伪",
+        "一个传闻出处追溯",
+        "一个免费品的重新命名",
+        "一个消除痛感或摩擦的链条机制"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP08→FS09 跨段;回收了前文的悬念 FS07→LOOP06、FS07→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "loyalty_data_system",
+      "start_ratio": 0.4786,
+      "end_ratio": 0.5976,
+      "start_sec": 660.7,
+      "end_sec": 824.9,
+      "position_label": "47.9%–59.8%(11:01–13:45)",
+      "purpose": "揭示忠诚卡是真正的计量器，理论亏损决定福利定价，并用数据化转型案例证明行业本质是客户数据库",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 83,
+          "position_ratio": 0.5264,
+          "time_ms": 726585,
+          "reason": "免费福利被重构为「对未来亏损的预付返还」"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.5913,
+          "time_ms": 816163,
+          "reason": "行业身份被重命名为恰好拥有物业的客户数据库"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "直觉经营与数据经营之间的范式冲突",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP10",
+          "tension": "最明显反例对主论点的压力",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "meter_and_refund_logic",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "new_question",
+          "mechanism": "who_deserves_effort"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "meter_reveal",
+          "mechanism": "activating_meter"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "term_naming",
+          "mechanism": "theo"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "refund_reframe",
+          "mechanism": "comps_as_refund"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "cost_value_contrast",
+          "mechanism": "room_cost_vs_value"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "actor_intro",
+          "mechanism": "data_transformation"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "belief_challenge",
+          "mechanism": "profit_in_regulars"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "scale_reveal",
+          "mechanism": "database_as_asset"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "identity_reframe",
+          "mechanism": "database_with_properties"
+        }
+      ],
+      "required_retention_events": [
+        "meter_reveal",
+        "term_naming",
+        "refund_reframe",
+        "cost_value_contrast",
+        "data_transformation_case",
+        "identity_reframe"
+      ],
+      "original_moves": [
+        "提出谁值得投入的新问题",
+        "把插卡重新命名为激活计量",
+        "命名理论亏损概念与绰号",
+        "重构福利为对未来亏损的返还",
+        "用成本与预期价值对照",
+        "用学者型经营者转型案例",
+        "展示会员规模与数据库资产",
+        "重命名行业身份为恰好拥有物业的客户数据库"
+      ],
+      "abstract_move": "提出投入对象新问题 + 重命名计量器 + 命名理论概念 + 重构福利为预付返还 + 用转型案例证明 + 重命名行业身份为数据库",
+      "replacement_needs": [
+        "一个投入对象或定价依据的新问题",
+        "一个理论概念的命名",
+        "一个福利重构为预付返还的逻辑",
+        "一个转型案例",
+        "一个行业身份的重新命名"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(83)、PK09(82);打开的悬念 LOOP09→FS10、LOOP10→FS11 跨段;回收了前文的悬念 FS08→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 83
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "whale_exception",
+      "start_ratio": 0.597,
+      "end_ratio": 0.6544,
+      "start_sec": 824,
+      "end_sec": 903.2,
+      "position_label": "59.7%–65.4%(13:44–15:03)",
+      "purpose": "用豪客例外检验主论点，说明为何只有这部分「真正像赌博」以及行业为何远离它",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "identity_reframe_answer",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE46",
+          "event_type": "exception_open",
+          "mechanism": "the_whale"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "collapse_reveal",
+          "mechanism": "junket_decline"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "thesis_confirmation",
+          "mechanism": "exception_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "exception_frame",
+        "volatility_evidence",
+        "collapse_reveal",
+        "thesis_confirmation"
+      ],
+      "original_moves": [
+        "预告例外框架",
+        "说明大数定律失效区间",
+        "指出低优势大额游戏与区域集中度",
+        "说明波动性与跨国追讨",
+        "展示中介数量崩缩",
+        "把例外收编为「唯一像赌博的部分」并说明行业远离"
+      ],
+      "abstract_move": "预告例外 + 说明失效区间 + 指出集中度与波动性 + 展示中介崩缩 + 把例外收编为论据并说明主体远离",
+      "replacement_needs": [
+        "一个例外预告及其失效区间说明",
+        "一个集中度与波动性的数据或现象",
+        "一个中介或参与者数量的崩缩证据",
+        "一个「例外证明主论点」的收编动作"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS09→LOOP09。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "non_gaming_pivot",
+      "start_ratio": 0.6537,
+      "end_ratio": 0.7343,
+      "start_sec": 902.2,
+      "end_sec": 1013.6,
+      "position_label": "65.4%–73.4%(15:02–16:54)",
+      "purpose": "追踪主业反转的历史交叉点与现状，展示度假村如何用费用变现并把赌桌降为引流层，再以旧模式残存作对照",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP10",
+          "payoff_type": "exception_confirms_thesis",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE49",
+          "event_type": "historic_crossing",
+          "mechanism": "non_gaming_flip"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "fee_inventory",
+          "mechanism": "resort_fees"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "model_inversion",
+          "mechanism": "room_not_free"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "contrast_case",
+          "mechanism": "regional_pure_version"
+        }
+      ],
+      "required_retention_events": [
+        "historic_crossing",
+        "identity_list",
+        "fee_inventory",
+        "model_inversion",
+        "contrast_case"
+      ],
+      "original_moves": [
+        "指出历史交叉点",
+        "展示主业占比现状",
+        "列出度假村身份清单",
+        "展示费用价格带与逐项收费",
+        "指出旧免费模式反转",
+        "以旧模式残存与区域纯粹版作对照"
+      ],
+      "abstract_move": "指出历史交叉点 + 展示占比现状 + 列出新身份清单 + 展示费用变现 + 指出免费模式反转 + 以旧模式残存作对照",
+      "replacement_needs": [
+        "一个历史交叉点与占比现状数据",
+        "一个新身份清单",
+        "一个费用价格带与逐项收费的变现机制",
+        "一个旧模式残存的对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS09→LOOP10。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "online_migration",
+      "start_ratio": 0.7336,
+      "end_ratio": 0.8289,
+      "start_sec": 1012.6,
+      "end_sec": 1144.1,
+      "position_label": "73.4%–82.9%(16:53–19:04)",
+      "purpose": "追踪同一优势如何迁入手机，并揭示利润率提升源于产品结构变化而非涨价",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "information_reveal",
+          "strength": 86,
+          "position_ratio": 0.8057,
+          "time_ms": 1112040,
+          "reason": "利润率提升被揭示为产品结构调整而非涨价，且由用户主动选择"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP11",
+          "tension": "同一套机制在更高利润率下的来源问题",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE53",
+          "event_type": "migration_tease",
+          "mechanism": "into_your_pocket"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "scale_reveal",
+          "mechanism": "online_growth"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "milestone_reveal",
+          "mechanism": "online_surpasses_physical"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "margin_reveal",
+          "mechanism": "hold_rise"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "mechanism_tease",
+          "mechanism": "changed_product_not_price"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "product_math",
+          "mechanism": "parlay_edge"
+        },
+        {
+          "event_id": "RE59",
+          "event_type": "demand_paradox",
+          "mechanism": "customer_demanded"
+        },
+        {
+          "event_id": "RE60",
+          "event_type": "callback",
+          "mechanism": "penny_machine_on_phone"
+        }
+      ],
+      "required_retention_events": [
+        "migration_tease",
+        "scale_and_milestone",
+        "margin_reveal",
+        "product_math",
+        "demand_paradox",
+        "callback"
+      ],
+      "original_moves": [
+        "预告迁移至口袋",
+        "展示线上规模与增速",
+        "指出反超实体的里程碑",
+        "展示利润率变化数据",
+        "否定涨价解释",
+        "用产品结构数学对照（串关 vs 单注）",
+        "指出需求悖论",
+        "回扣一分钱机器跨章机制"
+      ],
+      "abstract_move": "预告迁移 + 展示规模增速与反超里程碑 + 展示利润率上行 + 否定涨价解释 + 用产品结构数学对照 + 指出需求悖论 + 跨章回扣",
+      "replacement_needs": [
+        "一个迁移预告与规模增速数据",
+        "一个反超里程碑",
+        "一个利润率变化数据",
+        "一个否定涨价、改为产品结构调整的数学对照",
+        "一个需求悖论或跨章回扣"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(86);打开的悬念 LOOP11→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "revenue_concentration_reveal",
+      "start_ratio": 0.8282,
+      "end_ratio": 0.8792,
+      "start_sec": 1143.1,
+      "end_sec": 1213.5,
+      "position_label": "82.8%–87.9%(19:03–20:13)",
+      "purpose": "揭示收入高度集中于极少数持续亏损者，把机制分析加上道德重量",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.8426,
+          "time_ms": 1163034,
+          "reason": "收入集中度数据把机制讨论转为道德重量"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP11",
+          "payoff_type": "margin_mechanism_answer",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE61",
+          "event_type": "dark_section_open",
+          "mechanism": "off_the_annual_report_cover"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "concentration_reveal",
+          "mechanism": "state_study"
+        },
+        {
+          "event_id": "RE63",
+          "event_type": "concentration_ladder",
+          "mechanism": "cross_product_concentration"
+        },
+        {
+          "event_id": "RE64",
+          "event_type": "business_verdict",
+          "mechanism": "small_group_losing"
+        }
+      ],
+      "required_retention_events": [
+        "dark_section_open",
+        "study_evidence",
+        "concentration_ladder",
+        "business_verdict"
+      ],
+      "original_moves": [
+        "预告年报封面之外的章节",
+        "展示州研究集中度数据",
+        "列出多条产品线集中度阶梯",
+        "定性为「不是人人小亏而是少数人大亏」",
+        "说明气氛组与掩护功能"
+      ],
+      "abstract_move": "预告封面之外 + 展示集中度数据 + 列出产品线阶梯 + 定性分布 + 说明气氛组掩护功能",
+      "replacement_needs": [
+        "一个封面之外的预告",
+        "一个集中度数据（州研究或行业报告）",
+        "一个产品线集中度阶梯",
+        "一个「少数人承担大部分」的定性与气氛组功能说明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(90);回收了前文的悬念 FS12→LOOP11。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "synthesis_and_model_risk",
+      "start_ratio": 0.8785,
+      "end_ratio": 0.9652,
+      "start_sec": 1212.5,
+      "end_sec": 1332.2,
+      "position_label": "87.9%–96.5%(20:13–22:12)",
+      "purpose": "直接回答标题问题并压缩为「费率×时长」公式，随后指出模式唯一算不到的风险是用户不再回来",
+      "peaks": [
+        {
+          "peak_id": "PK12",
+          "peak_type": "worldview_shift",
+          "strength": 93,
+          "position_ratio": 0.8785,
+          "time_ms": 1212519,
+          "reason": "标题问题被直接回答：赚的不是赢钱而是时长，费率与时长分离"
+        },
+        {
+          "peak_id": "PK13",
+          "peak_type": "emotional_payoff",
+          "strength": 79,
+          "position_ratio": 0.9602,
+          "time_ms": 1325360,
+          "reason": "模式唯一算不到的风险被点明：防得住坏运气，防不住怨恨"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP12",
+          "tension": "万能计量叙事与客流下行数据之间的裂缝",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "direct_answer_plus_formula_recap",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE65",
+          "event_type": "title_answer",
+          "mechanism": "collecting_hours"
+        },
+        {
+          "event_id": "RE66",
+          "event_type": "compressed_recap",
+          "mechanism": "purchases_of_hours"
+        },
+        {
+          "event_id": "RE67",
+          "event_type": "risk_open",
+          "mechanism": "uncomputable_return"
+        },
+        {
+          "event_id": "RE68",
+          "event_type": "decline_data",
+          "mechanism": "visitor_and_revenue_downturn"
+        },
+        {
+          "event_id": "RE69",
+          "event_type": "complaint_inventory",
+          "mechanism": "fee_resentment"
+        },
+        {
+          "event_id": "RE70",
+          "event_type": "risk_aphorism",
+          "mechanism": "bad_luck_vs_resentment"
+        }
+      ],
+      "required_retention_events": [
+        "title_answer",
+        "formula_separation",
+        "compressed_recap",
+        "risk_open",
+        "decline_data",
+        "risk_aphorism"
+      ],
+      "original_moves": [
+        "直接回答标题问题",
+        "压缩为费率与时长的分工公式",
+        "用排比回收各手段如何购买时长",
+        "提出不可计算的数字",
+        "展示客流与收入下行数据",
+        "列出投诉清单",
+        "用风险警句收尾"
+      ],
+      "abstract_move": "直答标题问题 + 压缩为分工公式 + 排比回收 + 提出不可计算数 + 展示下行数据与投诉清单 + 用风险警句收尾",
+      "replacement_needs": [
+        "一个标题问题的直接回答",
+        "一个分工公式（费率 × 时长）",
+        "一个排比回收各手段的动作",
+        "一个不可计算数字的提出",
+        "一个下行数据、投诉清单或风险警句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK12(93)、PK13(79);打开的悬念 LOOP12→FS15 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK12",
+          "strength": 93
+        },
+        {
+          "peak_id": "PK13",
+          "strength": 79
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "callback_closure",
+      "start_ratio": 0.9645,
+      "end_ratio": 1,
+      "start_sec": 1331.3,
+      "end_sec": 1380.3,
+      "position_label": "96.5%–100%(22:11–23:00)",
+      "purpose": "回到地毯房间观看庆祝输钱的机器，以「从来不是你的钱而是你的下午」完成最终重命名，并衔接频道一致的CTA",
+      "peaks": [
+        {
+          "peak_id": "PK14",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.9718,
+          "time_ms": 1341371,
+          "reason": "结尾画面回扣：庆祝输钱的机器证明「目标从来不是钱而是下午」"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP12",
+          "payoff_type": "risk_identified_with_data",
+          "opened_in": "FS14"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE71",
+          "event_type": "closing_image",
+          "mechanism": "losing_celebration"
+        },
+        {
+          "event_id": "RE72",
+          "event_type": "cta",
+          "mechanism": "like_subscribe"
+        },
+        {
+          "event_id": "RE73",
+          "event_type": "cross_reference",
+          "mechanism": "thematic_cta"
+        }
+      ],
+      "required_retention_events": [
+        "scene_callback",
+        "final_reframe",
+        "cta",
+        "cross_reference"
+      ],
+      "original_moves": [
+        "召回场景",
+        "展示庆祝输钱的机器画面",
+        "用「从来不是你的钱而是你的下午」完成最终重命名",
+        "请求点赞订阅",
+        "推荐同主题视频",
+        "道别"
+      ],
+      "abstract_move": "召回场景 + 展示画面 + 用最终重命名句收尾 + 衔接点赞订阅与推荐 + 道别",
+      "replacement_needs": [
+        "一个场景召回",
+        "一个画面回扣",
+        "一句最终重命名句",
+        "点赞订阅请求、推荐与道别"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK14(88);回收了前文的悬念 FS14→LOOP12。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK14",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

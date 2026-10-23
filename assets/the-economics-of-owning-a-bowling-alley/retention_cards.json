@@ -1,0 +1,1034 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:41:31.009Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.0206,
+      "start_sec": 0.1,
+      "end_sec": 31,
+      "position_label": "0%–2.1%(0:00–0:31)",
+      "purpose": "用第二人称收购幻想与\"从外面看很简单\"的表象建立代入，随即抛出赢家/挣扎者对照悬念，并承诺从\"你实际买的是什么\"开始拆解",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "paradox_hook",
+          "strength": 80,
+          "position_ratio": 0.0154,
+          "time_ms": 23188,
+          "reason": "赢家年入数百万与挣扎者满场仍勉强维持的全片主对照"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主对照问题：为什么有人开馆年入两三百万，有人周末满场却勉强维持",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "你实际买的到底是什么",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_hook",
+          "mechanism": "second_person_fantasy"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "stakes_contrast",
+          "mechanism": "winner_loser_gap"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "roadmap_promise",
+          "mechanism": "explicit_deliverable"
+        }
+      ],
+      "required_retention_events": [
+        "winner_loser_contrast",
+        "roadmap_promise"
+      ],
+      "original_moves": [
+        "用第二人称复述收购保龄球馆的幻想（家庭欢笑声、业主身份、被动收入画面）",
+        "陈述表象：'看起来很简单——只要保持球道运转'",
+        "抛出对照悬念：为什么有人年入数百万，有的馆满场仍勉强维持",
+        "承诺拆解路线：从'你实际买的是什么'开始"
+      ],
+      "abstract_move": "用第二人称收购幻想与表象简单陈述建立代入，随即抛出赢家与挣扎者全片主对照悬念，并承诺从本质认知开始拆解",
+      "replacement_needs": [
+        "一个可被第二人称复述的收购或进入幻想场景",
+        "一个'从外面看很简单'的表象陈述",
+        "一个赢家与挣扎者的结果对照（需有量级差异）",
+        "一个拆解起点的承诺（从某个本质认知开始）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80);打开的悬念 LOOP01→FS14、LOOP02→FS02 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "ownership_fantasy_plus_winner_loser_contrast",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 35469,
+        "evidence_refs": [
+          "C0001",
+          "C0022",
+          "C0031"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "reveal",
+      "start_ratio": 0.0206,
+      "end_ratio": 0.1027,
+      "start_sec": 30.1,
+      "end_sec": 154.9,
+      "position_label": "2.1%–10.3%(0:30–2:35)",
+      "purpose": "第一兑现：否定\"买的是带球道的空间\"，把购买对象重构为最复杂的娱乐生意之一，用酒店类比与设备清点建立系统复杂度，并给出\"现金储备\"第一课",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.0235,
+          "time_ms": 35469,
+          "reason": "\"大多数人想象买的是空间——并非如此\"的第一兑现"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "开这样一家到底要花多少钱",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "inventory_reveal",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "belief_correction",
+          "mechanism": "misconception_denial"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "comparison_reframe",
+          "mechanism": "hotel_analogy"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "inventory_scan",
+          "mechanism": "main_door_count"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "inevitability_reveal",
+          "mechanism": "breakdown_certainty"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "new_question",
+          "mechanism": "entry_cost_question"
+        }
+      ],
+      "required_retention_events": [
+        "misconception_denial",
+        "inventory_montage"
+      ],
+      "original_moves": [
+        "用'大多数人想象买的是带球道的空间——并非如此'否定表象",
+        "用小酒店类比建立系统复杂度参照",
+        "清点全部设备系统（道面/置瓶机/回球/计分/厨房/酒吧/游戏区/派对房/停车场）",
+        "点出故障必然性与时间压力",
+        "给出第一课：'问题不是会不会坏，而是有没有现金与人手在周六前修好'"
+      ],
+      "abstract_move": "否定'买的是表面看到的东西'，用类比与全栈清点把购买对象重构为复杂系统，并给出关键资源储备的第一课",
+      "replacement_needs": [
+        "一个否定表象认知的'大多数人想象…并非如此'句式",
+        "一个可类比的复杂系统参照物",
+        "一个可逐项清点的设备或子系统全栈",
+        "一个关键资源储备的判断标准（现金/人手/时间维度）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(70);打开的悬念 LOOP03→FS03 跨段;回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.1027,
+      "end_ratio": 0.2118,
+      "start_sec": 153.9,
+      "end_sec": 319.5,
+      "position_label": "10.3%–21.2%(2:34–5:19)",
+      "purpose": "入场成本全栈：租金、建造、每道设备、厨房、酒吧、收银系统、酒牌、运营储备逐项给区间，最后聚合成总入场量级双档",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.2029,
+          "time_ms": 306142,
+          "reason": "入场总成本聚合为数百万级双档坐标"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "cost_total_summary",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "number_ladder",
+          "mechanism": "rent_construction_rungs"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "number_ladder",
+          "mechanism": "equipment_per_lane"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "scale_reveal",
+          "mechanism": "entry_total_aggregation"
+        }
+      ],
+      "required_retention_events": [
+        "range_number_ladder",
+        "total_aggregation"
+      ],
+      "original_moves": [
+        "开启成本问题：'到底要投多少钱'",
+        "逐项给出八项成本区间（租金、建造、每道设备、厨房、酒吧、收银系统、酒牌、运营储备）",
+        "强调地区与规模差异",
+        "聚合为总入场量级双档（小型馆数百万、中型馆更高）"
+      ],
+      "abstract_move": "入场成本全栈：逐项给出子项成本区间并强调变量因素，最后聚合为总入场量级双档坐标",
+      "replacement_needs": [
+        "五项以上可拆分的入场成本子项（含硬件、软件、合规、储备）",
+        "每项成本的区间数据与影响因素",
+        "一个总入场量级的双档或三档聚合"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75);回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "evidence_build",
+      "start_ratio": 0.2118,
+      "end_ratio": 0.2791,
+      "start_sec": 318.5,
+      "end_sec": 421.1,
+      "position_label": "21.2%–27.9%(5:19–7:01)",
+      "purpose": "固定资产陷阱与选址经济学：建了就搬不走，市场变迁困住业主；给出成功市场四个共同特征，以\"选址即生意\"判词收束并引出\"第一个错误\"",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.2647,
+          "time_ms": 399420,
+          "reason": "\"选址不只是重要，选址就是生意\"判词"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "每月光是\"存在\"就要花掉多少",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "constraint_reveal",
+          "mechanism": "fixed_asset_trap"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "verdict_line",
+          "mechanism": "location_is_business"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "mistake_reframe",
+          "mechanism": "hidden_fixed_costs"
+        }
+      ],
+      "required_retention_events": [
+        "fixed_asset_trap",
+        "verdict_line"
+      ],
+      "original_moves": [
+        "陈述固定资产陷阱：建了就搬不走",
+        "列举市场变迁困住业主的情景（郊区化、产业外迁、人口老龄化）",
+        "给出成功市场四个共同特征（家庭密度、年轻人口、办公区、收入水平）",
+        "以'选址不只是重要，选址就是生意'判词收束",
+        "用'第一个错误'转场至下一段"
+      ],
+      "abstract_move": "固定资产陷阱：不可迁移性让市场变迁困住业主；给出成功市场共同特征，以'选址即生意'判词收束并转场",
+      "replacement_needs": [
+        "一个固定资产不可迁移的陈述与后果",
+        "三种以上市场变迁困住业主的情景",
+        "三至四个成功市场的共同特征（人口结构/经济/地理维度）",
+        "一个判词级别的选址重要性总结"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75);打开的悬念 LOOP04→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evidence_build",
+      "start_ratio": 0.2791,
+      "end_ratio": 0.4027,
+      "start_sec": 420.2,
+      "end_sec": 607.5,
+      "position_label": "27.9%–40.3%(7:00–10:08)",
+      "purpose": "固定成本解剖：房租/人工/水电/维保/保险/税费逐项给区间，聚合为年固定成本总账，并把问题改写为\"钱进得够不够快\"",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.39,
+          "time_ms": 588338,
+          "reason": "年固定成本总账落地，尚未计入售出商品成本"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "fixed_cost_summary",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "number_reveal",
+          "mechanism": "labor_share"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "summary_signal",
+          "mechanism": "fixed_cost_summary_setup"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "scale_reveal",
+          "mechanism": "fixed_cost_total"
+        }
+      ],
+      "required_retention_events": [
+        "below_line_anatomy",
+        "running_total_summary"
+      ],
+      "original_moves": [
+        "逐项给出六大固定成本区间（房租、人工、水电、维保、保险、税费）",
+        "强调成本口径：尚未计入售出商品成本",
+        "聚合为年固定成本总账",
+        "用'问题不是钱进不进，而是进得够不够快'判词改写问题"
+      ],
+      "abstract_move": "固定成本解剖：逐项给出子项区间并强调口径，聚合为年总账，用判词把问题从'赚不赚钱'改写为'钱进得够不够快'",
+      "replacement_needs": [
+        "五项以上固定成本子项及各自区间",
+        "一个成本口径的强调（未计入哪类成本）",
+        "一个年总账聚合数字",
+        "一个改写问题性质的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80);回收了前文的悬念 FS04→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "reveal",
+      "start_ratio": 0.4027,
+      "end_ratio": 0.4728,
+      "start_sec": 606.5,
+      "end_sec": 713.3,
+      "position_label": "40.3%–47.3%(10:07–11:53)",
+      "purpose": "收入重心反转：球道是最不重要的部分，真正的钱在餐饮；给出餐饮毛利率区间，用四人周五晚账本演示\"道租不足一半\"，并点出千元级生日桌（段首含约9秒订阅CTA间奏）",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.4074,
+          "time_ms": 614598,
+          "reason": "\"球道或许是最不重要的部分\"——全片最强认知反转"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.4598,
+          "time_ms": 693671,
+          "reason": "四人账单超两百美元、道租不足一半的演示兑现"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "真正的钱到底从哪里来",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "counterintuitive_reframe",
+          "mechanism": "lanes_least_important"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "number_reveal",
+          "mechanism": "fnb_margin_ranges"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "lived_math_demo",
+          "mechanism": "friday_group_bill"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "payoff_number",
+          "mechanism": "bill_total_dominance"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "mechanism_naming",
+          "mechanism": "birthday_engine"
+        }
+      ],
+      "required_retention_events": [
+        "counterintuitive_reframe",
+        "lived_bill_demo"
+      ],
+      "original_moves": [
+        "约9秒订阅CTA间奏",
+        "抛出反转：'球道或许是最不重要的部分'",
+        "给出道租与鞋租价格区间及物理上限",
+        "给出餐饮毛利率区间",
+        "用四人周五晚账单演示'道租不足一半'",
+        "点出生日桌千元级收入锚点"
+      ],
+      "abstract_move": "收入重心反转：核心功能区是最不重要的部分，真正的钱在辅助服务；用账单演示证明并点出高价值事件锚点",
+      "replacement_needs": [
+        "一个'核心功能区最不重要'的反转陈述",
+        "核心功能区与辅助服务的价格区间及毛利率对比",
+        "一个完整账单演示（需证明辅助服务占比超过一半）",
+        "一个高价值事件的收入锚点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85)、PK07(75);打开的悬念 LOOP05→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "evidence_build",
+      "start_ratio": 0.4728,
+      "end_ratio": 0.5529,
+      "start_sec": 712.3,
+      "end_sec": 834.2,
+      "position_label": "47.3%–55.3%(11:52–13:54)",
+      "purpose": "事件引擎：生日包场填周末下午、企业包场填工作日下午；讲清价格不敏感逻辑、定金保护与单场企业活动收入演示",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "time_slot_shift",
+          "mechanism": "corporate_weekdays"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "payoff_number",
+          "mechanism": "corporate_event_day"
+        }
+      ],
+      "required_retention_events": [
+        "time_slot_filling",
+        "event_day_payoff"
+      ],
+      "original_moves": [
+        "介绍生日包场机制与每孩价格区间",
+        "讲清如何填充周末下午低谷时段",
+        "点出不可退定金的现金流保护作用",
+        "介绍企业包场如何填充工作日下午",
+        "解释企业客户价格不敏感的原因（预算已批、报销属性）",
+        "给出单场企业活动人均区间与总收入演示"
+      ],
+      "abstract_move": "事件引擎：两类包场如何填充低谷时段；讲清价格不敏感逻辑、定金保护机制与单场收入演示",
+      "replacement_needs": [
+        "两类包场或预定事件的机制与价格区间",
+        "各自填充的低谷时段及填充逻辑",
+        "一个价格不敏感的客群特征与原因",
+        "一个单场或单日收入演示"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "evidence_build",
+      "start_ratio": 0.5529,
+      "end_ratio": 0.6031,
+      "start_sec": 833.2,
+      "end_sec": 909.9,
+      "position_label": "55.3%–60.3%(13:53–15:10)",
+      "purpose": "收益工程：动态定价（航空/酒店同款逻辑）与VIP球道溢价；峰谷价差演示、采用者收入提升区间与年换算",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "mechanism_tease",
+          "mechanism": "dynamic_pricing_intro"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "payoff_number",
+          "mechanism": "pricing_uplift_annualized"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "overlooked_group",
+          "mechanism": "league_players_intro"
+        }
+      ],
+      "required_retention_events": [
+        "peak_offpeak_pricing",
+        "uplift_annualization"
+      ],
+      "original_moves": [
+        "介绍动态定价机制并用航空/酒店类比",
+        "给出峰谷价差演示",
+        "给出采用者收入提升区间与年换算",
+        "介绍VIP溢价区间与目标客群"
+      ],
+      "abstract_move": "收益工程：动态定价与溢价产品；用峰谷价差演示、提升区间年换算及目标客群说明",
+      "replacement_needs": [
+        "一个动态定价机制与可类比的行业参照",
+        "一个峰谷价差的具体演示",
+        "一个采用者收入提升区间与年换算",
+        "一个溢价产品的价格区间与目标客群"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "evidence_build",
+      "start_ratio": 0.6031,
+      "end_ratio": 0.653,
+      "start_sec": 908.9,
+      "end_sec": 985.2,
+      "position_label": "60.3%–65.3%(15:09–16:25)",
+      "purpose": "被忽视的基本盘：联赛玩家的承诺机制如何填满工作日夜晚、托底现金流；具名头部公司靠收购老馆+保留联赛基本盘做到十亿级年收入",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.6398,
+          "time_ms": 965348,
+          "reason": "具名头部公司年收十亿级的规模冲击"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "设备选型这件大多数人没意识到的事有多大财务差别",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "scale_reveal",
+          "mechanism": "named_company_empire"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "tech_tease",
+          "mechanism": "hidden_difference_setup"
+        }
+      ],
+      "required_retention_events": [
+        "overlooked_group_reveal",
+        "named_company_anchor"
+      ],
+      "original_moves": [
+        "用'几乎总被忽视'预告隐藏客群",
+        "介绍联赛玩家的承诺机制与赛季制",
+        "讲清如何填满工作日夜晚并托底现金流",
+        "给出具名头部公司十亿级年收入量级",
+        "点出其收购老馆+保留联赛基本盘的策略"
+      ],
+      "abstract_move": "被忽视的基本盘：承诺机制客群如何填满低谷时段并托底现金流；用具名头部公司规模冲击收束",
+      "replacement_needs": [
+        "一个'几乎总被忽视'的客群及其承诺机制",
+        "该客群填充的低谷时段与托底现金流逻辑",
+        "一个具名头部公司的年收入量级",
+        "该公司的收购或扩张策略（需与保留基本盘相关）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(75);打开的悬念 LOOP06→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "reveal",
+      "start_ratio": 0.653,
+      "end_ratio": 0.7215,
+      "start_sec": 984.3,
+      "end_sec": 1088.6,
+      "position_label": "65.3%–72.2%(16:24–18:09)",
+      "purpose": "技术更替：传统置瓶机三千多个零件与专职技师成本 vs 拉线式置瓶机的降本逻辑；认证扫清采用障碍；维保与电费节省量化到大中心年六位数",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.716,
+          "time_ms": 1080304,
+          "reason": "设备技术更替带来大中心年六位数节省"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "固定成本刚性藏着什么危险——坏年景会怎样",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "technology_economics",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "technology_reveal",
+          "mechanism": "string_pinsetter"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "payoff_number",
+          "mechanism": "tech_savings_annualized"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "danger_turn",
+          "mechanism": "hidden_fragility"
+        }
+      ],
+      "required_retention_events": [
+        "old_new_tech_contrast",
+        "savings_quantification"
+      ],
+      "original_moves": [
+        "用'大多数人没意识到'预告技术更替",
+        "给出传统设备零件量级与专职技师年薪",
+        "介绍新技术原理与运营优势",
+        "点出官方认证事件扫清采用障碍",
+        "量化维保与能耗节省到大中心年六位数"
+      ],
+      "abstract_move": "技术更替：传统设备复杂度与人力成本 vs 新技术降本逻辑；认证扫清采用障碍；节省量化到年六位数",
+      "replacement_needs": [
+        "传统设备的复杂度指标（零件量级/人力需求/年成本）",
+        "新技术的原理与运营优势对比",
+        "一个官方认证或行业采纳的里程碑事件",
+        "节省区间与大型设施的年换算"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(70);打开的悬念 LOOP07→FS13 跨段;回收了前文的悬念 FS09→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "conflict_escalation",
+      "start_ratio": 0.7215,
+      "end_ratio": 0.8045,
+      "start_sec": 1087.6,
+      "end_sec": 1213.7,
+      "position_label": "72.2%–80.5%(18:08–20:14)",
+      "purpose": "脆弱性与竞争压力：固定成本无法随淡季快速下调；故障/火灾/酒牌三类突发风险；经济危机中休闲支出最先被砍（含2008案例）；新休闲业态与家庭娱乐争抢同一段休闲时间",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "在新休闲业态与家庭娱乐夹击下，这门生意如何保持相关性",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "crisis_evidence",
+          "mechanism": "financial_crisis_closures"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "competition_list",
+          "mechanism": "new_leisure_options"
+        }
+      ],
+      "required_retention_events": [
+        "cost_rigidity",
+        "crisis_case"
+      ],
+      "original_moves": [
+        "陈述固定成本刚性：下雪天租金不会停",
+        "列举三类突发风险（周五夜故障、厨房火灾、酒牌违规）",
+        "给出经济危机中休闲支出最先被砍的逻辑与2008关店案例",
+        "列举新竞争业态清单（娱乐替代品）",
+        "点出家庭娱乐抬高出门槛"
+      ],
+      "abstract_move": "脆弱性与竞争压力：固定成本刚性、突发风险与危机案例；新业态与在家选项争抢同一段时间",
+      "replacement_needs": [
+        "固定成本无法随淡季或意外下调的陈述与情景",
+        "三类突发风险及其时间敏感性",
+        "一个经济危机中该行业受冲击的案例与逻辑",
+        "三种以上新竞争业态或在家替代品"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP08→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.8045,
+      "end_ratio": 0.8568,
+      "start_sec": 1213.6,
+      "end_sec": 1292.6,
+      "position_label": "80.5%–85.7%(20:14–21:33)",
+      "purpose": "奢侈化重构：最可能消费的顾客未必为打球而来——他们为氛围付费；头部以收购高端品牌完成重构；人均消费跃升与3-7年永续再投资周期",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.8161,
+          "time_ms": 1231210,
+          "reason": "最肯花钱的顾客\"未必为打球而来\"的动机重构"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "adaptation_strategy",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "worldview_reveal",
+          "mechanism": "not_there_to_bowl"
+        }
+      ],
+      "required_retention_events": [
+        "atmosphere_motive_reframe",
+        "premium_price_jump"
+      ],
+      "original_moves": [
+        "陈述奢侈化转型趋势",
+        "抛出动机反转：'最肯花钱的顾客未必为核心功能而来'",
+        "列举氛围要素清单（灯光、音响、座椅、食物品质、服务）",
+        "给出具名高端品牌收购案例",
+        "给出人均消费区间跃升数字",
+        "点出3-7年永续再投资周期"
+      ],
+      "abstract_move": "高端化重构：最肯花钱的顾客未必为核心功能而来，他们为氛围付费；头部以收购品牌完成重构；人均跃升与永续再投资周期",
+      "replacement_needs": [
+        "一个'未必为核心功能而来'的动机反转陈述",
+        "三项以上氛围要素或体验升级清单",
+        "一个具名品牌的收购或重构案例",
+        "人均消费或客单价跃升数字与永续再投资周期"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85);回收了前文的悬念 FS11→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "evidence_build",
+      "start_ratio": 0.8568,
+      "end_ratio": 0.9393,
+      "start_sec": 1291.6,
+      "end_sec": 1417.1,
+      "position_label": "85.7%–93.9%(21:32–23:37)",
+      "purpose": "损益情景：中型中心好年景收入与三项结构占比、经营利润区间；坏年景利润腰斩到零的摆动幅度；奢侈段毛利率与入场投入的双向放大（段内含商业指南CTA）",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.9033,
+          "time_ms": 1362809,
+          "reason": "同一家店好年坏年利润摆动幅度量化"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "revenue_mix_model",
+          "opened_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "volatility_quantification",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "nuance_turn",
+          "mechanism": "bad_year_scenario"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "payoff_number",
+          "mechanism": "good_bad_swing"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "final_lesson",
+          "mechanism": "universal_verdict_setup"
+        }
+      ],
+      "required_retention_events": [
+        "good_bad_year_scenario",
+        "swing_quantification"
+      ],
+      "original_moves": [
+        "给出中型中心好年景收入与三项结构占比（道租/餐饮/活动）",
+        "给出经营利润区间",
+        "列举坏年景触发清单（天气、竞争、经济）",
+        "量化利润腰斩到零的摆动幅度",
+        "给出奢侈段毛利率与入场投入的双向放大数字",
+        "商业指南CTA"
+      ],
+      "abstract_move": "损益情景：好年景收入结构与利润区间；坏年景利润摆动幅度量化；高端段双向放大",
+      "replacement_needs": [
+        "一个中型规模好年景收入与三项结构占比",
+        "一个经营利润区间",
+        "三种以上坏年景触发因素与利润摆动幅度",
+        "高端段毛利率与入场投入的双向放大数字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(80);回收了前文的悬念 FS06→LOOP05、FS10→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.9393,
+      "end_ratio": 1,
+      "start_sec": 1416.1,
+      "end_sec": 1508.7,
+      "position_label": "93.9%–100%(23:36–25:09)",
+      "purpose": "最终教训：你卖的不是一眼所见的东西——顾客为生日、团建、周五夜与约会而来；最成功的经营者运营的是以球道引流的社交娱乐中心；标题回环收束（含结尾点赞订阅CTA）",
+      "peaks": [
+        {
+          "peak_id": "PK12",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9867,
+          "time_ms": 1488711,
+          "reason": "本质判词与标题回环的双重收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "explanatory_synthesis",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "identity_reversal",
+          "mechanism": "social_entertainment_center"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "aphorism_close",
+          "mechanism": "title_callback"
+        }
+      ],
+      "required_retention_events": [
+        "identity_reversal",
+        "title_callback"
+      ],
+      "original_moves": [
+        "抛出最终教训：'你卖的不是一眼所见的东西'",
+        "用四类到场动机排比（生日、团建、周五夜、约会）",
+        "点出'引流vs变现'分工",
+        "给出身份重定义：'不经营球馆而经营社交娱乐中心'",
+        "用标题回环句收束",
+        "结尾点赞订阅CTA"
+      ],
+      "abstract_move": "最终教训：你卖的不是一眼所见的东西；用动机排比与引流变现分工重定义身份；标题回环收束",
+      "replacement_needs": [
+        "一个'你卖的不是一眼所见'的判词",
+        "三至四类到场动机的排比",
+        "一个'引流vs变现'或'入口vs收入'的分工陈述",
+        "一个身份重定义判词与标题回环句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK12(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK12",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

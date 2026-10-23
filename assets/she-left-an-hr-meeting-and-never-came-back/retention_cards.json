@@ -1,0 +1,1118 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T09:03:15.950Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "enigma_cold_open",
+      "start_ratio": 0,
+      "end_ratio": 0.014,
+      "start_sec": 0.2,
+      "end_sec": 24.7,
+      "position_label": "0%–1.4%(0:00–0:25)",
+      "purpose": "用'调查者对着缺失之物微笑'的悖论画面制造谜题钩子，拒绝任何解释",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "enigma_hook",
+          "strength": 75,
+          "position_ratio": 0.0115,
+          "time_ms": 21076,
+          "reason": "'要找的东西不在那里，他却笑了'：冷开场悖论谜题成立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "冷开场谜题：侦探在那一帧里寻找却'不在那里'的东西是什么",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook",
+          "mechanism": "enigma_frame_setup"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "paradox_reveal",
+          "mechanism": "absence_hook"
+        }
+      ],
+      "required_retention_events": [
+        "absence_hook",
+        "paradox_smile"
+      ],
+      "original_moves": [
+        "画面显示调查者正在逐帧查看监控录像",
+        "镜头锁定并放大某一特定帧",
+        "调查者面露微笑",
+        "旁白点明：要找的东西不在那里"
+      ],
+      "abstract_move": "用专业人员对着缺失结果展现满意表情的悖论场景制造认知冲突，拒绝给出任何背景或解释",
+      "replacement_needs": [
+        "一个正在执行专业查验动作的人物",
+        "一个明确的'应该存在却不存在'的对象",
+        "一个与预期情绪相反的反应（满意、放心、微笑等）",
+        "完全不解释为何如此的克制叙事"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(75);打开的悬念 LOOP01→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 24722,
+        "hook_type": "absence_enigma_cold_open",
+        "first_stimulus_ms": 16677,
+        "first_payoff_ms": 148762,
+        "evidence_refs": [
+          "C0001",
+          "C0010",
+          "C0012"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "channel_intro_cta",
+      "start_ratio": 0.014,
+      "end_ratio": 0.029,
+      "start_sec": 23.8,
+      "end_sec": 52.2,
+      "position_label": "1.4%–2.9%(0:24–0:52)",
+      "purpose": "频道定位与关注引导，用一处反常规幽默口播缓冲冷开场的紧张",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "主承诺：她离开那场会议之后究竟遭遇了什么（标题永别断言的悬挂）",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "humor_beat",
+          "mechanism": "absurdist_cta_humor"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "timestamp_anchor",
+          "mechanism": "investigation_clock_start"
+        }
+      ],
+      "required_retention_events": [
+        "absurdist_cta_humor"
+      ],
+      "original_moves": [
+        "用一句话说明频道内容定位（真实案件讲述）",
+        "说明更新频率",
+        "用荒诞指令式语言引导点赞（'如果不按就会怎样'式反逻辑）",
+        "引导订阅",
+        "宣告故事正式开始"
+      ],
+      "abstract_move": "用一句话明确内容定位，用一处违反常规礼貌的指令式幽默完成互动引导，为即将展开的紧张叙事制造情绪缓冲",
+      "replacement_needs": [
+        "频道或内容类型的一句话定位",
+        "关注、订阅、点赞等互动引导",
+        "一处反常规、反礼貌或反逻辑的幽默表达"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "victim_setup_and_title_event",
+      "start_ratio": 0.04,
+      "end_ratio": 0.108,
+      "start_sec": 72.5,
+      "end_sec": 197.8,
+      "position_label": "4%–10.8%(1:13–3:18)",
+      "purpose": "建立受害者的日常世界与牵挂，实景兑现标题事件，让'离开'带着情绪重量",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "stakes_establish",
+          "mechanism": "harassment_complaint_dread"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "reluctant_consent",
+          "mechanism": "job_threat_pressure"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "title_event_payoff",
+          "mechanism": "title_event_early_payoff"
+        }
+      ],
+      "required_retention_events": [
+        "timestamp_anchor",
+        "title_event_early_payoff",
+        "reluctant_confrontation"
+      ],
+      "original_moves": [
+        "给出精确时间日期锚点",
+        "交代受害者正面临的职场骚扰投诉",
+        "说明她不愿参加但被迫参加的当面对质会议",
+        "展现她的家人（未婚夫、儿子）与对未来生活的期待",
+        "会议结果如她所惧，令人不适",
+        "她因此想独处，选择回家"
+      ],
+      "abstract_move": "建立当事人的日常处境、情感牵挂与具体时间锚点，用一场她不愿面对却无法回避的冲突事件作为标题事件的实景兑现，让后续的'离开'承载情绪重量",
+      "replacement_needs": [
+        "精确到日期和时段的时间锚点",
+        "当事人的日常身份、处境与情感牵挂",
+        "一场她不愿参加却不得不参加的事件及其令人不适的结果",
+        "事件后选择独处或前往某地的合理动机"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "home_arrival_foreshadow",
+      "start_ratio": 0.108,
+      "end_ratio": 0.142,
+      "start_sec": 198.4,
+      "end_sec": 260.3,
+      "position_label": "10.8%–14.2%(3:18–4:20)",
+      "purpose": "用住所环境的破败与治安细节为'日常场所'注入危险预感",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "ominous_detail",
+          "mechanism": "broken_environment"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "danger_foreshadow",
+          "mechanism": "recent_robberies_plant"
+        }
+      ],
+      "required_retention_events": [
+        "dread_foreshadowing",
+        "unsafe_environment_detail"
+      ],
+      "original_moves": [
+        "当事人返回居住的公寓",
+        "用环境细节展现住所的破败（老旧楼道、摇晃灯具）",
+        "用旁白铺垫近期频发的盗窃事件",
+        "用内心独白再次点明她对儿子的牵挂",
+        "她打开门进入屋内"
+      ],
+      "abstract_move": "用住所环境的破败与失修细节、近期治安事件的铺垫，为一个本应安全的日常场所注入潜在危险的预感",
+      "replacement_needs": [
+        "住所或日常场所环境的破败、失修或不安全细节",
+        "近期发生的相关治安或安全事件铺垫",
+        "当事人对家人或未来生活的牵挂重提"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "attack_cliffhanger",
+      "start_ratio": 0.141,
+      "end_ratio": 0.194,
+      "start_sec": 259.4,
+      "end_sec": 356.3,
+      "position_label": "14.1%–19.4%(4:19–5:56)",
+      "purpose": "用'哪里不对劲'的细微信号把观众推到袭击发生的瞬间，然后在第一接触点切走",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "suspense_cliffhanger",
+          "strength": 85,
+          "position_ratio": 0.191,
+          "time_ms": 350248,
+          "reason": "抽屉大开到颈上收紧：袭击瞬间切走，悬念峰值"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "抽屉为什么开着：袭击前的不对劲信号意味着什么",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "object_plant",
+          "mechanism": "micro_object_clue"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "wrongness_signal",
+          "mechanism": "open_drawer_alarm"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "attack_beat",
+          "mechanism": "cliffhanger_cutaway"
+        }
+      ],
+      "required_retention_events": [
+        "wrongness_signal",
+        "micro_object_plant",
+        "cliffhanger_cutaway"
+      ],
+      "original_moves": [
+        "当事人进屋后一切平静",
+        "镜头特写订婚戒指，交代未婚夫背景",
+        "她走向卧室",
+        "注意到抽屉大开（不该出现的变化）",
+        "身后突然传来响动",
+        "颈部被收紧，画面切走"
+      ],
+      "abstract_move": "用一个微小的环境异常信号制造'哪里不对劲'的警觉，把观众推向袭击发生的瞬间，在身体接触的第一时刻切断画面",
+      "replacement_needs": [
+        "一个不该出现的微小变化或异常信号",
+        "突然的声音或动静",
+        "袭击接触的第一瞬间（来不及反应或回身）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(85);打开的悬念 LOOP09→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "body_discovery",
+      "start_ratio": 0.194,
+      "end_ratio": 0.242,
+      "start_sec": 355.4,
+      "end_sec": 444.4,
+      "position_label": "19.4%–24.2%(5:55–7:24)",
+      "purpose": "通过最亲近者的视角确认最坏结果，兑现'再也没回来'",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "shock_reveal",
+          "strength": 85,
+          "position_ratio": 0.2387,
+          "time_ms": 437678,
+          "reason": "翻身后青紫的脸：最坏结果确认，标题永别断言兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "ominous_discovery",
+          "mechanism": "unlocked_door_omen"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "shock_reveal",
+          "mechanism": "body_discovery"
+        }
+      ],
+      "required_retention_events": [
+        "unlocked_door_omen",
+        "shock_reveal"
+      ],
+      "original_moves": [
+        "未婚夫因失联而赶来",
+        "发现门已开着（不正常）",
+        "看到钱包等物品散落地上",
+        "呼喊无人应答",
+        "看到俯卧不动的身影",
+        "翻身后看到青紫的面容"
+      ],
+      "abstract_move": "通过最亲近者的视角，用一系列异常信号（未锁的门、散落的物品、无应答）逐步推进，最终用翻身后的冲击画面确认最坏结果，兑现'再也没回来'",
+      "replacement_needs": [
+        "亲近者因失联而前来查看",
+        "门未上锁或其他不正常的进入场景",
+        "散落物品或混乱迹象",
+        "俯卧或背对的身影及翻身后的冲击画面"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "crime_scene_deduction",
+      "start_ratio": 0.242,
+      "end_ratio": 0.374,
+      "start_sec": 443.5,
+      "end_sec": 685.7,
+      "position_label": "24.2%–37.4%(7:23–11:26)",
+      "purpose": "侦探登场做现场演绎，种下一条看似无懈可击的错误理论",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "侦探的错误理论：亲密作案=熟人动机=伴侣嫌疑，这条方向是否成立",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "嫌疑人轮盘之一：未婚夫是不是凶手",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP10",
+          "tension": "凶手如何在不留入侵痕迹的情况下进入公寓",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP11",
+          "tension": "钱包被翻倒散落、现金却分文未动：这算什么抢劫",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "deduction",
+          "mechanism": "no_forced_entry"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "anti_robbery_logic",
+          "mechanism": "counterfactual_elimination"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "deduction",
+          "mechanism": "weapon_from_scene"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "false_theory",
+          "mechanism": "intimacy_implies_acquaintance"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "suspicion_direct",
+          "mechanism": "statistical_partner_suspicion"
+        }
+      ],
+      "required_retention_events": [
+        "anti_robbery_logic",
+        "false_theory_seeding",
+        "statistical_suspicion"
+      ],
+      "original_moves": [
+        "侦探登场，说明凶器是用受害者自己的丝袜",
+        "现场无入侵痕迹，门窗完好",
+        "现场无财物失窃，现金就散落在地上",
+        "凶器取自现场抽屉，推断作案为临时起意",
+        "绞杀方式亲密，推断为私人恩怨",
+        "引用统计数据指向伴侣为头号嫌疑人"
+      ],
+      "abstract_move": "专业调查者登场，用现场物证推演出一条看似无懈可击的因果链：无外来痕迹、无财物动机、工具来自现场、作案方式亲密，逐步锁定特定方向",
+      "replacement_needs": [
+        "无外部入侵或外来痕迹的事实",
+        "排除常见动机（财物、仇杀等）的反证",
+        "工具或手段取自现场的临时性证据",
+        "作案方式的亲密性或特殊性指向特定关系类型的经验法则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS15、LOOP04→FS11、LOOP10→FS14、LOOP11→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "sponsor_read",
+      "start_ratio": 0.373,
+      "end_ratio": 0.422,
+      "start_sec": 684.7,
+      "end_sec": 773.5,
+      "position_label": "37.3%–42.2%(11:25–12:54)",
+      "purpose": "广告口播，安置在第一轮悬念建立之后、审讯主线开始之前",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "pattern_interrupt",
+          "mechanism": "sponsor_read"
+        }
+      ],
+      "required_retention_events": [
+        "pattern_interrupt_sponsor"
+      ],
+      "original_moves": [
+        "赞助商口播广告"
+      ],
+      "abstract_move": "在第一轮悬念建立完成、审讯主线即将展开前插入商业口播，利用自然的情绪节点安置",
+      "replacement_needs": [
+        "赞助商或合作方的口播内容"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "suspect_interrogation_primary",
+      "start_ratio": 0.421,
+      "end_ratio": 0.551,
+      "start_sec": 772.5,
+      "end_sec": 1009.9,
+      "position_label": "42.1%–55.1%(12:53–16:50)",
+      "purpose": "头号嫌疑人（伴侣）问询，并从他口中抛出两个新嫌疑人，扩大轮盘",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.541,
+          "time_ms": 992124,
+          "reason": "侦探惊觉骚扰对质就发生在遇害当天上午：嫌疑权重重排"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "嫌疑人轮盘之二：有前科且近来纠缠探视权的前任是不是凶手",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "嫌疑人轮盘之三：被投诉骚扰且行为不断升级的同事是不是凶手",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "behavior_tell",
+          "mechanism": "sudden_reserve"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "suspect_intro",
+          "mechanism": "two_new_names"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "realization_jolt",
+          "mechanism": "same_morning_shock"
+        }
+      ],
+      "required_retention_events": [
+        "behavior_tell",
+        "suspect_roulette",
+        "realization_jolt"
+      ],
+      "original_moves": [
+        "对头号嫌疑人（伴侣）进行时间线对质",
+        "观察其行为表现",
+        "伴侣沉默后主动提供两个新名字：前任和职场骚扰者",
+        "侦探追问职场骚扰细节",
+        "伴侣补充说明骚扰对质会议就在遇害当天上午",
+        "侦探惊觉时间重合，嫌疑权重重排"
+      ],
+      "abstract_move": "对头号嫌疑对象进行时间线对质与行为观察，从其口中获得两个新的可疑对象，扩大嫌疑轮盘，用一个迟来的时间重合信息制造嫌疑权重的重新排序",
+      "replacement_needs": [
+        "对头号嫌疑对象的时间线对质与行为观察",
+        "从其口中抛出的两个新嫌疑对象的名字或身份",
+        "一个迟来揭晓的时间重合或关键信息，导致嫌疑权重重排"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80);打开的悬念 LOOP05→FS11、LOOP06→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "suspect_interrogation_escalation",
+      "start_ratio": 0.55,
+      "end_ratio": 0.625,
+      "start_sec": 1008.9,
+      "end_sec": 1145.8,
+      "position_label": "55%–62.5%(16:49–19:06)",
+      "purpose": "骚扰者嫌疑人问询：用卷宗细节把嫌疑加到最满，再给不在场证明",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "escalation_evidence",
+          "mechanism": "harassment_pattern_reveal"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "opportunity_window",
+          "mechanism": "alibi_hook"
+        }
+      ],
+      "required_retention_events": [
+        "escalation_evidence",
+        "alibi_hook"
+      ],
+      "original_moves": [
+        "骚扰者嫌疑人表现悲痛",
+        "试图淡化投诉严重性，称只是误会",
+        "侦探拿出投诉卷宗，逐条展示骚扰行为的升级证据链",
+        "骚扰者承认案发时段外出，构成作案时间窗口",
+        "骚扰者提供同事可作证其不在场"
+      ],
+      "abstract_move": "对新嫌疑对象进行问询，用其避重就轻的辩解与卷宗中的升级证据链形成对比，把嫌疑拉到最满，再给出不在场证明的线索",
+      "replacement_needs": [
+        "嫌疑对象避重就轻的辩解",
+        "卷宗或记录中的升级证据链，逐条展示行为的恶化",
+        "嫌疑对象的可疑时间窗口",
+        "不在场证明的线索（证人、记录等）"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "alibi_collapse_new_lead",
+      "start_ratio": 0.624,
+      "end_ratio": 0.684,
+      "start_sec": 1144.8,
+      "end_sec": 1253.4,
+      "position_label": "62.4%–68.4%(19:05–20:53)",
+      "purpose": "三名嫌疑人不在场证明全部成立、希望归零，随即抛出全新线索",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "ironic_twist",
+          "strength": 75,
+          "position_ratio": 0.6489,
+          "time_ms": 1189920,
+          "reason": "前任案发当天 literally 在坐牢：嫌疑人全部清零的黑色幽默死局"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "嫌疑人轮盘之四：撒谎且案发前重新纠缠的跟踪者前任是不是凶手",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "alibi_verified",
+          "opened_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "ironic_alibi_in_jail",
+          "opened_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "alibi_verified",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "ironic_alibi",
+          "mechanism": "in_jail_alibi"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "new_suspect",
+          "mechanism": "restraining_order_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "alibi_whiplash",
+        "new_suspect_tease"
+      ],
+      "original_moves": [
+        "尸检报告无新信息",
+        "侦探逐一核销三名嫌疑人的不在场证明",
+        "其中前任案发当天正在坐牢（黑色幽默式铁证）",
+        "背景调查翻出旧案限制令",
+        "确认存在一名跟踪者"
+      ],
+      "abstract_move": "三名嫌疑对象的不在场证明逐一成立，希望归零，其中一份铁证带有黑色幽默意味，随即用背景调查抛出全新线索，确立新嫌疑方向",
+      "replacement_needs": [
+        "三份不在场证明逐一核销的过程",
+        "其中一份具有黑色幽默或荒诞性的铁证",
+        "背景调查中发现的旧案记录或限制令",
+        "新嫌疑对象存在的确立"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(75);打开的悬念 LOOP07→FS13 跨段;回收了前文的悬念 FS07→LOOP04、FS09→LOOP05、FS09→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "suspect_interrogation_threat",
+      "start_ratio": 0.683,
+      "end_ratio": 0.757,
+      "start_sec": 1252.4,
+      "end_sec": 1387.8,
+      "position_label": "68.3%–75.7%(20:52–23:08)",
+      "purpose": "跟踪者嫌疑人问询：谎言被当场拆穿，肢体威胁拉满后用证据自证",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "tension_peak",
+          "strength": 85,
+          "position_ratio": 0.7381,
+          "time_ms": 1353600,
+          "reason": "大块头嫌疑人濒临爆发、侦探意识到对方没戴手铐：人身威胁顶点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "审讯室微循环：濒临爆发的大块头嫌疑人会不会当场攻击侦探",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "lie_exposed",
+          "mechanism": "contradicted_claim"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "physical_threat",
+          "mechanism": "interrogation_room_danger"
+        }
+      ],
+      "required_retention_events": [
+        "lie_exposed",
+        "physical_threat_tension"
+      ],
+      "original_moves": [
+        "跟踪者嫌疑人登场",
+        "声称一年没联系受害者",
+        "侦探拿出家属证词，证明其一直在联系",
+        "谎言被当面拆穿",
+        "嫌疑人体格威胁性强，情绪濒临爆发边缘",
+        "侦探意识到对方没戴手铐，处于危险",
+        "嫌疑人自我克制，说'我能证明'"
+      ],
+      "abstract_move": "对新嫌疑对象进行问询，用事先核实的证词当场拆穿其一眼可拆的谎言，用对方的威胁性体格与爆发边缘的对峙把紧张拉到顶点，再让其用证据自证",
+      "replacement_needs": [
+        "嫌疑对象一眼可拆的谎言",
+        "事先核实的证词或证据当场拆穿",
+        "威胁性体格与爆发边缘的对峙场景描写",
+        "'我能证明'的自证宣言或证据提供"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85);打开的悬念 LOOP08→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "pivot_clue_phone_call",
+      "start_ratio": 0.756,
+      "end_ratio": 0.795,
+      "start_sec": 1386.8,
+      "end_sec": 1457.7,
+      "position_label": "75.6%–79.5%(23:07–24:18)",
+      "purpose": "全片轴心：一通看似琐事的电话把'缺失之物'摆上桌，侦探意识到方向全错",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "turning_point",
+          "strength": 90,
+          "position_ratio": 0.7905,
+          "time_ms": 1449578,
+          "reason": "戒指电话：'我们从一开始就走错了方向'，全片轴心"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "alibi_verified_receipts",
+          "opened_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "threat_defused_self_control",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "dead_end",
+          "mechanism": "receipts_clear_suspect"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "pivot_clue",
+          "mechanism": "micro_object_clue"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "reframe",
+          "mechanism": "everything_changed"
+        }
+      ],
+      "required_retention_events": [
+        "micro_object_clue",
+        "reframe_declaration"
+      ],
+      "original_moves": [
+        "用加油票排除跟踪者嫌疑",
+        "调查回到原点，侦探疲惫烦躁",
+        "家属打来电话",
+        "家属询问受害者的订婚戒指",
+        "侦探不知戒指存在，从未在现场见过",
+        "侦探意识到从一开始就走错了方向"
+      ],
+      "abstract_move": "用最后一份证据排除新嫌疑对象，调查陷入死局，在疲惫场景中一通看似琐事的外部电话把一个'缺失之物'摆上桌，专业调查者意识到整个方向全错",
+      "replacement_needs": [
+        "排除最后一名嫌疑对象的证据",
+        "调查陷入死局后的疲惫或烦躁场景",
+        "外部（家属、证人等）询问遗失物品的电话或信息",
+        "专业调查者对该物品一无所知的错愕与方向性反思"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(90);回收了前文的悬念 FS11→LOOP07、FS12→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "killer_pov_reconstruction",
+      "start_ratio": 0.798,
+      "end_ratio": 0.932,
+      "start_sec": 1463.3,
+      "end_sec": 1708.3,
+      "position_label": "79.8%–93.2%(24:23–28:28)",
+      "purpose": "换凶手视角整段重构案发经过，把此前每个'不合理'细节逐一回收",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "dramatic_irony_peak",
+          "strength": 90,
+          "position_ratio": 0.8481,
+          "time_ms": 1555299,
+          "reason": "门后的凶手看得见她、她看不见他：同处一室的战栗顶点"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "identity_reveal",
+          "strength": 95,
+          "position_ratio": 0.9178,
+          "time_ms": 1683060,
+          "reason": "万能钥匙与维修工身份揭晓：全片最大信息回报"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "full_reconstruction_and_identity_reveal",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "reconstruction_answer",
+          "opened_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP10",
+          "payoff_type": "master_key_reveal",
+          "opened_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP11",
+          "payoff_type": "reconstruction_answer",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "pov_shift",
+          "mechanism": "killer_pov_replay"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "dramatic_irony",
+          "mechanism": "one_sees_one_doesnt"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "murder_replay",
+          "mechanism": "forensic_reenactment"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "tell_detail",
+          "mechanism": "ring_taken"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "identity_reveal",
+          "mechanism": "master_key_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "pov_shift",
+        "dramatic_irony_room",
+        "identity_reveal"
+      ],
+      "original_moves": [
+        "宣告从凶手视角重构案发经过",
+        "凶手入室后听动静确认无人",
+        "翻抽屉被受害者提前归来撞破",
+        "凶手藏到门后，受害者看不见他",
+        "受害者注意到大开的抽屉",
+        "凶手从背后袭击灭口",
+        "顺手取走订婚戒指",
+        "翻包后放弃其他财物",
+        "慌乱中忘记锁门",
+        "画面显示凶手使用的通行钥匙",
+        "揭晓维修工身份"
+      ],
+      "abstract_move": "用凶手视角整段重构案发经过，把此前所有'不合理'细节逐一回收：入室动机、被撞破的意外、门后藏匿的戏剧性反讽、灭口决定、顺手取走的小件物品、忘锁门的慌乱、通行权工具暴露身份",
+      "replacement_needs": [
+        "凶手入室后的听觉或视觉确认（无人在家）",
+        "当事人提前归来的意外与凶手藏匿的戏剧性反讽",
+        "凶器来源、灭口动机与顺手取走小件物品的动作",
+        "暴露其身份的工具（通行权、专业工具等）或身份揭晓"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(90)、PK09(95);回收了前文的悬念 FS02→LOOP02、FS05→LOOP09、FS07→LOOP10、FS07→LOOP11。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 95
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "callback_resolution",
+      "start_ratio": 0.931,
+      "end_ratio": 0.988,
+      "start_sec": 1707.3,
+      "end_sec": 1812.5,
+      "position_label": "93.1%–98.8%(28:27–30:12)",
+      "purpose": "冷开场谜题显形：'没有的东西'被确认，错误理论被推翻，正义与善后落地",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "callback_payoff",
+          "strength": 85,
+          "position_ratio": 0.947,
+          "time_ms": 1736569,
+          "reason": "录像确认指上无戒指：冷开场谜题迟到二十多分钟的显形"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "cold_open_callback_answer",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "theory_overturned_theft_origin",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "callback",
+          "mechanism": "cold_open_callback"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "theory_overturned",
+          "mechanism": "theft_origin_verdict"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "justice_payoff",
+          "mechanism": "arrest_and_sentence"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "outro_cta",
+          "mechanism": "comment_playlist_prompt"
+        }
+      ],
+      "required_retention_events": [
+        "cold_open_callback",
+        "theft_pattern_reveal",
+        "justice_closure"
+      ],
+      "original_moves": [
+        "用戒指电话复盘整个转折",
+        "调出监控录像确认受害者手上无戒指（冷开场画面回扣）",
+        "案件定性为盗窃起源的灭口",
+        "查证邻里失窃模式",
+        "排查通行钥匙持有者",
+        "搜出赃物与订婚戒指",
+        "逮捕凶手",
+        "交代判决与善后"
+      ],
+      "abstract_move": "用录像确认'缺失之物'，显形冷开场谜题，案件定性从错误方向转向真实起源，用系统性排查锁定持有特定权限的对象，搜出证物后完成逮捕、判决与善后",
+      "replacement_needs": [
+        "冷开场画面与'缺失之物'的显式对应",
+        "案件真实起源的定性（非此前推断的方向）",
+        "系统性排查特定权限持有者或特定范围对象",
+        "搜出证物、逮捕、判决与善后的完整闭环"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85);回收了前文的悬念 FS01→LOOP01、FS07→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "outro_cta",
+      "start_ratio": 0.988,
+      "end_ratio": 1,
+      "start_sec": 1811.5,
+      "end_sec": 1833.8,
+      "position_label": "98.8%–100%(30:12–30:34)",
+      "purpose": "情绪落地后的频道互动与同类内容引导",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "comment_prompt",
+        "playlist_prompt"
+      ],
+      "original_moves": [
+        "引导观后互动（点赞、评论、订阅）",
+        "引导观看播放列表中的同类内容",
+        "道别"
+      ],
+      "abstract_move": "在情绪落地后引导观后互动与同类内容观看，完成频道留存转化",
+      "replacement_needs": [
+        "观后互动引导（点赞、评论、订阅等）",
+        "同类内容播放列表或推荐引导"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

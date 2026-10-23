@@ -1,0 +1,1007 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:50:05.165Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "paradox_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0577,
+      "start_sec": 0.2,
+      "end_sec": 92.8,
+      "position_label": "0%–5.8%(0:00–1:33)",
+      "purpose": "用一场真实的公开上市与远超直觉的估值建立核心悖论，让观众承认“这账算不过来”",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.0058,
+          "time_ms": 9360,
+          "reason": "估值量级以重复强调的方式砸下，开场十秒内完成第一次尺度冲击"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.029,
+          "time_ms": 46719,
+          "reason": "极小单位收益与极大估值被压进同一句反问，主悖论正式结晶"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "单位版税与公司估值之间的尺度悖论",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "表面业务与真实产品之间的身份悬念",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "cold_open_event",
+          "mechanism": "dated_ipo_drop"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "scale_reveal",
+          "mechanism": "billion_with_b_emphasis"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "comparison_stack",
+          "mechanism": "exceeds_familiar_giants"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "cognitive_dissonance",
+          "mechanism": "number_does_not_make_sense"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "micro_royalty_contrast",
+          "mechanism": "fractions_of_a_penny_reality"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "central_paradox_question",
+          "mechanism": "from_small_check_to_huge_valuation"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "identity_reframe_tease",
+          "mechanism": "not_really_in_that_business"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "hidden_product_tease",
+          "mechanism": "real_product_something_else"
+        }
+      ],
+      "required_retention_events": [
+        "dated_event_cold_open",
+        "scale_comparison",
+        "cognitive_dissonance",
+        "central_paradox_question",
+        "hidden_product_tease"
+      ],
+      "original_moves": [
+        "2021年1月上市事件作为时间锚点",
+        "估值与迪士尼、网飞等巨头对比建立量级感",
+        "单曲版税几分钱与百亿估值数字压进同一句反问",
+        "明确告知这不是表面的流媒体或唱片业务，预告真实业务另有其物"
+      ],
+      "abstract_move": "用带日期的公开事件建立尺度冲击，再用极小单位收益与极大估值的数量级对撞制造核心悖论，让观众承认直觉失效，同时预告表面业务之下另有真相",
+      "replacement_needs": [
+        "一个带日期的公开估值、融资或收购事件",
+        "一个观众熟悉的同量级对象作为锚点",
+        "单位收益与总估值的数量级差距（至少三个数量级）",
+        "一个明确预告：真实业务不是表面看到的那个"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(78)、PK02(82);打开的悬念 LOOP01→FS11、LOOP02→FS02 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 78
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 82
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "dated_event_scale_paradox",
+        "first_stimulus_ms": 160,
+        "first_payoff_ms": 101840,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0021",
+          "C0044"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "ownership_distinction",
+      "start_ratio": 0.0564,
+      "end_ratio": 0.1367,
+      "start_sec": 90.7,
+      "end_sec": 219.9,
+      "position_label": "5.6%–13.7%(1:31–3:40)",
+      "purpose": "给出全片核心区分——制作内容与拥有内容是两回事，并用交易流程与房东类比讲透所有权位置",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.0839,
+          "time_ms": 135040,
+          "reason": "所有权归属揭示：创作者得名，版权方得产，全片核心区分落地"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "core_distinction_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "transition_question",
+          "mechanism": "one_distinction_nobody_talks_about"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "core_distinction_reveal",
+          "mechanism": "making_vs_owning"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "ownership_reveal",
+          "mechanism": "label_owns_the_master"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "aphorism_lock",
+          "mechanism": "credit_vs_deed"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "analogy_launch",
+          "mechanism": "landlord_tenant_frame"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "analogy_payoff",
+          "mechanism": "rent_check_is_the_deal"
+        }
+      ],
+      "required_retention_events": [
+        "transition_question",
+        "core_distinction",
+        "deal_mechanics",
+        "everyday_analogy"
+      ],
+      "original_moves": [
+        "反问谁拥有创作者做出的内容",
+        "区分制作内容与拥有内容是两回事",
+        "列出交易中创作者投入劳动与才华、版权方投入资金与资源",
+        "明确所有权归属：创作者得名气，版权方得产权",
+        "用房东与租客类比落地：创作者住进去获得曝光，房东持有房产持续收租"
+      ],
+      "abstract_move": "给出全片核心区分——制作与拥有是两回事，用交易双方投入与所得清单明确所有权归属，再用生活化类比把抽象产权关系翻译成观众可感知的位置",
+      "replacement_needs": [
+        "一个核心区分句，分离两个常被混淆的角色或动作",
+        "交易双方的投入与所得清单，明确不对等结构",
+        "所有权归属的明确表述",
+        "一个生活化类比（房东/租客、地主/佃农、股东/员工等）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(85);回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "catalog_asset_reveal",
+      "start_ratio": 0.1351,
+      "end_ratio": 0.2431,
+      "start_sec": 217.4,
+      "end_sec": 391.1,
+      "position_label": "13.5%–24.3%(3:37–6:31)",
+      "purpose": "用“资产不下班”与连续高价曲库交易证明旧内容是持续收租的资产，并把理解推向“这还只是简单版本”",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.1771,
+          "time_ms": 285040,
+          "reason": "首个曲库交易量级证据，把“持续收租”推上亿元级尺度"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "“拥有即收租”之后，对收益层数的好奇",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "time_depth_reveal",
+          "mechanism": "decades_old_song_still_paying"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "catalog_sale_reveal",
+          "mechanism": "estimated_catalog_price"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "catalog_sale_reveal",
+          "mechanism": "repeated_catalog_sales"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "concept_upgrade",
+          "mechanism": "recurring_revenue_asset"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "recap_and_escalation_tease",
+          "mechanism": "simple_version_then_deeper_layer"
+        }
+      ],
+      "required_retention_events": [
+        "enumeration_stacking",
+        "time_depth_reveal",
+        "catalog_sale_evidence",
+        "recurring_asset_concept",
+        "cta_with_escalation_tease"
+      ],
+      "original_moves": [
+        "枚举每次使用都先向版权方付费的场景",
+        "强调创作者离场、退休甚至去世后版权方仍持续收取",
+        "说明曲库不退休，是可预测收益的资产",
+        "给出连续的曲库高价交易证据（鲍勃·迪伦、霉霉等）",
+        "小结为简单版本并预告更深层机制"
+      ],
+      "abstract_move": "用使用即收租的枚举与创作者离场后仍收取的时间纵深，证明旧内容是不下班的资产，再用连续高价交易证据把收租推上可量化的尺度，最后把当前理解降级为简单版本并预告深入",
+      "replacement_needs": [
+        "多个使用场景的枚举，证明每次使用都触发收费",
+        "时间纵深证据，证明创作者离场后收益仍持续",
+        "至少两个高价交易案例，带数字",
+        "收益可预测性的解释（长期、稳定、可估算）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(82);打开的悬念 LOOP03→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "revenue_stacking",
+      "start_ratio": 0.2416,
+      "end_ratio": 0.3827,
+      "start_sec": 388.7,
+      "end_sec": 615.8,
+      "position_label": "24.2%–38.3%(6:29–10:16)",
+      "purpose": "拆解同一内容资产内部的多重版权与多条独立收益流，把“一个产品”重构成“一台多出口收款机”",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "enumeration_answer",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "dual_copyright_reveal",
+          "mechanism": "two_copyrights_in_one_song"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "new_term_reveal",
+          "mechanism": "sync_fee_introduced"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "numeric_ladder",
+          "mechanism": "sync_fee_ranges"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "scale_reveal",
+          "mechanism": "publishing_arm_billions"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "enumeration_payoff",
+          "mechanism": "one_song_many_checks"
+        }
+      ],
+      "required_retention_events": [
+        "dual_copyright_reveal",
+        "new_term_definition",
+        "numeric_ladder",
+        "enumeration_payoff"
+      ],
+      "original_moves": [
+        "区分一首歌内部的两种版权（词曲版权与录音版权）",
+        "逐一命名与定义三类收益：机械版税、表演版税、同步授权费",
+        "给出授权费的量级阶梯（广告、电影、游戏等场景）",
+        "说明版权方同时控制两种版权，双侧通吃",
+        "给出部门级规模数字，证明单一收益流本身已是巨额",
+        "总结为一首歌开出多张支票"
+      ],
+      "abstract_move": "拆解单一产品内部的多重权利类型与多条独立收益流，用逐一命名与量级阶梯把一个产品重构成多出口收款机，再用双侧通吃与部门级规模证明这不是理论而是实操",
+      "replacement_needs": [
+        "产品内部至少两种可分离的权利类型",
+        "至少三类独立收益流，带命名与定义",
+        "授权费或收益的量级阶梯（不同场景、不同价格）",
+        "双侧通吃或全链条控制的结构说明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "artist_extraction",
+      "start_ratio": 0.3814,
+      "end_ratio": 0.5167,
+      "start_sec": 613.7,
+      "end_sec": 831.4,
+      "position_label": "38.1%–51.7%(10:14–13:51)",
+      "purpose": "把视角从“从作品赚”转向“从人赚”，拆解全口径分成合同与预付款回收机制，揭示创作者端的不对等",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 86,
+          "position_ratio": 0.462,
+          "time_ms": 743440,
+          "reason": "预付款被重命名为贷款，观众对行业合同的默认理解被翻转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "作品收益穷尽之后，“人的那一侧”收益与创作者处境之间的反差",
+          "closes_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP05",
+          "tension": "机制听起来不公却又真实存在之间的张力",
+          "closes_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "创作者破产与版权方利润并存引发的道德评判冲动",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "immediate_legality_answer",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "pivot_attention_command",
+          "mechanism": "from_song_to_artist"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "new_term_reveal",
+          "mechanism": "full_circle_deal_named"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "analogy_extension",
+          "mechanism": "landlord_takes_cut_of_side_income"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "reframe_reveal",
+          "mechanism": "advance_is_loan_not_paycheck"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "consequence_reveal",
+          "mechanism": "recoupment_never_comes"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "mechanism_reveal",
+          "mechanism": "cross_collateralization"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "human_consequence",
+          "mechanism": "legal_but_artists_broke"
+        }
+      ],
+      "required_retention_events": [
+        "pivot_attention_command",
+        "new_term_definition",
+        "analogy_extension",
+        "reframe_reveal",
+        "mechanism_reveal",
+        "human_consequence"
+      ],
+      "original_moves": [
+        "视角从作品收益转向对人的收益",
+        "说明全口径分成合同及典型比例区间",
+        "升级房东类比：不仅收房租还从租客工资里抽成",
+        "重构预付款：不是工资是贷款，创作者用未来收益偿还",
+        "拆解回收机制：预付款先从创作者分成中扣除",
+        "解释交叉抵押条款：旧专辑亏损用新专辑收益补",
+        "对照创作者破产与版权方持续盈利"
+      ],
+      "abstract_move": "把视角从产品收益转向对人的全口径控制，拆解分成合同与预付款回收机制，用贷款重构与交叉抵押条款揭示创作者端的不对等，最后用破产与盈利对照把结构性差距推到可感知的程度",
+      "replacement_needs": [
+        "全口径分成的名称与比例区间",
+        "预付款的性质重构（贷款、预支、垫付）与回收机制",
+        "交叉抵押或连带条款的解释",
+        "创作者与持有方处境的对照（破产/盈利、负债/增值等）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(86);打开的悬念 LOOP04→FS06、LOOP06(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "corporate_reframe",
+      "start_ratio": 0.5152,
+      "end_ratio": 0.6092,
+      "start_sec": 829,
+      "end_sec": 980.3,
+      "position_label": "51.5%–60.9%(13:49–16:20)",
+      "purpose": "把镜头拉到公司层面，将版权方重构为“以创作者为收购渠道的知识产权持有公司”，并用组合投资逻辑解释为何持续签人",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.5484,
+          "time_ms": 882480,
+          "reason": "公司身份被重构为知识产权持有公司，论证完成类别跃迁"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "mechanism_plus_human_consequence",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "zoom_out_turn",
+          "mechanism": "corporate_level_reframe"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "identity_reframe",
+          "mechanism": "ip_holding_company"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "analogy_payoff",
+          "mechanism": "portfolio_bet_logic"
+        }
+      ],
+      "required_retention_events": [
+        "zoom_out_turn",
+        "identity_reframe",
+        "vc_logic_analogy"
+      ],
+      "original_moves": [
+        "搁置公平评判，拉远到公司层面看",
+        "把签约翻译为收购长期收益资产",
+        "把预付款翻译为收购价",
+        "重新定义公司身份为知识产权持有公司",
+        "类比组合投资逻辑：签一百个创作者，十个爆款即可覆盖成本",
+        "解释为何持续签不盈利创作者：增加组合广度与命中概率"
+      ],
+      "abstract_move": "把镜头拉到公司层面，用财务术语把行业动作翻译为收购与持有，重新命名公司身份为资产持有公司，再用组合投资逻辑解释为何持续买入看似不划算的标的，完成类别跃迁",
+      "replacement_needs": [
+        "收购视角的财务术语翻译（签约=收购，预付=收购价等）",
+        "公司身份的重新命名",
+        "组合投资逻辑类比（风投、对冲基金、彩票思维等）",
+        "为何买入不盈利标的的解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(88);回收了前文的悬念 FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "scale_proof",
+      "start_ratio": 0.6081,
+      "end_ratio": 0.6668,
+      "start_sec": 978.6,
+      "end_sec": 1073,
+      "position_label": "60.8%–66.7%(16:19–17:53)",
+      "purpose": "用市场份额与收入规模证明这不是小作坊而是全球性资产持有巨头，并以金融系统入场的悬置预告换挡",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "“金融系统迟早会来”的预示与具体历史案例之间的信息缺口",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "“还有一层”的预告与答案之间的短缺口",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "statistic_reveal",
+          "mechanism": "majority_flows_to_few"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "cliffhanger_tease",
+          "mechanism": "finance_arrived_in_a_named_year"
+        }
+      ],
+      "required_retention_events": [
+        "market_share_reveal",
+        "statistic_reveal",
+        "cliffhanger_tease"
+      ],
+      "original_moves": [
+        "给出三家巨头的市场份额区间",
+        "给出行业总规模数字",
+        "给出各家年收入量级",
+        "用日常使用大概率流向三家建立个人化连接",
+        "悬置预告：金融系统如何看待并入场"
+      ],
+      "abstract_move": "用市场份额与收入规模证明这不是小作坊而是全球性巨头，用日常概率化表述把远方数字接到观众自己的行为，再用金融系统入场的悬置预告完成换挡",
+      "replacement_needs": [
+        "市场份额区间或行业集中度数据",
+        "行业总规模与各家收入量级",
+        "日常行为与巨头的概率化连接",
+        "下一层的悬念预告（金融化、机构化、资本化等）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS10、LOOP08→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "distribution_moat",
+      "start_ratio": 0.6659,
+      "end_ratio": 0.7079,
+      "start_sec": 1071.4,
+      "end_sec": 1139,
+      "position_label": "66.6%–70.8%(17:51–18:59)",
+      "purpose": "揭示版权方还控制通向观众的渠道基础设施，把护城河从资产扩展到分发",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "内容资产与消费品价值方向相反的反直觉",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "analogy_extension_answer",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "new_layer_tease",
+          "mechanism": "who_controls_the_pipes"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "analogy_extension",
+          "mechanism": "owns_the_road_to_the_building"
+        }
+      ],
+      "required_retention_events": [
+        "new_layer_tease",
+        "infra_control_reveal",
+        "analogy_extension"
+      ],
+      "original_moves": [
+        "反问谁控制通向观众的管道",
+        "对照独立分发路径与巨头自有路径",
+        "说明巨头拥有自有分发基础设施并对外提供服务",
+        "用类比升级：不仅拥有大楼还拥有通往大楼的路"
+      ],
+      "abstract_move": "揭示持有方还控制通向终端的渠道基础设施，用独立路径与巨头路径对照证明垄断位置，再用类比升级把护城河从资产扩展到分发，完成双重锁定",
+      "replacement_needs": [
+        "独立路径与巨头路径的对照",
+        "自有分发基础设施的说明",
+        "对外分发服务的证据",
+        "类比升级句（拥有大楼+道路、拥有商品+货架等）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP09→FS09 跨段;回收了前文的悬念 FS07→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "asset_appreciation",
+      "start_ratio": 0.7066,
+      "end_ratio": 0.7801,
+      "start_sec": 1137,
+      "end_sec": 1255.2,
+      "position_label": "70.7%–78%(18:57–20:55)",
+      "purpose": "解释内容资产与常规消费品相反的增值曲线，并回头重估开场上市定价的逻辑",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "inversion_explanation_plus_ipo_callback",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "inversion_tease",
+          "mechanism": "opposite_of_other_industries"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "inversion_reveal",
+          "mechanism": "old_content_more_valuable"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "ipo_callback_payoff",
+          "mechanism": "why_the_ipo_priced_that_way"
+        }
+      ],
+      "required_retention_events": [
+        "inversion_reveal",
+        "permanence_mechanism",
+        "ipo_callback"
+      ],
+      "original_moves": [
+        "对照内容资产与消费品的反向贬值曲线",
+        "说明流媒体让旧作永久可得，消除物理衰减",
+        "解释价值逐年上升且无需新投入",
+        "说明上市不融资、不增发，只为定价",
+        "回环到开场数字：市场给出的答案现在开始说得通"
+      ],
+      "abstract_move": "解释产品与常规消费品相反的增值曲线，用永久可得性机制消除物理衰减，再回头重估开场上市定价的逻辑，完成首次回环并为开场悖论提供第一层答案",
+      "replacement_needs": [
+        "反向贬值对照（内容资产 vs 消费品、数据 vs 实物等）",
+        "永久可得性或零边际成本的机制解释",
+        "上市结构说明（不融资、不增发、只为定价或退出）",
+        "对开场数字的首次回环"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS08→LOOP09。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "financialization_peak",
+      "start_ratio": 0.7789,
+      "end_ratio": 0.9208,
+      "start_sec": 1253.4,
+      "end_sec": 1481.6,
+      "position_label": "77.9%–92.1%(20:53–24:42)",
+      "purpose": "用金融史上首例内容证券化与机构化收购链把“歌曲”重定义为可交易金融资产，并接到观众的退休金",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 87,
+          "position_ratio": 0.798,
+          "time_ms": 1284000,
+          "reason": "首例内容证券化案例兑现跨段悬置，歌曲正式变成债券"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.8859,
+          "time_ms": 1425440,
+          "reason": "私募巨头收购收购者，金融化升级链到达机构顶点"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9103,
+          "time_ms": 1464720,
+          "reason": "“你的退休金”把远方行业机制接到观众自己的钱袋，情绪与认知同时到位"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP10",
+          "tension": "单个历史案例与当代金融基础设施之间的规模缺口",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "historical_case_reveal",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE42",
+          "event_type": "strangest_part_tease",
+          "mechanism": "songs_stopped_being_songs"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "cta_with_payoff_tease",
+          "mechanism": "subscribe_then_detail_that_clicks"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "historical_case_reveal",
+          "mechanism": "catalog_turned_into_bonds"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "milestone_reveal",
+          "mechanism": "catalog_becomes_financial_security"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "case_reveal",
+          "mechanism": "fund_launch"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "scale_reveal",
+          "mechanism": "buying_spree_numbers"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "acquisition_reveal",
+          "mechanism": "private_equity_buys_the_fund"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "personal_relevance_reveal",
+          "mechanism": "pension_fund_exposure"
+        }
+      ],
+      "required_retention_events": [
+        "strangest_part_tease",
+        "cta_with_payoff_tease",
+        "historical_case_reveal",
+        "escalating_case_chain",
+        "personal_relevance_payoff"
+      ],
+      "original_moves": [
+        "预告歌曲不再是歌曲并插入订阅 CTA",
+        "给出金融史上首例内容证券化案例与结构",
+        "说明基金化收购链与上市",
+        "给出私募巨头收购收购者的证据",
+        "说明养老金与机构资金入场",
+        "用你的退休金把远方机制接到观众钱袋"
+      ],
+      "abstract_move": "用金融史上首例证券化案例兑现跨段悬置，把产品重定义为可交易金融资产，再用机构化收购链把抽象金融化推到私募与养老金顶点，最后用个人化落点句把远方行业接到观众自己的钱",
+      "replacement_needs": [
+        "首例证券化的结构与数字",
+        "基金化收购链或机构化交易链",
+        "私募、养老金或主权基金入场的证据",
+        "个人化落点句（你的退休金、你的保险、你的税等）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(87)、PK08(84)、PK09(90);打开的悬念 LOOP10→FS11 跨段;回收了前文的悬念 FS07→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 87
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 84
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "callback_closure",
+      "start_ratio": 0.9195,
+      "end_ratio": 1,
+      "start_sec": 1479.6,
+      "end_sec": 1609.1,
+      "position_label": "92%–100%(24:40–26:49)",
+      "purpose": "压缩回收全片机制，回环重估开场估值，用最终定义句完成世界观升级并自然带出 CTA",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 92,
+          "position_ratio": 0.9555,
+          "time_ms": 1537520,
+          "reason": "开场估值被回环重估：“你估的不是内容公司而是资产组合”，主承诺在此兑现"
+        },
+        {
+          "peak_id": "PK11",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9835,
+          "time_ms": 1582640,
+          "reason": "最终定义句以对照结构收束全片，留下可复述的答案"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "title_callback_revaluation",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP10",
+          "payoff_type": "escalating_case_chain_with_personal_relevance",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE50",
+          "event_type": "thesis_synthesis",
+          "mechanism": "they_do_not_sell_what_you_think"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "title_callback",
+          "mechanism": "opening_valuation_makes_sense_now"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "final_definition",
+          "mechanism": "financial_company_definition"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "closing_cta",
+          "mechanism": "comments_and_subscribe"
+        }
+      ],
+      "required_retention_events": [
+        "thesis_synthesis",
+        "title_callback",
+        "final_definition",
+        "closing_cta"
+      ],
+      "original_moves": [
+        "综合更深层真相的预告",
+        "压缩复述多路收益与金融买家",
+        "回环到开场估值：现在完全说得通",
+        "重估句：你估的不是内容公司而是资产组合",
+        "最终定义句：它们不是唱片公司，它们是知识产权银行",
+        "自然带出评论与订阅 CTA"
+      ],
+      "abstract_move": "压缩回收全片机制，回环重估开场估值并兑现主承诺，用最终定义句以对照结构完成世界观升级并留下可复述的答案，自然带出与内容一致的行动呼吁",
+      "replacement_needs": [
+        "全片机制的压缩复述",
+        "开场数字的回环重估",
+        "最终定义句，带对照结构（不是X而是Y）",
+        "与内容逻辑一致的 CTA"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(92)、PK11(85);回收了前文的悬念 FS01→LOOP01、FS10→LOOP10。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 92
+        },
+        {
+          "peak_id": "PK11",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

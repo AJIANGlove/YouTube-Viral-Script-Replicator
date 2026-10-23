@@ -1,0 +1,819 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T09:12:37.710Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0.001,
+      "end_ratio": 0.096,
+      "start_sec": 0.5,
+      "end_sec": 57.2,
+      "position_label": "0.1%–9.6%(0:00–0:57)",
+      "purpose": "零铺垫第二人称点名，把观众按进最低一级的身份、场景、任务与报酬里，并上完第一堂规则课",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "hook",
+          "strength": 75,
+          "position_ratio": 0.0046,
+          "time_ms": 2743,
+          "reason": "第二人称身份绑定：'需要无处不在的眼睛，那就是你'，沉浸开关按下"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：这个层级体系的每一级人生到底是什么样、代价是什么（标题全等级清单的悬挂）",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "忘记发出预警的失误会招来什么后果",
+          "closes_in": "FS01"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mercy_threat_rule_establishment",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook",
+          "mechanism": "zero_preamble_level_entry"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "identity_assignment",
+          "mechanism": "second_person_lock"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "first_payoff",
+          "mechanism": "cash_ledger"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "corruption_reveal",
+          "mechanism": "payroll_reveal"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "mistake_beat",
+          "mechanism": "forgotten_warning"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "threat_payoff",
+          "mechanism": "quiet_death_threat"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "level_transition",
+          "mechanism": "level_announcement_hook"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_role_assignment",
+        "task_and_pay_ledger",
+        "corruption_reveal",
+        "death_threat_beat"
+      ],
+      "original_moves": [
+        "第二人称直接分配身份：'需要一双眼睛，那就是你'",
+        "给出最低级任务：盯公路、记车牌、报暗语",
+        "亮出报酬明账：现金、不问来源",
+        "区分两种威胁：警察被收买vs真正会杀你的人",
+        "展示一次失误案例：活埋威胁"
+      ],
+      "abstract_move": "零铺垫身份绑定 + 最低门槛任务与即时报酬 + 规则课（谁安全谁危险）+ 一次失误的克制死亡威胁",
+      "replacement_needs": [
+        "一个第二人称身份分配句式",
+        "一个最低技能门槛的具体任务流程",
+        "一个报酬数字与潜规则",
+        "一个体制内与体制外威胁的区分",
+        "一次失误事件及其后果"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(75);打开的悬念 LOOP01→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        }
+      ],
+      "hook": {
+        "start_ms": 451,
+        "end_ms": 57185,
+        "hook_type": "second_person_immediate_role_assignment",
+        "first_stimulus_ms": 451,
+        "first_payoff_ms": 21776,
+        "evidence_refs": [
+          "C0001",
+          "C0003",
+          "C0004",
+          "C0018"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "rank_escalation_logistics",
+      "start_ratio": 0.096,
+      "end_ratio": 0.212,
+      "start_sec": 57.2,
+      "end_sec": 126,
+      "position_label": "9.6%–21.2%(0:57–2:06)",
+      "purpose": "物流执行级：给出任务、路线与风险收益明账，展示恐惧如何被习惯磨平，以及组织如何对待失败者",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.1269,
+          "time_ms": 75599,
+          "reason": "西瓜下面焊在地板里的货物揭晓：任务真实性与危险性同时确立"
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.1844,
+          "time_ms": 109795,
+          "reason": "父亲因拒卖土地被同一体系杀死：为体系打工的私人悖论"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "这一趟跨境运输会不会被抓",
+          "closes_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "被捕的自己人会不会被组织捞回来",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "successful_delivery_first_big_money",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "expendability_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "cargo_reveal",
+          "mechanism": "hidden_contraband"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "stakes_ledger",
+          "mechanism": "risk_reward_numbers"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "reward_payoff",
+          "mechanism": "first_big_money"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "backstory_reveal",
+          "mechanism": "personal_wound_irony"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "doom_aphorism",
+          "mechanism": "fearlessness_equals_caught"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "expendability_reveal",
+          "mechanism": "no_lawyers_new_driver"
+        }
+      ],
+      "required_retention_events": [
+        "cargo_reveal",
+        "risk_reward_numbers",
+        "first_big_payoff",
+        "expendability_reveal"
+      ],
+      "original_moves": [
+        "展示藏货方式：西瓜下焊死的货物",
+        "给出路线与检查站细节",
+        "列出风险收益明账：被抓vs送达的概率与报酬对比",
+        "描写途中恐惧的身体反应",
+        "交付首次报酬的金额冲击",
+        "揭示私人创伤：父亲被同一体系杀死",
+        "展示组织对失败者的冷漠：表弟被捕无人管"
+      ],
+      "abstract_move": "任务真实性揭示 + 风险收益数字明账 + 恐惧如何被习惯磨平 + 私人创伤与体系暴力的悖论 + 组织对个体的可抛弃性",
+      "replacement_needs": [
+        "一个隐藏物揭示场景",
+        "一组风险与收益的数字对比",
+        "一段恐惧的身体化描写",
+        "一个私人创伤与当前体系的因果纠缠",
+        "一次组织冷漠处理失败者的事件"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80)、PK03(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "rank_escalation_enforcement",
+      "start_ratio": 0.212,
+      "end_ratio": 0.315,
+      "start_sec": 126,
+      "end_sec": 187.8,
+      "position_label": "21.2%–31.5%(2:06–3:08)",
+      "purpose": "暴力执行级：让观众代入的角色第一次亲手施暴，同时给出家庭回馈的甜与成为目标的苦",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "dark_escalation",
+          "strength": 75,
+          "position_ratio": 0.2787,
+          "time_ms": 165952,
+          "reason": "主角第一次亲手施暴并把店主打至昏迷：道德门槛跨越"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "violence_threshold",
+          "mechanism": "first_hand_violence"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "target_status_reveal",
+          "mechanism": "success_breeds_targeting"
+        }
+      ],
+      "required_retention_events": [
+        "price_list",
+        "violence_threshold_crossed",
+        "family_reward",
+        "target_status_reveal"
+      ],
+      "original_moves": [
+        "给出晋升条件",
+        "展示勒索价目表：不同对象的等级收费",
+        "演示拒缴事件处理全流程：离开-返回-施暴-加倍",
+        "主角第一次亲手施暴并打至昏迷",
+        "报酬升级并给家人回馈",
+        "揭示成为多方目标的代价"
+      ],
+      "abstract_move": "道德门槛跨越（第一次亲手施暴）+ 等级化收费体系 + 完整暴力执行流程 + 家庭回馈的甜 + 成为目标的苦",
+      "replacement_needs": [
+        "一个等级化的价目表或处理标准",
+        "一次完整的暴力执行流程",
+        "一个报酬升级与家庭回馈场景",
+        "一个成为多方目标的代价揭示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "rank_escalation_command",
+      "start_ratio": 0.315,
+      "end_ratio": 0.446,
+      "start_sec": 187.8,
+      "end_sec": 265.8,
+      "position_label": "31.5%–44.6%(3:08–4:26)",
+      "purpose": "小团队指挥级：自主暴力权、平民伤亡、免罚幻觉与上方压力同时登场",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "dark_escalation",
+          "strength": 85,
+          "position_ratio": 0.3826,
+          "time_ms": 227840,
+          "reason": "酒吧扫射十二人死亡五名平民：暴力规模跃迁与道德重量峰值"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "mass_violence_escalation",
+          "mechanism": "civilian_casualty_count"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "impunity_reveal",
+          "mechanism": "governor_on_payroll"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "upward_pressure",
+          "mechanism": "always_more_replacement_forever"
+        }
+      ],
+      "required_retention_events": [
+        "autonomous_violence",
+        "civilian_casualty_reveal",
+        "impunity_reveal",
+        "upward_pressure"
+      ],
+      "original_moves": [
+        "给出团队编制与供货数字",
+        "亮出分成明账",
+        "展示自主报复权：对敌对势力越境行动",
+        "执行酒吧扫射：十二人死亡、五名平民",
+        "展示媒体与政府姿态及背后包庇",
+        "暴露团队管理混乱与纪律手段",
+        "传达上方压力：永远要更多、替代即永远"
+      ],
+      "abstract_move": "自主暴力权获得 + 平民伤亡的道德重量峰值 + 免罚幻觉（政府包庇）+ 上方永不满足的压力 + 可替代性威胁",
+      "replacement_needs": [
+        "一个供货量或业绩数字与分成明账",
+        "一次含平民伤亡的公开暴力事件",
+        "一个外部包庇或免罚的证据",
+        "一个上方永远要更多的压力场景"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "rank_escalation_empire",
+      "start_ratio": 0.446,
+      "end_ratio": 0.604,
+      "start_sec": 265.8,
+      "end_sec": 359.8,
+      "position_label": "44.6%–60.4%(4:26–6:00)",
+      "purpose": "区域经营级：战争行动、洗钱体系与外部监听同时压上，信任开始归零",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "dark_escalation",
+          "strength": 80,
+          "position_ratio": 0.5167,
+          "time_ms": 307711,
+          "reason": "尸体挂上桥宣示领土：暴力公共化的视觉冲击峰值"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "terror_display",
+          "mechanism": "bodies_on_bridge"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "surveillance_reveal",
+          "mechanism": "wiretap_warning"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "trust_erosion",
+          "mechanism": "not_even_brother"
+        }
+      ],
+      "required_retention_events": [
+        "war_operation_setpiece",
+        "money_laundering_catalog",
+        "surveillance_reveal",
+        "trust_erosion"
+      ],
+      "original_moves": [
+        "展示排场蒙太奇：安全屋、护卫",
+        "策划跨境扩张行动",
+        "执行尸体示众：挂上桥宣示领土",
+        "列出洗钱产业清单：现金无法入银行",
+        "揭示外部执法监听与应对方式",
+        "呈现三线围困：政府、敌对势力、内部野心者",
+        "展示睡眠与信任的全面流失"
+      ],
+      "abstract_move": "战争行动规模跃迁 + 暴力公共化视觉冲击 + 洗钱体系复杂化 + 外部监听压力 + 三线围困 + 信任归零",
+      "replacement_needs": [
+        "一个规模与排场的蒙太奇",
+        "一次跨境或跨区域扩张行动及其暴力示众",
+        "一个现金流无法合法化的困境与洗钱清单",
+        "一个外部监听或围困的多线压力",
+        "一个信任流失的私人细节"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "peak_power_corruption",
+      "start_ratio": 0.604,
+      "end_ratio": 0.77,
+      "start_sec": 359.8,
+      "end_sec": 458.3,
+      "position_label": "60.4%–77%(6:00–7:38)",
+      "purpose": "州级掌门级：政治收买方法论与跨国物流规模推到极致，同时金笼代价集中爆发，完成顶点反讽",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.7272,
+          "time_ms": 433070,
+          "reason": "月入百万但钱只是屏幕上的数字：顶点反讽启动"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.7414,
+          "time_ms": 441556,
+          "reason": "不能祭扫母亲墓地因为可能有狙击手：代价落到最私人的场景"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "爬得越高是否越安全越自由：财富顶峰能否买来安宁",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "corruption_methodology",
+          "mechanism": "offers_not_threats"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "scale_montage",
+          "mechanism": "logistics_acceleration"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "emptiness_reveal",
+          "mechanism": "numbers_on_screen"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "family_cost_scene",
+          "mechanism": "mothers_grave_snipers"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "paranoia_in_action",
+          "mechanism": "execution_on_suspicion"
+        }
+      ],
+      "required_retention_events": [
+        "corruption_methodology",
+        "scale_montage",
+        "emptiness_reveal",
+        "family_cost_scene",
+        "paranoia_in_action"
+      ],
+      "original_moves": [
+        "给出月流水与跨国规模数字",
+        "展示对公众隐身的生存规则",
+        "演示对官员的收买三段论：收买-曝光-消失",
+        "呈现供应链与运具的规模蒙太奇",
+        "并置月入百万与'只是屏幕上的数字'",
+        "展示家人场景代价：无法出席生日、无法祭扫墓地",
+        "执行偏执处决：仅凭怀疑杀手下"
+      ],
+      "abstract_move": "政治收买方法论 + 跨国物流规模推到极致 + 顶点财富的虚无感 + 最私人场景的金笼代价 + 偏执与信任崩溃",
+      "replacement_needs": [
+        "一个月入或年流水的顶点数字",
+        "一个政治收买或腐败的完整流程",
+        "一个财富虚无感的并置场景",
+        "一个无法参与家人重要时刻的代价细节",
+        "一个偏执导致的内部处决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)、PK08(85);打开的悬念 LOOP05→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "apex_trap",
+      "start_ratio": 0.77,
+      "end_ratio": 0.884,
+      "start_sec": 458.3,
+      "end_sec": 526.6,
+      "position_label": "77%–88.4%(7:38–8:47)",
+      "purpose": "最高级：顶峰财富与全球通缉同框，退出机制被彻底焊死，'顶点即陷阱'定性",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.8827,
+          "time_ms": 525697,
+          "reason": "最有权势的罪犯与全球头号通缉犯同框：顶点即陷阱的定性峰值"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "是否存在退出这条路",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "bounty_reveal",
+          "mechanism": "net_worth_vs_bounty"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "empire_partition",
+          "mechanism": "map_as_business_deal"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "no_exit_reveal",
+          "mechanism": "resignation_equals_death"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "apex_verdict",
+          "mechanism": "double_superlative"
+        }
+      ],
+      "required_retention_events": [
+        "bounty_reveal",
+        "no_exit_reveal",
+        "apex_superlative_verdict"
+      ],
+      "original_moves": [
+        "总结登顶路径",
+        "给出年运输量、跨国分支与净资产",
+        "揭示悬赏金额与特种部队追捕",
+        "展示换脸、换藏身处、加密通信的日常",
+        "呈现瓜分版图的停火幻觉",
+        "点明贪婪必然重启战争",
+        "定性辞职即死：被自己人杀",
+        "并置双最高级：最有权势的罪犯与全球头号通缉犯"
+      ],
+      "abstract_move": "顶峰财富与全球通缉同框 + 极端生存细节 + 退出机制焊死 + 贪婪必然重启战争 + 顶点即陷阱的双最高级定性",
+      "replacement_needs": [
+        "一个年规模或净资产的顶点数字",
+        "一个悬赏或追捕的极端压力",
+        "一组极端生存细节（换脸、换地、加密）",
+        "一个退出即死的机制揭示",
+        "一个顶点即陷阱的双最高级并置"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);打开的悬念 LOOP06→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "downfall",
+      "start_ratio": 0.884,
+      "end_ratio": 0.937,
+      "start_sec": 526.6,
+      "end_sec": 558.2,
+      "position_label": "88.4%–93.7%(8:47–9:18)",
+      "purpose": "坠落级：被捕入狱，最高戒备的隔绝环境把一生积累兑换成四面墙与余生",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9285,
+          "time_ms": 553041,
+          "reason": "曾有帝国、现有四面墙与余生：全片情绪总清算的最高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "power_is_trap_gilded_cage_to_concrete_cell",
+          "opened_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "no_exit_confirmation",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "downfall_scene",
+          "mechanism": "isolation_numbers"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "legend_reference",
+          "mechanism": "escape_myth_broken"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "ledger_payoff",
+          "mechanism": "had_vs_have_contrast"
+        }
+      ],
+      "required_retention_events": [
+        "supermax_isolation",
+        "escape_myth_broken",
+        "possession_contrast_ledger"
+      ],
+      "original_moves": [
+        "展示被捕入狱场景",
+        "列出最高戒备监狱的隔离日常数字",
+        "宣告越狱与贿赂全部失效",
+        "揭示传奇越狱者就在隔壁也没用",
+        "并置曾有与现有的对照清单：亿万与帝国vs四面墙与余生"
+      ],
+      "abstract_move": "被捕入狱的坠落 + 最高戒备的隔绝日常 + 所有逃脱手段失效 + 曾有与现有的终极对照清算",
+      "replacement_needs": [
+        "一个最高戒备监狱的隔离日常数字",
+        "一个所有逃脱手段失效的宣告",
+        "一个曾有巅峰与现有困境的对照清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(90);回收了前文的悬念 FS06→LOOP05、FS07→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "cycle_closure",
+      "start_ratio": 0.937,
+      "end_ratio": 1,
+      "start_sec": 558.2,
+      "end_sec": 595.5,
+      "position_label": "93.7%–100%(9:18–9:56)",
+      "purpose": "继承与循环：位置立刻被新人填补、系统照常运转，镜头回扣第一级场景并落下主题定性",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "moral_verdict",
+          "strength": 90,
+          "position_ratio": 1,
+          "time_ms": 595542,
+          "reason": "血与腐败上的帝国仍在运转：最终定性短句收束全片"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "下一个坐在商店前等机会的孩子会不会重复这一切：刻意保持开放，叙事用途是把个人悲剧改写为结构性循环，用开场场景回扣替代直接回答，让观众带着不安离场",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_ladder_tour_and_system_verdict",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "cycle_verdict",
+          "mechanism": "endless_cycle"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "scene_callback",
+          "mechanism": "opening_scene_return"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "final_verdict",
+          "mechanism": "business_definition_close"
+        }
+      ],
+      "required_retention_events": [
+        "succession_reveal",
+        "cycle_verdict",
+        "scene_callback",
+        "final_aphorism"
+      ],
+      "original_moves": [
+        "宣告组织不随个人死亡并列出继承者",
+        "定性循环照旧：货、钱、尸体堆继续运转",
+        "展示身份滑落：从王者到传说再到警示故事",
+        "显式回扣开场场景：盯着公路等机会的孩子",
+        "落下生意定性短句",
+        "收束以'仍在运转'的最终句"
+      ],
+      "abstract_move": "个体被替代、系统照常运转 + 身份滑落轨迹 + 开场场景显式回扣 + 体系定性为永续循环 + 明示循环未闭合",
+      "replacement_needs": [
+        "一个继承者立刻填补位置的宣告",
+        "一个系统继续运转的循环定性",
+        "一个开场场景的显式回扣",
+        "一个体系定性短句",
+        "一个明示循环仍在运转的收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(90);打开的悬念 LOOP07(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

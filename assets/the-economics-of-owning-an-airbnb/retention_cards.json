@@ -1,0 +1,1199 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:13:08.371Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.0425,
+      "start_sec": 0.1,
+      "end_sec": 60.1,
+      "position_label": "0%–4.3%(0:00–1:00)",
+      "purpose": "用第二人称置业幻想复述\"被兜售的梦\"，随即以\"高流水也可能是坏投资\"的悖论制造不安，把资产本质重新定义为\"挂着房子的服务业生意\"，并抛出核心问题与预告答案，承诺一次全链条账本拆解",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "paradox_hook",
+          "strength": 80,
+          "position_ratio": 0.0107,
+          "time_ms": 15091,
+          "reason": "年流水10万美元的房源也可能是非常坏的投资：开场30秒内完成对\"躺赚\"幻象的第一次对撞"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.0169,
+          "time_ms": 23976,
+          "reason": "\"这不只是一套房，而是一家挂着房子的服务业生意\"：全片论证的地基句完成资产本质重构"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "高流水表象与到手利润之间的落差贯穿全片",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "开场悖论：账面高收入与\"坏投资\"判词的对撞",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "fantasy_entry",
+          "mechanism": "second_person_roleplay"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "dream_labeling",
+          "mechanism": "sold_dream_naming"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "problem_tease",
+          "mechanism": "high_revenue_paradox"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "perspective_tease",
+          "mechanism": "calendar_foreshadow"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "thesis_reframe",
+          "mechanism": "asset_redefinition"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "core_question",
+          "mechanism": "promise_contract_with_preview_answer"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_fantasy",
+        "dream_labeling",
+        "paradox_tease",
+        "thesis_redefinition",
+        "preview_answer"
+      ],
+      "original_moves": [
+        "用第二人称复述置业幻想：想象拥有度假屋、出租赚钱、资产升值",
+        "命名这个梦为'人人都在卖的梦'",
+        "抛出悖论：年流水10万美元的房源也可能是非常坏的投资",
+        "预告认知转变：看完后再也不会用同样眼光看待表象数字",
+        "重新定义资产本质：这不只是一套房，而是一家挂着房子的服务业生意",
+        "抛出核心问题：钱都去哪儿了",
+        "承诺答案：接下来逐项拆解整个账本"
+      ],
+      "abstract_move": "用目标受众熟悉的理想场景建立共鸣 + 立即用悖论击穿表层认知 + 重新定义事物本质 + 承诺完整解答",
+      "replacement_needs": [
+        "一个目标受众普遍持有的理想化预期或流行说法",
+        "一个与预期相悖的具体指标对比（高指标配低结果）",
+        "一个重新定义事物本质的类比或判断句",
+        "一个明确的核心问题与解答承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80)、PK02(85);打开的悬念 LOOP01→FS14、LOOP02→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 85
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_fantasy_plus_high_revenue_paradox",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 23976,
+        "evidence_refs": [
+          "C0001",
+          "C0027",
+          "C0033",
+          "C0050"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "context_expansion",
+      "start_ratio": 0.0425,
+      "end_ratio": 0.1141,
+      "start_sec": 60.1,
+      "end_sec": 161.5,
+      "position_label": "4.3%–11.4%(1:00–2:41)",
+      "purpose": "在市场层面完成尽调基础教育：位置如何决定定价与入住上限、同地段内部的巨大分化、照片里看不见的监管风险，最终落到\"这种模式救不了烂交易、只能放大交易本身好坏\"的交易质量原则",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 77,
+          "position_ratio": 0.074,
+          "time_ms": 104789,
+          "reason": "同邮编最好78-85晚、最差不足40晚：\"同城同天气同游客，却是完全不同的生意\""
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "chapter_shift",
+          "mechanism": "location_determines_everything"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "market_contrast",
+          "mechanism": "three_market_archetypes"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "numeric_divergence",
+          "mechanism": "same_zipcode_spread"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "risk_reveal",
+          "mechanism": "regulation_overnight_change"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "principle_verdict",
+          "mechanism": "amplifier_not_savior"
+        }
+      ],
+      "required_retention_events": [
+        "market_contrast",
+        "numeric_divergence",
+        "regulation_threat",
+        "principle_verdict"
+      ],
+      "original_moves": [
+        "确立位置如何决定定价上限与入住率天花板",
+        "用三类典型市场展示价格与入住天数的对应关系",
+        "揭示同一邮编内部的巨大分化：最好78-85晚对最差不足40晚",
+        "指出房价只是长算式的第一个数",
+        "警告监管突变风险：一夜之间从短租变成违法必须转换用途",
+        "下指令：先爱上当地规则",
+        "确立原则：这种模式救不了烂交易，只能放大交易本身的好坏"
+      ],
+      "abstract_move": "确立外部条件的决定性作用 + 用典型分类展示差异 + 揭示同类内部的极端分化 + 警告隐藏风险 + 确立质量优先原则",
+      "replacement_needs": [
+        "一个决定结果上限的外部条件",
+        "三类典型场景的对比数据",
+        "同类内部最好与最差的极端分化数据",
+        "一个容易被忽视但可能颠覆全局的风险",
+        "一个质量优先或放大效应的原则句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(77)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 77
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.1141,
+      "end_ratio": 0.2198,
+      "start_sec": 161.5,
+      "end_sec": 311.1,
+      "position_label": "11.4%–22%(2:41–5:11)",
+      "purpose": "用一个具体房源案例把\"拿到钥匙之前\"的全部前期资本逐项堆叠：首付、过户税费、收入型贷款溢价与酒店级改造费用，累积出入场总额，并追加\"便宜设备长期更贵\"的陷阱警告",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 83,
+          "position_ratio": 0.1925,
+          "time_ms": 272493,
+          "reason": "第一位客人进门之前已花掉约15.9万美元：\"看看有多少钱在你赚到第一美元之前消失\""
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "case_anchor",
+          "mechanism": "real_numbers_entry"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "loan_tradeoff",
+          "mechanism": "income_based_loan_premium"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "cost_itemization",
+          "mechanism": "hotel_standard_conversion"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "running_total_payoff",
+          "mechanism": "upfront_capital_total"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "trap_labeling",
+          "mechanism": "false_savings_trap"
+        }
+      ],
+      "required_retention_events": [
+        "concrete_case",
+        "itemized_costs",
+        "loan_tradeoff",
+        "running_total",
+        "trap_labeling"
+      ],
+      "original_moves": [
+        "锚定一个具体真实案例：35万美元房源",
+        "计算首付：25%即8.75万美元",
+        "加上过户税费：约1.4万美元",
+        "解释收入型贷款的利率溢价机制",
+        "逐区列出酒店级改造费用：厨房、卫生间、家具、电器",
+        "累计前期总投入：约15.9万美元",
+        "警告便宜设备陷阱：更快报废还附带差评的复利惩罚"
+      ],
+      "abstract_move": "用具体案例作为计算锚点 + 逐项堆叠启动前的隐性成本 + 累积出超出预期的总额 + 警告省钱陷阱的长期代价",
+      "replacement_needs": [
+        "一个具体案例的基准数额",
+        "三到五项启动前必须支付的成本类别及其数额",
+        "累计总额与基准数额的对比",
+        "一个看似节约实则更贵的陷阱及其复利后果"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(83)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 83
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "audience_cta",
+      "start_ratio": 0.2198,
+      "end_ratio": 0.2266,
+      "start_sec": 311.1,
+      "end_sec": 320.7,
+      "position_label": "22%–22.7%(5:11–5:21)",
+      "purpose": "在成本堆叠完成后的自然停顿处插入频道订阅请求，为后半段收入机制讨论换气",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "midroll_cta",
+          "mechanism": "subscription_request"
+        }
+      ],
+      "required_retention_events": [
+        "midroll_cta"
+      ],
+      "original_moves": [
+        "回顾前半段价值：如果觉得这些信息有用",
+        "请求订阅与点赞"
+      ],
+      "abstract_move": "在内容自然停顿处插入价值确认 + 转化请求",
+      "replacement_needs": [
+        "一个简短的价值回顾句",
+        "一个订阅或互动请求"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "reveal",
+      "start_ratio": 0.2266,
+      "end_ratio": 0.3471,
+      "start_sec": 320.7,
+      "end_sec": 491.2,
+      "position_label": "22.7%–34.7%(5:21–8:11)",
+      "purpose": "纠正\"高定价=高收入\"的核心直觉：用两个并排房源的完整算术证明入住率优先于定价，定义核心收入概念，补充市场入住率下行背景，并展示主动动态定价及\"填满日历\"与\"保护资产\"的目标冲突",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 86,
+          "position_ratio": 0.2343,
+          "time_ms": 331654,
+          "reason": "双房源算术演示：挂牌便宜130美元的房源每年反而多赚约9000美元，\"高定价幻觉\"被数字直接击穿"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "trap_naming",
+          "mechanism": "nightly_rate_illusion"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "scenario_math_demo",
+          "mechanism": "side_by_side_calculation"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "concept_definition",
+          "mechanism": "occupancy_doctrine_and_revpar"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "trend_reveal",
+          "mechanism": "national_occupancy_decline"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "lead_time_pressure",
+          "mechanism": "seven_week_booking_window"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "dynamic_pricing_demo",
+          "mechanism": "revenue_manager_behavior"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "goal_conflict",
+          "mechanism": "income_vs_asset_depreciation"
+        }
+      ],
+      "required_retention_events": [
+        "side_by_side_math",
+        "calculate_this_command",
+        "concept_definition",
+        "national_trend",
+        "price_range_demo",
+        "conflict_verdict"
+      ],
+      "original_moves": [
+        "命名直觉陷阱：高定价等于高收入",
+        "展示并排两个房源：一个挂牌325美元平均入住39晚，另一个195美元入住74晚",
+        "给出完整算术：325×39=12675对195×74=14430",
+        "宣布反直觉结论：便宜130美元的房源每年反而多赚约9000美元",
+        "确立入住率决定论",
+        "定义三个核心概念：定价、入住率、有效收入",
+        "补充全国入住率下行的背景",
+        "解释预订窗口与淡季被迫降价",
+        "展示基准价在旺季与淡季的摆动区间",
+        "指出填满日历与保护资产的目标冲突"
+      ],
+      "abstract_move": "命名常见直觉误区 + 用并排对比的完整算术击穿误区 + 确立真正决定结果的因素 + 定义核心概念 + 补充市场环境恶化背景 + 揭示内在目标冲突",
+      "replacement_needs": [
+        "两个并排案例的完整对比算术（高指标低结果对低指标高结果）",
+        "明确哪个变量才是决定性因素的判断句",
+        "两到三个必须定义的核心概念",
+        "一个市场或环境恶化的背景趋势",
+        "一个内在目标冲突"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(86)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "evidence_build",
+      "start_ratio": 0.3471,
+      "end_ratio": 0.4272,
+      "start_sec": 491.2,
+      "end_sec": 604.6,
+      "position_label": "34.7%–42.7%(8:11–10:05)",
+      "purpose": "把预订流水到手的两道剥离讲清：平台服务费的新旧结构变化（抽成直接出自房东），以及清洁费从\"免费钱\"变成隐性成本的误算，外加搜索算法对高清洁费的惩罚",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "\"记得我说过的清洁费吗\"的召回式提问，制造算账期待",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "annualized_miscalculation_reveal",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "commission_reveal",
+          "mechanism": "platform_fee_first_cut"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "structure_shift",
+          "mechanism": "old_vs_new_fee_structure"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "miscalculation_trap",
+          "mechanism": "cleaning_fee_inversion"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "annualized_loss",
+          "mechanism": "multiply_consequences"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "algorithm_penalty",
+          "mechanism": "search_demotion"
+        }
+      ],
+      "required_retention_events": [
+        "percentage_reveal",
+        "old_vs_new_structure",
+        "miscalculation_trap",
+        "annualized_loss",
+        "algorithm_penalty"
+      ],
+      "original_moves": [
+        "揭示平台服务费比例：约15%",
+        "用10万美元流水演示到手额：约8.5万",
+        "对比新旧费用结构：旧结构客人支付、新结构房东承担",
+        "揭示清洁费误算：收75美元但实际花费100-150美元",
+        "计算年度损耗：约1500-3000美元",
+        "补充搜索算法惩罚：高清洁费降低搜索排名"
+      ],
+      "abstract_move": "揭示从总额到实际到手的第一道剥离 + 对比规则变化前后的负担转移 + 揭示看似收入实为倒贴的项目 + 计算年度累计损耗 + 补充隐藏的第二重惩罚",
+      "replacement_needs": [
+        "一个从总额到实际到手的扣除比例及示例",
+        "一个规则变化导致的成本转移",
+        "一个看似盈利实则倒贴的项目及其年度累计",
+        "一个与直接成本无关的隐性惩罚机制"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP03。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:\"记得我说过的清洁费吗\"的召回式提问，制造算账期待",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "evidence_build",
+      "start_ratio": 0.4272,
+      "end_ratio": 0.4763,
+      "start_sec": 604.6,
+      "end_sec": 674.1,
+      "position_label": "42.7%–47.6%(10:05–11:14)",
+      "purpose": "把水电、网络、专用保险、维护、软件订阅等运营杂项逐项入账并给出年度区间，再用月度拆解展示\"每个数字单独看都不吓人\"的堆叠效应",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "hidden_cost_stack",
+          "mechanism": "utilities_and_specialty_insurance"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "stacking_verdict",
+          "mechanism": "small_numbers_compound"
+        }
+      ],
+      "required_retention_events": [
+        "behavior_based_cost",
+        "annual_range_reveal",
+        "monthly_breakdown",
+        "stacking_verdict"
+      ],
+      "original_moves": [
+        "指出客人行为导致的水电浪费",
+        "解释常规保险不覆盖经营活动，需要专用保险",
+        "给出运营杂项年度总额：约6000-9000美元",
+        "做月度拆解：保险、水电、网络、软件订阅、维护",
+        "下判词：单项不吓人，累加成大头"
+      ],
+      "abstract_move": "逐项列举容易被低估的小额支出 + 给出年度总额 + 用月度拆解展示堆叠效应 + 确立累加成大头的判断",
+      "replacement_needs": [
+        "三到五项单独看不起眼的小额支出类别",
+        "年度总额区间",
+        "月度或单次的拆解示例",
+        "一个堆叠效应的判断句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "evidence_build",
+      "start_ratio": 0.4763,
+      "end_ratio": 0.521,
+      "start_sec": 674.1,
+      "end_sec": 737.4,
+      "position_label": "47.6%–52.1%(11:14–12:17)",
+      "purpose": "把按揭从成本清单中单拎出来定性为\"不可控项\"：空置与否都必须偿还，给出案例月供与年供数字，并补充收入型贷款的最低收入覆盖率条件",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "fixed_obligation_reveal",
+          "mechanism": "mortgage_indifferent_to_vacancy"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "lender_requirement",
+          "mechanism": "income_coverage_ratio"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "hidden_expense_naming",
+          "mechanism": "time_not_in_ledger"
+        }
+      ],
+      "required_retention_events": [
+        "controllability_flip",
+        "fixed_number_reveal",
+        "vacancy_insensitivity",
+        "lender_requirement"
+      ],
+      "original_moves": [
+        "区分可控与不可控成本，把贷款定性为不可控项",
+        "给出案例月供：约2500美元",
+        "给出年供：约3万美元",
+        "强调空置或满房都必须偿还",
+        "对比需求下降时债务变成负担",
+        "补充收入型贷款的最低收入覆盖率条件：1.25倍"
+      ],
+      "abstract_move": "把固定刚性成本从清单中单拎出来定性 + 给出具体数额 + 强调其不受运营结果影响的刚性 + 补充触发条件或底线要求",
+      "replacement_needs": [
+        "一个不受运营结果影响的固定刚性成本",
+        "该成本的月度与年度数额",
+        "一个强调刚性特征的对比情景",
+        "一个底线要求或触发条件"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "reveal",
+      "start_ratio": 0.521,
+      "end_ratio": 0.5718,
+      "start_sec": 737.4,
+      "end_sec": 809.2,
+      "position_label": "52.1%–57.2%(12:17–13:29)",
+      "purpose": "把时间入账：自管的每周隐性劳动时数、托管公司的收入分成，以及用托管年费除以自管工时得出的时薪交换率，逼观众承认\"被动收入\"是一种可选择定价的经营劳动",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.5521,
+          "time_ms": 781295,
+          "reason": "15000美元托管费÷约600小时=25美元时薪：\"被动收入\"被换算成时薪后完成自我辨认"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "\"被动\"叙事与自管劳动现实之间的冲突",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "hourly_rate_exchange_verdict",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "outsourced_labor",
+          "mechanism": "management_company_cut"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "hourly_rate_math",
+          "mechanism": "time_pricing_exchange"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_expense_naming",
+        "rhetorical_question",
+        "hourly_rate_math",
+        "neither_wrong_verdict"
+      ],
+      "original_moves": [
+        "命名被忽略的支出：时间",
+        "列出自管劳动清单并估算每周时数：约12小时",
+        "反问：被动收入何时悄悄变成第二职业",
+        "给出托管公司收入分成：20-30%",
+        "计算托管年费：约1.5万美元",
+        "演示时薪换算：15000÷600小时≈25美元",
+        "下判词：两个答案都没错，假装选择不存在才错"
+      ],
+      "abstract_move": "把隐性劳动显性化并量化时间成本 + 反问被动收入的真实性 + 对比自管与外包的两种成本 + 用换算公式揭示时间的真实定价 + 确立选择存在的判断",
+      "replacement_needs": [
+        "一项被忽略的隐性投入及其量化（时间、精力、注意力）",
+        "自管的时间或精力成本估算",
+        "外包的货币成本",
+        "用换算公式揭示隐性成本真实定价的演示",
+        "一个确立选择两难的判断句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(82)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "conflict_escalation",
+      "start_ratio": 0.5718,
+      "end_ratio": 0.6414,
+      "start_sec": 809.2,
+      "end_sec": 907.8,
+      "position_label": "57.2%–64.1%(13:29–15:08)",
+      "purpose": "展示模型的突发脆弱性：几乎无审核的客人如何用一个周末抹去月利润、保障计划赔付的时滞、低于评分阈值后的差评-降价-更差客人死亡螺旋，最后指出杀死估值的往往是小理由",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "\"原因小到令人失望\"的悬念：如此重大的后果竟由琐事触发",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "trivial_cause_reveal",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "incident_cost",
+          "mechanism": "unverified_guest_damage"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "claims_lag",
+          "mechanism": "protection_program_delay"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "feedback_loop",
+          "mechanism": "review_death_spiral"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "emotional_labor_reveal",
+          "mechanism": "selling_hope_nightly"
+        }
+      ],
+      "required_retention_events": [
+        "incident_cost_build",
+        "claims_lag",
+        "death_spiral_chain",
+        "hope_commodification",
+        "trivial_cause_reveal"
+      ],
+      "original_moves": [
+        "对比短住客人与长租租客的审核差异：几乎无审核",
+        "计算单事件最高损失：维修、清洁、收入损失共约3000-5000美元",
+        "指出保障计划理赔时滞：房东先垫付",
+        "展示差评螺旋：低于4.7分搜索降权→被迫降价→吸引更差客人",
+        "定性：房东卖的是每晚的希望",
+        "列出杀死估值的小理由：卫生、网速、设备"
+      ],
+      "abstract_move": "对比审核门槛的巨大差异 + 计算单次意外的最高损失 + 指出救济机制的时滞 + 展示负面反馈的链式恶化 + 用一句话定性商品本质 + 列出致命的琐碎理由",
+      "replacement_needs": [
+        "一个门槛或审核机制的对比（严格对宽松）",
+        "单次意外事件的最高损失构成",
+        "救济或补偿机制的时滞或不足",
+        "一个负面反馈的链式恶化路径",
+        "三到五个看似琐碎实则致命的小理由"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP05。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:\"原因小到令人失望\"的悬念：如此重大的后果竟由琐事触发",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "evidence_build",
+      "start_ratio": 0.6414,
+      "end_ratio": 0.6975,
+      "start_sec": 907.8,
+      "end_sec": 987.1,
+      "position_label": "64.1%–69.8%(15:08–16:27)",
+      "purpose": "把月度波动扩展为年度节律：用同一房源的淡季月亏与旺季月赚对照展示现金流鞭打，给出全年净利但\"并不稳定\"的定性，并确立\"旺季的钱必须养活淡季\"的储备纪律",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.6482,
+          "time_ms": 917318,
+          "reason": "淡季月收入250-800美元对固定开支4800美元、旺季单月1.5万-1.8万美元：现金流鞭打把单月思维改成年度节律"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "full_year_reckoning_of_same_property",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE41",
+          "event_type": "annual_expansion",
+          "mechanism": "seasonality_setup"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "seasonal_whiplash",
+          "mechanism": "offseason_vs_peak_months"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "reserve_discipline",
+          "mechanism": "july_vs_january_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "monthly_contrast",
+        "season_verdict",
+        "inconsistent_profit",
+        "reserve_discipline"
+      ],
+      "original_moves": [
+        "宣告扩展到完整一年",
+        "展示淡季月收入：250-800美元对固定开支4800美元",
+        "展示旺季单月高收入：1.5万-1.8万美元",
+        "下判词：夏天度假不会让冬天的按揭消失",
+        "展示夹缝月的小盈小亏",
+        "给出全年净利：约4.2万美元",
+        "定性：不稳定",
+        "确立储备纪律：旺季的钱必须养活淡季"
+      ],
+      "abstract_move": "把单月视角扩展为完整周期 + 对比极端月份的收支落差 + 用判词强调固定成本的刚性 + 给出全周期总额及其不稳定定性 + 确立储备纪律",
+      "replacement_needs": [
+        "一个完整周期的时间跨度",
+        "低谷期与高峰期的极端收支对比",
+        "一个强调固定成本不受季节影响的判词",
+        "全周期净值及其波动性定性",
+        "一个跨周期储备或平滑的纪律句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80);回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "reveal",
+      "start_ratio": 0.6975,
+      "end_ratio": 0.8055,
+      "start_sec": 987.1,
+      "end_sec": 1140,
+      "position_label": "69.8%–80.6%(16:27–19:00)",
+      "purpose": "先讲税务身份如何把这类短租变成\"经营生意\"（加速折旧制造账面亏损、出售时补税的递延机制），再用同一案例做两种出租模式的正式裁决：纸面赢家是短租，代价是额外投资与每年数百小时劳动；最后揭示\"不是短租变好了，是其他选项变差了\"的不舒服真相",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.7601,
+          "time_ms": 1075660,
+          "reason": "长租或年亏3500美元对短租税前现金流约2.05万美元：同一套房上的正式裁决，\"纸面上短租是赢家\""
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 87,
+          "position_ratio": 0.8017,
+          "time_ms": 1134591,
+          "reason": "\"短租不是突然变赚钱，而是其他选项逐渐变差\"：全片最深的判断反转，把结论从模式之争改写为环境之变"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "两种商业模式在同一案例房产上的正式对决",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "nuanced_verdict_with_time_price",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE44",
+          "event_type": "tax_identity_reveal",
+          "mechanism": "operating_business_status"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "tax_contrast",
+          "mechanism": "passive_loss_comparison"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "head_to_head_test",
+          "mechanism": "str_vs_ltr_showdown"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "verdict_with_price",
+          "mechanism": "paper_winner_time_price"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "uncomfortable_truth",
+          "mechanism": "options_deteriorated"
+        }
+      ],
+      "required_retention_events": [
+        "tax_identity_reveal",
+        "deferral_caveat",
+        "head_to_head_numbers",
+        "paper_winner_verdict",
+        "uncomfortable_truth"
+      ],
+      "original_moves": [
+        "列出经营身份认定条件",
+        "解释加速折旧如何制造账面亏损",
+        "限定：不是免费钱，是递延，出售时补税",
+        "对比长租被动亏损：约3500美元",
+        "下判词：同一税法、待遇完全不同",
+        "宣告正式测试",
+        "给出短租税前现金流：约2.05万美元",
+        "确认纸面赢家：短租",
+        "列出代价：额外投资与每年数百小时劳动",
+        "揭示真相：不是短租变好了，是其他选项逐渐变差了"
+      ],
+      "abstract_move": "解释特殊身份如何改变计算规则 + 制造账面优势但限定其代价 + 对比另一选项的劣势 + 用同一案例做正式裁决 + 确认赢家及其代价 + 揭示环境恶化才是真正原因的深层真相",
+      "replacement_needs": [
+        "一个特殊身份或资格的认定条件及其带来的账面优势",
+        "该优势的代价或限定条件",
+        "另一选项的劣势数据",
+        "两种选项的正式对比裁决",
+        "赢家的额外投入或隐性成本",
+        "一个揭示环境恶化而非选项变好的深层真相句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(84)、PK09(87)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 84
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 87
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "reveal",
+      "start_ratio": 0.8055,
+      "end_ratio": 0.9157,
+      "start_sec": 1140,
+      "end_sec": 1295.9,
+      "position_label": "80.6%–91.6%(19:00–21:36)",
+      "purpose": "交付全片最实用的工具：用固定成本除以留存比例得出保本流水，并演示两档入住率下的保本定价；随后列出可单独击穿模型的因素清单，并用多因素复合把盈利房东推成倒贴",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.8241,
+          "time_ms": 1166244,
+          "reason": "约6.7万美元保本流水与369/263美元两档保本定价：两分钟可复算的公式级回报"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "\"说着容易做着难\"的保本问题，观众等待可操作的数字答案",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "numeric_formula_answer",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE49",
+          "event_type": "formula_handoff",
+          "mechanism": "break_even_derivation"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "dual_scenario_price",
+          "mechanism": "breakeven_nightly_rate"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "diy_verdict",
+          "mechanism": "two_minute_calculation"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "risk_inventory",
+          "mechanism": "kill_factor_list"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "compounding_demo",
+          "mechanism": "three_factor_cascade"
+        }
+      ],
+      "required_retention_events": [
+        "break_even_formula",
+        "dual_scenario_price",
+        "diy_calculation_verdict",
+        "kill_factor_list",
+        "compounding_demo"
+      ],
+      "original_moves": [
+        "抛出保本问题",
+        "展示成本结构：固定成本与变动成本比例",
+        "推导保本流水公式：固定成本÷留存比例",
+        "计算出约6.7万美元",
+        "演示两档保本定价：60%入住率369美元、80%入住率263美元",
+        "下判词：任何人两分钟能算，但多数人不算",
+        "列出可单独击穿模型的八项因素",
+        "用三因素复合推演：把4.2万利润推成倒贴1.7万"
+      ],
+      "abstract_move": "抛出保本问题 + 给出成本结构 + 推导可复算的公式 + 演示不同条件下的保本阈值 + 下判词强调算与不算的差距 + 列出可单独击穿模型的因素清单 + 用多因素复合推演极端反转",
+      "replacement_needs": [
+        "一个明确的保本问题",
+        "成本结构拆解",
+        "一个可复算的保本公式",
+        "两档条件下的保本阈值演示",
+        "五到八项可单独击穿模型的风险因素",
+        "一个多因素复合把盈利推成亏损的推演"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(82)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.9157,
+      "end_ratio": 1,
+      "start_sec": 1295.9,
+      "end_sec": 1415.2,
+      "position_label": "91.6%–100%(21:36–23:35)",
+      "purpose": "用赢家房源画像（融资克制、规则稳定、差异化卖点、多源需求、现金储备、变动成本上限）收束全片方法，随后完成主承诺回收：\"这类短租从来不是被动收入捷径，而是伪装成房产的服务业\"，并以\"账面显示与真实到手的落差\"压缩全片；最后接指南与点赞订阅 CTA",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9624,
+          "time_ms": 1362075,
+          "reason": "\"从来不是被动收入的捷径\"\"一门伪装成房产的服务业\"：主承诺以格言形式闭合"
+        },
+        {
+          "peak_id": "PK12",
+          "peak_type": "emotional_payoff",
+          "strength": 81,
+          "position_ratio": 0.9882,
+          "time_ms": 1398553,
+          "reason": "\"预订日历上显示的与真正打进银行账户的之间的落差\"：全片被压缩成一句可带走的总结"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "在风险清单之后，观众需要一个正向的可执行画像",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP09",
+          "tension": "把判断延伸到片外的前瞻预测",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "aphorism_plus_gap_summary_callback",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "checklist_answer",
+          "opened_in": "FS14"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP09"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE54",
+          "event_type": "winner_profile",
+          "mechanism": "survivor_checklist"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "promise_closure",
+          "mechanism": "aphorism_verdict"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "guide_cta",
+          "mechanism": "description_resource_pointer"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "compressed_callback",
+          "mechanism": "calendar_vs_bank_gap"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "closing_cta",
+          "mechanism": "like_subscribe"
+        }
+      ],
+      "required_retention_events": [
+        "winner_checklist",
+        "aphorism_verdict",
+        "future_prediction",
+        "guide_cta",
+        "gap_summary_callback",
+        "subscribe_cta"
+      ],
+      "original_moves": [
+        "列出赢家房源画像：融资克制、规则稳定、差异化卖点、多源需求、现金储备",
+        "确立变动成本上限习惯：30%",
+        "下格言：从来不是被动收入的捷径",
+        "完成本质定性：一门伪装成房产的服务业",
+        "做五年预测：跟风者退回长租",
+        "接指南CTA：描述区链接",
+        "用落差压缩全片：预订日历上显示的与真正打进银行账户的之间的落差",
+        "点赞订阅CTA"
+      ],
+      "abstract_move": "列出成功者画像 + 确立关键习惯或阈值 + 用格言否定捷径幻觉 + 完成本质定性 + 做前瞻预测 + 用一句话压缩全片核心落差 + 接CTA",
+      "replacement_needs": [
+        "五到六项成功者的共同特征",
+        "一个关键阈值或习惯",
+        "一个否定捷径或幻觉的格言句",
+        "一个重新定义事物本质的判断句",
+        "一个前瞻预测",
+        "一个压缩全片核心矛盾或落差的总结句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(85)、PK12(81);打开的悬念 LOOP09(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK12",
+          "strength": 81
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

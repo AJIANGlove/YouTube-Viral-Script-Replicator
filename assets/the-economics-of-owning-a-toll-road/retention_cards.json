@@ -1,0 +1,1225 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:14:22.230Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.0236,
+      "start_sec": 0.1,
+      "end_sec": 22,
+      "position_label": "0%–2.4%(0:00–0:22)",
+      "purpose": "用第二人称幻想完整建立\"无本万利\"的表象，让观众先充分代入再被反转",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "贯穿全片的标题承诺环",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "fantasy_entry",
+          "mechanism": "second_person_direct_address"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "montage_reveal",
+          "mechanism": "triple_negation_no_overhead"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_fantasy",
+        "triple_negation_montage",
+        "money_growth_image"
+      ],
+      "original_moves": [
+        "用第二人称直接呼唤观众进入想象",
+        "三连否定：无工厂、无库存、无销售部门",
+        "描绘资产已存在、用户本就想用的现成场景",
+        "展示只需站着收钱、账户数字永远增长的幻想画面"
+      ],
+      "abstract_move": "用第二人称幻想建立零投入高回报的表象，让观众充分代入轻松致富场景后等待反转",
+      "replacement_needs": [
+        "一个用户已存在且有刚需的资产或服务场景",
+        "一组否定清单证明无需常规商业投入",
+        "一个收入自动持续增长的幻想收束画面"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "effortless_money_fantasy_then_abrupt_reframe",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 28927,
+        "evidence_refs": [
+          "C0001",
+          "C0009",
+          "C0024",
+          "C0033"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "belief_challenge",
+      "start_ratio": 0.0226,
+      "end_ratio": 0.0562,
+      "start_sec": 21,
+      "end_sec": 52.3,
+      "position_label": "2.3%–5.6%(0:21–0:52)",
+      "purpose": "急刹车反转：买到的不是资产本身而是有期限的经营合同权，点明这一差别根本改变生意",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "abrupt_reversal",
+          "mechanism": "thats_the_problem"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "new_term",
+          "mechanism": "concession_contract_concept"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "stakes_tease",
+          "mechanism": "small_difference_big_consequence"
+        }
+      ],
+      "required_retention_events": [
+        "abrupt_reversal",
+        "concept_renaming",
+        "stakes_tease"
+      ],
+      "original_moves": [
+        "急刹车式短句反转前文幻想",
+        "揭示资产本体仍属国家或第三方的事实",
+        "引入经营合同权概念并给出期限尺度（30/50/99年）",
+        "判定看似微小的差别根本改变生意性质"
+      ],
+      "abstract_move": "急刹车反转：买到的不是资产所有权而是有期限的经营权，用判词悬挂这一差别的严重后果",
+      "replacement_needs": [
+        "一个资产所有权与经营权分离的法律或合同结构",
+        "一个明确的期限尺度",
+        "一句判词点明权利差异对生意的根本影响"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.0552,
+      "end_ratio": 0.0973,
+      "start_sec": 51.3,
+      "end_sec": 90.5,
+      "position_label": "5.5%–9.7%(0:51–1:30)",
+      "purpose": "搭建多数人心中的最简收入模型并代入具体数字，建立后续全部扣减的基线",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "numeric_substitution",
+          "mechanism": "concrete_assumptions"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "numeric_reveal",
+          "mechanism": "gross_revenue_baseline"
+        }
+      ],
+      "required_retention_events": [
+        "model_build",
+        "numeric_substitution",
+        "gross_revenue_reveal"
+      ],
+      "original_moves": [
+        "给出最简收入公式（车数×费率×天数）",
+        "代入具体假设参数（5万辆/日、2.5美元均价）",
+        "计算并展示标题级毛收入基线数字（4500万美元/年）",
+        "明示这是假设情景下的理论顶线"
+      ],
+      "abstract_move": "搭建多数人心中的最简收入模型并代入具体数字，建立后续全部扣减的基线",
+      "replacement_needs": [
+        "一个最简收入公式（单价×数量×频次）",
+        "一组可信的假设参数",
+        "一个足够吸引眼球的毛收入基线数字"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "investigation_contract",
+      "start_ratio": 0.0963,
+      "end_ratio": 0.1242,
+      "start_sec": 89.6,
+      "end_sec": 115.5,
+      "position_label": "9.6%–12.4%(1:30–1:55)",
+      "purpose": "宣布基线数字不是利润而是长楼梯顶端，立下逐级拆解的全片契约",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.0992,
+          "time_ms": 92304,
+          "reason": "4500 万被宣布不是利润而是长楼梯顶端，全片核心缺口在此打开"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "全片量化核心：长楼梯逐级扣减",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "reversal_tease",
+          "mechanism": "top_of_long_staircase"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "investigation_contract",
+          "mechanism": "step_by_step_ladder_promise"
+        }
+      ],
+      "required_retention_events": [
+        "reversal_tease",
+        "staircase_metaphor",
+        "ladder_promise"
+      ],
+      "original_moves": [
+        "用'almost'式话术打断乐观假设",
+        "宣布基线数字不是利润而是长楼梯顶端",
+        "给出长楼梯隐喻：每级都有人分走一块",
+        "立下逐级拆解承诺并点题标题数字与实得的巨大差距"
+      ],
+      "abstract_move": "宣布基线数字不是利润而是长楼梯顶端，立下逐级拆解的全片契约并打开核心悬念",
+      "replacement_needs": [
+        "一个打断乐观假设的转折话术",
+        "一个隐喻（楼梯、漏斗、层层剥皮）建立拆解预期",
+        "一个承诺：从标题数字到实得的完整路径"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(80);打开的悬念 LOOP02→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "reveal",
+      "start_ratio": 0.1231,
+      "end_ratio": 0.1853,
+      "start_sec": 114.5,
+      "end_sec": 172.4,
+      "position_label": "12.3%–18.5%(1:55–2:52)",
+      "purpose": "第一级扣减：揭示收款环节的漏损机制并给出第一次余额缩水",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 76,
+          "position_ratio": 0.1665,
+          "time_ms": 154903,
+          "reason": "漏缴率 20-50%、整体吃掉毛收入 4-12%——观众首次意识到收入不等于到账"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "楼梯第一阶：收款环节漏损",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "percentage_and_running_total",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "counterintuitive_reveal",
+          "mechanism": "not_every_car_pays"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "new_term",
+          "mechanism": "free_flow_system"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "complication",
+          "mechanism": "billing_breakdown"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "numeric_reveal",
+          "mechanism": "unpaid_rate_range"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "running_total",
+          "mechanism": "first_shrink_45_to_43"
+        }
+      ],
+      "required_retention_events": [
+        "counterintuitive_reveal",
+        "leak_quantification",
+        "running_total"
+      ],
+      "original_moves": [
+        "反直觉开场：不是每辆经过的车都付钱",
+        "给出收款技术系统的正面基线（free-flow、98%读取率）",
+        "列举三类漏损原因（账单失效、拒付、技术故障）",
+        "给出漏缴率区间（20-50%、整体4-12%）并完成第一次余额缩水（4500万→约4300万）"
+      ],
+      "abstract_move": "第一级扣减：揭示收款环节的反直觉漏损机制并用比例数据完成第一次余额缩水",
+      "replacement_needs": [
+        "一个反直觉的收款或回款障碍",
+        "一个技术或流程的正面基线作为对比",
+        "一个漏损率区间及其对基线数字的具体扣减"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(76)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "evidence_build",
+      "start_ratio": 0.1843,
+      "end_ratio": 0.2802,
+      "start_sec": 171.4,
+      "end_sec": 260.6,
+      "position_label": "18.4%–28%(2:51–4:21)",
+      "purpose": "第二级扣减：拆解多类运营成本并命名行业利润率指标，随后以\"物理载体会磨损\"悬挂新陷阱",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "楼梯第二阶：运营成本清单",
+          "closes_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP05",
+          "tension": "楼梯第三阶：磨损物理与维修经济学（悬挂最久的子环）",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "category_inventory_plus_running_total",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "category_setup",
+          "mechanism": "four_cost_categories"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "inventory_reveal",
+          "mechanism": "boring_maintenance_list"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "numeric_reveal",
+          "mechanism": "aggregate_opex_leak"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "running_total",
+          "mechanism": "second_shrink_43_to_34"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "new_term",
+          "mechanism": "ebitda_naming"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "trap_pivot",
+          "mechanism": "physical_object_wears_out"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "pattern_interrupt",
+          "mechanism": "mid_roll_subscribe_cta"
+        }
+      ],
+      "required_retention_events": [
+        "cost_inventory",
+        "running_total",
+        "term_naming",
+        "trap_teaser"
+      ],
+      "original_moves": [
+        "列举四类运营成本清单",
+        "给出成本占毛收入的比例区间（16-26%）",
+        "完成第二次余额缩水（4300万→约3400万）并强调'还没修一个坑洞'",
+        "命名行业利润率指标（EBITDA、75%利润率）",
+        "以'公路是会磨损的物理实体'悬挂下一陷阱",
+        "插入中段订阅CTA"
+      ],
+      "abstract_move": "第二级扣减：拆解多类运营成本并命名利润率指标，随后以物理损耗悬挂新陷阱",
+      "replacement_needs": [
+        "一个多类运营成本的清单",
+        "一个成本占比区间及余额缩水",
+        "一个行业术语或指标的命名",
+        "一个物理或结构性的损耗预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "conflict_escalation",
+      "start_ratio": 0.2792,
+      "end_ratio": 0.4021,
+      "start_sec": 259.7,
+      "end_sec": 373.9,
+      "position_label": "27.9%–40.2%(4:20–6:14)",
+      "purpose": "第三级扣减：用非线性损耗法则与维修价格清单把物理磨损翻译成商业成本，并以强制储备完成第三次缩水",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.3134,
+          "time_ms": 291511,
+          "reason": "四次方法则的 15 万倍尺度：一辆满载卡车磨损超 10 万辆轿车，把物理损耗变成商业冲击"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "wear_mechanics_plus_reserve_running_total",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "montage_reveal",
+          "mechanism": "roads_constantly_collapsing"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "new_term",
+          "mechanism": "fourth_power_rule"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "scale_reveal",
+          "mechanism": "150000x_damage"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "commercial_flip",
+          "mechanism": "trucks_pay_4_5x"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "inventory_reveal",
+          "mechanism": "repair_price_list"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "obligation_reveal",
+          "mechanism": "contractual_repair_fund"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "running_total",
+          "mechanism": "third_shrink_34_to_30"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "threat_naming",
+          "mechanism": "survive_or_bankrupt"
+        }
+      ],
+      "required_retention_events": [
+        "nonlinear_scale_reveal",
+        "commercial_flip",
+        "repair_price_list",
+        "running_total"
+      ],
+      "original_moves": [
+        "描述损耗的自然与使用原因（日晒雨淋、重卡碾压）",
+        "引入非线性损耗法则（四次方法则：轴重20倍=损坏15万倍）",
+        "给出反转：卡车<5%车流却付4-5倍费率，高价值用户是最大损耗源",
+        "列举维修与重建价格清单（重铺20-50万、重建100-300万、桥面板吃掉多年利润）",
+        "揭示合同强制维修基金再吃4-8%",
+        "完成第三次余额缩水（3400万→约3000万）"
+      ],
+      "abstract_move": "第三级扣减：用非线性损耗法则与价格清单把物理磨损翻译成商业冲击，并以强制储备完成缩水",
+      "replacement_needs": [
+        "一个非线性损耗或加速折旧法则及其尺度演示",
+        "一个反转：高价值用户同时是最大成本源",
+        "一个维修或重建价格清单",
+        "一个合同强制储备或准备金的扣减比例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(85);回收了前文的悬念 FS06→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "reveal",
+      "start_ratio": 0.401,
+      "end_ratio": 0.4825,
+      "start_sec": 373,
+      "end_sec": 448.7,
+      "position_label": "40.1%–48.3%(6:13–7:29)",
+      "purpose": "第四级扣减：拆解杠杆结构的双面性，给出所有者最终实得数字，完成楼梯主问题的数字答案",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 88,
+          "position_ratio": 0.4663,
+          "time_ms": 433726,
+          "reason": "4500 万只剩约 700 万——\"This is a real number\"，长楼梯承诺的数字答案在此兑现，反差最大"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "楼梯最后一阶：杠杆与债务刚性",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "running_total_numeric_answer",
+          "opened_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "leverage_mechanics_plus_final_running_total",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "chapter_open",
+          "mechanism": "debt_financing_intro"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "structure_reveal",
+          "mechanism": "70_30_leverage"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "risk_aphorism",
+          "mechanism": "debt_doesnt_care"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "numeric_reveal",
+          "mechanism": "debt_service_20m"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "core_payoff",
+          "mechanism": "7m_out_of_45m"
+        }
+      ],
+      "required_retention_events": [
+        "leverage_double_edge",
+        "risk_aphorism",
+        "core_payoff"
+      ],
+      "original_moves": [
+        "用'还没讲到决定生死的部分'悬挂最后冲击",
+        "给出生活化的融资类比（按揭买房）",
+        "揭示典型资本结构比例（70%债+30%股）",
+        "说明杠杆放大回报对投资者的吸引力",
+        "给出债务刚性的判词：债务不在乎车流、到期必付",
+        "计算偿债与税收后给出所有者最终实得（约700万）",
+        "用'This is a real number'强调反差"
+      ],
+      "abstract_move": "第四级扣减：拆解杠杆结构的双面性，给出所有者最终实得数字并完成长楼梯承诺的答案",
+      "replacement_needs": [
+        "一个生活化的融资或杠杆类比",
+        "一个典型资本结构比例",
+        "一个债务刚性的判词",
+        "一个最终实得数字及其与基线的巨大反差"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(88);回收了前文的悬念 FS04→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "evidence_build",
+      "start_ratio": 0.4814,
+      "end_ratio": 0.5556,
+      "start_sec": 447.8,
+      "end_sec": 516.8,
+      "position_label": "48.1%–55.6%(7:28–8:37)",
+      "purpose": "破除\"垄断者随意定价\"假设：合同涨幅约束与需求弹性双重限制，并首次提出用户真正购买的是什么",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 84,
+          "position_ratio": 0.5329,
+          "time_ms": 495617,
+          "reason": "司机为确定性而非沥青付费——核心价值命题首次出现，为结尾判词埋下种子"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "对\"拥有\"含义的第二个待破假设",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "债务环的真实世界压力证据",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "constraint_inventory_plus_elasticity_answer",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "assumption_challenge",
+          "mechanism": "raise_fee_whenever"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "constraint_reveal",
+          "mechanism": "contractual_fare_caps"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "counterpoint",
+          "mechanism": "drivers_not_hostages"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "new_term",
+          "mechanism": "price_elasticity"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "numeric_reveal",
+          "mechanism": "10pct_price_1_2pct_traffic"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "value_reframe",
+          "mechanism": "paying_for_confidence_not_asphalt"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "causal_payoff",
+          "mechanism": "reliability_majority_of_wtp"
+        }
+      ],
+      "required_retention_events": [
+        "assumption_challenge",
+        "constraint_reveal",
+        "elasticity_number",
+        "value_reframe"
+      ],
+      "original_moves": [
+        "破除'车多就涨价'的垄断假设",
+        "揭示合同涨幅限制机制（通胀挂钩/固定上限）",
+        "给出判词：拥有路也不拥有定价权",
+        "列举司机的替代选择（换路、改时、少开）",
+        "引入需求弹性概念与研究数字（涨价10%仅减流1-2%）",
+        "首次提出价值重构：司机为确定性而非沥青付费"
+      ],
+      "abstract_move": "破除垄断定价假设：用合同约束与需求弹性双重限制，并首次提出用户真正购买的是什么",
+      "replacement_needs": [
+        "一个合同或法规对涨价的约束机制",
+        "一个用户的替代选择清单",
+        "一个需求弹性数据",
+        "一个价值重构判词：用户为X而非Y付费"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(84);打开的悬念 LOOP08→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "conflict_escalation",
+      "start_ratio": 0.5546,
+      "end_ratio": 0.6912,
+      "start_sec": 515.8,
+      "end_sec": 642.9,
+      "position_label": "55.5%–69.1%(8:36–10:43)",
+      "purpose": "失败案例：展示一门资产仍在赚钱的生意如何因债务结构走进破产，区分资产盈利能力与持有者偿债能力",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 86,
+          "position_ratio": 0.6415,
+          "time_ms": 596624,
+          "reason": "路从未关闭、司机照常付费，公司却在 2014 年申请破产——盈利与偿债分离的认知冲击"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "case_study_causal_answer",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE42",
+          "event_type": "case_turn",
+          "mechanism": "what_can_go_wrong"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "case_intro",
+          "mechanism": "indiana_deal_structure"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "shock_event",
+          "mechanism": "2008_recession"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "paradox_deepens",
+          "mechanism": "road_never_closed_not_enough"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "numeric_reveal",
+          "mechanism": "debt_doubled_to_6b"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "case_climax",
+          "mechanism": "chapter_11_filing"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "distinction_reveal",
+          "mechanism": "profitability_vs_solvency"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "consequence_reveal",
+          "mechanism": "investors_lost_all"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "resolution_reveal",
+          "mechanism": "creditors_resell_5_7b"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "lesson_reveal",
+          "mechanism": "debt_decides_not_traffic"
+        }
+      ],
+      "required_retention_events": [
+        "case_turn",
+        "shock_event",
+        "bankruptcy_climax",
+        "solvency_distinction",
+        "lesson_reveal"
+      ],
+      "original_moves": [
+        "用'只看好年份的表格不是真生意'引入失败案例",
+        "给出交易背景（印第安纳75年特许权、38亿首付、30亿债务）",
+        "描述宏观冲击（2008衰退货运暴跌）",
+        "揭示金融工具反噬（利率互换、债务5年从34亿→60亿）",
+        "给出悖论高潮：路从未关闭、司机照常付费，公司却2014年破产",
+        "提炼判词：盈利与偿债是两个问题",
+        "给出结局数字：投资者血本无归、57亿转手",
+        "落下教训句：债务决定生死"
+      ],
+      "abstract_move": "失败案例：展示资产仍盈利的生意如何因债务结构走进破产，区分资产盈利能力与持有者偿债能力",
+      "replacement_needs": [
+        "一个交易结构与杠杆规模",
+        "一个宏观冲击或外部变量",
+        "一个金融工具或债务结构的反噬机制",
+        "一个悖论：资产正常运转而持有者破产",
+        "一个判词：盈利与偿债能力的分离"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(86);回收了前文的悬念 FS09→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "evidence_build",
+      "start_ratio": 0.6902,
+      "end_ratio": 0.8015,
+      "start_sec": 642,
+      "end_sec": 745.5,
+      "position_label": "69%–80.2%(10:42–12:25)",
+      "purpose": "成功案例：展示同一生意的相反结局，并把差异归因于合同、债务与买家理解而非资产本身",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 87,
+          "position_ratio": 0.7474,
+          "time_ms": 695117,
+          "reason": "10% 股权估值超 30 亿→整体约 300 亿，一代人涨 10 倍——与破产案形成最强烈的方向反差"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 89,
+          "position_ratio": 0.7862,
+          "time_ms": 731260,
+          "reason": "一个几乎团灭业主、一个成为全球最值钱资产，差异不在路而在合同、债务与理解——双案例的总判词"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "定价自由环的相反方向证据",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP10",
+          "tension": "把静态答案扩展为年份波动的压力测试",
+          "closes_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP11",
+          "tension": "成功叙事附带的政治责任争议",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "counter_case_contrast_answer",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP11"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE52",
+          "event_type": "counter_case_turn",
+          "mechanism": "opposite_story"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "case_intro",
+          "mechanism": "ontario_407_deal"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "outcome_reveal",
+          "mechanism": "most_profitable_asset"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "scale_reveal",
+          "mechanism": "10pct_stake_3b_total_30b"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "lesson_reframe",
+          "mechanism": "not_government_irresponsibility"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "contrast_synthesis",
+          "mechanism": "one_wipeout_one_windfall"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "cause_naming",
+          "mechanism": "contract_debts_understanding"
+        }
+      ],
+      "required_retention_events": [
+        "counter_case_turn",
+        "outcome_reveal",
+        "scale_reveal",
+        "cause_naming"
+      ],
+      "original_moves": [
+        "用'不只讲灾难'转向成功案例",
+        "给出交易背景（407案例：1999年99年特许权31亿加元、首日即争议）",
+        "揭示有利条款（几乎完全涨价自由+双倍租期）",
+        "给出长期回报数字（二十年后利润率25-30%、年收入超10亿）",
+        "给出估值跃迁数字（10%股权估值超30亿→整体约300亿，一代人涨10倍）",
+        "对简单归因作公平限定（教训不是政府不负责任）",
+        "落下总判词：差异不在路而在合同、债务与买家理解"
+      ],
+      "abstract_move": "成功案例：展示同一生意的相反结局，并把差异归因于合同、债务与理解而非资产本身",
+      "replacement_needs": [
+        "一个交易背景与有利条款",
+        "一个长期回报与估值跃迁数字",
+        "一个对简单归因的公平限定",
+        "一个总判词：差异不在资产而在结构与理解"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(87)、PK08(89);打开的悬念 LOOP10→FS12、LOOP11(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 87
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 89
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "synthesis",
+      "start_ratio": 0.8005,
+      "end_ratio": 0.9121,
+      "start_sec": 744.5,
+      "end_sec": 848.3,
+      "position_label": "80.1%–91.2%(12:24–14:08)",
+      "purpose": "双情景压力测试：乐观情景给出回报标尺，现实情景展示现金流消失甚至为负的风险幅度",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 82,
+          "position_ratio": 0.8822,
+          "time_ms": 820527,
+          "reason": "坏年份股东现金流可近乎消失甚至为负、好坏年差 1500 万——压力测试把风险变成可感数字"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP10",
+          "payoff_type": "dual_scenario_stress_test",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE59",
+          "event_type": "calculation_contract",
+          "mechanism": "not_feelings_real_numbers"
+        },
+        {
+          "event_id": "RE60",
+          "event_type": "scenario_reveal",
+          "mechanism": "optimistic_growth_path"
+        },
+        {
+          "event_id": "RE61",
+          "event_type": "numeric_reveal",
+          "mechanism": "irr_10_12"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "verdict_aphorism",
+          "mechanism": "reliable_not_bright"
+        },
+        {
+          "event_id": "RE63",
+          "event_type": "scenario_flip",
+          "mechanism": "realistic_recession"
+        },
+        {
+          "event_id": "RE64",
+          "event_type": "numeric_reveal",
+          "mechanism": "freight_down_15_25"
+        },
+        {
+          "event_id": "RE65",
+          "event_type": "consequence_reveal",
+          "mechanism": "cashflow_disappears_negative"
+        },
+        {
+          "event_id": "RE66",
+          "event_type": "scale_reveal",
+          "mechanism": "15m_good_bad_swing"
+        },
+        {
+          "event_id": "RE67",
+          "event_type": "risk_summary",
+          "mechanism": "real_risk_boring_business"
+        }
+      ],
+      "required_retention_events": [
+        "calculation_contract",
+        "optimistic_scenario",
+        "scenario_flip",
+        "swing_number"
+      ],
+      "original_moves": [
+        "用'不算感觉算真数'立下计算契约",
+        "给出乐观情景（第10年现金流超1200万、IRR 10-12%）",
+        "用格言式定性（'Reliable, not bright'）",
+        "给出现实情景（货运跌15-25%、成本与债务刚性）",
+        "展示现金流可消失甚至为负",
+        "给出好坏年份差额（超1500万）",
+        "落下风险判词：看似最无聊生意的真实风险"
+      ],
+      "abstract_move": "双情景压力测试：乐观情景给出回报标尺，现实情景展示现金流消失甚至为负的风险幅度",
+      "replacement_needs": [
+        "一个乐观情景的增长路径与回报标尺",
+        "一个格言式定性",
+        "一个现实情景的刚性成本排比",
+        "一个现金流消失或为负的风险数字及好坏年份差额"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(82);回收了前文的悬念 FS11→LOOP10。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.911,
+      "end_ratio": 0.9847,
+      "start_sec": 847.3,
+      "end_sec": 915.9,
+      "position_label": "91.1%–98.5%(14:07–15:16)",
+      "purpose": "全片结论：把全部扣减与案例压缩为价值重定义——真正的产品是确定性，资产是持续收费的权利",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.9781,
+          "time_ms": 909722,
+          "reason": "\"路面不是资产，资产是持续收取付款的权利\"——全片最终判词，完成标题承诺的概念兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "worldview_redefinition_with_compressed_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE68",
+          "event_type": "pattern_interrupt",
+          "mechanism": "guide_cta"
+        },
+        {
+          "event_id": "RE69",
+          "event_type": "conclusion_contract",
+          "mechanism": "main_conclusion_setup"
+        },
+        {
+          "event_id": "RE70",
+          "event_type": "product_redefinition",
+          "mechanism": "predicted_vs_unpredictable_trip"
+        },
+        {
+          "event_id": "RE71",
+          "event_type": "value_comparison",
+          "mechanism": "old_cracked_vs_brand_new"
+        },
+        {
+          "event_id": "RE72",
+          "event_type": "final_aphorism",
+          "mechanism": "road_surface_is_not_an_asset"
+        }
+      ],
+      "required_retention_events": [
+        "asphalt_negation",
+        "product_redefinition",
+        "final_aphorism"
+      ],
+      "original_moves": [
+        "插入描述区指南CTA",
+        "宣布主要结论：从未只卖沥青",
+        "用反证论证：没人花2.5美元只为触摸路面",
+        "给出用户真正购买物：时间与确定性",
+        "提炼定义句：真正的产品是可预测与不可预测行程之差",
+        "给出价值判词：价值取决于合同期稳定收入而非建造成本",
+        "给出推论：老旧稳定公路可能比全新公路更值钱",
+        "落下最终判词：路面不是资产，收费权才是"
+      ],
+      "abstract_move": "全片结论：把全部扣减与案例压缩为价值重定义——真正的产品是确定性，资产是持续收费的权利",
+      "replacement_needs": [
+        "一个核心结论：从未只卖物理载体",
+        "一个用户真正购买物的论证",
+        "一个定义句：可预测与不可预测之差",
+        "一个价值判词：价值取决于X而非Y",
+        "一个最终判词：表面载体不是资产"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.9837,
+      "end_ratio": 1,
+      "start_sec": 914.9,
+      "end_sec": 930.1,
+      "position_label": "98.4%–100%(15:15–15:30)",
+      "purpose": "致谢与订阅请求收束，维持频道教育定位的一致性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE73",
+          "event_type": "final_cta",
+          "mechanism": "thanks_like_subscribe"
+        }
+      ],
+      "required_retention_events": [
+        "thanks",
+        "subscribe_cta"
+      ],
+      "original_moves": [
+        "观看到结尾的致谢",
+        "点赞订阅请求与创作持续性说明",
+        "下期预告"
+      ],
+      "abstract_move": "致谢与订阅请求收束，维持频道教育定位的一致性",
+      "replacement_needs": [
+        "一个观看到结尾的致谢",
+        "一个点赞订阅请求",
+        "一个下期预告或频道定位说明"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

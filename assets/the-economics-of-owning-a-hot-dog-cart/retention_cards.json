@@ -1,0 +1,1207 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:31:26.257Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.0309,
+      "start_sec": 0,
+      "end_sec": 44,
+      "position_label": "0%–3.1%(0:00–0:44)",
+      "purpose": "用第二人称经营幻想与'简单生意'表象建立代入，随即泼冷水并抛出'没人告诉你的数字'与同一生意两种结局的对照悬念，承诺从头拆解",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "paradox_hook",
+          "strength": 85,
+          "position_ratio": 0.0156,
+          "time_ms": 22200,
+          "reason": "十万净利对一万五以下投入的核心数字并置，外加对冲基金对照"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念：高收益数字与流血结局的双结局对照",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "入门价格带未知",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_hook",
+          "mechanism": "second_person_fantasy"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "warning_turn",
+          "mechanism": "everything_can_go_wrong"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "insider_promise",
+          "mechanism": "nobody_tells_you"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "number_juxtaposition",
+          "mechanism": "profit_on_tiny_capital"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "loser_contrast",
+          "mechanism": "same_business_bleeds"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "roadmap_promise",
+          "mechanism": "start_at_beginning"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_fantasy",
+        "insider_number_promise",
+        "dual_outcome_contrast"
+      ],
+      "original_moves": [
+        "用第二人称描绘开餐车的经营幻想，营造'简单生意'的表象",
+        "泼冷水：声称有'没人告诉你的数字'",
+        "抛出核心数字对照：十万净利对一万五以下投入，并用对冲基金作对照锚点",
+        "展示同一生意的两种结局：成功与流血",
+        "承诺从头拆解真实结构"
+      ],
+      "abstract_move": "第二人称代入幻想 + 简单表象陈述 + 内幕数字承诺（高收益对低投入的悬殊对照） + 同一生意双结局对照悬念 + 从头拆解承诺",
+      "replacement_needs": [
+        "一个可代入的第二人称经营幻想场景",
+        "一个'简单生意'的表象特征",
+        "一组高收益对低投入的悬殊数字对照",
+        "一个同一生意成功与失败的对照画面"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(85);打开的悬念 LOOP01→FS15、LOOP02→FS02 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 85
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "ownership_fantasy_plus_insider_number_promise",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 22200,
+        "evidence_refs": [
+          "C0001",
+          "C0008",
+          "C0010",
+          "C0012"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "evidence_build",
+      "start_ratio": 0.0293,
+      "end_ratio": 0.13,
+      "start_sec": 41.7,
+      "end_sec": 185.1,
+      "position_label": "2.9%–13%(0:42–3:05)",
+      "purpose": "入场成本全栈：设备、合规、耗材等逐项给区间并聚合成总入场量级，与更高门槛业态对照；段末以'便宜入场不等于容易盈利'校准预期",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "被明确预告\"稍后回来讲\"的跨章伏笔",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "entry_cost_total_aggregation",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "reassurance_entry",
+          "mechanism": "cheapest_food_business"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "price_anchor",
+          "mechanism": "cart_price_tiers"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "cashless_logic",
+          "mechanism": "pos_seventy_percent"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "deferred_question",
+          "mechanism": "permit_off_rails"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "total_aggregation",
+          "mechanism": "startup_total_range"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "warning_pivot",
+          "mechanism": "cheap_not_easy"
+        }
+      ],
+      "required_retention_events": [
+        "range_price_ladders",
+        "first_surprise_permits",
+        "total_aggregation"
+      ],
+      "original_moves": [
+        "抛出入场成本问题",
+        "逐项列举七类成本区间：餐车本体、设备、合规、耗材等",
+        "某成本项展示地域极差，埋下'稍后解释'伏笔",
+        "聚合成总入场量级",
+        "用高门槛业态作对照锚点",
+        "段末给出'便宜入场不等于容易盈利'判词"
+      ],
+      "abstract_move": "入场成本问题开启 + 多类成本区间逐项罗列 + 某项地域极差伏笔 + 总入场量级聚合 + 高门槛业态对照 + 便宜≠容易警告判词",
+      "replacement_needs": [
+        "多个入场成本项及其区间数据",
+        "一个总入场量级的聚合数字",
+        "一个高门槛业态作为对照锚点",
+        "一个成本项的地域或情境极差（用于埋伏笔）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS08 跨段;回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "evidence_build",
+      "start_ratio": 0.1288,
+      "end_ratio": 0.1776,
+      "start_sec": 183.3,
+      "end_sec": 252.8,
+      "position_label": "12.9%–17.8%(3:03–4:13)",
+      "purpose": "物理约束：说明载体本身就是整个经营单元，全部功能塞在极小空间，物理容量给收入设硬上限；'物理极限即财务极限'（段首含订阅CTA间奏）",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "订阅CTA中的内容预告",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "cta_interstitial",
+          "mechanism": "subscribe_monthly_tease"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "reframe",
+          "mechanism": "cart_is_entire_restaurant"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "capacity_ceiling",
+          "mechanism": "cold_storage_ceiling"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "identity_verdict",
+          "mechanism": "calibrated_production_machine"
+        }
+      ],
+      "required_retention_events": [
+        "cta_interstitial",
+        "reframe",
+        "capacity_ceiling"
+      ],
+      "original_moves": [
+        "插入订阅CTA间奏",
+        "重构概念：餐车=整个餐厅，不是局部",
+        "列举极小空间内塞入的全部功能",
+        "给出空间区间与容量上限",
+        "建立因果：物理容量给收入设硬上限",
+        "提炼'物理极限即财务极限'判词"
+      ],
+      "abstract_move": "载体=整个经营单元的重构 + 极小空间与全功能清单 + 容量上限数据 + 容量-收入上限因果链 + 物理即财务判词（段首含CTA间奏）",
+      "replacement_needs": [
+        "一个'载体即整个经营单元'的重构概念",
+        "一个空间或容量的硬约束上限",
+        "一个容量直接限制收入的因果关系",
+        "一个功能清单（证明空间极小却需承载全部）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "reveal",
+      "start_ratio": 0.1763,
+      "end_ratio": 0.2291,
+      "start_sec": 250.9,
+      "end_sec": 326.1,
+      "position_label": "17.6%–22.9%(4:11–5:26)",
+      "purpose": "单位经济学：单件成本逐项搭建，给出行业均值与售价区间，算出账面毛利；随即以'好得不像真的'转折开启费用悬念",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.2136,
+          "time_ms": 304000,
+          "reason": "83%毛利率的单位经济学揭晓"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "好得不像真的的数字需要对账",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "numbers_setup",
+          "mechanism": "unit_cost_question"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "unit_cost_reveal",
+          "mechanism": "cost_range_average"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "margin_reveal",
+          "mechanism": "eighty_three_percent"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "skepticism_turn",
+          "mechanism": "too_good_to_be_true"
+        }
+      ],
+      "required_retention_events": [
+        "numbers_setup",
+        "unit_cost_reveal",
+        "margin_reveal"
+      ],
+      "original_moves": [
+        "逐项搭建单件成本：食材、包装等",
+        "给出行业均值与售价区间",
+        "算出账面毛利率83%",
+        "以'好得不像真的'转折，暗示后续有费用陷阱"
+      ],
+      "abstract_move": "单件成本逐项搭建 + 行业均值与售价区间 + 账面毛利演示（高毛利数字揭晓） + '好得不像真的'转折开启费用悬念",
+      "replacement_needs": [
+        "多项单件成本的区间与行业均值",
+        "一个售价区间与均单价",
+        "一个高毛利率的计算结果",
+        "一个转折点（暗示后续有隐藏费用或风险）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80);打开的悬念 LOOP05→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evidence_build",
+      "start_ratio": 0.2276,
+      "end_ratio": 0.2787,
+      "start_sec": 324,
+      "end_sec": 396.8,
+      "position_label": "22.8%–27.9%(5:24–6:37)",
+      "purpose": "微小渗漏解剖：小额可变成本清单、高价附加项冲击、自助取用造成月度侵蚀量化，给出修复方案并提炼'小渗漏乘千次交易成洪水'原则",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "micro_leak_intro",
+          "mechanism": "invisible_monthly_leak"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "escalation_detail",
+          "mechanism": "premium_topping_costs"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "leak_quantification",
+          "mechanism": "four_hundred_month"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "fix_and_principle",
+          "mechanism": "calibrated_pump_fix"
+        }
+      ],
+      "required_retention_events": [
+        "micro_leak_intro",
+        "escalation_detail",
+        "leak_quantification"
+      ],
+      "original_moves": [
+        "引入微小渗漏问题",
+        "列举附加项单份成本清单",
+        "对照高价与低价附加项的成本阶梯",
+        "量化自助取用造成的月度侵蚀金额",
+        "给出修复方案",
+        "提炼'小渗漏乘千次交易成洪水'原则"
+      ],
+      "abstract_move": "微小渗漏引入 + 附加项成本清单与高低价对照 + 自助渗漏的月量化金额 + 修复方案 + 渗漏-洪水原则判词",
+      "replacement_needs": [
+        "一个小额可变成本清单",
+        "一个高价与低价附加项的成本对照",
+        "一个自助或频繁使用导致的月度侵蚀量化",
+        "一个修复或控制方案"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "reveal",
+      "start_ratio": 0.2773,
+      "end_ratio": 0.3373,
+      "start_sec": 394.8,
+      "end_sec": 480.2,
+      "position_label": "27.7%–33.7%(6:35–8:00)",
+      "purpose": "客单价杠杆：把生意重新定义为'交易生意'；同客流高客单对照演示；组合套餐逻辑；高毛利零准备附加品；附加品利润覆盖固定开销",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.3023,
+          "time_ms": 430280,
+          "reason": "同样100个顾客流水近翻倍的上行演示"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "category_reframe",
+          "mechanism": "transaction_business"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "upsell_demo",
+          "mechanism": "same_traffic_double_revenue"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "drink_margin_reveal",
+          "mechanism": "beverage_margins"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "overhead_coverage",
+          "mechanism": "drinks_cover_overhead"
+        }
+      ],
+      "required_retention_events": [
+        "category_reframe",
+        "upsell_demo",
+        "drink_margin_reveal"
+      ],
+      "original_moves": [
+        "重构概念：这是'交易生意'，不只是产品生意",
+        "演示同样100个顾客，低客单对高客单的流水对照（450对850）",
+        "解释套餐双赢逻辑",
+        "展示高毛利附加品（饮料）的毛利区间与零准备成交速度",
+        "说明附加品利润可覆盖固定开销"
+      ],
+      "abstract_move": "'交易生意'重构 + 同客流双倍流水对照演示 + 套餐双赢逻辑 + 高毛利零准备附加品 + 附加品利润覆盖固定开销判词",
+      "replacement_needs": [
+        "一个生意性质的重构概念（从产品到交易）",
+        "一个同客流、不同客单价的流水对照演示",
+        "一个高毛利附加品及其毛利区间",
+        "一个附加品覆盖固定开销的因果链"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "reveal",
+      "start_ratio": 0.3364,
+      "end_ratio": 0.4052,
+      "start_sec": 478.8,
+      "end_sec": 576.8,
+      "position_label": "33.6%–40.5%(7:59–9:37)",
+      "purpose": "选址至上：预告'最重要的决定'；不产生顾客只拦截顾客的重构；多类点位的客流机制与权衡；'选址即产品，商品只是借口'判词",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.3466,
+          "time_ms": 493400,
+          "reason": "\"不产生顾客只拦截顾客——不是目的地，是伏击\"的生意本质重构"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.402,
+          "time_ms": 572240,
+          "reason": "\"选址即产品，热狗只是借口\"的章节判词"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "superlative_setup",
+          "mechanism": "most_important_decision"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "interception_reframe",
+          "mechanism": "ambush_not_destination"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "location_typology",
+          "mechanism": "construction_hidden_gem"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "essence_verdict",
+          "mechanism": "location_is_the_product"
+        }
+      ],
+      "required_retention_events": [
+        "superlative_setup",
+        "interception_reframe",
+        "location_typology"
+      ],
+      "original_moves": [
+        "预告'最重要的决定'",
+        "重构概念：不产生顾客，只拦截顾客——不是目的地，是伏击",
+        "展开选址类型学：多类点位的客流机制与权衡",
+        "提炼'选址即产品，热狗只是借口'判词"
+      ],
+      "abstract_move": "最重要决定预告 + 拦截/伏击生意本质重构 + 多类点位客流机制与权衡 + 选址即产品判词",
+      "replacement_needs": [
+        "一个'不产生只拦截'的生意本质重构",
+        "多个点位类型及其客流机制与权衡",
+        "一个'选址即产品'的判词（将位置提升到产品之上）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85)、PK05(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "evidence_build",
+      "start_ratio": 0.4038,
+      "end_ratio": 0.4907,
+      "start_sec": 574.7,
+      "end_sec": 698.5,
+      "position_label": "40.4%–49.1%(9:35–11:39)",
+      "purpose": "位置与监管成本：普通地区许可费区间对稀缺市场的牌照二级市场与拍卖极端值；强制后台设施与永不停歇的月租",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.4485,
+          "time_ms": 638440,
+          "reason": "公园摊位拍卖年价超20万美元的监管成本极端值"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "nyc_scarcity_secondary_market_answer",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "cost_turn",
+          "mechanism": "location_cost_complication"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "nyc_trap",
+          "mechanism": "permit_scarcity"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "secondary_market_shock",
+          "mechanism": "permit_rental_cost"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "auction_extreme",
+          "mechanism": "central_park_bids"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "fixed_cost_reveal",
+          "mechanism": "commissary_rent"
+        }
+      ],
+      "required_retention_events": [
+        "cost_turn",
+        "nyc_trap",
+        "secondary_market_shock"
+      ],
+      "original_moves": [
+        "展示普通地区许可费区间",
+        "对照稀缺市场的牌照稀缺与二级市场转租成本",
+        "抛出极端值：纽约公园摊位拍卖年价超20万美元",
+        "说明强制后台设施（中央厨房）的功能与月租区间",
+        "提炼'永不暂停'的固定成本判词"
+      ],
+      "abstract_move": "普通地区许可费区间 + 稀缺市场牌照二级市场与转租成本 + 拍卖极端值揭晓 + 强制后台设施月租 + 永不暂停固定成本判词",
+      "replacement_needs": [
+        "一个普通地区的许可或准入费用区间",
+        "一个稀缺市场的牌照稀缺与二级市场或拍卖极端值",
+        "一个强制后台设施或固定开销的月租区间",
+        "一个'永不暂停'的固定成本属性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80);回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "reveal",
+      "start_ratio": 0.4897,
+      "end_ratio": 0.6133,
+      "start_sec": 697,
+      "end_sec": 873,
+      "position_label": "49%–61.3%(11:37–14:33)",
+      "purpose": "日损益演示与劳动校准：完整日账（交易数、流水、逐项成本、经营者留存）与传统行业净利率对照；拆开'工资与利润'的关键区分；雇人后日净腰斩，第一堵规模化之墙",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.5231,
+          "time_ms": 744640,
+          "reason": "车主日留620.50美元、69%留存的日账兑现"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "多数人完全忽略的关键区分",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "monthly_cash_flow_answer",
+          "opened_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "margin_reconciliation_daily_pl",
+          "opened_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "wage_profit_split_answer",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "demo_setup",
+          "mechanism": "daily_economics"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "gross_tally",
+          "mechanism": "nine_hundred_day"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "keeper_number",
+          "mechanism": "six_twenty_kept"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "critical_distinction",
+          "mechanism": "wages_vs_profit_tease"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "labor_value_split",
+          "mechanism": "eleven_k_split"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "hiring_wall",
+          "mechanism": "first_scaling_wall"
+        }
+      ],
+      "required_retention_events": [
+        "demo_setup",
+        "gross_tally",
+        "keeper_number"
+      ],
+      "original_moves": [
+        "演示完整日损益账：交易数、流水、逐项成本",
+        "兑现车主日留存620.50美元、69%留存率",
+        "用传统行业净利率对照",
+        "拆解工资与利润的关键区分",
+        "演示雇人后日净腰斩",
+        "提炼'第一堵规模化之墙'判词"
+      ],
+      "abstract_move": "完整日损益逐项账演示 + 经营者留存金额与占比兑现 + 传统行业净利率对照 + 工资/利润区分拆解 + 雇人成本与日净腰斩 + 第一堵规模化之墙判词",
+      "replacement_needs": [
+        "一个完整日损益账（交易数、流水、逐项成本、留存）",
+        "一个经营者留存金额与占比数据",
+        "一个传统行业净利率作为对照锚点",
+        "一个雇人后净利率腰斩的对照演示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80);回收了前文的悬念 FS03→LOOP04、FS04→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "reveal",
+      "start_ratio": 0.6122,
+      "end_ratio": 0.6556,
+      "start_sec": 871.4,
+      "end_sec": 933.2,
+      "position_label": "61.2%–65.6%(14:31–15:33)",
+      "purpose": "盈亏平衡：月固定成本、单位售价与变动成本推出单位贡献，算出月/日盈亏平衡点；用重复钉与判词强化低门槛",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.6415,
+          "time_ms": 913200,
+          "reason": "\"每天17个热狗即盈亏平衡\"的极低门槛揭晓"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE44",
+          "event_type": "contribution_math",
+          "mechanism": "three_seventyfive"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "breakeven_payoff",
+          "mechanism": "seventeen_hotdogs"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "threshold_verdict",
+          "mechanism": "compelling_unit_economics"
+        }
+      ],
+      "required_retention_events": [
+        "contribution_math",
+        "breakeven_payoff",
+        "threshold_verdict"
+      ],
+      "original_moves": [
+        "列出月固定成本总额",
+        "拆解单位售价、变动成本、单位贡献",
+        "计算盈亏平衡点：334件/月，17个/天",
+        "重复钉阈值数字",
+        "提炼低门槛判词"
+      ],
+      "abstract_move": "月固定成本总额 + 单位售价/变动成本/贡献拆解 + 盈亏平衡点计算 + 阈值数字重复钉 + 极低门槛判词",
+      "replacement_needs": [
+        "一个月固定成本总额",
+        "一个单位售价、变动成本与贡献的拆解",
+        "一个月/日盈亏平衡点的计算结果",
+        "一个强化低门槛的阈值数字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "conflict_escalation",
+      "start_ratio": 0.6542,
+      "end_ratio": 0.7035,
+      "start_sec": 931.2,
+      "end_sec": 1001.3,
+      "position_label": "65.4%–70.4%(15:31–16:41)",
+      "purpose": "天气与季节：恶劣天气收入骤降而固定成本照扣的结构性不对称；旺淡季周期与'旺季收入当资本储备'的生存策略",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE47",
+          "event_type": "risk_turn",
+          "mechanism": "rain_problem"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "asymmetry_reveal",
+          "mechanism": "revenue_drops_costs_stay"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "seasonality_strategy",
+          "mechanism": "capital_reserve"
+        }
+      ],
+      "required_retention_events": [
+        "risk_turn",
+        "asymmetry_reveal",
+        "seasonality_strategy"
+      ],
+      "original_moves": [
+        "展示恶劣天气收入降幅区间",
+        "对照收入骤降与固定成本照扣的结构性不对称",
+        "提炼结构性不对称判词",
+        "说明旺淡季周期",
+        "给出'旺季收入当资本储备'的生存策略"
+      ],
+      "abstract_move": "恶劣天气收入降幅 + 收入骤降与成本照扣的结构性不对称 + 不对称判词 + 旺淡季周期 + 资本储备生存策略",
+      "replacement_needs": [
+        "一个外部冲击（天气、季节等）导致的收入降幅区间",
+        "一个收入骤降与固定成本照扣的结构性不对称",
+        "一个旺淡季周期或波动规律",
+        "一个应对策略（如储备、对冲）"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "evidence_build",
+      "start_ratio": 0.7023,
+      "end_ratio": 0.7748,
+      "start_sec": 999.7,
+      "end_sec": 1102.9,
+      "position_label": "70.2%–77.5%(16:40–18:23)",
+      "purpose": "活动经济：活动场景交易量跃迁与溢价逻辑；主办方收费/抽成结构；物流备货成本；恶劣天气报废情景；'最好的日子或最昂贵的灾难'判词与幸存者画像",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.7165,
+          "time_ms": 1019960,
+          "reason": "活动日600-1200笔对日常170笔的规模跃迁"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE50",
+          "event_type": "event_upside",
+          "mechanism": "event_vending_intro"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "volume_scale",
+          "mechanism": "festival_transactions"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "fee_reality",
+          "mechanism": "organizer_cut"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "rainout_risk",
+          "mechanism": "event_disaster_math"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "verdict",
+          "mechanism": "best_or_disaster"
+        }
+      ],
+      "required_retention_events": [
+        "event_upside",
+        "volume_scale",
+        "fee_reality"
+      ],
+      "original_moves": [
+        "展示活动场景交易量跃迁区间（600-1200笔对日常170笔）",
+        "解释活动溢价逻辑",
+        "列出主办方收费/抽成结构",
+        "说明物流备货成本",
+        "演示恶劣天气报废情景账",
+        "提炼'最好的日子或最昂贵的灾难'双刃剑判词",
+        "描绘持续盈利者画像"
+      ],
+      "abstract_move": "活动交易量跃迁与溢价逻辑 + 主办方收费/抽成结构 + 物流备货成本 + 恶劣天气报废情景账 + 双刃剑判词 + 幸存者画像",
+      "replacement_needs": [
+        "一个活动或高峰场景的交易量跃迁区间",
+        "一个主办方收费、抽成或准入结构",
+        "一个物流或备货成本",
+        "一个报废或损失情景的账目",
+        "一个双刃剑判词与幸存者画像"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "reveal",
+      "start_ratio": 0.7735,
+      "end_ratio": 0.8465,
+      "start_sec": 1101,
+      "end_sec": 1205,
+      "position_label": "77.4%–84.7%(18:21–20:05)",
+      "purpose": "年度总账：现实工作日模型；年流水与年费用逐项总账；年净留存；扣除劳动估值后仍强；回本周期判词",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.8195,
+          "time_ms": 1166440,
+          "reason": "年净留存约10.35万美元的年度总账兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE55",
+          "event_type": "annual_gross_reckoning",
+          "mechanism": "annual_revenue_expenses"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "annual_net_payoff",
+          "mechanism": "hundred_three_k"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "payback_reveal",
+          "mechanism": "three_six_months"
+        }
+      ],
+      "required_retention_events": [
+        "annual_setup",
+        "annual_gross_reckoning",
+        "annual_net_payoff"
+      ],
+      "original_moves": [
+        "建立现实工作日模型",
+        "列出年流水与年费用逐项总账",
+        "兑现年净留存约10.35万美元",
+        "扣除劳动估值，证明扣除后仍强",
+        "给出回本周期判词"
+      ],
+      "abstract_move": "工作日模型 + 年流水与年费用逐项总账 + 年净留存数字兑现 + 劳动估值扣除后仍强 + 回本周期判词",
+      "replacement_needs": [
+        "一个现实工作日或营业日模型",
+        "一个年流水与年费用的逐项清单",
+        "一个年净留存或年利润数字",
+        "一个劳动估值扣除的对照",
+        "一个回本周期或投资回报周期"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "conflict_escalation",
+      "start_ratio": 0.8451,
+      "end_ratio": 0.9073,
+      "start_sec": 1203,
+      "end_sec": 1291.5,
+      "position_label": "84.5%–90.7%(20:03–21:32)",
+      "purpose": "规模化墙：单点上限；多点流水增长与净利率压缩；生意性质转变（个人劳动→系统管理）；必备系统清单；'没有系统，扩张倍增的是问题'判词",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "增长诱惑与净利率压缩的对撞",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "conditional_systems_answer",
+          "opened_in": "FS14"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE58",
+          "event_type": "growth_turn",
+          "mechanism": "picture_changes_growth"
+        },
+        {
+          "event_id": "RE59",
+          "event_type": "margin_compression",
+          "mechanism": "fleet_margin_tradeoff"
+        },
+        {
+          "event_id": "RE60",
+          "event_type": "systems_verdict",
+          "mechanism": "systems_or_problems"
+        }
+      ],
+      "required_retention_events": [
+        "growth_turn",
+        "margin_compression",
+        "systems_verdict"
+      ],
+      "original_moves": [
+        "说明单点上限逻辑",
+        "展示多点流水区间",
+        "对照多点流水增长与净利率压缩",
+        "提炼生意性质转变判词（个人劳动→系统管理）",
+        "列举必备系统清单",
+        "提炼'没有系统，扩张倍增的是问题'判词"
+      ],
+      "abstract_move": "单点上限逻辑 + 多点流水增长与净利率压缩对照 + 生意性质转变判词 + 必备系统清单 + 倍增问题判词",
+      "replacement_needs": [
+        "一个单点上限的逻辑或数据",
+        "一个多点流水增长与净利率压缩的对照",
+        "一个生意性质转变的判词（从个人到系统）",
+        "一个必备系统或管理工具清单"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP07。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:增长诱惑与净利率压缩的对撞",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "closure",
+      "start_ratio": 0.9058,
+      "end_ratio": 1,
+      "start_sec": 1289.4,
+      "end_sec": 1423.4,
+      "position_label": "90.6%–100%(21:29–23:43)",
+      "purpose": "终极判词与收束：'值不值'的诚实回答归结为选址与纪律；成功条件清单与收益数字回环；失败模式解剖；'看似简单实则精密'重定义；纪律判词；指南CTA与点赞订阅收束",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.9722,
+          "time_ms": 1383800,
+          "reason": "\"差别几乎从不在热狗品质，而在运营纪律\"的全片判词"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "explanatory_synthesis",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE61",
+          "event_type": "final_question",
+          "mechanism": "is_it_worth_it"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "success_conditions",
+          "mechanism": "disciplined_operator_profile"
+        },
+        {
+          "event_id": "RE63",
+          "event_type": "failure_anatomy",
+          "mechanism": "three_failure_modes"
+        },
+        {
+          "event_id": "RE64",
+          "event_type": "essence_verdict",
+          "mechanism": "deceptively_precise"
+        },
+        {
+          "event_id": "RE65",
+          "event_type": "discipline_verdict",
+          "mechanism": "discipline_not_product"
+        },
+        {
+          "event_id": "RE66",
+          "event_type": "resource_cta",
+          "mechanism": "business_guide"
+        },
+        {
+          "event_id": "RE67",
+          "event_type": "community_cta",
+          "mechanism": "like_subscribe_thanks"
+        }
+      ],
+      "required_retention_events": [
+        "final_question",
+        "success_conditions",
+        "failure_anatomy"
+      ],
+      "original_moves": [
+        "抛出终极问题'值不值'",
+        "给出诚实回答：归结为选址与纪律",
+        "列出成功条件清单",
+        "回环开场收益数字",
+        "解剖失败模式",
+        "重定义'看似简单实则精密'的生意本质",
+        "提炼'差别几乎从不在热狗品质，而在运营纪律'判词",
+        "指南CTA与点赞订阅收束"
+      ],
+      "abstract_move": "终极问题'值不值' + 单变量诚实回答（选址与纪律） + 成功条件清单 + 收益数字回环 + 失败模式解剖 + 精密生意重定义 + 纪律判词 + CTA收束",
+      "replacement_needs": [
+        "一个终极问题的诚实回答（归结为单一或少数变量）",
+        "一个成功条件清单",
+        "一个开场收益数字的回环兑现",
+        "一个失败模式的解剖",
+        "一个'看似简单实则精密'的生意本质重定义"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

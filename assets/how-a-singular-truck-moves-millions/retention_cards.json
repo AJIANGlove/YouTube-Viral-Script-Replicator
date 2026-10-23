@@ -1,0 +1,861 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:11:31.927Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "everyday_fantasy_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.037,
+      "start_sec": 0.1,
+      "end_sec": 28.2,
+      "position_label": "0%–3.7%(0:00–0:28)",
+      "purpose": "用观众熟悉的日常场景和不敢说出口的幻想建立亲密入口，把观看对象与观众的私欲直接挂钩",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "everyday_scenario_entry",
+          "mechanism": "familiar_setting_projection"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "fantasy_projection",
+          "mechanism": "unspoken_what_if"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "identity_validation",
+          "mechanism": "universal_dream_claim"
+        }
+      ],
+      "required_retention_events": [
+        "everyday_scenario",
+        "fantasy_projection",
+        "universal_dream"
+      ],
+      "original_moves": [
+        "红灯场景",
+        "运钞车贴身",
+        "要是钱是你的",
+        "房子车子旅行",
+        "人人都做过这个梦却没人说出口"
+      ],
+      "abstract_move": "用观众熟悉的日常场景和不敢说出口的幻想建立亲密入口，把观看对象与观众的私欲直接挂钩",
+      "replacement_needs": [
+        "观众熟悉的日常场景",
+        "可代入的私密幻想",
+        "幻想所指向的具体好处"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "everyday_fantasy_scenario_with_question_stack",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 52936,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0010",
+          "C0016"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "question_stack_contract",
+      "start_ratio": 0.0357,
+      "end_ratio": 0.0682,
+      "start_sec": 27.3,
+      "end_sec": 52.1,
+      "position_label": "3.6%–6.8%(0:27–0:52)",
+      "purpose": "把幻想转成一组必须看完才能回答的问题，并以明确承诺锁定观看",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "把白日梦与完整系统解释之间的距离悬挂全片",
+          "closes_in": "FS13"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "未知内部与可见外壳之间的好奇缺口",
+          "closes_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "现金静止幻想与国家循环现实之间的张力",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "匿名巨款与具体押运者之间的身份缺口",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "question_stack",
+          "mechanism": "curiosity_gap"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "viewing_contract",
+          "mechanism": "explicit_stay_promise"
+        }
+      ],
+      "required_retention_events": [
+        "question_stack",
+        "stay_promise",
+        "curiosity_gap"
+      ],
+      "original_moves": [
+        "卡车装着一生见不到的钱",
+        "里面是什么/为何这样造/为何要移动/谁负责",
+        "留下就知道梦为何过不了红绿灯"
+      ],
+      "abstract_move": "把幻想转成一组必须看完才能回答的问题，并以明确承诺锁定观看",
+      "replacement_needs": [
+        "指向系统核心的连续问题",
+        "明确的观看契约",
+        "幻想与现实距离的预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP01→FS13、LOOP02→FS06、LOOP03→FS08、LOOP04→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "object_reframe_and_industry_context",
+      "start_ratio": 0.0669,
+      "end_ratio": 0.1474,
+      "start_sec": 51.1,
+      "end_sec": 112.6,
+      "position_label": "6.7%–14.7%(0:51–1:53)",
+      "purpose": "用一句重构改写观众对对象的定义，并用行业背景建立解释权威",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.0693,
+          "time_ms": 52936,
+          "reason": "“金库重构”是全片第一个认知奖励，把观看对象从卡车改写为带轮子的金库"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "concept_reframe",
+          "mechanism": "object_redefinition"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "authority_context",
+          "mechanism": "established_operators_history"
+        }
+      ],
+      "required_retention_events": [
+        "object_reframe",
+        "procedure_detail",
+        "industry_history"
+      ],
+      "original_moves": [
+        "不是卡车是带轮子的金库",
+        "装车监控与双重清点",
+        "路线单对账",
+        "问题不解决不发车",
+        "三大公司与1859年行业史"
+      ],
+      "abstract_move": "用一句重构改写观众对对象的定义，并用行业背景建立解释权威",
+      "replacement_needs": [
+        "观看对象的概念重命名",
+        "操作流程细节",
+        "行业与历史背景"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 74
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "armor_cost_engineering",
+      "start_ratio": 0.1465,
+      "end_ratio": 0.2005,
+      "start_sec": 111.9,
+      "end_sec": 153.2,
+      "position_label": "14.7%–20.1%(1:52–2:33)",
+      "purpose": "用工程细节与成本量级回答“为何造成这样”，并制造“防护物只是所载零头”的反差",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "numeric_reveal",
+          "mechanism": "vehicle_cost_scale"
+        }
+      ],
+      "required_retention_events": [
+        "engineering_detail",
+        "cost_contrast"
+      ],
+      "original_moves": [
+        "防弹钢板与加厚玻璃",
+        "卸力设计",
+        "15万至百万美元造价",
+        "车本身只是所载零头"
+      ],
+      "abstract_move": "用工程细节与成本量级回答“为何造成这样”，并制造“防护物只是所载零头”的反差",
+      "replacement_needs": [
+        "工程或设计细节",
+        "成本量级",
+        "成本与所护对象的价值反差"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS05",
+      "function": "tracking_deterrence_reveal",
+      "start_ratio": 0.1993,
+      "end_ratio": 0.2571,
+      "start_sec": 152.2,
+      "end_sec": 196.4,
+      "position_label": "19.9%–25.7%(2:32–3:16)",
+      "purpose": "展示多层追踪与“得手即失效”机制，把幻想中的得手路径逐条封死",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 77,
+          "position_ratio": 0.2283,
+          "time_ms": 174401,
+          "reason": "染料包机制把“偷到也花不掉”讲到可操作层面，是威慑段最强信息点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "mechanism_reveal",
+          "mechanism": "layered_tracking"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "mechanism_reveal",
+          "mechanism": "dye_pack_fail_safe"
+        }
+      ],
+      "required_retention_events": [
+        "layered_defense",
+        "fail_safe_mechanism"
+      ],
+      "original_moves": [
+        "车载GPS",
+        "袋内隐藏追踪器",
+        "染料包秒毁钞票",
+        "与银行同源的思路装进运输环节"
+      ],
+      "abstract_move": "展示多层追踪与“得手即失效”机制，把幻想中的得手路径逐条封死",
+      "replacement_needs": [
+        "多层防护机制",
+        "让得手成果失效的保险机制",
+        "与其他场景的机制同构说明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(77)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 77
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "theft_reality_check",
+      "start_ratio": 0.2558,
+      "end_ratio": 0.3585,
+      "start_sec": 195.5,
+      "end_sec": 273.9,
+      "position_label": "25.6%–35.9%(3:15–4:34)",
+      "purpose": "用真实统计与分布逻辑校正流行想象，完成第一轮幻想降温",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 72,
+          "position_ratio": 0.3049,
+          "time_ms": 232964,
+          "reason": "“不到15%被追回”先给诱惑再反转，反讽节奏制造中段小高潮"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "engineering_inventory_answer",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "statistic_reveal",
+          "mechanism": "theft_rarity_stats"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "ironic_reversal",
+          "mechanism": "tempting_stat_then_reality"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "causal_reveal",
+          "mechanism": "escape_route_geography"
+        }
+      ],
+      "required_retention_events": [
+        "statistic_reality_check",
+        "ironic_reversal",
+        "geographic_logic"
+      ],
+      "original_moves": [
+        "抢劫真实罕见（每年20-45起）",
+        "平均40万美元但只是零头",
+        "几乎必用枪械",
+        "追回率不足15%",
+        "逃跑路线决定案件地理"
+      ],
+      "abstract_move": "用真实统计与分布逻辑校正流行想象，完成第一轮幻想降温",
+      "replacement_needs": [
+        "与流行想象相反的统计",
+        "先诱惑后反转的现实校正",
+        "解释分布规律的因果逻辑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(72);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 72
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "money_cycle_explanation",
+      "start_ratio": 0.3576,
+      "end_ratio": 0.4868,
+      "start_sec": 273.2,
+      "end_sec": 371.9,
+      "position_label": "35.8%–48.7%(4:33–6:12)",
+      "purpose": "回答“为什么必须移动”，把对象嵌入更大的系统循环",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "transition_question",
+          "mechanism": "section_reframe"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "system_explanation",
+          "mechanism": "fed_order_delivery_cycle"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "process_reveal",
+          "mechanism": "reverse_flow_and_recycling"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "trivia_payoff",
+          "mechanism": "bill_lifespan_fact"
+        }
+      ],
+      "required_retention_events": [
+        "system_cycle",
+        "reverse_flow",
+        "trivia_payoff"
+      ],
+      "original_moves": [
+        "联储印钞分发",
+        "银行下单",
+        "押运配送",
+        "12家地区联储行各自运转",
+        "余钞回流",
+        "验钞粉碎",
+        "旧钞变堆肥建材"
+      ],
+      "abstract_move": "回答“为什么必须移动”，把对象嵌入更大的系统循环",
+      "replacement_needs": [
+        "系统循环的正向链路",
+        "反向回流与处理流程",
+        "冷知识式轻奖励"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "cash_paradox_reframe",
+      "start_ratio": 0.4856,
+      "end_ratio": 0.5446,
+      "start_sec": 371,
+      "end_sec": 416.1,
+      "position_label": "48.6%–54.5%(6:11–6:56)",
+      "purpose": "用反直觉事实刷新观众对系统前景的默认预期",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.4879,
+          "time_ms": 372753,
+          "reason": "现金不降反增直接推翻观众默认预期，并被旁白明示为“让人惊讶的部分”"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "system_cycle_answer",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "counterintuitive_reveal",
+          "mechanism": "cash_still_growing"
+        }
+      ],
+      "required_retention_events": [
+        "counterintuitive_reveal",
+        "narrator_flag",
+        "cycle_framing"
+      ],
+      "original_moves": [
+        "1美元寿命仅数年",
+        "数字支付普及现金却不降反增",
+        "人们为应急和账外交易持现",
+        "卡车是永不停歇循环的一环"
+      ],
+      "abstract_move": "用反直觉事实刷新观众对系统前景的默认预期",
+      "replacement_needs": [
+        "挑战默认预期的反直觉事实",
+        "旁白明示的惊讶标记",
+        "对象在更大循环中的位置重述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(82);回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 82
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "technology_shift_update",
+      "start_ratio": 0.5433,
+      "end_ratio": 0.5871,
+      "start_sec": 415.1,
+      "end_sec": 448.6,
+      "position_label": "54.3%–58.7%(6:55–7:29)",
+      "purpose": "交代新技术如何改变节奏而不取消系统，防止解释过时",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "trend_update",
+          "mechanism": "smart_safe_shift"
+        }
+      ],
+      "required_retention_events": [
+        "trend_update",
+        "continuity_assurance"
+      ],
+      "original_moves": [
+        "智能保险柜与现金回收机普及",
+        "先计数入账再等取走",
+        "不取消卡车只让拜访更少更精算"
+      ],
+      "abstract_move": "交代新技术如何改变节奏而不取消系统，防止解释过时",
+      "replacement_needs": [
+        "改变系统节奏的新技术",
+        "系统不被取消的连续性说明"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS10",
+      "function": "scale_reveal",
+      "start_ratio": 0.5859,
+      "end_ratio": 0.7274,
+      "start_sec": 447.6,
+      "end_sec": 555.7,
+      "position_label": "58.6%–72.7%(7:28–9:16)",
+      "purpose": "回答“到底多大的量级”，用分层数字与乘法聚合完成尺度冲击",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.6995,
+          "time_ms": 534429,
+          "reason": "数千辆车每天移动同样数字的乘法尺度，把单车日常放大为国家系统"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "日常画面与国家尺度之间的量级缺口",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "tiered_amounts_and_scale_aggregation",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "transition_question",
+          "mechanism": "scale_question"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "scope_expansion",
+          "mechanism": "client_variety"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "numeric_reveal",
+          "mechanism": "amount_tiers"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "scale_reveal",
+          "mechanism": "multiplication_move"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "opening_callback",
+          "mechanism": "car_window_number"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "transition",
+          "mechanism": "final_piece_marker"
+        }
+      ],
+      "required_retention_events": [
+        "amount_tiers",
+        "multiplication_move",
+        "window_callback"
+      ],
+      "original_moves": [
+        "赌场零售体育场同流程",
+        "门店5-50万/ATM10-30万/金库间50万-500万+",
+        "一班十几站",
+        "每城每天数千辆车",
+        "尺度答案回到车窗一米处"
+      ],
+      "abstract_move": "回答“到底多大的量级”，用分层数字与乘法聚合完成尺度冲击",
+      "replacement_needs": [
+        "分层量级数字",
+        "从单元到全域的乘法聚合",
+        "把尺度压回观众场景的回收句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 84
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "crew_protocol_and_accountability",
+      "start_ratio": 0.7261,
+      "end_ratio": 0.8625,
+      "start_sec": 554.8,
+      "end_sec": 659,
+      "position_label": "72.6%–86.3%(9:15–10:59)",
+      "purpose": "回答“谁在负责”，用组合规则、问责逻辑与交接链把匿名系统落回具体角色",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "rule_reveal",
+          "mechanism": "never_unguarded_rule"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "causal_reframe",
+          "mechanism": "accountability_over_strength"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "procedure_reveal",
+          "mechanism": "route_randomization"
+        }
+      ],
+      "required_retention_events": [
+        "rule_specificity",
+        "accountability_reframe",
+        "custody_chain"
+      ],
+      "original_moves": [
+        "两人一组车不离人",
+        "不是人多是互相见证",
+        "背景审查持枪许可",
+        "路线故意变换",
+        "封袋清单签收的交接链"
+      ],
+      "abstract_move": "回答“谁在负责”，用组合规则、问责逻辑与交接链把匿名系统落回具体角色",
+      "replacement_needs": [
+        "关键角色的组合规则",
+        "规则背后的真实原因",
+        "审查、培训与交接流程"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "labor_irony_calibration",
+      "start_ratio": 0.8613,
+      "end_ratio": 0.9321,
+      "start_sec": 658,
+      "end_sec": 712.1,
+      "position_label": "86.1%–93.2%(10:58–11:52)",
+      "purpose": "用责任与报酬的反差完成全片最大情绪点，把幻想与现实距离落到人身上",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9033,
+          "time_ms": 690136,
+          "reason": "护送百万的人拿普通年薪：全片最大反差点，情绪与信息同时到位"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 86,
+          "position_ratio": 0.9229,
+          "time_ms": 705121,
+          "reason": "“普通工资，就像旁边等红灯的每个人”把反差收拢到观众自身场景"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "巨大责任与普通报酬之间的反讽落差",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "roles_and_accountability_answer",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "procedure_reveal",
+          "mechanism": "pre_exit_scan"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "ironic_reveal",
+          "mechanism": "salary_contrast"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "emotional_payoff",
+          "mechanism": "ordinary_paycheck_irony"
+        }
+      ],
+      "required_retention_events": [
+        "salary_contrast",
+        "humanizing_irony"
+      ],
+      "original_moves": [
+        "下车前扫描环境",
+        "被托付百万的人年薪4-6.5万时薪18-20",
+        "下班拿普通工资",
+        "就像旁边等红灯的每个人"
+      ],
+      "abstract_move": "用责任与报酬的反差完成全片最大情绪点，把幻想与现实距离落到人身上",
+      "replacement_needs": [
+        "角色责任与报酬的量化反差",
+        "把反差落回普通人的画面"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(90)、PK07(86);打开的悬念 LOOP05→FS13 跨段;回收了前文的悬念 FS02→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 86
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "callback_closure",
+      "start_ratio": 0.9308,
+      "end_ratio": 1,
+      "start_sec": 711.1,
+      "end_sec": 764,
+      "position_label": "93.1%–100%(11:51–12:44)",
+      "purpose": "复现开场场景，压缩复述全部机制，对幻想定性并以一致的CTA收尾",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.9664,
+          "time_ms": 738304,
+          "reason": "“那个梦始终只是个念头”完成对开场幻想的最终定性，认知与情绪同步闭合"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "callback_recap_and_final_verdict",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "ironic_salary_contrast",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "title_callback",
+          "mechanism": "next_time_reframe"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "compressed_payoff",
+          "mechanism": "dream_remains_a_thought"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "cta",
+          "mechanism": "consistent_like_subscribe"
+        }
+      ],
+      "required_retention_events": [
+        "opening_callback",
+        "compressed_recap",
+        "human_closure",
+        "cta"
+      ],
+      "original_moves": [
+        "下次红灯再见运钞车",
+        "装甲追踪染料包循环两人复述",
+        "梦始终只是个念头",
+        "点赞订阅",
+        "频道口头禅收尾"
+      ],
+      "abstract_move": "复现开场场景，压缩复述全部机制，对幻想定性并以一致的CTA收尾",
+      "replacement_needs": [
+        "开场场景复现",
+        "核心要点的压缩复述",
+        "对开场幻想的最终定性",
+        "与内容一致的CTA"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(80);回收了前文的悬念 FS02→LOOP01、FS12→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ]
+    }
+  ]
+}

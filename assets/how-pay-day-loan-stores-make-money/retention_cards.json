@@ -1,0 +1,1228 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T07:59:04.123Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "paradox_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0251,
+      "start_sec": 0.1,
+      "end_sec": 34.1,
+      "position_label": "0%–2.5%(0:00–0:34)",
+      "purpose": "用行业通行规则与对方极简审核标准对撞，再用大样本统计给出“还不起的多数才是生意本体”的悖论判决，建立全片核心好奇",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.0223,
+          "time_ms": 30293,
+          "reason": "“那不是经营失败，另外86%才是生意”——开场30秒内完成第一次认知重构，把统计转成商业模式判决"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "统计悖论判决与机制解释之间的缺口",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "rule_contrast_setup",
+          "mechanism": "universal_rule_vs_minimal_check"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "anomaly_reveal",
+          "mechanism": "no_affordability_check"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "statistic_reveal",
+          "mechanism": "repayment_capacity_survey"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "paradox_verdict",
+          "mechanism": "the_86_are_the_business"
+        }
+      ],
+      "required_retention_events": [
+        "rule_contrast",
+        "affordability_anomaly",
+        "statistic_verdict"
+      ],
+      "original_moves": [
+        "陈述通行的放贷规则：查征信、评估还款能力",
+        "对照门店的极简审核标准：只查两样东西，从不问还款能力",
+        "用大样本统计揭示：仅14%的借款人还得起",
+        "给出悖论判决：那不是经营失败，另外86%才是生意"
+      ],
+      "abstract_move": "用行业通行规则与对方极简标准对撞，再用大样本统计翻转直觉（不合格的多数才是目标客户），以悖论判决句建立全片核心好奇",
+      "replacement_needs": [
+        "一个普世行业规则或常识标准",
+        "一个与之相反的极简标准或操作方式",
+        "一个大样本统计中不符合常规预期的比例",
+        "一个把统计结果重新定性为商业模式的判决句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(88);打开的悬念 LOOP02→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 88
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "rule_contrast_with_early_statistic_paradox_verdict",
+        "first_stimulus_ms": 16551,
+        "first_payoff_ms": 30293,
+        "evidence_refs": [
+          "C0001",
+          "C0009",
+          "C0012",
+          "C0015"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "case_story_hook",
+      "start_ratio": 0.0247,
+      "end_ratio": 0.0606,
+      "start_sec": 33.6,
+      "end_sec": 82.5,
+      "position_label": "2.5%–6.1%(0:34–1:23)",
+      "purpose": "用一个普通用户的完整个案（突发支出、低摩擦成交、费用累积反超本金）把抽象悖论落到具体人身上，并抛出全片主问句",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "emotional_payoff",
+          "strength": 84,
+          "position_ratio": 0.0428,
+          "time_ms": 58248,
+          "reason": "五个月后费用超过本金且本金分文未减，个案第一次反转，悖论在人身上兑现"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "把个案费用与整个行业之间的尺度差悬挂全片",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "个案人物的债务命运",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "protagonist_case_entry",
+          "mechanism": "emergency_expense_setup"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "frictionless_payoff",
+          "mechanism": "twenty_minutes_cash"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "debt_spiral_reveal",
+          "mechanism": "fees_exceed_principal"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "core_question_contract",
+          "mechanism": "fee_to_industry_question"
+        }
+      ],
+      "required_retention_events": [
+        "protagonist_case",
+        "frictionless_transaction",
+        "debt_spiral_reveal",
+        "core_question_contract"
+      ],
+      "original_moves": [
+        "设定突发支出场景：车坏了需要修理费，但发薪日未到",
+        "展示低摩擦成交：黄店二十分钟拿到钱，费用看似合理",
+        "时间跳转五个月后：费用累积超过本金，本金分文未减",
+        "抛出全片主问句：小额费用如何变成整个行业"
+      ],
+      "abstract_move": "用一个普通用户的完整个案（突发缺口、即时成交、费用看似合理、累积反转）把抽象悖论落到具体人身上，并抛出全片主问句",
+      "replacement_needs": [
+        "一个触发需求的突发事件与资金缺口",
+        "一个低摩擦、即时完成的交易过程",
+        "一个费用累积后反超本金的时间节点与数字对比",
+        "一个从个案推向全行业的主问句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(84);打开的悬念 LOOP01→FS14、LOOP03→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "counter_revisit_and_viewer_contract",
+      "start_ratio": 0.0606,
+      "end_ratio": 0.1126,
+      "start_sec": 82.5,
+      "end_sec": 153.2,
+      "position_label": "6.1%–11.3%(1:23–2:33)",
+      "purpose": "以频道问候换挡，回到交易现场用具体物件与流程还原低门槛的含义，并用挑衅式提问与评论邀请把观众变成参与者",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "process_walkthrough",
+          "mechanism": "three_documents_no_credit_check"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "viewer_challenge",
+          "mechanism": "prove_me_wrong_comment_prompt"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "relevance_cta",
+          "mechanism": "subscribe_sends_to_someone_in_line"
+        }
+      ],
+      "required_retention_events": [
+        "channel_greeting",
+        "process_detail",
+        "viewer_challenge_cta",
+        "relevance_cta"
+      ],
+      "original_moves": [
+        "频道问候语换挡",
+        "回到柜台现场：展示具体物件与只需三样材料的流程",
+        "明确对照：没有人问征信",
+        "对观众发起挑衅式提问并邀请评论参与",
+        "给出与主题绑定的订阅理由"
+      ],
+      "abstract_move": "以频道问候换挡，回到交易现场用具体物件与流程还原低门槛的含义，并用挑衅式提问与评论邀请把观众变成参与者",
+      "replacement_needs": [
+        "一个交易现场的具体物件或流程细节",
+        "一个与常规标准的明确对照（缺失某个关键审核步骤）",
+        "一个对观众的直接挑战或评论引导",
+        "一个与内容主题相关的订阅理由"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "price_arithmetic_reframe",
+      "start_ratio": 0.1119,
+      "end_ratio": 0.1677,
+      "start_sec": 152.3,
+      "end_sec": 228.3,
+      "position_label": "11.2%–16.8%(2:32–3:48)",
+      "purpose": "把小额标价逐步换算为年化成本，揭露话术如何回避利息表述，并公平呈现对方“没人借那么久”的反驳",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 86,
+          "position_ratio": 0.1462,
+          "time_ms": 199036,
+          "reason": "年化利率揭晓并重复一次，两周标价的“便宜”印象被数字击穿"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "concrete_pricing",
+          "mechanism": "price_list_and_case_fee"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "euphemism_reveal",
+          "mechanism": "never_says_interest"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "annualization_setup",
+          "mechanism": "periods_per_year_question"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "apr_reveal",
+          "mechanism": "annualized_rate_reveal"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "annualized_cost",
+          "mechanism": "year_long_fee_total"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "fair_counterpoint",
+          "mechanism": "on_paper_they_are_right"
+        }
+      ],
+      "required_retention_events": [
+        "concrete_price_list",
+        "euphemism_exposure",
+        "annualization_reveal",
+        "fair_counterpoint"
+      ],
+      "original_moves": [
+        "展示橱窗标价与个案费用：看起来不高",
+        "揭露话术回避：用'费用'和'预支'而非'利息'",
+        "执行周期换算：14天×26次=一年",
+        "揭晓年化利率并重复一次，与常识利率对照",
+        "回指个案：年化总费用是多少",
+        "公平呈现店方反驳：没人借那么久，字面成立"
+      ],
+      "abstract_move": "把小额标价逐步换算为年化成本，揭露话术如何回避核心表述，并公平呈现对方'没人用那么久'的反驳",
+      "replacement_needs": [
+        "一个具体标价与个案费用",
+        "一个措辞回避策略（用替代词避开核心表述）",
+        "一个周期到年化的换算链条",
+        "一个年化数字与常识的对照",
+        "一个对方反驳的公平呈现"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(86)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "rollover_mechanism_reveal",
+      "start_ratio": 0.1673,
+      "end_ratio": 0.2385,
+      "start_sec": 227.8,
+      "end_sec": 324.7,
+      "position_label": "16.7%–23.9%(3:48–5:25)",
+      "purpose": "回答还款日会发生什么：展期报价、只付费用本金不变、重复成交的累积，并用大样本数据确认其为常态，最后以入口/房间隐喻完成核心重构",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 92,
+          "position_ratio": 0.2326,
+          "time_ms": 316686,
+          "reason": "“首笔借款不是产品，是门；展期才是门后的房间”——全片核心重构，主环的钥匙句"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "店方反驳承认字面成立后留下的时间悬念",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "rollover_mechanism_answer",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "day_14_question",
+          "mechanism": "problem_on_the_14th"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "rollover_offer",
+          "mechanism": "just_pay_fee_real_business_begins"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "repetition_montage",
+          "mechanism": "ten_visits_same_principal"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "dataset_confirmation",
+          "mechanism": "regulator_large_sample"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "metaphor_reframe",
+          "mechanism": "door_and_room"
+        }
+      ],
+      "required_retention_events": [
+        "day_14_question",
+        "rollover_offer",
+        "repetition_montage",
+        "dataset_confirmation",
+        "metaphor_reframe"
+      ],
+      "original_moves": [
+        "设定还款日缺口情景：第14天仍然没钱",
+        "展示展期报价话术：只需付费用即可延期",
+        "演示本金不变、反复到店的累积过程",
+        "用大样本数据确认：展期比例与链条长度",
+        "给出核心隐喻重构：首笔借款是门、展期是门后的房间"
+      ],
+      "abstract_move": "回答还款日会发生什么：展期报价、只付费用本金不变、重复成交的累积，并用大样本数据确认其为常态，最后以入口/房间隐喻完成核心重构",
+      "replacement_needs": [
+        "一个还款日缺口的情景设定",
+        "一个展期或续期报价的话术",
+        "一个费用累积与本金不变的演示过程",
+        "一个大样本展期比例与链条长度数据",
+        "一个核心隐喻重构句（入口与真正产品的关系）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(92)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 92
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "borrower_demand_reality",
+      "start_ratio": 0.2378,
+      "end_ratio": 0.3312,
+      "start_sec": 323.7,
+      "end_sec": 450.8,
+      "position_label": "23.8%–33.1%(5:24–7:31)",
+      "purpose": "用可负担额度、平均用户画像、市场规模与真实用途构成，说明需求为何按固定周期复发；再锁定长期被困人群与“违约前已回本”的数学",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "暴利假设与账簿现实之间的落差",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mechanism_reframe_answer",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "affordability_gap",
+          "mechanism": "fifty_vs_four_hundred"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "average_case_match",
+          "mechanism": "almost_perfectly_average"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "market_scale",
+          "mechanism": "annual_users_and_spend"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "myth_bust",
+          "mechanism": "emergency_vs_recurring"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "trapped_groups",
+          "mechanism": "year_round_debt_and_default"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "default_not_disaster",
+          "mechanism": "fees_already_exceed_loan"
+        }
+      ],
+      "required_retention_events": [
+        "affordability_gap",
+        "average_case_match",
+        "market_scale",
+        "emergency_myth_bust",
+        "trapped_groups"
+      ],
+      "original_moves": [
+        "展示可负担额度与一次性还款额的落差",
+        "给出平均借款人画像，与开场主角对齐",
+        "展示年度人数与总花费规模",
+        "拆解真实用途构成，击穿'应急钱'神话",
+        "锁定常年被困群体与'违约前已回本'的数学事实"
+      ],
+      "abstract_move": "用可负担额度、平均用户画像、市场规模与真实用途构成，说明需求为何按固定周期复发；再锁定长期被困人群与'违约前已回本'的数学",
+      "replacement_needs": [
+        "一个可负担额度与一次性还款额的落差",
+        "一个平均用户画像与开场个案的对齐",
+        "一个年度人数与总花费规模",
+        "一个真实用途构成数据（击穿单一用途假设）",
+        "一个长期被困群体与'违约前已回本'的事实"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS07 跨段;回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "unit_economics_reality_check",
+      "start_ratio": 0.3305,
+      "end_ratio": 0.4082,
+      "start_sec": 449.9,
+      "end_sec": 555.6,
+      "position_label": "33.1%–40.8%(7:30–9:16)",
+      "purpose": "挑战“暴利”直觉，用账簿拆解运营成本与坏账份额，给出单店利润定性，再把答案落到走量与回头客",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.4028,
+          "time_ms": 548268,
+          "reason": "“一笔借款只够付工资，每两周回来的顾客才付房租、工资和利润”——走量模式的判决式总结"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "微利现实与行业规模之间的表面矛盾",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "unit_economics_reality_check",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "assumption_challenge",
+          "mechanism": "printing_money_question"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "cost_breakdown",
+          "mechanism": "operating_cost_per_hundred"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "profit_reality",
+          "mechanism": "decent_business_not_gold_mine"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "volume_answer",
+          "mechanism": "from_volume"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "returning_customer_verdict",
+          "mechanism": "repeat_customer_pays_everything"
+        }
+      ],
+      "required_retention_events": [
+        "assumption_challenge",
+        "operating_cost_breakdown",
+        "profit_reality_check",
+        "volume_answer",
+        "returning_customer_verdict"
+      ],
+      "original_moves": [
+        "明确提出暴利假设",
+        "引入监管方查阅账簿的行动",
+        "逐项量化运营成本：房租、工资、广告等",
+        "展示新旧门店与坏账的份额",
+        "给出单店年利润的定性结论：不算暴利",
+        "落到走量答案：一笔借款只够付工资",
+        "总结：回头客支付房租、工资与利润"
+      ],
+      "abstract_move": "挑战'暴利'直觉，用账簿拆解运营成本与坏账份额，给出单店利润定性，再把答案落到走量与回头客",
+      "replacement_needs": [
+        "一个暴利假设的明确提出",
+        "一个运营成本的逐项量化",
+        "一个新旧门店或坏账的份额数据",
+        "一个单店年利润的定性结论",
+        "一个走量答案与回头客支付结构的总结句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85);打开的悬念 LOOP06→FS08 跨段;回收了前文的悬念 FS06→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "market_structure_and_regulation",
+      "start_ratio": 0.4077,
+      "end_ratio": 0.4798,
+      "start_sec": 555.1,
+      "end_sec": 653.1,
+      "position_label": "40.8%–48%(9:15–10:53)",
+      "purpose": "揭示贴顶定价与位置竞争的市场结构，用密度对照制造尺度感，再引出人群集聚与首次利率上限立法及其保护例外",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.4708,
+          "time_ms": 640848,
+          "reason": "受保护群体不能再被收高价、隔壁街的普通人仍然可以——立法胜利与不完整保护的对撞"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "人群聚集事实与制度回应之间的等待",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "低门槛表象与回款保障之间的因果缺口",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "volume_model_answer",
+          "opened_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "partial_regulatory_resolution_with_contrast",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "price_ceiling",
+          "mechanism": "charge_the_legal_max"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "density_comparison",
+          "mechanism": "more_stores_than_fast_food"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "military_pattern",
+          "mechanism": "bases_and_security_problem"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "regulatory_cap",
+          "mechanism": "rate_cap_with_civilian_contrast"
+        }
+      ],
+      "required_retention_events": [
+        "price_ceiling",
+        "location_competition",
+        "density_comparison",
+        "military_pattern",
+        "regulatory_cap"
+      ],
+      "original_moves": [
+        "揭示贴顶定价现象：法定上限即实际价格",
+        "展示位置竞争与扎堆现象",
+        "用门店密度对照：超过快餐巨头的数量",
+        "展示特定人群集聚与安全问题数据",
+        "引入首次利率上限立法",
+        "揭示保护例外：受保护群体不能被收高价，普通人仍然可以"
+      ],
+      "abstract_move": "揭示贴顶定价与位置竞争的市场结构，用密度对照制造尺度感，再引出人群集聚与首次利率上限立法及其保护例外",
+      "replacement_needs": [
+        "一个法定价格上限与贴顶定价现象",
+        "一个位置竞争与扎堆现象",
+        "一个门店密度与其他行业的数量对照",
+        "一个特定人群高受影响的数据",
+        "一个利率上限立法结果与例外人群的对撞"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80);打开的悬念 LOOP08→FS09 跨段;回收了前文的悬念 FS07→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "guarantee_machine_reveal",
+      "start_ratio": 0.4794,
+      "end_ratio": 0.5604,
+      "start_sec": 652.6,
+      "end_sec": 762.8,
+      "position_label": "47.9%–56%(10:53–12:43)",
+      "purpose": "解释为何无需征信：担保工具让经营者在还款日排在所有人之前；扣款失败的连锁罚款与抵押升级展示风险如何转移给借款方",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "guarantee_mechanism_answer",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "guarantee_reveal",
+          "mechanism": "deferred_deposit_key_to_account"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "priority_position",
+          "mechanism": "first_in_line_on_payday"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "bank_fee_fallout",
+          "mechanism": "penalty_fees_and_closed_accounts"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "collateral_escalation",
+          "mechanism": "title_loan_car_loss"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "risk_position_verdict",
+          "mechanism": "paid_before_almost_everyone"
+        }
+      ],
+      "required_retention_events": [
+        "guarantee_reveal",
+        "first_in_line_priority",
+        "bank_fee_fallout",
+        "collateral_escalation"
+      ],
+      "original_moves": [
+        "展示担保工具：延期支票与扣款授权",
+        "翻译行业术语为本质",
+        "解释还款日优先扣款顺位：经营者排在所有人之前",
+        "展示扣款失败的银行罚款与关户数据",
+        "展示抵押升级的利率与财产损失比例",
+        "总结风险位置：风险转移给借款方"
+      ],
+      "abstract_move": "解释为何无需征信：担保工具让经营者在还款日排在所有人之前；扣款失败的连锁罚款与抵押升级展示风险如何转移给借款方",
+      "replacement_needs": [
+        "一个担保工具的行业术语与本质翻译",
+        "一个还款日优先扣款顺位的说明",
+        "一个银行账户罚款与关户数据",
+        "一个抵押升级的利率与财产损失比例",
+        "一个风险位置的总结句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS08→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "historical_lineage_context",
+      "start_ratio": 0.5597,
+      "end_ratio": 0.6483,
+      "start_sec": 761.8,
+      "end_sec": 882.5,
+      "position_label": "56%–64.8%(12:42–14:43)",
+      "purpose": "用百年前的历史对应物与反直觉的改革逻辑、现代行业的起源故事，证明模式轮回并展示规模化扩张",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE43",
+          "event_type": "history_callback",
+          "mechanism": "none_of_this_is_new"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "reform_paradox",
+          "mechanism": "rate_too_low_model_law"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "origin_milestone",
+          "mechanism": "first_store_opening"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "profitable_answer",
+          "mechanism": "lend_them_money_anyway"
+        }
+      ],
+      "required_retention_events": [
+        "history_callback",
+        "surprising_reform_logic",
+        "origin_story",
+        "profitable_verdict"
+      ],
+      "original_moves": [
+        "引入百年前的历史对应物：薪资放贷",
+        "展示管制困境与慈善基金会的反直觉解法",
+        "介绍示范法与各州广泛采纳",
+        "讲述现代行业创始人起源故事",
+        "展示首家门店与规模扩张数据",
+        "给出判决式金句：照样放款"
+      ],
+      "abstract_move": "用百年前的历史对应物与反直觉的改革逻辑、现代行业的起源故事，证明模式轮回并展示规模化扩张",
+      "replacement_needs": [
+        "一个历史对应物与管制困境",
+        "一个反直觉的改革逻辑",
+        "一个示范法或模板与广泛采纳",
+        "一个创始人个案与首家门店",
+        "一个行业扩张规模与判决式金句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "extreme_case_escalation",
+      "start_ratio": 0.6476,
+      "end_ratio": 0.7515,
+      "start_sec": 881.6,
+      "end_sec": 1022.9,
+      "position_label": "64.8%–75.2%(14:42–17:03)",
+      "purpose": "用线上化的极端违法个案展示隐藏真实价格的后果边界，并明确校准其为极端而非常态",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 82,
+          "position_ratio": 0.7142,
+          "time_ms": 972192,
+          "reason": "总营收规模、全部罪名成立与刑期集中落地，极端个案的道德愤慨达到高点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "合法性与道德性之间的根本争议",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP09"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE47",
+          "event_type": "extreme_case_entry",
+          "mechanism": "racer_financed_by_loans"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "hidden_price_demo",
+          "mechanism": "loan_total_inflation_demo"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "scheme_escalation",
+          "mechanism": "sovereignty_shield_split"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "legal_reckoning",
+          "mechanism": "guilty_verdict_and_sentence"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "legal_twist",
+          "mechanism": "supreme_court_limits_regulator"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "controversy_frame",
+          "mechanism": "honest_price_allowed_question"
+        }
+      ],
+      "required_retention_events": [
+        "extreme_case_entry",
+        "loan_mechanics_reveal",
+        "scheme_escalation",
+        "legal_reckoning"
+      ],
+      "original_moves": [
+        "引入线上化与极端人物：反差身份",
+        "演示个案借款的费用滚动过程",
+        "揭露监管规避手法与分成比例",
+        "展示奢侈获利与总营收规模",
+        "交代审判结果：入狱刑期与退赔波折",
+        "明确校准：这是极端个案，不是常态门店"
+      ],
+      "abstract_move": "用线上化的极端违法个案展示隐藏真实价格的后果边界，并明确校准其为极端而非常态",
+      "replacement_needs": [
+        "一个极端人物的反差身份",
+        "一个个案借款的费用滚动演示",
+        "一个监管规避手法与分成比例",
+        "一个奢侈获利与总营收规模",
+        "一个判决与后续法律波折",
+        "一个与常态的对照校准"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(82);打开的悬念 LOOP09(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "regulation_conflict_evidence",
+      "start_ratio": 0.751,
+      "end_ratio": 0.8667,
+      "start_sec": 1022.4,
+      "end_sec": 1179.9,
+      "position_label": "75.1%–86.7%(17:02–19:40)",
+      "purpose": "用一个地区的修法成功与另一个地区的全关店反例，并列展示监管的两种结局与用户的矛盾态度",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP10",
+          "tension": "行业预言与政策结果之间的赌局",
+          "closes_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP11",
+          "tension": "新话术与旧机制之间是否同构",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP10",
+          "payoff_type": "regulatory_outcome_answer",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE53",
+          "event_type": "local_observation",
+          "mechanism": "pastor_observes_rates"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "loophole_reveal",
+          "mechanism": "broker_license_loophole"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "new_law_terms",
+          "mechanism": "installment_and_fee_cap"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "outcome_contrast",
+          "mechanism": "stores_did_not_disappear"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "counter_case",
+          "mechanism": "all_branches_closed"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "borrower_ambivalence",
+          "mechanism": "advantage_and_relief"
+        }
+      ],
+      "required_retention_events": [
+        "controversy_framing",
+        "loophole_reveal",
+        "law_terms",
+        "outcome_contrast",
+        "borrower_ambivalence"
+      ],
+      "original_moves": [
+        "提出核心问题：诚实价格是否应被允许",
+        "引入地方人物与畸高利率观察",
+        "展示旧上限与牌照漏洞手法",
+        "详述新法具体条款与费用对照",
+        "展示行业预言与相反结果：立法后门店反增",
+        "对比反例州的全关店事实",
+        "展示借款人矛盾态度的调查数据",
+        "交代联邦规则的起落"
+      ],
+      "abstract_move": "用一个地区的修法成功与另一个地区的全关店反例，并列展示监管的两种结局与用户的矛盾态度",
+      "replacement_needs": [
+        "一个地方人物与畸高利率观察",
+        "一个既有上限与漏洞手法",
+        "一个新法具体条款与费用对照",
+        "一个行业预言与相反结果",
+        "一个反例州或地区的全关店事实",
+        "一个借款人矛盾态度的调查数据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP11→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "successor_pattern_recognition",
+      "start_ratio": 0.866,
+      "end_ratio": 0.9271,
+      "start_sec": 1178.9,
+      "end_sec": 1262,
+      "position_label": "86.6%–92.7%(19:39–21:02)",
+      "purpose": "展示同一模式在新应用形态中的重生：话术重命名、即时费按钮与小费机制，年化后似曾相识，以同构判决句完成模式识别",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 87,
+          "position_ratio": 0.9217,
+          "time_ms": 1254701,
+          "reason": "“柜台搬进了手机，形状一模一样”——把全片机制抽象成可迁移的模式识别，延伸到观众日常"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE59",
+          "event_type": "mutation_intro",
+          "mechanism": "early_access_rename"
+        },
+        {
+          "event_id": "RE60",
+          "event_type": "fee_math_repeat",
+          "mechanism": "instant_button_annualized"
+        },
+        {
+          "event_id": "RE61",
+          "event_type": "mutation_scale",
+          "mechanism": "workers_advances_scale"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "same_shape_verdict",
+          "mechanism": "counter_moved_to_phone"
+        }
+      ],
+      "required_retention_events": [
+        "mutation_intro",
+        "fee_math_repeat",
+        "scale_repeat",
+        "same_shape_verdict"
+      ],
+      "original_moves": [
+        "引入预支应用的新形态",
+        "展示话术重命名：同一机制换了新名字",
+        "计算典型金额、期限与费用",
+        "执行年化换算：似曾相识的数字",
+        "展示使用频率与规模数据",
+        "揭示小费机制的占比",
+        "给出同构判决句：柜台搬进了手机，形状一模一样"
+      ],
+      "abstract_move": "展示同一模式在新应用形态中的重生：话术重命名、即时费按钮与小费机制，年化后似曾相识，以同构判决句完成模式识别",
+      "replacement_needs": [
+        "一个新形态的话术重命名",
+        "一个典型金额、期限与费用",
+        "一个年化换算的似曾相识感",
+        "一个使用频率与规模数据",
+        "一个同构判决句（新旧形态本质相同）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(87)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 87
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "resolution_and_callback_closure",
+      "start_ratio": 0.9266,
+      "end_ratio": 1,
+      "start_sec": 1261.3,
+      "end_sec": 1361.3,
+      "position_label": "92.7%–100%(21:01–22:41)",
+      "purpose": "回到开场个案完成脱身与总账，用“卖的从来不是那笔本金”压缩回收主承诺，给出个人规则与可执行自查作业，以一致CTA收尾",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 83,
+          "position_ratio": 0.9442,
+          "time_ms": 1285313,
+          "reason": "“门店卖的从来不是那笔本金，而是接下来每个周期的反复出售”——主承诺的压缩回收句"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP12",
+          "tension": "频道系列承诺与观众互动邀请",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "compressed_callback_answer",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "protagonist_resolution_with_total_cost",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP11",
+          "payoff_type": "pattern_recognition_answer",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP12"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE63",
+          "event_type": "protagonist_resolution",
+          "mechanism": "exit_with_total_cost"
+        },
+        {
+          "event_id": "RE64",
+          "event_type": "compressed_callback",
+          "mechanism": "never_selling_principal"
+        },
+        {
+          "event_id": "RE65",
+          "event_type": "personal_rule",
+          "mechanism": "never_borrow_spent_paycheck"
+        },
+        {
+          "event_id": "RE66",
+          "event_type": "actionable_homework",
+          "mechanism": "search_your_state_law"
+        },
+        {
+          "event_id": "RE67",
+          "event_type": "outro_cta",
+          "mechanism": "subscribe_next_counter_comments"
+        },
+        {
+          "event_id": "RE68",
+          "event_type": "farewell",
+          "mechanism": "thanks_and_catchphrase"
+        }
+      ],
+      "required_retention_events": [
+        "protagonist_resolution",
+        "compressed_callback",
+        "personal_rule",
+        "actionable_homework",
+        "outro_cta"
+      ],
+      "original_moves": [
+        "回到开场主角：讲述脱身方式与最终总账",
+        "给出压缩回收句：门店卖的从来不是那笔本金，而是接下来每个周期的反复出售",
+        "给出个人规则句",
+        "布置观众本周可做的自查作业",
+        "提供资料来源指引",
+        "以与内容一致的CTA与告别收尾"
+      ],
+      "abstract_move": "回到开场个案完成脱身与总账，用'卖的从来不是那笔本金'压缩回收主承诺，给出个人规则与可执行自查作业，以一致CTA收尾",
+      "replacement_needs": [
+        "一个主角脱身方式与最终总账",
+        "一个对开场个案的压缩重述（揭示真正售卖物）",
+        "一个个人规则句",
+        "一个观众本周可做的自查动作",
+        "一个资料来源指引与一致CTA"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(83);打开的悬念 LOOP12(不闭合) 跨段;回收了前文的悬念 FS02→LOOP01、FS02→LOOP03、FS12→LOOP11。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 83
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

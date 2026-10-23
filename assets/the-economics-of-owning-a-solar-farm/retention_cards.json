@@ -1,0 +1,1142 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:17:15.831Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.0447,
+      "start_sec": 0.1,
+      "end_sec": 69.3,
+      "position_label": "0%–4.5%(0:00–1:09)",
+      "purpose": "用第二人称拥有幻想开局（买地、装板、晒太阳、每月收票30年），随即用\"有人年入数亿美元 vs 有人18个月违约\"的悖论划开裂缝，给出\"阳光免费，围绕它做生意——不\"的判词，并承诺从内部看真实成本、风险与数字",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "paradox_hook",
+          "strength": 85,
+          "position_ratio": 0.0315,
+          "time_ms": 48836,
+          "reason": "\"阳光免费vs生意不免费\"判词与\"财富在此得失\"主悬念并置"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悖论：阳光免费，围绕它做生意却不免费——同样的资产为何有人赚翻、有人违约",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_hook",
+          "mechanism": "second_person_fantasy"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "fantasy_detail",
+          "mechanism": "passive_income_details"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "paradox_turn",
+          "mechanism": "paradox_juxtaposition"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "aphorism_hook",
+          "mechanism": "contrast_aphorism"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "answer_promise",
+          "mechanism": "explicit_deliverable"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_fantasy",
+        "central_paradox"
+      ],
+      "original_moves": [
+        "用第二人称描绘被动收入幻想：买地、装面板、晒太阳、每月收票30年",
+        "三重确认盈利真实性：numbers are real, contracts are real, cash flows are real",
+        "抛出反例三连：有人18个月违约、贱卖资产、设备闲置",
+        "给出对照判词：阳光免费，围绕它做生意——不免费",
+        "承诺从内部看真实成本、风险与数字"
+      ],
+      "abstract_move": "用拥有幻想开局 + 盈利真实性多重确认 + 反例证明失败存在 + 悖论判词划开裂缝 + 承诺内部真相",
+      "replacement_needs": [
+        "一个第二人称可拥有的被动收入幻想场景",
+        "至少两个维度的盈利真实性确认",
+        "至少两个真实失败案例",
+        "一个'看似X实则Y'的悖论判词",
+        "一个承诺揭示内部数字/成本/风险的具体承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(85);打开的悬念 LOOP01→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 85
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "fantasy_premise_plus_paradox",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 27261,
+        "evidence_refs": [
+          "C0001",
+          "C0011",
+          "C0023",
+          "C0033",
+          "C0039"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "context_expansion",
+      "start_ratio": 0.0447,
+      "end_ratio": 0.0953,
+      "start_sec": 69.3,
+      "end_sec": 148,
+      "position_label": "4.5%–9.5%(1:09–2:28)",
+      "purpose": "用三档规模排除法定义\"太阳能电站\"（屋顶7-12kW、商业到5MW都不是主角），锁定工业级1-5000MW，并用100MW=600-1000英亩≈一座美国小镇建立量级坐标，列出电站的物理构成",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.0737,
+          "time_ms": 114420,
+          "reason": "100MW电站≈一座美国小镇：量级坐标重置"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "钱到底从哪来：为什么说\"不是上网等支票那么简单\"",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "chapter_question",
+          "mechanism": "definitional_reset"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "tier_elimination",
+          "mechanism": "three_tier_ruling_out"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "scale_anchor",
+          "mechanism": "human_scale_analogy"
+        }
+      ],
+      "required_retention_events": [
+        "three_tier_ruling_out",
+        "human_scale_analogy"
+      ],
+      "original_moves": [
+        "用三档规模排除法：屋顶7-12kW不是、商业到5MW也不是",
+        "锁定工业级容量区间：1-5000MW",
+        "用100MW=600-1000英亩≈一座美国小镇建立量级坐标",
+        "列出电站物理构成：数十万面板、逆变器、专用变电站",
+        "用'商业模式看起来简单'过渡到下一段"
+      ],
+      "abstract_move": "用两次排除法锁定主角 + 用量级类比重置坐标 + 列出物理构成清单 + 用简单外表埋下复杂伏笔",
+      "replacement_needs": [
+        "至少两个被排除的规模档位及其排除理由",
+        "一个主角规模的容量区间",
+        "一个将抽象容量转化为可感知尺度的类比",
+        "一份核心物理构成清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(70);打开的悬念 LOOP02→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "reveal",
+      "start_ratio": 0.0953,
+      "end_ratio": 0.1777,
+      "start_sec": 148,
+      "end_sec": 275.9,
+      "position_label": "9.5%–17.8%(2:28–4:36)",
+      "purpose": "回答\"钱到底从哪来\"：PPA长期合约是整个行业的金融地基（没有它银行不放贷）、现货市场的小时价与负电价（加州/德州/德国真实发生）、绿证、政府激励，并以\"激励会戏剧化改变算账\"悬挂预告",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.1385,
+          "time_ms": 215014,
+          "reason": "负电价：倒贴钱请电网收电的首次反直觉冲击"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "政府激励\"会戏剧化改变算账\"——到底怎么改",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "new_question",
+          "mechanism": "money_source_question"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "mechanism_reveal",
+          "mechanism": "ppa_contract_reveal"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "stakes_line",
+          "mechanism": "bankability_stakes"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "counterintuitive_reveal",
+          "mechanism": "negative_price_reveal"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "reality_anchor",
+          "mechanism": "named_geography_proof"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "forward_teaser",
+          "mechanism": "incentive_forward_reference"
+        }
+      ],
+      "required_retention_events": [
+        "ppa_contract_reveal",
+        "negative_price_reveal"
+      ],
+      "original_moves": [
+        "回答'钱从哪来'：PPA长期合约（10-25年固定价格）是金融地基，没有它银行不放贷",
+        "揭示现货市场机制与负电价实例：加州、德州、德国真实发生",
+        "介绍绿证机制作为第三收入来源",
+        "预告政府激励：会戏剧化改变算账",
+        "用预告制造悬念指向后文"
+      ],
+      "abstract_move": "回答核心问题 + 揭示金融地基机制 + 给出反直觉市场现象与多地证据 + 列举其他收入来源 + 用戏剧化预告悬挂后文",
+      "replacement_needs": [
+        "一个长期合约机制及其金融地基地位",
+        "一个反直觉的市场现象及至少两地真实案例",
+        "至少一个额外收入来源机制",
+        "一个'会戏剧化改变X'的预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80);打开的悬念 LOOP03→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "evidence_build",
+      "start_ratio": 0.1777,
+      "end_ratio": 0.256,
+      "start_sec": 275.9,
+      "end_sec": 397.5,
+      "position_label": "17.8%–25.6%(4:36–6:38)",
+      "purpose": "拆解入场成本：0.9-1.3美元/瓦→100MW=9000万-1.3亿美元的六项成本解剖（面板25-35%/支架10-15%/电气10-15%/土建15-20%/并网5万-50万美元每MW/间接15-25%），揭示被严重低估的并网陷阱（4000-5000万美元+3年审批），以\"钱花完了但一度电还没发\"的节拍收束",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.252,
+          "time_ms": 391255,
+          "reason": "\"钱花完了但一度电没发\"的资本黑洞节拍"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "revenue_stream_map",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "chapter_transition",
+          "mechanism": "direct_cost_question"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "price_reveal",
+          "mechanism": "unit_to_total_sticker"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "cost_anatomy",
+          "mechanism": "six_bucket_breakdown"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "cost_range_reveal",
+          "mechanism": "grid_connection_range"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "hidden_cost_trap",
+          "mechanism": "cheap_land_reversal"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "beat_line",
+          "mechanism": "zero_output_beat"
+        }
+      ],
+      "required_retention_events": [
+        "unit_to_total_sticker",
+        "six_bucket_breakdown"
+      ],
+      "original_moves": [
+        "给出单位成本：0.9-1.3美元/瓦",
+        "换算总成本：100MW=9000万-1.3亿美元",
+        "拆解六项成本占比：面板25-35%、支架10-15%、电气10-15%、土建15-20%、并网5万-50万美元/MW、间接15-25%",
+        "揭示并网陷阱：4000-5000万美元+3年审批",
+        "用沙漠便宜地反转案例佐证",
+        "用'钱花完了但一度电还没发'的节拍收束"
+      ],
+      "abstract_move": "单位成本到总成本的换算 + 多项成本占比解剖 + 揭示被低估的隐藏陷阱 + 用反转案例证实 + 用资本黑洞节拍收束",
+      "replacement_needs": [
+        "一个单位成本数字及总成本换算",
+        "至少四项成本占比分解",
+        "一个被严重低估的隐藏成本项及其极端值",
+        "一个'钱已花完但X还没Y'的节拍句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evidence_build",
+      "start_ratio": 0.256,
+      "end_ratio": 0.3614,
+      "start_sec": 397.5,
+      "end_sec": 561.1,
+      "position_label": "25.6%–36.1%(6:38–9:21)",
+      "purpose": "选址变量拆解：光照（亚利桑那vs英格兰南部约2倍）、高温衰减（每超25°C一度损约0.35%）、灰尘（2%-12%）、电网距离——\"盈利地图不只是阳光地图\"；土地标准做法是租不买（30-40年租约，农田800-2000美元/英亩/年，联邦沙漠地200-600但远端成本，棕地环境风险），判词\"每英亩最便宜几乎永远不是最便宜\"；段尾插入中段订阅CTA",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "银行开支票前的反直觉前提：电必须在电站建成前先卖掉",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "chapter_transition",
+          "mechanism": "superlative_decision"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "geography_contrast",
+          "mechanism": "insolation_comparison"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "degradation_reveal",
+          "mechanism": "temperature_coefficient"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "degradation_reveal",
+          "mechanism": "dust_soiling_loss"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "model_reframe",
+          "mechanism": "lease_not_buy"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "verdict_line",
+          "mechanism": "cheapest_lot_verdict"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "mid_cta",
+          "mechanism": "midroll_subscribe_cta"
+        }
+      ],
+      "required_retention_events": [
+        "insolation_comparison",
+        "temperature_coefficient"
+      ],
+      "original_moves": [
+        "拆解光照地理差异：亚利桑那vs英格兰南部约2倍",
+        "揭示高温衰减：每超25°C一度损约0.35%",
+        "量化灰尘损失：2%-12%",
+        "说明电网距离权衡",
+        "给出'盈利地图不只是阳光地图'的判词",
+        "解释土地标准做法：租不买，30-40年租约",
+        "列举三类土地成本：农田800-2000美元/英亩/年、联邦沙漠地200-600、棕地环境风险",
+        "给出'每英亩最便宜几乎永远不是最便宜'的判词",
+        "段尾插入订阅CTA"
+      ],
+      "abstract_move": "用地理差异数字拆解变量 + 量化多项损耗系数 + 给出反直觉判词 + 揭示标准做法 + 列举不同选项成本 + 用反转判词收束 + 插入中段CTA",
+      "replacement_needs": [
+        "至少三个影响产出的变量及其数字差异",
+        "一个'最优X不等于最优Y'的反直觉判词",
+        "标准做法与至少两种选项的成本对比",
+        "一个'最便宜的X几乎永远不是最便宜的Y'判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "evidence_build",
+      "start_ratio": 0.3614,
+      "end_ratio": 0.4419,
+      "start_sec": 561.1,
+      "end_sec": 686.1,
+      "position_label": "36.1%–44.2%(9:21–11:26)",
+      "purpose": "融资结构：银行要求电站在建成前就把电卖掉——PPA把不确定收入变成\"类债券\"，杠杆可达75-80%（无PPA需自筹60-70%）、三地区PPA价格带（美25-65/南欧30-48/中欧50-75美元每MWh）、银行是15-20年的运营合伙人、1.25-1.35倍债务覆盖率与干预权、P90保守发电量预测",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "counterintuitive_turn",
+          "mechanism": "sell_before_build"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "leverage_reveal",
+          "mechanism": "bond_like_cashflow"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "price_map",
+          "mechanism": "ppa_regional_bands"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "reframe",
+          "mechanism": "bank_as_operating_partner"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "lender_metric",
+          "mechanism": "dscr_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "sell_before_build",
+        "bond_like_cashflow"
+      ],
+      "original_moves": [
+        "揭示反直觉前提：银行要求在建成前就把产品卖掉",
+        "解释机制：长期合约把不确定收入变成类债券",
+        "给出杠杆数字：有合约75-80%、无合约需自筹60-70%",
+        "列出三地区价格带：美25-65/南欧30-48/中欧50-75美元每MWh",
+        "定性银行角色：15-20年的运营合伙人",
+        "说明债务覆盖率：1.25-1.35倍与干预权",
+        "解释P90保守发电量预测"
+      ],
+      "abstract_move": "揭示反直觉前提 + 解释金融转化机制 + 给出杠杆对比数字 + 列出地区价格地图 + 定性长期伙伴关系 + 说明风控阈值与干预权",
+      "replacement_needs": [
+        "一个反直觉的前置条件",
+        "一个不确定性转化为确定性的金融机制",
+        "有无该机制的杠杆对比数字",
+        "至少两个地区的价格带",
+        "一个风控比率阈值及其后果"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "reveal",
+      "start_ratio": 0.4419,
+      "end_ratio": 0.517,
+      "start_sec": 686.1,
+      "end_sec": 802.7,
+      "position_label": "44.2%–51.7%(11:26–13:23)",
+      "purpose": "兑现激励预告：美国IRA（30%投资税收抵免=1亿项目抵3000万、国产组件/能源社区/低收入叠加）、PTC约27.5美元/MWh（100MW年约440万）、5年加速折旧、英国差价合约；随即揭示陷阱——一次政策转向就能让项目经济的一整层失效，\"这是结构性事实，不是批评\"",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "subsidy_mechanism_stack",
+          "opened_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "financing_structure_map",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "policy_turn",
+          "mechanism": "ira_reveal"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "subsidy_math",
+          "mechanism": "itc_30_percent"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "subsidy_math",
+          "mechanism": "ptc_annual_stream"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "trap_reveal",
+          "mechanism": "policy_dependence_trap"
+        }
+      ],
+      "required_retention_events": [
+        "ira_reveal",
+        "itc_30_percent"
+      ],
+      "original_moves": [
+        "兑现激励预告：美国IRA 30%投资税收抵免，1亿项目抵3000万",
+        "列举叠加项：国产组件/能源社区/低收入",
+        "给出PTC数字：约27.5美元/MWh，100MW年约440万",
+        "解释5年加速折旧的税盾逻辑",
+        "介绍英国差价合约双向补差机制",
+        "揭示陷阱：一次政策转向就能让项目经济的一整层失效",
+        "给出'这是结构性事实，不是批评'的定性"
+      ],
+      "abstract_move": "兑现预告 + 给出主激励机制与金额 + 列举叠加条件 + 给出年度现金流数字 + 介绍其他地区机制 + 揭示政策风险陷阱 + 用中性定性收束",
+      "replacement_needs": [
+        "一个主激励机制及其百分比或金额",
+        "至少一个年度现金流数字",
+        "一个政策转向导致经济层失效的风险",
+        "一个'这是结构性X不是Y'的中性定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS03→LOOP03、FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "evidence_build",
+      "start_ratio": 0.517,
+      "end_ratio": 0.578,
+      "start_sec": 802.7,
+      "end_sec": 897.5,
+      "position_label": "51.7%–57.8%(13:23–14:58)",
+      "purpose": "拆解\"投资演示里没人提\"的运营成本：1.2万-2万美元/MW/年；植被管理是真实预算项（树荫减产+火灾风险）、财产税与租金、保险、监测合规；寿命10-15年的逆变器在第12-15年必须整体更换，需从第一天计提准备金",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "chapter_transition",
+          "mechanism": "hidden_cost_teaser"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "opex_reveal",
+          "mechanism": "operating_cost_reality"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "midlife_replacement",
+          "mechanism": "inverter_replacement_reserve"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_cost_teaser",
+        "operating_cost_reality"
+      ],
+      "original_moves": [
+        "给出年运营成本区间：1.2万-2万美元/MW/年",
+        "列举四项列账：植被管理（树荫减产+火灾风险）、财产税与租金、保险、监测合规",
+        "揭示中期更换：逆变器寿命10-15年，第12-15年必须整体更换",
+        "说明需从第一天计提准备金",
+        "给出100MW年总成本：120-200万美元"
+      ],
+      "abstract_move": "给出年度成本区间 + 列举被忽视的四项开支 + 揭示中期必须更换的大件 + 说明准备金要求 + 给出总成本数字",
+      "replacement_needs": [
+        "一个年度单位成本区间",
+        "至少三项被忽视的运营开支及其理由",
+        "一个中期必须更换的大件及其寿命",
+        "一个总项目年度成本数字"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "reveal",
+      "start_ratio": 0.578,
+      "end_ratio": 0.6189,
+      "start_sec": 897.5,
+      "end_sec": 961,
+      "position_label": "57.8%–61.9%(14:58–16:01)",
+      "purpose": "用完整情景算一次账：优质条件下100MW年发16-18万MWh、45美元PPA→毛利720-810万、减运营约160万、减偿债约550-560万→净利40-100万美元/年，ITC前一两年回流1500-2000万，典型回本8-12年，以\"账看起来不错\"收束并为反转蓄力",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "\"什么时候能回本？\"\"这取决于几乎所有事情\"",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE40",
+          "event_type": "question_transition",
+          "mechanism": "payback_question"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "model_payoff",
+          "mechanism": "worked_scenario_numbers"
+        }
+      ],
+      "required_retention_events": [
+        "worked_scenario_numbers",
+        "upfront_tax_credit"
+      ],
+      "original_moves": [
+        "用五步行模型算账：年发电量16-18万MWh",
+        "乘以45美元PPA得毛利720-810万",
+        "减运营成本约160万",
+        "减偿债约550-560万",
+        "得净利40-100万美元/年",
+        "说明ITC前一两年回流1500-2000万",
+        "给出典型回本期：8-12年",
+        "用'账看起来不错'收束并为反转蓄力"
+      ],
+      "abstract_move": "用完整模型逐步算账 + 给出年度净利 + 说明前期税收回流 + 给出回本期 + 用'看起来不错'埋下反转伏笔",
+      "replacement_needs": [
+        "一个完整的收入-成本-偿债-净利计算链条",
+        "一个前期税收或激励回流数字",
+        "一个回本期区间",
+        "一个'看起来不错'的蓄力句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "conflict_escalation",
+      "start_ratio": 0.6189,
+      "end_ratio": 0.7227,
+      "start_sec": 961,
+      "end_sec": 1122.2,
+      "position_label": "61.9%–72.3%(16:01–18:42)",
+      "purpose": "揭示真正的杀手不是风暴而是无形的市场结构：太阳能自我蚕食（同区同时满发→电价最低，加州年负电价数百次、德州跟进、德国同样）、利率（4%→7%使项目边际化、存量资产贬值）、限电（收入归零债务照付）、夜晚；随后给出正在改写经济学的解法——储能成本14年降约90%带来的峰谷套利与\"成型电力\"PPA",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.6457,
+          "time_ms": 1002610,
+          "reason": "太阳能结构性自我蚕食+三地负电价证据：全片最强认知反转"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.6975,
+          "time_ms": 1082927,
+          "reason": "储能成本14年降约90%：峰谷套利开启新经济学"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "\"账看起来不错。现在说说哪里会出错。\"",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "worked_scenario_numbers",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE42",
+          "event_type": "pivot_line",
+          "mechanism": "optimism_to_threat_pivot"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "threat_reframe",
+          "mechanism": "invisible_forces"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "worldview_reveal",
+          "mechanism": "self_cannibalization"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "evidence_anchor",
+          "mechanism": "negative_price_frequency"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "structural_threat",
+          "mechanism": "interest_rate_sensitivity"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "solution_reveal",
+          "mechanism": "battery_cost_collapse"
+        }
+      ],
+      "required_retention_events": [
+        "invisible_forces",
+        "self_cannibalization"
+      ],
+      "original_moves": [
+        "祛魅风暴风险：真正的杀手不是风暴",
+        "揭示自我蚕食机制：同区同时满发导致电价最低",
+        "给出三地负电价证据：加州年数百次、德州跟进、德国同样",
+        "说明利率敏感度：4%→7%使项目边际化、存量资产贬值",
+        "解释限电机制：收入归零债务照付",
+        "指出夜晚问题",
+        "给出解法：储能成本14年降约90%",
+        "解释峰谷套利与'成型电力'PPA"
+      ],
+      "abstract_move": "祛魅表面风险 + 揭示结构性自我破坏机制 + 给出三地证据 + 说明其他杀手 + 给出技术解法及其成本崩塌数字 + 解释新经济学",
+      "replacement_needs": [
+        "一个被高估的表面风险",
+        "一个结构性自我破坏机制及至少两地证据",
+        "至少一个其他致命因素",
+        "一个技术解法及其成本变化数字",
+        "一个新的商业模式"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(90)、PK06(75);打开的悬念 LOOP06→FS11 跨段;回收了前文的悬念 FS09→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "evidence_build",
+      "start_ratio": 0.7227,
+      "end_ratio": 0.7925,
+      "start_sec": 1122.2,
+      "end_sec": 1230.6,
+      "position_label": "72.3%–79.3%(18:42–20:31)",
+      "purpose": "规模经济与寿命管理：变电站500-1500万美元固定成本在10MW摊到150万/MW、200MW摊到7.5万/MW以下（单项20:1），采购折扣与固定监测成本——解释工业级为何由大资本主导；面板年衰减约0.5%（第25年剩约87.5%、质保80%），到期后翻新（repowering）与退役（decommissioning）两条路径及准备金",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.7329,
+          "time_ms": 1138006,
+          "reason": "同一固定成本÷10MW与÷200MW：单项20:1的规模护城河"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "谁真正拥有这些电站——\"很少是个人\"",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "threat_map_plus_mitigation",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE48",
+          "event_type": "chapter_transition",
+          "mechanism": "scale_economics_turn"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "scale_reveal",
+          "mechanism": "fixed_cost_division"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "degradation_reveal",
+          "mechanism": "panel_degradation_curve"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "ownership_question",
+          "mechanism": "ownership_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "fixed_cost_division",
+        "panel_degradation_curve"
+      ],
+      "original_moves": [
+        "演示固定成本摊薄：变电站500-1500万美元，10MW摊到150万/MW、200MW摊到7.5万/MW以下",
+        "给出单项比例：20:1",
+        "列举其他规模效应：采购折扣与固定监测成本",
+        "解释工业级为何由大资本主导",
+        "给出面板年衰减：约0.5%",
+        "计算第25年剩余：约87.5%、质保80%",
+        "说明到期后两条路径：翻新repowering与退役decommissioning",
+        "提及准备金"
+      ],
+      "abstract_move": "用同一固定成本在不同规模下的摊薄演示护城河 + 给出极端比例 + 列举其他规模效应 + 解释大资本主导逻辑 + 给出衰减曲线 + 说明到期路径",
+      "replacement_needs": [
+        "一个固定成本在至少两个规模下的摊薄对比",
+        "一个极端的规模比例",
+        "至少一个其他规模效应",
+        "一个年度衰减率及长期剩余百分比",
+        "至少两条到期路径"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80);打开的悬念 LOOP07→FS13 跨段;回收了前文的悬念 FS10→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "context_expansion",
+      "start_ratio": 0.7925,
+      "end_ratio": 0.8515,
+      "start_sec": 1230.6,
+      "end_sec": 1322.1,
+      "position_label": "79.3%–85.2%(20:31–22:02)",
+      "purpose": "所有权版图与参与路径：工业级业主是独立发电商（IPP）与基建/私募基金，养老基金30年负债正好匹配30年CPI挂钩现金流；普通人路径：社区太阳能份额、上市公司股息、项目众筹平台",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE52",
+          "event_type": "match_reveal",
+          "mechanism": "pension_liability_matching"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "access_bridge",
+          "mechanism": "retail_participation_question"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "access_paths",
+          "mechanism": "public_market_dividends"
+        }
+      ],
+      "required_retention_events": [
+        "ownership_reveal",
+        "pension_liability_matching"
+      ],
+      "original_moves": [
+        "列举工业级业主：独立发电商IPP与基建/私募基金",
+        "揭示养老基金逻辑：30年负债正好匹配30年CPI挂钩现金流",
+        "列举普通人三条参与路径：社区太阳能份额、上市公司股息、项目众筹平台"
+      ],
+      "abstract_move": "列举机构业主类型 + 揭示长期负债匹配逻辑 + 列举散户参与路径",
+      "replacement_needs": [
+        "至少两类机构业主",
+        "一个长期负债与长期现金流的匹配逻辑",
+        "至少两条散户参与路径"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.8515,
+      "end_ratio": 0.9562,
+      "start_sec": 1322.1,
+      "end_sec": 1484.7,
+      "position_label": "85.2%–95.6%(22:02–24:45)",
+      "purpose": "机构逻辑综合（15-20年可预测现金流、无燃料成本、CPI指数化、电气化结构性需求）后给出诚实裁决：\"金矿？\"——乐观情景（净利约30万/年起步、杠杆回报10-14%、回本9-11年）vs悲观情景（电价45→38、干旱-8%、逆变器300万、再融资变贵→坏年份现金流为负、回报6-7%），判词\"差别不在单一因素，是小偏差的累积\"\"好坏年份差距5000-9000万——这一行就是这门生意的全部历史\"",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9415,
+          "time_ms": 1461926,
+          "reason": "\"小偏差累积\"裁决：极好投资与平庸投资的分野"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.9504,
+          "time_ms": 1475749,
+          "reason": "好坏年份差5000-9000万：一行写完行业史"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "\"那太阳能电站到底是不是金矿？\"",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "ownership_landscape_plus_access_paths",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE55",
+          "event_type": "institutional_logic",
+          "mechanism": "no_fuel_cost_structure"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "verdict_question",
+          "mechanism": "gold_mine_question"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "scenario_numbers",
+          "mechanism": "optimistic_scenario"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "scenario_turn",
+          "mechanism": "pessimistic_scenario"
+        },
+        {
+          "event_id": "RE59",
+          "event_type": "synthesis_line",
+          "mechanism": "deviation_accumulation"
+        },
+        {
+          "event_id": "RE60",
+          "event_type": "history_line",
+          "mechanism": "gap_in_one_line"
+        }
+      ],
+      "required_retention_events": [
+        "no_fuel_cost_structure",
+        "dual_scenario_numbers"
+      ],
+      "original_moves": [
+        "综合机构逻辑：15-20年可预测现金流、无燃料成本、CPI指数化、电气化结构性需求",
+        "给出诚实裁决问题：金矿？",
+        "列出乐观情景：净利约30万/年起步、杠杆回报10-14%、回本9-11年",
+        "列出悲观情景：电价45→38、干旱-8%、逆变器300万、再融资变贵",
+        "说明后果：坏年份现金流为负、回报6-7%",
+        "给出判词：差别不在单一因素，是小偏差的累积",
+        "给出总结句：好坏年份差距5000-9000万——这一行就是这门生意的全部历史"
+      ],
+      "abstract_move": "综合机构逻辑 + 抛出裁决问题 + 对照乐观与悲观情景的收益与回本 + 说明悲观后果 + 给出小偏差累积判词 + 用好坏差距一行写完行业史",
+      "replacement_needs": [
+        "至少三项机构投资逻辑",
+        "乐观情景的收益与回本数字",
+        "悲观情景的多项成本压力与现金流后果",
+        "一个'差别在于小偏差累积'的判词",
+        "一个好坏年份的极端差距数字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)、PK09(85);打开的悬念 LOOP08→FS14 跨段;回收了前文的悬念 FS11→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.9562,
+      "end_ratio": 1,
+      "start_sec": 1484.7,
+      "end_sec": 1552.7,
+      "position_label": "95.6%–100%(24:45–25:53)",
+      "purpose": "商业指南软CTA后收束：\"太阳能电站不印钞，它把阳光转成长期可预测现金流——但只有当选址、融资、PPA、政策、运营全部对齐\"；失败则是\"坐在田里吸钱的昂贵非流动基建\"；回call开场判词\"阳光也许免费，但把阳光变成你账户里一美元的每一步都有成本\"；落在\"赚翻与亏光的投资者之间的主要差别\"；点赞订阅致谢收尾",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9849,
+          "time_ms": 1529297,
+          "reason": "开场判词回call：阳光免费，变现的每一步都有成本"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "dual_scenario_verdict_plus_callback_aphorism",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "dual_scenario_verdict",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE61",
+          "event_type": "verdict_reframe",
+          "mechanism": "not_a_money_printer"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "aphorism_close",
+          "mechanism": "callback_aphorism"
+        },
+        {
+          "event_id": "RE63",
+          "event_type": "end_cta",
+          "mechanism": "closing_cta"
+        }
+      ],
+      "required_retention_events": [
+        "not_a_money_printer",
+        "callback_aphorism"
+      ],
+      "original_moves": [
+        "插入商业指南软CTA",
+        "给出不印钞判词：它把资源转成长期可预测现金流——但只有当多项条件全部对齐",
+        "给出失败形态对照：昂贵非流动基建",
+        "回call开场判词：资源也许免费，但把资源变成账户里一美元的每一步都有成本",
+        "落在投资者分野句：赚翻与亏光的投资者之间的主要差别",
+        "点赞订阅致谢收尾"
+      ],
+      "abstract_move": "软CTA + 给出条件对齐判词 + 给出失败形态对照 + 回call开场判词 + 落在投资者分野 + 结尾CTA",
+      "replacement_needs": [
+        "一个条件对齐的判词",
+        "一个失败形态的对照描述",
+        "一个与开场判词呼应的回call句",
+        "一个赚翻与亏光投资者的分野句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85);回收了前文的悬念 FS01→LOOP01、FS13→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

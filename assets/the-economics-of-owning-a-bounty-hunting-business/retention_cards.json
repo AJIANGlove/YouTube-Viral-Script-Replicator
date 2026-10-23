@@ -1,0 +1,866 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:44:11.556Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.054,
+      "start_sec": 0.1,
+      "end_sec": 76.1,
+      "position_label": "0%–5.4%(0:00–1:16)",
+      "purpose": "用第二人称拥有幻想直接开局，随即用“那不是赏金”的重构打破观众的浪漫想象，并交付第一层保释金机制作为部分奖励",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "paradox_hook",
+          "strength": 80,
+          "position_ratio": 0.0118,
+          "time_ms": 16436,
+          "reason": "“赏金不是赏金”的核心重构，悬念正式立起"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主环：这门生意的钱到底从哪来、“赏金”背后藏着什么",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_hook",
+          "mechanism": "second_person_fantasy"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "premise_reframe",
+          "mechanism": "reward_is_not_reward"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "mechanism_context",
+          "mechanism": "bail_fee_range"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "stakes_anchor",
+          "mechanism": "non_refundable_fee"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_fantasy",
+        "premise_reframe"
+      ],
+      "original_moves": [
+        "拥有幻想 + 赏金非赏金 + 保释金机制入门 + 不可退费用"
+      ],
+      "abstract_move": "用第二人称拥有幻想直接开局，随即用“那不是赏金”的重构打破观众的浪漫想象，并交付第一层保释金机制作为部分奖励",
+      "replacement_needs": [
+        "拥有幻想的直接复述",
+        "“赏金不是赏金”的核心重构",
+        "保释金与保释金公司的角色",
+        "前端费用比例与不可退规则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80);打开的悬念 LOOP01→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "second_person_fantasy_plus_premise_reframe",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 16436,
+        "evidence_refs": [
+          "C0001",
+          "C0026",
+          "C0037"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "system_context",
+      "start_ratio": 0.054,
+      "end_ratio": 0.122,
+      "start_sec": 75.2,
+      "end_sec": 172,
+      "position_label": "5.4%–12.2%(1:15–2:52)",
+      "purpose": "用出庭与逃匿两条分支讲清保释金公司的盈亏结构，把主角重新定位为“保险产品的止损分包商”，并给出佣金区间",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.0977,
+          "time_ms": 136430,
+          "reason": "“保险产品的止损分包商”身份揭示，行业定位翻转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "单笔案件毛利与净利的差额到底有多大",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "branch_outcome",
+          "mechanism": "company_keeps_fee"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "deadline_pressure",
+          "mechanism": "forfeiture_deadline"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "identity_reveal",
+          "mechanism": "loss_prevention_subcontractor"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "new_question",
+          "mechanism": "gross_vs_net"
+        }
+      ],
+      "required_retention_events": [
+        "branch_outcome",
+        "identity_reveal"
+      ],
+      "original_moves": [
+        "双分支结局 + 全责赔付 + 止损分包商身份 + 佣金区间"
+      ],
+      "abstract_move": "用出庭与逃匿两条分支讲清保释金公司的盈亏结构，把主角重新定位为“保险产品的止损分包商”，并给出佣金区间",
+      "replacement_needs": [
+        "被告出庭时保释金公司零追捕获利",
+        "被告失踪后的通缉令与赔付期限",
+        "止损分包商身份判定",
+        "佣金区间与毛利净利之问"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(85);打开的悬念 LOOP02→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS03",
+      "function": "cost_breakdown",
+      "start_ratio": 0.122,
+      "end_ratio": 0.181,
+      "start_sec": 171,
+      "end_sec": 253.5,
+      "position_label": "12.2%–18.1%(2:51–4:13)",
+      "purpose": "用一个完整的跨省案例把单笔毛利逐项削减到实际到手，展示名目佣金与真实留存之间的巨大落差",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 90,
+          "position_ratio": 0.1756,
+          "time_ms": 245276,
+          "reason": "成本瀑布落点：名目佣金到手只剩零头，全片最强数字落差"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "cost_cascade_payoff",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "case_setup",
+          "mechanism": "worked_case"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "cost_cascade_payoff",
+          "mechanism": "net_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "worked_case",
+        "cost_cascade"
+      ],
+      "original_moves": [
+        "成本瀑布逐项扣减 + 到手金额落差揭示"
+      ],
+      "abstract_move": "用一个完整的跨省案例把单笔毛利逐项削减到实际到手，展示名目佣金与真实留存之间的巨大落差",
+      "replacement_needs": [
+        "跨省案例设定与名目佣金",
+        "逐项成本清单",
+        "搭档分成与税费扣减",
+        "最终到手金额与名义总额对比"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(90);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 90
+        }
+      ]
+    },
+    {
+      "stage_id": "FS04",
+      "function": "pricing_reveal",
+      "start_ratio": 0.181,
+      "end_ratio": 0.246,
+      "start_sec": 252.5,
+      "end_sec": 344.6,
+      "position_label": "18.1%–24.6%(4:13–5:45)",
+      "purpose": "揭示佣金率随风险浮动、超大单反而降价的定价逻辑，再抛出全片最硬的规则：尝试不计酬，失败零补偿",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.2274,
+          "time_ms": 317564,
+          "reason": "“尝试不计酬”一句话改写生意的风险底色"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "失败零报酬的规则下这门生意如何存活",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "counterintuitive_pricing",
+          "mechanism": "big_bond_rate_drop"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "reframe",
+          "mechanism": "commission_as_risk_transfer"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "harsh_rule",
+          "mechanism": "no_pay_for_trying"
+        }
+      ],
+      "required_retention_events": [
+        "counterintuitive_pricing",
+        "reframe"
+      ],
+      "original_moves": [
+        "费率三档变化 + 佣金实质重定义 + 失败零补偿宣告"
+      ],
+      "abstract_move": "揭示佣金率随风险浮动、超大单反而降价的定价逻辑，再抛出全片最硬的规则：尝试不计酬，失败零补偿",
+      "replacement_needs": [
+        "小单标准费率",
+        "紧急大单费率上浮逻辑",
+        "超大额保单费率反降",
+        "佣金的实质是风险转移定价",
+        "失败零报酬规则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80);打开的悬念 LOOP03→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "failure_economics",
+      "start_ratio": 0.246,
+      "end_ratio": 0.317,
+      "start_sec": 343.7,
+      "end_sec": 443.2,
+      "position_label": "24.6%–31.7%(5:44–7:23)",
+      "purpose": "把失败规则量化成成功率数学：成功案件必须连失败案件的窟窿一起赚回，并用地域差异说明成本结构随环境改变",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "failure_absorption_math",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "success_rate_math",
+          "mechanism": "completion_rate"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "failure_cost",
+          "mechanism": "out_of_pocket_loss"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "midroll_cta",
+          "mechanism": "subscribe_like"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "hidden_cost",
+          "mechanism": "data_platform_subscription"
+        }
+      ],
+      "required_retention_events": [
+        "success_rate_math",
+        "failure_cost"
+      ],
+      "original_moves": [
+        "成功率数学 + 失败成本 + 生存条件判词 + 地域对照"
+      ],
+      "abstract_move": "把失败规则量化成成功率数学：成功案件必须连失败案件的窟窿一起赚回，并用地域差异说明成本结构随环境改变",
+      "replacement_needs": [
+        "行业成功率水平",
+        "单次失败的自付成本与沉没工时",
+        "成功案件覆盖失败案件的生存条件",
+        "城市与乡村的成本结构差异"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS06",
+      "function": "hidden_cost_reveal",
+      "start_ratio": 0.317,
+      "end_ratio": 0.381,
+      "start_sec": 442.2,
+      "end_sec": 533.2,
+      "position_label": "31.7%–38.1%(7:22–8:53)",
+      "purpose": "揭示找人本身也要花钱的数据平台订阅成本，再用时薪换算把名目佣金打回普通工资水平",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.3656,
+          "time_ms": 510606,
+          "reason": "时薪换算把名目佣金打回普通工资水平"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "hourly_reframe",
+          "mechanism": "twenty_dollars_per_hour"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_cost",
+        "hourly_wage_reframe"
+      ],
+      "original_moves": [
+        "数据平台隐性成本 + 时薪换算 + 与受薪岗位对照"
+      ],
+      "abstract_move": "揭示找人本身也要花钱的数据平台订阅成本，再用时薪换算把名目佣金打回普通工资水平",
+      "replacement_needs": [
+        "商业数据平台的按次与包月成本",
+        "不用数据就破不了案的因果关系",
+        "两周案例的工时与直接成本",
+        "时薪换算与受薪职业对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "fixed_cost_anatomy",
+      "start_ratio": 0.381,
+      "end_ratio": 0.44,
+      "start_sec": 532.2,
+      "end_sec": 615.7,
+      "position_label": "38.1%–44%(8:52–10:16)",
+      "purpose": "把车辆相关的全部固定成本堆叠成月度账单，再戳破“买装备等于投资”的新手错觉，指出案件只来自关系",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "equipment_trap",
+          "mechanism": "devices_bring_no_cases"
+        }
+      ],
+      "required_retention_events": [
+        "fixed_cost_stack",
+        "equipment_trap"
+      ],
+      "original_moves": [
+        "车辆固定成本堆叠 + 装备陷阱纠偏"
+      ],
+      "abstract_move": "把车辆相关的全部固定成本堆叠成月度账单，再戳破“买装备等于投资”的新手错觉，指出案件只来自关系",
+      "replacement_needs": [
+        "车辆融资与专项保险",
+        "油费保养折旧的月度区间",
+        "零破案也要支付的固定成本性质",
+        "装备投资错觉与案件来源真相"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "regulatory_maze",
+      "start_ratio": 0.44,
+      "end_ratio": 0.54,
+      "start_sec": 614.7,
+      "end_sec": 754.6,
+      "position_label": "44%–54%(10:15–12:35)",
+      "purpose": "说明普通商业保险恰好排除这一行的全部工作、专项保险价格不菲，再展示无全国统一规则的执照拼图与跨州执法风险",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.5128,
+          "time_ms": 716175,
+          "reason": "部分地区入行本身即构成重罪绑架的法律惊吓"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "insurance_cost",
+          "mechanism": "special_coverage_premium"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "regulatory_patchwork",
+          "mechanism": "state_by_state"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "legal_shock",
+          "mechanism": "criminal_kidnapping"
+        }
+      ],
+      "required_retention_events": [
+        "insurance_exclusion",
+        "license_patchwork"
+      ],
+      "original_moves": [
+        "保险排除条款 + 执照州际拼图 + 重罪警告 + 跨州规则"
+      ],
+      "abstract_move": "说明普通商业保险恰好排除这一行的全部工作、专项保险价格不菲，再展示无全国统一规则的执照拼图与跨州执法风险",
+      "replacement_needs": [
+        "普通险排除条款与专项险年费",
+        "无全国统一规则的宣告",
+        "代表性州的准入要求与禁令",
+        "商业保释制度被废除州的定性",
+        "跨州追捕的文件与通报义务"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 75
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "legal_boundary_cases",
+      "start_ratio": 0.54,
+      "end_ratio": 0.621,
+      "start_sec": 753.6,
+      "end_sec": 867.6,
+      "position_label": "54%–62.1%(12:34–14:28)",
+      "purpose": "给出行使权力的百年判例地基，再用三个越界定罪案例和连带后果说明：一次下午的失误可以抹掉数年的利润",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.616,
+          "time_ms": 860218,
+          "reason": "“一个下午的失误抹掉数年利润”的风险顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "legal_foundation",
+          "mechanism": "century_old_ruling"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "catastrophe_stakes",
+          "mechanism": "one_mistake_wipes_years"
+        }
+      ],
+      "required_retention_events": [
+        "legal_foundation",
+        "boundary_cases"
+      ],
+      "original_moves": [
+        "历史判例地基 + 边界案例三连 + 后果清单 + 灭顶判词"
+      ],
+      "abstract_move": "给出行使权力的百年判例地基，再用三个越界定罪案例和连带后果说明：一次下午的失误可以抹掉数年的利润",
+      "replacement_needs": [
+        "行业权力来源的历史判例",
+        "现代法院的限制",
+        "三个越界定罪案例",
+        "刑责诉讼保险拒赔与执照吊销的连锁后果",
+        "一次失误抹掉多年利润的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "sourcing_reveal",
+      "start_ratio": 0.621,
+      "end_ratio": 0.688,
+      "start_sec": 866.6,
+      "end_sec": 961.3,
+      "position_label": "62.1%–68.8%(14:27–16:01)",
+      "purpose": "先用法网陷阱总结越界诱惑的代价，再揭示案件的真正来源链条：新手只能捡剩案，信任才是核心资产",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "稳定的案件究竟从哪里来",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "sourcing_pipeline_reveal",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "asset_reframe",
+          "mechanism": "relationships_are_the_asset"
+        }
+      ],
+      "required_retention_events": [
+        "efficiency_trap",
+        "sourcing_pipeline"
+      ],
+      "original_moves": [
+        "效率陷阱 + 派案链条揭示 + 剩案现实 + 信任资产判词"
+      ],
+      "abstract_move": "先用法网陷阱总结越界诱惑的代价，再揭示案件的真正来源链条：新手只能捡剩案，信任才是核心资产",
+      "replacement_needs": [
+        "强行进屋的效率诱惑与诉讼代价",
+        "保释金公司的三段派案顺序",
+        "新手只能拿到剩案的现实",
+        "信任作为核心资产的判定"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP04。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:稳定的案件究竟从哪里来",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS11",
+      "function": "unit_economics",
+      "start_ratio": 0.688,
+      "end_ratio": 0.755,
+      "start_sec": 960.3,
+      "end_sec": 1055,
+      "position_label": "68.8%–75.5%(16:00–17:35)",
+      "purpose": "用大小单的可靠性与利润对照说明案件组合策略，再把单人完整月度的收入成本算到税后到手",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "aggregation_payoff",
+          "mechanism": "full_month_pl"
+        }
+      ],
+      "required_retention_events": [
+        "caseload_strategy",
+        "aggregation_payoff"
+      ],
+      "original_moves": [
+        "案件组合策略 + 月度损益全链条"
+      ],
+      "abstract_move": "用大小单的可靠性与利润对照说明案件组合策略，再把单人完整月度的收入成本算到税后到手",
+      "replacement_needs": [
+        "大单低成功率与小单高成功率对照",
+        "小单薄利的计算",
+        "单人月度案件数与成功率假设",
+        "月度毛利到税后到手的完整链条"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "scaling_tradeoff",
+      "start_ratio": 0.755,
+      "end_ratio": 0.83,
+      "start_sec": 1054,
+      "end_sec": 1160.1,
+      "position_label": "75.5%–83%(17:34–19:20)",
+      "purpose": "用扩编成小型事务所的对照实验展示“收入翻两番、到手几乎不动”的规模悖论，并给出两条路径的启动资本与角色变化",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.7762,
+          "time_ms": 1083990,
+          "reason": "扩编后收入翻两番而到手几乎不动的规模悖论"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "scaling_contrast",
+          "mechanism": "revenue_up_income_flat"
+        }
+      ],
+      "required_retention_events": [
+        "scaling_contrast",
+        "startup_capital_ladder"
+      ],
+      "original_moves": [
+        "扩张对照实验 + 收入到手反差 + 双路径权衡"
+      ],
+      "abstract_move": "用扩编成小型事务所的对照实验展示“收入翻两番、到手几乎不动”的规模悖论，并给出两条路径的启动资本与角色变化",
+      "replacement_needs": [
+        "事务所月度案量与总收入",
+        "分包佣金对利润的吞噬",
+        "两种路径的启动资本区间",
+        "单人高利润率与事务所高上限的权衡"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS13",
+      "function": "earnings_reveal",
+      "start_ratio": 0.83,
+      "end_ratio": 0.954,
+      "start_sec": 1159.2,
+      "end_sec": 1333.4,
+      "position_label": "83%–95.4%(19:19–22:13)",
+      "purpose": "直接回答全片最想知道的收入问题：三档年收入区间，再用乐观与现实两个情景说明好坏年份的差距来自关系稳定性而非努力程度",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.9322,
+          "time_ms": 1301828,
+          "reason": "好坏年份差距巨大且与努力无关的判词"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "拥有这门生意一年到底能赚多少",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "earnings_tiers_plus_dual_scenario",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "direct_answer",
+          "mechanism": "earnings_question"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "scenario_gap",
+          "mechanism": "good_year_bad_year"
+        }
+      ],
+      "required_retention_events": [
+        "direct_answer",
+        "dual_scenario"
+      ],
+      "original_moves": [
+        "收入三档直答 + 双情景对照 + 波动来源判词"
+      ],
+      "abstract_move": "直接回答全片最想知道的收入问题：三档年收入区间，再用乐观与现实两个情景说明好坏年份的差距来自关系稳定性而非努力程度",
+      "replacement_needs": [
+        "新手单人成熟三档年收入",
+        "达到顶端所需的总收入与负担",
+        "乐观情景的完整条件与结果",
+        "现实情景的连锁恶化与收入腰斩",
+        "好坏年差距与努力无关的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS14",
+      "function": "verdict_closure",
+      "start_ratio": 0.954,
+      "end_ratio": 1,
+      "start_sec": 1332.4,
+      "end_sec": 1396.5,
+      "position_label": "95.4%–100%(22:12–23:16)",
+      "purpose": "正式回答标题之问：这不是追捕生意而是关系与风险管理生意，用谨慎经营者校准收束，并以频道引导完成结尾",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9633,
+          "time_ms": 1345275,
+          "reason": "行业身份重定义：关系与风险管理生意，主环闭合"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "verdict_redefinition",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "verdict",
+          "mechanism": "business_redefinition"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "audience_calibration",
+          "mechanism": "cautious_operators"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "closing_cta",
+          "mechanism": "like_subscribe"
+        }
+      ],
+      "required_retention_events": [
+        "verdict",
+        "identity_redefinition"
+      ],
+      "original_moves": [
+        "二选一判词 + 行业重定义 + 经营者校准 + 结尾 CTA"
+      ],
+      "abstract_move": "正式回答标题之问：这不是追捕生意而是关系与风险管理生意，用谨慎经营者校准收束，并以频道引导完成结尾",
+      "replacement_needs": [
+        "标题问句的二选一回答",
+        "行业本质的四要素重定义",
+        "谨慎经营者校准句",
+        "频道引导与订阅 CTA"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ]
+    }
+  ]
+}

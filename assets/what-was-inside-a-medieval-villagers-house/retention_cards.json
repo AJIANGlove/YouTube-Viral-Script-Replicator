@@ -1,0 +1,1040 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:58:32.767Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "atmospheric_scene_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.021,
+      "start_sec": 0,
+      "end_sec": 60.7,
+      "position_label": "0%–2.1%(0:00–1:01)",
+      "purpose": "电影化场景沉浸：用感官细节与'缺失枚举'制造时代陌生感，让观众在第一分钟意识到这是一个没有现代便利的世界",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "atmospheric_premise",
+          "strength": 70,
+          "position_ratio": 0.0003,
+          "time_ms": 901,
+          "reason": "无烟囱、烟从稻草渗出、房子在呼吸：缺失枚举+拟人意象，全片前提确立"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook",
+          "mechanism": "sensory_scene_painting"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "premise_reveal",
+          "mechanism": "absence_enumeration"
+        }
+      ],
+      "required_retention_events": [
+        "sensory_scene_painting",
+        "absence_enumeration",
+        "personified_building_image"
+      ],
+      "original_moves": [
+        "用冬季傍晚这一具体时刻锚定场景",
+        "描写烟雾从稻草屋顶渗出的视觉奇观",
+        "连续枚举缺失的现代元素：无烟囱、无玻璃窗、无天花板、土地面",
+        "用'房子在呼吸'的拟人化意象强化陌生感",
+        "暗示建筑另一端住着牲畜"
+      ],
+      "abstract_move": "用感官可见的异常现象开场，通过连续枚举缺失的现代标配制造时代距离感，再用一个拟人化意象把物理细节升格为整体氛围，最后埋下一个违反现代常识的空间悬念",
+      "replacement_needs": [
+        "一个可视觉化的时空锚点（季节、时刻、天气）",
+        "一串现代人习以为常但在该时代缺失的设施或物品",
+        "一个把空间或物体拟人化/生物化的意象",
+        "一个暗示空间功能混用或人与非人共处的细节"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 60675,
+        "hook_type": "atmospheric_immersion_with_absence_enumeration",
+        "first_stimulus_ms": 901,
+        "first_payoff_ms": 26735,
+        "evidence_refs": [
+          "C0001",
+          "C0012",
+          "C0017",
+          "C0035"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "question_battery_and_evidence_tease",
+      "start_ratio": 0.021,
+      "end_ratio": 0.053,
+      "start_sec": 60.7,
+      "end_sec": 150.1,
+      "position_label": "2.1%–5.3%(1:01–2:30)",
+      "purpose": "确立普通人定位，把标题问题拆成子问题束，并叠加认识论悬念与证据组合预告",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "question_escalation",
+          "strength": 75,
+          "position_ratio": 0.0358,
+          "time_ms": 101817,
+          "reason": "'最有趣的问题：他们几乎不写字，我们如何知道'——悬念从是什么升格为何以知"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：中世纪村民的屋子里到底有什么（标题清单式问句的悬挂，子问题束在各空间单元逐个小额兑现）",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "认识论悬念：这些人几乎从不写字，我们如何知道他们屋里有什么",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "positioning_claim",
+          "mechanism": "ordinariness_claim"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "new_question",
+          "mechanism": "question_battery"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "question_escalation",
+          "mechanism": "epistemology_tease"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "roadmap_offer",
+          "mechanism": "evidence_stack_preview"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "cta_break",
+          "mechanism": "channel_value_proposition"
+        }
+      ],
+      "required_retention_events": [
+        "ordinariness_claim",
+        "sub_question_battery",
+        "epistemology_tease",
+        "evidence_stack_preview"
+      ],
+      "original_moves": [
+        "声明这不是贵族城堡而是普通人的住所",
+        "显式复述标题问题：中世纪农民的房子里有什么",
+        "拆解成 4-7 个日常维度子问题：取暖、做饭、睡觉、储物、取水、照明",
+        "抛出认识论悬念：他们几乎不写字，我们如何知道",
+        "预告五类证据组合：考古、遗存建筑、财产清单、庄园法庭记录、语言学"
+      ],
+      "abstract_move": "先划定研究对象的阶层边界排除精英叙事，再把标题总问题拆解成多个具身日常子问题制造覆盖感，接着把问题升格为认识论挑战（信息源缺失如何知道），最后预告多源证据组合暗示答案的复杂性",
+      "replacement_needs": [
+        "一个阶层或身份定位（排除精英/特权群体，锚定普通人）",
+        "标题主问题的显式重述",
+        "4-7 个覆盖日常生活不同维度的子问题",
+        "一个关于信息来源困难的认识论悬念",
+        "一个多源证据类型的组合式预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(75);打开的悬念 LOOP01→FS15、LOOP02→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "channel_promise_cta",
+      "start_ratio": 0.053,
+      "end_ratio": 0.062,
+      "start_sec": 150.1,
+      "end_sec": 176.8,
+      "position_label": "5.3%–6.2%(2:30–2:57)",
+      "purpose": "在进入正题前用一句话频道价值主张完成订阅邀请，并以'让我们进去'跨过门槛",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "channel_value_proposition",
+        "threshold_transition"
+      ],
+      "original_moves": [
+        "发出订阅邀请",
+        "用一句话陈述频道价值：探索塑造现代世界的历史力量",
+        "用'让我们进去'完成从外部到内部的门槛过渡"
+      ],
+      "abstract_move": "在进入正文前插入频道价值主张完成行动号召，用一个与本期主题同构的抽象承诺建立长期关系，再用短促的空间过渡句跨过叙事门槛",
+      "replacement_needs": [
+        "一个与本期内容主题同构的频道价值承诺",
+        "一个简短的空间或叙事过渡句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "world_context_setup",
+      "start_ratio": 0.062,
+      "end_ratio": 0.127,
+      "start_sec": 176.8,
+      "end_sec": 360.7,
+      "position_label": "6.2%–12.7%(2:57–6:01)",
+      "purpose": "提供理解该空间所必需的时代坐标：人口、土地制度、院落布局，并落下第一个考古锚点",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "context_entry",
+          "mechanism": "world_before_house"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "evidence_anchor",
+          "mechanism": "named_excavation_anchor"
+        }
+      ],
+      "required_retention_events": [
+        "population_scale_anchor",
+        "institutional_context",
+        "named_excavation_anchor"
+      ],
+      "original_moves": [
+        "给出人口规模并标注数据来源分歧",
+        "极简说明租佃制度与农民身份",
+        "解释 toft（宅基地）与 croft（耕地）的空间关系",
+        "引入 Wharram Percy 遗址并介绍其四十年发掘史"
+      ],
+      "abstract_move": "提供理解微观空间所需的宏观时代参数（人口规模、制度框架），诚实标注数据的不确定性，解释空间的功能分区逻辑，最后落下一个命名考古锚点为后续证据建立可信度基础",
+      "replacement_needs": [
+        "一个带数量级的时代规模参数（人口、面积、数量）及其来源分歧的诚实标注",
+        "该时代主导制度或身份关系的极简说明",
+        "空间的功能分区或布局逻辑",
+        "一个命名的考古遗址、田野调查点或实物证据来源及其发掘/研究史"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "construction_survey",
+      "start_ratio": 0.127,
+      "end_ratio": 0.18,
+      "start_sec": 360.7,
+      "end_sec": 511.4,
+      "position_label": "12.7%–18%(6:01–8:31)",
+      "purpose": "讲清建筑的材料与结构逻辑：就地取材的地域差异、构架方式与墙体工艺",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "农舍是否真是每代都要重建的脆弱棚屋",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "old_view_statement",
+          "mechanism": "revisionist_setup"
+        }
+      ],
+      "required_retention_events": [
+        "regional_material_variation",
+        "structure_term_explanation",
+        "craft_process_description"
+      ],
+      "original_moves": [
+        "按地域列举建筑材料的差异（低地木材、高地石材）",
+        "解释曲木构架的核心结构并引入'开间'度量术语",
+        "给出房屋尺寸的数量级",
+        "描述篱笆抹泥墙体工艺及其可修补性优缺点"
+      ],
+      "abstract_move": "讲清建筑的物质基础：按地域差异列举就地取材逻辑，用一个核心结构术语建立空间量级感知，给出尺度的度量方式，最后评价材料工艺的实用性权衡",
+      "replacement_needs": [
+        "按地理或资源条件分异的材料清单",
+        "一个核心结构或组织原则的术语及其具象解释",
+        "空间或物体的尺寸量级及度量方式",
+        "材料或工艺的优缺点权衡评价"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "revisionist_verdict",
+      "start_ratio": 0.18,
+      "end_ratio": 0.222,
+      "start_sec": 511.4,
+      "end_sec": 632.5,
+      "position_label": "18%–22.2%(8:31–10:32)",
+      "purpose": "第一次翻案：用遗存建筑与测年证据推翻'脆弱窝棚、每代重建'的旧史学观点，并把房屋嵌入法律制度",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.194,
+          "time_ms": 552196,
+          "reason": "'其中一些至今仍然站立'：遗存建筑+树木年代学推翻旧史学观点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "revisionist_verdict",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "validation_reveal",
+          "mechanism": "surviving_evidence"
+        }
+      ],
+      "required_retention_events": [
+        "old_view_fair_statement",
+        "surviving_evidence_reveal",
+        "legal_embedding"
+      ],
+      "original_moves": [
+        "陈述旧史学观点（脆弱窝棚、每代重建）及其形成原因",
+        "用至今仍站立的木构房屋作为翻案证据",
+        "引入树木年代学测年方法验证建筑寿命",
+        "说明建材使用权归领主但维修义务归佃农",
+        "引用庄园法庭记录中的维修令与罚款"
+      ],
+      "abstract_move": "第一次认知翻转：公正陈述旧观点及其成因以示诚信，用遗存实物和科学测年方法推翻旧观点，再把技术结论嵌入法律制度框架揭示权力与责任的分离",
+      "replacement_needs": [
+        "一个流传的旧观点及其形成原因的公正陈述",
+        "推翻旧观点的决定性实物证据",
+        "一种科学测年或验证方法",
+        "与该物件相关的权利归属、使用规则或法律责任"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80);回收了前文的悬念 FS05→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "day_in_life_proxy",
+      "start_ratio": 0.222,
+      "end_ratio": 0.264,
+      "start_sec": 632.5,
+      "end_sec": 750.4,
+      "position_label": "22.2%–26.4%(10:32–12:30)",
+      "purpose": "引入一个虚构但典型的日常人物作为视角代理，把知识巡览转化为具身体验，并发出逐室巡览邀请",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "character_entry",
+          "mechanism": "proxy_character_day_in_life"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "sensory_reveal",
+          "mechanism": "touch_knowledge_no_privacy"
+        }
+      ],
+      "required_retention_events": [
+        "proxy_character_entry",
+        "fire_ritual",
+        "tour_invitation"
+      ],
+      "original_moves": [
+        "引入一个虚构但典型的农民并声明其非具体真人",
+        "描写清晨重新生火的日常仪式",
+        "描写黑暗中靠触觉识别空间和物品",
+        "提示现代隐私概念在该时代缺席",
+        "发出逐室巡览的显式邀请"
+      ],
+      "abstract_move": "引入一个明确虚构的典型视角人物作为日常代理，用火的仪式性开启一天，通过黑暗中的触觉导航强化感官沉浸，提示现代概念的缺席，最后发出空间巡览邀请把知识讲解转化为具身体验",
+      "replacement_needs": [
+        "一个明确声明非真人的典型视角人物",
+        "一个有仪式感的日常开场动作（与火、水、光等基本元素相关）",
+        "一个强化感官体验的具身细节（触觉、嗅觉、温度）",
+        "一个现代概念在该时代缺席的提示",
+        "一个显式的空间或流程巡览邀请"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "cohabitation_reveal",
+      "start_ratio": 0.264,
+      "end_ratio": 0.318,
+      "start_sec": 750.4,
+      "end_sec": 905.2,
+      "position_label": "26.4%–31.8%(12:30–15:05)",
+      "purpose": "揭示人畜同檐的长屋结构：穿廊动线、排水证据、同檐理由与适用范围",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.2809,
+          "time_ms": 799477,
+          "reason": "人畜同檐的长屋揭示：全片最意外的居住事实"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "牲畜究竟为建筑贡献了多少热量：无法测量、至今存疑——刻意保持开放，叙事用途是以显式存疑示范证据纪律",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP04"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "structure_reveal",
+          "mechanism": "cohabitation_reveal"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "question_pivot",
+          "mechanism": "why_question_pivot"
+        }
+      ],
+      "required_retention_events": [
+        "cross_passage_term",
+        "cohabitation_reveal",
+        "hedged_warmth_verdict"
+      ],
+      "original_moves": [
+        "命名穿廊空间术语",
+        "揭示长屋（longhouse）结构：人畜同屋",
+        "引用排水沟考古证据证明牲畜端的存在",
+        "列举同檐理由：防盗、便于照料、取暖（标注存疑）",
+        "说明该现象的地域与时代边界"
+      ],
+      "abstract_move": "揭示全片最反直觉的空间事实（人与非人同檐），用考古细节证据验证而非仅靠文献，列举多条理由但诚实标注其中不确定项，最后划定该现象的适用边界防止过度泛化",
+      "replacement_needs": [
+        "一个命名的空间术语或结构类型",
+        "一个违反现代常识的空间混用或共处事实",
+        "支撑该事实的考古或实物细节证据",
+        "多条解释理由及其中至少一条的不确定性标注",
+        "该现象的地域、时代或人群适用边界"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80);打开的悬念 LOOP04(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "hall_interior_tour",
+      "start_ratio": 0.318,
+      "end_ratio": 0.477,
+      "start_sec": 905.2,
+      "end_sec": 1358.9,
+      "position_label": "31.8%–47.7%(15:05–22:39)",
+      "purpose": "巡览主空间：中央灶火、烟的去向、地面、家具与工具，穿插危险证据与词源回扣",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "spatial_transition",
+          "mechanism": "walkthrough_imperative"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "evidence_connection",
+          "mechanism": "soot_evidence"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "danger_reveal",
+          "mechanism": "coroners_records_etymology"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "minimalism_reveal",
+          "mechanism": "furniture_inventory_tease"
+        }
+      ],
+      "required_retention_events": [
+        "central_hearth_reveal",
+        "soot_evidence_connection",
+        "fire_danger_and_etymology",
+        "key_furniture_reveal"
+      ],
+      "original_moves": [
+        "定位厅堂为主空间并描写中央灶火",
+        "解释烟的路径及烟炱遗存作为实物连接",
+        "引用火灾危险档案证据并回扣 curfew 词源",
+        "描述夯土地面及其维护方式",
+        "列举主要家具（板桌、箱柜）及其传承地位",
+        "提及农具与纺轮"
+      ],
+      "abstract_move": "巡览主空间时先确立中心元素（火）并解释其物理逻辑，用遗存物质（烟炱）建立与今天的直接连接，穿插危险证据和词源回扣增加历史纵深感，依次讲清地面、家具、工具并强调物品的传承价值",
+      "replacement_needs": [
+        "该空间的中心元素或核心功能及其运作逻辑",
+        "一种遗存的物质痕迹作为与今天的直接连接",
+        "一个与该元素相关的危险、规则或词源回扣",
+        "空间表面（地面、墙面）的材质与维护方式",
+        "主要物件及其传承地位或多功能性"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "hearth_economy_tour",
+      "start_ratio": 0.477,
+      "end_ratio": 0.632,
+      "start_sec": 1358.9,
+      "end_sec": 1800.2,
+      "position_label": "47.7%–63.2%(22:39–30:00)",
+      "purpose": "巡览厨房经济：最值钱的金属锅、日常饮食、领主垄断与磨石冲突轶事、饮品与餐具、储粮与灾难压力",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.5418,
+          "time_ms": 1542221,
+          "reason": "磨石从日用品到权力与反抗象征：冲突轶事的情绪峰值"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "stakes_reveal",
+          "strength": 80,
+          "position_ratio": 0.6292,
+          "time_ms": 1791200,
+          "reason": "储粮'是撑过这一年与撑不过这一年之间的分界线'：生存压力峰值"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "中世纪人从不喝水的现代说法是否成立",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "myth_debunk_verdict",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "domain_shift",
+          "mechanism": "kitchen_reveal"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "value_reveal",
+          "mechanism": "most_valuable_object"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "anecdote_payoff",
+          "mechanism": "conflict_anecdote"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "cta_break",
+          "mechanism": "channel_value_proposition"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "myth_debunk",
+          "mechanism": "myth_debunk_verdict"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "stakes_reveal",
+          "mechanism": "catastrophe_stakes"
+        }
+      ],
+      "required_retention_events": [
+        "most_valuable_object",
+        "conflict_anecdote",
+        "drink_myth_debunk",
+        "famine_stakes"
+      ],
+      "original_moves": [
+        "定位厨房并揭示金属锅是全屋最值钱物件",
+        "具象描述日常主食（黑麦面包、豆汤、粥）",
+        "说明领主垄断烤箱与磨坊并强制收费",
+        "讲述农民偷藏手磨石的冲突轶事",
+        "定性：普通物件成为权力与反抗象征",
+        "辟谣饮水误解（多喝淡啤酒因水不安全）",
+        "提及木餐具",
+        "列举储粮并定性为生存分界线",
+        "引入大饥荒作为生存压力峰值"
+      ],
+      "abstract_move": "巡览厨房经济时先揭示最值钱物件建立财富观，具象描述日常饮食，引入垄断制度与冲突轶事把日用品升格为权力象征，辟谣一个现代误解，最后通过储粮与灾难建立生存压力峰值",
+      "replacement_needs": [
+        "该空间或系统中最值钱物件的揭示及其传承地位",
+        "日常消耗品或活动的具象描述",
+        "一个垄断、禁令或强制规则及其规避行为的冲突轶事",
+        "日用品被赋予权力或反抗象征意义的定性",
+        "一个现代流传误解的辟谣",
+        "一个生存资源的清单及其稀缺性压力",
+        "一场命名的灾难或危机事件作为压力峰值"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85)、PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "private_life_tour",
+      "start_ratio": 0.632,
+      "end_ratio": 0.749,
+      "start_sec": 1800.2,
+      "end_sec": 2132,
+      "position_label": "63.2%–74.9%(30:00–35:32)",
+      "purpose": "巡览私密空间：内室与养老协议、床铺、照明与窗的词源，以及日照节律对生活方式的塑造",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "testimony_reveal",
+          "mechanism": "testimony_voices"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "etymology_callback",
+          "mechanism": "etymology_callback"
+        }
+      ],
+      "required_retention_events": [
+        "retirement_agreement_reveal",
+        "bed_testimony",
+        "window_etymology"
+      ],
+      "original_moves": [
+        "说明内室或阁楼的功能",
+        "引用档案中的养老协议揭示房屋布局与家庭责任绑定",
+        "描述草垫床铺并引用后世证词（标注偏见）",
+        "描述灯芯草烛的廉价照明方案",
+        "回扣'风之眼'窗的词源",
+        "定性生活服从日照节律"
+      ],
+      "abstract_move": "巡览私密空间时先说明功能分区，用档案证据揭示空间与社会责任的绑定，描述睡眠条件并标注后世证词的偏见，讲清廉价照明方案，回扣词源，最后定性生活方式受自然节律支配",
+      "replacement_needs": [
+        "私密或次级空间的功能",
+        "一份档案或协议揭示空间安排与社会责任的关系",
+        "睡眠或休息设施的朴素现实及后世证词（含偏见标注）",
+        "廉价照明或加热方案的工艺描述",
+        "一个词源回扣",
+        "生活方式受自然节律或外部约束支配的定性"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "hygiene_myth_debunk",
+      "start_ratio": 0.749,
+      "end_ratio": 0.802,
+      "start_sec": 2132,
+      "end_sec": 2281.7,
+      "position_label": "74.9%–80.2%(35:32–38:02)",
+      "purpose": "正面处理卫生问题：排污、取水、洗浴证据，辟谣'全然不在乎清洁'并给出平衡判决，附带害虫与猫的角色",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "中世纪农人是否全然不在乎清洁",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "balanced_verdict",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "myth_debunk",
+          "mechanism": "balanced_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "sanitation_methods",
+        "cleanliness_myth_debunk",
+        "balanced_verdict"
+      ],
+      "original_moves": [
+        "说明排污方式（茅坑/粪堆）与取水方式（井/溪）",
+        "引用洗浴与洗衣证据（礼仪文献）",
+        "显式陈述刻板印象（中世纪人不在乎清洁）并否定",
+        "给出双向限定平衡判决（有清洁意识但条件有限）",
+        "提及害虫现实与役猫的功能"
+      ],
+      "abstract_move": "正面处理敏感的卫生问题时先说明基础设施，引用证据证明清洁意识的存在，显式陈述并否定流传的刻板印象，给出诚实的双向限定判决（既肯定意愿又承认局限），最后用害虫与役用动物收束在现实主义基调",
+      "replacement_needs": [
+        "排污与取水的具体基础设施或方式",
+        "清洁活动的证据（礼仪文献、器物、遗迹）",
+        "一个流传刻板印象的显式陈述与否定",
+        "一个双向限定的平衡判决（承认意愿与局限）",
+        "与该议题相关的负面现实（害虫、疾病）与应对措施（役用动物）"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP06。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:中世纪农人是否全然不在乎清洁",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "evidence_and_competence_verdict",
+      "start_ratio": 0.802,
+      "end_ratio": 0.865,
+      "start_sec": 2281.7,
+      "end_sec": 2462.1,
+      "position_label": "80.2%–86.5%(38:02–41:02)",
+      "purpose": "集中回答认识论问题（财产清单如何揭示屋内之物），给出财富观重估、健康代价与'精巧适应'能力正名",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.8626,
+          "time_ms": 2455534,
+          "reason": "'不是鲁莽或原始，而是对资源、气候与经济现实的智慧回应'：能力正名，全片认知反转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "这种生活方式后来怎样了：它如何消失、又在哪里留下痕迹",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "priority_reveal",
+          "mechanism": "wealth_priority_reveal"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "competence_verdict",
+          "mechanism": "competence_rehabilitation"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "historical_inflection",
+          "mechanism": "everything_changed"
+        }
+      ],
+      "required_retention_events": [
+        "inventory_method_reveal",
+        "wealth_priority_reveal",
+        "competence_verdict"
+      ],
+      "original_moves": [
+        "说明财产清单档案的来源（死亡、债务、纠纷）",
+        "重估财富优先级（牲畜粮食远高于家具）",
+        "诚实呈现烟雾的健康代价",
+        "逐项回收设计选择的合理性",
+        "定性为'精巧适应'完成能力正名"
+      ],
+      "abstract_move": "集中回答认识论悬念（如何知道）时先说明档案来源，用财富清单重估价值优先级颠覆现代预设，诚实承认健康代价不美化，逐项回收前文设计选择的合理性，最后定性为智慧适应完成全片认知翻转",
+      "replacement_needs": [
+        "信息来源档案的类型及其产生情境",
+        "一个颠覆现代价值预设的优先级重估（用数据或清单支撑）",
+        "一个负面代价的诚实呈现（健康、寿命、安全）",
+        "多项设计选择的合理性逐项回收",
+        "一个定性总结：从无知/原始到智慧适应的认知翻转"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85);打开的悬念 LOOP07→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "transformation_arc",
+      "start_ratio": 0.865,
+      "end_ratio": 0.953,
+      "start_sec": 2462.1,
+      "end_sec": 2711.8,
+      "position_label": "86.5%–95.3%(41:02–45:12)",
+      "purpose": "把这种生活放进历史长河：大灾变改变一切，住房逐步现代化，而它的痕迹留在今天的语言里",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "historical_inflection",
+          "strength": 75,
+          "position_ratio": 0.8674,
+          "time_ms": 2469173,
+          "reason": "'一切都变了'：大瘟疫把微观生活史接入宏观历史转型"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "transformation_and_linguistic_legacy",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "concept_naming",
+          "mechanism": "great_rebuilding"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "legacy_reveal",
+          "mechanism": "linguistic_legacy_echo"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "promise_payoff",
+          "mechanism": "inventory_recall_payoff"
+        }
+      ],
+      "required_retention_events": [
+        "everything_changed_inflection",
+        "modernization_chain",
+        "linguistic_legacy_echo"
+      ],
+      "original_moves": [
+        "用'然后，一切都变了'标记历史拐点",
+        "引入黑死病及其人口与劳动力后果",
+        "说明村落消亡与幸存者迁移",
+        "列举住房改进证据（更大、更坚固、遗存建筑）",
+        "列举现代化链条：烟囱-吊顶-玻璃窗",
+        "列举今天日常用语中遗存的词源"
+      ],
+      "abstract_move": "把微观生活史接入宏观历史转型：用标志性时代拐点句开场，引入大灾变及其人口与制度后果，用考古与遗存证据列举物质改进的链条，最后用今天语言中的遗存痕迹建立历史连续性",
+      "replacement_needs": [
+        "一个标志性的时代拐点或转折句式",
+        "一场大灾变及其人口、劳动力或制度后果",
+        "物质条件改进的考古或遗存证据",
+        "一条现代化改进的技术链条（多个相关发明或变化）",
+        "今天日常语言或习惯中遗存的历史痕迹清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(75);回收了前文的悬念 FS13→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "inventory_recall_closure",
+      "start_ratio": 0.953,
+      "end_ratio": 1,
+      "start_sec": 2711.8,
+      "end_sec": 2846.7,
+      "position_label": "95.3%–100%(45:12–47:27)",
+      "purpose": "逐字兑现标题问题：清单式排比回答，接'工作的活的系统'定性、现代便利晚近反转与'历史写在物上'格言收束",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.9761,
+          "time_ms": 2778679,
+          "reason": "'我们习以为常的便利都是晚近发明'：现代人的独特性被相对化，全片世界观峰值"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "aphorism_close",
+          "strength": 85,
+          "position_ratio": 0.9962,
+          "time_ms": 2835864,
+          "reason": "'历史写在熏黑的椽子与夯实的土地上'：认识论 loop 的格言式闭环"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "inventory_recall_answer",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "evidence_methodology_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE35",
+          "event_type": "worldview_shift",
+          "mechanism": "recency_reversal"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "aphorism_close",
+          "mechanism": "history_written_on_objects"
+        }
+      ],
+      "required_retention_events": [
+        "title_question_recall",
+        "inventory_recall_payoff",
+        "recency_reversal",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "显式召回标题主问题",
+        "用清单式排比逐项回答（覆盖全片物件）",
+        "定性：按现代标准不多，但它是工作的活的系统",
+        "反转：我们习以为常的便利都是晚近发明",
+        "对齐：普通人生活就是人类历史的主流",
+        "订阅邀请",
+        "格言收束：历史写在熏黑的椽子与夯实的土地上"
+      ],
+      "abstract_move": "逐字兑现标题承诺：召回主问题，用排比清单式回答覆盖全片内容，定性为完整但简陋的系统，用现代便利晚近性反转观众优越感，对齐普通人与历史主流，最后用格言把认识论从文字扩展到物质完成闭环",
+      "replacement_needs": [
+        "标题主问题的显式召回",
+        "一个覆盖全片内容的清单式排比回答",
+        "一个定性：虽简陋但完整可运作的系统",
+        "一个反转：现代便利的晚近性或独特性",
+        "一个对齐：研究对象与人类历史主流的关系",
+        "一个格言式收束：从单一信息源扩展到多元信息源的认识论总结"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(90)、PK10(85);回收了前文的悬念 FS02→LOOP01、FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

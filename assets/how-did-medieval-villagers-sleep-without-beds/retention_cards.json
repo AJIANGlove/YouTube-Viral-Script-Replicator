@@ -1,0 +1,1077 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T09:01:42.628Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "immersive_scene_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.04,
+      "start_sec": 0.4,
+      "end_sec": 76.7,
+      "position_label": "0%–4%(0:00–1:17)",
+      "purpose": "场景沉浸冷开场：现在时感官白描把观众放进没有该物品的历史夜晚，随后显式化标题问句",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "premise_reveal",
+          "strength": 70,
+          "position_ratio": 0.0002,
+          "time_ms": 376,
+          "reason": "现在时沉浸冷开场：没有灯、没有床垫的夜直接压到观众面前"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "question_pose",
+          "strength": 65,
+          "position_ratio": 0.0398,
+          "time_ms": 76740,
+          "reason": "标题问句显式化：床不存在时他们究竟怎么睡"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：没有床的普通村民究竟如何过夜（标题方法问句的悬挂）",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook",
+          "mechanism": "immersive_cold_open"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "scale_universalization",
+          "mechanism": "most_people_who_ever_lived"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "title_question_pose",
+          "mechanism": "explicit_title_question"
+        }
+      ],
+      "required_retention_events": [
+        "present_tense_scene",
+        "scale_universalization",
+        "title_question_pose"
+      ],
+      "original_moves": [
+        "用现在时的感官白描（光、温度、声音、气味）把观众放进一个没有灯、没有床的历史夜晚",
+        "用'有史以来绝大多数人皆是如此'的尺度把个别场景升格为人类常态",
+        "自然缝合频道定位，显式化标题问句：床不存在时他们究竟怎么睡"
+      ],
+      "abstract_move": "现在时感官白描把观众放进缺失核心物品的历史场景，用尺度升格把个别场景扩展为人类常态，显式化标题问句",
+      "replacement_needs": [
+        "该物品缺失时的多感官场景白描（视觉、听觉、触觉、嗅觉）",
+        "把个别场景升格为'有史以来绝大多数人皆是如此'的尺度表述",
+        "将标题问句自然嵌入场景并显式陈述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70)、PK02(65);打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 65
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 76740,
+        "hook_type": "immersive_scene_cold_open_with_title_question",
+        "first_stimulus_ms": 376,
+        "first_payoff_ms": 92928,
+        "evidence_refs": [
+          "C0001",
+          "C0023",
+          "C0041",
+          "C0048"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "assumption_correction",
+      "start_ratio": 0.04,
+      "end_ratio": 0.087,
+      "start_sec": 76.7,
+      "end_sec": 167.1,
+      "position_label": "4%–8.7%(1:17–2:47)",
+      "purpose": "预设纠偏：承认观众脑中的精致画面真实存在过，但把它归还给它所属的少数阶层，把叙事主角锁定为绝大多数普通人",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "correction_tease",
+          "mechanism": "correct_one_assumption"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "value_anchor",
+          "mechanism": "most_expensive_item"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "stakes_framing",
+          "mechanism": "survival_problem"
+        }
+      ],
+      "required_retention_events": [
+        "elite_image_attribution",
+        "survival_problem_framing"
+      ],
+      "original_moves": [
+        "复述观众脑中的精致画面（华丽高床、精美床品）",
+        "用阶层归属与九成人口比例把该画面限定在少数人",
+        "用'家庭最贵财产'的价值锚点标注该物品的经济地位",
+        "把该需求从生活细节定性为生存问题，锁定叙事主角为普通人"
+      ],
+      "abstract_move": "承认观众预设画面的真实性，用阶层归属与人口比例把它归还给少数群体，用经济地位锚点强化稀缺性，把叙事主角锁定为绝大多数普通人",
+      "replacement_needs": [
+        "观众对该物品的典型预设画面的具象复述",
+        "该画面所属阶层与人口比例的证据",
+        "该物品作为家庭重大财产的价值锚点",
+        "从生活细节升格为生存问题的定性表述"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "space_context_exposition",
+      "start_ratio": 0.086,
+      "end_ratio": 0.145,
+      "start_sec": 166.1,
+      "end_sec": 278.5,
+      "position_label": "8.6%–14.5%(2:46–4:38)",
+      "purpose": "居住空间语境：用房屋结构解释睡眠安排，并首次示范'看似不卫生实则是策略'的判断反转",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "living_detail",
+          "mechanism": "animals_in_room"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "judgment_reversal",
+          "mechanism": "not_recklessness_strategy"
+        }
+      ],
+      "required_retention_events": [
+        "dwelling_description",
+        "strategy_reframe"
+      ],
+      "original_moves": [
+        "白描单间居所的材质与空间（茅草、木材、石材）",
+        "陈述人畜共居的格局事实",
+        "给出'动物是财富也是热源'的策略反转，解释看似不卫生的真实逻辑",
+        "细化格局：人居一端、畜居另一端的长屋结构"
+      ],
+      "abstract_move": "用居住空间的材质与格局白描建立语境，陈述看似不卫生的布局事实，用策略反转解释其真实逻辑，细化空间分区",
+      "replacement_needs": [
+        "居住空间的材质、面积或结构白描",
+        "看似不合理但真实存在的空间布局事实",
+        "该布局的策略性解释（经济、功能或生存需求）",
+        "空间分区的具体格局细节"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "primary_answer_delivery",
+      "start_ratio": 0.144,
+      "end_ratio": 0.251,
+      "start_sec": 277.5,
+      "end_sec": 483.6,
+      "position_label": "14.4%–25.1%(4:38–8:04)",
+      "purpose": "主答案交付：直接回答'躺在什么上面'，并同时给出优势、代价与维护节奏的三面分析",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.1498,
+          "time_ms": 288549,
+          "reason": "主答案落地：草垫是绝大多数人的床，垫层袋是床垫的祖先"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "没有床，他们究竟躺在什么上面",
+          "closes_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "草垫碎化、生虫、引鼠的严重缺点如何应对",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "direct_answer_with_genealogy",
+          "opened_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "maintenance_routine_answer",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "question_pivot",
+          "mechanism": "crux_question"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "direct_answer",
+          "mechanism": "straw_answer"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "genealogy_reveal",
+          "mechanism": "mattress_ancestor"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "drawback_tease",
+          "mechanism": "serious_drawbacks"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "pest_stakes",
+          "mechanism": "fleas_lice_ticks"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "era_complaint",
+          "mechanism": "contemporary_witness_quote"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "source_criticism",
+          "mechanism": "one_critical_guest_caveat"
+        }
+      ],
+      "required_retention_events": [
+        "explicit_question",
+        "direct_answer",
+        "tradeoff_and_maintenance",
+        "source_criticism"
+      ],
+      "original_moves": [
+        "显式追问'究竟躺在什么上面'",
+        "直接交付答案：就地采集的垫层材料（草、芦苇、蕨类等）",
+        "建立该安排与现代物品之间的谱系关系（垫层袋是床垫的祖先）",
+        "分析优势（低成本、保温、缓冲）",
+        "分析代价（碎化、虫害、鼠患）",
+        "给出随季节与收获节奏更换的维护策略",
+        "引用文献证据并标注孤证限定"
+      ],
+      "abstract_move": "显式追问后直接交付主答案，建立该答案与现代物品的谱系关系，同时给出优势、代价与维护节奏的三面分析",
+      "replacement_needs": [
+        "直接回答'用什么'的答案（就地采集或低成本的替代物）",
+        "该答案与现代物品之间的谱系或演化关系",
+        "优势分析（成本、功能、可获得性）",
+        "代价分析（耐久性、健康风险、维护负担）",
+        "维护或更换的时间节奏与触发条件"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "material_geography",
+      "start_ratio": 0.252,
+      "end_ratio": 0.317,
+      "start_sec": 485.5,
+      "end_sec": 611.1,
+      "position_label": "25.2%–31.7%(8:05–10:11)",
+      "purpose": "材料地理与季节节律：把'睡什么'绑定到风土与农事日历上，给出第一层的系统化解释",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "system_verdict",
+          "mechanism": "product_of_local_land"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "topic_pivot",
+          "mechanism": "warmth_becomes_key"
+        }
+      ],
+      "required_retention_events": [
+        "regional_material_list",
+        "seasonal_calendar_link"
+      ],
+      "original_moves": [
+        "按地貌列举不同垫层材料（平原用稻草、湿地用芦苇、山地用蕨类、海岸用海草）",
+        "指出某种材料的附加功能（如某些草有驱虫气味）",
+        "把采集定性为农事年历中的季节任务",
+        "对比同一材料在年初新鲜与冬末破损的状态",
+        "点明睡眠质量取决于日历"
+      ],
+      "abstract_move": "按地理或环境差异列举不同替代材料，指出材料的附加功能，把获取绑定到时间节律，用状态对比揭示季节周期对使用体验的影响",
+      "replacement_needs": [
+        "按地理或环境差异列举不同材料的清单",
+        "某种材料的附加功能或特性",
+        "材料获取作为时间节律中的周期性任务",
+        "同一材料在不同时间节点的状态对比"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "warmth_layering_system",
+      "start_ratio": 0.317,
+      "end_ratio": 0.365,
+      "start_sec": 610.1,
+      "end_sec": 702.2,
+      "position_label": "31.7%–36.5%(10:10–11:42)",
+      "purpose": "保暖分层系统：从'垫什么'扩展到'盖什么'，逐层叠加直至揭示最可靠热源是彼此的身体",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "heirloom_reveal",
+          "mechanism": "blankets_in_wills"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "layering_apex",
+          "mechanism": "most_reliable_heat_source"
+        }
+      ],
+      "required_retention_events": [
+        "layering_sequence",
+        "body_heat_reveal"
+      ],
+      "original_moves": [
+        "点明保暖成为关键问题",
+        "给出主力保暖材料（羊毛毯）及其经济地位（昂贵、可继承）",
+        "引用文献证据：盖物出现在遗嘱中",
+        "列举零成本加层方法（旧衣叠穿）",
+        "揭示最可靠热源是其他人的身体"
+      ],
+      "abstract_move": "从核心需求扩展到保暖系统，给出主力材料及其经济地位，用文献证据强化其财产属性，列举零成本加层，揭示最可靠资源是彼此的身体",
+      "replacement_needs": [
+        "主力保暖或功能材料及其经济地位",
+        "该材料作为可继承财产的文献或制度证据",
+        "零成本或低成本的补充手段",
+        "最可靠或最核心资源的层级顶点揭示"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "collectivity_reveal",
+      "start_ratio": 0.365,
+      "end_ratio": 0.414,
+      "start_sec": 702.2,
+      "end_sec": 796.4,
+      "position_label": "36.5%–41.4%(11:42–13:16)",
+      "purpose": "共眠常态揭示：把'挤在一起睡'从尴尬重构为常态，并给出'私人睡眠空间是极晚近奢侈'的第一次世界观反转",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "'更奇怪的还在后面'：古人的睡法与现代人有何根本不同",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "worldview_reversal",
+          "mechanism": "privacy_recent_luxury"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "escalation_tease",
+          "mechanism": "gets_even_weirder"
+        }
+      ],
+      "required_retention_events": [
+        "shared_sleep_norm",
+        "privacy_luxury_reversal"
+      ],
+      "original_moves": [
+        "陈述全家同室同眠的事实并给出热学解释",
+        "给出'不以为怪'的价值判断句",
+        "扩展共眠范围：仆役、旅人、客人",
+        "给出'私人睡眠空间是极晚近奢侈'的反转断言",
+        "定性睡眠为集体事务"
+      ],
+      "abstract_move": "陈述看似尴尬的共享事实，用物理或经济解释重构为常态，扩展共享范围至不同社会关系，用反转断言揭示私人空间是极晚近奢侈",
+      "replacement_needs": [
+        "看似尴尬的共享事实及其物理或经济解释",
+        "'不以为怪'的价值判断或常态化表述",
+        "共享范围的社会关系扩展（家人、仆役、客人等）",
+        "私人空间或个人权利是极晚近奢侈的反转断言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "pattern_disruption_reveal",
+      "start_ratio": 0.414,
+      "end_ratio": 0.491,
+      "start_sec": 797.1,
+      "end_sec": 946.4,
+      "position_label": "41.4%–49.1%(13:17–15:46)",
+      "purpose": "全片最大模式颠覆：他们甚至连睡法本身都和我们不一样——分段睡眠的学术假说、夜间清醒期的活动与审慎的争议标注",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 90,
+          "position_ratio": 0.4349,
+          "time_ms": 837686,
+          "reason": "全片最大模式颠覆：分段睡眠——他们连睡法本身都和我们不一样"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "分段睡眠究竟有多普遍、何时出现、因地区与阶层如何变化：学界仍在争论，刻意保持开放，叙事用途是以'有依据的学术论证而非定论'示范证据纪律",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "pattern_reveal_biphasic_sleep",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP05"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "pattern_reveal",
+          "mechanism": "segmented_biphasic_sleep"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "activity_list",
+          "mechanism": "midnight_wakefulness_activities"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "scholarly_caution",
+          "mechanism": "debate_explicitly_open"
+        }
+      ],
+      "required_retention_events": [
+        "escalation_tease",
+        "pattern_reveal",
+        "scholarly_caution"
+      ],
+      "original_moves": [
+        "用'更奇怪'的升级预告制造期待",
+        "对照陈述现代人的单块睡眠观",
+        "交代研究者与文献范围，建立学术基础",
+        "列举两段睡眠与夜间清醒活动（祈祷、聊天、性、巡查）",
+        "给出无人工照明世界对该模式的解释力",
+        "显式标注学术争议并引用术语证据"
+      ],
+      "abstract_move": "用升级预告制造期待，对照现代人的认知基线，交代学术基础，列举颠覆性的行为模式与具体活动，给出历史语境的解释力，显式标注争议边界",
+      "replacement_needs": [
+        "'越来越奇怪'的升级预告与期待制造",
+        "现代人认知基线的对照陈述",
+        "研究者、文献或证据范围的学术基础交代",
+        "颠覆性行为模式的具体活动列举",
+        "历史语境对该模式的解释力",
+        "学术争议的显式标注与术语证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(90);打开的悬念 LOOP05(不闭合) 跨段;回收了前文的悬念 FS07→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "social_contrast_survey",
+      "start_ratio": 0.493,
+      "end_ratio": 0.565,
+      "start_sec": 949.1,
+      "end_sec": 1088.6,
+      "position_label": "49.3%–56.5%(15:49–18:09)",
+      "purpose": "社会对照巡览：走出主角群体，用修道院与城堡两个极端场景把'共眠、起夜、无私人空间'扩展为整个社会的常态",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "contrast_reveal",
+          "mechanism": "sleep_subordinated_to_devotion"
+        }
+      ],
+      "required_retention_events": [
+        "disciplined_sleep_sample",
+        "elite_servant_contrast"
+      ],
+      "original_moves": [
+        "给出修道院的纪律化睡眠样本（规则、共眠、定时起夜、长明灯）",
+        "对照'主动选择的纪律'与自然节律的回响",
+        "给出城堡场景：仆役睡在大厅",
+        "落点：仅领主夫妇有固定独立睡具",
+        "定性经验渗透各阶层"
+      ],
+      "abstract_move": "走出主角群体，用两个极端社会场景（纪律化样本与富贵场景）展示同一模式的社会渗透，落点少数人才有的例外，定性经验跨阶层的普及",
+      "replacement_needs": [
+        "纪律化或制度化样本的规则与实践细节",
+        "主动纪律与自然节律或历史语境的对照",
+        "富贵或权力场景下底层群体的真实位置",
+        "极少数人才有的例外或特权的阶层落点"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "environmental_trial_stack",
+      "start_ratio": 0.565,
+      "end_ratio": 0.637,
+      "start_sec": 1087.7,
+      "end_sec": 1226.3,
+      "position_label": "56.5%–63.7%(18:08–20:26)",
+      "purpose": "环境试炼堆叠：黑暗、寒冷、烟雾、潮湿依次压上，每一项都给出当时的应对逻辑",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "夜晚的煎熬不止于一堆草与一条毯：黑暗、寒冷、烟雾、潮湿如何逐个应对",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "sensory_immersion",
+          "mechanism": "darkness_absolute"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "causal_reveal",
+          "mechanism": "smoke_sleep_low"
+        }
+      ],
+      "required_retention_events": [
+        "darkness_absolute",
+        "cold_smoke_causality"
+      ],
+      "original_moves": [
+        "用'考验不止于草与毯'承接前文",
+        "用第二人称感知指令开启黑暗段落",
+        "给出照明成本分层与日出而作的非自愿性",
+        "陈述无烟囱时代的排烟方式与低处睡眠的因果",
+        "给出地面返潮与垫高睡处的对策",
+        "埋下烟囱改变居住结构的伏笔"
+      ],
+      "abstract_move": "承接前文后堆叠新一轮环境试炼，用感知指令启动，依次给出黑暗、烟雾、潮湿的事实与当时的应对逻辑，埋下技术改变结构的伏笔",
+      "replacement_needs": [
+        "第二人称感知指令开启的环境压力",
+        "该压力的经济或技术约束与非自愿性",
+        "因果链：某项约束如何导致另一项不便",
+        "地面或物理环境的问题与垫高或隔离的对策",
+        "技术改变格局的伏笔"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "solution_evolution_ladder",
+      "start_ratio": 0.637,
+      "end_ratio": 0.705,
+      "start_sec": 1226.8,
+      "end_sec": 1357.2,
+      "position_label": "63.7%–70.5%(20:27–22:37)",
+      "purpose": "解法演化阶梯：把垫高对策延伸为从地面到高床的完整演化链，并把物品差距转译为阶层差距的度量",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "从地面草垫到现代床：睡眠安排如何一步步演变",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "trial_stack_with_practical_solutions",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "reframe_verdict",
+          "mechanism": "raised_bed_practical_solution"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "status_gap_verdict",
+          "mechanism": "measured_rich_poor_gap"
+        }
+      ],
+      "required_retention_events": [
+        "evolution_ladder",
+        "status_gap_measurement"
+      ],
+      "original_moves": [
+        "承接潮湿问题，给出垫高对策",
+        "定性高床为解法而非奢侈",
+        "枚举演化阶梯（地面垫层 → 袋装垫层 → 矮架 → 多层铺陈 → 四柱顶篷）",
+        "给出顶层配置的价格锚点（抵得上一座小屋）",
+        "用两端人群对比给出阶层度量句"
+      ],
+      "abstract_move": "承接具体问题，把单一对策延伸为完整演化阶梯，定性高端形态为问题解法而非奢侈，用价格锚点标注顶层配置，用两端对比把物品差距转译为阶层差距",
+      "replacement_needs": [
+        "从低端到高端的演化阶梯完整枚举",
+        "高端形态为问题解法而非奢侈的定性",
+        "顶层配置的价格锚点（对标重大财产）",
+        "两端人群对比的阶层度量表述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS16 跨段;回收了前文的悬念 FS10→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "comfort_relativity_reframe",
+      "start_ratio": 0.704,
+      "end_ratio": 0.726,
+      "start_sec": 1356.3,
+      "end_sec": 1398.2,
+      "position_label": "70.4%–72.6%(22:36–23:18)",
+      "purpose": "舒适相对性重构：防止观众把古人之夜读成纯粹受苦——人会适应，做惯的草垫也能真正安眠",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.7046,
+          "time_ms": 1357246,
+          "reason": "床的高度字面丈量了贫富差距：物品差距转译为阶层差距"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "empathy_reframe",
+          "mechanism": "never_knew_mattress"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "reconstruction_offer",
+          "mechanism": "trace_one_night"
+        }
+      ],
+      "required_retention_events": [
+        "adaptation_argument",
+        "system_works_verdict"
+      ],
+      "original_moves": [
+        "用'别以为只是折磨'的转折开启",
+        "给出适应性与舒适相对性论点",
+        "给出反事实：不知床垫为何物的家庭不会为它失眠",
+        "白描一张做得好的草垫上的安眠场景",
+        "判断系统因有效而延续"
+      ],
+      "abstract_move": "用转折防止观众把历史读成纯粹受苦，给出适应性与相对性论点，用反事实阻断同情投射，白描实际可达成的舒适场景，判断系统因有效而延续",
+      "replacement_needs": [
+        "适应性与舒适相对性的论点",
+        "不知现代标准者不为它失眠的反事实",
+        "低端条件下实际可达成的舒适场景白描",
+        "系统因有效而延续的判断"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "immersive_reconstruction",
+      "start_ratio": 0.727,
+      "end_ratio": 0.78,
+      "start_sec": 1399.8,
+      "end_sec": 1501.4,
+      "position_label": "72.7%–78%(23:20–25:01)",
+      "purpose": "一夜沉浸复原：不发明名字与台词，按史料一般条件走完从熄灯到黎明的一整夜，回收前文所有线索",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "no_invention_declaration",
+        "full_night_walkthrough"
+      ],
+      "original_moves": [
+        "声明方法：不发明人名与台词",
+        "按史料一般条件走完睡前流程（晚餐、安顿牲畜、封火、铺被褥）",
+        "给出孩子睡在成人中间的保暖细节",
+        "描述两段睡眠之间的安静清醒活动",
+        "给出黎明即起的农事逻辑"
+      ],
+      "abstract_move": "声明不虚构的方法约束，按史料一般条件走完从准备到清醒的完整周期，回收前文所有线索，给出关键细节的具体安排",
+      "replacement_needs": [
+        "不虚构具体人物或情节的方法声明",
+        "从准备到结束的完整流程枚举",
+        "回收前文线索的关键细节（保暖、分段、共享等）",
+        "周期结束与新周期启动的逻辑"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "consequence_stakes",
+      "start_ratio": 0.779,
+      "end_ratio": 0.838,
+      "start_sec": 1500.5,
+      "end_sec": 1614.7,
+      "position_label": "77.9%–83.8%(25:00–26:55)",
+      "purpose": "后果与赌注：长年如此的代价（疼痛、寒湿、虫媒疾病、共眠传染），以及铺盖作为遗产的地位证据",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 70,
+          "position_ratio": 0.7988,
+          "time_ms": 1538710,
+          "reason": "共眠的阴暗面：疾病进入同室之家很少止步于一个人"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "stakes_reveal",
+          "mechanism": "disease_rarely_stopped"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "document_evidence",
+          "mechanism": "bed_in_last_will"
+        }
+      ],
+      "required_retention_events": [
+        "health_disease_cost",
+        "inheritance_evidence"
+      ],
+      "original_moves": [
+        "给出寒湿与疼痛的慢性健康代价",
+        "给出虫媒疾病风险",
+        "给出共眠加速传染的链条",
+        "标注病因未明但模式可感的时代限制",
+        "引用铺盖频繁出现在遗嘱与财产清单的文献证据",
+        "定性睡具为地位指标"
+      ],
+      "abstract_move": "堆叠长年如此的健康代价（慢性、虫媒、传染），标注时代认知限制，引用文献证据把相关物品定性为财产与地位指标",
+      "replacement_needs": [
+        "慢性健康代价（疼痛、寒湿、劳损等）",
+        "虫媒或环境风险及其加速机制",
+        "共享或密集布局加速风险传播的链条",
+        "病因未明但模式可感的时代认知限制",
+        "相关物品出现在遗嘱或财产清单的文献证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "cultural_resilience_reframe",
+      "start_ratio": 0.839,
+      "end_ratio": 0.909,
+      "start_sec": 1616.7,
+      "end_sec": 1751.5,
+      "position_label": "83.9%–90.9%(26:57–29:12)",
+      "purpose": "语言习俗与韧性重估：睡眠如何渗进语言与日常仪式，隐私缺失如何塑造社会，最后把功劳归还给代代打磨的生存智慧",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9059,
+          "time_ms": 1744937,
+          "reason": "不是无知而是聪明回应：生存智慧的功劳被正式归还"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "perspective_reset",
+          "mechanism": "resilience_born"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "credit_verdict",
+          "mechanism": "not_ignorance_intelligent_responses"
+        }
+      ],
+      "required_retention_events": [
+        "language_ritual_evidence",
+        "ingenuity_credit"
+      ],
+      "original_moves": [
+        "给出留存至今的相关语汇作为普及度证据",
+        "列举封火、晾被等日常仪式及其节律属性",
+        "陈述隐私缺失如何塑造社会生活",
+        "给出'私人内心世界是晚近现象'的反转",
+        "清单式列举实操知识（材料、时令、位置）",
+        "给出'不是无知而是聪明回应'的功劳归还",
+        "点明无文字代际传承"
+      ],
+      "abstract_move": "用留存语汇证明普及度，列举日常仪式及其节律属性，陈述隐私缺失如何塑造社会，用反转揭示私人内心世界的晚近性，清单式敬意实操知识，功劳归还代际传承的生存智慧",
+      "replacement_needs": [
+        "留存至今的相关语汇或习俗作为普及度证据",
+        "重复到成为节律的日常仪式列举",
+        "隐私缺失或共享常态如何塑造社会生活",
+        "私人空间或个人观念是晚近现象的反转",
+        "实操知识的清单式敬意（材料、时令、策略等）",
+        "代际传承的生存智慧的功劳归还"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "modernization_callback_closure",
+      "start_ratio": 0.91,
+      "end_ratio": 1,
+      "start_sec": 1752.3,
+      "end_sec": 1926.2,
+      "position_label": "91%–100%(29:12–32:06)",
+      "purpose": "现代化瀑布与人性回扣：技术演进把该物品从珍宝变成寻常物，把观众的现代夜还原为极晚近的奢侈，以开场意象回环收束",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9831,
+          "time_ms": 1893698,
+          "reason": "用最仅有的手段满足最古老的需求：古人之夜升格为人性常量"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.9964,
+          "time_ms": 1919369,
+          "reason": "下次躺回床上时想起这份舒适有多罕见、多新、多了不起：观众的日常被永久陌生化"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 75,
+          "position_ratio": 0.9982,
+          "time_ms": 1922825,
+          "reason": "火尽、村暗：开场意象原句回环，全片静谧合拢"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "systematized_direct_answer_plus_scene_callback",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "evolution_ladder_plus_modernization_cascade",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "worldview_reversal",
+          "mechanism": "very_recent_acquisition"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "elevation",
+          "mechanism": "deeply_human"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "emotional_payoff",
+          "mechanism": "inherited_resilience"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "callback_close",
+          "mechanism": "scene_callback"
+        }
+      ],
+      "required_retention_events": [
+        "modernization_cascade",
+        "human_constant_elevation",
+        "scene_callback_close"
+      ],
+      "original_moves": [
+        "给出技术演进瀑布（烟囱、繁荣、廉价布料、工业化生产）",
+        "断言现代标配是极晚近的获得",
+        "换位：现代卧室清单在古人眼中是非凡财富",
+        "点题：大叙事跳过了夜晚",
+        "升格：他们在用最仅有的手段满足最古老的需求",
+        "给出继承二分句：韧性与苦难",
+        "邀约：下次躺回床上时想起这份舒适有多罕见、多新、多了不起",
+        "回环：开场意象（火尽、村暗）原句重现，全片合拢"
+      ],
+      "abstract_move": "给出技术演进瀑布把稀缺变寻常，断言现代标配是极晚近获得，换位揭示现代清单在历史眼中是非凡财富，点题大叙事的盲区，升格为人性常量，继承二分句，感知刷新邀约，开场意象回环收束",
+      "replacement_needs": [
+        "技术或社会演进的瀑布式枚举",
+        "'现代标配是极晚近获得'的反转断言",
+        "现代清单在历史眼中是非凡财富的换位",
+        "大叙事或主流视角的盲区点题",
+        "'用最仅有的手段满足最古老需求'的人性升格",
+        "韧性与苦难的继承二分句",
+        "观众下次使用该物品时的感知刷新邀约",
+        "开场意象的原句或近似回环"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)、PK09(80)、PK10(75);回收了前文的悬念 FS01→LOOP01、FS11→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

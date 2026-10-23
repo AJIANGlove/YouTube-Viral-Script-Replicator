@@ -1,0 +1,1006 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T09:09:18.561Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "fantasy_hook_and_contract",
+      "start_ratio": 0,
+      "end_ratio": 0.029,
+      "start_sec": 0,
+      "end_sec": 36.8,
+      "position_label": "0%–2.9%(0:00–0:37)",
+      "purpose": "幻想开场与账本契约：先给浪漫场景再立刻翻账本，用反直觉数据钩确立'钱从哪来'的子悬念与'能否致富'的主悬念",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.0122,
+          "time_ms": 15628,
+          "reason": "饲料费是住宿费的五倍：账本对浪漫版本的第一击"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：拥有这门生意到底能不能致富（标题经济学承诺的悬挂）",
+          "closes_in": "FS16"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "钱到底从哪来：为什么饲料费是住宿费的五倍，真实收入结构是什么",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook",
+          "mechanism": "second_person_identity_address"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "fantasy_deflation",
+          "mechanism": "ledger_pivot"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "data_shock",
+          "mechanism": "counterintuitive_ratio"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "contract_offer",
+          "mechanism": "follow_the_money"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "title_correction",
+          "mechanism": "terminology_intrigue"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_fantasy",
+        "ledger_pivot",
+        "counterintuitive_ratio_hook",
+        "wealth_question_contract"
+      ],
+      "original_moves": [
+        "给出浪漫化的旅行场景作为观众预期",
+        "翻开真实旅行账目进行反转",
+        "揭示饲料费是住宿费的五倍这一反直觉比例",
+        "点明浪漫版本遗漏了关键成本结构",
+        "预告将追踪硬币流向查明能否致富"
+      ],
+      "abstract_move": "浪漫预期建立 + 账本反转 + 反直觉成本比例揭示 + 遗漏要素定性 + 双层悬念开启（钱从哪来 + 能否致富）",
+      "replacement_needs": [
+        "一个大众持有的浪漫化/简化版本认知",
+        "一个可量化的反直觉成本比例数据（暗线成本远超主线）",
+        "一个贯穿全片的核心问句（盈利性/可持续性判决）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(78);打开的悬念 LOOP01→FS16、LOOP02→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 78
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 36843,
+        "hook_type": "immersive_fantasy_deflated_by_ledger",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 15628,
+        "evidence_refs": [
+          "C0001",
+          "C0013",
+          "C0024"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "term_calibration",
+      "start_ratio": 0.029,
+      "end_ratio": 0.082,
+      "start_sec": 36.8,
+      "end_sec": 105.2,
+      "position_label": "2.9%–8.2%(0:37–1:45)",
+      "purpose": "术语与证据基座校准：纠正标题用词，引入有留存文档的真实样本与空间尺度，为后续数字建立可信度",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "scale_reveal",
+          "mechanism": "spatial_walkthrough"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "reframe_verdict",
+          "mechanism": "transport_business_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "title_correction",
+        "documented_sample",
+        "scale_walkthrough"
+      ],
+      "original_moves": [
+        "纠正标题用词的时代错位（客栈/酒馆/旅店辨析）",
+        "引入一个文档留存丰富的真实样本",
+        "巡视建筑规模（十六间客房）与功能分区",
+        "建立空间尺度感（五六十人同时在场）"
+      ],
+      "abstract_move": "术语纠偏 + 真实样本锚定 + 空间尺度巡视 + 后续数据可信度铺垫",
+      "replacement_needs": [
+        "一个标题用词的时代/专业纠偏（该身份在当时的准确称呼）",
+        "一个有留存文档支撑的真实案例",
+        "建筑规模或容量的空间巡视数据"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "demand_structure_reveal",
+      "start_ratio": 0.082,
+      "end_ratio": 0.123,
+      "start_sec": 105.2,
+      "end_sec": 157.7,
+      "position_label": "8.2%–12.3%(1:45–2:38)",
+      "purpose": "需求结构揭示：每位旅客同时是多重客户，建筑的每个区域把一种需求变成一条收入",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "vivid_stakes",
+          "mechanism": "hungry_mouth_urgency"
+        }
+      ],
+      "required_retention_events": [
+        "multi_client_reframe",
+        "need_to_income_mapping"
+      ],
+      "original_moves": [
+        "列举地段带来的差异化客源类型",
+        "展开每类客源的差异化需求清单",
+        "引入随行牲畜作为'另一张等不及的嘴'",
+        "揭示一个客人同时创造多重收费",
+        "点题句：你买的是旅人选择变少的位置"
+      ],
+      "abstract_move": "客源类型拆解 + 差异化需求清单 + 非人类需求引入 + 单客多重收费机制 + 位置稀缺性定性",
+      "replacement_needs": [
+        "客源类型与差异化需求的清单式拆解",
+        "一个被忽视的附加需求源（非核心对象的刚需）",
+        "区域功能与收入的一一映射关系",
+        "位置即稀缺性的隐喻断言"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "capital_cost_scale",
+      "start_ratio": 0.123,
+      "end_ratio": 0.169,
+      "start_sec": 157.7,
+      "end_sec": 216.4,
+      "position_label": "12.3%–16.9%(2:38–3:36)",
+      "purpose": "建造成本的劳动年限换算：用日薪把陌生金额翻译成'N年收入'，并拆分房东与租户两种角色",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.1459,
+          "time_ms": 187067,
+          "reason": "建造成本换算为74个熟练工劳动年：陌生金额获得体感"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "scale_translation",
+          "mechanism": "wage_year_translation"
+        }
+      ],
+      "required_retention_events": [
+        "currency_conversion",
+        "wage_year_translation",
+        "landlord_tenant_split"
+      ],
+      "original_moves": [
+        "给出建造总价£400的原文数字",
+        "换算成最小货币单位96000便士",
+        "引入当代日薪5便士与年度工作日假设",
+        "换算为74个熟练工劳动年获得体感",
+        "拆分房东出墙与地、租户出钱经营的分工"
+      ],
+      "abstract_move": "陌生金额原文 + 最小单位换算 + 日薪锚定 + 劳动年限体感翻译 + 产权与经营分离",
+      "replacement_needs": [
+        "建造或启动总成本的原文数字",
+        "币制换算路径（换算至最小单位再对比日薪）",
+        "劳动年限换算结果（N年收入）",
+        "产权方与经营方的分工拆分"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "setup_and_working_capital",
+      "start_ratio": 0.169,
+      "end_ratio": 0.216,
+      "start_sec": 216.4,
+      "end_sec": 277.6,
+      "position_label": "16.9%–21.6%(3:36–4:38)",
+      "purpose": "开办装备与营运资金：把空楼变成可营业场所的全部投入，以及纸面盈利与现金流的悖论",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "paradox_tease",
+          "mechanism": "paper_profit_cash_gap"
+        }
+      ],
+      "required_retention_events": [
+        "inventory_montage",
+        "cash_flow_paradox"
+      ],
+      "original_moves": [
+        "列举分区装备清单（客房/大厅/饲养区）",
+        "引入起始存货的必要性",
+        "揭示损耗与失窃的日常现实",
+        "说明赊账与预付造成的现金缺口",
+        "给出悖论句：纸面盈利却无钱买面包",
+        "点明钱必须不停循环"
+      ],
+      "abstract_move": "装备清单铺陈 + 起始存货与损耗现实 + 赊账预付现金缺口 + 纸面盈利与现金流悖论 + 循环必要性",
+      "replacement_needs": [
+        "分区装备或启动物资清单",
+        "起始存货与日常损耗/失窃的现实",
+        "赊账或预付导致的现金流缺口机制",
+        "纸面盈利与实际现金的悖论句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "fixed_obligation_stakes",
+      "start_ratio": 0.216,
+      "end_ratio": 0.24,
+      "start_sec": 277.6,
+      "end_sec": 307.7,
+      "position_label": "21.6%–24%(4:38–5:08)",
+      "purpose": "固定义务的压力定性：租金不随经营好坏松动，用劳动年限换算强化其重量",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "aphorism_landing",
+          "mechanism": "rent_indifference"
+        }
+      ],
+      "required_retention_events": [
+        "rent_wage_translation",
+        "rent_indifference_aphorism"
+      ],
+      "original_moves": [
+        "给出年租金£8的原文数字",
+        "换算为384个劳动日",
+        "排比坏年景清单但金额不变（租金不在乎借口）",
+        "强调8磅仍是8磅的刚性",
+        "点题：楼归学院、义务归你（产权与义务分离）"
+      ],
+      "abstract_move": "固定义务原文 + 劳动日换算 + 坏年景清单与金额不变排比 + 刚性强调 + 产权义务分离点题",
+      "replacement_needs": [
+        "固定租金或固定义务的原文数字与劳动日换算",
+        "坏年景清单（但义务金额不变）的排比",
+        "产权与义务分离的点题句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "labor_household_structure",
+      "start_ratio": 0.24,
+      "end_ratio": 0.308,
+      "start_sec": 307.7,
+      "end_sec": 394.5,
+      "position_label": "24%–30.8%(5:08–6:35)",
+      "purpose": "人力与家庭劳动结构：大生意由疲惫的大家庭运转，无偿家庭劳动容易被误算成利润",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "wry_understatement",
+          "mechanism": "tired_household"
+        }
+      ],
+      "required_retention_events": [
+        "household_labor_reveal",
+        "wage_data"
+      ],
+      "original_moves": [
+        "纠偏'不是一个老板站柜台'的误解",
+        "拆解配偶/子女/雇工的家庭分工",
+        "揭示家庭劳动的隐性成本（折价计算）",
+        "给出雇工工资数据作为对照",
+        "说明酿酒与饲养等关键岗位的用人风险"
+      ],
+      "abstract_move": "单人经营误解纠偏 + 家庭成员分工拆解 + 家庭劳动隐性成本 + 雇工工资对照 + 关键岗位用人风险",
+      "replacement_needs": [
+        "家庭成员分工与隐性劳动成本的拆解",
+        "雇工工资数据作为成本对照",
+        "关键岗位的用人风险或技能门槛"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "supply_chain_perishability",
+      "start_ratio": 0.308,
+      "end_ratio": 0.369,
+      "start_sec": 394.5,
+      "end_sec": 473.1,
+      "position_label": "30.8%–36.9%(6:35–7:53)",
+      "purpose": "供应链与易腐损耗：基础物资牵一发动全身，小额流失合计吃掉全部毛利",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "perishability_reframe",
+          "mechanism": "money_goes_bad"
+        }
+      ],
+      "required_retention_events": [
+        "grain_domino",
+        "perishability_reframe",
+        "margin_erosion_verdict"
+      ],
+      "original_moves": [
+        "说明核心原料（粮食）牵一发动全身的多线涨价传导",
+        "列举燃料与蜡烛等日常消耗",
+        "展示设备损耗的持续支出",
+        "给出易腐品的两难（钱会在桶里坏掉/买多买少）",
+        "总结小额流失清单合计吃掉全部毛利"
+      ],
+      "abstract_move": "核心原料多线传导 + 日常消耗清单 + 易腐品两难 + 小额损耗清单 + 合计致命定性",
+      "replacement_needs": [
+        "核心原料的多线涨价传导链条",
+        "日常消耗与设备损耗清单",
+        "易腐品的买多买少两难",
+        "小额损耗合计吃掉毛利的定性"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "income_line_reveal",
+      "start_ratio": 0.369,
+      "end_ratio": 0.456,
+      "start_sec": 473.1,
+      "end_sec": 585.2,
+      "position_label": "36.9%–45.6%(7:53–9:45)",
+      "purpose": "全片核心反转：招牌产品最易被高估，饲养与食宿等暗线才是主收入，用真实账目比例完成揭示",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.4421,
+          "time_ms": 566898,
+          "reason": "'马厩是第二个餐厅'：收入倒挂的核心隐喻断言"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "income_inversion_reveal",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "contradiction_pivot",
+          "mechanism": "sounds_terrible"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "data_reveal",
+          "mechanism": "feed_equals_everything"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "aphorism_reveal",
+          "mechanism": "second_dining_room"
+        }
+      ],
+      "required_retention_events": [
+        "sounds_terrible_pivot",
+        "ledger_ratio_reveal",
+        "second_dining_room_aphorism"
+      ],
+      "original_moves": [
+        "给出自我反驳枢轴：听起来很惨，为什么还有人做",
+        "论证招牌产品（酒）最易被高估",
+        "列举真实收入结构（食物与住宿）",
+        "揭示真实账目比例：饲料费≈全组食宿酒总和",
+        "给出核心隐喻断言：马厩是第二个餐厅"
+      ],
+      "abstract_move": "自我反驳枢轴 + 招牌产品高估论证 + 真实收入结构列举 + 暗线成本比例揭示 + 隐喻断言（收入倒挂）",
+      "replacement_needs": [
+        "自我反驳枢轴（为什么还有人做）",
+        "招牌产品被高估的论证",
+        "真实账目比例（附属开销≈其余总和）",
+        "暗线收入的隐喻断言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(88);回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "income_ladder_extension",
+      "start_ratio": 0.456,
+      "end_ratio": 0.533,
+      "start_sec": 585.2,
+      "end_sec": 683.4,
+      "position_label": "45.6%–53.3%(9:45–11:23)",
+      "purpose": "收入阶梯扩展：货物仓储、贸易撮合、信息先到与信用枢纽，把场所升级为商业基础设施",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.529,
+          "time_ms": 678409,
+          "reason": "一位独行旅客不买酒也能创造六笔账：收入阶梯合拢"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "信用双刃：赊账能锁住客户，但坏账会不会反过来摧毁现金流",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "information_advantage",
+          "mechanism": "first_to_know"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "payoff",
+          "mechanism": "six_expenditures_no_ale"
+        }
+      ],
+      "required_retention_events": [
+        "cargo_service",
+        "information_asymmetry",
+        "credit_hub",
+        "six_expenditures_payoff"
+      ],
+      "original_moves": [
+        "揭示货物仓储与安保的服务化",
+        "说明客商聚集带来的贸易与转售机会",
+        "展示信息先到一步的优势",
+        "引入信用枢纽机制与双刃提示",
+        "合拢：一位独行旅客不买酒也能创造六笔账"
+      ],
+      "abstract_move": "仓储安保服务化 + 客商聚集带来贸易 + 信息先到优势 + 信用枢纽机制 + 收入阶梯合拢（不买主产品也多笔收入）",
+      "replacement_needs": [
+        "仓储与安保的服务化机制",
+        "客商聚集带来的贸易与信息优势",
+        "信用枢纽的锁客机制与双刃提示",
+        "不买主产品也能创造多笔收入的合拢句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(75);打开的悬念 LOOP04→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "good_year_scale",
+      "start_ratio": 0.533,
+      "end_ratio": 0.56,
+      "start_sec": 683.4,
+      "end_sec": 717.7,
+      "position_label": "53.3%–56%(11:23–11:58)",
+      "purpose": "好年收入的尺度揭示：总收入数字与劳动年限换算，并点明招牌产品只负责引流",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "成功的店主如何把一门生意变成更大财富的跳板：谁真正致富、靠的是什么",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "thesis_aphorism",
+          "mechanism": "lure_vs_value"
+        }
+      ],
+      "required_retention_events": [
+        "gross_revenue_reveal",
+        "lure_vs_value_aphorism"
+      ],
+      "original_moves": [
+        "给出好年客流假设（15旅客/日×300天）",
+        "重建好年总收入£88",
+        "换算为16年工资的总流水",
+        "提醒：总流水不等于到手",
+        "点明：酒负责喊人进门，其他需求让资产值钱"
+      ],
+      "abstract_move": "好年客流假设 + 总收入重建 + 劳动年限换算 + 总流水不等于到手提醒 + 招牌引流暗线变现定性",
+      "replacement_needs": [
+        "好年客流假设与总收入重建",
+        "总收入的劳动年限换算",
+        "招牌产品只负责引流、暗线收入才让资产值钱的定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "landlord_tenant_system",
+      "start_ratio": 0.56,
+      "end_ratio": 0.673,
+      "start_sec": 717.7,
+      "end_sec": 862.8,
+      "position_label": "56%–67.3%(11:58–14:23)",
+      "purpose": "双层产权制度与现代对照：房东玩长周期、租户玩快风险，这套结构今天依然可辨，并补齐监管与法律责任",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.5995,
+          "time_ms": 768745,
+          "reason": "'今天依然如此：资产归组织，不眠之夜归经营者'：古今结构对照"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "客流枯竭时这门生意会怎样：固定成本与波动收入的结构性冲突能否量化",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "modern_bridge",
+          "mechanism": "recognizable_pattern"
+        }
+      ],
+      "required_retention_events": [
+        "yield_calculation",
+        "modern_bridge",
+        "regulation_and_liability"
+      ],
+      "original_moves": [
+        "计算房东收益率（£400对£8租金，2%回报）",
+        "计算回本周期（四五十年）",
+        "对比长周期与快风险的分工",
+        "给出现代桥梁句：今天依然如此（资产归组织，不眠之夜归经营者）",
+        "补齐价格监管与法律责任细节",
+        "点题：每条收入线自带麻烦，声誉即资产负债表外资产"
+      ],
+      "abstract_move": "房东收益率与回本周期计算 + 长周期对快风险分工 + 古今结构对照桥梁句 + 监管责任补齐 + 声誉资产定性",
+      "replacement_needs": [
+        "房东收益率与回本周期计算",
+        "'今天依然如此'的现代桥梁句（古今对照）",
+        "价格监管与法律责任细节",
+        "每条收入线自带麻烦的对应表，声誉即资产"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80);打开的悬念 LOOP03→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "fragility_escalation",
+      "start_ratio": 0.673,
+      "end_ratio": 0.801,
+      "start_sec": 862.8,
+      "end_sec": 1027.2,
+      "position_label": "67.3%–80.1%(14:23–17:07)",
+      "purpose": "脆弱性升级：客流是氧气，固定成本不松动；火灾与'安静的失败'展示毁灭的两种形态，信用在坏年变成螺旋",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 76,
+          "position_ratio": 0.6741,
+          "time_ms": 864461,
+          "reason": "'客流是你的氧气'：脆弱性主题的格言落点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "credit_spiral_resolution",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "aphorism_landing",
+          "mechanism": "flow_is_oxygen"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "historical_evidence",
+          "mechanism": "fire_precedent"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "archival_poignancy",
+          "mechanism": "quiet_failure_reframe"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "aphorism_landing",
+          "mechanism": "half_roof"
+        }
+      ],
+      "required_retention_events": [
+        "flow_is_oxygen_aphorism",
+        "fire_evidence",
+        "quiet_failure_reframe",
+        "credit_spiral",
+        "half_roof_aphorism"
+      ],
+      "original_moves": [
+        "给出隐喻断言：客流是你的氧气",
+        "强调固定成本不松动",
+        "说明歉收的双向夹击（成本涨、收入跌）",
+        "给出火灾的史实证据",
+        "揭示档案里'承诺金额从未到达'的安静失败",
+        "展示信用收紧螺旋",
+        "点题：不能拿回半个屋顶"
+      ],
+      "abstract_move": "客流依赖隐喻断言 + 固定成本刚性 + 歉收双向夹击 + 火灾史实与安静失败 + 信用螺旋 + 义务不可逆点题",
+      "replacement_needs": [
+        "客流或需求依赖的隐喻断言",
+        "歉收或需求下降的双向夹击（成本涨收入跌）",
+        "灾难性失败的史实证据与安静失败的档案证据",
+        "信用收紧螺旋机制"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(76);回收了前文的悬念 FS10→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "three_scenario_model",
+      "start_ratio": 0.801,
+      "end_ratio": 0.91,
+      "start_sec": 1027.2,
+      "end_sec": 1167.1,
+      "position_label": "80.1%–91%(17:07–19:27)",
+      "purpose": "三情景年度量化：好年/平年/坏年的收支模型，用数字回答脆弱性疑问",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.9032,
+          "time_ms": 1158180,
+          "reason": "坏年亏损£13：一年坏年抹掉一年好年的量化判决"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "完整年度账本从未留存：确切的历史损益永远不可考；刻意保持开放，叙事用途是以重建声明区分史料与模型、强化证据纪律",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "three_scenario_quantification",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP05"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "evidence_discipline",
+          "mechanism": "reconstruction_disclaimer"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "scale_translation",
+          "mechanism": "modern_currency_anchor"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "data_verdict",
+          "mechanism": "one_bad_year_undoes"
+        }
+      ],
+      "required_retention_events": [
+        "reconstruction_disclaimer",
+        "good_typical_bad_quantification",
+        "one_bad_year_verdict"
+      ],
+      "original_moves": [
+        "显式声明模型性质（重建而非出土账本）",
+        "给出好年盈余£20及其现代币值与劳动年限换算",
+        "给出平年盈余£7的微薄缓冲",
+        "给出坏年亏损£13",
+        "量化判决：一年坏年抹掉一年好年"
+      ],
+      "abstract_move": "模型性质声明 + 好年盈余及换算 + 平年微薄缓冲 + 坏年亏损 + 量化判决（坏年抹掉好年）",
+      "replacement_needs": [
+        "模型性质的显式声明（重建而非实际账本）",
+        "好年/平年/坏年的收支数字",
+        "好年盈余的现代币值与劳动年限换算",
+        "坏年亏损抹掉好年盈余的量化判决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(82);打开的悬念 LOOP05(不闭合) 跨段;回收了前文的悬念 FS12→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "platform_answer",
+      "start_ratio": 0.91,
+      "end_ratio": 0.945,
+      "start_sec": 1167.1,
+      "end_sec": 1211.9,
+      "position_label": "91%–94.5%(19:27–20:12)",
+      "purpose": "平台化答案：真正致富者把这个身份当作收购其他资产的跳板，用标志性个案兑现'谁能致富'",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9296,
+          "time_ms": 1192053,
+          "reason": "他不是靠倒更多酒成为显要：平台化答案的个案兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "named_case_platform_reveal",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "question_pivot",
+          "mechanism": "who_gets_rich"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "inversion_reveal",
+          "mechanism": "not_by_pouring"
+        }
+      ],
+      "required_retention_events": [
+        "who_gets_rich_pivot",
+        "named_case_payoff",
+        "path_to_wealth_list"
+      ],
+      "original_moves": [
+        "换挡设问：谁在致富",
+        "否定句先行：不是酒倒得最好的人",
+        "给出标志性个案的多元资产与地位转换",
+        "点题：他不是靠倒更多酒成为显要",
+        "列举可操作的致富路径清单（人流变资产）"
+      ],
+      "abstract_move": "设问换挡（谁能致富） + 否定句先行（不是主产品最优者） + 标志性个案多元化资产 + 平台化路径清单",
+      "replacement_needs": [
+        "'谁能致富'的设问换挡",
+        "否定句先行（不是靠招牌产品做得最好的人）",
+        "标志性人物个案：多元化资产与地位转换",
+        "可操作的平台化致富路径清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85);回收了前文的悬念 FS11→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure",
+      "start_ratio": 0.945,
+      "end_ratio": 1,
+      "start_sec": 1211.9,
+      "end_sec": 1282.4,
+      "position_label": "94.5%–100%(20:12–21:22)",
+      "purpose": "回扣与重新定性：显式回答主问题，把该身份重新定性为'为旅途不便收费的市场'，并以引流钩子收尾",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.9902,
+          "time_ms": 1269796,
+          "reason": "'你以为是开酒吧，其实开的是建在距离上的市场'：命题重新定性"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "qualified_yes_with_platform_reframe",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "closure_reframe",
+          "mechanism": "market_on_distances"
+        }
+      ],
+      "required_retention_events": [
+        "qualified_yes_answer",
+        "market_on_distances_redefinition",
+        "lure_over_threshold_aphorism"
+      ],
+      "original_moves": [
+        "显式回答标题问题：能，但只是起点",
+        "对照：纯卖酒只能糊口",
+        "点明：枢纽化才能致富",
+        "总结：房东有木头你担风险的分工",
+        "给出重新定性格言：你以为是开酒吧，其实是建在距离上的市场"
+      ],
+      "abstract_move": "显式有条件回答 + 纯卖主产品只能糊口对照 + 枢纽化致富路径 + 风险分工总结 + 重新定性格言",
+      "replacement_needs": [
+        "对标题问题的显式有条件回答（能，但有前提）",
+        "纯卖招牌产品只能糊口的对照",
+        "房东与经营者风险分工的总结",
+        "开场浪漫预期的重新定性格言（你以为是X，其实是Y）"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(88);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

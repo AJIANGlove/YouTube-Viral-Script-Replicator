@@ -1,0 +1,1104 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:25:10.588Z",
+  "source": "program",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "timeline.observed_segments.information_move",
+    "abstract_move": "framework.structure_pattern.purpose",
+    "replacement_needs": "framework.structure_pattern.required_payload(缺失时用 exit_condition)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.0397,
+      "start_sec": 0.1,
+      "end_sec": 62.5,
+      "position_label": "0%–4%(0:00–1:02)",
+      "purpose": "用第二人称稳赚幻想开场，急刹车反转为悖论，以身份错位排比与\"最大威胁\"悬念立起全片",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "paradox_hook",
+          "strength": 85,
+          "position_ratio": 0.0171,
+          "time_ms": 27004,
+          "reason": "客户是政府、囚犯是占用者、产品是被关的人：三重身份错位在开场一分钟内完成反转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念：这门生意的经济学为什么与世界上几乎任何生意都不同——它的真实经济现实到底是什么",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_hook",
+          "mechanism": "second_person_fantasy"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "fantasy_blueprint",
+          "mechanism": "three_step_plan"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "pattern_interrupt",
+          "mechanism": "not_like_that"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "triple_redefinition",
+          "mechanism": "customer_occupant_product"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "threat_reframe",
+          "mechanism": "politician_sentencing_law"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "agenda_promise",
+          "mechanism": "inside_look"
+        }
+      ],
+      "required_retention_events": [
+        "hard_brake_reversal",
+        "identity_redefinition_triplet"
+      ],
+      "original_moves": [
+        "幻想复述",
+        "反转",
+        "三重身份错位",
+        "最大威胁悬念",
+        "议程预告"
+      ],
+      "abstract_move": "用第二人称稳赚幻想开场，急刹车反转为悖论，以身份错位排比与\"最大威胁\"悬念立起全片",
+      "replacement_needs": [
+        "外行三步稳赚蓝图复述",
+        "\"完全不是这样\"的急刹车反转",
+        "客户/占用者/产品的身份错位排比",
+        "排除法给出的反直觉最大威胁",
+        "全片议程预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(85);打开的悬念 LOOP01→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 85
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "second_person_fantasy_plus_identity_redefinition",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 27004,
+        "evidence_refs": [
+          "C0001",
+          "C0025",
+          "C0041",
+          "C0046"
+        ]
+      }
+    },
+    {
+      "stage_id": "FS02",
+      "function": "context_expansion",
+      "start_ratio": 0.0397,
+      "end_ratio": 0.089,
+      "start_sec": 61.5,
+      "end_sec": 140.2,
+      "position_label": "4%–8.9%(1:02–2:20)",
+      "purpose": "解释市场为什么存在：用一组长时段增长数据与方案卖点清单建立行业的表面合理性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "statistic_reveal",
+          "mechanism": "incarceration_growth_500pct"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "pitch_reenactment",
+          "mechanism": "private_sector_proposal"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "counterargument_tease",
+          "mechanism": "missed_or_chose_to_ignore"
+        }
+      ],
+      "required_retention_events": [
+        "origin_statistic",
+        "pillar_enumeration"
+      ],
+      "original_moves": [
+        "市场起源",
+        "500%锚点",
+        "私有化方案复述",
+        "五大经济支柱"
+      ],
+      "abstract_move": "解释市场为什么存在：用一组长时段增长数据与方案卖点清单建立行业的表面合理性",
+      "replacement_needs": [
+        "需求侧爆发的长时段统计锚点",
+        "\"我们建、你按单位付费\"的方案复述",
+        "多条卖点支柱的清单式枚举"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS03",
+      "function": "reveal",
+      "start_ratio": 0.089,
+      "end_ratio": 0.1106,
+      "start_sec": 139.3,
+      "end_sec": 174.2,
+      "position_label": "8.9%–11.1%(2:19–2:54)",
+      "purpose": "抛出被行业内外共同忽视的反方论点：委托方省钱与企业赚钱零和，唯一可压缩的是服务质量",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "商业模式到底是什么——为什么说私营监狱不是人们以为的那样",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "core_conflict",
+          "mechanism": "savings_vs_profits"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "mechanism_verdict",
+          "mechanism": "quality_is_only_lever"
+        }
+      ],
+      "required_retention_events": [
+        "zero_sum_verdict"
+      ],
+      "original_moves": [
+        "反方论点预告",
+        "省钱与赚钱零和",
+        "质量是唯一压缩项",
+        "核心问题命名"
+      ],
+      "abstract_move": "抛出被行业内外共同忽视的反方论点：委托方省钱与企业赚钱零和，唯一可压缩的是服务质量",
+      "replacement_needs": [
+        "\"被错过或选择忽视\"的论点预告",
+        "零和冲突的对仗陈述",
+        "唯一可压缩项的机制判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS04",
+      "function": "reveal",
+      "start_ratio": 0.1106,
+      "end_ratio": 0.2108,
+      "start_sec": 173.2,
+      "end_sec": 332,
+      "position_label": "11.1%–21.1%(2:53–5:32)",
+      "purpose": "拆解收入端机制：资金流、合同即生意本身、两至三种合同结构的风险分配与激励，用\"为闲置产能付费\"的真实案例与条款悖论判词收束",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.1964,
+          "time_ms": 309411,
+          "reason": "为空置床位支付数百万美元：科罗拉多 200 万、亚利桑那 300 万的荒诞账单"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "redefinition",
+          "mechanism": "prisoner_is_product"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "money_flow",
+          "mechanism": "taxpayer_to_profit"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "contract_structure_reveal",
+          "mechanism": "per_capita_occupancy_risk"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "contract_structure_reveal",
+          "mechanism": "minimum_occupancy_guarantee"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "statistic_reveal",
+          "mechanism": "quota_percentage_ladder"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "case_reveal",
+          "mechanism": "colorado_reform_backfire"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "empty_bed_payment_reveal",
+          "mechanism": "paying_for_nothing"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "mechanism_verdict",
+          "mechanism": "lockup_quota_penalty"
+        }
+      ],
+      "required_retention_events": [
+        "contract_structure_anatomy",
+        "empty_bed_payment"
+      ],
+      "original_moves": [
+        "产品重定义",
+        "资金流",
+        "三种合同结构",
+        "空床付费案例",
+        "锁定配额判词"
+      ],
+      "abstract_move": "拆解收入端机制：资金流、合同即生意本身、两至三种合同结构的风险分配与激励，用\"为闲置产能付费\"的真实案例与条款悖论判词收束",
+      "replacement_needs": [
+        "从付款方到利润的四步资金流",
+        "多种合同结构及各自风险归属",
+        "最低保障条款的覆盖比例与地区清单",
+        "为闲置产能付费的案例账单",
+        "\"需求下降反而受罚\"的机制判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS05",
+      "function": "conflict_escalation",
+      "start_ratio": 0.2108,
+      "end_ratio": 0.3301,
+      "start_sec": 331.2,
+      "end_sec": 519.8,
+      "position_label": "21.1%–33%(5:31–8:40)",
+      "purpose": "成本端解剖之一：劳动密集且不可停工，低薪策略引发流动率级联，\"最便宜的员工并不最便宜\"",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.2809,
+          "time_ms": 442430,
+          "reason": "\"表格上漂亮，实践里是陷阱\"：最便宜的员工并不最便宜的劳动悖论判词"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "中央劳动悖论：为什么付得更少反而成本更高",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "contract_structures_plus_incentive_verdict",
+          "opened_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "turnover_cascade_verdict",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "cost_dominance_reveal",
+          "mechanism": "labor_24_7_operation"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "operator_filing_reveal",
+          "mechanism": "per_prisoner_day_cost"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "margin_verdict",
+          "mechanism": "thin_gap_disappears"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "salary_ladder_reveal",
+          "mechanism": "public_private_pay_gap"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "paradox_verdict",
+          "mechanism": "cheapest_employee_trap"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "cascade_reveal",
+          "mechanism": "turnover_cost_chain"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "security_erosion_reveal",
+          "mechanism": "understaffing_consequences"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "mid_roll_cta",
+          "mechanism": "subscribe_reminder"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "topic_shift",
+          "mechanism": "healthcare_unpredictability"
+        }
+      ],
+      "required_retention_events": [
+        "labor_paradox_cascade"
+      ],
+      "original_moves": [
+        "劳动主导",
+        "日成本区间",
+        "薪酬阶梯",
+        "便宜员工陷阱",
+        "流动率级联",
+        "安全侵蚀"
+      ],
+      "abstract_move": "成本端解剖之一：劳动密集且不可停工，低薪策略引发流动率级联，\"最便宜的员工并不最便宜\"",
+      "replacement_needs": [
+        "劳动成本主导与全天候最低编制",
+        "运营商单位成本的真实区间",
+        "公私薪酬阶梯对照",
+        "流动率的级联成本（招聘、培训、加班、安全侵蚀）",
+        "中段订阅 CTA"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80);回收了前文的悬念 FS03→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS06",
+      "function": "conflict_escalation",
+      "start_ratio": 0.3301,
+      "end_ratio": 0.432,
+      "start_sec": 519.5,
+      "end_sec": 680.5,
+      "position_label": "33%–43.2%(8:39–11:20)",
+      "purpose": "成本端解剖之二：不可预算的刚性支出与固定价格的错配，产生\"克扣即利润\"的恶性激励，并以真实法律后果案例钉实",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.3966,
+          "time_ms": 624602,
+          "reason": "克扣医疗即利润：恶性激励被命名为难以抵抗的结构性力量"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.4179,
+          "time_ms": 658153,
+          "reason": "2017 年联邦接管案：残酷异常惩罚的宪法定性把经济分析钉进伦理后果"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "mechanism_reveal",
+          "mechanism": "flat_rate_no_complexity_adjustment"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "contrast_demo",
+          "mechanism": "healthy_vs_sick_inmate"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "statistic_reveal",
+          "mechanism": "sicker_population"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "perverse_incentive_reveal",
+          "mechanism": "healthcare_spending_vs_noi"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "litigation_case",
+          "mechanism": "federal_receivership_2017"
+        }
+      ],
+      "required_retention_events": [
+        "perverse_incentive",
+        "legal_consequence_case"
+      ],
+      "original_moves": [
+        "医疗不可预测",
+        "同价错配",
+        "更病人群",
+        "克扣激励",
+        "联邦接管案"
+      ],
+      "abstract_move": "成本端解剖之二：不可预算的刚性支出与固定价格的错配，产生\"克扣即利润\"的恶性激励，并以真实法律后果案例钉实",
+      "replacement_needs": [
+        "不可预算支出的机制说明",
+        "同价不同成本的对照演示",
+        "服务人群更高风险基数的统计背景",
+        "恶性激励的因果判词",
+        "真实法律后果案例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85)、PK05(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ]
+    },
+    {
+      "stage_id": "FS07",
+      "function": "evidence_build",
+      "start_ratio": 0.432,
+      "end_ratio": 0.4797,
+      "start_sec": 679.6,
+      "end_sec": 755.5,
+      "position_label": "43.2%–48%(11:20–12:35)",
+      "purpose": "复述行业的规模经济论据并立即给出限度：复杂度随规模非线性增长，风险增速反超节约",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "规模经济这个行业的立身论据，限度在哪里",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "nonlinear_complexity_limit",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "mechanism_reveal",
+          "mechanism": "fixed_cost_dilution"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "limit_reveal",
+          "mechanism": "nonlinear_complexity"
+        }
+      ],
+      "required_retention_events": [
+        "scale_limit_verdict"
+      ],
+      "original_moves": [
+        "固定成本摊薄",
+        "规模优势",
+        "复杂度非线性",
+        "限度判词"
+      ],
+      "abstract_move": "复述行业的规模经济论据并立即给出限度：复杂度随规模非线性增长，风险增速反超节约",
+      "replacement_needs": [
+        "固定成本摊薄的单位经济演示",
+        "规模论据的历史定位",
+        "复杂度非线性的限度判词"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP04。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:规模经济这个行业的立身论据，限度在哪里",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS08",
+      "function": "evidence_build",
+      "start_ratio": 0.4797,
+      "end_ratio": 0.5664,
+      "start_sec": 754.5,
+      "end_sec": 892.1,
+      "position_label": "48%–56.6%(12:34–14:52)",
+      "purpose": "产权经济学：巨额前置资本、投资方程、单一租户专用资产定性，并用一个海外融资模式的成本溢价案例展示长期负债锁死",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.5473,
+          "time_ms": 861993,
+          "reason": "547 亿英镑本金变超 3000 亿英镑还款：全片最强规模数字反差之一"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE36",
+          "event_type": "capital_stack_reveal",
+          "mechanism": "massive_upfront_capital"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "asset_reframe",
+          "mechanism": "single_tenant_property"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "case_reveal",
+          "mechanism": "uk_pfi_premium"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "scale_number_reveal",
+          "mechanism": "pfi_repayment_blowup"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "scenario_setup",
+          "mechanism": "hundred_million_facility"
+        }
+      ],
+      "required_retention_events": [
+        "single_tenant_reframe"
+      ],
+      "original_moves": [
+        "资本清单",
+        "投资方程",
+        "单一租户定性",
+        "PFI 溢价与还款规模"
+      ],
+      "abstract_move": "产权经济学：巨额前置资本、投资方程、单一租户专用资产定性，并用一个海外融资模式的成本溢价案例展示长期负债锁死",
+      "replacement_needs": [
+        "开业前的资本清单与政治阻力",
+        "今日巨资对多年回款的投资方程",
+        "单一租户专用资产的定性",
+        "海外融资模式的溢价与还款规模案例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS09",
+      "function": "conflict_escalation",
+      "start_ratio": 0.5664,
+      "end_ratio": 0.6814,
+      "start_sec": 891.1,
+      "end_sec": 1073.2,
+      "position_label": "56.6%–68.1%(14:51–17:53)",
+      "purpose": "情景压力测试：第二人称时间线推演需求蒸发，成本永存排比对撞收入等比下跌，专用资产残值悬崖，由此统一解释行业全部争议行为",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.5915,
+          "time_ms": 931638,
+          "reason": "\"什么都不消失\"排比：代入式崩溃推演的压迫顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE41",
+          "event_type": "policy_shock_reveal",
+          "mechanism": "nothing_disappears_cascade"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "stranded_asset_contrast",
+          "mechanism": "warehouse_hotel_office"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "dependency_verdict",
+          "mechanism": "dependent_on_inmate_supply"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "unified_explanation",
+          "mechanism": "explains_all_controversies"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "policy_event",
+          "mechanism": "executive_order_2021"
+        }
+      ],
+      "required_retention_events": [
+        "scenario_stress_test",
+        "unified_controversy_explanation"
+      ],
+      "original_moves": [
+        "情景设定",
+        "政策冲击",
+        "成本永存排比",
+        "残值对照",
+        "依赖命名",
+        "争议统一解释"
+      ],
+      "abstract_move": "情景压力测试：第二人称时间线推演需求蒸发，成本永存排比对撞收入等比下跌，专用资产残值悬崖，由此统一解释行业全部争议行为",
+      "replacement_needs": [
+        "重资产+长期债务的情景设定",
+        "政策/执法/人口三类需求冲击",
+        "成本永存排比与收入下跌的对撞",
+        "与可转用资产的残值对照",
+        "依赖系统持续供应需求的判词",
+        "争议行为的统一解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS10",
+      "function": "evidence_build",
+      "start_ratio": 0.6814,
+      "end_ratio": 0.7118,
+      "start_sec": 1072.3,
+      "end_sec": 1121.1,
+      "position_label": "68.1%–71.2%(17:52–18:41)",
+      "purpose": "政治风险实证：一项真实政策冲击如何威胁行业收入，以及行业如何通过合规路径绕行——遵守字面、无视意图",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.7056,
+          "time_ms": 1111290,
+          "reason": "县际绕行让行政令落空：遵守字面、无视意图的制度现实"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE46",
+          "event_type": "circumvention_reveal",
+          "mechanism": "intergovernmental_detour"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "central_lesson",
+          "mechanism": "cant_control_customer"
+        }
+      ],
+      "required_retention_events": [
+        "letter_vs_intent_verdict"
+      ],
+      "original_moves": [
+        "行政令威胁",
+        "县际绕行路径",
+        "字面与意图判词"
+      ],
+      "abstract_move": "政治风险实证：一项真实政策冲击如何威胁行业收入，以及行业如何通过合规路径绕行——遵守字面、无视意图",
+      "replacement_needs": [
+        "真实政策事件及其威胁",
+        "合规绕行路径的逐步拆解",
+        "字面与意图的对照判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ]
+    },
+    {
+      "stage_id": "FS11",
+      "function": "reveal",
+      "start_ratio": 0.7118,
+      "end_ratio": 0.7538,
+      "start_sec": 1120.9,
+      "end_sec": 1187.3,
+      "position_label": "71.2%–75.4%(18:41–19:47)",
+      "purpose": "中央商业教训：企业控制不了最重要的客户是否还想要它的产品；用一个接管失败案例展示政治风险如何兑现为财务毁灭",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "私营监狱究竟能不能算一项好投资",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE48",
+          "event_type": "case_reveal",
+          "mechanism": "birmingham_deterioration"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "consequence_reveal",
+          "mechanism": "step_in_and_settlement"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "investment_question",
+          "mechanism": "institutional_criteria"
+        }
+      ],
+      "required_retention_events": [
+        "central_lesson",
+        "cautionary_case"
+      ],
+      "original_moves": [
+        "中央教训句",
+        "政治风险定性",
+        "伯明翰恶化与接管",
+        "合同没了"
+      ],
+      "abstract_move": "中央商业教训：企业控制不了最重要的客户是否还想要它的产品；用一个接管失败案例展示政治风险如何兑现为财务毁灭",
+      "replacement_needs": [
+        "中央教训的一句话版本",
+        "单一客户=永久政治风险的定性",
+        "运营恶化的检查细节",
+        "接管与和解的财务后果",
+        "\"资产还在，合同没了\"的收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS12",
+      "function": "synthesis",
+      "start_ratio": 0.7538,
+      "end_ratio": 0.8093,
+      "start_sec": 1186.4,
+      "end_sec": 1276.2,
+      "position_label": "75.4%–80.9%(19:46–21:16)",
+      "purpose": "用机构投资者的检验标准逐项打分：收入稳定性、利润率、资本强度、需求可靠性、监管与声誉风险，直至融资渠道收紧迫使组织结构重组",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE51",
+          "event_type": "criteria_reveal",
+          "mechanism": "single_digit_margins"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "risk_peak_reveal",
+          "mechanism": "regulatory_reputational_risk"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "restructuring_reveal",
+          "mechanism": "reit_abandonment"
+        }
+      ],
+      "required_retention_events": [
+        "criteria_checklist"
+      ],
+      "original_moves": [
+        "投资设问",
+        "逐项检验",
+        "风险顶峰",
+        "银行退出",
+        "REIT 重组"
+      ],
+      "abstract_move": "用机构投资者的检验标准逐项打分：收入稳定性、利润率、资本强度、需求可靠性、监管与声誉风险，直至融资渠道收紧迫使组织结构重组",
+      "replacement_needs": [
+        "逐项标准的条件化评估",
+        "利润率量级及其敏感项",
+        "监管风险顶峰的断言",
+        "声誉风险→融资收紧→组织重组的因果链"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS13",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.8093,
+      "end_ratio": 0.9052,
+      "start_sec": 1276.2,
+      "end_sec": 1425.7,
+      "position_label": "80.9%–90.5%(21:16–23:46)",
+      "purpose": "超越报表：产品本质的伦理判词、结果导向合同的出路实验及其开放结局、还原辩论复杂性（多方都依赖同一需求），把二元争论重构为系统激励之争",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "能否设计出把企业利润与社会结果对齐的合同模式",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "criteria_checklist_assessment",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE54",
+          "event_type": "guide_cta",
+          "mechanism": "description_guide"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "essence_reveal",
+          "mechanism": "product_is_imprisonment"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "alternative_model_reveal",
+          "mechanism": "recidivism_kpi_contract"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "open_question",
+          "mechanism": "scalability_unknown"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "nuance_reveal",
+          "mechanism": "not_only_private_actors"
+        },
+        {
+          "event_id": "RE59",
+          "event_type": "debate_reframe",
+          "mechanism": "incentives_not_ownership"
+        },
+        {
+          "event_id": "RE60",
+          "event_type": "opening_callback",
+          "mechanism": "answer_original_question"
+        }
+      ],
+      "required_retention_events": [
+        "debate_reframe"
+      ],
+      "original_moves": [
+        "指南CTA",
+        "产品本质",
+        "KPI实验",
+        "开放问题",
+        "同构依赖",
+        "辩论重构"
+      ],
+      "abstract_move": "超越报表：产品本质的伦理判词、结果导向合同的出路实验及其开放结局、还原辩论复杂性（多方都依赖同一需求），把二元争论重构为系统激励之争",
+      "replacement_needs": [
+        "导流 CTA（指南）",
+        "产品本质的需求悖论判词",
+        "结果导向合同实验与开放问题",
+        "其他利益方的同构依赖",
+        "\"不是 A 对 B，是激励\"的辩题重构"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06(不闭合) 跨段;回收了前文的悬念 FS11→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": []
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.9052,
+      "end_ratio": 1,
+      "start_sec": 1424.7,
+      "end_sec": 1575,
+      "position_label": "90.5%–100%(23:45–26:15)",
+      "purpose": "正式回答开场设问：准入条件清单+根本风险+资产本质判词，再以规模数字对照揭示系统级真相，以低姿态 CTA 收尾",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9393,
+          "time_ms": 1479427,
+          "reason": "本质判词：拥有的不是楼，是价值系于他人政策决定的基础设施"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.9685,
+          "time_ms": 1525472,
+          "reason": "800 亿对 40-50 亿与\"只是发布季报的那部分\"：全片最高层级的真相重构"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "requirements_checklist_plus_system_verdict",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE61",
+          "event_type": "requirements_checklist",
+          "mechanism": "entry_requirements_list"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "final_risk_reveal",
+          "mechanism": "customer_stops_buying"
+        },
+        {
+          "event_id": "RE63",
+          "event_type": "essence_verdict",
+          "mechanism": "infrastructure_tied_to_policy"
+        },
+        {
+          "event_id": "RE64",
+          "event_type": "scale_number_reveal",
+          "mechanism": "eighty_billion_vs_five"
+        },
+        {
+          "event_id": "RE65",
+          "event_type": "worldview_verdict",
+          "mechanism": "not_an_anomaly"
+        },
+        {
+          "event_id": "RE66",
+          "event_type": "uncomfortable_truth",
+          "mechanism": "spreadsheet_truth"
+        },
+        {
+          "event_id": "RE67",
+          "event_type": "final_verdict",
+          "mechanism": "dividend_checks"
+        },
+        {
+          "event_id": "RE68",
+          "event_type": "final_cta",
+          "mechanism": "like_subscribe"
+        },
+        {
+          "event_id": "RE69",
+          "event_type": "gratitude_close",
+          "mechanism": "thanks_for_watching"
+        }
+      ],
+      "required_retention_events": [
+        "opening_callback",
+        "scale_contrast_truth"
+      ],
+      "original_moves": [
+        "设问回调",
+        "准入清单",
+        "根本风险",
+        "本质判词",
+        "规模对照",
+        "真相判词",
+        "CTA"
+      ],
+      "abstract_move": "正式回答开场设问：准入条件清单+根本风险+资产本质判词，再以规模数字对照揭示系统级真相，以低姿态 CTA 收尾",
+      "replacement_needs": [
+        "开场设问的正式回调",
+        "多项准入条件清单",
+        "客户不再购买的根本风险",
+        "价值系于他人政策决定的本质判词",
+        "总盘与行业份额的规模对照",
+        "系统级真相判词与致谢 CTA"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85)、PK10(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ]
+    }
+  ]
+}

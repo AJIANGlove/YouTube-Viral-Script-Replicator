@@ -1,0 +1,1280 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:53:45.790Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "price_shock_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0474,
+      "start_sec": 0,
+      "end_sec": 95.2,
+      "position_label": "0%–4.7%(0:00–1:35)",
+      "purpose": "用与观众自身相关物品的真实低价清单制造认知冲击，并把猎奇问题重构为“谁在赚钱”的商业问题",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.0145,
+          "time_ms": 29080,
+          "reason": "核心重构：问题从“怎么偷”换成“谁在赚、钱从哪来”，猎奇被转成商业问题"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "商品单价极低与经济体总收入极高之间的反差",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "personal_price_shock",
+          "mechanism": "own_data_price_list"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "scale_reveal",
+          "mechanism": "credential_inventory_scale"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "question_reframe",
+          "mechanism": "who_actually_makes_money"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "premium_tease",
+          "mechanism": "enterprise_access_high_price"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "commoditization_explain",
+          "mechanism": "identity_commoditized"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "partial_payoff",
+          "mechanism": "same_business_models_as_legit"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "core_question",
+          "mechanism": "cheap_goods_to_billions"
+        }
+      ],
+      "required_retention_events": [
+        "price_list_stacking",
+        "personal_stake",
+        "question_reframe",
+        "inventory_scale",
+        "business_model_tease"
+      ],
+      "original_moves": [
+        "用分级报价清单展示个人数据的真实售价（从单条记录到完整档案）",
+        "用库存规模数字证明这是现货市场而非个案",
+        "用核心反问把问题从技术细节重构为商业问题：谁在赚钱、钱从哪来",
+        "用高价顶端对照（企业级访问权）说明商品化的价值阶梯",
+        "预告后续将用合法商业模式类比来拆解整个结构"
+      ],
+      "abstract_move": "用与观众切身相关的物品真实低价清单制造认知冲击 + 用库存规模证明这是市场而非个案 + 用核心反问把猎奇问题重构为商业问题 + 用高价顶端对照说明价值阶梯 + 预告用合法模式类比拆解结构",
+      "replacement_needs": [
+        "一个分级报价清单，从最低端到高端的真实价格",
+        "一个证明规模的库存或交易量数字",
+        "一个把技术或猎奇问题重构为商业问题的核心反问",
+        "一个高价顶端对照，说明价值阶梯的存在"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80);打开的悬念 LOOP01→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "personal_price_list_stacking_with_question_reframe",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 13160,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0009",
+          "C0031"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "core_analogy",
+      "start_ratio": 0.0474,
+      "end_ratio": 0.0955,
+      "start_sec": 95.2,
+      "end_sec": 191.5,
+      "position_label": "4.7%–9.6%(1:35–3:12)",
+      "purpose": "用一个观众熟悉的合法商业模式类比，把隐秘经济体的分工结构讲到可复述，并把类比坐实为真实结构",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "“稍后揭晓数字”的明确预告",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "analogy_pivot",
+          "mechanism": "stop_hackers_start_franchise"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "analogy_build",
+          "mechanism": "franchise_hq_vs_operators"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "analogy_mapping",
+          "mechanism": "operators_never_touch_victims"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "metaphor_hardening",
+          "mechanism": "agreement_not_metaphor"
+        }
+      ],
+      "required_retention_events": [
+        "analogy_pivot",
+        "analogy_mapping",
+        "metaphor_hardening",
+        "numbers_tease"
+      ],
+      "original_moves": [
+        "宣布认知换挡：用合法商业模式来理解隐秘经济体",
+        "展开特许经营体系的全要素（加盟商、供应商、品牌方、佣金、客户）",
+        "逐角色映射回非法经济体的对应位置",
+        "用'不是比喻'坐实句强调这是真实结构而非修辞",
+        "用佣金数字预告为后续段落埋钩"
+      ],
+      "abstract_move": "用观众熟悉的合法商业模式类比展开分工结构的全要素 + 逐角色映射回目标经济体 + 用坐实句强调这是真实结构而非修辞 + 用关键数字预告为后续埋钩",
+      "replacement_needs": [
+        "一个观众熟悉的合法商业模式，具备清晰的分工角色",
+        "逐角色的映射对应关系",
+        "一个坐实句，强调类比是真实结构而非比喻",
+        "一个关键数字预告，为后续段落埋钩"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "supply_role_intro",
+      "start_ratio": 0.0955,
+      "end_ratio": 0.1155,
+      "start_sec": 191.5,
+      "end_sec": 231.6,
+      "position_label": "9.6%–11.6%(3:12–3:52)",
+      "purpose": "补全角色地图的供给侧角色，为后段供应链分工埋下术语与位置",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "role_intro",
+          "mechanism": "access_broker_as_supplier"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "role_behavior",
+          "mechanism": "package_and_resell_access"
+        }
+      ],
+      "required_retention_events": [
+        "role_intro",
+        "supplier_analogy"
+      ],
+      "original_moves": [
+        "定义供应商角色：提供上游资源的一方",
+        "用合法分销类比说明角色功能",
+        "为该角色命名术语（经纪人）",
+        "强调只转售不自用的行为模式，与终端使用者区分"
+      ],
+      "abstract_move": "补全供给侧角色定义 + 用合法类比说明功能 + 命名术语 + 强调只转售不自用的行为模式",
+      "replacement_needs": [
+        "一个供给侧角色的定义和功能描述",
+        "一个合法类比来说明该角色",
+        "一个术语或角色名称",
+        "一个行为模式特征，区分该角色与终端用户"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "marketplace_familiarization",
+      "start_ratio": 0.1155,
+      "end_ratio": 0.1754,
+      "start_sec": 231.6,
+      "end_sec": 351.9,
+      "position_label": "11.6%–17.5%(3:52–5:52)",
+      "purpose": "把交易场所讲成观众熟悉的平台经济形态，用“只是商品不同”的定性完成去神秘化",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.1654,
+          "time_ms": 331760,
+          "reason": "“它就是购物中心，只是商品违法”把黑市去神秘化为熟悉商业形态"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "scale_reveal",
+          "mechanism": "dozens_of_active_marketplaces"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "feature_familiarization",
+          "mechanism": "reviews_escrow_support_returns"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "named_platform",
+          "mechanism": "largest_market_commodity_exchange"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "pricing_logic",
+          "mechanism": "fresh_vs_stale_pricing"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "self_policing",
+          "mechanism": "bad_reviews_get_banned"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "synthesis",
+          "mechanism": "illegal_goods_shopping_mall"
+        }
+      ],
+      "required_retention_events": [
+        "marketplace_scale",
+        "feature_familiarization",
+        "freshness_pricing",
+        "self_policing",
+        "synthesis_label"
+      ],
+      "original_moves": [
+        "给出活跃市场数量，证明交易场所的规模",
+        "列举电商功能清单（搜索、评价、客服、担保）",
+        "描述头部平台的交易所式定价机制",
+        "说明新鲜度逻辑和差评封号的自治规则",
+        "用购物中心定性完成去神秘化：它就是电商平台，只是商品违法"
+      ],
+      "abstract_move": "用活跃场所数量证明规模 + 列举平台功能清单 + 描述定价逻辑与自治规则 + 用熟悉场所定性完成去神秘化：只是商品不同",
+      "replacement_needs": [
+        "一个活跃场所或平台的数量数字",
+        "一个平台功能清单，对应观众熟悉的电商或市场功能",
+        "一个定价逻辑或自治规则的描述",
+        "一个熟悉场所的定性句，完成去神秘化"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "product_ladder_breakdown",
+      "start_ratio": 0.1754,
+      "end_ratio": 0.2712,
+      "start_sec": 351.9,
+      "end_sec": 544,
+      "position_label": "17.5%–27.1%(5:52–9:04)",
+      "purpose": "沿价格阶梯自下而上拆解商品层，并以“原料本身最便宜”完成价值位置重构",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.2482,
+          "time_ms": 497919,
+          "reason": "企业访问溢价层与“数据本身最便宜”的价值位置重构"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "商品目录未知与“目录说明钱的流向”的承诺",
+          "closes_in": "FS05"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "中段 CTA 的承诺需要后续段落兑现",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "product_ladder_answer",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "catalog_tease",
+          "mechanism": "what_is_on_the_shelves"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "ladder_bottom",
+          "mechanism": "raw_data_bulk_volume"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "new_term",
+          "mechanism": "fulls_identity_package"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "new_term",
+          "mechanism": "stealer_logs_active_sessions"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "financial_access",
+          "mechanism": "price_tracks_balance"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "ladder_top",
+          "mechanism": "corporate_access_premium_tier"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "value_reposition",
+          "mechanism": "stolen_data_cheapest_part"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "midroll_cta",
+          "mechanism": "follow_the_money_promise"
+        }
+      ],
+      "required_retention_events": [
+        "catalog_tease",
+        "ladder_climb",
+        "term_definitions",
+        "value_reposition",
+        "midroll_cta"
+      ],
+      "original_moves": [
+        "承诺拆解商品目录",
+        "从底层原始数据开始，逐层上升（完整身份包、日志商品、金融账户、企业访问）",
+        "说明各层的溢价变量机制（完整度、新鲜度、访问权限）",
+        "给出顶端层的价位分布",
+        "用'数据本身最便宜'完成价值位置重构",
+        "承诺中段会回到订阅与服务"
+      ],
+      "abstract_move": "沿价格阶梯自下而上拆解商品层 + 说明各层溢价变量机制 + 给出顶端层价位分布 + 用价值位置重构句完成认知翻转 + 中段承诺",
+      "replacement_needs": [
+        "一个从底层到顶端的商品分层清单，每层有定义和价格",
+        "各层的溢价变量机制（什么因素让价格上升）",
+        "顶端层的价位分布",
+        "一个价值位置重构句，说明原料本身最便宜或类似的反直觉结论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(82);打开的悬念 LOOP04→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "supply_chain_specialization",
+      "start_ratio": 0.2712,
+      "end_ratio": 0.3543,
+      "start_sec": 544,
+      "end_sec": 710.6,
+      "position_label": "27.1%–35.4%(9:04–11:51)",
+      "purpose": "把经济体拆成供应链分工，详述上游与变现层，破除单人全能的流行想象",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "specialization_thesis",
+          "mechanism": "nobody_does_everything"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "role_detail",
+          "mechanism": "broker_price_list"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "market_maturation",
+          "mechanism": "broker_pricing_matures"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "cashout_layer",
+          "mechanism": "stablecoin_laundering_share"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "myth_correction",
+          "mechanism": "lone_actor_not_full_picture"
+        }
+      ],
+      "required_retention_events": [
+        "specialization_thesis",
+        "role_detail",
+        "market_maturation",
+        "cashout_layer",
+        "myth_correction",
+        "revenue_tease"
+      ],
+      "original_moves": [
+        "提出分工命题：这是供应链而非单人作业",
+        "详述访问经纪人的定价与成熟化趋势",
+        "说明支付轨道与洗钱网络的变现层集中度",
+        "否定孤狼全能的流行想象",
+        "预告最大收入源是出租软件"
+      ],
+      "abstract_move": "提出供应链分工命题 + 详述上游角色定价与趋势 + 说明变现层集中度 + 否定单人全能想象 + 预告最大收入源",
+      "replacement_needs": [
+        "一个分工命题，说明这是供应链而非单人",
+        "上游角色的定价数字或趋势",
+        "变现层的集中度或关键角色描述",
+        "一个最大收入源的预告"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "flagship_model_reveal",
+      "start_ratio": 0.3543,
+      "end_ratio": 0.4386,
+      "start_sec": 710.6,
+      "end_sec": 879.8,
+      "position_label": "35.4%–43.9%(11:51–14:40)",
+      "purpose": "揭示最赚钱的旗舰模式，用分成比例与阶梯激励把结构落到数字，并以“客户更少但单笔更多”的适应数据完成回报",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 86,
+          "position_ratio": 0.4002,
+          "time_ms": 802839,
+          "reason": "阶梯佣金随业绩爬升、类比企业销售薪酬计划，特许框架落到具体数字"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.4202,
+          "time_ms": 842880,
+          "reason": "付款者更少但单笔更多的反向适应数据，打破“打击见效”的直觉"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "commission_numbers_answer",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "revenue_tease",
+          "mechanism": "biggest_stream_is_renting"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "flagship_reveal",
+          "mechanism": "rental_model_franchise_mapping"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "commission_reveal",
+          "mechanism": "standard_revenue_split"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "commission_escalation",
+          "mechanism": "highest_split_buys_share"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "ladder_reveal",
+          "mechanism": "tiered_commission_sales_plan"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "numeric_payoff",
+          "mechanism": "fewer_pay_but_pay_more"
+        }
+      ],
+      "required_retention_events": [
+        "flagship_reveal",
+        "commission_reveal",
+        "commission_escalation",
+        "ladder_reveal",
+        "numeric_payoff"
+      ],
+      "original_moves": [
+        "定性出租软件模式为最赚钱旗舰",
+        "映射回特许经营框架的角色对应",
+        "给出标准分成比例",
+        "举抬价抢市场案例，说明竞争机制",
+        "详述阶梯佣金随业绩爬升的激励细节",
+        "给出年度总额与支付率的变化",
+        "用单笔中位数暴涨的反向适应数据完成回报：付款者更少但单笔更多"
+      ],
+      "abstract_move": "揭示旗舰模式定性 + 映射回类比框架 + 给出分成比例与竞争案例 + 详述阶梯激励落到数字 + 用反向适应数据完成回报：客户更少但单笔更多",
+      "replacement_needs": [
+        "一个旗舰模式的定性和角色映射",
+        "标准分成比例和竞争抬价案例",
+        "阶梯激励的具体细节（业绩门槛与对应佣金）",
+        "年度总额与参与率变化，以及单笔额度暴涨的反向适应数据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(86)、PK05(85);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 86
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "service_economy_expansion",
+      "start_ratio": 0.4386,
+      "end_ratio": 0.5554,
+      "start_sec": 879.8,
+      "end_sec": 1114,
+      "position_label": "43.9%–55.5%(14:40–18:34)",
+      "purpose": "把视野从单一产品线扩展到整个服务化经济，说明它镜像合法软件业且经济学极端偏向使用方",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "模式成立之后规模未知",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "scope_expansion",
+          "mechanism": "entire_service_economy"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "growth_reveal",
+          "mechanism": "service_revenue_growth"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "price_shock",
+          "mechanism": "kit_lunch_price"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "distribution_shift",
+          "mechanism": "kits_sold_off_platform"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "premium_tool",
+          "mechanism": "aitm_bypass_and_takedown"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "product_cycle",
+          "mechanism": "new_variants_monthly_pace"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "mirror_synthesis",
+          "mechanism": "mirror_of_legit_software"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "economics_imbalance",
+          "mechanism": "startup_cost_below_sneakers"
+        }
+      ],
+      "required_retention_events": [
+        "scope_expansion",
+        "growth_reveal",
+        "price_shock",
+        "distribution_shift",
+        "premium_tool",
+        "product_cycle",
+        "mirror_synthesis",
+        "economics_imbalance"
+      ],
+      "original_moves": [
+        "宣布视野从单一产品线扩展到整个服务板块",
+        "给出服务板块的增长数字",
+        "描述入门价格与站外分销渠道",
+        "说明卖方主动获客的模式",
+        "举高级套件与联合下架案例",
+        "强调变体迭代速度",
+        "用镜像定性坐实：这是软件即服务经济",
+        "用投入产出失衡说明经济学偏向使用方"
+      ],
+      "abstract_move": "把视野从单一产品线扩展到整个服务化经济 + 给出增长数字与价格渠道 + 说明卖方主动获客与高级工具下架 + 强调迭代速度 + 用镜像定性坐实 + 用投入产出失衡说明经济学偏向",
+      "replacement_needs": [
+        "服务板块的增长数字",
+        "入门价格与分销渠道",
+        "高级工具与下架案例",
+        "迭代速度与镜像定性句",
+        "投入产出失衡的描述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "scale_reckoning",
+      "start_ratio": 0.5554,
+      "end_ratio": 0.6418,
+      "start_sec": 1114,
+      "end_sec": 1287.3,
+      "position_label": "55.5%–64.2%(18:34–21:27)",
+      "purpose": "用两套权威口径给出总规模与分类目总账，证明这是有供应链与增长指标的平行经济",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 87,
+          "position_ratio": 0.561,
+          "time_ms": 1125320,
+          "reason": "非法资金总规模为千亿级且同比翻倍以上，尺度冲击叠加口语点评"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 83,
+          "position_ratio": 0.6118,
+          "time_ms": 1227200,
+          "reason": "一封邮件一次转账的平均损失约十二万美元，把宏观数字压到单笔动作"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "hidden_layers_delivery",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE47",
+          "event_type": "scale_question",
+          "mechanism": "how_big_has_it_gotten"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "scale_reveal",
+          "mechanism": "illicit_total_and_growth"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "category_exclusion",
+          "mechanism": "sanctioned_entities_excluded"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "category_breakdown",
+          "mechanism": "fraud_theft_ransomware_split"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "complaint_trend",
+          "mechanism": "complaints_rising"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "single_email_cost",
+          "mechanism": "email_scam_average_loss"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "growth_category",
+          "mechanism": "phishing_surge_parallel_economy"
+        }
+      ],
+      "required_retention_events": [
+        "scale_question",
+        "scale_reveal",
+        "category_exclusion",
+        "category_breakdown",
+        "complaint_trend",
+        "single_email_cost",
+        "growth_category"
+      ],
+      "original_moves": [
+        "提出规模问题",
+        "给出总规模与增速的权威口径",
+        "说明剔除类目，明确统计范围",
+        "列举分类目收入",
+        "给出投诉趋势数字",
+        "用单案均损把宏观数字压到单笔动作",
+        "指出最快增长类目",
+        "用平行经济定性收束"
+      ],
+      "abstract_move": "提出规模问题 + 给出总规模与增速 + 说明剔除类目 + 列举分类目收入 + 用单案均损把宏观压到单笔 + 指出最快增长类目 + 平行经济定性",
+      "replacement_needs": [
+        "总规模与增速的权威口径数字",
+        "剔除类目说明，明确统计范围",
+        "分类目收入清单",
+        "单案均损数字，把宏观压到单笔动作"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(87)、PK07(83);回收了前文的悬念 FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 87
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 83
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "enforcement_resilience",
+      "start_ratio": 0.6418,
+      "end_ratio": 0.7362,
+      "start_sec": 1287.3,
+      "end_sec": 1476.6,
+      "position_label": "64.2%–73.6%(21:27–24:37)",
+      "purpose": "用标志性打击行动的真实战果与随后的碎片化再生，论证模式层面的韧性，把问题从个案提升为结构",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.7232,
+          "time_ms": 1450640,
+          "reason": "“商业模式才是有机体”：执法打掉的是器官而非生命，问题从个案升为结构"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "执法成功与运营再生之间的矛盾",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "反转预告制造的世界观悬念",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "scale_totals_answer",
+          "opened_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "structural_metaphor_answer",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE54",
+          "event_type": "enforcement_pivot",
+          "mechanism": "operations_keep_coming_back"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "takedown_case",
+          "mechanism": "major_takedown_details"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "fragmentation_reveal",
+          "mechanism": "no_single_successor"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "takedown_montage",
+          "mechanism": "marketplace_takedown_series"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "replacement_speed",
+          "mechanism": "new_markets_within_weeks"
+        },
+        {
+          "event_id": "RE59",
+          "event_type": "structural_answer",
+          "mechanism": "model_is_organism"
+        },
+        {
+          "event_id": "RE60",
+          "event_type": "cta_tease",
+          "mechanism": "changes_how_you_look"
+        }
+      ],
+      "required_retention_events": [
+        "enforcement_pivot",
+        "takedown_case",
+        "fragmentation_reveal",
+        "takedown_montage",
+        "replacement_speed",
+        "structural_answer",
+        "cta_tease"
+      ],
+      "original_moves": [
+        "转入执法视角",
+        "详述标志性打击行动的战果（人数、平台、数据量）",
+        "说明战后份额碎片化而非消失",
+        "蒙太奇同类行动的频率与规模",
+        "给出再生速度数字",
+        "用有机体隐喻完成结构升级：商业模式是有机体，打掉的是器官而非生命",
+        "预告反转"
+      ],
+      "abstract_move": "用标志性行动战果说明执法力度 + 用战后份额碎片化与同类行动蒙太奇说明再生 + 给出再生速度数字 + 用结构隐喻完成升级：问题从个案升为模式 + 反转预告",
+      "replacement_needs": [
+        "一个标志性打击行动的细节（规模、战果）",
+        "战后份额碎片化的数据或描述",
+        "同类行动的蒙太奇（频率、规模）",
+        "再生速度数字与结构隐喻句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(88);打开的悬念 LOOP07→FS13 跨段;回收了前文的悬念 FS08→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "personal_relevance_pivot",
+      "start_ratio": 0.7362,
+      "end_ratio": 0.8187,
+      "start_sec": 1476.6,
+      "end_sec": 1642.2,
+      "position_label": "73.6%–81.9%(24:37–27:22)",
+      "purpose": "拆掉“这是别人的问题”的安全距离，把供应链转译到观众的个人路径与成本",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE61",
+          "event_type": "relevance_pivot",
+          "mechanism": "not_someone_elses_problem"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "personal_inventory",
+          "mechanism": "credentials_current_inventory"
+        },
+        {
+          "event_id": "RE63",
+          "event_type": "reuse_attack_path",
+          "mechanism": "one_reused_password"
+        },
+        {
+          "event_id": "RE64",
+          "event_type": "cost_translation",
+          "mechanism": "breach_cost_breakdown"
+        },
+        {
+          "event_id": "RE65",
+          "event_type": "single_email_cost",
+          "mechanism": "one_moment_of_trust"
+        },
+        {
+          "event_id": "RE66",
+          "event_type": "demand_growth",
+          "mechanism": "breaches_feed_brokers"
+        }
+      ],
+      "required_retention_events": [
+        "relevance_pivot",
+        "personal_inventory",
+        "reuse_attack_path",
+        "cost_translation",
+        "single_email_cost",
+        "demand_growth"
+      ],
+      "original_moves": [
+        "拆除舒适距离：这不是别人的问题",
+        "用库存现状化说明观众数据已在市场",
+        "描述密码复用的个人风险路径",
+        "说明自动化机制如何放大风险",
+        "翻译泄露成本为单邮件损失",
+        "用泄露循环归因增长"
+      ],
+      "abstract_move": "拆除舒适距离框架 + 库存现状化 + 描述个人风险路径 + 说明自动化机制 + 翻译成本为单次损失 + 归因增长",
+      "replacement_needs": [
+        "一个库存现状化的数字或描述",
+        "一个个人风险路径（从泄露到损失的链条）",
+        "一个自动化机制的描述",
+        "一个单次损失的成本翻译"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "income_inequality_reveal",
+      "start_ratio": 0.8187,
+      "end_ratio": 0.9471,
+      "start_sec": 1642.2,
+      "end_sec": 1899.8,
+      "position_label": "81.9%–94.7%(27:22–31:40)",
+      "purpose": "用研究数据完成全片最大反转：典型参与者收入微薄而平台建造者抽成巨大，再同构到合法平台经济",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 91,
+          "position_ratio": 0.8283,
+          "time_ms": 1661560,
+          "reason": "典型参与者月收入约千余美元等于最低工资，犯罪暴富想象被研究数据击碎"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "information_reveal",
+          "strength": 89,
+          "position_ratio": 0.8769,
+          "time_ms": 1759040,
+          "reason": "顶端执行者拿大头看似赢家，运营者小比例抽成即数百万且零操作风险"
+        },
+        {
+          "peak_id": "PK11",
+          "peak_type": "worldview_shift",
+          "strength": 92,
+          "position_ratio": 0.9077,
+          "time_ms": 1820760,
+          "reason": "与合法科技平台同构：不拥有资产的平台抽成最多，非法经济被指认为同一种结构"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE67",
+          "event_type": "reframe_announce",
+          "mechanism": "get_rich_assumption_named"
+        },
+        {
+          "event_id": "RE68",
+          "event_type": "study_reveal",
+          "mechanism": "typical_income_minimum_wage"
+        },
+        {
+          "event_id": "RE69",
+          "event_type": "labor_market",
+          "mechanism": "forum_job_market_study"
+        },
+        {
+          "event_id": "RE70",
+          "event_type": "employment_detail",
+          "mechanism": "benefits_and_reviews"
+        },
+        {
+          "event_id": "RE71",
+          "event_type": "top_earner_reveal",
+          "mechanism": "platform_builders_top_earners"
+        },
+        {
+          "event_id": "RE72",
+          "event_type": "operator_math",
+          "mechanism": "small_cut_of_huge_volume"
+        },
+        {
+          "event_id": "RE73",
+          "event_type": "pattern_generalization",
+          "mechanism": "risk_bottom_profit_top"
+        },
+        {
+          "event_id": "RE74",
+          "event_type": "legitimate_parallel",
+          "mechanism": "same_structure_as_tech_platforms"
+        },
+        {
+          "event_id": "RE75",
+          "event_type": "leverage_reframe",
+          "mechanism": "sells_leverage_not_data"
+        },
+        {
+          "event_id": "RE76",
+          "event_type": "working_class_close",
+          "mechanism": "own_working_class"
+        }
+      ],
+      "required_retention_events": [
+        "reframe_announce",
+        "study_reveal",
+        "labor_market",
+        "employment_detail",
+        "top_earner_reveal",
+        "operator_math",
+        "legitimate_parallel",
+        "leverage_reframe",
+        "working_class_close"
+      ],
+      "original_moves": [
+        "点名反转假设：大家以为参与者暴富",
+        "用收入研究证据给出典型参与者月收入",
+        "用劳动市场研究说明招聘广告与工资水平",
+        "给出顶层执行者收入数字",
+        "用顶层抽成数学说明运营者拿大头且零风险",
+        "总结全链风险分配：底层拿最少风险最大",
+        "同构到合法平台经济：不拥有资产的平台抽成最多",
+        "用杠杆定性与工薪阶层收束"
+      ],
+      "abstract_move": "点名反转假设 + 用研究证据给出典型收入击碎暴富想象 + 用劳动市场研究坐实工资水平 + 给出顶层收入与抽成数学 + 总结全链风险分配 + 同构到合法平台 + 杠杆定性与工薪阶层收束",
+      "replacement_needs": [
+        "典型参与者收入的研究证据",
+        "劳动市场研究或招聘广告数据",
+        "顶层收入数字与抽成比例数学",
+        "全链风险分配总结",
+        "合法平台同构案例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(91)、PK10(89)、PK11(92)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 91
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 89
+        },
+        {
+          "peak_id": "PK11",
+          "strength": 92
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "callback_closure",
+      "start_ratio": 0.9471,
+      "end_ratio": 1,
+      "start_sec": 1899.8,
+      "end_sec": 2005.9,
+      "position_label": "94.7%–100%(31:40–33:26)",
+      "purpose": "回扣开场价格并压缩回收因果链，把主问句改写为更锋利的版本，再以一致的 CTA 与续集预告结束",
+      "peaks": [
+        {
+          "peak_id": "PK12",
+          "peak_type": "emotional_payoff",
+          "strength": 87,
+          "position_ratio": 0.9471,
+          "time_ms": 1899840,
+          "reason": "开场价格回环：你只是价格表上按新鲜度估值的一行"
+        },
+        {
+          "peak_id": "PK13",
+          "peak_type": "worldview_shift",
+          "strength": 86,
+          "position_ratio": 0.9833,
+          "time_ms": 1972400,
+          "reason": "主问句改写收束：最赚钱的模式从不偷任何东西"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "下期预告留下的内部视角期待",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "compressed_answer_and_question_rewrite",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "income_reality_reframe",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE77",
+          "event_type": "callback",
+          "mechanism": "opening_price_callback"
+        },
+        {
+          "event_id": "RE78",
+          "event_type": "dehumanizing_metaphor",
+          "mechanism": "line_item_on_price_sheet"
+        },
+        {
+          "event_id": "RE79",
+          "event_type": "margin_chain",
+          "mechanism": "everyone_takes_margin"
+        },
+        {
+          "event_id": "RE80",
+          "event_type": "income_contrast",
+          "mechanism": "fast_food_wage_in_huge_economy"
+        },
+        {
+          "event_id": "RE81",
+          "event_type": "triple_synthesis",
+          "mechanism": "job_market_franchise_supply_chain"
+        },
+        {
+          "event_id": "RE82",
+          "event_type": "question_rewrite",
+          "mechanism": "real_question_rewritten"
+        },
+        {
+          "event_id": "RE83",
+          "event_type": "cta_close",
+          "mechanism": "comment_subscribe_next_episode"
+        }
+      ],
+      "required_retention_events": [
+        "callback",
+        "dehumanizing_metaphor",
+        "margin_chain",
+        "income_contrast",
+        "triple_synthesis",
+        "question_rewrite",
+        "cta_close"
+      ],
+      "original_moves": [
+        "回扣开场价格清单",
+        "用一行条目隐喻压缩观众位置",
+        "描述层层抽成的因果链",
+        "对照底层与顶层的收入风险",
+        "用三段式定性总结结构（底层冒险、中层执行、顶层建造）",
+        "改写主问句为更锋利版本：最赚钱的模式从不偷任何东西",
+        "一致CTA与下期预告"
+      ],
+      "abstract_move": "回扣开场价格 + 用隐喻压缩观众位置 + 压缩因果链 + 对照底层与顶层 + 三段式定性总结 + 改写主问句为更锋利版本 + 一致CTA与续集预告",
+      "replacement_needs": [
+        "开场价格的重现",
+        "一个隐喻或压缩句，说明观众在结构中的位置",
+        "层层抽成的因果链压缩",
+        "底层与顶层的角色对照",
+        "主问句的改写版本，更锋利地指向核心矛盾"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK12(87)、PK13(86);打开的悬念 LOOP08(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01、FS10→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK12",
+          "strength": 87
+        },
+        {
+          "peak_id": "PK13",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

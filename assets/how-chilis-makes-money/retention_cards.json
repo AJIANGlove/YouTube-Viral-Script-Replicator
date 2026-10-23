@@ -1,0 +1,1261 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:03:59.389Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "price_shock_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0355,
+      "start_sec": 0.2,
+      "end_sec": 45.1,
+      "position_label": "0%–3.6%(0:00–0:45)",
+      "purpose": "用观众熟悉的连锁品牌新套餐与竞争对手做同口径价格分量对比，再叠加母公司股价两年暴涨的尺度冲击，把一道菜单变成“这家餐厅到底怎么赚钱”的悬念",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 76,
+          "position_ratio": 0.0267,
+          "time_ms": 33985,
+          "reason": "母公司股价两年从约三十美元涨至超过二百五十美元，把一道菜单直接升级为赚钱之谜"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题问题与股价反差之间的因果缺口",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "everyday_offer_entry",
+          "mechanism": "familiar_brand_new_menu"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "value_contrast",
+          "mechanism": "portion_price_contrast"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "competitor_anchor",
+          "mechanism": "same_period_price_benchmark"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "scale_reveal",
+          "mechanism": "stock_price_jump"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "core_question",
+          "mechanism": "title_question_voiced"
+        }
+      ],
+      "required_retention_events": [
+        "price_value_contrast",
+        "competitor_anchor",
+        "scale_jump",
+        "core_question"
+      ],
+      "original_moves": [
+        "展示新低价套餐的具体内容与价格（汉堡+配菜+饮料约 10.99 美元）",
+        "对比竞争对手同口径套餐的价格与分量差距",
+        "揭示母公司股价两年从约 30 美元涨至超过 250 美元的尺度跃迁",
+        "明确提出核心问题：这家餐厅到底怎么赚钱"
+      ],
+      "abstract_move": "用观众熟悉的低价产品与竞品做同口径对比制造疑惑，再叠加母公司市值暴涨的尺度冲击，把产品定价变成盈利悬念",
+      "replacement_needs": [
+        "一个观众熟悉的低价产品及其具体价格与内容",
+        "一个可同口径对比的竞品价格与分量差距",
+        "母公司或核心指标的前后尺度对比数据",
+        "一个明确的核心问题陈述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(76);打开的悬念 LOOP01→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 76
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "price_value_contrast_with_scale_jump",
+        "first_stimulus_ms": 5885,
+        "first_payoff_ms": 117375,
+        "evidence_refs": [
+          "C0001",
+          "C0003",
+          "C0007",
+          "C0013"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "field_test_narrative",
+      "start_ratio": 0.0347,
+      "end_ratio": 0.1002,
+      "start_sec": 44.1,
+      "end_sec": 127.4,
+      "position_label": "3.5%–10%(0:44–2:07)",
+      "purpose": "叙述者亲自到店执行“只点最低价”计划，用一顿真实用餐演示菜单如何引导升单，并以最终账单完成首个微型回报",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.0924,
+          "time_ms": 117375,
+          "reason": "实测账单对比计划价，用个人账单完成机制的首个微型兑现"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "计划约束与菜单升单设计之间的冲突",
+          "closes_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "对被看穿的轻微不安与自证欲望",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "personal_bill_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP03"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "field_test_setup",
+          "mechanism": "narrator_field_visit"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "plan_declaration",
+          "mechanism": "strict_budget_plan"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "price_discovery",
+          "mechanism": "menu_column_shift"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "upgrade_slip",
+          "mechanism": "unplanned_drink_order"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "bill_reveal",
+          "mechanism": "final_bill_vs_plan"
+        }
+      ],
+      "required_retention_events": [
+        "firsthand_field_test",
+        "plan_declaration",
+        "menu_design_discovery",
+        "bill_reveal"
+      ],
+      "original_moves": [
+        "声明实测计划：只点菜单上最便宜的选项",
+        "用餐过程中发现目标菜品从主菜栏换到配菜栏导致涨价",
+        "记录计划外的加购行为（饮料、甜点等）",
+        "展示最终账单金额，对比最初计划价格，完成首个微型兑现"
+      ],
+      "abstract_move": "亲身执行极端计划，用真实过程演示产品设计如何引导偏离初衷，并以个人账单完成首个微型回报",
+      "replacement_needs": [
+        "一个可执行的极端计划声明",
+        "过程中发现的引导偏离设计细节",
+        "计划外发生的额外消费",
+        "最终账单与计划价格的对比"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(82);打开的悬念 LOOP03(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "audience_confession_contract",
+      "start_ratio": 0.0995,
+      "end_ratio": 0.1253,
+      "start_sec": 126.4,
+      "end_sec": 159.2,
+      "position_label": "10%–12.5%(2:06–2:39)",
+      "purpose": "把实测结果转成观众参与契约：要求观众坦白自己的订单与账单，并提出“几乎没人真付最低价”的待验证理论，以订阅点赞作赌注",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "audience_turn",
+          "mechanism": "confession_request"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "theory_tease",
+          "mechanism": "almost_no_one_pays_list_price"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "wager_cta",
+          "mechanism": "subscribe_like_wager"
+        }
+      ],
+      "required_retention_events": [
+        "audience_confession",
+        "theory_tease",
+        "subscribe_wager"
+      ],
+      "original_moves": [
+        "要求观众坦白自己的真实订单与账单",
+        "提出待验证理论：几乎没人真正支付最低价",
+        "设置订阅点赞赌注并邀请评论区讨论"
+      ],
+      "abstract_move": "把个人实测结果转为观众参与契约，提出待验证理论并以互动赌注锁定参与",
+      "replacement_needs": [
+        "一个针对观众的坦白要求",
+        "一个待验证的反直觉理论",
+        "一个互动赌注设计"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "scale_context_roadmap",
+      "start_ratio": 0.1246,
+      "end_ratio": 0.1546,
+      "start_sec": 158.3,
+      "end_sec": 196.4,
+      "position_label": "12.5%–15.5%(2:38–3:16)",
+      "purpose": "给出门店数、直营加盟结构与年营收规模，否定表面答案“靠汉堡赚钱”，再用九个命名机制加一个隐患的路线图锁定全片结构",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "路线图末尾的风险悬念",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "scale_context",
+          "mechanism": "chain_footprint"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "revenue_scale",
+          "mechanism": "annual_revenue_figure"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "mechanism_reframe",
+          "mechanism": "not_from_the_obvious_product"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "roadmap_tease",
+          "mechanism": "nine_named_mechanisms_plus_risk"
+        }
+      ],
+      "required_retention_events": [
+        "scale_context",
+        "mechanism_reframe",
+        "numbered_roadmap",
+        "risk_tease"
+      ],
+      "original_moves": [
+        "给出门店总数、直营与加盟比例、年营收规模",
+        "明确否定表面答案：不是靠汉堡赚钱",
+        "列出九个命名机制的路线图清单",
+        "预告片尾将揭示可能毁掉一切的隐患"
+      ],
+      "abstract_move": "给出规模数据否定表面答案，用命名机制清单锁定全片结构，并预告片尾隐患制造长线悬念",
+      "replacement_needs": [
+        "规模数据（门店数、营收、股权结构等）",
+        "对表面答案的明确否定",
+        "一个命名机制清单或结构路线图",
+        "一个片尾隐患预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "decline_backstory",
+      "start_ratio": 0.1538,
+      "end_ratio": 0.2336,
+      "start_sec": 195.5,
+      "end_sec": 296.7,
+      "position_label": "15.4%–23.4%(3:15–4:57)",
+      "purpose": "用品牌发家史与文化记忆建立纵深，再揭示复苏前“增收靠涨价、客流下滑、单美元利润下降”的虚假健康，为转折制造必要性",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "origin_story",
+          "mechanism": "founding_history"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "decline_reveal",
+          "mechanism": "growth_quality_problem"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "margin_squeeze",
+          "mechanism": "profit_per_dollar_drop"
+        }
+      ],
+      "required_retention_events": [
+        "origin_story",
+        "culture_marker",
+        "false_health_data"
+      ],
+      "original_moves": [
+        "讲述品牌创立时间、地点与发家史",
+        "唤起观众的文化记忆点（某个年代的聚会场所）",
+        "揭示复苏前同店销售增长靠涨价、客流实际下滑的背离",
+        "展示单美元利润下降数据，说明虚假健康"
+      ],
+      "abstract_move": "用发家史与文化记忆建立纵深，再揭示增长数据背后的结构性虚弱，为转折制造必要性",
+      "replacement_needs": [
+        "品牌创立背景与文化记忆点",
+        "复苏前的增长数据与结构性问题",
+        "单位利润下滑的量化证据"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "simplification_turnaround",
+      "start_ratio": 0.2328,
+      "end_ratio": 0.3348,
+      "start_sec": 295.8,
+      "end_sec": 425.4,
+      "position_label": "23.3%–33.5%(4:56–7:05)",
+      "purpose": "讲述新掌门做减法：砍掉四分之一菜单（包括同名菜）、放弃年收入上亿的副牌、弃用机器人，同时反向加大人力投入，解释简化如何降低成本并稳住标准",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.2447,
+          "time_ms": 310940,
+          "reason": "砍掉四分之一菜单且包括品牌同名菜，以强烈反差证明减法决心"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 68,
+          "position_ratio": 0.2675,
+          "time_ms": 339924,
+          "reason": "机器人进仓库无人怀念的干式幽默，在密集数字中释放张力"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "actor_intro",
+          "mechanism": "new_leader_arrives"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "cut_reveal",
+          "mechanism": "menu_reduction_irony"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "sacrificed_revenue",
+          "mechanism": "side_business_killed"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "dry_humor_beat",
+          "mechanism": "robot_waiters_warehouse"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "counterintuitive_move",
+          "mechanism": "labor_investment_reversal"
+        }
+      ],
+      "required_retention_events": [
+        "cut_reveal",
+        "sacrificed_revenue",
+        "dry_humor_beat",
+        "counterintuitive_investment"
+      ],
+      "original_moves": [
+        "介绍新负责人的履历背景",
+        "展示砍掉四分之一菜单且包括品牌同名菜的决策",
+        "讲述放弃年收入上亿美元的副牌业务",
+        "描述弃用机器人送回仓库且无人怀念的细节",
+        "解释厨房效率提升与标准稳定的逻辑",
+        "揭示反向加大人力投入金额与经理薪酬逻辑"
+      ],
+      "abstract_move": "讲述新负责人做减法：砍核心产品、放弃高营收副业、弃用自动化，同时反向加大人力投入，用强烈反差证明简化决心并解释效率逻辑",
+      "replacement_needs": [
+        "新负责人履历",
+        "被砍产品清单及其象征意义（包括同名产品）",
+        "被放弃业务的营收规模",
+        "一个自动化设备弃用的幽默细节",
+        "简化带来的效率提升逻辑",
+        "反向人力投入的金额与薪酬设计"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(78)、PK04(68)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 78
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 68
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "contrastive_bait_and_deal_proof",
+      "start_ratio": 0.3341,
+      "end_ratio": 0.4425,
+      "start_sec": 424.5,
+      "end_sec": 562.2,
+      "position_label": "33.4%–44.3%(7:04–9:22)",
+      "purpose": "揭示对标快餐的广告诱饵策略，回答“既然最便宜套餐这么值，为什么还有人付更多”的数学问题，再用连续两季业绩数据证明策略有效",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.4058,
+          "time_ms": 515584,
+          "reason": "不到十分之一顾客真正支付广告价，“超值套餐”被重构为引流装置"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.4213,
+          "time_ms": 535291,
+          "reason": "连续两季同店销售约三成增长与行业第一排名，策略有效性获得量化确认"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "超值诱饵与真实点单结构之间的表面矛盾",
+          "closes_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "客流数字与利润逻辑之间的机制缺口",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "proportional_math_answer",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "campaign_reveal",
+          "mechanism": "fastfood_targeting"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "ad_contrast",
+          "mechanism": "burger_side_by_side"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "bait_history",
+          "mechanism": "offer_predates_campaign"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "concern_question",
+          "mechanism": "why_pay_more_question"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "math_payoff",
+          "mechanism": "few_pay_list_price"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "aphorism",
+          "mechanism": "edible_advertisement"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "results_proof",
+          "mechanism": "sales_jump_confirmation"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "pivot",
+          "mechanism": "seat_economics_tease"
+        }
+      ],
+      "required_retention_events": [
+        "competitor_targeting",
+        "concern_question",
+        "deal_math_payoff",
+        "results_proof"
+      ],
+      "original_moves": [
+        "揭示广告对标快餐而非同行的策略定位",
+        "指出低价套餐早已存在而非新发明",
+        "展示从单品到系列产品线的扩展",
+        "用点单结构比例数学回答'为什么还有人付更多'（不到十分之一顾客支付广告价）",
+        "给出连续两季同店销售约 30% 增长与行业第一排名数据"
+      ],
+      "abstract_move": "揭示对标更低价竞品的广告策略，用点单结构比例数学回答为何多数人支付更高价，再以连续季度高增长数据证明策略有效",
+      "replacement_needs": [
+        "广告对标对象的选择逻辑",
+        "低价产品的存在时间证明",
+        "产品线扩展设计",
+        "点单结构的比例数学",
+        "连续季度的增长数据与行业排名"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(88)、PK06(82);打开的悬念 LOOP06→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 88
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "fixed_cost_seat_economics",
+      "start_ratio": 0.4417,
+      "end_ratio": 0.5418,
+      "start_sec": 561.3,
+      "end_sec": 688.4,
+      "position_label": "44.2%–54.2%(9:21–11:28)",
+      "purpose": "用“周二晚上第 13 个卡座”的思想实验解释固定成本生意的边际利润逻辑，再用单店营收、单美元利润反弹和一美元账本拆解完成全片最核心的机制兑现",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 92,
+          "position_ratio": 0.479,
+          "time_ms": 608599,
+          "reason": "工作日空店思想实验收束为“先到的顾客付房租，后来的顾客才是利润”，全片核心机制顿悟"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.5168,
+          "time_ms": 656574,
+          "reason": "一美元营收被逐项拆成食材、人力、其他与利润，账本式兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "marginal_cost_thought_experiment",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE34",
+          "event_type": "thought_experiment",
+          "mechanism": "weeknight_empty_booths"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "seat_secret",
+          "mechanism": "marginal_customer_profit"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "margin_jump",
+          "mechanism": "profit_per_dollar_rebound"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "ledger_breakdown",
+          "mechanism": "dollar_allocation_split"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "headroom_signal",
+          "mechanism": "below_previous_peak"
+        }
+      ],
+      "required_retention_events": [
+        "thought_experiment",
+        "seat_secret",
+        "margin_jump",
+        "ledger_breakdown"
+      ],
+      "original_moves": [
+        "说明租赁为主的资产结构",
+        "用周二晚上空店思想实验引出固定成本概念",
+        "解释边际顾客利润逻辑：先到的付房租，后来的才是利润",
+        "对比单店营收前后变化",
+        "展示单美元利润反弹数据",
+        "拆解一美元营收的成本结构（食材、人力、其他、利润）",
+        "提及回购与产能余量"
+      ],
+      "abstract_move": "用固定成本场景的思想实验解释边际单位的利润逻辑，再以单位营收、单位利润反弹和成本拆解完成核心机制的账本式兑现",
+      "replacement_needs": [
+        "固定成本占比的资产结构",
+        "一个空置场景思想实验",
+        "边际单位利润逻辑的表述",
+        "单位营收或利润的前后对比数据",
+        "单位收入的成本拆分明细",
+        "产能余量或回购数据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(92)、PK08(84);回收了前文的悬念 FS07→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 92
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "upsell_mix_engine",
+      "start_ratio": 0.5411,
+      "end_ratio": 0.6091,
+      "start_sec": 687.5,
+      "end_sec": 773.9,
+      "position_label": "54.1%–60.9%(11:27–12:54)",
+      "purpose": "回到实测餐桌，解释招牌菜品换栏涨价而不流失顾客的 mix 逻辑，展示每一档都有更大版本的升单阶梯与“一块两块无人合计”的累积心理，并用客单价变化量化结果",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE39",
+          "event_type": "callback_transition",
+          "mechanism": "return_to_field_table"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "upgrade_ladder",
+          "mechanism": "tiered_addons_design"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "micro_increment",
+          "mechanism": "unnoticed_accumulation"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "spend_reveal",
+          "mechanism": "average_check_rise"
+        }
+      ],
+      "required_retention_events": [
+        "callback_transition",
+        "upgrade_ladder",
+        "micro_increment",
+        "spend_reveal"
+      ],
+      "original_moves": [
+        "回到实测餐桌场景",
+        "解释招牌菜品换栏涨价而顾客不流失的现象",
+        "定义 mix 概念（产品组合优化）",
+        "展示每一档都有更大版本的升单阶梯设计",
+        "说明一块两块小额累积无人合计的心理",
+        "给出客单价年度对比数据量化结果"
+      ],
+      "abstract_move": "回到真实场景解释产品换位涨价不流失的组合逻辑，展示每档都有升级版的阶梯设计与小额累积心理，并以客单价变化量化结果",
+      "replacement_needs": [
+        "产品换位涨价的实例",
+        "产品组合优化概念或机制名称",
+        "升单阶梯的具体设计",
+        "小额累积的心理描述",
+        "客单价前后对比数据"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "bar_margin_engine",
+      "start_ratio": 0.6084,
+      "end_ratio": 0.6615,
+      "start_sec": 773,
+      "end_sec": 840.5,
+      "position_label": "60.8%–66.2%(12:53–14:01)",
+      "purpose": "拆解吧台机制：月度特价鸡尾酒的仪式感与回头率、惊人的原料采购尺度、无需厨房的出杯效率，并以公司不披露酒水占比留下开放好奇",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "公司乐于公布采购量却不披露酒水占比的信息落差",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE43",
+          "event_type": "bar_transition",
+          "mechanism": "margin_tease"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "scale_joke",
+          "mechanism": "third_largest_buyer_analogy"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "margin_logic",
+          "mechanism": "drink_without_kitchen"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "disclosure_gap",
+          "mechanism": "undisclosed_bar_revenue"
+        }
+      ],
+      "required_retention_events": [
+        "margin_tease",
+        "scale_joke",
+        "disclosure_gap"
+      ],
+      "original_moves": [
+        "展示招牌酒水的价格与单品销量",
+        "用惊人的原料采购尺度类比说明规模",
+        "介绍月度上新特价的机制设计",
+        "解释无需厨房的出杯效率与空桌填充逻辑",
+        "提示公司不披露酒水占比数据，留下开放好奇"
+      ],
+      "abstract_move": "拆解高毛利渠道：单品的仪式感与回头率、惊人采购规模、月度上新机制、无需后厨的效率优势，并以未披露占比留下开放好奇",
+      "replacement_needs": [
+        "招牌单品的价格与销量",
+        "原料采购规模的类比说明",
+        "周期上新机制设计",
+        "出品效率与空置填充逻辑",
+        "未披露关键指标的提示"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "viral_shareable_appetizer",
+      "start_ratio": 0.6608,
+      "end_ratio": 0.7226,
+      "start_sec": 839.6,
+      "end_sec": 918.1,
+      "position_label": "66.1%–72.3%(14:00–15:18)",
+      "purpose": "讲述拼盘前菜如何靠用户自发的拉丝视频获得免费传播，用销量占比翻倍和客群年轻化数据证明其商业重量",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.6979,
+          "time_ms": 886671,
+          "reason": "一道前菜销售占比翻倍至约七分之一收入，免费传播的商业重量落地"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE47",
+          "event_type": "product_reveal",
+          "mechanism": "shared_platter_intro"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "viral_proof",
+          "mechanism": "user_generated_cheese_pull"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "share_reveal",
+          "mechanism": "sales_share_doubling"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "demographic_shift",
+          "mechanism": "younger_customer_mix"
+        }
+      ],
+      "required_retention_events": [
+        "viral_proof",
+        "share_reveal",
+        "demographic_shift"
+      ],
+      "original_moves": [
+        "讲述拼盘前菜的单品年销量",
+        "展示用户自发拍摄拉丝视频的现象与播放量规模",
+        "揭示该单品销售占比翻倍至约七分之一收入",
+        "说明分享型产品设计逻辑",
+        "给出客群年龄结构年轻化数据"
+      ],
+      "abstract_move": "讲述单品如何靠用户自发传播获得免费流量，用销售占比翻倍与客群年轻化数据证明其商业重量",
+      "replacement_needs": [
+        "单品的年销量或销售占比",
+        "用户自发传播现象与播放量规模",
+        "销售占比的前后对比",
+        "分享型设计的特征",
+        "客群结构变化数据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "off_premise_prepaid_franchise",
+      "start_ratio": 0.7218,
+      "end_ratio": 0.7986,
+      "start_sec": 917.1,
+      "end_sec": 1014.7,
+      "position_label": "72.2%–79.9%(15:17–16:55)",
+      "purpose": "依次拆解外卖外带（同一厨房不占座位）、礼品卡沉淀资金直接计收入、海外加盟费占比极低三个边缘渠道，并以与收租模式对手的对照点明自营模式的风险对称性",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "预付资金与消费兑现之间的时间差",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "numeric_answer",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE51",
+          "event_type": "channel_turn",
+          "mechanism": "off_premise_transition"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "breakage_reveal",
+          "mechanism": "gift_card_breakage_income"
+        },
+        {
+          "event_id": "RE53",
+          "event_type": "model_contrast",
+          "mechanism": "franchise_vs_owned_operations"
+        }
+      ],
+      "required_retention_events": [
+        "seatless_sale",
+        "breakage_reveal",
+        "model_contrast"
+      ],
+      "original_moves": [
+        "给出外卖外带占比与平台结构",
+        "解释同一厨房不占座位的销售逻辑",
+        "揭示礼品卡未使用金额沉淀直接计入收入",
+        "说明海外加盟费规模与占比极低",
+        "与收租模式对手对照，点明自营模式的风险对称性"
+      ],
+      "abstract_move": "依次拆解三个边缘渠道：不占主资源的销售、预付资金的会计处理、低占比的轻资产收入，并以与收租模式对照点明自营风险",
+      "replacement_needs": [
+        "不占主资源的渠道占比",
+        "预付资金的规模与会计处理",
+        "轻资产收入的规模与占比",
+        "与收租模式的对照"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP08。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:预付资金与消费兑现之间的时间差",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "table_turn_technology",
+      "start_ratio": 0.7979,
+      "end_ratio": 0.8408,
+      "start_sec": 1013.7,
+      "end_sec": 1068.3,
+      "position_label": "79.8%–84.1%(16:54–17:48)",
+      "purpose": "解释桌面平板如何把支付、娱乐、会员招募和反馈分类合一，最终落脚在“早空出五分钟的桌子可以再卖一次”的周转逻辑",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "已验证机制与未来可持续性之间的张力",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP09"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE54",
+          "event_type": "tech_reveal",
+          "mechanism": "tabletop_devices_return"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "turnover_payoff",
+          "mechanism": "faster_table_resale"
+        }
+      ],
+      "required_retention_events": [
+        "tech_reveal",
+        "loyalty_hook",
+        "turnover_payoff"
+      ],
+      "original_moves": [
+        "说明桌面设备回归的时间与覆盖门店数",
+        "解释自助支付与会员权益合一的设计",
+        "介绍反馈的 AI 分类功能",
+        "落脚在翻台时间价值：早空出五分钟可以再卖一次"
+      ],
+      "abstract_move": "解释单一设备如何合一多项功能（支付、娱乐、会员、反馈），最终落脚在提前释放资源可再销售的周转逻辑",
+      "replacement_needs": [
+        "设备回归时间与覆盖范围",
+        "合一功能的清单",
+        "智能分类或自动化细节",
+        "周转时间的价值量化"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP09(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "growth_ceiling_predicament",
+      "start_ratio": 0.8401,
+      "end_ratio": 0.9349,
+      "start_sec": 1067.4,
+      "end_sec": 1187.9,
+      "position_label": "84%–93.5%(17:47–19:48)",
+      "purpose": "兑现开场预告的“隐患”：客流增长停滞、增长近半来自涨价、成本上升、姊妹品牌与同行的困境、对手跟进低价、门店老化带来的巨额资本开支，说明复苏难以延续",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.8401,
+          "time_ms": 1067360,
+          "reason": "叙事从机制赞美转向增长压力，预告已久的隐患正式登场"
+        },
+        {
+          "peak_id": "PK11",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.8613,
+          "time_ms": 1094320,
+          "reason": "增长近半来自涨价而非客流，复苏结构被指出开始像困境前一年"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "risk_analysis_payoff",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE56",
+          "event_type": "risk_turn",
+          "mechanism": "growth_pressure_acknowledged"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "quality_concern",
+          "mechanism": "price_driven_growth"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "competitive_response",
+          "mechanism": "rival_cheap_deals_and_failures"
+        },
+        {
+          "event_id": "RE59",
+          "event_type": "capex_drag",
+          "mechanism": "remodel_spending_stays_in_building"
+        }
+      ],
+      "required_retention_events": [
+        "risk_turn",
+        "growth_quality_concern",
+        "competitive_response",
+        "capex_drag"
+      ],
+      "original_moves": [
+        "揭示客流增长停滞数据",
+        "指出增长近半来自涨价而非客流",
+        "展示成本端上涨压力",
+        "对照姊妹品牌与同行的困境",
+        "说明竞争对手跟进低价策略",
+        "给出门店老化带来的巨额翻新资本开支"
+      ],
+      "abstract_move": "兑现预告隐患：客流停滞、增长依赖涨价、成本上升、同行困境、对手跟进、巨额资本开支，说明复苏难以延续",
+      "replacement_needs": [
+        "客流增速回落数据",
+        "增长结构拆解（涨价占比）",
+        "成本上升压力",
+        "同行或姊妹品牌对照",
+        "竞争对手跟进动作",
+        "未来资本开支规模"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(75)、PK11(80);回收了前文的悬念 FS04→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK11",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "synthesis_callback",
+      "start_ratio": 0.9341,
+      "end_ratio": 0.9606,
+      "start_sec": 1186.9,
+      "end_sec": 1220.5,
+      "position_label": "93.4%–96.1%(19:47–20:21)",
+      "purpose": "重问标题问题，用四句压缩复述整条因果链（砍菜单、无人真付的诱饵、满座变现、升单酒水前菜收尾），再以“餐的价格就是座位的价格”金句完成认知收束",
+      "peaks": [
+        {
+          "peak_id": "PK12",
+          "peak_type": "worldview_shift",
+          "strength": 93,
+          "position_ratio": 0.9341,
+          "time_ms": 1186860,
+          "reason": "标题问题重提并以四句因果链压缩兑现，主承诺正式闭合"
+        },
+        {
+          "peak_id": "PK13",
+          "peak_type": "emotional_payoff",
+          "strength": 86,
+          "position_ratio": 0.9531,
+          "time_ms": 1210921,
+          "reason": "定义式金句把整套机制浓缩为可带走的一句话，情绪落点完成"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "mechanism_map_plus_aphorism",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE60",
+          "event_type": "synthesis_question",
+          "mechanism": "title_question_reprise"
+        },
+        {
+          "event_id": "RE61",
+          "event_type": "compressed_answer",
+          "mechanism": "mechanism_chain_recap"
+        },
+        {
+          "event_id": "RE62",
+          "event_type": "aphorism_close",
+          "mechanism": "price_of_a_seat"
+        }
+      ],
+      "required_retention_events": [
+        "title_callback",
+        "compressed_answer",
+        "aphorism_close"
+      ],
+      "original_moves": [
+        "重提标题问题：这家餐厅到底怎么赚钱",
+        "再次否定表面答案：不是靠汉堡",
+        "用四句压缩复述因果链：砍菜单、无人真付诱饵、满座变现、升单酒水前菜",
+        "以定义式金句收束：餐的价格就是座位的价格"
+      ],
+      "abstract_move": "重问核心问题并再次否定表面答案，用压缩因果链兑现主承诺，再以定义式金句把整套机制浓缩为可带走认知",
+      "replacement_needs": [
+        "核心问题重提",
+        "对表面答案的再否定",
+        "因果链的压缩复述（3-5 句）",
+        "一个定义式金句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK12(93)、PK13(86);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK12",
+          "strength": 93
+        },
+        {
+          "peak_id": "PK13",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "community_cta_outro",
+      "start_ratio": 0.9598,
+      "end_ratio": 1,
+      "start_sec": 1219.5,
+      "end_sec": 1270.6,
+      "position_label": "96%–100%(20:20–21:11)",
+      "purpose": "邀请从业者评论区纠错，介绍社群与其他频道入口，引导订阅点赞与终屏推荐，以固定告别语结束",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE63",
+          "event_type": "community_cta",
+          "mechanism": "insider_comment_invite"
+        }
+      ],
+      "required_retention_events": [
+        "insider_comment_invite",
+        "channel_ecosystem"
+      ],
+      "original_moves": [
+        "邀请行业从业者在评论区纠错",
+        "介绍社群与其他频道入口",
+        "引导订阅点赞与终屏推荐",
+        "以固定告别语结束"
+      ],
+      "abstract_move": "邀请专业观众纠错，介绍社群入口，引导订阅互动与终屏推荐，以固定告别语结束",
+      "replacement_needs": [
+        "专业观众纠错邀请",
+        "社群或其他入口介绍",
+        "订阅点赞引导",
+        "终屏推荐与告别语"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

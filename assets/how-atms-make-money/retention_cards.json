@@ -1,0 +1,1163 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:07:23.340Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "misconception_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0242,
+      "start_sec": 0.1,
+      "end_sec": 23.4,
+      "position_label": "0%–2.4%(0:00–0:23)",
+      "purpose": "用观众共享的默认假设开场并立刻翻转，建立“你以为的归属是错的”这一核心认知缺口",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "开场的人物化预告悬挂为身份与经营方式的好奇",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "everyday_misconception_entry",
+          "mechanism": "shared_default_assumption"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "belief_flip",
+          "mechanism": "ownership_inversion"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "character_tease",
+          "mechanism": "one_man_fleet_image"
+        }
+      ],
+      "required_retention_events": [
+        "misconception_flip",
+        "ownership_tease"
+      ],
+      "original_moves": [
+        "点名观众默认假设：ATM 机属于银行",
+        "立刻翻转：大多数机器不属于银行",
+        "预告真实归属者的三种形态：大公司、街角店主或个人经营者"
+      ],
+      "abstract_move": "点名观众共享的默认归属假设 + 立刻用事实翻转假设 + 预告真实归属者的多样形态",
+      "replacement_needs": [
+        "一个观众普遍持有的归属假设",
+        "一个直接推翻该假设的事实陈述",
+        "真实归属者的形态类型预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP04→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "misconception_flip_with_character_tease",
+        "first_stimulus_ms": 80,
+        "first_payoff_ms": 12639,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0008"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "micro_story_fee_sting",
+      "start_ratio": 0.021,
+      "end_ratio": 0.1052,
+      "start_sec": 20.4,
+      "end_sec": 102.1,
+      "position_label": "2.1%–10.5%(0:20–1:42)",
+      "purpose": "用一个紧迫场景中的小额消费故事，把抽象费用落到一次具体决策，并用账单逐行揭示与百分比换算制造刺痛",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.0887,
+          "time_ms": 86080,
+          "reason": "“取自己的40美元付了6美元、即15%”把标题问题第一次量化成个人损失"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "账单第三行的异物感悬挂为待解谜团",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "scene_entry",
+          "mechanism": "cash_only_friday_vignette"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "fee_confrontation",
+          "mechanism": "screen_interrupts_withdrawal"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "time_jump_reveal",
+          "mechanism": "statement_three_weeks_later"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "third_line_reveal",
+          "mechanism": "unagreed_bank_fee"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "numeric_sting",
+          "mechanism": "six_dollars_for_forty"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "cost_contrast",
+          "mechanism": "tacos_vs_cash_cost"
+        }
+      ],
+      "required_retention_events": [
+        "scene_entry",
+        "fee_confrontation",
+        "statement_reveal",
+        "percentage_sting",
+        "cost_contrast"
+      ],
+      "original_moves": [
+        "给出一个必须用现金的紧迫场景",
+        "呈现收费提示与用户同意决策",
+        "三周后展示账单三行明细逐行揭示",
+        "把费用换算成本金的百分比（15%）",
+        "与消费本身的费用（餐费）对照放大刺痛"
+      ],
+      "abstract_move": "构建必须使用该设施的紧迫场景 + 收费提示与一次同意决策 + 账单逐行揭示 + 费用与本金的百分比换算 + 与消费本身费用的对照",
+      "replacement_needs": [
+        "一个必须使用该设施的紧迫场景",
+        "一次包含收费提示的同意决策",
+        "可逐行揭示的账单结构",
+        "费用与本金的百分比换算",
+        "与消费本身费用的对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(82);打开的悬念 LOOP03→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "comment_guess_contract",
+      "start_ratio": 0.1023,
+      "end_ratio": 0.1313,
+      "start_sec": 99.3,
+      "end_sec": 127.4,
+      "position_label": "10.2%–13.1%(1:39–2:07)",
+      "purpose": "把一个即将解释的数字问题转成评论区猜测任务，并用明确的揭晓承诺把观看转成参与",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "把分成问题转成可参与的数字猜测，用明确揭晓承诺悬挂",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP09",
+          "tension": "观众个人经历与主持人猜测之间的互动张力",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP09"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "comment_guess_contract",
+          "mechanism": "guess_in_cents"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "delayed_answer_promise",
+          "mechanism": "answer_in_a_few_minutes"
+        }
+      ],
+      "required_retention_events": [
+        "comment_guess",
+        "delayed_answer_promise",
+        "engagement_prompt"
+      ],
+      "original_moves": [
+        "抛出分成比例猜测任务",
+        "给出几分钟后揭晓的明确承诺",
+        "征集观众高费经历",
+        "轻量请求点赞订阅"
+      ],
+      "abstract_move": "把即将解释的数字问题转成可量化的猜测任务 + 明确揭晓时间承诺 + 征集相关经历 + 轻量订阅请求",
+      "replacement_needs": [
+        "一个可量化的猜测任务",
+        "明确的揭晓时间承诺",
+        "与主题相关的经历征集"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS10、LOOP09(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "revenue_map_contract",
+      "start_ratio": 0.1296,
+      "end_ratio": 0.1506,
+      "start_sec": 125.8,
+      "end_sec": 146.2,
+      "position_label": "13%–15.1%(2:06–2:26)",
+      "purpose": "用规模数据确立问题重要性，再给出“N 样东西养活它”的清单地图，把后续段落预编入可核销结构",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "把标题机制问句转成一张可逐条核销的收入线清单，悬挂全片",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "scale_reveal",
+          "mechanism": "half_million_machines"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "revenue_map_contract",
+          "mechanism": "six_things_pay"
+        }
+      ],
+      "required_retention_events": [
+        "scale_reveal",
+        "checklist_contract"
+      ],
+      "original_moves": [
+        "给出机器总量与人均密度数据",
+        "声明六样东西养活所有机器",
+        "一次性点名全部六条收入线"
+      ],
+      "abstract_move": "用对象总量或密度确立规模重要性 + 声明收入线数量 + 一次性点名全部收入线形成清单地图",
+      "replacement_needs": [
+        "对象总量或密度数据",
+        "收入线数量的明确声明",
+        "全部收入线的一次性点名"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP01→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "origin_to_business_history",
+      "start_ratio": 0.1485,
+      "end_ratio": 0.2479,
+      "start_sec": 144.2,
+      "end_sec": 240.6,
+      "position_label": "14.9%–24.8%(2:24–4:01)",
+      "purpose": "用起源史建立“它原本不收费、长期是成本”的基线，再以规则转折完成“成本变成生意”的概念重命名",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.2364,
+          "time_ms": 229440,
+          "reason": "“一旦能收费，机器就从成本变成铁盒里的小生意”完成全片核心概念重构"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "origin_tease",
+          "mechanism": "first_machine_free"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "trivia_payoff",
+          "mechanism": "pin_four_digits_origin"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "era_definition",
+          "mechanism": "machine_as_cost_30_years"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "regulatory_turn",
+          "mechanism": "fee_ban_dropped"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "concept_reframe",
+          "mechanism": "cost_to_business_box"
+        }
+      ],
+      "required_retention_events": [
+        "origin_trivia",
+        "regulatory_turn",
+        "concept_reframe"
+      ],
+      "original_moves": [
+        "给出首台机器不收费的起源",
+        "插入发明轶事与密码位数冷知识",
+        "定义近30年是成本的时代",
+        "指明禁令解除的规则转折点",
+        "用费用与数量齐涨说明变化",
+        "完成'成本变生意'的概念重命名"
+      ],
+      "abstract_move": "用起源时间与场景建立不收费基线 + 调味冷知识 + 定义曾是成本的时代 + 收费合法化的规则转折点 + 完成成本到生意的概念重命名",
+      "replacement_needs": [
+        "起源的时间与场景",
+        "可调味的冷知识",
+        "曾是成本的时代定义",
+        "收费合法化的规则转折点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "surcharge_anatomy",
+      "start_ratio": 0.2441,
+      "end_ratio": 0.2933,
+      "start_sec": 236.9,
+      "end_sec": 284.6,
+      "position_label": "24.4%–29.3%(3:57–4:45)",
+      "purpose": "给开场那笔费用命名并指明归属，再用均值、叠加项与地区极值把单笔刺痛升级为可比较的结构",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.2707,
+          "time_ms": 262720,
+          "reason": "两项费用合计与城市极值把单笔刺痛升级为全国尺度的费用结构"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "term_reveal",
+          "mechanism": "surcharge_named_and_owned"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "numeric_reveal",
+          "mechanism": "average_surcharge_record"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "aggregate_sting",
+          "mechanism": "combined_fee_and_city_extremes"
+        }
+      ],
+      "required_retention_events": [
+        "term_naming",
+        "numeric_reveal",
+        "aggregate_contrast"
+      ],
+      "original_moves": [
+        "给费用正式命名并指明归属方",
+        "给出平均费率与连年纪录趋势",
+        "揭示自有银行叠加费",
+        "给出合计与城市极值"
+      ],
+      "abstract_move": "费用命名与归属方指认 + 平均水平与趋势 + 叠加费用项 + 合计与地区极值对照",
+      "replacement_needs": [
+        "费用的正式名称与归属方",
+        "平均水平与趋势数据",
+        "叠加费用项",
+        "地区或场景极值"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "operator_business_model",
+      "start_ratio": 0.2907,
+      "end_ratio": 0.3536,
+      "start_sec": 282.2,
+      "end_sec": 343.2,
+      "position_label": "29.1%–35.4%(4:42–5:43)",
+      "purpose": "回答“对象到底属于谁”，用购置成本、使用频次、毛收入与净利把一台设施还原为一门可拥有的小生意",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.2988,
+          "time_ms": 290000,
+          "reason": "立法机构口径的“近六成独立经营”正式回答开场归属问题"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "把开场场景的所有权问题转成可回答的调查问句",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "study_count_answer",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "ownership_question",
+          "mechanism": "who_owns_gas_station_machine"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "study_reveal",
+          "mechanism": "independents_six_in_ten"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "scale_line",
+          "mechanism": "one_machine_vs_fleet"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "placement_tease",
+          "mechanism": "cannot_say_no_locations"
+        }
+      ],
+      "required_retention_events": [
+        "ownership_answer",
+        "unit_economics",
+        "scale_line",
+        "placement_tease"
+      ],
+      "original_moves": [
+        "给出归属调查的口径",
+        "揭示近六成独立经营的比例",
+        "给出单台购置成本",
+        "给出使用频次与月净利区间",
+        "划分单机与机器队的分界线",
+        "预告选址直觉"
+      ],
+      "abstract_move": "归属结构的调查口径与比例 + 单位购置成本 + 使用频次与净利区间 + 单位与规模的分界线",
+      "replacement_needs": [
+        "归属结构的调查口径与比例",
+        "单位购置成本",
+        "单位收入与净利区间",
+        "单位与规模的分界线"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(78)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "interchange_bank_logic",
+      "start_ratio": 0.3512,
+      "end_ratio": 0.4333,
+      "start_sec": 340.8,
+      "end_sec": 420.6,
+      "position_label": "35.1%–43.3%(5:41–7:01)",
+      "purpose": "回收开场悬挂的隐藏费用：揭示通道费与一次动作双向收钱的机制，并重构“免费”背后的留客逻辑",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 84,
+          "position_ratio": 0.3933,
+          "time_ms": 381680,
+          "reason": "“一次提款让机器收两次钱”加上“免费机器是留客工具”，双向收费与免费真相同时重构"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "loop_reopen",
+          "mechanism": "third_line_return"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "term_reveal",
+          "mechanism": "interchange_named"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "double_dip_reveal",
+          "mechanism": "withdrawal_pays_twice"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "strategy_reframe",
+          "mechanism": "free_machine_retention_logic"
+        }
+      ],
+      "required_retention_events": [
+        "loop_reopen",
+        "term_reveal",
+        "double_payment",
+        "retention_logic_reframe"
+      ],
+      "original_moves": [
+        "从账单第三行重启隐藏费用",
+        "给出网络名称",
+        "命名交换费",
+        "揭示一次提款双向付费机制",
+        "解释免费机器的留客逻辑"
+      ],
+      "abstract_move": "回收隐藏费用 + 通道层的存在与命名 + 一次动作双向付费机制揭示 + 免费选项的留客逻辑重构",
+      "replacement_needs": [
+        "隐藏费用的表面解释与真实成本",
+        "通道层的存在与名称",
+        "一次动作双向付费的机制",
+        "免费选项的留客逻辑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "fee_split_payoff",
+      "start_ratio": 0.4309,
+      "end_ratio": 0.4907,
+      "start_sec": 418.2,
+      "end_sec": 476.2,
+      "position_label": "43.1%–49.1%(6:58–7:56)",
+      "purpose": "正式兑现开场立下的互动猜测：用几种合作契约给出条件式答案，让极端猜测同时被验证",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.4458,
+          "time_ms": 432639,
+          "reason": "“这就是承诺过的答案”兑现开场立下的评论猜测契约，参与者情绪获得回报"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "hidden_rail_and_retention_logic_explained",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "operator_trade",
+          "mechanism": "interchange_for_free_processing"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "promised_answer",
+          "mechanism": "who_got_the_fee"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "guess_resolution",
+          "mechanism": "zero_or_all_could_be_right"
+        }
+      ],
+      "required_retention_events": [
+        "operator_trade",
+        "promised_answer",
+        "conditional_resolution"
+      ],
+      "original_moves": [
+        "给出小经营者的交换费交易",
+        "正式重启承诺答案",
+        "给出三种合作契约的分成结构",
+        "条件式确认极端猜测"
+      ],
+      "abstract_move": "承诺答案的正式重启 + 几种合作契约的分成结构 + 对极端猜测的条件式确认",
+      "replacement_needs": [
+        "承诺答案的正式重启",
+        "几种合作契约的分成结构",
+        "对极端猜测的条件式确认"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80);回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "location_power_reveal",
+      "start_ratio": 0.4883,
+      "end_ratio": 0.544,
+      "start_sec": 473.9,
+      "end_sec": 527.9,
+      "position_label": "48.8%–54.4%(7:54–8:48)",
+      "purpose": "解释设施对场所的第二层价值与选址权力：最好的位置让人别无选择，稀缺直接转化为定价权",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 77,
+          "position_ratio": 0.5363,
+          "time_ms": 520479,
+          "reason": "“机器越少，费可以越高”给出稀缺定价规则，把高费归因从贪婪改写到结构"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "conditional_answer_with_extreme_guesses_validated",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "spend_habit_reveal",
+          "mechanism": "cash_spent_in_shop"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "ironic_callback",
+          "mechanism": "protagonist_broke_the_rule"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "captive_location_inventory",
+          "mechanism": "no_other_machine_nearby"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "structural_gap",
+          "mechanism": "branch_closures_filled"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "pricing_power_rule",
+          "mechanism": "fewer_machines_higher_fee"
+        }
+      ],
+      "required_retention_events": [
+        "behavior_insight",
+        "ironic_callback",
+        "captive_inventory",
+        "structural_gap",
+        "scarcity_rule"
+      ],
+      "original_moves": [
+        "指明现金原地消费的行为惯性",
+        "用酒吧高费场景佐证",
+        "主角自嘲打破规律",
+        "总结好位置的共同特征",
+        "给出网点关停填空数据",
+        "给出稀缺定价规则句"
+      ],
+      "abstract_move": "就地消费的行为惯性 + 高价场景佐证 + 好位置的共同特征 + 结构性空白数据 + 稀缺与定价权的规则句",
+      "replacement_needs": [
+        "就地消费的行为惯性",
+        "高价场景佐证",
+        "好位置的共同特征",
+        "结构性空白数据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(77);回收了前文的悬念 FS03→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 77
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "cash_inside_logistics",
+      "start_ratio": 0.5414,
+      "end_ratio": 0.6659,
+      "start_sec": 525.4,
+      "end_sec": 646.2,
+      "position_label": "54.1%–66.6%(8:45–10:46)",
+      "purpose": "揭示设施内部的隐藏成本层：内容物需要被买入、装载、运输，资金占用与物流都是费用的真实去向",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "character_tease_fulfilled_by_route_day",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "hidden_layer_turn",
+          "mechanism": "money_inside_the_machine"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "idle_cash_scale",
+          "mechanism": "hundred_thousand_sitting_idle"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "route_day_vignette",
+          "mechanism": "forty_machine_monday"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "dry_irony_beat",
+          "mechanism": "glamorous_side_understatement"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "prework_recap",
+          "mechanism": "twenties_loaded_before_hunger"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_layer_turn",
+        "idle_cash_scale",
+        "route_day_vignette",
+        "dry_irony",
+        "prework_recap"
+      ],
+      "original_moves": [
+        "翻转认知：机器不生产现金",
+        "给出装钞额度与频次",
+        "给出闲置资金占用规模",
+        "说明装多装少的双向风险",
+        "具象呈现经营者巡机一天",
+        "说明借钞与押运外包",
+        "总结费用覆盖全部物流"
+      ],
+      "abstract_move": "它不生产内容物的认知翻转 + 装载额度与闲置占用规模 + 装载过多与过少的双向风险 + 经营者一天的具象劳动流程 + 规模化后的外包与借力",
+      "replacement_needs": [
+        "它不生产内容物的认知翻转",
+        "装载额度与闲置占用规模",
+        "装载过多与过少的双向风险",
+        "经营者一天的具象劳动流程"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS01→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "free_network_and_consolidation",
+      "start_ratio": 0.6638,
+      "end_ratio": 0.7978,
+      "start_sec": 644.2,
+      "end_sec": 774.3,
+      "position_label": "66.4%–79.8%(10:44–12:54)",
+      "purpose": "解释免费选项由谁买单的三方结构，再用行业整合量级与消亡论反问把尺度推到行业级并以反向数据闭合",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 83,
+          "position_ratio": 0.7537,
+          "time_ms": 731440,
+          "reason": "“运钱的公司买下它运钱的机器”一句话把行业垂直整合画面化"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 79,
+          "position_ratio": 0.7789,
+          "time_ms": 755920,
+          "reason": "流通现金增长的反向数据推翻“现金消亡论”，回答行业前景反问"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "“免费”与全片已建立的成本链之间的矛盾",
+          "closes_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "观众的默认行业判断与巨额收购之间的矛盾",
+          "closes_in": "FS13"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "“最贵的一个按钮”的悬念加上与观众旅行经验的连接",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "three_party_payment_structure",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE43",
+          "event_type": "paradox_rule",
+          "mechanism": "free_for_you_not_free"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "alignment_map",
+          "mechanism": "three_party_win_map"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "latest_deal",
+          "mechanism": "billions_acquisition"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "vertical_loop_image",
+          "mechanism": "truck_company_buys_machines"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "mortality_question",
+          "mechanism": "is_cash_dying"
+        },
+        {
+          "event_id": "RE48",
+          "event_type": "counter_trend_reveal",
+          "mechanism": "cash_up_since_2020"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "final_stream_tease",
+          "mechanism": "most_expensive_button"
+        }
+      ],
+      "required_retention_events": [
+        "free_paradox",
+        "three_party_map",
+        "deal_scale",
+        "vertical_integration_image",
+        "mortality_question",
+        "counter_trend_data"
+      ],
+      "original_moves": [
+        "指明免费网络标识与规模",
+        "揭示免费不等于免费的买单结构",
+        "画出三方正和利益地图",
+        "给出并购量级",
+        "抛出消亡论反问",
+        "给出机器数量与流通现金反向增长数据"
+      ],
+      "abstract_move": "免费选项的标识与规模 + 对你免费不等于免费的买单结构 + 三方正和利益地图 + 行业整合量级 + 消亡论反问与反向数据闭合",
+      "replacement_needs": [
+        "免费选项的标识与规模",
+        "对你免费不等于免费的买单结构",
+        "三方正和的利益地图",
+        "行业整合的量级",
+        "消亡论反问与反向数据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(83)、PK09(79);打开的悬念 LOOP07→FS13、LOOP08→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 83
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 79
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "currency_button_abroad",
+      "start_ratio": 0.7952,
+      "end_ratio": 0.8713,
+      "start_sec": 771.8,
+      "end_sec": 845.6,
+      "position_label": "79.5%–87.1%(12:52–14:06)",
+      "purpose": "拆解只在特殊场景出现的隐藏加价选项：用安全感诱饵、个案实证对照与一句话行动规则完成最后一条收入线",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.8253,
+          "time_ms": 800959,
+          "reason": "实拍证据与两种选择的价差对照让“一个按钮的代价”成为全片最强的实用震撼"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "counter_trend_data_answer",
+          "opened_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "mechanism_plus_actionable_rule",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE50",
+          "event_type": "currency_question",
+          "mechanism": "dollars_or_euros_choice"
+        },
+        {
+          "event_id": "RE51",
+          "event_type": "evidence_reveal",
+          "mechanism": "photographed_markup_evidence"
+        },
+        {
+          "event_id": "RE52",
+          "event_type": "practical_rule",
+          "mechanism": "always_choose_local_currency"
+        }
+      ],
+      "required_retention_events": [
+        "final_stream_tease",
+        "choice_scene",
+        "evidence_contrast",
+        "practical_rule"
+      ],
+      "original_moves": [
+        "预告最贵按钮",
+        "给出境外二选一场景",
+        "命名安全诱饵",
+        "揭示加价机制",
+        "给出实证价差",
+        "给出一句话行动规则",
+        "用供应商规模佐证"
+      ],
+      "abstract_move": "特殊场景的二选一问题 + 安全诱饵的命名 + 加价机制揭示 + 实证价差对照 + 一句话行动规则",
+      "replacement_needs": [
+        "特殊场景的二选一问题",
+        "安全诱饵的命名",
+        "加价机制与实证价差",
+        "一句话行动规则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85);回收了前文的悬念 FS12→LOOP07、FS12→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "recap_closure",
+      "start_ratio": 0.8685,
+      "end_ratio": 1,
+      "start_sec": 842.9,
+      "end_sec": 970.5,
+      "position_label": "86.9%–100%(14:03–16:11)",
+      "purpose": "补充最新制度动态，复现开场场景逐线压缩复述，交付可带走的自问规则，核销互动并以一致的 CTA 收尾",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "emotional_payoff",
+          "strength": 84,
+          "position_ratio": 0.9255,
+          "time_ms": 898240,
+          "reason": "“这一切只为两份 tacos”把六条收入线的行业地图压缩回一次小额消费，完成总收束"
+        },
+        {
+          "peak_id": "PK12",
+          "peak_type": "worldview_shift",
+          "strength": 78,
+          "position_ratio": 0.9351,
+          "time_ms": 907519,
+          "reason": "“我在付给谁？五分钟步行内有免费机器吗？”把行业知识转成观众下次可执行的自问"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "revenue_map_completed_with_scene_recap",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE53",
+          "event_type": "settlement_reveal",
+          "mechanism": "lawsuit_settlement_claim_window"
+        },
+        {
+          "event_id": "RE54",
+          "event_type": "scene_callback",
+          "mechanism": "picture_him_again"
+        },
+        {
+          "event_id": "RE55",
+          "event_type": "causal_recap",
+          "mechanism": "all_that_for_two_tacos"
+        },
+        {
+          "event_id": "RE56",
+          "event_type": "portable_rule",
+          "mechanism": "who_am_i_paying"
+        },
+        {
+          "event_id": "RE57",
+          "event_type": "comment_payoff",
+          "mechanism": "guesses_called_right"
+        },
+        {
+          "event_id": "RE58",
+          "event_type": "value_cta",
+          "mechanism": "learned_something_like_subscribe"
+        },
+        {
+          "event_id": "RE59",
+          "event_type": "character_signoff",
+          "mechanism": "off_to_find_free_machine"
+        }
+      ],
+      "required_retention_events": [
+        "settlement_update",
+        "scene_callback",
+        "compressed_recap",
+        "portable_rule",
+        "comment_payoff",
+        "cta",
+        "character_signoff"
+      ],
+      "original_moves": [
+        "补充诉讼和解与索赔窗口",
+        "召回开场场景",
+        "逐线压缩复述六条收入线",
+        "用两份tacos完成总收束",
+        "给出两个自问问题",
+        "核销评论猜测",
+        "给出社区与订阅CTA",
+        "角色彩蛋收尾"
+      ],
+      "abstract_move": "最新制度动态补充 + 开场场景复现 + 逐线压缩复述 + 这一切只为一次小额消费的总收束 + 可带走的自问规则 + 互动猜测的最终核销 + 与内容一致的CTA",
+      "replacement_needs": [
+        "最新制度动态或观众可主张的权利",
+        "开场场景复现与逐线压缩复述",
+        "这一切只为一次小额消费的总收束",
+        "可带走的自问规则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(84)、PK12(78);回收了前文的悬念 FS04→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 84
+        },
+        {
+          "peak_id": "PK12",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

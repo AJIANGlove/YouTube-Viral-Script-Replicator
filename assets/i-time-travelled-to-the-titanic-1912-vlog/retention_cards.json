@@ -1,0 +1,998 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T09:00:00.389Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "immersive_premise_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.022,
+      "start_sec": 0,
+      "end_sec": 18.7,
+      "position_label": "0%–2.2%(0:00–0:19)",
+      "purpose": "第一秒场景落地：主体、地点、确切日期与主角身位一次给齐，并顺手抛出禁入目标",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "premise_drop",
+          "strength": 70,
+          "position_ratio": 0,
+          "time_ms": 0,
+          "reason": "第一秒场景与日期直接落地，第一人称在场设定瞬间成立"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "goal_tease",
+          "strength": 60,
+          "position_ratio": 0.0128,
+          "time_ms": 10760,
+          "reason": "'我显然要试着进头等舱'：越界目标一句话挂上"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：作为穿越者亲历这个场景与其已知结局会是什么体验（标题承诺的悬挂）",
+          "closes_in": "FS16"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "探索线：持三等舱票的她能否真的潜入上层禁区",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook",
+          "mechanism": "instant_premise_drop"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "goal_tease",
+          "mechanism": "forbidden_access_tease"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "trust_contract",
+          "mechanism": "authenticity_contract"
+        }
+      ],
+      "required_retention_events": [
+        "scene_and_date_drop",
+        "embodied_position",
+        "forbidden_access_tease"
+      ],
+      "original_moves": [
+        "第一句直接点名场景本体：泰坦尼克号",
+        "立刻给出确切日期：1912年4月10日",
+        "用票价现代换算（约690美元）建立第一人称在场身位",
+        "一句话预告越界目标：我显然要试着进头等舱"
+      ],
+      "abstract_move": "第一秒场景落地：主体、地点、确切时间与主角身位一次给齐，并顺手抛出禁入目标",
+      "replacement_needs": [
+        "一个可以显式点名的场景本体与确切日期",
+        "一个能用现代换算建立在场凭证的票价或入场门槛",
+        "一个主角明确要试图进入的禁区或越界目标"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70)、PK02(60);打开的悬念 LOOP01→FS16、LOOP02→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 60
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "instant_premise_drop_with_forbidden_access_tease",
+        "first_stimulus_ms": 0,
+        "first_payoff_ms": 13760,
+        "evidence_refs": [
+          "C0001",
+          "C0002",
+          "C0006",
+          "C0008"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "authenticity_contract",
+      "start_ratio": 0.022,
+      "end_ratio": 0.04,
+      "start_sec": 18.7,
+      "end_sec": 33.9,
+      "position_label": "2.2%–4%(0:19–0:34)",
+      "purpose": "制作坦白：交代画面来源与复原原则，先行安抚观众对'合成画面真实性'的怀疑",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "source_disclosure",
+        "as_real_as_possible_promise"
+      ],
+      "original_moves": [
+        "声明素材来源：公共领域的历史图像",
+        "一句话说明复原方法：AI着色与动画处理",
+        "承诺克制度：尽可能接近实物，不夸张",
+        "暗示劳动强度：这是个大工程，换取观众珍惜感"
+      ],
+      "abstract_move": "制作坦白：交代画面来源与复原原则，先行安抚观众对合成画面真实性的怀疑",
+      "replacement_needs": [
+        "一个可以公开说明的素材来源声明",
+        "一个复原或重建方法的简短说明",
+        "一个劳动强度暗示换取内容珍惜感"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "mission_briefing",
+      "start_ratio": 0.04,
+      "end_ratio": 0.062,
+      "start_sec": 33.9,
+      "end_sec": 52.4,
+      "position_label": "4%–6.2%(0:34–0:52)",
+      "purpose": "任务简报：列出全片目标清单，把探索线与干预线同时挂为开放循环",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "干预线：她能否警告决策者、改变已知的结局",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "mission_tease",
+          "mechanism": "intervention_loop_open"
+        }
+      ],
+      "required_retention_events": [
+        "confidential_address",
+        "dual_mission_checklist"
+      ],
+      "original_moves": [
+        "用悄悄话语气开场：让我告诉你我的计划",
+        "列出探索清单：头等舱楼梯、餐厅、吸烟室、甲板",
+        "点明干预目标：我要找到某个关键人物，告诉他那件必须说的事",
+        "出征式收束：祝我好运"
+      ],
+      "abstract_move": "任务简报：列出全片目标清单，把探索线与干预线同时挂为开放循环",
+      "replacement_needs": [
+        "一个可以逐一点名的探索空间清单",
+        "一个需要找到特定决策者完成的干预目标",
+        "一个共谋语气的开场与出征式收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "threshold_crossing",
+      "start_ratio": 0.062,
+      "end_ratio": 0.101,
+      "start_sec": 52.4,
+      "end_sec": 85.2,
+      "position_label": "6.2%–10.1%(0:52–1:25)",
+      "purpose": "登船关卡：用一次小型检查仪式让阶层制度首次显形，并用超预期细节奖励观众",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "class_reveal",
+          "mechanism": "class_division_first_sign"
+        }
+      ],
+      "required_retention_events": [
+        "entry_friction",
+        "class_division_reveal"
+      ],
+      "original_moves": [
+        "遭遇健康检查：医生检查眼睛和头发",
+        "对照观察：头等舱和二等舱乘客直接通过",
+        "通过后自我安慰：至少我过了",
+        "超预期细节：三等舱走廊竟然有电灯"
+      ],
+      "abstract_move": "登船关卡：用一次小型检查仪式让阶层制度首次显形，并用超预期细节奖励观众",
+      "replacement_needs": [
+        "一个低配身份会遭遇、高配身份免检的具象入关摩擦",
+        "一个阶层通行权差异的对照观察",
+        "一个低配区域出现现代设施的超预期细节"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "daily_life_exploration",
+      "start_ratio": 0.101,
+      "end_ratio": 0.184,
+      "start_sec": 85.2,
+      "end_sec": 155.2,
+      "position_label": "10.1%–18.4%(1:25–2:35)",
+      "purpose": "日常生活流：舱房、床铺、厕所、启航，用感官细节与现代参照系幽默建立'住进去了'的真实感",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "humor_beat",
+          "mechanism": "modern_lens_comparison"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "curiosity_detail",
+          "mechanism": "anthropometric_discovery"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "milestone_moment",
+          "mechanism": "departure_reaction"
+        }
+      ],
+      "required_retention_events": [
+        "sensory_detail_reveal",
+        "modern_lens_humor",
+        "departure_moment"
+      ],
+      "original_moves": [
+        "白描新场景：闻到汗味、煤烟和湿木头",
+        "现代参照系调侃：比我上次住的青旅还差",
+        "考据式发现：床只有183厘米，我190厘米睡不下",
+        "生活设施笑料：厕所在一个叫爱尔兰的地方",
+        "启航瞬间实时惊呼：我们动了"
+      ],
+      "abstract_move": "日常生活流：舱房、床铺、厕所、启航，用感官细节与现代参照系幽默建立住进去了的真实感",
+      "replacement_needs": [
+        "一个可以用气味和材质白描的新场景",
+        "一个身体尺度不合或生活设施位置的考据式发现",
+        "一个可以用现代住宿标准比较的调侃点",
+        "一个启航或开始瞬间的实时惊呼"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "steerage_social_life",
+      "start_ratio": 0.184,
+      "end_ratio": 0.325,
+      "start_sec": 155.2,
+      "end_sec": 273.7,
+      "position_label": "18.4%–32.5%(2:35–4:34)",
+      "purpose": "底层社会生态：同桌乘客的梦想对白与菜单测评，把'遇难者名单'提前人化，并用食物细节发放考据奖励",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "当晚娱乐预告：有人带了提琴和手风琴的舞会到底多热闹",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "humanization",
+          "mechanism": "fellow_passenger_dreams"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "detail_reveal",
+          "mechanism": "actual_menu_reveal"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "humor_beat",
+          "mechanism": "self_deprecating_qualifier"
+        }
+      ],
+      "required_retention_events": [
+        "humanizing_dialogue",
+        "menu_verdict_flip",
+        "evening_event_tease"
+      ],
+      "original_moves": [
+        "同桌配角对白：各自的彼岸梦想（打工、结婚、务农）",
+        "宣读当日真实菜单：汤、鱼、肉、土豆、布丁",
+        "对汤品先贬后褒：一开始觉得难喝，后来还行",
+        "甜点自嘲式限定：这是我在船上吃过最好的布丁（也是唯一的）",
+        "预告当晚娱乐：晚上三等舱有舞会"
+      ],
+      "abstract_move": "底层社会生态：同桌乘客的梦想对白与菜单测评，把遇难者名单提前人化，并用食物细节发放考据奖励",
+      "replacement_needs": [
+        "配角的各自彼岸计划对白（具象化未来的普通人梦想）",
+        "一个当日真实菜单的逐项宣读与反应",
+        "一个先贬后褒的食物评价翻转",
+        "一个当晚娱乐活动的预告钩"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "communal_celebration",
+      "start_ratio": 0.325,
+      "end_ratio": 0.419,
+      "start_sec": 273.7,
+      "end_sec": 352.6,
+      "position_label": "32.5%–41.9%(4:34–5:53)",
+      "purpose": "舞会高光：底层舱的混乱欢乐到达情绪高点，并让关键配角在嬉闹中登场",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "meta_twist",
+          "strength": 75,
+          "position_ratio": 0.4188,
+          "time_ms": 352560,
+          "reason": "向戏中角色坦白穿越者身份与观众存在：元设定溶解的高能节拍"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "支线人物线：舞会上结识的配角与同行乘客们后来的命运——刻意不作答，叙事用途是让观众用自己的历史知识补完结局，把未说出口的哀悼转化为结尾悲伤的燃料",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "promised_spectacle_payoff",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP05"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "communal_high",
+          "mechanism": "belonging_payoff"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "character_intro",
+          "mechanism": "banter_meet_cute"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "twist",
+          "mechanism": "in_world_confession"
+        }
+      ],
+      "required_retention_events": [
+        "belonging_payoff",
+        "character_intro_banter"
+      ],
+      "original_moves": [
+        "换装狼狈自嘲：衣服上有肉汁污渍，但这是我最好的衬衫了",
+        "沉浸舞会现场：音乐、人群、混乱的快乐",
+        "归属感宣言：我不会跳舞，但没人介意",
+        "关键配角以调侃方式搭讪：你跳得像头熊",
+        "私下谈话邀约：跟我出来一下"
+      ],
+      "abstract_move": "舞会高光：底层舱的混乱欢乐到达情绪高点，并让关键配角在嬉闹中登场",
+      "replacement_needs": [
+        "一个换装与狼狈自嘲（污渍或实用主义穿搭）",
+        "一个沉浸式集体欢乐场景",
+        "一个我不会但没人介意的归属感金句",
+        "一个关键配角以调侃方式搭讪并邀约私下谈话"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(75);打开的悬念 LOOP05(不闭合) 跨段;回收了前文的悬念 FS06→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "confession_and_heist",
+      "start_ratio": 0.419,
+      "end_ratio": 0.511,
+      "start_sec": 352.6,
+      "end_sec": 429.8,
+      "position_label": "41.9%–51.1%(5:53–7:10)",
+      "purpose": "元设定溶解+限时潜入：向配角坦白穿越者身份，换取禁区通道情报，执行限时潜入并道别",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mission_success_payoff",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "plan_reveal",
+          "mechanism": "insider_intel_heist"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "tension_beat",
+          "mechanism": "whispered_heist"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "emotional_beat",
+          "mechanism": "bittersweet_parting"
+        }
+      ],
+      "required_retention_events": [
+        "in_world_confession",
+        "timed_heist_sequence",
+        "bittersweet_parting"
+      ],
+      "original_moves": [
+        "向配角坦白穿越者身份：我来自未来，这是个视频",
+        "获取禁区通道情报：F甲板的门、晚上9点看守换班、有15分钟空档",
+        "争分夺秒换装：脱掉三等舱衣服，换上偷来的头等舱礼服",
+        "压抑紧张的潜入对白：别跑 / 我不会跑",
+        "成功确认与道别：我进去了，谢谢你"
+      ],
+      "abstract_move": "元设定溶解加限时潜入：向配角坦白穿越者身份，换取禁区通道情报，执行限时潜入并道别",
+      "replacement_needs": [
+        "一个对镜头外身份的戏内坦白（穿越者或观众存在被点破）",
+        "一个禁区通道的具体情报（门锁、看守空档、时限）",
+        "一个争分夺秒的换装或伪装序列",
+        "一个压抑紧张的潜入对白与成功确认"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "forbidden_luxury_reveal",
+      "start_ratio": 0.511,
+      "end_ratio": 0.6,
+      "start_sec": 429.8,
+      "end_sec": 505.2,
+      "position_label": "51.1%–60%(7:10–8:25)",
+      "purpose": "禁区奇观：上层空间的材质、尺度与冷漠，与底层日常形成硬对照",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "spectacle_reveal",
+          "strength": 85,
+          "position_ratio": 0.5439,
+          "time_ms": 457840,
+          "reason": "标志楼梯揭示：'这在一艘移动的船上'，奇观与阶层反差双峰值"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "spectacle_reveal",
+          "mechanism": "landmark_reveal_contrast"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "conflict_beat",
+          "mechanism": "snobbery_rebuff"
+        }
+      ],
+      "required_retention_events": [
+        "landmark_reveal",
+        "class_contrast_juxtaposition"
+      ],
+      "original_moves": [
+        "材质级细节：厚地毯吞掉脚步声，这是真木材不是油漆",
+        "标志楼梯惊呼式揭示：天哪，这就是那个楼梯",
+        "对照定性：这和我的铺位、我的汤在同一艘船上",
+        "上层人士冷淡拒绝：尝试搭话被礼貌拒绝",
+        "违规紧张感：我本不该在这里"
+      ],
+      "abstract_move": "禁区奇观：上层空间的材质、尺度与冷漠，与底层日常形成硬对照",
+      "replacement_needs": [
+        "一个材质级细节（地毯、真木材对油漆）",
+        "一个标志空间的惊呼式揭示",
+        "一个这与我的低配日常在同一场所的对照定性",
+        "一个上层人士的冷淡互动与违规紧张感"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "luxury_catalog",
+      "start_ratio": 0.6,
+      "end_ratio": 0.665,
+      "start_sec": 505.2,
+      "end_sec": 559.4,
+      "position_label": "60%–66.5%(8:25–9:19)",
+      "purpose": "奢侈目录巡览：盛宴规模、专属空间与夜色美景，把繁荣推到顶点为下坠蓄势",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "tone_shift",
+          "strength": 85,
+          "position_ratio": 0.6646,
+          "time_ms": 559440,
+          "reason": "'明天就是那个日子'：全片由轻转重的调性翻转点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "倒计时线：被点名的那个日期何时以何种方式降临到她身边",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "scale_shock",
+          "mechanism": "feast_numbness"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "tone_shift",
+          "mechanism": "date_named_bomb"
+        }
+      ],
+      "required_retention_events": [
+        "scale_shock",
+        "numbness_observation"
+      ],
+      "original_moves": [
+        "盛宴规模数字化：十个课程的晚餐",
+        "阶层麻木观察：没有人对此感到惊讶",
+        "性别限制空间：吸烟室只对男士开放，我进不去",
+        "日常场所比喻：图书馆像我家附近的公共图书馆",
+        "夜色美感节拍：甲板上的星空和海面"
+      ],
+      "abstract_move": "奢侈目录巡览：盛宴规模、专属空间与夜色美景，把繁荣推到顶点为下坠蓄势",
+      "replacement_needs": [
+        "一个盛宴或消费规模的数字化呈现",
+        "一个无人惊讶的阶层麻木观察",
+        "一个看得见进不去的专属空间（性别或身份限制）",
+        "一个纯粹美感节拍为下坠蓄势"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85);打开的悬念 LOOP04→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "dramatic_irony_turn",
+      "start_ratio": 0.665,
+      "end_ratio": 0.707,
+      "start_sec": 559.4,
+      "end_sec": 594.8,
+      "position_label": "66.5%–70.7%(9:19–9:55)",
+      "purpose": "调性切换：在美景顶点直接点名那个日期，全片从探索模式切换为倒计时模式",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "stakes_reveal",
+          "mechanism": "attachment_stakes"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "plan_reveal",
+          "mechanism": "only_chance_stakes"
+        }
+      ],
+      "required_retention_events": [
+        "date_named_bomb",
+        "tone_shift"
+      ],
+      "original_moves": [
+        "显式点名日期：明天就是4月14日",
+        "唯一知情者独白：只有我知道会发生什么",
+        "清晨情绪前置：我不想这一天到来",
+        "对船上众人的牵挂：我想到了所有这些人"
+      ],
+      "abstract_move": "调性切换：在美景顶点直接点名那个日期，全片从探索模式切换为倒计时模式",
+      "replacement_needs": [
+        "一个明天就是那个日子的显式点名",
+        "一个主角作为唯一知情者的独白",
+        "一个我不想这一天到来的情绪前置",
+        "一个对场所内所有人的牵挂点题"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "plan_rehearsal",
+      "start_ratio": 0.707,
+      "end_ratio": 0.772,
+      "start_sec": 594.8,
+      "end_sec": 649.6,
+      "position_label": "70.7%–77.2%(9:55–10:50)",
+      "purpose": "计划与彩排：把警告行动的信息、场合、时间窗全部交代，让观众与主角一起预演",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "rehearsal",
+          "mechanism": "script_rehearsal"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "confrontation",
+          "mechanism": "warning_delivered"
+        }
+      ],
+      "required_retention_events": [
+        "script_rehearsal",
+        "only_chance_stakes"
+      ],
+      "original_moves": [
+        "决策者行程情报：史密斯船长晚上会在吸烟室",
+        "机会定性：这是我最好且唯一的机会",
+        "逐字彩排警告说辞：船长，我必须告诉您……我反复练习措辞",
+        "倒计时式时间安排：9点开始，10点半离场，我必须在这之前找到他",
+        "服饰重量式身体负担：礼服很重，领子很紧"
+      ],
+      "abstract_move": "计划与彩排：把警告行动的信息、场合、时间窗全部交代，让观众与主角一起预演",
+      "replacement_needs": [
+        "一个决策者当晚的行程与地点情报",
+        "一个最好且唯一的机会定性",
+        "一个逐字预演的警告说辞（措辞权衡自评）",
+        "一个倒计时式时间安排（几点开始、几点结束）"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "futile_warning",
+      "start_ratio": 0.772,
+      "end_ratio": 0.814,
+      "start_sec": 649.6,
+      "end_sec": 685.4,
+      "position_label": "77.2%–81.4%(10:50–11:25)",
+      "purpose": "干预失败：警告被礼貌驳回，任务线以'我试过了'的无力感闭合",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.7864,
+          "time_ms": 661960,
+          "reason": "警告被驳回：'我不怪他，但我试过了'的无力闭合"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "thwarted_mission_emotional_payoff",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "dismissal_payoff",
+          "mechanism": "graceful_failure"
+        }
+      ],
+      "required_retention_events": [
+        "bureaucratic_dismissal",
+        "graceful_acceptance"
+      ],
+      "original_moves": [
+        "拦截与警告：船长，我……我需要告诉您一件事，关于冰山",
+        "官方辞令式安抚：我们已经收到冰情报告，一切尽在掌握",
+        "和解式消化：他当然不会听一个陌生人的警告，我不怪他",
+        "使命收束：但我试过了",
+        "环境压迫感：夜色很黑，没有月亮"
+      ],
+      "abstract_move": "干预失败：警告被礼貌驳回，任务线以我试过了的无力感闭合",
+      "replacement_needs": [
+        "一个拦截时的措辞与紧张口吃",
+        "一个对方的官方辞令式安抚（已有监测或掌控）",
+        "一个他当然不会听我不怪他的和解式消化",
+        "一个但我试过了的使命收束与环境压迫感"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80);回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "countdown_and_impact",
+      "start_ratio": 0.814,
+      "end_ratio": 0.88,
+      "start_sec": 685.4,
+      "end_sec": 741,
+      "position_label": "81.4%–88%(11:25–12:21)",
+      "purpose": "倒计时与撞击：用精确时间戳把逼近感推满，撞击发生后用旁观者的轻描淡写反衬主角的知情恐惧",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "impact_climax",
+          "strength": 90,
+          "position_ratio": 0.8328,
+          "time_ms": 701000,
+          "reason": "倒计时尽头的撞击目击：全片张力最高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "dramatic_irony_climax",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "countdown",
+          "mechanism": "timestamp_dread"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "impact_climax",
+          "mechanism": "impact_witnessed"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "dramatic_irony",
+          "mechanism": "bystander_denial"
+        }
+      ],
+      "required_retention_events": [
+        "timestamp_countdown",
+        "impact_moment",
+        "dramatic_irony_denial"
+      ],
+      "original_moves": [
+        "分钟级报时：11点39分，还有一分钟",
+        "知情者独白：他们在瞭望台还看不见它",
+        "目击转向瞬间：11点40分，船开始转向",
+        "多数人毫无所觉：大多数人还在睡觉",
+        "旁观者轻描淡写对白：有人说这船扛得住任何撞击"
+      ],
+      "abstract_move": "倒计时与撞击：用精确时间戳把逼近感推满，撞击发生后用旁观者的轻描淡写反衬主角的知情恐惧",
+      "replacement_needs": [
+        "一个分钟级或秒级时间戳报时",
+        "一个他们还看不见它的知情者独白",
+        "一个目击转向或撞击的瞬间",
+        "一个旁观者这扛得住或没事的轻描淡写对白反衬主角恐惧"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(90);回收了前文的悬念 FS10→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "collapse_witnessing",
+      "start_ratio": 0.88,
+      "end_ratio": 0.947,
+      "start_sec": 741,
+      "end_sec": 796.7,
+      "position_label": "88%–94.7%(12:21–13:17)",
+      "purpose": "崩解见证：撤离中的信息管制、救生艇的数字落差与不愿登艇的人群，见证者情绪决堤",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.9093,
+          "time_ms": 765400,
+          "reason": "'我看不下去了'：见证者情绪决堤"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "fact_gut_punch",
+          "mechanism": "capacity_math"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "breaking_point",
+          "mechanism": "witness_collapse"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "denial_collapse",
+          "mechanism": "collective_awakening"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "thesis_close",
+          "mechanism": "read_vs_lived_contrast"
+        }
+      ],
+      "required_retention_events": [
+        "fact_juxtaposition_grief",
+        "witness_breaking_point"
+      ],
+      "original_moves": [
+        "官方措辞与真相落差：这纯属预防措施",
+        "容量与实载数字并置：救生艇能载65人，上面只有28人",
+        "拒登细节：有人坚信甲板比小船安全，拒绝登艇",
+        "见证者崩解独白：我看不下去了",
+        "集体心态转变：从不便到无人再假装"
+      ],
+      "abstract_move": "崩解见证：撤离中的信息管制、救生艇的数字落差与不愿登艇的人群，见证者情绪决堤",
+      "replacement_needs": [
+        "一个纯属预防的官方措辞与真相的落差",
+        "一个容量与实载人数的数字并置",
+        "一个有人坚信甲板更安全的拒登细节",
+        "一个我看不下去了的见证者崩解独白与集体心态转变"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure_reflection",
+      "start_ratio": 0.947,
+      "end_ratio": 1,
+      "start_sec": 796.7,
+      "end_sec": 841.7,
+      "position_label": "94.7%–100%(13:17–14:02)",
+      "purpose": "主题收束：以见证者身份给出'读过与活过'的对照断言，无CTA，让余韵在乐声中结束",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.9522,
+          "time_ms": 801480,
+          "reason": "'读过与活过是两回事'：体验被升格为主题断言"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "immersive_experience_fulfillment",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "thesis_line_close",
+        "no_cta_outro"
+      ],
+      "original_moves": [
+        "失语式开场：我找不到词来形容我今天所见",
+        "主题对照句：读过一件事和活过一件事是两回事",
+        "音乐余韵收束：画面淡出，音乐继续，无CTA"
+      ],
+      "abstract_move": "主题收束：以见证者身份给出读过与活过的对照断言，无CTA，让余韵在乐声中结束",
+      "replacement_needs": [
+        "一个我找不到词形容今天所见的失语式开场",
+        "一个读过与活过是两回事的主题对照句",
+        "一个无CTA无互动引导的克制结束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

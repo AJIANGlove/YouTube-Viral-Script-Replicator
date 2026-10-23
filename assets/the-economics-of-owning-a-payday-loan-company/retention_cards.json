@@ -1,0 +1,1024 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:28:54.391Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.0448,
+      "start_sec": 0.1,
+      "end_sec": 62.1,
+      "position_label": "0%–4.5%(0:00–1:02)",
+      "purpose": "用一笔最小交易单位的日常表象开场，翻转为\"看似琐碎、实则没人真正理解\"的认知缺口，并预告一个改变一切的运营数字",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "curiosity_gap_hook",
+          "strength": 75,
+          "position_ratio": 0.0087,
+          "time_ms": 12035,
+          "reason": "看似琐碎无聊与几乎没人理解的反差钩，附\"改变一切的数字\"预告"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.034,
+          "time_ms": 47067,
+          "reason": "同一笔$300一年可产生$900佣金、账面约300%年化的量级跃迁"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：这门生意到底怎么赚钱、钱流动起来后会发生什么",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "premise_hook",
+          "mechanism": "in_medias_res_scene"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "curiosity_gap",
+          "mechanism": "understated_flip"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "first_payoff",
+          "mechanism": "capital_velocity_reveal"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "number_payoff",
+          "mechanism": "invitation_to_calculate"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "question_reframe",
+          "mechanism": "real_question"
+        }
+      ],
+      "required_retention_events": [
+        "curiosity_gap",
+        "velocity_number_tease"
+      ],
+      "original_moves": [
+        "用一笔$300现金预支的日常交易场景开场，贴上'琐碎无聊'的表象标签",
+        "翻转为'几乎没人真正理解它如何运作'的认知缺口",
+        "揭示同一笔资本一年可周转15-20次的运营频次",
+        "将单笔$45手续费乘以周转次数，得出同一笔$300资本年化可产生约$900佣金、账面约300%年化的量级跃迁",
+        "用'这究竟是怎样的生意'重构主问题"
+      ],
+      "abstract_move": "用一笔最小交易单位的日常表象开场 + 表象贬抑与认知缺口的反差钩 + 资本周转频次的反直觉数字 + 单笔资本的年化量级跃迁 + 主问题的正式提出",
+      "replacement_needs": [
+        "一个最小交易单位的日常场景（可观察、易贬抑）",
+        "一个资本或资源周转频次的反直觉数字",
+        "一个单位资本或资源经多次周转后的年化或累积量级数字",
+        "一个'看似琐碎但几乎没人理解'的认知缺口表述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(75)、PK02(80);打开的悬念 LOOP01→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "understated_scene_plus_curiosity_gap",
+        "first_stimulus_ms": 9554,
+        "first_payoff_ms": 23306,
+        "evidence_refs": [
+          "C0001",
+          "C0008",
+          "C0013",
+          "C0019"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "belief_challenge",
+      "start_ratio": 0.0448,
+      "end_ratio": 0.1129,
+      "start_sec": 62.1,
+      "end_sec": 156.4,
+      "position_label": "4.5%–11.3%(1:02–2:36)",
+      "purpose": "回答\"为什么有人会买这种服务\"：用时间错位场景替代品格解释，用替代成本对比论证其相对便宜，把商品从钱重构为时间、把公司从信贷机构重构为速度公司",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.0789,
+          "time_ms": 109371,
+          "reason": "商品重构：客户买的不是钱，是9天的时间窗口"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "一笔贷款的手续费到底被谁分走了",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "new_question",
+          "mechanism": "borrower_motivation"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "cost_comparison",
+          "mechanism": "penalty_inventory"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "commodity_reframe",
+          "mechanism": "buying_time_not_money"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "identity_reframe",
+          "mechanism": "speed_company"
+        }
+      ],
+      "required_retention_events": [
+        "commodity_reframe",
+        "identity_reframe"
+      ],
+      "original_moves": [
+        "提出'为什么有人愿意支付这么高的费用'的核心问题",
+        "用时间错位场景替代品格解释：借款人面临账单到期但9天后才发薪的日历问题",
+        "对比至少三种替代成本：透支罚金$35、滞纳金$25-50、信用卡年费与利息，证明$45手续费相对便宜",
+        "重构商品定义：客户买的不是$300现金，而是9天的时间窗口",
+        "重构公司身份：不是信贷机构，而是速度公司",
+        "给出'壁垒越少定价越高'的关系判词"
+      ],
+      "abstract_move": "回答'为什么有人会买这种服务'的核心问题 + 用时间错位场景替代品格解释 + 至少三种替代成本与服务价格的对比论证 + 商品的第一次定义重构（从表象到本质） + 公司身份的第一次重构 + 定价与壁垒的关系判词",
+      "replacement_needs": [
+        "一个时间错位或资源错位的生活化场景",
+        "至少三种替代成本及其量级，证明服务价格相对便宜",
+        "一个商品或服务的定义重构（从表象到本质）",
+        "一个公司或平台身份的重构",
+        "一个定价与壁垒或稀缺性的关系判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(85);打开的悬念 LOOP02→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "reveal",
+      "start_ratio": 0.1129,
+      "end_ratio": 0.1724,
+      "start_sec": 156.4,
+      "end_sec": 238.9,
+      "position_label": "11.3%–17.2%(2:36–3:59)",
+      "purpose": "追踪一笔最小交易，把费用逐项扣除，将愤慨的年化大数字解剖为单笔微利余额",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.1688,
+          "time_ms": 233869,
+          "reason": "$45手续费逐项扣除后真实利润仅约$3的解剖落地"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "fee_anatomy_breakdown",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "new_question",
+          "mechanism": "track_one_loan"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "mechanism_reveal",
+          "mechanism": "annualized_compression"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "anatomy_payoff",
+          "mechanism": "itemized_deduction"
+        }
+      ],
+      "required_retention_events": [
+        "itemized_deduction",
+        "thin_margin_reveal"
+      ],
+      "original_moves": [
+        "设定标准交易：$300贷款、$45手续费、两周期限",
+        "解释年化表象数字的成因：$45手续费占$300本金的15%，两周换算年化约391%",
+        "逐项扣除至少五项成本去向及各自量级：处理费$3、坏账准备金$10、信用报告$2、银行费用$5、技术基础设施$8、合规与法务$4、客服$3、营销$7",
+        "得出单笔真实利润仅约$3的解剖落地数字",
+        "将愤慨的年化大数字解剖为单笔微利余额"
+      ],
+      "abstract_move": "设定标准交易的费用参数 + 解释年化或累积表象数字的成因 + 逐项扣除至少五项成本去向及各自量级 + 单笔真实利润的落地数字 + 将愤慨的表象大数字解剖为微利余额的判词",
+      "replacement_needs": [
+        "一个标准交易的费用设定及其年化或累积表象数字",
+        "至少五项成本去向及各自量级（需具体数字或比例）",
+        "一个单笔或单次真实利润的落地数字",
+        "一个'表象愤慨数字解剖为微利余额'的对比判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "evidence_build",
+      "start_ratio": 0.1724,
+      "end_ratio": 0.3033,
+      "start_sec": 238.9,
+      "end_sec": 420.2,
+      "position_label": "17.2%–30.3%(3:59–7:00)",
+      "purpose": "升级到组合概率模型，用敏感性阶梯展示盈亏对违约类单变量的极端敏感，并引入欺诈这一独立成本类目及其筛查成本",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.2461,
+          "time_ms": 341041,
+          "reason": "违约率超过20%后每笔贷款都在亏钱、组合走向资不抵债的悬崖"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "组合化之后，违约率如何决定这门生意的生死",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "sensitivity_ladder",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "scale_shift",
+          "mechanism": "portfolio_probability"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "default_erosion",
+          "mechanism": "principal_loss_math"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "emotional_anchor",
+          "mechanism": "owner_sleepless"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "default_cliff",
+          "mechanism": "sensitivity_ladder"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "new_threat",
+          "mechanism": "fraud_category"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "mechanism_reveal",
+          "mechanism": "loan_stacking_screening"
+        }
+      ],
+      "required_retention_events": [
+        "sensitivity_ladder",
+        "fraud_category_reveal"
+      ],
+      "original_moves": [
+        "升级到大规模组合概率模型的思想实验：假设发放1000笔贷款",
+        "演示违约对收入的侵蚀：5%违约率下每笔贡献$2.5，10%违约率下每笔贡献$1.5",
+        "展示违约率多档阶梯下的单笔贡献额变化：15%违约率下每笔贡献$0.5，20%违约率下每笔贡献-$0.5（亏损）",
+        "揭示违约率超过20%后每笔贷款都在亏钱、组合走向资不抵债的悬崖",
+        "引入欺诈与信用风险的类目区分",
+        "说明欺诈筛查机制与单次成本约$2-5"
+      ],
+      "abstract_move": "升级到大规模组合概率模型 + 演示单一风险变量对收入的侵蚀 + 用多档敏感性阶梯展示单笔贡献额变化 + 揭示风险阈值超限后的悬崖（盈利转亏损） + 引入第二风险类目及其筛查成本",
+      "replacement_needs": [
+        "一个大规模组合的思想实验设定及周期收入",
+        "一个单一风险变量的多档阶梯（至少三档）及其对单笔贡献额的侵蚀演示",
+        "一个风险阈值超限后的悬崖数字（盈利转亏损）",
+        "一个独立的第二风险类目及其筛查或防控成本"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "evidence_build",
+      "start_ratio": 0.3033,
+      "end_ratio": 0.3486,
+      "start_sec": 420.2,
+      "end_sec": 483.1,
+      "position_label": "30.3%–34.9%(7:00–8:03)",
+      "purpose": "揭示定价硬约束：费率上限使按人定价不可行，全部定价分析被迫前移到\"是否准入\"的闸门决策",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "cta_insert",
+          "mechanism": "subscribe_prompt"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "mechanism_shift",
+          "mechanism": "gatekeeping_shift"
+        }
+      ],
+      "required_retention_events": [
+        "gatekeeping_shift"
+      ],
+      "original_moves": [
+        "陈述费率上限约束：美国多数州设定36%年化利率上限",
+        "对照个体化定价行业（如信用卡、车贷）可根据信用评分调整利率",
+        "判词：费率上限使按人定价不可行，全部定价分析被迫前移到'是否准入'的闸门决策"
+      ],
+      "abstract_move": "陈述定价硬约束（法规或平台规则） + 与个体化定价行业或场景的对照 + 判词：硬约束使分析前移到准入闸门决策而非价格调整",
+      "replacement_needs": [
+        "一个定价硬约束的具体陈述（法规上限、平台规则、市场惯例）",
+        "一个可个体化定价的对照行业或场景",
+        "一个'分析前移到准入决策'的判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "evidence_build",
+      "start_ratio": 0.3486,
+      "end_ratio": 0.4042,
+      "start_sec": 483.1,
+      "end_sec": 560,
+      "position_label": "34.9%–40.4%(8:03–9:20)",
+      "purpose": "拆解获客成本：广告受限→实时竞拍的线索市场→线索价格分层→转化率折算→首单亏损的具体数字",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.4011,
+          "time_ms": 555769,
+          "reason": "首单在放款前已亏$75的获客经济学冲击"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "为什么有人围绕一门首单必亏的生意建公司",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "mechanism_reveal",
+          "mechanism": "lead_auction_ping_tree"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "cac_shock",
+          "mechanism": "first_loan_loss"
+        }
+      ],
+      "required_retention_events": [
+        "lead_auction_reveal",
+        "first_loan_loss"
+      ],
+      "original_moves": [
+        "说明广告受限背景：传统广告渠道对此类产品限制严格",
+        "揭示线索竞拍机制的名称与运作：实时竞拍的线索市场，如Ping Tree",
+        "展示高低质量线索的价格带：高质量线索$50-150，低质量线索$10-30",
+        "转化率折算后的有效获客成本：假设15%转化率，实际获客成本$200-300",
+        "首单亏损的算账演示：$3单笔利润减去$200-300获客成本，首单在放款前已亏约$75（假设中位获客成本$225，首单多笔摊销后约$75）"
+      ],
+      "abstract_move": "说明获客渠道受限的背景 + 揭示实时竞拍或竞价机制的名称与运作 + 展示线索或流量的价格分层 + 转化率折算后的有效获客成本 + 首单或首次亏损的算账演示及具体数字",
+      "replacement_needs": [
+        "一个获客渠道受限或竞争加剧的背景",
+        "一个实时竞拍或竞价机制的名称与运作描述",
+        "一个线索或流量的价格分层（高低质量或不同档次）",
+        "一个转化率折算后的有效获客成本",
+        "一个首单或首次交易亏损的算账演示及具体数字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80);打开的悬念 LOOP04→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "reveal",
+      "start_ratio": 0.4042,
+      "end_ratio": 0.4725,
+      "start_sec": 560,
+      "end_sec": 654.7,
+      "position_label": "40.4%–47.3%(9:20–10:55)",
+      "purpose": "回答\"为什么围绕首单亏损的交易建生意\"：复购关系绕过竞拍成本，多周期算账让关系转正——沉默引擎；同时诚实给出双刃面（债务循环风险与违约抹利机制）",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.4285,
+          "time_ms": 593745,
+          "reason": "关系在第六次贷款转正：沉默引擎揭示"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "repeat_engine_math",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "reframe",
+          "mechanism": "goal_is_relationship"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "engine_payoff",
+          "mechanism": "multi_cycle_math"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "caveat",
+          "mechanism": "double_edged_sword"
+        }
+      ],
+      "required_retention_events": [
+        "multi_cycle_math",
+        "engine_naming"
+      ],
+      "original_moves": [
+        "判词：首单不是目标，目标是建立复购关系",
+        "多周期复购的算账演示：假设客户复借6次，每次$3利润，累计$18利润，减去首单$75亏损，需6次才转正",
+        "引擎命名：沉默引擎——复购关系绕过竞拍成本",
+        "双刃面的诚实限定：债务循环风险、监管批评、社会争议",
+        "复购违约抹掉累积利润的机制：假设第6次违约，累计$18利润被$300坏账抹掉，前5次积累清零"
+      ],
+      "abstract_move": "判词：首单或首次交易不是目标 + 多周期复购的算账演示及转正节点 + 引擎或机制的命名 + 双刃面的诚实限定（风险或争议） + 复购或复用违约抹掉累积利润的机制",
+      "replacement_needs": [
+        "一个多周期或多次复购的算账演示及转正节点（第几次转正）",
+        "一个引擎或机制的命名（如复购引擎、沉默引擎）",
+        "一个双刃面的诚实限定（风险、争议、社会批评）",
+        "一个复购或复用违约或失败抹掉累积利润的机制及具体数字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85);回收了前文的悬念 FS06→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "context_expansion",
+      "start_ratio": 0.4725,
+      "end_ratio": 0.5523,
+      "start_sec": 654.7,
+      "end_sec": 765.3,
+      "position_label": "47.3%–55.2%(10:55–12:45)",
+      "purpose": "切换经营场所变量：实体门店与纯线上是\"同名的两种生意\"，固定成本与获客/欺诈风险置换，线上化引入技术风险新类目",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "channel_split",
+          "mechanism": "two_businesses_one_name"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "data_payoff",
+          "mechanism": "online_premium"
+        }
+      ],
+      "required_retention_events": [
+        "channel_cost_swap",
+        "tech_company_reframe"
+      ],
+      "original_moves": [
+        "对照两种渠道的成本项目：实体门店有租金、装修、人员工资；纯线上有技术开发、云服务、获客与欺诈成本",
+        "行业数据：线上每笔成本更高，如欺诈率线上3-5%、门店1-2%",
+        "身份重构：线上平台是'技术服务外衣'下的金融公司",
+        "技术风险的量级描述：系统宕机每小时损失数万至数十万美元"
+      ],
+      "abstract_move": "对照两种渠道或场景的成本项目 + 行业数据证实某一渠道每笔成本更高 + 身份重构（技术外衣或其他外衣下的本质） + 新渠道引入的新风险类目及量级描述",
+      "replacement_needs": [
+        "两种渠道或场景的成本项目对照（固定成本与可变成本的置换）",
+        "一个行业数据证实某一渠道或场景每笔成本更高",
+        "一个身份重构（某种外衣或标签下的本质）",
+        "一个新渠道或场景引入的新风险类目及其量级描述"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "reveal",
+      "start_ratio": 0.5523,
+      "end_ratio": 0.6053,
+      "start_sec": 765.3,
+      "end_sec": 838.8,
+      "position_label": "55.2%–60.5%(12:45–13:59)",
+      "purpose": "回答\"放出去的钱从哪来\"：批发授信加自有权益缓冲出资，利差才是真正成就或毁掉这门生意的东西",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "放给借款人的钱本身从哪来",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "capital_structure_spread",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "new_question",
+          "mechanism": "capital_source"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "verdict_line",
+          "mechanism": "spread_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "wholesale_credit_mechanism",
+        "spread_verdict"
+      ],
+      "original_moves": [
+        "章首设问：放出去的钱从哪来",
+        "批发授信工具的覆盖比例：80-90%资金来自银行或机构信贷额度",
+        "自有权益缓冲：10-20%自有资金作为缓冲",
+        "资金成本的浮动定价：批发利率随市场波动，如5-10%年化",
+        "利差定义及其决定性判词：利差=收费利率-资金成本利率，利差才是真正成就或毁掉这门生意的东西"
+      ],
+      "abstract_move": "章首设问（资金或资源来源） + 批发或上游供给工具的覆盖比例 + 自有缓冲或储备的比例 + 上游成本的浮动定价 + 利差或价差定义及其决定性判词",
+      "replacement_needs": [
+        "一个资金或资源来源的章首设问",
+        "一个批发或上游供给工具的覆盖比例及自有缓冲比例",
+        "一个上游成本的浮动定价区间",
+        "一个利差或价差的定义及其决定性判词"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP05。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:放给借款人的钱本身从哪来",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "reveal",
+      "start_ratio": 0.6053,
+      "end_ratio": 0.637,
+      "start_sec": 838.8,
+      "end_sec": 882.7,
+      "position_label": "60.5%–63.7%(13:59–14:43)",
+      "purpose": "用100单位毛收入的完整分流解剖做中段总结：绝大部分在成为利润之前消失，给出\"诚实解剖\"判词",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 90,
+          "position_ratio": 0.6313,
+          "time_ms": 874708,
+          "reason": "100单位毛收入约84%消失：三位数年化的诚实解剖"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "anatomy_verdict",
+          "mechanism": "honest_anatomy"
+        }
+      ],
+      "required_retention_events": [
+        "unit_walk_anatomy",
+        "residual_reveal"
+      ],
+      "original_moves": [
+        "设定100单位毛收入",
+        "逐项分流至少五项：坏账20单位、获客15单位、技术10单位、合规8单位、运营12单位、资金成本10单位、催收5单位、其他4单位",
+        "剩余利润比例：约16单位",
+        "判词：84%在成为利润之前消失，这是三位数年化的诚实解剖"
+      ],
+      "abstract_move": "设定100单位毛收入或毛利 + 逐项分流至少五项成本去向及各自占比 + 剩余利润比例 + 判词：绝大部分在成为利润之前消失，这是诚实解剖",
+      "replacement_needs": [
+        "一个100单位毛收入或毛利的设定",
+        "至少五项成本去向及各自占比（需具体数字或比例）",
+        "一个剩余利润比例",
+        "一个'绝大部分消失'的诚实解剖判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "evidence_build",
+      "start_ratio": 0.637,
+      "end_ratio": 0.6778,
+      "start_sec": 882.7,
+      "end_sec": 939.1,
+      "position_label": "63.7%–67.8%(14:43–15:39)",
+      "purpose": "补齐回款失败时触发的第二套成本结构：催收升级、债权贱卖、扣款失败罚金；放款日看似盈利的交易可以变成亏损",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE31",
+          "event_type": "residual_shock",
+          "mechanism": "cents_on_dollar"
+        }
+      ],
+      "required_retention_events": [
+        "collections_escalation",
+        "debt_resale_shock"
+      ],
+      "original_moves": [
+        "催收链条的升级路径：内部催收→第三方催收机构→法律诉讼",
+        "各环节分成比例：第三方催收机构收回款的25-50%作为佣金",
+        "债权贱卖的残值区间：未收回债权以5-15美分/美元出售给债务收购公司",
+        "扣款失败的单次直接成本：每次ACH失败罚金$25-35",
+        "判词：放款日看似盈利的交易可以变成亏损"
+      ],
+      "abstract_move": "催收或回收链条的升级路径及分成比例 + 债权或资产贱卖的残值区间 + 回收失败的单次直接成本 + 判词：放款日或初始日看似盈利的交易可以变成亏损",
+      "replacement_needs": [
+        "一个催收或回收链条的升级路径及各环节分成比例",
+        "一个债权或资产贱卖的残值区间",
+        "一个回收失败的单次直接成本",
+        "一个'初始盈利可变亏损'的判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "conflict_escalation",
+      "start_ratio": 0.6778,
+      "end_ratio": 0.8292,
+      "start_sec": 939.1,
+      "end_sec": 1148.9,
+      "position_label": "67.8%–82.9%(15:39–19:09)",
+      "purpose": "引入最强外部变量：监管可一夜改写模式（多法域对照+上限数学使传统模式\"不是缩小而是消失\"）；诚实承认社会批评的真实性并指出需求不会随之消失；竞争格局扩大到所有替代资金来源，指出低成本替代品正在蚕食传统客群",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.7258,
+          "time_ms": 1005667,
+          "reason": "36%上限使期费只剩$4：传统模式不是缩小而是完全消失"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "该行业的社会伤害批评与经济现实该如何权衡",
+          "closes_in": null
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "哪种版本的这门生意能在替代品蚕食下活下来",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "survival_criteria",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "external_force",
+          "mechanism": "regulation_strongest"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "cap_math",
+          "mechanism": "disappearance_demo"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "disappearance_verdict",
+          "mechanism": "not_shrunk_gone"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "critique_acknowledgment",
+          "mechanism": "real_harm"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "competition_reframe",
+          "mechanism": "emergency_cash_rivals"
+        },
+        {
+          "event_id": "RE37",
+          "event_type": "trend_shift",
+          "mechanism": "low_cost_substitutes"
+        }
+      ],
+      "required_retention_events": [
+        "cap_math_disappearance",
+        "critique_acknowledgment"
+      ],
+      "original_moves": [
+        "定性：监管是最强外部变量，可一夜改写模式",
+        "至少三个法域对照：科罗拉多州36%上限、纽约州25%上限、加州废除高息贷款",
+        "上限数学演示：36%上限下，两周贷款期费只剩$4（从$45降至$4），传统模式不是缩小而是完全消失",
+        "诚实承认社会批评的真实性：债务陷阱、掠夺性贷款的批评有部分事实基础",
+        "指出需求不会随之消失：需求迁移到朋友借款、雇主预付工资、加密货币贷款等替代渠道",
+        "竞争格局扩大到所有替代资金来源：信用卡、透支保护、Buy Now Pay Later、雇主预付、朋友借款",
+        "指出低成本替代品正在蚕食传统客群：如Earnin、Dave等$0-5订阅费的应用"
+      ],
+      "abstract_move": "定性：监管或平台规则是最强外部变量 + 至少三个法域或平台的对照 + 上限数学演示：传统模式不是缩小而是完全消失 + 诚实承认社会批评的真实性 + 指出需求不会随之消失及其迁移现实 + 竞争格局扩大到所有替代来源 + 低成本替代品正在蚕食传统客群",
+      "replacement_needs": [
+        "一个监管或平台规则作为最强变量的定性",
+        "至少三个法域或平台的监管或规则对照",
+        "一个上限数学演示：传统模式在新规则下完全消失（不是缩小）",
+        "一个社会批评的诚实承认及需求迁移现实",
+        "一个竞争格局扩大到所有替代来源的清单",
+        "一个低成本替代品蚕食传统客群的趋势描述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(88);打开的悬念 LOOP06(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.8292,
+      "end_ratio": 0.9231,
+      "start_sec": 1148.9,
+      "end_sec": 1279,
+      "position_label": "82.9%–92.3%(19:09–21:19)",
+      "purpose": "把全部变量收束为\"老板到底赚不赚钱\"的多因子公式，用同一规模组合的多情景压力测试展示结果对环境的极端敏感，指出经营者对这些波动几乎没有控制力",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.9123,
+          "time_ms": 1264047,
+          "reason": "同一$10M组合从年赚$4M到亏超$1M的三情景摆荡"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE38",
+          "event_type": "synthesis",
+          "mechanism": "formula_synthesis"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "scenario_stress_test",
+          "mechanism": "three_scenarios"
+        },
+        {
+          "event_id": "RE40",
+          "event_type": "scenario_collapse",
+          "mechanism": "million_swing"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "verdict_question",
+          "mechanism": "final_question"
+        }
+      ],
+      "required_retention_events": [
+        "formula_synthesis",
+        "scenario_stress_test"
+      ],
+      "original_moves": [
+        "列出六个以上因子的依赖清单：违约率、欺诈率、获客成本、复购率、资金成本、监管费率上限",
+        "容错判词：错两三个变量即转亏",
+        "同一$10M贷款组合三情景压测：好年景（违约10%、欺诈2%、复购60%、资金成本5%）年赚$4M；中性年景（违约15%、欺诈3%、复购50%、资金成本7%）年赚$800K；坏年景（违约20%、欺诈5%、复购40%、资金成本9%）年亏超$1M",
+        "判词：好坏之年以百万计且经营者对这些波动几乎没有控制力"
+      ],
+      "abstract_move": "列出六个以上因子的依赖清单 + 容错判词：错两三个变量即转亏 + 同一规模组合的多情景压力测试（至少三情景）及盈亏数字 + 判词：好坏之年以大数量级摆荡且经营者几乎无控制力",
+      "replacement_needs": [
+        "一个六个以上因子的依赖清单",
+        "一个容错判词：错两三个变量即转亏",
+        "一个同一规模组合的多情景压力测试（至少三情景）及各情景盈亏数字",
+        "一个'好坏之年以大数量级摆荡且不受控'的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closure",
+      "start_ratio": 0.9231,
+      "end_ratio": 1,
+      "start_sec": 1279,
+      "end_sec": 1385.6,
+      "position_label": "92.3%–100%(21:19–23:06)",
+      "purpose": "沿开场那笔最小交易重走全路径作为总结，给出\"吸引力是真的、脆弱性也是真的\"的平衡裁决，用\"被交易的从来不是表面商品\"的身份反转格言收束，CTA与内容兑现绑定",
+      "peaks": [
+        {
+          "peak_id": "PK11",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9882,
+          "time_ms": 1369302,
+          "reason": "身份反转格言：那笔贷款从来不是生意，围绕它的一切才是"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_anatomy_plus_identity_reframe",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE42",
+          "event_type": "balanced_verdict",
+          "mechanism": "appeal_vs_fragility"
+        },
+        {
+          "event_id": "RE43",
+          "event_type": "identity_reversal",
+          "mechanism": "aphorism"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "aligned_cta",
+          "mechanism": "outro"
+        }
+      ],
+      "required_retention_events": [
+        "balanced_verdict",
+        "identity_reversal_aphorism"
+      ],
+      "original_moves": [
+        "沿开场那笔$300贷款重走全路径：$45手续费→扣除8项成本→$3单笔利润→$225获客成本→6次复购转正→违约或监管改写→同一组合从年赚$4M到亏$1M",
+        "平衡裁决：吸引力是真的（高周转、可规模化），脆弱性也是真的（极端敏感、不受控）",
+        "身份反转格言：那笔$300贷款从来不是生意，围绕它的一切——获客、风控、催收、资金、合规——才是",
+        "条件式CTA：如果你想了解其他看似简单实则复杂的商业模式，关注我"
+      ],
+      "abstract_move": "沿开场那笔最小交易重走全路径作为总结 + 平衡裁决：吸引力是真的、脆弱性也是真的（对仗句式） + 身份反转格言：表面商品从来不是生意，围绕它的一切才是 + 条件式CTA与内容兑现绑定",
+      "replacement_needs": [
+        "一个沿开场最小交易重走全路径的总结",
+        "一个平衡裁决的对仗句式：吸引力是真的、脆弱性也是真的",
+        "一个身份反转格言句：表面商品从来不是生意，围绕它的一切才是",
+        "一个条件式CTA与内容兑现绑定"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK11(90);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK11",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

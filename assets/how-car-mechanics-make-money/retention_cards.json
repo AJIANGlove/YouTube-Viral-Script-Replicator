@@ -1,0 +1,1153 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-22T08:06:39.007Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "invoice_anomaly_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0282,
+      "start_sec": 0.2,
+      "end_sec": 27.8,
+      "position_label": "0%–2.8%(0:00–0:28)",
+      "purpose": "用一张观众也可能收到的日常维修账单制造反常对撞：账面工时与金额对照实际工时与实得，让观众立刻意识到这里有一套自己不懂的定价规则",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.0116,
+          "time_ms": 11399,
+          "reason": "账面 2 小时 $300 与实作 70 分钟、实得 $70 的直接对撞，是全片第一个认知冲击"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "everyday_bill_entry",
+          "mechanism": "familiar_service_scenario"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "invoice_anomaly_reveal",
+          "mechanism": "billed_vs_actual_gap"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "reframe",
+          "mechanism": "not_a_scam_but_a_pricing_system"
+        }
+      ],
+      "required_retention_events": [
+        "everyday_entry",
+        "invoice_anomaly",
+        "not_a_scam_reframe"
+      ],
+      "original_moves": [
+        "观众熟悉的送修场景引入",
+        "账单显示2小时工时、收费$300",
+        "实际施工仅70分钟、技工实得$70",
+        "三组数字直接对撞形成认知冲击",
+        "明确定性：这不是错误或欺诈，而是行业定价规则"
+      ],
+      "abstract_move": "用观众日常可能遇到的消费场景，呈现同一服务在账面与实际两个维度上的数字矛盾，通过直接对撞制造认知冲击，并立即给出系统性定性，让观众意识到背后存在一套自己不了解的运作机制",
+      "replacement_needs": [
+        "观众高频遇到的消费或服务场景",
+        "同一事项在名义与实际两个维度的量化矛盾数据",
+        "将矛盾定性为系统性规则而非偶然错误的判断句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(82)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 82
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "invoice_anomaly_cold_open",
+        "first_stimulus_ms": 239,
+        "first_payoff_ms": 19928,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0008"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "trace_contract",
+      "start_ratio": 0.0272,
+      "end_ratio": 0.0681,
+      "start_sec": 26.8,
+      "end_sec": 67.2,
+      "position_label": "2.7%–6.8%(0:27–1:07)",
+      "purpose": "把账单反常升级为行业级命题（卖的不是修理而是被定价手册决定的小时），立下逐行追踪每一美元的观看契约，并预告真正的受益者不是一线技工",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "账单各行价格与最终受益者之间的分配悬念",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "名义工时费率与技工实得之间的落差",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "scale_context",
+          "mechanism": "market_size_and_shop_count"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "mechanism_tease",
+          "mechanism": "hours_set_by_book_not_clock"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "money_location_tease",
+          "mechanism": "billed_vs_actual_hours_gap"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "viewing_contract",
+          "mechanism": "line_by_line_dollar_trace"
+        }
+      ],
+      "required_retention_events": [
+        "scale_context",
+        "mechanism_tease",
+        "trace_contract",
+        "beneficiary_reversal_tease"
+      ],
+      "original_moves": [
+        "给出行业年度总收入规模背景",
+        "提出核心命题：卖的不是服务本身，而是由定价手册决定的计量单位",
+        "点明矛盾来源：手册标注与实际耗时的差额即利润空间",
+        "立下观看契约：逐行拆解每一美元的流向",
+        "预告反转：真正的受益者不是执行服务的一线从业者"
+      ],
+      "abstract_move": "将开场的个案矛盾升级为行业级命题，揭示核心交易标的的真实性质，建立逐项追踪每一单位价值流向的观看契约，并预告利益分配的反直觉结构",
+      "replacement_needs": [
+        "行业或领域的规模背景数据",
+        "核心交易机制的反常识定性（交易标的的真实属性）",
+        "明确的逐项追踪承诺",
+        "利益分配反转的预告句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP01→FS15、LOOP02→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "flat_rate_labor_reveal",
+      "start_ratio": 0.0671,
+      "end_ratio": 0.1748,
+      "start_sec": 66.2,
+      "end_sec": 172.4,
+      "position_label": "6.7%–17.5%(1:06–2:52)",
+      "purpose": "拆解账单第一行：揭示工时由定价手册而非时钟决定的机制，以及同一本手册如何同时约束顾客付账与技工计酬，让中间方在两侧都吃差价",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.1385,
+          "time_ms": 136625,
+          "reason": "技工按同一本手册实得 $70 而你被收 $300、商家双边吃差，核心分配反差完成"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "mechanism_reveal",
+          "mechanism": "labor_guide_flat_rate"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "rule_reveal",
+          "mechanism": "same_price_fast_or_slow"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "numeric_contrast",
+          "mechanism": "tech_paid_by_same_book"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "mechanism_reveal",
+          "mechanism": "recovered_bay_time"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "metric_reveal",
+          "mechanism": "effective_labor_rate"
+        }
+      ],
+      "required_retention_events": [
+        "book_time_reveal",
+        "same_price_rule",
+        "worker_same_book",
+        "rate_gap"
+      ],
+      "original_moves": [
+        "揭示报价来源：统一的行业定价手册，而非实际耗时",
+        "说明快慢同价规则：手册标准一经制定不因执行速度改变",
+        "披露双边约束：技工报酬也按同一手册计算",
+        "呈现分配反差：顾客支付$300，技工实得$70，中间方双边吃差",
+        "计算有效费率：商家实际回收工位的速度远快于名义工时，有效小时费率数倍于账面"
+      ],
+      "abstract_move": "拆解账单核心项：揭示计价依据的真实来源，说明同一标准如何同时锁定买方支付与卖方获得，从而让中间环节在两侧都获取差价，并通过实际回收速度计算出隐藏的真实费率",
+      "replacement_needs": [
+        "统一定价依据的存在证据（行业标准、参考手册等）",
+        "同一标准同时约束买卖双方的机制说明",
+        "买方支付、卖方获得、中间方留存的三方数额对照",
+        "名义费率与实际有效费率的计算差距"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "parts_supplies_margin_reveal",
+      "start_ratio": 0.1747,
+      "end_ratio": 0.2496,
+      "start_sec": 172.4,
+      "end_sec": 246.3,
+      "position_label": "17.5%–25%(2:52–4:06)",
+      "purpose": "拆解账单第二、三行：揭示配件加价矩阵如何把毛利藏进顾客不会核对的小价格，以及小额用品附加费为何需要立法限制",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 76,
+          "position_ratio": 0.2144,
+          "time_ms": 211551,
+          "reason": "加价矩阵的存在理由被点破：毛利藏在你不会核对的小价格里"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "明码标价的配件与看不见的加价矩阵之间的落差",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "mechanism_inventory_answer",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "margin_hiding_logic_answer",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "numeric_reveal",
+          "mechanism": "parts_cost_vs_billed"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "mechanism_reveal",
+          "mechanism": "inverse_margin_scaling"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "mechanism_payoff",
+          "mechanism": "margin_hidden_in_small_prices"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "fee_reveal",
+          "mechanism": "legislated_incidental_charge"
+        }
+      ],
+      "required_retention_events": [
+        "parts_margin",
+        "matrix_rule",
+        "legislated_fee"
+      ],
+      "original_moves": [
+        "对比配件进价与账单售价，显示高毛利率",
+        "揭示加价矩阵规则：低价物品加价比例更高",
+        "点破设计逻辑：毛利被藏在顾客不会逐项核对的小额项目里",
+        "补充小额用品附加费曾被立法限制的监管背景"
+      ],
+      "abstract_move": "拆解账单次级项：展示进价与售价的量化差距，揭示加价规则如何随单价反向缩放，点破将利润隐藏在顾客难以核对的小额项目中的设计逻辑，并补充监管介入的历史证据",
+      "replacement_needs": [
+        "次级项目的进价与售价量化对照",
+        "随单价反向变化的加价比例规则",
+        "毛利隐藏在小额、难核对项目中的机制说明",
+        "相关监管或立法背景"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(76);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "invoice_total_reckoning",
+      "start_ratio": 0.2496,
+      "end_ratio": 0.2733,
+      "start_sec": 246.3,
+      "end_sec": 269.7,
+      "position_label": "25%–27.3%(4:06–4:30)",
+      "purpose": "把逐行拆解聚合成一张完整总账：税前税后总额、商家毛利与占比、一线劳动者实得的最终对照",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "高额毛利与“并不都留在店里”之间的悬念",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "aggregate_reveal",
+          "mechanism": "full_invoice_reckoning"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "labor_share_contrast",
+          "mechanism": "worker_share_vs_shop_gross"
+        }
+      ],
+      "required_retention_events": [
+        "total_aggregation",
+        "gross_profit_share",
+        "worker_contrast"
+      ],
+      "original_moves": [
+        "将前述各项金额汇总为税前、税后总额",
+        "计算商家毛利的绝对值与占比",
+        "对照实际执行者获得的金额与占比",
+        "完成一张完整的分配总账"
+      ],
+      "abstract_move": "将分散拆解的各项金额聚合成完整账面：呈现总额、中间方留存及占比、一线执行者实得及占比的最终对照，完成分配结构的总结算",
+      "replacement_needs": [
+        "各项金额的汇总结果（含税前税后）",
+        "中间环节留存金额及占比数据",
+        "一线执行者实得金额及占比数据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "engagement_break",
+      "start_ratio": 0.2724,
+      "end_ratio": 0.3115,
+      "start_sec": 268.7,
+      "end_sec": 307.4,
+      "position_label": "27.2%–31.2%(4:29–5:07)",
+      "purpose": "在主线总账之后插入互动间歇：向观众征集同类报价经历以强化共同体与社会证明，同时预告毛利去向，并用价值声明请求点赞订阅",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP10",
+          "tension": "个人经历与行业机制之间的互证邀请",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP10"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "audience_prompt",
+          "mechanism": "personal_quote_solicitation"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "cta",
+          "mechanism": "value_based_like_subscribe"
+        }
+      ],
+      "required_retention_events": [
+        "audience_prompt",
+        "open_question_reminder",
+        "value_cta"
+      ],
+      "original_moves": [
+        "预告下一步将回答毛利流向",
+        "向观众征集同类高价报价或同车不同价的经历",
+        "以内容带来的认知改变为理由请求点赞订阅"
+      ],
+      "abstract_move": "在主线叙事暂停点插入互动环节：预告悬念的后续走向，征集观众同类经历以强化共同体与社会证明，并以内容价值为锚请求轻量行动支持",
+      "replacement_needs": [
+        "与主题强相关、观众可共鸣的经历征集问题",
+        "主线悬念的简短再次点名",
+        "与内容认知价值一致的轻量行动请求理由"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP10(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "cost_structure_reveal",
+      "start_ratio": 0.3107,
+      "end_ratio": 0.3905,
+      "start_sec": 306.5,
+      "end_sec": 385.3,
+      "position_label": "31.1%–39.1%(5:07–6:25)",
+      "purpose": "回答毛利去向：设备、软件订阅、场地、保险、空闲工时等成本清单，最终把商家的多数“烦人行为”解释为一场与空工位的战争",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "cost_inventory",
+          "mechanism": "capital_equipment_list"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "trend_reveal",
+          "mechanism": "scan_tools_as_subscriptions"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "cost_inventory",
+          "mechanism": "overhead_and_idle_labor"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "reframe",
+          "mechanism": "empty_bay_logic"
+        }
+      ],
+      "required_retention_events": [
+        "cost_inventory",
+        "subscription_shift",
+        "idle_cost",
+        "empty_bay_reframe"
+      ],
+      "original_moves": [
+        "展开毛利去向清单：设备投入",
+        "补充诊断工具从一次性购买转为永久订阅的趋势",
+        "列举固定成本项：场地租金、保险、废物处理、前台人员",
+        "强调空闲工位成本：工位只有在授权施工时才产生收入",
+        "给出总结性判断：多数令人反感的商业行为实质是对抗空置率的战争"
+      ],
+      "abstract_move": "回答留存去向：逐项列举资本设备、订阅化工具、固定开支与空置成本，强调产能利用率约束，并将多数令人反感的商业行为重新定性为对抗空置的生存策略",
+      "replacement_needs": [
+        "资本设备与工具的清单及订阅化趋势",
+        "固定成本与空置成本的列举",
+        "产能利用率或空置率的经济约束说明",
+        "将令人反感行为重新定性的判断句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "free_service_funnel_reveal",
+      "start_ratio": 0.3895,
+      "end_ratio": 0.4435,
+      "start_sec": 384.3,
+      "end_sec": 437.6,
+      "position_label": "39%–44.4%(6:24–7:18)",
+      "purpose": "揭示免费检测与廉价引流服务的真实功能：它们不是服务而是销售研究，真正的产品是“接触到你的车”",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.4074,
+          "time_ms": 402017,
+          "reason": "免费检测被重构为“楼里最有利可图的十分钟”的销售研究，免费二字被永久祛魅"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "免费让利与“楼里最有利可图的十分钟”之间的反差",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "cost_structure_answer",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "worldview_reveal",
+          "mechanism": "inspection_as_sales_study"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "worldview_reveal",
+          "mechanism": "loss_leader_access_product"
+        }
+      ],
+      "required_retention_events": [
+        "free_service_reframe",
+        "loss_leader",
+        "access_is_product"
+      ],
+      "original_moves": [
+        "重新定性免费检测：它是全场最有利可图的十分钟",
+        "揭示本质：不是服务而是'今天能向你销售什么'的研究",
+        "类比廉价引流服务（如换油）：同样的销售研究逻辑",
+        "给出核心判断句：真正的产品不是引流项本身，而是'接触到你的标的物'这一机会"
+      ],
+      "abstract_move": "揭示免费或廉价引流服务的真实功能：它们不是服务本身，而是获取接触机会的销售研究，并将接触机会定性为真正的交易标的",
+      "replacement_needs": [
+        "免费或廉价引流服务的普遍形态",
+        "其作为销售研究而非服务本身的实质说明",
+        "引流品的经济性解释",
+        "'接触即产品'的核心定性句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85);打开的悬念 LOOP05→FS09 跨段;回收了前文的悬念 FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "trust_conversion_reveal",
+      "start_ratio": 0.4425,
+      "end_ratio": 0.5449,
+      "start_sec": 436.7,
+      "end_sec": 537.6,
+      "position_label": "44.3%–54.5%(7:17–8:58)",
+      "purpose": "解释行业如何把“看不见车底”的信任缺口转化为成交率：从口头推销到影像证据的跃迁及其量化效果，并公平限定“这不是操纵，问题真实存在”",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.4893,
+          "time_ms": 482828,
+          "reason": "客单价与月销量量化跃升，把信任机制从定性推向定量"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.5255,
+          "time_ms": 518580,
+          "reason": "客户真正购买的是“对一台自己无法检查的机器的裁决”：全片根源性重构"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "转化跃升的数字与“操纵”嫌疑之间的张力",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "funnel_reframe_answer",
+          "opened_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "conversion_mechanism_plus_fairness_answer",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "contrast_setup",
+          "mechanism": "old_upsell_vs_new"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "mechanism_reveal",
+          "mechanism": "photo_video_proof"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "numeric_reveal",
+          "mechanism": "conversion_results"
+        },
+        {
+          "event_id": "RE30",
+          "event_type": "fairness_caveat",
+          "mechanism": "not_manipulation_qualification"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "causal_reveal",
+          "mechanism": "trust_gap_root"
+        },
+        {
+          "event_id": "RE32",
+          "event_type": "worldview_reveal",
+          "mechanism": "buying_a_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "old_new_contrast",
+        "visual_proof",
+        "conversion_numbers",
+        "fairness_caveat",
+        "trust_gap_root"
+      ],
+      "original_moves": [
+        "回顾旧模式：口头推销的低成交率",
+        "引入新机制：影像证据直发用户设备",
+        "量化效果：客单价与月销量的具体提升数据",
+        "公平限定：容易被定性为操纵，但问题是真实存在的",
+        "解释信任问题如何通过影像消失",
+        "给出根源性定性：客户购买的不是服务本身，而是对一台自己无法检查的标的物的裁决"
+      ],
+      "abstract_move": "解释行业如何将信息不对称转化为成交率：从低效口头模式到证据化机制的跃迁，用量化数据证实效果，公平限定非操纵性质，并将交易标的重新定性为对不可见标的物的裁决权",
+      "replacement_needs": [
+        "旧推销模式的失效描述",
+        "新证据化机制的具体形态",
+        "成交率或客单价的量化提升数据",
+        "非操纵性的公平限定",
+        "信息不对称根源的定位",
+        "交易标的的根源性重新定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(78)、PK06(88);回收了前文的悬念 FS08→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 78
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "dealership_model_reveal",
+      "start_ratio": 0.5439,
+      "end_ratio": 0.6276,
+      "start_sec": 536.7,
+      "end_sec": 619.3,
+      "position_label": "54.4%–62.8%(8:57–10:19)",
+      "purpose": "把镜头拉到渠道层：售后固定运营以很小的收入份额贡献近半毛利，整车销售接近获客成本，服务合同才是真正的订阅",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.5571,
+          "time_ms": 549754,
+          "reason": "售后小收入份额贡献近半毛利，渠道的商业实质被改写"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "渠道订阅模式与软件准入封锁之间的规则之争",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE33",
+          "event_type": "share_reveal",
+          "mechanism": "fixed_operations_asymmetry"
+        },
+        {
+          "event_id": "RE34",
+          "event_type": "reframe",
+          "mechanism": "car_sale_as_acquisition"
+        },
+        {
+          "event_id": "RE35",
+          "event_type": "reframe",
+          "mechanism": "service_as_subscription"
+        },
+        {
+          "event_id": "RE36",
+          "event_type": "trend_reveal",
+          "mechanism": "dealer_share_decline"
+        }
+      ],
+      "required_retention_events": [
+        "share_asymmetry",
+        "acquisition_cost_reframe",
+        "subscription_logic",
+        "channel_shift"
+      ],
+      "original_moves": [
+        "说明信任不对称如何塑造渠道形态",
+        "揭示收入与毛利的不对称：售后固定运营收入份额小但毛利贡献接近一半",
+        "重新定性整车销售：接近获客成本",
+        "给出商业模式判断：车是注册入口，服务合同才是真正的订阅",
+        "补充保修期结束后份额流向独立店的趋势"
+      ],
+      "abstract_move": "将视角拉到渠道层：揭示小收入份额贡献高毛利占比的不对称结构，将前端销售重新定性为获客成本，将后端服务合同定性为真正的订阅模式，并说明份额在保修期后的流向变化",
+      "replacement_needs": [
+        "收入份额与毛利份额的不对称数据对照",
+        "前端销售作为获客成本的定性依据",
+        "后端服务作为订阅模式的机制说明",
+        "份额随时间流向变化的趋势数据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80);打开的悬念 LOOP07→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "right_to_repair_conflict",
+      "start_ratio": 0.6266,
+      "end_ratio": 0.7048,
+      "start_sec": 618.3,
+      "end_sec": 695.5,
+      "position_label": "62.7%–70.5%(10:18–11:35)",
+      "purpose": "呈现谁能赚到这笔钱的上层博弈：维修权之争中软件访问权、立法过程与诉讼结果的完整链条，及其对整个行业版图的意义",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "行业繁荣叙事与技工待遇平庸之间的落差",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE37",
+          "event_type": "stakes_reveal",
+          "mechanism": "software_gate"
+        },
+        {
+          "event_id": "RE38",
+          "event_type": "case_reveal",
+          "mechanism": "data_access_law"
+        },
+        {
+          "event_id": "RE39",
+          "event_type": "stakes_reframe",
+          "mechanism": "independent_vs_authorized_only"
+        }
+      ],
+      "required_retention_events": [
+        "software_gate",
+        "legislation_case",
+        "stakes_reframe"
+      ],
+      "original_moves": [
+        "说明现代维修必须通过软件接口'与标的物对话'",
+        "点明准入决定权归属：厂家控制访问权限",
+        "回顾地方立法要求开放数据访问",
+        "补充厂家多年诉讼后败诉并承认合规可行的时间线",
+        "说明利害：大量独立从业者能否参与，还是只有销售方能提供后续服务"
+      ],
+      "abstract_move": "呈现准入权的上层博弈：现代维修对接口的依赖，准入决定权的归属，立法介入与诉讼结果的完整时间线，以及博弈结果对整个行业版图的决定性影响",
+      "replacement_needs": [
+        "现代维修对厂家控制接口或数据的依赖说明",
+        "准入决定权的归属",
+        "立法介入与诉讼的时间线及结果",
+        "博弈结果对行业版图的影响判断"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP08→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "technician_labor_reality",
+      "start_ratio": 0.7039,
+      "end_ratio": 0.8,
+      "start_sec": 694.5,
+      "end_sec": 789.4,
+      "position_label": "70.4%–80%(11:35–13:09)",
+      "purpose": "把批判对象从一线劳动者校准开：同一套定价系统如何奖励走量、惩罚疑难，技工自带工具负债、薪资平庸，所谓招聘难实为薪酬问题",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 81,
+          "position_ratio": 0.7907,
+          "time_ms": 780192,
+          "reason": "人力缺口被重新定性为“伪装成招聘问题的薪酬问题”，批判方向被校准"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "legal_battle_outcome_and_stakes",
+          "opened_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "labor_reality_reframe",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE40",
+          "event_type": "labor_reality_reveal",
+          "mechanism": "volume_rewarded_difficulty_penalized"
+        },
+        {
+          "event_id": "RE41",
+          "event_type": "labor_reality_reveal",
+          "mechanism": "personal_tool_debt_and_wage"
+        },
+        {
+          "event_id": "RE42",
+          "event_type": "reframe",
+          "mechanism": "compensation_not_recruitment"
+        }
+      ],
+      "required_retention_events": [
+        "incentive_distortion",
+        "tool_debt",
+        "wage_reality",
+        "shortage_reframe"
+      ],
+      "original_moves": [
+        "说明按手册计酬表面的公平性",
+        "揭示机制缺陷：诊断最困难却几乎不计酬",
+        "说明激励导向：快速标准化作业受奖励，疑难问题受惩罚",
+        "披露工具成本：从业者自备工具且常负债",
+        "给出薪资水平数据：平均薪资平庸",
+        "重新定性人力缺口：这是伪装成招聘问题的薪酬问题"
+      ],
+      "abstract_move": "将批判对象从一线从业者校准开：揭示同一套计酬机制如何奖励标准化、惩罚复杂问题，从业者自备工具且负债，薪资水平平庸，并将人力缺口重新定性为薪酬问题而非招聘问题",
+      "replacement_needs": [
+        "计酬规则对复杂问题的惩罚机制说明",
+        "从业者自备工具及负债的事实",
+        "薪资水平的量化数据",
+        "人力缺口的重新定性判断"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(81);回收了前文的悬念 FS10→LOOP07、FS11→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 81
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "market_forces_shift",
+      "start_ratio": 0.7991,
+      "end_ratio": 0.9243,
+      "start_sec": 788.5,
+      "end_sec": 912.1,
+      "position_label": "79.9%–92.4%(13:09–15:12)",
+      "purpose": "交代驱动与威胁行业的两股力量：保有车辆老龄化带来的售后浪潮，与电动化带来的维保强度下降及收入再分配",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 77,
+          "position_ratio": 0.8666,
+          "time_ms": 855110,
+          "reason": "燃油车与电动车年度维保成本对照，把电动化威胁变成可感数字"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "老龄化浪潮的利好与电动化维保减半的威胁之间的双向张力",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE43",
+          "event_type": "scale_reveal",
+          "mechanism": "aging_fleet_tailwind"
+        },
+        {
+          "event_id": "RE44",
+          "event_type": "threat_reveal",
+          "mechanism": "ev_lower_service_intensity"
+        },
+        {
+          "event_id": "RE45",
+          "event_type": "threat_reveal",
+          "mechanism": "software_fix_and_revenue_fall"
+        },
+        {
+          "event_id": "RE46",
+          "event_type": "counterbalance",
+          "mechanism": "rarer_but_serious_work"
+        },
+        {
+          "event_id": "RE47",
+          "event_type": "reframe",
+          "mechanism": "redistribution_not_disappearance"
+        }
+      ],
+      "required_retention_events": [
+        "aging_fleet",
+        "ev_threat",
+        "software_fix",
+        "redistribution"
+      ],
+      "original_moves": [
+        "给出保有标的物平均使用年限创纪录数据",
+        "说明保有量规模巨大",
+        "预测大批标的物脱保进入售后市场",
+        "对比新技术路线的年度维保成本：约减半",
+        "补充新技术路线故障多由软件远程修复的趋势",
+        "判断服务收入可能显著下滑",
+        "但说明新技术路线的高压专项作业更贵且集中于少数有资质的店",
+        "给出总判断：行业被再分配而非消失"
+      ],
+      "abstract_move": "交代驱动与威胁行业的两股力量：保有标的物老龄化带来的售后需求浪潮，与新技术路线带来的维保强度下降及远程修复趋势，用成本对比量化威胁，并判断行业被再分配而非消失",
+      "replacement_needs": [
+        "保有标的物使用年限与保有量的纪录性数据",
+        "脱保标的物进入售后市场的浪潮预测",
+        "新旧技术路线年度维保成本的量化对比",
+        "远程修复或软件化趋势说明",
+        "收入再分配而非消失的判断"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(77);打开的悬念 LOOP09→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 77
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "money_location_answer",
+      "start_ratio": 0.9233,
+      "end_ratio": 0.9706,
+      "start_sec": 911.1,
+      "end_sec": 957.7,
+      "position_label": "92.3%–97.1%(15:11–15:58)",
+      "purpose": "给出“钱到底在哪”的总答案：不在修理本身而在定价系统；用压缩排比复述全部机制，把根源归结为信息不对称，并区分好商家与坏商家",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 91,
+          "position_ratio": 0.9282,
+          "time_ms": 915861,
+          "reason": "总答案：钱不在修车本身，而在“工时由书不由钟”的定价系统——主承诺兑现点"
+        },
+        {
+          "peak_id": "PK11",
+          "peak_type": "emotional_payoff",
+          "strength": 84,
+          "position_ratio": 0.9613,
+          "time_ms": 948565,
+          "reason": "信息不对称根源落到“好商家用照片解决、坏商家从未需要解决”的分野，认知转为判断框架"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "dual_force_future_answer",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE48",
+          "event_type": "answer_reveal",
+          "mechanism": "price_system_not_repair"
+        },
+        {
+          "event_id": "RE49",
+          "event_type": "compressed_recap",
+          "mechanism": "matrix_funnel_gaps_recap"
+        },
+        {
+          "event_id": "RE50",
+          "event_type": "root_cause_reveal",
+          "mechanism": "information_asymmetry_and_good_bad_split"
+        }
+      ],
+      "required_retention_events": [
+        "money_location_answer",
+        "compressed_recap",
+        "asymmetry_root",
+        "good_bad_split"
+      ],
+      "original_moves": [
+        "给出总答案：钱不在服务本身",
+        "定位第一层：在'计量单位由标准手册而非实际耗时决定'的定价系统",
+        "定位第二层：在将毛利藏入难核对小项的加价矩阵",
+        "定位第三层：在免费检测与廉价引流的销售研究",
+        "归结根源：信息不对称——你无法自行检查标的物",
+        "区分好坏从业者：好从业者用证据解决信任问题，坏从业者从未需要解决"
+      ],
+      "abstract_move": "给出'价值在哪'的总答案：不在服务本身而在定价系统；用压缩排比复述各层机制，将根源归结为信息不对称，并通过对待信任问题的态度区分好坏从业者",
+      "replacement_needs": [
+        "总答案的核心判断句",
+        "各层机制的压缩复述（定价系统、加价矩阵、引流研究等）",
+        "信息不对称的根源定位",
+        "区分好坏从业者的判断标准"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(91)、PK11(84);回收了前文的悬念 FS13→LOOP09。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 91
+        },
+        {
+          "peak_id": "PK11",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "cta_closure",
+      "start_ratio": 0.9696,
+      "end_ratio": 1,
+      "start_sec": 956.7,
+      "end_sec": 986.7,
+      "position_label": "97%–100%(15:57–16:27)",
+      "purpose": "以“账单看起来不一样了”为理由请求点赞订阅，推荐同主题相关内容，完成频道式收尾",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "money_map_answer_with_compressed_recap",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE51",
+          "event_type": "closing_cta",
+          "mechanism": "changed_view_like_subscribe"
+        }
+      ],
+      "required_retention_events": [
+        "changed_view_cta",
+        "related_recommendation"
+      ],
+      "original_moves": [
+        "以认知改变为理由：'如果你现在看账单的眼光不一样了'",
+        "请求点赞订阅",
+        "推荐同主题相关视频",
+        "推荐播放列表",
+        "频道标准收尾语"
+      ],
+      "abstract_move": "以认知改变为锚点请求行动支持，推荐同主题内容以延长观看路径，完成频道标准收尾",
+      "replacement_needs": [
+        "与认知改变绑定的行动请求理由",
+        "同主题内容推荐",
+        "频道标准收尾语"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS02→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}
