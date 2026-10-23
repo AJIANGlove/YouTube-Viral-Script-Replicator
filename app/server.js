@@ -8,6 +8,7 @@ const { validateBundle, summarize } = require('./lib/validate');
 const { parseSrt } = require('./lib/srt');
 const pipeline = require('./lib/pipeline');
 const analysis = require('./lib/analysis');
+const review = require('./lib/review');
 const search = require('./lib/search');
 const voice = require('./lib/voice');
 const topics = require('./lib/topics');
@@ -459,12 +460,21 @@ const server = http.createServer(async (req, res) => {
         },
         prompt_version: 'v3',
         // 写前分析(新流程):先跑分析,人工确认后才写稿;track 用于挑赛道证据卡,materials 是人工提供的参考资料
-        pre_analysis: !!body.pre_analysis,
+        // 先写后改(draft_first):分析和 AI 先调整自动跑完,不等确认直接写稿,写完在逐段对照里审
+        draft_first: !!body.draft_first,
+        pre_analysis: !!body.pre_analysis || !!body.draft_first,
         track: typeof body.track === 'string' ? body.track.trim() : '',
         materials: typeof body.materials === 'string' ? body.materials.trim() : '',
         // 频道声音设定:'__auto__' 按频道名匹配(默认) / '__none__' 不用 / 设定名
         voice_name: typeof body.voice_name === 'string' ? body.voice_name : voice.AUTO
       });
+      if (run.draft_first) {
+        review.runDraftFirst(run.id).catch(e => {
+          const r = store.getRun(run.id);
+          if (r) { r.status = 'failed'; r.error = '一键生成异常: ' + e.message; store.saveRun(r); }
+        });
+        return send(res, 200, { ok: true, id: run.id });
+      }
       if (run.pre_analysis) {
         analysis.runAnalysis(run.id).catch(e => {
           const r = store.getRun(run.id);
@@ -552,6 +562,29 @@ const server = http.createServer(async (req, res) => {
         if (rr) { rr.status = 'failed'; rr.error = '写前分析异常: ' + e.message; store.saveRun(rr); }
       });
       return send(res, 200, { ok: true, id: r.id });
+    }
+
+    // ---------- 先写后改:逐段对照审稿 ----------
+    // GET 视图(每次按当前稿子现算);POST status/undo 立即返回;rewrite/fact 等模型返回再响应(单章约 0.5–2 分钟)
+    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate))?$/);
+    if (rvMatch) {
+      const [, id, action] = rvMatch;
+      try {
+        if (!action && method === 'GET') return send(res, 200, review.getView(id));
+        if (action && method === 'POST') {
+          const body = await readBody(req);
+          if (action === 'status') return send(res, 200, review.setStatus(id, body.chapter, body.status));
+          if (action === 'undo') return send(res, 200, review.undo(id, body.chapter));
+          if (action === 'rewrite') return send(res, 200, await review.rewriteChapter(id, body.chapter, body.compress ? (body.note || review.COMPRESS_NOTE) : body.note, { compress: !!body.compress }));
+          if (action === 'fact') return send(res, 200, await review.updateFact(id, body.id, body.patch || {}));
+          if (action === 'translate') {
+            review.translateRun(id).catch(() => {});
+            return send(res, 200, { ok: true });
+          }
+        }
+      } catch (e) {
+        return send(res, e.status || 500, { error: e.message });
+      }
     }
 
     // ---------- 写前分析审核辅助(v1.2):AI 先调整 / 我的意见 / 标题审核 ----------
@@ -830,6 +863,13 @@ const server = http.createServer(async (req, res) => {
         delete r.error;
         delete r.cancel_requested;
         store.saveRun(r);
+        return send(res, 200, { ok: true, id: r.id });
+      }
+      if (r.draft_first) {
+        review.resumeDraftFirst(r.id).catch(e => {
+          const rr = store.getRun(r.id);
+          if (rr) { rr.status = 'failed'; rr.error = '一键生成异常: ' + e.message; store.saveRun(rr); }
+        });
         return send(res, 200, { ok: true, id: r.id });
       }
       // 新流程任务停在写前分析(未确认)时,重试 = 重新分析,不能跳过人工确认直接写稿
@@ -1167,6 +1207,15 @@ server.listen(PORT, HOST, () => {
   // 前提:单实例运行(多实例共用同一数据目录会重复调用且 run 文件有写竞争);用户已点取消的任务尊重意图不接管
   const orphans = store.listRuns().filter(r => (r.status === 'running' || r.status === 'analyzing') && !r.cancel_requested);
   for (const r of orphans) {
+    // 一键生成:还没写稿就从头跑,写稿中断就接着写
+    if (r.draft_first) {
+      console.log(`接管中断的一键生成: ${r.id} (${r.topic || ''})`);
+      review.resumeDraftFirst(r.id).catch(e => {
+        const rr = store.getRun(r.id);
+        if (rr) { rr.status = 'failed'; rr.error = '一键生成异常: ' + e.message; store.saveRun(rr); }
+      });
+      continue;
+    }
     // 写前分析没有断点产物:接管 = 重跑一次分析(停在 awaiting_review,不会自动写稿)
     if (r.status === 'analyzing') {
       console.log(`接管中断的写前分析: ${r.id} (${r.topic || ''})`);

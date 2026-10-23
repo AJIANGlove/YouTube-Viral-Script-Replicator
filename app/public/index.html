@@ -164,6 +164,36 @@
   .an-grp { display: inline-flex; gap: 3px; flex-wrap: wrap; }
   /* v1.2 新加的界面一律红字;AI 改过的格子标蓝 */
   .v12, .an-btn.v12 { color: #dc2626; }
+  /* v1.3 先写后改:新界面同样红字 */
+  .v13, .an-btn.v13 { color: #dc2626; }
+  .an-btn.v13 { border-color: #fca5a5; }
+  .rv-bar { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; font-size: 13px; padding: 8px 10px; border-radius: 6px; background: #f9fafb; margin: 6px 0 10px; }
+  .rv-bar b { font-weight: 600; }
+  .rv-row { border: 1px solid #e5e7eb; border-radius: 8px; margin: 10px 0; overflow: hidden; }
+  .rv-row.passed { border-color: #86efac; }
+  .rv-row.flagged { border-color: #fca5a5; }
+  .rv-row.dropped { background: #fafafa; border-style: dashed; }
+  .rv-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 10px; background: #f9fafb; font-size: 13px; flex-wrap: wrap; }
+  .rv-grid { display: grid; grid-template-columns: 1fr 0.75fr 1fr; }
+  .rv-grid > div { padding: 8px 10px; font-size: 13px; line-height: 1.65; border-top: 1px solid #f3f4f6; min-width: 0; }
+  .rv-grid > div + div { border-left: 1px solid #f3f4f6; }
+  .rv-col-title { font-size: 11px; color: #6b7280; margin-bottom: 4px; font-weight: 600; }
+  .rv-text { white-space: pre-wrap; word-break: break-word; }
+  .rv-src { max-height: 260px; overflow-y: auto; }
+  .rv-zh { white-space: pre-wrap; color: #6b7280; font-size: 12px; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #e5e7eb; }
+  .rv-foot { padding: 6px 10px 8px; border-top: 1px solid #f3f4f6; font-size: 12px; }
+  .rv-chip { display: inline-block; padding: 1px 7px; border-radius: 10px; margin: 2px 4px 2px 0; font-size: 12px; cursor: pointer; border: 1px solid transparent; }
+  .rv-chip.green { background: #dcfce7; color: #166534; }
+  .rv-chip.yellow { background: #fef9c3; color: #854d0e; }
+  .rv-chip.red { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+  .rv-flag { color: #b91c1c; margin: 2px 0; }
+  .rv-flag b { font-weight: 600; }
+  .rv-ops { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 6px; }
+  .rv-edit { margin-top: 6px; padding: 8px; border: 1px dashed #fca5a5; border-radius: 6px; background: #fff; }
+  .rv-edit textarea, .rv-edit input, .rv-edit select { width: 100%; box-sizing: border-box; font: inherit; font-size: 12px; margin: 2px 0 6px; }
+  .rv-quote { font-size: 12px; color: #374151; background: #f9fafb; border-left: 3px solid #d1d5db; padding: 4px 8px; margin: 4px 0; }
+  .rv-busy { color: #2563eb; }
+  @media (max-width: 900px) { .rv-grid { grid-template-columns: 1fr; } .rv-grid > div + div { border-left: 0; } }
   .an-btn.v12 { border-color: #fca5a5; }
   .an-aibar { border: 1px dashed #fca5a5; border-radius: 6px; padding: 6px 8px; margin: 6px 0 8px; }
   .an-adj { border: 1px solid #fecaca; background: #fff; border-radius: 6px; padding: 6px 8px; margin: 6px 0; font-size: 12px; line-height: 1.6; }
@@ -494,9 +524,18 @@
       </div>
       <div id="topics-result"></div>
       <div style="margin-top:8px">
+        <div class="v13" style="font-size:13px;font-weight:600;margin-bottom:4px">写稿方式</div>
+        <label class="v13" style="display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="radio" name="gen-mode" value="draft_first" checked style="width:auto">
+          先写后改(推荐):AI 自动查事实、定取舍,直接写完;写完后逐段对照原片审稿,哪段不行改哪段
+        </label>
         <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
-          <input type="checkbox" id="gen-pre-analysis" checked style="width:auto">
-          先做写前分析(查事实、定论点和留存地图,人工确认后再写稿;写完自动跑稿件检查)
+          <input type="radio" name="gen-mode" value="pre_analysis" style="width:auto">
+          <span>先审分析(高级):写前分析停下来等你确认事实表和模块取舍,确认后再写稿</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="radio" name="gen-mode" value="direct" style="width:auto">
+          <span>直接写稿(旧流程,不做写前分析)</span>
         </label>
         <label style="margin-top:6px">参考资料(选填 · 写前分析用:粘贴你查到的数据、报道、链接摘要,AI 只能用这里和它已知的事实)</label>
         <textarea id="gen-materials" rows="4" style="width:100%;box-sizing:border-box" placeholder="例如:2024 年韩国美发店平均月营业额 …(来源:统计厅)"></textarea>
@@ -568,6 +607,7 @@
       <div class="steps" id="detail-steps"></div>
       <div id="detail-error" class="err-list"></div>
     </div>
+    <div class="card hidden" id="rv-panel"></div>
     <div class="card hidden" id="an-panel"></div>
     <div class="card hidden" id="ret-panel"></div>
     <div id="detail-scripts" class="script-grid">
@@ -758,6 +798,11 @@ function showView(v) {
   if (v === 'runs') { parseRunsHash(); syncRunsToolbar(); loadRuns(); pollTimer = setInterval(() => loadRuns({ silent: true }), 3000); }
   if (v === 'detail' && currentRunId) { loadRunDetail(); pollTimer = setInterval(loadRunDetail, 3000); }
   if (v === 'settings') { loadSettings(); loadVoiceList(); }
+}
+
+function genMode() {
+  const el = document.querySelector('input[name="gen-mode"]:checked');
+  return el ? el.value : 'draft_first';
 }
 
 async function api(url, opts) {
@@ -984,8 +1029,9 @@ async function createRun() {
       target_audience: document.getElementById('gen-aud').value,
       video_goal: document.getElementById('gen-goal').value
     },
-    // 写前分析(流程 B②-⑨):开启后任务先停在「待确认分析」,确认后才写稿
-    pre_analysis: document.getElementById('gen-pre-analysis').checked,
+    // 写稿方式:先写后改(一键生成,写完逐段审)/ 先审分析(停在「待确认分析」)/ 直接写稿
+    draft_first: genMode() === 'draft_first',
+    pre_analysis: genMode() === 'pre_analysis',
     track: document.getElementById('gen-track').value.trim(),
     materials: document.getElementById('gen-materials').value.trim(),
     voice_name: document.getElementById('gen-voice').value
@@ -1151,6 +1197,12 @@ const STATUS_LABELS = { analyzing: '写前分析中', awaiting_review: '待确�
 const LANG_LABELS = { English: '英语', Hindi: '印地语', Spanish: '西班牙语', Portuguese: '葡萄牙语', Japanese: '日语', Korean: '韩语', Indonesian: '印尼语', German: '德语', French: '法语', Vietnamese: '越南语', Arabic: '阿拉伯语', Chinese: '中文' };
 const COUNTRY_LABELS = { US: '美国', IN: '印度', BR: '巴西', MX: '墨西哥', JP: '日本', KR: '韩国', ID: '印尼', DE: '德国', GB: '英国', FR: '法国', VN: '越南', SA: '沙特' };
 
+// 一键生成的任务在「待确认分析」只是 AI 先调整那几分钟,不需要人去确认
+function statusLabel(r) {
+  if (r.draft_first && r.status === 'awaiting_review') return 'AI 调整中';
+  return STATUS_LABELS[r.status] || r.status;
+}
+
 function fmtTime(s) {
   if (!s) return '—';
   const d = new Date(s);
@@ -1176,11 +1228,11 @@ function viralIcon(filled, cls) {
 }
 
 function runOpsCell(r) {
-  if (r.status === 'awaiting_review') {
+  if (r.status === 'awaiting_review' && !r.draft_first) {
     return `<button class="op-btn" onclick="event.stopPropagation();openRun('${r.id}')">去确认</button> `
       + `<button class="op-btn danger" onclick="event.stopPropagation();cancelRunById('${r.id}')">取消</button>`;
   }
-  if (r.status === 'queued' || r.status === 'running' || r.status === 'analyzing') {
+  if (r.status === 'queued' || r.status === 'running' || r.status === 'analyzing' || r.status === 'awaiting_review') {
     return `<button class="op-btn danger" onclick="event.stopPropagation();cancelRunById('${r.id}')">取消</button>`;
   }
   if (r.status === 'failed' || r.status === 'cancelled') {
@@ -1366,7 +1418,7 @@ function runRowHtml(r) {
       <td>${esc(r.asset_name || r.asset_id)}${r.asset_zh ? `<span class="sub">源:${esc(r.asset_zh)}</span>` : ''}</td>
       <td style="font-size:12px;color:#4b5563">${audienceCell(r.audience)}</td>
       <td style="font-size:12px;color:#4b5563">${r.channel_name ? esc(r.channel_name) : '<span class="vb-none">—</span>'}</td>
-      <td><span class="badge badge-${r.status}">${STATUS_LABELS[r.status] || r.status}${r.has_error ? ' ✗' : ''}</span></td>
+      <td><span class="badge badge-${r.status}">${statusLabel(r)}${r.has_error ? ' ✗' : ''}</span></td>
       <td>${videoStatusCell(r.video)}</td>
       <td class="time">${stepText}</td>
       <td class="time">${fmtTime(r.created_at)}</td>
@@ -1476,7 +1528,7 @@ async function loadRunDetail() {
   const r = await api('/api/runs/' + currentRunId);
   document.getElementById('detail-title').textContent = r.topic;
   document.getElementById('detail-sub').textContent =
-    `${r.asset_name || r.asset_id} · ${STATUS_LABELS[r.status] || r.status} · 创建于 ${fmtTime(r.created_at)}` +
+    `${r.asset_name || r.asset_id} · ${statusLabel(r)}${r.draft_first ? ' · 先写后改' : ''} · 创建于 ${fmtTime(r.created_at)}` +
     (r.voice_used ? ` · 频道声音:${r.voice_used}` : '');
   const stepKeys = ['blueprint', 'script', 'audit', 'optimized'];
   if (r.pre_analysis || (r.steps || {}).analysis) stepKeys.unshift('analysis');
@@ -1494,6 +1546,7 @@ async function loadRunDetail() {
     ((r.status === 'failed' || r.status === 'cancelled')
       ? ' <button class="primary" style="margin-left:8px" onclick="retryRun()">续跑此任务</button>' : '');
 
+  renderReviewPanel(r);
   renderAnalysisPanel(r);
   renderRetentionCheck(r);
   renderScriptCheck(r);
@@ -1554,6 +1607,230 @@ async function loadRunDetail() {
   document.getElementById('detail-fact').textContent = facts.join('\n');
 }
 
+
+// ---------- 先写后改:逐段对照审稿(v1.3,新界面红字) ----------
+// 每一行是新稿的一章:原片原文(附中文)| 模板(留存功能、高峰、可删性、AI 的处理)| AI 新稿(附中文),
+// 下面是这一章用到的事实(绿=有出处,黄=估算/假设,红=没来源)和程序查出的红旗。
+// 3 秒轮询只在稿子或审稿状态变化时重取视图;正在写意见/改事实时不重绘,避免冲掉输入。
+let rvState = null;
+
+function rvKeyOf(r) {
+  const s = r.script_v1 || r.final_script || '';
+  return [r.id, r.status, s.length, s.slice(-80), JSON.stringify(r.review || {}).length, JSON.stringify((r.steps || {}).review_zh || {}), JSON.stringify(((r.analysis || {}).facts) || []).length].join('|');
+}
+
+function rvEditing() {
+  const el = document.getElementById('rv-panel');
+  if (!el) return false;
+  return [...el.querySelectorAll('textarea, input[type=text]')].some(x => x === document.activeElement || (x.value || '').trim());
+}
+
+async function renderReviewPanel(r) {
+  const el = document.getElementById('rv-panel');
+  const hasScript = !!(r.script_v1 || r.final_script);
+  if (!r.draft_first && !(hasScript && r.status === 'done')) { el.classList.add('hidden'); rvState = null; return; }
+  el.classList.remove('hidden');
+  if (!rvState || rvState.runId !== r.id) rvState = { runId: r.id, open: !!r.draft_first, key: null, view: null, busy: {}, panel: {}, onlyFlags: false, err: '', msg: {} };
+  if (!(hasScript && r.status === 'done')) {
+    const step = r.status === 'analyzing' ? '写前分析' : r.status === 'awaiting_review' ? 'AI 先调整(查资料、补事实、定取舍)' : (r.status === 'failed' || r.status === 'cancelled') ? '' : '写稿';
+    el.innerHTML = `<h2 class="v13">逐段对照审稿</h2><div class="hint v13">${step ? 'AI 正在一键生成,现在在「' + step + '」。写完后在这里逐段对照原片审稿,不需要你先审事实表和模块取舍。' : '任务没有写完,续跑后再审稿。'}</div>`;
+    return;
+  }
+  if (!rvState.open) {
+    el.innerHTML = `<h2 style="display:flex;justify-content:space-between;align-items:center"><span class="v13">逐段对照审稿</span><button class="an-btn v13" onclick="rvToggleOpen()">打开逐段对照</button></h2>`;
+    return;
+  }
+  const key = rvKeyOf(r);
+  if (key === rvState.key && rvState.view) return;
+  if (rvState.view && rvEditing()) return; // 等人写完再刷新
+  try {
+    rvState.view = await api('/api/runs/' + r.id + '/review');
+    rvState.key = key;
+    rvState.err = '';
+  } catch (e) { rvState.err = e.message; }
+  rvDraw();
+}
+
+function rvToggleOpen() { rvState.open = !rvState.open; rvState.key = null; if (lastRunDetail) renderReviewPanel(lastRunDetail); }
+function rvToggleFlags() { rvState.onlyFlags = !rvState.onlyFlags; rvDraw(); }
+
+function rvFactChip(f, ch) {
+  const tip = [f.kind, f.why, f.source, f.year].filter(Boolean).join(' · ');
+  return `<span class="rv-chip ${f.state}" title="${escAttr(tip)}" onclick="rvOpenFact('${f.id}','${ch}')">${esc(f.id)} ${esc(String(f.content || '').slice(0, 28))}${f.content && f.content.length > 28 ? '…' : ''}</span>`;
+}
+
+function rvSourceCell(srcs) {
+  if (!srcs.length) return '<div class="rv-col-title">原片</div><div class="hint">(没找到对应的原片段)</div>';
+  return srcs.map(s => `<div class="rv-col-title">原片 ${esc(s.stage_id)} · ${esc(s.position_label || '')}</div>
+    <div class="rv-text rv-src">${esc(s.text || '(这段原片没有字幕)')}</div>${s.zh ? `<div class="rv-zh rv-src">${esc(s.zh)}</div>` : ''}`).join('<hr style="border:0;border-top:1px solid #f3f4f6">');
+}
+
+function rvTemplateCell(row) {
+  const s = row.source.map(x => `<div><b>${esc(x.stage_id)}</b> ${esc(x.function || '')}
+      <span class="${x.deletability === '不可删' ? 'v13' : 'hint'}">· ${esc(x.deletability || '')}</span></div>
+    <div>留存作用:${esc(x.abstract_move || '—')}</div>
+    ${x.peaks.length ? `<div>高峰:${x.peaks.map(p => esc(p.peak_id + '(' + (p.peak_type || '') + ' ' + (p.strength || '') + ')')).join('、')}</div>` : ''}
+    ${x.decision ? `<div>AI 的处理:<b>${esc(x.decision)}</b>${x.reason ? ' — ' + esc(x.reason) : ''}</div>` : ''}`).join('<hr style="border:0;border-top:1px solid #f3f4f6">');
+  return `<div class="rv-col-title">模板</div>${s || '<div class="hint">—</div>'}
+    ${row.treatment ? `<div style="margin-top:4px">这一章:${esc(row.treatment)}</div>` : ''}
+    ${row.purpose ? `<div class="hint" style="margin-top:4px">蓝图目标:${esc(row.purpose)}</div>` : ''}`;
+}
+
+function rvRowHtml(row) {
+  const busy = rvState.busy[row.id];
+  const panel = rvState.panel[row.id] || '';
+  const msg = rvState.msg[row.id] || row.last_reply || '';
+  const cls = row.status === '通过' ? 'passed' : (row.flags.length ? 'flagged' : '');
+  const words = row.budget ? `${row.words}/${row.budget} 词` : `${row.words} 词`;
+  const hist = row.history.length ? row.history[row.history.length - 1] : null;
+  return `<div class="rv-row ${cls}" id="rv-row-${row.id}">
+    <div class="rv-head"><span><b>${esc(row.id)}</b> ${esc(row.range)} · ${esc(row.fn)} · ${words}
+      ${row.status === '通过' ? '<span style="color:#059669">· 已通过</span>' : ''}${row.flags.length ? `<span class="v13"> · ${row.flags.length} 个红旗</span>` : ''}</span>
+      <span class="rv-ops">${busy ? `<span class="rv-busy">${esc(busy)}</span>` : `
+        <button class="an-btn v13" onclick="rvSetStatus('${row.id}','${row.status === '通过' ? '待审' : '通过'}')">${row.status === '通过' ? '取消通过' : '通过'}</button>
+        <button class="an-btn v13" onclick="rvTogglePanel('${row.id}','note')">我的意见</button>
+        <button class="an-btn v13" onclick="rvCompress('${row.id}')" title="这段在本题里撑不住:只留一两句过渡,把悬念交给下一章">压成过渡</button>
+        ${hist ? `<button class="an-btn v13" onclick="rvTogglePanel('${row.id}','hist')">看上一版</button><button class="an-btn v13" onclick="rvUndo('${row.id}')">撤回</button>` : ''}`}</span></div>
+    <div class="rv-grid">
+      <div>${rvSourceCell(row.source)}</div>
+      <div>${rvTemplateCell(row)}</div>
+      <div><div class="rv-col-title">AI 新稿</div><div class="rv-text">${esc(row.text)}</div>
+        ${row.zh ? `<div class="rv-zh">${esc(row.zh)}</div>` : (rvState.view.translating ? '<div class="rv-zh">中文对照翻译中…</div>' : '')}</div>
+    </div>
+    <div class="rv-foot">
+      <div>用到的事实:${row.facts.length ? row.facts.map(f => rvFactChip(f, row.id)).join('') : '<span class="hint">(没有对上事实表)</span>'}</div>
+      ${row.flags.map(f => `<div class="rv-flag"><b>${esc(f.type)}</b>:${esc(f.text)}</div>`).join('')}
+      ${msg ? `<div class="hint v13">AI:${esc(msg)}</div>` : ''}
+      ${panel === 'note' ? `<div class="rv-edit"><div class="v13" style="font-size:12px">写一句你的意见,AI 只重写这一章,前后章不动(程序查出的红旗会一并改掉):</div>
+        <textarea id="rv-note-${row.id}" rows="3" placeholder="例如:这里的冲突不成立,营收涨和店主不赚钱不是一回事,改成同一口径对比"></textarea>
+        <button class="an-btn v13" onclick="rvRewrite('${row.id}')">按意见重写这一章</button> <button class="an-btn" onclick="rvTogglePanel('${row.id}','')">收起</button></div>` : ''}
+      ${panel === 'hist' && hist ? `<div class="rv-edit"><div class="hint">上一版(${esc(fmtTime(hist.at))} · ${esc(hist.note || '')}):</div><div class="rv-text">${esc(hist.text)}</div></div>` : ''}
+      ${rvState.factEdit && rvState.factEdit.ch === row.id ? rvFactEditor(rvState.factEdit.id) : ''}
+    </div>
+  </div>`;
+}
+
+function rvDroppedHtml(d) {
+  return `<div class="rv-row dropped"><div class="rv-head"><span><b>${esc(d.stage_id)}</b> ${esc(d.position_label || '')} · ${esc(d.function || '')} · <span class="v13">新稿没有章节承接(${esc(d.decision)})</span></span></div>
+    <div class="rv-grid"><div>${rvSourceCell([d])}</div><div><div class="rv-col-title">模板</div><div>留存作用:${esc(d.abstract_move || '—')}</div>
+      <div>可删性:${esc(d.deletability || '')}</div>${d.reason ? `<div>AI 的理由:${esc(d.reason)}</div>` : ''}</div><div class="hint">(已删除或并入相邻章)</div></div></div>`;
+}
+
+function rvFactEditor(id) {
+  const f = (rvState.view.facts || []).find(x => x.id === id);
+  if (!f) return '';
+  const kinds = ['事实', '估算', '假设', '待查'];
+  return `<div class="rv-edit"><div class="v13" style="font-size:12px;font-weight:600">事实 ${esc(f.id)}(${esc(f.why)})</div>
+    ${f.evidence.length ? f.evidence.map(e => `<div class="rv-quote">${e.url ? `<a href="${escAttr(e.url)}" target="_blank" rel="noopener">${esc(e.title || e.url)}</a>` : esc(e.title || '')} ${esc(e.date || '')}${e.quote ? '<br>原文摘录:' + esc(e.quote) : ''}</div>`).join('') : '<div class="hint">没有存下搜索出处。</div>'}
+    <label class="hint">内容</label><textarea id="rv-f-content" rows="2">${esc(f.content)}</textarea>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+      <div><label class="hint">类型</label><select id="rv-f-kind">${kinds.map(k => `<option${k === f.kind ? ' selected' : ''}>${k}</option>`).join('')}</select></div>
+      <div><label class="hint">来源</label><input type="text" id="rv-f-source" value="${escAttr(f.source)}"></div>
+      <div><label class="hint">年份</label><input type="text" id="rv-f-year" value="${escAttr(f.year)}"></div>
+    </div>
+    <label class="hint">链接</label><input type="text" id="rv-f-url" value="${escAttr(f.url)}">
+    <label class="hint">算法(估算必填)</label><input type="text" id="rv-f-method" value="${escAttr(f.method)}">
+    <button class="an-btn v13" onclick="rvSaveFact('${f.id}')">保存;内容或类型改了就重写用到它的章节</button> <button class="an-btn" onclick="rvCloseFact()">收起</button></div>`;
+}
+
+function rvDraw() {
+  const el = document.getElementById('rv-panel');
+  if (!rvState) return;
+  const v = rvState.view;
+  if (!v) { el.innerHTML = `<h2 class="v13">逐段对照审稿</h2><div class="err-list">${esc(rvState.err || '加载中…')}</div>`; return; }
+  const s = v.summary;
+  const ratio = s.ratio ? Math.round(s.ratio * 100) + '%' : '—';
+  const redList = s.red_facts.length ? s.red_facts.map(id => { const f = v.facts.find(x => x.id === id); return f ? rvFactChip(f, (v.rows.find(r => r.facts.some(x => x.id === id)) || {}).id || '') : ''; }).join('') : '';
+  const rows = v.rows.filter(r => !rvState.onlyFlags || r.flags.length || r.facts.some(f => f.state === 'red'));
+  el.innerHTML = `<h2 style="display:flex;justify-content:space-between;align-items:center"><span class="v13">逐段对照审稿</span>
+      <span><button class="an-btn v13" onclick="rvToggleFlags()">${rvState.onlyFlags ? '显示全部章节' : '只看有问题的章节'}</button>
+      <button class="an-btn v13" onclick="rvTranslate()" ${v.translating ? 'disabled' : ''}>${v.translating ? '中文对照翻译中…' : '补齐中文对照'}</button>
+      ${lastRunDetail && !lastRunDetail.draft_first ? '<button class="an-btn" onclick="rvToggleOpen()">收起</button>' : ''}</span></h2>
+    <div class="rv-bar v13">
+      <span>篇幅 <b>${s.words}</b>${s.budget ? ' / 预算 ' + s.budget + ' 词(' + ratio + ')' : ' 词'}</span>
+      <span>已通过 <b>${s.passed}/${s.chapters}</b> 章</span>
+      <span>红旗 <b>${s.flags}</b> 个</span>
+      <span>稿里用到但没出处的事实 <b>${s.red_facts.length}</b> 个 ${redList}</span>
+    </div>
+    ${s.red_facts.length ? '<div class="hint v13">红色事实要先处理(补出处、改成估算或假设、或者让 AI 改掉这句话),再拿去发布。</div>' : ''}
+    ${v.zh_error ? `<div class="err-list">中文对照翻译失败:${esc(v.zh_error)}</div>` : ''}
+    ${rvState.err ? `<div class="err-list">${esc(rvState.err)}</div>` : ''}
+    ${rows.map(rvRowHtml).join('')}
+    ${v.dropped.length && !rvState.onlyFlags ? '<div class="an-sec v13">原片里没有被承接的段</div>' + v.dropped.map(rvDroppedHtml).join('') : ''}`;
+}
+
+function rvTogglePanel(ch, which) { rvState.panel[ch] = rvState.panel[ch] === which ? '' : which; rvDraw(); }
+function rvOpenFact(id, ch) { rvState.factEdit = rvState.factEdit && rvState.factEdit.id === id && rvState.factEdit.ch === ch ? null : { id, ch }; rvDraw(); }
+function rvCloseFact() { rvState.factEdit = null; rvDraw(); }
+
+async function rvRefresh() {
+  rvState.key = null;
+  try { rvState.view = await api('/api/runs/' + rvState.runId + '/review'); rvState.err = ''; } catch (e) { rvState.err = e.message; }
+  rvDraw();
+}
+
+async function rvPost(path, body) {
+  return api('/api/runs/' + rvState.runId + '/review/' + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+}
+
+async function rvSetStatus(ch, status) {
+  try { await rvPost('status', { chapter: ch, status }); } catch (e) { rvState.err = e.message; }
+  rvRefresh();
+}
+
+async function rvUndo(ch) {
+  if (!confirm('撤回到 ' + ch + ' 的上一版?')) return;
+  try { await rvPost('undo', { chapter: ch }); rvState.msg[ch] = '已撤回到上一版'; } catch (e) { rvState.err = e.message; }
+  rvRefresh();
+}
+
+async function rvRunBusy(ch, label, fn) {
+  rvState.busy[ch] = label; rvDraw();
+  try { await fn(); } catch (e) { rvState.err = ch + ':' + e.message; }
+  delete rvState.busy[ch];
+  rvRefresh();
+}
+
+function rvRewrite(ch) {
+  const el = document.getElementById('rv-note-' + ch);
+  const note = el ? el.value.trim() : '';
+  if (!note) { alert('先写一句意见'); return; }
+  rvState.panel[ch] = '';
+  rvRunBusy(ch, 'AI 正在重写这一章(约 0.5–2 分钟)…', async () => {
+    const r = await rvPost('rewrite', { chapter: ch, note });
+    rvState.msg[ch] = r.reply || '已重写';
+  });
+}
+
+function rvCompress(ch) {
+  if (!confirm('把 ' + ch + ' 压成 1–2 句过渡?可以撤回。')) return;
+  rvRunBusy(ch, 'AI 正在压成过渡…', async () => {
+    const r = await rvPost('rewrite', { chapter: ch, compress: true });
+    rvState.msg[ch] = r.reply || '已压成过渡';
+  });
+}
+
+function rvSaveFact(id) {
+  const val = k => (document.getElementById('rv-f-' + k) || {}).value || '';
+  const patch = { content: val('content'), kind: val('kind'), source: val('source'), year: val('year'), url: val('url'), method: val('method') };
+  const ch = rvState.factEdit ? rvState.factEdit.ch : '';
+  const old = (rvState.view.facts || []).find(x => x.id === id) || {};
+  const uses = rvState.view.rows.filter(r => r.facts.some(x => x.id === id)).map(r => r.id);
+  if ((old.content !== patch.content || old.kind !== patch.kind) && uses.length &&
+      !confirm('事实 ' + id + ' 用在 ' + uses.join('、') + ' 共 ' + uses.length + ' 章,保存后会逐章重写这些章节(每章约 0.5–2 分钟,可逐章撤回)。继续?')) return;
+  rvState.factEdit = null;
+  rvRunBusy(ch || 'fact', '正在保存事实 ' + id + ',并重写用到它的章节…', async () => {
+    const r = await rvPost('fact', { id, patch });
+    const failed = (r.rewritten || []).filter(x => !x.ok);
+    rvState.msg[ch] = '事实 ' + id + ' 已保存' + ((r.rewritten || []).length ? ',重写了 ' + r.rewritten.filter(x => x.ok).map(x => x.chapter).join('、') : '') + (failed.length ? ';失败:' + failed.map(x => x.chapter + ' ' + x.error).join(';') : '');
+  });
+}
+
+async function rvTranslate() {
+  try { await rvPost('translate', {}); } catch (e) { rvState.err = e.message; }
+  rvState.key = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
+}
 
 // ---------- 频道声音设定(流程 A4) ----------
 async function loadVoiceOptions() {

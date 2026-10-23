@@ -194,6 +194,7 @@ function indexEntry(run) {
     audience: run.audience || {},
     channel_id: run.channel_id || null,
     channel_name: run.channel_name || null,
+    draft_first: !!run.draft_first,
     boost_opening: !!run.boost_opening || !!((run.steps || {}).opening_boost),
     opening_boosted: !!run.opening_boosted,
     viral: { marked: !!(run.viral && run.viral.marked), marked_at: (run.viral && run.viral.marked_at) || null },
