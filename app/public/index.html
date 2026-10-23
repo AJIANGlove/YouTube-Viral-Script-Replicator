@@ -186,7 +186,7 @@
   .rv-chip.green { background: #dcfce7; color: #166534; }
   .rv-chip.yellow { background: #fef9c3; color: #854d0e; }
   .rv-chip.red { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
-  .rv-flag { color: #b91c1c; margin: 2px 0; }
+  .rv-flag { color: #b91c1c; margin: 2px 0; font-size: 12px; }
   .rv-flag b { font-weight: 600; }
   .rv-ops { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 6px; }
   .rv-edit { margin-top: 6px; padding: 8px; border: 1px dashed #fca5a5; border-radius: 6px; background: #fff; }
@@ -622,7 +622,8 @@
               <button class="ghost" id="ob-btn-v1" onclick="openBoostPanel('v1')">强化开头</button>
               <span class="btn-sep" aria-hidden="true"></span>
               <button class="ghost video-btn" id="vd-btn-v1" onclick="openVideoDialog('v1')" title="推送该版本文案到视频网站（存草稿 / 自动生视频）"><svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>视频</button>
-              <button class="primary" onclick="copyScript('detail-final', this)">复制</button>
+              <button class="ghost v13" onclick="downloadCleanScript('detail-final')" title="只有口播正文:去掉章节标签、标题行、分隔线">下载纯净稿</button>
+              <button class="primary" onclick="copyScript('detail-final', this)" title="复制纯净稿:去掉章节标签、标题行、分隔线">复制</button>
             </span>
           </h2>
           <div class="mono" id="detail-final"></div>
@@ -638,7 +639,8 @@
               <button class="ghost" id="ob-btn-v1_5" onclick="openBoostPanel('v1_5')">强化开头</button>
               <span class="btn-sep" aria-hidden="true"></span>
               <button class="ghost video-btn" id="vd-btn-v1_5" onclick="openVideoDialog('v1_5')" title="推送该版本文案到视频网站（存草稿 / 自动生视频）"><svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>视频</button>
-              <button class="primary" onclick="copyScript('detail-v15', this)">复制</button>
+              <button class="ghost v13" onclick="downloadCleanScript('detail-v15')" title="只有口播正文:去掉章节标签、标题行、分隔线">下载纯净稿</button>
+              <button class="primary" onclick="copyScript('detail-v15', this)" title="复制纯净稿:去掉章节标签、标题行、分隔线">复制</button>
             </span>
           </h2>
           <div class="mono" id="detail-v15"></div>
@@ -657,7 +659,8 @@
               <button class="ghost" id="ob-btn-v2" onclick="openBoostPanel('v2')">强化开头</button>
               <span class="btn-sep" aria-hidden="true"></span>
               <button class="ghost video-btn" id="vd-btn-v2" onclick="openVideoDialog('v2')" title="推送该版本文案到视频网站（存草稿 / 自动生视频）"><svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>视频</button>
-              <button class="primary" onclick="copyScript('detail-v2', this)">复制</button>
+              <button class="ghost v13" onclick="downloadCleanScript('detail-v2')" title="只有口播正文:去掉章节标签、标题行、分隔线">下载纯净稿</button>
+              <button class="primary" onclick="copyScript('detail-v2', this)" title="复制纯净稿:去掉章节标签、标题行、分隔线">复制</button>
             </span>
           </h2>
           <div class="mono" id="detail-v2"></div>
@@ -673,7 +676,8 @@
               <button class="ghost" id="ob-btn-v2_5" onclick="openBoostPanel('v2_5')">强化开头</button>
               <span class="btn-sep" aria-hidden="true"></span>
               <button class="ghost video-btn" id="vd-btn-v2_5" onclick="openVideoDialog('v2_5')" title="推送该版本文案到视频网站（存草稿 / 自动生视频）"><svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>视频</button>
-              <button class="primary" onclick="copyScript('detail-v25', this)">复制</button>
+              <button class="ghost v13" onclick="downloadCleanScript('detail-v25')" title="只有口播正文:去掉章节标签、标题行、分隔线">下载纯净稿</button>
+              <button class="primary" onclick="copyScript('detail-v25', this)" title="复制纯净稿:去掉章节标签、标题行、分隔线">复制</button>
             </span>
           </h2>
           <div class="mono" id="detail-v25"></div>
@@ -1752,6 +1756,8 @@ function rvDraw() {
       <span>红旗 <b>${s.flags}</b> 个</span>
       <span>稿里用到但没出处的事实 <b>${s.red_facts.length}</b> 个 ${redList}</span>
     </div>
+    ${(s.ledger_mismatches || []).length ? `<div class="rv-flag"><b>账本对不上(程序按公式重算)</b>:${s.ledger_mismatches.map(esc).join(';')}</div>` : ''}
+    ${(s.thesis_contradicts || []).length ? `<div class="rv-flag"><b>反转被事实推翻</b>:${s.thesis_contradicts.map(esc).join('、')} 和反转结论相反${s.thesis_note ? '(' + esc(s.thesis_note) + ')' : ''}</div>` : ''}
     ${s.red_facts.length ? '<div class="hint v13">红色事实要先处理(补出处、改成估算或假设、或者让 AI 改掉这句话),再拿去发布。</div>' : ''}
     ${v.zh_error ? `<div class="err-list">中文对照翻译失败:${esc(v.zh_error)}</div>` : ''}
     ${rvState.err ? `<div class="err-list">${esc(rvState.err)}</div>` : ''}
@@ -3156,9 +3162,12 @@ function displayScriptText(raw) {
   return raw.replace(/^Optimized Script[ \t]*(\n+|$)/, '');
 }
 
+// 纯净稿:只留口播正文。去掉章节标签、Markdown 标题行(如「# Optimized Script: …」)、分隔线(---)、行首加粗/列表装饰
 function cleanScriptText(raw) {
   return displayScriptText(raw).split('\n')
     .filter(l => !CH_TAG_LINE.test(l.trim()))
+    .filter(l => !/^\s*#{1,6}\s/.test(l) && !/^\s*(?:optimized script|final script)\b.*$/i.test(l) && !/^\s*[-–—*_=]{3,}\s*$/.test(l))
+    .map(l => l.replace(/^\s*(?:\*\*|__)(.*?)(?:\*\*|__)\s*$/, '$1'))
     .join('\n')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
@@ -3207,6 +3216,17 @@ async function copyDetailTitle() {
   status.classList.toggle('error', !ok);
   detailTitleCopyTimer = setTimeout(resetDetailTitleCopyFeedback, 1500);
   if (!ok) alert('标题复制失败,请检查浏览器剪贴板权限后重试');
+}
+
+function downloadCleanScript(elId) {
+  const text = cleanScriptText(document.getElementById(elId).textContent);
+  const name = ((document.getElementById('detail-title') || {}).textContent || 'script').replace(/[\\/:*?"<>|]+/g, ' ').trim().slice(0, 60);
+  const ver = { 'detail-final': 'V1', 'detail-v15': 'V1.5', 'detail-v2': 'V2', 'detail-v25': 'V2.5' }[elId] || '';
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text + '\n'], { type: 'text/plain;charset=utf-8' }));
+  a.download = name + (ver ? ' ' + ver : '') + ' 纯净稿.txt';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
 
 async function copyScript(elId, btn) {

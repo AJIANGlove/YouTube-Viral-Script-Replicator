@@ -38,6 +38,12 @@ YouTube爆款脚本质量审核员(Quality Auditor)。
 5. 原创性:依据查重报告逐条判定——凡报告列出的重合默认 severity=blocker;仅当能引用 style.language_patterns 的具体 pattern_id 举证其为公式句式时才可豁免,并必须写出该 pattern_id。
 6. 词密度:依据词密度报告,超标(>115%)或偏稀(<80%)的章节逐条列出。
 7. 事实溯源(有写前分析时):稿中每个数字、年份、人名、案例都要能对上事实表的编号;对不上的按 major 报,dimension 写 blueprint。
+8. 逻辑与算术(dimension 写 logic,一律 blocker):
+   - 把稿中每一组加总、占比、倍数、区间重新算一遍(例如「8,500원 中 680–1,580원」= 8%–19%,就不能同时说 8%–12%;「2줄+라면+음료=8,500원」要按单价加得出来)。算不对的逐条列出,写出正确的算式。
+   - 同一个量前后出现不同的数,逐条列出。
+   - 反转/揭晓的结论是否被稿里自己的数推翻(例如说「本社稳赚、风险为零」,却又写本社营业利润率 0.7% 甚至亏损、门店减少本社收入就减少)。被推翻的写清楚哪句结论、哪个数。
+   - 开场的冲突两边是否同一主体、同一口径。
+9. 节奏与语言(dimension 写 style):免责、软化插句(「다만…단정하기는 어렵습니다」「매장마다 다릅니다」之类)逐条列出;像逐字翻译的句子逐条列出;结尾最后一句如果不是明确的落点判断(例如换成了免责声明或中性总结),按 major 报。
 
 铁律:
 - 每条 issue 必须附 evidence_quote:从 Script 中逐字复制的原句;引不出原文的问题不许报。
@@ -52,7 +58,7 @@ YouTube爆款脚本质量审核员(Quality Auditor)。
   "issues": [
     {
       "location": "章节/时间",
-      "dimension": "framework|timeline|style|blueprint|originality|density",
+      "dimension": "framework|timeline|style|blueprint|originality|density|logic",
       "severity": "blocker|major|minor",
       "evidence_quote": "脚本原文逐字引用",
       "problem": "具体问题",

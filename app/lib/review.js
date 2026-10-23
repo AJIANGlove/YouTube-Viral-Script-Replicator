@@ -11,6 +11,7 @@ const store = require('./store');
 const checks = require('./checks');
 const retention = require('./retention');
 const voice = require('./voice');
+const { HEDGE_RE } = require('./compliance');
 
 const pl = () => require('./pipeline');
 const an = () => require('./analysis');
@@ -141,6 +142,10 @@ function chapterFlags(ch, ctx) {
     if (han.length) flags.push({ type: '汉字残留', text: han.join('、') });
   }
   for (const w of ctx.lintTerms) if (ch.text.includes(w)) flags.push({ type: '翻译腔', text: w });
+  const sentences = ch.text.split(/(?<=[.?!。!?])\s+|\n+/).map(x => x.trim()).filter(Boolean);
+  const hedges = sentences.filter(x => HEDGE_RE.test(x));
+  if (hedges.length) flags.push({ type: '免责插句', text: hedges.map(x => x.slice(0, 60)).join(' / ') });
+  if (ch.isLast && sentences.length && HEDGE_RE.test(sentences[sentences.length - 1]) ) flags.push({ type: '结尾', text: '最后一句是免责/中性说法,不是结尾落点判断' });
   const unknown = [...new Set(numberTokensOf(ch.text).filter(n => !ctx.knownNumbers.has(n)))];
   if (unknown.length) flags.push({ type: '数字不在事实表', text: unknown.slice(0, 8).join('、') });
   // 同一个数第 4 次(含)以后出现才算重复:开场的锚点数(如单价)前后呼应两三次是正常的;年份不算
@@ -217,6 +222,7 @@ function buildView(run, asset) {
       zh: (((state.zh || {}).script || {})[c.id] || {}).hash === hash(c.text) ? state.zh.script[c.id].text : '',
       last_reply: st.last_reply || ''
     };
+    row.isLast = i === chs.length - 1;
     row.flags = chapterFlags(row, ctx);
     return row;
   });
@@ -245,7 +251,10 @@ function buildView(run, asset) {
     summary: {
       chapters: rows.length, passed: rows.filter(r => r.status === '通过').length,
       flags: rows.reduce((n, r) => n + r.flags.length, 0),
-      red_facts: redFacts, words, budget, ratio: budget ? Math.round(words / budget * 100) / 100 : null
+      red_facts: redFacts, words, budget, ratio: budget ? Math.round(words / budget * 100) / 100 : null,
+      ledger_mismatches: an().verifyLedger(arr(a.ledger)).mismatches,
+      thesis_contradicts: arr((a.thesis_check || {}).contradicts),
+      thesis_note: (a.thesis_check || {}).note || ''
     }
   };
 }

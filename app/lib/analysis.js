@@ -99,16 +99,51 @@ function analysisBrief(a) {
   out.push('标题:' + (t.final_title || '') + (t.viewer_question ? '(观众想知道:' + t.viewer_question + ';期待方向:' + (t.expected_answer_direction || '') + ')' : ''));
   const th = a.thesis_card || {};
   out.push('论点卡:原有认知=' + (th.viewer_belief || '') + ';真相=' + (th.truth || '') + ';一句话论点=' + (th.one_line_thesis || '') + ';结尾落点=' + (th.ending_landing || ''));
-  out.push('事实表(只能用这些;[估算] 的数在稿中要说明是估算、怎么算的,[待查] 的数不要写成确定的事实):\n' + (a.facts || []).map(f => '- ' + f.id + ' [' + (f.kind || '') + '] ' + (f.content || '') + '(' + [f.source, f.year, f.region].filter(Boolean).join(',') + ')' + (f.method ? ' 算法:' + f.method : '')).join('\n'));
+  out.push('事实表(只能用这些;[估算] 的数不用逐个声明,全片在开始算账时说一次「下面按公开数据估算」即可;[假设] 的在用到时说一次「假设」;[待查] 的数不要写成确定的事实):\n' + (a.facts || []).map(f => '- ' + f.id + ' [' + (f.kind || '') + '] ' + (f.content || '') + '(' + [f.source, f.year, f.region].filter(Boolean).join(',') + ')' + (f.method ? ' 算法:' + f.method : '')).join('\n'));
   const stale = a.stale || {};
   const staleTag = (arr, key) => (Array.isArray(arr) && arr.includes(key) ? '(依据的事实已更新,这一行的数作废,按事实表重算)' : '');
-  if ((a.ledger || []).length) out.push('账本:\n' + a.ledger.map(l => '- ' + l.item + ' = ' + l.value + (l.fact_ids && l.fact_ids.length ? '(' + l.fact_ids.join(',') + ')' : '') + staleTag(stale.ledger, l.item)).join('\n'));
+  if ((a.ledger || []).length) {
+    verifyLedger(a.ledger);
+    out.push('账本(程序已按公式重算;标「程序重算」的以程序的数为准,稿中所有加总、占比必须和这张账本一致):\n' + a.ledger.map(l => '- ' + (l.id ? l.id + ' ' : '') + l.item + ' = ' + (l.value || ((l.amount != null ? l.amount : '') + (l.unit ? ' ' + l.unit : ''))) +
+      (l.formula ? ' [= ' + l.formula + ']' : '') + (l.mismatch ? '(程序重算:' + l.program_amount + (l.unit ? ' ' + l.unit : '') + ',原来写错了)' : '') +
+      (l.fact_ids && l.fact_ids.length ? '(' + l.fact_ids.join(',') + ')' : '') + staleTag(stale.ledger, l.item)).join('\n'));
+  }
+  const tc = a.thesis_check || {};
+  if (Array.isArray(tc.contradicts) && tc.contradicts.length) out.push('反转验证:事实 ' + tc.contradicts.join('、') + ' 和反转结论相反(' + (tc.note || '') + ')。写稿时反转的说法必须和这些事实一致,不能回避。');
   out.push('模块取舍(「保留」只保留功能和节奏,内容用本题事实):\n' + (a.modules || []).map(m => '- ' + m.segment + ' ' + m.decision + ':' + (m.reason || '') + (m.fact_ids && m.fact_ids.length ? '(' + m.fact_ids.join(',') + ')' : '') + staleTag(stale.modules, m.segment)).join('\n'));
   out.push('留存地图:\n' + (a.retention_map || []).map(r => '- ' + r.source_peak + '(' + (r.source_segment || '') + ')→' + (r.new_chapter_hint || '') + ' ' + r.status + (r.fact_ids && r.fact_ids.length ? '(' + r.fact_ids.join(',') + ')' : '')).join('\n'));
   const h = a.hook || {};
   const chosen = (h.candidates || [])[h.chosen || 0];
   if (chosen) out.push('钩子(已选定):' + chosen.text + '(事实 ' + (chosen.fact_ids || []).join(',') + ';第一个甜头 ' + chosen.first_payoff_sec + ' 秒)');
   return out.join('\n\n');
+}
+
+// 账本由程序核算:有 formula 的行按引用的行重算,和模型写的 amount 差超过 1% 记为对不上,写稿以程序算的数为准。
+// 按出现顺序算,引用的行要先算好(引用后面的行、或者公式里有别的字符,记为算不了)。返回 { rows, mismatches, errors }
+function verifyLedger(ledger) {
+  const rows = (Array.isArray(ledger) ? ledger : []).filter(l => l && typeof l === 'object');
+  const val = {};
+  const mismatches = [], errors = [];
+  rows.forEach((l, i) => {
+    const id = String(l.id || ('L' + (i + 1)));
+    const amount = Number(String(l.amount == null ? '' : l.amount).replace(/,/g, ''));
+    const f = String(l.formula || '').trim();
+    delete l.program_amount; delete l.mismatch;
+    if (f) {
+      const expr = f.replace(/L\d+/g, ref => (ref in val ? '(' + val[ref] + ')' : 'NaN'));
+      let calc = NaN;
+      if (/^[\d.\s+\-*/()NaN]+$/.test(expr)) { try { calc = Function('"use strict";return (' + expr + ')')(); } catch (e) { calc = NaN; } }
+      if (!isFinite(calc)) { errors.push(id + ' 的公式算不了:' + f); val[id] = isFinite(amount) ? amount : NaN; return; }
+      calc = Math.round(calc * 100) / 100;
+      l.program_amount = calc;
+      if (!isFinite(amount) || Math.abs(calc - amount) > Math.max(1, Math.abs(calc) * 0.01)) {
+        l.mismatch = true;
+        mismatches.push(id + ' ' + (l.item || '') + ':写的是 ' + (isFinite(amount) ? amount : '(空)') + ',按 ' + f + ' 算是 ' + calc);
+      }
+      val[id] = calc;
+    } else val[id] = isFinite(amount) ? amount : NaN;
+  });
+  return { rows: rows.length, mismatches, errors };
 }
 
 function acceptedGaps(a) {
@@ -236,6 +271,7 @@ async function runAnalysis(runId) {
       store.saveRun(run);
       return;
     }
+    a.ledger_check = verifyLedger(a.ledger);
     run.analysis = a;
     run.analysis_raw = r.content;
     run.steps.analysis = { ...run.steps.analysis, status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString() };
@@ -531,6 +567,7 @@ function mergeAdjust(a, out, batches) {
     ledger: list(out.ledger).length ? [] : list(a.ledger).filter(touches).map(l => l.item),
     modules: list(a.modules).filter(m => touches(m) && !list(out.modules).some(o => o && o.segment === m.segment)).map(m => m.segment)
   };
+  if (out.thesis_check && typeof out.thesis_check === 'object' && !Array.isArray(out.thesis_check)) a.thesis_check = out.thesis_check;
   if (out.thesis_card && typeof out.thesis_card === 'object' && !Array.isArray(out.thesis_card)) apply('thesis_card', out.thesis_card);
   if (out.hook && typeof out.hook === 'object' && !Array.isArray(out.hook) && Array.isArray(out.hook.candidates) && out.hook.candidates.length) apply('hook', out.hook);
   const addTitles = list(out.title_candidates_add).filter(t => typeof t === 'string' && t && !list((a.title || {}).candidates).includes(t));
@@ -578,6 +615,7 @@ async function runAutoAdjust(runId, draft, opts) {
   const prompt = fillVars(readPrompt('adjust.md'), { ...vars, search_results: search.resultsBrief(batches), analysis_json: JSON.stringify(forModel) });
   const out = await callJson(run, cfg, prompt, 'AI 先调整', o => typeof o === 'object' && !Array.isArray(o));
   const n = mergeAdjust(a, out, batches);
+  a.ledger_check = verifyLedger(a.ledger);
   const fresh = store.getRun(run.id) || run;
   // 这段可能跑了几分钟:期间任务若已确认、已进入写稿,这次结果就不能再写,
   // 否则会把分析覆盖回「未确认版」,和已经开始的稿子对不上。
@@ -661,7 +699,7 @@ async function auditTitle(runId, draft, title) {
 }
 
 module.exports = {
-  loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, acceptedGaps,
+  loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, acceptedGaps, verifyLedger,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,
   frameworkVars, fillVars, callJson, getTarget, setTarget, needsList, mergeAdjust, runAutoAdjust, reviseItem, auditTitle
