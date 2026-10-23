@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>爆款文案生成平台 · 现状操作流程总览</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; margin: 0; background: #f5f6f8; color: #1f2937; font-size: 14px; line-height: 1.65; }
+  header { background: #1f2937; color: #fff; padding: 22px 28px; }
+  header h1 { margin: 0 0 6px; font-size: 20px; }
+  header p { margin: 0; color: #9ca3af; font-size: 13px; }
+  main { max-width: 1180px; margin: 0 auto; padding: 20px 24px 60px; }
+  section { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px 24px; margin-bottom: 22px; }
+  section > h2 { margin: 0 0 4px; font-size: 17px; }
+  section > h2 .no { display: inline-block; background: #2563eb; color: #fff; border-radius: 6px; font-size: 12px; padding: 2px 8px; margin-right: 8px; vertical-align: 2px; }
+  section > .lead { color: #6b7280; font-size: 13px; margin: 0 0 16px; }
+
+  /* 通用流程 */
+  .flow { display: flex; align-items: stretch; flex-wrap: wrap; gap: 0; }
+  .node { border: 1.5px solid #d1d5db; background: #fff; border-radius: 8px; padding: 8px 12px; font-size: 13px; min-width: 120px; }
+  .node b { display: block; font-size: 13px; margin-bottom: 2px; }
+  .node .sub { color: #6b7280; font-size: 12px; line-height: 1.5; }
+  .node.user { border-color: #2563eb; background: #eff6ff; }
+  .node.auto { border-color: #7c3aed; background: #f5f3ff; }
+  .node.gate { border-color: #d97706; background: #fffbeb; }
+  .node.state { border-color: #059669; background: #ecfdf5; }
+  .node.bad  { border-color: #dc2626; background: #fef2f2; }
+  .node.human{ border-color: #ea580c; background: #fff7ed; }
+  .arrow { align-self: center; color: #9ca3af; font-size: 18px; padding: 0 8px; flex: 0 0 auto; }
+  .arrow.down { width: 100%; text-align: center; padding: 4px 0; }
+  .branch-note { align-self: center; font-size: 12px; color: #6b7280; padding: 0 6px; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: #4b5563; margin-top: 10px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid; display: inline-block; }
+
+  /* 信息架构 */
+  .ia { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .ia .col { border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
+  .ia .col h3 { margin: 0; background: #f3f4f6; padding: 8px 12px; font-size: 13.5px; border-bottom: 1px solid #e5e7eb; }
+  .ia .col h3 .tag { float: right; font-size: 11px; color: #6b7280; font-weight: normal; }
+  .ia .col ul { margin: 0; padding: 8px 12px 10px 26px; font-size: 12.5px; color: #374151; }
+  .ia .col li { margin: 3px 0; }
+  .ia .col li small { color: #9ca3af; }
+
+  table.matrix { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  table.matrix th, table.matrix td { border: 1px solid #e5e7eb; padding: 7px 10px; text-align: center; }
+  table.matrix th { background: #f3f4f6; font-weight: 600; }
+  table.matrix td:first-child, table.matrix th:first-child { text-align: left; font-weight: 600; }
+  td.y { color: #047857; } td.n { color: #cbd5e1; }
+  .ver-rule { background: #f9fafb; border-left: 3px solid #2563eb; padding: 8px 14px; font-size: 12.5px; color: #374151; margin-top: 12px; border-radius: 0 6px 6px 0; }
+
+  /* 状态机 */
+  .sm { display: flex; flex-wrap: wrap; align-items: center; gap: 0; }
+  .st { border-radius: 999px; padding: 5px 14px; font-size: 12.5px; font-weight: 600; border: 1.5px solid transparent; }
+  .st.queued { background: #f3f4f6; color: #4b5563; }
+  .st.analyzing { background: #dbeafe; color: #1d4ed8; }
+  .st.awaiting { background: #ffedd5; color: #c2410c; border-color: #fdba74; }
+  .st.running { background: #dbeafe; color: #1d4ed8; }
+  .st.done { background: #d1fae5; color: #047857; }
+  .st.failed { background: #fee2e2; color: #b91c1c; }
+  .st.cancelled { background: #f3f4f6; color: #6b7280; }
+
+  /* 痛点 */
+  .pain { counter-reset: p; }
+  .pain li { list-style: none; margin: 0 0 10px; padding: 10px 14px 10px 46px; position: relative; background: #fff; border: 1px solid #fecaca; border-radius: 8px; font-size: 13px; }
+  .pain li::before { counter-increment: p; content: "P" counter(p); position: absolute; left: 12px; top: 10px; background: #fee2e2; color: #b91c1c; font-weight: 700; font-size: 12px; border-radius: 5px; padding: 2px 6px; }
+  .pain li b { color: #111827; }
+  .pain li .impact { color: #6b7280; font-size: 12.5px; display: block; margin-top: 2px; }
+  ul.pain { margin: 0; padding: 0; }
+
+  .journey { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .journey .jc { border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 16px; }
+  .journey h3 { margin: 0 0 8px; font-size: 14px; }
+  .journey ol { margin: 0; padding-left: 20px; font-size: 12.8px; color: #374151; }
+  .journey li { margin: 4px 0; }
+  .journey li em { color: #9ca3af; font-style: normal; font-size: 12px; }
+
+  .kv-inline { font-size: 12.5px; color: #6b7280; margin-top: 8px; }
+  code { background: #f3f4f6; border-radius: 4px; padding: 1px 5px; font-size: 12px; font-family: Consolas, monospace; }
+  @media print { body { background: #fff; } section { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>爆款文案生成平台 · 现状操作流程总览</h1>
+  <p>供 UI/UX 改版讨论使用 · 与代码版本 v1.2 对应（app/README.md 为准） · 生成日期 2026-10-23</p>
+</header>
+<main>
+
+<!-- ============ 0 产品一句话 ============ -->
+<section>
+  <h2><span class="no">0</span>这是个什么产品</h2>
+  <p class="lead">局域网内部工具（无登录、多人共用）：把"已验证的爆款视频框架"（资产库里的拆解 JSON）套到新选题上，由 LLM 管线自动产出多语言口播文案，再做人工微调，最后一键推送到视频生成网站出片。</p>
+  <div class="legend">
+    <span><i class="sw" style="border-color:#2563eb;background:#eff6ff"></i>用户操作</span>
+    <span><i class="sw" style="border-color:#7c3aed;background:#f5f3ff"></i>系统自动 / LLM</span>
+    <span><i class="sw" style="border-color:#d97706;background:#fffbeb"></i>质量闸门（程序校验）</span>
+    <span><i class="sw" style="border-color:#ea580c;background:#fff7ed"></i>需人工确认 / 决策点</span>
+    <span><i class="sw" style="border-color:#059669;background:#ecfdf5"></i>完成 / 产物</span>
+    <span><i class="sw" style="border-color:#dc2626;background:#fef2f2"></i>失败 / 中断</span>
+  </div>
+</section>
+
+<!-- ============ 1 信息架构 ============ -->
+<section>
+  <h2><span class="no">1</span>信息架构（现状）</h2>
+  <p class="lead">顶部 4 个平级导航 + 2 个不在导航里的页面。单文件 SPA（<code>app/public/index.html</code>，约 4500 行，HTML/CSS/JS 全部内联，无框架无构建）。</p>
+  <div class="ia">
+    <div class="col">
+      <h3>① 文案创作 <span class="tag">默认页</span></h3>
+      <ul>
+        <li>第 1 步：选框架资产 <small>（卡片网格 + 搜索/排序/频道筛选）</small></li>
+        <li>第 2 步：主题与受众 <small>（赛道+推荐选题、新主题、频道、目标语言×12、国家×13、受众、时长、写前分析勾选、参考资料、频道声音）</small></li>
+        <li>「开始生成」→ 创建任务</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>② 任务 <span class="tag">列表</span></h3>
+      <ul>
+        <li>10 列表格：主题/框架/目标/频道/状态/视频/步骤/创建/结束/操作</li>
+        <li>筛选：关键词、时间、状态 chip×7、语言 chip、视频状态 chip、只看爆款</li>
+        <li>3 秒轮询；分页 50/页；爆款 ☆ 标记；取消 / 失败重试</li>
+        <li>「刷新视频状态」按钮</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>③ 资产库</h3>
+      <ul>
+        <li>框架资产卡片网格 <small>（样本数/语速/章数等）</small></li>
+        <li>搜索 / 排序 / 频道 chip</li>
+        <li>点卡片 → 独立页「原文对照」<small>（/source.html?id=…，双语 SRT 对照）</small></li>
+        <li><b>界面上没有上传入口</b><small>（资产靠预置或调 API）</small></li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>④ 设置 <span class="tag">5 张卡平铺</span></h3>
+      <ul>
+        <li>频道声音设定 <small>（AI 起草 + JSON 编辑）</small></li>
+        <li>联网搜索 <small>（渠道/开关/Key）</small></li>
+        <li>视频网站绑定 <small>（全局单账号）</small></li>
+        <li>主流程 API 配置 <small>（渠道/模型/参数）</small></li>
+        <li>微调按钮 API 配置 <small>（独立第二套）</small></li>
+      </ul>
+    </div>
+  </div>
+  <div class="kv-inline">导航外页面：<b>任务详情页</b>（从任务列表点进，见第 4、5 节）· <b>原文对照页</b>（资产库点入）。</div>
+</section>
+
+<!-- ============ 2 主流程 ============ -->
+<section>
+  <h2><span class="no">2</span>端到端主流程（一条文案从 0 到出片）</h2>
+  <p class="lead">主线 6 大步。勾了「写前分析」会多一个人工确认环节（橙色）；每步之间都有程序化的质量闸门（黄色），不合格会自动让模型重试，再不合格任务置失败。</p>
+
+  <div class="flow">
+    <div class="node user"><b>1. 选框架资产</b><span class="sub">创作页第 1 步<br>从资产库选一套爆款框架</span></div>
+    <span class="arrow">→</span>
+    <div class="node user"><b>2. 填主题与受众</b><span class="sub">新主题 / 语言 / 国家 / 受众 / 时长<br>选填：赛道推荐选题、频道、声音、参考资料</span></div>
+    <span class="arrow">→</span>
+    <div class="node human"><b>3. 写前分析？</b><span class="sub">勾选（默认勾）→ 走 3a 分支<br>不勾 → 直接进第 4 步</span></div>
+    <span class="arrow">→</span>
+    <div class="node auto"><b>4. 四步生成管线</b><span class="sub">蓝图 → 写稿 → 审核 → 终稿<br>（详见下方展开）</span></div>
+    <span class="arrow">→</span>
+    <div class="node state"><b>5. 任务完成</b><span class="sub">产出 V1 / V2 双版本文案<br>+ 待核实事实清单</span></div>
+    <span class="arrow">→</span>
+    <div class="node user"><b>6. 详情页微调 + 出片</b><span class="sub">检查/改写/简介 → 推送视频网站<br>（存草稿 或 自动生视频）</span></div>
+  </div>
+
+  <div class="arrow down">▼ 3a 分支：写前分析（勾选时）</div>
+  <div class="flow" style="margin-left:24px">
+    <div class="node auto"><b>LLM 写前分析</b><span class="sub">结论 / 候选标题 / 论点卡<br>事实表 / 留存地图 / 钩子候选<br>（可用联网搜索核实）</span></div>
+    <span class="arrow">→</span>
+    <div class="node human"><b>待确认分析</b><span class="sub">任务停摆等人来<br>可直接改 JSON / AI 先调整 /<br>我的意见 / 标题审核 / 补料重跑</span></div>
+    <span class="arrow">→</span>
+    <div class="node user"><b>点「确认并开始写稿」</b><span class="sub">分析结论注入后续四步</span></div>
+  </div>
+
+  <div class="arrow down">▼ 第 4 步「四步生成管线」展开</div>
+  <div class="flow" style="margin-left:24px">
+    <div class="node auto"><b>Step1 蓝图</b><span class="sub">章节结构 + 时长分配</span></div>
+    <span class="arrow">→</span>
+    <div class="node gate"><b>闸门</b><span class="sub">字段查重 / JSON 合法<br>时长对账</span></div>
+    <span class="arrow">→</span>
+    <div class="node auto"><b>Step2 写稿</b><span class="sub">逐章口播正文</span></div>
+    <span class="arrow">→</span>
+    <div class="node gate"><b>闸门</b><span class="sub">章节结构 / 查重<br>词密度 / 截断续写</span></div>
+    <span class="arrow">→</span>
+    <div class="node gate"><b>留存检查</b><span class="sub">软闸门：高峰承接<br>首个甜头秒数 / 间隔<br>（不置失败，仅标记）</span></div>
+    <span class="arrow">→</span>
+    <div class="node auto"><b>Step3 审核</b><span class="sub">事实/证据核查<br>产出 Change Log</span></div>
+    <span class="arrow">→</span>
+    <div class="node gate"><b>稿件检查 K1-K5</b><span class="sub">标题结论/旧数据/数字<br>凑节拍/篇幅密度<br>（仅 K3 可自动改）</span></div>
+    <span class="arrow">→</span>
+    <div class="node auto"><b>Step4 终稿</b><span class="sub">应用修改 → V1</span></div>
+    <span class="arrow">→</span>
+    <div class="node gate"><b>闸门</b><span class="sub">章节递增 / 元评论<br>占位符 / 时间轴漂移</span></div>
+    <span class="arrow">→</span>
+    <div class="node state"><b>done</b></div>
+    <span class="branch-note">任一闸门重试仍失败 →</span>
+    <div class="node bad"><b>failed</b><span class="sub">可一键重试</span></div>
+  </div>
+</section>
+
+<!-- ============ 3 状态机 ============ -->
+<section>
+  <h2><span class="no">3</span>任务状态机（任务列表的"状态"列）</h2>
+  <div class="sm">
+    <span class="st queued">排队中 queued</span><span class="arrow">→</span>
+    <span class="st analyzing">写前分析中 analyzing</span><span class="arrow">→</span>
+    <span class="st awaiting">待确认分析 awaiting_review</span><span class="arrow">→</span>
+    <span class="st running">生成中 running（step1-4）</span><span class="arrow">→</span>
+    <span class="st done">完成 done</span>
+    <span class="branch-note">（不勾选写前分析时：排队中 → 生成中 → 完成；任何时刻可取消 → <b>已取消 cancelled</b>；闸门/出错 → <b>失败 failed</b>，可重试）</span>
+  </div>
+  <div class="kv-inline">⚠ <b>awaiting_review 是"停摆等人工"状态</b>：不点确认任务永远不往下走；目前只有列表徽章和详情页能看到它，没有全局提醒。另有一套并行的<b>视频状态</b>：未推送 / 草稿 / 生产中 / 已暂停 / 已完成 / 失败。</div>
+</section>
+
+<!-- ============ 4 详情页操作矩阵 ============ -->
+<section>
+  <h2><span class="no">4</span>任务详情页：4 个版本 × 6+ 种操作</h2>
+  <p class="lead">详情页从上到下一次堆叠：步骤进度条 → 写前分析面板 → 留存检查面板 → <b>4 张版本文案卡（2×2 网格）</b> → 指纹/商业化/留存 3 个检测面板 → 稿件检查面板 → 待核实事实清单。每张版本卡标题栏里塞了 6-7 个按钮。</p>
+  <table class="matrix">
+    <tr><th>版本 \ 操作</th><th>生成简介</th><th>指纹检测</th><th>商业化检查</th><th>开头留存检查</th><th>强化开头</th><th>推送视频</th><th>复制/下载</th></tr>
+    <tr><td>V1（终稿）</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓ →生成V2</td><td class="y">✓</td><td class="y">✓</td></tr>
+    <tr><td>V1.5（V1+采纳改写）</td><td class="y">✓</td><td class="n">—</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓ 原地更新</td><td class="y">✓</td><td class="y">✓</td></tr>
+    <tr><td>V2（强化开头版）</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓ →生成V2.5</td><td class="y">✓</td><td class="y">✓</td></tr>
+    <tr><td>V2.5（V2+采纳改写）</td><td class="y">✓</td><td class="n">—</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓ 原地更新</td><td class="y">✓</td><td class="y">✓</td></tr>
+  </table>
+  <div class="ver-rule">
+    <b>版本演化规则（新用户必须理解的概念）：</b>
+    V1 = 管线终稿；在 V1/V2 上做"指纹替换 / 商业化采纳 / 留存采纳"→ 生成对应 <b>.5</b>（底版不动，.5 = 底版 + 最近一次确认的勾选）；
+    "强化开头"：V1 → 生成 V2、V2 → 生成 V2.5（此后底版锁定）、.5 → 原地更新可反复。
+    稿件检查 K3 自动改只发生在 V1 上。检测类结果按版本缓存，重开不重复扣费。
+  </div>
+</section>
+
+<!-- ============ 5 出片链路 ============ -->
+<section>
+  <h2><span class="no">5</span>出片链路（推送到视频生成网站）</h2>
+  <div class="flow">
+    <div class="node user"><b>详情页选版本点「视频」</b><span class="sub">弹窗二选一</span></div>
+    <span class="arrow">→</span>
+    <div class="node user"><b>存草稿</b><span class="sub">只建项目<br>人去视频网站继续</span></div>
+    <span class="branch-note">或</span>
+    <div class="node auto"><b>自动生视频</b><span class="sub">建项目 + 确认旁白<br>视频网站自动配音出片</span></div>
+    <span class="arrow">→</span>
+    <div class="node state"><b>列表"视频"列跟踪状态</b><span class="sub">草稿/生产中/已完成…<br>手动点「刷新视频状态」</span></div>
+  </div>
+  <div class="kv-inline">前置条件：设置页完成"视频网站绑定"（全局单账号）+ 任务选了频道；仅 6 种 locale 可推送（en-US/ja-JP/ko-KR/es-ES/fr-FR/pt-BR）。</div>
+</section>
+
+<!-- ============ 6 用户旅程 ============ -->
+<section>
+  <h2><span class="no">6</span>两条典型用户旅程</h2>
+  <div class="journey">
+    <div class="jc">
+      <h3>A. 首次使用（配置期，只此一次）</h3>
+      <ol>
+        <li>开「设置」→ 配<b>主流程 API</b>（渠道/模型/Key）<em>← 不配则全部功能不可用</em></li>
+        <li>配<b>微调按钮 API</b> <em>（可同一渠道）</em></li>
+        <li>（可选）开<b>联网搜索</b>、绑定<b>视频网站</b>、建<b>频道声音</b></li>
+        <li>去「资产库」确认有可用框架 <em>（资产靠预置，界面无上传入口）</em></li>
+        <li>进入日常旅程 B</li>
+      </ol>
+    </div>
+    <div class="jc">
+      <h3>B. 日常创作（每条文案）</h3>
+      <ol>
+        <li>「文案创作」选框架 → 填主题/语言/受众 → 开始生成</li>
+        <li>（默认）等写前分析 → 去详情页<b>核对并确认</b> <em>← 容易卡住的点</em></li>
+        <li>等 3-8 分钟 → done → 详情页看 V1/V2</li>
+        <li>按需：生成简介 / 指纹检测 / 商业化检查 / 留存检查 / 强化开头</li>
+        <li>核对 fact_check_list 里的待核实事实</li>
+        <li>选版本推送视频网站 → 出片发布</li>
+        <li>发布后回任务列表标 ☆ 爆款 <em>（沉淀哪些选题真爆了）</em></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7 痛点 ============ -->
+<section>
+  <h2><span class="no">7</span>已观察到的可用性痛点（改版重点候选）</h2>
+  <ul class="pain">
+    <li><b>前端是 4500+ 行单文件</b>（HTML/CSS/JS 全内联，约 256KB），无组件、无设计系统，各面板样式各自手写。<span class="impact">改样式风险高、新功能越堆越乱——改版需顺带考虑代码组织。</span></li>
+    <li><b>任务详情页信息垂直无限堆叠</b>：进度、写前分析、留存检查、4 张版本卡、3-4 个检测面板、事实清单全部塞在一页，动辄滚十几屏。<span class="impact">找不到入口、版本对比困难。</span></li>
+    <li><b>每张版本卡标题栏 6-7 个按钮</b>（4 张卡共约 26 个按钮），视觉噪音大，主次不分。<span class="impact">高频操作（复制/看文案）与低频操作（各类检测）没有分层。</span></li>
+    <li><b>V1 / V1.5 / V2 / V2.5 版本命名不直观</b>，演化规则只在 README 里有。<span class="impact">新人不知道哪个是"最新可用稿"、该推哪个版本出片。</span></li>
+    <li><b>awaiting_review 停摆状态无全局提醒</b>，入口只有列表小徽章。<span class="impact">任务卡住用户却不知道，白等。</span></li>
+    <li><b>设置页 5 张配置卡平铺、无顺序引导</b>，首次使用不知道"必须先配主流程 API"，也没有任何 onboarding / 空状态指引。<span class="impact">新用户第一步就迷路。</span></li>
+    <li><b>创作页第 2 步 10+ 字段平铺</b>，必填/选填不分组，高级选项（声音、参考资料）与基础项混排。<span class="impact">表单压迫感强。</span></li>
+    <li><b>任务列表 10 列 + 多排筛选 chip</b>，状态徽章两套色系（任务 7 态 + 视频 6 态）叠在一行。<span class="impact">信息密度高，扫读困难。</span></li>
+    <li><b>资产库没有上传入口</b>（只能预置或调 API），也没有空状态引导。<span class="impact">想加新框架得找会调 API 的人。</span></li>
+    <li><b>检测类面板（指纹/商业化/留存/稿件检查/写前分析）交互范式相似但各画各的</b>：都是"列表问题→逐条采纳/忽略→写回版本"。<span class="impact">本可以统一成一套"审阅工作台"组件。</span></li>
+  </ul>
+</section>
+
+</main>
+</body>
+</html>
