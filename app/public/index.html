@@ -227,6 +227,7 @@
   .rv-ai-head { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; cursor: pointer; }
   .rv-ai-body { margin: 4px 0 0 22px; line-height: 1.6; }
   .rv-dopts { margin: 4px 0; }
+  .rv-dold { font-weight: 700; font-size: 14px; color: #111827; }
   .rv-dopt { display: flex; gap: 6px; align-items: flex-start; padding: 4px 8px; margin: 3px 0; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer; background: #fff; }
   .rv-dopt.on { border-color: #16a34a; background: #f0fdf4; }
   .rv-ai-detail { margin-top: 6px; padding: 6px 10px; background: #f9fafb; border-radius: 6px; }
@@ -2152,7 +2153,7 @@ function rvDeaiHtml(v, translating, busy) {
         <b>${esc(x.id)}</b> <span class="rv-chip">${esc(x.chapter)}</span> <span class="rv-chip ${pc(x.priority)}">${esc(x.priority)}</span> <span class="hint">${esc(x.type)}</span>
         ${x.found === false ? '<span class="rv-chip red" title="应用时会让 AI 再校正一次原句">原句没在终稿里找到</span>' : ''}</label>
       <div class="rv-ai-body">
-        <div class="rv-ai-cols"><div class="rv-del-plain">${esc(x.old)}</div><div class="rv-ai-zh">${x.old_zh ? esc(x.old_zh) : pending}</div></div>
+        <div class="rv-ai-cols"><div><span class="hint">原句</span><div class="rv-dold">${esc(x.old)}</div></div><div class="rv-ai-zh">${x.old_zh ? esc(x.old_zh) : pending}</div></div>
         ${x.problem ? `<div class="hint" style="margin:2px 0 4px">为什么有 AI 感:${esc(x.problem)}</div>` : ''}
         ${on ? `<div class="rv-dopts">${opts}</div>
         <div class="rv-edit"><textarea class="rv-keep" rows="2" ${busy ? 'disabled' : ''} oninput="rvDeaiText('${escAttr(x.id)}', this.value)" placeholder="留空表示删掉这句">${esc(sel.text[x.id] || '')}</textarea>

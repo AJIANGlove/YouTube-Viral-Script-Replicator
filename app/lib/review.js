@@ -303,7 +303,7 @@ function buildView(run, asset) {
     diffs: versionDiffs(state),
     revision: revisionView(state),
     deai_revision: revisionView(state, 'd4'),
-    deai: state.deai ? { ...state.deai, items: arr(state.deai.items).map(x => ({ ...x, old_zh: x.old_zh || zhOf(state, x.old), options: x.options.map(o => ({ ...o, zh: o.zh || (o.text ? zhOf(state, o.text) : '') })) })), stale: !!state.deai.base_hash && state.deai.base_hash !== hash(arr(state.versions).some(v => v.key === 'd4' && v.text === script) ? ((arr(state.versions).find(v => v.key === 'd3') || {}).text || '') : script) } : null,
+    deai: state.deai ? { ...state.deai, diagnosis: deaiReportOf(state.deai), items: deaiItemsOf(state.deai).map(x => ({ ...x, old_zh: x.old_zh || zhOf(state, x.old), options: x.options.map(o => ({ ...o, zh: o.zh || (o.text ? zhOf(state, o.text) : '') })) })), stale: !!state.deai.base_hash && state.deai.base_hash !== hash(arr(state.versions).some(v => v.key === 'd4' && v.text === script) ? ((arr(state.versions).find(v => v.key === 'd3') || {}).text || '') : script) } : null,
     final: state.final || null,
     tracks: trackList(), track_default: state.final_track || autoTrack(run, asset),
     translating: ((run.steps || {}).review_zh || {}).status === 'running',
@@ -413,7 +413,7 @@ function textsToTranslate(run) {
   // 二稿审稿报告的问题和修改方向
   arr(((run.review || {}).audit || {}).issues).forEach(x => { if (hasForeign(x.problem)) texts.push(x.problem); if (hasForeign(x.direction)) texts.push(x.direction); });
   // 去AI感候选改法:AI 没给中文的补翻
-  arr(((run.review || {}).deai || {}).items).forEach(x => { if (!x.old_zh) texts.push(x.old); x.options.forEach(o => { if (!o.zh && o.text) texts.push(o.text); }); });
+  deaiItemsOf((run.review || {}).deai).forEach(x => { if (!x.old_zh) texts.push(x.old); x.options.forEach(o => { if (!o.zh && o.text) texts.push(o.text); }); });
   const have = ((run.review || {}).zh || {}).byHash || {};
   return texts.filter(t => t && !have[hash(t)]);
 }
@@ -1192,7 +1192,8 @@ function setDeaiStage(runId, stage) {
 // ===ITEM=== 块:章节/类型/优先级/原句/原句中文/问题/方案N/方案N中文/方案N说明
 const DEAI_FIELD_RE = /^\s*[-*]?\s*\**\s*(章节|位置|类型|类别|优先级|严重程度|原句|原文|原句中文|问题|原因|方案\s*\d+\s*(?:中文|翻译|说明|思路)?)\s*\**\s*[:：]\s*(.*)$/;
 function parseDeaiItems(text) {
-  const c = String(text || '').replace(/^[*`\s]*(===\s*[A-Za-z]+\s*===)[*`\s]*$/gm, '$1');
+  // 模型常把分隔符连写在一行(===ITEMS======ITEM===)或加粗,先拆成每个分隔符单独一行
+  const c = String(text || '').replace(/[*`]*(===\s*[A-Za-z]+\s*===)[*`]*/g, '\n$1\n').replace(/\n{3,}/g, '\n\n');
   const cut = c.search(/^===\s*ITEMS\s*===\s*$/m);
   const report = (cut >= 0 ? c.slice(0, cut) : c.split(/^===\s*ITEM\s*===\s*$/m)[0]).trim();
   const parts = (cut >= 0 ? c.slice(cut) : c).split(/^===\s*ITEM\s*===\s*$/m).slice(1);
@@ -1218,6 +1219,16 @@ function parseDeaiItems(text) {
     };
   }).filter(x => x.old && x.options.length).map((x, i) => ({ ...x, id: 'D' + String(i + 1).padStart(2, '0') }));
   return { report, items };
+}
+
+// 旧结果解析失败(items 为空但报告里有 ===ITEM===)时,按新规则重新解析
+function deaiItemsOf(d) {
+  if (!d) return [];
+  if (arr(d.items).length || !/===\s*ITEM/.test(d.diagnosis || '')) return arr(d.items);
+  return parseDeaiItems(d.diagnosis).items;
+}
+function deaiReportOf(d) {
+  return d && !arr(d.items).length && /===\s*ITEM/.test(d.diagnosis || '') ? parseDeaiItems(d.diagnosis).report : (d || {}).diagnosis || '';
 }
 
 function deaiBase(run) {
@@ -1281,7 +1292,7 @@ async function applyDeai(runId, picks) {
   const start = currentScript(run);
   const base = deaiBase(run);
   const t0 = Date.now();
-  const byId = Object.fromEntries(arr(d.items).map(x => [x.id, x]));
+  const byId = Object.fromEntries(deaiItemsOf(d).map(x => [x.id, x]));
   const chosen = arr(picks).filter(p => byId[p.id]);
   const edits = chosen.map(p => { const x = byId[p.id]; return { chapter: x.chapter, category: x.type, old: x.old, new: String(p.text || '').trim(), reason: x.problem, deai_id: x.id }; });
   run.steps = { ...(run.steps || {}), deai: { ...((run.steps || {}).deai || {}), status: 'running', stage: '按你的选择修改' } };
@@ -1319,7 +1330,7 @@ function startDeai(runId, body) {
   deaiGuard(run);
   if (body && body.apply) {
     const d = (run.review || {}).deai;
-    if (!d || !arr(d.items).length) throw Object.assign(new Error('还没有去AI感建议,先生成'), { status: 400 });
+    if (!d || !deaiItemsOf(d).length) throw Object.assign(new Error('还没有去AI感建议,先生成'), { status: 400 });
     if (d.base_hash !== hash(deaiBase(run))) throw Object.assign(new Error('生成建议以后稿子改过,原句可能对不上,请重新生成建议'), { status: 400 });
     (async () => { try { await applyDeai(runId, body.picks); } catch (e) {} await translateRun(runId); })();
     return { ok: true };
