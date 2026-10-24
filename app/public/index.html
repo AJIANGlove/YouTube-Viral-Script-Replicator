@@ -2015,7 +2015,7 @@ function rvRevisionHtml(rev, translating) {
       ${rvState.revZh ? `<div class="rv-zh">${c.zh_final ? esc(c.zh_final) : pending}</div>` : ''}
       ${notes}</div>`;
   }).join('');
-  const failed = rev.failed.length && !clean ? `<details class="rv-md-box"><summary>${rev.failed.length} 处修改没有采用(原句在二稿里找不到或互相重叠)</summary>${rev.failed.map(e => `<div class="rv-issue"><b>${rvNum(e.n)} ${esc(e.chapter || '')} ${esc(e.category || '')}</b> ${esc(e.error || '')}<br><span class="hint">原句:${esc(e.old)}</span><br><span class="hint">改成:${esc(e.new || '(删除)')}</span><br><span class="hint">理由:${esc(e.reason || '')}</span></div>`).join('')}</details>` : '';
+  const failed = rev.failed.length && !clean ? `<details class="rv-md-box" ${rev.failed.length > rev.applied ? 'open' : ''}><summary>${rev.failed.length} 处修改没有采用(原句在二稿里找不到或互相重叠)</summary>${rev.failed.map(e => `<div class="rv-issue"><b>${rvNum(e.n)} ${esc(e.chapter || '')} ${esc(e.category || '')}</b> ${esc(e.error || '')}<br><span class="hint">原句:${esc(e.old)}</span><br><span class="hint">改成:${esc(e.new || '(删除)')}</span><br><span class="hint">理由:${esc(e.reason || '')}</span></div>`).join('')}</details>` : '';
   const fin = rvState.view.final;
   let head = '';
   if (fin) {

@@ -475,8 +475,21 @@ function programFindings(run, asset) {
 // ---------- 终审:逐处修改 ----------
 // 终审不再整章重写,而是列出一处一处的修改(原句 → 改成 + 理由);程序在二稿里定位原句、替换,拼出终稿,
 // 页面在整页全文上划线展示每一处改动,附中文和理由。
-const EDIT_FIELDS = { 章节: 'chapter', 类别: 'category', 原句: 'old', 改成: 'new', 理由: 'reason' };
-const EDIT_DELETE = /^[((]\s*删除\s*[))]$|^删除$/;
+const EDIT_FIELDS = {
+  章节: 'chapter', 位置: 'chapter', 类别: 'category', 类型: 'category',
+  原句: 'old', 原文: 'old', 修改前: 'old', 改前: 'old',
+  改成: 'new', 改为: 'new', 修改为: 'new', 修改后: 'new', 改后: 'new', 新句: 'new',
+  理由: 'reason', 原因: 'reason', 修改理由: 'reason', 说明: 'reason'
+};
+const EDIT_FIELD_RE = new RegExp('^\\s*[-*•]?\\s*\\**\\s*(' + Object.keys(EDIT_FIELDS).sort((a, b) => b.length - a.length).join('|') + ')\\s*\\**\\s*[:：]\\s*\\**\\s*(.*)$');
+const EDIT_DELETE = /^[(\uFF08\u3010\[]?\s*(删除|删掉|删去)[^)\uFF09\u3011\]]{0,8}[)\uFF09\u3011\]]?$/;
+// 模型常给原句加引号或书名号:成对的包裹符号去掉
+function unwrapQuote(s) {
+  const pairs = [['「', '」'], ['『', '』'], ['“', '”'], ['"', '"'], ["'", "'"], ['‘', '’'], ['《', '》'], ['`', '`']];
+  let x = String(s || '').trim().replace(/^\*+|\*+$/g, '').trim();
+  for (const [a, b] of pairs) if (x.length > 2 && x.startsWith(a) && x.endsWith(b) && !x.slice(1, -1).includes(b)) return x.slice(1, -1).trim();
+  return x;
+}
 
 function parseEdits(text) {
   const parts = String(text || '').replace(/^[*`\s]*(===\s*[A-Za-z]+\s*===)[*`\s]*$/gm, '$1').split(/^===\s*EDIT\s*===\s*$/m).slice(1);
@@ -485,10 +498,12 @@ function parseEdits(text) {
     const e = {};
     let cur = null;
     body.split('\n').forEach(line => {
-      const m = line.match(/^\s*[-*]?\s*\**\s*(章节|类别|原句|改成|理由)\s*\**\s*[:：]\s*(.*)$/);
-      if (m) { cur = EDIT_FIELDS[m[1]]; e[cur] = m[2]; } else if (cur) e[cur] += '\n' + line;
+      const m = line.match(EDIT_FIELD_RE);
+      if (m && !(cur && e[EDIT_FIELDS[m[1]]] != null)) { cur = EDIT_FIELDS[m[1]]; e[cur] = m[2]; } else if (cur) e[cur] += '\n' + line;
     });
     Object.keys(e).forEach(k => { e[k] = e[k].trim(); });
+    if (e.old) e.old = unwrapQuote(e.old);
+    if (e.new) e.new = unwrapQuote(e.new);
     if (e.new != null && EDIT_DELETE.test(e.new)) e.new = '';
     e.chapter = (String(e.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase();
     return e;
@@ -496,14 +511,43 @@ function parseEdits(text) {
 }
 
 // 在一章正文里找原句:先逐字找,找不到就放宽空白和引号再找
-function locate(text, old) {
+// 定位顺序:逐字 → 忽略空白和引号差异 → 原句里有省略号时按首尾两段 → 多句原句按首句和末句
+const ELLIPSIS = /\s*(?:…+|\.{3,}|⋯+|。{3,})\s*/;
+function compactIndex(text) {
+  const norm = ch => (/["“”„]/.test(ch) ? '"' : /['‘’]/.test(ch) ? "'" : ch);
+  let s = '';
+  const pos = [];
+  for (let i = 0; i < text.length; i++) { if (/\s/.test(text[i])) continue; s += norm(text[i]); pos.push(i); }
+  return { s, pos };
+}
+function locateLoose(text, old) {
   const i = text.indexOf(old);
   if (i >= 0) return { start: i, end: i + old.length };
-  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const pat = old.trim().split(/\s+/).map(w => esc(w).replace(/["“”]/g, '["“”]').replace(/['‘’]/g, "['‘’]")).join('\\s+');
-  if (!pat) return null;
-  const m = new RegExp(pat).exec(text);
-  return m ? { start: m.index, end: m.index + m[0].length } : null;
+  const T = compactIndex(text), O = compactIndex(old).s;
+  if (!O) return null;
+  const j = T.s.indexOf(O);
+  return j >= 0 ? { start: T.pos[j], end: T.pos[j + O.length - 1] + 1 } : null;
+}
+function locate(text, old) {
+  const o = String(old || '').trim();
+  const hit = locateLoose(text, o);
+  if (hit) return hit;
+  const span = (a, b) => {
+    const p = locateLoose(text, a);
+    if (!p) return null;
+    const q = locateLoose(text.slice(p.end), b);
+    if (!q) return null;
+    const end = p.end + q.end;
+    return end - p.start <= Math.max(o.length * 3, 200) ? { start: p.start, end } : null;
+  };
+  if (ELLIPSIS.test(o)) {
+    const parts = o.split(ELLIPSIS).filter(x => x.trim());
+    if (parts.length >= 2) { const r = span(parts[0], parts[parts.length - 1]); if (r) return r; }
+    if (parts.length === 1) return locateLoose(text, parts[0]);
+  }
+  const sents = o.match(/[^.!?。!?]+[.!?。!?]+["”’」]?|[^.!?。!?]+$/g) || [];
+  if (sents.length >= 2) return span(sents[0].trim(), sents[sents.length - 1].trim());
+  return null;
 }
 
 // 把修改套到稿子上:返回新稿和每处修改的结果(ok / 没找到 / 和前一处重叠);offset 记的是改前那一章里的位置
@@ -984,6 +1028,31 @@ function editsText(edits) {
   return ok.length ? ok.map(e => '- [' + e.chapter + '][' + (e.category || '') + '] ' + (e.reason || '') + '\n  原句:' + e.old + '\n  改成:' + (e.new || '(删除)')).join('\n') : '(没有修改)';
 }
 
+// 套修改;原句找不到的,把那几章原文发回给模型,让它逐字重抄原句,再整体套一次
+async function applyWithRepair(run, cfg, text, edits, label) {
+  let res = applyEdits(text, edits.map(e => ({ ...e })));
+  const lost = res.edits.filter(e => !e.ok && /没找到/.test(e.error || ''));
+  if (!lost.length) return res;
+  const chs = scriptChapters(text);
+  const ids = [...new Set(lost.map(e => e.chapter).filter(id => chs.some(c => c.id === id)))];
+  const show = ids.length ? chs.filter(c => ids.includes(c.id)) : chs;
+  const prompt = an().fillVars(readPrompt('final_fix_quotes.md'), {
+    failed: lost.map(e => '===EDIT===\n章节:' + (e.chapter || '') + '\n类别:' + (e.category || '') + '\n原句:' + e.old + '\n改成:' + (e.new || '(删除)') + '\n理由:' + (e.reason || '')).join('\n'),
+    chapters: show.map(c => c.tag + '\n' + c.text).join('\n\n')
+  });
+  try {
+    const r = await callLong(run, cfg, prompt, label + '·补对原句');
+    const fixed = parseEdits(r.content);
+    if (!fixed.length) return res;
+    const keepOk = res.edits.filter(e => e.ok || !/没找到/.test(e.error || '')).map(e => ({ chapter: e.chapter, category: e.category, old: e.old, new: e.new, reason: e.reason }));
+    const again = applyEdits(text, keepOk.concat(fixed));
+    // 补了以后仍然找不到的,保留模型最初给的原句,方便人看
+    const stillLost = lost.filter(l => !again.edits.some(e => e.ok && e.reason === l.reason && e.new === l.new));
+    again.edits = again.edits.filter(e => e.ok || !/没找到/.test(e.error || '')).concat(stillLost);
+    return again;
+  } catch (e) { return res; }
+}
+
 async function runFinal(runId) {
   const cfg = pl().loadConfig();
   let { run, asset } = loadRunAsset(runId);
@@ -1026,7 +1095,7 @@ async function runFinal(runId) {
     const r2 = await callLong(run, cfg, an().fillVars(readPrompt('final_revise.md'), { ...common, audit_report: s1.report, script: base }), '终审·修改');
     let edits1 = parseEdits(r2.content);
     if (r2.truncated && !/^===\s*END\s*===/m.test(r2.content)) edits1 = edits1.slice(0, -1);
-    const a1 = applyEdits(base, edits1);
+    const a1 = await applyWithRepair(run, cfg, base, edits1, '终审·修改');
     let text = a1.next, edits = a1.edits.filter(e => e.ok).map(e => ({ ...e })), failed = a1.edits.filter(e => !e.ok);
     // ③ 复审(没达标就再改一轮,再复审一次)
     const rechecks = [];
@@ -1048,7 +1117,7 @@ async function runFinal(runId) {
       let edits2 = parseEdits(s3.tail);
       if (r3.truncated && !/^===\s*END\s*===/m.test(s3.tail)) edits2 = edits2.slice(0, -1);
       if (!edits2.length) break;
-      const a2 = applyEdits(text, edits2);
+      const a2 = await applyWithRepair(run, cfg, text, edits2, '终审·复审' + round);
       rc.edits_applied = a2.edits.filter(e => e.ok);
       failed = failed.concat(a2.edits.filter(e => !e.ok).map(e => ({ ...e, round: '2' })));
       if (!rc.edits_applied.length) break;
