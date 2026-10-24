@@ -266,7 +266,7 @@ function buildView(run, asset) {
   return {
     run_id: run.id, status: run.status, target_language: lang,
     passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null },
-    audit: state.audit ? { ...state.audit, stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
+    audit: state.audit ? { ...state.audit, score: state.audit.score != null ? state.audit.score : reportScore(state.audit.report), stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
     versions: arr(state.versions).map(v => ({ key: v.key, label: v.label, at: v.at, issues: arr(v.issues), changed: arr(v.changed), truncated: !!v.truncated })),
     diffs: versionDiffs(state),
     translating: ((run.steps || {}).review_zh || {}).status === 'running',
@@ -567,6 +567,44 @@ function routeSections(report) {
   return out;
 }
 
+// 总分:先看清单里的 ===SCORE===;没有就从报告正文里找「总分:68 分 / 68/100」;再没有就把评分表的「实际得分」列加起来
+function reportScore(report, scoreBlock) {
+  const ok = n => (isFinite(n) && n >= 0 && n <= 100 ? Math.round(n * 10) / 10 : null);
+  const fromBlock = String(scoreBlock || '').match(/(\d+(?:\.\d+)?)/);
+  if (fromBlock && ok(+fromBlock[1]) != null) return ok(+fromBlock[1]);
+  const text = String(report || '').replace(/\*+/g, '');
+  const inReport = text.match(/===\s*SCORE\s*===\s*\n\s*(\d+(?:\.\d+)?)/);
+  if (inReport && ok(+inReport[1]) != null) return ok(+inReport[1]);
+  // 「总分」后面跟着数字,数字后面是「分」或「/100」;跳过权重合计的 100
+  const re = /总(?:分|得分|评分)[^\d\n]{0,15}?(\d{1,3}(?:\.\d+)?)\s*(分|\/\s*100|／\s*100)?/g;
+  let m, loose = null;
+  while ((m = re.exec(text)) !== null) {
+    const n = ok(+m[1]);
+    if (n == null) continue;
+    if (m[2] && n !== 100) return n;
+    if (loose == null && n !== 100) loose = n;
+  }
+  // 评分表:表头里有「实际得分」的那张,把这一列加起来(跳过「合计/总分」行)
+  const lines = text.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    if (!/^\s*\|/.test(lines[i]) || !/实际得分|得分/.test(lines[i])) continue;
+    const head = lines[i].split('|').map(s => s.trim());
+    const col = head.findIndex(h => /实际得分/.test(h)) >= 0 ? head.findIndex(h => /实际得分/.test(h)) : head.findIndex(h => /^得分$/.test(h));
+    if (col < 0) continue;
+    let sum = 0, rows = 0, total = null;
+    for (let j = i + 1; j < lines.length && /^\s*\|/.test(lines[j]); j++) {
+      const cells = lines[j].split('|').map(s => s.trim());
+      const v = parseFloat(cells[col]);
+      if (!isFinite(v)) continue;
+      if (/合计|总分|总计/.test(cells[1] || '')) { total = v; continue; }
+      sum += v; rows++;
+    }
+    if (total != null && ok(total) != null) return ok(total);
+    if (rows >= 3 && ok(sum) != null) return ok(sum);
+  }
+  return loose;
+}
+
 // 问题小节里某个字段的内容:「**问题类型:** xxx」同一行,或者标题下一行
 function auditField(section, name) {
   const lines = section.split('\n');
@@ -639,9 +677,11 @@ async function runReverseAudit(runId) {
       script: base
     });
     const r = await callLong(run, cfg, prompt, '二稿审稿');
-    const cut = r.content.search(/^===\s*SCORE\s*===\s*$/m);
-    const report = (cut >= 0 ? r.content.slice(0, cut) : r.content).trim();
-    const blocks = cut >= 0 ? parseBlocks(r.content.slice(cut), false) : {};
+    // 模型偶尔给清单的分隔行加粗或包进代码围栏:先把 **===SCORE===** / `===SCORE===` 还原成裸分隔行,再去掉围栏
+    const content = r.content.replace(/^[*`\s]*(===\s*[A-Za-z]+\s*===)[*`\s]*$/gm, '$1');
+    let cut = content.search(/^===\s*(SCORE|ISSUES|ROUTE)\s*===\s*$/m);
+    const report = (cut >= 0 ? content.slice(0, cut) : content).replace(/\n```[a-z]*\s*$/, '').trim();
+    const blocks = cut >= 0 ? parseBlocks(content.slice(cut).replace(/^```.*$/gm, ''), false) : {};
     const sections = auditSections(report);
     let issues = parseAuditIssues(blocks.ISSUES || '');
     // 清单没出来(截断或模型漏写):从报告的 P 小节里兜底取编号和严重程度
@@ -653,7 +693,7 @@ async function runReverseAudit(runId) {
       });
     }
     issues.forEach(x => { x.detail = sections[x.id] || ''; });
-    const score = Number((String(blocks.SCORE || '').match(/\d+(?:\.\d+)?/) || [])[0] || (report.match(/总分[^\d\n]{0,10}(\d+(?:\.\d+)?)/) || [])[1]) || null;
+    const score = reportScore(report, blocks.SCORE);
     const routeLine = String(blocks.ROUTE || '');
     const recommended = ((routeLine.match(/\b([ABC])\b/) || routeLine.match(/([ABC])/) || [])[1]) || '';
     const fresh = store.getRun(runId) || run;
@@ -873,4 +913,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

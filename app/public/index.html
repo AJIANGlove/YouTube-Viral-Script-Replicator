@@ -1822,7 +1822,7 @@ function rvPassLine(v) {
   const one = k => {
     const st = p[k];
     const txt = !st ? (k === 'final' && v.audit ? '等你在审稿报告里选要改的问题' : '没跑') : st.status === 'running' ? '<span class="rv-busy">进行中…</span>' : st.status === 'failed' ? '<span class="err-list">失败:' + esc(st.error || '') + '</span>'
-      : k === 'audit' ? '完成(' + (st.score != null ? st.score + ' 分,' : '') + (st.issues || 0) + ' 个问题)'
+      : k === 'audit' ? (sc => '完成(' + (sc != null ? sc + ' 分,' : '') + (st.issues || 0) + ' 个问题)')(v.audit && v.audit.score != null ? v.audit.score : st.score)
       : '完成(' + (st.issues || 0) + ' 个问题,改了 ' + (st.changed || 0) + ' 章)';
     const busy = st && st.status === 'running';
     // 有审稿报告时,终审从报告页发起(带上勾选的问题和路线)
@@ -1915,7 +1915,7 @@ function rvAuditHtml(v) {
       <b>${k}. ${RV_ROUTES[k]}</b>${au.recommended === k ? ' <span class="rv-chip red">AI 推荐</span>' : ''}</label>`).join('');
   const routeText = au.routes && au.routes[sel.route] ? `<details class="rv-md-box"><summary>报告里对「${sel.route}. ${RV_ROUTES[sel.route]}」的说明</summary><div class="rv-md">${rvMd(au.routes[sel.route])}</div></details>` : '';
   return `<div class="rv-bar v13">
-      <span>总分 <b>${au.score != null ? esc(au.score) : '—'}</b> / 100</span>
+      <span>总分 <b>${au.score != null ? esc(au.score) : '—'}</b> / 100${au.score == null ? '<span class="hint">(报告里没读出总分,请看下面完整报告第 2 部分)</span>' : ''}</span>
       <span>问题 <b>${au.issues.length}</b> 个(S/A 级 ${au.issues.filter(x => /^[SA]$/.test(x.severity)).length} 个)</span>
       <span>AI 推荐路线 <b>${au.recommended ? au.recommended + '. ' + RV_ROUTES[au.recommended] : '—'}</b>${au.route_reason ? '(' + esc(au.route_reason) + ')' : ''}</span>
     </div>
