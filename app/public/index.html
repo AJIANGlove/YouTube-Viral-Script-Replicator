@@ -202,6 +202,20 @@
   .rv-edit textarea, .rv-edit input, .rv-edit select { width: 100%; box-sizing: border-box; font: inherit; font-size: 12px; margin: 2px 0 6px; }
   .rv-quote { font-size: 12px; color: #374151; background: #f9fafb; border-left: 3px solid #d1d5db; padding: 4px 8px; margin: 4px 0; }
   .rv-busy { color: #2563eb; }
+  .rv-doc { border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 18px; background: #fff; }
+  .rv-doc-ch { margin-bottom: 18px; }
+  .rv-doc-tag { font-size: 11px; color: #9ca3af; margin-bottom: 4px; }
+  .rv-doc-text { white-space: pre-wrap; word-break: break-word; font-size: 15px; line-height: 1.9; }
+  .rv-rev { color: inherit; text-decoration: none; }
+  .rv-rev .rv-del { margin-right: 2px; }
+  .rv-n { color: #dc2626; font-weight: 600; margin-left: 1px; }
+  .rv-note { margin: 8px 0 0; padding: 6px 10px; border-left: 3px solid #fca5a5; background: #fffafa; font-size: 13px; }
+  .rv-note:target { background: #fef2f2; }
+  .rv-note-head { margin-bottom: 4px; } .rv-note-why { color: #374151; }
+  .rv-note-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .rv-del-plain { color: #991b1b; text-decoration: line-through; white-space: pre-wrap; }
+  .rv-ins-plain { color: #166534; white-space: pre-wrap; }
+  @media (max-width: 700px) { .rv-note-grid { grid-template-columns: 1fr; } }
   .rv-ai { border: 1px solid #e5e7eb; border-radius: 6px; margin: 6px 0; padding: 6px 10px; font-size: 13px; }
   .rv-ai.on { border-color: #fca5a5; background: #fff7f7; }
   .rv-ai-head { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; cursor: pointer; }
@@ -1774,10 +1788,10 @@ function rvDraw() {
   if (rvState.waitFinal && finalDone && diffs.some(d => d.key === 'd3')) { rvState.waitFinal = false; rvState.tab = 'd3'; }
   if (!rvState.tab || !validTab(rvState.tab)) rvState.tab = v.audit && (!finalDone || v.audit.at > ((v.passes || {}).final || {}).finished_at) ? 'audit' : diffs.length ? diffs[diffs.length - 1].key : 'current';
   const passLine = rvPassLine(v);
-  const diffTab = d => `<button class="rv-tab${rvState.tab === d.key ? ' on' : ''}" onclick="rvSetTab('${d.key}')">${esc(d.from)} → ${esc(d.to)}(改了 ${d.chapters.filter(c => c.changed).length} 章)</button>`;
+  const diffTab = d => `<button class="rv-tab${rvState.tab === d.key ? ' on' : ''}" onclick="rvSetTab('${d.key}')">${d.key === 'd3' && v.revision ? '终稿全文修订(改了 ' + v.revision.applied + ' 处)' : esc(d.from) + ' → ' + esc(d.to) + '(改了 ' + d.chapters.filter(c => c.changed).length + ' 章)'}</button>`;
   const auditTab = v.audit ? `<button class="rv-tab${rvState.tab === 'audit' ? ' on' : ''}" onclick="rvSetTab('audit')">二稿审稿报告${v.audit.score != null ? '(' + v.audit.score + ' 分)' : ''}</button>` : '';
   const tabs = `<div class="rv-tabs">${diffs.filter(d => d.key !== 'd3').map(diffTab).join('')}${auditTab}${diffs.filter(d => d.key === 'd3').map(diffTab).join('')}
-    <button class="rv-tab${rvState.tab === 'current' ? ' on' : ''}" onclick="rvSetTab('current')">当前稿逐章审</button></div>`;
+    <button class="rv-tab${rvState.tab === 'current' ? ' on' : ''}" onclick="rvSetTab('current')">逐章手动改(一般用不到)</button></div>`;
   if (rvState.tab === 'audit') {
     el.innerHTML = `<h2 class="v13">审稿:初稿 → 二稿 → 审稿报告 → 终稿</h2>
       ${passLine}${tabs}
@@ -1791,7 +1805,7 @@ function rvDraw() {
       ${passLine}${tabs}
       ${v.zh_error ? `<div class="err-list">中文对照翻译失败:${esc(v.zh_error)}</div>` : ''}
       ${rvState.err ? `<div class="err-list">${esc(rvState.err)}</div>` : ''}
-      ${rvDiffHtml(diffs.find(d => d.key === rvState.tab), v.translating)}`;
+      ${rvState.tab === 'd3' && v.revision ? rvRevisionHtml(v.revision, v.translating) : rvDiffHtml(diffs.find(d => d.key === rvState.tab), v.translating)}`;
     return;
   }
   el.innerHTML = `<h2 style="display:flex;justify-content:space-between;align-items:center"><span class="v13">审稿:当前稿逐章审</span>
@@ -1823,6 +1837,7 @@ function rvPassLine(v) {
     const st = p[k];
     const txt = !st ? (k === 'final' && v.audit ? '等你在审稿报告里选要改的问题' : '没跑') : st.status === 'running' ? '<span class="rv-busy">进行中…</span>' : st.status === 'failed' ? '<span class="err-list">失败:' + esc(st.error || '') + '</span>'
       : k === 'audit' ? (sc => '完成(' + (sc != null ? sc + ' 分,' : '') + (st.issues || 0) + ' 个问题)')(v.audit && v.audit.score != null ? v.audit.score : st.score)
+      : st.edits != null ? '完成(改了 ' + st.edits + ' 处' + (st.edits_failed ? ',' + st.edits_failed + ' 处没采用' : '') + ')'
       : '完成(' + (st.issues || 0) + ' 个问题,改了 ' + (st.changed || 0) + ' 章)';
     const busy = st && st.status === 'running';
     // 有审稿报告时,终审从报告页发起(带上勾选的问题和路线)
@@ -1954,6 +1969,54 @@ async function rvAuditFinal(skip) {
   rvState.waitFinal = true; // 终稿出来后自动切到「二稿 → 终稿」对比
   rvState.key = null;
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
+}
+
+// ---------- 终稿全文修订(v1.7) ----------
+// 整页全文:以二稿为底,改掉的原句划线、后面紧跟改成的文字,右上角是编号;每章下面列出这一章每处修改的中文和理由。
+const RV_CIRCLED = '①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳';
+const rvNum = n => RV_CIRCLED[n - 1] || '(' + n + ')';
+function rvRevisionHtml(rev, translating) {
+  const clean = rvState.revMode === 'clean';
+  const byN = Object.fromEntries(rev.edits.map(e => [e.n, e]));
+  const pending = translating ? '<span class="hint">中文翻译中…</span>' : '<span class="hint">(还没有中文,点上方「补齐中文对照」)</span>';
+  const zhLine = z => z ? esc(z) : pending;
+  const body = rev.chapters.map(c => {
+    const text = clean ? esc(c.final) : c.segs.map(s => {
+      if (s.t === 'text') return esc(s.text);
+      const e = byN[s.n];
+      return `<a class="rv-rev" href="#rv-note-${e.n}" title="${escAttr(e.reason || '')}"><span class="rv-del">${esc(e.old)}</span>${e.new ? '<span class="rv-ins">' + esc(e.new) + '</span>' : ''}<sup class="rv-n">${rvNum(e.n)}</sup></a>`;
+    }).join('');
+    const notes = clean ? '' : c.edits.map(n => byN[n]).map(e => `<div class="rv-note" id="rv-note-${e.n}">
+        <div class="rv-note-head"><b>${rvNum(e.n)}</b> ${e.category ? '<span class="rv-chip red">' + esc(e.category) + '</span>' : ''} <span class="rv-note-why">${esc(e.reason || '')}</span></div>
+        <div class="rv-note-grid">
+          <div><div class="rv-col-title">原句</div><div class="rv-del-plain">${esc(e.old)}</div><div class="rv-zh">${zhLine(e.zh_old)}</div></div>
+          <div><div class="rv-col-title">改成</div>${e.new ? `<div class="rv-ins-plain">${esc(e.new)}</div><div class="rv-zh">${zhLine(e.zh_new)}</div>` : '<div class="hint">(删掉这句)</div>'}</div>
+        </div></div>`).join('');
+    return `<div class="rv-doc-ch"><div class="rv-doc-tag">${esc(c.id)} · ${esc(c.range)} · ${esc(c.fn)}${c.edits.length && !clean ? ' · 改了 ' + c.edits.length + ' 处' : ''}</div>
+      <div class="rv-doc-text">${text}</div>
+      ${rvState.revZh ? `<div class="rv-zh">${c.zh_final ? esc(c.zh_final) : pending}</div>` : ''}
+      ${notes}</div>`;
+  }).join('');
+  const failed = rev.failed.length && !clean ? `<details class="rv-md-box"><summary>${rev.failed.length} 处修改没有采用(原句在二稿里找不到或互相重叠)</summary>${rev.failed.map(e => `<div class="rv-issue"><b>${rvNum(e.n)} ${esc(e.chapter || '')} ${esc(e.category || '')}</b> ${esc(e.error || '')}<br><span class="hint">原句:${esc(e.old)}</span><br><span class="hint">改成:${esc(e.new || '(删除)')}</span><br><span class="hint">理由:${esc(e.reason || '')}</span></div>`).join('')}</details>` : '';
+  return `<div class="rv-ops v13">
+      <button class="rv-tab${clean ? '' : ' on'}" onclick="rvState.revMode='marked';rvDraw()">显示修改痕迹</button>
+      <button class="rv-tab${clean ? ' on' : ''}" onclick="rvState.revMode='clean';rvDraw()">只看终稿</button>
+      <label class="hint"><input type="checkbox" ${rvState.revZh ? 'checked' : ''} onchange="rvState.revZh=this.checked;rvDraw()"> 每章附整章中文</label>
+      <button class="an-btn v13" onclick="rvCopyFinal(this)">复制终稿纯净版</button>
+    </div>
+    <div class="hint v13">以${esc(rev.from)}为底,终审改了 ${rev.applied} 处:<span class="rv-del">划线</span>是删掉的原句,<span class="rv-ins">绿色</span>是改成的文字,右上角编号对应每章下面的说明(原句中文、改成的文字和中文、修改理由)。</div>
+    ${failed}
+    <div class="rv-doc">${body}</div>`;
+}
+
+async function rvCopyFinal(btn) {
+  const rev = rvState.view && rvState.view.revision;
+  if (!rev) return;
+  const text = cleanScriptText(rev.final_text);
+  let ok = false;
+  if (navigator.clipboard && window.isSecureContext) { try { await navigator.clipboard.writeText(text); ok = true; } catch (e) { ok = legacyCopy(text); } } else ok = legacyCopy(text);
+  btn.textContent = ok ? '已复制 ✓' : '复制失败';
+  setTimeout(() => { btn.textContent = '复制终稿纯净版'; }, 1500);
 }
 
 // 逐词对比:按空白切词做 LCS,改前标删除、改后标新增
