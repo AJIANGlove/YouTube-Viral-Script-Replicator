@@ -294,7 +294,7 @@ function buildView(run, asset) {
   return {
     run_id: run.id, status: run.status, target_language: lang,
     passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null },
-    audit: state.audit ? { ...state.audit, score: state.audit.score != null ? state.audit.score : reportScore(state.audit.report), stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
+    audit: state.audit ? { ...state.audit, issues: arr(state.audit.issues).map(x => ({ ...x, zh_problem: hasForeign(x.problem) ? zhOf(state, x.problem) : '', zh_direction: hasForeign(x.direction) ? zhOf(state, x.direction) : '', need_zh: hasForeign(x.problem) || hasForeign(x.direction) })), score: state.audit.score != null ? state.audit.score : reportScore(state.audit.report), stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
     versions: arr(state.versions).map(v => ({ key: v.key, label: v.label, at: v.at, issues: arr(v.issues), changed: arr(v.changed), truncated: !!v.truncated })),
     diffs: versionDiffs(state),
     revision: revisionView(state),
@@ -340,6 +340,9 @@ function needsZh(text) {
   return other > han;
 }
 
+// 中文为主但夹着韩文、日文假名或英文单词的句子(审稿问题、修改方向),也要整句翻成中文
+function hasForeign(text) { return /[가-힯぀-ヿ]|[A-Za-z]{4,}/.test(String(text || '')); }
+
 // ===KEY=== 分段文本 → { KEY: 内容 };没有收尾的最后一段(输出被截断)丢掉
 function parseBlocks(text, truncated) {
   const out = {};
@@ -362,7 +365,7 @@ async function rawCall(run, cfg, prompt, label) {
 
 async function translateTexts(run, cfg, texts, label) {
   const out = {};
-  const items = [...new Set(texts.filter(t => t && needsZh(t)))];
+  const items = [...new Set(texts.filter(t => t && (needsZh(t) || hasForeign(t))))];
   let batch = [], size = 0;
   const flush = async () => {
     if (!batch.length) return;
@@ -401,6 +404,8 @@ function textsToTranslate(run) {
     scriptChapters(vs[i].text).forEach(c => { if (before[c.id] !== c.text) texts.push(c.text, before[c.id] || ''); });
   }
   vs.forEach(v => arr(v.edits).forEach(e => texts.push(e.old, e.new || '')));
+  // 二稿审稿报告的问题和修改方向
+  arr(((run.review || {}).audit || {}).issues).forEach(x => { if (hasForeign(x.problem)) texts.push(x.problem); if (hasForeign(x.direction)) texts.push(x.direction); });
   const have = ((run.review || {}).zh || {}).byHash || {};
   return texts.filter(t => t && !have[hash(t)]);
 }

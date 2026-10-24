@@ -219,6 +219,9 @@
   .rv-gain { display: inline-block; padding: 0 7px; border-radius: 10px; background: #eff6ff; color: #1d4ed8; font-size: 12px; font-weight: 600; }
   .rv-est { margin: 6px 0; padding: 6px 10px; border-radius: 6px; background: #eff6ff; font-size: 13px; }
   .rv-est b { color: #1d4ed8; font-size: 15px; }
+  .rv-ai-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .rv-ai-zh { color: #374151; border-left: 2px solid #e5e7eb; padding-left: 10px; }
+  @media (max-width: 700px) { .rv-ai-cols { grid-template-columns: 1fr; } .rv-ai-zh { border-left: 0; padding-left: 0; border-top: 1px dashed #e5e7eb; padding-top: 4px; } }
   .rv-ai { border: 1px solid #e5e7eb; border-radius: 6px; margin: 6px 0; padding: 6px 10px; font-size: 13px; }
   .rv-ai.on { border-color: #fca5a5; background: #fff7f7; }
   .rv-ai-head { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; cursor: pointer; }
@@ -1797,7 +1800,8 @@ function rvDraw() {
   const tabs = `<div class="rv-tabs">${diffs.filter(d => d.key !== 'd3').map(diffTab).join('')}${auditTab}${diffs.filter(d => d.key === 'd3').map(diffTab).join('')}
     </div>`;
   if (rvState.tab === 'audit') {
-    el.innerHTML = `<h2 class="v13">审稿:初稿 → 二稿 → 审稿报告 → 终稿</h2>
+    el.innerHTML = `<h2 style="display:flex;justify-content:space-between;align-items:center"><span class="v13">审稿:初稿 → 二稿 → 审稿报告 → 终稿</span>
+      <span><button class="an-btn v13" onclick="rvTranslate()" ${v.translating ? 'disabled' : ''}>${v.translating ? '中文对照翻译中…' : '补齐中文对照'}</button></span></h2>
       ${passLine}${tabs}
       ${rvState.err ? `<div class="err-list">${esc(rvState.err)}</div>` : ''}
       ${rvAuditHtml(v)}`;
@@ -1963,7 +1967,8 @@ function rvAuditHtml(v) {
         <b>${esc(x.id)}</b> <span class="rv-chip ${RV_SEV_CLS[x.severity] || ''}">${esc(x.severity)} 级</span> <span class="rv-chip ${x.priority === 'P0' ? 'red' : x.priority === 'P1' ? 'yellow' : 'green'}">${esc(x.priority)}</span>
         <span class="rv-gain" title="改好这一处,总分预计提高">+${G.gains[x.id]} 分</span>
         <span class="hint">${esc(x.chapter)} · ${esc(x.type)}</span></label>
-      <div class="rv-ai-body">${esc(x.problem)}${x.direction ? `<br><span class="hint">修改方向:${esc(x.direction)}</span>` : ''}
+      <div class="rv-ai-body"><div class="rv-ai-cols"><div>${esc(x.problem)}${x.direction ? `<br><span class="hint">修改方向:${esc(x.direction)}</span>` : ''}</div>
+        <div class="rv-ai-zh">${!x.need_zh ? '<span class="hint">(已是中文)</span>' : (x.zh_problem || x.zh_direction || !x.need_zh) ? `${esc(x.zh_problem || x.problem)}${x.direction ? `<br><span class="hint">修改方向:${esc(x.zh_direction || x.direction)}</span>` : ''}` : `<span class="hint">${v.translating ? '中文翻译中…' : '还没有中文,点上方「补齐中文对照」'}</span>`}</div></div>
         ${x.detail ? `<div><a href="javascript:void 0" onclick="rvAuditOpen('${escAttr(x.id)}')">${sel.open[x.id] ? '收起详情' : '看详情(原文位置、为什么不好、示范修改)'}</a></div>${sel.open[x.id] ? `<div class="rv-md rv-ai-detail">${rvMd(x.detail)}</div>` : ''}` : ''}</div>
     </div>`).join('');
   const routes = ['A', 'B', 'C'].map(k => `<label class="rv-route${sel.route === k ? ' on' : ''}"><input type="radio" name="rv-route" ${sel.route === k ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="rvAuditRoute('${k}')">
