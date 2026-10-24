@@ -94,9 +94,6 @@ function writeScript(run, text) {
   if (run.script_v1) run.script_v1 = text; else run.final_script = text;
   // V1 文案已变:这一版的扫描与简介缓存过期
   ['compliance_scans', 'opening_scans', 'descriptions'].forEach(k => { if (run[k] && run[k].v1) run[k].v1.stale = true; });
-  // 稿件检查的结论基于旧稿:标过期(详情页沿用既有提示「稿子已改,建议重新检查一次」)。
-  // 留存检查不标:它跑在 Step1 蓝图上(carries_peaks 结构),单章重写不动蓝图
-  if (run.script_check) run.script_check.stale_after_adopt = true;
 }
 
 // ---------- 事实 ----------
@@ -185,6 +182,34 @@ function versionDiffs(state) {
   return out;
 }
 
+// 终稿全文修订视图:以二稿为底,每章切成「原文 / 修改」片段,修改处附中文和理由
+function revisionView(state) {
+  const vs = arr(state.versions);
+  const d3 = vs.find(v => v.key === 'd3');
+  const d2 = vs.find(v => v.key === 'd2') || vs.find(v => v.key === 'd1');
+  if (!d3 || !arr(d3.edits).length || !d2) return null;
+  const edits = d3.edits.map(e => ({ ...e, zh_old: zhOf(state, e.old), zh_new: e.new ? zhOf(state, e.new) : '' }));
+  const finals = Object.fromEntries(scriptChapters(d3.text).map(c => [c.id, c.text]));
+  const chapters = scriptChapters(d3.base_text || d2.text).map(c => {
+    const list = edits.filter(e => e.ok && e.chapter === c.id).sort((a, b) => a.start - b.start);
+    const segs = [];
+    let at = 0;
+    list.forEach(e => {
+      if (e.start > at) segs.push({ t: 'text', text: c.text.slice(at, e.start) });
+      segs.push({ t: 'edit', n: e.n });
+      at = e.end;
+    });
+    if (at < c.text.length) segs.push({ t: 'text', text: c.text.slice(at) });
+    const fin = finals[c.id] != null ? finals[c.id] : c.text;
+    return { id: c.id, fn: c.fn, range: c.range, segs, edits: list.map(e => e.n), final: fin, zh_final: zhOf(state, fin) };
+  });
+  return {
+    from: d2.label, at: d3.at, chapters, edits,
+    applied: edits.filter(e => e.ok).length, failed: edits.filter(e => !e.ok),
+    final_text: d3.text
+  };
+}
+
 // ---------- 视图 ----------
 function buildView(run, asset) {
   const script = currentScript(run);
@@ -269,9 +294,12 @@ function buildView(run, asset) {
   return {
     run_id: run.id, status: run.status, target_language: lang,
     passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null },
-    audit: state.audit ? { ...state.audit, stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
+    audit: state.audit ? { ...state.audit, score: state.audit.score != null ? state.audit.score : reportScore(state.audit.report), stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
     versions: arr(state.versions).map(v => ({ key: v.key, label: v.label, at: v.at, issues: arr(v.issues), changed: arr(v.changed), truncated: !!v.truncated })),
     diffs: versionDiffs(state),
+    revision: revisionView(state),
+    final: state.final || null,
+    tracks: trackList(), track_default: state.final_track || autoTrack(run, asset),
     translating: ((run.steps || {}).review_zh || {}).status === 'running',
     zh_error: ((run.steps || {}).review_zh || {}).error || '',
     rows, dropped,
@@ -372,6 +400,7 @@ function textsToTranslate(run) {
     const before = Object.fromEntries(scriptChapters(vs[i - 1].text).map(c => [c.id, c.text]));
     scriptChapters(vs[i].text).forEach(c => { if (before[c.id] !== c.text) texts.push(c.text, before[c.id] || ''); });
   }
+  vs.forEach(v => arr(v.edits).forEach(e => texts.push(e.old, e.new || '')));
   const have = ((run.review || {}).zh || {}).byHash || {};
   return texts.filter(t => t && !have[hash(t)]);
 }
@@ -403,7 +432,7 @@ async function translateRun(runId) {
 // 版本存在 review.versions(初稿 / 二稿 / 终稿),页面按相邻两版逐章对比。
 const PASSES = {
   check: { label: '二稿', step: 'draft_check', prompt: 'draft_check.md', title: '初稿检查' },
-  final: { label: '终稿', step: 'final_review', prompt: 'final_review.md', title: '终审' }
+  final: { label: '终稿', step: 'final_review', prompt: 'final_audit.md', title: '终审' }
 };
 const ISSUE_RE = /^\s*[-*•]\s*\[(CH\d+|全篇|全片|ALL)\]\s*\[([^\]]+)\]\s*(.+)$/i;
 
@@ -443,6 +472,80 @@ function programFindings(run, asset) {
   return out.join('\n') || '(无)';
 }
 
+// ---------- 终审:逐处修改 ----------
+// 终审不再整章重写,而是列出一处一处的修改(原句 → 改成 + 理由);程序在二稿里定位原句、替换,拼出终稿,
+// 页面在整页全文上划线展示每一处改动,附中文和理由。
+const EDIT_FIELDS = { 章节: 'chapter', 类别: 'category', 原句: 'old', 改成: 'new', 理由: 'reason' };
+const EDIT_DELETE = /^[((]\s*删除\s*[))]$|^删除$/;
+
+function parseEdits(text) {
+  const parts = String(text || '').replace(/^[*`\s]*(===\s*[A-Za-z]+\s*===)[*`\s]*$/gm, '$1').split(/^===\s*EDIT\s*===\s*$/m).slice(1);
+  return parts.map(part => {
+    const body = part.split(/^===\s*END\s*===\s*$/m)[0];
+    const e = {};
+    let cur = null;
+    body.split('\n').forEach(line => {
+      const m = line.match(/^\s*[-*]?\s*\**\s*(章节|类别|原句|改成|理由)\s*\**\s*[:：]\s*(.*)$/);
+      if (m) { cur = EDIT_FIELDS[m[1]]; e[cur] = m[2]; } else if (cur) e[cur] += '\n' + line;
+    });
+    Object.keys(e).forEach(k => { e[k] = e[k].trim(); });
+    if (e.new != null && EDIT_DELETE.test(e.new)) e.new = '';
+    e.chapter = (String(e.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase();
+    return e;
+  }).filter(e => e.old);
+}
+
+// 在一章正文里找原句:先逐字找,找不到就放宽空白和引号再找
+function locate(text, old) {
+  const i = text.indexOf(old);
+  if (i >= 0) return { start: i, end: i + old.length };
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pat = old.trim().split(/\s+/).map(w => esc(w).replace(/["“”]/g, '["“”]').replace(/['‘’]/g, "['‘’]")).join('\\s+');
+  if (!pat) return null;
+  const m = new RegExp(pat).exec(text);
+  return m ? { start: m.index, end: m.index + m[0].length } : null;
+}
+
+// 把修改套到稿子上:返回新稿和每处修改的结果(ok / 没找到 / 和前一处重叠);offset 记的是改前那一章里的位置
+function applyEdits(base, edits) {
+  const chs = scriptChapters(base);
+  const byCh = {};
+  edits.forEach((e, idx) => {
+    e.n = idx + 1;
+    let ch = chs.find(c => c.id === e.chapter);
+    let pos = ch ? locate(ch.text, e.old) : null;
+    if (!pos) { // 章节写错了:到别的章里找
+      for (const c of chs) { const p = locate(c.text, e.old); if (p) { ch = c; pos = p; break; } }
+    }
+    if (!pos) { e.ok = false; e.error = '在二稿里没找到这句原句'; return; }
+    if (!e.new) { // 删除:连带吃掉一个空格或一个空行,免得留下双空格、空段
+      const tx = ch.text;
+      if (tx[pos.end] === ' ') pos.end++;
+      else if ((pos.start === 0 || tx[pos.start - 1] === '\n') && /^\n{1,2}/.test(tx.slice(pos.end))) pos.end += tx.slice(pos.end).match(/^\n{1,2}/)[0].length;
+      else if (tx[pos.start - 1] === ' ') pos.start--;
+    }
+    e.chapter = ch.id; e.start = pos.start; e.end = pos.end; e.old = ch.text.slice(pos.start, pos.end);
+    if (e.new === e.old) { e.ok = false; e.error = '改前改后一样'; return; }
+    (byCh[ch.id] = byCh[ch.id] || []).push(e);
+  });
+  let next = base;
+  for (const ch of chs) {
+    const list = (byCh[ch.id] || []).sort((a, b) => a.start - b.start);
+    let out = '', at = 0;
+    list.forEach(e => {
+      if (e.start < at) { e.ok = false; e.error = '和前一处修改重叠,没有采用'; return; }
+      out += ch.text.slice(at, e.start) + (e.new || '');
+      at = e.end; e.ok = true;
+    });
+    if (!list.some(e => e.ok)) continue;
+    out += ch.text.slice(at);
+    const tryNext = replaceChapter(next, ch.id, out);
+    if (tryNext && !checks.chapterStructureError(tryNext)) next = tryNext;
+    else list.forEach(e => { if (e.ok) { e.ok = false; e.error = '改完章节结构不对,这一章没有采用'; } });
+  }
+  return { next, edits };
+}
+
 async function runPass(runId, kind) {
   const P = PASSES[kind];
   const cfg = pl().loadConfig();
@@ -477,10 +580,18 @@ async function runPass(runId, kind) {
     });
     const r = await rawCall(run, cfg, prompt, P.title);
     const blocks = parseBlocks(r.content, r.stopReason === 'max_tokens');
-    const issues = parseIssues(blocks.ISSUES || r.content.split(/^===\s*CH\d+/m)[0]);
+    let issues = parseIssues(blocks.ISSUES || r.content.split(/^===\s*CH\d+/m)[0]);
     let next = base;
     const changed = [];
-    for (const ch of scriptChapters(base)) {
+    // 终审:逐处修改(截断时最后一处可能不完整,丢掉)
+    let edits = kind === 'final' ? parseEdits(r.content) : [];
+    if (edits.length && r.stopReason === 'max_tokens' && !/^===\s*END\s*===/m.test(r.content)) edits = edits.slice(0, -1);
+    if (edits.length) {
+      next = applyEdits(base, edits).next;
+      scriptChapters(next).forEach(c => { const b = scriptChapters(base).find(x => x.id === c.id); if (b && b.text !== c.text) changed.push(c.id); });
+      issues = edits.map(e => ({ chapter: e.chapter || '全篇', category: e.category || '', problem: e.reason || '', quote: e.old, fix: e.new || '(删除)', edit: e.n }));
+    }
+    for (const ch of edits.length ? [] : scriptChapters(base)) {
       const t = blocks[ch.id];
       if (!t) continue;
       const clean = t.replace(/^\s*\[CH\d+[^\]]*\]\s*\n?/, '').trim(); // 模型偶尔把标签行带进来
@@ -494,13 +605,13 @@ async function runPass(runId, kind) {
     const versions = arr(fresh.review.versions).length ? fresh.review.versions : [{ key: 'd1', label: '初稿', at: new Date().toISOString(), text: base, issues: [] }];
     // 重跑同一遍:替换掉旧的同名版本及其后的版本
     const keep = versions.filter(v => v.key === 'd1' || (kind === 'final' && v.key === 'd2'));
-    keep.push({ key: kind === 'check' ? 'd2' : 'd3', label: P.label, at: new Date().toISOString(), text: next, issues, changed, truncated: r.stopReason === 'max_tokens' });
+    keep.push({ key: kind === 'check' ? 'd2' : 'd3', label: P.label, at: new Date().toISOString(), text: next, issues, changed, truncated: r.stopReason === 'max_tokens', ...(edits.length ? { edits, base_text: base } : {}) });
     fresh.review.versions = keep;
     if (next !== start) writeScript(fresh, next);
     if (changed.length) {
       changed.forEach(id => { const st = chapterState(fresh, id); st.status = '待审'; st.history = [...arr(st.history), { at: new Date().toISOString(), note: P.title, by: kind, text: scriptChapters(base).find(c => c.id === id).text }].slice(-HISTORY_MAX); });
     }
-    fresh.steps = { ...(fresh.steps || {}), [P.step]: { status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString(), issues: issues.length, changed: changed.length } };
+    fresh.steps = { ...(fresh.steps || {}), [P.step]: { status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString(), issues: issues.length, changed: changed.length, ...(edits.length ? { edits: edits.filter(e => e.ok).length, edits_failed: edits.filter(e => !e.ok).length } : {}) } };
     if (kind === 'check') { delete fresh.steps.final_review; delete fresh.steps.reverse_audit; if (fresh.review.audit) fresh.review.audit = null; }
     if (kind === 'final' && fresh.review.audit) fresh.review.audit.used_selection = (fresh.review.audit.selection || null);
     if (run.attempts) fresh.attempts = run.attempts;
@@ -570,6 +681,44 @@ function routeSections(report) {
   return out;
 }
 
+// 总分:先看清单里的 ===SCORE===;没有就从报告正文里找「总分:68 分 / 68/100」;再没有就把评分表的「实际得分」列加起来
+function reportScore(report, scoreBlock) {
+  const ok = n => (isFinite(n) && n >= 0 && n <= 100 ? Math.round(n * 10) / 10 : null);
+  const fromBlock = String(scoreBlock || '').match(/(\d+(?:\.\d+)?)/);
+  if (fromBlock && ok(+fromBlock[1]) != null) return ok(+fromBlock[1]);
+  const text = String(report || '').replace(/\*+/g, '');
+  const inReport = text.match(/===\s*SCORE\s*===\s*\n\s*(\d+(?:\.\d+)?)/);
+  if (inReport && ok(+inReport[1]) != null) return ok(+inReport[1]);
+  // 「总分」后面跟着数字,数字后面是「分」或「/100」;跳过权重合计的 100
+  const re = /总(?:分|得分|评分)[^\d\n]{0,15}?(\d{1,3}(?:\.\d+)?)\s*(分|\/\s*100|／\s*100)?/g;
+  let m, loose = null;
+  while ((m = re.exec(text)) !== null) {
+    const n = ok(+m[1]);
+    if (n == null) continue;
+    if (m[2] && n !== 100) return n;
+    if (loose == null && n !== 100) loose = n;
+  }
+  // 评分表:表头里有「实际得分」的那张,把这一列加起来(跳过「合计/总分」行)
+  const lines = text.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    if (!/^\s*\|/.test(lines[i]) || !/实际得分|得分/.test(lines[i])) continue;
+    const head = lines[i].split('|').map(s => s.trim());
+    const col = head.findIndex(h => /实际得分/.test(h)) >= 0 ? head.findIndex(h => /实际得分/.test(h)) : head.findIndex(h => /^得分$/.test(h));
+    if (col < 0) continue;
+    let sum = 0, rows = 0, total = null;
+    for (let j = i + 1; j < lines.length && /^\s*\|/.test(lines[j]); j++) {
+      const cells = lines[j].split('|').map(s => s.trim());
+      const v = parseFloat(cells[col]);
+      if (!isFinite(v)) continue;
+      if (/合计|总分|总计/.test(cells[1] || '')) { total = v; continue; }
+      sum += v; rows++;
+    }
+    if (total != null && ok(total) != null) return ok(total);
+    if (rows >= 3 && ok(sum) != null) return ok(sum);
+  }
+  return loose;
+}
+
 // 问题小节里某个字段的内容:「**问题类型:** xxx」同一行,或者标题下一行
 function auditField(section, name) {
   const lines = section.split('\n');
@@ -609,7 +758,7 @@ async function callLong(run, cfg, prompt, label) {
     text += r.content;
     secs += r.secs || 0;
     if (r.stopReason !== 'max_tokens') return { content: text, secs, truncated: false };
-    messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: '输出被截断了。从你上一条最后一个字接着往下写,不要重复已经写过的内容,不要重新开头,最后照样输出 ===SCORE=== 那段清单。' }];
+    messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: '输出被截断了。从你上一条最后一个字接着往下写,不要重复已经写过的内容,不要重新开头,最后照样输出结尾那段 === 开头的给程序读的清单。' }];
   }
   return { content: text, secs, truncated: true };
 }
@@ -642,9 +791,11 @@ async function runReverseAudit(runId) {
       script: base
     });
     const r = await callLong(run, cfg, prompt, '二稿审稿');
-    const cut = r.content.search(/^===\s*SCORE\s*===\s*$/m);
-    const report = (cut >= 0 ? r.content.slice(0, cut) : r.content).trim();
-    const blocks = cut >= 0 ? parseBlocks(r.content.slice(cut), false) : {};
+    // 模型偶尔给清单的分隔行加粗或包进代码围栏:先把 **===SCORE===** / `===SCORE===` 还原成裸分隔行,再去掉围栏
+    const content = r.content.replace(/^[*`\s]*(===\s*[A-Za-z]+\s*===)[*`\s]*$/gm, '$1');
+    let cut = content.search(/^===\s*(SCORE|ISSUES|ROUTE)\s*===\s*$/m);
+    const report = (cut >= 0 ? content.slice(0, cut) : content).replace(/\n```[a-z]*\s*$/, '').trim();
+    const blocks = cut >= 0 ? parseBlocks(content.slice(cut).replace(/^```.*$/gm, ''), false) : {};
     const sections = auditSections(report);
     let issues = parseAuditIssues(blocks.ISSUES || '');
     // 清单没出来(截断或模型漏写):从报告的 P 小节里兜底取编号和严重程度
@@ -656,7 +807,7 @@ async function runReverseAudit(runId) {
       });
     }
     issues.forEach(x => { x.detail = sections[x.id] || ''; });
-    const score = Number((String(blocks.SCORE || '').match(/\d+(?:\.\d+)?/) || [])[0] || (report.match(/总分[^\d\n]{0,10}(\d+(?:\.\d+)?)/) || [])[1]) || null;
+    const score = reportScore(report, blocks.SCORE);
     const routeLine = String(blocks.ROUTE || '');
     const recommended = ((routeLine.match(/\b([ABC])\b/) || routeLine.match(/([ABC])/) || [])[1]) || '';
     const fresh = store.getRun(runId) || run;
@@ -700,44 +851,258 @@ function selectedFixes(run) {
 function startFinal(runId, body) {
   const run = store.getRun(runId);
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
-  if (passBusy(runId)) throw Object.assign(new Error('有审稿正在跑,等它跑完再终审'), { status: 409 });
   if (((run.steps || {}).final_review || {}).status === 'running') throw Object.assign(new Error('终审正在进行'), { status: 400 });
   const au = (run.review || {}).audit;
   if (au) {
     const ids = arr(body.ids).map(String).filter(id => arr(au.issues).some(x => x.id === id));
-    au.selection = { ids, route: ROUTE_NAMES[body.route] ? body.route : '', note: String(body.note || '').trim().slice(0, 2000), at: new Date().toISOString() };
-    store.saveRun(run);
+    au.selection = { ids, route: ROUTE_NAMES[body.route] ? body.route : '', note: String(body.note || '').trim().slice(0, 2000), track: TRACK_KEYS.includes(body.track) ? body.track : '', at: new Date().toISOString() };
   }
+  run.review = run.review || {};
+  if (TRACK_KEYS.includes(body.track)) run.review.final_track = body.track;
+  store.saveRun(run);
   runPasses(runId, 'final').catch(() => {});
   return { ok: true };
 }
 
-// 初稿检查 → 二稿审稿报告 → 停下等人选;人选完再终审 → 翻译。某一遍失败不影响已有稿子,页面上可以单独重跑
-// 并发守卫:同一任务同一时刻只许一个 pass 在跑(连点重跑/终审会并发烧 LLM 并竞争写 run 文件)。
-// 用进程内集合而不是 run 文件里的 running 状态:进程重启后集合自然清空,崩溃留下的假 running 不会挡续跑
-const passRunning = new Set();
-function passBusy(runId) { return passRunning.has(runId); }
-async function runPasses(runId, from) {
-  if (passRunning.has(runId)) throw Object.assign(new Error('有审稿正在跑,等它跑完再重跑'), { status: 409 });
-  passRunning.add(runId);
-  try {
-    const order = from === 'final' ? ['final'] : from === 'audit' ? ['audit'] : ['check', 'audit'];
-    for (const k of order) {
-      try { if (k === 'audit') await runReverseAudit(runId); else await runPass(runId, k); } catch (e) { break; }
+// ---------- 终审(v1.8):独立审稿 → 按诊断修改 → 独立复审,按赛道换提示词 ----------
+// 三步分开调用,避免模型一边写一边替自己的问题辩护:
+//   ① 审稿(final_audit.md):七维评分、P0–P3 问题清单、结构方案、待核实事实、修改决策,不改稿;
+//   ② 修改(final_revise.md):按审稿报告 + 人工勾选的二稿审稿问题,列出一处一处的修改,程序套到二稿上;
+//   ③ 复审(final_recheck.md):把改后的全文当新稿再审,给修改前后评分对照;没达标就再给一轮修改,套上后再复审一次(只出报告)。
+// 赛道配置在 prompts/final_tracks/*.md:不同赛道替换「维度4」的审查内容、频道定位、留存重点。
+const TRACK_KEYS = ['econ', 'history', 'science', 'pov', 'general'];
+const FINAL_RECHECK_ROUNDS = 2;
+
+function loadTrack(key) {
+  const k = TRACK_KEYS.includes(key) ? key : 'general';
+  const b = parseBlocks(readPrompt('final_tracks/' + k + '.md'));
+  return {
+    key: k, name: b.NAME || k, match: b.MATCH || '', audience: b.AUDIENCE || '', position: b.POSITION || '',
+    dim4_name: b.DIM4_NAME || '事实与逻辑', dim4_role: b.DIM4_ROLE || '事实审稿人', dim4_view: b.DIM4_VIEW || '',
+    mechanism: b.MECHANISM || '', dim4: b.DIM4 || '', retention: b.RETENTION || '', dim4_recheck: b.DIM4_RECHECK || ''
+  };
+}
+function trackList() { return TRACK_KEYS.map(k => { const tr = loadTrack(k); return { key: k, name: tr.name }; }); }
+
+// 默认赛道:写前分析匹配到的赛道证据卡;没有就按题目和资产重新匹配一次
+function autoTrack(run, asset) {
+  let name = run.track_card_name || '';
+  if (!name) { try { const c = an().pickTrackCard(run.track, run.topic, asset); name = c ? c.name : ''; } catch (e) {} }
+  return TRACK_KEYS.find(k => { const m = loadTrack(k).match; return m && m === name; }) || 'general';
+}
+
+function finalDims(tr) {
+  return ['框架与结构', '核心矛盾', '信息递进', tr.dim4_name, '留存与承诺兑现', '目标国家母语口播', '结尾完整性与整体一致性'];
+}
+
+// ===SCORES=== 段:一行一个「维度: 分数」;对不上名字的按顺序取
+function parseScores(block, dims) {
+  const lines = String(block || '').split('\n').map(l => l.replace(/\*+/g, '').trim()).filter(l => /\d/.test(l));
+  const out = {};
+  dims.forEach((d, i) => {
+    const line = lines.find(l => l.includes(d)) || lines.find(l => l.includes(d.slice(0, 2)));
+    const m = (line || '').match(/(\d+(?:\.\d+)?)\s*(?:\/\s*10)?\s*$/) || (line || '').match(/(\d+(?:\.\d+)?)/);
+    if (m && +m[1] <= 10) out[d] = +m[1];
+    else if (lines[i] && /^(\D*?)(\d+(?:\.\d+)?)/.test(lines[i]) && +lines[i].match(/(\d+(?:\.\d+)?)/)[1] <= 10 && !line) out[d] = +lines[i].match(/(\d+(?:\.\d+)?)/)[1];
+  });
+  return out;
+}
+
+// 报告正文 + 尾部清单:清单从第一个 ===SCORES=== 开始
+function splitReport(content) {
+  const c = String(content || '').replace(/^[*`\s]*(===\s*[A-Za-z]+\s*===)[*`\s]*$/gm, '$1');
+  const cut = c.search(/^===\s*SCORES\s*===\s*$/m);
+  return { report: (cut >= 0 ? c.slice(0, cut) : c).replace(/\n```[a-z]*\s*$/, '').trim(), tail: cut >= 0 ? c.slice(cut).replace(/^```.*$/gm, '') : '', all: c };
+}
+
+// 一章改后的文字切成片段:原文片段记它在改前那章的位置,修改片段记是哪一处修改
+function chapterPieces(baseText, edits) {
+  const pieces = [];
+  let at = 0, r = 0;
+  edits.filter(e => e.ok).sort((a, b) => a.start - b.start).forEach(e => {
+    if (e.start > at) { pieces.push({ type: 'base', rs: r, re: r + e.start - at, bs: at, be: e.start }); r += e.start - at; }
+    const len = (e.new || '').length;
+    pieces.push({ type: 'edit', rs: r, re: r + len, bs: e.start, be: e.end, e });
+    r += len; at = e.end;
+  });
+  if (at < baseText.length) pieces.push({ type: 'base', rs: r, re: r + baseText.length - at, bs: at, be: baseText.length });
+  return pieces;
+}
+
+// 复审又改了一轮:把第二轮的修改折算回「相对二稿」的修改,和第一轮重叠的合并成一处(理由合在一起),
+// 这样全文修订页始终以二稿为底,一次看全两轮改动
+function mergeRounds(base, text1, edits1, edits2) {
+  const out = edits1.filter(e => e.ok).map(e => ({ ...e }));
+  const baseChs = Object.fromEntries(scriptChapters(base).map(c => [c.id, c.text]));
+  const r1Chs = Object.fromEntries(scriptChapters(text1).map(c => [c.id, c.text]));
+  for (const chId of [...new Set(edits2.filter(e => e.ok).map(e => e.chapter))]) {
+    const B = baseChs[chId], R = r1Chs[chId];
+    if (B == null || R == null) continue;
+    const mine = out.filter(e => e.chapter === chId);
+    let pieces = chapterPieces(B, mine);
+    // 片段拼出来的文字和稿子里这一章可能差首尾空白(replaceChapter 会 trim)
+    const composed = pieces.map(p => p.type === 'base' ? B.slice(p.bs, p.be) : (p.e.new || '')).join('');
+    const lead = composed.length - composed.trimStart().length;
+    pieces.forEach(p => { p.rs -= lead; p.re -= lead; });
+    for (const e2 of edits2.filter(e => e.ok && e.chapter === chId).sort((a, b) => b.start - a.start)) {
+      const s = e2.start, en = e2.end;
+      const hit = pieces.filter(p => (p.rs < en && p.re > s) || (p.rs === p.re && p.rs > s && p.rs < en));
+      const eds = hit.filter(p => p.type === 'edit');
+      const RS = Math.min(s, ...eds.map(p => p.rs)), RE = Math.max(en, ...eds.map(p => p.re));
+      const toBase = (x, isEnd) => {
+        const p = pieces.find(q => (isEnd ? q.rs < x && q.re >= x : q.rs <= x && q.re > x)) || pieces.find(q => q.rs <= x && q.re >= x);
+        if (!p) return isEnd ? B.length : 0;
+        return p.type === 'base' ? p.bs + (x - p.rs) : (isEnd ? p.be : p.bs);
+      };
+      const BS = toBase(RS, false), BE = toBase(RE, true);
+      const merged = eds.map(p => p.e);
+      merged.forEach(m => { const i = out.indexOf(m); if (i >= 0) out.splice(i, 1); });
+      const ne = {
+        chapter: chId, ok: true, round: merged.length ? '1+2' : '2', start: BS, end: BE, old: B.slice(BS, BE),
+        new: R.slice(RS, s) + (e2.new || '') + R.slice(en, RE),
+        category: [...new Set([...merged.map(m => m.category), e2.category].filter(Boolean))].join(' / '),
+        reason: [...merged.map(m => m.reason), '复审:' + (e2.reason || '')].filter(Boolean).join(';')
+      };
+      out.push(ne);
+      // 重建这一章的片段:新修改之前的保持不动(从后往前处理,后面的不会再用到)
+      pieces = pieces.filter(p => p.re <= RS || (p.type === 'base' && p.rs < RS)).map(p => (p.type === 'base' && p.re > RS ? { ...p, re: RS, be: p.bs + (RS - p.rs) } : p));
+      pieces.push({ type: 'edit', rs: RS, re: RS + ne.new.length, bs: BS, be: BE, e: ne });
     }
-    await translateRun(runId);
-  } finally { passRunning.delete(runId); }
+  }
+  return out.sort((a, b) => (a.chapter === b.chapter ? a.start - b.start : a.chapter.localeCompare(b.chapter))).map((e, i) => ({ ...e, n: i + 1 }));
+}
+
+function setFinalStage(runId, stage) {
+  const fresh = store.getRun(runId);
+  if (!fresh) return;
+  fresh.steps = { ...(fresh.steps || {}), final_review: { ...((fresh.steps || {}).final_review || {}), status: 'running', stage } };
+  store.saveRun(fresh);
+}
+
+function editsText(edits) {
+  const ok = edits.filter(e => e.ok);
+  return ok.length ? ok.map(e => '- [' + e.chapter + '][' + (e.category || '') + '] ' + (e.reason || '') + '\n  原句:' + e.old + '\n  改成:' + (e.new || '(删除)')).join('\n') : '(没有修改)';
+}
+
+async function runFinal(runId) {
+  const cfg = pl().loadConfig();
+  let { run, asset } = loadRunAsset(runId);
+  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
+  const start = currentScript(run);
+  if (!start) throw Object.assign(new Error('稿子还没写好'), { status: 400 });
+  const vByKey = Object.fromEntries(arr((run.review || {}).versions).map(v => [v.key, v]));
+  const base = vByKey.d2 && vByKey.d3 && vByKey.d3.text === start ? vByKey.d2.text : start;
+  const sel = ((run.review || {}).audit || {}).selection || null;
+  const trackKey = (sel && sel.track) || (run.review || {}).final_track || autoTrack(run, asset);
+  const tr = loadTrack(trackKey);
+  const dims = finalDims(tr);
+  const t0 = Date.now();
+  run.steps = { ...(run.steps || {}), final_review: { status: 'running', stage: '审稿', track: tr.key, started_at: new Date().toISOString() } };
+  run.review = run.review || {};
+  if (!arr(run.review.versions).length) run.review.versions = [{ key: 'd1', label: '初稿', at: new Date().toISOString(), text: base, issues: [] }];
+  store.saveRun(run);
+  try {
+    const a = run.analysis || {};
+    const aud = run.audience || {};
+    const lang = aud.target_language || '';
+    const common = {
+      today: pl().todayStr(), topic: run.topic, title: ((a.title || {}).final_title) || run.topic,
+      target_language: lang, target_country: aud.target_country || '', video_goal: aud.video_goal || '(未指定,按稿件实际长度判断)',
+      voice: voice.voiceBrief(voice.voiceForRun(run)) || '(未设定)',
+      analysis: run.analysis ? an().analysisBrief(a) : '(无写前分析)',
+      track_name: tr.name, track_audience: tr.audience, track_position: tr.position, track_mechanism: tr.mechanism,
+      track_dim4: tr.dim4, track_retention: tr.retention, dim4_name: tr.dim4_name, dim4_role: tr.dim4_role, dim4_view: tr.dim4_view, dim4_recheck: tr.dim4_recheck,
+      language_notes: /^Korean$/i.test(lang) ? '例如韩语里频繁使用「그런데」「하지만」「문제는」「진짜 이유는」。' : '',
+      dims_list: dims.map((d, i) => (i + 1) + '. ' + d).join('\n'),
+      dims_score_lines: dims.map(d => d + ': 分数').join('\n'),
+      selected_fixes: selectedFixes(run)
+    };
+    // ① 审稿
+    const r1 = await callLong(run, cfg, an().fillVars(readPrompt('final_audit.md'), { ...common, chapter_map: chapterMap(run, asset), program_findings: programFindings(run, asset), script: base }), '终审·审稿');
+    const s1 = splitReport(r1.content);
+    const scoresBefore = parseScores(parseBlocks(s1.tail, false).SCORES, dims);
+    // ② 修改
+    setFinalStage(runId, '修改');
+    const r2 = await callLong(run, cfg, an().fillVars(readPrompt('final_revise.md'), { ...common, audit_report: s1.report, script: base }), '终审·修改');
+    let edits1 = parseEdits(r2.content);
+    if (r2.truncated && !/^===\s*END\s*===/m.test(r2.content)) edits1 = edits1.slice(0, -1);
+    const a1 = applyEdits(base, edits1);
+    let text = a1.next, edits = a1.edits.filter(e => e.ok).map(e => ({ ...e })), failed = a1.edits.filter(e => !e.ok);
+    // ③ 复审(没达标就再改一轮,再复审一次)
+    const rechecks = [];
+    for (let round = 1; round <= FINAL_RECHECK_ROUNDS; round++) {
+      setFinalStage(runId, '复审' + (round > 1 ? '(第 ' + round + ' 轮)' : ''));
+      const allowEdits = round < FINAL_RECHECK_ROUNDS;
+      const r3 = await callLong(run, cfg, an().fillVars(readPrompt('final_recheck.md'), {
+        ...common, scores_before: dims.map(d => d + ': ' + (scoresBefore[d] != null ? scoresBefore[d] : '—')).join('\n'),
+        edits_done: editsText(round === 1 ? edits : rechecks[rechecks.length - 1].edits_applied || []),
+        edits_instruction: allowEdits ? '如果未达标,在 ===VERDICT=== 那一行后面接着输出要补的修改(格式同前:每处以 ===EDIT=== 开头,写 章节/类别/原句/改成/理由;原句从上面「修改后的完整稿子」逐字复制;只修尚未解决的问题),然后再写 ===END===。达标就不要输出修改。' : '这是最后一轮复审,只出报告,不要输出修改。',
+        script: text
+      }), '终审·复审' + round);
+      const s3 = splitReport(r3.content);
+      const tb = parseBlocks(s3.tail, false);
+      const verdict = /未达标/.test(tb.VERDICT || '') ? '未达标' : /达标/.test(tb.VERDICT || '') ? '达标' : '';
+      const rc = { round, report: s3.report, scores: parseScores(tb.SCORES, dims), verdict, edits_applied: [] };
+      rechecks.push(rc);
+      if (!allowEdits || verdict !== '未达标') break;
+      let edits2 = parseEdits(s3.tail);
+      if (r3.truncated && !/^===\s*END\s*===/m.test(s3.tail)) edits2 = edits2.slice(0, -1);
+      if (!edits2.length) break;
+      const a2 = applyEdits(text, edits2);
+      rc.edits_applied = a2.edits.filter(e => e.ok);
+      failed = failed.concat(a2.edits.filter(e => !e.ok).map(e => ({ ...e, round: '2' })));
+      if (!rc.edits_applied.length) break;
+      edits = mergeRounds(base, text, edits, a2.edits);
+      text = a2.next;
+    }
+    const allEdits = edits.map((e, i) => ({ ...e, n: i + 1 })).concat(failed.map((e, i) => ({ ...e, ok: false, n: edits.length + i + 1 })));
+    const last = rechecks[rechecks.length - 1] || {};
+    const fresh = store.getRun(runId) || run;
+    if (currentScript(fresh) !== start) throw new Error('终审运行期间稿子被改过,结果没有保存,请重跑');
+    fresh.review = fresh.review || {};
+    const versions = arr(fresh.review.versions).length ? fresh.review.versions : [{ key: 'd1', label: '初稿', at: new Date().toISOString(), text: base, issues: [] }];
+    const keep = versions.filter(v => v.key === 'd1' || v.key === 'd2');
+    const changed = [];
+    scriptChapters(text).forEach(c => { const b = scriptChapters(base).find(x => x.id === c.id); if (b && b.text !== c.text) changed.push(c.id); });
+    const issues = allEdits.filter(e => e.ok).map(e => ({ chapter: e.chapter || '全篇', category: e.category || '', problem: e.reason || '', quote: e.old, fix: e.new || '(删除)', edit: e.n }));
+    keep.push({ key: 'd3', label: '终稿', at: new Date().toISOString(), text, issues, changed, edits: allEdits, base_text: base });
+    fresh.review.versions = keep;
+    fresh.review.final = {
+      at: new Date().toISOString(), track: tr.key, track_name: tr.name, dims,
+      audit_report: s1.report, scores_before: scoresBefore,
+      rechecks: rechecks.map(r => ({ round: r.round, report: r.report, scores: r.scores, verdict: r.verdict, edits: r.edits_applied.length })),
+      scores_after: last.scores || {}, verdict: last.verdict || ''
+    };
+    if (text !== start) writeScript(fresh, text);
+    changed.forEach(id => { const st = chapterState(fresh, id); st.status = '待审'; st.history = [...arr(st.history), { at: new Date().toISOString(), note: '终审', by: 'final', text: scriptChapters(base).find(c => c.id === id).text }].slice(-HISTORY_MAX); });
+    fresh.steps = { ...(fresh.steps || {}), final_review: {
+      status: 'done', secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: new Date().toISOString(), track: tr.key,
+      issues: issues.length, changed: changed.length, edits: allEdits.filter(e => e.ok).length, edits_failed: allEdits.filter(e => !e.ok).length, verdict: last.verdict || ''
+    } };
+    if (fresh.review.audit) fresh.review.audit.used_selection = (fresh.review.audit.selection || null);
+    if (run.attempts) fresh.attempts = run.attempts;
+    store.saveRun(fresh);
+    return { ok: true, edits: allEdits.length };
+  } catch (e) {
+    const fresh = store.getRun(runId) || run;
+    fresh.steps = { ...(fresh.steps || {}), final_review: { status: 'failed', error: e.message, track: tr.key } };
+    store.saveRun(fresh);
+    throw e;
+  }
+}
+
+// 初稿检查 → 二稿审稿报告 → 停下等人选;人选完再终审 → 翻译。某一遍失败不影响已有稿子,页面上可以单独重跑
+async function runPasses(runId, from) {
+  const order = from === 'final' ? ['final'] : from === 'audit' ? ['audit'] : ['check', 'audit'];
+  for (const k of order) {
+    try { if (k === 'audit') await runReverseAudit(runId); else if (k === 'final') await runFinal(runId); else await runPass(runId, k); } catch (e) { break; }
+  }
+  await translateRun(runId);
 }
 
 // ---------- 一键生成 ----------
 async function runDraftFirst(runId) {
   await an().runAnalysis(runId);
-  return finishDraftFirst(runId);
-}
-
-// 分析之后的部分:AI 先调整 → 自动确认 → 点火写初稿 → 初稿检查出二稿 → 二稿审稿报告 → 停下等人选 → 中文对照。
-// 单独抽出是为了重启接管:分析已完成、调整被中断的任务从这里续跑,不重复调用分析(见 resumeDraftFirst)
-async function finishDraftFirst(runId) {
   let run = store.getRun(runId);
   if (!run || run.status !== 'awaiting_review') return; // 分析失败或已取消
   try {
@@ -748,12 +1113,7 @@ async function finishDraftFirst(runId) {
     store.saveRun(run);
   }
   run = store.getRun(runId);
-  // 取消接口对 awaiting_review 是直接落 cancelled(不打 cancel_requested 标记):两种痕迹都要查,
-  // 否则用户在 AI 调整期间点了取消,这里会把已取消的任务重新写成 queued 并点火写稿
-  if (!run || run.cancel_requested || run.status === 'cancelled') {
-    if (run && run.status !== 'cancelled') { run.status = 'cancelled'; store.saveRun(run); }
-    return;
-  }
+  if (!run || run.cancel_requested) { if (run) { run.status = 'cancelled'; store.saveRun(run); } return; }
   run.analysis_confirmed = true;
   run.analysis_auto_confirmed = true;
   run.analysis_confirmed_at = new Date().toISOString();
@@ -764,14 +1124,11 @@ async function finishDraftFirst(runId) {
   if (run && run.status === 'done') await runPasses(runId);
 }
 
-// 续跑(重试 / 重启接管):分析没跑完就从头跑一键生成;分析跑完但调整被中断,从调整续跑;已经在写稿就接着写,写完补二稿、终稿和翻译
+// 续跑(重试 / 重启接管):还没写稿就从头跑一键生成;已经在写稿就接着写,写完补二稿、终稿和翻译
 async function resumeDraftFirst(runId) {
   const run = store.getRun(runId);
   if (!run) return;
-  if (!run.analysis_confirmed) {
-    if (run.status === 'awaiting_review' && run.analysis) return finishDraftFirst(runId);
-    return runDraftFirst(runId);
-  }
+  if (!run.analysis_confirmed) return runDraftFirst(runId);
   if (run.status !== 'done') await pl().runGeneration(runId);
   const done = store.getRun(runId);
   if (!done || done.status !== 'done') return;
@@ -899,4 +1256,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
