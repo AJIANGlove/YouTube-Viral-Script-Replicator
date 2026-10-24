@@ -216,6 +216,9 @@
   .rv-del-plain { color: #991b1b; text-decoration: line-through; white-space: pre-wrap; }
   .rv-ins-plain { color: #166534; white-space: pre-wrap; }
   @media (max-width: 700px) { .rv-note-grid { grid-template-columns: 1fr; } }
+  .rv-gain { display: inline-block; padding: 0 7px; border-radius: 10px; background: #eff6ff; color: #1d4ed8; font-size: 12px; font-weight: 600; }
+  .rv-est { margin: 6px 0; padding: 6px 10px; border-radius: 6px; background: #eff6ff; font-size: 13px; }
+  .rv-est b { color: #1d4ed8; font-size: 15px; }
   .rv-ai { border: 1px solid #e5e7eb; border-radius: 6px; margin: 6px 0; padding: 6px 10px; font-size: 13px; }
   .rv-ai.on { border-color: #fca5a5; background: #fff7f7; }
   .rv-ai-head { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; cursor: pointer; }
@@ -1919,6 +1922,23 @@ const RV_TRACK_TIPS = {
 };
 const RV_SEV_CLS = { S: 'red', A: 'red', B: 'yellow', C: 'green' };
 const RV_ROUTES = { A: '最小修改', B: '结构优化', C: '深度重构' };
+// 每个问题改好后预计加几分:优先用 AI 在清单里给的 [+n];旧报告没有就按严重程度估,并把总潜力压在合理范围内
+const RV_SEV_GAIN = { S: 4, A: 2.5, B: 1.2, C: 0.5 };
+function rvAuditGains(au) {
+  const score = typeof au.score === 'number' ? au.score : null;
+  const out = {};
+  let raw = 0, guessed = false;
+  au.issues.forEach(x => {
+    const g = typeof x.gain === 'number' ? x.gain : (guessed = true, RV_SEV_GAIN[x.severity] || 1);
+    out[x.id] = g; raw += g;
+  });
+  if (score != null && raw > 0) {
+    const cap = guessed ? Math.max(0, 92 - score) : Math.max(0, 100 - score);
+    if (raw > cap) Object.keys(out).forEach(k => { out[k] = out[k] * cap / raw; });
+  }
+  Object.keys(out).forEach(k => { out[k] = Math.round(out[k] * 10) / 10; });
+  return { gains: out, guessed };
+}
 const RV_ROUTE_TIPS = {
   A: '章节顺序和写法基本不动,只修你勾的问题(错的数、不成立的推理、别扭的句子)。改动最少,最安全;稿子底子不错、只有几处硬伤时选它。',
   B: '主线不动,但可以调章节里的内容顺序、删重复、补缺的解释和过渡、把揭晓提前或后移。改动中等;稿子「有料但讲得乱、拖」时选它。',
@@ -1933,9 +1953,15 @@ function rvAuditHtml(v) {
   const used = au.used_selection;
   const order = { P0: 0, P1: 1, P2: 2 };
   const issues = [...au.issues].sort((a, b) => (order[a.priority] - order[b.priority]) || a.id.localeCompare(b.id));
+  const G = rvAuditGains(au);
+  const sumOf = ids => Math.round([...ids].reduce((n, id) => n + (G.gains[id] || 0), 0) * 10) / 10;
+  const base = typeof au.score === 'number' ? au.score : null;
+  const est = ids => (base == null ? null : Math.min(100, Math.round((base + sumOf(ids)) * 10) / 10));
+  const estLine = base == null ? '' : `<div class="rv-est v13">当前 <b>${base}</b> 分 → 按现在勾选的 ${sel.ids.size} 个问题改好,预计 <b>${est(sel.ids)}</b> 分(+${sumOf(sel.ids)});全部改好预计 ${est(au.issues.map(x => x.id))} 分。<span class="hint">${G.guessed ? '这份报告没给每条的加分,按严重程度估算(S≈4、A≈2.5、B≈1.2、C≈0.5,总分封顶)。' : '每条加分是审稿 AI 按评分表估的。'}只是估算,实际以终审复审为准。</span></div>`;
   const rows = issues.map(x => `<div class="rv-ai${sel.ids.has(x.id) ? ' on' : ''}">
       <label class="rv-ai-head"><input type="checkbox" ${sel.ids.has(x.id) ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="rvAuditToggle('${escAttr(x.id)}', this.checked)">
         <b>${esc(x.id)}</b> <span class="rv-chip ${RV_SEV_CLS[x.severity] || ''}">${esc(x.severity)} 级</span> <span class="rv-chip ${x.priority === 'P0' ? 'red' : x.priority === 'P1' ? 'yellow' : 'green'}">${esc(x.priority)}</span>
+        <span class="rv-gain" title="改好这一处,总分预计提高">+${G.gains[x.id]} 分</span>
         <span class="hint">${esc(x.chapter)} · ${esc(x.type)}</span></label>
       <div class="rv-ai-body">${esc(x.problem)}${x.direction ? `<br><span class="hint">修改方向:${esc(x.direction)}</span>` : ''}
         ${x.detail ? `<div><a href="javascript:void 0" onclick="rvAuditOpen('${escAttr(x.id)}')">${sel.open[x.id] ? '收起详情' : '看详情(原文位置、为什么不好、示范修改)'}</a></div>${sel.open[x.id] ? `<div class="rv-md rv-ai-detail">${rvMd(x.detail)}</div>` : ''}` : ''}</div>
@@ -1957,6 +1983,7 @@ function rvAuditHtml(v) {
       <span class="hint">${esc(RV_TRACK_TIPS[sel.track] || '')}</span></div>
     <div class="an-sec v13">1. 勾选要改的问题(默认勾上 S/A 级和 P0/P1;不想改的取消勾选)</div>
     <div class="rv-ops"><button class="an-btn" onclick="rvAuditAll(true)" ${busy ? 'disabled' : ''}>全选</button><button class="an-btn" onclick="rvAuditAll(false)" ${busy ? 'disabled' : ''}>全不选</button><button class="an-btn" onclick="rvAuditAll('sa')" ${busy ? 'disabled' : ''}>只选 S/A 级</button><span class="hint">已选 ${sel.ids.size} 个</span></div>
+    ${estLine}
     ${rows || '<div class="hint">报告里没有解析出问题清单,可以直接看下面的完整报告,把要改的写进补充意见。</div>'}
     <div class="an-sec v13">2. 选修改路线</div>
     <div class="rv-ops">${routes}</div>${routeText}

@@ -673,7 +673,7 @@ async function runPass(runId, kind) {
 // 把原片标题、原文案、拆解框架、新题目、新标题和二稿交给模型,按用户的审稿提示词出完整报告(赛道、评分、迁移对照、
 // 逐段问题 P01…、深层问题、P0/P1/P2、三种修改路线)。报告末尾附一段 ===SCORE=== / ===ISSUES=== / ===ROUTE=== 清单给程序读。
 // 报告出来后流程停住:人在页面上勾选要改的问题、选修改路线,再带着这些去终审。
-const AUDIT_ISSUE_RE = /^\s*[-*•]\s*\[(P\d+)\]\s*\[([SABC])[级]?\]\s*\[(P[012])\]\s*\[([^\]]+)\]\s*(.+)$/i;
+const AUDIT_ISSUE_RE = /^\s*[-*•]\s*\[(P\d+)\]\s*\[([SABC])[级]?\]\s*\[(P[012])\]\s*\[([^\]]+)\]\s*(?:\[\s*\+?\s*(\d+(?:\.\d+)?)\s*分?\s*\]\s*)?(.+)$/i;
 const AUDIT_MAX_ROUNDS = 4; // 报告很长,被 max_tokens 截断就接着写,最多续 3 次
 const ROUTE_NAMES = { A: '最小修改', B: '结构优化', C: '深度重构' };
 
@@ -681,9 +681,10 @@ function parseAuditIssues(text) {
   return String(text || '').split('\n').map(l => {
     const m = l.match(AUDIT_ISSUE_RE);
     if (!m) return null;
-    const parts = m[5].split(/\s*[｜|]\s*/);
+    const parts = m[6].split(/\s*[｜|]\s*/);
     return {
       id: m[1].toUpperCase().replace(/^P(\d)$/, 'P0$1'), severity: m[2].toUpperCase(), priority: m[3].toUpperCase(),
+      gain: m[5] != null ? +m[5] : null,
       chapter: /^CH/i.test(m[4].trim()) ? m[4].trim().toUpperCase() : '全篇',
       type: (parts[0] || '').trim(), problem: (parts[1] || '').trim(),
       direction: (parts.find((p, i) => i > 1 && /^修改方向[:：]/.test(p)) || parts[2] || '').replace(/^修改方向[:：]\s*/, '').trim()
