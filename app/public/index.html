@@ -3246,13 +3246,24 @@ function renderAnalysisPanel(r) {
     if (key === anRenderedKey) return;
     anRenderedKey = key;
     el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">还没有分析结果${r.error ? '(' + esc(r.error) + ')' : ''}。</div>
-      ${['failed', 'cancelled', 'awaiting_review'].includes(r.status) && !r.analysis_confirmed ? anRerunBox(r.materials) : ''}`;
+      ${['failed', 'cancelled', 'awaiting_review'].includes(r.status) && !r.analysis_confirmed && !r.draft_first ? anRerunBox(r.materials) : ''}`;
     return;
   }
   if (r.analysis_confirmed) {
     if (key === anRenderedKey) return;
     anRenderedKey = key;
     el.innerHTML = `<details><summary style="cursor:pointer"><b>⓪ 写前分析(已确认${r.analysis_edited ? ',人工改过' : ''} · ${fmtTime(r.analysis_confirmed_at)})</b></summary>${analysisHtml(r.analysis)}</details>`;
+    return;
+  }
+  if (r.draft_first) {
+    // 先写后改:AI 自动完成分析与调整、不停下来等确认。这里只给只读视图,
+    // 不渲染人工审核区——确认/保存/重跑/调整这几个操作在服务端对这类任务也一律拒绝(409),
+    // 否则在 AI 调整窗口期点「确认」会和一键生成并发双点火
+    if (key === anRenderedKey) return;
+    anRenderedKey = key;
+    anEdit = null;
+    el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">先写后改模式:${r.status === 'awaiting_review' ? 'AI 正在自动调整事实、账本与留存取舍,完成后直接写稿,无需确认。' : '由 AI 自动分析与调整,无需人工确认。'}</div>
+      <details><summary style="cursor:pointer"><b>查看 AI 的分析与调整(只读)</b></summary>${analysisHtml(r.analysis)}</details>`;
     return;
   }
   // 待确认:草稿脏时轮询只刷新提示,绝不重建 DOM
