@@ -1257,14 +1257,15 @@ server.listen(PORT, HOST, () => {
     store.saveRun(r);
     console.log(`取消中断的写前分析: ${r.id}`);
   }
-  // 崩溃于审稿 pass(初稿检查/审稿报告/终审)的任务:状态是 done,上面的孤儿接管够不着。
+  // 崩溃于审稿 pass(初稿检查/审稿报告/终审)或去AI感的任务:状态是 done,上面的孤儿接管够不着。
   // 先写后改任务卡在初稿检查/审稿报告的,自动续跑(resumeDraftFirst 只补这两遍,绝不自动跑终审);
-  // 卡在终审的、以及非一键生成任务手动重跑时被中断的:把假 running 落成 failed,页面上可手动重跑
+  // 卡在终审或去AI感的(都是人工发起)、以及非一键生成任务手动重跑时被中断的:把假 running 落成 failed,页面上可手动重跑
+  // (去AI感不加进来,它卡 running 会把 deaiGuard 永久挡死,任务再无入口)
   for (const r of store.listRuns().filter(x => x.status === 'done')) {
     const st = r.steps || {};
-    const stuck = ['draft_check', 'reverse_audit', 'final_review'].filter(k => (st[k] || {}).status === 'running');
+    const stuck = ['draft_check', 'reverse_audit', 'final_review', 'deai'].filter(k => (st[k] || {}).status === 'running');
     if (!stuck.length) continue;
-    if (r.draft_first && !r.cancel_requested && !stuck.includes('final_review')) {
+    if (r.draft_first && !r.cancel_requested && stuck.every(k => k === 'draft_check' || k === 'reverse_audit')) {
       console.log(`接管中断的审稿(${stuck.join('/')}): ${r.id} (${r.topic || ''})`);
       review.resumeDraftFirst(r.id).catch(e => {
         const rr = store.getRun(r.id);

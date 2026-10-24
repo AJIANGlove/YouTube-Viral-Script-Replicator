@@ -42,4 +42,6 @@
 恢复方式：见本段所属提交（feature/draft-first-v1.6 上合并提交之后的那一个）。
 
 > **v1.8 重打记录**：上游 v1.8（0008/0009）依然不含上述修复；终审从单次调用改成 `runFinal` 三步（审稿→修改→复审，分赛道），但重打点不变——`runPasses`（守卫包住 runFinal 路由）、`startFinal`（passBusy + 赛道存取）、`runDraftFirst`/`resumeDraftFirst`/`writeScript`/exports 逐项重打，提交见 feature/final-tracks-v1.8 上合并提交之后的那一个。server.js 上游连续三轮未触碰，本地修复无损存活。
+>
+> **v1.10 重打记录**：上游 v1.10（0010–0015）仍不含上述修复，但**增量叠加可行**——在 `claude-v18-series` 链顶（已入本地历史）直接 `git am 0010-0015`，合并基点是真祖先，唯一冲突是 review.js exports 行（合并双方导出名即可）。另新增一处本地修复：**启动崩溃清理扩展到 `steps.deai`**（去AI感卡 running 会被 `deaiGuard` 永久挡死；落成 failed 手动重跑，去AI感绝不自动续跑）。
 
