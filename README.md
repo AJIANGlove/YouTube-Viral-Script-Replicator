@@ -44,7 +44,7 @@ flowchart LR
 │   ├── bin/                留存卡批量构建 CLI
 │   ├── prompts/            现行提示词（生产用，单一来源）
 │   ├── public/             前端 SPA
-│   ├── data/runs/          57 条生成记录（含每步 attempts 与校验明细）
+│   ├── data/runs/          64 条生成记录（含每步 attempts 与校验明细）
 │   ├── data/logs/          运行日志（失败样本、留存卡批处理、探针输出）
 │   └── config.example.json 配置结构示例（不含真实 Key）
 ├── assets/                 180 个四层资产包，每包含原始 SRT 与留存卡
@@ -212,7 +212,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 26 份 `.md`（2362 行，含 `final_tracks/` 5 份）+ `fingerprints.json` 模式库。
+合计 31 份 `.md`（2362 行，含 `final_tracks/` 5 份）+ `fingerprints.json` 模式库。
 
 ### 历史版本
 
