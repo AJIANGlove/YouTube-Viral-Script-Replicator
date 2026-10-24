@@ -566,7 +566,7 @@ const server = http.createServer(async (req, res) => {
 
     // ---------- 先写后改:逐段对照审稿 ----------
     // GET 视图(每次按当前稿子现算);POST status/undo 立即返回;rewrite/fact 等模型返回再响应(单章约 0.5–2 分钟)
-    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final))?$/);
+    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai))?$/);
     if (rvMatch) {
       const [, id, action] = rvMatch;
       try {
@@ -585,6 +585,8 @@ const server = http.createServer(async (req, res) => {
           }
           // 看完二稿审稿报告:带着勾选的问题、修改路线和备注去终审(后台跑)
           if (action === 'final') return send(res, 200, review.startFinal(id, body));
+          // 终稿之后去AI感(后台跑):诊断 → 最小修改 → 反向复核
+          if (action === 'deai') return send(res, 200, review.startDeai(id, body));
           if (action === 'translate') {
             review.translateRun(id).catch(() => {});
             return send(res, 200, { ok: true });

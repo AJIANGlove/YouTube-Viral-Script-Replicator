@@ -183,11 +183,12 @@ function versionDiffs(state) {
 }
 
 // 终稿全文修订视图:以二稿为底,每章切成「原文 / 修改」片段,修改处附中文和理由
-function revisionView(state) {
+function revisionView(state, key) {
   const vs = arr(state.versions);
-  const d3 = vs.find(v => v.key === 'd3');
-  const d2 = vs.find(v => v.key === 'd2') || vs.find(v => v.key === 'd1');
-  if (!d3 || !arr(d3.edits).length || !d2) return null;
+  const k = key || 'd3';
+  const d3 = vs.find(v => v.key === k);
+  const d2 = k === 'd4' ? vs.find(v => v.key === 'd3') : (vs.find(v => v.key === 'd2') || vs.find(v => v.key === 'd1'));
+  if (!d3 || !d2 || (!arr(d3.edits).length && k !== 'd4')) return null;
   const edits = d3.edits.map(e => ({ ...e, zh_old: zhOf(state, e.old), zh_new: e.new ? zhOf(state, e.new) : '' }));
   const finals = Object.fromEntries(scriptChapters(d3.text).map(c => [c.id, c.text]));
   const chapters = scriptChapters(d3.base_text || d2.text).map(c => {
@@ -293,11 +294,13 @@ function buildView(run, asset) {
   const budget = rows.reduce((n, r) => n + (r.budget || 0), 0);
   return {
     run_id: run.id, status: run.status, target_language: lang,
-    passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null },
+    passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null, deai: (run.steps || {}).deai || null },
     audit: state.audit ? { ...state.audit, issues: arr(state.audit.issues).map(x => ({ ...x, zh_problem: hasForeign(x.problem) ? zhOf(state, x.problem) : '', zh_direction: hasForeign(x.direction) ? zhOf(state, x.direction) : '', need_zh: hasForeign(x.problem) || hasForeign(x.direction) })), score: state.audit.score != null ? state.audit.score : reportScore(state.audit.report), stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
     versions: arr(state.versions).map(v => ({ key: v.key, label: v.label, at: v.at, issues: arr(v.issues), changed: arr(v.changed), truncated: !!v.truncated })),
     diffs: versionDiffs(state),
     revision: revisionView(state),
+    deai_revision: revisionView(state, 'd4'),
+    deai: state.deai || null,
     final: state.final || null,
     tracks: trackList(), track_default: state.final_track || autoTrack(run, asset),
     translating: ((run.steps || {}).review_zh || {}).status === 'running',
@@ -929,7 +932,8 @@ function loadTrack(key) {
   return {
     key: k, name: b.NAME || k, match: b.MATCH || '', audience: b.AUDIENCE || '', position: b.POSITION || '',
     dim4_name: b.DIM4_NAME || '事实与逻辑', dim4_role: b.DIM4_ROLE || '事实审稿人', dim4_view: b.DIM4_VIEW || '',
-    mechanism: b.MECHANISM || '', dim4: b.DIM4 || '', retention: b.RETENTION || '', dim4_recheck: b.DIM4_RECHECK || ''
+    mechanism: b.MECHANISM || '', dim4: b.DIM4 || '', retention: b.RETENTION || '', dim4_recheck: b.DIM4_RECHECK || '',
+    deai_protect: b.DEAI_PROTECT || '- 所有事实、数字、案例和引用。\n- 因果链和信息递进的顺序。', deai_focus: b.DEAI_FOCUS || '重复的总结句和模板化转场。'
   };
 }
 function trackList() { return TRACK_KEYS.map(k => { const tr = loadTrack(k); return { key: k, name: tr.name }; }); }
@@ -1066,7 +1070,8 @@ async function runFinal(runId) {
   const start = currentScript(run);
   if (!start) throw Object.assign(new Error('稿子还没写好'), { status: 400 });
   const vByKey = Object.fromEntries(arr((run.review || {}).versions).map(v => [v.key, v]));
-  const base = vByKey.d2 && vByKey.d3 && vByKey.d3.text === start ? vByKey.d2.text : start;
+  const untouched = (vByKey.d3 && vByKey.d3.text === start) || (vByKey.d4 && vByKey.d4.text === start);
+  const base = vByKey.d2 && untouched ? vByKey.d2.text : start;
   const sel = ((run.review || {}).audit || {}).selection || null;
   const trackKey = (sel && sel.track) || (run.review || {}).final_track || autoTrack(run, asset);
   const tr = loadTrack(trackKey);
@@ -1142,6 +1147,8 @@ async function runFinal(runId) {
     const issues = allEdits.filter(e => e.ok).map(e => ({ chapter: e.chapter || '全篇', category: e.category || '', problem: e.reason || '', quote: e.old, fix: e.new || '(删除)', edit: e.n }));
     keep.push({ key: 'd3', label: '终稿', at: new Date().toISOString(), text, issues, changed, edits: allEdits, base_text: base });
     fresh.review.versions = keep;
+    fresh.review.deai = null;
+    if (fresh.steps) delete fresh.steps.deai;
     fresh.review.final = {
       at: new Date().toISOString(), track: tr.key, track_name: tr.name, dims,
       audit_report: s1.report, scores_before: scoresBefore,
@@ -1164,6 +1171,104 @@ async function runFinal(runId) {
     store.saveRun(fresh);
     throw e;
   }
+}
+
+// ---------- 去AI感(终稿之后):诊断 → 最小幅度修改 → 反向复核 ----------
+// 以终稿为底,只处理模板化、重复、机械的表达;反向复核撤销改过头的地方。结果存成 d4「去AI感稿」并写回 V1。
+// 重跑:去AI感之后没人动过稿子,就从终稿重新来。
+function setDeaiStage(runId, stage) {
+  const fresh = store.getRun(runId);
+  if (!fresh) return;
+  fresh.steps = { ...(fresh.steps || {}), deai: { ...((fresh.steps || {}).deai || {}), status: 'running', stage } };
+  store.saveRun(fresh);
+}
+
+async function runDeai(runId, trackKey) {
+  const cfg = pl().loadConfig();
+  let { run, asset } = loadRunAsset(runId);
+  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
+  const start = currentScript(run);
+  const vByKey = Object.fromEntries(arr((run.review || {}).versions).map(v => [v.key, v]));
+  if (!vByKey.d3) throw Object.assign(new Error('还没有终稿,先跑终审'), { status: 400 });
+  const base = vByKey.d4 && vByKey.d4.text === start ? vByKey.d3.text : start;
+  const tr = loadTrack(TRACK_KEYS.includes(trackKey) ? trackKey : ((run.review || {}).final || {}).track || autoTrack(run, asset));
+  const t0 = Date.now();
+  run.steps = { ...(run.steps || {}), deai: { status: 'running', stage: '诊断', track: tr.key, started_at: new Date().toISOString() } };
+  store.saveRun(run);
+  try {
+    const a = run.analysis || {};
+    const aud = run.audience || {};
+    const lang = aud.target_language || '';
+    const common = {
+      target_language: lang, target_country: aud.target_country || '', title: ((a.title || {}).final_title) || run.topic,
+      track_position: tr.position, track_audience: tr.audience, deai_protect: tr.deai_protect, deai_focus: tr.deai_focus,
+      language_notes: /^Korean$/i.test(lang) ? '韩语里常见的是「그런데」「하지만」「문제는」「진짜 이유는」「결국」反复出现。' : ''
+    };
+    // ① 诊断
+    const r1 = await callLong(run, cfg, an().fillVars(readPrompt('deai_diagnose.md'), { ...common, script: base }), '去AI感·诊断');
+    const diagnosis = r1.content.trim();
+    // ② 最小修改
+    setDeaiStage(runId, '修改');
+    const r2 = await callLong(run, cfg, an().fillVars(readPrompt('deai_edit.md'), { ...common, diagnosis, script: base }), '去AI感·修改');
+    let edits = parseEdits(r2.content);
+    if (r2.truncated && !/^===\s*END\s*===/m.test(r2.content)) edits = edits.slice(0, -1);
+    let applied = await applyWithRepair(run, cfg, base, edits, '去AI感·修改');
+    // ③ 反向复核:撤销改过头的
+    setDeaiStage(runId, '反向复核');
+    const okList = applied.edits.filter(e => e.ok);
+    let recheck = '', reverted = [];
+    if (okList.length) {
+      okList.forEach((e, i) => { e.n = i + 1; });
+      const r3 = await callLong(run, cfg, an().fillVars(readPrompt('deai_recheck.md'), {
+        ...common, script_before: base, script_after: applied.next,
+        edits_done: okList.map(e => '[' + e.n + '] ' + e.chapter + ' | ' + (e.category || '') + ' | ' + e.old + ' → ' + (e.new || '(删除)') + ' | ' + (e.reason || '')).join('\n')
+      }), '去AI感·反向复核');
+      const c = String(r3.content || '').replace(/^[*`\s]*(===\s*[A-Za-z]+\s*===)[*`\s]*$/gm, '$1');
+      const cut = c.search(/^===\s*REVERT\s*===\s*$/m);
+      recheck = (cut >= 0 ? c.slice(0, cut) : c).trim();
+      const block = cut >= 0 ? (parseBlocks(c.slice(cut), false).REVERT || '') : '';
+      block.split('\n').forEach(l => {
+        const m = l.match(/\[\s*(\d+)\s*\]\s*(.*)$/);
+        const e = m && okList.find(x => x.n === +m[1]);
+        if (e) reverted.push({ e, why: m[2].replace(/^[\s:：-]+/, '').trim() });
+      });
+      if (reverted.length) {
+        const keep = okList.filter(e => !reverted.some(r => r.e === e)).map(e => ({ chapter: e.chapter, category: e.category, old: e.old, new: e.new, reason: e.reason }));
+        const again = applyEdits(base, keep);
+        applied = { next: again.next, edits: again.edits.concat(applied.edits.filter(e => !e.ok)) };
+      }
+    }
+    const final = applied.edits.filter(e => e.ok).map(e => ({ ...e }));
+    const lost = applied.edits.filter(e => !e.ok).map(e => ({ ...e }));
+    const rev = reverted.map(r => ({ ...r.e, ok: false, error: '反向复核撤销:' + (r.why || '改过头了') }));
+    const allEdits = final.concat(rev, lost).map((e, i) => ({ ...e, n: i + 1 }));
+    const text = applied.next;
+    const fresh = store.getRun(runId) || run;
+    if (currentScript(fresh) !== start) throw new Error('去AI感运行期间稿子被改过,结果没有保存,请重跑');
+    fresh.review = fresh.review || {};
+    fresh.review.versions = arr(fresh.review.versions).filter(v => v.key !== 'd4').concat([{ key: 'd4', label: '去AI感稿', at: new Date().toISOString(), text, edits: allEdits, base_text: base, issues: [] }]);
+    fresh.review.deai = { at: new Date().toISOString(), track: tr.key, track_name: tr.name, diagnosis, recheck, applied: final.length, reverted: rev.length, failed: lost.length };
+    if (text !== start) writeScript(fresh, text);
+    fresh.steps = { ...(fresh.steps || {}), deai: { status: 'done', track: tr.key, secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: new Date().toISOString(), edits: final.length, reverted: rev.length } };
+    if (run.attempts) fresh.attempts = run.attempts;
+    store.saveRun(fresh);
+    return { ok: true };
+  } catch (e) {
+    const fresh = store.getRun(runId) || run;
+    fresh.steps = { ...(fresh.steps || {}), deai: { status: 'failed', error: e.message, track: tr.key } };
+    store.saveRun(fresh);
+    throw e;
+  }
+}
+
+function startDeai(runId, body) {
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  const st = run.steps || {};
+  if ((st.deai || {}).status === 'running' || (st.final_review || {}).status === 'running') throw Object.assign(new Error('正在运行,请稍等'), { status: 400 });
+  if (!arr((run.review || {}).versions).some(v => v.key === 'd3')) throw Object.assign(new Error('还没有终稿,先跑终审'), { status: 400 });
+  (async () => { try { await runDeai(runId, body.track); } catch (e) {} await translateRun(runId); })();
+  return { ok: true };
 }
 
 // 初稿检查 → 二稿审稿报告 → 停下等人选;人选完再终审 → 翻译。某一遍失败不影响已有稿子,页面上可以单独重跑
@@ -1331,4 +1436,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { runDeai, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
