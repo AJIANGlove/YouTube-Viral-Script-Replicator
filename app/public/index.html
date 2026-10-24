@@ -1784,14 +1784,15 @@ function rvDraw() {
   const rows = v.rows.filter(r => !rvState.onlyFlags || r.flags.length || r.facts.some(f => f.state === 'red'));
   const diffs = v.diffs || [];
   const finalDone = ((v.passes || {}).final || {}).status === 'done';
-  const validTab = k => k === 'current' || (k === 'audit' && v.audit) || diffs.some(d => d.key === k);
+  // 逐章手动改的页面已去掉:只有还没有任何版本对比和审稿报告时(旧任务),才显示当前稿逐章视图
+  const validTab = k => (k === 'current' && !diffs.length && !v.audit) || (k === 'audit' && v.audit) || diffs.some(d => d.key === k);
   if (rvState.waitFinal && finalDone && diffs.some(d => d.key === 'd3')) { rvState.waitFinal = false; rvState.tab = 'd3'; }
   if (!rvState.tab || !validTab(rvState.tab)) rvState.tab = v.audit && (!finalDone || v.audit.at > ((v.passes || {}).final || {}).finished_at) ? 'audit' : diffs.length ? diffs[diffs.length - 1].key : 'current';
   const passLine = rvPassLine(v);
   const diffTab = d => `<button class="rv-tab${rvState.tab === d.key ? ' on' : ''}" onclick="rvSetTab('${d.key}')">${d.key === 'd3' && v.revision ? '终稿全文修订(改了 ' + v.revision.applied + ' 处)' : esc(d.from) + ' → ' + esc(d.to) + '(改了 ' + d.chapters.filter(c => c.changed).length + ' 章)'}</button>`;
   const auditTab = v.audit ? `<button class="rv-tab${rvState.tab === 'audit' ? ' on' : ''}" onclick="rvSetTab('audit')">二稿审稿报告${v.audit.score != null ? '(' + v.audit.score + ' 分)' : ''}</button>` : '';
   const tabs = `<div class="rv-tabs">${diffs.filter(d => d.key !== 'd3').map(diffTab).join('')}${auditTab}${diffs.filter(d => d.key === 'd3').map(diffTab).join('')}
-    <button class="rv-tab${rvState.tab === 'current' ? ' on' : ''}" onclick="rvSetTab('current')">逐章手动改(一般用不到)</button></div>`;
+    </div>`;
   if (rvState.tab === 'audit') {
     el.innerHTML = `<h2 class="v13">审稿:初稿 → 二稿 → 审稿报告 → 终稿</h2>
       ${passLine}${tabs}
