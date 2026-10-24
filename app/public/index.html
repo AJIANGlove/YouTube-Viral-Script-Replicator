@@ -216,10 +216,19 @@
   .rv-del-plain { color: #991b1b; text-decoration: line-through; white-space: pre-wrap; }
   .rv-ins-plain { color: #166534; white-space: pre-wrap; }
   @media (max-width: 700px) { .rv-note-grid { grid-template-columns: 1fr; } }
+  .rv-gain { display: inline-block; padding: 0 7px; border-radius: 10px; background: #eff6ff; color: #1d4ed8; font-size: 12px; font-weight: 600; }
+  .rv-est { margin: 6px 0; padding: 6px 10px; border-radius: 6px; background: #eff6ff; font-size: 13px; }
+  .rv-est b { color: #1d4ed8; font-size: 15px; }
+  .rv-ai-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .rv-ai-zh { color: #374151; border-left: 2px solid #e5e7eb; padding-left: 10px; }
+  @media (max-width: 700px) { .rv-ai-cols { grid-template-columns: 1fr; } .rv-ai-zh { border-left: 0; padding-left: 0; border-top: 1px dashed #e5e7eb; padding-top: 4px; } }
   .rv-ai { border: 1px solid #e5e7eb; border-radius: 6px; margin: 6px 0; padding: 6px 10px; font-size: 13px; }
   .rv-ai.on { border-color: #fca5a5; background: #fff7f7; }
   .rv-ai-head { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; cursor: pointer; }
   .rv-ai-body { margin: 4px 0 0 22px; line-height: 1.6; }
+  .rv-dopts { margin: 4px 0; }
+  .rv-dopt { display: flex; gap: 6px; align-items: flex-start; padding: 4px 8px; margin: 3px 0; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer; background: #fff; }
+  .rv-dopt.on { border-color: #16a34a; background: #f0fdf4; }
   .rv-ai-detail { margin-top: 6px; padding: 6px 10px; background: #f9fafb; border-radius: 6px; }
   .rv-route { display: inline-flex; gap: 6px; align-items: center; padding: 4px 10px; border: 1px solid #e5e7eb; border-radius: 14px; font-size: 13px; cursor: pointer; }
   .rv-route.on { border-color: #dc2626; color: #dc2626; }
@@ -1236,7 +1245,7 @@ function setTrack(v) {
 }
 
 // ---------- 任务 ----------
-const STEP_LABELS = { analysis: '⓪ 写前分析', blueprint: '① 蓝图', script: '② 脚本', audit: '③ 审核', optimized: '④ 优化', opening_boost: '⑤ 强化开头', script_check: '⑥ 稿件检查', draft_check: '⑦ 初稿检查→二稿', reverse_audit: '⑧ 二稿审稿报告', final_review: '⑨ 终审→终稿' };
+const STEP_LABELS = { analysis: '⓪ 写前分析', blueprint: '① 蓝图', script: '② 脚本', audit: '③ 审核', optimized: '④ 优化', opening_boost: '⑤ 强化开头', script_check: '⑥ 稿件检查', draft_check: '⑦ 初稿检查→二稿', reverse_audit: '⑧ 二稿审稿报告', final_review: '⑨ 终审→终稿', deai: '⑩ 去AI感' };
 const STATUS_LABELS = { analyzing: '写前分析中', awaiting_review: '待确认分析', queued: '排队中', running: '生成中', done: '完成', failed: '失败', cancelled: '已取消' };
 const LANG_LABELS = { English: '英语', Hindi: '印地语', Spanish: '西班牙语', Portuguese: '葡萄牙语', Japanese: '日语', Korean: '韩语', Indonesian: '印尼语', German: '德语', French: '法语', Vietnamese: '越南语', Arabic: '阿拉伯语', Chinese: '中文' };
 const COUNTRY_LABELS = { US: '美国', IN: '印度', BR: '巴西', MX: '墨西哥', JP: '日本', KR: '韩国', ID: '印尼', DE: '德国', GB: '英国', FR: '法国', VN: '越南', SA: '沙特' };
@@ -1581,6 +1590,7 @@ async function loadRunDetail() {
   if (r.boost_opening || (r.steps || {}).opening_boost) stepKeys.push('opening_boost');
   if (r.analysis_confirmed || (r.steps || {}).script_check) stepKeys.push('script_check');
   if (r.draft_first || (r.steps || {}).draft_check) stepKeys.push('draft_check', 'reverse_audit', 'final_review');
+  if ((r.steps || {}).deai) stepKeys.push('deai');
   document.getElementById('detail-steps').innerHTML = stepKeys.map((k, i) => {
     const s = (r.steps || {})[k] || {};
     const cls = s.status === 'done' ? 'done' : (s.status === 'running' ? 'running' : (s.status === 'failed' ? 'failed' : ''));
@@ -1663,13 +1673,14 @@ let rvState = null;
 
 function rvKeyOf(r) {
   const s = r.script_v1 || r.final_script || '';
-  return [r.id, r.status, s.length, s.slice(-80), JSON.stringify(r.review || {}).length, JSON.stringify((r.steps || {}).review_zh || {}), JSON.stringify((r.steps || {}).draft_check || {}), JSON.stringify((r.steps || {}).reverse_audit || {}), JSON.stringify((r.steps || {}).final_review || {}), JSON.stringify(((r.analysis || {}).facts) || []).length].join('|');
+  return [r.id, r.status, s.length, s.slice(-80), JSON.stringify(r.review || {}).length, JSON.stringify((r.steps || {}).review_zh || {}), JSON.stringify((r.steps || {}).draft_check || {}), JSON.stringify((r.steps || {}).reverse_audit || {}), JSON.stringify((r.steps || {}).final_review || {}), JSON.stringify((r.steps || {}).deai || {}), JSON.stringify(((r.analysis || {}).facts) || []).length].join('|');
 }
 
 function rvEditing() {
   const el = document.getElementById('rv-panel');
   if (!el) return false;
-  return [...el.querySelectorAll('textarea, input[type=text]')].some(x => x === document.activeElement || (x.value || '').trim());
+  // 去AI感的改法框内容存在 rvState 里,有内容也不挡刷新,只在正在输入时挡
+  return [...el.querySelectorAll('textarea, input[type=text]')].some(x => x === document.activeElement || (!x.classList.contains('rv-keep') && (x.value || '').trim()));
 }
 
 async function renderReviewPanel(r) {
@@ -1784,16 +1795,18 @@ function rvDraw() {
   const rows = v.rows.filter(r => !rvState.onlyFlags || r.flags.length || r.facts.some(f => f.state === 'red'));
   const diffs = v.diffs || [];
   const finalDone = ((v.passes || {}).final || {}).status === 'done';
-  const validTab = k => k === 'current' || (k === 'audit' && v.audit) || diffs.some(d => d.key === k);
+  // 逐章手动改的页面已去掉:只有还没有任何版本对比和审稿报告时(旧任务),才显示当前稿逐章视图
+  const validTab = k => (k === 'current' && !diffs.length && !v.audit) || (k === 'audit' && v.audit) || diffs.some(d => d.key === k);
   if (rvState.waitFinal && finalDone && diffs.some(d => d.key === 'd3')) { rvState.waitFinal = false; rvState.tab = 'd3'; }
   if (!rvState.tab || !validTab(rvState.tab)) rvState.tab = v.audit && (!finalDone || v.audit.at > ((v.passes || {}).final || {}).finished_at) ? 'audit' : diffs.length ? diffs[diffs.length - 1].key : 'current';
   const passLine = rvPassLine(v);
   const diffTab = d => `<button class="rv-tab${rvState.tab === d.key ? ' on' : ''}" onclick="rvSetTab('${d.key}')">${d.key === 'd3' && v.revision ? '终稿全文修订(改了 ' + v.revision.applied + ' 处)' : esc(d.from) + ' → ' + esc(d.to) + '(改了 ' + d.chapters.filter(c => c.changed).length + ' 章)'}</button>`;
   const auditTab = v.audit ? `<button class="rv-tab${rvState.tab === 'audit' ? ' on' : ''}" onclick="rvSetTab('audit')">二稿审稿报告${v.audit.score != null ? '(' + v.audit.score + ' 分)' : ''}</button>` : '';
   const tabs = `<div class="rv-tabs">${diffs.filter(d => d.key !== 'd3').map(diffTab).join('')}${auditTab}${diffs.filter(d => d.key === 'd3').map(diffTab).join('')}
-    <button class="rv-tab${rvState.tab === 'current' ? ' on' : ''}" onclick="rvSetTab('current')">逐章手动改(一般用不到)</button></div>`;
+    </div>`;
   if (rvState.tab === 'audit') {
-    el.innerHTML = `<h2 class="v13">审稿:初稿 → 二稿 → 审稿报告 → 终稿</h2>
+    el.innerHTML = `<h2 style="display:flex;justify-content:space-between;align-items:center"><span class="v13">审稿:初稿 → 二稿 → 审稿报告 → 终稿</span>
+      <span><button class="an-btn v13" onclick="rvTranslate()" ${v.translating ? 'disabled' : ''}>${v.translating ? '中文对照翻译中…' : '补齐中文对照'}</button></span></h2>
       ${passLine}${tabs}
       ${rvState.err ? `<div class="err-list">${esc(rvState.err)}</div>` : ''}
       ${rvAuditHtml(v)}`;
@@ -1918,6 +1931,23 @@ const RV_TRACK_TIPS = {
 };
 const RV_SEV_CLS = { S: 'red', A: 'red', B: 'yellow', C: 'green' };
 const RV_ROUTES = { A: '最小修改', B: '结构优化', C: '深度重构' };
+// 每个问题改好后预计加几分:优先用 AI 在清单里给的 [+n];旧报告没有就按严重程度估,并把总潜力压在合理范围内
+const RV_SEV_GAIN = { S: 4, A: 2.5, B: 1.2, C: 0.5 };
+function rvAuditGains(au) {
+  const score = typeof au.score === 'number' ? au.score : null;
+  const out = {};
+  let raw = 0, guessed = false;
+  au.issues.forEach(x => {
+    const g = typeof x.gain === 'number' ? x.gain : (guessed = true, RV_SEV_GAIN[x.severity] || 1);
+    out[x.id] = g; raw += g;
+  });
+  if (score != null && raw > 0) {
+    const cap = guessed ? Math.max(0, 92 - score) : Math.max(0, 100 - score);
+    if (raw > cap) Object.keys(out).forEach(k => { out[k] = out[k] * cap / raw; });
+  }
+  Object.keys(out).forEach(k => { out[k] = Math.round(out[k] * 10) / 10; });
+  return { gains: out, guessed };
+}
 const RV_ROUTE_TIPS = {
   A: '章节顺序和写法基本不动,只修你勾的问题(错的数、不成立的推理、别扭的句子)。改动最少,最安全;稿子底子不错、只有几处硬伤时选它。',
   B: '主线不动,但可以调章节里的内容顺序、删重复、补缺的解释和过渡、把揭晓提前或后移。改动中等;稿子「有料但讲得乱、拖」时选它。',
@@ -1932,11 +1962,18 @@ function rvAuditHtml(v) {
   const used = au.used_selection;
   const order = { P0: 0, P1: 1, P2: 2 };
   const issues = [...au.issues].sort((a, b) => (order[a.priority] - order[b.priority]) || a.id.localeCompare(b.id));
+  const G = rvAuditGains(au);
+  const sumOf = ids => Math.round([...ids].reduce((n, id) => n + (G.gains[id] || 0), 0) * 10) / 10;
+  const base = typeof au.score === 'number' ? au.score : null;
+  const est = ids => (base == null ? null : Math.min(100, Math.round((base + sumOf(ids)) * 10) / 10));
+  const estLine = base == null ? '' : `<div class="rv-est v13">当前 <b>${base}</b> 分 → 按现在勾选的 ${sel.ids.size} 个问题改好,预计 <b>${est(sel.ids)}</b> 分(+${sumOf(sel.ids)});全部改好预计 ${est(au.issues.map(x => x.id))} 分。<span class="hint">${G.guessed ? '这份报告没给每条的加分,按严重程度估算(S≈4、A≈2.5、B≈1.2、C≈0.5,总分封顶)。' : '每条加分是审稿 AI 按评分表估的。'}只是估算,实际以终审复审为准。</span></div>`;
   const rows = issues.map(x => `<div class="rv-ai${sel.ids.has(x.id) ? ' on' : ''}">
       <label class="rv-ai-head"><input type="checkbox" ${sel.ids.has(x.id) ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="rvAuditToggle('${escAttr(x.id)}', this.checked)">
         <b>${esc(x.id)}</b> <span class="rv-chip ${RV_SEV_CLS[x.severity] || ''}">${esc(x.severity)} 级</span> <span class="rv-chip ${x.priority === 'P0' ? 'red' : x.priority === 'P1' ? 'yellow' : 'green'}">${esc(x.priority)}</span>
+        <span class="rv-gain" title="改好这一处,总分预计提高">+${G.gains[x.id]} 分</span>
         <span class="hint">${esc(x.chapter)} · ${esc(x.type)}</span></label>
-      <div class="rv-ai-body">${esc(x.problem)}${x.direction ? `<br><span class="hint">修改方向:${esc(x.direction)}</span>` : ''}
+      <div class="rv-ai-body"><div class="rv-ai-cols"><div>${esc(x.problem)}${x.direction ? `<br><span class="hint">修改方向:${esc(x.direction)}</span>` : ''}</div>
+        <div class="rv-ai-zh">${!x.need_zh ? '<span class="hint">(已是中文)</span>' : (x.zh_problem || x.zh_direction || !x.need_zh) ? `${esc(x.zh_problem || x.problem)}${x.direction ? `<br><span class="hint">修改方向:${esc(x.zh_direction || x.direction)}</span>` : ''}` : `<span class="hint">${v.translating ? '中文翻译中…' : '还没有中文,点上方「补齐中文对照」'}</span>`}</div></div>
         ${x.detail ? `<div><a href="javascript:void 0" onclick="rvAuditOpen('${escAttr(x.id)}')">${sel.open[x.id] ? '收起详情' : '看详情(原文位置、为什么不好、示范修改)'}</a></div>${sel.open[x.id] ? `<div class="rv-md rv-ai-detail">${rvMd(x.detail)}</div>` : ''}` : ''}</div>
     </div>`).join('');
   const routes = ['A', 'B', 'C'].map(k => `<label class="rv-route${sel.route === k ? ' on' : ''}"><input type="radio" name="rv-route" ${sel.route === k ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="rvAuditRoute('${k}')">
@@ -1956,6 +1993,7 @@ function rvAuditHtml(v) {
       <span class="hint">${esc(RV_TRACK_TIPS[sel.track] || '')}</span></div>
     <div class="an-sec v13">1. 勾选要改的问题(默认勾上 S/A 级和 P0/P1;不想改的取消勾选)</div>
     <div class="rv-ops"><button class="an-btn" onclick="rvAuditAll(true)" ${busy ? 'disabled' : ''}>全选</button><button class="an-btn" onclick="rvAuditAll(false)" ${busy ? 'disabled' : ''}>全不选</button><button class="an-btn" onclick="rvAuditAll('sa')" ${busy ? 'disabled' : ''}>只选 S/A 级</button><span class="hint">已选 ${sel.ids.size} 个</span></div>
+    ${estLine}
     ${rows || '<div class="hint">报告里没有解析出问题清单,可以直接看下面的完整报告,把要改的写进补充意见。</div>'}
     <div class="an-sec v13">2. 选修改路线</div>
     <div class="rv-ops">${routes}</div>${routeText}
@@ -1992,18 +2030,19 @@ async function rvAuditFinal(skip) {
 // 整页全文:以二稿为底,改掉的原句划线、后面紧跟改成的文字,右上角是编号;每章下面列出这一章每处修改的中文和理由。
 const RV_CIRCLED = '①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳';
 const rvNum = n => RV_CIRCLED[n - 1] || '(' + n + ')';
-function rvRevisionHtml(rev, translating) {
-  const clean = rvState.revMode === 'clean';
+// 一份修订稿的整页划线(终审:以二稿为底;去AI感:以终稿为底)
+function rvDocHtml(rev, clean, translating, baseLabel) {
   const byN = Object.fromEntries(rev.edits.map(e => [e.n, e]));
   const pending = translating ? '<span class="hint">中文翻译中…</span>' : '<span class="hint">(还没有中文,点上方「补齐中文对照」)</span>';
   const zhLine = z => z ? esc(z) : pending;
+  const pre = clean ? 'c' : (baseLabel === '终稿' ? 'da' : 'fr');
   const body = rev.chapters.map(c => {
     const text = clean ? esc(c.final) : c.segs.map(s => {
       if (s.t === 'text') return esc(s.text);
       const e = byN[s.n];
-      return `<a class="rv-rev" href="#rv-note-${e.n}" title="${escAttr(e.reason || '')}"><span class="rv-del">${esc(e.old)}</span>${e.new ? '<span class="rv-ins">' + esc(e.new) + '</span>' : ''}<sup class="rv-n">${rvNum(e.n)}</sup></a>`;
+      return `<a class="rv-rev" href="#rv-note-${pre}${e.n}" title="${escAttr(e.reason || '')}"><span class="rv-del">${esc(e.old)}</span>${e.new ? '<span class="rv-ins">' + esc(e.new) + '</span>' : ''}<sup class="rv-n">${rvNum(e.n)}</sup></a>`;
     }).join('');
-    const notes = clean ? '' : c.edits.map(n => byN[n]).map(e => `<div class="rv-note" id="rv-note-${e.n}">
+    const notes = clean ? '' : c.edits.map(n => byN[n]).map(e => `<div class="rv-note" id="rv-note-${pre}${e.n}">
         <div class="rv-note-head"><b>${rvNum(e.n)}</b> ${e.category ? '<span class="rv-chip red">' + esc(e.category) + '</span>' : ''} <span class="rv-note-why">${esc(e.reason || '')}</span></div>
         <div class="rv-note-grid">
           <div><div class="rv-col-title">原句</div><div class="rv-del-plain">${esc(e.old)}</div><div class="rv-zh">${zhLine(e.zh_old)}</div></div>
@@ -2014,33 +2053,173 @@ function rvRevisionHtml(rev, translating) {
       ${rvState.revZh ? `<div class="rv-zh">${c.zh_final ? esc(c.zh_final) : pending}</div>` : ''}
       ${notes}</div>`;
   }).join('');
-  const failed = rev.failed.length && !clean ? `<details class="rv-md-box"><summary>${rev.failed.length} 处修改没有采用(原句在二稿里找不到或互相重叠)</summary>${rev.failed.map(e => `<div class="rv-issue"><b>${rvNum(e.n)} ${esc(e.chapter || '')} ${esc(e.category || '')}</b> ${esc(e.error || '')}<br><span class="hint">原句:${esc(e.old)}</span><br><span class="hint">改成:${esc(e.new || '(删除)')}</span><br><span class="hint">理由:${esc(e.reason || '')}</span></div>`).join('')}</details>` : '';
-  const fin = rvState.view.final;
+  const reverted = rev.failed.filter(e => /反向复核撤销/.test(e.error || ''));
+  const lost = rev.failed.filter(e => !/反向复核撤销/.test(e.error || ''));
+  const list = (xs, title, open) => xs.length && !clean ? `<details class="rv-md-box" ${open ? 'open' : ''}><summary>${title}</summary>${xs.map(e => `<div class="rv-issue"><b>${rvNum(e.n)} ${esc(e.chapter || '')} ${esc(e.category || '')}</b> ${esc(e.error || '')}<br><span class="hint">原句:${esc(e.old)}</span>${e.zh_old ? '<br><span class="hint">原句中文:' + esc(e.zh_old) + '</span>' : ''}<br><span class="hint">改成:${esc(e.new || '(删除)')}</span>${e.zh_new ? '<br><span class="hint">改成中文:' + esc(e.zh_new) + '</span>' : ''}<br><span class="hint">理由:${esc(e.reason || '')}</span></div>`).join('')}</details>` : '';
+  return `${clean ? '' : `<div class="hint v13">以${esc(baseLabel || rev.from)}为底,改了 ${rev.applied} 处:<span class="rv-del">划线</span>是删掉的原句,<span class="rv-ins">绿色</span>是改成的文字,右上角编号对应每章下面的说明(原句中文、改成的文字和中文、修改理由)。</div>`}
+    ${list(reverted, reverted.length + ' 处修改被反向复核撤销(改过头了,已恢复原句)', false)}
+    ${list(lost, lost.length + ' 处修改没有采用(原句找不到或互相重叠)', lost.length > rev.applied)}
+    <div class="rv-doc">${body}</div>`;
+}
+
+function rvTrackSelect(v, cur, onchange, busy) {
+  return `<select onchange="${onchange}" ${busy ? 'disabled' : ''}>${(v.tracks || []).map(x => `<option value="${escAttr(x.key)}" ${cur === x.key ? 'selected' : ''}>${esc(x.name)}${x.key === v.track_default ? '(自动匹配)' : ''}</option>`).join('')}</select>`;
+}
+
+// 终稿页:显示修改痕迹(终审) / 去AI感 / 只看终稿(最新稿)
+function rvRevisionHtml(rev, translating) {
+  const v = rvState.view;
+  const mode = rvState.revMode || 'marked';
+  const fin = v.final;
+  const P = v.passes || {};
+  const busy = (P.final || {}).status === 'running' || (P.deai || {}).status === 'running';
+  const latest = v.deai_revision || rev;
+  const modes = `<div class="rv-ops v13">
+      <button class="rv-tab${mode === 'marked' ? ' on' : ''}" onclick="rvState.revMode='marked';rvDraw()">显示修改痕迹</button>
+      <button class="rv-tab${mode === 'deai' ? ' on' : ''}" onclick="rvState.revMode='deai';rvDraw()">去AI感${v.deai_revision ? '(改了 ' + v.deai_revision.applied + ' 处)' : ''}</button>
+      <button class="rv-tab${mode === 'clean' ? ' on' : ''}" onclick="rvState.revMode='clean';rvDraw()">只看终稿${v.deai_revision ? '(去AI感后)' : ''}</button>
+      <label class="hint"><input type="checkbox" ${rvState.revZh ? 'checked' : ''} onchange="rvState.revZh=this.checked;rvDraw()"> 每章附整章中文</label>
+      <button class="an-btn v13" onclick="rvCopyFinal(this)">复制终稿纯净版</button>
+    </div>`;
+  if (mode === 'clean') return modes + rvDocHtml(latest, true, translating);
+  if (mode === 'deai') return modes + rvDeaiHtml(v, translating, busy);
   let head = '';
   if (fin) {
     const dims = fin.dims || Object.keys(fin.scores_before || {});
-    const sc = o => (o && o[d] != null ? o[d] : '—');
+    const val = (o, d) => (o && o[d] != null ? o[d] : '—');
     const avg = o => { const xs = dims.map(d => o && o[d]).filter(x => typeof x === 'number'); return xs.length ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length * 10) / 10 : '—'; };
-    let d;
-    const rows = dims.map(dd => { d = dd; const b = sc(fin.scores_before), a = sc(fin.scores_after); const up = typeof a === 'number' && typeof b === 'number' ? (a > b ? ' <span class="rv-ins">↑' + Math.round((a - b) * 10) / 10 + '</span>' : a < b ? ' <span class="rv-del">↓' + Math.round((b - a) * 10) / 10 + '</span>' : '') : ''; return `<tr><td>${esc(dd)}</td><td>${b}</td><td>${a}${up}</td></tr>`; }).join('');
+    const rows = dims.map(d => { const b = val(fin.scores_before, d), a = val(fin.scores_after, d); const up = typeof a === 'number' && typeof b === 'number' ? (a > b ? ' <span class="rv-ins">↑' + Math.round((a - b) * 10) / 10 + '</span>' : a < b ? ' <span class="rv-del">↓' + Math.round((b - a) * 10) / 10 + '</span>' : '') : ''; return `<tr><td>${esc(d)}</td><td>${b}</td><td>${a}${up}</td></tr>`; }).join('');
     head = `<div class="rv-bar v13"><span>赛道 <b>${esc(fin.track_name || '')}</b></span><span>复审结论 <b class="${fin.verdict === '达标' ? '' : 'rv-flag'}">${esc(fin.verdict || '—')}</b></span><span>七维平均 <b>${avg(fin.scores_before)} → ${avg(fin.scores_after)}</b></span><span>复审 ${(fin.rechecks || []).length} 轮</span></div>
       <div class="rv-md"><div class="rv-md-table"><table><tr><th>维度</th><th>修改前</th><th>修改后</th></tr>${rows}</table></div></div>
       <details class="rv-md-box"><summary>终审审稿报告(修改前:七维评分、P0–P3 问题、结构方案、待核实事实)</summary><div class="rv-md">${rvMd(fin.audit_report)}</div></details>
       ${(fin.rechecks || []).map(r => `<details class="rv-md-box"><summary>复审报告(第 ${r.round} 轮:${esc(r.verdict || '—')}${r.edits ? ',又改了 ' + r.edits + ' 处' : ''})</summary><div class="rv-md">${rvMd(r.report)}</div></details>`).join('')}`;
   }
-  return `${head}<div class="rv-ops v13">
-      <button class="rv-tab${clean ? '' : ' on'}" onclick="rvState.revMode='marked';rvDraw()">显示修改痕迹</button>
-      <button class="rv-tab${clean ? ' on' : ''}" onclick="rvState.revMode='clean';rvDraw()">只看终稿</button>
-      <label class="hint"><input type="checkbox" ${rvState.revZh ? 'checked' : ''} onchange="rvState.revZh=this.checked;rvDraw()"> 每章附整章中文</label>
-      <button class="an-btn v13" onclick="rvCopyFinal(this)">复制终稿纯净版</button>
-    </div>
-    <div class="hint v13">以${esc(rev.from)}为底,终审改了 ${rev.applied} 处:<span class="rv-del">划线</span>是删掉的原句,<span class="rv-ins">绿色</span>是改成的文字,右上角编号对应每章下面的说明(原句中文、改成的文字和中文、修改理由)。</div>
-    ${failed}
-    <div class="rv-doc">${body}</div>`;
+  const ft = rvState.finalTrack || (fin && fin.track) || v.track_default || 'general';
+  const trackRow = `<div class="rv-ops v13"><b>终审赛道</b>${rvTrackSelect(v, ft, "rvState.finalTrack=this.value;rvDraw()", busy)}
+      <span class="hint">${esc(RV_TRACK_TIPS[ft] || '')}</span>
+      <button class="an-btn v13" onclick="rvRefinal()" ${busy ? 'disabled' : ''}>${fin && ft !== fin.track ? '换这个赛道重新终审' : '重新终审'}</button></div>`;
+  return head + trackRow + modes + rvDocHtml(rev, false, translating, rev.from);
+}
+
+const RV_DEAI_TIPS = {
+  econ: '保护经营数字、成本计算、店主原话和反直觉结论;重点去掉每笔账后面的套路总结和一章一个的「돈은 어디로?」式问句。',
+  history: '保护年代人物、史料出处和「推测/定论」的区分;重点去掉空洞升华和每段一样的「진짜 놀라운 건」开头。',
+  science: '保护研究出处、证据强弱的措辞和机制解释;重点去掉「과학자들은 놀라운 사실을」式空话和煽情收尾。',
+  pov: '保护第二人称代入、每一级的规则和代价;重点去掉每一级一模一样的开头收尾和堆砌的金句。',
+  general: '保护事实、数字和因果链;去掉重复总结和模板化转场。'
+};
+// 去AI感选择:勾哪些位置、每处用第几种改法(-1 = 自己写)、手改后的文字
+function rvDeaiSel(d) {
+  if (!rvState.deaiSel || rvState.deaiSel.at !== d.at) {
+    const ap = d.applied;
+    const picked = ap ? Object.fromEntries(ap.picks.map(p => [p.id, p.text])) : null;
+    const pick = {}, text = {};
+    d.items.forEach(x => {
+      const t = picked && picked[x.id];
+      const i = t != null ? x.options.findIndex(o => o.text === t) : 0;
+      pick[x.id] = t != null && i < 0 ? -1 : Math.max(0, i);
+      text[x.id] = t != null ? t : (x.options[0] || {}).text || '';
+    });
+    rvState.deaiSel = { at: d.at, ids: new Set(picked ? Object.keys(picked) : d.items.filter(x => x.priority !== 'P2').map(x => x.id)), pick, text };
+  }
+  return rvState.deaiSel;
+}
+function rvDeaiHtml(v, translating, busy) {
+  const d = v.deai;
+  const st = (v.passes || {}).deai || {};
+  const dt = rvState.deaiTrack || (d && d.track) || ((v.final || {}).track) || v.track_default || 'general';
+  const running = st.status === 'running';
+  const pending = `<span class="hint">${translating ? '中文翻译中…' : '(还没有中文)'}</span>`;
+  const ctrl = `<div class="hint v13">去AI感分两步:① AI 先诊断终稿里机械、重复、模板化的地方,每处给 3~5 种改法(都配中文,从改动最小排到最大),这一步不动稿子;② 你勾选要改的位置、挑一种改法(也可以在框里自己改),点「修改并去除AI感」,按你的选择替换,结果写回 V1 文案。</div>
+    <div class="rv-ops v13"><b>去AI感赛道</b>${rvTrackSelect(v, dt, "rvState.deaiTrack=this.value;rvDraw()", busy)}
+      <span class="hint">${esc(RV_DEAI_TIPS[dt] || '')}</span>
+      <button class="an-btn v13" onclick="rvRunDeai()" ${busy ? 'disabled' : ''}>${running ? '去AI感进行中(' + esc(st.stage || '') + ')…' : d ? (d.track !== dt ? '换这个赛道重新生成建议' : '重新生成建议') : '生成去AI感建议'}</button></div>
+    ${st.status === 'failed' ? `<div class="err-list">去AI感失败:${esc(st.error || '')}</div>` : ''}`;
+  if (!d) return ctrl;
+  const sel = rvDeaiSel(d);
+  const pc = p => (p === 'P0' ? 'red' : p === 'P1' ? 'yellow' : 'green');
+  const rows = d.items.map(x => {
+    const on = sel.ids.has(x.id);
+    const k = sel.pick[x.id];
+    const opts = x.options.map((o, i) => `<label class="rv-dopt${k === i ? ' on' : ''}"><input type="radio" name="rv-d-${escAttr(x.id)}" ${k === i ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="rvDeaiPick('${escAttr(x.id)}', ${i})">
+        <div class="rv-ai-cols" style="flex:1"><div><b>方案${i + 1}</b> ${o.text ? esc(o.text) : '<span class="rv-del">(删掉这句)</span>'}${o.note ? `<div class="hint">${esc(o.note)}</div>` : ''}</div>
+        <div class="rv-ai-zh">${o.text ? (o.zh ? esc(o.zh) : pending) : '删掉'}</div></div></label>`).join('')
+      + `<label class="rv-dopt${k === -1 ? ' on' : ''}"><input type="radio" name="rv-d-${escAttr(x.id)}" ${k === -1 ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="rvDeaiPick('${escAttr(x.id)}', -1)"><b>自己写</b><span class="hint">(在下面框里改)</span></label>`;
+    const cur = k >= 0 ? x.options[k] : null;
+    const edited = !cur || sel.text[x.id] !== cur.text;
+    return `<div class="rv-ai${on ? ' on' : ''}">
+      <label class="rv-ai-head"><input type="checkbox" ${on ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="rvDeaiToggle('${escAttr(x.id)}', this.checked)">
+        <b>${esc(x.id)}</b> <span class="rv-chip">${esc(x.chapter)}</span> <span class="rv-chip ${pc(x.priority)}">${esc(x.priority)}</span> <span class="hint">${esc(x.type)}</span>
+        ${x.found === false ? '<span class="rv-chip red" title="应用时会让 AI 再校正一次原句">原句没在终稿里找到</span>' : ''}</label>
+      <div class="rv-ai-body">
+        <div class="rv-ai-cols"><div class="rv-del-plain">${esc(x.old)}</div><div class="rv-ai-zh">${x.old_zh ? esc(x.old_zh) : pending}</div></div>
+        ${x.problem ? `<div class="hint" style="margin:2px 0 4px">为什么有 AI 感:${esc(x.problem)}</div>` : ''}
+        ${on ? `<div class="rv-dopts">${opts}</div>
+        <div class="rv-edit"><textarea class="rv-keep" rows="2" ${busy ? 'disabled' : ''} oninput="rvDeaiText('${escAttr(x.id)}', this.value)" placeholder="留空表示删掉这句">${esc(sel.text[x.id] || '')}</textarea>
+          <div class="hint">${edited ? '已手动修改,中文仅供参考:' : '中文:'}${cur && cur.text ? esc(cur.zh || '') : cur ? '删掉这句' : ''}</div></div>` : ''}
+      </div></div>`;
+  }).join('');
+  const ap = d.applied;
+  const applying = running && /修改/.test(st.stage || '');
+  return ctrl + `<div class="rv-bar v13"><span>赛道 <b>${esc(d.track_name || '')}</b></span><span>建议改 <b>${d.items.length}</b> 处(P0 ${d.items.filter(x => x.priority === 'P0').length}、P1 ${d.items.filter(x => x.priority === 'P1').length}、P2 ${d.items.filter(x => x.priority === 'P2').length})</span>${ap ? `<span>已按你的选择改了 <b>${ap.ok}</b> 处${ap.failed ? ',' + ap.failed + ' 处没对上原句' : ''}</span>` : '<span>还没应用</span>'}</div>
+    ${d.stale ? '<div class="rv-flag"><b>注意</b>:生成建议以后稿子又改过,原句可能对不上,请重新生成建议。</div>' : ''}
+    ${d.truncated ? '<div class="rv-flag"><b>注意</b>:AI 输出太长被截断,后面几处可能没列出来。</div>' : ''}
+    <details class="rv-md-box"><summary>AI 感诊断报告(整体诊断、重复信息、结构节奏、可以保留、待核实)</summary><div class="rv-md">${rvMd(d.diagnosis)}</div></details>
+    <div class="an-sec v13">勾选要改的位置,每处挑一种改法(默认勾上 P0/P1、选方案1;不想改的取消勾选)</div>
+    <div class="rv-ops"><button class="an-btn" onclick="rvDeaiAll('all')" ${busy ? 'disabled' : ''}>全选</button><button class="an-btn" onclick="rvDeaiAll('none')" ${busy ? 'disabled' : ''}>全不选</button><button class="an-btn" onclick="rvDeaiAll('p01')" ${busy ? 'disabled' : ''}>只选 P0/P1</button><span class="hint">已选 ${sel.ids.size} 处</span></div>
+    ${rows || '<div class="hint">AI 没有列出需要改的位置,可以看上面的诊断报告,或换个赛道重新生成。</div>'}
+    <div class="rv-ops v13" style="margin:8px 0"><button class="an-btn v13" onclick="rvDeaiApply()" ${busy || d.stale ? 'disabled' : ''}>${applying ? '修改中…' : `修改并去除AI感(${sel.ids.size} 处)`}</button><span class="hint">${ap ? '再点一次会从终稿按新的选择重新改' : '以终稿为底替换,结果写回 V1 文案'}</span></div>
+    ${ap && v.deai_revision ? `<div class="an-sec v13">去AI感稿(相对终稿的修改)</div>${rvDocHtml(v.deai_revision, false, translating, '终稿')}` : ''}`;
+}
+function rvDeaiToggle(id, on) { const s = rvState.deaiSel; if (on) s.ids.add(id); else s.ids.delete(id); rvDraw(); }
+function rvDeaiPick(id, i) {
+  const s = rvState.deaiSel, x = rvState.view.deai.items.find(y => y.id === id);
+  s.pick[id] = i;
+  if (i >= 0) s.text[id] = x.options[i].text;
+  rvDraw();
+}
+function rvDeaiText(id, t) { const s = rvState.deaiSel; s.text[id] = t; s.pick[id] = -1; }
+function rvDeaiAll(mode) {
+  const d = rvState.view.deai, s = rvState.deaiSel;
+  s.ids = new Set(d.items.filter(x => mode === 'all' || (mode === 'p01' && x.priority !== 'P2')).map(x => x.id));
+  rvDraw();
+}
+async function rvDeaiApply() {
+  const d = rvState.view.deai, s = rvState.deaiSel;
+  const picks = d.items.filter(x => s.ids.has(x.id)).map(x => ({ id: x.id, text: s.text[x.id] || '' }));
+  if (!confirm(picks.length ? `按你选的 ${picks.length} 处改法修改终稿?结果写回 V1 文案。` : '一处都没选,会恢复成终稿。继续?')) return;
+  if (document.activeElement) document.activeElement.blur();
+  try { await rvPost('deai', { apply: true, picks }); } catch (e) { rvState.err = e.message; }
+  rvState.key = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
+}
+
+async function rvRunDeai() {
+  const v = rvState.view;
+  const dt = rvState.deaiTrack || (v.deai && v.deai.track) || ((v.final || {}).track) || v.track_default || 'general';
+  if (!confirm(v.deai ? '重新生成去AI感建议?现在的建议和勾选会被替换(已经改好的稿子先保留,再点「修改并去除AI感」才会替换)。' : '生成去AI感建议?AI 会诊断终稿,每处给几种改法,这一步不改稿子。')) return;
+  try { await rvPost('deai', { track: dt }); } catch (e) { rvState.err = e.message; }
+  rvState.revMode = 'deai';
+  rvState.key = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
+}
+
+async function rvRefinal() {
+  const v = rvState.view;
+  const au = v.audit;
+  const fin = v.final;
+  const ft = rvState.finalTrack || (fin && fin.track) || v.track_default || 'general';
+  const s = au && (au.used_selection || au.selection);
+  if (!confirm('用「' + ((v.tracks || []).find(x => x.key === ft) || {}).name + '」赛道重新终审?会从二稿重新审稿、修改、复审' + (s ? ',沿用上次勾选的 ' + s.ids.length + ' 个问题和路线' : '') + (v.deai ? ';现在的去AI感稿会被替换,需要再跑一次' : '') + '。')) return;
+  try { await rvPost('final', { ids: s ? s.ids : [], route: s ? s.route : '', note: s ? s.note : '', track: ft }); } catch (e) { rvState.err = e.message; }
+  rvState.waitFinal = true;
+  rvState.revMode = 'marked';
+  rvState.key = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
 }
 
 async function rvCopyFinal(btn) {
-  const rev = rvState.view && rvState.view.revision;
+  const rev = rvState.view && (rvState.view.deai_revision || rvState.view.revision);
   if (!rev) return;
   const text = cleanScriptText(rev.final_text);
   let ok = false;

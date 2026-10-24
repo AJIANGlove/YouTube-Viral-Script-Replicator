@@ -186,11 +186,12 @@ function versionDiffs(state) {
 }
 
 // 终稿全文修订视图:以二稿为底,每章切成「原文 / 修改」片段,修改处附中文和理由
-function revisionView(state) {
+function revisionView(state, key) {
   const vs = arr(state.versions);
-  const d3 = vs.find(v => v.key === 'd3');
-  const d2 = vs.find(v => v.key === 'd2') || vs.find(v => v.key === 'd1');
-  if (!d3 || !arr(d3.edits).length || !d2) return null;
+  const k = key || 'd3';
+  const d3 = vs.find(v => v.key === k);
+  const d2 = k === 'd4' ? vs.find(v => v.key === 'd3') : (vs.find(v => v.key === 'd2') || vs.find(v => v.key === 'd1'));
+  if (!d3 || !d2 || (!arr(d3.edits).length && k !== 'd4')) return null;
   const edits = d3.edits.map(e => ({ ...e, zh_old: zhOf(state, e.old), zh_new: e.new ? zhOf(state, e.new) : '' }));
   const finals = Object.fromEntries(scriptChapters(d3.text).map(c => [c.id, c.text]));
   const chapters = scriptChapters(d3.base_text || d2.text).map(c => {
@@ -296,11 +297,13 @@ function buildView(run, asset) {
   const budget = rows.reduce((n, r) => n + (r.budget || 0), 0);
   return {
     run_id: run.id, status: run.status, target_language: lang,
-    passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null },
-    audit: state.audit ? { ...state.audit, score: state.audit.score != null ? state.audit.score : reportScore(state.audit.report), stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
+    passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null, deai: (run.steps || {}).deai || null },
+    audit: state.audit ? { ...state.audit, issues: arr(state.audit.issues).map(x => ({ ...x, zh_problem: hasForeign(x.problem) ? zhOf(state, x.problem) : '', zh_direction: hasForeign(x.direction) ? zhOf(state, x.direction) : '', need_zh: hasForeign(x.problem) || hasForeign(x.direction) })), score: state.audit.score != null ? state.audit.score : reportScore(state.audit.report), stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
     versions: arr(state.versions).map(v => ({ key: v.key, label: v.label, at: v.at, issues: arr(v.issues), changed: arr(v.changed), truncated: !!v.truncated })),
     diffs: versionDiffs(state),
     revision: revisionView(state),
+    deai_revision: revisionView(state, 'd4'),
+    deai: state.deai ? { ...state.deai, items: arr(state.deai.items).map(x => ({ ...x, old_zh: x.old_zh || zhOf(state, x.old), options: x.options.map(o => ({ ...o, zh: o.zh || (o.text ? zhOf(state, o.text) : '') })) })), stale: !!state.deai.base_hash && state.deai.base_hash !== hash(arr(state.versions).some(v => v.key === 'd4' && v.text === script) ? ((arr(state.versions).find(v => v.key === 'd3') || {}).text || '') : script) } : null,
     final: state.final || null,
     tracks: trackList(), track_default: state.final_track || autoTrack(run, asset),
     translating: ((run.steps || {}).review_zh || {}).status === 'running',
@@ -343,6 +346,9 @@ function needsZh(text) {
   return other > han;
 }
 
+// 中文为主但夹着韩文、日文假名或英文单词的句子(审稿问题、修改方向),也要整句翻成中文
+function hasForeign(text) { return /[가-힯぀-ヿ]|[A-Za-z]{4,}/.test(String(text || '')); }
+
 // ===KEY=== 分段文本 → { KEY: 内容 };没有收尾的最后一段(输出被截断)丢掉
 function parseBlocks(text, truncated) {
   const out = {};
@@ -365,7 +371,7 @@ async function rawCall(run, cfg, prompt, label) {
 
 async function translateTexts(run, cfg, texts, label) {
   const out = {};
-  const items = [...new Set(texts.filter(t => t && needsZh(t)))];
+  const items = [...new Set(texts.filter(t => t && (needsZh(t) || hasForeign(t))))];
   let batch = [], size = 0;
   const flush = async () => {
     if (!batch.length) return;
@@ -404,6 +410,10 @@ function textsToTranslate(run) {
     scriptChapters(vs[i].text).forEach(c => { if (before[c.id] !== c.text) texts.push(c.text, before[c.id] || ''); });
   }
   vs.forEach(v => arr(v.edits).forEach(e => texts.push(e.old, e.new || '')));
+  // 二稿审稿报告的问题和修改方向
+  arr(((run.review || {}).audit || {}).issues).forEach(x => { if (hasForeign(x.problem)) texts.push(x.problem); if (hasForeign(x.direction)) texts.push(x.direction); });
+  // 去AI感候选改法:AI 没给中文的补翻
+  arr(((run.review || {}).deai || {}).items).forEach(x => { if (!x.old_zh) texts.push(x.old); x.options.forEach(o => { if (!o.zh && o.text) texts.push(o.text); }); });
   const have = ((run.review || {}).zh || {}).byHash || {};
   return texts.filter(t => t && !have[hash(t)]);
 }
@@ -478,8 +488,21 @@ function programFindings(run, asset) {
 // ---------- 终审:逐处修改 ----------
 // 终审不再整章重写,而是列出一处一处的修改(原句 → 改成 + 理由);程序在二稿里定位原句、替换,拼出终稿,
 // 页面在整页全文上划线展示每一处改动,附中文和理由。
-const EDIT_FIELDS = { 章节: 'chapter', 类别: 'category', 原句: 'old', 改成: 'new', 理由: 'reason' };
-const EDIT_DELETE = /^[((]\s*删除\s*[))]$|^删除$/;
+const EDIT_FIELDS = {
+  章节: 'chapter', 位置: 'chapter', 类别: 'category', 类型: 'category',
+  原句: 'old', 原文: 'old', 修改前: 'old', 改前: 'old',
+  改成: 'new', 改为: 'new', 修改为: 'new', 修改后: 'new', 改后: 'new', 新句: 'new',
+  理由: 'reason', 原因: 'reason', 修改理由: 'reason', 说明: 'reason'
+};
+const EDIT_FIELD_RE = new RegExp('^\\s*[-*•]?\\s*\\**\\s*(' + Object.keys(EDIT_FIELDS).sort((a, b) => b.length - a.length).join('|') + ')\\s*\\**\\s*[:：]\\s*\\**\\s*(.*)$');
+const EDIT_DELETE = /^[(\uFF08\u3010\[]?\s*(删除|删掉|删去)[^)\uFF09\u3011\]]{0,8}[)\uFF09\u3011\]]?$/;
+// 模型常给原句加引号或书名号:成对的包裹符号去掉
+function unwrapQuote(s) {
+  const pairs = [['「', '」'], ['『', '』'], ['“', '”'], ['"', '"'], ["'", "'"], ['‘', '’'], ['《', '》'], ['`', '`']];
+  let x = String(s || '').trim().replace(/^\*+|\*+$/g, '').trim();
+  for (const [a, b] of pairs) if (x.length > 2 && x.startsWith(a) && x.endsWith(b) && !x.slice(1, -1).includes(b)) return x.slice(1, -1).trim();
+  return x;
+}
 
 function parseEdits(text) {
   const parts = String(text || '').replace(/^[*`\s]*(===\s*[A-Za-z]+\s*===)[*`\s]*$/gm, '$1').split(/^===\s*EDIT\s*===\s*$/m).slice(1);
@@ -488,10 +511,12 @@ function parseEdits(text) {
     const e = {};
     let cur = null;
     body.split('\n').forEach(line => {
-      const m = line.match(/^\s*[-*]?\s*\**\s*(章节|类别|原句|改成|理由)\s*\**\s*[:：]\s*(.*)$/);
-      if (m) { cur = EDIT_FIELDS[m[1]]; e[cur] = m[2]; } else if (cur) e[cur] += '\n' + line;
+      const m = line.match(EDIT_FIELD_RE);
+      if (m && !(cur && e[EDIT_FIELDS[m[1]]] != null)) { cur = EDIT_FIELDS[m[1]]; e[cur] = m[2]; } else if (cur) e[cur] += '\n' + line;
     });
     Object.keys(e).forEach(k => { e[k] = e[k].trim(); });
+    if (e.old) e.old = unwrapQuote(e.old);
+    if (e.new) e.new = unwrapQuote(e.new);
     if (e.new != null && EDIT_DELETE.test(e.new)) e.new = '';
     e.chapter = (String(e.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase();
     return e;
@@ -499,14 +524,43 @@ function parseEdits(text) {
 }
 
 // 在一章正文里找原句:先逐字找,找不到就放宽空白和引号再找
-function locate(text, old) {
+// 定位顺序:逐字 → 忽略空白和引号差异 → 原句里有省略号时按首尾两段 → 多句原句按首句和末句
+const ELLIPSIS = /\s*(?:…+|\.{3,}|⋯+|。{3,})\s*/;
+function compactIndex(text) {
+  const norm = ch => (/["“”„]/.test(ch) ? '"' : /['‘’]/.test(ch) ? "'" : ch);
+  let s = '';
+  const pos = [];
+  for (let i = 0; i < text.length; i++) { if (/\s/.test(text[i])) continue; s += norm(text[i]); pos.push(i); }
+  return { s, pos };
+}
+function locateLoose(text, old) {
   const i = text.indexOf(old);
   if (i >= 0) return { start: i, end: i + old.length };
-  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const pat = old.trim().split(/\s+/).map(w => esc(w).replace(/["“”]/g, '["“”]').replace(/['‘’]/g, "['‘’]")).join('\\s+');
-  if (!pat) return null;
-  const m = new RegExp(pat).exec(text);
-  return m ? { start: m.index, end: m.index + m[0].length } : null;
+  const T = compactIndex(text), O = compactIndex(old).s;
+  if (!O) return null;
+  const j = T.s.indexOf(O);
+  return j >= 0 ? { start: T.pos[j], end: T.pos[j + O.length - 1] + 1 } : null;
+}
+function locate(text, old) {
+  const o = String(old || '').trim();
+  const hit = locateLoose(text, o);
+  if (hit) return hit;
+  const span = (a, b) => {
+    const p = locateLoose(text, a);
+    if (!p) return null;
+    const q = locateLoose(text.slice(p.end), b);
+    if (!q) return null;
+    const end = p.end + q.end;
+    return end - p.start <= Math.max(o.length * 3, 200) ? { start: p.start, end } : null;
+  };
+  if (ELLIPSIS.test(o)) {
+    const parts = o.split(ELLIPSIS).filter(x => x.trim());
+    if (parts.length >= 2) { const r = span(parts[0], parts[parts.length - 1]); if (r) return r; }
+    if (parts.length === 1) return locateLoose(text, parts[0]);
+  }
+  const sents = o.match(/[^.!?。!?]+[.!?。!?]+["”’」]?|[^.!?。!?]+$/g) || [];
+  if (sents.length >= 2) return span(sents[0].trim(), sents[sents.length - 1].trim());
+  return null;
 }
 
 // 把修改套到稿子上:返回新稿和每处修改的结果(ok / 没找到 / 和前一处重叠);offset 记的是改前那一章里的位置
@@ -632,7 +686,7 @@ async function runPass(runId, kind) {
 // 把原片标题、原文案、拆解框架、新题目、新标题和二稿交给模型,按用户的审稿提示词出完整报告(赛道、评分、迁移对照、
 // 逐段问题 P01…、深层问题、P0/P1/P2、三种修改路线)。报告末尾附一段 ===SCORE=== / ===ISSUES=== / ===ROUTE=== 清单给程序读。
 // 报告出来后流程停住:人在页面上勾选要改的问题、选修改路线,再带着这些去终审。
-const AUDIT_ISSUE_RE = /^\s*[-*•]\s*\[(P\d+)\]\s*\[([SABC])[级]?\]\s*\[(P[012])\]\s*\[([^\]]+)\]\s*(.+)$/i;
+const AUDIT_ISSUE_RE = /^\s*[-*•]\s*\[(P\d+)\]\s*\[([SABC])[级]?\]\s*\[(P[012])\]\s*\[([^\]]+)\]\s*(?:\[\s*\+?\s*(\d+(?:\.\d+)?)\s*分?\s*\]\s*)?(.+)$/i;
 const AUDIT_MAX_ROUNDS = 4; // 报告很长,被 max_tokens 截断就接着写,最多续 3 次
 const ROUTE_NAMES = { A: '最小修改', B: '结构优化', C: '深度重构' };
 
@@ -640,9 +694,10 @@ function parseAuditIssues(text) {
   return String(text || '').split('\n').map(l => {
     const m = l.match(AUDIT_ISSUE_RE);
     if (!m) return null;
-    const parts = m[5].split(/\s*[｜|]\s*/);
+    const parts = m[6].split(/\s*[｜|]\s*/);
     return {
       id: m[1].toUpperCase().replace(/^P(\d)$/, 'P0$1'), severity: m[2].toUpperCase(), priority: m[3].toUpperCase(),
+      gain: m[5] != null ? +m[5] : null,
       chapter: /^CH/i.test(m[4].trim()) ? m[4].trim().toUpperCase() : '全篇',
       type: (parts[0] || '').trim(), problem: (parts[1] || '').trim(),
       direction: (parts.find((p, i) => i > 1 && /^修改方向[:：]/.test(p)) || parts[2] || '').replace(/^修改方向[:：]\s*/, '').trim()
@@ -883,7 +938,8 @@ function loadTrack(key) {
   return {
     key: k, name: b.NAME || k, match: b.MATCH || '', audience: b.AUDIENCE || '', position: b.POSITION || '',
     dim4_name: b.DIM4_NAME || '事实与逻辑', dim4_role: b.DIM4_ROLE || '事实审稿人', dim4_view: b.DIM4_VIEW || '',
-    mechanism: b.MECHANISM || '', dim4: b.DIM4 || '', retention: b.RETENTION || '', dim4_recheck: b.DIM4_RECHECK || ''
+    mechanism: b.MECHANISM || '', dim4: b.DIM4 || '', retention: b.RETENTION || '', dim4_recheck: b.DIM4_RECHECK || '',
+    deai_protect: b.DEAI_PROTECT || '- 所有事实、数字、案例和引用。\n- 因果链和信息递进的顺序。', deai_focus: b.DEAI_FOCUS || '重复的总结句和模板化转场。'
   };
 }
 function trackList() { return TRACK_KEYS.map(k => { const tr = loadTrack(k); return { key: k, name: tr.name }; }); }
@@ -988,6 +1044,31 @@ function editsText(edits) {
   return ok.length ? ok.map(e => '- [' + e.chapter + '][' + (e.category || '') + '] ' + (e.reason || '') + '\n  原句:' + e.old + '\n  改成:' + (e.new || '(删除)')).join('\n') : '(没有修改)';
 }
 
+// 套修改;原句找不到的,把那几章原文发回给模型,让它逐字重抄原句,再整体套一次
+async function applyWithRepair(run, cfg, text, edits, label) {
+  let res = applyEdits(text, edits.map(e => ({ ...e })));
+  const lost = res.edits.filter(e => !e.ok && /没找到/.test(e.error || ''));
+  if (!lost.length) return res;
+  const chs = scriptChapters(text);
+  const ids = [...new Set(lost.map(e => e.chapter).filter(id => chs.some(c => c.id === id)))];
+  const show = ids.length ? chs.filter(c => ids.includes(c.id)) : chs;
+  const prompt = an().fillVars(readPrompt('final_fix_quotes.md'), {
+    failed: lost.map(e => '===EDIT===\n章节:' + (e.chapter || '') + '\n类别:' + (e.category || '') + '\n原句:' + e.old + '\n改成:' + (e.new || '(删除)') + '\n理由:' + (e.reason || '')).join('\n'),
+    chapters: show.map(c => c.tag + '\n' + c.text).join('\n\n')
+  });
+  try {
+    const r = await callLong(run, cfg, prompt, label + '·补对原句');
+    const fixed = parseEdits(r.content);
+    if (!fixed.length) return res;
+    const keepOk = res.edits.filter(e => e.ok || !/没找到/.test(e.error || '')).map(e => ({ chapter: e.chapter, category: e.category, old: e.old, new: e.new, reason: e.reason }));
+    const again = applyEdits(text, keepOk.concat(fixed));
+    // 补了以后仍然找不到的,保留模型最初给的原句,方便人看
+    const stillLost = lost.filter(l => !again.edits.some(e => e.ok && e.reason === l.reason && e.new === l.new));
+    again.edits = again.edits.filter(e => e.ok || !/没找到/.test(e.error || '')).concat(stillLost);
+    return again;
+  } catch (e) { return res; }
+}
+
 async function runFinal(runId) {
   const cfg = pl().loadConfig();
   let { run, asset } = loadRunAsset(runId);
@@ -995,7 +1076,8 @@ async function runFinal(runId) {
   const start = currentScript(run);
   if (!start) throw Object.assign(new Error('稿子还没写好'), { status: 400 });
   const vByKey = Object.fromEntries(arr((run.review || {}).versions).map(v => [v.key, v]));
-  const base = vByKey.d2 && vByKey.d3 && vByKey.d3.text === start ? vByKey.d2.text : start;
+  const untouched = (vByKey.d3 && vByKey.d3.text === start) || (vByKey.d4 && vByKey.d4.text === start);
+  const base = vByKey.d2 && untouched ? vByKey.d2.text : start;
   const sel = ((run.review || {}).audit || {}).selection || null;
   const trackKey = (sel && sel.track) || (run.review || {}).final_track || autoTrack(run, asset);
   const tr = loadTrack(trackKey);
@@ -1030,7 +1112,7 @@ async function runFinal(runId) {
     const r2 = await callLong(run, cfg, an().fillVars(readPrompt('final_revise.md'), { ...common, audit_report: s1.report, script: base }), '终审·修改');
     let edits1 = parseEdits(r2.content);
     if (r2.truncated && !/^===\s*END\s*===/m.test(r2.content)) edits1 = edits1.slice(0, -1);
-    const a1 = applyEdits(base, edits1);
+    const a1 = await applyWithRepair(run, cfg, base, edits1, '终审·修改');
     let text = a1.next, edits = a1.edits.filter(e => e.ok).map(e => ({ ...e })), failed = a1.edits.filter(e => !e.ok);
     // ③ 复审(没达标就再改一轮,再复审一次)
     const rechecks = [];
@@ -1052,7 +1134,7 @@ async function runFinal(runId) {
       let edits2 = parseEdits(s3.tail);
       if (r3.truncated && !/^===\s*END\s*===/m.test(s3.tail)) edits2 = edits2.slice(0, -1);
       if (!edits2.length) break;
-      const a2 = applyEdits(text, edits2);
+      const a2 = await applyWithRepair(run, cfg, text, edits2, '终审·复审' + round);
       rc.edits_applied = a2.edits.filter(e => e.ok);
       failed = failed.concat(a2.edits.filter(e => !e.ok).map(e => ({ ...e, round: '2' })));
       if (!rc.edits_applied.length) break;
@@ -1071,6 +1153,8 @@ async function runFinal(runId) {
     const issues = allEdits.filter(e => e.ok).map(e => ({ chapter: e.chapter || '全篇', category: e.category || '', problem: e.reason || '', quote: e.old, fix: e.new || '(删除)', edit: e.n }));
     keep.push({ key: 'd3', label: '终稿', at: new Date().toISOString(), text, issues, changed, edits: allEdits, base_text: base });
     fresh.review.versions = keep;
+    fresh.review.deai = null;
+    if (fresh.steps) delete fresh.steps.deai;
     fresh.review.final = {
       at: new Date().toISOString(), track: tr.key, track_name: tr.name, dims,
       audit_report: s1.report, scores_before: scoresBefore,
@@ -1093,6 +1177,155 @@ async function runFinal(runId) {
     store.saveRun(fresh);
     throw e;
   }
+}
+
+// ---------- 去AI感(终稿之后):诊断并给每处 3~5 种改法 → 人勾选、挑改法 → 应用 ----------
+// 第一步只出诊断和候选改法,不动稿子;人选好后第二步按选择替换,结果存成 d4「去AI感稿」并写回 V1。
+// 重跑:去AI感之后没人动过稿子,就从终稿重新来。
+function setDeaiStage(runId, stage) {
+  const fresh = store.getRun(runId);
+  if (!fresh) return;
+  fresh.steps = { ...(fresh.steps || {}), deai: { ...((fresh.steps || {}).deai || {}), status: 'running', stage } };
+  store.saveRun(fresh);
+}
+
+// ===ITEM=== 块:章节/类型/优先级/原句/原句中文/问题/方案N/方案N中文/方案N说明
+const DEAI_FIELD_RE = /^\s*[-*]?\s*\**\s*(章节|位置|类型|类别|优先级|严重程度|原句|原文|原句中文|问题|原因|方案\s*\d+\s*(?:中文|翻译|说明|思路)?)\s*\**\s*[:：]\s*(.*)$/;
+function parseDeaiItems(text) {
+  const c = String(text || '').replace(/^[*`\s]*(===\s*[A-Za-z]+\s*===)[*`\s]*$/gm, '$1');
+  const cut = c.search(/^===\s*ITEMS\s*===\s*$/m);
+  const report = (cut >= 0 ? c.slice(0, cut) : c.split(/^===\s*ITEM\s*===\s*$/m)[0]).trim();
+  const parts = (cut >= 0 ? c.slice(cut) : c).split(/^===\s*ITEM\s*===\s*$/m).slice(1);
+  const items = parts.map(part => {
+    const f = {};
+    let cur = null;
+    part.split(/^===\s*END\s*===\s*$/m)[0].split('\n').forEach(line => {
+      const m = line.match(DEAI_FIELD_RE);
+      if (m) { cur = m[1].replace(/\s+/g, ''); f[cur] = m[2]; } else if (cur && line.trim()) f[cur] += '\n' + line;
+    });
+    Object.keys(f).forEach(k => { f[k] = f[k].trim(); });
+    const options = [];
+    for (let n = 1; n <= 8; n++) {
+      const t = f['方案' + n];
+      if (t == null) continue;
+      const txt = unwrapQuote(t);
+      options.push({ text: EDIT_DELETE.test(txt) ? '' : txt, zh: f['方案' + n + '中文'] || f['方案' + n + '翻译'] || '', note: f['方案' + n + '说明'] || f['方案' + n + '思路'] || '' });
+    }
+    return {
+      chapter: (String(f['章节'] || f['位置'] || '').match(/CH\d+/i) || [''])[0].toUpperCase(),
+      type: f['类型'] || f['类别'] || '', priority: (String(f['优先级'] || f['严重程度'] || '').match(/P[0-2]/i) || ['P1'])[0].toUpperCase(),
+      old: unwrapQuote(f['原句'] || f['原文'] || ''), old_zh: f['原句中文'] || '', problem: f['问题'] || f['原因'] || '', options
+    };
+  }).filter(x => x.old && x.options.length).map((x, i) => ({ ...x, id: 'D' + String(i + 1).padStart(2, '0') }));
+  return { report, items };
+}
+
+function deaiBase(run) {
+  const start = currentScript(run);
+  const vByKey = Object.fromEntries(arr((run.review || {}).versions).map(v => [v.key, v]));
+  if (!vByKey.d3) throw Object.assign(new Error('还没有终稿,先跑终审'), { status: 400 });
+  return vByKey.d4 && vByKey.d4.text === start ? vByKey.d3.text : start;
+}
+
+async function runDeai(runId, trackKey) {
+  const cfg = pl().loadConfig();
+  let { run, asset } = loadRunAsset(runId);
+  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
+  const start = currentScript(run);
+  const base = deaiBase(run);
+  const tr = loadTrack(TRACK_KEYS.includes(trackKey) ? trackKey : ((run.review || {}).final || {}).track || autoTrack(run, asset));
+  const t0 = Date.now();
+  run.steps = { ...(run.steps || {}), deai: { status: 'running', stage: '诊断并给改法', track: tr.key, started_at: new Date().toISOString() } };
+  store.saveRun(run);
+  try {
+    const a = run.analysis || {};
+    const aud = run.audience || {};
+    const lang = aud.target_language || '';
+    const vars = {
+      target_language: lang, target_country: aud.target_country || '', title: ((a.title || {}).final_title) || run.topic,
+      track_position: tr.position, track_audience: tr.audience, deai_protect: tr.deai_protect, deai_focus: tr.deai_focus,
+      language_notes: /^Korean$/i.test(lang) ? '韩语里常见的是「그런데」「하지만」「문제는」「진짜 이유는」「결국」反复出现。' : '',
+      script: base
+    };
+    const r = await callLong(run, cfg, an().fillVars(readPrompt('deai_diagnose.md'), vars), '去AI感·诊断');
+    const { report, items } = parseDeaiItems(r.content);
+    if (r.truncated && items.length && !/^===\s*END\s*===/m.test(r.content)) items.pop();
+    // 原句在终稿里找不到的,标出来(应用时还会再让 AI 校正一次引号)
+    const byCh = Object.fromEntries(scriptChapters(base).map(c => [c.id, c.text]));
+    items.forEach(x => { const t = byCh[x.chapter]; x.found = !!(t && locate(t, x.old)) || Object.values(byCh).some(t2 => locate(t2, x.old)); });
+    const fresh = store.getRun(runId) || run;
+    if (currentScript(fresh) !== start) throw new Error('去AI感运行期间稿子被改过,结果没有保存,请重跑');
+    fresh.review = fresh.review || {};
+    // AI 给的中文直接记进翻译缓存,改完后修订说明里的原句/改成中文也能用上
+    const zh = {};
+    items.forEach(x => { if (x.old_zh) zh[hash(x.old)] = x.old_zh; x.options.forEach(o => { if (o.text && o.zh) zh[hash(o.text)] = o.zh; }); });
+    fresh.review.zh = { ...(fresh.review.zh || {}), byHash: { ...((fresh.review.zh || {}).byHash || {}), ...zh } };
+    fresh.review.deai = { at: new Date().toISOString(), track: tr.key, track_name: tr.name, diagnosis: report, items, base_hash: hash(base), truncated: !!r.truncated, applied: null };
+    fresh.steps = { ...(fresh.steps || {}), deai: { status: 'done', stage: '等你选改法', track: tr.key, secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: new Date().toISOString(), items: items.length } };
+    if (run.attempts) fresh.attempts = run.attempts;
+    store.saveRun(fresh);
+    return { ok: true };
+  } catch (e) {
+    const fresh = store.getRun(runId) || run;
+    fresh.steps = { ...(fresh.steps || {}), deai: { status: 'failed', error: e.message, track: tr.key } };
+    store.saveRun(fresh);
+    throw e;
+  }
+}
+
+// picks: [{ id, text }],text 是人选中(或手改过)的改法,空字符串表示删掉这句
+async function applyDeai(runId, picks) {
+  const cfg = pl().loadConfig();
+  let run = store.getRun(runId);
+  const d = (run.review || {}).deai;
+  const start = currentScript(run);
+  const base = deaiBase(run);
+  const t0 = Date.now();
+  const byId = Object.fromEntries(arr(d.items).map(x => [x.id, x]));
+  const chosen = arr(picks).filter(p => byId[p.id]);
+  const edits = chosen.map(p => { const x = byId[p.id]; return { chapter: x.chapter, category: x.type, old: x.old, new: String(p.text || '').trim(), reason: x.problem, deai_id: x.id }; });
+  run.steps = { ...(run.steps || {}), deai: { ...((run.steps || {}).deai || {}), status: 'running', stage: '按你的选择修改' } };
+  store.saveRun(run);
+  try {
+    const applied = edits.length ? await applyWithRepair(run, cfg, base, edits, '去AI感·修改') : { next: base, edits: [] };
+    const okN = applied.edits.filter(e => e.ok).length;
+    const allEdits = applied.edits.filter(e => e.ok).concat(applied.edits.filter(e => !e.ok)).map((e, i) => ({ ...e, n: i + 1 }));
+    const fresh = store.getRun(runId) || run;
+    if (currentScript(fresh) !== start) throw new Error('修改期间稿子被改过,结果没有保存,请重试');
+    fresh.review.versions = arr(fresh.review.versions).filter(v => v.key !== 'd4');
+    if (allEdits.length) fresh.review.versions.push({ key: 'd4', label: '去AI感稿', at: new Date().toISOString(), text: applied.next, edits: allEdits, base_text: base, issues: [] });
+    fresh.review.deai = { ...fresh.review.deai, applied: { at: new Date().toISOString(), picks: chosen, ok: okN, failed: allEdits.length - okN } };
+    if (applied.next !== start) writeScript(fresh, applied.next);
+    fresh.steps = { ...(fresh.steps || {}), deai: { ...((fresh.steps || {}).deai || {}), status: 'done', stage: '已修改', secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: new Date().toISOString(), edits: okN } };
+    if (run.attempts) fresh.attempts = run.attempts;
+    store.saveRun(fresh);
+  } catch (e) {
+    const fresh = store.getRun(runId) || run;
+    fresh.steps = { ...(fresh.steps || {}), deai: { ...((fresh.steps || {}).deai || {}), status: 'failed', error: e.message } };
+    store.saveRun(fresh);
+    throw e;
+  }
+}
+
+function deaiGuard(run) {
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  const st = run.steps || {};
+  if ((st.deai || {}).status === 'running' || (st.final_review || {}).status === 'running') throw Object.assign(new Error('正在运行,请稍等'), { status: 400 });
+  if (!arr((run.review || {}).versions).some(v => v.key === 'd3')) throw Object.assign(new Error('还没有终稿,先跑终审'), { status: 400 });
+}
+
+function startDeai(runId, body) {
+  const run = store.getRun(runId);
+  deaiGuard(run);
+  if (body && body.apply) {
+    const d = (run.review || {}).deai;
+    if (!d || !arr(d.items).length) throw Object.assign(new Error('还没有去AI感建议,先生成'), { status: 400 });
+    if (d.base_hash !== hash(deaiBase(run))) throw Object.assign(new Error('生成建议以后稿子改过,原句可能对不上,请重新生成建议'), { status: 400 });
+    (async () => { try { await applyDeai(runId, body.picks); } catch (e) {} await translateRun(runId); })();
+    return { ok: true };
+  }
+  (async () => { try { await runDeai(runId, body && body.track); } catch (e) {} await translateRun(runId); })();
+  return { ok: true };
 }
 
 // 初稿检查 → 二稿审稿报告 → 停下等人选;人选完再终审 → 翻译。某一遍失败不影响已有稿子,页面上可以单独重跑
@@ -1282,4 +1515,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
