@@ -304,7 +304,13 @@ function buildView(run, asset) {
     revision: revisionView(state),
     deai_revision: revisionView(state, 'd4'),
     deai: state.deai ? { ...state.deai, diagnosis: deaiReportOf(state.deai), items: deaiItemsOf(state.deai).map(x => ({ ...x, old_zh: x.old_zh || zhOf(state, x.old), options: x.options.map(o => ({ ...o, zh: o.zh || (o.text ? zhOf(state, o.text) : '') })) })), stale: !!state.deai.base_hash && state.deai.base_hash !== hash(arr(state.versions).some(v => v.key === 'd4' && v.text === script) ? ((arr(state.versions).find(v => v.key === 'd3') || {}).text || '') : script) } : null,
-    final: state.final || null,
+    final: state.final ? (() => {
+      // 旧结果:清单里没读出的分数,按报告正文的评分表补上
+      const f = state.final, dims = arr(f.dims);
+      const rechecks = arr(f.rechecks).map(r => ({ ...r, scores: fillScores(r.scores, r.report, dims, 2) }));
+      const last = rechecks[rechecks.length - 1];
+      return { ...f, rechecks, scores_before: fillScores(f.scores_before, f.audit_report, dims, 1), scores_after: last ? { ...last.scores, ...(f.scores_after || {}) } : f.scores_after };
+    })() : null,
     tracks: trackList(), track_default: state.final_track || autoTrack(run, asset),
     translating: ((run.steps || {}).review_zh || {}).status === 'running',
     zh_error: ((run.steps || {}).review_zh || {}).error || '',
@@ -505,7 +511,7 @@ function unwrapQuote(s) {
 }
 
 function parseEdits(text) {
-  const parts = String(text || '').replace(/^[*`\s]*(===\s*[A-Za-z]+\s*===)[*`\s]*$/gm, '$1').split(/^===\s*EDIT\s*===\s*$/m).slice(1);
+  const parts = String(text || '').replace(/[*`]*(===\s*(?:EDIT|END|SCORES|VERDICT|OPEN)\s*===)[*`]*/gi, '\n$1\n').replace(/^[ \t]+(===)/gm, '$1').split(/^===\s*EDIT\s*===\s*$/m).slice(1);
   return parts.map(part => {
     const body = part.split(/^===\s*END\s*===\s*$/m)[0];
     const e = {};
@@ -517,6 +523,11 @@ function parseEdits(text) {
     Object.keys(e).forEach(k => { e[k] = e[k].trim(); });
     if (e.old) e.old = unwrapQuote(e.old);
     if (e.new) e.new = unwrapQuote(e.new);
+    // 模型有时把整章连同章节标签行一起当原句:标签行不是正文,去掉再定位
+    const TAG = /^\s*\[\s*(CH\d+)[^\]\n]*\]\s*(?:\n|$)/i;
+    const tag = String(e.old || '').match(TAG);
+    if (tag) { e.old = e.old.replace(TAG, '').trim(); if (!e.chapter) e.chapter = tag[1]; }
+    if (e.new) e.new = e.new.replace(TAG, '').trim();
     if (e.new != null && EDIT_DELETE.test(e.new)) e.new = '';
     e.chapter = (String(e.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase();
     return e;
@@ -970,9 +981,40 @@ function parseScores(block, dims) {
 
 // 报告正文 + 尾部清单:清单从第一个 ===SCORES=== 开始
 function splitReport(content) {
-  const c = String(content || '').replace(/^[*`\s]*(===\s*[A-Za-z]+\s*===)[*`\s]*$/gm, '$1');
+  // 分隔符被加粗、放进代码块或和别的字连在一行时,先拆成单独一行
+  const c = String(content || '').replace(/[*`]*(===\s*(?:SCORES|VERDICT|OPEN|EDIT|END)\s*===)[*`]*/gi, '\n$1\n').replace(/^[ \t]+(===)/gm, '$1');
   const cut = c.search(/^===\s*SCORES\s*===\s*$/m);
   return { report: (cut >= 0 ? c.slice(0, cut) : c).replace(/\n```[a-z]*\s*$/, '').trim(), tail: cut >= 0 ? c.slice(cut).replace(/^```.*$/gm, '') : '', all: c };
+}
+
+// 清单里没读出分数时,从报告正文的评分表里找:一行有维度名,取表格里第 pick 个纯数字格(审稿报告取第 1 个,复审对照表取第 2 个=修改后)
+function scoresFromReport(report, dims, pick) {
+  const out = {};
+  const rows = String(report || '').split('\n').filter(l => l.includes('|'));
+  dims.forEach(d => {
+    const row = rows.find(l => l.includes(d)) || rows.find(l => l.includes(d.slice(0, 4)));
+    if (!row) return;
+    const nums = row.split('|').map(x => x.replace(/\*+/g, '').trim()).map(x => x.match(/^(\d+(?:\.\d+)?)\s*(?:\/\s*10|分)?$/)).filter(Boolean).map(m => +m[1]).filter(n => n <= 10);
+    const n = nums[Math.min(pick, nums.length) - 1];
+    if (n != null) out[d] = n;
+  });
+  // 没有评分表时,按小标题找:「### 1. 框架与结构:6分」「框架与结构:6 → 7 分」
+  const lines = String(report || '').split('\n').filter(l => !l.includes('|'));
+  dims.forEach(d => {
+    if (out[d] != null) return;
+    const line = lines.find(l => l.includes(d) && new RegExp(d.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[*\\s]*[:：]').test(l));
+    if (!line) return;
+    const after = line.slice(line.indexOf(d) + d.length).replace(/\*+/g, '');
+    const nums = (after.match(/\d+(?:\.\d+)?(?=\s*(?:分|\/\s*10|→|->|$|\s))/g) || []).map(Number).filter(n => n <= 10);
+    const n = pick > 1 ? nums[nums.length - 1] : nums[0];
+    if (n != null) out[d] = n;
+  });
+  return out;
+}
+function fillScores(scores, report, dims, pick) {
+  const have = scores || {};
+  if (dims.every(d => have[d] != null)) return have;
+  return { ...scoresFromReport(report, dims, pick), ...have };
 }
 
 // 一章改后的文字切成片段:原文片段记它在改前那章的位置,修改片段记是哪一处修改
@@ -1106,7 +1148,7 @@ async function runFinal(runId) {
     // ① 审稿
     const r1 = await callLong(run, cfg, an().fillVars(readPrompt('final_audit.md'), { ...common, chapter_map: chapterMap(run, asset), program_findings: programFindings(run, asset), script: base }), '终审·审稿');
     const s1 = splitReport(r1.content);
-    const scoresBefore = parseScores(parseBlocks(s1.tail, false).SCORES, dims);
+    const scoresBefore = fillScores(parseScores(parseBlocks(s1.tail, false).SCORES, dims), s1.report, dims, 1);
     // ② 修改
     setFinalStage(runId, '修改');
     const r2 = await callLong(run, cfg, an().fillVars(readPrompt('final_revise.md'), { ...common, audit_report: s1.report, script: base }), '终审·修改');
@@ -1128,7 +1170,7 @@ async function runFinal(runId) {
       const s3 = splitReport(r3.content);
       const tb = parseBlocks(s3.tail, false);
       const verdict = /未达标/.test(tb.VERDICT || '') ? '未达标' : /达标/.test(tb.VERDICT || '') ? '达标' : '';
-      const rc = { round, report: s3.report, scores: parseScores(tb.SCORES, dims), verdict, edits_applied: [] };
+      const rc = { round, report: s3.report, scores: fillScores(parseScores(tb.SCORES, dims), s3.report, dims, 2), verdict, edits_applied: [] };
       rechecks.push(rc);
       if (!allowEdits || verdict !== '未达标') break;
       let edits2 = parseEdits(s3.tail);
