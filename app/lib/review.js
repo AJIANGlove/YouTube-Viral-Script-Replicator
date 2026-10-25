@@ -15,6 +15,7 @@ const { HEDGE_RE } = require('./compliance');
 
 const pl = () => require('./pipeline');
 const an = () => require('./analysis');
+const search = require('./search');
 
 const PROMPTS_DIR = path.join(__dirname, '..', 'prompts');
 const readPrompt = f => fs.readFileSync(path.join(PROMPTS_DIR, f), 'utf-8');
@@ -297,8 +298,9 @@ function buildView(run, asset) {
   const budget = rows.reduce((n, r) => n + (r.budget || 0), 0);
   return {
     run_id: run.id, status: run.status, target_language: lang,
-    passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null, deai: (run.steps || {}).deai || null },
+    passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null, deai: (run.steps || {}).deai || null, final_open: (run.steps || {}).final_open || null },
     audit: state.audit ? { ...state.audit, issues: arr(state.audit.issues).map(x => ({ ...x, zh_problem: hasForeign(x.problem) ? zhOf(state, x.problem) : '', zh_direction: hasForeign(x.direction) ? zhOf(state, x.direction) : '', need_zh: hasForeign(x.problem) || hasForeign(x.direction) })), score: state.audit.score != null ? state.audit.score : reportScore(state.audit.report), stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
+    factcheck: state.factcheck ? { ...state.factcheck, items: arr(state.factcheck.items).map(x => ({ ...x, zh_claim: hasForeign(x.claim) ? zhOf(state, x.claim) : '' })) } : null,
     versions: arr(state.versions).map(v => ({ key: v.key, label: v.label, at: v.at, issues: arr(v.issues), changed: arr(v.changed), truncated: !!v.truncated })),
     diffs: versionDiffs(state),
     revision: revisionView(state),
@@ -418,6 +420,8 @@ function textsToTranslate(run) {
   vs.forEach(v => arr(v.edits).forEach(e => texts.push(e.old, e.new || '')));
   // 二稿审稿报告的问题和修改方向
   arr(((run.review || {}).audit || {}).issues).forEach(x => { if (hasForeign(x.problem)) texts.push(x.problem); if (hasForeign(x.direction)) texts.push(x.direction); });
+  // 事实核验表里的原文主张
+  arr(((run.review || {}).factcheck || {}).items).forEach(x => { if (hasForeign(x.claim)) texts.push(x.claim); });
   // 去AI感候选改法:AI 没给中文的补翻
   deaiItemsOf((run.review || {}).deai).forEach(x => { if (!x.old_zh) texts.push(x.old); x.options.forEach(o => { if (!o.zh && o.text) texts.push(o.text); }); });
   const have = ((run.review || {}).zh || {}).byHash || {};
@@ -614,6 +618,133 @@ function applyEdits(base, edits) {
   return { next, edits };
 }
 
+// ---------- 事实核验(初稿检查的前半段) ----------
+// ① 事实审计(fact_audit.md):把初稿拆成一条条主张 F01…,标风险,给高风险的出搜索词;
+// ② 联网核验(fact_verify.md):程序按搜索词联网搜,模型只能用搜到的结果(R 编号)定证据等级 A–E、独立重算、选处理方式;
+// 结果存在 review.factcheck,写进初稿检查(改二稿时落实)和终审(审稿、修改、复审都以它为准)的提示词。
+// 核验失败不挡初稿检查,只记下错误。
+const FACT_MAX_QUERIES = 12;
+const FACT_RESULTS_PER_QUERY = 3; // 要正文,每条较长,少取几条
+const FACT_GRADES = ['A', 'B', 'C', 'D', 'E'];
+const FACT_ACTIONS = ['保留', '修正数字', '限定表述', '标明估算', '删除', '改为观点'];
+const FACT_RISKS = ['致命', '高', '中', '低'];
+// 不同赛道核验的重点不一样:账本类盯数字和计算,历史、科普、POV 类盯年代、人物、研究结论和因果
+const FACT_FOCUS = {
+  econ: '- 价格、销量、成本、租金、人工、毛利和净利,以及它们之间的计算和口径。\n- 「大多数店」「行业平均」这类把个案或估算说成行业事实的判断。\n- 政策、税费、法定最低工资等要用今年的现行值。',
+  history: '- 年代、朝代、在位时间、人物身份和事件经过是否对得上史料。\n- 引语和「某人说过」是否真有出处;传说、野史、后人演绎有没有被写成史实。\n- 把一个时期、一个地区的情况推广成「古人都这样」的判断。\n- 数字(人口、寿命、价格)只在稿子里真的用到时才查,不要为了核验去追加数字。',
+  science: '- 研究结论有没有被夸大:样本是动物还是人、相关还是因果、单个研究还是学界共识。\n- 生物学、心理学、医学说法是否准确,有没有过时的说法。\n- 「科学证明」「研究发现」这类说法是否真有对应的研究。',
+  pov: '- 身份、等级、职业、制度、工具和年代等设定细节是否符合史实或现实。\n- 第二人称的代入、想象情节不算需要核实的主张,只查其中当作事实讲出来的部分。\n- 收入、刑罚、死亡率等数字只在稿子里真的用到时才查。',
+  general: '- 当作事实讲出来的年份、人物、事件、研究结论和统计数据。\n- 绝对化表述和把个案推广成普遍规律的判断。'
+};
+const FACT_LINE_RE = /^\s*[-*•\d.)]*\s*\[\s*(F\d+)\s*\]\s*\[\s*([^\]]*)\]\s*\[\s*([^\]]*)\]\s*(.+)$/i;
+const splitBar = s => String(s || '').split(/\s*[|｜]\s*/);
+
+function parseClaims(block) {
+  const out = [];
+  String(block || '').split('\n').forEach(l => {
+    const m = l.replace(/\*+/g, '').match(FACT_LINE_RE);
+    if (!m) return;
+    const parts = splitBar(m[4]);
+    const check = parts.length >= 3 ? parts.pop() : '';
+    const type = parts.length >= 2 ? parts.pop() : '';
+    const id = m[1].toUpperCase();
+    if (out.some(c => c.id === id)) return;
+    out.push({ id, chapter: m[2].trim().toUpperCase().replace(/^全片$/, '全篇') || '全篇', risk: FACT_RISKS.find(r => m[3].includes(r)) || '中', claim: parts.join(' | ').trim(), type: type.trim(), check: check.trim() });
+  });
+  return out.slice(0, 40);
+}
+
+function parseFactQueries(block) {
+  const out = [];
+  String(block || '').split('\n').forEach(l => {
+    const m = l.replace(/\*+/g, '').match(/^\s*[-*•\d.)]*\s*\[\s*(F\d+)\s*\]\s*(.+)$/i);
+    const q = m && m[2].trim().replace(/^["“「]|["”」]$/g, '');
+    if (q && !out.some(x => x.query === q)) out.push({ target: m[1].toUpperCase(), query: q });
+  });
+  return out.slice(0, FACT_MAX_QUERIES);
+}
+
+function parseVerdicts(block) {
+  const out = {};
+  String(block || '').split('\n').forEach(l => {
+    const m = l.replace(/\*+/g, '').match(FACT_LINE_RE);
+    if (!m) return;
+    const parts = splitBar(m[4]);
+    const refs = parts.length >= 3 ? (parts.pop().match(/R\d+/gi) || []).map(x => x.toUpperCase()) : [];
+    const fix = parts.length >= 2 ? parts.pop() : '';
+    out[m[1].toUpperCase()] = {
+      grade: (m[2].trim().toUpperCase().match(/[A-E]/) || [''])[0],
+      action: FACT_ACTIONS.find(a => m[3].includes(a)) || m[3].trim(),
+      finding: parts.join(' | ').trim(), fix: fix.trim(), refs
+    };
+  });
+  return out;
+}
+
+function setStepStage(runId, step, stage) {
+  const fresh = store.getRun(runId);
+  if (!fresh) return;
+  fresh.steps = { ...(fresh.steps || {}), [step]: { ...((fresh.steps || {})[step] || {}), status: 'running', stage } };
+  store.saveRun(fresh);
+}
+
+async function runFactCheck(run, cfg, script, asset) {
+  const a = run.analysis || {};
+  const aud = run.audience || {};
+  const ss = search.searchStatus(cfg);
+  const common = {
+    today: pl().todayStr(), topic: run.topic, target_language: aud.target_language || '', target_country: aud.target_country || '',
+    analysis: run.analysis ? an().analysisBrief(a) : '(无写前分析)', script
+  };
+  // 赛道:已经选过终审赛道就用那个,否则按写前分析匹配的赛道
+  const trackKey = ((run.review || {}).final || {}).track || autoTrack(run, asset);
+  const tr = loadTrack(trackKey);
+  // ① 事实审计
+  setStepStage(run.id, 'draft_check', '事实审计');
+  const r1 = await callLong(run, cfg, an().fillVars(readPrompt('fact_audit.md'), { ...common, max_queries: FACT_MAX_QUERIES, track_name: tr.name, fact_focus: FACT_FOCUS[tr.key] || FACT_FOCUS.general }), '事实审计');
+  const b1 = parseBlocks(r1.content.replace(/[*`]*(===\s*(?:CLAIMS|QUERIES|END)\s*===)[*`]*/gi, '\n$1\n'), false);
+  const claims = parseClaims(b1.CLAIMS);
+  const overview = r1.content.split(/^===\s*CLAIMS/m)[0].trim();
+  if (!claims.length) return { at: new Date().toISOString(), track: tr.key, track_name: tr.name, search_ready: ss.ready, claims: 0, items: [], overview, report: '', error: '事实审计没有列出主张' };
+  // ② 联网搜索(没开就跳过,全部按未核实处理)
+  let batches = [];
+  const queries = parseFactQueries(b1.QUERIES);
+  if (ss.ready && queries.length) {
+    setStepStage(run.id, 'draft_check', '联网核验(搜索 ' + queries.length + ' 条)');
+    batches = await search.runQueries(queries, run.topic, cfg, { max: FACT_MAX_QUERIES, content: true, count: FACT_RESULTS_PER_QUERY });
+  }
+  // ③ 逐项核验
+  setStepStage(run.id, 'draft_check', '联网核验(逐项定级)');
+  const claimsText = claims.map(c => '- [' + c.id + '][' + c.chapter + '][' + c.risk + '] ' + c.claim + ' | ' + c.type + ' | ' + c.check).join('\n');
+  const results = ss.ready ? search.resultsBrief(batches) : '(没有开联网搜索:除了按稿子里的输入值能独立重算、对照的计算类和口径类主张,其他一律标 D)';
+  const r2 = await callLong(run, cfg, an().fillVars(readPrompt('fact_verify.md'), { ...common, claims: claimsText, results }), '联网核验');
+  const c2 = r2.content.replace(/[*`]*(===\s*(?:VERDICTS|END)\s*===)[*`]*/gi, '\n$1\n');
+  const verdicts = parseVerdicts(parseBlocks(c2, false).VERDICTS);
+  const items = claims.map(c => {
+    const v = verdicts[c.id] || { grade: 'D', action: '', finding: '没有给出核验结论', fix: '', refs: [] };
+    const evidence = search.resolveEvidence(v.refs, batches);
+    let grade = FACT_GRADES.includes(v.grade) ? v.grade : 'D';
+    // 没有能对上的搜索结果,就只能是 D(计算、口径类按稿子里的输入重算、对照,可以没有链接)
+    if (grade !== 'D' && !evidence.length && !/计算|口径/.test(c.type)) grade = 'D';
+    return { ...c, grade, action: v.action, finding: v.finding, fix: v.fix, evidence, downgraded: grade !== v.grade && !!verdicts[c.id], ai_grade: v.grade };
+  });
+  return {
+    at: new Date().toISOString(), track: tr.key, track_name: tr.name, search_ready: ss.ready, queries: batches.length, results: batches.reduce((n, b) => n + arr(b.results).length, 0),
+    search_errors: batches.filter(b => b.error).map(b => b.query + ':' + b.error).slice(0, 5),
+    claims: claims.length, items, overview, report: c2.split(/^===\s*VERDICTS/m)[0].trim(), truncated: r1.truncated || r2.truncated
+  };
+}
+
+// 写进初稿检查、终审提示词的事实核验表
+function factBrief(fc) {
+  if (!fc || !arr(fc.items).length) return fc && fc.error ? '(事实核验没有完成:' + fc.error + '。数字和事实按写前分析的事实表处理,拿不准的不要新增。)' : '(本稿没有做事实核验)';
+  const head = fc.search_ready ? '(已联网核验。等级:A 原始来源直接支持 / B 可靠二手来源 / C 部分证据、口径不全匹配 / D 证据不足 / E 与证据矛盾。只改处理方式不是「保留」的,改法要口播自然,不加免责句)' : '(这次没有联网搜索,除计算、口径类外都是 D:不得把这些数字当成已核实;观众能直接察觉、或核心论点依赖的才改,其余按表里的处理方式,「保留」的不要动)';
+  return head + '\n' + fc.items.map(i => {
+    const ev = i.evidence.slice(0, 2).map(e => e.title + (e.date ? '(' + e.date + ')' : '') + ' ' + e.url).join(';');
+    return '- [' + i.id + '][' + i.chapter + '][' + i.risk + '][' + i.grade + '][' + (i.action || '待人工决定') + '] ' + i.claim + ' | 核验:' + (i.finding || '—') + ' | 正确数据/改法:' + (i.fix || '—') + (ev ? ' | 来源:' + ev : '');
+  }).join('\n');
+}
+
 async function runPass(runId, kind) {
   const P = PASSES[kind];
   const cfg = pl().loadConfig();
@@ -629,7 +760,12 @@ async function runPass(runId, kind) {
   // 第一遍之前把当前稿存成初稿
   if (!arr(run.review.versions).length) run.review.versions = [{ key: 'd1', label: '初稿', at: new Date().toISOString(), text: base, issues: [] }];
   store.saveRun(run);
+  let factcheck = kind === 'check' ? null : undefined;
   try {
+    if (kind === 'check') {
+      try { factcheck = await runFactCheck(run, cfg, base, asset); } catch (e) { factcheck = { at: new Date().toISOString(), items: [], error: e.message }; }
+      setStepStage(runId, P.step, '改出二稿');
+    }
     const a = run.analysis || {};
     const aud = run.audience || {};
     const prompt = an().fillVars(readPrompt(P.prompt), {
@@ -644,6 +780,7 @@ async function runPass(runId, kind) {
       chapter_map: chapterMap(run, asset),
       program_findings: programFindings(run, asset),
       selected_fixes: kind === 'final' ? selectedFixes(run) : '',
+      fact_check: kind === 'check' ? factBrief(factcheck) : factBrief((run.review || {}).factcheck),
       script: base
     });
     const r = await rawCall(run, cfg, prompt, P.title);
@@ -675,11 +812,12 @@ async function runPass(runId, kind) {
     const keep = versions.filter(v => v.key === 'd1' || (kind === 'final' && v.key === 'd2'));
     keep.push({ key: kind === 'check' ? 'd2' : 'd3', label: P.label, at: new Date().toISOString(), text: next, issues, changed, truncated: r.stopReason === 'max_tokens', ...(edits.length ? { edits, base_text: base } : {}) });
     fresh.review.versions = keep;
+    if (factcheck !== undefined) fresh.review.factcheck = factcheck;
     if (next !== start) writeScript(fresh, next);
     if (changed.length) {
       changed.forEach(id => { const st = chapterState(fresh, id); st.status = '待审'; st.history = [...arr(st.history), { at: new Date().toISOString(), note: P.title, by: kind, text: scriptChapters(base).find(c => c.id === id).text }].slice(-HISTORY_MAX); });
     }
-    fresh.steps = { ...(fresh.steps || {}), [P.step]: { status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString(), issues: issues.length, changed: changed.length, ...(edits.length ? { edits: edits.filter(e => e.ok).length, edits_failed: edits.filter(e => !e.ok).length } : {}) } };
+    fresh.steps = { ...(fresh.steps || {}), [P.step]: { status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString(), issues: issues.length, changed: changed.length, ...(edits.length ? { edits: edits.filter(e => e.ok).length, edits_failed: edits.filter(e => !e.ok).length } : {}), ...(factcheck ? { facts: arr(factcheck.items).length, facts_wrong: arr(factcheck.items).filter(x => x.grade === 'E').length, facts_error: factcheck.error || '' } : {}) } };
     if (kind === 'check') { delete fresh.steps.final_review; delete fresh.steps.reverse_audit; if (fresh.review.audit) fresh.review.audit = null; }
     if (kind === 'final' && fresh.review.audit) fresh.review.audit.used_selection = (fresh.review.audit.selection || null);
     if (run.attempts) fresh.attempts = run.attempts;
@@ -688,6 +826,7 @@ async function runPass(runId, kind) {
   } catch (e) {
     const fresh = store.getRun(runId) || run;
     fresh.steps = { ...(fresh.steps || {}), [P.step]: { status: 'failed', error: e.message } };
+    if (factcheck) { fresh.review = fresh.review || {}; fresh.review.factcheck = factcheck; }
     store.saveRun(fresh);
     throw e;
   }
@@ -1111,6 +1250,40 @@ async function applyWithRepair(run, cfg, text, edits, label) {
   } catch (e) { return res; }
 }
 
+// 终审各步共用的提示词变量
+const OPEN_FORMAT = '在 ===OPEN=== 下面逐行列出还没解决的问题(达标且没有遗留问题就写「无」),每行一个,格式:\n- [R01][CH13][关键] 问题(中文,一两句;引用原句保留原语言) | 建议改法(中文)\n第三个方括号只能写 关键、次要、待核实 之一。「待核实」指需要人确认事实或数据才能改的问题。';
+function finalCommon(run, tr, dims) {
+  const a = run.analysis || {};
+  const aud = run.audience || {};
+  const lang = aud.target_language || '';
+  return {
+    today: pl().todayStr(), topic: run.topic, title: ((a.title || {}).final_title) || run.topic,
+    target_language: lang, target_country: aud.target_country || '', video_goal: aud.video_goal || '(未指定,按稿件实际长度判断)',
+    voice: voice.voiceBrief(voice.voiceForRun(run)) || '(未设定)',
+    analysis: run.analysis ? an().analysisBrief(a) : '(无写前分析)',
+    track_name: tr.name, track_audience: tr.audience, track_position: tr.position, track_mechanism: tr.mechanism,
+    track_dim4: tr.dim4, track_retention: tr.retention, dim4_name: tr.dim4_name, dim4_role: tr.dim4_role, dim4_view: tr.dim4_view, dim4_recheck: tr.dim4_recheck,
+    language_notes: /^Korean$/i.test(lang) ? '例如韩语里频繁使用「그런데」「하지만」「문제는」「진짜 이유는」。' : '',
+    dims_list: dims.map((d, i) => (i + 1) + '. ' + d).join('\n'),
+    dims_score_lines: dims.map(d => d + ': 分数').join('\n'),
+    open_format: OPEN_FORMAT, patch_note: '',
+    fact_check: factBrief((run.review || {}).factcheck)
+  };
+}
+
+// ===OPEN=== 段:复审没解决的问题,一行一条 - [R01][CH13][关键] 问题 | 建议
+function parseOpen(block) {
+  const out = [];
+  String(block || '').split('\n').forEach(l => {
+    const m = l.replace(/\*+/g, '').match(/^\s*[-*\d.)]*\s*\[\s*(R\d+)\s*\]\s*\[\s*([^\]]*)\]\s*\[\s*([^\]]*)\]\s*(.+)$/i);
+    if (!m) return;
+    const [problem, ...rest] = m[4].split(/\s*[|｜]\s*/);
+    const level = /待核实|核实/.test(m[3]) ? '待核实' : /次要/.test(m[3]) ? '次要' : '关键';
+    out.push({ id: m[1].toUpperCase(), chapter: (m[2].match(/CH\d+/gi) || []).map(x => x.toUpperCase()).join('/') || m[2].trim(), level, problem: problem.trim(), suggestion: rest.join(' | ').replace(/^建议(改法)?[:：]\s*/, '').trim() });
+  });
+  return out;
+}
+
 async function runFinal(runId) {
   const cfg = pl().loadConfig();
   let { run, asset } = loadRunAsset(runId);
@@ -1130,21 +1303,7 @@ async function runFinal(runId) {
   if (!arr(run.review.versions).length) run.review.versions = [{ key: 'd1', label: '初稿', at: new Date().toISOString(), text: base, issues: [] }];
   store.saveRun(run);
   try {
-    const a = run.analysis || {};
-    const aud = run.audience || {};
-    const lang = aud.target_language || '';
-    const common = {
-      today: pl().todayStr(), topic: run.topic, title: ((a.title || {}).final_title) || run.topic,
-      target_language: lang, target_country: aud.target_country || '', video_goal: aud.video_goal || '(未指定,按稿件实际长度判断)',
-      voice: voice.voiceBrief(voice.voiceForRun(run)) || '(未设定)',
-      analysis: run.analysis ? an().analysisBrief(a) : '(无写前分析)',
-      track_name: tr.name, track_audience: tr.audience, track_position: tr.position, track_mechanism: tr.mechanism,
-      track_dim4: tr.dim4, track_retention: tr.retention, dim4_name: tr.dim4_name, dim4_role: tr.dim4_role, dim4_view: tr.dim4_view, dim4_recheck: tr.dim4_recheck,
-      language_notes: /^Korean$/i.test(lang) ? '例如韩语里频繁使用「그런데」「하지만」「문제는」「진짜 이유는」。' : '',
-      dims_list: dims.map((d, i) => (i + 1) + '. ' + d).join('\n'),
-      dims_score_lines: dims.map(d => d + ': 分数').join('\n'),
-      selected_fixes: selectedFixes(run)
-    };
+    const common = { ...finalCommon(run, tr, dims), selected_fixes: selectedFixes(run) };
     // ① 审稿
     const r1 = await callLong(run, cfg, an().fillVars(readPrompt('final_audit.md'), { ...common, chapter_map: chapterMap(run, asset), program_findings: programFindings(run, asset), script: base }), '终审·审稿');
     const s1 = splitReport(r1.content);
@@ -1170,7 +1329,7 @@ async function runFinal(runId) {
       const s3 = splitReport(r3.content);
       const tb = parseBlocks(s3.tail, false);
       const verdict = /未达标/.test(tb.VERDICT || '') ? '未达标' : /达标/.test(tb.VERDICT || '') ? '达标' : '';
-      const rc = { round, report: s3.report, scores: fillScores(parseScores(tb.SCORES, dims), s3.report, dims, 2), verdict, edits_applied: [] };
+      const rc = { round, report: s3.report, scores: fillScores(parseScores(tb.SCORES, dims), s3.report, dims, 2), verdict, open: parseOpen(tb.OPEN), edits_applied: [] };
       rechecks.push(rc);
       if (!allowEdits || verdict !== '未达标') break;
       let edits2 = parseEdits(s3.tail);
@@ -1200,7 +1359,7 @@ async function runFinal(runId) {
     fresh.review.final = {
       at: new Date().toISOString(), track: tr.key, track_name: tr.name, dims,
       audit_report: s1.report, scores_before: scoresBefore,
-      rechecks: rechecks.map(r => ({ round: r.round, report: r.report, scores: r.scores, verdict: r.verdict, edits: r.edits_applied.length })),
+      rechecks: rechecks.map(r => ({ round: r.round, report: r.report, scores: r.scores, verdict: r.verdict, open: r.open, edits: r.edits_applied.length })),
       scores_after: last.scores || {}, verdict: last.verdict || ''
     };
     if (text !== start) writeScript(fresh, text);
@@ -1219,6 +1378,133 @@ async function runFinal(runId) {
     store.saveRun(fresh);
     throw e;
   }
+}
+
+// ---------- 按复审意见再改一轮 ----------
+// 复审没达标时:把复审里没解决的问题列出来(新复审直接在 ===OPEN=== 里给;旧报告用 final_open_extract.md 整理),
+// 人勾选、写下自己的决定,只补改这几处(final_patch.md),再复审一次(只出报告)。以终稿为底,不从二稿重来。
+function openPrompt(report) {
+  return an().fillVars(readPrompt('final_open_extract.md'), { open_format: OPEN_FORMAT, report });
+}
+
+async function extractOpen(runId) {
+  const cfg = pl().loadConfig();
+  const run = store.getRun(runId);
+  const last = arr(((run.review || {}).final || {}).rechecks).slice(-1)[0];
+  run.steps = { ...(run.steps || {}), final_open: { status: 'running', started_at: new Date().toISOString() } };
+  store.saveRun(run);
+  try {
+    const r = await callLong(run, cfg, openPrompt(last.report), '终审·整理复审问题');
+    const c = String(r.content || '').replace(/[*`]*(===\s*(?:OPEN|END)\s*===)[*`]*/gi, '\n$1\n');
+    const items = parseOpen(parseBlocks(c, false).OPEN || c);
+    const fresh = store.getRun(runId) || run;
+    const rc = arr(fresh.review.final.rechecks).slice(-1)[0];
+    if (rc) rc.open = items;
+    fresh.steps = { ...(fresh.steps || {}), final_open: { status: 'done', finished_at: new Date().toISOString(), items: items.length } };
+    if (run.attempts) fresh.attempts = run.attempts;
+    store.saveRun(fresh);
+  } catch (e) {
+    const fresh = store.getRun(runId) || run;
+    fresh.steps = { ...(fresh.steps || {}), final_open: { status: 'failed', error: e.message } };
+    store.saveRun(fresh);
+    throw e;
+  }
+}
+
+async function runFinalPatch(runId, body) {
+  const cfg = pl().loadConfig();
+  let { run } = loadRunAsset(runId);
+  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
+  const start = currentScript(run);
+  const vByKey = Object.fromEntries(arr(run.review.versions).map(v => [v.key, v]));
+  const d2 = vByKey.d2, d3 = vByKey.d3;
+  const fin = run.review.final;
+  const tr = loadTrack(fin.track);
+  const dims = arr(fin.dims).length ? fin.dims : finalDims(tr);
+  const last = arr(fin.rechecks).slice(-1)[0] || {};
+  const picked = arr(last.open).filter(x => arr(body.ids).includes(x.id));
+  const note = String(body.note || '').trim().slice(0, 3000);
+  const t0 = Date.now();
+  const prevStep = (run.steps || {}).final_review || {};
+  run.steps = { ...(run.steps || {}), final_review: { ...prevStep, status: 'running', stage: '补改', patch: true, started_at: new Date().toISOString() } };
+  store.saveRun(run);
+  try {
+    const common = finalCommon(run, tr, dims);
+    const selected = picked.length ? picked.map(x => '- [' + x.id + '][' + x.chapter + '][' + x.level + '] ' + x.problem + (x.suggestion ? '\n  复审建议:' + x.suggestion : '')).join('\n') : '(没有勾选复审问题,只按下面人的决定改)';
+    const r = await callLong(run, cfg, an().fillVars(readPrompt('final_patch.md'), { ...common, selected, note: note || '(没有补充意见)', script: d3.text }), '终审·补改');
+    let edits = parseEdits(r.content);
+    if (r.truncated && !/^===\s*END\s*===/m.test(r.content)) edits = edits.slice(0, -1);
+    const a = await applyWithRepair(run, cfg, d3.text, edits.map(e => ({ ...e, round: '补改' })), '终审·补改');
+    const okNew = a.edits.filter(e => e.ok);
+    if (!okNew.length) throw new Error(edits.length ? '补改的 ' + edits.length + ' 处都没对上原句,稿子没有变化,可以再点一次' : 'AI 没有给出补改,稿子没有变化');
+    const text = a.next;
+    // 复审(只出报告)
+    setFinalStage(runId, '补改后复审');
+    const patchNote = note ? '【人的决定(以此为准:与写前分析账本冲突的旧数字,按人的决定改过的不算错)】\n' + note + '\n\n' : '';
+    const r3 = await callLong(run, cfg, an().fillVars(readPrompt('final_recheck.md'), {
+      ...common, patch_note: patchNote,
+      scores_before: dims.map(d => d + ': ' + ((fin.scores_before || {})[d] != null ? fin.scores_before[d] : '—')).join('\n'),
+      edits_done: editsText(okNew),
+      edits_instruction: '这是最后一轮复审,只出报告,不要输出修改。',
+      script: text
+    }), '终审·补改后复审');
+    const s3 = splitReport(r3.content);
+    const tb = parseBlocks(s3.tail, false);
+    const verdict = /未达标/.test(tb.VERDICT || '') ? '未达标' : /达标/.test(tb.VERDICT || '') ? '达标' : '';
+    const scores = fillScores(parseScores(tb.SCORES, dims), s3.report, dims, 2);
+    // 修订痕迹仍以二稿为底:把这次补改并进终稿原有的修改里
+    const oldEdits = arr(d3.edits);
+    const merged = mergeRounds(d2.text, d3.text, oldEdits.filter(e => e.ok), a.edits);
+    const failed = oldEdits.filter(e => !e.ok).concat(a.edits.filter(e => !e.ok));
+    const allEdits = merged.map((e, i) => ({ ...e, n: i + 1 })).concat(failed.map((e, i) => ({ ...e, ok: false, n: merged.length + i + 1 })));
+    const fresh = store.getRun(runId) || run;
+    if (currentScript(fresh) !== start) throw new Error('补改期间稿子被改过,结果没有保存,请重试');
+    const changed = [];
+    scriptChapters(text).forEach(c => { const b = scriptChapters(d2.text).find(x => x.id === c.id); if (b && b.text !== c.text) changed.push(c.id); });
+    const issues = allEdits.filter(e => e.ok).map(e => ({ chapter: e.chapter || '全篇', category: e.category || '', problem: e.reason || '', quote: e.old, fix: e.new || '(删除)', edit: e.n }));
+    fresh.review.versions = arr(fresh.review.versions).filter(v => v.key === 'd1' || v.key === 'd2').concat([{ ...d3, at: new Date().toISOString(), text, issues, changed, edits: allEdits }]);
+    fresh.review.deai = null;
+    if (fresh.steps) delete fresh.steps.deai;
+    const f2 = fresh.review.final;
+    f2.rechecks = arr(f2.rechecks).concat([{ round: arr(f2.rechecks).length + 1, patch: true, picked: picked.map(x => x.id), note, report: s3.report, scores, verdict, open: parseOpen(tb.OPEN), edits: okNew.length }]);
+    f2.scores_after = scores;
+    f2.verdict = verdict;
+    if (text !== start) writeScript(fresh, text);
+    fresh.steps = { ...(fresh.steps || {}), final_review: { ...prevStep, status: 'done', patch: true, secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: new Date().toISOString(),
+      issues: issues.length, changed: changed.length, edits: allEdits.filter(e => e.ok).length, edits_failed: allEdits.filter(e => !e.ok).length, verdict } };
+    if (run.attempts) fresh.attempts = run.attempts;
+    store.saveRun(fresh);
+    return { ok: true, edits: okNew.length };
+  } catch (e) {
+    const fresh = store.getRun(runId) || run;
+    // 补改失败不影响原终稿:状态回到上一次终审的结果,只记下这次的错误
+    fresh.steps = { ...(fresh.steps || {}), final_review: { ...prevStep, patch_error: e.message, patch_failed_at: new Date().toISOString() } };
+    store.saveRun(fresh);
+    throw e;
+  }
+}
+
+function startFinalPatch(runId, body) {
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  const st = run.steps || {};
+  if (passBusy(runId) || (st.final_review || {}).status === 'running' || (st.deai || {}).status === 'running' || (st.final_open || {}).status === 'running') throw Object.assign(new Error('有审稿正在跑,等它跑完再补改'), { status: 409 });
+  const vs = arr((run.review || {}).versions);
+  const d3 = vs.find(v => v.key === 'd3'), d4 = vs.find(v => v.key === 'd4');
+  const fin = (run.review || {}).final;
+  if (!d3 || !fin || !vs.some(v => v.key === 'd2')) throw Object.assign(new Error('还没有终稿,先跑终审'), { status: 400 });
+  const cur = currentScript(run);
+  if (cur !== d3.text && !(d4 && d4.text === cur)) throw Object.assign(new Error('终稿之后稿子被改过,不能按复审补改;请重新终审'), { status: 400 });
+  const last = arr(fin.rechecks).slice(-1)[0];
+  if (!last) throw Object.assign(new Error('这次终审没有复审报告'), { status: 400 });
+  if (body && body.extract) {
+    (async () => { try { await extractOpen(runId); } catch (e) {} })();
+    return { ok: true };
+  }
+  if (!arr(body.ids).length && !String(body.note || '').trim()) throw Object.assign(new Error('至少勾一个问题,或写下你的决定'), { status: 400 });
+  passRunning.add(runId);
+  (async () => { try { await runFinalPatch(runId, body); } catch (e) {} finally { passRunning.delete(runId); } await translateRun(runId); })();
+  return { ok: true };
 }
 
 // ---------- 去AI感(终稿之后):诊断并给每处 3~5 种改法 → 人勾选、挑改法 → 应用 ----------
@@ -1572,4 +1858,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

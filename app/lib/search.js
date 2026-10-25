@@ -9,6 +9,7 @@ const pl = () => require('./pipeline');
 const SEARCH_TIMEOUT_MS = 60 * 1000;
 const MAX_QUERIES = 8;
 const SUMMARY_MAX = 700;
+const CONTENT_MAX = 1500; // 事实核验要正文时的长度上限
 const QUOTE_MAX = 240; // 落盘的原文摘录长度
 const DEFAULT_PROVIDER = 'deepseek';
 
@@ -20,8 +21,8 @@ const ADAPTERS = {
     name: 'DeepSeek',
     default_base: 'https://api.deepseek.com',
     path: '/v1/tools/search',
-    build: (q, s, ori) => Object.assign(
-      { query: q, count: Math.max(s.count * 2, 8), need_content: false },
+    build: (q, s, ori, opt) => Object.assign(
+      { query: q, count: Math.max(s.count * 2, 8), need_content: !!(opt && opt.content) },
       ori ? { ori_question: String(ori).slice(0, 128) } : {}
     ),
     headers: key => ({ 'Content-Type': 'application/json', Authorization: 'Bearer ' + key }),
@@ -32,7 +33,8 @@ const ADAPTERS = {
       date: (r.date || '').slice(0, 10),
       authority: r.authority,
       score: r.rerank_score,
-      summary: String(r.summary || r.snippet || '')
+      summary: String(r.summary || r.snippet || ''),
+      content: String(r.content || '')
     }))
   }
 };
@@ -82,31 +84,38 @@ function rankResults(items) {
     (Number(b.authority) || -1) - (Number(a.authority) || -1) || t(b.date) - t(a.date) || (Number(b.score) || 0) - (Number(a.score) || 0));
 }
 
-async function webSearch(query, oriQuestion, cfg) {
+// opt.content:要正文(事实核验用,摘要放长一些,好让 AI 看到原始数字)
+async function webSearch(query, oriQuestion, cfg, opt) {
+  opt = opt || {};
   const s = searchConfig(cfg);
   if (!s.api_key) throw new Error('联网搜索没有可用的 ' + s.provider_name + ' API Key');
   const q = String(query || '').trim().slice(0, 128);
   if (!q) return { query: q, results: [] };
   const ad = adapterOf(s.provider);
-  const resp = await pl().postJson(s.base_url + ad.path, ad.headers(s.api_key), ad.build(q, s, oriQuestion), SEARCH_TIMEOUT_MS);
+  const resp = await pl().postJson(s.base_url + ad.path, ad.headers(s.api_key), ad.build(q, s, oriQuestion, opt), SEARCH_TIMEOUT_MS);
   if (resp.status === 402) throw new Error(s.provider_name + ' 余额不足(HTTP 402),请先充值');
   if (resp.status < 200 || resp.status >= 300) throw new Error('搜索失败 HTTP ' + resp.status + ': ' + (resp.text || '').slice(0, 200));
   let data;
   try { data = JSON.parse(resp.text); } catch (e) { throw new Error('搜索返回的不是 JSON'); }
-  const results = rankResults(ad.parse(data)).slice(0, s.count).map(r => Object.assign({}, r, {
-    summary: String(r.summary || '').slice(0, SUMMARY_MAX)
-  }));
+  const max = opt.content ? CONTENT_MAX : SUMMARY_MAX;
+  const results = rankResults(ad.parse(data)).slice(0, opt.count || s.count).map(r => {
+    const o = Object.assign({}, r, { summary: String((opt.content && r.content) || r.summary || '').slice(0, max) });
+    delete o.content;
+    return o;
+  });
   return { query: q, results };
 }
 
 // 依次跑一组查询;单个查询失败只记错,不中断整批。结果统一编号 R1、R2…,方便 AI 引用
-async function runQueries(queries, oriQuestion, cfg) {
+// opt.max 改查询上限,opt.content / opt.count 传给 webSearch
+async function runQueries(queries, oriQuestion, cfg, opt) {
+  opt = opt || {};
   const out = [];
   let n = 0;
-  for (const item of (Array.isArray(queries) ? queries : []).slice(0, MAX_QUERIES)) {
+  for (const item of (Array.isArray(queries) ? queries : []).slice(0, opt.max || MAX_QUERIES)) {
     const q = typeof item === 'string' ? { query: item } : (item || {});
     try {
-      const r = await webSearch(q.query, oriQuestion, cfg);
+      const r = await webSearch(q.query, oriQuestion, cfg, opt);
       r.results.forEach(x => { x.ref = 'R' + (++n); });
       out.push({ ...q, results: r.results });
     } catch (e) {
