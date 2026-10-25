@@ -1264,8 +1264,9 @@ server.listen(PORT, HOST, () => {
   for (const r of store.listRuns().filter(x => x.status === 'done')) {
     const st = r.steps || {};
     const stuck = ['draft_check', 'reverse_audit', 'final_review', 'deai'].filter(k => (st[k] || {}).status === 'running');
-    if (!stuck.length) continue;
-    if (r.draft_first && !r.cancel_requested && stuck.every(k => k === 'draft_check' || k === 'reverse_audit')) {
+    const stuckZh = (st.review_zh || {}).status === 'running'; // 翻译已移出审稿锁(v1.10.4),崩溃在翻译期会永挂「翻译中…」并置灰补翻按钮
+    if (!stuck.length && !stuckZh) continue;
+    if (stuck.length && r.draft_first && !r.cancel_requested && stuck.every(k => k === 'draft_check' || k === 'reverse_audit')) {
       console.log(`接管中断的审稿(${stuck.join('/')}): ${r.id} (${r.topic || ''})`);
       review.resumeDraftFirst(r.id).catch(e => {
         const rr = store.getRun(r.id);
@@ -1273,8 +1274,15 @@ server.listen(PORT, HOST, () => {
       });
     } else {
       stuck.forEach(k => { r.steps[k] = { ...r.steps[k], status: 'failed', error: '进程重启中断,可在审稿页重跑' }; });
+      if (stuckZh) r.steps.review_zh = { ...r.steps.review_zh, status: 'failed', error: '进程重启中断,可点「补齐中文对照」重跑' };
       store.saveRun(r);
-      console.log(`审稿中断落成失败(可重跑): ${r.id} (${stuck.join('/')})`);
+      console.log(`审稿中断落成失败(可重跑): ${r.id} (${[...stuck, ...(stuckZh ? ['review_zh'] : [])].join('/')})`);
+    }
+    // 只有翻译卡住的(审稿都正常跑完):单独把 review_zh 落 failed,不动其他
+    if (!stuck.length && stuckZh) {
+      r.steps.review_zh = { ...r.steps.review_zh, status: 'failed', error: '进程重启中断,可点「补齐中文对照」重跑' };
+      store.saveRun(r);
+      console.log(`翻译中断落成失败(可重翻): ${r.id}`);
     }
   }
 });

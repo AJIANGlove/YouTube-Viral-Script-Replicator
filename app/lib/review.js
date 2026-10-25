@@ -1394,8 +1394,9 @@ async function runPasses(runId, from) {
     for (const k of order) {
       try { if (k === 'audit') await runReverseAudit(runId); else if (k === 'final') await runFinal(runId); else await runPass(runId, k); } catch (e) { break; }
     }
-    await translateRun(runId);
   } finally { passRunning.delete(runId); }
+  // 中文对照放在锁外:翻译可能要好几分钟,期间不该挡住换赛道重新终审(翻译保存前会重读任务,只合并译文)
+  await translateRun(runId);
 }
 
 // ---------- 一键生成 ----------
@@ -1465,8 +1466,11 @@ function assertDone(run) {
 function setStatus(runId, chId, status) {
   const { run } = loadRunAsset(runId);
   assertDone(run);
-  if (!scriptChapters(currentScript(run)).some(c => c.id === chId)) throw Object.assign(new Error('找不到章节 ' + chId), { status: 400 });
-  chapterState(run, chId).status = status === '通过' ? '通过' : '待审';
+  const chs = scriptChapters(currentScript(run));
+  // chapter 为 '*':一键全部通过 / 全部取消
+  const ids = chId === '*' ? chs.map(c => c.id) : [chId];
+  if (!ids.length || !ids.every(id => chs.some(c => c.id === id))) throw Object.assign(new Error('找不到章节 ' + chId), { status: 400 });
+  ids.forEach(id => { chapterState(run, id).status = status === '通过' ? '通过' : '待审'; });
   store.saveRun(run);
   return { ok: true };
 }

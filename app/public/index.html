@@ -1829,7 +1829,7 @@ function rvDraw() {
     ${passLine}${tabs}
     <div class="rv-bar v13">
       <span>篇幅 <b>${s.words}</b>${s.budget ? ' / 预算 ' + s.budget + ' 词(' + ratio + ')' : ' 词'}</span>
-      <span>已通过 <b>${s.passed}/${s.chapters}</b> 章</span>
+      <span>已通过 <b>${s.passed}/${s.chapters}</b> 章 ${s.passed < s.chapters ? `<button class="an-btn v13" onclick="rvPassAll(true)">一键全部通过</button>` : `<button class="an-btn" onclick="rvPassAll(false)">全部取消通过</button>`}</span>
       <span>红旗 <b>${s.flags}</b> 个</span>
       <span>稿里用到但没出处的事实 <b>${s.red_facts.length}</b> 个 ${redList}</span>
     </div>
@@ -2019,7 +2019,7 @@ async function rvAuditFinal(skip) {
   const note = skip ? '' : (s.note || '').trim();
   const msg = skip ? '不按审稿报告改,直接终审?' : `按选中的 ${ids.length} 个问题、路线 ${s.route}. ${RV_ROUTES[s.route]} 去终审?`;
   if (!confirm(msg)) return;
-  try { await rvPost('final', { ids, route: skip ? '' : s.route, note, track: s.track }); } catch (e) { rvState.err = e.message; }
+  try { await rvPost('final', { ids, route: skip ? '' : s.route, note, track: s.track }); } catch (e) { rvState.err = e.message; alert('没能开始终审:' + e.message); return; }
   s.note = '';
   const ta = document.getElementById('rv-audit-note'); if (ta) { ta.value = ''; ta.blur(); }
   rvState.waitFinal = true; // 终稿出来后自动切到「二稿 → 终稿」对比
@@ -2098,7 +2098,8 @@ function rvRevisionHtml(rev, translating) {
   const ft = rvState.finalTrack || (fin && fin.track) || v.track_default || 'general';
   const trackRow = `<div class="rv-ops v13"><b>终审赛道</b>${rvTrackSelect(v, ft, "rvState.finalTrack=this.value;rvDraw()", busy)}
       <span class="hint">${esc(RV_TRACK_TIPS[ft] || '')}</span>
-      <button class="an-btn v13" onclick="rvRefinal()" ${busy ? 'disabled' : ''}>${fin && ft !== fin.track ? '换这个赛道重新终审' : '重新终审'}</button></div>`;
+      <button class="an-btn v13" onclick="rvRefinal()" ${busy ? 'disabled' : ''}>${(P.final || {}).status === 'running' ? '终审进行中…' : fin && ft !== fin.track ? '换这个赛道重新终审' : '重新终审'}</button></div>
+    ${(P.final || {}).status === 'running' ? `<div class="rv-flag v13"><b>终审进行中(${esc((P.final || {}).stage || '')})</b>:按「${esc(((v.tracks || []).find(x => x.key === (P.final || {}).track) || {}).name || '')}」赛道从二稿重新审稿、修改、复审,一般要十几分钟。下面还是上一版终稿,跑完会自动换成新的。</div>` : ''}`;
   return head + trackRow + modes + rvDocHtml(rev, false, translating, rev.from);
 }
 
@@ -2190,7 +2191,7 @@ async function rvDeaiApply() {
   const picks = d.items.filter(x => s.ids.has(x.id)).map(x => ({ id: x.id, text: s.text[x.id] || '' }));
   if (!confirm(picks.length ? `按你选的 ${picks.length} 处改法修改终稿?结果写回 V1 文案。` : '一处都没选,会恢复成终稿。继续?')) return;
   if (document.activeElement) document.activeElement.blur();
-  try { await rvPost('deai', { apply: true, picks }); } catch (e) { rvState.err = e.message; }
+  try { await rvPost('deai', { apply: true, picks }); } catch (e) { rvState.err = e.message; alert('没能修改:' + e.message); return; }
   rvState.key = null;
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
 }
@@ -2199,7 +2200,7 @@ async function rvRunDeai() {
   const v = rvState.view;
   const dt = rvState.deaiTrack || (v.deai && v.deai.track) || ((v.final || {}).track) || v.track_default || 'general';
   if (!confirm(v.deai ? '重新生成去AI感建议?现在的建议和勾选会被替换(已经改好的稿子先保留,再点「修改并去除AI感」才会替换)。' : '生成去AI感建议?AI 会诊断终稿,每处给几种改法,这一步不改稿子。')) return;
-  try { await rvPost('deai', { track: dt }); } catch (e) { rvState.err = e.message; }
+  try { await rvPost('deai', { track: dt }); } catch (e) { rvState.err = e.message; alert('没能开始去AI感:' + e.message); return; }
   rvState.revMode = 'deai';
   rvState.key = null;
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
@@ -2212,7 +2213,7 @@ async function rvRefinal() {
   const ft = rvState.finalTrack || (fin && fin.track) || v.track_default || 'general';
   const s = au && (au.used_selection || au.selection);
   if (!confirm('用「' + ((v.tracks || []).find(x => x.key === ft) || {}).name + '」赛道重新终审?会从二稿重新审稿、修改、复审' + (s ? ',沿用上次勾选的 ' + s.ids.length + ' 个问题和路线' : '') + (v.deai ? ';现在的去AI感稿会被替换,需要再跑一次' : '') + '。')) return;
-  try { await rvPost('final', { ids: s ? s.ids : [], route: s ? s.route : '', note: s ? s.note : '', track: ft }); } catch (e) { rvState.err = e.message; }
+  try { await rvPost('final', { ids: s ? s.ids : [], route: s ? s.route : '', note: s ? s.note : '', track: ft }); } catch (e) { rvState.err = e.message; alert('没能开始重新终审:' + e.message); return; }
   rvState.waitFinal = true;
   rvState.revMode = 'marked';
   rvState.key = null;
@@ -2285,6 +2286,13 @@ async function rvPost(path, body) {
 
 async function rvSetStatus(ch, status) {
   try { await rvPost('status', { chapter: ch, status }); } catch (e) { rvState.err = e.message; }
+  rvRefresh();
+}
+
+async function rvPassAll(on) {
+  const v = rvState.view, s = v.summary || {};
+  if (on && !confirm('把全部章节标成通过?' + (s.flags ? '还有 ' + s.flags + ' 个红旗没处理。' : ''))) return;
+  try { await rvPost('status', { chapter: '*', status: on ? '通过' : '待审' }); } catch (e) { rvState.err = e.message; }
   rvRefresh();
 }
 
