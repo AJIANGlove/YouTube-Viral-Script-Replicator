@@ -44,7 +44,7 @@ flowchart LR
 │   ├── bin/                留存卡批量构建 CLI
 │   ├── prompts/            现行提示词（生产用，单一来源）
 │   ├── public/             前端 SPA
-│   ├── data/runs/          64 条生成记录（含每步 attempts 与校验明细）
+│   ├── data/runs/          70 条生成记录（含每步 attempts 与校验明细）
 │   ├── data/logs/          运行日志（失败样本、留存卡批处理、探针输出）
 │   └── config.example.json 配置结构示例（不含真实 Key）
 ├── assets/                 180 个四层资产包，每包含原始 SRT 与留存卡
@@ -130,7 +130,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 
 ### 先写后改（默认模式，当前 v1.8）
 
-新建任务默认走 draft-first：分析 → AI 先调整（可联网）→ 自动确认 → 四步写稿 → 稿件检查 → **初稿检查出二稿**（`prompts/draft_check.md`）→ **二稿逆向审稿报告**（`prompts/reverse_audit.md`，逐段对照审稿的报告页，停下等人勾选问题、选路线 A/B/C、选赛道）→ **终审三步出终稿** → 中文对照。
+新建任务默认走 draft-first：分析 → AI 先调整（可联网）→ 自动确认 → 四步写稿 → 稿件检查 → **事实审计 + 联网核验**（`fact_audit.md` / `fact_verify.md`，拆主张、标风险、按证据定级，E 级必改、C/D 收窄）→ **初稿检查出二稿**（`prompts/draft_check.md`）→ **二稿逆向审稿报告**（`prompts/reverse_audit.md`，逐段对照审稿的报告页，停下等人勾选问题、选路线 A/B/C、选赛道）→ **终审三步出终稿** → 中文对照。
 
 - 终审 = 独立审稿（`prompts/final_audit.md`，七维评分 + P0–P3 清单，只审不改）→ 按诊断修改（`prompts/final_revise.md`，逐处「原句→改成+理由」，程序定位替换拼出终稿）→ 独立复审（`prompts/final_recheck.md`，未达标自动补改一轮再复审，最多两轮）。三步分开调用，避免模型一边写一边替自己的问题辩护。
 - 终审按赛道换提示词（`prompts/final_tracks/`：经济拆账 / 历史与古人 / 心理与动物科普 / POV 与等级沉浸 / 通用），替换维度 4 的审查内容、频道定位与留存重点；默认取写前分析匹配到的赛道卡，人可在审稿报告页改。
@@ -196,11 +196,14 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `step4.md` | 终稿优化 | 55 |
 | `step5.md` | 开头逐句仿写（强化开头） | 27 |
 | `script_check.md` | 稿件检查 K1-K5 | 38 |
-| `draft_check.md` | 初稿检查出二稿 | 47 |
+| `draft_check.md` | 初稿检查出二稿 | 54 |
+| `fact_audit.md` | 事实审计（拆主张、标风险、给搜索词） | 51 |
+| `fact_verify.md` | 联网核验（按证据定级 A–E，必改或收窄） | 54 |
 | `reverse_audit.md` | 二稿逆向工程审稿报告（九部分 + 逐条预估加分） | 523 |
-| `final_audit.md` | 终审①独立审稿（七维评分 + P0–P3 清单） | 220 |
-| `final_revise.md` | 终审②按诊断修改（逐处原句→改成+理由） | 80 |
-| `final_recheck.md` | 终审③独立复审（评分对照，未达标补改一轮） | 63 |
+| `final_audit.md` | 终审①独立审稿（七维评分 + P0–P3 清单） | 223 |
+| `final_revise.md` | 终审②按诊断修改（逐处原句→改成+理由） | 83 |
+| `final_recheck.md` | 终审③独立复审（评分对照，未达标补改一轮） | 71 |
+| `final_patch.md` | 按复审 OPEN 清单补改终稿 | 56 |
 | `final_fix_quotes.md` | 原句定位失败时让模型对照原章逐字重抄 | 20 |
 | `final_tracks/*.md` | 终审与去AI感赛道配置（经济拆账/历史与古人/心理与动物科普/POV/通用） | 202 |
 | `deai_diagnose.md` | 去AI感诊断（A–K 类型、P0/P1/P2、每处 3–5 种改法） | 107 |
@@ -216,7 +219,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 28 份 `.md`（2529 行，`final_tracks/` 按一行计；物理文件共 33 份）+ `fingerprints.json` 模式库。
+合计 31 份 `.md`（2509 行）+ `final_tracks/` 5 份（202 行）+ `fingerprints.json` 模式库；物理文件 36 份，合计 2711 行。
 
 ### 历史版本
 
