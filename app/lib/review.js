@@ -309,7 +309,8 @@ function buildView(run, asset) {
     final: state.final ? (() => {
       // 旧结果:清单里没读出的分数,按报告正文的评分表补上
       const f = state.final, dims = arr(f.dims);
-      const rechecks = arr(f.rechecks).map(r => ({ ...r, scores: fillScores(r.scores, r.report, dims, 2) }));
+      const rechecks = arr(f.rechecks).map(r => ({ ...r, scores: fillScores(r.scores, r.report, dims, 2),
+        open: arr(r.open).map(x => ({ ...x, zh_problem: hasForeign(x.problem) ? zhOf(state, x.problem) : '', zh_suggestion: hasForeign(x.suggestion) ? zhOf(state, x.suggestion) : '' })) }));
       const last = rechecks[rechecks.length - 1];
       return { ...f, rechecks, scores_before: fillScores(f.scores_before, f.audit_report, dims, 1), scores_after: last ? { ...last.scores, ...(f.scores_after || {}) } : f.scores_after };
     })() : null,
@@ -420,6 +421,8 @@ function textsToTranslate(run) {
   vs.forEach(v => arr(v.edits).forEach(e => texts.push(e.old, e.new || '')));
   // 二稿审稿报告的问题和修改方向
   arr(((run.review || {}).audit || {}).issues).forEach(x => { if (hasForeign(x.problem)) texts.push(x.problem); if (hasForeign(x.direction)) texts.push(x.direction); });
+  // 复审没解决的问题和建议(里面常引用韩文原句)
+  arr(((run.review || {}).final || {}).rechecks).forEach(r => arr(r.open).forEach(x => { if (hasForeign(x.problem)) texts.push(x.problem); if (hasForeign(x.suggestion)) texts.push(x.suggestion); }));
   // 事实核验表里的原文主张
   arr(((run.review || {}).factcheck || {}).items).forEach(x => { if (hasForeign(x.claim)) texts.push(x.claim); });
   // 去AI感候选改法:AI 没给中文的补翻
@@ -1498,7 +1501,7 @@ function startFinalPatch(runId, body) {
   const last = arr(fin.rechecks).slice(-1)[0];
   if (!last) throw Object.assign(new Error('这次终审没有复审报告'), { status: 400 });
   if (body && body.extract) {
-    (async () => { try { await extractOpen(runId); } catch (e) {} })();
+    (async () => { try { await extractOpen(runId); } catch (e) {} await translateRun(runId); })();
     return { ok: true };
   }
   if (!arr(body.ids).length && !String(body.note || '').trim()) throw Object.assign(new Error('至少勾一个问题,或写下你的决定'), { status: 400 });
@@ -1518,7 +1521,7 @@ function setDeaiStage(runId, stage) {
 }
 
 // ===ITEM=== 块:章节/类型/优先级/原句/原句中文/问题/方案N/方案N中文/方案N说明
-const DEAI_FIELD_RE = /^\s*[-*]?\s*\**\s*(章节|位置|类型|类别|优先级|严重程度|原句|原文|原句中文|问题|原因|方案\s*\d+\s*(?:中文|翻译|说明|思路)?)\s*\**\s*[:：]\s*(.*)$/;
+const DEAI_FIELD_RE = /^\s*[-*]?\s*\**\s*(章节|位置|类型|类别|优先级|严重程度|原句|原文|原句中文|问题|原因|推荐理由|推荐|方案\s*\d+\s*(?:中文|翻译|说明|思路)?)\s*\**\s*[:：]\s*(.*)$/;
 function parseDeaiItems(text) {
   // 模型常把分隔符连写在一行(===ITEMS======ITEM===)或加粗,先拆成每个分隔符单独一行
   const c = String(text || '').replace(/[*`]*(===\s*[A-Za-z]+\s*===)[*`]*/g, '\n$1\n').replace(/\n{3,}/g, '\n\n');
@@ -1543,7 +1546,10 @@ function parseDeaiItems(text) {
     return {
       chapter: (String(f['章节'] || f['位置'] || '').match(/CH\d+/i) || [''])[0].toUpperCase(),
       type: f['类型'] || f['类别'] || '', priority: (String(f['优先级'] || f['严重程度'] || '').match(/P[0-2]/i) || ['P1'])[0].toUpperCase(),
-      old: unwrapQuote(f['原句'] || f['原文'] || ''), old_zh: f['原句中文'] || '', problem: f['问题'] || f['原因'] || '', options
+      old: unwrapQuote(f['原句'] || f['原文'] || ''), old_zh: f['原句中文'] || '', problem: f['问题'] || f['原因'] || '', options,
+      // 推荐:方案N(从 0 数);没写或越界就不标
+      recommend: (n => n >= 1 && n <= options.length ? n - 1 : -1)(Number((String(f['推荐'] || '').match(/\d+/) || [0])[0])),
+      recommend_reason: f['推荐理由'] || ''
     };
   }).filter(x => x.old && x.options.length).map((x, i) => ({ ...x, id: 'D' + String(i + 1).padStart(2, '0') }));
   return { report, items };

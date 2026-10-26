@@ -2133,12 +2133,17 @@ function rvPatchHtml(v, busy) {
   }
   return head + err + rvPatchForm(rc, busy);
 }
+// 复审问题里有韩文却还没有中文:翻译中就提示,没在翻就给个按钮
+function rvOpenZhWait(t) {
+  if (!/[가-힯぀-ヿ]/.test(String(t || ''))) return '';
+  return rvState.view && rvState.view.translating ? '<div class="rv-zh">中文对照翻译中…</div>' : '<div class="hint"><a href="javascript:void 0" onclick="rvTranslate()">补上中文翻译</a></div>';
+}
 function rvPatchForm(rc, busy) {
   const sel = rvPatchSel(rc);
   const rows = (rc.open || []).map(x => `<div class="rv-ai${sel.ids.has(x.id) ? ' on' : ''}">
       <label class="rv-ai-head"><input type="checkbox" ${sel.ids.has(x.id) ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="rvPatchToggle('${escAttr(x.id)}', this.checked)">
         <b>${esc(x.id)}</b> <span class="rv-chip ${RV_OPEN_CLS[x.level] || ''}">${esc(x.level)}</span> <span class="hint">${esc(x.chapter)}</span></label>
-      <div class="rv-ai-body">${esc(x.problem)}${x.suggestion ? `<br><span class="hint">复审建议:${esc(x.suggestion)}</span>` : ''}</div></div>`).join('');
+      <div class="rv-ai-body">${esc(x.problem)}${x.zh_problem ? `<div class="rv-zh">中文:${esc(x.zh_problem)}</div>` : rvOpenZhWait(x.problem)}${x.suggestion ? `<br><span class="hint">复审建议:${esc(x.suggestion)}</span>${x.zh_suggestion ? `<div class="rv-zh">建议中文:${esc(x.zh_suggestion)}</div>` : rvOpenZhWait(x.suggestion)}` : ''}</div></div>`).join('');
   return `${rows ? `<div class="rv-ops"><span class="hint">默认勾上关键和次要;「待核实」要你先确认事实,写在下面的决定里再勾。已选 ${sel.ids.size} 个</span></div>${rows}` : ''}
     <div class="rv-edit"><div class="v13" style="font-size:12px">你的决定和补充意见(AI 以这里为准,哪怕和复审建议、账本不一样):</div>
       <textarea id="rv-patch-note" class="rv-keep" rows="3" ${busy ? 'disabled' : ''} placeholder="例如:CH13 A店租金改成月400万,相关的合计、占比、利润全部重算;B店老板人工4800万不包含在前面的3000万里;CH06 공헌이익률统一为65%" oninput="rvState.patchSel.note = this.value">${esc(sel.note)}</textarea>
@@ -2181,9 +2186,10 @@ function rvDeaiSel(d) {
     const pick = {}, text = {};
     d.items.forEach(x => {
       const t = picked && picked[x.id];
-      const i = t != null ? x.options.findIndex(o => o.text === t) : 0;
+      const rec = x.recommend >= 0 && x.recommend < x.options.length ? x.recommend : 0;
+      const i = t != null ? x.options.findIndex(o => o.text === t) : rec;
       pick[x.id] = t != null && i < 0 ? -1 : Math.max(0, i);
-      text[x.id] = t != null ? t : (x.options[0] || {}).text || '';
+      text[x.id] = t != null ? t : (x.options[rec] || {}).text || '';
     });
     rvState.deaiSel = { at: d.at, ids: new Set(picked ? Object.keys(picked) : d.items.filter(x => x.priority !== 'P2').map(x => x.id)), pick, text };
   }
@@ -2207,7 +2213,7 @@ function rvDeaiHtml(v, translating, busy) {
     const on = sel.ids.has(x.id);
     const k = sel.pick[x.id];
     const opts = x.options.map((o, i) => `<label class="rv-dopt${k === i ? ' on' : ''}"><input type="radio" name="rv-d-${escAttr(x.id)}" ${k === i ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="rvDeaiPick('${escAttr(x.id)}', ${i})">
-        <div class="rv-ai-cols" style="flex:1"><div><b>方案${i + 1}</b> ${o.text ? esc(o.text) : '<span class="rv-del">(删掉这句)</span>'}${o.note ? `<div class="hint">${esc(o.note)}</div>` : ''}</div>
+        <div class="rv-ai-cols" style="flex:1"><div><b>方案${i + 1}</b>${x.recommend === i ? ' <span class="rv-chip green">推荐</span>' : ''} ${o.text ? esc(o.text) : '<span class="rv-del">(删掉这句)</span>'}${o.note ? `<div class="hint">${esc(o.note)}</div>` : ''}${x.recommend === i && x.recommend_reason ? `<div class="hint" style="color:#166534">推荐理由:${esc(x.recommend_reason)}</div>` : ''}</div>
         <div class="rv-ai-zh">${o.text ? (o.zh ? esc(o.zh) : pending) : '删掉'}</div></div></label>`).join('')
       + `<label class="rv-dopt${k === -1 ? ' on' : ''}"><input type="radio" name="rv-d-${escAttr(x.id)}" ${k === -1 ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="rvDeaiPick('${escAttr(x.id)}', -1)"><b>自己写</b><span class="hint">(在下面框里改)</span></label>`;
     const cur = k >= 0 ? x.options[k] : null;
@@ -2230,7 +2236,7 @@ function rvDeaiHtml(v, translating, busy) {
     ${d.stale ? '<div class="rv-flag"><b>注意</b>:生成建议以后稿子又改过,原句可能对不上,请重新生成建议。</div>' : ''}
     ${d.truncated ? '<div class="rv-flag"><b>注意</b>:AI 输出太长被截断,后面几处可能没列出来。</div>' : ''}
     <details class="rv-md-box"><summary>AI 感诊断报告(整体诊断、重复信息、结构节奏、可以保留、待核实)</summary><div class="rv-md">${rvMd(d.diagnosis)}</div></details>
-    <div class="an-sec v13">勾选要改的位置,每处挑一种改法(默认勾上 P0/P1、选方案1;不想改的取消勾选)</div>
+    <div class="an-sec v13">勾选要改的位置,每处挑一种改法(默认勾上 P0/P1、选 AI 标「推荐」的方案,没标推荐就选方案1;不想改的取消勾选)</div>
     <div class="rv-ops"><button class="an-btn" onclick="rvDeaiAll('all')" ${busy ? 'disabled' : ''}>全选</button><button class="an-btn" onclick="rvDeaiAll('none')" ${busy ? 'disabled' : ''}>全不选</button><button class="an-btn" onclick="rvDeaiAll('p01')" ${busy ? 'disabled' : ''}>只选 P0/P1</button><span class="hint">已选 ${sel.ids.size} 处</span></div>
     ${rows || '<div class="hint">AI 没有列出需要改的位置,可以看上面的诊断报告,或换个赛道重新生成。</div>'}
     <div class="rv-ops v13" style="margin:8px 0"><button class="an-btn v13" onclick="rvDeaiApply()" ${busy || d.stale ? 'disabled' : ''}>${applying ? '修改中…' : `修改并去除AI感(${sel.ids.size} 处)`}</button><span class="hint">${ap ? '再点一次会从终稿按新的选择重新改' : '以终稿为底替换,结果写回 V1 文案'}</span></div>
