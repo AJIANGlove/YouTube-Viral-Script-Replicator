@@ -69,6 +69,17 @@ function parseChapters(script) {
   return out;
 }
 
+// 看着像章节标签、但 parseChapters 认不出的行(时间写成「미할당」、缺竖线等)。
+// parseChapters 会把这类标签连同它的正文静默跳过,所以结构闸门要单独把它们报出来。
+const CH_TAG_LIKE = /^[ \t]*\[CH\d+[^\]\r\n]*\][ \t]*\r?$/gm;
+const CH_TAG_OK = /^[ \t]*\[CH\d+ \| \d+:\d+(?::\d+)?\s*[-–—]\s*\d+:\d+(?::\d+)? \| [^\]]+\][ \t]*\r?$/;
+function malformedChapterTags(script) {
+  const out = []; let m, n = 0;
+  const re = new RegExp(CH_TAG_LIKE.source, 'gm');
+  while ((m = re.exec(script || '')) !== null) { n++; if (!CH_TAG_OK.test(m[0])) out.push({ index: n, text: m[0].trim() }); }
+  return out;
+}
+
 function collapseHits(hits) {
   const out = [];
   for (const g of hits) {
@@ -249,8 +260,15 @@ function stripLeadingPreamble(text) {
 // 章节结构校验:章号必须从 01 起严格递增、每个章号只出现一次。
 // 实测两类事故都靠它兜住:①中转层把「中断的前半段 + 重试的完整段」拼进同一个响应体;
 // ②模型自己从头重写一遍(实测量产记录 run_a3cb19c5b8a6 终稿 23 个标签、CH02–CH11 各两次)。
+// ③标签格式不合法会被 parseChapters 静默跳过(实测 run_61f5f188d286:CH13 时间写成「미할당」,解析只剩 CH01,单章天然合法,残缺稿一路跑到终审)。
+// expected:蓝图章数。传了就要求恰好 CH01..CHN 全部写出,少章判不合格。
 // 返回 null 表示合格,否则返回可直接回灌给模型的中文原因。
-function chapterStructureError(text) {
+function chapterStructureError(text, expected) {
+  const bad = malformedChapterTags(text || '');
+  if (bad.length) {
+    return '章节标签格式不合法(第 ' + bad.map(b => b.index).join('、') + ' 个标签:' + bad.slice(0, 3).map(b => b.text).join(';') +
+      ';时间必须写成 m:ss - m:ss,如 [CH13 | 11:20 - 12:00 | cta_outro])';
+  }
   const chs = parseChapters(text || '');
   if (!chs.length) return '未解析到任何 [CHxx | 时间 | 功能] 章节标签';
   const nums = chs.map(c => Number(c.ch));
@@ -263,6 +281,10 @@ function chapterStructureError(text) {
     if (nums[i] !== i + 1) {
       return '章节顺序异常(第 ' + (i + 1) + ' 个标签是 CH' + String(nums[i]).padStart(2, '0') + ',应为 CH' + String(i + 1).padStart(2, '0') + ')';
     }
+  }
+  if (expected && nums.length < expected) {
+    const pad = n => 'CH' + String(n).padStart(2, '0');
+    return '章节不全(只写了 ' + nums.length + ' 章,蓝图有 ' + expected + ' 章,缺 ' + pad(nums.length + 1) + (nums.length + 1 < expected ? '–' + pad(expected) : '') + ')';
   }
   return null;
 }
@@ -329,4 +351,4 @@ function extractFinalScript(optText) {
   return stripLeadingPreamble(cleaned).text;
 }
 
-module.exports = { normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, toSec, fmt, parseChapters, chapterStructureError, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };
+module.exports = { normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };

@@ -265,8 +265,12 @@ async function probeProvider(cfg) {
 }
 
 // 主流程(异步,不阻塞 HTTP)
-// 篇幅:全稿词数对比蓝图 word_budget 合计(蓝图没写预算时按目标时长 × 语速)。上限 115%
+// 篇幅:全稿词数对比蓝图 word_budget 合计(蓝图没写预算时按目标时长 × 语速)。上限 115%;
+// 下限:低于即不合格(实测 run_61f5f188d286 只写了开头和 CTA,4% 也判通过),低于警告线记警告。
+// 韩文按空格数词,同样时长的词数天然只有英文的六成左右(历史完整稿 29%–86%,中位 57%),所以下限单独放低,
+// 否则会误伤正常韩文稿;英文完整稿最低 55%,用 50% / 70%
 const LENGTH_MAX_RATIO = 1.15;
+const LENGTH_MIN = { default: [0.5, 0.7], Korean: [0.25, 0.4] }; // [不合格线, 警告线]
 function lengthCheck(script, blueprint, audience, wpm) {
   let budget = 0;
   try { budget = (JSON.parse(checks.stripFence(blueprint || '')).chapters || []).reduce((n, c) => n + (Number(c.word_budget) || 0), 0); } catch (e) {}
@@ -277,13 +281,19 @@ function lengthCheck(script, blueprint, audience, wpm) {
   if (!budget) return null;
   const words = checks.parseChapters(script || '').reduce((n, c) => n + c.words, 0);
   const ratio = Math.round(words / budget * 100) / 100;
-  const ok = ratio <= LENGTH_MAX_RATIO;
-  return { words, budget, ratio, ok, detail: words + ' 词,预算 ' + budget + ' 词(' + Math.round(ratio * 100) + '%' + (ok ? '' : ',超过上限 ' + Math.round(LENGTH_MAX_RATIO * 100) + '%') + ')' };
+  const [minR, warnR] = LENGTH_MIN[(audience || {}).target_language] || LENGTH_MIN.default;
+  const short = ratio < minR;
+  const ok = ratio <= LENGTH_MAX_RATIO && !short;
+  const warn = !short && ratio < warnR;
+  return { words, budget, ratio, ok, ...(short ? { short: true } : {}), ...(warn ? { warn: true } : {}),
+    detail: words + ' 词,预算 ' + budget + ' 词(' + Math.round(ratio * 100) + '%' +
+      (short ? ',低于下限 ' + Math.round(minR * 100) + '%' : !ok ? ',超过上限 ' + Math.round(LENGTH_MAX_RATIO * 100) + '%' : warn ? ',偏短(低于 ' + Math.round(warnR * 100) + '%)' : '') + ')' };
 }
 
 async function runGeneration(runId) {
   const run = store.getRun(runId);
   if (!run) return;
+  if (run.checks && run.checks.gate_fail) { delete run.checks.gate_fail; } // 续跑:上次的失败记录作废
   const cfg = loadConfig();
   if (!cfg || !cfg.api_key) {
     run.status = 'failed'; run.error = '未配置 API Key(POST /api/settings)'; store.saveRun(run); return;
@@ -441,7 +451,11 @@ async function runGeneration(runId) {
       // 判定同时覆盖「未解析到任何章节」与「章号重复/乱序」——后者实测于中转层把两段流拼进同一响应体、
       // 或模型自己从头重写一遍(见 checks.chapterStructureError 注释),这类输出拼接出来必然错位。
       if (step === 2) {
-        let structErr = checks.chapterStructureError(content);
+        let bpChapters = [];
+        try { bpChapters = JSON.parse(checks.stripFence(ctx.blueprint)).chapters || []; } catch (e) {}
+        // 被 max_tokens 截断的稿子由闸门 B 续写补全,这里先不按蓝图章数要求
+        const wantChapters = () => (r.stopReason === 'max_tokens' ? 0 : bpChapters.length);
+        let structErr = checks.chapterStructureError(content, wantChapters());
         for (let retry = 1; structErr && retry <= GATE_MAX_RETRIES; retry++) {
           run.steps.script.gate_retry = { reason: structErr, attempt: retry };
           store.saveRun(run);
@@ -450,15 +464,13 @@ async function runGeneration(runId) {
           messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];
           r = await callLlm(messages, 'Step 2 结构重试');
           content = textnorm.normalizeChapterTags(r.content.trim());
-          structErr = checks.chapterStructureError(content);
+          structErr = checks.chapterStructureError(content, wantChapters());
         }
         if (structErr) throw new Error('Step 2 重试后仍不合格: ' + structErr);
 
         // Step 2 闸门 B:max_tokens 截断时退到章节边界续写,绝不从句子中间拼接。
         // 轮数上限 = Blueprint 章数 + 2:续写每轮强制从下一章标签行开始(至少完成一章),该上限正常路径永远碰不到;
         // 仅在渠道系统性截断(每轮都写不完一章)时触发,防止无限烧额度;蓝图不可解析时固定 4 轮兜底,始终有界
-        let bpChapters = [];
-        try { bpChapters = JSON.parse(checks.stripFence(ctx.blueprint)).chapters || []; } catch (e) {}
         const maxContRounds = bpChapters.length ? bpChapters.length + 2 : 4;
         let continued = false;
         let contRound = 0;
@@ -547,13 +559,32 @@ async function runGeneration(runId) {
             if (vErr) throw new Error('Step 2 校验重试后仍不合格: ' + vErr);
           }
         }
+
+        // Step 2 闸门 C:篇幅下限。低于预算 50% 反馈重写一次,仍不合格置失败,不让残缺稿进入审核和终审
+        let len = lengthCheck(content, ctx.blueprint, run.audience, tools.targetWpm);
+        if (len && len.short) {
+          run.steps.script.gate_retry = { reason: '篇幅不合格: ' + len.detail, attempt: 1 };
+          store.saveRun(run);
+          const feedback = '上一次输出篇幅不合格:' + len.detail + '。请按 Blueprint 把每一章的旁白正文完整写出来(每章接近该章的 word_budget),' +
+            '每章以 [CHxx | m:ss - m:ss | function] 标签行开头,章号从 CH01 起严格递增;不要只写开头和结尾,不要输出解释。';
+          messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];
+          r = await callLlm(messages, 'Step 2 篇幅重试');
+          content = textnorm.normalizeChapterTags(r.content.trim());
+          const e2 = checks.chapterStructureError(content, wantChapters());
+          if (e2) throw new Error('Step 2 篇幅重试后结构不合格: ' + e2);
+          len = lengthCheck(content, ctx.blueprint, run.audience, tools.targetWpm);
+          if (len && len.short) throw new Error('Step 2 篇幅重试后仍不合格: ' + len.detail);
+        }
+        run.checks = { ...(run.checks || {}), script_length: len };
       }
 
       // Step 4 章节结构闸门:终稿必须是一份「CH01 起、章号严格递增不重复」的完整脚本。
       // 中转层把两段流拼进一个响应体、或模型自己整篇重写时,这里会拦住(反馈重试 1 次,仍不合格置失败),
       // 避免把重复/错位的终稿当成品存进 final_script。
       if (step === 4) {
-        let structErr = checks.chapterStructureError(checks.extractFinalScript(content));
+        let bp4 = [];
+        try { bp4 = JSON.parse(checks.stripFence(ctx.blueprint)).chapters || []; } catch (e) {}
+        let structErr = checks.chapterStructureError(checks.extractFinalScript(content), bp4.length);
         if (structErr) {
           run.steps.optimized.gate_retry = { reason: structErr, attempt: 1 };
           store.saveRun(run);
@@ -562,12 +593,14 @@ async function runGeneration(runId) {
           messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];
           r = await callLlm(messages, 'Step 4 结构重试');
           content = textnorm.normalizeChapterTags(r.content.trim());
-          structErr = checks.chapterStructureError(checks.extractFinalScript(content));
+          structErr = checks.chapterStructureError(checks.extractFinalScript(content), bp4.length);
           if (structErr) throw new Error('Step 4 章节结构不合格: ' + structErr);
         }
         // Step 4 篇幅闸门:优化只修问题,不许把稿子撑大。实测韩文稿因词数统计失效被判「偏稀」,
         // 优化把 7,785 字撑到 16,959 字(预算的 184%)。超出预算 115% 反馈压缩一次;仍超标不置失败,结果写进 checks 交人工
         let len = lengthCheck(checks.extractFinalScript(content), ctx.blueprint, run.audience, tools.targetWpm);
+        // 优化后反而不到预算一半:说明优化把正文删没了,不交给审核
+        if (len && len.short) throw new Error('Step 4 终稿篇幅不合格: ' + len.detail);
         if (len && !len.ok) {
           run.steps.optimized.gate_retry = { reason: len.detail, attempt: 1 };
           store.saveRun(run);
@@ -576,9 +609,10 @@ async function runGeneration(runId) {
           messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];
           const r2 = await callLlm(messages, 'Step 4 篇幅重试');
           const c2 = textnorm.normalizeChapterTags(r2.content.trim());
-          if (!checks.chapterStructureError(checks.extractFinalScript(c2))) {
+          if (!checks.chapterStructureError(checks.extractFinalScript(c2), bp4.length)) {
             r = r2; content = c2;
             len = lengthCheck(checks.extractFinalScript(content), ctx.blueprint, run.audience, tools.targetWpm);
+            if (len && len.short) throw new Error('Step 4 篇幅重试后不合格: ' + len.detail);
           }
         }
         run.checks = { ...(run.checks || {}), length: len };
@@ -607,6 +641,7 @@ async function runGeneration(runId) {
     } catch (e) {
       run.status = 'failed';
       run.error = 'Step ' + step + ' 失败: ' + e.message;
+      run.checks = { ...(run.checks || {}), gate_fail: { step, reason: e.message, at: new Date().toISOString() } };
       run.steps[stepNames[step - 1]].status = 'failed';
       store.saveRun(run);
       return;

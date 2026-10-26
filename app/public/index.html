@@ -1600,8 +1600,12 @@ async function loadRunDetail() {
     const gate = s.gate_retry ? ' ⟳重试' : '';
     return `<div class="step-pill ${cls}">${STEP_LABELS[k]}${extra}${gate}</div>`;
   }).join('');
+  const ck = r.checks || {};
+  const lenWarn = [['脚本', ck.script_length], ['终稿', ck.length]].filter(x => x[1] && (x[1].warn || x[1].short)).map(x => x[0] + '篇幅' + (x[1].short ? '不合格' : '偏短') + ':' + x[1].detail);
   document.getElementById('detail-error').innerHTML =
     (r.error ? '错误: ' + esc(r.error) : '') +
+    (ck.gate_fail && !r.error ? '闸门不合格(Step ' + esc(ck.gate_fail.step) + '):' + esc(ck.gate_fail.reason) : '') +
+    (lenWarn.length ? '<div class="hint" style="color:#b45309">⚠ ' + esc(lenWarn.join(';')) + '</div>' : '') +
     ((r.status === 'failed' || r.status === 'cancelled')
       ? ' <button class="primary" style="margin-left:8px" onclick="retryRun()">续跑此任务</button>' : '');
 
