@@ -536,6 +536,8 @@ function parseEdits(text) {
     if (tag) { e.old = e.old.replace(TAG, '').trim(); if (!e.chapter) e.chapter = tag[1]; }
     if (e.new) e.new = e.new.replace(TAG, '').trim();
     if (e.new != null && EDIT_DELETE.test(e.new)) e.new = '';
+    // 「改成」写成了一句删除说明(如「(删除三处中的后两处,只保留第一处)」):按删掉原句处理
+    else if (e.new && /^[(（【\[]\s*(删除|删掉|删去|去掉)/.test(e.new.trim()) && checks.isMetaNoteLine(e.new)) e.new = '';
     e.chapter = (String(e.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase();
     return e;
   }).filter(e => e.old);
@@ -601,6 +603,7 @@ function applyEdits(base, edits) {
     }
     e.chapter = ch.id; e.start = pos.start; e.end = pos.end; e.old = ch.text.slice(pos.start, pos.end);
     if (e.new === e.old) { e.ok = false; e.error = '改前改后一样'; return; }
+    if (e.new && e.new.split('\n').some(l => checks.isMetaNoteLine(l))) { e.ok = false; e.error = '「改成」里写的是修改说明,不是正文,没有采用'; return; }
     (byCh[ch.id] = byCh[ch.id] || []).push(e);
   });
   let next = base;

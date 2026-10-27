@@ -289,6 +289,28 @@ function chapterStructureError(text, expected) {
   return null;
 }
 
+// 修改说明混进正文:模型偶尔不真删,而是在原处留一行「(删除三处中的后两处,只保留第一处)」这类中文批注。
+// 判定:不是章节标签的整行,中文字占这一行字母的一半以上(韩文/英文稿的正文不会这样),
+// 或整行被括号包住且以 删除/保留/省略/此处/修改/略 这类编辑动词开头。中文稿不做前一种判定。
+const HAN = /[\u4e00-\u9fff]/g;
+const META_WORD = /^[(（【\[]\s*(删除|删掉|删去|去掉|保留|省略|此处|这里|修改|改为|略|同上|待核实|注|备注|unchanged|omitted)/i;
+function isMetaNoteLine(line, lang) {
+  const t = String(line || '').trim();
+  if (!t || /^\[CH\d+/.test(t)) return false;
+  const wrapped = /^[(（【\[].*[)）】\]]$/.test(t);
+  if (wrapped && META_WORD.test(t)) return true;
+  if (/^(Chinese|中文|Japanese|日文)/i.test(lang || '')) return false;
+  const han = (t.match(HAN) || []).length;
+  const letters = (t.match(/[\p{L}]/gu) || []).length;
+  return han >= 2 && han / Math.max(letters, 1) > 0.5;
+}
+function stripMetaNotes(text, lang) {
+  const removed = [];
+  const out = String(text || '').split('\n').filter(l => { if (isMetaNoteLine(l, lang)) { removed.push(l.trim()); return false; } return true; })
+    .join('\n').replace(/\n{3,}/g, '\n\n');
+  return { text: removed.length ? out : String(text || ''), removed };
+}
+
 // Step4: 元评论 / ChangeLog before / 时间漂移 / 附加内容
 function checkOptimized(optText, origScript) {
   const meta = [/\[VERIFY/i, /\(unchanged\)/i, /note\s*[:：]/i, /all (the )?fixes are/i, /I need to flag/i].filter(p => p.test(optText)).map(p => p.source);
@@ -351,4 +373,4 @@ function extractFinalScript(optText) {
   return stripLeadingPreamble(cleaned).text;
 }
 
-module.exports = { normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };
+module.exports = { normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };

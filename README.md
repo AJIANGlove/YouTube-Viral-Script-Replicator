@@ -193,7 +193,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `step1.md` | Blueprint 生成 | 84 |
 | `step2.md` | 脚本施工 | 51 |
 | `step3.md` | 质量审核 | 71 |
-| `step4.md` | 终稿优化 | 55 |
+| `step4.md` | 终稿优化 | 56 |
 | `step5.md` | 开头逐句仿写（强化开头） | 27 |
 | `script_check.md` | 稿件检查 K1-K5 | 38 |
 | `draft_check.md` | 初稿检查出二稿 | 54 |
@@ -219,7 +219,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 31 份 `.md`（2509 行）+ `final_tracks/` 5 份（202 行）+ `fingerprints.json` 模式库；物理文件 36 份，合计 2711 行。
+合计 31 份 `.md`（2510 行）+ `final_tracks/` 5 份（202 行）+ `fingerprints.json` 模式库；物理文件 36 份，合计 2712 行。
 
 ### 历史版本
 

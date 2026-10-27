@@ -631,7 +631,10 @@ async function runGeneration(runId) {
       if (step === 3) run.checks = { ...(run.checks || {}), audit: checks.checkAudit(content, outputs.step2) };
       if (step === 4) {
         run.checks = { ...(run.checks || {}), optimized: checks.checkOptimized(content, outputs.step2) };
-        run.final_script = checks.extractFinalScript(content);
+        // 正文里混进的修改说明行(如「(删除三处中的后两处,只保留第一处)」)不是旁白,去掉并留痕
+        const meta = checks.stripMetaNotes(checks.extractFinalScript(content), (run.audience || {}).target_language);
+        run.final_script = meta.text;
+        if (meta.removed.length) run.checks.optimized.meta_lines = meta.removed;
       }
       if (step === 1) ctx.blueprint = content;
       if (step === 2) ctx.script = content;
