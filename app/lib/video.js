@@ -49,16 +49,26 @@ const STAGE_LABELS = {
   DELETING: '删除中'
 };
 
-// 与前端 cleanScriptText 一致:去掉 "Optimized Script" 标题行与章节标签行
-// (视频后端按行切句、不过滤 [CH..] 标签,标签会被当成旁白朗读)
+// 推送前清洗:必须与前端 index.html 的 cleanScriptText 逐条一致,
+// 否则同一版本文案「下载纯净稿」拿到的正文与推到视频网站的正文不是同一份
+// (历史 52 个有文案的版本里有 18 个不一致:推送多出 ---、## 小标题、整行加粗外壳)。
+// 规则:去 "Optimized Script / Final Script" 标题行、章节标签行([CH..] 会被后端当旁白念)、
+// Markdown 小标题行、分隔线,并剥掉整行加粗外壳。
 // 容错:允许行首 Markdown 装饰(#/>/列表符/加粗)与行尾加粗 —— 存量文案里出现过 **[CH01 | ..]** 形态
 const CH_TAG_LINE = /^[\s#>*+_\-]*\[CH\d+\s*\|\s*\d{1,2}:\d{2}(?::\d{2})?\s*[-–—~]\s*\d{1,2}:\d{2}(?::\d{2})?\s*\|[^\]]*\][\s*_]*$/;
+const MD_HEADING_LINE = /^\s*#{1,6}\s/;
+const SCRIPT_TITLE_LINE = /^\s*(?:optimized script|final script)\b.*$/i;
+const MD_RULE_LINE = /^\s*[-–—*_=]{3,}\s*$/;
+const BOLD_WRAPPED_LINE = /^\s*(?:\*\*|__)(.*?)(?:\*\*|__)\s*$/;
 
 function cleanScript(raw) {
+  // 换行归一(前端拿到的是浏览器规范化后的 textContent,恒为 \n),保证两边逐字节相同
   return String(raw || '')
-    .replace(/^\s*#?\s*Optimized Script[ \t]*\r?\n?/i, '')
-    .split(/\r?\n/)
+    .replace(/\r\n?/g, '\n')
+    .split('\n')
     .filter(line => !CH_TAG_LINE.test(line.trim()))
+    .filter(line => !MD_HEADING_LINE.test(line) && !SCRIPT_TITLE_LINE.test(line) && !MD_RULE_LINE.test(line))
+    .map(line => line.replace(BOLD_WRAPPED_LINE, '$1'))
     .join('\n')
     .replace(/\n{3,}/g, '\n\n')
     .trim();

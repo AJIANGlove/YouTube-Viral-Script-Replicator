@@ -5325,7 +5325,9 @@ function renderVideoDialog() {
   const locale = VIDEO_LOCALE_BY_LANGUAGE[lang] || null;
   const channel = videoChannels.find(c => c.id === r.channel_id) || null;
   const channelName = channel ? channel.name : (r.channel_name || '');
-  const words = st.text.trim().split(/\s+/).filter(Boolean).length;
+  // 弹窗展示与实际推送必须是同一份正文:用与「下载纯净稿」完全相同的清洗(服务端 video.cleanScript 同规则)
+  const pushed = cleanScriptText(st.text);
+  const words = pushed.trim().split(/\s+/).filter(Boolean).length;
 
   document.getElementById('video-modal-title').textContent = `推送 ${versionLabel(st.version)} 文案到视频网站`;
   const body = document.getElementById('video-modal-body');
@@ -5353,8 +5355,8 @@ function renderVideoDialog() {
     <div class="kv"><span class="k">标题</span><span class="v">${esc(r.topic || '')}</span></div>
     <div class="kv"><span class="k">频道</span><span class="v">${esc(channelName || '未选择')}</span></div>
     <div class="kv"><span class="k">语言</span><span class="v">${esc(lang)}${locale ? ' → ' + esc(locale) : ''}</span></div>
-    <div class="kv"><span class="k">文案</span><span class="v">${words} 词 · ${st.text.length} 字符(已去掉标题行与章节标签)</span></div>
-    <div class="script-peek">${esc(st.text.slice(0, 260))}${st.text.length > 260 ? '\n…' : ''}</div>
+    <div class="kv"><span class="k">文案</span><span class="v">${words} 词 · ${pushed.length} 字符(纯净稿:已去掉标题行、章节标签、Markdown 小标题与分隔线)</span></div>
+    <div class="script-peek">${esc(pushed.slice(0, 260))}${pushed.length > 260 ? '\n…' : ''}</div>
     ${problems.map(p => `<div class="notice warn">${esc(p)}</div>`).join('')}
     ${st.error ? `<div class="notice err">${esc(st.error)}</div>` : ''}
     ${st.busy ? `<div class="notice info modal-loading">${st.pendingMode === 'auto' ? '正在创建项目并启动全链路自动生产,通常需要 10–60 秒,请勿关闭…' : '正在创建项目…'}</div>` : ''}

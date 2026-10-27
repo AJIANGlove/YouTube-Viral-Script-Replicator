@@ -45,3 +45,13 @@
 >
 > **v1.10 重打记录**：上游 v1.10（0010–0015）仍不含上述修复，但**增量叠加可行**——在 `claude-v18-series` 链顶（已入本地历史）直接 `git am 0010-0015`，合并基点是真祖先，唯一冲突是 review.js exports 行（合并双方导出名即可）。另新增一处本地修复：**启动崩溃清理扩展到 `steps.deai`**（去AI感卡 running 会被 `deaiGuard` 永久挡死；落成 failed 手动重跑，去AI感绝不自动续跑）。
 
+## 视频推送文案 == 纯净稿（2026-10-26，跨文件不变量，改清洗规则时两处必须同步）
+
+「存草稿 / 自动生视频」推送的正文必须与「下载纯净稿」逐字节相同，否则同一版本文案在两处内容不同。
+
+- 前端：`app/public/index.html` 的 `cleanScriptText`（作用在页面 DOM 文本，下载/复制/弹窗预览共用）。
+- 服务端：`app/lib/video.js` 的 `cleanScript`（作用在 run 里的原始字段，`server.js` 的 `pushToVideo` 调用）。
+- 规则：去 `Optimized Script` / `Final Script` 标题行（含 `# Optimized Script: XXX` 整行）、`[CH..]` 章节标签行、Markdown 小标题行、分隔线（`---` 等），剥整行加粗外壳，折叠多余空行。
+- 历史差异（已修）：服务端只删标题**前缀**，`# Optimized Script: XXX` 会留 `: XXX` 残片；且未删 `---` / `##` 小标题 / 加粗外壳 —— 52 个有文案版本里 18 个不一致。
+- 改任一处的校验方法：从 index.html 抽 `CH_TAG_LINE`→`cleanScriptText` 整段 eval 出函数，与 `video.cleanScript` 对 `app/data/runs/*.json` 的四个脚本字段逐字节比对，必须 0 差异。
+
