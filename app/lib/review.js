@@ -1306,6 +1306,23 @@ function parseOpen(block) {
   return out;
 }
 
+// 复审报告读不出评分或结论(模型没写 ===SCORES===/===VERDICT=== 清单、写错格式或被截断):
+// 把报告交回模型,只补这份清单,不重审;补出来的只填空缺,已经读到的不动
+const parseVerdict = v => /未达标/.test(v || '') ? '未达标' : /达标/.test(v || '') ? '达标' : '';
+async function ensureRecheckBlocks(run, cfg, common, dims, s3, label) {
+  const tb = parseBlocks(s3.tail, false);
+  let scores = fillScores(parseScores(tb.SCORES, dims), s3.report, dims, 2), verdict = parseVerdict(tb.VERDICT);
+  if (verdict && dims.every(d => scores[d] != null) || !String(s3.report || '').trim()) return { tb, scores, verdict };
+  try {
+    const r = await callLong(run, cfg, '下面是一份复审报告。按报告里已经写出的评分和结论,只输出给程序读取的清单,不要重写报告,不要改分数,报告里没写分数的维度按报告内容给分。\n' +
+      '格式(不要代码围栏):\n===SCORES===\n' + common.dims_score_lines + '\n===OPEN===\n' + OPEN_FORMAT + '\n===VERDICT===\n达标 或 未达标(只写这三个字之一)\n===END===\n\n【复审报告】\n' + s3.report, label + '·补评分');
+    const sx = splitReport(r.content), tx = parseBlocks(sx.tail || sx.all, false);
+    scores = { ...parseScores(tx.SCORES, dims), ...Object.fromEntries(Object.entries(scores).filter(([, v]) => v != null)) };
+    verdict = verdict || parseVerdict(tx.VERDICT);
+    return { tb: { ...tx, ...Object.fromEntries(Object.entries(tb).filter(([, v]) => v)) }, scores, verdict, refilled: true };
+  } catch (e) { return { tb, scores, verdict }; }
+}
+
 async function runFinal(runId) {
   const cfg = pl().loadConfig();
   let { run, asset } = loadRunAsset(runId);
@@ -1349,9 +1366,8 @@ async function runFinal(runId) {
         script: text
       }), '终审·复审' + round);
       const s3 = splitReport(r3.content);
-      const tb = parseBlocks(s3.tail, false);
-      const verdict = /未达标/.test(tb.VERDICT || '') ? '未达标' : /达标/.test(tb.VERDICT || '') ? '达标' : '';
-      const rc = { round, report: s3.report, scores: fillScores(parseScores(tb.SCORES, dims), s3.report, dims, 2), verdict, open: parseOpen(tb.OPEN), edits_applied: [] };
+      const { tb, scores: sc3, verdict, refilled } = await ensureRecheckBlocks(run, cfg, common, dims, s3, '终审·复审' + round);
+      const rc = { round, report: s3.report, scores: sc3, verdict, open: parseOpen(tb.OPEN), edits_applied: [], ...(refilled ? { refilled: true } : {}), ...(r3.truncated ? { truncated: true } : {}) };
       rechecks.push(rc);
       if (!allowEdits || verdict !== '未达标') break;
       let edits2 = parseEdits(s3.tail);
@@ -1475,9 +1491,7 @@ async function runFinalPatch(runId, body) {
       script: text
     }), '终审·补改后复审');
     const s3 = splitReport(r3.content);
-    const tb = parseBlocks(s3.tail, false);
-    const verdict = /未达标/.test(tb.VERDICT || '') ? '未达标' : /达标/.test(tb.VERDICT || '') ? '达标' : '';
-    const scores = fillScores(parseScores(tb.SCORES, dims), s3.report, dims, 2);
+    const { tb, scores, verdict } = await ensureRecheckBlocks(run, cfg, common, dims, s3, '终审·补改后复审');
     // 修订痕迹仍以二稿为底:把这次补改并进终稿原有的修改里
     const oldEdits = arr(d3.edits);
     const merged = mergeRounds(d2.text, d3.text, oldEdits.filter(e => e.ok), a.edits);
