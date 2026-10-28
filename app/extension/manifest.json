@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "文案程序 · YouTube 数据抓取",
+  "version": "1.0.0",
+  "description": "在 YouTube Studio 的视频数据分析页一键抓取留存、观看、点击等数据，发送到本机文案程序，存进对应的文案任务。",
+  "permissions": ["storage", "unlimitedStorage"],
+  "host_permissions": ["https://studio.youtube.com/*", "http://localhost/*", "http://127.0.0.1/*"],
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    { "matches": ["https://studio.youtube.com/*"], "js": ["hook.js"], "run_at": "document_start", "world": "MAIN" },
+    { "matches": ["https://studio.youtube.com/*"], "js": ["collect.js"], "run_at": "document_idle" }
+  ]
+}

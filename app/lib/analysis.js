@@ -376,7 +376,7 @@ async function runScriptCheck(runId) {
       // 已基于 V1 生成 V2:V1 锁定,不再自动改,只提示
       issues.filter(i => i.type === 'K3' && i.status === '已修改').forEach(i => { i.status = '待选择'; i.problem = (i.problem || '') + '(已生成 V2,V1 不再自动修改)'; });
     }
-    const after = applyK3(before, issues);
+    const after = checks.cleanForeignScript(applyK3(before, issues), (run.audience || {}).target_language).text;
     if (after !== before) {
       // 改前版本留档;改后结构不合格则整体放弃自动修改
       if (checks.chapterStructureError(after)) issues.filter(i => i.applied).forEach(i => { i.applied = false; i.status = '待选择'; });

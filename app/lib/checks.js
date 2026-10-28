@@ -311,6 +311,57 @@ function stripMetaNotes(text, lang) {
   return { text: removed.length ? out : String(text || ''), removed };
 }
 
+// 外文字符混进旁白:目标语言不是中文/日文时,稿子里出现汉字或日文假名,配音会念错或念不出来。
+// 来源有三类(仓库 70 篇终稿里 6 篇):括号注原词或中文翻译「에레베타가루 (エレベーターガール)」、
+// 汉字数字「팔십六만」「60 万 people」、中文词混进句子「口径이 다르다」「14시间」。
+// 前两类按规则修,第三类留给 purify.js 交模型改写。
+const FOREIGN_CHAR = /[\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff]/;
+const FOREIGN_CHARS = /[\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff]/g;
+const KO_NUM = { '一': '일', '二': '이', '三': '삼', '四': '사', '五': '오', '六': '육', '七': '칠', '八': '팔', '九': '구', '十': '십', '百': '백', '千': '천', '万': '만', '萬': '만', '億': '억', '亿': '억' };
+// 目标语言是中文/日文,或没填语言但全文汉字假名占三成以上:不做这项检查
+function foreignCheckApplies(text, lang) {
+  const l = String(lang || '').trim();
+  if (/^(Chinese|中文|汉语|Japanese|日文|日语|日本語|zh|ja)/i.test(l)) return false;
+  if (l) return true;
+  const t = String(text || '');
+  const cjk = (t.match(FOREIGN_CHARS) || []).length;
+  const letters = (t.match(/\p{L}/gu) || []).length;
+  return cjk / Math.max(letters, 1) < 0.3;
+}
+function foreignLines(text) {
+  return String(text || '').split('\n').map((l, i) => ({ line: i, text: l }))
+    .filter(x => !/^\s*\[CH\d+/.test(x.text) && FOREIGN_CHAR.test(x.text))
+    .map(x => ({ line: x.line, text: x.text.trim(), chars: [...new Set(x.text.match(FOREIGN_CHARS))].join('') }));
+}
+function cleanForeignScript(text, lang) {
+  const src = String(text || '');
+  if (!FOREIGN_CHAR.test(src) || !foreignCheckApplies(src, lang)) return { text: src, fixed: [], left: [] };
+  const ko = /^(Korean|韩|한국|ko)/i.test(String(lang || '').trim()) || (src.match(HANGUL_CHAR) || []).length > (src.match(/[A-Za-z]/g) || []).length;
+  const fixed = [];
+  const out = src.split('\n').map(line => {
+    if (/^\s*\[CH\d+/.test(line) || !FOREIGN_CHAR.test(line)) return line;
+    let t = line;
+    // ① 括号里大半是汉字/假名:原词注释或中文翻译,整段去掉
+    t = t.replace(/\s*[(（]([^()（）\n]*)[)）]/g, (m, inner) => {
+      const cjk = (inner.match(FOREIGN_CHARS) || []).length;
+      const letters = (inner.match(/\p{L}/gu) || []).length;
+      return cjk && cjk / Math.max(letters, 1) > 0.5 ? '' : m;
+    });
+    if (t !== line) t = t.replace(/([.!?])\s*\.(?=\s|$)/g, '$1');
+    if (ko) {
+      // ② 韩文稿:挨着韩文或数字的汉字数字换成韩文读法(六→육、一자형→일자형)
+      t = t.replace(/[一二三四五六七八九十百千万萬億亿]+/g, (m, off, s) =>
+        /[\uac00-\ud7af0-9]/.test(s.slice(Math.max(0, off - 1), off) + s.slice(off + m.length, off + m.length + 1)) ? [...m].map(c => KO_NUM[c]).join('') : m);
+    } else {
+      // ② 拉丁字母稿:「60 万」→「600,000」
+      t = t.replace(/(\d+(?:\.\d+)?)\s*(万|萬|亿|億)/g, (m, n, u) => Math.round(parseFloat(n) * (/[万萬]/.test(u) ? 1e4 : 1e8)).toLocaleString('en-US'));
+    }
+    if (t !== line) fixed.push({ before: line.trim(), after: t.trim() });
+    return t;
+  }).join('\n');
+  return { text: out, fixed, left: foreignLines(out) };
+}
+
 // Step4: 元评论 / ChangeLog before / 时间漂移 / 附加内容
 function checkOptimized(optText, origScript) {
   const meta = [/\[VERIFY/i, /\(unchanged\)/i, /note\s*[:：]/i, /all (the )?fixes are/i, /I need to flag/i].filter(p => p.test(optText)).map(p => p.source);
@@ -373,4 +424,4 @@ function extractFinalScript(optText) {
   return stripLeadingPreamble(cleaned).text;
 }
 
-module.exports = { normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };
+module.exports = { normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };

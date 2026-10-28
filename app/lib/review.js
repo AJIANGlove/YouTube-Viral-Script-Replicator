@@ -9,6 +9,7 @@ const path = require('path');
 const crypto = require('crypto');
 const store = require('./store');
 const checks = require('./checks');
+const purify = require('./purify');
 const retention = require('./retention');
 const voice = require('./voice');
 const { HEDGE_RE } = require('./compliance');
@@ -92,6 +93,8 @@ function blueprintOf(run) {
 // 稿子的当前版本(和稿件检查同一份:有 V1 存档取 V1,否则取终稿)
 function currentScript(run) { return run.script_v1 || run.final_script || ''; }
 function writeScript(run, text) {
+  // 非中文稿混进的汉字/日文假名:各遍保存前已经清过(purifyText),这里按规则再兜一次(单章重写、撤回也走这里)
+  text = checks.cleanForeignScript(text, (run.audience || {}).target_language).text;
   if (run.script_v1) run.script_v1 = text; else run.final_script = text;
   // V1 文案已变:这一版的扫描与简介缓存过期
   ['compliance_scans', 'opening_scans', 'descriptions'].forEach(k => { if (run[k] && run[k].v1) run[k].v1.stale = true; });
@@ -810,9 +813,12 @@ async function runPass(runId, kind) {
       const tryNext = replaceChapter(next, ch.id, clean);
       if (tryNext && !checks.chapterStructureError(tryNext)) { next = tryNext; changed.push(ch.id); }
     }
+    const pure = await purifyText(run, cfg, next, P.label);
+    next = pure.text;
     const fresh = store.getRun(runId) || run;
     if (currentScript(fresh) !== start) throw new Error('这一遍运行期间稿子被改过,结果没有保存,请重跑');
     fresh.review = fresh.review || {};
+    setForeign(fresh, pure, P.label);
     const versions = arr(fresh.review.versions).length ? fresh.review.versions : [{ key: 'd1', label: '初稿', at: new Date().toISOString(), text: base, issues: [] }];
     // 重跑同一遍:替换掉旧的同名版本及其后的版本
     const keep = versions.filter(v => v.key === 'd1' || (kind === 'final' && v.key === 'd2'));
@@ -964,6 +970,16 @@ function frameworkText(asset) {
 }
 
 // 长输出:被 max_tokens 截断就让模型接着写,拼起来
+// 保存前清掉非中文稿里混进的汉字/日文假名(规则修 + 模型逐行改写,见 purify.js)
+async function purifyText(run, cfg, text, label) {
+  return purify.purifyScript(text, run.audience, async p => (await callLong(run, cfg, p, label + '·外文字符修正')).content);
+}
+// 日志挂在 review.foreign 上,详情页显示;这一遍没发现问题就清掉旧日志
+function setForeign(fresh, pure, label) {
+  fresh.review = fresh.review || {};
+  fresh.review.foreign = purify.hasLog(pure.log) ? { at: new Date().toISOString(), pass: label, ...pure.log } : null;
+}
+
 async function callLong(run, cfg, prompt, label) {
   let messages = [{ role: 'user', content: prompt }];
   let text = '', r = null, secs = 0;
@@ -1350,9 +1366,12 @@ async function runFinal(runId) {
     }
     const allEdits = edits.map((e, i) => ({ ...e, n: i + 1 })).concat(failed.map((e, i) => ({ ...e, ok: false, n: edits.length + i + 1 })));
     const last = rechecks[rechecks.length - 1] || {};
+    const pure = await purifyText(run, cfg, text, '终审');
+    text = pure.text;
     const fresh = store.getRun(runId) || run;
     if (currentScript(fresh) !== start) throw new Error('终审运行期间稿子被改过,结果没有保存,请重跑');
     fresh.review = fresh.review || {};
+    setForeign(fresh, pure, '终审');
     const versions = arr(fresh.review.versions).length ? fresh.review.versions : [{ key: 'd1', label: '初稿', at: new Date().toISOString(), text: base, issues: [] }];
     const keep = versions.filter(v => v.key === 'd1' || v.key === 'd2');
     const changed = [];
@@ -1443,7 +1462,8 @@ async function runFinalPatch(runId, body) {
     const a = await applyWithRepair(run, cfg, d3.text, edits.map(e => ({ ...e, round: '补改' })), '终审·补改');
     const okNew = a.edits.filter(e => e.ok);
     if (!okNew.length) throw new Error(edits.length ? '补改的 ' + edits.length + ' 处都没对上原句,稿子没有变化,可以再点一次' : 'AI 没有给出补改,稿子没有变化');
-    const text = a.next;
+    const pure = await purifyText(run, cfg, a.next, '终审·补改');
+    const text = pure.text;
     // 复审(只出报告)
     setFinalStage(runId, '补改后复审');
     const patchNote = note ? '【人的决定(以此为准:与写前分析账本冲突的旧数字,按人的决定改过的不算错)】\n' + note + '\n\n' : '';
@@ -1465,6 +1485,7 @@ async function runFinalPatch(runId, body) {
     const allEdits = merged.map((e, i) => ({ ...e, n: i + 1 })).concat(failed.map((e, i) => ({ ...e, ok: false, n: merged.length + i + 1 })));
     const fresh = store.getRun(runId) || run;
     if (currentScript(fresh) !== start) throw new Error('补改期间稿子被改过,结果没有保存,请重试');
+    setForeign(fresh, pure, '终审·补改');
     const changed = [];
     scriptChapters(text).forEach(c => { const b = scriptChapters(d2.text).find(x => x.id === c.id); if (b && b.text !== c.text) changed.push(c.id); });
     const issues = allEdits.filter(e => e.ok).map(e => ({ chapter: e.chapter || '全篇', category: e.category || '', problem: e.reason || '', quote: e.old, fix: e.new || '(删除)', edit: e.n }));
@@ -1636,10 +1657,13 @@ async function applyDeai(runId, picks) {
   store.saveRun(run);
   try {
     const applied = edits.length ? await applyWithRepair(run, cfg, base, edits, '去AI感·修改') : { next: base, edits: [] };
+    const pure = await purifyText(run, cfg, applied.next, '去AI感');
+    applied.next = pure.text;
     const okN = applied.edits.filter(e => e.ok).length;
     const allEdits = applied.edits.filter(e => e.ok).concat(applied.edits.filter(e => !e.ok)).map((e, i) => ({ ...e, n: i + 1 }));
     const fresh = store.getRun(runId) || run;
     if (currentScript(fresh) !== start) throw new Error('修改期间稿子被改过,结果没有保存,请重试');
+    setForeign(fresh, pure, '去AI感');
     fresh.review.versions = arr(fresh.review.versions).filter(v => v.key !== 'd4');
     if (allEdits.length) fresh.review.versions.push({ key: 'd4', label: '去AI感稿', at: new Date().toISOString(), text: applied.next, edits: allEdits, base_text: base, issues: [] });
     fresh.review.deai = { ...fresh.review.deai, applied: { at: new Date().toISOString(), picks: chosen, ok: okN, failed: allEdits.length - okN } };

@@ -133,6 +133,8 @@ function resolveWriteBack(run, version, overwrite) {
 
 // 把强化结果写入任务记录(V1 兜底 / final_script 同步 / 缓存过期 / boost_log),由调用方 store.saveRun
 function applyResult(run, wb, baseText, result, chapters) {
+  // 非中文稿混进的汉字/日文假名按规则清掉(见 checks.cleanForeignScript)
+  result = { ...result, content: checks.cleanForeignScript(result.content, (run.audience || {}).target_language).text };
   // V1→V2 与旧第五阶段口径一致:先兜住 script_v1,再同步 final_script
   if (wb.target === 'v2') {
     run.script_v1 = run.script_v1 || checks.extractFinalScript(baseText);

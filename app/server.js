@@ -21,6 +21,7 @@ const opening = require('./lib/opening');
 const boost = require('./lib/boost');
 const checks = require('./lib/checks');
 const video = require('./lib/video');
+const ytdata = require('./lib/ytdata');
 
 const PORT = Number(process.env.PORT) || 8080; // 默认 8080,可用 PORT 环境变量覆盖(如调试时不占用正式实例)
 const HOST = '0.0.0.0';
@@ -497,6 +498,31 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true, id: run.id });
     }
 
+    // ---------- YouTube 真实数据(插件 extension/ 从 Studio 抓来) ----------
+    // 按视频 ID / 标题找到对应任务存起来;同标题有多篇时返回 409 和候选,插件里让人选
+    if (url === '/api/yt-analytics' && method === 'POST') {
+      const body = await readBody(req);
+      if (!body.video_id || !body.tabs || !Object.keys(body.tabs).length) return send(res, 400, { error: '没有抓到数据:请在视频的数据分析页点「一键抓取并发送」' });
+      const found = ytdata.findRun(body);
+      if (!found.run) return send(res, found.status || 404, { error: found.error, candidates: found.candidates || [] });
+      const latest = ytdata.saveCapture(body, found.run, found.matched_by);
+      const m = latest.metrics || {};
+      const summary_text = [m.views && '观看 ' + m.views, m.avg_view_duration && '平均观看 ' + m.avg_view_duration, m.avg_view_pct && '平均观看百分比 ' + m.avg_view_pct, m.ctr && '点击率 ' + m.ctr,
+        latest.curve ? '留存曲线 ' + latest.curve.points.length + ' 个点' : '没读到留存曲线'].filter(Boolean).join(',');
+      return send(res, 200, { ok: true, run_id: found.run.id, topic: found.run.topic, matched_by: found.matched_by, summary_text });
+    }
+    const ytMatch = url.match(/^\/api\/runs\/([\w-]+)\/yt-analytics(\/bundle)?$/);
+    if (ytMatch && method === 'GET') {
+      const r = store.getRun(ytMatch[1]);
+      if (!r) return send(res, 404, { error: '任务不存在' });
+      if (!r.yt_analytics) return send(res, 404, { error: '这篇还没有 YouTube 数据' });
+      if (ytMatch[2]) {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Content-Disposition': 'attachment; filename="analysis_' + r.id + '.json"' });
+        return res.end(JSON.stringify(ytdata.bundle(r), null, 2));
+      }
+      return send(res, 200, { yt_analytics: r.yt_analytics, aligned: ytdata.alignScript(r) });
+    }
+
     const runMatch = url.match(/^\/api\/runs\/([\w-]+)$/);
     if (runMatch && method === 'GET') {
       const r = store.getRun(runMatch[1]);
@@ -709,6 +735,7 @@ const server = http.createServer(async (req, res) => {
       const src = analysis.v1Text(r);
       const applied = analysis.applyOptionExact(src, apply.find, apply.replace || '');
       if (!applied.ok) return send(res, 409, { error: applied.reason + ',未做任何改动。请用「复制」手动改' });
+      applied.text = checks.cleanForeignScript(applied.text, (r.audience || {}).target_language).text;
 
       if (!r.script_check_before_adopt) r.script_check_before_adopt = src;
       sc.adoptions = [...(sc.adoptions || []), {

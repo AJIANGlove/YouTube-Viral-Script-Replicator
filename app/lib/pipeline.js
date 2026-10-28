@@ -7,6 +7,7 @@ const http = require('http');
 const https = require('https');
 const store = require('./store');
 const checks = require('./checks');
+const purify = require('./purify');
 const textnorm = require('./textnorm');
 const retention = require('./retention');
 const analysis = require('./analysis');
@@ -633,8 +634,11 @@ async function runGeneration(runId) {
         run.checks = { ...(run.checks || {}), optimized: checks.checkOptimized(content, outputs.step2) };
         // 正文里混进的修改说明行(如「(删除三处中的后两处,只保留第一处)」)不是旁白,去掉并留痕
         const meta = checks.stripMetaNotes(checks.extractFinalScript(content), (run.audience || {}).target_language);
-        run.final_script = meta.text;
+        // 非中文稿里混进的汉字/日文假名(如「에레베타가루 (エレベーターガール)」):规则修 + 模型逐行改写,改不掉的留痕
+        const pure = await purify.purifyScript(meta.text, run.audience, async p => (await callLlm([{ role: 'user', content: p }], 'Step 4 外文字符修正')).content);
+        run.final_script = pure.text;
         if (meta.removed.length) run.checks.optimized.meta_lines = meta.removed;
+        if (purify.hasLog(pure.log)) run.checks.optimized.foreign = pure.log;
       }
       if (step === 1) ctx.blueprint = content;
       if (step === 2) ctx.script = content;
