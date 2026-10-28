@@ -3872,7 +3872,7 @@ async function renderYtPanel(r) {
   if (!ya || !ya.latest) { el.classList.add('hidden'); return; }
   el.classList.remove('hidden');
   const L = ya.latest, m = L.metrics || {};
-  const names = { views: '观看次数', avg_view_duration: '平均观看时长', avg_view_pct: '平均观看百分比', impressions: '展示次数', ctr: '展示点击率', watch_hours: '观看时长(小时)', subscribers: '订阅人数', unique_viewers: '独立观看者' };
+  const names = { views: '观看次数', avg_view_duration: '平均观看时长', avg_view_pct: '平均观看百分比', impressions: '缩略图展示次数', ctr: '缩略图点击率', engaged_views: '深度观看次数', unique_viewers: '唯一观看者', watch_hours: '观看时长(小时)', subscribers: '订阅人数' };
   const tiles = Object.keys(names).filter(k => m[k]).map(k => `<div style="padding:6px 12px;border:1px solid var(--border,#e5e7eb);border-radius:8px"><div class="hint" style="margin:0">${names[k]}</div><b style="font-size:16px">${esc(m[k])}</b></div>`).join('');
   el.innerHTML = `<h2>真实数据(YouTube)</h2>
     <div class="hint">抓取于 ${esc(String(L.at || '').replace('T', ' ').slice(0, 16))},抓了 ${esc((L.tabs || []).join('、'))} ${L.responses || 0} 份接口数据。
@@ -3894,6 +3894,7 @@ async function renderYtPanel(r) {
   const worst = a.worst_lines.slice(0, 8).map(w => `<div style="font-size:13px;margin:2px 0"><b style="color:#b91c1c">-${w.drop}</b> <span class="hint">${esc(w.ch)} ${fmtSec(w.start_sec)} ${w.ret_start}%→${w.ret_end}%</span> ${esc(w.text.length > 120 ? w.text.slice(0, 120) + '…' : w.text)}</div>`).join('');
   box.className = '';
   box.innerHTML = `<div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:520px;max-width:${W}px">${grid}${marks}<polyline points="${line}" fill="none" stroke="#2563eb" stroke-width="1.8"/></svg></div>
+    ${L.curve.sample_viewers ? `<div class="hint" style="color:${L.curve.sample_viewers < 100 ? '#b45309' : 'inherit'}">这条曲线约 ${L.curve.sample_viewers} 人的数据${L.curve.sample_viewers < 100 ? ',一个人就占 ' + (100 / L.curve.sample_viewers).toFixed(1) + '%,只看大趋势,别抠单句' : ''}。</div>` : ''}
     <div class="hint">视频版本 ${esc(a.version)},时长 ${fmtSec(dur)}。每句在视频里的时间按字数比例估算,会差几秒。「本章流失」= 进这章的观众里,没听完这章就走的比例。</div>
     <div class="rv-md-table"><table><tr><th>章节</th><th>作用</th><th>视频里大约</th><th>进入时还剩</th><th>离开时还剩</th><th>本章流失</th></tr>${rows}</table></div>
     <details open style="margin-top:6px"><summary>掉人最多的句子(百分点)</summary>${worst}</details>`;

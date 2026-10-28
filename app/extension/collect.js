@@ -140,11 +140,28 @@
     } else setStatus('✗ ' + ((r && r.data && r.data.error) || '发送失败'));
   }
 
-  async function startAuto() {
+  // 下载成文件(.txt,里面是 JSON;聊天里 .json 附件会被拦)。原始接口返回最多留 5MB,文件太大不好发
+  async function download(vid) {
+    await sleep(1000);
+    await chain;
+    const st = (await store.get('yta_' + vid)) || { tabs: {}, responses: [] };
+    let size = 0; const responses = [];
+    for (const r of st.responses) { if (size + r.body.length > 5e6) break; responses.push(r); size += r.body.length; }
+    const payload = { video_id: vid, period: st.period, page_url: location.href, titles: st.titles || [], tabs: st.tabs, responses, responses_dropped: st.responses.length - responses.length, captured_at: new Date().toISOString(), ext_version: chrome.runtime.getManifest().version };
+    const d = new Date(), pad = n => String(n).padStart(2, '0');
+    const name = 'yt-data_' + vid + '_' + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' + pad(d.getHours()) + pad(d.getMinutes()) + '.txt';
+    const r = await new Promise(res => chrome.runtime.sendMessage({ type: 'yta-download', name, text: JSON.stringify(payload) }, res));
+    if (!r || !r.ok) { setStatus('✗ 下载失败:' + ((r && r.error) || '未知原因'), [{ label: '再试一次', act: () => download(vid) }]); return; }
+    const charts = Object.values(st.tabs || {}).reduce((n, t) => n + ((t && t.charts) || []).length, 0);
+    setStatus('✓ 已下载 ' + name + '(在浏览器的下载文件夹里),把这个文件发给我就行。\n抓到 ' + Object.keys(st.tabs || {}).length + ' 个标签、' + charts + ' 张曲线图、' + st.responses.length + ' 份接口数据。',
+      [{ label: '再下载一次', act: () => download(vid) }]);
+  }
+
+  async function startAuto(mode) {
     const info = pageInfo();
     if (!info) return;
     await update(info.vid, st => { st.tabs = {}; st.responses = []; st.titles = []; });
-    await store.set('yta_auto', { vid: info.vid, period: info.period, queue: TABS.map(t => t.key) });
+    await store.set('yta_auto', { vid: info.vid, period: info.period, mode: mode === 'send' ? 'send' : 'download', queue: TABS.map(t => t.key) });
     location.href = tabUrl(info.vid, TABS[0], info.period);
   }
 
@@ -159,7 +176,7 @@
     auto.queue.shift();
     if (auto.queue.length) { await store.set('yta_auto', auto); location.href = tabUrl(info.vid, TABS.find(t => t.key === auto.queue[0]), auto.period); return; }
     await store.del('yta_auto');
-    await send(info.vid);
+    if (auto.mode === 'send') await send(info.vid); else await download(info.vid);
   }
 
   // ---------- 面板 ----------
@@ -169,13 +186,15 @@
     panel = document.createElement('div');
     panel.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:99999;width:300px;background:#fff;border:1px solid #d0d7de;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.15);font:13px/1.6 system-ui,sans-serif;color:#1f2328;padding:12px';
     panel.innerHTML = '<div style="font-weight:600;margin-bottom:6px">文案程序 · 数据抓取</div>' +
-      '<button data-a="auto" style="width:100%;padding:8px;border:0;border-radius:6px;background:#cc0000;color:#fff;font-weight:600;cursor:pointer">一键抓取并发送</button>' +
+      '<button data-a="auto" style="width:100%;padding:8px;border:0;border-radius:6px;background:#cc0000;color:#fff;font-weight:600;cursor:pointer">一键抓取并下载</button>' +
       '<div data-s style="white-space:pre-wrap;margin-top:8px;color:#57606a"></div><div data-c></div>' +
       '<details style="margin-top:6px"><summary style="cursor:pointer;color:#57606a">设置</summary>' +
       '程序地址 <input data-server style="width:100%;box-sizing:border-box;margin:4px 0;padding:4px" placeholder="http://localhost:8080">' +
-      '<button data-a="save" style="padding:4px 10px">保存</button></details>';
+      '<button data-a="save" style="padding:4px 10px">保存</button>' +
+      '<button data-a="send" style="display:block;margin-top:6px;padding:4px 10px">抓取并发送到文案程序</button></details>';
     document.body.appendChild(panel);
-    panel.querySelector('[data-a=auto]').onclick = startAuto;
+    panel.querySelector('[data-a=auto]').onclick = () => startAuto('download');
+    panel.querySelector('[data-a=send]').onclick = () => startAuto('send');
     panel.querySelector('[data-a=save]').onclick = async () => { await store.set('yta_server', panel.querySelector('[data-server]').value.trim() || 'http://localhost:8080'); setStatus('已保存'); };
     store.get('yta_server').then(v => { panel.querySelector('[data-server]').value = v || 'http://localhost:8080'; });
     return panel;
@@ -192,7 +211,7 @@
     ensurePanel().style.display = '';
     if (await store.get('yta_auto')) return;
     const st = await store.get('yta_' + info.vid);
-    if (!st) { setStatus('打开的是视频数据分析页。点上面按钮,会依次打开 4 个标签抓数据(约 40 秒),然后发到文案程序。'); return; }
+    if (!st) { setStatus('打开的是视频数据分析页。点上面按钮,会依次打开 4 个标签抓数据(约 40 秒),然后下载成一个文件,把文件发给我就行。'); return; }
   }
 
   let lastPath = '';

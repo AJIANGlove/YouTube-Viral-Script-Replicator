@@ -7,3 +7,12 @@ chrome.runtime.onMessage.addListener((msg, sender, reply) => {
     .catch(e => reply({ ok: false, status: 0, data: { error: '连不上文案程序(' + base + '):' + e.message + '。请确认程序已启动,地址对不对。' } }));
   return true;
 });
+
+// 下载成文件:文件名用 chrome.downloads 指定(页面里用 <a download> 有时拿不到文件名)
+chrome.runtime.onMessage.addListener((msg, sender, reply) => {
+  if (!msg || msg.type !== 'yta-download') return;
+  chrome.downloads.download({ url: 'data:text/plain;charset=utf-8,' + encodeURIComponent(msg.text), filename: msg.name, saveAs: false }, id => {
+    reply(chrome.runtime.lastError ? { ok: false, error: chrome.runtime.lastError.message } : { ok: true, id });
+  });
+  return true;
+});

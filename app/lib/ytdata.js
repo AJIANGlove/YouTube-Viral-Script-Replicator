@@ -14,11 +14,12 @@ const METRICS = {
   views: ['观看次数', 'Views', '조회수'],
   watch_hours: ['观看时长（小时）', '观看时长(小时)', 'Watch time (hours)', '시청 시간(단위: 시간)'],
   subscribers: ['订阅人数', 'Subscribers', '구독자'],
-  impressions: ['展示次数', 'Impressions', '노출수'],
-  ctr: ['展示点击率', 'Impressions click-through rate', '노출 클릭률'],
+  impressions: ['缩略图展示次数', '展示次数', 'Impressions', '노출수'],
+  ctr: ['缩略图点击率', '展示点击率', 'Impressions click-through rate', '노출 클릭률'],
+  engaged_views: ['深度观看次数', 'Engaged views'],
   avg_view_duration: ['平均观看时长', 'Average view duration', '평균 시청 지속 시간'],
   avg_view_pct: ['平均观看百分比', 'Average percentage viewed', '평균 조회율'],
-  unique_viewers: ['独立观看者', 'Unique viewers', '순시청자수', '순 시청자수'],
+  unique_viewers: ['唯一身份观看者人数', '独立观看者', 'Unique viewers', '순시청자수', '순 시청자수'],
   returning_viewers: ['回访观看者', 'Returning viewers', '재방문 시청자'],
   new_viewers: ['新观看者', 'New viewers', '신규 시청자']
 };
@@ -26,13 +27,16 @@ const VALUE = /^[-+]?[\d.,:]+\s*(%|万|千|亿|K|M|천|만)?$/;
 
 function parseMetrics(tabs) {
   const out = {};
-  for (const tab of Object.values(tabs || {})) {
+  // 先看 概览/覆盖面/互动(主指标卡);观众页里「观看次数 · 自上传以来」下面跟的是地区占比,不能当观看次数
+  const order = ['overview', 'reach', 'engagement', 'audience'];
+  const list = Object.entries(tabs || {}).sort((a, b) => (order.indexOf(a[0]) + 1 || 9) - (order.indexOf(b[0]) + 1 || 9)).map(x => x[1]);
+  for (const tab of list) {
     const lines = String((tab && tab.text) || '').split('\n').map(s => s.trim()).filter(Boolean);
     for (const [key, labels] of Object.entries(METRICS)) {
       if (out[key]) continue;
       for (let i = 0; i < lines.length && !out[key]; i++) {
-        if (!labels.some(l => lines[i] === l || lines[i].startsWith(l + ' ') || lines[i].startsWith(l + ' '))) continue;
-        const v = lines.slice(i + 1, i + 4).find(s => VALUE.test(s));
+        if (!labels.includes(lines[i])) continue;
+        const v = VALUE.test(lines[i + 1] || '') ? lines[i + 1] : null; // 只认紧跟的下一行(「—」表示没数据,不往下找)
         if (v) out[key] = v;
       }
     }
@@ -51,7 +55,36 @@ function parseInsights(tabs) {
   return out.slice(0, 40);
 }
 
-// 留存曲线:概览页带 100%/0% 刻度、第一个点接近 100% 的那条线
+// 留存曲线首选 Studio 接口里的 retentionValues(100 个点,均匀铺满全片,精确值);
+// 接口里没有才用页面图表换算的曲线。
+function retentionFromResponses(responses, vid, duration) {
+  for (const r of responses || []) {
+    if (!/get_screen|get_cards/.test(r.url || '')) continue;
+    let j; try { j = JSON.parse(r.body); } catch (e) { continue; }
+    const stack = [j];
+    while (stack.length) {
+      const o = stack.pop();
+      if (!o || typeof o !== 'object') continue;
+      if (Array.isArray(o.videosData)) {
+        const v = o.videosData.find(x => x && Array.isArray(x.retentionValues) && (!vid || x.videoId === vid));
+        if (v && v.retentionValues.length > 10) {
+          const n = v.retentionValues.length, mt = v.metricTotals || {};
+          const dur = duration || (mt.avgViewDurationMillis && mt.avgPercentageWatched ? Math.round(mt.avgViewDurationMillis / 1000 / mt.avgPercentageWatched) : null);
+          if (!dur) continue;
+          // 每个值都是「1/人数」的整数倍(如 2.17% = 1/46):最小的非零值≈ 一个人占的百分比,用来估这条曲线是多少人算出来的
+          const minV = Math.min(...v.retentionValues.filter(x => x > 0));
+          return { source: 'studio_api', duration_sec: dur, sample_viewers: isFinite(minV) && minV < 50 ? Math.round(100 / minV) : null,
+            points: v.retentionValues.map((x, i) => [Math.round(i * dur / (n - 1) * 10) / 10, x]),
+            totals: mt, highlights: v.highlights || [] };
+        }
+      }
+      Object.values(o).forEach(x => { if (x && typeof x === 'object') stack.push(x); });
+    }
+  }
+  return null;
+}
+
+// 页面图表换算的曲线:概览页带 100%/0% 刻度、第一个点接近 100% 的那条线
 function pickRetention(tabs) {
   const charts = [];
   for (const k of ['overview', 'engagement']) ((tabs || {})[k] || {}).charts && tabs[k].charts.forEach(c => charts.push(c));
@@ -130,8 +163,10 @@ function saveCapture(payload, run, matchedBy) {
   const latest = {
     at, period: payload.period || '', file: path.relative(path.join(__dirname, '..'), file),
     tabs: Object.keys(payload.tabs || {}), responses: (payload.responses || []).length,
-    metrics, insights: parseInsights(payload.tabs), curve: pickRetention(payload.tabs)
+    metrics, insights: parseInsights(payload.tabs), curve: null
   };
+  const chart = pickRetention(payload.tabs);
+  latest.curve = retentionFromResponses(payload.responses, vid, chart && chart.duration_sec) || (chart && { source: 'chart', ...chart });
   const prev = run.yt_analytics || {};
   run.yt_analytics = {
     video_id: vid, matched_by: matchedBy, latest,
@@ -204,4 +239,4 @@ function bundle(run) {
   };
 }
 
-module.exports = { parseMetrics, parseInsights, pickRetention, retentionAt, findRun, saveCapture, alignScript, bundle, publishedText };
+module.exports = { parseMetrics, parseInsights, pickRetention, retentionFromResponses, retentionAt, findRun, saveCapture, alignScript, bundle, publishedText };
