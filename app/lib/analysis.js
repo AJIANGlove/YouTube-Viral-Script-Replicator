@@ -328,8 +328,10 @@ function v1Text(run) { return run.script_v1 || run.final_script || ''; }
 function scriptProgramStats(run) {
   const asset = store.getAsset(run.asset_id);
   if (!asset) return null;
+  const nw = require('./narration').narrationWpm(run, null); // 预计片长按配音语速估
   return retention.scriptStats(v1Text(run), {
-    timeline: asset.timeline, framework: asset.framework, srt: asset.srt, facts: (run.analysis || {}).facts
+    timeline: asset.timeline, framework: asset.framework, srt: asset.srt, facts: (run.analysis || {}).facts,
+    wpm: nw.from === 'source' ? null : nw.wpm
   });
 }
 

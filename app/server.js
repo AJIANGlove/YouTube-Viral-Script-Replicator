@@ -20,6 +20,7 @@ const compliance = require('./lib/compliance');
 const opening = require('./lib/opening');
 const boost = require('./lib/boost');
 const checks = require('./lib/checks');
+const narration = require('./lib/narration');
 const video = require('./lib/video');
 const ytdata = require('./lib/ytdata');
 
@@ -529,6 +530,12 @@ const server = http.createServer(async (req, res) => {
       if (!r) return send(res, 404, { error: '任务不存在' });
       // 编辑分析用的对照数据(原片高峰、第一个甜头),只随响应返回,不落盘
       r.analysis_context = analysis.analysisContext(r.asset_id);
+      // 听感检查(开头点题、前 10 秒数字、连念数字、语体)按当前稿现算,不落盘
+      if (r.final_script) {
+        const nw = (r.checks || {}).narration || narration.narrationWpm(r, null);
+        r.listen_check = checks.listenCheck(checks.extractFinalScript(r.final_script), { wpm: nw.wpm, title: ((r.analysis || {}).title || {}).final_title || r.topic, lang: (r.audience || {}).target_language });
+        r.narration_label = nw.label || narration.narrationLabel(nw);
+      }
       // 确认文案版本后内容被改过?现算给前端提示,不落盘(索引里也不存哈希)
       if (r.confirmed_version && r.confirmed_version.version) {
         const t = description.versionText(r, r.confirmed_version.version);
@@ -1166,7 +1173,9 @@ const server = http.createServer(async (req, res) => {
       const cfg = pipeline.loadTweakConfig();
       if (!cfg || !cfg.api_key) return send(res, 400, { error: '未配置微调按钮的 API Key,请在设置页「微调按钮 API 配置」中选择有效渠道' });
       try {
-        const scan = await opening.detect(cfg, baseText, { topic: r.topic, audience: r.audience });
+        const listen = checks.listenCheck(checks.extractFinalScript(baseText), {
+          wpm: narration.narrationWpm(r, null).wpm, title: ((r.analysis || {}).title || {}).final_title || r.topic, lang: (r.audience || {}).target_language });
+        const scan = await opening.detect(cfg, baseText, { topic: r.topic, audience: r.audience, listen });
         scan.scanned_at = new Date().toISOString();
         scan.stale = false;
         // 等待 LLM 期间任务可能被其他操作改动,合入最新记录再存,避免整对象覆盖

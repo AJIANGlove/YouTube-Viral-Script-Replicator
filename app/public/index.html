@@ -1778,7 +1778,7 @@ async function loadRunDetail() {
     (r.error ? '错误: ' + esc(r.error) : '') +
     (ck.gate_fail && !r.error ? '闸门不合格(Step ' + esc(ck.gate_fail.step) + '):' + esc(ck.gate_fail.reason) : '') +
     (lenWarn.length ? '<div class="hint" style="color:#b45309">⚠ ' + esc(lenWarn.join(';')) + '</div>' : '') +
-    foreignWarn(r) +
+    foreignWarn(r) + listenWarn(r) +
     ((r.status === 'failed' || r.status === 'cancelled')
       ? ' <button class="primary" style="margin-left:8px" onclick="retryRun()">续跑此任务</button>' : '');
 
@@ -2057,6 +2057,16 @@ function foreignWarn(r) {
     lines.slice(0, 8).map(l => '<div style="margin-left:12px">· ' + esc(l.length > 80 ? l.slice(0, 80) + '…' : l) + '</div>').join('') +
     (lines.length > 8 ? '<div style="margin-left:12px">…还有 ' + (lines.length - 8) + ' 行</div>' : '') + '</div>';
 }
+// 听感检查:稿子是配音给人听的,开头点题、前 10 秒数字、一句连念数字、语体混用(程序按配音语速推算时间)
+function listenWarn(r) {
+  const lc = r.listen_check;
+  const nl = r.narration_label ? '<span style="color:#6b7280">(篇幅按配音语速 ' + esc(r.narration_label) + ' 计算)</span>' : '';
+  if (!lc) return nl ? '<div class="hint">' + nl + '</div>' : '';
+  if (lc.ok) return '<div class="hint" style="color:#047857">✓ 听感检查通过 ' + nl + '</div>';
+  const dense = (lc.dense || []).slice(0, 5).map(d => '<div style="margin-left:12px">· ' + esc(Math.floor(d.sec / 60) + ':' + String(d.sec % 60).padStart(2, '0')) + ' ' + esc(d.text.length > 80 ? d.text.slice(0, 80) + '…' : d.text) + '</div>').join('');
+  return '<div class="hint" style="color:#b45309">⚠ 听感检查:' + esc(lc.issues.join(';')) + ' ' + nl + dense +
+    ((lc.dense || []).length > 5 ? '<div style="margin-left:12px">…还有 ' + (lc.dense.length - 5) + ' 句</div>' : '') + '</div>';
+}
 const RV_PASS_NAMES = { check: '初稿检查 → 二稿', audit: '二稿审稿报告', final: '终审 → 终稿' };
 function rvPassLine(v) {
   const p = v.passes || {};
@@ -2065,7 +2075,7 @@ function rvPassLine(v) {
     const txt = !st ? (k === 'final' && v.audit ? '等你在审稿报告里选要改的问题' : '没跑') : st.status === 'running' ? '<span class="rv-busy">进行中' + (st.stage ? '(' + esc(st.stage) + ')' : '') + '…</span>' : st.status === 'failed' ? '<span class="err-list">失败:' + esc(st.error || '') + '</span>'
       : k === 'audit' ? (sc => '完成(' + (sc != null ? sc + ' 分,' : '') + (st.issues || 0) + ' 个问题)')(v.audit && v.audit.score != null ? v.audit.score : st.score)
       : st.edits != null ? '完成(改了 ' + st.edits + ' 处' + (st.edits_failed ? ',' + st.edits_failed + ' 处没采用' : '') + (st.verdict ? ',复审' + esc(st.verdict) : '') + ')'
-      : '完成(' + (st.facts ? '核验 ' + st.facts + ' 条事实' + (st.facts_wrong ? ',' + st.facts_wrong + ' 条与证据矛盾' : '') + ';' : '') + (st.issues || 0) + ' 个问题,改了 ' + (st.changed || 0) + ' 章)';
+      : '完成(' + (st.facts ? '核验 ' + st.facts + ' 条事实' + (st.facts_wrong ? ',' + st.facts_wrong + ' 条与证据矛盾' : '') + ';' : '') + (st.issues || 0) + ' 个问题,改了 ' + (st.changed || 0) + ' 章' + (st.growth_rejected ? ',' + st.growth_rejected + ' 章因改长被退回' : '') + ')';
     const busy = st && st.status === 'running';
     // 有审稿报告时,终审从报告页发起(带上勾选的问题和路线)
     const btn = k === 'final' && v.audit ? `<button class="an-btn v13" onclick="rvSetTab('audit')">去选审稿意见</button>`

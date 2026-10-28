@@ -158,6 +158,23 @@ function parseResult(content, script, stopReason) {
   return { summary, hits };
 }
 
+// ---------- 程序实测的开头硬指标(checks.listenCheck 的结果) ----------
+const HARD_FAIL_CAP = 6;
+function hardFails(lc) {
+  if (!lc) return [];
+  return lc.issues.filter(i => /前 \d+ 秒/.test(i) || (/一口气念/.test(i) && lc.dense.some(d => d.sec < 60)));
+}
+function listenNote(lc) {
+  if (!lc) return '';
+  const o = lc.opening || {};
+  const early = (lc.dense || []).filter(d => d.sec < 60);
+  return '\n\n程序实测(按配音语速 ' + lc.wpm + ' 词/分钟推算时间,以此为准,不要自己另算):\n' +
+    '- 前 10 秒念了 ' + (o.nums_10s || 0) + ' 个数字(硬规则:最多 1 个)\n' +
+    '- 标题关键词出现的时间:' + ((o.title_words || []).map(w => w.word + (w.sec == null ? ' 没出现' : ' ' + Math.floor(w.sec / 60) + ':' + String(w.sec % 60).padStart(2, '0'))).join('、') || '(无)') + '(硬规则:8 秒内用一个人或一个场景说出标题里的冲突)\n' +
+    '- 前 60 秒一口气念 3 个以上数字的句子:' + (early.length ? early.map(d => '「' + d.text + '」').join(' ') : '无') + '(硬规则:一句最多 2 个数字)\n' +
+    '违反硬规则的,每条都要作为命中报告并给出改法;前 30 秒有任何一条违反,score_0_30 不得高于 ' + HARD_FAIL_CAP + '。改法只许删和换,开头不能变长。';
+}
+
 // ---------- 检测入口 ----------
 async function detect(cfg, script, meta) {
   const boundary = openingBoundary(script);
@@ -169,7 +186,7 @@ async function detect(cfg, script, meta) {
     .replaceAll('{{script}}', script)
     .replaceAll('{{topic}}', m.topic || '(未提供)')
     .replaceAll('{{audience}}', m.audience || '(未提供)')
-    .replaceAll('{{opening_note}}', boundary.note);
+    .replaceAll('{{opening_note}}', boundary.note + listenNote(m.listen));
   const detectCfg = { ...cfg, temperature: 0 }; // 检测任务关掉随机性
   const messages = [{ role: 'user', content: prompt }];
   let r = await pipeline.llmCall(detectCfg, messages, '开头留存检查');
@@ -189,6 +206,9 @@ async function detect(cfg, script, meta) {
     parsed = parseResult(r.content, script, r.stopReason);
   }
   const { summary, hits } = parsed;
+  // 程序实测的硬指标没过,前 30 秒的分数最多 6 分(实测 run_2713e3885236 被 AI 打 7 分,观众 0:10–0:20 走了一半)
+  const hard = hardFails(m.listen);
+  if (hard.length) { summary.hard_fails = hard; if (summary.score_0_30 != null && summary.score_0_30 > HARD_FAIL_CAP) summary.score_0_30 = HARD_FAIL_CAP; }
   return {
     model: cfg.model || '',
     type_names: { ...TYPE_NAMES }, // 前端展示用 {id: 中文名}

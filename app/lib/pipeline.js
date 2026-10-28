@@ -12,6 +12,7 @@ const textnorm = require('./textnorm');
 const retention = require('./retention');
 const analysis = require('./analysis');
 const voice = require('./voice');
+const narration = require('./narration');
 
 const CONFIG_PATH = path.join(__dirname, '..', 'config.json');
 
@@ -98,6 +99,8 @@ function fillTemplate(tpl, ctx, tools) {
     .replaceAll('{{chapters}}', ctx.chapters || '(未指定)')
     .replaceAll('{{chapter_rules}}', ctx.chapter_rules || '')
     .replaceAll('{{analysis}}', ctx.analysis || '(无写前分析,按原流程执行)')
+    .replaceAll('{{narration_wpm}}', String(ctx.narration_wpm || tools.targetWpm || ''))
+    .replaceAll('{{listen_rules}}', checks.LISTEN_RULES)
     .replaceAll('{{voice}}', ctx.voice || '(未设定频道声音,按 Style 执行)')
     .replaceAll('{{plagiarism_report}}', plag)
     .replaceAll('{{density_report}}', dens);
@@ -271,6 +274,7 @@ async function probeProvider(cfg) {
 // 韩文按空格数词,同样时长的词数天然只有英文的六成左右(历史完整稿 29%–86%,中位 57%),所以下限单独放低,
 // 否则会误伤正常韩文稿;英文完整稿最低 55%,用 50% / 70%
 const LENGTH_MAX_RATIO = 1.15;
+const FIRST_PAYOFF_MAX = 45; // 秒:第一个答案最晚落点
 const LENGTH_MIN = { default: [0.5, 0.7], Korean: [0.25, 0.4] }; // [不合格线, 警告线]
 function lengthCheck(script, blueprint, audience, wpm) {
   let budget = 0;
@@ -315,7 +319,34 @@ async function runGeneration(runId) {
     voice: voice.voiceBrief(voice.voiceForRun(run))
   };
   run.voice_used = (voice.voiceForRun(run) || {}).name || null;
-  const tools = checks.makeRefTools({ examples: asset.examples, srt: asset.srt, timeline: asset.timeline });
+  // 篇幅/预算/密度按配音语速算(见 lib/narration.js);原片字幕语速只做参照
+  const refAsset = { examples: asset.examples, srt: asset.srt, timeline: asset.timeline };
+  const nw = narration.narrationWpm(run, checks.makeRefTools(refAsset).sourceWpm);
+  const tools = checks.makeRefTools(refAsset, { wpm: nw.wpm });
+  ctx.narration_wpm = nw.wpm;
+  run.checks = { ...(run.checks || {}), narration: { ...nw, label: narration.narrationLabel(nw) } };
+  // 听感检查(开头 8 秒点题、前 10 秒数字、一句连念 3 个以上数字、语体混用)用的标题
+  const listenOpts = () => ({ wpm: nw.wpm, title: (((run.analysis || {}).title || {}).final_title) || run.topic, lang: (run.audience || {}).target_language });
+
+  // 听感闸门:不合格反馈重写一次;重写后结构完好、篇幅没坏、问题更少才采用,否则保留原稿,结果都记进 checks
+  const listenGate = async (step, content, messages, r, extract, valid) => {
+    const lc = checks.listenCheck(extract(content), listenOpts());
+    if (!lc || lc.ok) return { content, r, messages, lc };
+    const name = stepNames[step - 1];
+    run.steps[name].gate_retry = { reason: '听感检查: ' + lc.issues.join(';'), attempt: 1 };
+    store.saveRun(run);
+    const feedback = '这份稿子是配音给人听的,听感检查不合格:\n' + checks.listenFeedback(lc) + '\n\n' + checks.LISTEN_RULES +
+      '\n\n只改上面点到的句子和开头,其他句子原样保留,不要加长;章节标签和时间范围不变。' +
+      (step === 4 ? '只输出一份完整终稿,格式要求不变(Change Log 与 fact_check_list 放在终稿之后)。' : '输出完整脚本,不要解释。');
+    const m2 = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];
+    const r2 = await callLlm(m2, 'Step ' + step + ' 听感重试');
+    const c2 = textnorm.normalizeChapterTags(r2.content.trim());
+    const lc2 = checks.listenCheck(extract(c2), listenOpts());
+    if (r2.stopReason !== 'max_tokens' && lc2 && valid(c2) && checks.listenScore(lc2) < checks.listenScore(lc)) {
+      return { content: c2, r: r2, messages: m2, lc: { ...lc2, retried: true, before: lc.issues } };
+    }
+    return { content, r, messages, lc: { ...lc, retried: true, retry_rejected: true } };
+  };
 
   // 每次 LLM 调用(首轮/闸门重试/截断续写)都记一条流水到 run.attempts(封顶 100 条),失败原因不再随重试丢失
   const logAttempt = (label, result) => {
@@ -431,6 +462,28 @@ async function runGeneration(runId) {
           ret = retention.checkBlueprintRetention(content, asset.timeline, analysis.acceptedGaps(run.analysis));
         }
         run.checks = { ...(run.checks || {}), retention: ret };
+
+        // 第一个答案不晚于 45 秒(实测 run_2713e3885236:0:10–0:20 走了一半观众)。晚了反馈一次,改坏时长就保留原版
+        const payoffOf = t => { try { return Number(((JSON.parse(checks.stripFence(t)) || {}).hook || {}).first_payoff_sec) || null; } catch (e) { return null; } };
+        let payoff = payoffOf(content);
+        if (payoff > FIRST_PAYOFF_MAX) {
+          run.steps.blueprint.gate_retry = { reason: '第一个答案在 ' + payoff + ' 秒,晚于 ' + FIRST_PAYOFF_MAX + ' 秒', attempt: 1 };
+          store.saveRun(run);
+          const feedback = '蓝图的第一个答案(hook.first_payoff_sec)在 ' + payoff + ' 秒,太晚:观众在前 20 秒就会走一半。请把第一个答案提前到 ' + FIRST_PAYOFF_MAX +
+            ' 秒以内(可以先给一半答案,完整答案留到后面),开头 8 秒用一个人或一个场景说出标题里的冲突;总时长和其余要求不变,重新输出完整 JSON(禁止代码围栏)。';
+          messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];
+          const r2 = await callLlm(messages, 'Step 1 开头重试');
+          const c2 = checks.stripFence(r2.content.trim());
+          const g2 = checks.checkBlueprint(c2, tools, (run.audience || {}).video_goal);
+          if (g2.duration.ok !== false && payoffOf(c2) && payoffOf(c2) < payoff) { r = r2; content = c2; gate = g2; payoff = payoffOf(c2); }
+        }
+        run.checks.first_payoff = { sec: payoff, max: FIRST_PAYOFF_MAX, ok: payoff == null ? null : payoff <= FIRST_PAYOFF_MAX };
+
+        // 词数预算按配音语速重算:模型照原片字幕语速算的预算会把稿子写长
+        if (nw.from !== 'source') {
+          const rs = narration.rescaleBlueprint(content, nw.wpm);
+          if (rs.changed) { content = rs.text; run.checks.narration = { ...run.checks.narration, rescaled_chapters: rs.changed }; }
+        }
       }
 
       // Step 3 JSON 闸门:输出无法解析为 JSON 时自动反馈重试(最多 GATE_MAX_RETRIES 次)
@@ -577,6 +630,17 @@ async function runGeneration(runId) {
           if (len && len.short) throw new Error('Step 2 篇幅重试后仍不合格: ' + len.detail);
         }
         run.checks = { ...(run.checks || {}), script_length: len };
+
+        // Step 2 闸门 D:听感(开头点题、前 10 秒数字、连念数字、语体)
+        const words0 = len ? len.words : checks.parseChapters(content).reduce((n, c) => n + c.words, 0);
+        const lg = await listenGate(2, content, messages, r, t => t, c2 => {
+          if (checks.chapterStructureError(c2, bpChapters.length)) return false;
+          const l2 = lengthCheck(c2, ctx.blueprint, run.audience, tools.targetWpm);
+          return !(l2 && l2.short) && (!l2 || l2.words <= words0 * 1.05);
+        });
+        content = lg.content; r = lg.r; messages = lg.messages;
+        run.checks.script_listen = lg.lc;
+        if (lg.lc && lg.lc.retried && !lg.lc.retry_rejected) run.checks.script_length = lengthCheck(content, ctx.blueprint, run.audience, tools.targetWpm);
       }
 
       // Step 4 章节结构闸门:终稿必须是一份「CH01 起、章号严格递增不重复」的完整脚本。
@@ -617,6 +681,15 @@ async function runGeneration(runId) {
           }
         }
         run.checks = { ...(run.checks || {}), length: len };
+
+        // Step 4 听感闸门:同 Step 2;重写后篇幅不许比原来超得更多
+        const lg = await listenGate(4, content, messages, r, checks.extractFinalScript, c2 => {
+          if (checks.chapterStructureError(checks.extractFinalScript(c2), bp4.length)) return false;
+          const l2 = lengthCheck(checks.extractFinalScript(c2), ctx.blueprint, run.audience, tools.targetWpm);
+          return !(l2 && l2.short) && (!l2 || !len || l2.words <= Math.max(len.words * 1.03, len.budget * LENGTH_MAX_RATIO));
+        });
+        if (lg.content !== content) { content = lg.content; r = lg.r; messages = lg.messages; run.checks.length = lengthCheck(checks.extractFinalScript(content), ctx.blueprint, run.audience, tools.targetWpm); }
+        run.checks.optimized_listen = lg.lc;
       }
 
       outputs['step' + step] = content;
@@ -637,6 +710,7 @@ async function runGeneration(runId) {
         // 非中文稿里混进的汉字/日文假名(如「에레베타가루 (エレベーターガール)」):规则修 + 模型逐行改写,改不掉的留痕
         const pure = await purify.purifyScript(meta.text, run.audience, async p => (await callLlm([{ role: 'user', content: p }], 'Step 4 外文字符修正')).content);
         run.final_script = pure.text;
+        run.checks.listen = checks.listenCheck(run.final_script, listenOpts());
         if (meta.removed.length) run.checks.optimized.meta_lines = meta.removed;
         if (purify.hasLog(pure.log)) run.checks.optimized.foreign = pure.log;
       }

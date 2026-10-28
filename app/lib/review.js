@@ -586,8 +586,54 @@ function locate(text, old) {
   return null;
 }
 
+// 审稿不许把稿子改长(实测 run_2713e3885236:二稿把 1,453 词改到 1,845 词,观众在前 2 分钟走光)。
+// 前 2 分钟只许删和换:这段里净加词的修改不采用;整篇改完不许超过改前词数的 3%,超了从加得最多的那处开始退回。
+const GROWTH_OPENING_SEC = 120, GROWTH_TOLERANCE = 0.03;
+const scriptWords = text => checks.parseChapters(text || '').reduce((n, c) => n + c.words, 0);
+// maxWords:改完最多多少词。终审多轮修改共用第一轮算出的上限,不让每轮各涨 3%
+function growthLimit(run, base) {
+  const wpm = require('./narration').narrationWpm(run, null).wpm || 150;
+  const w = scriptWords(base);
+  return { openingWords: Math.round(GROWTH_OPENING_SEC * wpm / 60), maxWords: Math.max(w + 5, Math.round(w * (1 + GROWTH_TOLERANCE))), wpm };
+}
+function limitEditGrowth(chs, list, limit) {
+  const before = {};
+  let acc = 0;
+  chs.forEach(c => { before[c.id] = acc; acc += checks.countWords(c.text); });
+  const delta = e => checks.countWords(e.new || '') - checks.countWords(e.old || '');
+  list.forEach(e => {
+    const at = before[e.chapter] + checks.countWords(chs.find(c => c.id === e.chapter).text.slice(0, e.start));
+    if (at < limit.openingWords && delta(e) > 1) { e.ok = false; e.error = '前 2 分钟只许删和换,不许加长(这处多了 ' + delta(e) + ' 词),没有采用'; e.growth_rejected = true; }
+  });
+  let total = acc + list.filter(e => e.ok !== false).reduce((n, e) => n + delta(e), 0);
+  const grow = list.filter(e => e.ok !== false && delta(e) > 0).sort((a, b) => delta(b) - delta(a));
+  for (const e of grow) {
+    if (total <= limit.maxWords) break;
+    total -= delta(e);
+    e.ok = false; e.error = '整篇改完会超过改前篇幅,这处加长(多 ' + delta(e) + ' 词)没有采用'; e.growth_rejected = true;
+  }
+}
+// 整章改写同理:开头 2 分钟里的章不许变长,整篇超了从加得最多的章开始退回。返回被退回的章
+function limitChapterGrowth(baseText, nextText, limit) {
+  const bc = scriptChapters(baseText);
+  let acc = 0;
+  const startOf = {};
+  bc.forEach(c => { startOf[c.id] = acc; acc += checks.countWords(c.text); });
+  const rows = scriptChapters(nextText).map(c => { const b = bc.find(x => x.id === c.id); return b && b.text !== c.text ? { id: c.id, old: b.text, before: checks.countWords(b.text), after: checks.countWords(c.text) } : null; }).filter(Boolean);
+  const rejected = [];
+  let text = nextText;
+  const revert = (r, reason) => { const t = replaceChapter(text, r.id, r.old); if (t) { text = t; rejected.push({ chapter: r.id, words_before: r.before, words_after: r.after, reason }); r.reverted = true; } };
+  rows.forEach(r => { if (startOf[r.id] < limit.openingWords && r.after > r.before + 1) revert(r, '前 2 分钟只许删和换,这一章改长了 ' + (r.after - r.before) + ' 词'); });
+  for (const r of rows.filter(x => !x.reverted && x.after > x.before).sort((a, b) => (b.after - b.before) - (a.after - a.before))) {
+    if (scriptWords(text) <= limit.maxWords) break;
+    revert(r, '整篇改完超过改前篇幅,这一章多了 ' + (r.after - r.before) + ' 词');
+  }
+  return { text, rejected };
+}
+
 // 把修改套到稿子上:返回新稿和每处修改的结果(ok / 没找到 / 和前一处重叠);offset 记的是改前那一章里的位置
-function applyEdits(base, edits) {
+// limit(可选,见 growthLimit):不许改长
+function applyEdits(base, edits, limit) {
   const chs = scriptChapters(base);
   const byCh = {};
   edits.forEach((e, idx) => {
@@ -609,9 +655,10 @@ function applyEdits(base, edits) {
     if (e.new && e.new.split('\n').some(l => checks.isMetaNoteLine(l))) { e.ok = false; e.error = '「改成」里写的是修改说明,不是正文,没有采用'; return; }
     (byCh[ch.id] = byCh[ch.id] || []).push(e);
   });
+  if (limit) limitEditGrowth(chs, Object.values(byCh).flat(), limit);
   let next = base;
   for (const ch of chs) {
-    const list = (byCh[ch.id] || []).sort((a, b) => a.start - b.start);
+    const list = (byCh[ch.id] || []).filter(e => e.ok !== false).sort((a, b) => a.start - b.start);
     let out = '', at = 0;
     list.forEach(e => {
       if (e.start < at) { e.ok = false; e.error = '和前一处修改重叠,没有采用'; return; }
@@ -800,8 +847,10 @@ async function runPass(runId, kind) {
     // 终审:逐处修改(截断时最后一处可能不完整,丢掉)
     let edits = kind === 'final' ? parseEdits(r.content) : [];
     if (edits.length && r.stopReason === 'max_tokens' && !/^===\s*END\s*===/m.test(r.content)) edits = edits.slice(0, -1);
+    const limit = growthLimit(run, base);
+    let growthRejected = [];
     if (edits.length) {
-      next = applyEdits(base, edits).next;
+      next = applyEdits(base, edits, limit).next;
       scriptChapters(next).forEach(c => { const b = scriptChapters(base).find(x => x.id === c.id); if (b && b.text !== c.text) changed.push(c.id); });
       issues = edits.map(e => ({ chapter: e.chapter || '全篇', category: e.category || '', problem: e.reason || '', quote: e.old, fix: e.new || '(删除)', edit: e.n }));
     }
@@ -813,6 +862,11 @@ async function runPass(runId, kind) {
       const tryNext = replaceChapter(next, ch.id, clean);
       if (tryNext && !checks.chapterStructureError(tryNext)) { next = tryNext; changed.push(ch.id); }
     }
+    if (!edits.length && changed.length) {
+      const g = limitChapterGrowth(base, next, limit);
+      next = g.text; growthRejected = g.rejected;
+      g.rejected.forEach(x => changed.splice(changed.indexOf(x.chapter), 1));
+    }
     const pure = await purifyText(run, cfg, next, P.label);
     next = pure.text;
     const fresh = store.getRun(runId) || run;
@@ -822,14 +876,14 @@ async function runPass(runId, kind) {
     const versions = arr(fresh.review.versions).length ? fresh.review.versions : [{ key: 'd1', label: '初稿', at: new Date().toISOString(), text: base, issues: [] }];
     // 重跑同一遍:替换掉旧的同名版本及其后的版本
     const keep = versions.filter(v => v.key === 'd1' || (kind === 'final' && v.key === 'd2'));
-    keep.push({ key: kind === 'check' ? 'd2' : 'd3', label: P.label, at: new Date().toISOString(), text: next, issues, changed, truncated: r.stopReason === 'max_tokens', ...(edits.length ? { edits, base_text: base } : {}) });
+    keep.push({ key: kind === 'check' ? 'd2' : 'd3', label: P.label, at: new Date().toISOString(), text: next, issues, changed, truncated: r.stopReason === 'max_tokens', ...(edits.length ? { edits, base_text: base } : {}), ...(growthRejected.length ? { growth_rejected: growthRejected } : {}), words_before: scriptWords(base), words_after: scriptWords(next) });
     fresh.review.versions = keep;
     if (factcheck !== undefined) fresh.review.factcheck = factcheck;
     if (next !== start) writeScript(fresh, next);
     if (changed.length) {
       changed.forEach(id => { const st = chapterState(fresh, id); st.status = '待审'; st.history = [...arr(st.history), { at: new Date().toISOString(), note: P.title, by: kind, text: scriptChapters(base).find(c => c.id === id).text }].slice(-HISTORY_MAX); });
     }
-    fresh.steps = { ...(fresh.steps || {}), [P.step]: { status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString(), issues: issues.length, changed: changed.length, ...(edits.length ? { edits: edits.filter(e => e.ok).length, edits_failed: edits.filter(e => !e.ok).length } : {}), ...(factcheck ? { facts: arr(factcheck.items).length, facts_wrong: arr(factcheck.items).filter(x => x.grade === 'E').length, facts_error: factcheck.error || '' } : {}) } };
+    fresh.steps = { ...(fresh.steps || {}), [P.step]: { status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString(), issues: issues.length, changed: changed.length, ...(growthRejected.length ? { growth_rejected: growthRejected.length } : {}), ...(edits.length ? { edits: edits.filter(e => e.ok).length, edits_failed: edits.filter(e => !e.ok).length } : {}), ...(factcheck ? { facts: arr(factcheck.items).length, facts_wrong: arr(factcheck.items).filter(x => x.grade === 'E').length, facts_error: factcheck.error || '' } : {}) } };
     if (kind === 'check') { delete fresh.steps.final_review; delete fresh.steps.reverse_audit; if (fresh.review.audit) fresh.review.audit = null; }
     if (kind === 'final' && fresh.review.audit) fresh.review.audit.used_selection = (fresh.review.audit.selection || null);
     if (run.attempts) fresh.attempts = run.attempts;
@@ -1248,8 +1302,8 @@ function editsText(edits) {
 }
 
 // 套修改;原句找不到的,把那几章原文发回给模型,让它逐字重抄原句,再整体套一次
-async function applyWithRepair(run, cfg, text, edits, label) {
-  let res = applyEdits(text, edits.map(e => ({ ...e })));
+async function applyWithRepair(run, cfg, text, edits, label, limit) {
+  let res = applyEdits(text, edits.map(e => ({ ...e })), limit);
   const lost = res.edits.filter(e => !e.ok && /没找到/.test(e.error || ''));
   if (!lost.length) return res;
   const chs = scriptChapters(text);
@@ -1263,8 +1317,8 @@ async function applyWithRepair(run, cfg, text, edits, label) {
     const r = await callLong(run, cfg, prompt, label + '·补对原句');
     const fixed = parseEdits(r.content);
     if (!fixed.length) return res;
-    const keepOk = res.edits.filter(e => e.ok || !/没找到/.test(e.error || '')).map(e => ({ chapter: e.chapter, category: e.category, old: e.old, new: e.new, reason: e.reason }));
-    const again = applyEdits(text, keepOk.concat(fixed));
+    const keepOk = res.edits.filter(e => e.ok || (!/没找到/.test(e.error || '') && !e.growth_rejected)).map(e => ({ chapter: e.chapter, category: e.category, old: e.old, new: e.new, reason: e.reason }));
+    const again = applyEdits(text, keepOk.concat(fixed), limit);
     // 补了以后仍然找不到的,保留模型最初给的原句,方便人看
     const stillLost = lost.filter(l => !again.edits.some(e => e.ok && e.reason === l.reason && e.new === l.new));
     again.edits = again.edits.filter(e => e.ok || !/没找到/.test(e.error || '')).concat(stillLost);
@@ -1352,7 +1406,8 @@ async function runFinal(runId) {
     const r2 = await callLong(run, cfg, an().fillVars(readPrompt('final_revise.md'), { ...common, audit_report: s1.report, script: base }), '终审·修改');
     let edits1 = parseEdits(r2.content);
     if (r2.truncated && !/^===\s*END\s*===/m.test(r2.content)) edits1 = edits1.slice(0, -1);
-    const a1 = await applyWithRepair(run, cfg, base, edits1, '终审·修改');
+    const limit = growthLimit(run, base);
+    const a1 = await applyWithRepair(run, cfg, base, edits1, '终审·修改', limit);
     let text = a1.next, edits = a1.edits.filter(e => e.ok).map(e => ({ ...e })), failed = a1.edits.filter(e => !e.ok);
     // ③ 复审(没达标就再改一轮,再复审一次)
     const rechecks = [];
@@ -1362,7 +1417,7 @@ async function runFinal(runId) {
       const r3 = await callLong(run, cfg, an().fillVars(readPrompt('final_recheck.md'), {
         ...common, scores_before: dims.map(d => d + ': ' + (scoresBefore[d] != null ? scoresBefore[d] : '—')).join('\n'),
         edits_done: editsText(round === 1 ? edits : rechecks[rechecks.length - 1].edits_applied || []),
-        edits_instruction: allowEdits ? '如果未达标,在 ===VERDICT=== 那一行后面接着输出要补的修改(格式同前:每处以 ===EDIT=== 开头,写 章节/类别/原句/改成/理由;原句从上面「修改后的完整稿子」逐字复制;只修尚未解决的问题),然后再写 ===END===。达标就不要输出修改。' : '这是最后一轮复审,只出报告,不要输出修改。',
+        edits_instruction: allowEdits ? '如果未达标,在 ===VERDICT=== 那一行后面接着输出要补的修改(格式同前:每处以 ===EDIT=== 开头,写 章节/类别/原句/改成/理由;原句从上面「修改后的完整稿子」逐字复制;只修尚未解决的问题;不许把稿子改长,前 2 分钟只许删和换,程序会退回加长的修改),然后再写 ===END===。达标就不要输出修改。' : '这是最后一轮复审,只出报告,不要输出修改。',
         script: text
       }), '终审·复审' + round);
       const s3 = splitReport(r3.content);
@@ -1373,7 +1428,7 @@ async function runFinal(runId) {
       let edits2 = parseEdits(s3.tail);
       if (r3.truncated && !/^===\s*END\s*===/m.test(s3.tail)) edits2 = edits2.slice(0, -1);
       if (!edits2.length) break;
-      const a2 = await applyWithRepair(run, cfg, text, edits2, '终审·复审' + round);
+      const a2 = await applyWithRepair(run, cfg, text, edits2, '终审·复审' + round, limit);
       rc.edits_applied = a2.edits.filter(e => e.ok);
       failed = failed.concat(a2.edits.filter(e => !e.ok).map(e => ({ ...e, round: '2' })));
       if (!rc.edits_applied.length) break;
@@ -1475,7 +1530,7 @@ async function runFinalPatch(runId, body) {
     const r = await callLong(run, cfg, an().fillVars(readPrompt('final_patch.md'), { ...common, selected, note: note || '(没有补充意见)', script: d3.text }), '终审·补改');
     let edits = parseEdits(r.content);
     if (r.truncated && !/^===\s*END\s*===/m.test(r.content)) edits = edits.slice(0, -1);
-    const a = await applyWithRepair(run, cfg, d3.text, edits.map(e => ({ ...e, round: '补改' })), '终审·补改');
+    const a = await applyWithRepair(run, cfg, d3.text, edits.map(e => ({ ...e, round: '补改' })), '终审·补改', growthLimit(run, d3.text));
     const okNew = a.edits.filter(e => e.ok);
     if (!okNew.length) throw new Error(edits.length ? '补改的 ' + edits.length + ' 处都没对上原句,稿子没有变化,可以再点一次' : 'AI 没有给出补改,稿子没有变化');
     const pure = await purifyText(run, cfg, a.next, '终审·补改');
@@ -1670,7 +1725,7 @@ async function applyDeai(runId, picks) {
   run.steps = { ...(run.steps || {}), deai: { ...((run.steps || {}).deai || {}), status: 'running', stage: '按你的选择修改' } };
   store.saveRun(run);
   try {
-    const applied = edits.length ? await applyWithRepair(run, cfg, base, edits, '去AI感·修改') : { next: base, edits: [] };
+    const applied = edits.length ? await applyWithRepair(run, cfg, base, edits, '去AI感·修改', growthLimit(run, base)) : { next: base, edits: [] };
     const pure = await purifyText(run, cfg, applied.next, '去AI感');
     applied.next = pure.text;
     const okN = applied.edits.filter(e => e.ok).length;
@@ -1905,4 +1960,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

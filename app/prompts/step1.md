@@ -24,7 +24,12 @@ YouTube爆款内容结构导演(Viral Blueprint Architect)。
 - 这类章节只描述功能(例:"此处需要一句重命名式判断,把日常饮品重构为社会技术"),并在 originality_constraint 中注明须避开的源案例元素。
 
 词数预算:
-从 Timeline 的 subtitle_metrics.average_words_per_minute 读取语速,word_budget = round(章节时长秒 × 语速 / 60)。
+按成片配音语速 {{narration_wpm}} 词/分钟计算:word_budget = round(章节时长秒 × {{narration_wpm}} / 60)。不要用 Timeline 的 subtitle_metrics.average_words_per_minute(那是原片字幕语速,按它算稿子会比目标时长长出一半);程序会按配音语速复核并改写 word_budget。
+
+开头(硬规则,来自已发布视频的真实留存:0:10–0:20 走了一半观众):
+- hook 的前 8 秒用一个具体的人或场景说出标题里的冲突,观众点进来想知道的事要先听到;
+- 前 10 秒最多出现 1 个数字;
+- hook.first_payoff_sec 不晚于 45 秒(可以先给一半答案,完整答案留到后面)。
 
 事实纪律:
 information_goal 只描述"需要什么类型的事实",禁止编造具体年份、遗址、人名、研究名称。

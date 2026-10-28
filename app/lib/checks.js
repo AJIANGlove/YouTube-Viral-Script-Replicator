@@ -92,13 +92,16 @@ function collapseHits(hits) {
 }
 
 // 参照工具:基于资产 examples + 源 SRT + timeline 语速
-function makeRefTools(asset) {
+// opts.wpm:按配音语速算密度(见 lib/narration.js),不传则用原片字幕语速
+function makeRefTools(asset, opts) {
   let ex = '';
   try { ex = (JSON.parse(asset.examples).examples || []).map(e => e.example_text || '').join('\n'); }
   catch (e) { ex = asset.examples || ''; }
   const refText = ex + '\n' + (asset.srt || '');
   let tw = 149;
   try { tw = JSON.parse(asset.timeline).data.subtitle_metrics.average_words_per_minute || 149; } catch (e) {}
+  const sourceWpm = tw;
+  if (opts && opts.wpm) tw = opts.wpm;
   // 两种单位的参照集按需各建一次
   const refSets = {};
   const refSetOf = mode => refSets[mode] || (refSets[mode] = new Set(ngrams(overlapTokens(refText, mode), mode === 'chars' ? OVERLAP_CHARS : OVERLAP_WORDS, mode === 'chars' ? '' : ' ')));
@@ -150,7 +153,7 @@ function makeRefTools(asset) {
     });
     return { lines, bad, chapters: chs };
   };
-  return { findOverlaps, densityLines, targetWpm: tw };
+  return { findOverlaps, densityLines, targetWpm: tw, sourceWpm };
 }
 
 function goalSeconds(videoGoal) {
@@ -362,6 +365,85 @@ function cleanForeignScript(text, lang) {
   return { text: out, fixed, left: foreignLines(out) };
 }
 
+// ---------- 为「听」写:开头和数字密度(按真实留存定的规矩) ----------
+// 실측 run_2713e3885236(김밥집,46 人留存曲线):前 10 秒连念 3,869원/1,299원/33.6% 三个数、标题里的「200줄 적자」到 0:32 才出现,
+// 0:10–0:20 掉了一半人;1:00 起一行念 5 个带克数的价格,1:01–1:42 从 30% 掉到 7%。
+// 时间按字数和配音语速(wpm)估,句子级的位置会差几秒。
+const NUM_TOKEN = /\d[\d,.]*/g;
+const OPEN_TITLE_SEC = 8, OPEN_NUM_SEC = 10, OPEN_MAX_NUMS = 1, LINE_MAX_NUMS = 2;
+function narrationLines(script, wpm) {
+  const out = [];
+  let acc = 0;
+  String(script || '').split('\n').forEach(raw => {
+    const l = raw.trim();
+    if (!l || /^\[CH\d+/.test(l) || /^(---|#)/.test(l)) return;
+    const w = Math.max(countWords(l), 1);
+    out.push({ text: l, start: acc / wpm * 60, end: (acc + w) / wpm * 60, nums: (l.match(NUM_TOKEN) || []).length });
+    acc += w;
+  });
+  return out;
+}
+// 标题关键词:按空格切,去标点;韩文取前 2 个字当词干(조사、어미不同也能对上),数字只认数字
+function titleStems(title) {
+  return [...new Set(String(title || '').split(/[\s,.!?…·:;'"“”‘’()\[\]-]+/).map(t => t.trim()).filter(t => t.length >= 2)
+    .map(t => /^\d/.test(t) ? t.match(/^\d[\d,.]*/)[0] : /[가-힯]/.test(t) ? t.slice(0, 2) : t.toLowerCase()))];
+}
+// 韩文语体:-다(반말/서술체)和 -니다/-요(존댓말)混用,听起来像两个人在说
+function koreanRegister(lines) {
+  const c = { plain: [], formal: [] };
+  lines.forEach(l => {
+    if (/^["“「'‘]/.test(l.text)) return; // 引语不算
+    const t = l.text.replace(/["”」'’)\]]+$/, '').replace(/[.!?。…]+$/, '');
+    if (/(니다|니까|세요|어요|아요|해요|에요|예요|죠|지요|군요|네요|까요|래요|대요|거든요|잖아요)$/.test(t)) c.formal.push(l);
+    else if (/[^니]다$|[가-힣](까|냐|자|라)$/.test(t)) c.plain.push(l);
+  });
+  const n = c.plain.length + c.formal.length;
+  const minor = c.plain.length <= c.formal.length ? 'plain' : 'formal';
+  return { plain: c.plain.length, formal: c.formal.length, mixed: n >= 10 && c[minor].length / n >= 0.1, minor, examples: c[minor].slice(0, 3).map(l => l.text) };
+}
+function listenCheck(script, opts) {
+  const o = opts || {};
+  const wpm = o.wpm || 150;
+  const lines = narrationLines(script, wpm);
+  if (!lines.length) return null;
+  const issues = [];
+  // 开头:前 10 秒最多 1 个数字;前 8 秒要出现标题里的说法
+  const nums10 = lines.filter(l => l.start < OPEN_NUM_SEC).reduce((n, l) => n + l.nums, 0);
+  if (nums10 > OPEN_MAX_NUMS) issues.push('前 ' + OPEN_NUM_SEC + ' 秒念了 ' + nums10 + ' 个数字(最多 ' + OPEN_MAX_NUMS + ' 个)');
+  const stems = titleStems(o.title);
+  const seen = stems.map(st => { const l = lines.find(x => x.text.toLowerCase().includes(st)); return { word: st, sec: l ? Math.round(l.start) : null }; });
+  const early = seen.filter(x => x.sec != null && x.sec < OPEN_TITLE_SEC).length;
+  const titleHit = stems.length ? Math.round(early / stems.length * 100) / 100 : null;
+  if (stems.length >= 3 && titleHit < 0.34) issues.push('前 ' + OPEN_TITLE_SEC + ' 秒只出现了标题里 ' + early + '/' + stems.length + ' 个关键词' +
+    (seen.some(x => x.sec != null && x.sec >= OPEN_TITLE_SEC) ? '(' + seen.filter(x => x.sec != null && x.sec >= OPEN_TITLE_SEC).map(x => x.word + ' 在 ' + fmt(x.sec)).join('、') + ')' : ''));
+  // 数字串:一行(一句)最多 2 个数字
+  const dense = lines.filter(l => l.nums > LINE_MAX_NUMS).map(l => ({ sec: Math.round(l.start), nums: l.nums, text: l.text }));
+  if (dense.length) issues.push(dense.length + ' 句一口气念 3 个以上的数字(最早在 ' + fmt(dense[0].sec) + ')');
+  const register = /^(Korean|韩|한국|ko)/i.test(String(o.lang || '')) ? koreanRegister(lines) : null;
+  if (register && register.mixed) issues.push('语体混用:-다 体 ' + register.plain + ' 句,-니다/-요 体 ' + register.formal + ' 句');
+  return { wpm, ok: !issues.length, issues, opening: { nums_10s: nums10, title_hit: titleHit, title_words: seen }, dense, register };
+}
+// 问题轻重,用来比较重写前后哪版更好(越小越好)
+function listenScore(lc) {
+  if (!lc) return 0;
+  const o = lc.opening || {};
+  return Math.max(0, (o.nums_10s || 0) - OPEN_MAX_NUMS) * 2 + (lc.issues.some(i => /关键词/.test(i)) ? 4 : 0) +
+    lc.dense.length + (lc.register && lc.register.mixed ? 6 : 0);
+}
+// 写稿、优化、审稿共用的听感规则(提示词里也是这几条)
+const LISTEN_RULES = '听感规则(稿子是配音给人听的,观众不能回看):\n' +
+  '- 开头 ' + OPEN_TITLE_SEC + ' 秒内,用一个人或一个场景说出标题里的冲突;前 ' + OPEN_NUM_SEC + ' 秒最多 ' + OPEN_MAX_NUMS + ' 个数字;45 秒前给出第一个答案。\n' +
+  '- 一句最多 ' + LINE_MAX_NUMS + ' 个数字;价格表、配料克数这类清单不要一口气念完,只留最关键的一两个,其余拆开或删掉。\n' +
+  '- 全篇只用一种语体(韩文:-다 体和 -니다/-요 体二选一),引用别人的话除外。';
+// 给模型的修改意见(写稿重试、复审用)
+function listenFeedback(lc) {
+  if (!lc || lc.ok) return '';
+  const parts = lc.issues.map(i => '- ' + i);
+  if (lc.dense.length) parts.push('需要拆开的句子:\n' + lc.dense.slice(0, 6).map(d => '  · ' + d.text).join('\n'));
+  if (lc.register && lc.register.mixed) parts.push('语体不统一的句子(全篇只用一种语体):\n' + lc.register.examples.map(t => '  · ' + t).join('\n'));
+  return parts.join('\n');
+}
+
 // Step4: 元评论 / ChangeLog before / 时间漂移 / 附加内容
 function checkOptimized(optText, origScript) {
   const meta = [/\[VERIFY/i, /\(unchanged\)/i, /note\s*[:：]/i, /all (the )?fixes are/i, /I need to flag/i].filter(p => p.test(optText)).map(p => p.source);
@@ -424,4 +506,4 @@ function extractFinalScript(optText) {
   return stripLeadingPreamble(cleaned).text;
 }
 
-module.exports = { normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };
+module.exports = { normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };

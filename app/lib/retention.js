@@ -322,7 +322,7 @@ function scriptStats(script, opts) {
   const now = o.year || new Date().getFullYear();
   const tl = dataOf(parse(o.timeline));
   const fw = dataOf(parse(o.framework));
-  const wpm = ((tl.subtitle_metrics || {}).average_words_per_minute) || 130;
+  const wpm = o.wpm || ((tl.subtitle_metrics || {}).average_words_per_minute) || 130;
   const chapters = chapterBodies(script || '');
   const words = chapters.reduce((s, c) => s + countWords(c.text), 0);
   const estSec = Math.round(words / wpm * 60);

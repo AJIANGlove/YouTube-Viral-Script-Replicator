@@ -180,6 +180,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | 选题推荐 | 结合赛道与已验证框架，生成 5 个高点击选题 |
 | 外文纯净 | 非中文稿混入的汉字/日文假名：规则修（括号注释、汉字数字、万→千位）+ 模型逐行改写兜底，挂在各写稿/审稿环节保存前；中文/日文目标稿豁免 |
 | YouTube 数据抓取 | `extension/` Chrome 插件在 Studio 数据页一键抓取指标与留存曲线，按标题/视频 ID 匹配任务；详情页「真实数据」卡：曲线画章节位置、每章流失、掉人最多的句子、下载分析包 |
+| 听感与语速闸门 | 听感检查（前 8 秒标题说法、前 10 秒数字 ≤1、一句 ≤2 个数字、语体混用）挂 Step2/Step4 不合格反馈重写一次；审稿各环节不许把稿子改长（整篇 +3%、前 2 分钟只许删换）；篇幅按真实配音语速（narration_wpm → 已发布实测 → 语言默认 → 原片语速） |
 
 ---
 
@@ -194,20 +195,20 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `adjust_queries.md` | 生成联网搜索查询词 | 21 |
 | `revise.md` | 按人工意见只重做一行 | 29 |
 | `title_audit.md` | 自写标题审核 | 26 |
-| `step1.md` | Blueprint 生成 | 84 |
-| `step2.md` | 脚本施工 | 51 |
+| `step1.md` | Blueprint 生成 | 89 |
+| `step2.md` | 脚本施工 | 52 |
 | `step3.md` | 质量审核 | 71 |
-| `step4.md` | 终稿优化 | 56 |
+| `step4.md` | 终稿优化 | 58 |
 | `step5.md` | 开头逐句仿写（强化开头） | 27 |
 | `script_check.md` | 稿件检查 K1-K5 | 38 |
-| `draft_check.md` | 初稿检查出二稿 | 54 |
+| `draft_check.md` | 初稿检查出二稿 | 56 |
 | `fact_audit.md` | 事实审计（拆主张、标风险、给搜索词） | 51 |
 | `fact_verify.md` | 联网核验（按证据定级 A–E，必改或收窄） | 54 |
 | `reverse_audit.md` | 二稿逆向工程审稿报告（九部分 + 逐条预估加分） | 523 |
 | `final_audit.md` | 终审①独立审稿（七维评分 + P0–P3 清单） | 223 |
-| `final_revise.md` | 终审②按诊断修改（逐处原句→改成+理由） | 83 |
+| `final_revise.md` | 终审②按诊断修改（逐处原句→改成+理由） | 85 |
 | `final_recheck.md` | 终审③独立复审（评分对照，未达标补改一轮） | 71 |
-| `final_patch.md` | 按复审 OPEN 清单补改终稿 | 56 |
+| `final_patch.md` | 按复审 OPEN 清单补改终稿 | 57 |
 | `final_open_extract.md` | 从旧复审报告里抽出 OPEN 待改清单 | 17 |
 | `final_fix_quotes.md` | 原句定位失败时让模型对照原章逐字重抄 | 20 |
 | `foreign_fix.md` | 外文稿混入汉字/假名的整行改写（规则修兜底） | 20 |
@@ -221,11 +222,11 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `fingerprint_detect.md` | 爆款声音指纹检测与改写 | 42 |
 | `fingerprints.json` | 指纹模式库（各语言正则 + 结构判定要点） | — |
 | `compliance_check.md` | YouTube 商业化检查 | 287 |
-| `opening_retention_check.md` | 开头留存检查 | 120 |
+| `opening_retention_check.md` | 开头留存检查 | 126 |
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 33 份 `.md`（2550 行）+ `final_tracks/` 5 份（202 行）+ `fingerprints.json` 模式库；物理文件 38 份，合计 2752 行。
+合计 33 份 `.md`（2569 行）+ `final_tracks/` 5 份（202 行）+ `fingerprints.json` 模式库；物理文件 38 份，合计 2771 行。
 
 ### 历史版本
 
