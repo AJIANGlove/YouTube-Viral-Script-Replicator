@@ -1,0 +1,858 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.870Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.0467,
+      "start_sec": 0.1,
+      "end_sec": 46.8,
+      "position_label": "0%–4.7%(0:00–0:47)",
+      "purpose": "零寒暄把观众放进最底层:第二人称财产盘点与清晨待雇场景建立代入,纠正\"非奴隶非锁链\"的大众误认,用\"唯一机器\"归因句锁定缺失要素,并以利害关系清单(吃/住/婚配/活过荒年)立住 stakes",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "worldview_shift",
+          "strength": 70,
+          "position_ratio": 0.0139,
+          "time_ms": 13976,
+          "reason": "开场即宣告\"真实的底层与多数人想象完全不同\",击穿对该身份的扁平化默认想象"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "场景伏笔:开场意象需要被后段反转与回收才有重量",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "pov_immersion",
+          "mechanism": "second_person_scene_drop"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "myth_correction",
+          "mechanism": "myth_correction_tease"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "aphorism",
+          "mechanism": "aphorism_anchor"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_scene_drop",
+        "possession_inventory",
+        "myth_correction_tease",
+        "aphorism_anchor",
+        "stakes_catalog"
+      ],
+      "original_moves": [
+        "用第二人称盘点\"你\"的全部财产：一间茅屋加一块只有现代车位大小的园子，再无其他产出来源",
+        "把观众放进黎明泥地里几十人等待管家挑选的雇工场景",
+        "直接纠正想象：你不是奴隶，也不是拖着锁链的农奴",
+        "给出归因句：土地是当时唯一已发明的把劳动变成财富的机器，而你恰好没有",
+        "列出这一缺失要素决定的后果清单：吃什么、睡哪里、能否娶想娶的人、能否活过下一次歉收"
+      ],
+      "abstract_move": "第二人称财产盘点 + 待雇场景沉浸 + 纠正大众想象 + 单一缺失要素归因 + 利害关系清单",
+      "replacement_needs": [
+        "一个目标受众能秒代入的底层身份场景",
+        "一个大众想象与真实处境的纠偏点",
+        "一个决定全局的稀缺要素",
+        "一张该要素支配的生活后果清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP03→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_immersion_with_myth_correction",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 13976,
+        "evidence_refs": [
+          "C0001",
+          "C0014",
+          "C0020"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "promise_setup",
+      "start_ratio": 0.0457,
+      "end_ratio": 0.1424,
+      "start_sec": 45.8,
+      "end_sec": 142.7,
+      "position_label": "4.6%–14.2%(0:46–2:23)",
+      "purpose": "立起全片框架:宣告同一身份内部是梯级清晰的梯子而非单一标签,用同标签两极并置证明,承诺从底层爬到脱离身份的全程,声明档案来源建立可信度,登记猜比例数字的延迟契约,并补上\"多数人生死同级、爬升者是例外\"的冷峻基线",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.0726,
+          "time_ms": 72717,
+          "reason": "同一标签下吃肉雇人与饿死并置,首次以对照证明梯子真实存在,框架在此确立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "全片最长悬念:把逐级爬升的体感换算成一个待揭晓的比例答案",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "主承诺弧:标题承诺遍历全部等级,悬念在终点是否存在出口",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "curiosity_gap",
+          "mechanism": "withheld_explanation_flag"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "contrast_reveal",
+          "mechanism": "internal_contrast_reveal"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "authority_claim",
+          "mechanism": "evidence_source_claim"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "guessing_contract",
+          "mechanism": "guessing_game_contract"
+        }
+      ],
+      "required_retention_events": [
+        "curiosity_gap_direct",
+        "internal_contrast_reveal",
+        "evidence_source_claim",
+        "guessing_game_contract",
+        "exception_baseline"
+      ],
+      "original_moves": [
+        "宣告\"几乎没人讲清的部分\"：农民从没有单一工作、单一收入或单一法律身份，而是一架梯级清晰的梯子",
+        "两极并置：有的农民几乎每周吃肉还雇别的农民干活，有的在荒年饿死——档案里他们都叫农民",
+        "承诺全程：从只有一块园圃的人爬到彻底脱离农民身份的家庭",
+        "声明数字来自法庭清单、遗嘱清册与税册的重建，而非猜测",
+        "让观众猜：同时代一百户人家里有几户一生能爬上一级，要求记住这个数字",
+        "补冷峻基线：梯子始终存在，多数人生死在同一级，爬升者是例外而非常态"
+      ],
+      "abstract_move": "认知缺口宣告 + 同标签两极并置 + 全程爬升承诺 + 档案来源声明 + 猜比例契约 + 例外者基线",
+      "replacement_needs": [
+        "一组同一标签下的两极对照事实",
+        "一个可延迟兑现的比例问题",
+        "一手数据来源类型（档案、账册、官方记录）",
+        "一个\"大多数与例外\"的基线判断"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(78);打开的悬念 LOOP01→FS10、LOOP02→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "rung_reveal",
+      "start_ratio": 0.1415,
+      "end_ratio": 0.2614,
+      "start_sec": 141.8,
+      "end_sec": 262,
+      "position_label": "14.2%–26.1%(2:22–4:22)",
+      "purpose": "第一级揭幕(赤贫自由层):持有盘点、卖双手的活计清单、日薪换算成年收入区间;点破真正差距不在数字而在抗风险,用荒年死亡率证据落重;段尾以\"名义最自由却换不来吃的\"悖论金句收束",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "surprise",
+          "strength": 74,
+          "position_ratio": 0.2561,
+          "time_ms": 256651,
+          "reason": "全片第一个悖论金句:最穷的一级反而最自由,而没有土地的自由换不来能吃的东西"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "隐性条件悬念:劳动力短缺如何改变整架梯子的可爬性",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "quantification",
+          "mechanism": "wage_unit_conversion"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "evidence_spike",
+          "mechanism": "famine_mortality_evidence"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "paradox_punchline",
+          "mechanism": "paradox_punchline"
+        }
+      ],
+      "required_retention_events": [
+        "level_naming",
+        "possession_inventory",
+        "wage_unit_conversion",
+        "famine_mortality_evidence",
+        "paradox_punchline"
+      ],
+      "original_moves": [
+        "命名第一级（夏日居民）并盘点持有：茅屋加半英亩以下园圃，无公田条地、无犁队份额，顶多岁里一头猪",
+        "列出靠卖双手为生的时令活计：犁地、割草、收割、修篱、挖沟",
+        "给出日薪（大瘟疫前一两个便士），换算币制后推出满负荷年收入两三镑——而这种满负荷几乎从不会有",
+        "点破真正的差距不是数字，而是哪周没被雇：没有存粮没有租地，隔一周就是断炊",
+        "用 1315-1317 荒年的庄园与教区记录证明死亡率在这一级升得最高",
+        "反转收束：这一级反而是全梯最自由的人之一，但没有土地的自由几乎换不来任何能吃的东西"
+      ],
+      "abstract_move": "等级命名 + 持有盘点 + 谋生清单 + 报酬换算成年收入区间 + \"差距不在数字\"重述 + 灾难年证据 + 名义优势悖论落地",
+      "replacement_needs": [
+        "该级的资源清单与日结报酬标准",
+        "一个可换算成年度量级的报酬体系",
+        "一组灾难年份的死亡率或损失记录",
+        "一个\"名义优势实际无用\"的悖论点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(74);打开的悬念 LOOP05→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "rung_reveal",
+      "start_ratio": 0.2605,
+      "end_ratio": 0.3402,
+      "start_sec": 261.1,
+      "end_sec": 340.9,
+      "position_label": "26.1%–34%(4:21–5:41)",
+      "purpose": "第二级揭幕(初有缓冲层):亩数锚点与缩小版义务,首次拥有真正归自己的产出;给出收入区间后立刻重述——差别在稳定不在收入,存粮缓冲让短期灾祸不再致命;以\"愿卖掉几乎一切去换的缓冲\"定价",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "reframe",
+          "mechanism": "stability_over_income_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "level_naming",
+        "acreage_quantification",
+        "income_range_reveal",
+        "stability_over_income_reframe",
+        "buffer_value_punchline"
+      ],
+      "original_moves": [
+        "命名第二级（小土地持有者），给出五到十五英亩的锚点区间",
+        "说明义务仍在但缩小：劳役天数更少，磨坊窑场的杂费照付",
+        "强调质变：第一次拥有公田里的条地，收成真正归自己支配",
+        "给出年收入二到五镑的区间，承认纸面上只比下一级好一点",
+        "重述真正差别在稳定不在收入：自家存粮让一周生病不再等于断炊",
+        "落点金句：这正是农民愿意卖掉几乎一切去换的缓冲"
+      ],
+      "abstract_move": "等级命名 + 资源量级锚点 + 义务缩小说明 + 首次自有产出 + 收入区间 + 稳定重于收入的重述 + 缓冲价值金句",
+      "replacement_needs": [
+        "该级的资源量级数据",
+        "一组仍然存在但缩小的义务或成本",
+        "一个\"数字相近但抗风险能力质变\"的对照点"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "rung_reveal",
+      "start_ratio": 0.3392,
+      "end_ratio": 0.4522,
+      "start_sec": 339.9,
+      "end_sec": 453.1,
+      "position_label": "33.9%–45.2%(5:40–7:33)",
+      "purpose": "第三级揭幕(不自由却安稳层,全片核心悖论):锚定大众刻板印象后挂悖论旗标;列不自由义务清单,再反转出缴清后的净资产与无债继承;用现代负债家庭做安全性对照,落成\"身份与财务是两回事\"的定性",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.4175,
+          "time_ms": 418329,
+          "reason": "核心悖论登顶:法律不自由者纸面上比许多现代负债家庭更安稳,现代对照把历史直接接到观众身上"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "段内嵌套悖论:不自由与安稳如何共存",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "paradox_resolution",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "contradiction_flag",
+          "mechanism": "stereotype_anchor"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "modern_analogy",
+          "mechanism": "modern_analogy_jolt"
+        }
+      ],
+      "required_retention_events": [
+        "level_naming",
+        "stereotype_anchor",
+        "obligation_inventory",
+        "net_asset_reveal",
+        "modern_analogy_jolt",
+        "paradox_resolution"
+      ],
+      "original_moves": [
+        "命名第三级（维兰），二三十英亩的全额惯例租地",
+        "锚定刻板印象：这正是多数人听到\"农民\"时想象的样子，矛盾由此开始",
+        "列不自由义务清单：每周两三天给领主干活、磨坊强制收费、死时最好的牲口被拿走、女儿外嫁要交费",
+        "反转：缴清义务后净有九十到一百先令资产，儿子继承时不欠一个便士",
+        "现代对照：纸面上比许多背着车贷卡账的现代家庭更安稳",
+        "定性收束：不自由与财务宽裕是完全分离的两个问题，会让只看账本的现代会计师困惑"
+      ],
+      "abstract_move": "等级命名 + 刻板印象锚定 + 强制性义务清单 + 缴清后的净资产反转 + 现代负债对照 + 身份与财务分离定性",
+      "replacement_needs": [
+        "一组该级的强制性义务条款",
+        "一份缴清义务后的净资产估计",
+        "一个现代可比的对照对象（负债、稳定性）",
+        "一个身份与财务可分离的悖论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(88)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "rung_reveal",
+      "start_ratio": 0.4512,
+      "end_ratio": 0.55,
+      "start_sec": 452.1,
+      "end_sec": 551.1,
+      "position_label": "45.1%–55%(7:32–9:11)",
+      "purpose": "第四级揭幕(花钱买身份层):说明它与相邻级并行而非更高,变化是法律的不是财务的;列出花钱也买不到的三项权益,重述租金购买的是流动性与机会捕捉能力;给出制度内两条越级路径,并埋下劳动力短缺的时代条件",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "reframe",
+          "mechanism": "purchase_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "level_naming",
+        "lateral_rung_reframe",
+        "rights_inventory",
+        "purchase_reframe",
+        "escape_route_catalog"
+      ],
+      "original_moves": [
+        "命名第四级（自由佃户），说明它与维兰并行而非更高——变化是法律的，不是财务的",
+        "列出现金地租替代劳役后买到的三样：随时离开庄园、女儿自由婚配、在王室法庭告自己的领主",
+        "给出收入区间：与同等土地的维兰相近，有时扣完租金反而略低",
+        "重述：租金买的不是库里的硬币，而是流动性、法律地位和随时抓住别处机会的能力",
+        "补两条制度内越级路径：特许城市住满一年零一天，或攒钱办正式赎身文书",
+        "时代注解：劳动力短缺时这一级的人数与影响力显著上升"
+      ],
+      "abstract_move": "等级命名 + 并行而非更高的关系修正 + 非金钱权益清单 + 收入相近对照 + \"买什么\"重述 + 制度内越级路径 + 时代条件注解",
+      "replacement_needs": [
+        "该级与相邻级的法律权利差异清单",
+        "一个\"花钱买身份而非收入\"的对照",
+        "制度内合法的越级通道类型"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "rung_reveal",
+      "start_ratio": 0.549,
+      "end_ratio": 0.6455,
+      "start_sec": 550.1,
+      "end_sec": 646.8,
+      "position_label": "54.9%–64.6%(9:10–10:47)",
+      "purpose": "第五级揭幕(雇主反转层,情绪高点):从泥地等雇反转为发工钱的一方,开场场景意象以祖孙同地完成回收;给出收入与生活清单,灾年从死刑降为麻烦;关键限定——这一级长期几乎不存在,依赖廉价土地加稀缺劳动力的时代窗口;以谨慎扩张法则收束",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.5719,
+          "time_ms": 573108,
+          "reason": "开场泥地待雇场景在此反转:你成了发同一枚日薪的雇主,祖孙同地,爬升叙事最强情绪拍"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "implicit_condition_reveal",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "scene_callback",
+          "mechanism": "scene_inversion_callback"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "condition_caveat",
+          "mechanism": "historical_condition_caveat"
+        }
+      ],
+      "required_retention_events": [
+        "level_naming",
+        "scene_inversion_callback",
+        "income_range_reveal",
+        "comfort_inventory",
+        "historical_condition_caveat",
+        "cautious_expansion_rule"
+      ],
+      "original_moves": [
+        "命名第五级（约曼），六十到上百英亩，自有与廉租混合",
+        "场景反转：你不再是泥地里等雇的人，而是发同一两个便士日薪的雇主——雇的人站在你祖父站过的同一片地里",
+        "给出年收入十到二十镑，列生活清单：木桁架大屋、常吃肉、一次歉收只是麻烦而非死刑",
+        "关键注解：这一级在该时代的大部分世纪几乎不存在，依赖廉价土地加稀缺劳动力的窗口",
+        "扩张法则：逐条扩地、绝不超出自家耕种能力的家庭，才爬得高且站得住"
+      ],
+      "abstract_move": "等级命名 + 资产结构说明 + 雇方与被雇方的场景反转（呼应开场） + 收入生活清单 + 存在条件限定 + 谨慎扩张法则",
+      "replacement_needs": [
+        "一个可与开场场景镜像的身份反转",
+        "该级的收入与物质生活清单",
+        "该层存在所依赖的宏观条件",
+        "一条可迁移的稳健扩张原则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85);回收了前文的悬念 FS03→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "rung_reveal",
+      "start_ratio": 0.6451,
+      "end_ratio": 0.732,
+      "start_sec": 646.4,
+      "end_sec": 733.5,
+      "position_label": "64.5%–73.2%(10:46–12:13)",
+      "purpose": "第六级揭幕(脱离身份层):先诚实预告稀有度;描述把财富转换为制度外资产的自觉选择;用具名家族案例证明出口存在,随即以\"门存在不等于门好开\"校准,并用统计学常见终点回落",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "surprise",
+          "strength": 82,
+          "position_ratio": 0.6955,
+          "time_ms": 696948,
+          "reason": "具名家族两代人从底层到城堡并当庭挑战贵族,顶层出口被证实,随即被\"门不好开\"校准"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "terminal_rung_case_proof",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "case_proof",
+          "mechanism": "named_case_proof"
+        }
+      ],
+      "required_retention_events": [
+        "rarity_flag",
+        "named_case_proof",
+        "door_exists_but_hard",
+        "statistical_tempering"
+      ],
+      "original_moves": [
+        "预告这是最稀有的一级，并先诚实说明稀有程度",
+        "描述自觉选择：把血汗财富换成庄园法庭永远征不到的东西——儿子的法律教育、战略联姻或两者兼有",
+        "用具名家族案例证明出口存在：从不自由的底层起步，两代人后拥有城堡并当庭挑战世袭贵族",
+        "立即校准：这证明门存在，不证明门对谁都好开",
+        "统计学回落：更多走这条路的家族最终停在上一级——舒适、安全，与头衔的世界相安无事"
+      ],
+      "abstract_move": "稀有度预告 + 财富形态转换的自觉选择 + 具名越级案例 + 门存在不等于门好开的校准 + 统计学常见终点回落",
+      "replacement_needs": [
+        "一个可查证的真实越级案例",
+        "一个财富转为制度外资产的路径类型",
+        "一个成功率的统计学对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(82);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "caveat_correction",
+      "start_ratio": 0.7315,
+      "end_ratio": 0.7876,
+      "start_sec": 732.9,
+      "end_sec": 789.2,
+      "position_label": "73.2%–78.8%(12:13–13:09)",
+      "purpose": "修正爬升叙事的个人奋斗误读:规则在丧偶问题上的不对称、寡妇独立经营的档案证据,落成\"站在哪一级比站在那里的是谁更重要\"的结构判断",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 76,
+          "position_ratio": 0.7795,
+          "time_ms": 781051,
+          "reason": "寡妇独立经营整份地的记录反复出现,推翻爬升叙事的男性默认:位置比性别更决定命运"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "assumption_correction",
+          "mechanism": "gender_assumption_correction"
+        }
+      ],
+      "required_retention_events": [
+        "agency_caveat",
+        "rule_asymmetry_reveal",
+        "widow_record_evidence",
+        "gender_assumption_correction"
+      ],
+      "original_moves": [
+        "免责声明：把整架梯子讲成全凭个人选择是不公平的，最大的起伏与土地劳动无关",
+        "规则不对称对照：妻子去世丈夫财产不动，丈夫去世寡妇可保惯例租地但须履行义务——通常意味着一年内再婚或付费独身",
+        "档案证据：独力经营整份地的寡妇在法庭记录里反复出现，雇工、交租、打官司与男租户无异",
+        "落点定性：你站在哪一级，远比那年站在那里的是男是女更重要"
+      ],
+      "abstract_move": "个人奋斗误读声明 + 规则不对称对照 + 被忽视群体的实绩档案证据 + 位置大于属性的定性",
+      "replacement_needs": [
+        "一组规则或制度上的不对称条款",
+        "一类被忽视群体的实绩记录",
+        "一个\"结构位置大于个体属性\"的判断"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(76)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "deferred_payoff_reveal",
+      "start_ratio": 0.7866,
+      "end_ratio": 0.8394,
+      "start_sec": 788.2,
+      "end_sec": 841.1,
+      "position_label": "78.7%–83.9%(13:08–14:01)",
+      "purpose": "兑现开头猜数契约:档案口径给出极低比例答案,用极端罕见度类比加固,给猜中的观众确认感;随即重命名梯子成因——不是被制度冻住,而是被环境压陡、偶尔塌陷",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "title_callback",
+          "strength": 90,
+          "position_ratio": 0.7985,
+          "time_ms": 800111,
+          "reason": "开头猜数契约兑现:低个位数、跨多级如遭雷击,全片最长悬念在主承诺尺度上闭合"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "deferred_answer_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "loop_payoff",
+          "mechanism": "deferred_number_payoff"
+        }
+      ],
+      "required_retention_events": [
+        "loop_recall",
+        "deferred_number_payoff",
+        "lightning_odds_metaphor",
+        "ladder_cause_reframe"
+      ],
+      "original_moves": [
+        "召回开头契约：现在揭晓视频开头那个数字",
+        "给出档案口径答案：低个位数——一百户里只有寥寥几户一生爬上一级",
+        "罕见度类比：连跨两三级几乎如同被雷劈",
+        "确认机制：猜得接近说明你已看懂了把这个群体看成一团灰色的人永远没看懂的东西",
+        "成因重命名：梯子不是被法律冻住的，而是被环境压到几乎不可爬，只在超出个人掌控的原因下偶尔塌陷，让少数坚决的人爬过去"
+      ],
+      "abstract_move": "延迟数字召回 + 低比例答案 + 极端罕见度类比 + 猜中者确认 + 梯子成因重命名（从制度到环境）",
+      "replacement_needs": [
+        "开头登记的延迟数字及其档案口径答案",
+        "一个罕见度的类比",
+        "一个把归因从制度改到环境的重述"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(90);回收了前文的悬念 FS02→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "mechanism_meta_explanation",
+      "start_ratio": 0.8389,
+      "end_ratio": 0.8787,
+      "start_sec": 840.7,
+      "end_sec": 880.4,
+      "position_label": "83.9%–87.9%(14:01–14:40)",
+      "purpose": "回答\"为什么会有这些记录\":当权者收入依赖精确到最小单位的簿记,官僚不是装饰而是机制本身,正是它意外留下证据让后世得以重建每一级的坡度",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "meta_revaluation",
+          "mechanism": "bureaucracy_revaluation"
+        }
+      ],
+      "required_retention_events": [
+        "why_recorded_question",
+        "bureaucracy_revaluation",
+        "accidental_evidence_note"
+      ],
+      "original_moves": [
+        "设问：为什么庄园书记员要强迫症式记录梯子的每一级",
+        "给出答案：领主的收入完全取决于精确到先令地知道每个租户站在哪份地上",
+        "定性重估：官僚不是装饰，是整套系统运转的机制本身",
+        "元评论：正是这套官僚意外留下了证据，让六七百年后的我们得以重建每一级有多陡"
+      ],
+      "abstract_move": "记录动机设问 + 收入依赖精确记录的因果链 + 官僚即机制的重估 + 意外留下证据的元评论",
+      "replacement_needs": [
+        "一个\"为什么会有这些记录\"的问题",
+        "记录与当权者利益的因果链",
+        "记录意外成为后世证据的事实"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "recap_consolidation",
+      "start_ratio": 0.8777,
+      "end_ratio": 0.936,
+      "start_sec": 879.5,
+      "end_sec": 937.9,
+      "position_label": "87.8%–93.6%(14:39–15:38)",
+      "purpose": "把逐级展开的各层压缩成一张可复述清单:每级一行,资源加核心特征加悖论或反转,顶层以昂贵赌注定格",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "recap",
+          "mechanism": "compressed_recap"
+        }
+      ],
+      "required_retention_events": [
+        "compressed_recap",
+        "per_rung_one_liner"
+      ],
+      "original_moves": [
+        "口令开场：把所有梯子摆出来",
+        "逐梯一行复述：最底层——园子加日薪，离赤贫只差一个坏星期，却是梯上最自由的人之一",
+        "第二级——一把真英亩，第一次有了真正的缓冲",
+        "第三级——法律不自由却财务安稳，全片核心的真矛盾",
+        "第四级——与第三级并行，用劳役费换货币地租，买的是法律地位与流动性",
+        "第五级——从等雇变成发薪的人；顶层——把一生积累押上、让原身份一词不再适用的昂贵赌注"
+      ],
+      "abstract_move": "复述口令 + 逐梯一行压缩（每级：资源加核心特征加悖论或反转） + 顶层赌注定格",
+      "replacement_needs": [
+        "每一级一行可复述的特征句",
+        "每级一个悖论或反转短语"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.9351,
+      "end_ratio": 1,
+      "start_sec": 937,
+      "end_sec": 1002,
+      "position_label": "93.5%–100%(15:37–16:42)",
+      "purpose": "总收束:复述扁平化旧想象,用\"一个法律头衔下的多种财务人生\"替换;以开场泥地场景的双角色镜像(等雇者与雇主同属一个身份)回收全片;修正努力神话——跃迁靠敢押上已建一切的罕见决策,而没有任何一级曾保证过他们",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 84,
+          "position_ratio": 0.9549,
+          "time_ms": 956816,
+          "reason": "\"多种财务人生共享一个法律头衔\"完成总重构,等雇者与雇主同为纸面同一身份的镜像收束开场"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "scene_inversion_callback",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "final_reframe",
+          "mechanism": "final_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "flattened_mass_reframe",
+        "final_scene_mirror",
+        "effort_myth_correction",
+        "open_dignity_close"
+      ],
+      "original_moves": [
+        "复述旧想象：封建金字塔底一团无差别的灰色群体，彼此之间只有失败的差别",
+        "用档案的真实描述替换：共享一个法律头衔的六种截然不同的财务人生，被真实的英亩、先令与自由程度隔开",
+        "镜像收束开场：黎明泥地里等雇的人与决定雇他的人，在纸面、法律与税吏眼中都是同一种身份",
+        "修正努力神话：少数脱离该身份的家庭靠的不是更努力，而是敢把已建成的一切押向下一级",
+        "收束句：而那是任何一级上都没有人保证过他们的事"
+      ],
+      "abstract_move": "旧想象复述 + 一个头衔多种人生的总重构 + 开场场景双角色镜像 + 努力神话修正 + 无保证的收束句",
+      "replacement_needs": [
+        "一个被推翻的扁平化大众想象",
+        "一个\"同名不同命\"的总重构句",
+        "开场场景的镜像回收",
+        "一条关于跃迁代价的判断句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(84);回收了前文的悬念 FS01→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

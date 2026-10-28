@@ -1,0 +1,782 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.889Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "cold_open_siege",
+      "start_ratio": 0,
+      "end_ratio": 0.0416,
+      "start_sec": 0.2,
+      "end_sec": 36.5,
+      "position_label": "0%–4.2%(0:00–0:37)",
+      "purpose": "不铺垫背景，用第二人称把观众直接扔进被侵占的家中，先给绝境规模与无解感",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 70,
+          "position_ratio": 0.0125,
+          "time_ms": 10960,
+          "reason": "开场数秒内亮出入侵者规模，绝境量级瞬间成立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：标题所示的赌命生存游戏如何打、输赢如何",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "scale_shock",
+          "mechanism": "invasion_scale_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "in_medias_res_cold_open",
+        "scale_shock",
+        "threat_declaration",
+        "no_exit_verdict"
+      ],
+      "original_moves": [
+        "第一句直接交代丈夫出征二十年、生死不明",
+        "陌生男人开始闯入你的家，规模从一两名升级到一百零八名壮汉",
+        "他们每晚吃你的羊、喝你的酒、逼你改嫁交出家产",
+        "落下判词：没有办法驱逐这群入侵者"
+      ],
+      "abstract_move": "至亲失联背景 + 入侵者规模升级 + 每晚侵害清单 + 无法驱逐的无解判词",
+      "replacement_needs": [
+        "一个至亲或保护者长期缺席的背景",
+        "一组可量化的入侵规模数字",
+        "一条封死驱逐选项的现实约束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "in_medias_res_siege_second_person",
+        "first_stimulus_ms": 6960,
+        "first_payoff_ms": 28700,
+        "evidence_refs": [
+          "C0001",
+          "C0016"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "frame_ritual_identity_entry",
+      "start_ratio": 0.0437,
+      "end_ratio": 0.0766,
+      "start_sec": 38.3,
+      "end_sec": 67.2,
+      "position_label": "4.4%–7.7%(0:38–1:07)",
+      "purpose": "用频道框架仪式完成时空定位与身份分配，把观众正式安进主角身体",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE02",
+          "event_type": "identity_assignment",
+          "mechanism": "second_person_role_handover"
+        }
+      ],
+      "required_retention_events": [
+        "frame_ritual",
+        "identity_assignment",
+        "character_reframe_tease"
+      ],
+      "original_moves": [
+        "以“深夜时间列车靠站”的频道仪式开场",
+        "报出本次停靠的时空坐标：古希腊伊萨卡宫殿",
+        "宣布“今天你就是王后佩涅洛佩”，完成身份分配",
+        "预告人物定性：史上最孤独惨烈的密室心理战，随即推开故事之门"
+      ],
+      "abstract_move": "频道仪式开场 + 时空坐标播报 + 第二人称身份分配 + 人物定性预告",
+      "replacement_needs": [
+        "一套自有的框架仪式与频道开场语",
+        "一个可代入的主角身份与其定性标签"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "siege_mechanics_lockdown",
+      "start_ratio": 0.074,
+      "end_ratio": 0.195,
+      "start_sec": 65,
+      "end_sec": 171.1,
+      "position_label": "7.4%–19.5%(1:05–2:51)",
+      "purpose": "解释围困如何运转：权力真空、入侵者背景、绝对规则锁死驱逐选项、离开即失去一切",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "rule_reveal",
+          "mechanism": "absolute_rule_lockdown"
+        }
+      ],
+      "required_retention_events": [
+        "sensory_scene",
+        "power_vacuum_explain",
+        "rule_reveal",
+        "no_exit_lockdown"
+      ],
+      "original_moves": [
+        "用音乐、狂笑、碎杯与骸骨铺出宫殿一层的沦陷现场",
+        "交代权力真空：丈夫未归、儿子年幼、王位空悬",
+        "揭示入侵者都是有背景的贵族子弟，动他们就引来报复",
+        "亮出绝对规则：神明的宾客法则禁止驱逐上门者",
+        "点明人质处境：你一旦离开，儿子没命、王位易主"
+      ],
+      "abstract_move": "沦陷现场感官铺陈 + 权力真空交代 + 入侵者背景背书 + 绝对规则锁死 + 人质处境判词",
+      "replacement_needs": [
+        "一个解释围困成因的权力或制度真空",
+        "一条观众此前不知道的绝对规则或硬约束",
+        "一个离开即失去一切的质押物"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "lose_lose_dilemma",
+      "start_ratio": 0.1922,
+      "end_ratio": 0.2291,
+      "start_sec": 168.7,
+      "end_sec": 201,
+      "position_label": "19.2%–22.9%(2:49–3:21)",
+      "purpose": "直接向观众抛二难：忍是纵容，赶是获罪，逼观众承认无路可走",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "把无解二难转化为对唯一出路的期待",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "direct_viewer_question",
+          "mechanism": "lose_lose_interrogation"
+        }
+      ],
+      "required_retention_events": [
+        "direct_viewer_question",
+        "lose_lose_dilemma",
+        "feigned_compliance"
+      ],
+      "original_moves": [
+        "直接问观众：换成你怎么办",
+        "摊开两条路：忍着是纵容家产被吃空，赶人则触怒神明、尽失民心",
+        "给出主角的当下选择：挂着冰冷的微笑继续以礼待客"
+      ],
+      "abstract_move": "直接点名的抉择问句 + 两选项各自的毁灭性后果 + 表面顺从的伪装动作",
+      "replacement_needs": [
+        "一组互斥且各自代价惨重的选项",
+        "一个让伪装显得合理的社会规范"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "threat_escalation",
+      "start_ratio": 0.2263,
+      "end_ratio": 0.327,
+      "start_sec": 198.6,
+      "end_sec": 287,
+      "position_label": "22.6%–32.7%(3:19–4:47)",
+      "purpose": "敌方头目登场升级暴力，威胁从财产扩展到至亲，并用最后期限封死拖延空间",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "deadline_ultimatum",
+          "mechanism": "time_pressure_spike"
+        }
+      ],
+      "required_retention_events": [
+        "villain_introduction",
+        "stakes_escalation",
+        "kin_threat",
+        "deadline_ultimatum"
+      ],
+      "original_moves": [
+        "推出敌方头目安提诺奥斯：最年轻最残忍的贵族",
+        "暴力升级：调戏侍女、掏空粮仓、抢走王子的酒杯",
+        "揭示他们连你的儿子也盯上，日后果然密谋暗杀",
+        "落下最后通牒：下一个黎明前必须做出决定，否则宫殿成灰、儿子不保"
+      ],
+      "abstract_move": "敌方头目登场 + 暴力逐级升级 + 至亲受胁加码 + 最后期限通牒",
+      "replacement_needs": [
+        "一个具象的敌方头目形象",
+        "一次针对至亲或核心资产的威胁升级",
+        "一个不可再拖的时间截止点"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "counterweapon_reveal",
+      "start_ratio": 0.3247,
+      "end_ratio": 0.453,
+      "start_sec": 285,
+      "end_sec": 397.6,
+      "position_label": "32.5%–45.3%(4:45–6:38)",
+      "purpose": "揭底唯一武器是智慧：以被许可的日常美德做伪装公开承诺，夜间反向拆解自己的劳动",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 88,
+          "position_ratio": 0.4073,
+          "time_ms": 357440,
+          "reason": "昼夜双面机关揭底：被许可的日常美德反转为最锋利的武器，第一次认知回报"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "机关的持续性与暴露风险构成中段张力",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "counterweapon_reveal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "counterweapon_declared",
+          "mechanism": "sole_weapon_tease"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "trick_reveal",
+          "mechanism": "day_night_double_mechanism"
+        }
+      ],
+      "required_retention_events": [
+        "counterweapon_reveal",
+        "trick_mechanism",
+        "hidden_cost",
+        "discovery_risk"
+      ],
+      "original_moves": [
+        "宣布唯一武器不是刀也不是毒，而是智慧",
+        "当众承诺：为公公织完寿衣之日就是改嫁之时，求婚者讥笑着接受",
+        "揭底机关：白天认真织，深夜点着蜡烛把织好的线一根根拆掉",
+        "给出代价：指尖被粗线割破流血，连呻吟都不敢出声，因为门外有人偷听"
+      ],
+      "abstract_move": "唯一武器宣告 + 以美德为伪装的公开承诺 + 昼夜双面机关揭底 + 身体代价与监听风险",
+      "replacement_needs": [
+        "一个被规范允许、可无限拖延的日常行为",
+        "一个夜间反向操作的机关机制",
+        "一组机关的身体或心理代价细节"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(88);打开的悬念 LOOP03→FS08 跨段;回收了前文的悬念 FS04→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "attrition_endurance",
+      "start_ratio": 0.4498,
+      "end_ratio": 0.4991,
+      "start_sec": 394.8,
+      "end_sec": 438,
+      "position_label": "45%–49.9%(6:35–7:18)",
+      "purpose": "把机关拉长为以年计的消耗战，量化机关赢得的时间战果，同时给出秘密将泄露的不祥预告",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "sustainability_question",
+          "mechanism": "tightrope_duration_suspense"
+        }
+      ],
+      "required_retention_events": [
+        "tightrope_fear",
+        "time_lapse",
+        "gains_quantified",
+        "foreshadowing"
+      ],
+      "original_moves": [
+        "铺走钢丝般的日常：门外一点脚步声就心跳骤停",
+        "时间流逝递进：一天、一个月、季节变换",
+        "量化战果：靠这一个织了又拆的动作，从一百零八名男人手里偷走了三年",
+        "埋下不祥预告：秘密不可能永远保住"
+      ],
+      "abstract_move": "走钢丝恐惧细节 + 递进时间标记 + 战果量化 + 秘密将泄露的预告",
+      "replacement_needs": [
+        "一个可持续多年的拖延机制",
+        "一组流逝刻度与对应的量化战果",
+        "一条指向崩塌的伏笔"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "betrayal_collapse",
+      "start_ratio": 0.4966,
+      "end_ratio": 0.5768,
+      "start_sec": 435.8,
+      "end_sec": 506.2,
+      "position_label": "49.7%–57.7%(7:16–8:26)",
+      "purpose": "最信任者的背叛让机关当场崩塌，盾牌碎裂，绝境触底，把观众推到最后关头",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.521,
+          "time_ms": 457240,
+          "reason": "最信任者带人当场抓破机关，保护机制瞬间崩塌"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "betrayal_exposure_forced_deadline",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "betrayal_exposure",
+          "mechanism": "caught_red_handed_crash"
+        }
+      ],
+      "required_retention_events": [
+        "betrayal_reveal",
+        "caught_red_handed",
+        "shield_collapse",
+        "cliffhanger_question"
+      ],
+      "original_moves": [
+        "揭晓背叛者：被你视如己出的侍女梅兰托，夜里把秘密卖给求婚者",
+        "当场抓获：深夜房门被撞开，火把下是散落的线团和头目喷火的眼神",
+        "强制执行：没有宽限，立刻准备婚礼，织机盾牌当场粉碎",
+        "触底追问：丈夫未归、被亲信出卖、借口用尽，这次真的结束了吗"
+      ],
+      "abstract_move": "最信任者背叛揭晓 + 当场抓获场面 + 强制执行通牒 + 触底追问",
+      "replacement_needs": [
+        "一个与主角有情感纽带的内部背叛者",
+        "一个让机关当场失效的证据场面",
+        "一组把退路全部清零的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80);回收了前文的悬念 FS06→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "final_gamble_trap",
+      "start_ratio": 0.574,
+      "end_ratio": 0.6788,
+      "start_sec": 503.7,
+      "end_sec": 595.7,
+      "position_label": "57.4%–67.9%(8:24–9:56)",
+      "purpose": "主角主动抛出最后赌局：一个只有唯一一人能通过的公开考验，并向观众揭底其必胜逻辑",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "surprise",
+          "strength": 78,
+          "position_ratio": 0.5904,
+          "time_ms": 518159,
+          "reason": "触底之后主角反而主动抛出以自身为赌注的公开考验"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.6532,
+          "time_ms": 573240,
+          "reason": "考验只认唯一一人的隐藏条件揭底，赌局从鲁莽翻转为精密陷阱"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "赌局结果是全片最大悬念，直接决定主角命运",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "final_gamble_declared",
+          "mechanism": "all_in_contest_setup"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "trap_reveal",
+          "mechanism": "only_one_can_pass_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "defiance_turn",
+        "contest_setup",
+        "challengers_fail_montage",
+        "trap_reveal"
+      ],
+      "original_moves": [
+        "主角拒不认输，当众抛出最后赌局：谁能拉开丈夫留下的强弓、一箭穿过十二把斧柄孔，就嫁给谁",
+        "求婚者争相上场，却连弓弦都挂不上，一个个灰头土脸败退",
+        "揭底隐藏条件：这世上能拉开这张弓的只有一个人——你的丈夫，这是无人能通过的考试"
+      ],
+      "abstract_move": "拒降宣言 + 以自身为赌注的公开考验 + 挑战者失败蒙太奇 + 唯一合格者条件的揭底",
+      "replacement_needs": [
+        "一个与缺席者能力绑定的考验道具",
+        "一组挑战者逐一失败的场面",
+        "一个把鲁莽赌局翻转为精密陷阱的隐藏条件"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(78)、PK05(85);打开的悬念 LOOP04→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 78
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "gamble_stakes_mapping",
+      "start_ratio": 0.676,
+      "end_ratio": 0.7166,
+      "start_sec": 593.3,
+      "end_sec": 628.9,
+      "position_label": "67.6%–71.7%(9:53–10:29)",
+      "purpose": "摊开赌局的两种失败结局，强调主角把全部身家押上的胆量，把悬念顶到最高点",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "stakes_mapping",
+        "all_in_tension",
+        "final_rhetorical_question"
+      ],
+      "original_moves": [
+        "摊开失败结局一：万一有人侥幸拉开弓，你就得真的下嫁",
+        "摊开失败结局二：万一丈夫始终不出现，二十年等待瞬间化为泡影",
+        "判词加码：你把一切都押在了这一张弓上，并最后一问观众敢不敢赌"
+      ],
+      "abstract_move": "失败结局双推演 + 等待归零的风险具象化 + 全部身家押注判词 + 最后一问",
+      "replacement_needs": [
+        "赌局的两条失败路径推演",
+        "一个可量化的全损刻度"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "disguised_return_payoff",
+      "start_ratio": 0.7139,
+      "end_ratio": 0.7774,
+      "start_sec": 626.5,
+      "end_sec": 682.3,
+      "position_label": "71.4%–77.7%(10:26–11:22)",
+      "purpose": "被嘲笑的伪装者现身通过考验，身份揭晓，积压多年的清算一次兑现，情绪到达最高点",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 95,
+          "position_ratio": 0.749,
+          "time_ms": 657279,
+          "reason": "被嘲笑的伪装者轻松通过考验并揭晓身份，多年压抑一次兑现为清算"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "disguised_return_contest_payoff",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "underdog_entrance",
+          "mechanism": "mocked_stranger_steps_up"
+        }
+      ],
+      "required_retention_events": [
+        "underdog_entrance",
+        "effortless_pass_contrast",
+        "identity_reveal",
+        "cathartic_purge"
+      ],
+      "original_moves": [
+        "被众人嘲笑的落魄老乞丐走上前要求试弓",
+        "他像对待老友般轻松挂弦，一箭贯穿十二个斧孔",
+        "身份揭晓：乞丐正是二十年后潜回家中的丈夫本人",
+        "清算兑现：求婚者与背叛的侍女无一活着走出宫殿"
+      ],
+      "abstract_move": "被嘲笑的伪装者登场 + 轻松通过考验的反差 + 身份揭晓 + 无人生还的清算",
+      "replacement_needs": [
+        "一个此前被全场轻视的伪装者",
+        "一场对全部敌对阵营的总清算场面"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(95);回收了前文的悬念 FS09→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 95
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "final_verification",
+      "start_ratio": 0.7748,
+      "end_ratio": 0.8709,
+      "start_sec": 680,
+      "end_sec": 764.3,
+      "position_label": "77.5%–87.1%(11:20–12:44)",
+      "purpose": "团圆前再加一场身份验证：主角不轻信，用只有两人共享的秘密试探，确认之后才释放积压的情感",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 88,
+          "position_ratio": 0.8418,
+          "time_ms": 738800,
+          "reason": "共享秘密被验证，多年等待的情感决堤相拥"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "团圆被主动按下，真伪悬念延迟情感释放",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "shared_secret_verification",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "counterintuitive_restraint",
+          "mechanism": "reunion_withheld"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "secret_verification",
+          "mechanism": "shared_secret_test"
+        }
+      ],
+      "required_retention_events": [
+        "counterintuitive_restraint",
+        "secret_verification",
+        "emotional_release"
+      ],
+      "original_moves": [
+        "丈夫就在眼前，主角却拒绝立刻相认——她要最后验证一次",
+        "她故意吩咐侍女把卧室的大床搬出来，试探对方反应",
+        "男人勃然反驳：那床是以活的橄榄树为柱、他亲手打造，砍不断树根谁也搬不动",
+        "只有两人共享的秘密被准确说出，验证通过，她终于泪崩相拥"
+      ],
+      "abstract_move": "不合直觉的冷静拒绝 + 试探机关布置 + 共享秘密揭晓 + 情感决堤相拥",
+      "replacement_needs": [
+        "一个只有两人知晓的私密细节",
+        "一个引诱对方暴露真伪的试探指令"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(88)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "closure_worldview_reframe",
+      "start_ratio": 0.8682,
+      "end_ratio": 1,
+      "start_sec": 762,
+      "end_sec": 877.6,
+      "position_label": "86.8%–100%(12:42–14:38)",
+      "purpose": "框架仪式收束，把“被动等待”重定义为“主动作战”，用二选一提问把话题迁移给观众并引导订阅",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.94,
+          "time_ms": 824959,
+          "reason": "结尾判词把被动等待翻转为一场主动作战，完成人物重评"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "框架级预告，为频道下一集留悬念",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "wisdom_survival_and_reunion_vindication",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "worldview_reframe",
+          "mechanism": "waiting_redefined_as_war"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "audience_question",
+          "mechanism": "binary_choice_comment_prompt"
+        }
+      ],
+      "required_retention_events": [
+        "frame_ritual_closure",
+        "worldview_reframe",
+        "parallel_lines_summary",
+        "audience_question",
+        "subscription_prompt"
+      ],
+      "original_moves": [
+        "框架仪式收尾：长夜过去天亮，请乘客下车",
+        "人物重评判词：她不是被动等待的贤妻，而是用智慧打完二十年战争的战士",
+        "双线对照：丈夫在海上战怪物，她在宫中战一百零八匹狼，武器是智慧与忍耐",
+        "把二选一价值提问抛给观众：无望地等下去，还是转身走新路，引导评论区留言",
+        "以下一站预告与“预订座位”的隐喻引导订阅，以祝福道晚安"
+      ],
+      "abstract_move": "框架仪式收束 + 人物评价翻转判词 + 双线对照总结 + 观众二选一提问 + 隐喻化订阅引导",
+      "replacement_needs": [
+        "一套与开场呼应的收尾仪式",
+        "一个可被翻转的人物刻板标签",
+        "一个能引发站队讨论的二选一价值问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(82);打开的悬念 LOOP06(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

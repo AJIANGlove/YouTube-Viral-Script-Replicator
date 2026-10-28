@@ -1,0 +1,970 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.840Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "authority_number_demotion_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0553,
+      "start_sec": 0.1,
+      "end_sec": 49.7,
+      "position_label": "0%–5.5%(0:00–0:50)",
+      "purpose": "以权威口径数字开场并当场降格为\"全片最没用的数字\";切到第二人称具身场景,用两堆硬币意象登记账面与实留的对照,承诺全片讲\"两者之间发生的一切\"",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 72,
+          "position_ratio": 0.0111,
+          "time_ms": 9958,
+          "reason": "权威数字被当场判为\"全片最没用的数字\",预期被瞬间反转"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "premise_visualization",
+          "strength": 74,
+          "position_ratio": 0.0256,
+          "time_ms": 23002,
+          "reason": "两堆硬币意象把\"账面与实留\"的抽象对立落成画面,全片框架在此定型"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题问题从\"赚多少\"被重构为\"留下多少\"后,全片扣减链与最终总账之间的主悬念",
+          "closes_in": "FS16"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "主承诺的可视化锚:把抽象的名义与实际之差变成画面,等待两堆各自被赋值",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "authority_quote_entry",
+          "mechanism": "authority_number_citation"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "number_demotion",
+          "mechanism": "true_but_useless_flip"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "scene_immersion",
+          "mechanism": "two_piles_visual_anchor"
+        }
+      ],
+      "required_retention_events": [
+        "authority_number_demotion",
+        "second_person_scene_entry",
+        "two_piles_visual_anchor",
+        "process_promise"
+      ],
+      "original_moves": [
+        "引用史学界口径给出雇工日薪数字",
+        "当场判定该数字\"是真的,也是全片最没用的\"",
+        "切到第二人称小屋场景:桌上并排放着两堆硬币",
+        "点明大堆是教科书口径的收入、小堆是真正留到入冬的",
+        "承诺全片讲\"这两堆之间发生的一切\""
+      ],
+      "abstract_move": "权威数字降格 + 第二人称具身场景 + 双堆对照意象 + 过程承诺",
+      "replacement_needs": [
+        "一个观众以为已知的权威统计数字",
+        "一个可视化的大小对照意象",
+        "一句把全片定义为\"两者之间过程\"的承诺句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(72)、PK02(74);打开的悬念 LOOP01→FS16、LOOP03→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 72
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 74
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "authority_number_demotion_with_second_person_scene",
+        "first_stimulus_ms": 9958,
+        "first_payoff_ms": 62943,
+        "evidence_refs": [
+          "C0001",
+          "C0008",
+          "C0019",
+          "C0043"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "deferred_number_contract",
+      "start_ratio": 0.0542,
+      "end_ratio": 0.0779,
+      "start_sec": 48.8,
+      "end_sec": 70.1,
+      "position_label": "5.4%–7.8%(0:49–1:10)",
+      "purpose": "定量设问一类隐性义务的天数,给出量级答案,并明示\"记住它,会回来\"完成延迟兑现登记",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "明示登记的延迟数字契约,把开场悬念挂到中段的隐形扣减层",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "quiz_hook",
+          "mechanism": "quantitative_guess_prompt"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "deferred_contract",
+          "mechanism": "keep_this_number_callback"
+        }
+      ],
+      "required_retention_events": [
+        "quiz_question",
+        "magnitude_answer",
+        "deferred_number_contract"
+      ],
+      "original_moves": [
+        "设问:猜猜今年有多少天你无权向任何人出售自己的劳动",
+        "给出量级答案:超过全年四分之一,且写在佃户义务里",
+        "明示\"记住这个数字,结束之前会回来\""
+      ],
+      "abstract_move": "定量设问 + 量级答案 + 明示延迟兑现登记",
+      "replacement_needs": [
+        "一个可量化但被忽略的隐性义务类目",
+        "一句明确的延迟兑现承诺句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "context_lockdown",
+      "start_ratio": 0.0768,
+      "end_ratio": 0.1568,
+      "start_sec": 69.2,
+      "end_sec": 141.1,
+      "position_label": "7.7%–15.7%(1:09–2:21)",
+      "purpose": "交代制度背景:劳动力骤减后的法定上限冻结;用看不懂的文字告示细节建立信息不对等,以\"纸面规则 vs 现实\"金句收口",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "context_lockdown",
+          "mechanism": "wage_freeze_statute"
+        }
+      ],
+      "required_retention_events": [
+        "historical_context",
+        "wage_freeze_law",
+        "literacy_barrier_detail",
+        "paper_vs_reality_line"
+      ],
+      "original_moves": [
+        "交代1352年背景:瘟疫后劳动力骤减,议会通过工资冻结法令",
+        "法令把工资钉死在瘟疫前的水平",
+        "拉丁文告示钉在教堂门上而当事人看不懂,不懂法不构成辩护",
+        "金句收口:法律能冻结纸面数字,不能让死去的工人站回田里"
+      ],
+      "abstract_move": "危机背景交代 + 上限冻结事实 + 信息不对等细节 + 纸面与现实对照金句",
+      "replacement_needs": [
+        "一条与民生直接相关的制度事实",
+        "一个当事人无法获取规则文本的细节",
+        "一句\"纸面能做到/做不到\"的对照金句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "illegal_market_build",
+      "start_ratio": 0.1558,
+      "end_ratio": 0.2616,
+      "start_sec": 140.2,
+      "end_sec": 235.4,
+      "position_label": "15.6%–26.2%(2:20–3:55)",
+      "purpose": "展开灰色市场:真实行情数倍于法定上限、双向违法;执法机制与惩罚清单;纸面合规表演;被抓先例小故事;当事人判断沉默值得冒险",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.1663,
+          "time_ms": 149613,
+          "reason": "环顾四周后悄然开出三倍于法定上限的价格并点明双向违法,张力陡增"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "灰色市场段的当下风险悬念",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "precedent_anecdote_resolution",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "gray_market_offer",
+          "mechanism": "illegal_quiet_offer"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "compliance_theater",
+          "mechanism": "paper_wage_rollback"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "precedent_anecdote",
+          "mechanism": "caught_but_undeterred"
+        }
+      ],
+      "required_retention_events": [
+        "illegal_offer_scene",
+        "enforcement_catalog",
+        "paper_compliance_theater",
+        "precedent_anecdote",
+        "risk_decision"
+      ],
+      "original_moves": [
+        "雇主环顾四周后悄悄开出三倍于法定上限的工钱,点明双方同罪",
+        "介绍巡回稽查官与惩罚清单:罚款、枷锁示众",
+        "描述稽查前一周账面工资自动回落到法定线的合规表演",
+        "邻村工人被罚两周工钱加一上午枷锁,但次年照旧、只是转入沉默",
+        "当事人判断:合法工钱不够交本季义务,沉默值得冒险"
+      ],
+      "abstract_move": "悄然出价场景 + 双向违法声明 + 执法与惩罚清单 + 纸面合规表演 + 被抓先例小故事 + 风险决策",
+      "replacement_needs": [
+        "一个法定上限与真实行情的数倍落差",
+        "一套执法机制与惩罚清单",
+        "一个被抓却无人停手的先例小故事"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "payment_camouflage",
+      "start_ratio": 0.2606,
+      "end_ratio": 0.2977,
+      "start_sec": 234.5,
+      "end_sec": 267.9,
+      "position_label": "26.1%–29.8%(3:55–4:28)",
+      "purpose": "揭示超额报酬的非现金形态:三类难以举证的实物与款待,点破心照不宣的默契",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "payment_camouflage",
+          "mechanism": "unprovable_in_kind"
+        }
+      ],
+      "required_retention_events": [
+        "payment_in_kind",
+        "unprovable_exchange",
+        "complicity_beat"
+      ],
+      "original_moves": [
+        "点破超额报酬不以硬币出现:正午的麦酒、周末袋装的谷物、雇主桌上的一顿热饭",
+        "强调这些无人能证明是报酬而非款待",
+        "你吃得好,也心照不宣为什么吃得好;工作本身不在乎法律怎么说"
+      ],
+      "abstract_move": "报酬形态置换清单 + 不可举证性强调 + 心照不宣默契落点",
+      "replacement_needs": [
+        "三类难以举证的非现金报酬形态",
+        "一句\"系统不在乎纸面规则\"的定性句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "labor_reality_and_counter_custom",
+      "start_ratio": 0.2967,
+      "end_ratio": 0.4001,
+      "start_sec": 267,
+      "end_sec": 360.1,
+      "position_label": "29.7%–40%(4:27–6:00)",
+      "purpose": "用身体损耗细节还原劳动真实成本,点名被默认隐形的家庭劳动;给出唯一绕开中间层的反向惯例作为喘息与对照",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "body_cost",
+          "mechanism": "blistering_labor_detail"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "counter_custom",
+          "mechanism": "gleaning_direct_access"
+        }
+      ],
+      "required_retention_events": [
+        "body_cost_detail",
+        "wage_rigidity",
+        "invisible_family_labor",
+        "rare_counter_custom"
+      ],
+      "original_moves": [
+        "具身劳动描写:从天亮干到远超现代工时,手掌起泡、背痛整季",
+        "每小时报酬被锁死在约定值,不多一分",
+        "妻儿无偿同在田间,家庭劳动被默认不计入账本",
+        "唯一反向惯例:拾穗权,直接供粮、不经领主磨坊主教士之手"
+      ],
+      "abstract_move": "身体损耗细节流 + 报酬刚性声明 + 隐形劳动点名 + 唯一反例惯例及其直接性",
+      "replacement_needs": [
+        "一组身体损耗的具体细节",
+        "一个被默认隐形的劳动类目",
+        "一个绕开中间层的直接获益惯例"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "gross_total_reveal",
+      "start_ratio": 0.3991,
+      "end_ratio": 0.4337,
+      "start_sec": 359.1,
+      "end_sec": 390.3,
+      "position_label": "39.9%–43.4%(5:59–6:30)",
+      "purpose": "算术汇总账面总额并换算,指认这就是史书记账口径与开场意象中的大堆;预告这是它最后一次完全属于你",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "title_callback",
+          "strength": 85,
+          "position_ratio": 0.4263,
+          "time_ms": 383617,
+          "reason": "账面总额汇总落地并指认为史书口径与开场大堆,同时预告\"最后一次完全属于你\""
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "扣减链的失血悬念:观众盯着运行余额被逐项划走",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "gross_total",
+          "mechanism": "arithmetic_summary"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "loss_foreshadow",
+          "mechanism": "last_fully_yours_warning"
+        }
+      ],
+      "required_retention_events": [
+        "gross_total_arithmetic",
+        "history_book_callback",
+        "last_fully_yours_warning"
+      ],
+      "original_moves": [
+        "算术汇总:30天×日薪3便士=90便士,换算为7先令6便士",
+        "指认这就是史书记账的数字、开场桌上的大堆",
+        "预告:这是全片这个数字最后一次完全属于你"
+      ],
+      "abstract_move": "乘法算术汇总 + 与开场意象挂钩 + 流失预告",
+      "replacement_needs": [
+        "一组可复算的乘法汇总与单位换算",
+        "一句\"此后再不完整\"的预告句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(85);打开的悬念 LOOP04→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "deduction_cascade_rent",
+      "start_ratio": 0.4326,
+      "end_ratio": 0.4862,
+      "start_sec": 389.3,
+      "end_sec": 437.5,
+      "position_label": "43.3%–48.6%(6:29–7:18)",
+      "purpose": "扣减链第一刀:定额义务,旱涝照付;用\"季节未过半、大半已合法属于别人\"的比例对比放大失落",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 78,
+          "position_ratio": 0.476,
+          "time_ms": 428379,
+          "reason": "季节未过半、大半收入已合法属于别人,比例对比带来第一次重击"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "fixed_obligation",
+          "mechanism": "rent_bite_running_ledger"
+        }
+      ],
+      "required_retention_events": [
+        "fixed_obligation",
+        "unconditional_clause",
+        "majority_bite_line"
+      ],
+      "original_moves": [
+        "交代持有地形态:约15英亩条田,设计目标是糊口而非致富",
+        "年租5先令旱涝照付,可用实物抵",
+        "从90便士划走60便士;点破季节未过半、大半收入已合法属于别人"
+      ],
+      "abstract_move": "资产形态与用途上限说明 + 旱涝保收的定额义务 + 划走大头 + 双重比例对比句",
+      "replacement_needs": [
+        "一个定额义务及其无条件性条款",
+        "一个\"时间未过半/收入已过半\"的错位对比"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(78)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "monopoly_levy_mill",
+      "start_ratio": 0.4851,
+      "end_ratio": 0.5498,
+      "start_sec": 436.5,
+      "end_sec": 494.8,
+      "position_label": "48.5%–55%(7:17–8:15)",
+      "purpose": "扣减链第二刀:必经加工环节的垄断,禁用替代品;抽成比例与口碑细节;落点为\"从未需要选择\"的无力感",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "monopoly_levy",
+          "mechanism": "thumb_on_scales"
+        }
+      ],
+      "required_retention_events": [
+        "monopoly_gate",
+        "substitute_ban",
+        "weight_thumb_detail",
+        "no_choice_beat"
+      ],
+      "original_moves": [
+        "加工垄断:方圆数里唯一的磨坊在领主手里,家用小磨被禁",
+        "磨坊主按例抽成最高十六分之一,且有压秤口碑",
+        "没人敢得罪唯一控制加工的人;再扣12便士",
+        "落点:你从未需要选择要不要付"
+      ],
+      "abstract_move": "必经环节垄断 + 禁替代品 + 抽成惯例与口碑细节 + 无选择性落点",
+      "replacement_needs": [
+        "一个必经加工或服务环节的垄断事实",
+        "一个默认抽成比例",
+        "一个\"从未需要选择\"的无力感落点句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "collective_fine_drip",
+      "start_ratio": 0.5488,
+      "end_ratio": 0.6221,
+      "start_sec": 493.8,
+      "end_sec": 559.8,
+      "position_label": "54.9%–62.2%(8:14–9:20)",
+      "purpose": "扣减链第三刀:与己无关过错的连坐式小额罚款及其制度化节奏;回报运行余额并与史书口径形成讽刺对照",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 92,
+          "position_ratio": 0.6116,
+          "time_ms": 550380,
+          "reason": "运行余额落定为零头现金,与史书口径的讽刺对照完成现金线核心兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "collective_guilt",
+          "mechanism": "stray_animal_fine"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "ledger_payoff",
+          "mechanism": "ironic_history_contrast"
+        }
+      ],
+      "required_retention_events": [
+        "collective_guilt_event",
+        "fine_drip_rhythm",
+        "running_ledger_recap",
+        "ironic_history_contrast"
+      ],
+      "original_moves": [
+        "邻居的猪撞坏领主篱笆,全排连坐各罚半便士,不管你的动物出没出院子",
+        "庄园法庭一年数次专门开这种小额罚单:篱笆失修、义务未履等琐碎违规",
+        "回报运行余额:只剩17.5便士,而史书记载你赚了7先令6便士"
+      ],
+      "abstract_move": "连坐式小额罚款事件 + 罚款的制度化节奏 + 运行余额回报与权威口径讽刺对照",
+      "replacement_needs": [
+        "一个无过错也被扣款的连坐事件",
+        "一组制度化的小额扣款节奏",
+        "一条贯穿中段的运行余额线索"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(92)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 92
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "invisible_labor_debt_payoff",
+      "start_ratio": 0.621,
+      "end_ratio": 0.7024,
+      "start_sec": 558.8,
+      "end_sec": 632.1,
+      "position_label": "62.1%–70.2%(9:19–10:32)",
+      "purpose": "扣减链第四刀:不体现为钱的无偿劳动日;兑现开场登记的延迟数字;指出义务时段与自有生计冲突造成二次伤害;以\"只是时间\"定性收口",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "callback_payoff",
+          "strength": 80,
+          "position_ratio": 0.6566,
+          "time_ms": 590890,
+          "reason": "开场登记的延迟数字在无偿劳动日机制处明示兑现,契约闭合"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "deferred_number_callback",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "running_ledger_payoff",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "time_debt",
+          "mechanism": "hundred_unpaid_days"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "callback_payoff",
+          "mechanism": "opening_number_return"
+        }
+      ],
+      "required_retention_events": [
+        "invisible_time_debt",
+        "opening_number_callback",
+        "seasonal_conflict",
+        "just_time_line"
+      ],
+      "original_moves": [
+        "点破以上都是钱看得见的扣法,还有不体现为钱的:领主自营地无偿劳动日",
+        "全年累计超过一百天——明示这就是开场登记的那个数字、超过全年四分之一",
+        "这些日子偏偏堆在春耕与秋收等自家地最需要人的时段,误时又被罚款",
+        "落点:账本上什么都没扣,因为扣的只是时间"
+      ],
+      "abstract_move": "非现金扣减类目揭示 + 开场延迟数字明示callback + 时段冲突二次伤害 + 定性金句",
+      "replacement_needs": [
+        "一个以时间而非金钱计价的义务类目",
+        "一个与开场登记数字对应的callback",
+        "一句把损失重新定性的金句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(80);回收了前文的悬念 FS02→LOOP02、FS07→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "proportional_produce_levy",
+      "start_ratio": 0.7014,
+      "end_ratio": 0.7666,
+      "start_sec": 631.2,
+      "end_sec": 689.9,
+      "position_label": "70.1%–76.7%(10:31–11:30)",
+      "purpose": "扣减链第五刀:产出的比例奉献,丰歉不免;用收纳建筑的体量对比与大小两类分开记账表现滴水不漏;强调取用顺序先于自家温饱",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "levy_image",
+          "mechanism": "barn_bigger_than_hut"
+        }
+      ],
+      "required_retention_events": [
+        "proportional_levy",
+        "no_exemption",
+        "barn_size_contrast",
+        "itemized_ledger"
+      ],
+      "original_moves": [
+        "土地产出的十分之一归教会什一税,丰歉不免",
+        "奉献仓比自家屋子更大更结实,因为要装全教区的粮",
+        "大什一(谷物干草)与小什一(羊羔羊毛鸡蛋)分开记账,没有一样产出能漏网",
+        "强调它在家人开吃之前就被取走"
+      ],
+      "abstract_move": "比例奉献义务 + 无条件性声明 + 收纳建筑体量对比细节 + 分类记账清单 + 取用顺序强调",
+      "replacement_needs": [
+        "一个按比例计取且无豁免的义务",
+        "一个体量或规格对比的具象细节",
+        "一张分类记账的清单"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "system_without_villain_reframe",
+      "start_ratio": 0.7655,
+      "end_ratio": 0.8235,
+      "start_sec": 688.9,
+      "end_sec": 741,
+      "position_label": "76.6%–82.4%(11:29–12:21)",
+      "purpose": "去反派化总定性:刚才一切都不是丑闻,每项索取完全合法、正常、被各方预期;系统由十几项小额合法索取世代叠加而成,无人对总量负责,剩余几乎成了次要念头",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 84,
+          "position_ratio": 0.7957,
+          "time_ms": 716047,
+          "reason": "\"没有一个贪婪反派,只有世代叠加的合法索取\"完成框架级重构"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "no_villain",
+          "mechanism": "legitimate_claims_accumulation"
+        }
+      ],
+      "required_retention_events": [
+        "no_villain_reframe",
+        "legality_triad",
+        "accumulation_logic",
+        "no_total_owner_line"
+      ],
+      "original_moves": [
+        "总定性:刚才发生的一切都不是丑闻,每笔扣减完全合法、完全正常、被各方预期",
+        "没有一个贪婪反派从顶上偷钱,系统是几代人用十几项小额合法索取叠出来的",
+        "每项单独看都正当,没有人对总量负责",
+        "你剩下的几乎成了次要念头"
+      ],
+      "abstract_move": "去丑闻化总定性 + 合法性三连 + 累积机制说明 + 无人对总量负责 + 剩余次要化落点",
+      "replacement_needs": [
+        "一张前段已建好的逐项合法扣减清单",
+        "一句\"无人对总量负责\"的机制判断"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "modern_mirror_mapping",
+      "start_ratio": 0.8225,
+      "end_ratio": 0.8822,
+      "start_sec": 740.1,
+      "end_sec": 793.9,
+      "position_label": "82.3%–88.2%(12:20–13:14)",
+      "purpose": "古今镜像:声明这不是该时代独有;用现代名目逐行替换历史名目完成映射;点出同一问题形式的历史纵深",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "modern_parallel_reveal",
+          "strength": 82,
+          "position_ratio": 0.8397,
+          "time_ms": 755662,
+          "reason": "现代名目逐行替换历史名目,观众在自己的收入单上认出同一结构"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "modern_mirror",
+          "mechanism": "line_substitution"
+        }
+      ],
+      "required_retention_events": [
+        "modern_parallel_declare",
+        "line_by_line_substitution",
+        "centuries_depth_anchor"
+      ],
+      "original_moves": [
+        "转折:这不是中世纪独有,现代录用信数字到银行账户之间是同一个缺口",
+        "逐行替换映射:所得税代替什一税、强制养老金代替无偿劳动日、手续费代替磨坊抽成、滞纳金代替连坐罚款、捆绑软件订阅代替磨坊主份额",
+        "点出同一问题形式已在账本里躺了至少670年"
+      ],
+      "abstract_move": "非独有声明 + 现代缺口类比 + 名目逐行替换映射 + 历史纵深时间锚",
+      "replacement_needs": [
+        "一组古今名目一一对应且功能等价的替换表",
+        "一句历史纵深的时间锚句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(82)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "verdict_and_two_piles_closure",
+      "start_ratio": 0.8811,
+      "end_ratio": 0.9809,
+      "start_sec": 792.9,
+      "end_sec": 882.7,
+      "position_label": "88.1%–98.1%(13:13–14:43)",
+      "purpose": "学界重建背书:名义数字看似可活,一次意外就能把全年变成负债;总账对照收束并给出零头的购买力清单;义务循环提示;回收双堆意象完成主承诺",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 88,
+          "position_ratio": 0.9332,
+          "time_ms": 839755,
+          "reason": "名义总额到手中零头的总账对照与购买力清单,双堆意象回收,情绪落地"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "scholarly_verdict",
+          "mechanism": "budget_reconstruction"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "final_ledger",
+          "mechanism": "gross_to_remainder"
+        }
+      ],
+      "required_retention_events": [
+        "scholarly_reconstruction",
+        "fragility_triplet",
+        "final_ledger_contrast",
+        "purchasing_power_list",
+        "obligation_cycle",
+        "two_piles_recycle"
+      ],
+      "original_moves": [
+        "引入经济史学家重建结论:纸面工资看似可活,付清所有正当索取后,一次坏收成、一头病牛、一场严厉庭审就能把全年变成负债",
+        "总账收束:7先令6便士变成手中17.5便士,外加更少的自留粮与100多天从未属于你",
+        "17.5便士的购买力:盐、修好的镰刀、一段绳,没别的了;义务年复一年重复",
+        "回收双堆意象:大堆与小堆从未是同一堆,只是没人问中间发生了什么"
+      ],
+      "abstract_move": "学界重建背书 + 脆弱性三连例 + 总账对照 + 零头购买力清单 + 义务循环 + 开场意象回收金句",
+      "replacement_needs": [
+        "一个学界或权威重建结论",
+        "一组小而具体的脆弱性反例",
+        "一张剩余购买力的极短清单",
+        "开场意象的回收句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(88)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "next_episode_tease",
+      "start_ratio": 0.9798,
+      "end_ratio": 1,
+      "start_sec": 881.8,
+      "end_sec": 899.9,
+      "position_label": "98%–100%(14:42–15:00)",
+      "purpose": "预告续集情境(坏年景下的拖欠),以上限悬念问句收尾,保持系列开放",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "系列引流环,主承诺闭合后才开启",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "deduction_cascade_with_final_ledger",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "visual_metaphor_resolution",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "next_episode",
+          "mechanism": "arrears_limit_tease"
+        }
+      ],
+      "required_retention_events": [
+        "next_episode_tease",
+        "limit_question_hook"
+      ],
+      "original_moves": [
+        "预告下一集:坏春天加歉收,佃户付不起已减的租",
+        "以悬念问句收尾:法律最终判\"拿得太多\"之前,领主依法最多能拿走多少"
+      ],
+      "abstract_move": "续集情境预告 + 法定上限悬念问句",
+      "replacement_needs": [
+        "一个自然的续集情境",
+        "一个关于上限或边界的悬念问句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01、FS01→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

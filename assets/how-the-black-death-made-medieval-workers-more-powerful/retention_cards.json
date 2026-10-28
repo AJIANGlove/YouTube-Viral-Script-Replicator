@@ -1,0 +1,939 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.843Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "pov_paradox_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0299,
+      "start_sec": 0.1,
+      "end_sec": 19.2,
+      "position_label": "0%–3%(0:00–0:19)",
+      "purpose": "以第二人称一句话把观众放进幸存者位置,紧接着给出反直觉结果:大灾难带走身边大量人口,观众却因此变得前所未有地富有,制造『灾难=变富』的悖论钩子",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 72,
+          "position_ratio": 0.0241,
+          "time_ms": 15434,
+          "reason": "灾难带走身边大量人口、你却前所未有地富有,悖论结果在 20 秒内直接兑现,击穿灾难等于变惨的默认预期"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "pov_entry",
+          "mechanism": "second_person_survival_jolt"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "paradox_payoff",
+          "mechanism": "catastrophe_riches_inversion"
+        }
+      ],
+      "required_retention_events": [
+        "pov_entry",
+        "catastrophe_intimacy",
+        "paradox_payoff"
+      ],
+      "original_moves": [
+        "用一句第二人称宣告开场:你活下来了",
+        "把灾难损失贴身化:你的邻居、半个村子、可能你的家人",
+        "立刻给出悖论结果:灾难过后你反而变得前所未有地富有"
+      ],
+      "abstract_move": "第二人称身份代入 + 贴身化损失清单 + 反直觉结果前置",
+      "replacement_needs": [
+        "一个观众可直接代入的幸存者身份",
+        "一组贴身化的损失细节(人际而非统计)",
+        "一个与直觉相反的结果句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(72)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 72
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_catastrophe_paradox",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 16252,
+        "evidence_refs": [
+          "C0001",
+          "C0017",
+          "C0028"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "thesis_credibility_contract",
+      "start_ratio": 0.0299,
+      "end_ratio": 0.1014,
+      "start_sec": 18.3,
+      "end_sec": 65,
+      "position_label": "3%–10.1%(0:18–1:05)",
+      "purpose": "声明悖论不是戏剧加工而是有据可查的经济反转;指出『都知道灾难本身、几乎没人讲机制』的内容缺口;回收系列前集的概念设定;把答案预告为基础供求法则在空前尺度上的运转,并立下『先讲灾前制度』的铺垫契约",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 66,
+          "position_ratio": 0.076,
+          "time_ms": 48696,
+          "reason": "不是宏大的政治改革、而是简单残酷的供求法则在空前尺度上运转,机制类别命名给出第一层答案"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题机制承诺与全片证据链之间的主悬念",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "灾前基线与灾后反转之间的对照契约",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "mechanism_tease",
+          "mechanism": "unexplained_mechanism_claim"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "thesis_naming",
+          "mechanism": "supply_demand_scale_tease"
+        }
+      ],
+      "required_retention_events": [
+        "credibility_claim",
+        "content_gap_claim",
+        "series_callback",
+        "supply_demand_tease",
+        "setup_contract"
+      ],
+      "original_moves": [
+        "声明这不是为戏剧效果加的情节,而是有最多文献记载的经济反转",
+        "指出内容缺口:人人都知道黑死病死了人,几乎没人讲它对工资、租金和金融结构做了什么",
+        "回收系列前集设定:租金、磨坊费、灾荒年也不变的固定义务",
+        "预告机制类别:不是政治改革,而是简单残酷的供求法则在空前尺度上运转",
+        "立下铺垫契约:先讲灾前制度有多不公,才能理解灾后改变有多彻底"
+      ],
+      "abstract_move": "可信度声明 + 内容缺口宣称 + 系列伏笔回收 + 机制类别预告 + 先破后立的铺垫契约",
+      "replacement_needs": [
+        "一句排除夸张嫌疑的可信度声明",
+        "一个同行都没讲的机制层缺口",
+        "一个可命名但不展开的基础机制类别"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(66);打开的悬念 LOOP01→FS14、LOOP02→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 66
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "rigged_system_baseline",
+      "start_ratio": 0.1014,
+      "end_ratio": 0.162,
+      "start_sec": 64,
+      "end_sec": 103.9,
+      "position_label": "10.1%–16.2%(1:04–1:44)",
+      "purpose": "建立灾前制度的不公基线:固定租金、垄断性收费、人身依附等全部建立在同一条经济事实上——劳动力永远过剩而土地不足;用『随时有别的家庭顶替你』的具体威胁把可替代性讲透,点明这就是旧制度数百年不动摇的地基",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "tension_escalation",
+          "strength": 62,
+          "position_ratio": 0.1327,
+          "time_ms": 85060,
+          "reason": "随时有十个别的家庭顶替你的位置,灾前不公被压缩成一句贴身威胁,为后段反转蓄势"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "unfairness_visceral",
+          "mechanism": "replaceability_threat"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "historical_anchor",
+          "mechanism": "dated_event_entry"
+        }
+      ],
+      "required_retention_events": [
+        "unfairness_baseline",
+        "replaceability_threat",
+        "foundation_metaphor"
+      ],
+      "original_moves": [
+        "罗列灾前制度义务:固定租金、磨坊垄断、人身依附、法庭费",
+        "点破所有义务依赖同一条经济事实:劳动力永远过剩、土地不足",
+        "用具身威胁讲透可替代性:你不喜欢义务,随时有十户家庭顶替你的位置",
+        "收束为地基隐喻:这就是庄园制度数百年不动摇的地基"
+      ],
+      "abstract_move": "不公清单罗列 + 收束于单一经济事实 + 可替代性具身威胁 + 地基隐喻",
+      "replacement_needs": [
+        "一组该制度的不公义务清单",
+        "一条支撑全部不公的核心经济事实",
+        "一个把可替代性变成个人威胁的具体画面"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(62)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 62
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "catastrophe_arrival",
+      "start_ratio": 0.162,
+      "end_ratio": 0.233,
+      "start_sec": 103,
+      "end_sec": 149.4,
+      "position_label": "16.2%–23.3%(1:43–2:29)",
+      "purpose": "给出灾难降临的历史锚点与规模事实:船队入港的具体场景、沿既有商路传播的反讽(带来税收的道路变成灾难的配送线)、统治者对灾难无计可施的三连句、人口损失区间与『村庄被整个抹掉』的程度描述、田地无人收割的画面",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 76,
+          "position_ratio": 0.2145,
+          "time_ms": 137490,
+          "reason": "人口损失区间加村庄被整个抹掉、不是削弱而是毁灭的程度递进,灾难规模到达情绪顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "scale_devastation",
+          "mechanism": "death_toll_range_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "historical_anchor",
+        "route_irony",
+        "dry_irony",
+        "scale_reveal",
+        "desolation_imagery"
+      ],
+      "original_moves": [
+        "给历史锚点:某年秋,商船队入港,船员大多已死或濒死",
+        "写传播反讽:几代人为领主带来关税的道路与河流,变成灾难的配送线",
+        "统治者三连无能:不能对它征税、不能与它谈判、不能自保",
+        "给人口损失区间,并用不是削弱而是毁灭递进",
+        "落画面:田地无人收割,因为没有人了"
+      ],
+      "abstract_move": "场景化历史锚点 + 基础设施反讽 + 权力工具逐项失效排比 + 规模区间 + 荒芜画面",
+      "replacement_needs": [
+        "一个有日期与地点的进入场景",
+        "一条由盛转灾的基础设施反讽",
+        "一个权威区间的规模数字",
+        "一个后果的可见画面"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(76)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "perspective_meta_reframe",
+      "start_ratio": 0.233,
+      "end_ratio": 0.2542,
+      "start_sec": 148.4,
+      "end_sec": 162.9,
+      "position_label": "23.3%–25.4%(2:28–2:43)",
+      "purpose": "用元评论切换观看框架:暂时把灾难从悲剧视角移开,承认这听起来冷血,然后给出全片的重构钥匙——把它看作历史上最大最快的就业市场冲击;同时埋下『哪些领主能恢复、哪些不能』的前向伏笔",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 72,
+          "position_ratio": 0.2482,
+          "time_ms": 159104,
+          "reason": "把灾难重命名为历史上最大最快的就业市场冲击,观看框架完成第一次切换"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "对面阵营分化结局的前向悬念",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "meta_reframe",
+          "mechanism": "tragedy_to_market_shock"
+        }
+      ],
+      "required_retention_events": [
+        "meta_reframe",
+        "coldness_buffer",
+        "forward_hint"
+      ],
+      "original_moves": [
+        "显式挂起悲剧视角:暂时别把它当人间悲剧,我知道这听起来冷血",
+        "给重构钥匙:把它看作历史上最大最快的就业市场冲击",
+        "埋前向伏笔:这种思维方式正是区分能恢复与不能恢复的领主的东西"
+      ],
+      "abstract_move": "道德缓冲元评论 + 灾难重命名为市场事件 + 分化结局前向伏笔",
+      "replacement_needs": [
+        "一句承认道德不适的缓冲句",
+        "一个把灾难改称为市场事件的最高级重命名",
+        "一个后段对照判决用的分化伏笔"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(72);打开的悬念 LOOP07→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 72
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "scarcity_reversal_reveal",
+      "start_ratio": 0.2542,
+      "end_ratio": 0.3105,
+      "start_sec": 161.9,
+      "end_sec": 199,
+      "position_label": "25.4%–31.1%(2:42–3:19)",
+      "purpose": "兑现机制第一层:灾难完全没有改变土地,只让劳动力瞬间消失;曾经最过剩的要素变成最稀缺,曾经稀缺的要素照旧充足;宣告这不是『有经济后果的悲剧』,而是每一笔交易里谁占上风的根本且不可逆的改变",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.2981,
+          "time_ms": 191077,
+          "reason": "土地分毫未少而劳动力瞬间消失,这不是有经济后果的悲剧、而是每一笔交易谁占上风的根本不可逆改变,机制断言到达顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "leverage_reversal_declared",
+          "mechanism": "resource_scarcity_flip"
+        }
+      ],
+      "required_retention_events": [
+        "scarcity_flip",
+        "untouched_land_contrast",
+        "upper_hand_declaration"
+      ],
+      "original_moves": [
+        "回顾制度地基:劳动力过剩、土地不足",
+        "否定句隔离变量:灾难完全没有碰土地,灾前存在的每块地灾后仍在",
+        "对照句锁定变量:只有劳动力瞬间消失了",
+        "定性:最过剩的要素变成灾难性稀缺,另一种要素照旧充足",
+        "升格宣告:这不是有经济后果的悲剧,而是每笔交易谁占上风的根本不可逆改变"
+      ],
+      "abstract_move": "地基回顾 + 否定句隔离不变量 + 对照句锁定消失量 + 稀缺反转定性 + 上风易位宣告",
+      "replacement_needs": [
+        "一个灾难前后不变的对照要素",
+        "一个瞬间消失的要素",
+        "一句把机制升格为权力易位的宣告句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "pov_power_application",
+      "start_ratio": 0.3105,
+      "end_ratio": 0.3577,
+      "start_sec": 198.1,
+      "end_sec": 229.3,
+      "position_label": "31.1%–35.8%(3:18–3:49)",
+      "purpose": "把机制重新落到第二人称:幸存者第一次变得难以替代,没有人再排队顶替你的位置,劳动力从最易得的商品变成最稀缺的商品;宣告困住你几代人的每一条经济规律开始反向运转",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "工资线证据段的段内短悬念",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "numbers_tease",
+          "mechanism": "dramatic_records_preview"
+        }
+      ],
+      "required_retention_events": [
+        "pov_application",
+        "replaceability_gone",
+        "reverse_laws_declared"
+      ],
+      "original_moves": [
+        "把受益者点名:活下来并在土地上劳作的人,就像你",
+        "确认难以替代:没有人再排队顶替你的位置",
+        "商品稀缺度反转:劳动力从最易得变成最稀缺",
+        "宣告规律反向:困住你几代人的每一条经济规律开始反向运转"
+      ],
+      "abstract_move": "受益者第二人称点名 + 顶替画面消失 + 稀缺度反转 + 规律反向宣告",
+      "replacement_needs": [
+        "一个可与观众重合的受益者画像",
+        "一个旧威胁消失的具体画面",
+        "一句规律反向运转的总括句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "wage_evidence_payoff",
+      "start_ratio": 0.3577,
+      "end_ratio": 0.4393,
+      "start_sec": 229.2,
+      "end_sec": 281.6,
+      "position_label": "35.8%–43.9%(3:49–4:42)",
+      "purpose": "兑现数字证据第一条线(工资):声明变化见诸真实账簿而非理论;给出灾前与灾后日薪区间的对照、单代之内翻倍至数倍的记录;强调这不是渐进增长而是市场的实时重估;以劳方首次拥有真实议价筹码、资方别无选择只能付账收束",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.3938,
+          "time_ms": 252409,
+          "reason": "日薪区间前后对照加单代翻倍至数倍的账簿记录,数字证据兑现数字预告"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "numeric_evidence",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "numeric_payoff",
+          "mechanism": "wage_jump_evidence"
+        }
+      ],
+      "required_retention_events": [
+        "numbers_tease",
+        "records_evidence_claim",
+        "wage_range_contrast",
+        "doubling_record",
+        "no_choice_but_pay"
+      ],
+      "original_moves": [
+        "数字预告:接下来就是数字真正戏剧化的地方,而且见诸真实账簿而非理论",
+        "给灾前日薪区间与灾后日薪区间的对照",
+        "加单代之内翻倍至数倍的记录",
+        "定性:这不是几十年的渐进增长,而是市场的实时重估",
+        "收束:劳方首次拥有真实议价筹码,资方别无选择只能付账"
+      ],
+      "abstract_move": "数字预告 + 账簿证据声明 + 前后区间对照 + 翻倍记录 + 反渐进定性 + 别无选择收束",
+      "replacement_needs": [
+        "一组同口径的前后价格区间",
+        "一条短期翻倍至数倍的记录",
+        "一句排除渐进解释的反直觉定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(78);回收了前文的悬念 FS07→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "elite_counterattack_legislation",
+      "start_ratio": 0.4393,
+      "end_ratio": 0.5297,
+      "start_sec": 280.6,
+      "end_sec": 339.5,
+      "position_label": "43.9%–53%(4:41–5:40)",
+      "purpose": "切换至对面阵营:把工资翻倍加租金断流换算成既得利益者的生存威胁;由利益受损阶层主导的立法机构通过冻结工资、禁止拒工、禁止高价抢人的法令;点破这不是政治手腕而是『用立法废除市场现实』",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "既得利益阵营反击与现实之间的冲突悬念",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "failure_verdict",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "antagonist_counterattack",
+          "mechanism": "wage_freeze_legislation"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "failure_reveal",
+          "mechanism": "short_verdict_sentence"
+        }
+      ],
+      "required_retention_events": [
+        "side_switch",
+        "threat_conversion",
+        "antagonist_counterattack",
+        "reality_abolish_line"
+      ],
+      "original_moves": [
+        "切换视角:既得利益阵营把变化视为生存威胁而非市场修正",
+        "威胁换算:劳动成本翻倍加空置地块租金断流",
+        "点破立法机构由损失最大的阶层主导",
+        "列法令禁令:冻结工资、禁止拒工、禁止高价抢人",
+        "定性:这不是政治手腕,而是用立法废除市场现实"
+      ],
+      "abstract_move": "阵营切换 + 生存威胁换算 + 立法者利益结构点破 + 禁令清单 + 废除现实定性",
+      "replacement_needs": [
+        "一份既得利益方的成本威胁换算",
+        "一组对抗性规则或禁令的原始内容",
+        "一句把对抗定性为对抗现实的判词"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP04。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:既得利益阵营反击与现实之间的冲突悬念",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "law_failure_market_verdict",
+      "start_ratio": 0.5297,
+      "end_ratio": 0.6069,
+      "start_sec": 338.6,
+      "end_sec": 389,
+      "position_label": "53%–60.7%(5:39–6:29)",
+      "purpose": "兑现立法悬念:用极短判决句宣告失败;区分立法与执行——只要稀缺根源还在,冻结令在全国范围内无法落地;后续记录显示公开而普遍的违规,缺人的雇主偷偷按市价付薪;最后升格为可迁移原则:你可以写任何法律,但不能用法律覆盖真实的供求关系",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.5911,
+          "time_ms": 378909,
+          "reason": "可以写任何法律、但不能用法律覆盖真实的供求关系,立法线升格为可迁移原则,智力满足高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "principle_generalization",
+          "mechanism": "law_vs_market_maxim"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "callback_thread",
+          "mechanism": "rent_obligation_recall"
+        }
+      ],
+      "required_retention_events": [
+        "short_verdict",
+        "enforcement_gap",
+        "open_violations",
+        "law_vs_market_maxim"
+      ],
+      "original_moves": [
+        "极短判决:它没有用",
+        "区分立法与执行:颁布是一回事,在稀缺根源未除的情况下全国执行是另一回事",
+        "给违规证据:后续几十年的记录显示公开而持续的违规",
+        "细节:缺人的雇主偷偷按市价付薪,因为撂荒的地没有任何收入",
+        "升格原则:你可以写任何法律,但不能用法律覆盖真实的供求"
+      ],
+      "abstract_move": "极短判决句 + 立法与执行区分 + 普遍违规证据 + 偷付市价细节 + 市场压过法律原则",
+      "replacement_needs": [
+        "一条规则被普遍绕过的记录",
+        "一个执行者自己违规的具体动机",
+        "一句可迁移的原则句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(82)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "rent_collapse_inversion",
+      "start_ratio": 0.6069,
+      "end_ratio": 0.709,
+      "start_sec": 388,
+      "end_sec": 454.5,
+      "position_label": "60.7%–70.9%(6:28–7:34)",
+      "purpose": "兑现数字证据第二条线(租金):回收系列中『唯一从未改变的义务』伏笔;灾后大量地块空置,问题从『如何榨取更多』变成『如何找到任何人来种』;供给大于需求价格必跌;账簿记录显示租金下降与条件改善清单;以谈判格局百年倒置与『他们变成了你』的身份倒置句点破",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 86,
+          "position_ratio": 0.7044,
+          "time_ms": 451483,
+          "reason": "谈判格局百年倒置以他们变成了你收束,权力易位被写成身份互换,标题承诺的情感兑现点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "第二条证据线的段内悬念,同时是系列伏笔回收",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "roles_reversed_payoff",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "price_reversal_evidence",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "inversion_punchline",
+          "mechanism": "roles_reversed_identity_line"
+        }
+      ],
+      "required_retention_events": [
+        "scope_expansion",
+        "callback_thread",
+        "idle_land_imagery",
+        "price_must_drop",
+        "concession_list",
+        "inversion_line"
+      ],
+      "original_moves": [
+        "扩题预告:故事变得更有趣,变化不限于工资",
+        "回收伏笔:还记得那个整个制度里唯一从未改变的义务——租金",
+        "画面:大量地块因家庭绝户而空置",
+        "问题重述:问题从如何榨取更多变成如何找到任何人来种",
+        "推导:供给大于需求,价格必跌,否则闲置无收入",
+        "账簿证据:租金下降,条件改善清单——更短更灵活的租约、更少义务、甚至金钱激励",
+        "点破:谈判格局百年倒置,他们变成了你"
+      ],
+      "abstract_move": "扩题预告 + 不变义务伏笔回收 + 空置画面 + 问题重述 + 供求推导 + 让步清单 + 身份倒置点破",
+      "replacement_needs": [
+        "一条系列内可回收的伏笔义务",
+        "一组价格下跌与条件改善的记录",
+        "一句把权力易位写成身份互换的点破句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(86);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "living_standard_payoff",
+      "start_ratio": 0.709,
+      "end_ratio": 0.7813,
+      "start_sec": 453.5,
+      "end_sec": 500.8,
+      "position_label": "70.9%–78.1%(7:34–8:21)",
+      "purpose": "点破全片最反直觉的一层:只记死亡数字的人会错过这部分;幸存者迎来生活水平最显著的改善期——更高工资、更强谈判地位、在雇主之间流动的自由;并给出制度后果:旧人身依附制度加速瓦解,因为支撑它的经济杠杆随劳动力稀缺而消失",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "side_switch",
+          "mechanism": "other_side_of_bill"
+        }
+      ],
+      "required_retention_events": [
+        "counterintuitive_pointout",
+        "improvement_list",
+        "mobility_freedom",
+        "institution_decay_mechanism"
+      ],
+      "original_moves": [
+        "反直觉点破:只记死亡数字的人会错过这部分",
+        "定性幸存者收益:该时期生活水平最显著的改善",
+        "列改善清单:更高工资、更强谈判地位、在雇主间流动的自由",
+        "给制度后果:旧人身依附制度加速瓦解,因为支撑它的经济杠杆随劳动力稀缺而消失"
+      ],
+      "abstract_move": "反直觉点破 + 最高级收益定性 + 改善清单 + 制度瓦解的机制归因",
+      "replacement_needs": [
+        "一个被主流记忆遗漏的收益角度",
+        "一组幸存者可感的改善项",
+        "一条从要素稀缺到制度瓦解的因果链"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "elite_bifurcation_verdict",
+      "start_ratio": 0.7813,
+      "end_ratio": 0.87,
+      "start_sec": 499.9,
+      "end_sec": 557.6,
+      "position_label": "78.1%–87%(8:20–9:18)",
+      "purpose": "把镜头切回对面阵营完成对照判决:固定成本照旧而劳动力可以抬脚走人;适应者迅速转向市价工资与更好条件并重建模式,固守者守着纸面冻结令眼看人手流向竞争对手、田地撂荒、收入实时崩塌;宣判财务上幸存的不是土地最多或头衔最老的,而是正确评估市场并调整整个经济模式的",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "bifurcation_verdict",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "adaptation_verdict",
+          "mechanism": "adapters_vs_clingers_contrast"
+        }
+      ],
+      "required_retention_events": [
+        "side_switch",
+        "adapters_vs_clingers",
+        "collapse_imagery",
+        "bifurcation_verdict"
+      ],
+      "original_moves": [
+        "切到账单另一侧:固定成本照旧,劳动力却可以抬脚走人",
+        "适应者动作:转向市价工资、更好租约、重建经济模式",
+        "固守者画面:守着纸面冻结令,眼看人手流向竞争对手、田地撂荒、收入实时崩塌",
+        "宣判:财务上幸存的不是土地最多或头衔最老的,而是正确评估市场并调整整个模式的"
+      ],
+      "abstract_move": "账单另一侧切换 + 适应者动作清单 + 固守者崩塌画面 + 按适应力而非存量宣判",
+      "replacement_needs": [
+        "一组适应者的具体动作",
+        "一组固守者的崩塌画面",
+        "一个先排除存量标准再肯定适应力的判决结构"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS05→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "synthesis_worldview_upgrade",
+      "start_ratio": 0.87,
+      "end_ratio": 0.967,
+      "start_sec": 556.7,
+      "end_sec": 619.8,
+      "position_label": "87%–96.7%(9:17–10:20)",
+      "purpose": "大图综合:承认结论违背人们对灾难与财富的全部直觉;把同一事件同时命名为最致命的事件与最大的财富再分配——影响力从旧统治阶层直接转入幸存劳动阶层之手,只靠供求法则的空前尺度运转;强调无人设计、无人计划,只是『永远充足』的假设崩塌迫使一切价格重写;回扣两类领主的不同结局",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "title_callback",
+          "strength": 88,
+          "position_ratio": 0.8948,
+          "time_ms": 573572,
+          "reason": "最致命事件同时是最大财富再分配的双重命名,把全部证据链压缩为一句世界观结论,回扣标题主承诺"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "系列连续性的开放参与环",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_mechanism_chain_with_final_reframe",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "synthesis_reframe",
+          "mechanism": "disaster_as_redistribution"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "next_episode_tease",
+          "mechanism": "opposite_approach_institution"
+        }
+      ],
+      "required_retention_events": [
+        "against_intuition_meta",
+        "double_naming_synthesis",
+        "nobody_planned_this",
+        "assumption_collapse",
+        "ending_callback"
+      ],
+      "original_moves": [
+        "大图元评论:这违背人们对灾难与财富的全部直觉",
+        "双重命名:最致命的记载事件,同时也是该时期最大的财富再分配",
+        "归因:影响力从旧统治阶层直接转入幸存劳动阶层,只靠供求法则的空前尺度",
+        "无人设计:没有人计划这一切,只是永远充足的假设崩塌,迫使一切价格重写",
+        "回扣两族结局:理解最快的保住产业,没理解的用一代人写没人遵守的法令"
+      ],
+      "abstract_move": "违背直觉元评论 + 双重极端命名 + 机制归因 + 无人设计声明 + 两类结局回扣",
+      "replacement_needs": [
+        "两个同时为真的极端命名",
+        "一句排除人为设计的归因句",
+        "一组前文两造结局的回扣"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(88);打开的悬念 LOOP06(不闭合) 跨段;回收了前文的悬念 FS02→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "series_teaser_outro",
+      "start_ratio": 0.967,
+      "end_ratio": 1,
+      "start_sec": 618.9,
+      "end_sec": 641,
+      "position_label": "96.7%–100%(10:19–10:41)",
+      "purpose": "以系列下一集预告收尾:顺着『绝望立法』的话头引出同一时代的另一个机构——它采取相反路线,不与经济变化对抗,而是悄悄转型为当时最富有最高效的金融结构之一;参与环保持开放",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "topic_handoff",
+        "opposite_approach_tease",
+        "next_episode_teaser"
+      ],
+      "original_moves": [
+        "顺话头衔接:说到既得利益阵营写下的绝望立法",
+        "引出对照:同一时代另一个机构采取相反路线,不与经济变化对抗",
+        "最高级预告:它悄悄转型为该时期最富有最高效的金融结构之一",
+        "开放收束:这就是我们下一集要看的"
+      ],
+      "abstract_move": "话头衔接 + 相反路线对照预告 + 最高级结果描述 + 不点名的开放收束",
+      "replacement_needs": [
+        "一个与本期主题同场的对照主体",
+        "一组描述结果但不揭示身份的最高级措辞",
+        "一句指向下一集的收束句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

@@ -1,0 +1,952 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:07:41.448Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "paradox_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0494,
+      "start_sec": 0,
+      "end_sec": 45.6,
+      "position_label": "0%–4.9%(0:00–0:46)",
+      "purpose": "用浪漫意象与\"名字被标价\"的悖论制造主悬念，并把观众邀入这一夜",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 76,
+          "position_ratio": 0.0218,
+          "time_ms": 20119,
+          "reason": "浪漫舞会意象被\"名字与身价被印刷售卖\"一击翻转，主悬念成形"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺环：把浪漫想象翻转为代价追问",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "paradox_tease",
+          "mechanism": "romantic_image_price_subversion"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "journey_invitation",
+          "mechanism": "night_entry_offer"
+        }
+      ],
+      "required_retention_events": [
+        "romantic_image_subversion",
+        "price_list_paradox",
+        "night_invitation"
+      ],
+      "original_moves": [
+        "先给观众最熟悉的浪漫画面：水城假面舞会、华美面具与神秘爱情",
+        "突然插入反差：最耀眼女子的名字与身价被印在一本册子里全城售卖",
+        "给出判词：全城为他们疯狂，却没人把他们当真正的人",
+        "发出邀请：今夜就走进这最华丽又最孤独的一夜"
+      ],
+      "abstract_move": "浪漫意象铺垫 + 商品化悖论一击 + 情绪判词 + 敬语邀约入夜",
+      "replacement_needs": [
+        "一个大众熟知的浪漫化场景",
+        "一个能把该场景主角商品化的具体实物或机制",
+        "一句点破\"被追捧不等于被尊重\"的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(76);打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 76
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "romantic_image_price_list_paradox",
+        "first_stimulus_ms": 14240,
+        "first_payoff_ms": 28320,
+        "evidence_refs": [
+          "C0001",
+          "C0008",
+          "C0010",
+          "C0013"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "frame_boarding",
+      "start_ratio": 0.0516,
+      "end_ratio": 0.0927,
+      "start_sec": 47.6,
+      "end_sec": 85.6,
+      "position_label": "5.2%–9.3%(0:48–1:26)",
+      "purpose": "用框架装置完成启程仪式，分配第二人称角色并预先警告代价",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "框架预告环：登车前挂起的凉意承诺",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "cost_prewarning",
+          "mechanism": "chill_forecast"
+        }
+      ],
+      "required_retention_events": [
+        "frame_device_boarding",
+        "destination_announcement",
+        "role_assignment"
+      ],
+      "original_moves": [
+        "以频道框架问候：欢迎乘坐深夜时间列车",
+        "宣告本次停靠站：数百年前海上建起的水城共和国",
+        "分配角色：你将成为舞会主角、一位受邀的女子",
+        "预先警告：得知华丽的代价后你会感到一丝凉意",
+        "用\"打开车厢门\"作为进入场景的开关"
+      ],
+      "abstract_move": "框架装置问候 + 目的地宣告 + 第二人称角色分配 + 代价预告 + 开门动作",
+      "replacement_needs": [
+        "一个可复用的旅程类框架装置",
+        "一个具体时空目的地",
+        "一个可直接分配给观众的剧中身份"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "sensory_immersion",
+      "start_ratio": 0.0893,
+      "end_ratio": 0.1961,
+      "start_sec": 82.4,
+      "end_sec": 181,
+      "position_label": "8.9%–19.6%(1:22–3:01)",
+      "purpose": "用五感细节与着装仪式让观众附身新身份，同时埋下身体代价",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "wealth_contrast",
+          "mechanism": "status_above_nobles"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "bodily_cost",
+          "mechanism": "costume_pain_detail"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "cost_contrast",
+          "mechanism": "finery_vs_artisan_years"
+        }
+      ],
+      "required_retention_events": [
+        "five_senses_immersion",
+        "costume_ritual",
+        "pain_detail"
+      ],
+      "original_moves": [
+        "从醒来的房间开始五感落地：窄窗、运河、贡多拉、钟声与海的腥味",
+        "交代住所等级：最成功的女人住得比贵族还好",
+        "进入着装仪式：束腰收紧肋骨、呼吸一寸寸变短、白铅粉层层上脸、染发、珠宝",
+        "用造价对照收尾：这一身装束抵得上工匠数年收入"
+      ],
+      "abstract_move": "五感空间落地 + 住所等级暗示 + 着装仪式步骤 + 身体隐痛细节 + 造价对照",
+      "replacement_needs": [
+        "该时代身份的空间与感官细节素材",
+        "一套带身体代价的装扮流程",
+        "一个跨阶层的造价对照"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "identity_reveal",
+      "start_ratio": 0.1943,
+      "end_ratio": 0.2497,
+      "start_sec": 179.4,
+      "end_sec": 230.5,
+      "position_label": "19.4%–25%(2:59–3:51)",
+      "purpose": "揭晓身份名称与等级制度，把浪漫定位到制度顶端",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "identity_naming",
+          "mechanism": "identity_label_drop"
+        }
+      ],
+      "required_retention_events": [
+        "identity_naming",
+        "status_system_map",
+        "modern_analogy"
+      ],
+      "original_moves": [
+        "直接命名身份：这座城市称你这样的女子为\"高级名妓\"",
+        "展开等级制度：桥下底层、中层、顶端三个阶层",
+        "解释顶端的本质：卖的不是身体而是教养，要会作诗、乐器、多国语言、谈政治哲学",
+        "给现代类比：相当于城里最有名的艺术家兼沙龙女主人"
+      ],
+      "abstract_move": "身份命名 + 等级制度图 + 顶层能力清单 + 现代类比",
+      "replacement_needs": [
+        "一个该身份的正式名称",
+        "一张该身份内部的层级图",
+        "一份顶层所需能力的清单",
+        "一个当代可比职业"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "commodification_reveal",
+      "start_ratio": 0.2465,
+      "end_ratio": 0.3172,
+      "start_sec": 227.6,
+      "end_sec": 292.8,
+      "position_label": "24.7%–31.7%(3:48–4:53)",
+      "purpose": "用实物证据把荣耀翻译成商品化事实，兑现标题的核心承诺",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 84,
+          "position_ratio": 0.2868,
+          "time_ms": 264759,
+          "reason": "数百人连名带价被印刷成册的规模证据落下，荣耀正式被翻译为商品，兑现标题核心承诺"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "commodification_evidence",
+          "mechanism": "printed_catalog_scale"
+        }
+      ],
+      "required_retention_events": [
+        "object_evidence_reveal",
+        "printed_price_shock",
+        "scale_number_drop"
+      ],
+      "original_moves": [
+        "用实物引出：梳妆台上有一本小册子",
+        "揭示册子内容：全城名妓的名字、住址、一夜价格都印在上面",
+        "点破你也在其中：你的名字和身价同样被印刷",
+        "给出历史证据：当时流传的名录共收录两百余人",
+        "落下商品判词：你是最美的女人，同时也是被标价上榜的商品"
+      ],
+      "abstract_move": "实物证据引出 + 册内内容揭示 + 把你写进名单 + 规模数字坐实 + 商品化判词",
+      "replacement_needs": [
+        "一个能把人商品化的实物或文件",
+        "该实物收录的规模数字",
+        "一句\"既是主角又是商品\"的双重判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "grand_entrance",
+      "start_ratio": 0.3148,
+      "end_ratio": 0.3833,
+      "start_sec": 290.6,
+      "end_sec": 353.8,
+      "position_label": "31.5%–38.3%(4:51–5:54)",
+      "purpose": "给观众一次万众瞩目的高光，同时植入仰慕与轻蔑的裂缝",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "spectacle_immersion",
+          "mechanism": "candlelit_entrance"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "duality_reveal",
+          "mechanism": "admiration_with_contempt"
+        }
+      ],
+      "required_retention_events": [
+        "candlelit_spectacle",
+        "crowd_gaze",
+        "admiration_contempt_duality"
+      ],
+      "original_moves": [
+        "夜行过渡：两岸烛火宫殿在水面摇晃",
+        "入场瞬间奇观：门一开数百支烛光倾泻、数十道目光投来、乐声一顿",
+        "植入裂缝：窃窃私语里除了仰慕还有轻蔑，他们狂热却不把你当同类",
+        "下达昂头指令：明知如此也要抬头走进去，今夜主角是你"
+      ],
+      "abstract_move": "行进过渡 + 入场奇观 + 仰慕与轻蔑并置 + 昂头指令",
+      "replacement_needs": [
+        "一段通往主场景的行进描写",
+        "一个入场瞬间的感官奇观",
+        "一组\"被追捧但被排斥\"的对照细节"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "wit_showcase",
+      "start_ratio": 0.3808,
+      "end_ratio": 0.4108,
+      "start_sec": 351.4,
+      "end_sec": 379.2,
+      "position_label": "38.1%–41.1%(5:51–6:19)",
+      "purpose": "展示主角真正的武器是谈吐而非外貌，给观众能力快意",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "wit_as_weapon",
+        "social_combat_victory",
+        "audience_surrogate_triumph"
+      ],
+      "original_moves": [
+        "贵族们围上来，有人献诗有人讲笑话",
+        "点破真正武器：机智的回答让全场安静，一句短诗让男人们倾倒",
+        "强调他们着迷的是你的言辞与才智而非身体"
+      ],
+      "abstract_move": "社交围攻场面 + 谈吐制胜细节 + 能力定性判词",
+      "replacement_needs": [
+        "一场该身份展示核心能力的社交场面",
+        "能力生效后的具体反应细节"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "mask_ownership_reversal",
+      "start_ratio": 0.4081,
+      "end_ratio": 0.4499,
+      "start_sec": 376.7,
+      "end_sec": 415.2,
+      "position_label": "40.8%–45%(6:17–6:55)",
+      "purpose": "第一次重定义象征物，把\"需要面具的人\"反转给对方",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.4133,
+          "time_ms": 381440,
+          "reason": "面具归属反转：真正需要遮脸的是要保全体面的对方，主角反而以真名立足"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "expectation_reversal",
+          "mechanism": "mask_ownership_flip"
+        }
+      ],
+      "required_retention_events": [
+        "expectation_reversal",
+        "mask_ownership_flip",
+        "barefaced_fame_pride"
+      ],
+      "original_moves": [
+        "用\"有一件事必须指出\"转折",
+        "反转面具归属：真正需要面具的不是你，而是要保全体面的贵族",
+        "事实坐实：一年近半时间可以戴面具，赌场里甚至是义务",
+        "对照收尾：你以真面目、真名字成为全城最有名的女人"
+      ],
+      "abstract_move": "转折招呼 + 象征物归属反转 + 事实清单坐实 + 真面目对照",
+      "replacement_needs": [
+        "一个全场共享的象征物",
+        "一组反转归属所需的事实清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "demand_function_reveal",
+      "start_ratio": 0.4477,
+      "end_ratio": 0.4934,
+      "start_sec": 413.2,
+      "end_sec": 455.4,
+      "position_label": "44.8%–49.3%(6:53–7:35)",
+      "purpose": "回答\"对方为什么需要你\"，把浪漫打回工具现实",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 74,
+          "position_ratio": 0.4835,
+          "time_ms": 446240,
+          "reason": "恋人兼名誉工具的双重定性，把被追捧的浪漫打回功能现实"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "function_reveal",
+          "mechanism": "honor_tool_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "why_question_drive",
+        "marriage_delay_fact",
+        "honor_tool_verdict"
+      ],
+      "original_moves": [
+        "自问自答：为什么这些华丽贵族需要你这样的女人",
+        "给出对方处境：贵族男子普遍晚婚，宗教城市要求表面守贞",
+        "解释功能：需要不辱没门楣又能安放欲望的对象",
+        "落下双重判词：你是迷人的恋人，同时也是保全名誉的便利工具"
+      ],
+      "abstract_move": "需求问句 + 对方处境事实 + 体面约束 + 功能解释 + 恋人工具双重判词",
+      "replacement_needs": [
+        "需求方的制度性处境事实",
+        "一条该社会的体面约束",
+        "一句\"既是伴侣又是工具\"的双重判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "patron_economy_reveal",
+      "start_ratio": 0.4892,
+      "end_ratio": 0.5733,
+      "start_sec": 451.5,
+      "end_sec": 529.1,
+      "position_label": "48.9%–57.3%(7:32–8:49)",
+      "purpose": "展示所得一切的来源与可收回性，并用反例给出狭窄出路",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "真实人物伏笔环：先给高光再悬置结局",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "revocability_warning",
+          "mechanism": "gift_not_yours"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "counterexample_hook",
+          "mechanism": "self_made_case_intro"
+        }
+      ],
+      "required_retention_events": [
+        "patron_gift_montage",
+        "revocability_warning",
+        "counterexample_case"
+      ],
+      "original_moves": [
+        "赞助人登场：全城最富有贵族向你伸手",
+        "赠予清单：临水宅邸、丝绸与珠宝",
+        "可收回警告：这些光都不是你的，他心一变随时收回",
+        "自立反例：也有女人走出赞助人阴影，自己致富、出版作品集",
+        "点出真实案例：一位女诗人曾受君主接见",
+        "再降温：那自由永远标着看不见的价"
+      ],
+      "abstract_move": "赠予清单 + 可收回警告 + 自立反例 + 真实人物伏笔 + 隐形价格提示",
+      "replacement_needs": [
+        "一份可被收回的赠予清单",
+        "一个成功自立的反例",
+        "一位可考的真实人物及其高光时刻"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "impossible_love_wound",
+      "start_ratio": 0.5696,
+      "end_ratio": 0.6487,
+      "start_sec": 525.7,
+      "end_sec": 598.7,
+      "position_label": "57%–64.9%(8:46–9:59)",
+      "purpose": "用一场具体的爱情伤口把制度性不可能变成全片情绪低点",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 88,
+          "position_ratio": 0.6101,
+          "time_ms": 563079,
+          "reason": "旧爱眼神晃动后慢慢别过脸，制度性不可能凝成一个动作，全片情绪低点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "爱情不可能环：单场戏内开合",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "emotional_low",
+          "mechanism": "lover_turns_away"
+        }
+      ],
+      "required_retention_events": [
+        "old_love_recognition",
+        "fiancee_contrast",
+        "turned_away_gaze"
+      ],
+      "original_moves": [
+        "宴会高潮处你认出一个人：上一季你第一次付出真心的人，一位贵族",
+        "他曾让你以为可以抛开身份只做普通女人去爱",
+        "现实对照：他身旁站着出身名门的未婚妻",
+        "关键动作：他与你对视，眼神晃动，然后慢慢转过头去",
+        "表情管理指令：不能垮掉，你是今夜主角，数十双眼睛在看，笑一笑",
+        "制度判词：贵族可以爱名妓，却不能娶她；这座城市刻在你身上的身份比任何爱情都坚固"
+      ],
+      "abstract_move": "旧爱认出 + 正当婚配者对照 + 别过脸微动作 + 表情管理指令 + 制度大于爱情的判词",
+      "replacement_needs": [
+        "一段与身份冲突的旧情",
+        "一个代表正当婚配的对照人物",
+        "一个把不可能演出来的微动作"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(88);打开的悬念 LOOP05→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "dual_existence_reveal",
+      "start_ratio": 0.6455,
+      "end_ratio": 0.7415,
+      "start_sec": 595.8,
+      "end_sec": 684.4,
+      "position_label": "64.6%–74.2%(9:56–11:24)",
+      "purpose": "揭开昼夜双重身份与法律约束，并给出制度容忍的真正动机",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "information_reveal",
+          "strength": 76,
+          "position_ratio": 0.6989,
+          "time_ms": 645079,
+          "reason": "法律连衣着场所与戴面具的自由都限定，最需要面具的人反而被剥夺面具"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "impossible_love_verdict",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "legal_constraint",
+          "mechanism": "dress_and_mask_ban"
+        }
+      ],
+      "required_retention_events": [
+        "mirror_real_face",
+        "day_night_double_life",
+        "legal_constraint_list"
+      ],
+      "original_moves": [
+        "退到镜前：浓妆下露出真脸，不是女王，只是一个连爱人都无法拥有的疲惫女人",
+        "点破人们渴望的是华丽名字而非名字背后的你",
+        "昼夜对照：夜里是万人仰望的女王，白天是街上被侧目的低贱身份",
+        "法律清单：法律规定你能穿什么衣服、能进什么场所",
+        "反讽落点：最需要面具的人，连戴面具的自由都不完整",
+        "制度揭底：城市容忍你不是因为爱你，而是为男人设立的社会算计"
+      ],
+      "abstract_move": "镜中真脸 + 名字与人的剥离 + 昼夜双重身份 + 法律约束清单 + 象征物禁令反讽 + 制度动机揭底",
+      "replacement_needs": [
+        "该身份的昼夜待遇对照",
+        "一组针对该身份的法律或规则清单",
+        "一条制度容忍该身份的真实动机"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(76);回收了前文的悬念 FS11→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "fear_inventory",
+      "start_ratio": 0.7385,
+      "end_ratio": 0.84,
+      "start_sec": 681.6,
+      "end_sec": 775.4,
+      "position_label": "73.9%–84%(11:22–12:55)",
+      "purpose": "散场后盘点时间与死亡两种终极恐惧，并第二次重定义象征物",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.8282,
+          "time_ms": 764399,
+          "reason": "最华丽面具之城同时怀着最阴森的鸟嘴面具，象征物第二次重定义完成"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "时间恐惧环：除名预言悬挂消亡焦虑",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "mortality_fear",
+          "mechanism": "name_erasure_deadline"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "sinister_symbol",
+          "mechanism": "plague_mask_intro"
+        }
+      ],
+      "required_retention_events": [
+        "ball_end_transition",
+        "fear_enumeration",
+        "name_erasure_deadline"
+      ],
+      "original_moves": [
+        "散场过渡：蜡烛一盏盏熄灭，你走上黎明前的阳台",
+        "恐惧一（时间）：更年轻的新面孔不断涌来，你的名字终将从那本名单上被抹去，美貌枯萎身价就跌",
+        "恐惧二（死亡）：水城之下永远流着瘟疫的阴影，大疫一来华丽与低贱都没用，最先被抛弃的总是你这样的人",
+        "第二次重定义面具：介绍鸟嘴医生面具，最华丽面具之城也怀着最阴森的面具"
+      ],
+      "abstract_move": "散场过渡 + 编号式恐惧列举 + 除名预言 + 时代级死亡阴影 + 象征物二次重定义",
+      "replacement_needs": [
+        "该身份的两项终极恐惧（如时间与死亡）",
+        "一个与除名或贬值相关的具体机制",
+        "一个该时代与死亡相关的象征物"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(82);打开的悬念 LOOP03→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "case_fate_and_grace",
+      "start_ratio": 0.8375,
+      "end_ratio": 0.8941,
+      "start_sec": 773,
+      "end_sec": 825.3,
+      "position_label": "83.8%–89.4%(12:53–13:45)",
+      "purpose": "回收前文的真名人物伏笔，先给惨淡结局再给临终善举",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.8755,
+          "time_ms": 808079,
+          "reason": "伏笔人物贫困而终却给后来者留下出路资金，悲悯升华为全片最大暖意"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "fear_inventory_and_case_fate_delivery",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "fate_fall",
+          "mechanism": "case_poverty_death"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "grace_note",
+          "mechanism": "legacy_for_women"
+        }
+      ],
+      "required_retention_events": [
+        "case_fate_callback",
+        "witch_trial_fall",
+        "deathbed_poverty"
+      ],
+      "original_moves": [
+        "回收伏笔：前文那位女诗人的结局",
+        "惨淡结局：大疫中离城，归来时财产尽失，被仆人告发为异端，站上审判席，最终在贫困中离世",
+        "善举反转：她至死没忘一件事——遗嘱里给贫困女子留下出嫁资金，写明若同行女子想离开这条路去婚嫁或出家，要先帮她们",
+        "点题：她想从自己走过的路上，至少救出别的女人"
+      ],
+      "abstract_move": "真实人物伏笔回收 + 惨淡结局清单 + 临终善举反转 + 救后来人点题",
+      "replacement_needs": [
+        "一位前文埋过的真实人物及其可考结局",
+        "一份该人物的临终善举或遗赠记录"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(90);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "defiant_return",
+      "start_ratio": 0.8915,
+      "end_ratio": 0.9236,
+      "start_sec": 822.9,
+      "end_sec": 852.5,
+      "position_label": "89.2%–92.4%(13:43–14:13)",
+      "purpose": "让主角明知结局仍选择返场，完成悲壮的小高潮",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "fate_reversal_plus_grace_note",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "defiant_return",
+          "mechanism": "smile_back_to_ball"
+        }
+      ],
+      "required_retention_events": [
+        "foreknowledge_of_end",
+        "still_night_defiance",
+        "smile_through_tears"
+      ],
+      "original_moves": [
+        "终局自知：你知道今夜的华丽总有一天必然结束",
+        "夜色未散判断：但现在，还是夜晚",
+        "含泪微笑：擦干眼泪，最后灿烂地笑一次",
+        "返场动作：重新走回舞池那片耀眼灯光里，今夜你仍是全城最耀眼的女子"
+      ],
+      "abstract_move": "终局自知 + 夜色未散判断 + 含泪微笑 + 返场动作",
+      "replacement_needs": [
+        "主角对结局的先知",
+        "一个\"时间还没到\"的临界点判断",
+        "一个带泪的微笑类情绪动作"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS10→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "disembark_transfer",
+      "start_ratio": 0.921,
+      "end_ratio": 1,
+      "start_sec": 850,
+      "end_sec": 923,
+      "position_label": "92.1%–100%(14:10–15:23)",
+      "purpose": "用框架装置收束复盘，第三次重定义象征物并向观众迁移，最后发出返程邀约",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "title_callback",
+          "strength": 84,
+          "position_ratio": 0.9614,
+          "time_ms": 887360,
+          "reason": "华丽之名是最难摘下的面具这一终极重定义与尊严祝福，回收开场悖论完成迁移"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "迁移开放环：只负责把领悟递给观众",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "motif_callback_and_dignity_synthesis",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "defiant_acceptance_of_transience",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "motif_transfer",
+          "mechanism": "we_too_wear_masks"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "return_invitation",
+          "mechanism": "scheduled_next_trip"
+        }
+      ],
+      "required_retention_events": [
+        "disembark_call",
+        "mask_motif_final_redefinition",
+        "worldview_transfer_question"
+      ],
+      "original_moves": [
+        "框架收束：天亮了，到下车时间，问乘客这一路如何",
+        "一夜复盘：最华丽名字背后藏着最孤独的脸",
+        "第三次重定义面具：面具本是贵族遮脸之物，而这城里藏得最深的却是一直以真面目活着的你——华丽之名才是最摘不下来的面具",
+        "迁移问句：也许我们每个人都戴着\"别人想要的脸\"这张面具活着",
+        "尊严祝福：请记住华丽名字背后真实的你的脸比什么都珍贵，愿你自己别忘了那张脸",
+        "返程邀约：想坐下一班列车就点订阅，每周固定时间列车进站，我们在这里等你，道别"
+      ],
+      "abstract_move": "框架下车宣告 + 一夜复盘 + 象征物终极重定义 + 向观众迁移的问句 + 尊严祝福 + 返程订阅邀约",
+      "replacement_needs": [
+        "框架装置的收束台词",
+        "一句把全片主悬念压成判词的复盘",
+        "一个能迁移到观众自身的普遍问句",
+        "一个固定的更新周期与关注入口"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(84);打开的悬念 LOOP06(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01、FS13→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

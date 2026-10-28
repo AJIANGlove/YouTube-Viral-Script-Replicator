@@ -1,0 +1,903 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.879Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "era_reframe_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0903,
+      "start_sec": 0.2,
+      "end_sec": 73.4,
+      "position_label": "0%–9%(0:00–1:13)",
+      "purpose": "用冒犯性街头画面制造错位，揭示时间锚点并推翻时代成见，以穿越邀请收束开场",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "worldview_shift",
+          "strength": 72,
+          "position_ratio": 0.0244,
+          "time_ms": 19880,
+          "reason": "时间锚点一句话落下，观众对该时代的默认印象被正面推翻"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：推翻时代成见，还原一段可进入的明亮日常",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "transgressive_open_image",
+          "mechanism": "cold_open_detail_drop"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "social_disapproval_chorus",
+          "mechanism": "crowd_reaction_signal"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "era_reveal",
+          "mechanism": "temporal_anchor_flip"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "belief_challenge",
+          "mechanism": "dark_photo_assumption_break"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "frame_invitation",
+          "mechanism": "time_train_boarding_call"
+        }
+      ],
+      "required_retention_events": [
+        "transgressive_scene_tease",
+        "social_disapproval_chorus",
+        "era_reveal",
+        "belief_challenge_catalog",
+        "frame_invitation"
+      ],
+      "original_moves": [
+        "开场直接上演一段出格画面：剪短长发、露出小腿、涂红唇的女性走在街上，路人咂舌感叹世风日下",
+        "揭示这是整整一百年前那座城市的真实街景",
+        "打破观众对该时代\"黑白贫困老照片\"的默认想象",
+        "快闪式罗列华丽都市元素：百货店、咖啡馆、电影院、电梯、霓虹灯",
+        "点出街头最惹眼的一群新女性并报出她们的称号",
+        "以\"今夜列车载你去百年前\"的邀请收尾"
+      ],
+      "abstract_move": "冒犯性街头画面 → 保守势力哗然 → 时间锚点揭示 → 成见推翻 → 繁华元素快闪目录 → 主角群体登场 → 穿越邀请",
+      "replacement_needs": [
+        "一个违反该时代礼教的具体画面",
+        "一句当时保守势力的典型骂声",
+        "一份该时代繁华面的元素清单",
+        "一个可被第二人称代入的主角群体称号"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(72);打开的悬念 LOOP01→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 72
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "transgressive_scene_into_era_reveal",
+        "first_stimulus_ms": 9599,
+        "first_payoff_ms": 16880,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0008",
+          "C0011"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "identity_entry",
+      "start_ratio": 0.0903,
+      "end_ratio": 0.139,
+      "start_sec": 75.4,
+      "end_sec": 113,
+      "position_label": "9%–13.9%(1:15–1:53)",
+      "purpose": "以框架装置完成欢迎、目的地宣告与第二人称角色分配",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "身份承诺：角色加冕后需要用一天的行动与结局兑现头衔",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "role_assignment",
+          "mechanism": "protagonist_coronation"
+        }
+      ],
+      "required_retention_events": [
+        "frame_device_welcome",
+        "destination_announcement",
+        "second_person_role_assignment",
+        "departure_question"
+      ],
+      "original_moves": [
+        "以深夜列车广播的敬语欢迎乘客登车",
+        "报出目的地：往回一百年那座城市",
+        "分配角色：你成为全城最红的女专栏作家",
+        "以\"准备好了吗，出发\"正式开车"
+      ],
+      "abstract_move": "框架装置欢迎辞 → 目的地宣告 → 第二人称角色加冕 → 出发确认",
+      "replacement_needs": [
+        "一个可复用的穿越框架装置",
+        "一个带最高头衔的可代入角色",
+        "一句开车口令式转场"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "ritual_immersion",
+      "start_ratio": 0.139,
+      "end_ratio": 0.2621,
+      "start_sec": 110.6,
+      "end_sec": 213.2,
+      "position_label": "13.9%–26.2%(1:51–3:33)",
+      "purpose": "用晨间准备仪式建立身体感代入，并以第一次社会摩擦确立主角的从容人格",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "cost_anchor",
+          "mechanism": "salary_scale_sacrifice"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "social_friction",
+          "mechanism": "elder_scorn_dialogue"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "graceful_defiance",
+          "mechanism": "wink_counter_gesture"
+        }
+      ],
+      "required_retention_events": [
+        "morning_ritual_flow",
+        "cost_anchor",
+        "mirror_check_beat",
+        "social_friction",
+        "graceful_defiance"
+      ],
+      "original_moves": [
+        "留声机与爵士乐中醒来",
+        "用进口香皂洗漱，对镜完成全套化妆",
+        "点破这套化妆品花掉整月薪水，但不后悔",
+        "按电影明星同款挑连衣裙、圆帽与高跟鞋，镜前转圈确认",
+        "房东太太数落\"你这样嫁不出去\"，你回以一个眨眼，踩着鞋跟上街"
+      ],
+      "abstract_move": "晨间仪式流(洗漱-化妆-穿搭-镜检) → 代价点破 → 长辈摩擦 → 从容反手势 → 出门",
+      "replacement_needs": [
+        "一套可细写的晨间准备动作清单",
+        "一条以收入为尺度的代价换算",
+        "一场低烈度的代际偏见摩擦",
+        "一个不动声色的反手势动作"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "space_tour",
+      "start_ratio": 0.2621,
+      "end_ratio": 0.3563,
+      "start_sec": 211.3,
+      "end_sec": 289.8,
+      "position_label": "26.2%–35.6%(3:31–4:50)",
+      "purpose": "以地标消费空间展示主角的品味权力，并用今昔延续拉近距离",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 66,
+          "position_ratio": 0.2734,
+          "time_ms": 222360,
+          "reason": "百年前的地标被揭示为今天仍在原处的同一空间，历史距离瞬间归零"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "present_day_anchor",
+          "mechanism": "landmark_continuity_reveal"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "influence_proof",
+          "mechanism": "tastemaker_power_demo"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "hesitation_beat",
+          "mechanism": "price_shock_then_commitment"
+        }
+      ],
+      "required_retention_events": [
+        "landmark_continuity_reveal",
+        "sensory_space_catalog",
+        "influence_proof",
+        "price_hesitation_beat",
+        "decisive_purchase"
+      ],
+      "original_moves": [
+        "第一站是最高级百货店，点明这个位置今天仍是同一家老店",
+        "进门先写气味、地面、吊灯与陈列柜的感官扫描",
+        "展示主角的品味权力：她说什么好，全城女性就抢购什么",
+        "一眼相中进口口红，价格是普通人数日工钱，毫不犹豫地买下"
+      ],
+      "abstract_move": "地标空间入场 → 今昔延续揭示 → 感官细节扫描 → 主角影响力证明 → 高价心动物的果断入手",
+      "replacement_needs": [
+        "一个今天仍存在的地标空间",
+        "一组可感官化的空间细节",
+        "一条主角品味权力的证明",
+        "一次价格冲击加果断购买"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(66)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 66
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "spectacle_catalog",
+      "start_ratio": 0.3563,
+      "end_ratio": 0.4336,
+      "start_sec": 288,
+      "end_sec": 352.6,
+      "position_label": "35.6%–43.4%(4:48–5:53)",
+      "purpose": "用营销噱头与日常奇观制造会心感，点破今昔同构",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "prize_scale_surprise",
+          "mechanism": "jackpot_escalation"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "present_parallel_line",
+          "mechanism": "same_as_today_equation"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "queue_riddle",
+          "mechanism": "unexplained_line_question"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "direct_quote_atmosphere",
+          "mechanism": "in_world_voice_insert"
+        }
+      ],
+      "required_retention_events": [
+        "prize_scale_surprise",
+        "present_parallel_line",
+        "queue_riddle",
+        "direct_quote_atmosphere"
+      ],
+      "original_moves": [
+        "写百货店的抽奖噱头：头奖是一栋像样的住宅，人们为此敞开钱包",
+        "旁白点破让人心动的办法百年前与今天一模一样",
+        "发现一条长队：有人只为乘坐那部会升降的神奇机器",
+        "引用电梯小姐报层广播的原声作为氛围落点"
+      ],
+      "abstract_move": "营销噱头展示 → 今昔同构点破 → 排队悬念 → 原声引述揭底",
+      "replacement_needs": [
+        "一个当时的新鲜营销手段及其越级大奖",
+        "一句今昔同构的旁白",
+        "一个需要排队围观的日常奇观",
+        "一段可直接引用的时代原声"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "sensory_payoff",
+      "start_ratio": 0.4336,
+      "end_ratio": 0.4916,
+      "start_sec": 349.8,
+      "end_sec": 399.8,
+      "position_label": "43.4%–49.2%(5:50–6:40)",
+      "purpose": "把时代的\"新\"落成视野与舌尖的身体回报",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "emotional_payoff",
+          "strength": 58,
+          "position_ratio": 0.4752,
+          "time_ms": 386400,
+          "reason": "第一口异域食物的闭眼反应，把\"新文明\"落成可想象的身体体验"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "vista_payoff",
+          "mechanism": "rooftop_overlook_reveal"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "sensory_payoff",
+          "mechanism": "first_bite_reaction"
+        }
+      ],
+      "required_retention_events": [
+        "vista_reveal",
+        "sensory_first_bite",
+        "new_civilization_framing"
+      ],
+      "original_moves": [
+        "升到屋顶庭园俯瞰全城，电车在脚下像玩具一样穿行",
+        "写下高处俯瞰的酥爽感受",
+        "点单西式炸猪排，用刀叉吃下第一口，不自觉闭上眼睛",
+        "把这道菜定性为舌尖上尝到的新文明"
+      ],
+      "abstract_move": "视野揭示 → 身体感受命名 → 异域食物初尝 → 文明定性",
+      "replacement_needs": [
+        "一个可俯瞰或张望的视角位",
+        "一道当时代表新事物的食物",
+        "一句把食物升格为时代象征的定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(58)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 58
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "cost_reveal_unit",
+      "start_ratio": 0.4916,
+      "end_ratio": 0.5448,
+      "start_sec": 397.6,
+      "end_sec": 443,
+      "position_label": "49.2%–54.5%(6:38–7:23)",
+      "purpose": "用新风潮消费项目再次演示代价换算与主角特权",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "cost_anchor",
+          "mechanism": "rice_unit_price_shock"
+        }
+      ],
+      "required_retention_events": [
+        "procedure_explanation",
+        "cost_anchor",
+        "onlooker_spectacle",
+        "privilege_framing"
+      ],
+      "original_moves": [
+        "前往话题中的美容院做电烫",
+        "解释这就是今天烫发的雏形",
+        "点破价格相当于两袋米，贵到有人专程来围观谁舍得做",
+        "你毫不犹豫地坐上椅子",
+        "落下判词：最先享受最新潮流是头号摩登女孩的特权"
+      ],
+      "abstract_move": "新风潮项目体验 → 与今日对应物翻译 → 代价换算加围观证明 → 毫不犹豫 → 特权判词",
+      "replacement_needs": [
+        "一个当时刚出现的消费项目",
+        "它在今天的对应物",
+        "一条以主食为尺度的价格换算",
+        "一句主角特权判词"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "moment_crystallization",
+      "start_ratio": 0.5448,
+      "end_ratio": 0.5809,
+      "start_sec": 441.2,
+      "end_sec": 472.4,
+      "position_label": "54.5%–58.1%(7:21–7:52)",
+      "purpose": "用一次奢侈的留影把一天的闪耀凝固成物件，收束体验段",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "keepsake_moment",
+          "mechanism": "shutter_click_crystallization"
+        }
+      ],
+      "required_retention_events": [
+        "special_occasion_framing",
+        "keepsake_crystallization"
+      ],
+      "original_moves": [
+        "动线最后绕去照相馆",
+        "交代当时拍照是要下决心的奢侈事",
+        "你摆出最自信的表情与姿势",
+        "快门一响，灿烂的一天被收进一张珍贵的照片"
+      ],
+      "abstract_move": "留影空间入场 → 奢侈性铺垫 → 姿态定格 → 一日结晶",
+      "replacement_needs": [
+        "一种当时稀缺的记录或纪念方式",
+        "一句其奢侈性的说明",
+        "一个把一天收束为物件的定格动作"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "conflict_escalation",
+      "start_ratio": 0.5809,
+      "end_ratio": 0.6933,
+      "start_sec": 469.8,
+      "end_sec": 563.8,
+      "position_label": "58.1%–69.3%(7:50–9:24)",
+      "purpose": "以偏见冲突完成全片张力最高点与代理爽感",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.6443,
+          "time_ms": 523959,
+          "reason": "用可量化的读者数反问羞辱者，全片最高的反杀爽点"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.6874,
+          "time_ms": 558959,
+          "reason": "人生伴侣由自己挑选的判词，把冲突收束为自主宣言"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "单场景冲突：预告-侮辱-反击-退场的完整张力弧",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "witty_comeuppance_and_self_paid_exit",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "conflict_forecast",
+          "mechanism": "unwelcome_appointment_setup"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "insult_trigger",
+          "mechanism": "antagonist_dismissal_line"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "comeback_payoff",
+          "mechanism": "reader_count_counter"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "exit_triumph",
+          "mechanism": "self_paid_walkout"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "creed_line",
+          "mechanism": "self_choice_declaration"
+        }
+      ],
+      "required_retention_events": [
+        "unwelcome_appointment_forecast",
+        "antagonist_insult",
+        "composure_beat",
+        "witty_comeback",
+        "self_paid_exit",
+        "creed_line"
+      ],
+      "original_moves": [
+        "预告晚上的不情愿相亲，对方是富家子弟",
+        "男方居高临下：女人读书无用、写文章是家门之耻",
+        "你端着咖啡从容反问：我的读者全城数千，想嫁你的姑娘有几位",
+        "补刀：女人读书正是为了一眼认出你这种人",
+        "自付咖啡钱起身离场，鞋跟声前所未有的痛快",
+        "落下判词：人生伴侣由自己挑选，这是摩登女孩的自尊"
+      ],
+      "abstract_move": "不情愿会面预告 → 居高临下侮辱 → 从容反问(己方量化资本) → 补刀 → 用行动完成的退场 → 自主判词",
+      "replacement_needs": [
+        "一场被安排的偏见会面",
+        "一句有时代代表性的轻视台词",
+        "一项主角可量化反击的社会资本",
+        "一个用行动完成的退场",
+        "一句自主选择权的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(90)、PK05(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "community_belonging",
+      "start_ratio": 0.6933,
+      "end_ratio": 0.8138,
+      "start_sec": 561.5,
+      "end_sec": 661.8,
+      "position_label": "69.3%–81.4%(9:21–11:02)",
+      "purpose": "扩展同温层群像并揭示时代约束，把个人姿态升级为群体共性",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "时代约束揭示：让华丽日常落到真实限制上",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "group_portrait",
+          "mechanism": "peer_pride_roster"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "constraint_reveal",
+          "mechanism": "banned_pleasure_fact"
+        }
+      ],
+      "required_retention_events": [
+        "friend_group_portrait",
+        "shared_pride_thesis",
+        "period_snack_detail",
+        "constraint_reveal",
+        "adaptive_joy_resolution"
+      ],
+      "original_moves": [
+        "转战常去的咖啡馆，同类女孩朋友们到齐",
+        "逐个介绍群像：百货店导购、电话接线员、演员志愿生",
+        "提炼共性：不依靠任何人、靠自己双手立足的自豪",
+        "点当时的流行饮品与甜点，热闹复盘白天的反杀",
+        "话题自然滑向恋爱八卦",
+        "揭示时代约束：别处都有的舞厅唯独此地不被允许",
+        "以\"我们用自己的方式享受夜晚\"收束"
+      ],
+      "abstract_move": "同温层集结 → 群像点名 → 共性提炼 → 流行小物加战果复盘 → 闲聊滑题 → 时代约束揭示 → 自创快乐判词",
+      "replacement_needs": [
+        "一组与主角同温层的职业群像",
+        "一句群像共性判词",
+        "一份当时的流行小物清单",
+        "一条真实的时代禁令或约束",
+        "一句自创快乐的收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "counterattack_climax",
+      "start_ratio": 0.8138,
+      "end_ratio": 0.9127,
+      "start_sec": 660.2,
+      "end_sec": 742.2,
+      "position_label": "81.4%–91.3%(11:00–12:22)",
+      "purpose": "把私人态度升级为公开宣言，用市场反响完成身份加冕",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 84,
+          "position_ratio": 0.8559,
+          "time_ms": 696000,
+          "reason": "宣言核心句把个人打扮升格为对人生选择权的公开宣告"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 82,
+          "position_ratio": 0.8866,
+          "time_ms": 721000,
+          "reason": "脱销预言成真，回击被市场验证，指责声安静下去"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "把私人态度升级为公共宣言的胜负悬念",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "adaptive_joy_resolution",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE28",
+          "event_type": "manifesto_title_reveal",
+          "mechanism": "column_title_drop"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "prophecy_vindicated",
+          "mechanism": "sellout_confirmation"
+        }
+      ],
+      "required_retention_events": [
+        "backlash_context",
+        "manifesto_title_reveal",
+        "creed_quote",
+        "editor_doubt_beat",
+        "prophecy_vindicated",
+        "fame_coronation"
+      ],
+      "original_moves": [
+        "几天后一家杂志社被一篇专栏搅得天翻地覆",
+        "交代当时媒体对这群新女性的围攻",
+        "主角决定正面回击，专栏标题是优雅拒绝无聊男人的方法",
+        "引用宣言原文：短裙红唇不为取悦谁，华丽是对自己人生的宣言",
+        "编辑起初反对，主角预言这期会卖到脱销",
+        "预言成真，全城年轻女性狂热共鸣",
+        "主角一夜成为全城最著名的专栏作家，指责声安静下去"
+      ],
+      "abstract_move": "作品骚动预告 → 舆论围攻背景 → 正面回击决定 → 宣言原文引用 → 权威质疑加主角预言 → 预言成真 → 身份加冕",
+      "replacement_needs": [
+        "一个可作为宣言的作品载体",
+        "一段围攻主角群体的舆论背景",
+        "一句宣言核心句",
+        "一个权威质疑加主角预言的回合",
+        "一个预言成真的反响证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(84)、PK07(82);打开的悬念 LOOP04→FS12 跨段;回收了前文的悬念 FS10→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 84
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.9127,
+      "end_ratio": 0.9724,
+      "start_sec": 739.9,
+      "end_sec": 790.8,
+      "position_label": "91.3%–97.2%(12:20–13:11)",
+      "purpose": "回收旅程画面，把时代黑暗与青春颜色解耦，完成时代重评",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 78,
+          "position_ratio": 0.9545,
+          "time_ms": 776199,
+          "reason": "时代黑暗不等于青春黑暗的重评，把爽感沉淀为余韵"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "体验移交：把整片积累的好感转化为观众自己的想象",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "identity_fulfillment_coronation",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "public_vindication_and_coronation",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "era_reappraisal",
+          "mechanism": "dark_youth_reframe"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "audience_question",
+          "mechanism": "hypothetical_handoff"
+        }
+      ],
+      "required_retention_events": [
+        "journey_recap",
+        "shadow_acknowledgment",
+        "era_reappraisal",
+        "footprint_continuity"
+      ],
+      "original_moves": [
+        "列车员宣布长旅程到此，回收今天的高光画面",
+        "承认那个时代绝不轻松：阴影笼罩整座城市",
+        "转折：但她们比谁都堂堂正正、比谁都耀眼地活成了自己",
+        "提炼重评：时代黑暗不等于其中的青春也黑暗",
+        "把她们的脚印延续到今天你走的街道"
+      ],
+      "abstract_move": "旅程回收 → 承认时代阴影 → 转折致敬 → 时代与青春解耦的重评 → 今昔延续收束",
+      "replacement_needs": [
+        "一组当日旅程的高光回放",
+        "一句对时代苦难的克制承认",
+        "一句时代与青春解耦式的重评",
+        "一条连到当下观众生活的延续线索"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(78);打开的悬念 LOOP06(不闭合) 跨段;回收了前文的悬念 FS02→LOOP02、FS11→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "audience_handoff",
+      "start_ratio": 0.9724,
+      "end_ratio": 1,
+      "start_sec": 788.6,
+      "end_sec": 813.2,
+      "position_label": "97.2%–100%(13:09–13:33)",
+      "purpose": "以假设性提问把体验移交观众，用框架化比喻完成订阅转化并道别",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "worldview_reappraisal_synthesis",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "subscription_callback",
+          "mechanism": "schedule_and_seat_metaphor"
+        }
+      ],
+      "required_retention_events": [
+        "audience_question",
+        "comment_prompt",
+        "schedule_callback",
+        "seat_metaphor_cta",
+        "farewell"
+      ],
+      "original_moves": [
+        "抛出最后问题：如果你能去百年前的街头，第一件想做的事是什么",
+        "邀请观众把答案写进评论",
+        "报出列车班次：每周固定一晚再来",
+        "以\"用订阅与提醒预订座位\"完成框架化行动号召",
+        "向今夜的乘客道别"
+      ],
+      "abstract_move": "假设性提问移交 → 留言邀请 → 班次预告 → 框架化订阅号召 → 道别",
+      "replacement_needs": [
+        "一个把体验假设性移交给观众的问题",
+        "一个与框架装置同构的订阅比喻",
+        "一个固定的更新节奏承诺"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

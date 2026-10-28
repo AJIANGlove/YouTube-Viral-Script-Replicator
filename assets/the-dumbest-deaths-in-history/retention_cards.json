@@ -1,0 +1,897 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.793Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "promise_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.0084,
+      "start_sec": 0.3,
+      "end_sec": 8.6,
+      "position_label": "0%–0.8%(0:00–0:09)",
+      "purpose": "直给标题承诺:一句话宣告极值盘点主题与倒数清单格式,并立即报出末位名次及其荒诞前提,零寒暄进入清单",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题极值承诺与倒数递进之间的主悬念",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "单元内「他怎么蠢死的」即时悬念",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "title_promise",
+          "mechanism": "countdown_promise_announce"
+        }
+      ],
+      "required_retention_events": [
+        "title_promise_restate",
+        "countdown_format_announce",
+        "first_rank_absurd_tease"
+      ],
+      "original_moves": [
+        "一句话宣告主题:今天盘点史上最蠢的死法",
+        "立即报出倒数第10名并给出荒诞前提:一位哲学家笑死了",
+        "用「是的你没听错」确认前提真实性"
+      ],
+      "abstract_move": "极值主题一句话宣告 + 首名次荒诞前提直给 + 真实性确认",
+      "replacement_needs": [
+        "一个可排序的极值清单主题",
+        "首名次案例的一句话荒诞前提",
+        "一句确认前提真实的口语句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS11、LOOP02→FS02 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "title_restate_then_first_rank_absurd_tease",
+        "first_stimulus_ms": 4920,
+        "first_payoff_ms": 83520,
+        "evidence_refs": [
+          "C0001",
+          "C0002",
+          "C0003",
+          "C0004",
+          "C0005"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "countdown_irony_unit",
+      "start_ratio": 0.0048,
+      "end_ratio": 0.1096,
+      "start_sec": 4.9,
+      "end_sec": 112.6,
+      "position_label": "0.5%–11%(0:05–1:53)",
+      "purpose": "第10名单元(全片模板建立):报名次与人名→铺垫人物身份信条→反常场景递进→死法揭晓→补充致死原理→以对观众的玩笑收束",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 62,
+          "position_ratio": 0.0084,
+          "time_ms": 8599,
+          "reason": "开场5秒即兑现首个荒诞前提「哲学家笑死」,标题承诺即时开始交付"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "surprise",
+          "strength": 75,
+          "position_ratio": 0.0813,
+          "time_ms": 83520,
+          "reason": "首个完整死法揭晓:他真的笑到断气,「是的你没听错」把难以置信推到顶点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "标志物悬念:骄傲之物如何反噬",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "death_reveal_with_mechanism",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE02",
+          "event_type": "first_rank_tease",
+          "mechanism": "instant_absurd_premise"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "escalation",
+          "mechanism": "absurd_scene_escalation"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "death_reveal",
+          "mechanism": "first_unit_payoff"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "mechanism_bonus",
+          "mechanism": "how_it_kills_explainer"
+        }
+      ],
+      "required_retention_events": [
+        "rank_announcement_reset",
+        "identity_belief_baseline",
+        "absurd_scene_escalation",
+        "death_reveal",
+        "mechanism_bonus_explanation",
+        "direct_address_joke"
+      ],
+      "original_moves": [
+        "铺垫哲学家的身份信条:一生教人控制情绪",
+        "给出反常场景:看驴吃无花果笑到不行,还吩咐仆人给驴灌酒",
+        "揭晓死法:笑到停不下来,窒息/心脏骤停而死",
+        "补充原理:极端大笑如何致命(缺氧、心脏骤停)",
+        "用「下次看猫视频悠着点」的对观众玩笑收束"
+      ],
+      "abstract_move": "身份信条铺垫 + 反常场景递进 + 死法揭晓 + 致死原理补充 + 对观众的玩笑收束",
+      "replacement_needs": [
+        "一个带信条或身份反差的人物",
+        "一个反常到可笑的具体场景",
+        "一个一句话能说清的致死机制",
+        "一句把死法关联到观众日常的玩笑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(62)、PK02(75);打开的悬念 LOOP03→FS03 跨段;回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 62
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "countdown_irony_unit",
+      "start_ratio": 0.1065,
+      "end_ratio": 0.2091,
+      "start_sec": 109.4,
+      "end_sec": 214.8,
+      "position_label": "10.7%–20.9%(1:49–3:35)",
+      "purpose": "第9名单元:标志物铺垫→突发危机→习惯性安全动作的关键遗忘→被自身标志物反噬致死→「骄傲即败因」收束",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "irony_reveal",
+          "strength": 72,
+          "position_ratio": 0.1799,
+          "time_ms": 184760,
+          "reason": "逃火时被自己最骄傲的胡子绊倒,标志物反噬的瞬间揭晓"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "signature_trait_backfire_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "rank_transition",
+          "mechanism": "next_rank_tease"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "foreshadow",
+          "mechanism": "safety_habit_setup"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "death_reveal",
+          "mechanism": "signature_trait_backfire"
+        }
+      ],
+      "required_retention_events": [
+        "rank_announcement_reset",
+        "signature_trait_setup",
+        "disaster_scene",
+        "foreshadowed_habit_failure",
+        "death_reveal",
+        "irony_moral"
+      ],
+      "original_moves": [
+        "设定人物标志物:近四英尺长的胡须,堪称本地名人",
+        "突发灾难:全城大火,众人逃命",
+        "点出习惯性安全动作:平时都把胡子塞进外套",
+        "关键遗忘:慌乱中忘了塞胡子,被自己的胡子绊倒摔断脖子",
+        "反讽收束:引以为傲的标志物成了他的败因"
+      ],
+      "abstract_move": "标志物铺垫 + 突发危机 + 习惯性安全动作设定 + 关键遗忘 + 标志物反噬揭晓 + 反讽收束",
+      "replacement_needs": [
+        "一个人物引以为傲的标志物",
+        "一场需要逃生的突发危机",
+        "一个平时有效但这次失效的习惯动作",
+        "一句「骄傲即败因」的反讽收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(72);回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 72
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "countdown_irony_unit",
+      "start_ratio": 0.2053,
+      "end_ratio": 0.2954,
+      "start_sec": 210.9,
+      "end_sec": 303.4,
+      "position_label": "20.5%–29.5%(3:31–5:03)",
+      "purpose": "第8名单元:行业地位铺垫→第三方行为机制解释→身体特征被误判→瞬间致死揭晓→预警玩笑收束",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "surprise",
+          "strength": 74,
+          "position_ratio": 0.282,
+          "time_ms": 289680,
+          "reason": "拟声词独立成拍「Wham」,乌龟砸中光头当场毙命,铺垫已久的误判链条瞬间兑现"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "身份与死法反差的单元悬念",
+          "closes_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP05",
+          "tension": "强者与微小死因的反差悬念",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "instant_death_reveal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "rank_transition",
+          "mechanism": "next_rank_tease"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "dramatic_irony",
+          "mechanism": "misidentification_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "rank_announcement_reset",
+        "status_baseline",
+        "animal_mechanism_explainer",
+        "misidentification_chain",
+        "instant_death_reveal",
+        "direct_address_joke"
+      ],
+      "original_moves": [
+        "铺垫行业地位:悲剧之父,改写了戏剧",
+        "设定身体特征:光头锃亮",
+        "解释第三方机制:鹰会把乌龟扔到石头上砸开壳",
+        "误判链条:鹰把光头当成石头,扔下乌龟",
+        "瞬间揭晓:乌龟砸中,当场毙命",
+        "预警玩笑:下次出门留神天上掉乌龟"
+      ],
+      "abstract_move": "行业地位铺垫 + 身体特征设定 + 第三方行为机制解释 + 误判链条 + 瞬间揭晓 + 对观众的预警玩笑",
+      "replacement_needs": [
+        "一个行业地位极高的人物",
+        "一个会被误判的身体特征",
+        "一个真实存在的第三方行为机制",
+        "一句把荒诞死法转成观众预警的玩笑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(74);打开的悬念 LOOP05→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "countdown_irony_unit",
+      "start_ratio": 0.2926,
+      "end_ratio": 0.3944,
+      "start_sec": 300.5,
+      "end_sec": 405.1,
+      "position_label": "29.3%–39.4%(5:01–6:45)",
+      "purpose": "第7名单元:武力极值铺垫→战利品炫耀→微小伤口→恶化→「以小克大」哲理收束",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "怪癖预告的死因悬念",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "smallest_thing_kills_reveal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "rank_transition",
+          "mechanism": "era_scene_reset"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "twist_signal",
+          "mechanism": "trophy_fights_back"
+        }
+      ],
+      "required_retention_events": [
+        "rank_announcement_reset",
+        "power_baseline",
+        "trophy_hubris",
+        "tiny_wound_foreshadow",
+        "infection_escalation",
+        "death_reveal",
+        "philosophical_moral"
+      ],
+      "original_moves": [
+        "武力铺垫:令人闻风丧胆的战神",
+        "战利品行为:把敌人首级挂在马鞍上炫耀",
+        "微小伤口:首级的牙齿刮破了他的腿",
+        "恶化:小伤口感染扩散,无药可救",
+        "哲理收束:最大的敌人是一颗牙,再强也会被最小的事击倒"
+      ],
+      "abstract_move": "武力极值铺垫 + 炫耀性危险行为 + 微小伤口 + 恶化过程 + 「以小克大」哲理收束",
+      "replacement_needs": [
+        "一个武力或地位极值的人物",
+        "一个炫耀战利品的危险动作",
+        "一个起初不起眼的微小伤害",
+        "一句「最小之物击倒最强者」的哲理句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS06 跨段;回收了前文的悬念 FS04→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "countdown_irony_unit",
+      "start_ratio": 0.3908,
+      "end_ratio": 0.5055,
+      "start_sec": 401.4,
+      "end_sec": 519.2,
+      "position_label": "39.1%–50.5%(6:41–8:39)",
+      "purpose": "第6名单元:怪癖与成就双铺垫→场合硬约束→生理与礼节两难→死法与病程揭晓→「大人物困于肉身小事」收束",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "shock_reveal",
+          "strength": 70,
+          "position_ratio": 0.4746,
+          "time_ms": 487479,
+          "reason": "膀胱「像灌太满的气球一样爆开」,生理冲击与画面比喻叠加的震撼揭晓"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "怪诞信仰与求生冲突的悬念",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "physiological_reveal",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "rank_transition",
+          "mechanism": "oddity_tease"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "constraint_reveal",
+          "mechanism": "etiquette_stakes"
+        }
+      ],
+      "required_retention_events": [
+        "rank_announcement_reset",
+        "oddity_and_achievement_setup",
+        "etiquette_constraint",
+        "physiological_dilemma",
+        "death_reveal",
+        "cosmic_irony_moral"
+      ],
+      "original_moves": [
+        "怪癖与成就双铺垫:铜鼻子天文学家,王室座上宾",
+        "场合约束设定:御宴上先于国王离席极失礼",
+        "两难冲突:内急却硬撑数小时",
+        "死法与病程揭晓:膀胱爆裂,痛苦十一天后去世",
+        "反讽收束:仰望星空的人也被肉身小事击倒"
+      ],
+      "abstract_move": "怪癖成就双铺垫 + 场合硬约束 + 生理与规则两难 + 死法与病程揭晓 + 「大人物困于小事」反讽收束",
+      "replacement_needs": [
+        "一个成就与怪癖并存的人物",
+        "一个不允许离场的场合硬约束",
+        "一个生理需求与规则的冲突",
+        "一句「肉身小事击倒大人物」的反讽收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(70);打开的悬念 LOOP07→FS07 跨段;回收了前文的悬念 FS05→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "countdown_irony_unit",
+      "start_ratio": 0.5022,
+      "end_ratio": 0.5988,
+      "start_sec": 515.8,
+      "end_sec": 615,
+      "position_label": "50.2%–59.9%(8:36–10:15)",
+      "purpose": "第7→中段单元:成就铺垫(勾连观众课本记忆)→怪诞信仰设定→致命处境→信仰与求生二选一→守信仰致死→「信条反噬」收束",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "belief_defiance_reveal",
+          "strength": 71,
+          "position_ratio": 0.5777,
+          "time_ms": 593360,
+          "reason": "宁死不肯踩豆田,在求生与信条的二选一前停步,信念代价的顶点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "极端方案的成败悬念",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "belief_cost_reveal",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "rank_transition",
+          "mechanism": "nostalgia_hook"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "audience_prediction",
+          "mechanism": "you_guessed_it_invite"
+        }
+      ],
+      "required_retention_events": [
+        "rank_announcement_reset",
+        "nostalgia_hook",
+        "bizarre_belief_setup",
+        "chase_stakes",
+        "belief_vs_survival_dilemma",
+        "death_reveal",
+        "irony_moral"
+      ],
+      "original_moves": [
+        "成就铺垫:定理写进课本的数学家,勾连观众记忆",
+        "怪诞信仰设定:坚信豆子神圣不可触碰",
+        "致命处境:被政敌追杀手追逃命",
+        "二选一:踩豆田逃生还是守信仰停下",
+        "死法揭晓:拒绝踩豆,被追兵打死",
+        "收束:帮人理解世界的头脑栽在豆子上"
+      ],
+      "abstract_move": "成就铺垫 + 怪诞信仰设定 + 致命处境 + 信仰与求生二选一 + 守信仰致死 + 反差收束",
+      "replacement_needs": [
+        "一个成就家喻户晓的人物",
+        "一个外人看来荒诞的私人信条",
+        "一个信条与求生直接冲突的处境",
+        "一句「信条反噬」的收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(71);打开的悬念 LOOP08→FS08 跨段;回收了前文的悬念 FS06→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 71
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "countdown_irony_unit",
+      "start_ratio": 0.5946,
+      "end_ratio": 0.6848,
+      "start_sec": 610.7,
+      "end_sec": 703.4,
+      "position_label": "59.5%–68.5%(10:11–11:43)",
+      "purpose": "第4名单元:狂想设定(自认超凡)→极端证明方案→公开围观场景→死法揭晓与物证反讽→「狂想代价」收束",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "dark_humor_payoff",
+          "strength": 73,
+          "position_ratio": 0.6524,
+          "time_ms": 670079,
+          "reason": "跳火山者当场毙命,唯一浮上来的是一只铜凉鞋,狂想被物证一秒击碎"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "expectation_shatter_reveal",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "rank_transition",
+          "mechanism": "extreme_proof_tease"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "spectacle_setup",
+          "mechanism": "public_spectacle_scene"
+        }
+      ],
+      "required_retention_events": [
+        "rank_announcement_reset",
+        "god_complex_setup",
+        "extreme_proof_scheme",
+        "public_spectacle",
+        "death_reveal_with_artifact",
+        "hubris_moral"
+      ],
+      "original_moves": [
+        "狂想设定:哲学家自认是神",
+        "极端证明方案:跳入活火山以证不死",
+        "公开场景:山下聚集围观人群等待神迹",
+        "死法揭晓:当场毙命,只有一只铜凉鞋浮上来",
+        "收束:最狂的举动换来最普通的结局"
+      ],
+      "abstract_move": "狂想设定 + 极端证明方案 + 公开围观场景 + 死法揭晓与物证反讽 + 「狂想代价」收束",
+      "replacement_needs": [
+        "一个自认超越凡人的人物狂想",
+        "一个公开的极端证明行为",
+        "一个戳破狂想的具体物证",
+        "一句「最狂举动最普通结局」的收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(73);回收了前文的悬念 FS07→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 73
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "countdown_irony_unit",
+      "start_ratio": 0.6815,
+      "end_ratio": 0.7901,
+      "start_sec": 700,
+      "end_sec": 811.5,
+      "position_label": "68.2%–79%(11:40–13:31)",
+      "purpose": "第3名单元:能力极值铺垫→徒手炫技→能力反成囚笼→天敌补刀→死法揭晓→「优势即弱点」收束",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 76,
+          "position_ratio": 0.769,
+          "time_ms": 789839,
+          "reason": "碾压赛场的强者被自己的力量困住、遭狼群分食,悲壮与荒诞的叠加顶点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "力量极值与无力结局的反差悬念",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP10",
+          "tension": "所求即死因的悖论悬念",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "strength_backfire_reveal",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "rank_transition",
+          "mechanism": "legend_intro"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "disaster_turn",
+          "mechanism": "strength_backfire_trap"
+        }
+      ],
+      "required_retention_events": [
+        "rank_announcement_reset",
+        "strength_legend_baseline",
+        "showoff_attempt",
+        "strength_backfire_trap",
+        "predator_arrival",
+        "death_reveal",
+        "irony_moral"
+      ],
+      "original_moves": [
+        "力量传奇铺垫:六连冠摔跤手,近乎超人",
+        "徒手炫技:徒手劈开大树",
+        "反困转折:树干合拢夹住双手",
+        "天敌出现:狼群围上来",
+        "死法揭晓:被自己的力量困住,遭狼群分食",
+        "收束:最大优势即致命弱点"
+      ],
+      "abstract_move": "能力极值铺垫 + 徒手炫技 + 能力反困 + 天敌补刀 + 死法揭晓 + 「优势即弱点」收束",
+      "replacement_needs": [
+        "一个以某项能力著称的人物",
+        "一个炫耀该能力的动作",
+        "一个让该能力反成囚笼的转折",
+        "一句「优势即弱点」的反讽收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(76);打开的悬念 LOOP10→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "countdown_irony_unit",
+      "start_ratio": 0.7856,
+      "end_ratio": 0.9075,
+      "start_sec": 806.9,
+      "end_sec": 932.1,
+      "position_label": "78.6%–90.8%(13:27–15:32)",
+      "purpose": "第2名单元:权力与执念铺垫→求解过程→「解药即毒药」揭示→慢性恶化→「所求即死因」收束",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "irony_reveal",
+          "strength": 77,
+          "position_ratio": 0.898,
+          "time_ms": 922320,
+          "reason": "「亲手封死自己的命,死于他以为能让他永生的东西」,所求即死因的反讽顶点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP11",
+          "tension": "契合度预告撑起的高潮悬念",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP10",
+          "payoff_type": "self_inflicted_poison_reveal",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "rank_transition",
+          "mechanism": "power_obsession_tease"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "dramatic_irony",
+          "mechanism": "cure_is_poison_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "rank_announcement_reset",
+        "power_and_obsession_setup",
+        "quest_montage",
+        "dramatic_irony_reveal",
+        "slow_poisoning_escalation",
+        "death_reveal",
+        "self_inflicted_moral"
+      ],
+      "original_moves": [
+        "权力与执念铺垫:千古一帝,痴迷长生",
+        "求药过程:派船队寻仙岛,方士献策",
+        "毒理揭示:所服仙丹实为剧毒矿物",
+        "恶化与驾崩:幻觉、虚弱,出巡途中驾崩",
+        "反讽收束:求永生者亲手服毒送命"
+      ],
+      "abstract_move": "权力极值与执念铺垫 + 求解过程 + 「解药即毒药」揭示 + 慢性恶化 + 「所求即死因」反讽收束",
+      "replacement_needs": [
+        "一个权力或成就登顶且怕死的人物",
+        "一套他深信不疑的长生方案",
+        "一个「方案即毒药」的事实揭示",
+        "一句「所求之物亲手送命」的反讽收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(77);打开的悬念 LOOP11→FS11 跨段;回收了前文的悬念 FS09→LOOP10。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 77
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "countdown_irony_unit",
+      "start_ratio": 0.9042,
+      "end_ratio": 1,
+      "start_sec": 928.7,
+      "end_sec": 1027.1,
+      "position_label": "90.4%–100%(15:29–17:07)",
+      "purpose": "第1名高潮收束单元:恶名铺垫→契合度预告→荒诞疗法设定→连锁意外揭晓→绰号改写 punchline→总评收束,全片在此结束,无CTA段",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "climactic_dark_humor_payoff",
+          "strength": 82,
+          "position_ratio": 0.9708,
+          "time_ms": 997120,
+          "reason": "蜡烛点着烈酒泡布,绰号从「坏」改写成「烤」,第1名以全片最大黑色幽默收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_countdown_delivery_with_final_reveal",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP11",
+          "payoff_type": "nickname_rewrite_punchline",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "rank_transition",
+          "mechanism": "final_rank_signal"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "climax",
+          "mechanism": "chain_accident_ignition"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "closing_moral",
+          "mechanism": "final_irony_wrap"
+        }
+      ],
+      "required_retention_events": [
+        "rank_announcement_reset",
+        "notoriety_baseline",
+        "fitting_end_tease",
+        "absurd_remedy_setup",
+        "chain_accident_reveal",
+        "nickname_rewrite_punchline",
+        "final_verdict"
+      ],
+      "original_moves": [
+        "恶名铺垫:以背叛与残忍著称的枭雄",
+        "契合度预告:没人料到他的结局会如此荒诞又如此般配",
+        "荒诞疗法设定:御医把他裹进浸泡烈酒的布中治病",
+        "连锁意外:侍女缠布时碰到蜡烛,瞬间起火",
+        "绰号改写揭晓:从「坏人」变成「烤人」",
+        "总评收束:躲过无数暗算,却栽在医生偏方与侍女失手;全片到此直接结束,无CTA"
+      ],
+      "abstract_move": "恶名铺垫 + 契合度预告 + 荒诞方案设定 + 连锁意外揭晓 + 绰号改写 punchline + 总评收束(无CTA)",
+      "replacement_needs": [
+        "一个恶名或绰号鲜明的人物",
+        "一个本身就荒诞的处置方案",
+        "一个意外点火式的连锁细节",
+        "一个可改写绰号的双关 punchline"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(82);回收了前文的悬念 FS01→LOOP01、FS10→LOOP11。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

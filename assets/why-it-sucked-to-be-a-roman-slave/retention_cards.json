@@ -1,0 +1,986 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:07:41.426Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_drop_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0475,
+      "start_sec": 0.1,
+      "end_sec": 34.1,
+      "position_label": "0%–4.8%(0:00–0:34)",
+      "purpose": "无寒暄直投:先给时代坐标,立刻宣布观众的故事不从希望开始而从锁链开始;用最常见的坠落途径与一句制度方黑色幽默格言完成世界观奠基",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "dark_humor_peak",
+          "strength": 62,
+          "position_ratio": 0.0396,
+          "time_ms": 28400,
+          "reason": "制度方格言加陪笑反问完成开场首个黑色幽默落点,世界观与语气同时确立"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题体验承诺与全片清单式苦难之间的母悬念",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "identity_drop",
+          "mechanism": "era_and_second_person_drop"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "no_hope_reversal",
+          "mechanism": "begins_with_chains"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "dark_proverb",
+          "mechanism": "enemy_we_shelter_proverb"
+        }
+      ],
+      "required_retention_events": [
+        "identity_drop",
+        "no_hope_reversal",
+        "war_path_reveal",
+        "dark_proverb"
+      ],
+      "original_moves": [
+        "宣布时代背景与帝国鼎盛坐标",
+        "用「你的故事不从希望或野心开始,从锁链开始」反向开局",
+        "给出最常见坠落途径:战败被俘,单次战役数以万计",
+        "抛出制度方黑色幽默格言「每个奴隶都是我们庇护的敌人」并陪笑反问"
+      ],
+      "abstract_move": "时代锚点 → 反向开局宣告(不从希望开始) → 最常见入局途径 → 制度方冷幽默格言 + 反问确认",
+      "replacement_needs": [
+        "一个可代入的历史身份与时代锚点",
+        "一条最高频的入局途径(带规模感)",
+        "一句代表制度方立场的冷峻格言或俗话"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(62);打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 62
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_identity_drop_with_dark_proverb",
+        "first_stimulus_ms": 7160,
+        "first_payoff_ms": 28400,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0013"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "pathway_catalog_scale_context",
+      "start_ratio": 0.0444,
+      "end_ratio": 0.0878,
+      "start_sec": 31.8,
+      "end_sec": 63,
+      "position_label": "4.4%–8.8%(0:32–1:03)",
+      "purpose": "补齐沦为该身份的其余途径清单,用「一次失足即坠落」压缩风险;随后抬高视角:该制度是帝国运转的引擎与身份象征,为进入交易现场提供动机",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "从制度抬升到交易现场的前向钩",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "stakes_compression",
+          "mechanism": "one_slip_freedom_gone"
+        }
+      ],
+      "required_retention_events": [
+        "pathway_catalog",
+        "stakes_compression",
+        "system_scale",
+        "status_irony"
+      ],
+      "original_moves": [
+        "补充其余入局途径:被家人卖掉、债务、刑罚、海盗掳走",
+        "用「一次失手自由就没了」压缩风险",
+        "抬升视角:该制度是帝国运转引擎",
+        "点明其是富人的身份象征并反问「家里没几百仆人还算吗」"
+      ],
+      "abstract_move": "次频途径清单 → 风险压缩句 → 制度规模抬升 → 地位象征反问",
+      "replacement_needs": [
+        "三到四条不同类型的入局途径",
+        "一个制度级规模事实",
+        "一个地位象征式细节"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS03 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "market_auction_dehumanization",
+      "start_ratio": 0.0843,
+      "end_ratio": 0.1531,
+      "start_sec": 60.4,
+      "end_sec": 109.8,
+      "position_label": "8.4%–15.3%(1:00–1:50)",
+      "purpose": "进入交易现场:物流、拍卖流程、挂在脖子上的身份牌,把「人变成商品」用流程细节落实;以恐惧心理描写完成尊严剥离",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "dehumanization_reveal",
+          "strength": 74,
+          "position_ratio": 0.1104,
+          "time_ms": 79159,
+          "reason": "半裸、颈挂木牌、价值压缩成几个词:人变商品的屈辱画面达到首个共情峰值"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "process_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "forward_hook",
+          "mechanism": "enter_the_slave_market"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "dehumanization_detail",
+          "mechanism": "half_naked_wooden_sign"
+        }
+      ],
+      "required_retention_events": [
+        "forward_hook",
+        "process_reveal",
+        "dehumanization_detail",
+        "psychological_descent"
+      ],
+      "original_moves": [
+        "宣告进入奴隶市场",
+        "描述被转交贩子、沿贸易路线运输,产业高效得发指",
+        "拍卖现场:半裸、颈挂木牌写明年龄来历技能",
+        "定性尊严不在套餐里",
+        "描写恐惧先于求生本能的心理下沉"
+      ],
+      "abstract_move": "场景门宣告 → 物流流程 → 拍卖道具与屈辱画面 → 尊严剥夺定性 → 心理下沉",
+      "replacement_needs": [
+        "一个交易或分配场景的流程细节",
+        "一件把人变成商品的道具",
+        "一段当事者心理描写"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(74);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "market_value_tiering",
+      "start_ratio": 0.1499,
+      "end_ratio": 0.1842,
+      "start_sec": 107.5,
+      "end_sec": 132.1,
+      "position_label": "15%–18.4%(1:48–2:12)",
+      "purpose": "交代估值规则:年龄、体力、技能与出身如何换算成价格,用冷面道喜与祝好运的反讽落点",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "humor_peak",
+          "strength": 58,
+          "position_ratio": 0.171,
+          "time_ms": 122640,
+          "reason": "「恭喜你是 premium 产品,否则祝好运」把估值逻辑反讽推成冷面笑点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "value_irony",
+          "mechanism": "premium_product_congrats"
+        }
+      ],
+      "required_retention_events": [
+        "value_dimensions",
+        "scarcity_premium",
+        "deadpan_congrats"
+      ],
+      "original_moves": [
+        "交代估值维度:年轻、强壮、受教育加分",
+        "指出某出身有聪明名声构成溢价",
+        "用「恭喜你是 premium 产品,否则祝好运」冷面落点"
+      ],
+      "abstract_move": "估值维度清单 → 稀缺出身溢价 → 冷面道喜与祝好运落点",
+      "replacement_needs": [
+        "一套把人分等的估值维度",
+        "一个溢价标签",
+        "一句冷面反讽"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(58)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 58
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "born_into_bondage",
+      "start_ratio": 0.1804,
+      "end_ratio": 0.2447,
+      "start_sec": 129.4,
+      "end_sec": 175.5,
+      "position_label": "18%–24.5%(2:09–2:56)",
+      "purpose": "第二条入局路径:出生即入局;先用「有屋顶有熟面孔」制造也许较好的假设,立刻撤回到「仍然是财产」,并给出从小灌输的服从规则",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "path_reveal",
+          "mechanism": "born_into_it"
+        }
+      ],
+      "required_retention_events": [
+        "birth_inheritance_reveal",
+        "false_comfort_withdrawal",
+        "indoctrination_rule"
+      ],
+      "original_moves": [
+        "揭示第二条入局路径:父母是奴隶你也是",
+        "给家生身份的小舒适:熟面孔、屋顶",
+        "撤回:「听着不错吧?别太舒服,你仍是财产」",
+        "法律确保你忘不了身份",
+        "从会走路起教忠诚服从,反叛火苗掐灭"
+      ],
+      "abstract_move": "出生继承规则 → 虚假安慰 → 撤回定性 → 制度提醒 → 从幼驯化",
+      "replacement_needs": [
+        "一条出生即入局的规则",
+        "一组表面小舒适",
+        "一套驯化教育内容"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "worst_assignment_descent",
+      "start_ratio": 0.2425,
+      "end_ratio": 0.3437,
+      "start_sec": 173.9,
+      "end_sec": 246.5,
+      "position_label": "24.3%–34.4%(2:54–4:07)",
+      "purpose": "待遇阶梯最底层:两种最差岗位的感官沉浸——烈日田间的体力崩坏与黑暗矿井的窒息恐惧,以可替代性与无出口宣告封死希望",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "dread_peak",
+          "strength": 68,
+          "position_ratio": 0.3114,
+          "time_ms": 223319,
+          "reason": "矿井窒息、塌方吱呀声与活埋可能的感官堆叠,体力苦难段的恐惧峰值"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "ranking_reveal",
+          "mechanism": "worst_assignments_named"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "dread_detail",
+          "mechanism": "tunnel_collapse_shiver"
+        }
+      ],
+      "required_retention_events": [
+        "worst_ranking_reveal",
+        "sensory_descent",
+        "replaceability_threat",
+        "no_exit_seal"
+      ],
+      "original_moves": [
+        "点明最差岗位排序:农业与矿业",
+        "田间感官堆叠:烈日、汗水、手起疱破裂、肌肉罢工",
+        "威胁:随时有人替代你",
+        "矿井恐惧堆叠:窒息黑暗、尘土、塌方吱呀声、可能被活埋",
+        "收工仍戴锁链睡觉",
+        "封印:没有逃脱,只有劳动到身体报废"
+      ],
+      "abstract_move": "最差排序揭示 → 岗位一感官堆叠 → 可替代性威胁 → 岗位二恐惧堆叠 → 无出口封印",
+      "replacement_needs": [
+        "两个最差处境的感官细节库",
+        "一条可替代性或无出口的事实"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(68)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 68
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "household_tradeoff_reversal",
+      "start_ratio": 0.3399,
+      "end_ratio": 0.405,
+      "start_sec": 243.8,
+      "end_sec": 290.5,
+      "position_label": "34%–40.5%(4:04–4:50)",
+      "purpose": "待遇阶梯上层:先给「运气好」的假设,立刻撤回;较好环境伴随隐形、随叫随到与多形态虐待,安全被定性为幻觉",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "待遇阶梯的假设撤回环:较好环境是否带来较好命运",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "hope_tease",
+          "mechanism": "lets_say_you_got_lucky"
+        }
+      ],
+      "required_retention_events": [
+        "hope_tease",
+        "expectation_reversal",
+        "invisibility_rule",
+        "abuse_inventory",
+        "safety_illusion"
+      ],
+      "original_moves": [
+        "假设你运气好成了家内奴",
+        "撤回:「听着像赢了吧?未必」",
+        "较好条件:更干净、不那么毁身体,但随时待命且隐形",
+        "宴会高压:一盘酒洒了就完了",
+        "枚举多形态虐待",
+        "定性安全永远是幻觉"
+      ],
+      "abstract_move": "假设让步 → 撤回 → 较好条件清单 → 高压仪式场景 → 隐性损耗枚举 → 安全幻觉定性",
+      "replacement_needs": [
+        "一个较好处境版本",
+        "一组高压仪式细节",
+        "一类非物质损耗"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "household_day_arc",
+      "start_ratio": 0.4023,
+      "end_ratio": 0.5033,
+      "start_sec": 288.5,
+      "end_sec": 361,
+      "position_label": "40.2%–50.3%(4:49–6:01)",
+      "purpose": "用一天的时间轴把较好岗位落到具体动作:从凌晨第一项劳作到宴会高压服务,以「还没到过中午」的累积转折与「奖励是更多工作」收束",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "expectation_reversal",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "structure_promise",
+          "mechanism": "day_in_life_arc"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "accumulation_turn",
+          "mechanism": "havent_seen_midday"
+        }
+      ],
+      "required_retention_events": [
+        "day_arc_structure",
+        "choreography_pressure",
+        "accumulation_turn",
+        "reward_irony"
+      ],
+      "original_moves": [
+        "宣告一日流程结构",
+        "天没亮点燃地暖系统",
+        "伺候主人穿衣,每根别针不能错",
+        "做饭打扫跑腿如影子般隐形",
+        "伺候沐浴更衣",
+        "累积转折:这一切还没到过中午",
+        "宴客日高压升级,一个眼神都招罚",
+        "收束:奖励是更多工作"
+      ],
+      "abstract_move": "时间轴开场(天没亮) → 伺候流程清单 → 影子定性 → 累积转折(还没到中午) → 高压升级 → 奖励反讽",
+      "replacement_needs": [
+        "一条从凌晨起的一日动作链",
+        "一个高压服务场景",
+        "一个反讽式奖励"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS07→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "specialized_role_gambles",
+      "start_ratio": 0.4995,
+      "end_ratio": 0.5572,
+      "start_sec": 358.2,
+      "end_sec": 399.6,
+      "position_label": "50%–55.7%(5:58–6:40)",
+      "purpose": "特殊岗位的风险收益倒置:以命换口福、以命博欢呼,每个岗位都是「危险绝对,好处附带条件」的赌局",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "odd_job_reveal",
+          "mechanism": "food_taster_gamble"
+        }
+      ],
+      "required_retention_events": [
+        "risk_reward_inversion",
+        "arena_stakes",
+        "conditional_benefit"
+      ],
+      "original_moves": [
+        "引入特殊岗位:试毒者每餐先吃",
+        "危险绝对,但能吃主人的饭「如果你活下来」",
+        "角斗士为人群欢呼而战,多数是该身份少数是逐名利的自由人",
+        "输赢规则:赢则多活一天,输则成了尸体"
+      ],
+      "abstract_move": "岗位一:风险绝对 + 附带好处 + 存活条件句 → 岗位二:表演性生死规则 → 输赢对照",
+      "replacement_needs": [
+        "两个风险收益倒置的岗位",
+        "各自的条件句与生死规则"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "legal_vacuum_role_ladder",
+      "start_ratio": 0.5538,
+      "end_ratio": 0.5947,
+      "start_sec": 397.2,
+      "end_sec": 426.5,
+      "position_label": "55.4%–59.5%(6:37–7:06)",
+      "purpose": "制度兜底:无法律保护、全凭主人意志;再按技能给岗位分层,每层都以「按该身份标准算不错,但本质不变」回撤",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "legal_vacuum_reveal",
+        "skill_ladder",
+        "per_rung_pullback"
+      ],
+      "original_moves": [
+        "宣告法律缺位:不是公民,全凭主人摆布",
+        "按技能分层:受教育者做教师文书",
+        "壮者做门卫",
+        "女性多做乳母,主人母亲视育儿为低贱",
+        "逐层回撤:按该身份标准算体面,但本质不变"
+      ],
+      "abstract_move": "法律真空宣告 → 技能分层枚举 → 逐层回撤定性",
+      "replacement_needs": [
+        "一条权利真空事实",
+        "一条技能与岗位分层清单",
+        "一句回撤定性"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "escape_cost_fear_regime",
+      "start_ratio": 0.5917,
+      "end_ratio": 0.6956,
+      "start_sec": 424.3,
+      "end_sec": 498.8,
+      "position_label": "59.2%–69.6%(7:04–8:19)",
+      "purpose": "逃跑主题:梦想的火花与致命代价的不对称——烙印、铭文项圈等震慑细节;恐惧统治日常化;点破「越值钱越不会被毁」的财产逻辑反讽",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "shock_reveal",
+          "strength": 80,
+          "position_ratio": 0.6241,
+          "time_ms": 447599,
+          "reason": "铁项圈铭文逐字读出,惩罚的震慑设计以最具体的形式呈现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "escape_tease",
+          "mechanism": "spark_of_hope"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "shock_inscription",
+          "mechanism": "iron_collar_text"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "defiance_pivot",
+          "mechanism": "not_everyone_accepted_chains"
+        }
+      ],
+      "required_retention_events": [
+        "escape_tease",
+        "shock_inscription",
+        "fear_regime",
+        "property_logic_irony"
+      ],
+      "original_moves": [
+        "点燃逃跑之念:梦想危险,尝试致命",
+        "被抓的烙印字母惩罚",
+        "铁项圈铭文逐字读出:请把我交还主人可获赏金",
+        "惩罚公开残酷以儆效尤,日常殴打与极端酷刑并存",
+        "财产逻辑:高技能者值钱所以罚不伤及投资",
+        "收束:命不属于你,每口气都看别人心情"
+      ],
+      "abstract_move": "希望点燃 → 致命代价 → 震慑道具与铭文细节 → 惩罚光谱 → 财产逻辑反讽 → 主权否定",
+      "replacement_needs": [
+        "一组逃跑或违规的震慑性惩罚细节",
+        "一条财产估值逻辑",
+        "一句主权否定定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "rebellion_rise",
+      "start_ratio": 0.6921,
+      "end_ratio": 0.7592,
+      "start_sec": 496.3,
+      "end_sec": 544.5,
+      "position_label": "69.2%–75.9%(8:16–9:04)",
+      "purpose": "英雄插曲上行:最著名的反抗者率众越狱、据险反击、队伍滚雪球式膨胀为一场运动,叙事从清单切换到战役故事线",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "scale_surprise",
+          "strength": 72,
+          "position_ratio": 0.7383,
+          "time_ms": 529480,
+          "reason": "起义队伍滚雪球式膨胀的规模揭示,把个人逃跑重命名为一场运动"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "英雄故事线:逃跑个体升级为运动之后的命运悬念",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "scale_reveal",
+          "mechanism": "army_swelled_massively"
+        }
+      ],
+      "required_retention_events": [
+        "defiance_pivot",
+        "hero_entrance",
+        "siege_reversal",
+        "scale_reveal",
+        "movement_reframe"
+      ],
+      "original_moves": [
+        "转折:不是人人接受锁链,有人反抗",
+        "最著名的反抗者登场",
+        "约七十人越狱、上山据险",
+        "击退来剿部队,消息野火般传播",
+        "队伍膨胀为十万级,含妇孺",
+        "重命名:这不是一支军队,是一场运动"
+      ],
+      "abstract_move": "转折句 → 英雄登场 → 小规模越狱 → 以弱胜强首胜 → 规模滚雪球 → 性质重命名",
+      "replacement_needs": [
+        "一段真实反抗故事(人物、起点、规模)",
+        "一次以弱胜强的战役",
+        "一个性质重命名句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(72);打开的悬念 LOOP04→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 72
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "freedom_taste_immersion",
+      "start_ratio": 0.7565,
+      "end_ratio": 0.8014,
+      "start_sec": 542.6,
+      "end_sec": 574.8,
+      "position_label": "75.7%–80.1%(9:03–9:35)",
+      "purpose": "全片情绪最高点:把观众再次按进第二人称,用无锁链的手腕、自主的选择与「空气味道不同」的感官句兑现自由的滋味,同时埋入「他们必会回来」的阴影",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.788,
+          "time_ms": 565120,
+          "reason": "第二人称自由体感与「空气味道不同」的感官金句,全片唯一正向大兑现,情绪最高点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "自由体感中埋入的阴影预告,嵌套于英雄线之内",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "sensory_payoff",
+          "mechanism": "air_tastes_like_freedom"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_reimmersion",
+        "sensory_freedom_payoff",
+        "shadow_foreshadow"
+      ],
+      "original_moves": [
+        "第二人称重返:想象你是逃亡者之一",
+        "体感清单:手腕无锁链、头顶无命令、选择归己",
+        "多年来第一次笑,与同痛者交换故事",
+        "感官金句:空气味道不同,像自由像可能",
+        "阴影预告:明知对方会来,这一口也值一切"
+      ],
+      "abstract_move": "体感清单(束缚消失的细节) → 首次情感释放 → 感官金句 → 代价预告中的价值宣言",
+      "replacement_needs": [
+        "一组束缚消失的体感细节",
+        "一句感官化自由金句",
+        "一个迫在眉睫的威胁预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(90);打开的悬念 LOOP05→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "rebellion_crushed_spectacle",
+      "start_ratio": 0.7982,
+      "end_ratio": 0.8534,
+      "start_sec": 572.4,
+      "end_sec": 612,
+      "position_label": "79.8%–85.3%(9:32–10:12)",
+      "purpose": "镇压:强势将领出场、起义被碾碎、沿大道的大规模处刑成为给所有路人看的震慑信息;英雄尸骨无存,燃烧明亮但结局灰暗",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "atrocity_spectacle",
+          "strength": 85,
+          "position_ratio": 0.8255,
+          "time_ms": 592040,
+          "reason": "沿大道的大规模处刑与「路人必看的警告」点破,希望掐灭与震慑设计同时达到峰值"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "tragic_heroic_arc",
+          "opened_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "deterrence_spectacle_payoff",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "deterrence_spectacle",
+          "mechanism": "crucifixion_road"
+        }
+      ],
+      "required_retention_events": [
+        "enforcer_entrance",
+        "deterrence_spectacle",
+        "message_function",
+        "hero_fate"
+      ],
+      "original_moves": [
+        "宣告对方不轻纵,连败后派出最富有最无情的将领",
+        "起义被碾压",
+        "数千俘虏沿大道处刑,百余里路段成为路人必看的警告",
+        "点破:这就是敢梦自由的下场",
+        "英雄战死,尸骨无存",
+        "收束:燃烧明亮,结局灰暗"
+      ],
+      "abstract_move": "镇压者登场 → 力量碾压 → 震慑奇观(规模+地点+可见性) → 信息功能点破 → 英雄结局 → 明暗对照收束",
+      "replacement_needs": [
+        "一次真实镇压的规模与地点细节",
+        "一个信息功能点破句",
+        "英雄的下场"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(85);回收了前文的悬念 FS12→LOOP04、FS13→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "legal_freedom_paths",
+      "start_ratio": 0.8497,
+      "end_ratio": 0.9248,
+      "start_sec": 609.4,
+      "end_sec": 663.2,
+      "position_label": "85%–92.5%(10:09–11:03)",
+      "purpose": "制度化解套:合法释放的机制及附带条件(义务工时、买断投资、被遗弃式自由),用附带条件与微薄希望保持悲观基调",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "rare_hope_reframe",
+          "mechanism": "manumission_rare_not_impossible"
+        }
+      ],
+      "required_retention_events": [
+        "conditional_hope",
+        "obligation_strings",
+        "buyback_logic",
+        "abandonment_note"
+      ],
+      "original_moves": [
+        "宣告反抗非唯一出路:合法释放稀有但存在",
+        "机制一:忠诚奖励或花钱买断,本质是赔回主人的投资",
+        "附带条件:自由后每年仍欠旧主固定工作日",
+        "更弱希望:被遗弃式自由",
+        "悲观注脚:该身份值钱,主人会榨干最后一点投资"
+      ],
+      "abstract_move": "替代出路宣告 → 机制一及条件 → 机制本质点破 → 附带义务 → 更弱机制加悲观注脚",
+      "replacement_needs": [
+        "一到两条制度化解套路径及附带条件",
+        "一个「投资榨干」式悲观事实"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "freed_stigma_decline_close",
+      "start_ratio": 0.9205,
+      "end_ratio": 1,
+      "start_sec": 660.2,
+      "end_sec": 717.2,
+      "position_label": "92.1%–100%(11:00–11:57)",
+      "purpose": "自由之后与收束:技能变现的有限上行与污名的不可洗脱;制度随帝国衰落而松动,但平等连崩溃都没兑现;以把锁链转喻为隐形结构的修辞问句收束,无行动号召",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 78,
+          "position_ratio": 0.9897,
+          "time_ms": 709760,
+          "reason": "「如果锁链隐形,自由又是什么」把全片清单式苦难升级为结构性判断并回扣标题"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "出路问题之后的后传悬念",
+          "closes_in": "FS16"
+        },
+        {
+          "loop_id": "LOOP07",
+          "tension": "结尾前的宏观希望试探",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "accumulated_catalog_answer_with_rhetorical_reframe",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "bittersweet_stigma_reveal",
+          "opened_in": "FS16"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "deflated_hope",
+          "opened_in": "FS16"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "stigma_reversal",
+          "mechanism": "chains_escape_judgment_stays"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "rhetorical_close",
+          "mechanism": "invisible_chains_question"
+        }
+      ],
+      "required_retention_events": [
+        "limited_mobility",
+        "stigma_reversal",
+        "institutional_decline",
+        "rhetorical_question_close"
+      ],
+      "original_moves": [
+        "设问:那之后会怎样",
+        "有限上行:靠技能营生,有人致富",
+        "污名反转:不得担任公职,逃得出锁链逃不出审判",
+        "制度随帝国衰落而松动,界限渐模糊",
+        "放气:平等连崩溃都没能兑现",
+        "修辞问句收尾:如果锁链隐形,自由又是什么"
+      ],
+      "abstract_move": "有限上行清单 → 污名反转 → 制度衰落 → 平等缺席放气 → 核心意象转喻的修辞问句收束",
+      "replacement_needs": [
+        "一组自由后的上行与天花板事实",
+        "一个制度衰落的宏观事实",
+        "一个可把主题转喻化的收尾概念"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(78);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

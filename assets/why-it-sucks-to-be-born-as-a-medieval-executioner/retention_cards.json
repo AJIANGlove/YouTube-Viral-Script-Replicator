@@ -1,0 +1,912 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:07:41.452Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry_world_baseline",
+      "start_ratio": 0,
+      "end_ratio": 0.0374,
+      "start_sec": 0.4,
+      "end_sec": 22.2,
+      "position_label": "0%–3.7%(0:00–0:22)",
+      "purpose": "零寒暄把观众直接降生到故事世界:宣告出生时代与地域,用「不够富也不够穷」的否定式定位家庭阶层,速写母亲持家、父亲常年外出,为后段身份揭示埋下家庭结构伏笔",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题承诺与全片代价清单之间的总悬念",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "identity_entry",
+          "mechanism": "second_person_rebirth"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_rebirth",
+        "baseline_sketch",
+        "foreshadow_detail"
+      ],
+      "original_moves": [
+        "直接宣告观众降生于某世纪的某国",
+        "用「不够富也不够穷、平凡到没人记得」定位家庭阶层",
+        "速写母亲操持一切、父亲常年在外不见人影"
+      ],
+      "abstract_move": "第二人称降生宣告 + 否定式家庭阶层定位 + 父母职能速写(一方缺席埋笔)",
+      "replacement_needs": [
+        "一个时代与地域背景",
+        "一个普通家庭的阶层基线",
+        "一个「父亲角色常年缺席」式的家庭结构伏笔"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;打开的悬念 LOOP01→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_rebirth_with_dark_stat",
+        "first_stimulus_ms": 26599,
+        "first_payoff_ms": 103640,
+        "evidence_refs": [
+          "C0001",
+          "C0012",
+          "C0043"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "survival_milestone_isolation_signs",
+      "start_ratio": 0.034,
+      "end_ratio": 0.0869,
+      "start_sec": 20.2,
+      "end_sec": 51.6,
+      "position_label": "3.4%–8.7%(0:20–0:52)",
+      "purpose": "用婴儿存活里程碑制造黑暗反差幽默,随后陈列一组异样信号(无人来访、不住在孩子附近、母亲不许出门),并用「狼会吃小孩」的借口式解释把身份悬念挂起来",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 62,
+          "position_ratio": 0.0448,
+          "time_ms": 26599,
+          "reason": "婴儿夭折率黑暗统计与冷面「恭喜」并置,全片第一个情绪刺激点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "早段异样信号积累的求因悬念",
+          "closes_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "搪塞借口式伏笔:字面威胁与真实威胁的错位",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE02",
+          "event_type": "dark_statistic",
+          "mechanism": "infant_mortality_congrats"
+        }
+      ],
+      "required_retention_events": [
+        "dark_statistic",
+        "deadpan_congrats",
+        "isolation_clues",
+        "excuse_foreshadow"
+      ],
+      "original_moves": [
+        "给「活到一岁」发奖章,顺便甩出当时近四成儿童夭折的黑暗统计",
+        "陈列异样信号:没人来家里、不住在其他孩子附近、母亲不许出门",
+        "用「外面有狼、狼爱吃小孩」的借口式解释搪塞"
+      ],
+      "abstract_move": "黑暗统计冷面祝贺 + 异样信号清单 + 借口式解释埋悬念",
+      "replacement_needs": [
+        "一个该时代的高死亡率类统计",
+        "一组可观察的孤立信号",
+        "一个大人用来搪塞孩子的借口"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(62);打开的悬念 LOOP02→FS04、LOOP04→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 62
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "public_shame_incident",
+      "start_ratio": 0.0827,
+      "end_ratio": 0.1486,
+      "start_sec": 49.1,
+      "end_sec": 88.2,
+      "position_label": "8.3%–14.9%(0:49–1:28)",
+      "purpose": "用一次进城采购把「被孤立」升级为「被敌视」:期待中的大冒险变成被凝视、窃语、怒视、咒骂,绰号当众点爆身份,母亲加速拽孩子回家,把「为什么」的好奇心推到顶点",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.1232,
+          "time_ms": 73200,
+          "reason": "绰号当众点爆身份,异样信号积累获得第一个答案方向"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "identity_name_drop",
+          "mechanism": "executioner_brat_slur"
+        }
+      ],
+      "required_retention_events": [
+        "expectation_subversion",
+        "escalating_hostility",
+        "identity_name_drop",
+        "curiosity_open"
+      ],
+      "original_moves": [
+        "第一次跟母亲进城,期待中的大冒险变成被围观",
+        "路人敌意逐级升级:凝视、窃语、怒视、咒骂",
+        "一句「刽子手的崽子」当众点爆身份",
+        "母亲拽着孩子以前所未有的速度逃回家"
+      ],
+      "abstract_move": "公开场景的期待落差 + 敌意逐级升级 + 绰号点爆身份 + 监护人仓皇撤离",
+      "replacement_needs": [
+        "一个公开场景",
+        "一组逐级升级的敌意动作",
+        "一个能暴露身份的称呼"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "origin_reveal_fate_announcement",
+      "start_ratio": 0.1433,
+      "end_ratio": 0.2172,
+      "start_sec": 85.1,
+      "end_sec": 129,
+      "position_label": "14.3%–21.7%(1:25–2:09)",
+      "purpose": "孩子坐等父亲回家要答案,父亲亲口揭示身份真相,早段「狼」的借口瞬间贬值;随即宣告父亲老了、观众是下一个接班人,把身份悬念升级为命运冲击",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.1745,
+          "time_ms": 103640,
+          "reason": "父亲亲口揭示身份,狼的借口瞬间贬值,观众与主角的世界同时翻转"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.2072,
+          "time_ms": 123079,
+          "reason": "「你是下一个」接班宣告与「不不不」自我打断,命运冲击的情绪尖点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "接班宣告后的逃脱悬念",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "identity_reveal",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "metaphor_recontextualization",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "identity_reveal",
+          "mechanism": "father_truth_reveal"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "succession_dread",
+          "mechanism": "you_are_next"
+        }
+      ],
+      "required_retention_events": [
+        "identity_reveal",
+        "callback_payoff",
+        "succession_dread",
+        "self_interruption"
+      ],
+      "original_moves": [
+        "孩子熬夜坐等父亲回家,不让他坐下就要答案",
+        "父亲坦白:他就是城里负责处决的人,狼顿时不可怕了",
+        "补一刀:父亲老了,你是下一个接班人",
+        "主角连连否认,甩出梦想清单(手艺人、战士)"
+      ],
+      "abstract_move": "坐等答案 + 亲缘者揭示真相 + 旧恐惧贬值回收 + 接班宣告 + 梦想清单反抗",
+      "replacement_needs": [
+        "一个揭示场景",
+        "一句身份真相句",
+        "一个「轮到你了」的宣告",
+        "一组主角的替代梦想"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(85)、PK04(80);打开的悬念 LOOP03→FS06 跨段;回收了前文的悬念 FS02→LOOP02、FS02→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "dream_denial_lineage_lock",
+      "start_ratio": 0.2124,
+      "end_ratio": 0.28,
+      "start_sec": 126.2,
+      "end_sec": 166.3,
+      "position_label": "21.2%–28%(2:06–2:46)",
+      "purpose": "主角用梦想清单(手艺人、战士)反抗,父亲拒绝安抚:全城不会给别的活路;再用多代世袭链条排比证明这不是惩罚而是结构,以「家族生意/你被困住了」定性锁死退路",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "lineage_litany",
+          "mechanism": "generations_chain"
+        }
+      ],
+      "required_retention_events": [
+        "dream_list_denial",
+        "no_sugarcoat",
+        "lineage_litany",
+        "trap_verdict"
+      ],
+      "original_moves": [
+        "父亲不哄:全城没有别家会雇你",
+        "父亲自曝也曾梦想当别的,但从不可能",
+        "排比背诵家族链:祖父、曾祖、高祖全是干这行的",
+        "定性句:这是家族生意,你被困住了"
+      ],
+      "abstract_move": "拒绝安抚 + 亲缘者自曝同款未竟梦想 + 多代世袭链条排比 + 锁死定性句",
+      "replacement_needs": [
+        "一条多代世袭链",
+        "一句「没有别的可能」的断言",
+        "一个锁死定性句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "apprenticeship_first_witness",
+      "start_ratio": 0.2739,
+      "end_ratio": 0.3824,
+      "start_sec": 162.7,
+      "end_sec": 227.1,
+      "position_label": "27.4%–38.2%(2:43–3:47)",
+      "purpose": "年龄换挡进入学徒期:从擦拭刑具、清理刑场的杂役基线开始;「至少还没看过人死」的侥幸念头立刻被「你乌鸦嘴了」回收,首次目睹处刑(求饶、家属哭喊、行刑)完成冲击,并把全城对判决的恨意错置到执行者身上",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 78,
+          "position_ratio": 0.3423,
+          "time_ms": 203319,
+          "reason": "首次目睹行刑的冲击与「这不是训练,这是你的一生」定性叠加"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "escape_denied_lineage_lock",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "jinx_callback",
+          "mechanism": "you_jinxed_it"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "first_witness_shock",
+          "mechanism": "rope_snaps_neck"
+        }
+      ],
+      "required_retention_events": [
+        "time_skip_milestone",
+        "jinx_callback",
+        "first_witness_shock",
+        "life_verdict",
+        "misplaced_blame"
+      ],
+      "original_moves": [
+        "年龄换挡:学徒期从擦刑具、清刑场的杂役开始",
+        "刚说「至少还没看过人死」,旁白立刻「你乌鸦嘴了」回收",
+        "首次目睹处决:求饶、家属哭喊、行刑一气呵成",
+        "定性「这不是训练,这是你的一生」,并点破全城把判决的恨算在执行者头上"
+      ],
+      "abstract_move": "年龄换挡 + 杂役基线 + 侥幸念头当场回收 + 首次见证冲击 + 一生定性 + 恨意错置",
+      "replacement_needs": [
+        "一个学徒期起点",
+        "一个可被立刻戳破的侥幸念头",
+        "一场首次见证的高张力场景",
+        "一个恨意错置的社会观察"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(78);回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "brutal_training_protocol",
+      "start_ratio": 0.3784,
+      "end_ratio": 0.5735,
+      "start_sec": 224.7,
+      "end_sec": 340.6,
+      "position_label": "37.8%–57.4%(3:45–5:41)",
+      "purpose": "训练升格:用现代游乐场所的反讽类比引出解剖与酷刑科目,「要么学会要么流血」的规则句呈现丛林法则;技术细节对照(徒手与工具)制造冷幽默;两年法规期与「无人竞争」的行业事实补全职业结构,最后以「面不改色」考核出师",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "rule_reveal",
+          "mechanism": "learn_or_you_bleed"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "no_competition_reveal",
+          "mechanism": "nobody_applies"
+        }
+      ],
+      "required_retention_events": [
+        "training_escalation",
+        "anachronism_gag",
+        "rule_reveal",
+        "technique_contrast",
+        "no_competition_reveal",
+        "graduation_test"
+      ],
+      "original_moves": [
+        "两年杂役换真训练,用「如果那地方有断头台」式现代类比反讽",
+        "训练科目:解剖真尸体、学酷刑,规则是「要么学会要么流血」",
+        "技术对照:徒手拔牙很糙,用钳子干净",
+        "再背两年法规;揭示这行无人竞争因为没人想要这人生",
+        "通过「面不改色」考核,获准上岗"
+      ],
+      "abstract_move": "训练升格清单 + 时代错位反讽 + 残酷规则句 + 技术细节对照 + 零竞争揭示 + 出师考核",
+      "replacement_needs": [
+        "一组训练科目",
+        "一条残酷学习规则",
+        "一个前后技术对照",
+        "一个「无人竞争」的行业事实",
+        "一个考核动作"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "first_public_execution_trial",
+      "start_ratio": 0.5692,
+      "end_ratio": 0.6739,
+      "start_sec": 338.1,
+      "end_sec": 400.2,
+      "position_label": "56.9%–67.4%(5:38–6:40)",
+      "purpose": "首次公开处刑:黑斗篷用途反转(不是遮脸是立威),外在镇定与内在恐慌对照,父亲的口头禅支撑主角一次成功;人群倒吸凉气,「好得吓人」的夸奖之后回报却是诅咒与唾沫,点破「好像这是他自己选的人生」的委屈",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 88,
+          "position_ratio": 0.6284,
+          "time_ms": 373199,
+          "reason": "首次公开处刑一剑成功,全片动作最高点,紧接掌声反转为诅咒"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "仪式道具用途的微型悬念,当场自问自答",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "rhetorical_flip_self_answer",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "purpose_flip",
+          "mechanism": "cloak_strikes_fear"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "first_trial_climax",
+          "mechanism": "one_clean_stroke"
+        }
+      ],
+      "required_retention_events": [
+        "ritual_entry",
+        "purpose_flip",
+        "outside_inside_contrast",
+        "motto_support",
+        "first_trial_climax",
+        "applause_reversal",
+        "unfairness_callout"
+      ],
+      "original_moves": [
+        "首次公开上岗,披风用途反转:不是遮脸,是让人害怕",
+        "外稳内慌:背直手稳,心里狂跳,靠「装到成功为止」撑住",
+        "一次成功,人群倒吸凉气,夸他「好得吓人」",
+        "回报却是诅咒与唾沫,点破「好像这是他自己选的人生」"
+      ],
+      "abstract_move": "仪式感登场 + 道具用途反转 + 外稳内慌对照 + 口头禅支撑 + 一次成功 + 掌声反转为敌意 + 非自愿点题",
+      "replacement_needs": [
+        "一个首次公开展示场景",
+        "一个道具或服装的真实用途",
+        "一组外在镇定与内在恐慌的对照",
+        "一次成功换来敌意的反讽"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(88)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "title_inheritance_privilege_cost",
+      "start_ratio": 0.669,
+      "end_ratio": 0.776,
+      "start_sec": 397.4,
+      "end_sec": 460.9,
+      "position_label": "66.9%–77.6%(6:37–7:41)",
+      "purpose": "继承头衔成为正式执行者:特权清单(高薪、可取死者遗物)陈列后立刻配对代价——用「穿着死者大衣逛街被其女儿看见」的具象场景把抽象仇恨落到一个人身上,再以制度性排斥(教会拒绝入内)与「不洁的必要之恶」的矛盾定性收束",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 83,
+          "position_ratio": 0.7398,
+          "time_ms": 439400,
+          "reason": "穿着死者大衣逛街被其女儿看见:全城抽象仇恨被具象成一个人的眼神"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "concretized_grudge",
+          "mechanism": "dead_mans_coat_scene"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "institutional_rejection",
+          "mechanism": "church_refuses_entry"
+        }
+      ],
+      "required_retention_events": [
+        "title_inheritance",
+        "privilege_list",
+        "concretized_grudge",
+        "untouchable_tension",
+        "institutional_rejection",
+        "oxymoron_label"
+      ],
+      "original_moves": [
+        "继承头衔成为正式执行者",
+        "特权清单:高薪,可取死者遗物,衣橱建在尸体上",
+        "具象化仇恨:穿着昨天被处决者的大衣逛街,其女儿恨不得杀他却不能",
+        "制度性排斥:教会拒绝他入内,定性为「不洁的必要之恶」"
+      ],
+      "abstract_move": "头衔继承 + 特权清单 + 抽象仇恨具象化单场景 + 制度性排斥 + 矛盾定性词组",
+      "replacement_needs": [
+        "一组职业特权",
+        "一个把仇恨落到具体人物的场景",
+        "一个制度性排斥事实",
+        "一个矛盾定性词组"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(83)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 83
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "outcast_marriage",
+      "start_ratio": 0.7728,
+      "end_ratio": 0.8256,
+      "start_sec": 459,
+      "end_sec": 490.3,
+      "position_label": "77.3%–82.6%(7:39–8:10)",
+      "purpose": "婚姻段落:被社会排斥者只能与同样被排斥者结合,配偶「懂他」给出短暂暖意;空荡婚礼(没有祭司没有宾客)用排比否定量化孤独,以「至少他幸福」让步收束,再补一句「这行的幸福是稀罕物」压回基调",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 70,
+          "position_ratio": 0.7937,
+          "time_ms": 471400,
+          "reason": "空荡婚礼与「至少他幸福/幸福在这行是稀罕物」,苦乐参半"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "empty_ceremony",
+          "mechanism": "empty_wedding"
+        }
+      ],
+      "required_retention_events": [
+        "outcast_pairing",
+        "empty_ceremony",
+        "concession_beat",
+        "rarity_verdict"
+      ],
+      "original_moves": [
+        "被期待结婚,只能找同样被社会唾弃的人",
+        "配偶身份同样边缘:她懂他,没人评判她的选择",
+        "婚礼空荡:没有祭司没有宾客,只有一个来蹭饭的亲戚",
+        "收束:至少他幸福——而这行的幸福是稀罕物"
+      ],
+      "abstract_move": "同类相配 + 空荡仪式排比否定 + 让步式收束 + 幸福稀缺定性",
+      "replacement_needs": [
+        "一个同样被排斥的配偶类型",
+        "一场空荡的仪式",
+        "一句让步式收束",
+        "一个稀缺定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "fame_haunting_reversal",
+      "start_ratio": 0.8198,
+      "end_ratio": 0.8685,
+      "start_sec": 486.9,
+      "end_sec": 515.8,
+      "position_label": "82%–86.9%(8:07–8:36)",
+      "purpose": "规模里程碑:千次处刑后成名、邻城皆知,被定性为超越祖先的传奇;随即反转——这不是值得骄傲的数字,而是夜夜纠缠的创伤,用梦境、尖叫、压胸的身体化描写完成荣耀到代价的清算",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 76,
+          "position_ratio": 0.8407,
+          "time_ms": 499319,
+          "reason": "「死亡传奇」当场反转为「夜夜纠缠的数字」,荣耀叙事翻转为代价清算"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "pride_reversal",
+          "mechanism": "legend_haunts_you"
+        }
+      ],
+      "required_retention_events": [
+        "milestone_scale",
+        "legend_label",
+        "pride_reversal",
+        "trauma_imagery"
+      ],
+      "original_moves": [
+        "数量里程碑:上千次处决后成名,名声传到邻城",
+        "定性为超越所有祖先的死亡传奇",
+        "当场反转:这不是值得骄傲的数字,它夜夜纠缠",
+        "创伤具象化:脸涌入梦里、尖叫爬进耳朵、重量压胸"
+      ],
+      "abstract_move": "规模里程碑 + 传奇定性 + 骄傲反转句 + 创伤身体化三连",
+      "replacement_needs": [
+        "一个规模或年限里程碑",
+        "一个传奇定性",
+        "一句反转句",
+        "一组创伤的身体化描写"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(76)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "late_joy_body_decay",
+      "start_ratio": 0.8646,
+      "end_ratio": 0.9198,
+      "start_sec": 513.5,
+      "end_sec": 546.3,
+      "position_label": "86.5%–92%(8:34–9:06)",
+      "purpose": "迟来的喜悦:子女降生让主角第一次知道真正的快乐,全力保护;但身体衰败信号(站姿撑不住、手抖)接踵而至,「这行里一次失误就是死」的硬规则把喜悦重新压入危机",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "晚年身体衰败与职业硬规则叠加的生存悬念",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "body_decay_signal",
+          "mechanism": "hands_shake_mistake_death"
+        }
+      ],
+      "required_retention_events": [
+        "late_joy",
+        "protective_action",
+        "body_decay_signal",
+        "mistake_is_death_rule"
+      ],
+      "original_moves": [
+        "妻子生下一儿一女,主角第一次知道真正的快乐",
+        "全力保护孩子,给他们好生活",
+        "身体衰败信号:当年吓人的站姿撑不住、手开始抖",
+        "硬规则揭示:这行里一次失误就是死"
+      ],
+      "abstract_move": "迟来的家庭喜悦 + 保护动作 + 身体衰败信号 + 失误即毁灭的硬规则",
+      "replacement_needs": [
+        "一个迟来的家庭喜悦",
+        "一组身体衰败信号",
+        "一条「失误即毁灭」的职业硬规则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "cycle_succession_closure",
+      "start_ratio": 0.9151,
+      "end_ratio": 0.9641,
+      "start_sec": 543.5,
+      "end_sec": 572.6,
+      "position_label": "91.5%–96.4%(9:03–9:33)",
+      "purpose": "循环收束:唯一的出路是把儿子拉到一边开始训练,就像当年父亲对自己做的那样;两代人「恨它」的态度回声让命运复刻显形,「要活命就必须比你更强」给出理由,以一句生存格言回答标题「为什么糟」并闭合主承诺",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "title_callback",
+          "strength": 86,
+          "position_ratio": 0.9504,
+          "time_ms": 564480,
+          "reason": "「不靠仁慈靠刀刃」生存格言收束,回答标题「为什么糟」,主承诺闭合"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "succession_as_only_escape",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "fate_recursion",
+          "mechanism": "carve_same_fate"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "closing_maxim",
+          "mechanism": "live_by_the_blade"
+        }
+      ],
+      "required_retention_events": [
+        "cycle_declaration",
+        "only_choice",
+        "fate_recursion",
+        "history_echo",
+        "closing_maxim"
+      ],
+      "original_moves": [
+        "宣告循环继续:只剩一个选择,恨它但知道必须做",
+        "把儿子拉到一边开始训练,就像当年父亲训练他",
+        "把同样的命运刻进儿子,儿子也恨它,就像当年的自己",
+        "理由:要活命就必须比你更强;收束格言:这人生不靠仁慈活,靠刀刃活"
+      ],
+      "abstract_move": "唯一选择宣告 + 向下一代复刻命运 + 两代人态度回声 + 变强理由 + 生存格言收束",
+      "replacement_needs": [
+        "一个不得不做的传承动作",
+        "一组两代人态度回声",
+        "一句可复述的生存格言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(86);回收了前文的悬念 FS12→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "closing_cta_cross_reference",
+      "start_ratio": 0.9596,
+      "end_ratio": 1,
+      "start_sec": 569.9,
+      "end_sec": 593.9,
+      "position_label": "96%–100%(9:30–9:54)",
+      "purpose": "叙事闭环后切出:感谢观看并声明创作者真的读评论,征集下一期选题,用「如果你觉得这算糟,那还有更糟」的对比钩子交叉推荐同系列视频,引导点击并道别",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "选题征集的参与钩子,声明创作者真的读评论",
+          "closes_in": null
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "交叉推荐钩子:用相对惨度引导点击下一集",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "accumulated_cost_ledger_with_cycle_maxim",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP07",
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "cross_reference_tease",
+          "mechanism": "roman_slave_next"
+        }
+      ],
+      "required_retention_events": [
+        "gratitude",
+        "comment_prompt",
+        "cross_reference_tease",
+        "comparative_hook",
+        "farewell"
+      ],
+      "original_moves": [
+        "感谢观看,声明创作者真的读评论",
+        "征集下一期选题",
+        "交叉推荐同系列「生为另一种古代身份」视频,用「如果你觉得这算糟」的相对惨度钩子",
+        "引导点击屏幕并道别"
+      ],
+      "abstract_move": "感谢 + 评论征集 + 同形式交叉推荐 + 相对惨度钩子 + 点击引导道别",
+      "replacement_needs": [
+        "一个评论征集问题",
+        "一条同系列相邻选题",
+        "一句相对惨度对比钩子"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07(不闭合)、LOOP08(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

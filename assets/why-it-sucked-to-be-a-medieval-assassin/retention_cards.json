@@ -1,0 +1,913 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.817Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_drop_promise_turn",
+      "start_ratio": 0,
+      "end_ratio": 0.0657,
+      "start_sec": 0.4,
+      "end_sec": 48.8,
+      "position_label": "0%–6.6%(0:00–0:49)",
+      "purpose": "把观众以第二人称直接投放进目标身份的出生现场:报出大致年代与地域区间,用「听起来很酷吧?完全不是」的反讽转折确认标题契约,顺手埋下「以阵亡长辈命名」的玩笑式预言伏笔,再以出生即被围攻的处境揭示完成首次「糟」兑现",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 58,
+          "position_ratio": 0.0364,
+          "time_ms": 27039,
+          "reason": "出生即被围攻:标题承诺的第一个苦难证据在 30 秒内落地"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "全片主引擎,逐阶段累积代价证据",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "埋伏笔供结尾反转回收",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "identity_drop",
+          "mechanism": "second_person_birth_assignment"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "promise_turn",
+          "mechanism": "sounds_cool_not_really"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "threat_reveal",
+          "mechanism": "born_into_siege"
+        }
+      ],
+      "required_retention_events": [
+        "identity_drop",
+        "ironic_promise_turn",
+        "foreshadowing_joke",
+        "threat_reveal"
+      ],
+      "original_moves": [
+        "直接把观众设定为出生在某个被围困山城的孩子,报出大致年代区间",
+        "用「听起来很酷吧?完全不是」的反讽转折定调",
+        "玩笑式伏笔:新生儿以阵亡长辈命名,旁白吐槽「希望这不是预言」",
+        "点破处境:出生地的城堡已被围攻数月"
+      ],
+      "abstract_move": "第二人称身份投放 + 年代环境锚点 + 反讽转折定调 + 玩笑式预言伏笔 + 环境威胁揭示",
+      "replacement_needs": [
+        "一个有浪漫化滤镜的目标身份",
+        "一个该身份出生/入场即处于危机的环境事实",
+        "一个可回收的玩笑式伏笔"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(58);打开的悬念 LOOP01→FS14、LOOP02→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 58
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_identity_drop_with_ironic_turn",
+        "first_stimulus_ms": 8720,
+        "first_payoff_ms": 27039,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0012"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "hardship_catalog_with_gallows_humor",
+      "start_ratio": 0.0625,
+      "end_ratio": 0.1308,
+      "start_sec": 46.4,
+      "end_sec": 97.1,
+      "position_label": "6.3%–13.1%(0:46–1:37)",
+      "purpose": "围城内的生存困境清单:断粮、断水、物价飞涨,升级到「穷人已经在菜单上」的食人传闻黑色幽默;随后时间跳切到七岁围城结束,父亲生还但失去一臂,解脱附带永久代价,种下对敌方的终身仇恨",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "humor_peak",
+          "strength": 62,
+          "position_ratio": 0.081,
+          "time_ms": 60160,
+          "reason": "「穷人已经在菜单上」的食人传闻黑色幽默,苦难与笑点首次叠加"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "建立情感资产供中段引爆",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "gallows_humor",
+          "mechanism": "on_the_menu"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "time_jump_relief",
+          "mechanism": "siege_ends_at_seven"
+        }
+      ],
+      "required_retention_events": [
+        "hardship_catalog",
+        "gallows_humor",
+        "time_jump_relief",
+        "permanent_scar",
+        "hatred_seeded"
+      ],
+      "original_moves": [
+        "逐条列出围城内生存困境:断粮、断水、物价离谱",
+        "抛出「穷人已经在菜单上」的食人传闻黑色幽默",
+        "时间跳切:七岁时围城结束,父亲生还但失去一臂",
+        "落点:活下来但留下永久仇恨"
+      ],
+      "abstract_move": "生存困境清单递进 + 越界黑色幽默落点 + 时间跳切给出阶段解脱 + 解脱附带永久代价",
+      "replacement_needs": [
+        "一组该身份早年生存压力的具象事实",
+        "一个尺度内可接受的黑色幽默点",
+        "一个阶段解脱但留疤的事件"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(62);打开的悬念 LOOP03→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 62
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "indoctrination_and_vow",
+      "start_ratio": 0.128,
+      "end_ratio": 0.2194,
+      "start_sec": 95,
+      "end_sec": 163,
+      "position_label": "12.8%–21.9%(1:35–2:43)",
+      "purpose": "引入兄长角色并建立创伤纽带;列举被灌输的内容(识字、教义、被迫害身份叙事与英雄故事);宣告时代二元规则「没有谈判,杀或被杀」;以两兄弟向父母摊牌的家庭场景完成立志仪式,父亲骄傲、母亲恐惧,落点于「义务没有回头路」",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "trauma_bond",
+          "mechanism": "brother_bond_established"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "family_vow",
+          "mechanism": "joining_the_fight_scene"
+        }
+      ],
+      "required_retention_events": [
+        "trauma_bond",
+        "indoctrination_list",
+        "binary_rule",
+        "family_vow_scene",
+        "no_way_back"
+      ],
+      "original_moves": [
+        "引入兄长角色,建立创伤纽带",
+        "列举被灌输的内容:识字、教义、被迫害身份叙事与英雄故事",
+        "给出时代规则:没有谈判,杀或被杀",
+        "家庭场景立志:两兄弟向父母摊牌,父亲骄傲、母亲恐惧",
+        "落点:这是义务,没有回头路"
+      ],
+      "abstract_move": "同伴角色引入并绑定情感 + 灌输内容清单 + 二元世界规则宣告 + 家庭立志仪式 + 不可逆性落点",
+      "replacement_needs": [
+        "一个可与主角共享命运的同伴角色",
+        "一套该身份必须内化的信念清单",
+        "一个向家人宣告的立志场景"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "forced_recruitment_threshold",
+      "start_ratio": 0.2164,
+      "end_ratio": 0.3119,
+      "start_sec": 160.7,
+      "end_sec": 231.6,
+      "position_label": "21.6%–31.2%(2:41–3:52)",
+      "purpose": "九岁时征募者上门挑中孩子,冷面宣判「童年正式结束」;父母心碎但以「大义」自我安慰,旁白拆穿宏大叙事的代价;过渡到总部之地,用「孩子进去,杀手出来」的入口定义收尾,并揭晓真实身份——被外界低声称呼的暗杀者",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.3006,
+          "time_ms": 223200,
+          "reason": "暗杀者名号揭晓:身份想象落地为黑暗现实,类型幻想兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "forced_recruitment",
+          "mechanism": "recruiters_at_nine"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "threshold_definition",
+          "mechanism": "kids_in_killers_out"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "role_naming",
+          "mechanism": "whispered_killer_name"
+        }
+      ],
+      "required_retention_events": [
+        "forced_recruitment",
+        "childhood_over_verdict",
+        "greater_good_debunk",
+        "threshold_place_definition",
+        "role_naming"
+      ],
+      "original_moves": [
+        "九岁时征募者上门,孩子被挑中",
+        "旁白冷面落点:童年正式结束",
+        "父母心碎但以「大义」自我安慰,旁白拆穿大义的代价",
+        "过渡到总部:「孩子进去,杀手出来」的入口定义",
+        "揭晓真实身份:被外界低声称呼的暗杀者"
+      ],
+      "abstract_move": "强制征募事件 + 童年终结宣判 + 宏大理由的冷面拆穿 + 门槛之地定义句(进去的是 X,出来的是 Y)+ 身份命名揭示",
+      "replacement_needs": [
+        "一个把主角从家庭剥离的制度性事件",
+        "一句对宏大理由的冷面拆穿",
+        "一个入口/训练营式地点的可定义特征",
+        "一个外界对该身份的称呼"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "role_reveal_death_catch",
+      "start_ratio": 0.3088,
+      "end_ratio": 0.361,
+      "start_sec": 229.3,
+      "end_sec": 268.1,
+      "position_label": "30.9%–36.1%(3:49–4:28)",
+      "purpose": "用制服细节清单(暗色束腰、软底靴、可拉低的兜帽)建立「消失在人群里」的职业真实感;一句话宣告工作内容:杀非常重要的人;随即以「一个小附带条件」冷面抛出死亡条款——预期你在任务中死去,兄弟俩对视无言",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "把死亡预期挂在全片上",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "death_catch",
+          "mechanism": "expected_to_die_catch"
+        }
+      ],
+      "required_retention_events": [
+        "uniform_detail_list",
+        "job_one_liner",
+        "death_catch",
+        "silent_reaction_beat"
+      ],
+      "original_moves": [
+        "制服细节清单:暗色束腰、软底靴、可拉低的兜帽,为了消失在人群里",
+        "宣告工作内容:杀非常重要的人",
+        "抛出死亡条款:预期你在任务中死去",
+        "兄弟俩对视无言的反应拍"
+      ],
+      "abstract_move": "装备细节清单建立真实感 + 职责一句话宣告 + 死亡条款作为附带条件冷面抛出 + 人物无言反应拍",
+      "replacement_needs": [
+        "一套可穿戴的具象装备细节",
+        "一条被轻描淡写的致命条款",
+        "一个人物无言反应的瞬间"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "brutal_training_montage",
+      "start_ratio": 0.3583,
+      "end_ratio": 0.4764,
+      "start_sec": 266.1,
+      "end_sec": 353.8,
+      "position_label": "35.8%–47.6%(4:26–5:54)",
+      "purpose": "身体摧毁式训练清单:长跑、攀爬、静默移动,并点明淘汰是字面意义的死亡;一年后发标志性武器(贴身短刃)并绑定「足够近闻到对方最后一口气」的作战哲学;技能拓展到语言、宗教、习俗与伪装;十年时间跳切收束为「准备好杀,也准备好死」",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "death_toll",
+          "mechanism": "training_literally_kills"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "signature_weapon",
+          "mechanism": "curved_dagger_philosophy"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "decade_skip",
+          "mechanism": "ten_years_time_jump"
+        }
+      ],
+      "required_retention_events": [
+        "training_ordeal_list",
+        "death_toll_statement",
+        "signature_weapon",
+        "disguise_skillset",
+        "decade_time_skip"
+      ],
+      "original_moves": [
+        "身体摧毁式训练清单:长跑、攀爬、静默移动",
+        "点明淘汰是字面意义的死亡",
+        "一年后发武器:贴身短刃,强调近到能闻到对方最后一口气",
+        "技能拓展:语言、宗教、习俗,随时扮演商人或游僧",
+        "十年时间跳切收束:准备好杀,也准备好死"
+      ],
+      "abstract_move": "训练苦难清单 + 死亡率明写 + 标志性工具登场并绑定使用哲学 + 伪装技能拓展 + 长时间跳切收束为「准备好 X,也准备好死」",
+      "replacement_needs": [
+        "一组该身份的训练/淘汰事实",
+        "一件标志性工具及其使用哲学",
+        "一条长时间跨度的时间标记"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "loyalty_test_sacrifice",
+      "start_ratio": 0.4735,
+      "end_ratio": 0.566,
+      "start_sec": 351.6,
+      "end_sec": 420.3,
+      "position_label": "47.4%–56.6%(5:52–7:00)",
+      "purpose": "领袖把众人带上山顶宣布忠诚测试,旁白预埋「测试和山顶同时出现准没好事」的不安;随机点到三人,兄长在其中;单词命令「跳」落下,兄长毫不犹豫跃下,用坠地声响的感官描写替代哭嚎;领袖微笑宣布训练完成,零哀悼时间,直接派发首个任务",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 95,
+          "position_ratio": 0.5133,
+          "time_ms": 381199,
+          "reason": "单词命令「跳」与兄长跃下:全片情感引爆点,早段纽带在此变现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "emotional_sacrifice",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "test_setup",
+          "mechanism": "loyalty_test_on_peak"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "one_word_command",
+          "mechanism": "jump_order"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "sensory_death",
+          "mechanism": "impact_sound_memory"
+        }
+      ],
+      "required_retention_events": [
+        "loyalty_test_setup",
+        "ominous_meta_joke",
+        "random_selection_dread",
+        "one_word_command",
+        "sensory_death_moment",
+        "zero_mourning"
+      ],
+      "original_moves": [
+        "领袖把众人带上山顶,宣布忠诚测试",
+        "冷面吐槽预埋不安:「测试」和「山顶」同时出现准没好事",
+        "随机点到三人,兄长在其中",
+        "单词命令「跳」,兄长毫不犹豫跃下",
+        "用坠地声响的感官描写替代哭嚎",
+        "领袖微笑宣布训练完成,零哀悼时间,直接派发首个任务"
+      ],
+      "abstract_move": "权威者设局 + 冷面吐槽预埋不安 + 随机抽签制造恐怖 + 单词命令触发至亲牺牲 + 感官细节替代情绪宣泄 + 组织零哀悼的冷酷落点",
+      "replacement_needs": [
+        "一场以忠诚/服从为名的终极测试",
+        "一个单词级命令",
+        "一个感官化的死亡瞬间细节",
+        "一个零哀悼的组织反应"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(95);回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 95
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "first_mission_infiltration",
+      "start_ratio": 0.5625,
+      "end_ratio": 0.6254,
+      "start_sec": 417.7,
+      "end_sec": 464.4,
+      "position_label": "56.3%–62.5%(6:58–7:44)",
+      "purpose": "首个任务立刻下发:潜入敌营等待指令;冷面翻转动机——杀仇敌不是任务是礼物;伪装身份落地为集市小贩,向仇人微笑数钱;六个月潜伏后情报网传来目标档案,战术悬念正式启动",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "战术悬念(目标-弱点-执行)",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "first_mission",
+          "mechanism": "infiltrate_and_wait"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "cover_identity",
+          "mechanism": "perfume_trader_cover"
+        }
+      ],
+      "required_retention_events": [
+        "immediate_mission",
+        "motive_flip_gift",
+        "cover_identity_routine",
+        "sleeper_delay",
+        "intel_network"
+      ],
+      "original_moves": [
+        "首个任务立刻下发:潜入敌营等待指令",
+        "冷面翻转动机:杀仇敌不是任务,是礼物",
+        "伪装身份落地:集市小贩,向仇人微笑数钱",
+        "六个月潜伏后,情报网传来目标"
+      ],
+      "abstract_move": "任务即刻下发 + 动机翻转(义务变礼物)+ 伪装身份日常化 + 长时间潜伏与情报网到位",
+      "replacement_needs": [
+        "一个可长期潜伏的伪装身份",
+        "一张支撑任务的组织网络设定",
+        "一个目标到位的延迟机制"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "target_intel_creed_conflict",
+      "start_ratio": 0.6207,
+      "end_ratio": 0.7065,
+      "start_sec": 461,
+      "end_sec": 524.6,
+      "position_label": "62.1%–70.7%(7:41–8:45)",
+      "purpose": "宣读目标档案:年轻得势、推动敌对政策;命令附带逃生条款,与「杀了就死」的职业信条冲突,主角明显不适;分配搭档负责目标的贴身护卫;监视发现目标的人性弱点——每周固定绕路只为偷看暗恋对象,弱点锁定为行动窗口",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "任务段内的认知失调张力",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "creed_conflict",
+          "mechanism": "escape_order_feels_wrong"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "weakness_lock",
+          "mechanism": "weekly_stroll_pattern"
+        }
+      ],
+      "required_retention_events": [
+        "target_dossier",
+        "creed_conflict",
+        "partner_assignment",
+        "weakness_discovery",
+        "window_lock"
+      ],
+      "original_moves": [
+        "宣读目标档案:年轻得势、推动敌对政策",
+        "命令附带逃生条款,与「杀了就死」的信条冲突,主角不适",
+        "分配搭档负责目标的贴身护卫",
+        "监视发现弱点:目标每周固定绕路只为偷看暗恋对象",
+        "弱点锁定为行动窗口"
+      ],
+      "abstract_move": "目标档案宣读 + 命令与信条冲突制造认知失调 + 搭档分工 + 监视发现人性弱点 + 弱点转为行动窗口",
+      "replacement_needs": [
+        "一份目标的危险性档案",
+        "一条与组织信条冲突的附加命令",
+        "目标的一个可预测习惯或弱点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "execution_and_guilt",
+      "start_ratio": 0.7041,
+      "end_ratio": 0.8034,
+      "start_sec": 522.9,
+      "end_sec": 596.6,
+      "position_label": "70.4%–80.3%(8:43–9:57)",
+      "purpose": "行动前夜以雇工身份混入现场;执行瞬间用速度感描写(目标看见时刀刃已入);双线同步:搭档同时解决护卫;对照处理——搭档跪下迎接殉道,主角遵命逃走;负罪落点:「像懦夫一样逃跑」,部分的他想留下来赴死",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "surprise",
+          "strength": 85,
+          "position_ratio": 0.7459,
+          "time_ms": 553920,
+          "reason": "集市双杀的速度感执行:十年训练铺垫的动作高潮"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "guilt_payoff",
+          "opened_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "action_payoff",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "execution_peak",
+          "mechanism": "dagger_already_buried"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "martyrdom_contrast",
+          "mechanism": "partner_kneels_embraces_death"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "survivor_guilt",
+          "mechanism": "flee_like_a_coward"
+        }
+      ],
+      "required_retention_events": [
+        "infiltration_setup",
+        "speed_execution",
+        "parallel_takedown",
+        "martyrdom_contrast",
+        "survivor_guilt"
+      ],
+      "original_moves": [
+        "行动前夜以雇工身份混入现场",
+        "执行瞬间:目标看见时刀刃已入",
+        "双线同步:搭档同时解决护卫",
+        "对照处理:搭档跪下迎接殉道,主角遵命逃走",
+        "负罪落点:像懦夫一样逃跑,部分的他想留下赴死"
+      ],
+      "abstract_move": "前置潜入 + 速度感执行描写 + 双线同步收割 + 留下与离开的对照处理 + 幸存负罪落点",
+      "replacement_needs": [
+        "一个贴近目标的伪装入口",
+        "一组留下者与离开者的对照",
+        "一份具体的幸存者内疚"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85);回收了前文的悬念 FS09→LOOP05、FS08→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "kill_montage_escalation",
+      "start_ratio": 0.8015,
+      "end_ratio": 0.8603,
+      "start_sec": 595.2,
+      "end_sec": 638.9,
+      "position_label": "80.2%–86%(9:55–10:39)",
+      "purpose": "下一个目标私人化:围攻平民的将领让主角想起童年的自己;暗夜一击即走的完美行动速写;数字递进蒙太奇(一次、两次、一打)展示战绩;落点于「战绩已超越绝大多数同僚的想象」并暗示按信条他早该殉道多次",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "personal_target",
+          "mechanism": "siege_governor_reminds_self"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "escalating_count",
+          "mechanism": "two_becomes_a_dozen"
+        }
+      ],
+      "required_retention_events": [
+        "personal_target",
+        "perfect_hit_sketch",
+        "escalating_count",
+        "should_have_died_hint"
+      ],
+      "original_moves": [
+        "下一个目标私人化:围攻平民的将领勾起主角童年记忆",
+        "暗夜一击即走,无目击无痕迹",
+        "数字递进蒙太奇:一次、两次、一打",
+        "战绩超越同僚想象,暗示按信条早该殉道多次"
+      ],
+      "abstract_move": "私人化目标(与主角过去挂钩)+ 完美行动速写 + 数字递进蒙太奇 + 「按规则早该死却没死」的悬念暗示",
+      "replacement_needs": [
+        "一个与主角过去共鸣的目标",
+        "一组递进的战绩数字",
+        "一条「早该被淘汰」的规则暗示"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "martyrdom_denied_twist",
+      "start_ratio": 0.8581,
+      "end_ratio": 0.9189,
+      "start_sec": 637.2,
+      "end_sec": 682.4,
+      "position_label": "85.8%–91.9%(10:37–11:22)",
+      "purpose": "组织召回,主角直接质问为什么偷走他的殉道;核心反转揭示:不是每个人都获准去死,有人必须活下来带领与传承,机器需要人维持运转;晋升落点——被提拔为教官,憎恨但服从,晋升即囚禁",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.8819,
+          "time_ms": 654880,
+          "reason": "「不是每个人都获准去死」:核心反转释放,最糟的不是死而是活下来"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "ironic_inversion",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "core_inversion",
+          "mechanism": "not_everyone_gets_to_die"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "promotion_prison",
+          "mechanism": "promoted_master_hates_it"
+        }
+      ],
+      "required_retention_events": [
+        "accusation_scene",
+        "core_inversion_reveal",
+        "machine_logic",
+        "promotion_as_prison"
+      ],
+      "original_moves": [
+        "组织召回,主角直接质问:为什么偷走我的殉道",
+        "真相揭示:不是每个人都获准去死,有人必须活下来带下一代",
+        "晋升落点:被提拔为教官,憎恨但服从"
+      ],
+      "abstract_move": "主角反向控诉组织 + 核心反转揭示(最想要的奖赏被拒绝)+ 机器逻辑说明 + 晋升即囚禁的悖论落点",
+      "replacement_needs": [
+        "一个主角主动质问的场面",
+        "一条「有人必须留下来」式的组织逻辑",
+        "一个违背本人意愿的晋升"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(90);回收了前文的悬念 FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "survivor_penance_trainer",
+      "start_ratio": 0.9159,
+      "end_ratio": 0.9726,
+      "start_sec": 680.2,
+      "end_sec": 722.2,
+      "position_label": "91.6%–97.3%(11:20–12:02)",
+      "purpose": "新职责:训练与当年的自己同龄的孩子;点破职责实质——不是教他们活,是教他们死;在每个后来者身上看见兄长与自己;金句落点:每一场操练都是一场缓慢的葬礼,一代代人走向死亡而他留在原地",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE29",
+          "event_type": "duty_reframe",
+          "mechanism": "teaching_them_to_die"
+        }
+      ],
+      "required_retention_events": [
+        "survivor_duty",
+        "duty_reframe",
+        "mirror_of_the_dead",
+        "aphorism_grief"
+      ],
+      "original_moves": [
+        "新职责:训练与当年的自己同龄的孩子",
+        "点破实质:不是教他们活,是教他们死",
+        "每个孩子身上都看见兄长与自己",
+        "金句落点:每一场操练都是一场缓慢的葬礼"
+      ],
+      "abstract_move": "幸存者职责揭示 + 职责实质的残酷点破 + 在后来者身上看见逝者 + 金句化悲哀落点",
+      "replacement_needs": [
+        "一个把主角与下一代绑定的职责",
+        "一句点破职责实质的判断句",
+        "一个在别人身上看见亲人的镜像设计"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "identity_stripped_ghost_closure",
+      "start_ratio": 0.9701,
+      "end_ratio": 1,
+      "start_sec": 720.4,
+      "end_sec": 742.6,
+      "position_label": "97%–100%(12:00–12:23)",
+      "purpose": "组织开始惧怕知道太多的幸存者,逐级切断联系:不再下令、不再来访;身份剥夺宣判——你不再是他们的师父,你是他们的幽灵;结尾意象「满是记忆的城堡里最后一个幽灵」反转回收开头预言伏笔:他没像长辈一样战死,而是被留下,标题承诺闭合",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "title_callback",
+          "strength": 88,
+          "position_ratio": 0.9932,
+          "time_ms": 737519,
+          "reason": "幽灵结局收束全片并反转回收开头预言伏笔,标题承诺闭合"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "worldview_inversion_answer",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "subverted_foreshadowing",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "knowing_too_much",
+          "mechanism": "feared_by_own_side"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "ghost_closure",
+          "mechanism": "last_ghost_in_castle"
+        }
+      ],
+      "required_retention_events": [
+        "knowing_too_much_fear",
+        "contact_cutoff",
+        "identity_stripping_verdict",
+        "ghost_image_callback"
+      ],
+      "original_moves": [
+        "组织开始惧怕知道太多的幸存者",
+        "逐级切断联系:不再下令,不再来访",
+        "身份剥夺:你不再是他们的师父,你是他们的幽灵",
+        "结尾意象:满是记忆的城堡里最后一个幽灵,反转回收开头预言伏笔"
+      ],
+      "abstract_move": "兔死狗烹的恐惧揭示 + 联系逐级切断 + 身份剥夺宣判 + 幽灵意象收束并反转回收开头伏笔",
+      "replacement_needs": [
+        "一个「知道太多」的组织性恐惧",
+        "一个逐级剥夺联系的过程",
+        "一个与开头伏笔呼应的结尾意象"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(88);回收了前文的悬念 FS01→LOOP01、FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

@@ -1,0 +1,717 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:07:41.444Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "cold_open_capture_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0961,
+      "start_sec": 0.1,
+      "end_sec": 47.2,
+      "position_label": "0%–9.6%(0:00–0:47)",
+      "purpose": "现在时冷开场：一位不具名的大人物隐姓埋名穿越敌对地带,全程不给名字只给画面;一枚随身高价小物被陌生人认出,数小时内住所被围——点破他不是败于战场而是败于疏忽,最后才揭晓其名与盛名背书",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 74,
+          "position_ratio": 0.0617,
+          "time_ms": 30293,
+          "reason": "戒备森严的大人物没有败于战场,而是因一件忘摘的随身小物被捕——细节触发命运反转的第一记重击"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "开场身份悬念:用延迟揭晓钩住前一分钟",
+          "closes_in": "FS01"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "identity_reveal",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "cold_open_entry",
+          "mechanism": "incognito_protagonist"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "detail_betrayal_trigger",
+          "mechanism": "small_object_gives_away"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "ironic_reversal",
+          "mechanism": "capture_not_in_battle"
+        }
+      ],
+      "required_retention_events": [
+        "incognito_entry",
+        "detail_betrayal_trigger",
+        "ironic_capture",
+        "identity_reveal"
+      ],
+      "original_moves": [
+        "现在时画面:大人物隐姓埋名、只带少数随从穿越敌对地区",
+        "陌生人认出的是他忘了摘的戒指而非脸或姿态",
+        "数小时内住所被围,点破\"不是败于战场而是败于一件饰物\"",
+        "揭晓姓名:刚打完十字军、最负盛名的战士国王"
+      ],
+      "abstract_move": "匿名潜行开场 + 小物败露反转 + 否定式排比点题 + 身份与盛名延迟揭晓",
+      "replacement_needs": [
+        "一个\"大人物试图隐匿行踪\"的真实场景",
+        "一件与身份不符、可被外人识别的随身小物",
+        "主角的盛名或地位背书材料"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 74
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "incognito_capture_detail_betrayal",
+        "first_stimulus_ms": 17009,
+        "first_payoff_ms": 32172,
+        "evidence_refs": [
+          "C0001",
+          "C0021",
+          "C0036"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "grievance_conflict_escalation",
+      "start_ratio": 0.0941,
+      "end_ratio": 0.1683,
+      "start_sec": 46.2,
+      "end_sec": 82.6,
+      "position_label": "9.4%–16.8%(0:46–1:23)",
+      "purpose": "宿怨补叙:抓捕者并非偶遇而是蓄候——曾被当众羞辱的旧账、私人复仇、再把囚徒移交给更强大的掌权者;个人恩怨被升级为洲际级危机,末尾宣告勒索意图",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "标题机制承诺与全片筹款链之间的主悬念",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "grievance_tease",
+          "mechanism": "no_random_capture"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "promise_reframe",
+          "mechanism": "not_what_you_think"
+        }
+      ],
+      "required_retention_events": [
+        "grievance_flashback",
+        "revenge_chain",
+        "power_handoff",
+        "ransom_intent_tease"
+      ],
+      "original_moves": [
+        "抓捕者是旧怨在身的公爵:十字军战场上曾被当众撕旗羞辱",
+        "冷面断语\"这样的侮辱不会消失\"",
+        "公爵复仇后把囚徒移交给更强者——神圣罗马帝国皇帝",
+        "皇帝囚禁国王并传话:我有你们想要的东西,我要让你们付钱"
+      ],
+      "abstract_move": "宿怨补叙 + 当众羞辱细节 + 短句定性预告 + 权力链移交升级 + 勒索意图宣告",
+      "replacement_needs": [
+        "一段有具体羞辱细节的私人旧怨",
+        "一条可移交筹码的权力等级链",
+        "勒索方的意图宣告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "ransom_norm_reframe",
+      "start_ratio": 0.1663,
+      "end_ratio": 0.2479,
+      "start_sec": 81.7,
+      "end_sec": 121.7,
+      "position_label": "16.6%–24.8%(1:22–2:02)",
+      "purpose": "认知重构:直接告诉观众\"你想到的赎金不是那回事\"——掳索贵族在当时是合法制度,有惯例、价码区间与外交仪式;用同制度的小型先例垫脚,再用棋盘点定位被捕者的价值,末句抛出金额悬念",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "微悬念:金额句起头不落地,制造秒级期待",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "number_tease",
+          "mechanism": "amount_pending"
+        }
+      ],
+      "required_retention_events": [
+        "promise_reframe",
+        "norm_establishment",
+        "precedent_anchor",
+        "value_positioning",
+        "number_tease"
+      ],
+      "original_moves": [
+        "元评论:你想到的\"赎金\"不是那回事,这不是现代意义的绑架",
+        "掳索贵族是合法制度,有惯例、价码区间与外交仪式",
+        "举同制度的小型先例:比武场上骑士掳骑士",
+        "棋盘定位:他抓到的是全盘最有价值的一子",
+        "末句起头:他开出的价码是……"
+      ],
+      "abstract_move": "否定式概念重构 + 制度化惯例描述 + 同制度小型先例垫脚 + 价值定位比喻 + 金额悬念起头",
+      "replacement_needs": [
+        "一个观众普遍误解的概念及其真实制度背景",
+        "一个同制度的小型先例",
+        "一个能定位主角价值的比喻"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "scale_reveal_stakes_anchor",
+      "start_ratio": 0.2459,
+      "end_ratio": 0.3309,
+      "start_sec": 120.8,
+      "end_sec": 162.5,
+      "position_label": "24.6%–33.1%(2:01–2:42)",
+      "purpose": "核心数字兑现:先抛总额,立刻做\"八百年前的数字没有意义,直到你感到它的重量\"的元评论,换算成国家岁入倍数;再对照一场旷日持久的战争工程的造价——一次性、无分期、还要更快;末尾点明倒计时开始",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 86,
+          "position_ratio": 0.2707,
+          "time_ms": 132927,
+          "reason": "总额抛出后立刻锚定为全国岁入的数倍,标题命题在此实质兑现,尺度震撼为全片信息最高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "number_reveal",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "scale_payoff",
+          "mechanism": "revenue_multiple_anchor"
+        }
+      ],
+      "required_retention_events": [
+        "number_payoff",
+        "scale_anchor",
+        "war_cost_contrast",
+        "countdown_pressure"
+      ],
+      "original_moves": [
+        "抛出总额:十五万马克",
+        "元评论:八百年前的数字无意义,直到你感到它的重量",
+        "换算:相当于英格兰王冠两三年的全部岁入",
+        "对照:爱德华一世十年威尔士城堡工程花八万英镑、摊三十年,这次更多且一次付清",
+        "结尾点题:人在外国监狱,时间正在耗尽"
+      ],
+      "abstract_move": "金额抛出 + \"数字无意义\"元评论 + 岁入倍数锚定 + 同口径工程对照 + 倒计时压力",
+      "replacement_needs": [
+        "一个核心金额",
+        "一个岁入/收入倍数换算口径",
+        "一个同口径的长期工程造价对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(86);回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "internal_betrayal_race",
+      "start_ratio": 0.3289,
+      "end_ratio": 0.4438,
+      "start_sec": 161.5,
+      "end_sec": 217.9,
+      "position_label": "32.9%–44.4%(2:42–3:38)",
+      "purpose": "引入救援者与背叛者:年迈的摄政母亲登场(履历背书其政治手腕),而另一位继承人暗中谈判、要求延长囚禁以便自己继位;财务故事被点名为惊悚片,筹款被重构为与自家人的竞速",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "betrayal_reveal",
+          "strength": 80,
+          "position_ratio": 0.4078,
+          "time_ms": 200275,
+          "reason": "至亲暗中谈判要求“永不支付”以便自己继位,财务故事翻面成惊悚片,情绪张力最高点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "嵌套于主环的内部威胁:把筹款变成与至亲的竞速",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "betrayal_reveal",
+          "mechanism": "brother_pays_for_delay"
+        }
+      ],
+      "required_retention_events": [
+        "rescuer_introduction",
+        "betrayal_reveal",
+        "thriller_reframe",
+        "race_framing"
+      ],
+      "original_moves": [
+        "救援者登场:年迈的摄政太后,履历是熬死对手、埋葬阴谋的一生",
+        "另一子暗中与囚禁者谈判:不是催款,而是让赎金永远不被支付",
+        "每拖一天,背叛者的地位就强一分",
+        "定性:这把财务故事变成了惊悚片,她在与自己的儿子竞速"
+      ],
+      "abstract_move": "救援者履历背书 + 背叛者逆向谈判揭示 + 拖延收益机制 + 惊悚化定性 + 双线竞速点题",
+      "replacement_needs": [
+        "一位有政治手腕背书的救援者",
+        "一条内部背叛线索及其拖延收益机制",
+        "倒计时压力源"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80);打开的悬念 LOOP04→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "emergency_levy_catalog",
+      "start_ratio": 0.4418,
+      "end_ratio": 0.5514,
+      "start_sec": 217,
+      "end_sec": 270.8,
+      "position_label": "44.2%–55.1%(3:37–4:31)",
+      "purpose": "筹款第一层(全民):以\"没有央行与债市,如何快速凑出两三年岁入\"的直接提问换挡;对全民开征约四分之一的收入与动产特别税,立即征收不等收获季;叠加既有租税负担,点明这是对无储备经济体的意外重击",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "direct_question_shift",
+          "mechanism": "how_to_raise_fast"
+        }
+      ],
+      "required_retention_events": [
+        "direct_question_shift",
+        "levy_reveal",
+        "burden_stacking",
+        "reserve_less_economy"
+      ],
+      "original_moves": [
+        "直接提问换挡:没有央行、没有债市,如何快速凑出两三年岁入",
+        "第一层:向全民开征约四分之一收入与动产的特别税,立即征收不等收获季",
+        "叠底参照:佃户本就被租税磨坊费拿走三分之一到一半",
+        "定性:对毫无储备的经济体的一记意外重击"
+      ],
+      "abstract_move": "直接提问换挡 + 全民比例税揭示 + 既有负担叠底 + 无储备受创定性",
+      "replacement_needs": [
+        "一个比例税额及其征收节奏",
+        "一组既有负担的叠底参照数据",
+        "经济体无储备的证据"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "sacred_wealth_meltdown",
+      "start_ratio": 0.5496,
+      "end_ratio": 0.646,
+      "start_sec": 269.9,
+      "end_sec": 317.2,
+      "position_label": "55%–64.6%(4:30–5:17)",
+      "purpose": "筹款第二层(教会):对象转换句换挡;累积四个世纪的受保护财富被勒令交出,祭器熔铸为赎金;用\"想象一位修士看着传世圣器被抬向熔炉\"把历史从抽象变成可想象的画面,点明连最隐蔽的财富也被卷入",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 68,
+          "position_ratio": 0.6248,
+          "time_ms": 306828,
+          "reason": "“想象一位修士看着传世圣器被抬向熔炉”——制度性掠夺第一次落到具体人的眼睛,共情峰值"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "target_shift",
+          "mechanism": "church_turn_humanized"
+        }
+      ],
+      "required_retention_events": [
+        "target_shift",
+        "treasury_seizure",
+        "meltdown_imagery",
+        "humanized_witness"
+      ],
+      "original_moves": [
+        "对象转换:转向教会",
+        "修道院四个世纪受保护的财富被勒令交出",
+        "祭坛上的金银器皿被熔铸成赎金币",
+        "旁观者想象:一位修士看着传世圣器被抬向熔炉",
+        "定性:连王国藏得最深的财富也被卷入"
+      ],
+      "abstract_move": "对象转换换挡 + 没收令范围 + 熔毁再造画面 + 旁观者想象人性化 + 隐蔽财富卷入定性",
+      "replacement_needs": [
+        "一处长期受保护的机构财富",
+        "一个器物被销毁变现的具体画面",
+        "一个可代入的旁观者角色"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(68)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 68
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "harvest_firesale_catalog",
+      "start_ratio": 0.6441,
+      "end_ratio": 0.725,
+      "start_sec": 316.3,
+      "end_sec": 356,
+      "position_label": "64.4%–72.5%(5:16–5:56)",
+      "purpose": "筹款第三层(产业):转向更不显眼的资产——年产预售变现,放弃正常贸易周期、以低于市价换现金;用\"等不起更好价格\"的处境逻辑收束三层榨取,以拼图式累积句宣告赎金正在凑齐",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "target_shift",
+          "mechanism": "less_obvious_asset"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_asset_reveal",
+        "firesale_logic",
+        "no_luxury_of_waiting",
+        "piecemeal_accumulation"
+      ],
+      "original_moves": [
+        "对象转换:转向更不显眼的东西——羊毛",
+        "修道院经营着全国最大羊毛生产,直供佛兰德与意大利市场",
+        "不等正常贸易周期,全年羊毛预售换现,价格低于市价",
+        "处境逻辑:国王囚于德国要塞、弟弟想让他回不来,没资格等更好价格",
+        "拼图收束:一件一件、一币一币,赎金正在凑齐"
+      ],
+      "abstract_move": "对象转换 + 产业资产揭示 + 预售折价机制 + 等不起的处境逻辑 + 拼图式累积收束",
+      "replacement_needs": [
+        "一项可预售变现的产业资产",
+        "正常变现周期与折价代价的对照",
+        "证明\"等不起\"的倒计时证据"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "resolution_false_closure",
+      "start_ratio": 0.7231,
+      "end_ratio": 0.7546,
+      "start_sec": 355.1,
+      "end_sec": 370.5,
+      "position_label": "72.3%–75.5%(5:55–6:11)",
+      "purpose": "虚假收官:给出时间标记,主角获释归航——主悬念闭合;立刻用\"故事看似该结束,而这正是它不结束的原因\"翻篇,并预告王国无法一键重启",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 62,
+          "position_ratio": 0.7356,
+          "time_ms": 361242,
+          "reason": "时间标记后主角获释归航,主悬念闭合带来释然,但虚假收官句立刻把情绪重新拉紧"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "ransom_paid_release_resolution",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "false_closure_pivot",
+          "mechanism": "story_should_end_but"
+        }
+      ],
+      "required_retention_events": [
+        "release_resolution",
+        "false_closure_pivot",
+        "no_reboot_tease"
+      ],
+      "original_moves": [
+        "时间标记:次年三月,距戒指败露已一年多",
+        "主角获释归航",
+        "翻篇句:这一刻看似故事该结束,而这正是它不结束的原因",
+        "预告:王国无法一键重启到危机前"
+      ],
+      "abstract_move": "时间标记 + 获释归航兑现 + 虚假收官翻篇句 + 无法重启预告",
+      "replacement_needs": [
+        "一个明确的获释时间点",
+        "一句元评论翻篇句",
+        "至少一项尚未清算的余波"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(62);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 62
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "aftermath_cost_accounting",
+      "start_ratio": 0.7527,
+      "end_ratio": 0.8302,
+      "start_sec": 369.6,
+      "end_sec": 407.7,
+      "position_label": "75.3%–83%(6:10–6:48)",
+      "purpose": "余波清算:逐一点名三层承担者的多年代价——缴了重税的家庭仍在恢复、熔掉的圣产永不复得、折价预售的产出多年贬值;归纳为\"冲击—凑钱—多年悄悄重建\"的固定恢复模式;末尾以主角复位如常制造反差,引出主题揭示",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "cost_roll_call",
+        "recovery_pattern",
+        "reset_contrast",
+        "thesis_lead_in"
+      ],
+      "original_moves": [
+        "余波点名:缴了四分之一收入税的佃户家庭仍在恢复",
+        "熔掉的祭器让修道院永失数世纪圣产",
+        "折价预售的羊毛让王冠多年拿不到足值",
+        "模式归纳:冲击、凑钱、所有人用数年悄悄重建——我们在饥荒围城战争里见过同样剧本",
+        "反差:中心人物复位如常,仿佛什么都没发生",
+        "引导:这正是全片真正揭示的东西"
+      ],
+      "abstract_move": "三层代价逐一回点 + 恢复模式归纳 + 主角复位反差 + 主题揭示引导",
+      "replacement_needs": [
+        "每层代价的多年恢复证据",
+        "一个可归纳的\"冲击-恢复\"模式",
+        "中心人物未付代价的反差事实"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "systemic_fragility_reveal",
+      "start_ratio": 0.8282,
+      "end_ratio": 0.9187,
+      "start_sec": 406.7,
+      "end_sec": 451.2,
+      "position_label": "82.8%–91.9%(6:47–7:31)",
+      "purpose": "系统升维:点破全片主题——当时的财富只是表面坚固,石墙、金匠、货仓与地产之下每个细节都暗暗相连;一个被遗忘的小物在错误时间被错误的人看见,就足以把全局拖入一场无人拨备预算的紧急状态;用末梢小人物\"从没听说过那场恩怨,却付出了四分之一身家\"完成冲击传导闭环",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.8638,
+          "time_ms": 424208,
+          "reason": "“财富只是表面坚固,一个小物就足以把全局拖入无预算紧急状态”——从故事升到系统洞见的顿悟峰值"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "thesis_reveal",
+          "mechanism": "wealth_only_looked_solid"
+        }
+      ],
+      "required_retention_events": [
+        "thesis_reveal",
+        "interconnection_mapping",
+        "small_cause_big_effect",
+        "periphery_perspective"
+      ],
+      "original_moves": [
+        "主题揭示:当时的财富只是表面坚固——石墙金匠货仓与占全国耕地四分之一的修道院地产",
+        "但每个细节都暗暗相连",
+        "一枚被遗忘的戒指在错误时间被错误的人看见,就把全局拖入无人拨备预算的紧急状态",
+        "末梢视角:维也纳城外二十四英亩地的佃农从没听说过那场羞辱,却不知一件饰物刚让他付出四分之一身家",
+        "闭环:系统任何部位的危机都会传导到所有其他部位——而这次确实如此"
+      ],
+      "abstract_move": "表面坚固意象清单 + 互联结构点题 + 小因拖垮全局 + 末梢小人物视角 + 冲击传导闭环",
+      "replacement_needs": [
+        "一组\"表面坚固\"的财富意象",
+        "证明各环节互联的证据链",
+        "一个毫不知情却付出代价的末梢人物"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(88)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "closure_next_episode_hook",
+      "start_ratio": 0.9167,
+      "end_ratio": 1,
+      "start_sec": 450.2,
+      "end_sec": 491.1,
+      "position_label": "91.7%–100%(7:30–8:11)",
+      "purpose": "收束与尾钩:交代结局状态(复位、竞速胜出但只是暂时),用开场小物所在地的意象回扣完成情绪闭环,定格\"一个小细节曾迫使整个国家机器紧急运转\"的历史意义;最后预告同主题的下一集(为一日荣光主动挥霍的另一种事件)",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "下集预告环:正片所有承诺闭合后开启,交由下一集兑现",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "race_outcome_reveal",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP05"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "race_outcome",
+          "mechanism": "won_for_now"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "next_episode_tease",
+          "mechanism": "same_theme_next_event"
+        }
+      ],
+      "required_retention_events": [
+        "outcome_status",
+        "image_callback",
+        "historical_significance_freeze",
+        "next_episode_tease"
+      ],
+      "original_moves": [
+        "结局状态:主角回国,太后赢了与次子的竞速——至少暂时",
+        "意象回扣:奥地利小镇上,戒指败露的那座房子重新变回一座普通的房子",
+        "定格:一个不起眼的小细节,曾迫使整个国家财政机器紧急运转",
+        "尾钩预告:同一时代,贵族们不需要借口也会主动挥霍巨财,只为让在场者永远记住他们——下一集讲这个"
+      ],
+      "abstract_move": "结局状态 + \"暂时\"限定 + 开场意象平凡化回扣 + 历史意义定格 + 同主题相反动机预告",
+      "replacement_needs": [
+        "一个可回扣的开场意象地点",
+        "一句历史意义定格句",
+        "一个同主题下一集的事件轮廓"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05(不闭合) 跨段;回收了前文的悬念 FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

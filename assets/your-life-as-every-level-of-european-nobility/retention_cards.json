@@ -1,0 +1,796 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.857Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "pov_immersion_promise_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0709,
+      "start_sec": 0.1,
+      "end_sec": 63.1,
+      "position_label": "0%–7.1%(0:00–1:03)",
+      "purpose": "零寒暄把观众扔进最低一级的具体处境:年代、年龄、刚继承的财产与债务、等待表态的附庸;随即抛出远端最高目标的承诺、跨越数百年的时间尺度与多数失败的赔率;结尾用口径免责把全片定义为趋势线而非统一规则",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "title_promise_hook",
+          "strength": 72,
+          "position_ratio": 0.0196,
+          "time_ms": 17440,
+          "reason": "泥浆开局后立刻抛出远端王冠、数百年逐梦与\"多数失败\"的赔率,主赌注在30秒内立起"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题承诺的全片主悬念:从最低一级到最高处的完整爬升弧",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "pov_scene_drop",
+          "mechanism": "second_person_immersion"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "distant_prize_tease",
+          "mechanism": "crown_promise_with_failure_odds"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "pattern_disclaimer",
+          "mechanism": "trend_line_not_rules"
+        }
+      ],
+      "required_retention_events": "immersive_curiosity",
+      "original_moves": [
+        "用年代+年龄+泥浆+一把赔不起的剑把观众扔进开局处境",
+        "交代父亲病死留下的遗产清单:木厅、四十英亩、十一个观望的佃户",
+        "宣告身份落地:从今天早上起你是男爵",
+        "抛出远端承诺:某处有一顶王冠,是这个体系的真正顶点",
+        "加上时间尺度与赔率:之后六百年你的子孙都会尝试,大多数失败",
+        "口径免责:欧洲从无统一梯子,接下来讲的是反复出现的趋势线而非规则"
+      ],
+      "abstract_move": "感官处境清单 + 遗产账目 + 身份宣告 + 远端目标承诺 + 失败赔率 + 趋势线口径免责",
+      "replacement_needs": [
+        "一个目标受众能立刻代入的底层开局处境(年代、年龄、手持物、债务)",
+        "一个体系顶端的具象符号(顶点意象)",
+        "一个真实的长时间尺度与失败比例",
+        "一句口径免责声明(趋势而非规则)"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(72);打开的悬念 LOOP01→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 72
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_scene_drop_with_distant_prize_tease",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 87109,
+        "evidence_refs": [
+          "C0001",
+          "C0017",
+          "C0085"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "baseline_level_reality",
+      "start_ratio": 0.0698,
+      "end_ratio": 0.1722,
+      "start_sec": 62.1,
+      "end_sec": 153.3,
+      "position_label": "7%–17.2%(1:02–2:33)",
+      "purpose": "第一级的现实落地:头衔因何存在、对谁尽什么义务;用审判权清单展示权力,用祛魅句与生活账单展示代价;给出一个制度冷知识抬升该级价值,再用止步统计与无捷径格言钉住天花板",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 76,
+          "position_ratio": 0.157,
+          "time_ms": 139764,
+          "reason": "止步统计+\"台阶是真的,没有电梯\"的格言,把浪漫爬升想象第一次击穿"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "全片方法论环:三扇门规则在每一级被逐一举例,直到被血统之墙整体作废",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "glamour_inversion",
+          "mechanism": "clerical_work_with_occasional_violence"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "stagnation_math",
+          "mechanism": "disappointing_generations_statistic"
+        }
+      ],
+      "required_retention_events": "demystifying_groundedness",
+      "original_moves": [
+        "定义男爵的存在理由:上级需要可信的本地代理人,以土地换军役与忠诚",
+        "祛魅句:这生活大多是文书工作,偶尔有暴力",
+        "用审判权清单展示权力:牛闯田、兄弟争产、窃贼的生死",
+        "给生活账单:城堡冷、呛烟、一半收入修屋顶",
+        "抬升价值:男爵是进入议会的最低一级,以下只是地主",
+        "钉死天花板:大多数男爵家族原地停留三四百年,台阶是真的,没有电梯"
+      ],
+      "abstract_move": "代理关系定义 + 祛魅反差句 + 职权三件事列举 + 生活成本账单 + 制度门槛冷知识 + 止步统计 + 无捷径格言",
+      "replacement_needs": [
+        "一个该级存在的代理逻辑(谁需要这个角色、交换条件是什么)",
+        "两三个该级真实处理的日常事务",
+        "一个可感的生活成本细节",
+        "一个该级与以下各级的制度差异事实",
+        "一个止步比例的统计"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(76);打开的悬念 LOOP02→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "promotion_rule_reveal",
+      "start_ratio": 0.1712,
+      "end_ratio": 0.1951,
+      "start_sec": 152.3,
+      "end_sec": 173.6,
+      "position_label": "17.1%–19.5%(2:32–2:54)",
+      "purpose": "给出全片规则卡:向上走只有极少数几扇门,且明确排除才能与人气;为后文每一次晋升提供统一解释框架,并以家族找到门的预告衔接叙事",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "rule_card",
+          "mechanism": "three_doors_only"
+        }
+      ],
+      "required_retention_events": "rule_clarity",
+      "original_moves": [
+        "设问:一个家族到底怎么才能往上走",
+        "先排除直觉答案:不靠才能,不靠人气",
+        "给出封闭清单:只有三扇门——卓越效劳、联姻并土、恩宠",
+        "给恩宠加注解:在正确的时间对正确的人有用,常在战时",
+        "预告兑现:你的家族在两代后找到了门"
+      ],
+      "abstract_move": "设问 + 排除直觉答案 + 封闭数量规则卡 + 末项贬义注解 + 兑现预告",
+      "replacement_needs": [
+        "一组该体系真实可核查的晋升通道(两至四条)",
+        "一个对最容易被美化的通道的冷注解",
+        "一个家族将在后文用到通道的预告"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "deputy_level_climb",
+      "start_ratio": 0.1941,
+      "end_ratio": 0.274,
+      "start_sec": 172.7,
+      "end_sec": 243.9,
+      "position_label": "19.4%–27.4%(2:53–4:04)",
+      "purpose": "第一扇门的兑现:隔代战功换来新一级;用词源把新头衔落地为代理人职位,用管辖跃迁展示收益,用仍被问责展示代价;插入无仪式无证书的揭示,把晋升定性为走人情通道,并以多数家族开不了门收束",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "晋升非正式性的悬念:制度表面之下的人情通道",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "bittersweet_promotion",
+          "mechanism": "power_without_freedom"
+        }
+      ],
+      "required_retention_events": "bittersweet_progress",
+      "original_moves": [
+        "世代跳切:孙辈在边境冲突中打得漂亮,被上级注意",
+        "兑现晋升:获第二块封地,成为子爵",
+        "词源落地:vice comes,伯爵的副手——这不是装饰,是职位描述",
+        "规模跃迁:管辖超过祖父,管束其他男爵领",
+        "对冲账单:想独立?你仍对上级负责——更强了,但没自由",
+        "揭示非正式性:没有仪式、考试与证书,晋升走战场、婚礼与正确的大厅",
+        "收束:多数男爵家族永远开不了这扇门"
+      ],
+      "abstract_move": "世代跳切 + 关键事件 + 词源落地 + 规模跃迁 + 权力/自由对冲句 + 非正式通道揭示 + 多数失败统计",
+      "replacement_needs": [
+        "一个隔代兑现的关键事件(战功、联姻或押注)",
+        "一个该级头衔的词源或冷知识",
+        "一组该级与上一级的管辖规模对比",
+        "一句该级权力与不自由的并置",
+        "一个晋升无正式程序的事实"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "regional_power_level",
+      "start_ratio": 0.273,
+      "end_ratio": 0.3848,
+      "start_sec": 243,
+      "end_sec": 342.5,
+      "position_label": "27.3%–38.5%(4:03–5:42)",
+      "purpose": "职权从地方跃迁为区域级:最古老头衔冷知识开场,辖区词源落地;司法税收军权清单后给出小国家式重构;晋升路径首次被重命名为并购式交易;段尾用区域顶点与远端目标的距离感、以及爬升悄然终结的统计重新拉满张力",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.3592,
+          "time_ms": 319661,
+          "reason": "区域最强仍远离王冠的距离揭示+\"爬升在此悄然终结\"的统计,信息与情绪双落差"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "主环的中段加压装置:用区域顶点与王座的距离感维持爬升张力",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "level_hinge",
+          "mechanism": "title_word_cut"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "marriage_reframe",
+          "mechanism": "merger_not_romance"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "distance_reveal",
+          "mechanism": "regional_peak_yet_far_from_crown"
+        }
+      ],
+      "required_retention_events": "earned_power_with_humility",
+      "original_moves": [
+        "冷知识开场:伯爵是该国最古老的有记载头衔",
+        "词源落地:count 统治 county,即直接控制的领地",
+        "规模跃迁清单:全郡司法权、重罪审判、税收、征军——你统治一个小国",
+        "晋升方式升级:婚姻不再是私事,是按商业交易谈判的领土并购",
+        "距离揭示:四百年后你已是区域最强,却连王冠的边都没挨到",
+        "止步统计:多数走到这一级的家族再未上升,爬升在此悄然终结"
+      ],
+      "abstract_move": "沿革冷知识 + 词源落地 + 权力清单 + 体量重构句 + 婚姻并购重命名 + 远端距离揭示 + 止步统计",
+      "replacement_needs": [
+        "一个该级头衔的沿革事实",
+        "一组该级权力的制度清单",
+        "一个把小单位重构为大单位的句式",
+        "一个联姻作为并购的证据",
+        "一个该级止步比例的统计"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(78);打开的悬念 LOOP04→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "border_risk_level",
+      "start_ratio": 0.3837,
+      "end_ratio": 0.4877,
+      "start_sec": 341.5,
+      "end_sec": 434,
+      "position_label": "38.4%–48.8%(5:42–7:14)",
+      "purpose": "晋升逻辑第一次反转:靠地理而非功绩;新头衔的词源来自边境职责,代价从账单升级为全天候生存危险;再用失土即全局危机的悖论把危险反转为地位杠杆;段尾埋下名称比原因长寿的主题种子",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "主题种子环:从\"头衔比原因长寿\"埋到\"头衔本身全部失效\"的终极回收",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "readiness_burden",
+          "mechanism": "constant_border_danger"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "crisis_status_paradox",
+          "mechanism": "danger_becomes_leverage"
+        }
+      ],
+      "required_retention_events": "dangerous_privilege",
+      "original_moves": [
+        "反转晋升逻辑:这次靠地理不靠功绩——边界重划,你的郡成了边境",
+        "词源落地:侯爵原本就是恰好拥有边境的伯爵",
+        "代价升级为生存危险:第一个挨入侵,全天候机动巡逻",
+        "悖论反转:失土是王国级危机,所以国王需要你——危险成了地位杠杆",
+        "埋主题种子:名称总是比它被创造的原因活得久,后世侯爵再不守边境"
+      ],
+      "abstract_move": "晋升逻辑反转(地理而非功绩) + 词源落地 + 代价升级为危险 + 危机悖论(被需要) + 名称长寿主题种子",
+      "replacement_needs": [
+        "一个非功绩晋升的偶然因素(地理、时点、继承空缺)",
+        "一个该级词源事实",
+        "一个该级独有的持续性危险细节",
+        "一个危险反向兑换地位的机制",
+        "一个名称与功能脱钩的观察"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "gambit_ceiling_level",
+      "start_ratio": 0.4849,
+      "end_ratio": 0.5858,
+      "start_sec": 431.5,
+      "end_sec": 521.4,
+      "position_label": "48.5%–58.6%(7:12–8:41)",
+      "purpose": "用一场押注事件把家族送上普通序列的天花板:站队未明朗的胜者、押上一切、让拒绝封赏成为对方的自杀选项;穿插特殊头衔目录与词源冷知识,并用富过王国的对照抬升想象;段尾宣告这一级只剩出生或救命两条路",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.507,
+          "time_ms": 451259,
+          "reason": "女性祖先雪中送炭的押注兑现,\"拒绝封赏等于政治自杀\"的权力逻辑带来爽感峰"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "gambit_payoff",
+          "mechanism": "political_suicide_logic"
+        }
+      ],
+      "required_retention_events": "gambit_triumph",
+      "original_moves": [
+        "押注事件:一位女性祖先在继承危机中早早支持未明朗的胜者,押上一切",
+        "兑现逻辑:胜者登基后,拒绝封赏她等于政治自杀——于是他不拒绝",
+        "定位:公爵是普通贵族的顶点,王室之前的最后一级",
+        "特殊头衔目录:大公、执政公、选帝侯等特例",
+        "词源与对照:duke 源自罗马军衔;勃艮第富过王国、与国王平起平坐",
+        "收窄通道:这一级只有两条路——生于已被抬升的家族,或功劳大到拒绝更危险"
+      ],
+      "abstract_move": "押注故事 + 对方别无选择的兑现逻辑 + 序列顶点定位 + 特例目录 + 词源冷知识 + 越级对照 + 通道收窄宣告",
+      "replacement_needs": [
+        "一个高风险押注事件(站队、投资、背书)",
+        "一个让对方不得不兑现的利益结构",
+        "一组该体系特例的枚举",
+        "一个该级与更高级单位对比的夸张事实",
+        "一个通道收窄至两条的规则归纳"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "pace_meta_reveal",
+      "start_ratio": 0.5848,
+      "end_ratio": 0.6137,
+      "start_sec": 520.5,
+      "end_sec": 546.2,
+      "position_label": "58.5%–61.4%(8:40–9:06)",
+      "purpose": "元视角间奏:用设问把观众从故事里拉出来,逐级报数做代际算术,得出爬到此处耗费的真实时长;再以没人记得起点与系统吞掉人生的判断完成情绪沉淀",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.5848,
+          "time_ms": 520490,
+          "reason": "代际算术把数百年压缩成一串数字,元视角揭示系统的真实速度"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "pace_meta_question",
+          "mechanism": "generation_arithmetic_prompt"
+        }
+      ],
+      "required_retention_events": "humbling_perspective",
+      "original_moves": [
+        "设问拉回元视角:你注意到这次爬升的节奏了吗",
+        "逐级报数:男爵到子爵两代,子爵到伯爵三代,伯爵到侯爵两代,侯爵到公爵又两代",
+        "算术落地:约两百五十年才到普通贵族的顶",
+        "情绪沉淀:家族里已没人记得起点的那片泥",
+        "定性:这不是细节,这是系统的真实速度——它吞掉人生而毫无察觉"
+      ],
+      "abstract_move": "元视角设问 + 逐级排比报数 + 总时长算术 + 起点记忆抹去 + 系统速度定性",
+      "replacement_needs": [
+        "一组可心算的逐级时间或成本数字",
+        "一个排比报数的句式结构",
+        "一个起点已被遗忘的感性细节",
+        "一句对系统速度的定性判断"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "blood_wall_reveal",
+      "start_ratio": 0.6127,
+      "end_ratio": 0.7207,
+      "start_sec": 545.3,
+      "end_sec": 641.4,
+      "position_label": "61.3%–72.1%(9:05–10:41)",
+      "purpose": "全片最大反转:宣告此前全部晋升机制在此格作废;用两地相反规则与主权血缘之辨展示该级的机制剧变;再以机制失效三连与墙之格言把问题从怎么走反转为哪里永远走不通;收束于最富家族仍在门外的酸楚",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.7008,
+          "time_ms": 623685,
+          "reason": "血统之墙:全部晋升机制失效,\"不是你要爬的墙,是你出生在哪一边的墙\"的全片最大反转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "rule_exhaustion_at_blood_wall",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "wall_reveal",
+          "mechanism": "doors_stop_working"
+        }
+      ],
+      "required_retention_events": "merit_wall_shock",
+      "original_moves": [
+        "宣告作废:在这里,过去两百五十年对你家族管用的一切停止管用",
+        "机制剧变:英格兰王子高于公爵且只属王室直系;大陆却可能相反,主权亲王可实权在握",
+        "概念辨析:统治亲王与血缘亲王必须区分",
+        "失效三连:买不来、联姻换不来,必须生在直系王脉",
+        "格言落地:这不是你要爬的墙,是你要么生在另一边、要么不在的墙",
+        "酸楚收束:六代之后家族已是王国最富的非王室,技术上仍在统治家族门外"
+      ],
+      "abstract_move": "机制作废宣告 + 两地规则相反展示 + 概念辨析 + 通道失效三连 + 宿命格言 + 门外的顶点统计",
+      "replacement_needs": [
+        "一个该体系努力彻底失效的硬边界",
+        "一组规则在不同分支相反的事实",
+        "一句把边界意象化的格言",
+        "一个已到极致却仍被排除的地位对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(88);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "vacancy_inheritance_reveal",
+      "start_ratio": 0.7202,
+      "end_ratio": 0.8279,
+      "start_sec": 641,
+      "end_sec": 736.8,
+      "position_label": "72%–82.8%(10:41–12:17)",
+      "purpose": "兑现主承诺:唯一通道是上方王朝的绝嗣;空缺争夺战中血统、实力与可接受度共同决定归属,家族数百年积累在同一刻结账;随后给出全片主论断——最高处不是被爬上去的,是空出来时被准备最久的人接住的",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.7663,
+          "time_ms": 681982,
+          "reason": "六百年家族弧的兑现时刻:空缺出现,积累最厚的家族接过王冠,主环闭合"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 92,
+          "position_ratio": 0.8174,
+          "time_ms": 727500,
+          "reason": "全片主论断:没人爬上王座,王座空出来,准备最久的人接住它——对一切逆袭叙事的改写"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_ladder_completion_by_vacancy",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "human_channels_callback",
+          "opened_in": "FS04"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "distance_zeroed_by_vacancy",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "vacancy_fight",
+          "mechanism": "succession_crisis_opens"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "thesis_statement",
+          "mechanism": "no_one_climbs_the_crown"
+        }
+      ],
+      "required_retention_events": "destiny_fulfillment",
+      "original_moves": [
+        "唯一通道:统治王朝绝嗣——国王无子,女儿也无权继位",
+        "争夺战三要素:血统重要,实力重要,其他大家族愿意接受你也重要",
+        "兑现:六代积累在此结账,有稀薄王血与足够军队的公爵接过王冠",
+        "权力定性:君权从不委托,是世袭权甚至神授,与以下各级完全不同",
+        "主论断:没人爬上王座——王座空出来,准备最久的人接住它"
+      ],
+      "abstract_move": "唯一通道揭示 + 争夺战要素清单 + 积累一刻结账 + 权力性质重构 + 主语翻转式主论断",
+      "replacement_needs": [
+        "一个体系顶层出缺的真实机制(绝嗣、改制、职位出缺)",
+        "一组空缺争夺的胜负要素",
+        "一个长期积累在瞬间兑现的画面",
+        "一句主语翻转的论断句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)、PK08(92);回收了前文的悬念 FS01→LOOP01、FS04→LOOP03、FS05→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 92
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "unreachable_apex_and_fall",
+      "start_ratio": 0.827,
+      "end_ratio": 0.8945,
+      "start_sec": 736,
+      "end_sec": 796.1,
+      "position_label": "82.7%–89.5%(12:16–13:16)",
+      "purpose": "塔尖之上再露一级:名义权威与实权的反差、词源冷知识、本家族明确不可达;登顶后的家族在数代之后被不在乎头衔的力量终结,爽感首次逆转为虚无",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "apex_extension",
+          "mechanism": "one_level_above_king"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "dynasty_fall",
+          "mechanism": "revolution_indifferent_to_titles"
+        }
+      ],
+      "required_retention_events": "apex_humility",
+      "original_moves": [
+        "塔尖之上再露一级:王之上还有帝,权威横跨多个民族与王国",
+        "反差:名义权威很大,实权常是象征性的",
+        "词源冷知识:imperator 最初只是胜利的将领",
+        "明确不可达:你的家族到不了——几乎没人到得了,除非征服数国或控制授衔机构",
+        "王朝终局:家族再传四代后失冠,终结者不是对手家族,而是一场不在乎你七百年头衔的革命"
+      ],
+      "abstract_move": "更高一级揭示 + 名义/实权反差 + 词源冷知识 + 不可达宣告 + 非对称终结者",
+      "replacement_needs": [
+        "一个比主角终点更高的层级",
+        "一个名义与实权反差的事实",
+        "一个该层级的真实准入条件",
+        "一个终结者不在乎积累的失败方式"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "roll_call_recap",
+      "start_ratio": 0.8935,
+      "end_ratio": 0.9452,
+      "start_sec": 795.2,
+      "end_sec": 841.2,
+      "position_label": "89.4%–94.5%(13:15–14:01)",
+      "purpose": "总结宣告后,用一句话绰号逐一点名回放全部等级,让观众验收清单并把每一级压缩成可复述的带走定义",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "compressed_recap",
+          "mechanism": "roll_call_begins"
+        }
+      ],
+      "required_retention_events": "compressed_clarity",
+      "original_moves": [
+        "总结宣告:那就全部加总一遍",
+        "逐句绰号回放:男爵=漏屋顶的地方法官;子爵=替人管地的副手;伯爵=全郡实权与多数家族的终点;侯爵=同样的权力加背上的靶子;公爵=普通贵族天花板;王子=墙;君主=空缺继承者;皇帝=几乎无人到达"
+      ],
+      "abstract_move": "总结宣告 + 每级一句职权与代价并置的绰号式定义,逐级点名回放",
+      "replacement_needs": [
+        "每一级一个压缩定义,且必须同时含权力与代价",
+        "一套统一的压缩句式",
+        "与原片逐级的呼应关系"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "system_collapse_subversion",
+      "start_ratio": 0.9442,
+      "end_ratio": 1,
+      "start_sec": 840.3,
+      "end_sec": 890,
+      "position_label": "94.4%–100%(14:00–14:50)",
+      "purpose": "最终反转:全部头衔终将无关,不是因为家族输了,而是体系本身崩塌;用革命与巨变的清单给出具体时间锚点,把诚实结局从登顶改写成保护失效,以梯子被整体抽走的画面定格收尾",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "title_callback",
+          "strength": 90,
+          "position_ratio": 0.9523,
+          "time_ms": 847511,
+          "reason": "从最低级到最高级的全部头衔被宣告终将无关,系统本身崩塌,标题承诺被反转式超额兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "thematic_callback_collapse",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "final_reframe_prompt",
+          "mechanism": "worth_thinking_last_time"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "collapse_payoff",
+          "mechanism": "protection_erased"
+        }
+      ],
+      "required_retention_events": "existential_subversion",
+      "original_moves": [
+        "终局宣告:最后一次值得思考的部分",
+        "全称否定:从男爵到皇帝,每一个头衔最终都变得无关紧要",
+        "机制改写:不是家族输了战争,是整个系统在他们脚下崩塌",
+        "时间锚点:革命、统一运动、两次世界大战,1790、1848 或 1917,取决于你生在哪个王国",
+        "诚实结局:这个故事的诚实结局不是登顶,而是某天七百年积累不再保护你",
+        "定格画面:梯子是真的,然后在一瞬间从所有人的脚下被整体抽走"
+      ],
+      "abstract_move": "终局宣告 + 全称否定句 + 失败原因改写(系统而非个人) + 具体时点清单 + 诚实结局反转 + 崩塌画面定格",
+      "replacement_needs": [
+        "一个该体系真实终结或衰落的历史事实",
+        "一组具体时点或事件锚点",
+        "一句把价值归零落到个人层面的句子",
+        "一个把抽象崩塌具象化的画面"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(90);回收了前文的悬念 FS06→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

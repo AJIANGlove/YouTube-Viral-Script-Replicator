@@ -1,0 +1,838 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.832Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry",
+      "start_ratio": 0,
+      "end_ratio": 0.1255,
+      "start_sec": 0.1,
+      "end_sec": 116.8,
+      "position_label": "0%–12.6%(0:00–1:57)",
+      "purpose": "零铺垫第二人称点名,直接把观众按进最低一级的身份:年龄、被送离家庭的分离代价、「这是荣耀」的倒置安慰、仆人日常与「被培养成武器」的目标宣言,段尾以「你不会是被淘汰的那个」立约",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "emotional_payoff",
+          "strength": 70,
+          "position_ratio": 0.0059,
+          "time_ms": 5520,
+          "reason": "开场十秒内「数年见不到家人」的分离重击,把代入直接焊死"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题全等级清单与逐级兑现之间的主悬念",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "亲情伏笔:开场分离代价的价值判断弧",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "level_drop_hook",
+          "mechanism": "zero_preamble_identity_binding"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "separation_gut_punch",
+          "mechanism": "family_separation_cost_first"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "aspiration_promise",
+          "mechanism": "groomed_for_greatness"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "goal_reframe",
+          "mechanism": "not_scholar_but_weapon"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "resolve_vow",
+          "mechanism": "not_one_of_the_failed"
+        }
+      ],
+      "required_retention_events": [
+        "level_announcement_hook",
+        "second_person_immersion",
+        "separation_cost_first",
+        "low_position_contrast",
+        "chore_catalog",
+        "goal_reframe",
+        "elimination_threat",
+        "resolve_vow"
+      ],
+      "original_moves": [
+        "第一句直接宣判「第一级:侍童,你 7 岁」,零寒暄完成身份分配",
+        "交代被父亲送到陌生城堡、数年见不到家人,把分离代价前置",
+        "立刻倒置安慰:这是荣耀,父亲动用了所有人情,多数男孩没这机会",
+        "用农家孩子一生不出 20 英里对照,抬高「你」的特殊性",
+        "铺开侍童日常:倒酒、送信、贴墙旁听大人们谈战争与婚事",
+        "给观察学习线:看骑士如何不发火就赢得尊重",
+        "排教育清单:礼仪、舞蹈、棋、拉丁文与读写",
+        "一句「不是培养学者,是培养武器」完成目标重命名",
+        "给训练代价与淘汰机制:教头在筛选,撑不住的孩子被客气送回家",
+        "段尾立志:你不会是其中之一,因为你想要那种力量超过一切"
+      ],
+      "abstract_move": "等级公告+年龄定位→分离代价前置→「这是荣耀」倒置安慰→低位对照组抬高特殊性→日常任务清单→观察学习线→教育清单→目标重命名→训练代价与淘汰机制→立志句立约",
+      "replacement_needs": [
+        "一个最低等级的身份名与入行年龄",
+        "一个开场即付的分离或失去代价",
+        "一组低位对照群体的量化事实",
+        "一份日常任务与教育清单",
+        "一个淘汰机制与「我不会被淘汰」的立志落点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS09、LOOP02→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "zero_preamble_second_person_level_drop",
+        "first_stimulus_ms": 80,
+        "first_payoff_ms": 113680,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0054"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "rank_escalation_apprenticeship",
+      "start_ratio": 0.1221,
+      "end_ratio": 0.2672,
+      "start_sec": 113.7,
+      "end_sec": 248.7,
+      "position_label": "12.2%–26.7%(1:54–4:09)",
+      "purpose": "学徒级:绑定一位具象导师,做影子式服务(备甲、喂马、守夜),第一次从战场边缘目击血与气味;导师存亡即自身存亡的短悬念后接夜授真传,七年淬炼蒙太奇收束",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "sensory_immersion",
+          "strength": 66,
+          "position_ratio": 0.1929,
+          "time_ms": 179519,
+          "reason": "初战的声、血、气味三连,浪漫想象第一次被感官现实打碎"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "学徒级的短悬念:导师存亡即主角存亡",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "relief_reversal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "level_transition",
+          "mechanism": "level_two_announcement"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "sensory_shock",
+          "mechanism": "first_battle_smell"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "loop_relief",
+          "mechanism": "mentor_survives"
+        }
+      ],
+      "required_retention_events": [
+        "mentor_binding",
+        "chore_catalog",
+        "warhorse_menace",
+        "combat_ban_tension",
+        "sensory_battle_shock",
+        "mentor_survival_loop",
+        "doctrine_aphorism",
+        "years_montage"
+      ],
+      "original_moves": [
+        "公告换挡:第二级侍从,14 岁,变声期",
+        "绑定具象导师:三次战役的老兵,从太阳穴到下颌的疤",
+        "影子服务清单:黎明前备甲、擦到照出人影、查锈查凹",
+        "战马课:烈性战马被训练去踢踏敌人,尊重到近乎害怕",
+        "随军职责与禁令:扛备用长枪、备替换马,但不许参战只能看",
+        "初战感官冲击:惨叫、血把泥搅成红浆、没人警告过的气味",
+        "导师失踪悬念:他死了你就没有存在意义,会被羞辱遣返",
+        "悬念解除:他凹痕累累血迹斑斑地回来了",
+        "夜授真传:读地形、预判战线崩溃、杀伤不犹豫",
+        "信条句落地:犹豫会害死你,仁慈会害死你;七年淬炼蒙太奇收段"
+      ],
+      "abstract_move": "等级公告+身体标记→导师具象画像→影子服务清单→危险动物敬畏课→随军职责与禁令张力→初体验感官冲击→导师存亡短悬念→悬念解除→实战信条夜授→年限蒙太奇",
+      "replacement_needs": [
+        "一位有可见资历标记的导师",
+        "一份影子式服务清单",
+        "一次只许看不许上手的禁令",
+        "一场初体验的感官冲击",
+        "一个导师存亡即自身存亡的短悬念",
+        "一组书本之外的实战信条"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(66)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 66
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "rank_escalation_anointing_hollow_status",
+      "start_ratio": 0.2645,
+      "end_ratio": 0.3927,
+      "start_sec": 246.2,
+      "end_sec": 365.5,
+      "position_label": "26.5%–39.3%(4:06–6:06)",
+      "purpose": "受封级:守夜誓言的理想文本先立并立刻被「现实会更血腥」倒置;仪式荣耀(家人到场、点肩、起身之称)兑现到顶,随即倒置为「有头衔无产业」;锦标赛经济与政治让球铺开,定级为职业生涯最危险期",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "status_transformation",
+          "strength": 80,
+          "position_ratio": 0.2975,
+          "time_ms": 276880,
+          "reason": "点肩与「起身吧,骑士」完成受封,童年线第一个大兑现"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 72,
+          "position_ratio": 0.3171,
+          "time_ms": 295120,
+          "reason": "受封余韵未落就被「有头衔无产业、马吃得比你好」倒置"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "受封级的前向悬念:理想文本与现实代价的落差",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "foreshadow_fulfillment",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "level_transition",
+          "mechanism": "level_three_announcement_with_vigil"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "ceremony_payoff",
+          "mechanism": "rise_sir_knight"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "status_inversion",
+          "mechanism": "titled_but_poor"
+        }
+      ],
+      "required_retention_events": [
+        "vigil_oath",
+        "reality_inversion_warning",
+        "ceremony_payoff",
+        "status_inversion",
+        "poverty_detail",
+        "tournament_economics",
+        "political_concession",
+        "fragility_stakes"
+      ],
+      "original_moves": [
+        "公告换挡:第三级侍从骑士,21 岁",
+        "受封前夜:禁食祈祷,在冷石头上跪 12 小时默想誓言",
+        "先立誓言理想文本,立刻倒置:词句很美,现实会更血腥",
+        "仪式高潮:满庭见证、父母远道赶来、点肩、「起身吧,骑士」",
+        "权利清单与一无所有倒置:有持械权、金马刺,但没有城堡、收入、随从",
+        "穷困细节:铠甲是父亲送的,马吃得比你好",
+        "谋生线:锦标赛一场=一年工资,但人会死在里面",
+        "政治课:有时故意输给大人物之子换前程",
+        "定级最危险期:一次重伤、一匹死马就完蛋,许多人默默无闻死去",
+        "段尾立志:你不会是其中之一"
+      ],
+      "abstract_move": "等级公告→仪式前夜的誓言理想文本→「现实更血腥」倒置预警→仪式高潮与家人到场→权利与一无所有倒置→穷困细节→高回报高风险的谋生经济账→政治让步潜规则→脆弱性定级→立志句",
+      "replacement_needs": [
+        "一段誓言或誓词的原文级引用",
+        "一个仪式高潮动作",
+        "一份「有头衔无产业」的倒置清单",
+        "一个危险但高回报的谋生渠道",
+        "一条政治让步潜规则",
+        "一组脆弱性条件"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(80)、PK04(72)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 72
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "rank_escalation_household_belonging",
+      "start_ratio": 0.3901,
+      "end_ratio": 0.4845,
+      "start_sec": 363.1,
+      "end_sec": 451,
+      "position_label": "39%–48.5%(6:03–7:31)",
+      "purpose": "家臣级:被一位大人物注意到(三种原因留白),用服务换稳定;兄弟会归属与敏感政治任务铺开,点出「读局比剑术更有用」的信条为后段权谋埋能",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "家臣级埋下的能力伏笔,悬到权力顶层兑现",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "level_transition",
+          "mechanism": "level_four_patron_noticed"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "belonging_bond",
+          "mechanism": "die_for_each_other"
+        }
+      ],
+      "required_retention_events": [
+        "patron_noticed_blank",
+        "stability_ledger",
+        "silent_violence_promise",
+        "brotherhood_bond",
+        "sensitive_missions",
+        "operative_reframe",
+        "power_reading_doctrine"
+      ],
+      "original_moves": [
+        "公告换挡:第四级家臣骑士",
+        "被大人物注意到的三种留白:救过命、赢过赛、或溃逃时留下",
+        "稳定明账:床、饭、津贴;义务:他召唤你必应",
+        "职责铺开:训兵、护卫家眷、谈判时站在身后当沉默的暴力承诺",
+        "兄弟会归属:同吃同训同饮,愿为彼此而死,比血更浓",
+        "敏感任务清单:送不能写下来的口信、护送女儿穿越敌境完婚、查内奸",
+        "身份升级定性:不只是士兵,是政治执行者、问题解决者",
+        "信条句埋能:读懂权力涨落比任何剑术都有用,战争常在会议室决出"
+      ],
+      "abstract_move": "等级公告→被招揽的留白三选→稳定明账与效忠义务→职责清单(含沉默暴力承诺)→兄弟会归属定性→敏感任务清单→身份升级定性→读局信条埋能",
+      "replacement_needs": [
+        "一个被上级注意到的留白时刻",
+        "一份稳定收益与效忠义务的对价清单",
+        "一个兄弟会或同侪归属场景",
+        "一组只能口头执行的敏感任务",
+        "一条「读局胜过硬技能」的信条"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "rank_escalation_command_burden",
+      "start_ratio": 0.4812,
+      "end_ratio": 0.5764,
+      "start_sec": 447.9,
+      "end_sec": 536.5,
+      "position_label": "48.1%–57.6%(7:28–8:56)",
+      "purpose": "方旗级:战功被最高层亲眼见证,剪尾成旗的仪式细节把战功转成带队编制;建军、雇班子、把战役变成盈亏计算;随后孤独账单落地(错误决策=人命,荣耀与坟墓分配不均),以酒与祷告收",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "status_transformation",
+          "strength": 74,
+          "position_ratio": 0.4974,
+          "time_ms": 462960,
+          "reason": "国王亲手剪尾成旗的仪式细节,把战功转成带队编制"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "level_transition",
+          "mechanism": "level_five_king_witnessed"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "command_loneliness",
+          "mechanism": "every_decision_costs_lives"
+        }
+      ],
+      "required_retention_events": [
+        "king_witnessed_charge",
+        "banner_ritual_detail",
+        "company_building",
+        "staff_catalog",
+        "profit_loss_questions",
+        "command_loneliness",
+        "drink_and_pray_beat",
+        "aphoristic_verdict"
+      ],
+      "original_moves": [
+        "公告换挡:第五级方旗骑士",
+        "战功被最高层亲眼见证:你的冲锋撕开了敌军侧翼",
+        "仪式细节:当场剪掉旗帜燕尾,三角旗变方旗,获得带队权",
+        "编制线:招募二三十人队伍,自行与领主和国王谈合同",
+        "班子清单:传令官、文书、军医、随军牧师",
+        "企业化定性:每场战役都是盈亏计算——报酬、存活率、战利品",
+        "孤独账单:错误决策=士兵送命、寡妇咒你;正确决策=荣耀归你、薄坟归他们",
+        "生活细节拍:酒喝得更多,祷告也更多",
+        "段尾格言:指挥的重量比任何铠甲都沉"
+      ],
+      "abstract_move": "等级公告→王者见证的战功→剪旗仪式细节→编制与合同→班子清单→盈亏计算定性→指挥孤独双账→酒与祷告拍→格言收束",
+      "replacement_needs": [
+        "一次被最高层见证的关键战功",
+        "一个把战功转成编制的仪式细节",
+        "一份自建班子的岗位清单",
+        "一组盈亏计算问题",
+        "一份指挥孤独的代价双账"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "rank_escalation_governance_endurance",
+      "start_ratio": 0.5726,
+      "end_ratio": 0.6737,
+      "start_sec": 533,
+      "end_sec": 627.1,
+      "position_label": "57.3%–67.4%(8:53–10:27)",
+      "purpose": "堡主级:被授一座要塞的指挥权(非所有权),日常是操练、点库、判案、收税的治理清单;外敌围困转成消耗战:配给、疫病、士气崩裂、以意志撑到敌退,「靠忍耐而非战斗获胜」结段",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "surprise",
+          "strength": 68,
+          "position_ratio": 0.6465,
+          "time_ms": 601760,
+          "reason": "围困苦难清单(食鼠、煮皮革、雨水)带来生理级震撼"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "堡主级的围困悬念:配给与士气能否撑到敌退",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "endurance_reversal",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "level_transition",
+          "mechanism": "level_six_castle_command"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "siege_hardship",
+          "mechanism": "rats_and_rainwater"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "endurance_payoff",
+          "mechanism": "won_by_endurance_not_battle"
+        }
+      ],
+      "required_retention_events": [
+        "command_not_ownership",
+        "governance_catalog",
+        "triple_role_reframe",
+        "raider_skirmishes",
+        "siege_craft_lessons",
+        "starvation_catalog",
+        "surrender_whispers",
+        "endurance_not_battle_verdict"
+      ],
+      "original_moves": [
+        "公告换挡:第六级堡主",
+        "授城背景:边境不安、敌领主袭扰,国王需要可信的人",
+        "权属倒置:指挥权而非所有权,你是这座要塞的军事总督",
+        "治理清单:操练守军、盘点粮箭腌肉、维护器械、断案收税",
+        "身份叠加定性:法官、将军、行政官三合一",
+        "迎击袭扰:有时速胜,有时追数日",
+        "守城视角课:以少守墙、一个月口粮拉成三个月、与围困者谈判拖时",
+        "围困苦难清单:吃老鼠煮皮革、喝垛口雨水、疫病、投降耳语",
+        "意志撑到敌退:对方补给耗尽撤兵",
+        "定性句:你靠忍耐而非战斗获胜;国王以更大责任回报忠诚"
+      ],
+      "abstract_move": "等级公告→授城背景→权属倒置→治理清单→身份叠加定性→迎击与追击→守城方法课→围困苦难清单→忍耐获胜定性→信任兑现更大责任",
+      "replacement_needs": [
+        "一个被授予而非拥有的指挥岗位",
+        "一份日常治理清单",
+        "一组防守视角的方法课",
+        "一份围困苦难清单",
+        "一个「靠忍耐而非战斗获胜」的反直觉定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(68)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 68
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "rank_escalation_nobility_obligations",
+      "start_ratio": 0.6709,
+      "end_ratio": 0.7725,
+      "start_sec": 624.5,
+      "end_sec": 719,
+      "position_label": "67.1%–77.3%(10:24–11:59)",
+      "purpose": "封爵级:大庭广众授地授产,血脉进入永久贵族,父亲之泪回收开场分离伏笔;随即义务账与联姻政治摊开,司法生杀权与同侪嫉妒收尾",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 78,
+          "position_ratio": 0.7029,
+          "time_ms": 654240,
+          "reason": "父亲之泪回收开场分离伏笔,亲情弧在贵族顶点闭合"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "emotional_callback_vindication",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "level_transition",
+          "mechanism": "level_season_baron_elevation"
+        },
+        {
+          "event_id": "RE20",
+          "event_type": "callback_payoff",
+          "mechanism": "father_tears_vindication"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "doctrine_aphorism",
+          "mechanism": "love_irrelevant_legacy_everything"
+        }
+      ],
+      "required_retention_events": [
+        "land_grant_ceremony",
+        "bloodline_elevation",
+        "father_callback_payoff",
+        "obligation_ledger",
+        "marriage_politics",
+        "legacy_over_love_verdict",
+        "judgment_power",
+        "jealous_watchers"
+      ],
+      "original_moves": [
+        "公告换挡:第七级男爵",
+        "授地仪式:满廷见证下获封产粮地产、村庄与属于自己的城堡",
+        "血脉定性:子女继承头衔,血脉进入永久贵族",
+        "伏笔回收:父亲闻讯落泪,当年送你做侍童的牺牲被证明值得",
+        "义务账:每年 40 天军役、维持定额骑士、应召赴廷数月",
+        "联姻政治:女儿嫁邻爵之子固盟,儿子娶富商之女拿嫁妆修墙筹军费",
+        "定性句:爱情无关紧要,传承才是一切",
+        "司法权:断田产牲畜纠纷,偷剁手、杀绞刑,你的话就是法律",
+        "危险定性:权力醉人而危险,同级贵族嫉妒地盯着你找破绽"
+      ],
+      "abstract_move": "等级公告→授地仪式→血脉晋升定性→亲情伏笔回收→义务明账→联姻政治双案例→传承定性句→司法生杀权→醉人而危险定性与同侪嫉妒",
+      "replacement_needs": [
+        "一场公开授地或授权仪式",
+        "一个血脉晋升的情绪点(亲情伏笔回收)",
+        "一份义务明账(服役、养兵、赴会)",
+        "两个联姻政治案例",
+        "一组司法生杀细节与嫉妒监视"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(78);回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "apex_power_paranoia",
+      "start_ratio": 0.7699,
+      "end_ratio": 0.8745,
+      "start_sec": 716.6,
+      "end_sec": 814,
+      "position_label": "77%–87.5%(11:57–13:34)",
+      "purpose": "伯顶级:以一场亲手扭转的转折战役登顶为顶级领主,军队与收入对标王室;进入枢密圈层后猜忌环伺,「中和威胁」三段论(联姻、收买、除掉)把暗室手段摆上台面,以编年史与真相的两本账收束",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "action_climax",
+          "strength": 75,
+          "position_ratio": 0.7897,
+          "time_ms": 735040,
+          "reason": "看穿破绽、亲自冲锋、叛军首领死于你的剑下,动作最高点"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "dark_reveal",
+          "strength": 82,
+          "position_ratio": 0.861,
+          "time_ms": 801440,
+          "reason": "中和威胁三段论落到暗杀与「暗室真相随你而死」,滤镜彻底破碎"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "skill_callback_payoff",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "level_transition",
+          "mechanism": "level_eight_war_opportunity"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "action_climax",
+          "mechanism": "decisive_charge_rebel_slain"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "dark_reveal",
+          "mechanism": "neutralization_includes_assassination"
+        }
+      ],
+      "required_retention_events": [
+        "war_levy_scale",
+        "decisive_charge",
+        "royal_benchmark_ledger",
+        "council_seat",
+        "whisper_triplet",
+        "neutralization_trilemma",
+        "chronicles_vs_truth_verdict"
+      ],
+      "original_moves": [
+        "公告换挡:第八级伯爵",
+        "战时机遇:国王征讨叛军,你应召带 200 骑士与一千步兵,任何男爵能出的最大兵力",
+        "转折战役:在沼泽之战看到没人看到的破绽,亲自冲锋斩将",
+        "登顶明账:领土大过一些小国,数十男爵效忠,收入超过常人千世,军队匹敌王室",
+        "枢密席位:参与战争、和平与税收,国王有时听有时不听",
+        "猜忌环伺:同级向国王进谗三连问——他是否太强、是否有野心、是否在谋划叛乱",
+        "中和威胁三段论:联姻绑定、贿赂买默、暗杀制造意外",
+        "两本账定性:编年史记下公开功业,暗室里的事随你而死"
+      ],
+      "abstract_move": "等级公告→战时征召与出兵规模→转折战役亲手斩将→登顶明账对标最高层→枢密席位与「有时听」→进谗三连问→中和威胁三段论→两本账定性",
+      "replacement_needs": [
+        "一次战时征召与出兵规模数字",
+        "一场亲手扭转的转折战役",
+        "一份对标最高层的登顶明账",
+        "一组进谗猜忌的问句",
+        "一套中和威胁的三段论",
+        "一条公开叙事与暗室真相的两本账定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(75)、PK09(82);回收了前文的悬念 FS04→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 75
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "legend_mortality_closure",
+      "start_ratio": 0.8722,
+      "end_ratio": 1,
+      "start_sec": 811.8,
+      "end_sec": 930.8,
+      "position_label": "87.2%–100%(13:32–15:31)",
+      "purpose": "传奇收束级:冠军头衔功能与传奇物件推顶,衰老与旧伤、年轻挑战者的饥饿目光把必死摆上桌面——「总有一天会败,但不是今天」;巡游欢呼后镜头拉回第一级的仆人铺位意象完成环形回扣,以「值得每一道伤疤」定性全片",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "title_callback",
+          "strength": 90,
+          "position_ratio": 0.9895,
+          "time_ms": 921040,
+          "reason": "仆人铺位到王子寝宫的环形回扣加「值得每一道伤疤」,全片情绪总兑现"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "末级开启的必死性议题:把传奇压回肉身,维持尾段张力",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "ladder_completion_with_cyclical_callback",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP07"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "level_transition",
+          "mechanism": "level_nine_champion"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "mortality_tension",
+          "mechanism": "challenger_will_come_but_not_today"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "immortal_today_beat",
+          "mechanism": "crowd_roars_name"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "cyclical_callback",
+          "mechanism": "servant_quarters_to_prince_chambers"
+        }
+      ],
+      "required_retention_events": [
+        "champion_function_catalog",
+        "legendary_artifacts",
+        "folk_worship",
+        "aging_body_ledger",
+        "challenger_mortality_note",
+        "immortal_today_beat",
+        "cyclical_image_callback",
+        "worth_every_scar_verdict"
+      ],
+      "original_moves": [
+        "公告换挡:第九级王国冠军",
+        "资历铺陈:打遍本朝每一场大战,逐敌入海、擒王弟平叛",
+        "头衔功能:外国王子挑战时你代王出战,比武审判你代表王权",
+        "传奇物件:名匠铠甲价值超过一座小城堡,佩剑之名被歌谣传唱",
+        "民间崇拜:孩子扮你游戏、年轻侍从梦想侍奉你、画家为你的战役作画",
+        "衰老账单:旧伤入冬作痛、剑臂变慢、每次幸存都留下印记",
+        "必死悬念:年轻人看你就像你当年看老冠军,总有一天会来你打不过的人——但不是今天",
+        "今日不朽拍:巡游街道、人群山呼你的名字,明天是明天的问题",
+        "环形回扣:当年倒酒的男孩成了王国最伟大的骑士,仆人铺位换成王子寝宫",
+        "人生定性收束:他们会把你的事迹刻进石头,这段旅程值得每一道伤疤"
+      ],
+      "abstract_move": "等级公告→资历铺陈→头衔功能清单→传奇物件与民间崇拜→衰老账单→必死悬念(开放)→今日不朽拍→环形回扣开场意象→人生定性句",
+      "replacement_needs": [
+        "一份顶点头衔的功能清单",
+        "一组传奇物件与民间崇拜细节",
+        "一份衰老与旧伤的身体账",
+        "一个保持开放的挑战者悬念",
+        "一个开场意象的环形回扣",
+        "一句「值得」式人生定性"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(90);打开的悬念 LOOP07(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

@@ -1,0 +1,941 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.828Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "pov_birth_immersion_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0717,
+      "start_sec": 0.3,
+      "end_sec": 44.2,
+      "position_label": "0%–7.2%(0:00–0:44)",
+      "purpose": "把观众直接生成为一个神庙里的新生儿:父母为你向生育女神祈祷还愿;旁白宣判\"活着在这里已经算赢、但别太舒服\"的世界基线;再用动物命名传统的吐槽完成首个幽默缓冲,建立\"标题已宣判厄运、过程自己走\"的戏剧反讽前提",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "humor_peak",
+          "strength": 62,
+          "position_ratio": 0.0281,
+          "time_ms": 17300,
+          "reason": "\"活着已经算赢、但别太舒服\":出生祝福语与世界残酷判词的对撞,全片幽默与厄运的双重定调"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "humor_peak",
+          "strength": 55,
+          "position_ratio": 0.0503,
+          "time_ms": 31000,
+          "reason": "动物命名吐槽连击(\"还可以更糟\"式加码),开场段落的笑点峰值"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题厄运判决与全片苦难账单之间的主悬念",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "pov_birth_entry",
+          "mechanism": "second_person_immersion"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "doom_contract",
+          "mechanism": "ironic_foreshadow"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "naming_humor",
+          "mechanism": "anachronistic_roast"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_immersion",
+        "doom_foreshadow",
+        "world_baseline_verdict",
+        "naming_humor"
+      ],
+      "original_moves": [
+        "第二人称把观众生成为神庙里的新生儿,父母向生育女神祈祷还愿",
+        "旁白宣判\"活着在这里已经算赢、但别太舒服\"的世界基线",
+        "给你起一个动物名,并用\"还可以更糟\"的加码吐槽交代命名传统"
+      ],
+      "abstract_move": "出生入戏+世界残酷基线宣判+身份命名吐槽缓冲",
+      "replacement_needs": [
+        "一个仪式感强的出生或入场场景",
+        "一句量化环境残酷度的黑色判词",
+        "一套可吐槽的本地身份规则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(62)、PK02(55);打开的悬念 LOOP01→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 62
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 55
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_birth_with_doom_contract",
+        "first_stimulus_ms": 8600,
+        "first_payoff_ms": 14500,
+        "evidence_refs": [
+          "C0001",
+          "C0003",
+          "C0004",
+          "C0007"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "childhood_hardship_montage",
+      "start_ratio": 0.0717,
+      "end_ratio": 0.1053,
+      "start_sec": 44.2,
+      "end_sec": 64.9,
+      "position_label": "7.2%–10.5%(0:44–1:05)",
+      "purpose": "时间快进到幼年:还不会走路就被送进军事化男校,直接否定\"寓教于乐\"的现代想象,纪律严苛、偷懒只换惩罚没有安慰奖,确立苦难升级的第一级台阶",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "time_skip",
+        "modern_school_contrast",
+        "harsh_rules"
+      ],
+      "original_moves": [
+        "时间快进到幼年,还不会走路就被送进军事化男校",
+        "直接否定\"寓教于乐\"的现代想象",
+        "纪律严苛:偷懒只换来惩罚,没有安慰奖"
+      ],
+      "abstract_move": "时间快进+现代想象否定+严苛规则清单",
+      "replacement_needs": [
+        "一个与现代童年反差大的训练制度",
+        "两三条具体严苛规则",
+        "一句否定观众默认预期的对照句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "antagonist_demonization",
+      "start_ratio": 0.1053,
+      "end_ratio": 0.171,
+      "start_sec": 64.9,
+      "end_sec": 105.4,
+      "position_label": "10.5%–17.1%(1:05–1:45)",
+      "purpose": "再快进八年:课程变成\"用利器伤人\"的技术;引出在父亲故事里反复出现的宿敌之名,并用\"剧透警告\"式元评论定性;父亲与祭司两种口径把宿敌妖魔化;落点把训练与生存直接挂钩",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "童年段挂出的外部威胁,驱动训练与参战动机",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "time_skip_escalation",
+          "mechanism": "fast_forward_montage"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "antagonist_tease",
+          "mechanism": "spoiler_alert_label"
+        }
+      ],
+      "required_retention_events": [
+        "time_skip",
+        "weapon_curriculum",
+        "antagonist_tease",
+        "spoiler_alert_label",
+        "stakes_declaration"
+      ],
+      "original_moves": [
+        "再快进到十岁,课程变成用利器伤人的技术",
+        "引出在父亲故事里反复出现的宿敌之名,用\"剧透警告\"式元评论定性",
+        "父亲与祭司两种口径把宿敌妖魔化",
+        "落点:像命悬一线那样训练——因为确实如此"
+      ],
+      "abstract_move": "时间快进+宿敌登场+多口径妖魔化+生存赌注落点",
+      "replacement_needs": [
+        "一个宿敌或对手阵营",
+        "两种来源的负面描述",
+        "一句把训练与生存直接挂钩的落点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "training_escalation_war_tease",
+      "start_ratio": 0.171,
+      "end_ratio": 0.2217,
+      "start_sec": 105.4,
+      "end_sec": 136.6,
+      "position_label": "17.1%–22.2%(1:45–2:17)",
+      "purpose": "训练强度蒙太奇:跑到腿烧、举到手臂麻木;点出这一切只为了一个名字很美的战争;补刀——对方也在同等强度地训练,等你送上门",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "名词悬念:美丽名称与残酷实质的落差",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "name_irony_question",
+          "mechanism": "poetic_name_vs_reality"
+        }
+      ],
+      "required_retention_events": [
+        "training_montage",
+        "poetic_name_tease",
+        "parallel_enemy_training"
+      ],
+      "original_moves": [
+        "训练强度清单:跑到腿烧、举到手臂麻木",
+        "点出这一切只为了一个名字很美的战争",
+        "补刀:对方也在同等强度训练,等你送上门"
+      ],
+      "abstract_move": "强度清单+美丽名词预告+对手镜像加压",
+      "replacement_needs": [
+        "一组可感的训练强度细节",
+        "一个名实反差大的制度名",
+        "对手同步备战的镜像信息"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "war_rules_irony_reveal",
+      "start_ratio": 0.2217,
+      "end_ratio": 0.2717,
+      "start_sec": 136.6,
+      "end_sec": 167.4,
+      "position_label": "22.2%–27.2%(2:17–2:47)",
+      "purpose": "自问\"这名字谁起的\"再升级反讽;揭示战争真正目标不是歼灭而是活捉,抓人数量是战士的排行榜,最有价值的不是杀敌最多而是带回活口最多的人",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.2677,
+          "time_ms": 165000,
+          "reason": "俘虏排行榜揭示:战争价值最高的是带回活口的人,战争真规则落地"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "rules_reveal",
+          "mechanism": "leaderboard_reframe"
+        }
+      ],
+      "required_retention_events": [
+        "name_irony_flip",
+        "rules_reveal",
+        "leaderboard_reframe"
+      ],
+      "original_moves": [
+        "自问\"这名字谁起的\",把反讽再升一级",
+        "揭示战争目标不是歼灭而是活捉",
+        "用排行榜与最有价值者的现代类比重命名战争规则"
+      ],
+      "abstract_move": "名义反讽升级+真实规则揭示+现代类比重命名",
+      "replacement_needs": [
+        "一个名实不符的制度",
+        "一条真正的胜负指标",
+        "一个现代排名或评优类比"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "stakes_personalization_twist",
+      "start_ratio": 0.2717,
+      "end_ratio": 0.3329,
+      "start_sec": 167.4,
+      "end_sec": 205.2,
+      "position_label": "27.2%–33.3%(2:47–3:25)",
+      "purpose": "宣告本周末开战;情节反转——父母此刻安排婚事,对象是富邻之女,但附加前提:先凯旋归来才能成婚;用\"没压力吧\"式反问收束,把私人牵挂绑上战场",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "私人牵挂环:把生存 stakes 与婚姻前景绑定",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "plot_twist",
+          "mechanism": "marriage_stakes_injection"
+        }
+      ],
+      "required_retention_events": [
+        "plot_twist",
+        "marriage_stakes_injection",
+        "victory_precondition",
+        "rhetorical_capper"
+      ],
+      "original_moves": [
+        "宣告本周末开战,七年训练迎来检验",
+        "情节反转:父母此刻安排婚事",
+        "附加前提:先凯旋归来才能成婚",
+        "用\"没压力吧\"式反问收束"
+      ],
+      "abstract_move": "开战宣告+私人牵挂注入+胜利前提绑定+反问收束",
+      "replacement_needs": [
+        "一个迫在眉睫的时间点",
+        "一桩私人牵挂",
+        "一个先赢才兑现的前提条件"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS16 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "sacrifice_economy_reframe",
+      "start_ratio": 0.3329,
+      "end_ratio": 0.3784,
+      "start_sec": 205.2,
+      "end_sec": 233.2,
+      "position_label": "33.3%–37.8%(3:25–3:53)",
+      "purpose": "先铺\"这个文明对宗教极其认真\"的口径与饥荒背景;揭示名字很美的战争其实是祭品的补给机制;落点倒置参战动机——你不是为荣耀而战,而是为不成为下一个祭品而战",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.3706,
+          "time_ms": 228400,
+          "reason": "美丽战争=祭品补给机制+你不是为荣耀而是为不成为祭品而战,全片最大框架重构"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "name_irony_escalates_to_system_reveal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "system_reframe",
+          "mechanism": "sacrifice_supply_chain_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "system_reframe",
+        "supply_chain_reveal",
+        "stakes_inversion"
+      ],
+      "original_moves": [
+        "先铺\"这个文明对宗教极其认真\"的口径",
+        "给出饥荒背景",
+        "揭示美丽战争其实是祭品的补给机制",
+        "落点倒置:你不是为荣耀而是为不成为祭品而战"
+      ],
+      "abstract_move": "世界观铺垫+系统功能揭示+参战动机倒置",
+      "replacement_needs": [
+        "一个被掩盖真实功能的制度",
+        "一条供需逻辑",
+        "一句动机倒置句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80);回收了前文的悬念 FS04→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "prebattle_stakes_lock",
+      "start_ratio": 0.3784,
+      "end_ratio": 0.4251,
+      "start_sec": 233.2,
+      "end_sec": 262,
+      "position_label": "37.8%–42.5%(3:53–4:22)",
+      "purpose": "战前状态扫描:心跳、战妆;元评论提示\"你已经知道代价\";失败代价锁死——不是丢脸回家而是游街加祭坛;与个人计划的反差吐槽;以婚礼动机收尾点火",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "stakes_lock",
+          "mechanism": "cost_of_losing_spelled_out"
+        }
+      ],
+      "required_retention_events": [
+        "cost_lock",
+        "stakes_restate",
+        "personal_motivation_recall"
+      ],
+      "original_moves": [
+        "战前状态扫描:心跳与战妆",
+        "元评论提示\"你已经知道代价\"",
+        "失败代价锁死:不是丢脸回家而是游街加祭坛",
+        "用婚礼动机收尾点火"
+      ],
+      "abstract_move": "战前扫描+失败代价锁死+个人动机回扣",
+      "replacement_needs": [
+        "一组失败后的具体代价",
+        "一句提示观众已知信息的元评论",
+        "私人牵挂的二次召回"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "battlefield_targeting_rules",
+      "start_ratio": 0.4251,
+      "end_ratio": 0.4873,
+      "start_sec": 262,
+      "end_sec": 300.3,
+      "position_label": "42.5%–48.7%(4:22–5:00)",
+      "purpose": "抵达战场,宿敌列队、\"仿佛已经赢了\"的姿态激怒你;选择猎物的标准——强壮英俊体格完美者;揭示原因:神明对祭品有标准,祭品越好捕手越荣耀(为后文甄选反讽埋因)",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "enemy_sighting",
+        "targeting_rules",
+        "gods_have_standards"
+      ],
+      "original_moves": [
+        "抵达战场,宿敌\"仿佛已经赢了\"的姿态激怒你",
+        "交代猎选标准:强壮英俊体格完美者",
+        "揭示原因:神明对祭品有标准,祭品越好捕手越荣耀"
+      ],
+      "abstract_move": "对手登场+猎选标准+标准背后的制度原因",
+      "replacement_needs": [
+        "一个让主角上头的对手姿态",
+        "一条猎选或竞争标准",
+        "该标准的制度性解释"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "battle_reversal_capture",
+      "start_ratio": 0.4873,
+      "end_ratio": 0.5861,
+      "start_sec": 300.3,
+      "end_sec": 361.2,
+      "position_label": "48.7%–58.6%(5:00–6:01)",
+      "purpose": "冲锋高光:连下两人、队友欢呼、你以为\"就是这一刻\";拟声急停——巨汉如墙撞击,反抗无效,朋友无力施救;单词成句宣告被俘;补刀:你正是对方最想要的货色,多年训练只为成为祭品",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "title_callback",
+          "strength": 85,
+          "position_ratio": 0.5598,
+          "time_ms": 345000,
+          "reason": "\"你被俘了\"单词成句+你正是对方最想要的货色:标题身份正式兑现,高光瞬间归零"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "threat_materializes_as_capture_reversal",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "battle_charge",
+          "mechanism": "triumph_setup"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "capture_reversal",
+          "mechanism": "punctuated_verdict"
+        }
+      ],
+      "required_retention_events": [
+        "triumph_setup",
+        "wham_reversal",
+        "punctuated_verdict",
+        "title_payoff"
+      ],
+      "original_moves": [
+        "冲锋高光:连下两人、队友欢呼",
+        "拟声急停:巨汉如墙撞击,反抗无效",
+        "单词成句宣告被俘",
+        "补刀:你正是对方最想要的货色"
+      ],
+      "abstract_move": "高光铺垫+拟声急停反转+判决式宣告+价值反成死罪",
+      "replacement_needs": [
+        "一段主角占上风的细节",
+        "一个压倒性反派的登场方式",
+        "一句\"你的优点正是对方要的\"式补刀"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85);回收了前文的悬念 FS03→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "glory_inversion_parade",
+      "start_ratio": 0.5861,
+      "end_ratio": 0.649,
+      "start_sec": 361.2,
+      "end_sec": 400,
+      "position_label": "58.6%–64.9%(6:01–6:40)",
+      "purpose": "战斗以战平收兵,双方各获足够祭品,你被当作战利品押赴敌都;城市规模令你震撼;人群为捕手欢呼、他成了英雄;荣耀倒置——本该受欢呼的是你,而你成了下一个祭品",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 72,
+          "position_ratio": 0.6441,
+          "time_ms": 397000,
+          "reason": "荣耀归属倒置:本该受欢呼的是你,而你成了下一个祭品"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "glory_inversion",
+        "city_spectacle",
+        "captor_celebration"
+      ],
+      "original_moves": [
+        "战平收兵,你被当作战利品押赴敌都",
+        "城市规模令你震撼",
+        "人群为捕手欢呼,他成了英雄",
+        "荣耀倒置:本该受欢呼的是你"
+      ],
+      "abstract_move": "战利品化押送+异域奇观+荣耀归属倒置",
+      "replacement_needs": [
+        "一座有压迫感的对方主场",
+        "一场为对方举办的欢呼",
+        "一句荣耀归属对照句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(72)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 72
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "destination_reveal_hope_hook",
+      "start_ratio": 0.649,
+      "end_ratio": 0.7043,
+      "start_sec": 400,
+      "end_sec": 434.1,
+      "position_label": "64.9%–70.4%(6:40–7:14)",
+      "purpose": "揭示终点:宗教心脏的双神庙,雨神与战神分工对照,反问\"你猜你归哪位\";随即抛出一线生机——并非人人献祭,有人被选作奴隶,那是你的机会",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "绝望段落的呼吸口,嵌套在主厄运环内的希望短环",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "hope_hook",
+          "mechanism": "sliver_of_hope"
+        }
+      ],
+      "required_retention_events": [
+        "destination_reveal",
+        "two_gods_contrast",
+        "rhetorical_verdict",
+        "hope_hook"
+      ],
+      "original_moves": [
+        "揭示终点:宗教心脏的双神庙",
+        "两位神明分工对照",
+        "反问\"你猜你归哪位\"",
+        "抛出一线生机:并非人人献祭,有人被选作奴隶"
+      ],
+      "abstract_move": "终点揭示+二元对照+反问宣判+生机钩子",
+      "replacement_needs": [
+        "一个终局地标的揭示",
+        "一组二元命运对照",
+        "一条貌似可行的生路"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "selection_irony_ritual_prep",
+      "start_ratio": 0.7043,
+      "end_ratio": 0.764,
+      "start_sec": 434.1,
+      "end_sec": 470.9,
+      "position_label": "70.4%–76.4%(7:14–7:51)",
+      "purpose": "祭司驻足,你绷紧;宣判\"太英俊不适合为奴,美貌属于祭坛\"——生机被你自己的优点掐灭;你后悔当初没长丑点;成为\"被选中者\"获得净身、美食、专房的礼遇——差点令人安心,若不是在为处决备料",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "humor_peak",
+          "strength": 78,
+          "position_ratio": 0.7204,
+          "time_ms": 444000,
+          "reason": "\"太英俊不适合为奴,美貌属于祭坛\":优点变死罪,全片最狠的黑色幽默"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "hope_crushed_by_inverted_criteria",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "ironic_verdict",
+          "mechanism": "inverted_criteria_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "inverted_criteria",
+        "hope_crush",
+        "ironic_pampering",
+        "false_comfort_undercut"
+      ],
+      "original_moves": [
+        "祭司停在你面前宣判:太英俊不适合为奴,美貌属于祭坛",
+        "你后悔当初没长丑点",
+        "成为被选中者,获得净身美食专房的礼遇",
+        "一句\"差点令人安心——若不是在为处决备料\"拆穿"
+      ],
+      "abstract_move": "生机掐灭+优点变死罪+礼遇反讽+假安慰拆穿",
+      "replacement_needs": [
+        "一条把优点反转为死罪的甄选标准",
+        "一组\"优待即备料\"的礼遇细节",
+        "一句拆穿假安慰的元评论"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(78);回收了前文的悬念 FS12→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "public_display_countdown",
+      "start_ratio": 0.764,
+      "end_ratio": 0.7993,
+      "start_sec": 470.9,
+      "end_sec": 492.6,
+      "position_label": "76.4%–79.9%(7:51–8:13)",
+      "purpose": "游街示众:人群围观指点;选角类比——你拿到的角色是\"祭品\"且没有返场;明确死期只剩一周;\"除非奇迹出现\"挂上最后一钩,把倒计时牌亮出来",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "末日倒计时:把抽象死期变成可见时钟",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "countdown_timer",
+          "mechanism": "explicit_deadline"
+        }
+      ],
+      "required_retention_events": [
+        "public_display",
+        "casting_call_metaphor",
+        "countdown_timer",
+        "miracle_hook"
+      ],
+      "original_moves": [
+        "游街示众,人群围观指点",
+        "用选角类比:你拿到的角色没有返场",
+        "明确死期只剩一周",
+        "\"除非奇迹出现\"挂上最后一钩"
+      ],
+      "abstract_move": "公开物化+现代类比降格+死期倒计时+奇迹钩子",
+      "replacement_needs": [
+        "一个示众或公示场景",
+        "一个把身份降格为角色的现代类比",
+        "一个明确倒计时"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "sacrifice_climax",
+      "start_ratio": 0.7993,
+      "end_ratio": 0.8912,
+      "start_sec": 492.6,
+      "end_sec": 549.3,
+      "position_label": "79.9%–89.1%(8:13–9:09)",
+      "purpose": "末日当天不再等待;登塔时忍不住赞叹壮丽风景(苦中作乐的反讽缓冲);被按上祭坛,祭司举刀,利落结束;心脏献神、身体沿台阶滚落、人群欢庆;落点——对他们你不是人,是礼物、祭品、必需品",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 92,
+          "position_ratio": 0.8745,
+          "time_ms": 539000,
+          "reason": "献祭仪式完整执行:举刀、心脏献神、身体滚落、人群欢庆,\"你不是人是必需品\"的悲剧顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "countdown_expires_without_rescue",
+          "opened_in": "FS14"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "climax_execution",
+          "mechanism": "knife_raise_payoff"
+        }
+      ],
+      "required_retention_events": [
+        "final_day",
+        "view_irony",
+        "ritual_execution",
+        "dehumanization_verdict"
+      ],
+      "original_moves": [
+        "末日当天不再等待不再幻想",
+        "登塔时忍不住赞叹壮丽风景",
+        "被按上祭坛,举刀,利落结束",
+        "心脏献神、身体滚落、人群欢庆",
+        "落点:对他们你不是人,是必需品"
+      ],
+      "abstract_move": "末日执行+美景反讽缓冲+仪式白描+物化判词",
+      "replacement_needs": [
+        "一段仪式执行的白描细节",
+        "一处苦中作乐的美景反讽",
+        "一句去人格化判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(92);回收了前文的悬念 FS14→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 92
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "afterlife_bitter_reckoning",
+      "start_ratio": 0.8912,
+      "end_ratio": 1,
+      "start_sec": 549.3,
+      "end_sec": 616.3,
+      "position_label": "89.1%–100%(9:09–10:16)",
+      "purpose": "死亡不终结叙事:亡魂被迫旁观;捕手因你再获财富地位,贵族分食你的身体——食人等于吸收神力;游戏能量块类比\"补给品就是你\";一生训练只成全他人成功故事;\"你有未竟之事,但你已经死了\";假安慰收束——至少换一年丰收,反正你也高兴不起来",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.9479,
+          "time_ms": 584200,
+          "reason": "死后揭示:分食祭品=吸收神力,能量块类比把剥夺再升一级"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 70,
+          "position_ratio": 0.9959,
+          "time_ms": 613800,
+          "reason": "一生清算+假安慰收束:未竟之事但你已死,至少换一年丰收——反正你也高兴不起来"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "cumulative_life_accounting_with_false_comfort",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "tragic_forfeit_recalled_at_reckoning",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "posthumous_reveal",
+          "mechanism": "cannibalism_power_up"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "bitter_consolation",
+          "mechanism": "false_comfort_close"
+        }
+      ],
+      "required_retention_events": [
+        "posthumous_perspective",
+        "cannibal_reveal",
+        "power_up_metaphor",
+        "life_accounting",
+        "false_comfort_close"
+      ],
+      "original_moves": [
+        "亡魂被迫旁观:捕手因你再获财富地位",
+        "贵族分食你的身体,食人等于吸收神力",
+        "用游戏能量块类比:补给品就是你",
+        "一生训练只成全他人的成功故事",
+        "\"你有未竟之事,但你已经死了\"",
+        "假安慰收尾:至少换一年丰收——反正你也高兴不起来"
+      ],
+      "abstract_move": "死后旁观+剥夺升级+现代类比讽刺+一生清算+假安慰收束",
+      "replacement_needs": [
+        "一个死后或事后旁观视角",
+        "一层比死亡更进一步的剥夺",
+        "一句把全部投入归零的清算句",
+        "一句假安慰式收束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(74)、PK10(70);回收了前文的悬念 FS01→LOOP01、FS06→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 74
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

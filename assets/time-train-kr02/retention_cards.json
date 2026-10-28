@@ -1,0 +1,996 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:07:41.464Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "paradox_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0417,
+      "start_sec": 0.1,
+      "end_sec": 47.8,
+      "position_label": "0%–4.2%(0:00–0:48)",
+      "purpose": "用华丽符号与两个反常细节的正面撞击建立主悬念，并宣布改由最底层视角进入",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.0116,
+          "time_ms": 13559,
+          "reason": "华丽共识画面与设施缺失宣言正面相撞，全片第一个信息冲击"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "surprise",
+          "strength": 78,
+          "position_ratio": 0.0214,
+          "time_ms": 25039,
+          "reason": "最高位者晨起受冻受观的画面把冲突从设施推到人格层面"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题级悬念一：华丽共识与基本设施缺失的正面冲突",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "标题级悬念二：最高身份与受辱画面的冲突",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "glamour_common_image",
+          "mechanism": "shared_symbol_premise"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "paradox_hook",
+          "mechanism": "facility_absence_claim"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "shocking_image_question",
+          "mechanism": "humiliated_top_figure_why"
+        }
+      ],
+      "required_retention_events": [
+        "glamour_common_image",
+        "paradox_detail",
+        "shocking_image_question",
+        "pov_switch_promise"
+      ],
+      "original_moves": [
+        "先调出观众脑中“金碧辉煌宫殿”的共识画面",
+        "抛出反常细节一：这里几乎没有像样的卫生设施",
+        "抛出反常细节二：最高位的女性每天清晨要在众人注视下受冻",
+        "反问“到底为什么”",
+        "宣布这次不从主人视角、而从贴身底层仆人的眼睛进入"
+      ],
+      "abstract_move": "共识华丽画面 + 反常细节二连击 + 悬念反问 + 视角下沉宣言",
+      "replacement_needs": [
+        "一个大众共识度高的华丽符号",
+        "两个与符号直接冲突的可核验反常细节",
+        "一个最低层且贴近权力中心的视角身份"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80)、PK02(78);打开的悬念 LOOP01→FS10、LOOP02→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 78
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "glamour_paradox_with_humiliated_top_figure",
+        "first_stimulus_ms": 13559,
+        "first_payoff_ms": 44840,
+        "evidence_refs": [
+          "C0001",
+          "C0006",
+          "C0010",
+          "C0014",
+          "C0018"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "frame_device_entry",
+      "start_ratio": 0.0417,
+      "end_ratio": 0.081,
+      "start_sec": 49.7,
+      "end_sec": 95.9,
+      "position_label": "4.2%–8.1%(0:50–1:36)",
+      "purpose": "用频道标志性框架装置完成身份分配、目的地确认与生存警告，把观看转成亲历",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "框架任务环：生存警告把全片变成有赌注的一天",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "frame_identity_entry",
+          "mechanism": "conductor_greeting"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "survival_warning",
+          "mechanism": "survive_this_day_stake"
+        }
+      ],
+      "required_retention_events": [
+        "frame_ritual_greeting",
+        "identity_assignment",
+        "expectation_gap_tease",
+        "survival_warning"
+      ],
+      "original_moves": [
+        "频道框架主持人登场问候“车票准备好了吗”",
+        "报站：本次目的地是该华丽场景",
+        "分配身份：观众成为初来乍到的底层仆人第一天上班",
+        "补一刀落差：家乡亲人为之骄傲，而你一天之内就会知道真相",
+        "关门警告：请务必撑过这一天"
+      ],
+      "abstract_move": "框架问候 + 目的地报站 + 第二人称身份分配 + 旁观者荣景与真相的落差预告 + 生存警告",
+      "replacement_needs": [
+        "一个可复用的频道框架装置",
+        "一个当日任务型身份设定",
+        "一条“撑过今天”的生存赌注"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "labor_immersion_entry",
+      "start_ratio": 0.081,
+      "end_ratio": 0.1348,
+      "start_sec": 93.6,
+      "end_sec": 159.4,
+      "position_label": "8.1%–13.5%(1:34–2:39)",
+      "purpose": "以居住环境与黎明劳作把身份代入落到身体层面，建立华丽不及之处的第一触感",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "sensory_space_contrast",
+        "deadline_labor_stack",
+        "punishment_stake"
+      ],
+      "original_moves": [
+        "醒来地点是屋顶下最冷最窄的阁楼，与华丽房间对照",
+        "冷水草草洗漱、摸黑穿衣",
+        "列出黎明前必须完成的劳作：生火、热水、暖房",
+        "强调手指烫伤手臂酸痛也不能停",
+        "点明失误惩罚：迟到即受罚"
+      ],
+      "abstract_move": "居所与华丽空间对照 + 时限劳作清单 + 身体损耗 + 失误惩罚",
+      "replacement_needs": [
+        "一组与华丽空间反差强烈的居所细节",
+        "一份带时限的体力劳作清单",
+        "一条明确的失误惩罚规则"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "hierarchy_and_rule_drill",
+      "start_ratio": 0.1348,
+      "end_ratio": 0.2322,
+      "start_sec": 156.2,
+      "end_sec": 272.9,
+      "position_label": "13.5%–23.2%(2:36–4:33)",
+      "purpose": "交代同一屋檐下的等级秩序，以禁令清单与连坐惩罚制造行为高压",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "禁令环：开场埋下的身体接触禁令等待一次被迫违反",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "hierarchy_tease",
+          "mechanism": "must_know_rule_announce"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "direct_address_check",
+          "mechanism": "memorize_all_rules_question"
+        }
+      ],
+      "required_retention_events": [
+        "hierarchy_tease",
+        "rule_inventory",
+        "collective_punishment_stake",
+        "direct_address_check"
+      ],
+      "original_moves": [
+        "宣告“有必须知道的事”：侍女之间等级森严",
+        "从上到下排出等级链，点明观众在最底层",
+        "同一房间共事也身份天差地别，连递东西都要按次序",
+        "权威人物登场：以规矩闻名的上级",
+        "禁令连发：不得先对视、不得先开口、不得触碰主人身体、不得忘身份",
+        "连坐代价：你出事，推荐人也蒙羞",
+        "反问：这么多规矩你一次记得住吗"
+      ],
+      "abstract_move": "等级预告 + 等级链分层 + 行为次序规则 + 权威人物 + 禁令连发 + 连坐代价 + 记忆确认反问",
+      "replacement_needs": [
+        "一张多层的等级链",
+        "一组可逐条朗读的禁令清单",
+        "一条波及第三者的连坐代价"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "ritual_spectacle_build",
+      "start_ratio": 0.2322,
+      "end_ratio": 0.311,
+      "start_sec": 270.5,
+      "end_sec": 365.3,
+      "position_label": "23.2%–31.1%(4:30–6:05)",
+      "purpose": "引入全片核心仪式并给出第一层反常解释，把奇观转成规则展示",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 72,
+          "position_ratio": 0.2498,
+          "time_ms": 292240,
+          "reason": "核心仪式的时长反常数字落地，好奇心被数字化点燃"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "ritual_tease",
+          "mechanism": "strangest_ceremony_preview"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "curiosity_gap_question",
+          "mechanism": "duration_anomaly_why"
+        }
+      ],
+      "required_retention_events": [
+        "ritual_tease",
+        "curiosity_gap_question",
+        "principle_explanation",
+        "scale_numbers"
+      ],
+      "original_moves": [
+        "预告即将看到全场最诡异的仪式",
+        "命名仪式并给出时长反常：穿衣要花两个小时",
+        "追问“到底为什么”，给出原则：主人什么都不能亲手做",
+        "连一杯水一条手帕都要经最高身份者的手传递",
+        "补充高频重复：一天要完整换三次装",
+        "补充消耗规模：同一件衣服绝不穿第二次，每季新做几十件",
+        "落点：这些衣服的搬运管理全是底层的事"
+      ],
+      "abstract_move": "仪式预告 + 时长反常数字 + 反问与原则解释 + 高频重复 + 消耗规模 + 底层负担落点",
+      "replacement_needs": [
+        "一个可命名的核心仪式",
+        "一组时长或规模的反常数字",
+        "一条解释反常的核心原则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(72)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 72
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "ritual_absurdity_climax",
+      "start_ratio": 0.311,
+      "end_ratio": 0.3702,
+      "start_sec": 362.4,
+      "end_sec": 434.7,
+      "position_label": "31.1%–37%(6:02–7:15)",
+      "purpose": "用递接升级的荒诞场景把仪式推到顶点，点破最高位者同样被规则囚禁",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.3408,
+          "time_ms": 398800,
+          "reason": "递接荒诞顶点上当事人受冻画面与真实轶事叠加，开场人格悬念兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "escalating_absurdity",
+          "mechanism": "relay_interruption_chain"
+        }
+      ],
+      "required_retention_events": [
+        "escalating_absurdity",
+        "historical_anecdote",
+        "loop02_payoff",
+        "prison_verdict"
+      ],
+      "original_moves": [
+        "反问预热：这个优雅仪式实际有多滑稽",
+        "递接升级连锁：侍女正要递出，更高身份者进门接手，再更高者进门再接手",
+        "当事人画面：主人一丝不挂地在寒冷中发抖等待",
+        "真实轶事：末代主人曾忍不住抱怨“这真的太过分了”",
+        "定性：最高权力者也是规矩牢笼里的囚徒"
+      ],
+      "abstract_move": "反问预热 + 递接升级连锁 + 当事人受困画面 + 真实轶事佐证 + 规则囚禁定性",
+      "replacement_needs": [
+        "一条会自我升级的传递规则",
+        "一个当事人受困的画面",
+        "一条可引用的真实人物轶事"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(90)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "participation_dilemma_test",
+      "start_ratio": 0.3702,
+      "end_ratio": 0.4362,
+      "start_sec": 431.7,
+      "end_sec": 511.6,
+      "position_label": "37%–43.6%(7:12–8:32)",
+      "purpose": "把观众推入一次必须作答的传递抉择，用瞬间紧张把规则内化为体感",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 70,
+          "position_ratio": 0.4287,
+          "time_ms": 501599,
+          "reason": "一次日常传递被定性为赌上性命，规则压力首次体感化"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "principle_reveal_with_anecdote",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "participation_dilemma_quiz",
+          "mechanism": "forced_choice_question"
+        }
+      ],
+      "required_retention_events": [
+        "participation_dilemma_quiz",
+        "temptation_vs_rule_conflict",
+        "narrow_relief_verdict"
+      ],
+      "original_moves": [
+        "日常任务降临：今天由你端水杯",
+        "主人口渴了，而你面前站着三位更高身份的侍女",
+        "点破诱惑与禁令：主人就在眼前，但绝不能亲手递",
+        "抉择提问：这杯水你要交给谁",
+        "你颤抖着交给身旁侍女，次序正确，冷汗直流",
+        "判词落地：连递一杯水都要赌上性命的地方"
+      ],
+      "abstract_move": "日常任务 + 等级在场提示 + 诱惑与禁令冲突 + 抉择提问 + 正确执行的紧张 + 劫后余生判词",
+      "replacement_needs": [
+        "一个日常物件任务",
+        "一条禁止直接交付的等级规则",
+        "一次可判定对错的抉择情境"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(70);回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "hygiene_truth_reveal",
+      "start_ratio": 0.4362,
+      "end_ratio": 0.5686,
+      "start_sec": 509.3,
+      "end_sec": 666.6,
+      "position_label": "43.6%–56.9%(8:29–11:07)",
+      "purpose": "揭开华丽背后的气味与清洁真相，并把细节升级为阶层不公证据",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 82,
+          "position_ratio": 0.4755,
+          "time_ms": 556440,
+          "reason": "“看起来最华丽、闻起来最难忍”的感官对照完成幻灭转折"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "worldview_shift",
+          "strength": 85,
+          "position_ratio": 0.5519,
+          "time_ms": 645839,
+          "reason": "同一资源两种命运的对照把细节升级为阶层不公控诉"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "历史后果伏笔：为符号的最终命运留下远端悬念",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "hidden_face_transition",
+          "mechanism": "concealed_truth_preview"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "gross_detail_reveal",
+          "mechanism": "unwashable_construction"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "injustice_contrast",
+          "mechanism": "resource_waste_vs_hunger"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "title_callback_announce",
+          "mechanism": "biggest_secret_turn"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_face_transition",
+        "sensory_truth_reveal",
+        "object_purpose_reversal",
+        "injustice_contrast"
+      ],
+      "original_moves": [
+        "预告：从这里开始看到华丽背后被隐藏的素颜",
+        "气味真相：当时的人害怕水洗，主人也几乎不沐浴，只用香布干擦",
+        "遮掩逻辑：卫生不是干净，而是看起来干净",
+        "头部真相：高发髻用动物油脂加面粉定型，无法清洗而招虫",
+        "物件反转：优雅的珠宝长簪真实用途是挠头",
+        "不公对照：多数人吃不饱的那种粉末，被权势者撒在头上做造型",
+        "历史伏笔：难怪后来愤怒的多数人会憎恨这里"
+      ],
+      "abstract_move": "隐藏真相预告 + 感官真相 + 时代观念解释 + 遮掩逻辑定性 + 物件用途反转 + 资源双向命运对照 + 历史后果伏笔",
+      "replacement_needs": [
+        "一组感官层面的真相",
+        "一个外观与用途反转的物件",
+        "一条同一资源两种命运的对照事实"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(82)、PK07(85);打开的悬念 LOOP06(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 82
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "title_secret_payoff",
+      "start_ratio": 0.5686,
+      "end_ratio": 0.6002,
+      "start_sec": 664,
+      "end_sec": 703.3,
+      "position_label": "56.9%–60%(11:04–11:43)",
+      "purpose": "兑现开场第一悬念，给出空间尺度的不雅真相",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "title_callback",
+          "strength": 84,
+          "position_ratio": 0.588,
+          "time_ms": 688000,
+          "reason": "空间污染画面与清洁命令轶事兑现标题级悬念一"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "title_callback_announce",
+        "loop01_payoff",
+        "space_scale_reveal"
+      ],
+      "original_moves": [
+        "显式回扣：现在该讲开场说的那个秘密了",
+        "给出尺度：数千人生活的巨大空间里像样的设施屈指可数",
+        "替代方式清单：便携器具、走廊角落、花园树丛",
+        "污染轶事：走廊污秽到需要每周下令清扫"
+      ],
+      "abstract_move": "标题回扣宣告 + 尺度数字 + 替代方式清单 + 污染轶事",
+      "replacement_needs": [
+        "一个开场埋下的设施悬念",
+        "一组人口与设施的尺度数字",
+        "一条空间污染的具体轶事"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "bodily_endurance_test",
+      "start_ratio": 0.6002,
+      "end_ratio": 0.6365,
+      "start_sec": 701.4,
+      "end_sec": 746.1,
+      "position_label": "60%–63.7%(11:41–12:26)",
+      "purpose": "把设施真相转成底层身体的当下痛苦，用第二次抉择提问维持代入",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "hidden_truth_reveal",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "participation_dilemma_quiz",
+          "mechanism": "endurance_choice_question"
+        }
+      ],
+      "required_retention_events": [
+        "bodily_urgency_escalation",
+        "participation_dilemma_quiz",
+        "endurance_resolution"
+      ],
+      "original_moves": [
+        "把设施缺失转成底层处境：侍奉期间再急也不能离席",
+        "身体紧迫升级：几个小时过去，早上的水开始作怪",
+        "重申约束：此刻离席就是失礼",
+        "抉择提问：这痛苦你要怎么忍",
+        "结局：只能若无其事地微笑硬撑"
+      ],
+      "abstract_move": "底层处境提醒 + 身体紧迫升级 + 禁令重申 + 抉择提问 + 微笑忍耐结局",
+      "replacement_needs": [
+        "一条不得离席的侍奉规则",
+        "一个逐渐升级的身体困境",
+        "一个以忍耐收场的结局"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "status_symbol_decode",
+      "start_ratio": 0.6365,
+      "end_ratio": 0.6735,
+      "start_sec": 743.5,
+      "end_sec": 789.9,
+      "position_label": "63.7%–67.4%(12:24–13:10)",
+      "purpose": "解码一个视觉符号的阶层含义，并连接到当代消费符号完成迁移",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "细节解码环：视觉符号的含义悬念",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "detail_symbol_mystery",
+          "mechanism": "color_detail_question"
+        }
+      ],
+      "required_retention_events": [
+        "detail_symbol_mystery",
+        "access_rule_reveal",
+        "modern_echo"
+      ],
+      "original_moves": [
+        "引导视线：看那些华丽来客的鞋子",
+        "细节提问：注意到鞋跟全是同一种颜色了吗",
+        "准入规则：只有获得最高宠信者才能穿",
+        "含义解读：这颜色宣告“我不必踩这污秽的地面”",
+        "当代回声：今天某奢侈品的标志性鞋底正源于此"
+      ],
+      "abstract_move": "视线引导 + 细节提问 + 准入规则 + 含义解读 + 当代回声",
+      "replacement_needs": [
+        "一个全场统一的视觉细节",
+        "一条该细节的准入规则",
+        "一个连接当代的回声事实"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "spectacle_and_hidden_war",
+      "start_ratio": 0.6735,
+      "end_ratio": 0.7767,
+      "start_sec": 786.4,
+      "end_sec": 910.3,
+      "position_label": "67.4%–77.7%(13:06–15:10)",
+      "purpose": "先给全片唯一的纯华丽回报，再逐层戳破并把盛宴重定义为战场",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "symbol_decode",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "spectacle_contrast_payoff",
+          "mechanism": "night_glamour_release"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "scene_reframe",
+          "mechanism": "ballroom_as_battlefield"
+        }
+      ],
+      "required_retention_events": [
+        "spectacle_contrast_payoff",
+        "brief_immersion_reward",
+        "burden_inventory",
+        "scene_reframe"
+      ],
+      "original_moves": [
+        "时间推进到夜晚：白日的素颜都被烛光藏起",
+        "华丽堆叠：数千烛光、宝石礼服、管弦乐、舞姿",
+        "给一次短暂沉醉：连你也不禁看得出神",
+        "提醒位置：你不是舞台主角，而是为舞台耗尽身体的人",
+        "穿戴负担：礼服重到过不了门、裙撑要侧身、发髻压颈、束腰令人窒息",
+        "战场重定义：最华丽的厅堂其实是最凶险的战场，一次失礼即社死"
+      ],
+      "abstract_move": "时间推进 + 华丽堆叠 + 短暂沉醉 + 主角位置提醒 + 穿戴负担清单 + 场景重定义",
+      "replacement_needs": [
+        "一场可堆叠感官细节的盛宴",
+        "一组穿戴者的物理负担事实",
+        "一套社交监视与惩罚规则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS11→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "rule_conflict_crisis",
+      "start_ratio": 0.7767,
+      "end_ratio": 0.8383,
+      "start_sec": 907.4,
+      "end_sec": 982.4,
+      "position_label": "77.7%–83.8%(15:07–16:22)",
+      "purpose": "用两条规则互斥的突发危机制造张力顶点，并以极限化解完成第三次抉择",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "surprise",
+          "strength": 88,
+          "position_ratio": 0.8088,
+          "time_ms": 946440,
+          "reason": "规则互斥危机在众目之下爆发，全片张力顶点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "mid_spectacle_crisis",
+          "mechanism": "public_wardrobe_emergency"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "participation_dilemma_quiz",
+          "mechanism": "deadlock_choice_question"
+        }
+      ],
+      "required_retention_events": [
+        "mid_spectacle_crisis",
+        "rule_deadlock",
+        "participation_dilemma_quiz",
+        "silent_relief"
+      ],
+      "original_moves": [
+        "突发事件：主人的礼服被刮破，命你立刻补救",
+        "压力提示：全场数百只眼睛都盯着主人",
+        "禁令回忆：不得触碰主人身体",
+        "规则互斥：要补衣服就必须碰到，碰了就违规，不碰主人当众出丑",
+        "抉择提问：这种情况下你怎么办",
+        "极限化解：屏住呼吸只捏住布料边缘缝补",
+        "无声余悸：没人察觉，你退下后才敢喘气"
+      ],
+      "abstract_move": "突发破损 + 众目压力 + 禁令回忆 + 规则互斥困境 + 抉择提问 + 极限克制化解 + 无声余悸",
+      "replacement_needs": [
+        "一个必须现场补救的突发事件",
+        "两条会互斥的行为规则",
+        "一个可被观众评判的化解动作"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(88)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "day_cycle_closure",
+      "start_ratio": 0.8383,
+      "end_ratio": 0.916,
+      "start_sec": 979.4,
+      "end_sec": 1073.1,
+      "position_label": "83.8%–91.6%(16:19–17:53)",
+      "purpose": "以夜间仪式的镜像重复与收尾劳作闭合一天框架，并预告循环重演",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "rule_deadlock_resolution",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "continuation_hook",
+          "mechanism": "day_not_over_notice"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "cycle_reset_tease",
+          "mechanism": "dawn_returns_again"
+        }
+      ],
+      "required_retention_events": [
+        "mirror_ritual_repeat",
+        "continuation_hook",
+        "cycle_reset_tease"
+      ],
+      "original_moves": [
+        "深夜时间锚点：宾客散尽的空虚厅堂",
+        "镜像仪式：早晨的穿衣仪式原样倒放为卸妆",
+        "收尾劳作：熄烛、收拾、倒污物、备好明日",
+        "回到开场居所：拖着腿爬上那间冷阁楼",
+        "身体损耗清单：脚肿、背僵、指尖开裂",
+        "循环预告：几个小时后同样的一天会重新开始"
+      ],
+      "abstract_move": "深夜锚点 + 仪式镜像重复 + 收尾劳作清单 + 回到开场空间 + 身体损耗清单 + 循环重置预告",
+      "replacement_needs": [
+        "一条可与开场镜像的仪式",
+        "一份收尾劳作清单",
+        "一个明日重演的循环点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS04→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "worldview_upgrade",
+      "start_ratio": 0.916,
+      "end_ratio": 0.9793,
+      "start_sec": 1070.5,
+      "end_sec": 1147.3,
+      "position_label": "91.6%–97.9%(17:50–19:07)",
+      "purpose": "把一天经历上升为对华丽符号的总定性，并向观众抛出人生选择镜像问题",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 86,
+          "position_ratio": 0.9532,
+          "time_ms": 1115320,
+          "reason": "“也许没有任何人真正自由”的判词完成符号重定义"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "journey_completion",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "closing_mirror_question",
+          "mechanism": "which_life_choice"
+        }
+      ],
+      "required_retention_events": [
+        "layered_reframe_summary",
+        "nobody_free_verdict",
+        "mirror_question_to_viewer"
+      ],
+      "original_moves": [
+        "框架问安：客人，这一天感觉如何",
+        "排比定性：华丽礼服下是没洗过的身体，优雅微笑下是生存战争，耀眼舞台后是无名者的汗水",
+        "总判词：连最高位者也是囚徒，这里也许没有任何人真正自由",
+        "镜像问题：华丽而疲惫的一生与朴素而自在的一生，你选哪个",
+        "评论邀请：把你的选择留言告诉我"
+      ],
+      "abstract_move": "框架问安 + 多层对照排比定性 + 无人自由判词 + 二选一人生镜像问题 + 评论邀请",
+      "replacement_needs": [
+        "一组可排比的“华丽之下”对照",
+        "一句无人自由的总判词",
+        "一个二选一的人生镜像问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(86);回收了前文的悬念 FS02→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "channel_outro",
+      "start_ratio": 0.9793,
+      "end_ratio": 1,
+      "start_sec": 1144.4,
+      "end_sec": 1170.1,
+      "position_label": "97.9%–100%(19:04–19:30)",
+      "purpose": "以框架装置收边，把订阅转译为装置内的自然动作并留下祝福",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "next_episode_tease",
+          "mechanism": "next_stop_curiosity"
+        }
+      ],
+      "required_retention_events": [
+        "next_episode_tease",
+        "subscription_as_frame_action",
+        "blessing_farewell"
+      ],
+      "original_moves": [
+        "预告班次：本列车每周固定时间进站",
+        "下次悬念：下一站会是哪里、哪扇车门会打开",
+        "订阅转译：用订阅和提醒来预订座位",
+        "祝福道别：愿你今夜不看任何人脸色，安心休息"
+      ],
+      "abstract_move": "班次预告 + 下次旅程悬念 + 订阅的框架化转译 + 祝福式道别",
+      "replacement_needs": [
+        "一个可复用的框架装置订阅隐喻",
+        "一句与主题呼应的祝福语"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

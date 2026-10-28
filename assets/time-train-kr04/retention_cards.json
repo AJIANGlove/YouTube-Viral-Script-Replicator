@@ -1,0 +1,1012 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.876Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "dilemma_cold_open",
+      "start_ratio": 0,
+      "end_ratio": 0.0555,
+      "start_sec": 0.3,
+      "end_sec": 64.7,
+      "position_label": "0%–5.6%(0:00–1:05)",
+      "purpose": "结局闪回冷开:先把观众抛到抉择之夜——肖像走红、追求者排队、两份要约同夜摆在桌上,并声明当事人已算清哪边更值,但答案按下不表",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "title_callback",
+          "strength": 80,
+          "position_ratio": 0.0478,
+          "time_ms": 55800,
+          "reason": "冷开收束句与标题的二选一问题直接对位,并声明答案已算出,主悬念锁死"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题主承诺的片内化:开场声明她已算清答案,全片据此悬挂",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP01"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "immersion_drop",
+          "mechanism": "second_person_time_drop"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "dilemma_tease",
+          "mechanism": "betting_moment_flash"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "answer_withheld_hook",
+          "mechanism": "calculated_answer_tease"
+        }
+      ],
+      "required_retention_events": [
+        "dilemma_cold_open",
+        "withheld_answer_contract",
+        "status_arithmetic"
+      ],
+      "original_moves": [
+        "闪回抉择之夜:你的脸被印上明信片卖出几十万张",
+        "贵族马车在剧场后门排队,化妆台上堆满钻石与玫瑰",
+        "伯爵之子递上一座庄园等值的戒指,只附带一个条件",
+        "你想起手包里另一份大照片公司的独家合约",
+        "抛出二选一:做伦敦的万人迷恋还是真正的伯爵夫人,并声明你当晚已算清哪边更值"
+      ],
+      "abstract_move": "结局高光闪回 + 两份互斥要约同框 + 条件悬念 + 答案已算出但不揭晓的声明",
+      "replacement_needs": [
+        "一个结局时刻的高光场景",
+        "两份互斥且各带条件的要约",
+        "一句答案存在但暂不揭晓的声明"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80);打开的悬念 LOOP01(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "flash_forward_dilemma_with_withheld_answer",
+        "first_stimulus_ms": 280,
+        "first_payoff_ms": 55800,
+        "evidence_refs": [
+          "C0001",
+          "C0010",
+          "C0021",
+          "C0025",
+          "C0026"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "frame_boarding_identity_entry",
+      "start_ratio": 0.0575,
+      "end_ratio": 0.1223,
+      "start_sec": 67.1,
+      "end_sec": 142.7,
+      "position_label": "5.8%–12.2%(1:07–2:23)",
+      "purpose": "频道框架登车:用交通工具框架完成欢迎与报站,交代当事人姓名、出身、职业起点与今夜将收到两份邀约的前向钩子,并立下世界第一组规则",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "把主环落成当天的具体任务,给全天行程一个指向",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "frame_boarding",
+          "mechanism": "branded_train_welcome"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "forward_hook",
+          "mechanism": "tonight_two_offers"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "rule_inventory",
+          "mechanism": "rule_one_skin_must_be_pale"
+        }
+      ],
+      "required_retention_events": [
+        "branded_frame_boarding",
+        "forward_hook_tonight",
+        "rule_inventory"
+      ],
+      "original_moves": [
+        "频道框架登车:欢迎乘坐深夜时间列车",
+        "报站:1905年7月20日伦敦,你是艾薇·哈特利",
+        "交代出身:棉纺厂女工之女,十七岁独闯伦敦,四次试镜才入选",
+        "定位真实位置:十二人合唱团女郎之一,同样的衣服同样的舞,没有一句台词",
+        "前向钩子:今晚你将收到两份邀约",
+        "世界第一组规则:皮肤必须晒不黑,台下不许化妆"
+      ],
+      "abstract_move": "框架登车报站 + 身份与出身入场 + 系统内真实位置 + 今夜悬念预告 + 首批世界规则",
+      "replacement_needs": [
+        "一个可复用的频道框架装置",
+        "当事人的身份与出身信息",
+        "系统内位置的对照说明",
+        "一组世界规则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "daily_routine_status_economy",
+      "start_ratio": 0.1197,
+      "end_ratio": 0.2163,
+      "start_sec": 139.6,
+      "end_sec": 252.4,
+      "position_label": "12%–21.6%(2:20–4:12)",
+      "purpose": "晨间例行与追求者经济学:用起居细节建立质感,用名片分级、礼物与置装开销展示这套世界的地位算法,并埋下第三次邀约意味着什么的倒计时",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "倒计时式伏笔,把晨间日常与夜晚高潮连线",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "mystery_token",
+          "mechanism": "nameless_crest_card"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "status_arithmetic",
+          "mechanism": "rank_over_count"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "scale_translation",
+          "mechanism": "hat_costs_a_month_wage"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "countdown_foreshadow",
+          "mechanism": "third_invitation_means_something"
+        }
+      ],
+      "required_retention_events": [
+        "clock_itinerary",
+        "status_arithmetic",
+        "scale_translation"
+      ],
+      "original_moves": [
+        "晨间例行:玫瑰水擦脸、仆人束腰、十二枚发簪盘发",
+        "窗台上的倾慕者信号:白兰花连送三个月,卡片只写纹章不落名",
+        "室友对白:名片不比数量比等级,议员与贵族之子分档",
+        "置装经济学:一顶帽子花掉整周薪水,等于普通职员一个月工资;周薪只是零花,照片另算钱",
+        "倒计时预告:第三次邀约,该有结果了"
+      ],
+      "abstract_move": "高质感起居例行 + 倾慕者信号分级 + 地位计分规则 + 收入结构换算 + 计数式前向钩子",
+      "replacement_needs": [
+        "一组可考据的晨间例行细节",
+        "倾慕者信号的分级规则",
+        "一项开销与普通人收入的换算",
+        "一个计数式前向钩子"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "street_walk_rights_reveal",
+      "start_ratio": 0.2144,
+      "end_ratio": 0.2728,
+      "start_sec": 250.2,
+      "end_sec": 318.2,
+      "position_label": "21.4%–27.3%(4:10–5:18)",
+      "purpose": "街头行走与权利法则揭示:橱窗里正版与盗版肖像并置,当事人对自己的脸毫无权利的法律事实被点破,为要约B的要价埋下伏笔",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 74,
+          "position_ratio": 0.2533,
+          "time_ms": 295560,
+          "reason": "肖像权法则点破:你的脸家喻户晓却不归你所有,整套交易的底层不公显形"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "rights_law_reveal",
+          "mechanism": "photo_ownership_law"
+        }
+      ],
+      "required_retention_events": [
+        "clock_itinerary",
+        "rights_law_reveal",
+        "piracy_contrast"
+      ],
+      "original_moves": [
+        "步行过桥进入剧院街,在文具店橱窗前放慢脚步",
+        "明信片墙:王室、风景、女演员,你的脸在中间一排",
+        "三个版本对照:正版印刷精细名字正确,盗版粗糙还拼错名字",
+        "法则点破:照片属于按下快门的人,被拍的人毫无权利",
+        "路人买走印错名字的那张,你整了整阳伞继续走"
+      ],
+      "abstract_move": "公共空间观察 + 本人形象的可见性证据 + 正版盗版并置 + 权利归属法则点破 + 克制反应收束",
+      "replacement_needs": [
+        "一个本人形象公开流通的场景",
+        "正版与盗版的可对照样本",
+        "一条真实的权利归属规则"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "hierarchy_metric_reveal",
+      "start_ratio": 0.2705,
+      "end_ratio": 0.3046,
+      "start_sec": 315.6,
+      "end_sec": 355.3,
+      "position_label": "27.1%–30.5%(5:16–5:55)",
+      "purpose": "等级度量揭示:用展示框里照片的大小关系说明这套世界的排位规则,并点明观众到底为谁而来、选人先看什么",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "hierarchy_metric",
+          "mechanism": "photo_size_equals_role_size"
+        }
+      ],
+      "required_retention_events": [
+        "hierarchy_metric",
+        "audience_truth_reveal",
+        "face_first_casting"
+      ],
+      "original_moves": [
+        "剧院正门玻璃框:主唱的大照片在上,十二张小照片在下,你在左起第五",
+        "点破:照片大小即角色大小",
+        "揭示:一半观众是冲十二人合唱团来的",
+        "反常标准:选合唱团先看脸,再看歌舞",
+        "你再看一眼最上面的位置,拐进小巷"
+      ],
+      "abstract_move": "等级可视化陈列 + 度量规则点破 + 受众真实指向揭示 + 选人标准反常优先级 + 无声渴望动作",
+      "replacement_needs": [
+        "一个等级可视化的陈列场景",
+        "一条把层级实体化的度量规则",
+        "受众真实指向的证据",
+        "一个可仰望的上位样板"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "first_offer_terms_layout",
+      "start_ratio": 0.3026,
+      "end_ratio": 0.3984,
+      "start_sec": 353,
+      "end_sec": 464.8,
+      "position_label": "30.3%–39.8%(5:53–7:45)",
+      "purpose": "要约A条款铺开:独家合约的甜头、一次性巨款、条件清单与回复期限逐条亮出,当事人不置可否,把决定挂起",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 72,
+          "position_ratio": 0.3368,
+          "time_ms": 392880,
+          "reason": "要约A的甜头以一次性数字落地,足以改变居住与阶层轨迹"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "要约A的决定悬挂,回复期限制造持续压力",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP03"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "number_drop",
+          "mechanism": "advance_equals_one_year_wage"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "contract_teeth",
+          "mechanism": "face_belongs_to_the_company"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "deadline_device",
+          "mechanism": "answer_by_sunday"
+        }
+      ],
+      "required_retention_events": [
+        "offer_terms_layout",
+        "number_drop",
+        "contract_teeth"
+      ],
+      "original_moves": [
+        "经理召见:桌上放着照片公司的一年独家合约",
+        "甜头:一百三十镑预付金等于一次拿一年周薪,可搬离宿舍雇女佣",
+        "官方背书:你的明信片就是演出广告,剧院赞成",
+        "条件亮牙:一年里你的脸归公司,拍什么、怎么拍、卖到哪里都由对方定",
+        "上升通道:出名就能推你当主唱,现任主唱就是这么上来的",
+        "当事人挂起:说我考虑考虑;对方安排下午试拍,期限周日"
+      ],
+      "abstract_move": "要约入场 + 甜头数字换算 + 官方背书 + 主导权让渡条款 + 上升通道许诺 + 挂起姿态与回复期限",
+      "replacement_needs": [
+        "一份条款可具体化的要约",
+        "甜头与日常收入的等值换算",
+        "让渡主导权的条件条款",
+        "一个回复期限"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(72);打开的悬念 LOOP03(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 72
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "training_machine_montage",
+      "start_ratio": 0.3967,
+      "end_ratio": 0.4746,
+      "start_sec": 462.8,
+      "end_sec": 553.8,
+      "position_label": "39.7%–47.5%(7:43–9:14)",
+      "purpose": "训练机器蒙太奇:排练与一连串贵族技能课展示这套系统如何把普通人打造成上层模样,并用一句今晚用得上把训练接回主线悬念",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 66,
+          "position_ratio": 0.4229,
+          "time_ms": 493440,
+          "reason": "观看机制一行点破:这套舞台卖的是脸不是腿,行业逻辑被翻明"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "mechanism_motto",
+          "mechanism": "face_not_legs_dance"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "lesson_purpose_callback",
+          "mechanism": "use_it_tonight_at_the_dinner"
+        }
+      ],
+      "required_retention_events": [
+        "clock_itinerary",
+        "mechanism_motto",
+        "skill_stack"
+      ],
+      "original_moves": [
+        "白天排练:千人空场只亮一盏工作灯,新舞打磨十二遍",
+        "视线技术:投向二楼前排,让全场都以为你在看他",
+        "机制点破:这不是让人看腿的舞,是让人看脸的舞",
+        "技能课蒙太奇:击剑、发声、台词,剧院出钱,只为台上演贵妇不露馅",
+        "击剑教练看背不看脚:背直了就是夫人",
+        "室友问学这个干嘛,答:今晚在莎沃伊用得上"
+      ],
+      "abstract_move": "空场排练 + 观看机制点破 + 技能课清单 + 制造假象的目的说明 + 训练目的接回主线",
+      "replacement_needs": [
+        "一组技能训练清单",
+        "一句观看机制的点破",
+        "训练与当晚场合的接合句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(66)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 66
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "costume_fashion_engine",
+      "start_ratio": 0.472,
+      "end_ratio": 0.5192,
+      "start_sec": 550.7,
+      "end_sec": 605.8,
+      "position_label": "47.2%–51.9%(9:11–10:06)",
+      "purpose": "服装间与时尚引擎:统一服装与独一件的头部待遇对照,点明潮流从这里流向全城的传导链,强化再往上走一步的诱惑",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "fashion_origin_claim",
+          "mechanism": "trend_starts_in_this_room"
+        }
+      ],
+      "required_retention_events": [
+        "clock_itinerary",
+        "head_vs_rank_contrast",
+        "fashion_origin_claim"
+      ],
+      "original_moves": [
+        "服装间:十二件同款淡紫长裙,丝绸滑过手臂",
+        "镜中变形:你看起来像公爵夫人,出身不见了",
+        "独一件对照:主唱的巴黎定制裙单独挂在对面墙上",
+        "潮流传导链:下周她穿它上杂志,再下周同款进百货橱窗",
+        "点破:伦敦的时尚从这个房间开始"
+      ],
+      "abstract_move": "集体制服上身 + 镜中变形 + 头部独一件对照 + 潮流传导链 + 源头宣言",
+      "replacement_needs": [
+        "一套集体视觉符号",
+        "一件头部专属样板",
+        "一条从样板到大众的潮流传导链"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "lunch_status_market",
+      "start_ratio": 0.5175,
+      "end_ratio": 0.5723,
+      "start_sec": 603.7,
+      "end_sec": 667.6,
+      "position_label": "51.8%–57.2%(10:04–11:08)",
+      "purpose": "午餐的地位市场:折扣、头版与同桌窃语展示名气如何折算成实际利益,并点破同伴即竞争者的关系实质与应对围观的训练成果",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "dual_relation_reveal",
+          "mechanism": "friends_and_rivals"
+        }
+      ],
+      "required_retention_events": [
+        "clock_itinerary",
+        "fame_to_discount",
+        "dual_relation_reveal"
+      ],
+      "original_moves": [
+        "餐厅给合唱团半价,因为上过画报的脸在店里吃饭就是活广告",
+        "头部人物坐窗边:一份餐盘三份报纸,每份都有她的照片",
+        "室友耳语:我的照片上画报下期头版;你的合约事全剧院都知道了",
+        "点破:这个剧院没有秘密,十二人是朋友也是竞争者",
+        "邻桌绅士打量,你装作没看见,这也是剧院教的"
+      ],
+      "abstract_move": "名气折算利益 + 头部媒体占位 + 同伴即竞争者点破 + 围观应对展示",
+      "replacement_needs": [
+        "一个名气换利益的具体安排",
+        "头部人物的媒体占位证据",
+        "一组朋友兼竞争者的关系"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "test_shoot_class_sting",
+      "start_ratio": 0.5705,
+      "end_ratio": 0.666,
+      "start_sec": 665.6,
+      "end_sec": 777,
+      "position_label": "57.1%–66.6%(11:06–12:57)",
+      "purpose": "要约A的试拍:用对方先付成本示好的细节抬高要约分量,再用一个出身印记被专业人士点破的瞬间制造阶层刺点,最后以比权贵更畅销的判断收尾",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.6377,
+          "time_ms": 744000,
+          "reason": "出身印记被当场点破与手套对策的应对,阶层摩擦的全片最痛一击"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 76,
+          "position_ratio": 0.6617,
+          "time_ms": 772000,
+          "reason": "比权贵更畅销的判断把自我路线的底气推到顶点,层级感被翻转"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "微型阶层刺点,测试当事人的应变",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "immediate_coping_reframe",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "persuasion_cost_reveal",
+          "mechanism": "plates_and_hour_as_persuasion_budget"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "class_sting",
+          "mechanism": "factory_hands_called_out"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "outsell_royalty",
+          "mechanism": "royalty_once_a_year_you_weekly"
+        }
+      ],
+      "required_retention_events": [
+        "persuasion_cost_reveal",
+        "class_sting",
+        "coping_prop"
+      ],
+      "original_moves": [
+        "王室御用照相馆:门厅挂王室徽章,墙上王室与女演员并排",
+        "对方先付成本:六块玻璃底片加摄影师一小时,都是说服你的钱",
+        "专业规格:坐姿十二种、站姿十二种、手位八种",
+        "阶层刺点:助理说把手藏起来,工厂的手不是伯爵夫人的手",
+        "应对:你看着十四岁绕纱线的手说所以一直戴手套,助理第一次笑:那就拍戴手套的",
+        "层级翻转:王室一年来拍一次,橱窗里常卖的是你"
+      ],
+      "abstract_move": "权威场地 + 对方先付成本 + 专业规格展示 + 出身印记点破 + 道具对策收口 + 频率对照翻转",
+      "replacement_needs": [
+        "一个权威背书的场地",
+        "对方先付成本的示好安排",
+        "一个出身印记被点破的瞬间",
+        "一个化解刺点的道具对策"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(80)、PK06(76)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "cautionary_mirror_warning",
+      "start_ratio": 0.6638,
+      "end_ratio": 0.7218,
+      "start_sec": 774.4,
+      "end_sec": 842.1,
+      "position_label": "66.4%–72.2%(12:54–14:02)",
+      "purpose": "警示镜像登场:一个走过联姻那条路、折返而归的前辈用一句换装建议给出全片唯一的前辈忠告,代价叙事不展开但句句有分量",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.6967,
+          "time_ms": 812800,
+          "reason": "警示镜像的出走与三年折返:联姻那条路的隐形价码有了活样本"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "警示镜像:让要约B的代价以活样本提前显形",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "cautionary_mirror",
+          "mechanism": "predecessor_who_returned"
+        }
+      ],
+      "required_retention_events": [
+        "cautionary_mirror",
+        "silence_rule",
+        "wardrobe_advice"
+      ],
+      "original_moves": [
+        "化妆间:只有台上才允许化的妆,脸按观看距离定制",
+        "前辈登场:波特夫人默不作声替你扶正发簪",
+        "往事:十五年前她也是合唱团女郎,嫁准男爵之子离开舞台,三年后回到这里,从此不谈婚姻",
+        "一句忠告:去莎沃伊别穿紫色穿黑色,舞台装只会让他永远看见舞台上的女人"
+      ],
+      "abstract_move": "上场准备仪式 + 镜像人物登场 + 出走与折返往事 + 对往事的沉默规则 + 一句实操忠告",
+      "replacement_needs": [
+        "一个走过那条路的镜像人物",
+        "其出走与折返的事实",
+        "一句指向当晚场合的实操忠告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(74);打开的悬念 LOOP05→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "performance_spectacle",
+      "start_ratio": 0.7197,
+      "end_ratio": 0.7591,
+      "start_sec": 839.7,
+      "end_sec": 885.7,
+      "position_label": "72%–75.9%(14:00–14:46)",
+      "purpose": "演出奇观兑现:把全片铺垫的舞台魅力一次性兑现——千人剧场、包厢望远镜与多次谢幕,让观众亲身体验当事人不愿放弃的东西",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "spectacle_payoff",
+          "mechanism": "triple_curtain_call"
+        }
+      ],
+      "required_retention_events": [
+        "spectacle_payoff",
+        "box_glass_glint",
+        "triple_curtain_call"
+      ],
+      "original_moves": [
+        "上场口:幕后一千人的嗡鸣、节目单翻动、包厢笑声",
+        "演出:第一幕你扮女仆端盘穿行,第二幕淡紫长裙十二人一排",
+        "包厢暗处望远镜镜片一闪一闪",
+        "主唱居中歌唱,你们在身后托住她",
+        "谢幕三次"
+      ],
+      "abstract_move": "幕前声场铺垫 + 集体高光画面 + 被观看的证据 + 托举结构 + 谢幕次数兑现",
+      "replacement_needs": [
+        "一场可具身经历的演出或服务现场",
+        "被观看的可视证据",
+        "一个谢幕式的高光指标"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "stage_door_status_arithmetic",
+      "start_ratio": 0.7571,
+      "end_ratio": 0.8369,
+      "start_sec": 883.3,
+      "end_sec": 976.4,
+      "position_label": "75.7%–83.7%(14:43–16:16)",
+      "purpose": "后台门口的地位算术:花束数量与亮灯马车数量的差值点破今夜真正等你的人不在门口;步行转场中完成善意分配与轻装赴约",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "absence_reasoning",
+          "mechanism": "five_bouquets_four_lit_carriages"
+        }
+      ],
+      "required_retention_events": [
+        "absence_reasoning",
+        "status_arithmetic",
+        "kind_redistribution"
+      ],
+      "original_moves": [
+        "卸妆流程:冷霜、热毛巾、橄榄油皂、冷水,换下紫裙取出黑裙",
+        "后门排场:五束花,四辆亮灯的马车",
+        "差值推理:还有一个人不在门口,他在莎沃伊等",
+        "你给小厮一枚硬币让他抱花,半路把五束花全送他:给母亲,多的给邻居",
+        "只带一只手包走进酒店"
+      ],
+      "abstract_move": "卸妆换装执行忠告 + 排场差值推理 + 对弱者的善意分配 + 轻装赴约",
+      "replacement_needs": [
+        "一组可数的排场对照",
+        "一次对弱者的善意分配",
+        "一个轻装赴约的收束画面"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "dinner_social_reading",
+      "start_ratio": 0.8351,
+      "end_ratio": 0.929,
+      "start_sec": 974.2,
+      "end_sec": 1083.9,
+      "position_label": "83.5%–92.9%(16:14–18:04)",
+      "purpose": "晚宴社交阅读:顶级场合的规格、同桌权贵间的冷战、餐具秩序的训练成果,以及对方话题版图里刻意回避的一块,全部进入当事人的静默计算",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "cold_war_cameo",
+          "mechanism": "duchess_and_actress_back_to_back"
+        }
+      ],
+      "required_retention_events": [
+        "venue_spectacle",
+        "cold_war_cameo",
+        "trained_etiquette_payoff"
+      ],
+      "original_moves": [
+        "门房认出你:他在餐厅等你",
+        "场合规格:全城第一栋全电力照明的酒店,十一点吃晚饭是这家店带起的风气",
+        "权贵侧写:公爵夫人与她讨厌的女演员同屋背对而坐",
+        "餐具秩序实战:从外到内用叉,剧院教的",
+        "回避信号:他只谈庄园乡居,一句不提伦敦,他的未来里没有伦敦"
+      ],
+      "abstract_move": "被认出入场 + 场合规格之最 + 权贵关系侧写 + 训练成果实战验证 + 话题版图回避信号",
+      "replacement_needs": [
+        "一个规格到顶的场合",
+        "一组权贵关系侧写",
+        "一项前文训练成果的实战验证",
+        "一个话题回避信号"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "proposal_cliffhanger_withheld",
+      "start_ratio": 0.9267,
+      "end_ratio": 0.9885,
+      "start_sec": 1081.1,
+      "end_sec": 1153.3,
+      "position_label": "92.7%–98.9%(18:01–19:13)",
+      "purpose": "求婚高潮与答案留白:信物亮出、全场屏息,条件逐条摊开——退出舞台、清除肖像、远离此城;当事人在警示镜像与舞台高光两段记忆的对照中张嘴欲答,叙述在此切断",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.9309,
+          "time_ms": 1086080,
+          "reason": "信物亮出、全场声量减半,全天铺垫在此刻收拢为屏息一击"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 86,
+          "position_ratio": 0.9477,
+          "time_ms": 1105679,
+          "reason": "条件清单宣判:退出舞台、清除肖像、远离此城,浪漫包装彻底撕开"
+        },
+        {
+          "peak_id": "PK10",
+          "peak_type": "title_callback",
+          "strength": 82,
+          "position_ratio": 0.9842,
+          "time_ms": 1148280,
+          "reason": "张嘴欲答处切断,标题问题原样移交观众,裁决权完成让渡"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "both_offers_fully_laid_out",
+          "opened_in": "FS02"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "foreshadowed_proposal_arrives",
+          "opened_in": "FS03"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "cautionary_memory_callback",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "climax_object",
+          "mechanism": "ring_box_opens_noise_halves"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "condition_list",
+          "mechanism": "stage_must_end_first_condition"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "narrative_cutoff",
+          "mechanism": "mouth_opens_then_cut"
+        }
+      ],
+      "required_retention_events": [
+        "climax_object",
+        "condition_list_escalation",
+        "memory_duel"
+      ],
+      "original_moves": [
+        "他放下酒杯叫你的名字,黑色小盒无声打开:戒指",
+        "全场量化反应:餐厅噪音减半,邻桌有人屏住呼吸",
+        "真心声明:母亲已说服,父亲我会去说服",
+        "你问有条件吧,条件宣判:舞台必须结束,橱窗里的脸进不了宅门,明信片会全部清走",
+        "补充条件:不常来伦敦,庄园在乡下,你在那边休息就好",
+        "记忆对决:想起波特夫人扶正发簪的手与三年后回来的人,也想起晚八点脚下升起的光和两千双眼睛",
+        "他等着,戒指开着;你放下酒杯,张开嘴,叙述切断"
+      ],
+      "abstract_move": "信物亮出 + 全场量化反应 + 真心声明 + 条件清单宣判 + 另一份要约的在场提醒 + 两段记忆对决 + 张嘴处切断",
+      "replacement_needs": [
+        "一件信物",
+        "一组可量化的全场反应",
+        "一份逐条对应前文铺垫的条件清单",
+        "两段分属两条路的记忆素材"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(90)、PK09(86)、PK10(82);回收了前文的悬念 FS02→LOOP02、FS03→LOOP04、FS11→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 86
+        },
+        {
+          "peak_id": "PK10",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "viewer_handoff_cta",
+      "start_ratio": 0.9865,
+      "end_ratio": 1,
+      "start_sec": 1150.9,
+      "end_sec": 1166.7,
+      "position_label": "98.7%–100%(19:11–19:27)",
+      "purpose": "问题移交与频道收尾:把同一选择原样抛给观众,用交通工具框架完成到站道别与下期预约,评论环保持开放",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "schedule_cta",
+          "mechanism": "weekly_stop_subscribe"
+        }
+      ],
+      "required_retention_events": [
+        "viewer_handoff_question",
+        "schedule_cta",
+        "frame_farewell"
+      ],
+      "original_moves": [
+        "移交观众:换作是你,会签吗?会收下戒指吗?",
+        "旅程收束:漫长的旅行到此结束,问你今晚感觉如何",
+        "更新节奏:深夜时间列车每周日晚停靠",
+        "框架CTA:用订阅与提醒预约下一个座位",
+        "道别:今晚的乘客,晚安"
+      ],
+      "abstract_move": "二选一问句移交 + 旅程收束 + 更新节奏宣告 + 框架内CTA + 到站道别",
+      "replacement_needs": [
+        "一个与标题严格对位的移交问句",
+        "频道框架的到站措辞",
+        "更新节奏信息"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

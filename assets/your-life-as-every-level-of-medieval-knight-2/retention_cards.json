@@ -1,0 +1,872 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.866Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "identity_entry_rise_promise_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0659,
+      "start_sec": 0.6,
+      "end_sec": 71.1,
+      "position_label": "0%–6.6%(0:01–1:11)",
+      "purpose": "用第二人称把观众放进最低一级的入门处境(年幼离家),紧接抛出上升承诺(这条职业路能从一无所有走到制度顶端)并锚定一个不点名的真人案例作为全程暗线;随后给出主题命题(该身份不是单点而是一架阶梯)与逐级全景预告",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.021,
+          "time_ms": 22705,
+          "reason": "开场 25 秒内双重锚定:无地男孩到王国统治者的上升承诺,加上\"真有其人且同起点\"的纪实锚"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "把标题的等级全景压缩成一条上升弧线悬念,贯穿全片",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "给抽象的等级模板挂上一条可追踪的真人进度线",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP03",
+          "tension": "把粉丝向的浪漫想象改写成制度命题,留待全片验证",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "identity_entry",
+          "mechanism": "second_person_age_drop"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "promise_anchor",
+          "mechanism": "real_person_same_start"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "roadmap_declaration",
+          "mechanism": "staircase_preview"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_identity_drop",
+        "rise_promise_tease",
+        "unnamed_real_case_anchor",
+        "staircase_roadmap",
+        "thesis_statement"
+      ],
+      "original_moves": [
+        "第一句直接把观众放进一个七岁孩子身上:被不重要的骑士父亲送给别人家了",
+        "立刻声明这不是惩罚,而是唯一能让无地男孩变成王国统治者的职业起点",
+        "锚定一位真实骑士:他与你同起点,后来成了英格兰摄政,本视频会反复回访他",
+        "泼冷水:大多数骑士远没走到那一步,但阶梯本身真实存在,每级有自己的收入、危险与职责",
+        "冷吐槽:这些职责与骑士精神的幻想形象几乎无关",
+        "给出主题命题:骑士不是一种职业,而是地基不是天花板",
+        "宣告要逐级走完这架阶梯"
+      ],
+      "abstract_move": "第二人称身份投放 + 极端上升承诺 + 真人同起点锚点 + 泼冷水限定 + 幻想纠偏预告 + 主题命题 + 全景路线图",
+      "replacement_needs": [
+        "一个反常识的入门处境事实",
+        "一条从底层到顶端真实存在的职业路径",
+        "一个可全程追踪的真实人物案例",
+        "一句可复述的主题命题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(80);打开的悬念 LOOP01→FS10、LOOP02→FS11、LOOP03→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 80
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_identity_drop_with_rise_promise",
+        "first_stimulus_ms": 627,
+        "first_payoff_ms": 20142,
+        "evidence_refs": [
+          "C0001",
+          "C0018",
+          "C0020"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "level_unit_servitude_foundation",
+      "start_ratio": 0.0658,
+      "end_ratio": 0.1184,
+      "start_sec": 71.1,
+      "end_sec": 127.9,
+      "position_label": "6.6%–11.8%(1:11–2:08)",
+      "purpose": "第一级:展示入门期的真实日常与幻想完全无关——职责是侍从杂务与礼仪规训而非技能训练,重点在服从;揭示无声筛选机制,让最低的一关也有赌注",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "gate_threat",
+          "mechanism": "silent_elimination"
+        }
+      ],
+      "required_retention_events": [
+        "level_title_callout",
+        "fixed_anatomy_template",
+        "duty_demystification",
+        "silent_elimination_threat"
+      ],
+      "original_moves": [
+        "标题报幕:侍童(Page)",
+        "给入场条件:七岁左右、家里有点分量,被送到地位更高的领主家",
+        "揭示日常与战斗完全无关:端桌上菜、跑腿、学宫廷礼仪",
+        "体能训练只是基础,重点是纪律与服从",
+        "揭示无声筛选:领主与骑士们一直在悄悄评估谁值得继续投资",
+        "落点:有人永远停在这一级,没人会宣布这个决定"
+      ],
+      "abstract_move": "标题报幕 + 入场条件 + 日常职责祛魅 + 规训重点定性 + 无声筛选揭示 + 静默淘汰落点",
+      "replacement_needs": [
+        "该级的年龄与家庭门槛",
+        "一组与幻想无关的真实日常职责",
+        "一个无声运作的筛选机制"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "level_unit_apprenticeship_proving",
+      "start_ratio": 0.1175,
+      "end_ratio": 0.2383,
+      "start_sec": 127,
+      "end_sec": 257.4,
+      "position_label": "11.8%–23.8%(2:07–4:17)",
+      "purpose": "第二级:学徒期同时承担真实危险与真实收入——跟随时傅、维护装备、随行作战;用训练器械细节落地严苛,再用赛事经济学(战败赎回制)揭示该级即可积累财富;真人暗线在此首次落点",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 72,
+          "position_ratio": 0.1993,
+          "time_ms": 215255,
+          "reason": "比武大会被重构为可盈利的职业联赛,学徒期收入反超有地骑士,纯军事想象首次翻转"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "danger_detail",
+          "mechanism": "training_device_punishment"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "economic_reveal",
+          "mechanism": "tournament_profitability"
+        }
+      ],
+      "required_retention_events": [
+        "level_title_callout",
+        "fixed_anatomy_template",
+        "danger_detail",
+        "economic_reveal",
+        "case_anchor_progress"
+      ],
+      "original_moves": [
+        "标题报幕:侍从(Squire)",
+        "从属关系变化:师从某位具体骑士而非整个府邸",
+        "职责升级:照料马匹武器、帮穿盔甲(复杂多步骤)、随行实战到足以丧命的距离",
+        "训练具象化:战马不同于农活马;旋转刺靶打偏就把你打下马",
+        "经济揭示:比武大会是职业联赛,战败者要赎回马、甲甚至自己,侍从由此可在授衔前数年致富",
+        "真人暗线回访:主角在诺曼底师从某位领主,还接受诗歌与经典教育"
+      ],
+      "abstract_move": "标题报幕 + 从属关系升级 + 危险职责具象化 + 惩罚装置细节 + 隐藏经济揭示 + 真人案例回访",
+      "replacement_needs": [
+        "该级的从属关系规则",
+        "一个有物理后果的训练或考核装置",
+        "一组该级即可产生收入的机制事实"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(72)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 72
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "level_unit_title_reality_gap",
+      "start_ratio": 0.2374,
+      "end_ratio": 0.3382,
+      "start_sec": 256.4,
+      "end_sec": 365.3,
+      "position_label": "23.7%–33.8%(4:16–6:05)",
+      "purpose": "第三级:正式授衔的高光时刻被当场戳破——头衔不附赠土地、收入与指挥权;用继承规则解释为什么大量有头衔者无产,并用\"可能穷过平民\"的对照钉死头衔与收入的脱钩;真人暗线落入同一处境,靠赛事周薪求生",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 76,
+          "position_ratio": 0.2604,
+          "time_ms": 281248,
+          "reason": "正式授衔之喜被当场戳破:头衔不附赠土地、收入与指挥权,全片核心落差成立"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "myth_bust",
+          "mechanism": "title_grants_nothing"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "status_income_gap",
+          "mechanism": "poorer_than_commoner"
+        }
+      ],
+      "required_retention_events": [
+        "level_title_callout",
+        "myth_bust",
+        "status_income_gap",
+        "case_anchor_progress"
+      ],
+      "original_moves": [
+        "标题报幕:见习骑士(Knight Bachelor)",
+        "先给仪式高光:守夜祈祷、授剑礼,二十出头正式封爵",
+        "立刻戳破:这个头衔不自动附带土地、收入或指挥权",
+        "解释机制:长子继承制让幼子只剩一匹马、一把剑、一个头衔",
+        "落差对照:你被称为\"大人\",却可能比富裕平民更穷,声望与收入在这一级几乎无关",
+        "真人暗线回访:主角作为小男爵第四子授衔后,数年全靠比武赎金过活"
+      ],
+      "abstract_move": "标题报幕 + 仪式高光 + 否定三连戳破 + 制度机制解释 + 下行对照钉死落差 + 真人案例落入同处境",
+      "replacement_needs": [
+        "一场有仪式感的晋升时刻",
+        "一组头衔不附带实利的否定清单",
+        "一个造成普遍无产的继承或分配规则",
+        "一个低位但富足的对照群体"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(76)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "level_unit_contract_service",
+      "start_ratio": 0.3374,
+      "end_ratio": 0.4082,
+      "start_sec": 364.4,
+      "end_sec": 440.8,
+      "position_label": "33.7%–40.8%(6:04–7:21)",
+      "purpose": "第四级:晋升赛道从武艺切换为被雇佣——无产者凭已证明的本事进入权贵门下领薪;用史学命名把旧制度重述为雇佣合同制,列举该级的多重角色;真人暗线借此进入权力中心,被标记为全部前途的支点",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "worldview_shift",
+          "strength": 70,
+          "position_ratio": 0.3695,
+          "time_ms": 399055,
+          "reason": "\"以地换忠\"被重述为雇佣合同制度并被史家命名,制度视角完成升级"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "system_reframe",
+          "mechanism": "contract_labor_rename"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "pivot_flag",
+          "mechanism": "appointment_as_turning_point"
+        }
+      ],
+      "required_retention_events": [
+        "level_title_callout",
+        "system_reframe",
+        "role_catalog",
+        "pivot_flagging",
+        "case_anchor_progress"
+      ],
+      "original_moves": [
+        "标题报幕:家臣骑士/待命骑士",
+        "点破晋升逻辑转弯:这一级与战斗技能无关,只与能否被雇佣有关",
+        "机制说明:食宿薪水换随叫随到的军事与政治服务,是正式合同而非恩惠",
+        "制度重构:史家称之为\"变态封建制\",以地换忠变成付费劳动",
+        "角色清单:顾问、保镖、使节,有时甚至人质或谈判代表",
+        "真人暗线回访:主角入宫侍奉年轻王子,这一步被标记为全部前途的支点"
+      ],
+      "abstract_move": "标题报幕 + 晋升逻辑转弯 + 雇佣机制说明 + 制度重命名 + 角色清单 + 案例支点标记",
+      "replacement_needs": [
+        "一个从技能赛道切换到关系赛道的晋升规则",
+        "一份真实存在的合同或雇佣制度材料",
+        "一个多面手职责清单",
+        "案例人物的一个关键任命"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "level_unit_merit_command",
+      "start_ratio": 0.4072,
+      "end_ratio": 0.5202,
+      "start_sec": 439.8,
+      "end_sec": 561.8,
+      "position_label": "40.7%–52%(7:20–9:22)",
+      "purpose": "第五级:罕见的战功晋升——从在别人旗下作战到举起自己的旗帜统领队伍;用战场就地剪旗的仪式细节让晋升可视;真人暗线凭赛事战绩达到此级,规模数字把声望钉实,但段尾点破他仍无一寸土地,开启新的收入悬念",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "surprise",
+          "strength": 74,
+          "position_ratio": 0.4983,
+          "time_ms": 538205,
+          "reason": "真人案例亲手俘获五百余敌的规模数字,把\"名声\"落成可感的量级"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "在案例线中段制造\"收入从哪里来\"的具体缺口",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "ceremony_detail",
+          "mechanism": "pennant_tip_cut"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "scale_stat",
+          "mechanism": "five_hundred_captures"
+        }
+      ],
+      "required_retention_events": [
+        "level_title_callout",
+        "earned_promotion_frame",
+        "ceremony_detail",
+        "scale_stat",
+        "landless_hook"
+      ],
+      "original_moves": [
+        "标题报幕:方旗骑士(Knight Banneret)",
+        "稀缺性定义:几乎只凭战场领导力获得,与血统和地产无关",
+        "权力实质:从别人旗下作战到自己举旗,统领一队骑士与步兵,薪酬与责任同步上涨",
+        "仪式细节:战场上当众剪掉三角旗尖,当场变方旗,不必等宫廷典礼",
+        "真人暗线回访:主角凭比武战绩获此级,自陈俘获五百余敌,三十岁名满西欧",
+        "段尾反差落点:名声、旗帜、纹章俱全,却仍无一寸土地"
+      ],
+      "abstract_move": "标题报幕 + 稀缺晋升定义 + 权力实质说明 + 现场仪式细节 + 案例规模战绩 + 盛名之下仍有缺口的悬念",
+      "replacement_needs": [
+        "一个纯凭业绩的稀缺晋升等级",
+        "一场可视化的晋升仪式",
+        "一个可量化的累计战绩数字",
+        "一个名声与资产脱钩的缺口事实"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(74);打开的悬念 LOOP04→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "level_unit_income_transformation",
+      "start_ratio": 0.5194,
+      "end_ratio": 0.5946,
+      "start_sec": 561,
+      "end_sec": 642.2,
+      "position_label": "51.9%–59.5%(9:21–10:42)",
+      "purpose": "第六级:真正改变一切的一级——第一个带来保障收入的等级,给出法定收入门槛数字;揭示几乎无人能凭空获得,只有继承与联姻两条路径;真人暗线数十年积累在一场婚礼中瞬间变现,并把此前的赛事生涯重构为\"为这一刻的长期投资\"",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 82,
+          "position_ratio": 0.5796,
+          "time_ms": 625920,
+          "reason": "数十年无地生涯在一场婚礼中瞬间翻转为大领主,案例线第一个情感高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "reversal_via_marriage",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "difficulty_flag",
+          "mechanism": "almost_no_one_gets_this"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "instant_reversal",
+          "mechanism": "marriage_transformation"
+        }
+      ],
+      "required_retention_events": [
+        "level_title_callout",
+        "income_threshold_number",
+        "two_path_reveal",
+        "instant_reversal",
+        "case_anchor_progress",
+        "career_reframe"
+      ],
+      "original_moves": [
+        "标题报幕:有地骑士",
+        "定性:这一级才真正改变一切,因为第一次带来保障收入",
+        "给门槛数字:法定骑士役约需每年二十磅土地收入",
+        "泼冷水:几乎没人凭空得到这一级",
+        "给两条路径:继承(他们没有)或娶女继承人(罕见)",
+        "真人暗线兑现:四十三岁获准娶彭布罗克女继承人,一场婚礼让小男爵第四子瞬间成为多地大领主",
+        "重构句:他的比武生涯不是偏离主业,而是为这一刻的完整选角"
+      ],
+      "abstract_move": "标题报幕 + 保障收入定性 + 门槛数字 + 稀缺宣告 + 双路径揭示 + 案例瞬间翻转 + 长期主义重构",
+      "replacement_needs": [
+        "一个法定的收入或资产门槛数字",
+        "两条可验证的获取路径",
+        "一个积累瞬间变现的真实事件"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(82);回收了前文的悬念 FS06→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "level_unit_pure_prestige",
+      "start_ratio": 0.5938,
+      "end_ratio": 0.6729,
+      "start_sec": 641.3,
+      "end_sec": 726.8,
+      "position_label": "59.4%–67.3%(10:41–12:07)",
+      "purpose": "第七级:战斗职能耗尽后的纯荣誉层——该级很晚才被发明,借神话创立,名额极稀缺,不可申请、由最高权力者直接点名;用\"机制极简\"反衬荣誉极纯,并点明它是功成名就后的锦上添花而非必经之路",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "myth_anchor",
+          "mechanism": "arthur_legend_founding"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "mechanism_summary",
+          "mechanism": "king_simply_decides"
+        }
+      ],
+      "required_retention_events": [
+        "level_title_callout",
+        "myth_anchor",
+        "scarcity_number",
+        "mechanism_summary",
+        "evolution_theme"
+      ],
+      "original_moves": [
+        "标题报幕:嘉德骑士",
+        "时间事实:这一级十四世纪中叶才存在,说明身份制度仍在演化",
+        "神话锚点:国王借亚瑟王圆桌传说创立",
+        "稀缺机制:限额二十四人,君主亲自授予",
+        "极简定性:不能申请、不靠比武赎金,国王认定你是全国二十余人之一,这就是全部机制",
+        "背景加持:创始成员多来自同一场战役,是给已成功生涯的锦上添花而非必经之路"
+      ],
+      "abstract_move": "标题报幕 + 晚近发明的时间事实 + 神话锚点 + 稀缺名额 + 不可申请的极简机制 + 锦上添花定性",
+      "replacement_needs": [
+        "一个晚近才被发明的荣誉等级",
+        "一个神话或传统锚点",
+        "一个稀缺名额数字",
+        "一条不可主动申请的授予规则"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "parallel_path_dark_mirror",
+      "start_ratio": 0.6736,
+      "end_ratio": 0.8188,
+      "start_sec": 727.5,
+      "end_sec": 884.3,
+      "position_label": "67.4%–81.9%(12:07–14:44)",
+      "purpose": "平行支线:一条完全在主梯之外的等级路径——放弃婚姻与世袭换取跨国指挥权,其顶点不受任何君主管辖;正是这种独立性招来覆灭:协同搜捕、末任首领被处死、组织解散;段尾用回声把支线接回真人主角的临终选择",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.7512,
+          "time_ms": 811259,
+          "reason": "统一清晨大搜捕与末任大团长被处死:体系外最高权力的黑暗结局集中兑现"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "用黑暗结局预告把观众拉上一条偏离主梯的支线",
+          "closes_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP06",
+          "tension": "把支线余波引回主线人物,防止支线结束后注意力流失",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "dark_cautionary_reveal",
+          "opened_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "thematic_echo_resolution",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "dark_turn_tease",
+          "mechanism": "strangest_darkest_ending"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "raid_reveal",
+          "mechanism": "coordinated_morning_arrests"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "echo_tease",
+          "mechanism": "same_ending_in_hero_life"
+        }
+      ],
+      "required_retention_events": [
+        "parallel_path_callout",
+        "vow_tradeoff",
+        "dark_turn_tease",
+        "raid_reveal",
+        "downfall_chain",
+        "thematic_echo"
+      ],
+      "original_moves": [
+        "支线标题报幕:军事修会大团长",
+        "存在性声明:还有一条几乎完全在主梯之外的路,它有全片最奇怪最黑暗的结局",
+        "对价关系:放弃娶妻与世袭领地,换跨国城堡军队的指挥权",
+        "权力顶点:大团长统领的组织不臣服于任何国王,比多数君主更富",
+        "覆灭链:独立性引来毁灭——统一清晨大搜捕、末任大团长囚禁七年被处死、修会解散",
+        "回声接回:主角临终自己宣誓加入修会、葬入修会教堂,体制最成功者仍向往这条神圣之路"
+      ],
+      "abstract_move": "支线报幕 + 黑暗结局预告 + 放弃与获得的对价 + 体系外顶点 + 独立性招毁灭的覆灭链 + 回声接回主线人物",
+      "replacement_needs": [
+        "一条同主题不同路径的平行体系",
+        "一组放弃与获得的对价事实",
+        "一个因独立性而覆灭的真实结局",
+        "一个主线人物与支线的真实交集"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(75)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "ladder_top_regency_payoff",
+      "start_ratio": 0.8185,
+      "end_ratio": 0.9099,
+      "start_sec": 884,
+      "end_sec": 982.7,
+      "position_label": "81.9%–91%(14:44–16:23)",
+      "purpose": "主梯顶点:兑现开头上升承诺——真人暗线在政权危局中成为制度顶端的实际执掌者;借同时代第三方的极值评价封顶,并立即澄清该评价指的不是单项技艺而是走完了系统的每一级",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "title_callback",
+          "strength": 92,
+          "position_ratio": 0.8601,
+          "time_ms": 928859,
+          "reason": "国难之际众人一致转向同一人,无地幼子成为王国摄政,标题承诺在事实层面完全兑现"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.8861,
+          "time_ms": 956966,
+          "reason": "\"史上最伟大\"的顶点评价与其定义(走完每一级的人)叠加,案例线情绪封顶"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "顶点评价抛出后立即自我追问,防止评价落空为吹捧",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "biographical_arc_completion",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "definition_clarification",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "unanimous_turn",
+          "mechanism": "barons_turn_to_one_man"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "verdict_clarification",
+          "mechanism": "greatest_knight_definition"
+        }
+      ],
+      "required_retention_events": [
+        "ladder_top_callout",
+        "service_streak",
+        "unanimous_turn",
+        "title_callback",
+        "verdict_clarification"
+      ],
+      "original_moves": [
+        "顶端标题报幕:元帅与摄政",
+        "定性:体制内走到头的实用极限不是荣誉,而是开始执掌政府本身",
+        "履历铺陈:主角婚后数十年侍奉连续四位国王,历经多次内战",
+        "危局时刻:先王暴亡留下九岁幼主与入侵危机,贵族们一致转向唯一可信的人",
+        "顶点职权清单:七十多岁成为摄政、重颁大宪章、亲征赢下林肯战役保住王位",
+        "极值评价:近乎同时代的教会官员称他为史上最伟大的骑士",
+        "立即澄清:这句话指的不是剑术第一,而是走完了系统的每一级"
+      ],
+      "abstract_move": "顶端报幕 + 实用极限定性 + 长期履历铺陈 + 危局一致推举 + 顶点职权清单 + 第三方极值评价 + 评价含义澄清",
+      "replacement_needs": [
+        "一段跨越多个任期的长期履历",
+        "一个危机中的一致推举时刻",
+        "一组顶点职权的事实清单",
+        "一条有来源的第三方极值评价"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(92)、PK09(80);回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 92
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "compressed_ladder_recap",
+      "start_ratio": 0.9091,
+      "end_ratio": 0.961,
+      "start_sec": 981.8,
+      "end_sec": 1037.9,
+      "position_label": "90.9%–96.1%(16:22–17:18)",
+      "purpose": "把整条阶梯压缩成可复述的清单:每个等级一句话定义,包含平行支线,让观众验收全景并带走地图",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "character_arc_completion_with_verdict",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "compressed_recap",
+        "one_line_per_level",
+        "parallel_path_recap"
+      ],
+      "original_moves": [
+        "宣告复述:让我们把这条阶梯的每一步摆出来",
+        "逐级一句话压缩:侍童是被悄悄评估的七岁杂役",
+        "侍从:真训练与真比武收入,远在正式封爵之前",
+        "见习骑士:职业的真正地基,常无地常身无分文",
+        "家臣骑士:大领主或国王身边领薪的合同制职业者",
+        "方旗骑士:纯凭声誉获得的指挥权,无需继承",
+        "有地骑士:把声誉变成保障收入的一级,通常只能靠婚姻或王室恩典",
+        "嘉德骑士:纯粹的精选荣誉,授给已证明一切的人",
+        "平行支线回收:修会曾给出比一切都大的实权,直到国王认定它独立得不可容忍"
+      ],
+      "abstract_move": "复述宣告 + 逐级一句话压缩定义 + 平行支线同步回收",
+      "replacement_needs": [
+        "每一级的一句可复述定义",
+        "一句对平行支线的总结判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "worldview_upgrade_closure",
+      "start_ratio": 0.9601,
+      "end_ratio": 1,
+      "start_sec": 1036.9,
+      "end_sec": 1080,
+      "position_label": "96%–100%(17:17–18:00)",
+      "purpose": "价值收束:纠偏\"身份即单点\"的默认认知,把古代制度整体翻译成现代职业坐标系(实习期、绩效晋升、靠婚姻变现的管理层、功高震主);以归因反转收束真人暗线——他登顶不是因为最强,而是数十年逐级攀爬、没有一步白拿",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 68,
+          "position_ratio": 0.9964,
+          "time_ms": 1076073,
+          "reason": "\"五十年来没有一步是白拿的\"收束金句,把全部攀爬压缩为可带走的判词"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "worldview_reframe",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "modern_reframe",
+          "mechanism": "career_ladder_analogy"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "closing_aphorism",
+          "mechanism": "never_for_free"
+        }
+      ],
+      "required_retention_events": [
+        "modern_analogy_reframe",
+        "attribution_reversal",
+        "closing_aphorism"
+      ],
+      "original_moves": [
+        "纠偏句:我们习惯把骑士当成单一固定身份,要么是要么不是",
+        "现代类比:真实制度是与现代职业层级一样复杂的职业阶梯",
+        "类比逐项展开:无薪实习期、绩效晋升、靠成功婚姻才够得着的管理层",
+        "主题回声:以及功高震主的教训——爬得太高会威胁结构顶端的人",
+        "归因反转:他登顶不是因为是最强战士(也许真是),而是五十年逐级走来",
+        "金句收束:没有一步是白拿的"
+      ],
+      "abstract_move": "默认认知纠偏 + 现代系统类比 + 类比逐项展开 + 主题回声 + 归因反转 + 金句收束",
+      "replacement_needs": [
+        "一个结构同构的现代类比系统",
+        "三到四个可逐项对应的制度要素",
+        "一条从前文机制推出的归因反转",
+        "一句压缩全片代价的金句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(68);回收了前文的悬念 FS01→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 68
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

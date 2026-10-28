@@ -1,0 +1,778 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.806Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "second_person_immersion_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0399,
+      "start_sec": 0.6,
+      "end_sec": 20,
+      "position_label": "0%–4%(0:01–0:20)",
+      "purpose": "零寒暄把观众直接任命为当事人：清晨劳作指令开场，随即给出「今日最高目标是活到晚饭」的生存定义，并用一句假祝贺钉死社会最底层身份，标题承诺即刻开始兑现",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "title_callback",
+          "strength": 70,
+          "position_ratio": 0.0267,
+          "time_ms": 13400,
+          "reason": "「最高目标是活到晚饭」在开篇即兑现标题糟糕感，完成主环开启"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题承诺与全片苦难清单之间的主悬念",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "second_person_imperative_entry",
+          "mechanism": "instant_role_assignment"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "title_promise_confirmation",
+          "mechanism": "survival_goal_definition"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_imperative",
+        "survival_goal_definition",
+        "false_congratulation"
+      ],
+      "original_moves": [
+        "用「醒来拿上工具」的第二人称命令句零寒暄开场",
+        "给出「今日最高目标是活到晚饭」的生存定义",
+        "用「恭喜你，你在社会阶梯最底层」的假祝贺钉死身份"
+      ],
+      "abstract_move": "第二人称命令句即刻入戏 + 生存目标定义 + 假祝贺式身份宣告",
+      "replacement_needs": [
+        "一句能立刻把观众任命为当事人的动作指令",
+        "一条该身份的生存级目标定义",
+        "一句可反转使用的祝贺语"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(70);打开的悬念 LOOP01→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 70
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_imperative_false_congratulation_immersion",
+        "first_stimulus_ms": 560,
+        "first_payoff_ms": 13400,
+        "evidence_refs": [
+          "C0001",
+          "C0006",
+          "C0007",
+          "C0008"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "social_status_establishment",
+      "start_ratio": 0.0368,
+      "end_ratio": 0.0907,
+      "start_sec": 18.4,
+      "end_sec": 45.4,
+      "position_label": "3.7%–9.1%(0:18–0:45)",
+      "purpose": "用两个身份档位的对比（枷锁多少之差）解释社会位置，随即用排比宣告土地、时间、决策权都不属于自己，把「底层」从形容词变成产权清单",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "deprivation_parallelism",
+          "mechanism": "ownership_negation_triplet"
+        }
+      ],
+      "required_retention_events": [
+        "status_tier_contrast",
+        "deprivation_triplet"
+      ],
+      "original_moves": [
+        "用农奴与自由人两个档位对比解释底层（枷锁多少之差）",
+        "用「土地不是你的、时间不是你的、决定轮不到你」的排比宣告产权剥夺",
+        "补刀：决定权属于有钱有头衔却不知劳作艰辛的人"
+      ],
+      "abstract_move": "身份档位对比 + 产权剥夺排比 + 向上阶层补刀",
+      "replacement_needs": [
+        "该身份内部的两档细分",
+        "一组可被排比剥夺的权利清单",
+        "一个向上阶层的对照画像"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "labor_catalog_unit",
+      "start_ratio": 0.0863,
+      "end_ratio": 0.2296,
+      "start_sec": 43.2,
+      "end_sec": 115,
+      "position_label": "8.6%–23%(0:43–1:55)",
+      "purpose": "苦难清单第一维度·劳动：破晓前上工、农事循环、无周末无休假，婚嫁出行皆需主人许可，用现代职场类比收束本单元",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "humor_peak",
+          "strength": 74,
+          "position_ratio": 0.1729,
+          "time_ms": 86640,
+          "reason": "把当事人比作无薪实习生的现代类比，全片首个可复述的错位笑点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "genre_parody_reframe",
+          "mechanism": "sitcom_parody_label"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "modern_analogy",
+          "mechanism": "workplace_mapping"
+        }
+      ],
+      "required_retention_events": [
+        "routine_catalog",
+        "absence_parallelism",
+        "modern_analogy"
+      ],
+      "original_moves": [
+        "破晓前上工，睡眠被调侃为「被高估的东西」",
+        "罗列犁地播种收割的无限循环，自嘲为「不会完结的无聊剧集」",
+        "宣告无周末无休假，唯一假期是祈祷别饿死的宗教日",
+        "结婚出行需主人许可，职责是喂饱骑士与教会且没有感谢信",
+        "把当事人比作「无薪实习生，但泥更多、咖啡更少」"
+      ],
+      "abstract_move": "作息循环清单 + 缺席排比 + 人身许可约束 + 现代角色类比",
+      "replacement_needs": [
+        "一套作息与劳作循环事实",
+        "一组现代观众默认拥有而当事人没有的保障",
+        "一项需他人许可的人身事项",
+        "一个现代角色类比"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "housing_catalog_unit",
+      "start_ratio": 0.2252,
+      "end_ratio": 0.3243,
+      "start_sec": 112.8,
+      "end_sec": 162.5,
+      "position_label": "22.5%–32.4%(1:53–2:42)",
+      "purpose": "苦难清单第二维度·住所：单间泥草屋、人畜共居、无烟囱烟熏、草垫破衣，用「露营但没有回家那部分」类比落地",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "连续苦难清单后的喘息悬念",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "proverb_subversion_shift",
+          "mechanism": "proverb_subversion"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "relief_tease",
+          "mechanism": "tone_shift_announcement"
+        }
+      ],
+      "required_retention_events": [
+        "proverb_subversion",
+        "sensory_detail_catalog",
+        "modern_analogy"
+      ],
+      "original_moves": [
+        "用「家是心之所在，除非你是农民」的熟语反转换挡",
+        "罗列单间泥草屋、人畜共居、毫无隐私",
+        "无烟囱变烟熏房的感官细节：咳嗽、刺眼、烟渗进衣服和食物",
+        "草垫破衣，用「像露营但没有回家那部分」收束"
+      ],
+      "abstract_move": "熟语反转换挡 + 居所清单 + 感官细节 + 现代活动类比",
+      "replacement_needs": [
+        "居所的材质与空间事实",
+        "一项感官级的居住细节",
+        "一个现代活动类比"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS05 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "relief_valve_contrast",
+      "start_ratio": 0.321,
+      "end_ratio": 0.4082,
+      "start_sec": 160.8,
+      "end_sec": 204.5,
+      "position_label": "32.1%–40.8%(2:41–3:25)",
+      "purpose": "喘息反差段：宣告「并非全是黑暗」，展开罕见节庆的短暂快乐，再用日出上工把幻梦当面击碎，只留记忆与宿醉",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "emotional_payoff",
+          "strength": 68,
+          "position_ratio": 0.3733,
+          "time_ms": 187040,
+          "reason": "节庆夜里「感觉自己几乎像个人」——全片唯一的快乐峰值，为幻灭蓄势"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "humor_peak",
+          "strength": 66,
+          "position_ratio": 0.397,
+          "time_ms": 198879,
+          "reason": "主食三连递进到寒酸改善款， repetition 式幽默把单调饮食落到一句调侃"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "contrast_relief_then_reversal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "comic_repetition",
+          "mechanism": "menu_escalation_gag"
+        }
+      ],
+      "required_retention_events": [
+        "relief_tease",
+        "sensory_joy_catalog",
+        "reversal_after_relief"
+      ],
+      "original_moves": [
+        "宣告「并非全是黑暗」开启喘息",
+        "罗列罕见节庆：丰收庆典、宗教节日、放下犁耙拿起酒杯",
+        "穿最不破的衣服、音乐舞蹈、年成好时有烤肉，「感觉自己几乎像个人」",
+        "用日出上工把幻梦当面击碎，只剩记忆和宿醉"
+      ],
+      "abstract_move": "语气转变宣告 + 罕见快乐清单 + 同段幻灭回收",
+      "replacement_needs": [
+        "一次真实存在的罕见节庆或喘息场合",
+        "一组快乐细节",
+        "一个能把快乐打回原形的日常约束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(68)、PK04(66);回收了前文的悬念 FS04→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 68
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 66
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "food_catalog_unit",
+      "start_ratio": 0.4032,
+      "end_ratio": 0.4721,
+      "start_sec": 202,
+      "end_sec": 236.5,
+      "position_label": "40.3%–47.2%(3:22–3:57)",
+      "purpose": "苦难清单第三维度·饮食：主食单调重复、改善款寒酸、荤腥稀缺且需许可、歉收即挨饿，落在「吃饭只为热量」",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "comic_repetition",
+        "permission_constraint",
+        "function_reframe"
+      ],
+      "original_moves": [
+        "主食三连：面包、更多面包、心情好时面包配豆子",
+        "面包更像砖头，蔬菜只是炖菜里的点缀，肉是稀罕物",
+        "住在水边捕鱼也要主人的许可",
+        "歉收即挨饿，吃饭只为塞进热量活过明天"
+      ],
+      "abstract_move": "同词重复递进 + 寒酸改善款调侃 + 许可约束 + 功能化收束",
+      "replacement_needs": [
+        "一份单调主食清单",
+        "一项稀缺荤腥及其获取约束",
+        "一条歉收即挨饿的因果链"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "hygiene_disease_catalog_unit",
+      "start_ratio": 0.4674,
+      "end_ratio": 0.5523,
+      "start_sec": 234.2,
+      "end_sec": 276.7,
+      "position_label": "46.7%–55.2%(3:54–4:37)",
+      "purpose": "苦难清单第四维度·卫生与疾病：一生洗澡次数级、污秽即常态、疫病常客化、小伤即生死、医疗只剩草药与祈祷",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 76,
+          "position_ratio": 0.4758,
+          "time_ms": 238400,
+          "reason": "一生洗澡次数级的频次揭示，把卫生苦难压缩成一个可复述数字感冲击"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "statistical_shock",
+          "mechanism": "lifetime_frequency_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "statistical_shock",
+        "threat_inventory",
+        "absence_kicker"
+      ],
+      "original_moves": [
+        "一生洗澡次数以「如果运气好」计",
+        "水用于饮用做饭和牲畜，不用于洗澡这种「轻浮的事」",
+        "黑死病、伤寒、痢疾像不请自来的邻居",
+        "小伤口感染即致命，医疗只有草药和祈祷"
+      ],
+      "abstract_move": "极端低频冲击句 + 常态污秽清单 + 威胁清单 + 手段缺席",
+      "replacement_needs": [
+        "一个极端低频的卫生事实",
+        "一份常见病威胁清单",
+        "一条小伤致命的因果链"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(76)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "superstition_coping_unit",
+      "start_ratio": 0.5487,
+      "end_ratio": 0.6233,
+      "start_sec": 274.9,
+      "end_sec": 312.3,
+      "position_label": "54.9%–62.3%(4:35–5:12)",
+      "purpose": "精神应对维度：歉收怪罪邻人、病畜靠埋符，把迷信定义为绝望处境下的「生活窍门」，并用自指玩笑收束——那不算科学，但你的人生也不算",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "scapegoat_scenario",
+          "mechanism": "blame_the_neighbor_scene"
+        }
+      ],
+      "required_retention_events": [
+        "scapegoat_scenario",
+        "function_reframe",
+        "self_referential_kicker"
+      ],
+      "original_moves": [
+        "歉收就怪两间屋外那个「一直斜眼看人」的巫婆",
+        "牛病了就在田里埋护身符求神灵可怜",
+        "把迷信重命名为「中世纪生活窍门」：半本生存指南半本绝望的一厢情愿",
+        "自指收束：那不算科学，但你的人生也不算"
+      ],
+      "abstract_move": "替罪场景 + 禳解场景 + 功能重命名 + 自指回马枪",
+      "replacement_needs": [
+        "一个替罪或禳解的具体场景",
+        "一个把迷信重命名为实用策略的角度"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "community_barter_resilience",
+      "start_ratio": 0.6192,
+      "end_ratio": 0.7261,
+      "start_sec": 310.2,
+      "end_sec": 363.8,
+      "position_label": "61.9%–72.6%(5:10–6:04)",
+      "purpose": "互助与韧性维度：同船邻居互济、以物易物、物尽其用、走钢丝式生存平衡，承认没有安全网但强调适应力",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "concrete_barter_list",
+          "mechanism": "goods_for_goods_specificity"
+        }
+      ],
+      "required_retention_events": [
+        "shared_fate_framing",
+        "concrete_barter_list",
+        "balance_metaphor"
+      ],
+      "original_moves": [
+        "宣告邻居是最好盟友，因为大家都在同一条下沉的船上",
+        "丰收分余粮，歉收靠借粮和奇迹",
+        "货币比洗澡还稀罕，以物易物：鸡蛋换面粉、柴火换布",
+        "破工具补到补丁比工具还多；坏天气勒紧裤带，生病靠草药和祈祷",
+        "用「在灾难深渊上走钢丝却总能站稳」收束"
+      ],
+      "abstract_move": "同船宣告 + 互济清单 + 易物清单 + 修补细节 + 平衡比喻",
+      "replacement_needs": [
+        "一组邻里互济的事实",
+        "一组以物易物的具体组合",
+        "一个走钢丝式生存平衡的比喻"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "punitive_control_unit",
+      "start_ratio": 0.7222,
+      "end_ratio": 0.8135,
+      "start_sec": 361.8,
+      "end_sec": 407.6,
+      "position_label": "72.2%–81.4%(6:02–6:48)",
+      "purpose": "秩序压迫维度：主人意志即规矩、轻错重罚、裁决靠酷刑试炼、刑具常备，点破这套秩序不为真相只为驯顺，并抛出「有没有出路」之问",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "humor_peak",
+          "strength": 78,
+          "position_ratio": 0.7626,
+          "time_ms": 382080,
+          "reason": "熬过酷刑试炼即判无罪的黑暗祝贺，制度荒诞在一句反讽中达到峰值"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "制度压迫段末尾抛出的出路之问",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "disproportionate_punishment",
+          "mechanism": "petty_crime_heavy_price"
+        }
+      ],
+      "required_retention_events": [
+        "disproportionate_punishment",
+        "ordeal_scenario",
+        "function_unmasking"
+      ],
+      "original_moves": [
+        "宣告「主人的话就是规矩」，越界就倒大霉",
+        "偷一条面包的代价是一只手，抱怨换来一顿打",
+        "更大的罪名用酷刑试炼裁决：熬过沸水或沉河就算无罪",
+        "点破这套秩序不为真相，只为让你守规矩",
+        "绞架与颈手枷常备，没有出路只有不惹祸的指望"
+      ],
+      "abstract_move": "规矩宣告 + 轻错重罚 + 裁决荒诞场景 + 功能点破 + 出路之问",
+      "replacement_needs": [
+        "一组轻错重罚的对照事实",
+        "一个裁决荒诞性的场景",
+        "一句制度功能点破"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(78);打开的悬念 LOOP03→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "revolt_arc",
+      "start_ratio": 0.8085,
+      "end_ratio": 0.9152,
+      "start_sec": 405,
+      "end_sec": 458.5,
+      "position_label": "80.9%–91.5%(6:45–7:39)",
+      "purpose": "微型故事弧：积怨升级为集体反抗，焚烧账册、攻进城池、短暂相信改变可能，随即承诺被背弃、镇压到来、领头者被处死示众，反抗失败回到田里，点破牌局早已被操纵",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 86,
+          "position_ratio": 0.8601,
+          "time_ms": 430919,
+          "reason": "反抗弧的希望顶点——当事人第一次相信事情可能改变，全片情绪最高点"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.8786,
+          "time_ms": 440160,
+          "reason": "承诺背弃与镇压瞬间到来，领头者被处死示众，希望被当面粉碎"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "出路之问的嵌套子环：用一次真实反抗作答",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "failed_escape_confirmation",
+          "opened_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "hope_reversal_crackdown",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "escalation_turn",
+          "mechanism": "whisper_to_shout"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "hope_reversal",
+          "mechanism": "blunt_reversal_marker"
+        }
+      ],
+      "required_retention_events": [
+        "collective_action_arc",
+        "hope_peak",
+        "blunt_reversal_marker",
+        "rigged_game_kicker"
+      ],
+      "original_moves": [
+        "积怨升级：税收、苦役与被黑死病改变的看法让人受够了",
+        "低语变呐喊：焚烧税册、拆毁压迫的象征，第一次感到希望",
+        "攻进都城、把权贵拖上街，短暂相信改变可能",
+        "国王许下无意兑现的承诺，镇压迅速而残酷",
+        "领头者被处死示众，反抗失败回到田里，点破牌局早已被操纵"
+      ],
+      "abstract_move": "积怨升级链 + 集体行动 + 希望峰值 + 背弃镇压反转 + 操纵点破",
+      "replacement_needs": [
+        "一次可考的集体反抗事件",
+        "希望峰值的具体行动细节",
+        "背弃与镇压的史实"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(86)、PK08(80);回收了前文的悬念 FS10→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 86
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "worldview_inversion_closure",
+      "start_ratio": 0.911,
+      "end_ratio": 0.988,
+      "start_sec": 456.4,
+      "end_sec": 495,
+      "position_label": "91.1%–98.8%(7:36–8:15)",
+      "purpose": "结尾世界观反转：一生的泥泞没有可见回报却仍在继续，点破「你不是被系统遗忘，而是系统建立在你之上」，底层被重命名为时代的承重骨架，把尊严还给这具身体",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 92,
+          "position_ratio": 0.9673,
+          "time_ms": 484639,
+          "reason": "「系统不是为你而建，而是建在你之上」加承重骨架重命名，全片世界观反转落点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "片尾参与环",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "catalog_accumulation_plus_inversion_reframe",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP05"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "inversion_reframe",
+          "mechanism": "subject_object_inversion"
+        }
+      ],
+      "required_retention_events": [
+        "compressed_recap",
+        "subject_object_inversion",
+        "dignity_reframe"
+      ],
+      "original_moves": [
+        "压缩回顾：一生在泥里从早干到晚，除了更多泥一无所有",
+        "你撑下去不是因为容易，而是别无选择",
+        "他们拿走你的时间、劳动和希望，而你仍在坚持",
+        "主客体反转：系统不是为你而建，而是建在你之上",
+        "重命名收束：城堡庄园财富都压在你疲惫的肩上，你不只是农民，你是撑起一切的承重骨架"
+      ],
+      "abstract_move": "一生压缩回顾 + 坚持归因 + 主客体反转 + 承重骨架重命名",
+      "replacement_needs": [
+        "一生的压缩回顾素材",
+        "一个主客体反转判断",
+        "一个承重骨架式重命名"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(92);打开的悬念 LOOP05(不闭合) 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 92
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "end_screen_cta",
+      "start_ratio": 0.9832,
+      "end_ratio": 1,
+      "start_sec": 492.6,
+      "end_sec": 501,
+      "position_label": "98.3%–100%(8:13–8:21)",
+      "purpose": "口播收束：用「我猜你在想接下来做什么」的元过渡，引导点击平台推荐的下一个视频",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "end_screen_pointer",
+          "mechanism": "algorithmic_recommendation_cta"
+        }
+      ],
+      "required_retention_events": [
+        "meta_transition",
+        "end_screen_pointer"
+      ],
+      "original_moves": [
+        "用「我猜你在想接下来该做什么」的元过渡出戏",
+        "引导点击平台推荐的下一个视频"
+      ],
+      "abstract_move": "元过渡句 + 平台推荐引导",
+      "replacement_needs": [
+        "一句元过渡话术",
+        "一个推荐位引导"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

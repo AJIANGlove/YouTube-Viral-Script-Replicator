@@ -3,6 +3,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const store = require('./lib/store');
 const { validateBundle, summarize } = require('./lib/validate');
 const { parseSrt } = require('./lib/srt');
@@ -26,6 +27,11 @@ const HOST = '0.0.0.0';
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.png': 'image/png' };
 const DEFAULT_MODELS = ['claude-opus-4-8', 'claude-opus-5']; // 渠道预设缺 models 字段时的兜底(兼容手改的旧配置)
+
+// 版本文本指纹:只用于判断"确认文案版本后内容有没有被改过",不参与任何生成逻辑
+function textHash(text) {
+  return crypto.createHash('sha1').update(String(text || ''), 'utf-8').digest('hex');
+}
 
 function send(res, status, data, type = 'application/json') {
   if (Buffer.isBuffer(data)) {
@@ -274,7 +280,8 @@ const server = http.createServer(async (req, res) => {
     }
 
     // ---------- 资产库 ----------
-    if (url === '/api/assets' && method === 'GET') return send(res, 200, store.listAssets());
+    // items=资产列表(每项带 track 分类 key);tracks=分类定义(顺序即前端 chip 顺序)
+    if (url === '/api/assets' && method === 'GET') return send(res, 200, { items: store.listAssets(), tracks: store.assetCategories() });
 
     if (url === '/api/assets' && method === 'POST') {
       const files = await readBody(req);
@@ -496,6 +503,11 @@ const server = http.createServer(async (req, res) => {
       if (!r) return send(res, 404, { error: '任务不存在' });
       // 编辑分析用的对照数据(原片高峰、第一个甜头),只随响应返回,不落盘
       r.analysis_context = analysis.analysisContext(r.asset_id);
+      // 确认文案版本后内容被改过?现算给前端提示,不落盘(索引里也不存哈希)
+      if (r.confirmed_version && r.confirmed_version.version) {
+        const t = description.versionText(r, r.confirmed_version.version);
+        r.confirmed_stale = !!(t && r.confirmed_version.hash && textHash(t) !== r.confirmed_version.hash);
+      }
       return send(res, 200, r);
     }
 
@@ -810,6 +822,31 @@ const server = http.createServer(async (req, res) => {
       const saved = store.setRunViral(r.id, marked);
       if (!saved) return send(res, 404, { error: '任务不存在' });
       return send(res, 200, { ok: true, id: r.id, viral: saved.viral });
+    }
+
+    // 确认文案版本:行级单一值(列表一列只放一个),再点一次取消(version 传 null)。
+    // 仅已完成任务可确认——未完成时 V1 还会被终审/去AI感/单章重写改写,确认一个还在变的稿没有意义。
+    // 确认时存该版文本哈希,详情页据此提示"确认后内容被改过"(V1.5/V2.5 会被采纳建议原地覆盖)。
+    const confirmVerMatch = url.match(/^\/api\/runs\/([\w-]+)\/confirm-version$/);
+    if (confirmVerMatch && method === 'POST') {
+      const body = await readBody(req);
+      const r = store.getRun(confirmVerMatch[1]);
+      if (!r) return send(res, 404, { error: '任务不存在' });
+      const version = body.version ? String(body.version) : null;
+      if (version && !['v1', 'v1_5', 'v2', 'v2_5'].includes(version)) {
+        return send(res, 400, { error: 'version 必须是 v1/v1_5/v2/v2_5 之一,或传 null 取消' });
+      }
+      if (!version) {
+        const saved = store.setRunConfirmed(r.id, null, null);
+        if (!saved) return send(res, 404, { error: '任务不存在' });
+        return send(res, 200, { ok: true, id: r.id, confirmed_version: null });
+      }
+      if (r.status !== 'done') return send(res, 400, { error: '仅已完成的任务可确认文案版本(当前: ' + (r.status || '?') + ')' });
+      const text = description.versionText(r, version);
+      if (!text) return send(res, 400, { error: '该版本文案不存在' });
+      const saved = store.setRunConfirmed(r.id, version, textHash(text));
+      if (!saved) return send(res, 404, { error: '任务不存在' });
+      return send(res, 200, { ok: true, id: r.id, confirmed_version: saved.confirmed_version });
     }
 
     // 取消任务:排队中直接取消;生成中打标记,当前步骤跑完后由管线停置为 cancelled

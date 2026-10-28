@@ -1,0 +1,955 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.883Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "sensory_paradox_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0975,
+      "start_sec": 0.2,
+      "end_sec": 112.8,
+      "position_label": "0%–9.8%(0:00–1:53)",
+      "purpose": "用五感洪流建立\"光的宫殿\",先给社会规则反差,再抛出高身份者偷窃悖论与主问题",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 72,
+          "position_ratio": 0.0364,
+          "time_ms": 42160,
+          "reason": "揭示该场所是世上首个女性可独自逗留的空间,华丽铺陈升格为社会规则反差"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "title_callback",
+          "strength": 82,
+          "position_ratio": 0.0898,
+          "time_ms": 104000,
+          "reason": "最优雅富有的客群被目睹藏起贵重商品,标题的隐秘癖好落地成主悬念"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺环:把标题的隐秘癖好翻转为动机追问",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "eyes_open_immersion",
+          "mechanism": "eyes_open_command"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "social_rule_reveal",
+          "mechanism": "unprecedented_freedom_tease"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "paradox_reveal",
+          "mechanism": "rich_thief_paradox"
+        }
+      ],
+      "required_retention_events": [
+        "eyes_open_command",
+        "five_senses_flood",
+        "social_rule_reveal",
+        "rich_thief_paradox",
+        "main_question_invitation"
+      ],
+      "original_moves": [
+        "闭眼再睁眼的指令开场,光的宫殿五感洪流(玻璃天顶的阳光、丝绸堆成山、丝带流成河、香水与皮革气味、绸缎摩擦与硬币声、女客的笑声)",
+        "揭示社会规则:此前女性独自外出需要理由且会遭侧目",
+        "这里成为世上首个女性可独自整日逗留的空间,是被困家中的女性的解放区",
+        "反转:最优雅富有的贵妇们正把贵重商品藏进袖口",
+        "抛出主问题:她们为何偷窃,并邀你一起走进秘密"
+      ],
+      "abstract_move": "感官洪流附身 + 社会规则反差揭示 + 高身份者反常行为悖论 + 主问题设问 + 敬语邀约",
+      "replacement_needs": [
+        "一组可五感渲染的封闭场所细节",
+        "一条该时代的社会禁忌规则",
+        "一个高身份者做反常之事的悖论事实"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(72)、PK02(82);打开的悬念 LOOP01→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 72
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 82
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "five_senses_palace_immersion_social_rule_tease",
+        "first_stimulus_ms": 9559,
+        "first_payoff_ms": 42160,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0019",
+          "C0024"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "frame_boarding_role_entry",
+      "start_ratio": 0.0996,
+      "end_ratio": 0.1803,
+      "start_sec": 115.4,
+      "end_sec": 208.8,
+      "position_label": "10%–18%(1:55–3:29)",
+      "purpose": "用频道框架完成登车仪式,分配第二人称角色并落地日常处境",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "frame_greeting",
+          "mechanism": "midnight_train_boarding"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "role_assignment",
+          "mechanism": "best_clerk_role"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "livelihood_context",
+          "mechanism": "room_board_wage"
+        }
+      ],
+      "required_retention_events": [
+        "frame_greeting",
+        "destination_announcement",
+        "role_assignment",
+        "daily_life_inventory",
+        "crowd_scale_number"
+      ],
+      "original_moves": [
+        "频道框架问候:欢迎乘坐深夜时间列车",
+        "宣告停靠站:某年代的异国都市,世界首个该类场所",
+        "角色分配:你成为这家店里最能干的店员",
+        "日常处境:黑色制服、住顶层宿舍、包吃住还有薪水,对乡下姑娘是福音",
+        "开门钟响,每日上万客流涌进光的宫殿"
+      ],
+      "abstract_move": "框架装置问候 + 目的地宣告 + 第二人称角色分配 + 日常处境清单 + 客流规模数字",
+      "replacement_needs": [
+        "一个可复用的旅程类框架装置",
+        "一个具体时空目的地与首创场所",
+        "一个可分配给观众的职业身份",
+        "该身份的日常生活细节"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "window_girl_foreshadow",
+      "start_ratio": 0.178,
+      "end_ratio": 0.2199,
+      "start_sec": 206.1,
+      "end_sec": 254.6,
+      "position_label": "17.8%–22%(3:26–4:15)",
+      "purpose": "在完美日常外埋下一个触不到的凝视者,并宣告日后重逢",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "surprise",
+          "strength": 58,
+          "position_ratio": 0.2117,
+          "time_ms": 245159,
+          "reason": "旁白宣告窗外少女日后会与你重逢,长线伏笔落钉"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "伏笔人物环:先给凝视画面再悬置命运",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "window_girl_scene",
+          "mechanism": "outside_glass_gaze"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "foreshadow_plant",
+          "mechanism": "reunion_promise"
+        }
+      ],
+      "required_retention_events": [
+        "window_gaze_scene",
+        "untouchable_dream_verdict",
+        "reunion_foreshadow"
+      ],
+      "original_moves": [
+        "整理货架时你的目光落到巨大玻璃窗外",
+        "一个衣着寒酸的瘦弱少女把脸贴在玻璃上凝望店内",
+        "那些闪亮商品是她永远触不到的梦",
+        "你心生怜悯的间隙她已消失",
+        "伏笔宣告:那时的你不知道日后会与她重逢"
+      ],
+      "abstract_move": "日常动作中的视线转移 + 窗外凝视者速写 + 触不到的对照判词 + 伏笔宣告",
+      "replacement_needs": [
+        "一个与主角处境镜像的弱势人物",
+        "一个只能看不能碰的画面",
+        "一句明示日后再见的伏笔句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(58);打开的悬念 LOOP02→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 58
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "novelty_rule_catalog",
+      "start_ratio": 0.218,
+      "end_ratio": 0.2621,
+      "start_sec": 252.4,
+      "end_sec": 303.5,
+      "position_label": "21.8%–26.2%(4:12–5:03)",
+      "purpose": "用编号式清单展示该场所的首创规则,给观众认知红利",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "rule_catalog_start",
+          "mechanism": "numbered_novel_rules"
+        }
+      ],
+      "required_retention_events": [
+        "numbered_rule_catalog",
+        "before_after_contrast",
+        "center_placement"
+      ],
+      "original_moves": [
+        "设问过渡:看看这家店到底是什么样的地方",
+        "规则一:每件商品都贴价格标签(此前买卖双方要讨价还价)",
+        "规则二:不满意可退可换,不满意就退钱的承诺是首创",
+        "规则三:只看不买也没人给脸色",
+        "顾客在宫殿里光看着就开心,而你站在这一切新奇体验的中心"
+      ],
+      "abstract_move": "设问过渡 + 编号式规则清单 + 每条规则配此前惯例对照 + 把观众角色放到新规则中心",
+      "replacement_needs": [
+        "三条该场所首创的规则或惯例",
+        "每条规则的此前惯例对照素材"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "identity_elevation",
+      "start_ratio": 0.2603,
+      "end_ratio": 0.2974,
+      "start_sec": 301.4,
+      "end_sec": 344.4,
+      "position_label": "26%–29.7%(5:01–5:44)",
+      "purpose": "把这份工作升格为当时罕见的女性自立机会,制服被重定义为自由",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "object_redefinition",
+          "mechanism": "uniform_as_freedom"
+        }
+      ],
+      "required_retention_events": [
+        "era_contrast",
+        "scarcity_emphasis",
+        "self_earned_definition",
+        "object_redefinition_verdict"
+      ],
+      "original_moves": [
+        "当时贫苦女性只能在工厂或别人家厨房辛苦劳作",
+        "在华丽场所拥有体面职业的女性极为罕见",
+        "乡下姑娘在此迎宾、每月领自己挣的薪水是难得的机会",
+        "不是看谁脸色拿的钱,而是自赚自花的钱",
+        "判词:黑色制服不只是制服,是你第一次亲手获得的自由的别名"
+      ],
+      "abstract_move": "时代处境对照 + 稀缺性强调 + 自赚自花定义 + 物件重定义判词",
+      "replacement_needs": [
+        "该身份在当时的稀缺性事实",
+        "一份第一次属于自己的具体清单",
+        "一个可重定义的日常物件"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "craft_demonstration",
+      "start_ratio": 0.2958,
+      "end_ratio": 0.3886,
+      "start_sec": 342.5,
+      "end_sec": 449.9,
+      "position_label": "29.6%–38.9%(5:43–7:30)",
+      "purpose": "用微场景演示核心技能与首次为己消费的暖意,并以假设反思回扣伏笔人物",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "quiet_pride",
+          "mechanism": "self_earned_first_things"
+        }
+      ],
+      "required_retention_events": [
+        "skill_definition",
+        "micro_scene_demo",
+        "first_own_purchase_list",
+        "mirror_hypothesis_reflection"
+      ],
+      "original_moves": [
+        "过渡:现在展示你的真正实力",
+        "定义顶级技能:读出客人自己都没察觉的欲望",
+        "场景演示:犹豫的贵妇摸蓝色丝巾,你默默换上玫瑰色,一句话融化犹豫",
+        "连带销售:买丝巾的客人连同手套帽子一起买走,你成为业绩最好的店员",
+        "第一次为自己买东西:想读的书、小镜子,无需任何人许可",
+        "安静午后的反思:若没有这家店,你也许就是窗外那个女孩,胸口发热"
+      ],
+      "abstract_move": "技能定义 + 微场景演示 + 连带结果 + 业绩定性 + 首次为己消费清单 + 假设性镜像反思",
+      "replacement_needs": [
+        "一项该职业的核心技能及其演示场景",
+        "一份第一次为自己的清单",
+        "一个与弱势镜像人物的假设性对照"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "rumor_of_thefts",
+      "start_ratio": 0.3863,
+      "end_ratio": 0.4232,
+      "start_sec": 447.3,
+      "end_sec": 490,
+      "position_label": "38.6%–42.3%(7:27–8:10)",
+      "purpose": "用失窃传闻把主问题从开场悖论拉回场内,氛围开始变调",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "传闻身份环:把主问题从抽象传闻推向具体人物",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE12",
+          "event_type": "rumor_whisper",
+          "mechanism": "disappearing_goods"
+        }
+      ],
+      "required_retention_events": [
+        "rumor_whisper_scene",
+        "disappearing_inventory",
+        "rich_hands_contradiction",
+        "air_change_verdict"
+      ],
+      "original_moves": [
+        "转折:华丽的店里开始流传奇怪传闻",
+        "同事们压低声音窃窃私语:东西总在消失",
+        "而且是通过不缺钱的优雅贵妇之手",
+        "珠宝、香水转眼从货架上消失",
+        "设问:她们为何有钱还要偷,你无法理解",
+        "判词:从那天起店里的空气变了"
+      ],
+      "abstract_move": "传闻开场 + 集体窃语场面 + 失窃清单 + 身份与行为的矛盾设问 + 氛围变化判词",
+      "replacement_needs": [
+        "一组东西在消失的具体现象",
+        "一个行为者不缺资源的矛盾点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "key_customer_introduction",
+      "start_ratio": 0.4207,
+      "end_ratio": 0.4726,
+      "start_sec": 487.1,
+      "end_sec": 547.2,
+      "position_label": "42.1%–47.3%(8:07–9:07)",
+      "purpose": "让最关键的人物登场并绑定主顾关系,同时埋下微笑阴影伏笔",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "人物真相环:先给裂缝细节再悬置解释",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "key_customer_entrance",
+          "mechanism": "exclusive_patron"
+        }
+      ],
+      "required_retention_events": [
+        "key_character_entrance",
+        "exclusive_patron_bond",
+        "perfect_surface_detail",
+        "smile_shadow_foreshadow"
+      ],
+      "original_moves": [
+        "你最重要的客人登场:名门贵妇,举止完美无瑕",
+        "她是只认你的老主顾,别的店员她看都不看",
+        "你照例铺开最好的商品,她优雅挑选",
+        "裂缝伏笔:完美微笑一角掠过说不清的落寞,华服珠宝也遮不住的淡影",
+        "你当时不知道那是什么"
+      ],
+      "abstract_move": "关键人物登场 + 主顾关系建立 + 完美表象铺陈 + 微笑阴影伏笔 + 后知后觉旁白",
+      "replacement_needs": [
+        "一个高身份关键人物",
+        "一组完美表象加微小裂缝的对照细节"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "witnessed_transgression",
+      "start_ratio": 0.4705,
+      "end_ratio": 0.522,
+      "start_sec": 544.8,
+      "end_sec": 604.4,
+      "position_label": "47.1%–52.2%(9:05–10:04)",
+      "purpose": "让观众与主角同时目击最关键人物的偷窃瞬间,传闻落成事实",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "surprise",
+          "strength": 86,
+          "position_ratio": 0.4896,
+          "time_ms": 566839,
+          "reason": "最关键的人物在你眼前熟练藏起商品,传闻瞬间变成目击"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "witnessed_theft",
+          "mechanism": "freeze_shock"
+        }
+      ],
+      "required_retention_events": [
+        "fixation_setup",
+        "turn_away_timing",
+        "witnessed_theft_moment",
+        "practiced_motion_verdict",
+        "heartbeat_shock"
+      ],
+      "original_moves": [
+        "她尤其对一副顶级手套挪不开眼,反复抚摸",
+        "你被别的客人叫走,回过头的那一瞬间你僵住了",
+        "目击:她极其自然地把一只手套滑进袖口,熟练得像做过几百次",
+        "然后若无其事地恢复优雅微笑",
+        "你的心脏狂跳:你分明看见了,传闻中的偷窃者竟是你最珍贵的主顾"
+      ],
+      "abstract_move": "执念细节铺垫 + 转身时机设计 + 目击反常行为 + 熟练度判词 + 身份落差震惊",
+      "replacement_needs": [
+        "一个被目击的反常行为场面",
+        "行为者的高身份背书细节",
+        "目击者与行为者的利益关系"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(86)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "dilemma_pose",
+      "start_ratio": 0.5199,
+      "end_ratio": 0.5432,
+      "start_sec": 602,
+      "end_sec": 629,
+      "position_label": "52%–54.3%(10:02–10:29)",
+      "purpose": "把两条路都输的选择直接抛给观众,把决定权交出去",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "两难环:把决定权直接交给观众",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "identity_witness_reveal",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "dilemma_question",
+          "mechanism": "lose_lose_fork"
+        }
+      ],
+      "required_retention_events": [
+        "direct_dilemma_question",
+        "option_a_ruin_chain",
+        "option_b_loss_chain"
+      ],
+      "original_moves": [
+        "直接把两难抛给观众:现在你怎么办",
+        "选项A:大声喊人等于她当场成窃贼、身败名裂、传言传遍全城,你失去最贵客人、她的人生坠落",
+        "选项B:装作没看见,丢失商品的钱要由你赔偿"
+      ],
+      "abstract_move": "直接向观众发问 + 选项A后果链 + 选项B后果链",
+      "replacement_needs": [
+        "一个两个选项都带真实损失的两难",
+        "每条后果链的具体环节"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS11 跨段;回收了前文的悬念 FS07→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "ingenious_resolution",
+      "start_ratio": 0.5414,
+      "end_ratio": 0.6865,
+      "start_sec": 626.9,
+      "end_sec": 794.8,
+      "position_label": "54.1%–68.7%(10:27–13:15)",
+      "purpose": "用成对道具与双关话术完成无人受伤的双赢化解,交付全片最大智力回报",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 88,
+          "position_ratio": 0.5861,
+          "time_ms": 678639,
+          "reason": "展示道具竟与失窃物成对,双关话术把退路递到对方手里"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "double_meaning_win_win_resolution",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "paired_object_reveal",
+          "mechanism": "parasol_glove_pair"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "graceful_resolution",
+          "mechanism": "win_win_checkout"
+        }
+      ],
+      "required_retention_events": [
+        "paired_object_trick",
+        "crowd_gathering",
+        "double_meaning_script",
+        "graceful_compliance",
+        "win_win_checkout",
+        "shared_secret_glance"
+      ],
+      "original_moves": [
+        "你灵光一闪,面带从容微笑走近她",
+        "你取出与那副手套成对的蕾丝阳伞,在她眼前展开",
+        "周围客人被吸引聚拢,她站到众人目光前",
+        "你柔声说:这手柄必须戴着成对的那副手套才能显出真正价值",
+        "她明白了:你全看见了,还在给她留退路",
+        "她缓缓从袖中取出手套优雅戴上,拿起阳伞,旁人只剩赞叹",
+        "你把两件一起写上账单:她保住了体面,你一分不少收回货款",
+        "判词:无人受伤、无人察觉的完美收尾",
+        "结账后无言对视:共享秘密之人的眼神,她留下淡笑离去"
+      ],
+      "abstract_move": "急中生智 + 成对道具揭示 + 围观目光聚拢 + 双关话术给退路 + 对方领悟配合 + 双赢结账 + 完美收尾判词 + 共享秘密对视",
+      "replacement_needs": [
+        "一对成对设计的道具或规则机制",
+        "一句只有当事人能听懂的双关话术",
+        "一个双赢的结账方式"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(88);回收了前文的悬念 FS10→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "motive_confession",
+      "start_ratio": 0.6839,
+      "end_ratio": 0.7737,
+      "start_sec": 791.9,
+      "end_sec": 895.8,
+      "position_label": "68.4%–77.4%(13:12–14:56)",
+      "purpose": "用当事人的独家自白把主问题从贪婪重判为反抗,完成主环兑现",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 84,
+          "position_ratio": 0.7417,
+          "time_ms": 858800,
+          "reason": "当事人自白真正动机:不是贪欲而是对华丽牢笼的唯一反抗"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "confession_rebellion_reframe",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "character_truth_confession",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "return_visit",
+          "mechanism": "gratitude_then_confession"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "motive_reframe",
+          "mechanism": "rebellion_not_greed"
+        }
+      ],
+      "required_retention_events": [
+        "return_visit",
+        "exclusive_confession",
+        "penniless_reveal",
+        "possession_redefinition",
+        "rebellion_reframe",
+        "wall_collapse_empathy"
+      ],
+      "original_moves": [
+        "数日后她再次来访,安静午后向你道谢",
+        "她开始倾诉从未对人说过的心事",
+        "自白:名门女主人,自己却一分钱都没有",
+        "华服珠宝全是丈夫买的、丈夫许可的,连一条丝带都做不了主",
+        "在这座大店里,她能随心拥有的只有这双手偷偷藏起来的东西",
+        "你这才明白:她偷不是因为没钱也不是贪心,而是对华丽牢笼的小小隐秘反抗",
+        "是她无从自主的人生里唯一能自己选择的一次脱轨",
+        "你们之间的墙塌了,你作为同时代女性深深理解了她"
+      ],
+      "abstract_move": "回访道谢 + 独家自白 + 一无所有揭示 + 占有物重定义 + 动机重判 + 同代人共情墙塌",
+      "replacement_needs": [
+        "一个高身份者实际一无所有的事实结构",
+        "一句把反常行为重定义为反抗的自白",
+        "一段跨越身份的共情逻辑"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(84);回收了前文的悬念 FS01→LOOP01、FS08→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "mirror_case_contrast",
+      "start_ratio": 0.7721,
+      "end_ratio": 0.8486,
+      "start_sec": 894,
+      "end_sec": 982.6,
+      "position_label": "77.2%–84.9%(14:54–16:23)",
+      "purpose": "用伏笔人物的被捕完成镜像对照,把同一行为的两种命运砸在一起",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "surprise",
+          "strength": 82,
+          "position_ratio": 0.7873,
+          "time_ms": 911600,
+          "reason": "被拖走的正是开场窗外凝视的少女,伏笔以最痛的方式回收"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "foreshadow_fate_collision_callback",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "sudden_commotion",
+          "mechanism": "guard_seizure"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "foreshadow_callback",
+          "mechanism": "same_girl_recognition"
+        }
+      ],
+      "required_retention_events": [
+        "sudden_commotion",
+        "foreshadow_character_callback",
+        "worthless_evidence_contrast",
+        "plea_ignored_drag",
+        "fate_contrast_question"
+      ],
+      "original_moves": [
+        "突发骚动:警卫抓住一个衣着寒酸、满脸惊恐的少女",
+        "你倒吸一口气:正是当年贴在窗外的那个女孩",
+        "她掉落的只是一枚丝带小发卡——她曾隔着橱窗日思夜想的那枚",
+        "她哭求:平生第一次、就这一次",
+        "警卫充耳不闻把她拖走",
+        "你浑身发凉:同样偷了东西,她拿的比起贵妇的手套不值一提",
+        "对照设问:为何华服贵妇优雅走出,寒酸少女却成了罪犯被拖走"
+      ],
+      "abstract_move": "突发骚动 + 伏笔人物回收 + 寒酸证物对照 + 哀求无效拖走 + 双人对照设问",
+      "replacement_needs": [
+        "一个与前文伏笔呼应的弱势人物事件",
+        "一件价值悬殊的证物",
+        "一组同罪不同命的画面对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(82);回收了前文的悬念 FS03→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "naming_injustice_reveal",
+      "start_ratio": 0.8465,
+      "end_ratio": 0.9147,
+      "start_sec": 980.1,
+      "end_sec": 1059,
+      "position_label": "84.7%–91.5%(16:20–17:39)",
+      "purpose": "落下同一行为因衣着异名的核心判词,并用无声对视完成当事人结算",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 92,
+          "position_ratio": 0.857,
+          "time_ms": 992279,
+          "reason": "同一行为因衣着而被异名,全片核心判词落下"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "naming_verdict",
+          "mechanism": "clothing_decides_name"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "silent_glance",
+          "mechanism": "wordless_settlement"
+        }
+      ],
+      "required_retention_events": [
+        "cold_realization",
+        "naming_injustice_verdict",
+        "clothing_decides_name",
+        "silent_glance_settlement",
+        "shame_turn_away"
+      ],
+      "original_moves": [
+        "你恍然领悟一个冰冷事实:两人都伸了手",
+        "贵妇的手被称作心病被悄然掩盖,少女的手被称作偷窃被拖走",
+        "判词:不是偷了什么,而是穿着什么衣服,决定同一行为被叫作什么名字",
+        "华丽宫殿里这冰冷的道理也不例外",
+        "她目睹少女被拖走,脸上掠过复杂情绪",
+        "无言对视:若不是你网开一面,被拖走的位置本可能是她",
+        "她垂下眼转身,优雅微笑换成淡淡羞愧"
+      ],
+      "abstract_move": "冰冷领悟 + 同行为异命名判词 + 衣着决定命名 + 目击者复杂神情 + 无声对视结算 + 羞愧转身",
+      "replacement_needs": [
+        "一组同一行为因身份不同而被不同命名的社会事实",
+        "一场目击者与当事人的无声对视"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(92)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 92
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "quiet_aftermath_disembark",
+      "start_ratio": 0.9125,
+      "end_ratio": 1,
+      "start_sec": 1056.5,
+      "end_sec": 1157.8,
+      "position_label": "91.3%–100%(17:37–19:18)",
+      "purpose": "让日常复原但留下无解之问,框架收束后把选择迁移给观众并邀约返程",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "迁移开放环:只负责把无解之问递给观众",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP06"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "lingering_question",
+          "mechanism": "unanswered_next_time"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "transfer_question",
+          "mechanism": "what_would_you_do"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "scheduled_return",
+          "mechanism": "weekly_train_cta"
+        }
+      ],
+      "required_retention_events": [
+        "routine_resumption",
+        "lingering_unanswered_question",
+        "disembark_call",
+        "group_recap",
+        "transfer_question_to_viewer",
+        "scheduled_return_cta",
+        "blessing_farewell"
+      ],
+      "original_moves": [
+        "店里恢复忙碌,你整理制服站回货架前",
+        "表面如常,心里却留下抹不去的东西:下次再来这种时刻,你会怎么办",
+        "框架收束:今天的旅程到此为止,请下车",
+        "复盘:这家世界首创的店对当时女性是一个梦,华丽宫殿里站着同是女性却位置各异的人——自食其力的店员、困于华丽牢笼的贵妇、为一枚发卡做错事的小女孩",
+        "迁移问句:如果你是那天的店员,你会对藏东西的贵妇怎么做,对少女又会是什么心情,请留言",
+        "列车每周固定时间进站,订阅预订座位",
+        "道别祝福:愿你今夜静静掂量那份小小自由的重量"
+      ],
+      "abstract_move": "日常复原 + 悬而未决之问 + 框架下车宣告 + 群像复盘 + 迁移问句 + 固定周期订阅邀约 + 祝福道别",
+      "replacement_needs": [
+        "一个留给主角的无解问题",
+        "一段不同位置人物的群像复盘",
+        "一个把选择交还给观众的迁移问句",
+        "一个固定更新周期与关注入口"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

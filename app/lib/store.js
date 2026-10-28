@@ -25,15 +25,43 @@ function slugify(title) {
 // ---------- 资产 ----------
 function assetDir(id) { return path.join(ASSETS_ROOT, id); }
 
+// 框架库分类筛选:assets/_library/asset_categories.json 里按终审 5 赛道人工归类
+// 只用于浏览筛选,不参与 autoTrack;按 mtime 缓存,改分类文件后不必重启进程
+const CATEGORIES_FILE = path.join(ASSETS_ROOT, '_library', 'asset_categories.json');
+let catCache = { mtime: 0, tracks: [], items: {} };
+
+function loadAssetCategories() {
+  let mtime = 0;
+  try { mtime = fs.statSync(CATEGORIES_FILE).mtimeMs; } catch (e) {}
+  if (mtime && mtime === catCache.mtime) return catCache;
+  try {
+    const j = JSON.parse(fs.readFileSync(CATEGORIES_FILE, 'utf-8'));
+    catCache = {
+      mtime,
+      tracks: (j.cats || []).filter(c => c && c.key).map(c => ({ key: c.key, name: c.name || c.key })),
+      items: j.items || {}
+    };
+  } catch (e) {
+    // 文件缺失或损坏时退化为"无分类",不影响资产列表本身
+    catCache = { mtime: 0, tracks: [], items: {} };
+  }
+  return catCache;
+}
+
+// 分类定义(顺序即前端 chip 顺序)
+function assetCategories() { return loadAssetCategories().tracks; }
+
 function listAssets() {
   ensureDirs();
+  const cats = loadAssetCategories();
   return fs.readdirSync(ASSETS_ROOT, { withFileTypes: true })
     .filter(e => e.isDirectory() && !e.name.startsWith('_')) // _library 等下划线目录是汇总产物,不是资产
     .map(e => {
       try {
         const meta = JSON.parse(fs.readFileSync(path.join(ASSETS_ROOT, e.name, 'meta.json'), 'utf-8'));
-        return { id: e.name, ...meta };
-      } catch (err) { return { id: e.name, name: e.name, broken: true }; }
+        // track: 分类 key(cats 里没有则为空串=未分类),不写回 meta.json
+        return { id: e.name, ...meta, track: cats.items[e.name] || '' };
+      } catch (err) { return { id: e.name, name: e.name, broken: true, track: '' }; }
     })
     .sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
 }
@@ -125,6 +153,18 @@ function setRunViral(id, marked) {
   return run;
 }
 
+// 确认文案版本(行级单一值,再点一次取消):version 为空即取消。
+// hash 记录确认时该版文本指纹,详情页据此提示"确认后内容被改过";不刷新 updated_at,免得改写结束时间
+function setRunConfirmed(id, version, hash) {
+  const run = getRun(id);
+  if (!run) return null;
+  run.confirmed_version = version
+    ? { version, at: new Date().toISOString(), hash: hash || null }
+    : null;
+  saveRun(run, { touch: false });
+  return run;
+}
+
 function getRun(id) {
   // 读取侧同样归一化:存量脏数据不必等迁移脚本就能被强化/留存检查正常解析
   try { return normalizeRunText(JSON.parse(fs.readFileSync(runPath(id), 'utf-8'))); } catch (e) { return null; }
@@ -146,7 +186,7 @@ function listRuns() {
 // 读取前用 readdir+stat 校验文件指纹,不一致(新增/删除/被外部改写)就整体重建;
 // 正常写入路径由 saveRun 直接维护,不会触发重建。
 const RUNS_INDEX = path.join(APP_ROOT, 'data', 'runs.index.json');
-const INDEX_VERSION = 1;
+const INDEX_VERSION = 2; // 2: 新增 confirmed(确认文案版本),旧索引会因版本不符自动重建
 let indexCache = null;
 
 // 源标题中文只用于列表副标题,按资产 id 缓存,避免重复读 meta.json
@@ -198,6 +238,10 @@ function indexEntry(run) {
     boost_opening: !!run.boost_opening || !!((run.steps || {}).opening_boost),
     opening_boosted: !!run.opening_boosted,
     viral: { marked: !!(run.viral && run.viral.marked), marked_at: (run.viral && run.viral.marked_at) || null },
+    // 确认文案版本:列表只展示版本号与确认时间,内容是否已改由详情页现算(索引不存文本哈希)
+    confirmed: (run.confirmed_version && run.confirmed_version.version)
+      ? { version: run.confirmed_version.version, at: run.confirmed_version.at || null }
+      : null,
     video: p ? {
       push_id: p.push_id || null,
       version: p.version || null,
@@ -344,7 +388,7 @@ function queryRuns(opts) {
 
 module.exports = {
   APP_ROOT, ASSETS_ROOT, RUNS_ROOT, ensureDirs, slugify,
-  listAssets, getAsset, saveAsset, deleteAsset, newAssetId,
-  newRun, saveRun, getRun, listRuns, setRunViral,
+  listAssets, getAsset, saveAsset, deleteAsset, newAssetId, assetCategories,
+  newRun, saveRun, getRun, listRuns, setRunViral, setRunConfirmed,
   queryRuns, RUNS_INDEX, SCRIPT_TEXT_FIELDS, normalizeRunText
 };

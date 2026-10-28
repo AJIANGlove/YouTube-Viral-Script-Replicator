@@ -1,0 +1,1105 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.887Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "flashforward_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0436,
+      "start_sec": 0.2,
+      "end_sec": 50.8,
+      "position_label": "0%–4.4%(0:00–0:51)",
+      "purpose": "用终局场景与时限反差建立主悬念",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "title_callback",
+          "strength": 82,
+          "position_ratio": 0.0222,
+          "time_ms": 25840,
+          "reason": "时限数字被同时定义为在位时长与死亡倒计时，标题承诺在开场即兑现一半"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺：什么把站上顶峰的女人引向丈夫的刀口，精确时限内发生了什么",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "sensory_immersion",
+          "mechanism": "execution_cold_open_senses"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "time_limit_paradox",
+          "mechanism": "time_limit_double_meaning"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "invitation_question",
+          "mechanism": "journey_invitation"
+        }
+      ],
+      "required_retention_events": [
+        "flashforward_suspense",
+        "time_limit_paradox",
+        "direct_invitation"
+      ],
+      "original_moves": [
+        "用泰晤士河的雾、伦敦塔的石板、脚步声与剑刃的感官细节直接开处刑现场",
+        "揭示台上女人的身份：曾坐上全国最高位、亲手夺得王冠",
+        "抛出时限数字：她坐王后之位只有一千天，而这数字也是她被丈夫砍头所需的时间",
+        "反问什么把她引向丈夫的刀口，并邀请观众一同进入这一千天"
+      ],
+      "abstract_move": "终局场景感官先行 + 巅峰身份揭示 + 时限数字双重含义 + 坠落反问 + 同行邀请",
+      "replacement_needs": [
+        "一个结局广为人知的历史人物及其终局场景的可考细节",
+        "一个能同时度量辉煌与毁灭的时限数字",
+        "一句把坠落原因设为主问题的反问"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(82);打开的悬念 LOOP01→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 82
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "hook_type": "execution_flashforward_with_time_limit_paradox",
+        "first_stimulus_ms": 199,
+        "first_payoff_ms": 25840,
+        "evidence_refs": [
+          "C0001",
+          "C0006",
+          "C0012",
+          "C0018",
+          "C0021"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "identity_entry",
+      "start_ratio": 0.0436,
+      "end_ratio": 0.0851,
+      "start_sec": 53.2,
+      "end_sec": 99.1,
+      "position_label": "4.4%–8.5%(0:53–1:39)",
+      "purpose": "用频道化旅途框架完成角色分配",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "观众代入后能否在这场生存游戏里活下来",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "frame_greeting",
+          "mechanism": "midnight_train_welcome"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "role_assignment",
+          "mechanism": "become_the_protagonist"
+        }
+      ],
+      "required_retention_events": [
+        "channel_frame_greeting",
+        "role_assignment",
+        "survival_game_question"
+      ],
+      "original_moves": [
+        "以深夜时间列车的频道框架问候观众",
+        "报站：五百年前华丽与阴谋并存的十六世纪都铎宫廷，一步走错就会掉脑袋",
+        "宣布今晚观众将成为亲手改写规则夺得王冠的女人安·博林",
+        "以这场生存游戏里你能活下来吗的设问发令出发"
+      ],
+      "abstract_move": "频道框架问候 + 目的地危险度报站 + 角色分配宣告 + 生存设问发车",
+      "replacement_needs": [
+        "一个自有的频道叙述框架及其问候语",
+        "目的时代的危险度一句话定性",
+        "一个可供代入的主人公及其核心欲望"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "asset_setup_and_offer",
+      "start_ratio": 0.0851,
+      "end_ratio": 0.1327,
+      "start_sec": 97.3,
+      "end_sec": 154.6,
+      "position_label": "8.5%–13.3%(1:37–2:35)",
+      "purpose": "建立主人公的独特资本并引出权力者的捷径提议",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "权力者递来的捷径提议接不接",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "whispered_offer",
+          "mechanism": "power_offer_direct_speech"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "direct_dilemma_question",
+          "mechanism": "what_would_you_do"
+        }
+      ],
+      "required_retention_events": [
+        "sensory_scene_setting",
+        "unique_asset_inventory",
+        "direct_dilemma_question"
+      ],
+      "original_moves": [
+        "用烛光、香水、丝绸礼服的感官细节铺出舞会",
+        "交代你的资本：法国宫廷练出的举止与口才，开口迷人、起舞夺目",
+        "国王注意到你，递上珠宝箱并耳语：做我的情妇",
+        "转头问观众：换作是你，接不接受"
+      ],
+      "abstract_move": "场景感官铺陈 + 主角独有资本清单 + 权力者注意 + 捷径提议耳语 + 向观众设问",
+      "replacement_needs": [
+        "一个展示主角独有资本的高可见度场合",
+        "权力者给出的捷径式提议及其直接引语",
+        "一次指向观众的抉择设问"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "all_in_refusal",
+      "start_ratio": 0.1327,
+      "end_ratio": 0.1928,
+      "start_sec": 152.9,
+      "end_sec": 224.6,
+      "position_label": "13.3%–19.3%(2:33–3:45)",
+      "purpose": "分析捷径的隐性代价，完成拒绝与全押宣言",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "emotional_payoff",
+          "strength": 84,
+          "position_ratio": 0.1529,
+          "time_ms": 178120,
+          "reason": "正面拒绝捷径的台词完成第一次人格高光"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "非顶即空的赌局能否登顶",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "refusal_and_all_in_declaration",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "unexpected_refusal",
+          "mechanism": "refusal_against_norm"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "all_in_framing",
+          "mechanism": "two_paths_only"
+        }
+      ],
+      "required_retention_events": [
+        "unexpected_refusal",
+        "inner_oath",
+        "all_in_gamble_framing"
+      ],
+      "original_moves": [
+        "先算账：情妇虽有珠宝华服与宠爱，但恩宠一冷就被丢弃，孩子也无法继承",
+        "强调多数女人连拒绝国王的念头都不敢有",
+        "你却正面拒绝：不是王后之位就什么都不是",
+        "内心独白全押：既已踏进这宫廷，就要亲手改规则登上最高处",
+        "定性为赌命的二选一：要么登顶，要么失去一切"
+      ],
+      "abstract_move": "捷径代价分析 + 常人不敢的对比 + 正面拒绝台词 + 内心独白全押 + 非顶即空赌局定性",
+      "replacement_needs": [
+        "捷径位置的隐性代价清单",
+        "一句正面拒绝的直接引语",
+        "把选择压缩成二选一的赌局结构"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(84);打开的悬念 LOOP04→FS07 跨段;回收了前文的悬念 FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "obstacle_wall",
+      "start_ratio": 0.1928,
+      "end_ratio": 0.2358,
+      "start_sec": 222.2,
+      "end_sec": 274.7,
+      "position_label": "19.3%–23.6%(3:42–4:35)",
+      "purpose": "揭示通往目标的第一堵制度绝壁",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "制度绝壁（既有配偶与宗教禁令）如何突破",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "rule_wall",
+          "mechanism": "doctrine_forbids_exit"
+        }
+      ],
+      "required_retention_events": [
+        "rule_wall_stack",
+        "authority_refusal",
+        "crisis_verdict"
+      ],
+      "original_moves": [
+        "拒绝反而点燃国王，他决定正式娶你",
+        "但国王已有正式王后，必须先离婚",
+        "交代时代规则：天主教国家，离婚须教皇批准，而教皇断然拒绝",
+        "判定赌局开局即濒临死亡"
+      ],
+      "abstract_move": "拒绝反点燃追求 + 既有位置障碍 + 制度禁令规则化 + 最高权威拒绝 + 开局即死危机判词",
+      "replacement_needs": [
+        "一个占据目标位置的既有角色",
+        "一条禁止变通的制度规则及其权威来源",
+        "权威拒绝的明确证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS06 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "rule_breaking_gamble",
+      "start_ratio": 0.2358,
+      "end_ratio": 0.3132,
+      "start_sec": 271.8,
+      "end_sec": 364.9,
+      "position_label": "23.6%–31.3%(4:32–6:05)",
+      "purpose": "主人公以改写规则本身的非常手段破壁并同步承受代价",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.2731,
+          "time_ms": 318199,
+          "reason": "为一人改写一国千年信仰的尺度判词，把私人野心抬到历史级"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "四面埋伏的敌意何时落下",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "rule_rewrite_move_explained",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "unthinkable_move",
+          "mechanism": "cut_ties_with_authority"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "scale_escalation",
+          "mechanism": "nation_changed_faith_for_one"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "threat_foreshadow",
+          "mechanism": "invisible_blades"
+        }
+      ],
+      "required_retention_events": [
+        "unthinkable_move",
+        "rule_rewrite",
+        "scale_escalation",
+        "threat_foreshadow"
+      ],
+      "original_moves": [
+        "你提出谁都想不到的手段：教皇不准，就干脆与教皇决裂",
+        "推动国王与罗马教廷断交，另立以国王为首的新教会",
+        "判词：为立一个王后，一国把千年信仰整个换掉",
+        "代价同步落地：全欧洲骂你是迷惑国王的妖女，旧王后的贵族支持者等你倒台",
+        "预告看不见的刀已从四面对准你"
+      ],
+      "abstract_move": "非常手段设想 + 改写规则本身 + 尺度对照判词 + 舆论污名与敌对者清单 + 威胁预告",
+      "replacement_needs": [
+        "一个改写规则本身而非绕开规则的破局手段",
+        "手段规模的对照性判词",
+        "手段招致的污名与敌对者清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(88);打开的悬念 LOOP06→FS11 跨段;回收了前文的悬念 FS05→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "coronation_false_summit",
+      "start_ratio": 0.3132,
+      "end_ratio": 0.3446,
+      "start_sec": 362.3,
+      "end_sec": 401.5,
+      "position_label": "31.3%–34.5%(6:02–6:42)",
+      "purpose": "兑现登顶，完成标题承诺的第一次回报",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 80,
+          "position_ratio": 0.3267,
+          "time_ms": 380639,
+          "reason": "登顶画面兑现标题承诺的第一次回报"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "coronation_summit_reached",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "summit_payoff",
+          "mechanism": "coronation_scene"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "false_summit_reversal",
+          "mechanism": "real_game_starts_now"
+        }
+      ],
+      "required_retention_events": [
+        "summit_payoff",
+        "false_summit_tease"
+      ],
+      "original_moves": [
+        "加冕钟声、欢呼与花瓣只为你一人",
+        "你正式加冕为王后，从侍女一路把世界变成敌人也要夺得王冠",
+        "判词：把世界规则按自己意志改写的胜利时刻",
+        "反转预告：真正令人窒息的游戏从现在才开始"
+      ],
+      "abstract_move": "登顶仪式感官 + 登顶判词 + 来路回顾加权 + 假顶反转预告",
+      "replacement_needs": [
+        "登顶仪式的可考感官细节",
+        "一句把胜利写成规则改写的判词",
+        "胜利之后更大风险的预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80);回收了前文的悬念 FS04→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "absolute_rule_reveal",
+      "start_ratio": 0.3446,
+      "end_ratio": 0.4006,
+      "start_sec": 399.4,
+      "end_sec": 466.8,
+      "position_label": "34.5%–40.1%(6:39–7:47)",
+      "purpose": "揭示让该位置天然不稳的绝对规则，并以第一次违约落地",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "surprise",
+          "strength": 78,
+          "position_ratio": 0.3943,
+          "time_ms": 459440,
+          "reason": "举国期待的结果揭晓与期待相反，庆祝缺席的静默落地"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "能否生下绝对规则要求的继承人",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "rule_failed_result_reveal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "reveal_tension",
+          "mechanism": "bystander_face_freeze"
+        }
+      ],
+      "required_retention_events": [
+        "absolute_rule_reveal",
+        "result_reversal",
+        "dramatic_irony_seed"
+      ],
+      "original_moves": [
+        "揭示绝对规则：王后必须生下继承人，生不出就等于没有存在理由",
+        "举国等待、国王连名字都提前取好，期待拉满",
+        "分娩日揭晓：不是儿子，是女儿，庆祝缺席只剩沉默",
+        "旁白反讽：当时无人知晓这个女儿日后是谁"
+      ],
+      "abstract_move": "绝对规则条文 + 举国期待铺垫 + 结果揭晓反差 + 旁观者表情定格 + 戏剧性反讽伏笔",
+      "replacement_needs": [
+        "一条让该位置天然不稳的硬性规则",
+        "一次期待拉满后的相反结果",
+        "一个当时无人知晓、日后兑现的伏笔"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(78)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 78
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "decline_spiral",
+      "start_ratio": 0.4006,
+      "end_ratio": 0.4696,
+      "start_sec": 466.4,
+      "end_sec": 547.1,
+      "position_label": "40.1%–47%(7:46–9:07)",
+      "purpose": "展示违约后的慢性冷却过程",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "不安预感是否兑现，头顶的位置是否还安全",
+          "closes_in": "FS11"
+        },
+        {
+          "loop_id": "LOOP12",
+          "tension": "这个当时无人知晓意义的女儿后来怎样",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "dramatic_irony_seed",
+          "mechanism": "nobody_knew_then"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "rival_gaze",
+          "mechanism": "ruler_looks_elsewhere"
+        }
+      ],
+      "required_retention_events": [
+        "repeated_failure",
+        "affection_cooling",
+        "rival_gaze_hint"
+      ],
+      "original_moves": [
+        "冷场体感：贵族在柱子后窃窃私语，宫中空气变了",
+        "屡次怀孕屡次流产，儿子始终不来",
+        "国王的目光一点点冷却，当年为你改宗教的男人如今只剩失望与烦躁",
+        "你发现他的目光落在了别人身上"
+      ],
+      "abstract_move": "冷场体感 + 屡次失败记录 + 权力者目光冷却渐变 + 移情迹象",
+      "replacement_needs": [
+        "违约后环境氛围的可感变化",
+        "屡次失败的连续记录",
+        "权力者态度冷却的渐变证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP08→FS11、LOOP12→FS15 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "mirror_reversal",
+      "start_ratio": 0.4696,
+      "end_ratio": 0.5168,
+      "start_sec": 544.8,
+      "end_sec": 602.1,
+      "position_label": "47%–51.7%(9:05–10:02)",
+      "purpose": "用镜像场景完成猎人变猎物的结构反噬",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 87,
+          "position_ratio": 0.5006,
+          "time_ms": 583240,
+          "reason": "猎人变猎物的镜像判词完成结构反噬"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "mirror_recognition",
+          "mechanism": "hunter_becomes_prey"
+        }
+      ],
+      "required_retention_events": [
+        "mirror_recognition",
+        "hunter_becomes_prey"
+      ],
+      "original_moves": [
+        "新对手登场：你自己的侍女，性格与你截然相反",
+        "你认出这场面：正是当年你夺走第一任王后位置的手法，原样复刻",
+        "判词：曾经的猎人如今以同样方式成了猎物",
+        "迟来共情：当年被我挤走的女人，也曾这样看着自己崩塌"
+      ],
+      "abstract_move": "新对手对照登场 + 镜像识别 + 猎人猎物身份对调判词 + 对前任的迟来共情",
+      "replacement_needs": [
+        "一个与主角手段同构的新对手",
+        "镜像识别时刻的场景证据",
+        "一句身份对调的判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(87)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 87
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "removal_plot_and_arrest",
+      "start_ratio": 0.5168,
+      "end_ratio": 0.6153,
+      "start_sec": 599.8,
+      "end_sec": 716.8,
+      "position_label": "51.7%–61.5%(10:00–11:57)",
+      "purpose": "权力者从疏远升级为抹除，悬念物引爆逮捕",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "纸条里写了什么，权力者为何离场",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "threat_materializes_as_arrest",
+          "opened_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "ruler_turns_to_removal_plot",
+          "opened_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "note_explained_by_arrest",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "mystery_object",
+          "mechanism": "the_note"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "sudden_arrest",
+          "mechanism": "soldiers_next_day"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "fabricated_charges",
+          "mechanism": "historians_dispute"
+        }
+      ],
+      "required_retention_events": [
+        "mystery_note_tease",
+        "last_sight_freeze",
+        "sudden_arrest",
+        "fabricated_charges"
+      ],
+      "original_moves": [
+        "国王开始找除掉你的办法，离婚太干净，他要更狠的名分",
+        "五月的比武场上，一张纸条递到国王手中，他读完不看一眼就离场",
+        "定格：那是你见到丈夫的最后一面",
+        "翌日士兵闯入逮捕你，关进伦敦塔",
+        "罪名清单落地：通奸与谋反，且多为捏造，后世史家也这么看"
+      ],
+      "abstract_move": "抹除动机升级 + 日常场景悬念物特写 + 最后一面定格 + 突袭逮捕 + 罪名清单与捏造定性",
+      "replacement_needs": [
+        "一个日常场景中的悬念物及其引爆",
+        "最后一面的事实句",
+        "罪名清单及其可信度争议"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS06→LOOP06、FS09→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "prison_dilemma",
+      "start_ratio": 0.6153,
+      "end_ratio": 0.66,
+      "start_sec": 714,
+      "end_sec": 768.9,
+      "position_label": "61.5%–66%(11:54–12:49)",
+      "purpose": "狱中给出求生交易并向观众设问",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP10",
+          "tension": "求生交易要不要签",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "deal_dilemma_question",
+          "mechanism": "sign_or_die"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "hidden_trap_tease",
+          "mechanism": "cruel_trap_hidden"
+        }
+      ],
+      "required_retention_events": [
+        "inner_defiance",
+        "deal_offer",
+        "direct_dilemma_question"
+      ],
+      "original_moves": [
+        "狱中独白：他们能关住我的身体，关不住我的自尊；认罪就等于承认我是他们说的那种人",
+        "一位神职人员深夜来访，递上交易：承认婚姻自始无效，可保命去修道院",
+        "问观众：死亡就在眼前，这个字你签不签"
+      ],
+      "abstract_move": "狱中不屈独白 + 中间人登场 + 交易条款 + 向观众设问",
+      "replacement_needs": [
+        "一段支撑人物不认罪的价值独白",
+        "一份以保命为条件的交易条款",
+        "一次指向观众的签字设问"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP10→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "trap_betrayal_defiance",
+      "start_ratio": 0.66,
+      "end_ratio": 0.742,
+      "start_sec": 766.3,
+      "end_sec": 864.4,
+      "position_label": "66%–74.2%(12:46–14:24)",
+      "purpose": "揭示交易陷阱、完成签字与背叛，把人物压到谷底后定格其不屈",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 90,
+          "position_ratio": 0.7058,
+          "time_ms": 822320,
+          "reason": "求生交易被证伪的背叛，全片情绪最低点"
+        },
+        {
+          "peak_id": "PK08",
+          "peak_type": "humor_peak",
+          "strength": 82,
+          "position_ratio": 0.7274,
+          "time_ms": 847519,
+          "reason": "临终幽默引语在最低点形成尊严反差"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP11",
+          "tension": "交易承诺是否会兑现",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP10",
+          "payoff_type": "signature_decision_shown",
+          "opened_in": "FS12"
+        },
+        {
+          "loop_id": "LOOP11",
+          "payoff_type": "deal_betrayal_reveal",
+          "opened_in": "FS13"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "betrayal_reveal",
+          "mechanism": "deal_never_honored"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "gallows_humor",
+          "mechanism": "slender_neck_quip"
+        }
+      ],
+      "required_retention_events": [
+        "hidden_trap_reveal",
+        "betrayal_reveal",
+        "gallows_humor_dignity"
+      ],
+      "original_moves": [
+        "揭示隐藏陷阱：婚姻作废意味着女儿沦为私生女，失去王位继承权",
+        "求生欲与护女心在绝望中对撞，你最终颤抖着签下自白书",
+        "背叛落地：交易自始是谎言，拿到自白后你被直接送上刑场",
+        "临终幽默：听说刽子手手艺极好，幸好我的脖子很细",
+        "尊严总结：世界没能折断她的骄傲"
+      ],
+      "abstract_move": "隐藏陷阱揭示 + 两难冲突 + 签字动作 + 背叛判词 + 临终幽默引语 + 尊严定格",
+      "replacement_needs": [
+        "交易条款里以第三者为代价的隐藏陷阱",
+        "签字或被背叛的可考节点",
+        "一句有记载的临终幽默引语"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(90)、PK08(82);回收了前文的悬念 FS12→LOOP10。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 90
+        },
+        {
+          "peak_id": "PK08",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "execution_climax",
+      "start_ratio": 0.742,
+      "end_ratio": 0.8615,
+      "start_sec": 861,
+      "end_sec": 1003.8,
+      "position_label": "74.2%–86.2%(14:21–16:44)",
+      "purpose": "处刑全程，回收开场景观",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.8159,
+          "time_ms": 950600,
+          "reason": "赴死动作特写以克制方式完成尊严定格"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "survival_question_answered_with_death",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "final_speech",
+          "mechanism": "scaffold_address_quote"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "dignity_closeup",
+          "mechanism": "hair_neck_gesture"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "closing_verdict",
+          "mechanism": "time_limit_fall"
+        }
+      ],
+      "required_retention_events": [
+        "final_speech_quote",
+        "dignity_closeup",
+        "opening_scene_callback"
+      ],
+      "original_moves": [
+        "刑场清晨的冷空气、干草与人群的感官细节",
+        "国王特意从法国请来剑手与利剑，看似仁慈实为面子",
+        "临终演说：我来此赴死，不抵抗，不怪任何人，请为国王祈祷",
+        "你挽起头发露出脖颈，动作特写定格尊严",
+        "临终独白：我从侍女登上最高位，按自己意志活过，所以无所畏惧",
+        "落幕判词：这一千天悄然落幕，回收开场数字"
+      ],
+      "abstract_move": "刑场感官 + 特殊安排及其解读 + 临终演说引语 + 赴死动作特写 + 临终独白 + 落幕判词回环",
+      "replacement_needs": [
+        "处刑当日的可考细节与特殊安排",
+        "一段临终演说原话",
+        "一个赴死动作特写",
+        "回收开场时限数字的落幕判词"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(85);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "legacy_reframe",
+      "start_ratio": 0.8615,
+      "end_ratio": 0.9656,
+      "start_sec": 1001.8,
+      "end_sec": 1125,
+      "position_label": "86.2%–96.6%(16:42–18:45)",
+      "purpose": "退回叙述框架，先给世俗定评再用后代成就重评输赢",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 93,
+          "position_ratio": 0.9303,
+          "time_ms": 1083840,
+          "reason": "后代成就揭示推翻世俗定评，完成输赢重估"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP13",
+          "tension": "她究竟是失败者还是赢家",
+          "closes_in": "FS15"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "full_causal_chain_and_closing_recap",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP12",
+          "payoff_type": "descendant_achievement_reveal",
+          "opened_in": "FS09"
+        },
+        {
+          "loop_id": "LOOP13",
+          "payoff_type": "secular_verdict_overturned_by_legacy",
+          "opened_in": "FS15"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE30",
+          "event_type": "secular_verdict_question",
+          "mechanism": "was_she_a_loser"
+        },
+        {
+          "event_id": "RE31",
+          "event_type": "descendant_reveal",
+          "mechanism": "daughter_becomes_greatest_monarch"
+        }
+      ],
+      "required_retention_events": [
+        "secular_verdict_list",
+        "descendant_achievement_reveal",
+        "rule_broken_by_next_generation"
+      ],
+      "original_moves": [
+        "列车框架回归：长旅到此结束，请乘客下车",
+        "列出世俗定评：贪欲毁灭的蠢女人、迷惑国王的妖女、凄惨的失败者",
+        "反问：她真的是失败者吗",
+        "证据：她留在祈祷书上的话——时机将至",
+        "揭晓：那个因不是儿子而被轻视的女儿，日后成为该国史上最伟大的君主，亲手打碎只有儿子能继承的规则",
+        "女儿终身把母亲的小隼徽章带在身边，那句时机将至经女儿兑现"
+      ],
+      "abstract_move": "框架回归 + 世俗定评清单 + 反问 + 遗言遗物证据 + 后代成就揭示 + 规则被下一代打破回收",
+      "replacement_needs": [
+        "世俗定评的清单式呈现",
+        "主人公留下的文字或遗物证据",
+        "后代推翻同一规则的可考成就"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(93);回收了前文的悬念 FS01→LOOP01、FS09→LOOP12。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 93
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "closure_question_cta",
+      "start_ratio": 0.9656,
+      "end_ratio": 1,
+      "start_sec": 1122.6,
+      "end_sec": 1165.1,
+      "position_label": "96.6%–100%(18:43–19:25)",
+      "purpose": "把最终价值判断抛回观众并给出订阅出口",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP14",
+          "tension": "换作是你，这顶以生命为代价的桂冠戴不戴",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP14"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE32",
+          "event_type": "final_identity_question",
+          "mechanism": "would_you_wear_crown"
+        },
+        {
+          "event_id": "RE33",
+          "event_type": "schedule_tease",
+          "mechanism": "next_station_subscription"
+        }
+      ],
+      "required_retention_events": [
+        "final_identity_question",
+        "comment_prompt"
+      ],
+      "original_moves": [
+        "重估判词：你用命守住的也许不是王冠，而是日后改变世界的人",
+        "终极设问：换作是你，这顶只戴一千天的致命王冠你还戴吗",
+        "引导观众把想法写进评论",
+        "预告每周固定更新，订阅即订座",
+        "祝福收尾：愿你今晚想起这个被叫作失败者却赢下最伟大胜利的女人"
+      ],
+      "abstract_move": "价值重估判词 + 终极代入设问 + 评论引导 + 更新预告 + 祝福式请托收尾",
+      "replacement_needs": [
+        "一个把判断权交给观众的二选一设问",
+        "评论引导与更新节奏信息",
+        "一句回扣重评结论的祝福"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP14(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

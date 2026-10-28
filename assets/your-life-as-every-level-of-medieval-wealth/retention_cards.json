@@ -1,0 +1,983 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.862Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "paradox_question_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0468,
+      "start_sec": 0.1,
+      "end_sec": 51.4,
+      "position_label": "0%–4.7%(0:00–0:51)",
+      "purpose": "以「听起来简单实则不然」的元评论开场,抛出有地位者与无地位富人谁更富的二选一悖论;立即给出诚实但扫兴的答案,顺势立下全片命题——地位与金钱从来不是同一架梯子,只是偶尔相交;最后用「晋升规则随等级改变」预告整片结构",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "worldview_shift",
+          "strength": 75,
+          "position_ratio": 0.015,
+          "time_ms": 16477,
+          "reason": "开场 20 秒内给出全片命题:头衔与金钱从来不是同一架梯子、只是偶尔相交,击穿\"头衔=财富\"的默认想象"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题与开场设下的价值比较悬念,驱动观众看完整个等级梯子",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "路线图式悬念:等级序列本身就是待展开的地图",
+          "closes_in": "FS14"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "hook_question",
+          "mechanism": "paradox_question_open"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "partial_answer",
+          "mechanism": "honest_answer_tease"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "thesis_preview",
+          "mechanism": "category_reframe"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "roadmap_tease",
+          "mechanism": "rules_change_tease"
+        }
+      ],
+      "required_retention_events": [
+        "paradox_question",
+        "honest_answer_tease",
+        "category_reframe",
+        "rules_change_tease"
+      ],
+      "original_moves": [
+        "用「听起来简单实则不然」的元评论开场",
+        "抛出二选一设问:中世纪的男爵和没有头衔的羊毛商人谁更有钱",
+        "立即给出诚实答案:要看是哪个男爵、哪个商人,且到 1400 年代押注商人往往更聪明",
+        "立下全片命题:头衔与金钱从来不是同一架梯子,只是平行偶尔相交",
+        "给出对照预告:一些英格兰最富的人从没有贵族头衔,一些有头衔的领主却很穷",
+        "用「晋升规则随你所在等级改变」预告整片结构"
+      ],
+      "abstract_move": "扫兴元评论 + 二选一悖论设问 + 诚实但反直觉的即时回答 + 双轨命题立靶 + 对照预告 + 规则随级改变的路线图钩子",
+      "replacement_needs": [
+        "一对观众默认「地位高=更富有」的具体对阵双方",
+        "一个诚实但扫兴、且带时代转向的真实答案",
+        "一个「两套体系平行」的框架命题",
+        "一条「规则随等级改变」的全片结构预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(75);打开的悬念 LOOP01→FS14、LOOP02→FS14 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 75
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "paradox_question_with_immediate_honest_answer",
+        "first_stimulus_ms": 100,
+        "first_payoff_ms": 17444,
+        "evidence_refs": [
+          "C0001",
+          "C0005",
+          "C0015"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "credibility_calibration",
+      "start_ratio": 0.0459,
+      "end_ratio": 0.0691,
+      "start_sec": 50.5,
+      "end_sec": 75.9,
+      "position_label": "4.6%–6.9%(0:50–1:16)",
+      "purpose": "开讲前的可信度校准:声明古代数值不可直接换算成现代货币、价格随地区与年代波动,并列出同期史据来源类型,让观众放心接受后文的数字",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "credibility_anchor",
+          "mechanism": "methodology_disclaimer"
+        }
+      ],
+      "required_retention_events": [
+        "methodology_disclaimer",
+        "source_credibility_claim",
+        "bottom_entry_cue"
+      ],
+      "original_moves": [
+        "宣告「开始前先说一件事」",
+        "声明中世纪货币无法直接换算成现代货币,同样的镑买到的商品组合完全不同",
+        "声明价格随地区与年代波动",
+        "列出史据来源:同期工资册、税单与家庭账簿",
+        "说明用真实数字是为了让等级间差距可见",
+        "用「从最底层开始」给出入口"
+      ],
+      "abstract_move": "前置声明 + 数值不可直接换算的免责 + 波动限定 + 来源类型清单 + 数字用途说明 + 起点入口指引",
+      "replacement_needs": [
+        "一个数值跨时代/跨体系不可直接通约的 disclaimer",
+        "一组可点名的同期史料类型(账簿、登记册等)",
+        "一句「为什么仍要给数字」的用途说明"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "level_bottom_immersion",
+      "start_ratio": 0.0682,
+      "end_ratio": 0.1859,
+      "start_sec": 75,
+      "end_sec": 204.3,
+      "position_label": "6.8%–18.6%(1:15–3:24)",
+      "purpose": "第一级(一无所有者):第二人称代入「你什么都没有」的生存状态;给出日收入与货币换算说明、全年劳作的总量收入;用一次大灾变后的劳动力短缺给出底层首次议价杠杆;再用「一场坏收成即灾难」与历史饥荒死亡率证据把脆弱性拉满;收尾给出唯一上行路径",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "level_entry",
+          "mechanism": "second_person_immersion"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "income_reveal",
+          "mechanism": "annual_income_number"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "stakes_raise",
+          "mechanism": "fragility_one_season"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "path_tease",
+          "mechanism": "only_way_up"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_immersion",
+        "income_number_reveal",
+        "misfortune_leverage_turn",
+        "fragility_stakes",
+        "historical_evidence_cite",
+        "upward_path_tease"
+      ],
+      "original_moves": [
+        "明码换挡「第一级,无地雇农」,第二人称代入:你没有土地、没有可继承的房、没有牲畜,过得好也就一头猪",
+        "描述按日受雇的生存方式与计酬形式",
+        "给出黑死病前的日薪(一两个便士)并换算货币单位,直言算术残酷",
+        "给出全年稳定劳作的总收入(两三镑),并限定这种稳定几乎不存在",
+        "给出反转:1348 年瘟疫后劳动力短缺,日薪几十年翻倍,底层首次获得议价杠杆",
+        "把脆弱性拉满:一场坏收成即灾难,1315-17 大饥荒中该层死亡率最高",
+        "给出唯一上行路径:攒多年硬币租下第一条地,从卖劳力变成分收成"
+      ],
+      "abstract_move": "明码换挡 + 第二人称一无所有清单 + 计酬方式 + 日收入与货币换算 + 年收入总量与可行性限定 + 灾变带来的议价杠杆反转 + 脆弱性判决与饥荒证据 + 唯一上行路径预告",
+      "replacement_needs": [
+        "一个底层等级的财产空白清单",
+        "一组日收入与年收入的真实数字(含货币单位换算)",
+        "一次让底层获得杠杆的历史灾变",
+        "一份底层在饥荒中死亡率最高的史料证据",
+        "一条唯一可行的上行路径(积累-租地-分成)"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "stability_over_income_reveal",
+      "start_ratio": 0.185,
+      "end_ratio": 0.2578,
+      "start_sec": 203.3,
+      "end_sec": 283.3,
+      "position_label": "18.5%–25.8%(3:23–4:43)",
+      "purpose": "第二级(小有产者):拥有小块土地后的自给形态与净收入数字;核心反转是「收入其实没比底层多多少,多数人都会意外——差别不在收入而在储备与稳定性」;再给出灾变后土地过剩的窗口期,让十年渐进并地成为通往下一级的地基",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "expectation_break",
+          "mechanism": "income_surprise"
+        }
+      ],
+      "required_retention_events": [
+        "level_shift_marker",
+        "income_number_reveal",
+        "expectation_violation",
+        "stability_reframe",
+        "window_of_opportunity"
+      ],
+      "original_moves": [
+        "明码换挡「第二级,小地主」,说明持有形态(份地 15-30 亩,自由佃户或依附农)",
+        "定性:自给自足带少量盈余,正常年景够吃还有一点余粮可卖或缴租",
+        "给出净收入数字(约 2-5 镑),并立即预期违背:并不比无地雇工多多少,多数人会意外",
+        "给出真正差别:不在收入在稳定——有存粮,病一周地也不会消失",
+        "给出窗口期:1350 年后瘟疫造成土地过剩,死者的弃地被贱卖",
+        "给出渐进路径:十年里小心并进两三条垄,不超家庭劳力极限,成为下一级的地基"
+      ],
+      "abstract_move": "明码换挡 + 持有形态说明 + 自给定性 + 净收入数字 + 收入未大增的预期违背 + 差别在稳定性的重命名 + 灾变窗口期 + 渐进积累路径",
+      "replacement_needs": [
+        "一个小有产等级的持有规模与法律形态",
+        "一个「收入没多多少」的反直觉对照数字",
+        "一项稳定性资产(存粮、储备)的具体形态",
+        "一次让资产廉价易手的历史窗口期",
+        "一条有节奏约束的渐进积累路径"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "middle_class_emergence",
+      "start_ratio": 0.2575,
+      "end_ratio": 0.347,
+      "start_sec": 283,
+      "end_sec": 381.3,
+      "position_label": "25.8%–34.7%(4:43–6:21)",
+      "purpose": "第三级(新兴中产):经营规模扩大,用「从被人雇到雇人」的镜像反转兑现升级爽感;给出收入数字与生活清单;点出该阶层在大灾变前几乎不存在的新历史性;用「被征税官看见本身就是成功标志」做反直觉重命名;以「收入约等于落魄的有头衔者」作对照,落到全片枢纽宣言——此级以下地位与金钱高度相关,此级以上开始严重脱钩",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 80,
+          "position_ratio": 0.3403,
+          "time_ms": 373929,
+          "reason": "全片结构枢纽:此级以下头衔与金钱高度相关,此级以上开始严重脱钩——前半段的攀升逻辑从此改写"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "identity_flip",
+          "mechanism": "employer_inversion"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "status_reframe",
+          "mechanism": "tax_visibility_reframe"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "pivot_declaration",
+          "mechanism": "divergence_threshold"
+        }
+      ],
+      "required_retention_events": [
+        "level_shift_marker",
+        "identity_inversion",
+        "income_number_reveal",
+        "historical_novelty",
+        "status_reframe",
+        "benchmark_contrast",
+        "divergence_pivot"
+      ],
+      "original_moves": [
+        "明码换挡「第三级,约曼」,给出经营规模(60 到 100 多亩,部分自有一部分租入)",
+        "身份反转:从每天赚一便士变成每天付别人一便士——你开始雇人",
+        "给出收入数字(约 10-20 镑)与生活清单(木构架房、常吃肉、坏收成只是挫折不是死刑)",
+        "指出新历史性:该阶层在黑死病前几乎不存在,其爆发是中世纪晚期最重要的经济变化之一",
+        "给出史料可见性:遗嘱、继承记录、留存至今的石屋",
+        "反直觉重命名:常被税册点名,被税务官看见本身就是成功的标志",
+        "跨级对照:约等于落魄骑士一年的收入",
+        "枢纽宣言:此级以下头衔与金钱高度相关,此级以上开始严重脱钩"
+      ],
+      "abstract_move": "明码换挡 + 经营规模 + 雇佣关系镜像反转 + 收入与生活清单 + 阶层新历史性 + 史料可见性 + 被征税即成功的重命名 + 跨级对照 + 双轨脱钩枢纽宣言",
+      "replacement_needs": [
+        "一个新中产等级的经营规模数字",
+        "一组雇佣关系方向反转的事实",
+        "一份该阶层新兴的断代证据",
+        "一类该阶层才开始出现的史料(遗嘱、税册)",
+        "一个与更高头衔者收入相当的跨级对照",
+        "一条「两套体系在此脱钩」的枢纽判断"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "untitled_power_unlock",
+      "start_ratio": 0.3461,
+      "end_ratio": 0.4142,
+      "start_sec": 380.4,
+      "end_sec": 455.2,
+      "position_label": "34.6%–41.4%(6:20–7:35)",
+      "purpose": "第四级(无头衔富绅):用词义解释与文学典故描写该级的富足;给出收入区间与官职清单;揭示制度反常——仅凭财富、无需血统即可兑换真实地方政治权力,并用更严格的对照体系凸显这一例外;收尾预告「前路分岔成两个截然不同的方向」",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "路径选择悬念:同级起点的两种命运对照",
+          "closes_in": "FS09"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "fork_tease",
+          "mechanism": "two_paths_branch"
+        }
+      ],
+      "required_retention_events": [
+        "level_shift_marker",
+        "literary_reference",
+        "income_number_reveal",
+        "system_anomaly_reveal",
+        "cross_system_contrast",
+        "fork_tease"
+      ],
+      "original_moves": [
+        "明码换挡「第四级,富兰克林」,先解词:有相当地产但无头衔的自由人",
+        "引文学典故:乔叟笔下的富兰克林家里肉酒多得像下雪",
+        "给出收入区间(20-40 镑以上)与官职清单(郡长、治安官、郡议员),全无头衔",
+        "揭示制度反常:在英格兰,仅凭财富无需血统就能获得真实地方政治权力",
+        "与大陆更严格的贵族制对照:这里的钱买到了别处只有头衔能保护的影响力",
+        "收尾预告:再往上路分岔成两个截然不同的方向,家族选择决定它变多富"
+      ],
+      "abstract_move": "明码换挡 + 阶层词义解释 + 文学典故形象化 + 收入与官职清单 + 无血统换实权的制度例外 + 跨体系对照 + 前路分岔预告",
+      "replacement_needs": [
+        "一个需要解词的阶层名称",
+        "一个同时代文学形象作富足写照",
+        "一组无头衔者可任的实权官职",
+        "一个「钱可直接买权」的制度例外及更严格的对照体系",
+        "一条双岔路的方向预告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS09 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "merchant_path_case_studies",
+      "start_ratio": 0.4134,
+      "end_ratio": 0.5682,
+      "start_sec": 454.2,
+      "end_sec": 624.4,
+      "position_label": "41.3%–56.8%(7:34–10:24)",
+      "purpose": "分岔路径一(经商):先定位支柱产业,再用两个具名案例走完商业路径——案例一放贷给王权、三代之内从商贩升入最高贵族,落到「收入大到地位体系无法假装看不见」;案例二四任市政高位、无头衔却让王权欠债,落到「他不需要头衔」;给出该级收入区间并宣告财富与地位等级彻底脱钩;再用异国金融家族被王权违约一夜拖垮的反噬,补齐顶级商业财富的致命风险",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 78,
+          "position_ratio": 0.4689,
+          "time_ms": 515330,
+          "reason": "富商家族收入大到头衔体系\"无法假装他们不存在\",从商贩到公爵的三代攀升完成首次越级兑现"
+        },
+        {
+          "peak_id": "PK04",
+          "peak_type": "emotional_payoff",
+          "strength": 82,
+          "position_ratio": 0.4995,
+          "time_ms": 548887,
+          "reason": "\"他没有贵族头衔,他也不需要——国王欠他钱\",无头衔者权力反转的情绪最高点"
+        },
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.5534,
+          "time_ms": 608144,
+          "reason": "国王一次违约同时拖垮两大银行王朝:商人财富足以决定国王能否开战,也能被国王的失信一夜清零"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "case_entry",
+          "mechanism": "named_merchant_case"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "power_inversion",
+          "mechanism": "kings_owed_him"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "ruin_reveal",
+          "mechanism": "royal_default_collapse"
+        }
+      ],
+      "required_retention_events": [
+        "branch_announcement",
+        "scale_contrast",
+        "case_study_entry",
+        "ascension_payoff",
+        "power_inversion",
+        "income_number_reveal",
+        "decoupling_declaration",
+        "ruin_reversal"
+      ],
+      "original_moves": [
+        "宣布岔路一:商人,并定位支柱产业(羊毛出口是王国最大商业行业,从业者规模碾压几乎整个贵族层)",
+        "案例一:威廉·德拉波尔靠羊毛与放贷起家,给爱德华三世放巨款支撑百年战争,受封骑士再封男爵,后代一代后成萨福克公爵",
+        "点题:家族从羊和船开始,封公爵不是因为血统,而是收入大到头衔体系无法假装他们不存在",
+        "案例二:理查德·惠廷顿,四任伦敦市长,给亨利四世、五世放巨款,死时巨富,遗产办的济贫院、图书馆、医院存续数百年",
+        "金句:他从没有贵族头衔,他不需要——国王欠他钱",
+        "给出该级收入区间(50、100 乃至数百镑),宣告财富与贵族等级彻底脱钩",
+        "补异国案例:佛罗伦萨巴尔迪与佩鲁齐家族直接给国王放贷",
+        "反噬结局:爱德华三世 1340 年代违约,两大银行家族一同崩塌——商人财富大到能决定国王能否开战,也脆弱到被国王失信一夜清零"
+      ],
+      "abstract_move": "岔路宣布 + 支柱产业规模定位 + 攀升案例(放贷-受封-三代登顶) + 体系被迫承认的点题 + 权力案例(无头衔而权力者欠债) + 收入区间与脱钩宣言 + 异国同型案例 + 王权违约的反噬结局",
+      "replacement_needs": [
+        "一个该领域支柱性贸易/金融产业",
+        "一个从底层经商到三代跻身顶层的具名家族案例",
+        "一个无头衔却让最高权力者欠债的具名案例",
+        "一组该级收入区间数字",
+        "一个权力方违约拖垮金融方的反噬案例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(78)、PK04(82)、PK05(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 78
+        },
+        {
+          "peak_id": "PK04",
+          "strength": 82
+        },
+        {
+          "peak_id": "PK05",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "knighthood_cost_inversion",
+      "start_ratio": 0.568,
+      "end_ratio": 0.6656,
+      "start_sec": 624.2,
+      "end_sec": 731.4,
+      "position_label": "56.8%–66.6%(10:24–12:11)",
+      "purpose": "分岔路径二(荣誉头衔):先纠偏浪漫想象——该头衔本质上是财务门槛而非浪漫召唤,并用强制受封的法律证据坐实;给出该级收入区间;以「最不舒服的部分」悬念引出核心倒置:小产业的有头衔者反而不如无头衔富绅,因为头衔不保证收入、只保证开销;用装备、战马、随从、无酬差旅的成本清单与负债史料坐实,收于「向名义上低一级者举债」的倒挂",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "worldview_shift",
+          "strength": 84,
+          "position_ratio": 0.6209,
+          "time_ms": 682346,
+          "reason": "\"头衔不保证收入,它保证的是开销\"——对骑士阶层的浪漫想象完成财务学解构,全片最锋利的金句"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "嵌套在分岔环内的阴暗预告,维持换档时的注意力",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "inversion_aphorism_payoff",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "ominous_tease",
+          "mechanism": "unpleasant_part_tease"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "inversion_payoff",
+          "mechanism": "rank_guarantees_expenses"
+        }
+      ],
+      "required_retention_events": [
+        "branch_announcement",
+        "romantic_myth_correction",
+        "legal_evidence",
+        "ominous_tease",
+        "inversion_aphorism",
+        "cost_listing",
+        "debt_irony"
+      ],
+      "original_moves": [
+        "宣布岔路二:骑士之路,先纠偏——多数幻想作品都画错了",
+        "重构:骑士身份本质上是财务门槛而非浪漫召唤",
+        "给法律证据:13 世纪中期法律规定地产年收入 20 镑以上者必须受封,不管愿不愿意,因为王权需要一份买得起战马盔甲的名单",
+        "给出骑士地产收入区间(20 到数百镑)",
+        "阴暗预告:最不舒服的部分从这里开始",
+        "核心倒置:小地产骑士负担装备与社会义务,可能反不如富裕的无头衔富兰克林或羊毛商人安稳",
+        "金句:头衔不保证收入,它保证的是开销",
+        "成本清单:一副盔甲就值穷骑士年收入的大头,加战马、扈从、为王出差数月无酬",
+        "史料坐实:记录里满是负债的骑士,他们向名义上低自己一级的商人借钱——一个昂贵战季加一个平庸收成就够了"
+      ],
+      "abstract_move": "岔路宣布 + 浪漫想象纠偏 + 头衔即财务门槛的重构 + 强制受封的法律证据 + 收入区间 + 阴暗预告 + 有头衔者反不如无头衔者的倒置 + 保证金句(保开销不保收入) + 成本清单与负债史料 + 向低一级举债的倒挂",
+      "replacement_needs": [
+        "一个被浪漫化的荣誉头衔及其流行误读",
+        "一条把头衔与财富门槛绑定的法律证据",
+        "一组维持头衔的成本清单(装备、随从、义务差旅)",
+        "一批有头衔者负债的史料",
+        "一个向名义下级借钱的倒挂事实"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "titled_land_durability",
+      "start_ratio": 0.6651,
+      "end_ratio": 0.7113,
+      "start_sec": 730.9,
+      "end_sec": 781.7,
+      "position_label": "66.5%–71.1%(12:11–13:02)",
+      "purpose": "第六级(有头衔地产主):给出收入区间与城堡、随从、地区影响力清单;承认有头衔与无头衔富豪的差距仍未消失——顶级商人年流水可抵其全年收入;核心对照是财富形态:货物与硬币怕风暴与市况,土地却年复一年自动产出",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "中段埋下的财富形态差异问题,等待因果解释",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "dual_path_comparison",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "asset_contrast",
+          "mechanism": "durability_difference"
+        }
+      ],
+      "required_retention_events": [
+        "level_shift_marker",
+        "income_number_reveal",
+        "scale_contrast",
+        "asset_form_contrast"
+      ],
+      "original_moves": [
+        "明码换挡「第六级,男爵」,给出收入区间(200-500 镑)与配置清单(设防庄园、随从、地区影响力)",
+        "承认差距未消失:巅峰期的国际羊毛商人一年流水可抵男爵全年地产收入甚至更多",
+        "给出形态差异:商人的财富在货物与硬币里,怕风暴与市场崩溃",
+        "对照:男爵的收入在土地里,若无战乱没收,年复一年自动产出,不管海上发生什么"
+      ],
+      "abstract_move": "明码换挡 + 收入区间与配置清单 + 同级两阵营流水对照 + 财富形态怕风险的限定 + 土地自动产出的耐久对照",
+      "replacement_needs": [
+        "一个有头衔地产等级的收入区间",
+        "一组无头衔同行流水可与之匹敌的对照数字",
+        "两种财富形态(流动货物 vs 固定土地)的抗风险差异"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS12 跨段;回收了前文的悬念 FS06→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "wealth_as_military_power",
+      "start_ratio": 0.7108,
+      "end_ratio": 0.7864,
+      "start_sec": 781.2,
+      "end_sec": 864.2,
+      "position_label": "71.1%–78.6%(13:01–14:24)",
+      "purpose": "第七级(顶级贵族):给出收入量级,点明此级财富开始直接兑换成军事力量——私兵规模使王权如临外敌,金钱即对王座的持续威胁;用具名的「造王者」案例把逻辑推到极值:多郡产业私兵化,两次废立君主,自己不戴王冠却造王废王",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.7706,
+          "time_ms": 846809,
+          "reason": "\"造王者\"以私人军队两次废立国王:私人财富威力的历史极值点,信息与情绪双重高潮"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "threat_reveal",
+          "mechanism": "money_as_threat_to_throne"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "extreme_case",
+          "mechanism": "kingmaker_twice"
+        }
+      ],
+      "required_retention_events": [
+        "level_shift_marker",
+        "wealth_to_power_conversion",
+        "threat_to_crown",
+        "named_case_payoff",
+        "extreme_point_declaration"
+      ],
+      "original_moves": [
+        "明码换挡「第七级,伯爵——大贵族的财富」,给出收入量级(数千镑,多郡地产加法庭费与封臣义务)",
+        "机制点明:此级财富开始直接兑换成军事力量——能召集装备并长期供养数百私兵",
+        "紧张关系:王权监视最富的伯爵如同监视外敌,此级的钱是对王座的持续威胁",
+        "具名案例:「造王者」沃里克,多郡地产构成王国最大私人收入之一,直接换成只效忠他个人的武装",
+        "极值兑现:玫瑰战争中两次废立国王——私人财富的极端点,不戴王冠而造王废王"
+      ],
+      "abstract_move": "明码换挡 + 收入量级 + 财富兑换军事力量的机制 + 王权与巨富的互相监视 + 具名「造王者」案例 + 两次废立的极值兑现 + 不居其位而行其权的点题",
+      "replacement_needs": [
+        "一个顶级贵族等级的收入量级",
+        "一条财富直接兑换武力的供养链证据",
+        "一个私兵化财富两度改变最高权力归属的具名案例"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "crown_cash_paradox",
+      "start_ratio": 0.7856,
+      "end_ratio": 0.8496,
+      "start_sec": 863.3,
+      "end_sec": 933.6,
+      "position_label": "78.6%–85%(14:23–15:34)",
+      "purpose": "第八级(王座):登顶后揭示全片最大悖论——最高权力位置的财政常常不是王国最大的金库,只是法律权威最高;给出好年景预算量级与战争的消耗速度;解释王座转向商人举债的原因:不缺抽象财富、缺的是及时现金;落到「最有权力的财务位置实际欠着无头衔平民的钱」,并用「贸易带来现金、土地变现太慢」收束机制",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "surprise",
+          "strength": 86,
+          "position_ratio": 0.8359,
+          "time_ms": 918557,
+          "reason": "登顶后的终极悖论:王国最有权力的财务位置,在某些时期实际欠着未受封、无地产的平民的钱"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "登顶悖论悬念:梯子顶端的财务位置为何反而缺钱",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "top_paradox_reveal",
+          "opened_in": "FS11"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "top_paradox",
+          "mechanism": "crown_turns_to_merchants"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "paradox_payoff",
+          "mechanism": "crown_owed_commoners"
+        }
+      ],
+      "required_retention_events": [
+        "level_shift_marker",
+        "top_paradox_reveal",
+        "war_drain_math",
+        "borrowing_turn",
+        "cash_vs_land_mechanism"
+      ],
+      "original_moves": [
+        "明码换挡「第八级,王冠」,登顶",
+        "登顶悖论:王室财政常常不是王国最大的金库,只是法律权威最高的那个",
+        "给出量级与消耗:好年景预算数万镑,但百年战争规模的战争能灾难性地快速耗尽岁入",
+        "归因:王冠转向德拉波尔、惠廷顿这类人,不是缺抽象意义的财富,而是最需要现金的当口缺现金",
+        "悖论兑现:王国最强的财务位置,某些时期实际欠着未受封、无地产、未入宫者的钱",
+        "机制收束:贸易带来现金,土地无论多显赫,变现都不够快"
+      ],
+      "abstract_move": "明码换挡登顶 + 顶端非最大金库的悖论 + 预算量级与战争消耗速度 + 缺现金而非缺财富的归因 + 顶端欠底层钱的悖论兑现 + 现金与土地变现速度的机制收束",
+      "replacement_needs": [
+        "一个顶端位置的预算量级数字",
+        "一场能快速耗尽顶端收入的大消耗(战争)",
+        "一个顶端向无头衔者举债的史实",
+        "一条「现金流 vs 资产变现速度」的机制解释"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(86)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "survivorship_honest_caveat",
+      "start_ratio": 0.8487,
+      "end_ratio": 0.9219,
+      "start_sec": 932.7,
+      "end_sec": 1013,
+      "position_label": "84.9%–92.2%(15:33–16:53)",
+      "purpose": "收尾前的诚实纠偏:直言大多数同类叙述略去不讲的部分——两套路径长期分离是偏向既得地位者的制度结果;地产世袭受法律保护,商业财富却可能一个季节蒸发,这正是暴富家族急于把商业财富换成土地与头衔的原因(回收中段的形态差异悬念);再承认幸存者偏差:绝大多数人一生未曾升级,被记住的家族恰恰因为罕见",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "emotional_payoff",
+          "strength": 73,
+          "position_ratio": 0.8979,
+          "time_ms": 986740,
+          "reason": "幸存者偏差纠偏:绝大多数人一生停在原级,被记住的家族恰恰因为罕见——诚实时刻带来的清醒余震"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "causal_explanation_durability",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "honesty_turn",
+          "mechanism": "survivorship_admission"
+        }
+      ],
+      "required_retention_events": [
+        "omission_correction",
+        "system_bias_attribution",
+        "asset_form_contrast",
+        "conversion_motive_reveal",
+        "survivorship_caveat"
+      ],
+      "original_moves": [
+        "纠偏宣告:大多数同类叙述略去不讲的部分,有必要直说",
+        "归因:头衔与金钱长期各走各路,是有利于已有头衔者的制度结果",
+        "对照:地产财富世袭、受保护、有法律保障;羊毛财富一个坏航季、一次市场过剩、一场关闭港口的战争就会蒸发",
+        "动机揭示:所以德拉波尔这类暴富家族总是尽快把贸易财富换成土地与头衔——土地是唯一扛得住一个坏十年的形态",
+        "幸存者偏差:也值得诚实承认,这架梯子每一级上的绝大多数人一生没再往上爬——无地雇工仍是无地雇工,小地主仍是小地主",
+        "点题:德拉波尔、惠廷顿这样的家族被记住,恰恰因为罕见到值得记录"
+      ],
+      "abstract_move": "纠偏宣告 + 双轨分离的制度偏向归因 + 两种财富的法律与风险对照 + 暴富者换资产的动机揭示(回收形态差异悬念) + 幸存者偏差的普遍化承认 + 罕见所以被记录的点题",
+      "replacement_needs": [
+        "一个同类叙述普遍略去的结构性偏向",
+        "一组两种资产的法律保障与风险对照",
+        "一个暴富者急于转换资产形态的动机解释",
+        "一段「绝大多数人从未升级」的诚实承认"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(73);回收了前文的悬念 FS09→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 73
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "ladder_recap_synthesis",
+      "start_ratio": 0.921,
+      "end_ratio": 0.9654,
+      "start_sec": 1012.1,
+      "end_sec": 1060.9,
+      "position_label": "92.1%–96.5%(16:52–17:41)",
+      "purpose": "把整架梯子逐格压缩复述:每一级用一句定性概括(无储备者、薄安全垫、新兴中产、纯靠钱买的地方实权、分岔后的伪装荣誉与商业财富、耐久但常被超越的有头衔地产、权力最大却现金最少的顶端),完成标题承诺的完整兑现",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE26",
+          "event_type": "recap_device",
+          "mechanism": "full_ladder_recap"
+        }
+      ],
+      "required_retention_events": [
+        "catalog_recap",
+        "per_level_one_liner",
+        "fork_recall"
+      ],
+      "original_moves": [
+        "宣告:把整架梯子摆出来",
+        "无地雇工:没有储备,离崩溃只差一个坏月份",
+        "小地主:自给自足带一点安全垫",
+        "约曼:瘟疫后的新中产,富裕且大多无头衔",
+        "富兰克林:只用钱买、无需贵族血统的地方实权",
+        "梯子分岔召回:骑士是伪装成荣誉的财务门槛,商业财富可将它完全遮蔽",
+        "男爵与伯爵:有头衔的地产财富,耐久,但在金钱上常被当代最巨的无头衔财富超越",
+        "王冠在顶端:法律权力比谁都大,现金有时比它赖以开战的羊毛商和服饰商还少"
+      ],
+      "abstract_move": "全梯展开宣告 + 每级一句定性(脆弱性-安全垫-新贵-实权-分岔-伪装荣誉-耐久但被超越-权力大现金少) + 分岔结构召回 + 顶端悖论压缩复述",
+      "replacement_needs": [
+        "每一级一句互不重复的定性概括",
+        "一次对分岔结构的明确召回",
+        "一句顶端悖论的压缩复述"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "two_ladder_closing_reframe",
+      "start_ratio": 0.9648,
+      "end_ratio": 1,
+      "start_sec": 1060.2,
+      "end_sec": 1098.9,
+      "position_label": "96.5%–100%(17:40–18:19)",
+      "purpose": "以「值得记住的想法」收束:复述大众想象中的单梯图景,再给出最终重构——其实是两架并排的梯子,一架建立在土地与血统上,一架建立在贸易与现金上;大多数时候分离,偶尔因巨富买位或落魄者求助而交叉;把价值判断落在「看懂两梯、且金钱有时高于血统的人,名字在数百年后仍被记住」",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "title_callback",
+          "strength": 88,
+          "position_ratio": 0.9739,
+          "time_ms": 1070262,
+          "reason": "结尾重构:不是一架梯子而是两架并排——土地与血统一架,贸易与现金一架,主承诺在此完全闭合"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "worldview_reframe_two_ladders",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "full_catalog_completion",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE27",
+          "event_type": "closing_reframe",
+          "mechanism": "two_ladders_image"
+        }
+      ],
+      "required_retention_events": [
+        "closing_thought_marker",
+        "single_ladder_myth_recall",
+        "two_ladder_reframe",
+        "intersection_condition",
+        "memorable_names_verdict"
+      ],
+      "original_moves": [
+        "收束宣告:这里有一个值得记住的想法",
+        "复述大众想象:中世纪财富是一架单梯,国王在顶、农民在底,头衔标记每一级",
+        "最终重构:其实是两架并排的梯子——一架建在土地与血统上,一架建在贸易与现金上",
+        "交叉条件:大多数时候分离,偶尔在商人富到能买另一架的位置、或领主穷到需要他们帮助时相交",
+        "价值判决:看懂是两架而非一架、且金钱有时高于血统的人,名字在 600 年后仍被真正记住"
+      ],
+      "abstract_move": "收束宣告 + 大众单梯想象复述 + 两架并排梯子的最终重构 + 两梯交叉的条件说明 + 以历史记忆为尺度的价值判决",
+      "replacement_needs": [
+        "一个大众默认的单梯想象",
+        "一个「两架并排梯子」的最终重构意象",
+        "一组两梯交叉的触发条件",
+        "一条以长时间尺度为标准的价值判决"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(88);回收了前文的悬念 FS01→LOOP01、FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

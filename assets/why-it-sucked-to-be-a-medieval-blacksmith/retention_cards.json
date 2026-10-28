@@ -1,0 +1,900 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.822Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "doomed_baseline_setup",
+      "start_ratio": 0,
+      "end_ratio": 0.0561,
+      "start_sec": 0.2,
+      "end_sec": 40.6,
+      "position_label": "0%–5.6%(0:00–0:41)",
+      "purpose": "第二人称宣判出生:家庭阶层、饮食、前途全部注定,以「没有财富没有荣耀只是无名之辈」的代际循环收束,把观众按进窒息基线,为逃离邀约蓄势",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "second_person_drop",
+          "mechanism": "fate_verdict_entry"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "deprivation_punchline",
+          "mechanism": "single_word_negation"
+        }
+      ],
+      "required_retention_events": [
+        "second_person_immersion",
+        "fate_verdict",
+        "deprivation_inventory",
+        "cycle_closure"
+      ],
+      "original_moves": [
+        "宣判你出生在十二世纪的农家,父母是佃农,人生已定死",
+        "列饮食剥夺清单:主要是面包,肉是想都别想的富人专属",
+        "给出唯一的指望:卖力气、效忠领主,也许能有一间小屋",
+        "用「没有财富没有荣耀,只是无名之辈」加子承父业的循环收死这条命"
+      ],
+      "abstract_move": "出生宣判 + 剥夺清单 + 唯一指望的卑微画像 + 代际循环收死",
+      "replacement_needs": [
+        "一个让观众有体感的底层起点身份",
+        "一组日常剥夺事实(饮食、劳作、居住)",
+        "一个代际循环的收束句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "second_person_doomed_fate_verdict_with_escape_tease",
+        "first_stimulus_ms": 240,
+        "first_payoff_ms": 22000,
+        "evidence_refs": [
+          "C0001",
+          "C0010",
+          "C0013"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "escape_offer_hook",
+      "start_ratio": 0.0535,
+      "end_ratio": 0.1138,
+      "start_sec": 38.6,
+      "end_sec": 82.2,
+      "position_label": "5.4%–11.4%(0:39–1:22)",
+      "purpose": "父辈给出唯一出路:城里有一位「富有、受尊重、真正重要」的手艺人愿意收徒;「但有代价,不会容易」的警告钩与「唯一机会」登记为全片主悬念;童年离家完成分离仪式",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 68,
+          "position_ratio": 0.0643,
+          "time_ms": 46480,
+          "reason": "出路宣告与「但有代价」警告同框,希望与恐惧同时拉起"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题代价承诺与全片逐层兑现之间的主悬念",
+          "closes_in": "FS14"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "逃离赌局的成败悬念",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "escape_offer_tease",
+          "mechanism": "change_everything_signal"
+        }
+      ],
+      "required_retention_events": [
+        "escape_offer",
+        "role_model_contrast",
+        "warning_catch",
+        "one_shot_stakes"
+      ],
+      "original_moves": [
+        "父亲透露改变一切的信息:城里有个铁匠愿意收徒",
+        "给铁匠三连画像:有钱、受尊重、真正重要,和父亲完全相反",
+        "附警告钩:这条路不会容易",
+        "宣判这是逃离农家命的唯一机会,八岁送你进城"
+      ],
+      "abstract_move": "改变一切的信息预告 + 成功范本对照画像 + 代价警告钩 + 唯一机会登记 + 幼年离家",
+      "replacement_needs": [
+        "一个真实存在的跃迁通道",
+        "一个可三连画像的成功范本",
+        "一句真实的代价警告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK01(68);打开的悬念 LOOP01→FS14、LOOP02→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 68
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "threshold_shock",
+      "start_ratio": 0.1109,
+      "end_ratio": 0.1714,
+      "start_sec": 80.1,
+      "end_sec": 123.8,
+      "position_label": "11.1%–17.1%(1:20–2:04)",
+      "purpose": "新环境的感官冲击(喧闹、气味、混乱作坊);权威者第一句就是命令——立刻换装开工,无欢迎仪式;用「锤声成为摇篮曲」式冷幽默完成幻想粉碎,反讽恭喜开启学徒身份",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE04",
+          "event_type": "barked_order",
+          "mechanism": "no_welcome_threshold"
+        }
+      ],
+      "required_retention_events": [
+        "sensory_overload",
+        "barked_order",
+        "no_welcome_ritual",
+        "deadpan_lullaby",
+        "ironic_congratulation"
+      ],
+      "original_moves": [
+        "城市感官冲击:吵、挤、混杂着牲口汗味与火味",
+        "到作坊:一片混乱,全是和你一样的孩子",
+        "铁匠第一句就是命令:换衣服干活,没有欢迎仪式",
+        "冷幽默落点:锤声从此是你的摇篮曲",
+        "反讽恭喜:你现在是学徒了"
+      ],
+      "abstract_move": "新环境感官冲击 + 权威者命令式第一句 + 无欢迎仪式落差 + 冷幽默落点 + 反讽恭喜",
+      "replacement_needs": [
+        "一组可感的五感细节",
+        "一句权威者的真实命令",
+        "一个依附事实的冷幽默点"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "ordeal_catalog_apprenticeship",
+      "start_ratio": 0.1683,
+      "end_ratio": 0.3056,
+      "start_sec": 121.6,
+      "end_sec": 220.8,
+      "position_label": "16.8%–30.6%(2:02–3:41)",
+      "purpose": "学徒期苦役清单:打杂与日夜劳作、随时被退回原点的达摩克利斯之剑、幼年身体代价的冷面吐槽、报酬只有食物的生存要挟、三个具象同侪的竞争点名、犯规即挨饿的规则,以压缩比喻落地",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "humor_peak",
+          "strength": 66,
+          "position_ratio": 0.1974,
+          "time_ms": 142560,
+          "reason": "幼年身体代价的冷面吐槽,苦役清单的第一个情绪爆点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "身体代价的长线伏笔,嵌套于主代价承诺之下",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "deadpan_pain_gag",
+          "mechanism": "understatement_humor"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "rival_roll_call",
+          "mechanism": "named_competition"
+        }
+      ],
+      "required_retention_events": [
+        "ordeal_inventory",
+        "sword_of_damocles",
+        "pain_gag",
+        "food_as_wage",
+        "rival_roll_call",
+        "starvation_rule",
+        "compressed_metaphor"
+      ],
+      "original_moves": [
+        "列学徒苦役清单:打水、搬炭、拉风箱,从天黑干到天亮",
+        "立达摩克利斯之剑:偷懒就滚回农场铲粪,外面一堆孩子等着顶替你",
+        "冷面吐槽:十岁就有了腰背痛和关节痛",
+        "揭示报酬规则:不给钱只给饭,证明你值每一片面包",
+        "点名三个竞争对手:谄媚的、有门第的、天才",
+        "讲犯规惩罚:加工时或直接挨饿",
+        "压缩比喻落地:学徒就是一边抛接刀子一边踩蛋壳"
+      ],
+      "abstract_move": "苦役清单 + 退回原点威胁 + 身体代价冷吐槽 + 报酬即生存规则 + 同侪竞争点名 + 违规惩罚 + 压缩比喻落地",
+      "replacement_needs": [
+        "一份真实苦役清单",
+        "一个退回原点的惩罚机制",
+        "一组同侪竞争者画像",
+        "一个压缩全段处境的比喻"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(66);打开的悬念 LOOP05→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 66
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "level_up_milestone",
+      "start_ratio": 0.303,
+      "end_ratio": 0.367,
+      "start_sec": 218.9,
+      "end_sec": 265.1,
+      "position_label": "30.3%–36.7%(3:39–4:25)",
+      "purpose": "多年跨度压缩后出师:从打杂到真正干活,野心护体抗住消耗,里程碑年龄宣判新身份,师父亲自认可——为二选一抉择蓄能",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "age_milestone",
+          "mechanism": "level_up_payoff"
+        }
+      ],
+      "required_retention_events": [
+        "time_lapse",
+        "real_work_grant",
+        "ambition_shield",
+        "age_milestone",
+        "master_acknowledgment"
+      ],
+      "original_moves": [
+        "多年压缩:终于不再是打杂,开始真正修武器修工具",
+        "写内心:热度、疲惫和竞争只是扎不破野心的小针",
+        "里程碑宣判:十五岁,你出师了,你是真正的铁匠了",
+        "师父把你叫过去,当面认可"
+      ],
+      "abstract_move": "多年压缩 + 从杂役到实作的转变 + 内心护盾句 + 里程碑宣判 + 权威认可动作",
+      "replacement_needs": [
+        "一个可压缩的训练时长",
+        "一个从打杂到实作的标志事件",
+        "一个权威认可的仪式动作"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "fork_choice_gamble",
+      "start_ratio": 0.3625,
+      "end_ratio": 0.4305,
+      "start_sec": 261.8,
+      "end_sec": 311,
+      "position_label": "36.3%–43.1%(4:22–5:11)",
+      "purpose": "师父摊牌二选一:留下=安稳饭碗,离开=漂泊赌局;犹豫拍后追加「也许还收你回来,也许」的不确定甜枣;主角选择赌局,全片最大决策张力在此释放",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "suspense",
+          "strength": 74,
+          "position_ratio": 0.3731,
+          "time_ms": 269520,
+          "reason": "安稳与赌局二选一摊牌,全片最大决策张力"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "uncertain_sweetener",
+          "mechanism": "might_no_promises"
+        }
+      ],
+      "required_retention_events": [
+        "binary_choice",
+        "security_vs_destiny",
+        "hesitation_beat",
+        "uncertain_sweetener",
+        "risk_commitment"
+      ],
+      "original_moves": [
+        "师父摊牌二选一:留下,有工资有铁饭碗;离开,做流动匠人赌一把",
+        "给赌局画像:可能出人头地,也可能无家可归挨饿",
+        "你犹豫:安稳很好,自己闯也很好",
+        "师父追加甜枣:漂泊几年后也许还收你回来——也许,不保证",
+        "你被推过临界点:选赌局"
+      ],
+      "abstract_move": "二选一摊牌 + 安稳路画像 + 赌局路画像 + 犹豫拍 + 不确定甜枣 + 选择落定",
+      "replacement_needs": [
+        "一组真实的安稳与赌局选项",
+        "一个不确定的甜枣条件",
+        "一个推过临界点的理由"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "rock_bottom_ordeal",
+      "start_ratio": 0.4275,
+      "end_ratio": 0.5517,
+      "start_sec": 308.8,
+      "end_sec": 398.6,
+      "position_label": "42.8%–55.2%(5:09–6:39)",
+      "purpose": "旁白抢先判死刑「大错,你马上就知道」:数周无人雇佣、零工清单、住处冷幽默、首单只换一顿饭、形同乞丐、认真考虑爬回去——谷底四连;结尾运气转折给出有偿工作",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "humor_peak",
+          "strength": 64,
+          "position_ratio": 0.4893,
+          "time_ms": 353440,
+          "reason": "谷底住处的自嘲式冷幽默,绝望中的笑声缓冲"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "旁白判死刑式反讽制造的选择质疑",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "narrator_doomsday",
+          "mechanism": "dramatic_irony_verdict"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "crawl_back_temptation",
+          "mechanism": "lowest_point_confession"
+        }
+      ],
+      "required_retention_events": [
+        "narrator_doomsday",
+        "rejection_streak",
+        "menial_inventory",
+        "rock_bottom_humor",
+        "meal_wage_gig",
+        "beggar_look",
+        "crawl_back_temptation",
+        "luck_turn"
+      ],
+      "original_moves": [
+        "旁白抢先判死刑:你拒了铁饭碗,大错,你马上就知道",
+        "数周没人雇你:没钱、没饭、没住处",
+        "零工清单加冷幽默:睡过街角马厩,还有一堆你真希望不是厕所的干草堆",
+        "首单只换一顿饭:给农夫修锄头",
+        "又一周空窗,你看起来不像铁匠像乞丐",
+        "认真考虑爬回去求师父,只为一口饭",
+        "运气转折:终于有活干,这次真给钱"
+      ],
+      "abstract_move": "旁白判死刑预告 + 失业时间跨度 + 零工与住处清单(含自嘲幽默) + 廉价首单 + 身份错位镜像 + 爬回去的诱惑 + 运气转折",
+      "replacement_needs": [
+        "一段真实的失业与零工经历",
+        "一个自嘲式谷底细节",
+        "一次廉价首单的屈辱定价",
+        "一个运气或能力的转折点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(64);打开的悬念 LOOP03→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 64
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "competence_climb_montage",
+      "start_ratio": 0.5471,
+      "end_ratio": 0.6226,
+      "start_sec": 395.2,
+      "end_sec": 449.8,
+      "position_label": "54.7%–62.3%(6:35–7:30)",
+      "purpose": "攀升蒙太奇:有偿首单一单接一单,攒钱并再投资于进修,强势回归被宣判为「极好的一位」,名声带来排队雇佣;段尾以「听起来很棒对吧?错了。」急刹反转,把攀升动能接入危险段",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 78,
+          "position_ratio": 0.5954,
+          "time_ms": 430080,
+          "reason": "回归即被宣判「极好的一位」,赌局兑现的情绪回报"
+        },
+        {
+          "peak_id": "PK06",
+          "peak_type": "surprise",
+          "strength": 80,
+          "position_ratio": 0.615,
+          "time_ms": 444280,
+          "reason": "先肯定再否定的急刹加「人即武器」定位反转,名声兑现为危险"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "return_triumph",
+          "mechanism": "damn_good_verdict"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "affirmation_reversal",
+          "mechanism": "sounds_great_wrong"
+        }
+      ],
+      "required_retention_events": [
+        "paid_gig_chain",
+        "coin_by_coin_climb",
+        "skill_investment",
+        "return_triumph",
+        "reputation_spread",
+        "affirmation_reversal"
+      ],
+      "original_moves": [
+        "有偿首单之后一单接一单,几个月从活不下去到真赚钱",
+        "你不只攒钱还投资:跑别的镇子学高级手艺",
+        "越值钱越回来:回城时你已是极好的一位,名声传开",
+        "排队雇佣清单:贵族、雇佣兵、将军",
+        "急刹反转:听起来很棒对吧?错了"
+      ],
+      "abstract_move": "有偿首单 + 接单蒙太奇 + 攒钱再投资 + 进修扩技能 + 回归宣判 + 名声排队 + 急刹反转",
+      "replacement_needs": [
+        "一条可信的技能变现链",
+        "一个再投资动作",
+        "一组排队上门的客户画像",
+        "一个高点急刹的反转钩"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(78)、PK06(80)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 78
+        },
+        {
+          "peak_id": "PK06",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "success_danger_reversal",
+      "start_ratio": 0.6201,
+      "end_ratio": 0.6792,
+      "start_sec": 447.9,
+      "end_sec": 490.6,
+      "position_label": "62%–67.9%(7:28–8:11)",
+      "purpose": "名声的阴暗面:权贵不谈判只掠夺,乱世逼近,主角本人成了「值钱的武器」;绑架风声→消失躲藏→侥幸脱身,当段开环当段闭合,证明成功引来的不是订单而是猎手",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "成名后人身安全的即时威胁",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "kidnap_whisper",
+          "mechanism": "person_as_weapon_threat"
+        }
+      ],
+      "required_retention_events": [
+        "takers_not_negotiators",
+        "war_stakes",
+        "person_as_weapon",
+        "kidnap_whisper",
+        "disappearance_gambit",
+        "narrow_escape"
+      ],
+      "original_moves": [
+        "揭权力规则:这些人不谈判不签合同,直接拿",
+        "时代背景:内战正在酝酿,铁匠本身成了值钱的武器",
+        "绑架风声:有人想绑你,落到他们手里就是一辈子当奴隶打铁",
+        "你消失一个月躲起来,侥幸没被抓到,风波过后你仍然自由"
+      ],
+      "abstract_move": "不谈判只掠夺的权力规则 + 乱世背景 + 人即资源定位反转 + 绑架风声 + 消失动作 + 侥幸脱身",
+      "replacement_needs": [
+        "一套强者掠夺的规则事实",
+        "一个抬高主角战略价值的时代背景",
+        "一次具体的人身威胁与脱身方式"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP04→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "summit_dream_achieved",
+      "start_ratio": 0.6766,
+      "end_ratio": 0.7491,
+      "start_sec": 488.7,
+      "end_sec": 541.1,
+      "position_label": "67.7%–74.9%(8:09–9:01)",
+      "purpose": "漂泊期正式结束,被大人物聘为专属匠人:自建作坊、豪宅、仆人、锦衣玉食——童年梦想全额兑现,「你赢了」宣判;句尾铰链「但成功有价」接入代价段",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "emotional_payoff",
+          "strength": 85,
+          "position_ratio": 0.7325,
+          "time_ms": 529120,
+          "reason": "童年梦想全额兑现加胜利宣判,全片情绪最高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "vindication_after_ordeal",
+          "opened_in": "FS07"
+        },
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "narrow_escape_relief",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "victory_plus_price_hinge",
+          "mechanism": "dream_then_bill"
+        }
+      ],
+      "required_retention_events": [
+        "era_closure",
+        "patron_signing",
+        "own_establishment",
+        "luxury_inventory",
+        "dream_confirmed",
+        "victory_declaration",
+        "success_price_hinge"
+      ],
+      "original_moves": [
+        "宣判漂泊期正式结束:二十二岁,你是师傅级人物了",
+        "被大人物收编:领主聘你做专属铁匠",
+        "兑现清单:自建作坊、豪宅、仆人、最好的衣食酒",
+        "梦想确认加应得宣判:这就是你童年梦想的生活,你挣来的,你赢了",
+        "铰链句:但成功有价"
+      ],
+      "abstract_move": "时代结束宣判 + 权势收编 + 梦想清单全额兑现 + 应得感宣判 + 代价铰链",
+      "replacement_needs": [
+        "一个收编主角的权势方",
+        "一份与开篇基线对照的兑现清单",
+        "一句承上启下的代价铰链"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(85);回收了前文的悬念 FS07→LOOP03、FS09→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "crown_cost_burden",
+      "start_ratio": 0.746,
+      "end_ratio": 0.83,
+      "start_sec": 538.9,
+      "end_sec": 599.6,
+      "position_label": "74.6%–83%(8:59–10:00)",
+      "purpose": "价的兑现:千件级订单,战争胜负系于一身;雇人建团队变成机器,作坊作息回环学徒期——「区别只是不吃陈面包了」的回环句;名声到全城心脏、全国第一",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "title_callback",
+          "strength": 74,
+          "position_ratio": 0.7965,
+          "time_ms": 575360,
+          "reason": "作坊作息回环学徒期,标题的「糟」在顶点再次兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "goal_achievement_declaration",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "war_scale_orders",
+        "wars_depend_on_you",
+        "workforce_machine",
+        "apprentice_days_callback",
+        "stale_bread_upgrade",
+        "city_heartbeat",
+        "national_first"
+      ],
+      "original_moves": [
+        "订单规模:领主需要成千件武器,不止打仗还要装备他的地盘与士兵",
+        "责任升级:整个战争取决于你打铁有多快多强",
+        "你雇人建团队,把自己变成一台机器,还是不够用",
+        "回环句:作坊从天亮烧到天黑,跟学徒时一样,区别只是你不再吃陈面包了",
+        "地位封顶:全城的心脏,全国最重要的铁匠"
+      ],
+      "abstract_move": "规模化订单 + 胜负系于一身的责任 + 建团队变机器 + 作息回环对照 + 地位封顶",
+      "replacement_needs": [
+        "一个规模化需求的来源",
+        "一个胜负系于一身的责任事实",
+        "一组与开篇作息的回环细节"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(74);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "legacy_arena_shift",
+      "start_ratio": 0.8249,
+      "end_ratio": 0.9127,
+      "start_sec": 595.8,
+      "end_sec": 659.3,
+      "position_label": "82.5%–91.3%(9:56–10:59)",
+      "purpose": "战争结束时代换挡:行会出现,主角全力支持并被推为行会首领;战场从手艺切换到密室交易与权贵博弈——「你以为打铁累?试试跟权欲熏心的人打交道」的反问完成疲劳对比",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "peace_turn",
+          "mechanism": "era_shift"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "fatigue_comparison",
+          "mechanism": "arena_reframe_question"
+        }
+      ],
+      "required_retention_events": [
+        "peace_turn",
+        "guild_formation",
+        "pay_it_forward_motive",
+        "guild_head_appointment",
+        "arena_shift_reframe",
+        "politics_grind"
+      ],
+      "original_moves": [
+        "战争结束,稳定带来组织化,行会成立",
+        "你全力支持:你亲历过这条路有多难,行会能护住后来的学徒",
+        "你被推为本城行会首领,从手艺人变成政治人物",
+        "新战场画像:密室交易、贵族博弈、维持行会的持续压力",
+        "疲劳对比反问:你以为打铁累?试试跟权欲熏心的贵族打交道"
+      ],
+      "abstract_move": "时代换挡 + 组织出现 + 回馈后来者的动机 + 首领任命 + 新战场画像 + 疲劳对比反问",
+      "replacement_needs": [
+        "一个制度化的历史转折",
+        "一个主角回馈后来者的动机",
+        "一组新战场的博弈细节"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "mortality_bill_reveal",
+      "start_ratio": 0.9094,
+      "end_ratio": 0.9652,
+      "start_sec": 656.9,
+      "end_sec": 697.2,
+      "position_label": "90.9%–96.5%(10:57–11:37)",
+      "purpose": "身体报警三连(咳、僵、抖),硬撑到撑不住;医生诊断=职业中毒,无解;「这行大多活不过某个岁数,你只差几年」的寿命统计;平静接受——把标题的「糟」落到终极账单",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "information_reveal",
+          "strength": 92,
+          "position_ratio": 0.9331,
+          "time_ms": 674040,
+          "reason": "职业中毒诊断加无解宣判加寿命统计,标题代价的终极落地"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "foreshadowed_occupational_bill",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "diagnosis_reveal",
+          "mechanism": "occupational_bill"
+        }
+      ],
+      "required_retention_events": [
+        "body_alarm_triplet",
+        "push_through_until_cant",
+        "diagnosis_reveal",
+        "no_cure",
+        "lifespan_statistic",
+        "age_check",
+        "peaceful_acceptance"
+      ],
+      "original_moves": [
+        "身体报警三连:咳得凶、背僵得弯不下、手抖像泡了冰水",
+        "硬撑到撑不住才去看医生",
+        "诊断:铅中毒,一辈子吸入毒烟摸金属的账到期了,无解",
+        "寿命统计:这行大多活不过五十,你四十七",
+        "平静接受:你知道接下来是什么"
+      ],
+      "abstract_move": "身体报警三连 + 硬撑到撑不住 + 诊断揭晓 + 无解宣判 + 寿命统计对照 + 平静接受",
+      "replacement_needs": [
+        "一组与职业因果相连的身体症状",
+        "一个无解的诊断",
+        "一个行业寿命统计与主角年龄的对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(92);回收了前文的悬念 FS04→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 92
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "legacy_transcendent_closure",
+      "start_ratio": 0.9618,
+      "end_ratio": 1,
+      "start_sec": 694.8,
+      "end_sec": 722.4,
+      "position_label": "96.2%–100%(11:35–12:02)",
+      "purpose": "遗产清算:门徒、因手艺而兴的城、保护后来者的行会;身体失败但火种不灭;临终画面全城锤声轰鸣;身份重构金句「从来不只是个匠人,是塑造帝国的火」闭合主承诺",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "worldview_shift",
+          "strength": 88,
+          "position_ratio": 0.9903,
+          "time_ms": 715360,
+          "reason": "「从来不只是个匠人,是塑造帝国的火」身份升维收束"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "cumulative_cost_ledger_with_peaceful_acceptance",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "deathbed_sound",
+          "mechanism": "legacy_closure_image"
+        }
+      ],
+      "required_retention_events": [
+        "legacy_inventory",
+        "fires_never_out",
+        "deathbed_city_sound",
+        "identity_reframe_eulogy"
+      ],
+      "original_moves": [
+        "遗产清算:教出几十个学徒、一座因你手艺而兴的城、一个护住后世铁匠的行会",
+        "对照句:身体在失败,但你点的火永远不会灭",
+        "临终画面:你咽下最后一口气时,全城锤声轰鸣",
+        "重构金句:你从来不只是个铁匠,你是塑造一个帝国的火"
+      ],
+      "abstract_move": "遗产清算清单 + 身体失败与火种不灭对照 + 临终画面声音设计 + 身份重构金句",
+      "replacement_needs": [
+        "一份可清算的遗产清单(人、物、制度)",
+        "一个身体与遗产的对照句",
+        "一句先否定旧身份再升维的重构金句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(88);回收了前文的悬念 FS02→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 88
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

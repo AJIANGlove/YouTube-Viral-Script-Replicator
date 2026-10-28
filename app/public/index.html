@@ -65,8 +65,15 @@
   .asset-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 2px 12px; }
   .asset-toolbar input[type=text] { width: 240px; }
   .asset-toolbar select { width: auto; }
-  #lib-channels, #gen-channels { display: inline-flex; flex-wrap: nowrap; overflow-x: auto; max-width: 100%; }
+  /* 频道行独占一行、单行横向滚动（原来跟排序框挤同一行，21 个频道会被压得只剩两三个可见） */
+  #lib-channels, #gen-channels { flex: 0 0 100%; display: inline-flex; flex-wrap: nowrap; overflow-x: auto; max-width: 100%; padding-bottom: 2px; }
   #lib-channels .chip, #gen-channels .chip { flex: 0 0 auto; margin-top: 0; }
+  /* 分类行独占一整行,允许换行(5 个 chip 通常一行放得下) */
+  #lib-tracks, #gen-tracks { flex: 0 0 100%; display: inline-flex; flex-wrap: wrap; }
+  #lib-tracks .chip, #gen-tracks .chip { flex: 0 0 auto; margin-top: 0; }
+  #lib-tracks:empty, #gen-tracks:empty { display: none; }
+  .filter-reset { color: #2563eb; cursor: pointer; }
+  .filter-reset:hover { text-decoration: underline; }
   .chip.on { background: #2563eb; border-color: #2563eb; color: #fff; }
   .channel-head { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 8px; margin: 6px 0 -4px; padding: 4px 2px 6px; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; background: #fff; z-index: 4; }
   .channel-head .channel-name { font-size: 15px; font-weight: 650; color: #111827; }
@@ -309,8 +316,11 @@
   .topic-card.selected .topic-check { visibility: visible; }
   .flash { animation: flashborder 1.2s ease; }
   @keyframes flashborder { 0%,100% { box-shadow: none; } 30% { box-shadow: 0 0 0 3px rgba(37,99,235,.35); border-color: #2563eb; } }
-  .chip { display: inline-block; font-size: 12px; padding: 3px 10px; margin: 5px 6px 0 0; border: 1px solid #d1d5db; border-radius: 999px; color: #374151; cursor: pointer; background: #fff; }
+  .chip { display: inline-block; font-size: 12px; padding: 3px 10px; margin: 5px 6px 0 0; border: 1px solid #d1d5db; border-radius: 999px; color: #374151; cursor: pointer; background: #fff; font-variant-numeric: tabular-nums; }
   .chip:hover { border-color: #2563eb; color: #2563eb; }
+  /* 该筛选组合下没有内容:置灰不可点,位置保留,避免整行跳动 */
+  .chip.off { color: #9ca3af; border-color: #e5e7eb; background: #f9fafb; cursor: not-allowed; }
+  .chip.off:hover { border-color: #e5e7eb; color: #9ca3af; }
   .topics-err { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 8px 0; }
   /* 指纹检测面板与 V1.5/V2.5 */
   .script-col { display: flex; flex-direction: column; }
@@ -348,7 +358,6 @@
   .fp-pop-reason { font-size: 12px; color: #92400e; background: #fffbeb; border-radius: 4px; padding: 4px 8px; margin-bottom: 6px; line-height: 1.5; }
   .fp-zh { font-size: 12px; color: #6b7280; margin: 2px 0 6px; line-height: 1.5; }
   .fp-pop-ops { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
-  .fp-chip-off { opacity: .45; }
   .fp-legacy { font-size: 12px; color: #92400e; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 5px; padding: 6px 10px; margin: 8px 0; }
   /* 商业化检查面板与内嵌高亮(复用 fp 面板结构,独立配色) */
   .cp-summary { border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px 12px; margin: 8px 0; background: #fafafa; }
@@ -439,8 +448,23 @@
   .vb-none { color: #cbd5e1; }
   .video-cell { font-size: 12px; line-height: 1.5; }
   .video-cell .ver { font-size: 11px; color: #6b7280; margin-left: 4px; }
+  /* 确认文案版本:正向结果用绿色(红色在本项目已固定表示失败/危险) */
+  .cf-ver { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 999px; background: #d1fae5; color: #047857; white-space: nowrap; }
+  button.cf-btn { padding: 6px 12px; border: 1px solid #059669; border-radius: 5px; font-size: 12px; cursor: pointer; background: #059669; color: #fff; font-weight: 600; }
+  button.cf-btn:hover { background: #047857; border-color: #047857; }
+  button.cf-btn.on { background: #ecfdf5; color: #047857; border-color: #6ee7b7; }
+  button.cf-btn.on:hover { background: #d1fae5; }
+  button.cf-btn.stale { background: #fffbeb; color: #b45309; border-color: #fcd34d; }
+  button.cf-btn.stale:hover { background: #fef3c7; }
+  .cf-pill { display: inline-block; margin-left: 8px; font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 999px; background: #d1fae5; color: #047857; vertical-align: 1px; }
+  .cf-pill.stale { background: #fef3c7; color: #b45309; }
+  .cf-pill.hidden { display: none; }
+  /* 卡片标题行:标题不换行;按钮多时整体右对齐换行,不会把标题挤成两行 */
+  #detail-scripts h2 { gap: 10px; }
+  #detail-scripts h2 > span:first-child { flex-shrink: 0; white-space: nowrap; }
+  #detail-scripts h2 > span:last-child { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; align-items: center; }
   #view-runs .card { overflow-x: auto; }
-  .runs-table { min-width: 1120px; }
+  .runs-table { min-width: 1180px; }
   .script-peek { margin-top: 8px; max-height: 132px; overflow-y: auto; white-space: pre-wrap; font-size: 12px; line-height: 1.6;
     color: #374151; background: #fafafa; border: 1px solid #eef0f3; border-radius: 6px; padding: 8px 10px; }
   .bind-state { font-size: 12px; line-height: 1.7; }
@@ -473,6 +497,7 @@
         <option value="wpm">语速快</option>
         <option value="chapters">章数多</option>
       </select>
+      <span id="lib-tracks"></span>
       <span id="lib-channels"></span>
     </div>
     <div class="grid" id="asset-list"></div>
@@ -497,6 +522,7 @@
           <option value="wpm">语速快</option>
           <option value="chapters">章数多</option>
         </select>
+        <span id="gen-tracks"></span>
         <span id="gen-channels"></span>
       </div>
       <div id="gen-asset-list" class="grid"></div>
@@ -629,16 +655,17 @@
     <div class="card" style="padding:6px 16px 12px">
       <table class="runs-table">
         <thead><tr>
-          <th style="width:19%">主题</th>
-          <th style="width:15%">框架</th>
-          <th style="width:12%">目标</th>
-          <th style="width:8%">频道</th>
+          <th style="width:18%">主题</th>
+          <th style="width:13%">框架</th>
+          <th style="width:10%">目标</th>
+          <th style="width:7%">频道</th>
           <th style="width:7%">状态</th>
+          <th style="width:7%">确认文案版本</th>
           <th style="width:9%">是否生成视频</th>
           <th style="width:5%">步骤</th>
           <th style="width:9%">创建时间</th>
           <th style="width:9%">结束时间</th>
-          <th style="width:8%">操作</th>
+          <th style="width:7%">操作</th>
         </tr></thead>
         <tbody id="runs-tbody"></tbody>
       </table>
@@ -664,7 +691,7 @@
     <div id="detail-scripts" class="script-grid">
       <div class="script-col">
         <div class="card hidden" id="detail-final-card">
-          <h2 style="display:flex;justify-content:space-between;align-items:center">V1文案
+          <h2 style="display:flex;justify-content:space-between;align-items:center"><span>V1文案<span class="cf-pill hidden" id="cf-pill-v1">已确认</span></span>
             <span>
               <button class="ghost" id="desc-btn-v1" onclick="genDescription('v1')">生成简介</button>
               <button class="ghost" id="fp-btn-v1" onclick="openFpPanel('v1')">指纹检测</button>
@@ -675,6 +702,8 @@
               <button class="ghost video-btn" id="vd-btn-v1" onclick="openVideoDialog('v1')" title="推送该版本文案到视频网站（存草稿 / 自动生视频）"><svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>视频</button>
               <button class="ghost v13" onclick="downloadCleanScript('detail-final')" title="只有口播正文:去掉章节标签、标题行、分隔线">下载纯净稿</button>
               <button class="primary" onclick="copyScript('detail-final', this)" title="复制纯净稿:去掉章节标签、标题行、分隔线">复制</button>
+              <span class="btn-sep" aria-hidden="true"></span>
+              <button class="cf-btn" id="cf-btn-v1" onclick="confirmVersion('v1')" title="把这一版标为最终交付版本(再点一次取消)">确认此版本</button>
             </span>
           </h2>
           <div class="mono" id="detail-final"></div>
@@ -682,7 +711,7 @@
           <div class="desc-box hidden" id="ob-box-v1"></div>
         </div>
         <div class="card v15 hidden" id="detail-v15-card">
-          <h2 style="display:flex;justify-content:space-between;align-items:center">V1.5文案
+          <h2 style="display:flex;justify-content:space-between;align-items:center"><span>V1.5文案<span class="cf-pill hidden" id="cf-pill-v1_5">已确认</span></span>
             <span>
               <button class="ghost" id="desc-btn-v1_5" onclick="genDescription('v1_5')">生成简介</button>
               <button class="ghost" id="cp-btn-v1_5" onclick="openCpPanel('v1_5')">YouTube 商业化检查</button>
@@ -692,6 +721,8 @@
               <button class="ghost video-btn" id="vd-btn-v1_5" onclick="openVideoDialog('v1_5')" title="推送该版本文案到视频网站（存草稿 / 自动生视频）"><svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>视频</button>
               <button class="ghost v13" onclick="downloadCleanScript('detail-v15')" title="只有口播正文:去掉章节标签、标题行、分隔线">下载纯净稿</button>
               <button class="primary" onclick="copyScript('detail-v15', this)" title="复制纯净稿:去掉章节标签、标题行、分隔线">复制</button>
+              <span class="btn-sep" aria-hidden="true"></span>
+              <button class="cf-btn" id="cf-btn-v1_5" onclick="confirmVersion('v1_5')" title="把这一版标为最终交付版本(再点一次取消)">确认此版本</button>
             </span>
           </h2>
           <div class="mono" id="detail-v15"></div>
@@ -701,7 +732,7 @@
       </div>
       <div class="script-col">
         <div class="card hidden" id="detail-v2-card">
-          <h2 style="display:flex;justify-content:space-between;align-items:center">V2文案(已强化开头)
+          <h2 style="display:flex;justify-content:space-between;align-items:center"><span>V2文案(已强化开头)<span class="cf-pill hidden" id="cf-pill-v2">已确认</span></span>
             <span>
               <button class="ghost" id="desc-btn-v2" onclick="genDescription('v2')">生成简介</button>
               <button class="ghost" id="fp-btn-v2" onclick="openFpPanel('v2')">指纹检测</button>
@@ -712,6 +743,8 @@
               <button class="ghost video-btn" id="vd-btn-v2" onclick="openVideoDialog('v2')" title="推送该版本文案到视频网站（存草稿 / 自动生视频）"><svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>视频</button>
               <button class="ghost v13" onclick="downloadCleanScript('detail-v2')" title="只有口播正文:去掉章节标签、标题行、分隔线">下载纯净稿</button>
               <button class="primary" onclick="copyScript('detail-v2', this)" title="复制纯净稿:去掉章节标签、标题行、分隔线">复制</button>
+              <span class="btn-sep" aria-hidden="true"></span>
+              <button class="cf-btn" id="cf-btn-v2" onclick="confirmVersion('v2')" title="把这一版标为最终交付版本(再点一次取消)">确认此版本</button>
             </span>
           </h2>
           <div class="mono" id="detail-v2"></div>
@@ -719,7 +752,7 @@
           <div class="desc-box hidden" id="ob-box-v2"></div>
         </div>
         <div class="card v15 hidden" id="detail-v25-card">
-          <h2 style="display:flex;justify-content:space-between;align-items:center">V2.5文案
+          <h2 style="display:flex;justify-content:space-between;align-items:center"><span>V2.5文案<span class="cf-pill hidden" id="cf-pill-v2_5">已确认</span></span>
             <span>
               <button class="ghost" id="desc-btn-v2_5" onclick="genDescription('v2_5')">生成简介</button>
               <button class="ghost" id="cp-btn-v2_5" onclick="openCpPanel('v2_5')">YouTube 商业化检查</button>
@@ -729,6 +762,8 @@
               <button class="ghost video-btn" id="vd-btn-v2_5" onclick="openVideoDialog('v2_5')" title="推送该版本文案到视频网站（存草稿 / 自动生视频）"><svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>视频</button>
               <button class="ghost v13" onclick="downloadCleanScript('detail-v25')" title="只有口播正文:去掉章节标签、标题行、分隔线">下载纯净稿</button>
               <button class="primary" onclick="copyScript('detail-v25', this)" title="复制纯净稿:去掉章节标签、标题行、分隔线">复制</button>
+              <span class="btn-sep" aria-hidden="true"></span>
+              <button class="cf-btn" id="cf-btn-v2_5" onclick="confirmVersion('v2_5')" title="把这一版标为最终交付版本(再点一次取消)">确认此版本</button>
             </span>
           </h2>
           <div class="mono" id="detail-v25"></div>
@@ -869,7 +904,27 @@ async function api(url, opts) {
 
 // ---------- 资产库 ----------
 let libAssets = [];
-const libFilter = { q: '', channel: '', sort: '' };
+const libFilter = { q: '', channel: '', track: '', sort: '' };
+
+// 框架分类(按终审 5 赛道人工归类):顺序即 chip 顺序,由 /api/assets 的 tracks 下发
+// DEFAULT_TRACKS 仅作旧接口兜底与中文名后备
+const DEFAULT_TRACKS = [
+  { key: 'econ', name: '经济拆账' },
+  { key: 'history', name: '历史与古人' },
+  { key: 'pov', name: 'POV 与等级沉浸' },
+  { key: 'science', name: '心理与动物科普' },
+  { key: 'general', name: '通用' }
+];
+let assetTracks = DEFAULT_TRACKS;
+
+// 兼容 /api/assets 两种返回:{ items, tracks } 或旧版直接数组
+function normalizeAssetPayload(d) {
+  if (Array.isArray(d)) return { items: d, tracks: DEFAULT_TRACKS };
+  return {
+    items: (d && d.items) || [],
+    tracks: (d && d.tracks && d.tracks.length) ? d.tracks : DEFAULT_TRACKS
+  };
+}
 
 const CONTENT_TYPE_LABELS = {
   business_economics_explainer: '商业经济解说',
@@ -901,21 +956,30 @@ function hl(text, q) {
 }
 
 async function loadAssets() {
-  libAssets = await api('/api/assets');
-  document.getElementById('asset-count').textContent = libAssets.length ? `共 ${libAssets.length} 个框架` : '';
+  const norm = normalizeAssetPayload(await api('/api/assets'));
+  libAssets = norm.items;
+  assetTracks = norm.tracks;
   renderLibList();
 }
 
 function renderLibList() {
   document.getElementById('lib-search').value = libFilter.q;
   document.getElementById('lib-sort').value = libFilter.sort;
-  document.getElementById('lib-channels').innerHTML = channelChipsHtml(libAssets, libFilter, 'lib');
+  // 分面计数：分类行按「频道 + 搜索」算，频道行按「分类 + 搜索」算，本行自身的选中不影响自己的数字
+  const trackBase = facetBase(libAssets, libFilter, 'track');
+  const channelBase = facetBase(libAssets, libFilter, 'channel');
+  document.getElementById('lib-tracks').innerHTML = trackChipsHtml(libAssets, trackBase, libFilter, 'lib');
+  document.getElementById('lib-channels').innerHTML = channelChipsHtml(libAssets, channelBase, libFilter, 'lib');
   const filtered = sortAssets(libAssets.filter(a => assetMatches(a, libFilter)), libFilter.sort);
-  document.getElementById('asset-list').innerHTML = filtered.length ? groupedAssetHtml(filtered, false, libFilter.q) : '<div class="hint">没有匹配的框架。</div>';
+  document.getElementById('asset-count').textContent = assetCountText(libAssets.length, filtered.length);
+  document.getElementById('asset-list').innerHTML = filtered.length ? groupedAssetHtml(filtered, false, libFilter.q) : emptyStateHtml(libFilter, 'lib');
 }
 
 function assetMatches(a, f) {
-  if (f.channel && (a.channel || '') !== f.channel) return false;
+  if (f.track === '__none') { if (a.track) return false; }
+  else if (f.track && (a.track || '') !== f.track) return false;
+  if (f.channel === '__none') { if (a.channel) return false; }
+  else if (f.channel && (a.channel || '') !== f.channel) return false;
   const q = f.q.trim().toLowerCase();
   if (q) {
     const hay = [a.name, a.source_title, a.source_title_zh, a.description, a.channel].filter(Boolean).join('\n').toLowerCase();
@@ -924,13 +988,61 @@ function assetMatches(a, f) {
   return true;
 }
 
-function channelChipsHtml(list, f, target) {
+// 忽略某个维度的筛选（用于该维度自己那行 chip 的计数）：忽略分类时 track 置空，忽略频道时 channel 置空
+function facetBase(list, f, ignore) {
+  const g = Object.assign({}, f, { track: '', channel: '' });
+  if (ignore !== 'track') g.track = f.track;
+  if (ignore !== 'channel') g.channel = f.channel;
+  return list.filter(a => assetMatches(a, g));
+}
+
+// 统一 chip：数字为 0 且未选中时置灰不可点（已选中的即使 0 条也要能点回来取消）
+function facetChip(label, count, on, onclick) {
+  const off = count === 0 && !on;
+  return `<span class="chip${on ? ' on' : ''}${off ? ' off' : ''}"${off ? ' title="当前筛选下无内容"' : ` onclick="${onclick}"`}>${esc(label)} ${count}</span>`;
+}
+
+// 分类 chip：全部 / 各类（0 条也留位置，置灰）/ 未分类（未登记映射的资产，不并入"通用"）
+// all 用来判断要不要渲染本行；base 是已按「频道 + 搜索」过滤后的列表，只用来算数字
+// 排序：选中项钉在「全部」之后，其余按当前数字降序，数字相同按 cats 里的固定顺序兜底
+function trackChipsHtml(all, base, f, target) {
+  if (!all.some(a => a.track)) return ''; // 旧接口或尚未打标：不渲染分类行，避免整页显示"未分类 179"
   const counts = {};
-  list.forEach(a => { const c = a.channel || ''; counts[c] = (counts[c] || 0) + 1; });
-  const chs = Object.keys(counts).sort((x, y) => counts[y] - counts[x] || x.localeCompare(y));
-  const chips = [`<span class="chip${f.channel === '' ? ' on' : ''}" onclick="setAssetFilter('${target}','')">全部 ${list.length}</span>`];
-  chs.forEach(c => {
-    chips.push(`<span class="chip${f.channel === c ? ' on' : ''}" onclick="setAssetFilter('${target}','${encodeURIComponent(c)}')">${esc(c || '未分类')} ${counts[c]}</span>`);
+  base.forEach(a => { const k = a.track || ''; counts[k] = (counts[k] || 0) + 1; });
+  const items = assetTracks.map((t, i) => ({ key: t.key, name: t.name, count: counts[t.key] || 0, idx: i }));
+  if (counts['']) items.push({ key: '__none', name: '未分类', count: counts[''], idx: 999 });
+  const pinned = items.filter(x => x.key === f.track);
+  const rest = items.filter(x => x.key !== f.track)
+    .sort((x, y) => y.count - x.count || x.idx - y.idx);
+  const chips = [facetChip('全部', base.length, f.track === '', `setTrackFilter('${target}','')`)];
+  pinned.concat(rest).forEach(x => {
+    chips.push(facetChip(x.name, x.count, f.track === x.key, `setTrackFilter('${target}','${x.key}')`));
+  });
+  return chips.join('');
+}
+
+function setTrackFilter(target, key) {
+  const f = target === 'lib' ? libFilter : genFilter;
+  f.track = key || '';
+  if (target === 'lib') renderLibList(); else renderGenAssetList();
+}
+
+// 频道 chip：数字按「分类 + 搜索」算；排序同分类行——选中项钉前，其余按当前数字降序，
+// 并列按全量条数降序兜底（切筛选时相对位置尽量稳），空频道名走 '__none' 哨兵（否则会等于"全部"）
+function channelChipsHtml(all, base, f, target) {
+  const total = {};
+  all.forEach(a => { const c = a.channel || ''; total[c] = (total[c] || 0) + 1; });
+  const counts = {};
+  base.forEach(a => { const c = a.channel || ''; counts[c] = (counts[c] || 0) + 1; });
+  const items = Object.keys(total).map(c => ({
+    c, key: c === '' ? '__none' : c, name: c || '未分类', count: counts[c] || 0, base: total[c] || 0
+  }));
+  const pinned = items.filter(x => x.key === f.channel);
+  const rest = items.filter(x => x.key !== f.channel)
+    .sort((x, y) => y.count - x.count || y.base - x.base || x.c.localeCompare(y.c));
+  const chips = [facetChip('全部', base.length, f.channel === '', `setAssetFilter('${target}','')`)];
+  pinned.concat(rest).forEach(x => {
+    chips.push(facetChip(x.name, x.count, f.channel === x.key, `setAssetFilter('${target}','${x.c === '' ? '__none' : encodeURIComponent(x.c)}')`));
   });
   return chips.join('');
 }
@@ -938,6 +1050,28 @@ function channelChipsHtml(list, f, target) {
 function setAssetFilter(target, ch) {
   const f = target === 'lib' ? libFilter : genFilter;
   f.channel = decodeURIComponent(ch || '');
+  if (target === 'lib') renderLibList(); else renderGenAssetList();
+}
+
+// 顶部计数：筛选生效时补「当前 N 个」，避免让人以为资产变少了
+function assetCountText(total, shown) {
+  if (!total) return '';
+  return `共 ${total} 个框架` + (shown !== total ? ` · 当前 ${shown} 个` : '');
+}
+
+// 空态：保留已选 chip 的高亮，但给出一键清除入口
+function emptyStateHtml(f, target) {
+  const acts = [];
+  if (f.track) acts.push(`<span class="filter-reset" onclick="setTrackFilter('${target}','')">清除分类</span>`);
+  if (f.channel) acts.push(`<span class="filter-reset" onclick="setAssetFilter('${target}','')">清除频道</span>`);
+  if (f.q) acts.push(`<span class="filter-reset" onclick="resetAssetQuery('${target}')">清除搜索</span>`);
+  return `<div class="hint">没有匹配的框架。${acts.length ? ' ' + acts.join(' / ') : ''}</div>`;
+}
+
+function resetAssetQuery(target) {
+  const f = target === 'lib' ? libFilter : genFilter;
+  f.q = '';
+  document.getElementById(target === 'lib' ? 'lib-search' : 'gen-search').value = '';
   if (target === 'lib') renderLibList(); else renderGenAssetList();
 }
 
@@ -988,10 +1122,12 @@ function assetCard(a, forSelect, opts) {
 
 // ---------- 新建生成 ----------
 let genAssets = [];
-const genFilter = { q: '', channel: '', sort: '' };
+const genFilter = { q: '', channel: '', track: '', sort: '' };
 
 async function loadGenAssets() {
-  genAssets = await api('/api/assets');
+  const norm = normalizeAssetPayload(await api('/api/assets'));
+  genAssets = norm.items;
+  assetTracks = norm.tracks;
   renderGenAssetList();
   // 回到本页时始终从第 1 步开始
   if (selectedAsset) renderSelectedAsset();
@@ -1001,9 +1137,13 @@ async function loadGenAssets() {
 function renderGenAssetList() {
   document.getElementById('gen-search').value = genFilter.q;
   document.getElementById('gen-sort').value = genFilter.sort;
-  document.getElementById('gen-channels').innerHTML = channelChipsHtml(genAssets, genFilter, 'gen');
+  // 与资料库同一套分面口径
+  const trackBase = facetBase(genAssets, genFilter, 'track');
+  const channelBase = facetBase(genAssets, genFilter, 'channel');
+  document.getElementById('gen-tracks').innerHTML = trackChipsHtml(genAssets, trackBase, genFilter, 'gen');
+  document.getElementById('gen-channels').innerHTML = channelChipsHtml(genAssets, channelBase, genFilter, 'gen');
   const filtered = sortAssets(genAssets.filter(a => assetMatches(a, genFilter)), genFilter.sort);
-  document.getElementById('gen-asset-list').innerHTML = filtered.length ? groupedAssetHtml(filtered, true, genFilter.q) : '<div class="hint">没有匹配的框架。</div>';
+  document.getElementById('gen-asset-list').innerHTML = filtered.length ? groupedAssetHtml(filtered, true, genFilter.q) : emptyStateHtml(genFilter, 'gen');
 }
 
 function selectedAssetLabel() {
@@ -1317,6 +1457,13 @@ function videoStatusCell(v) {
     + ` onclick="event.stopPropagation()" title="${esc(tip || '打开视频网站项目')}">${body}</a>`;
 }
 
+// 列表"确认文案版本"列:只读(操作统一在详情页),只展示版本号,确认时间放悬浮提示;
+// 未确认显示 —,与"频道 / 是否生成视频"的空值表达一致
+function confirmVersionCell(c) {
+  if (!c || !c.version) return '<span class="vb-none">—</span>';
+  return `<span class="cf-ver" title="${esc(c.at ? '确认于 ' + fmtTime(c.at) : '')}">${esc(versionLabel(c.version))}</span>`;
+}
+
 // ---------- 任务列表:筛选 / 分页 / 爆款 ----------
 // 筛选与分页全部在服务端完成(见 GET /api/runs),前端只保存查询条件与当前页数据;
 // 3 秒轮询只在数据指纹变化时重绘,避免打断输入、翻页和滚动。
@@ -1443,7 +1590,8 @@ async function loadRuns(opts) {
   const sig = JSON.stringify([data.total, data.total_all, data.page, data.page_size,
     data.items.map(r => [r.id, r.topic, r.status, r.current_step, r.has_error, r.channel_name, r.asset_zh,
       r.video ? [r.video.status, r.video.stage_label, r.video.updated_at] : null,
-      !!(r.viral && r.viral.marked)])]);
+      !!(r.viral && r.viral.marked),
+      r.confirmed ? [r.confirmed.version, r.confirmed.at] : null])]);
   if (silent && sig === runsSig) return; // 无变化不重绘:不打断输入/翻页/滚动
   runsSig = sig;
   runsData = data;
@@ -1476,6 +1624,7 @@ function runRowHtml(r) {
       <td style="font-size:12px;color:#4b5563">${audienceCell(r.audience)}</td>
       <td style="font-size:12px;color:#4b5563">${r.channel_name ? esc(r.channel_name) : '<span class="vb-none">—</span>'}</td>
       <td><span class="badge badge-${r.status}">${statusLabel(r)}${r.has_error ? ' ✗' : ''}</span></td>
+      <td>${confirmVersionCell(r.confirmed)}</td>
       <td>${videoStatusCell(r.video)}</td>
       <td class="time">${stepText}</td>
       <td class="time">${fmtTime(r.created_at)}</td>
@@ -1581,12 +1730,34 @@ function openRun(id) {
   if (anEdit && anEdit.runId !== id) anEdit = null;
   currentRunId = id; anRenderedKey = null; resetDetailTitleCopyFeedback(); fpState = null; cpState = null; Object.keys(descPending).forEach(k => delete descPending[k]); document.getElementById('fp-panel').classList.add('hidden'); document.getElementById('cp-panel').classList.add('hidden'); document.getElementById('fp-popover').classList.add('hidden'); showView('detail'); }
 
+// 确认文案版本:点即生效,再点同一版 = 取消(可逆、无下游副作用,不做二次确认);
+// 一个任务只有一个确认版本,确认 B 会自动顶掉 A(服务端按单一字段存)。列表返回时自然刷新
+let confirmBusy = false;
+async function confirmVersion(v) {
+  if (confirmBusy || !currentRunId || !lastRunDetail) return;
+  const cur = (lastRunDetail.confirmed_version && lastRunDetail.confirmed_version.version) || null;
+  confirmBusy = true;
+  try {
+    await api('/api/runs/' + currentRunId + '/confirm-version', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ version: cur === v ? null : v })
+    });
+    await loadRunDetail();
+  } catch (e) {
+    alert('确认失败:' + (e.message || '未知错误'));
+  } finally {
+    confirmBusy = false;
+  }
+}
+
 async function loadRunDetail() {
   const r = await api('/api/runs/' + currentRunId);
   document.getElementById('detail-title').textContent = r.topic;
   document.getElementById('detail-sub').textContent =
     `${r.asset_name || r.asset_id} · ${statusLabel(r)}${r.draft_first ? ' · 先写后改' : ''} · 创建于 ${fmtTime(r.created_at)}` +
-    (r.voice_used ? ` · 频道声音:${r.voice_used}` : '');
+    (r.voice_used ? ` · 频道声音:${r.voice_used}` : '') +
+    (r.confirmed_version && r.confirmed_version.version ? ` · 确认 ${versionLabel(r.confirmed_version.version)}` : '');
   const stepKeys = ['blueprint', 'script', 'audit', 'optimized'];
   if (r.pre_analysis || (r.steps || {}).analysis) stepKeys.unshift('analysis');
   if (r.boost_opening || (r.steps || {}).opening_boost) stepKeys.push('opening_boost');
@@ -1640,6 +1811,25 @@ async function loadRunDetail() {
     // 推送视频:与其它外挂按钮同一可用性口径(任务完成且该版本文案存在)
     const vdBtn = document.getElementById('vd-btn-' + v);
     if (vdBtn) vdBtn.style.display = fpUsable && cpVersions[v] ? '' : 'none';
+  });
+  // 确认文案版本:行级单选(一个任务只有一个),未完成任务的按钮与其它卡片按钮一同隐藏;
+  // 确认后内容被改过(confirmed_stale 由服务端现算)用琥珀色提示,不自动取消确认
+  const cfVer = (r.confirmed_version && r.confirmed_version.version) || null;
+  const cfStale = !!r.confirmed_stale;
+  ['v1', 'v2', 'v1_5', 'v2_5'].forEach(v => {
+    const btn = document.getElementById('cf-btn-' + v);
+    const pill = document.getElementById('cf-pill-' + v);
+    const on = cfVer === v;
+    btn.style.display = fpUsable && cpVersions[v] ? '' : 'none';
+    btn.classList.toggle('on', on && !cfStale);
+    btn.classList.toggle('stale', on && cfStale);
+    btn.textContent = on ? (cfStale ? '✓ 已确认 · 内容已改' : '✓ 已确认') : '确认此版本';
+    btn.title = on
+      ? (cfStale ? '确认后这一版被改过,建议重新确认;再点一次取消确认' : '再点一次取消确认')
+      : '把这一版标为最终交付版本';
+    pill.classList.toggle('hidden', !on);
+    pill.classList.toggle('stale', on && cfStale);
+    pill.textContent = cfStale ? '已确认 · 内容已改' : '已确认';
   });
   // 视频简介:按钮可用性与指纹检测一致;已缓存的简介随轮询渲染(进行中的版本跳过,防冲掉加载态)
   document.getElementById('desc-btn-v1').style.display = fpUsable && v1Text ? '' : 'none';
@@ -4003,9 +4193,36 @@ function downloadDescription(version) {
   URL.revokeObjectURL(a.href);
 }
 
+// ---------- 检测面板共用:类型筛选 ----------
+// 三个面板(指纹/商业化/开头留存)同一口径:筛选同时作用于列表与正文高亮,全选与替换只算显示项。
+// filterTypes 为空 = 显示全部;非空 = 只显示这些 type(单选 UI 下最多 1 个,函数保留并集能力)。
+function pickHits(hits, filterTypes) {
+  const list = hits || [];
+  const on = filterTypes || [];
+  return on.length ? list.filter(h => on.includes(h.type)) : list;
+}
+
+// 芯片行:首个「全部 N」用于一键还原,其余按类型计数(计数用全量,不随筛选跳变)
+function typeChipsHtml(allHits, names, filterTypes, fnName) {
+  const list = allHits || [];
+  const on = filterTypes || [];
+  const counts = {};
+  list.forEach(h => { counts[h.type] = (counts[h.type] || 0) + 1; });
+  const head = `<span class="chip${on.length ? '' : ' on'}" onclick="${fnName}('')" title="显示全部类型">全部 ${list.length}</span>`;
+  return head + Object.entries(counts).map(([t, n]) =>
+    `<span class="chip${on.includes(t) ? ' on' : ''}" onclick="${fnName}('${t}')" title="只看 ${escAttr(names[t] || t)}">${esc(names[t] || t)} ${n}</span>`
+  ).join('');
+}
+
+// 筛选后可能一条都不剩:给一键还原,避免看起来像"面板坏了"
+function filterEmptyHtml(allCount, shownCount, fnName) {
+  if (!allCount || shownCount) return '';
+  return `<div class="hint" style="margin:10px 0">当前筛选下没有命中,<a href="javascript:void(0)" onclick="${fnName}('')">显示全部 ${allCount} 处</a></div>`;
+}
+
 // ---------- 爆款指纹检测 ----------
 // 面板状态独立于 3s 轮询:轮询只刷新数据与高亮、不重建面板,正在编辑的建议文本不会被冲掉
-let fpState = null; // { runId, base, loading, error, cached, scan, summary, hiddenTypes, showList }
+let fpState = null; // { runId, base, loading, error, cached, scan, summary, filterTypes, showList }
 let fpReqSeq = 0;   // 请求序号:只接受最后一次请求的响应(防重复点击/快速切换的竞态)
 let lastRunDetail = null; // 最近一次详情数据,供高亮重渲染用
 
@@ -4022,7 +4239,7 @@ async function openFpPanel(base, force) {
     return;
   }
   const seq = ++fpReqSeq;
-  fpState = { runId: currentRunId, base, loading: true, error: null, cached: false, scan: null, summary: null, hiddenTypes: {}, showList: false };
+  fpState = { runId: currentRunId, base, loading: true, error: null, cached: false, scan: null, summary: null, filterTypes: [], showList: false };
   renderFpPanel();
   try {
     const r = await api('/api/runs/' + currentRunId + '/fingerprint/detect', {
@@ -4030,7 +4247,7 @@ async function openFpPanel(base, force) {
     });
     if (seq !== fpReqSeq) return; // 已有更新的请求,丢弃过期响应
     (r.scan.hits || []).forEach(h => { h.checked = h.status !== 'replaced'; });
-    fpState = { runId: currentRunId, base, loading: false, error: null, cached: r.cached, scan: r.scan, summary: null, hiddenTypes: {}, showList: false };
+    fpState = { runId: currentRunId, base, loading: false, error: null, cached: r.cached, scan: r.scan, summary: null, filterTypes: [], showList: false };
   } catch (e) {
     if (seq !== fpReqSeq) return;
     fpState.loading = false;
@@ -4084,7 +4301,7 @@ function fpComputeMarks(text, hits) {
 
 function renderFpScript(elId, text, hits) {
   const el = document.getElementById(elId);
-  const visible = (hits || []).filter(h => !((fpState && fpState.hiddenTypes) || {})[h.type]);
+  const visible = pickHits(hits, fpState && fpState.filterTypes);
   if (!visible.length) { el.textContent = text; return; }
   const marks = fpComputeMarks(text, visible);
   let html = '', cur = 0;
@@ -4181,40 +4398,40 @@ function renderFpPanel() {
     return;
   }
   const scan = fpState.scan;
-  const hits = scan.hits || [];
+  const allHits = scan.hits || [];
   const names = scan.pattern_names || {};
-  const selCount = hits.filter(h => h.checked && h.status !== 'replaced').length;
-  const legacy = hits.length > 0 && hits[0].original_zh === undefined; // 旧格式结果无中文对照字段
-  const typeCounts = {};
-  hits.forEach(h => { typeCounts[h.type] = (typeCounts[h.type] || 0) + 1; });
-  const chips = Object.entries(typeCounts).map(([t, n]) =>
-    `<span class="chip${(fpState.hiddenTypes || {})[t] ? ' fp-chip-off' : ''}" onclick="fpToggleType('${t}')">${esc(names[t] || t)} ${n}</span>`
-  ).join('');
+  const hits = pickHits(allHits, fpState.filterTypes);
+  const selCount = allHits.filter(h => h.checked && h.status !== 'replaced').length;
+  const legacy = allHits.length > 0 && allHits[0].original_zh === undefined; // 旧格式结果无中文对照字段
   const head = `<h2 style="display:flex;justify-content:space-between;align-items:center">
-      <span>指纹检测 — ${baseLabel}文案 <span class="tag">${hits.length} 处命中</span></span>
+      <span>指纹检测 — ${baseLabel}文案 <span class="tag">${allHits.length} 处命中</span></span>
       <button class="ghost" onclick="closeFpPanel()">收起(同时清除高亮)</button></h2>
     <div class="fp-meta">检测时间 ${fmtTime(scan.scanned_at)} · 模式库 v${esc(scan.lib_version || '?')} · 模型 ${esc(scan.model || '?')} · 用时 ${scan.secs || '?'}s${fpState.cached ? ' · 已保存结果(未重新扣费)' : ''}</div>
     ${legacy ? '<div class="fp-legacy">当前为旧格式检测结果,无中文对照。点「重新检测」可获取带中文翻译与理由的结果(会重新调用 LLM)。</div>' : ''}`;
-  const guide = hits.length
-    ? `<div class="hint" style="margin:6px 0 0">命中句已在上方 ${baseLabel} 文案中高亮,点击高亮句查看双语对照与改写、逐条采纳/忽略。类型筛选只影响高亮显示,不影响勾选。</div>
-       <div style="margin:2px 0 0">${chips}</div>`
+  const guide = allHits.length
+    ? `<div class="hint" style="margin:6px 0 0">命中句已在上方 ${baseLabel} 文案中高亮,点击高亮句查看双语对照与改写、逐条采纳/忽略。类型筛选同时作用于下方列表与正文高亮;全选只作用于显示项,替换按全部已勾选项计算。</div>
+       <div style="margin:2px 0 0">${typeChipsHtml(allHits, names, fpState.filterTypes, 'fpToggleType')}</div>`
     : '';
-  panel.innerHTML = head + fpToolbar(selCount) + guide +
-    (hits.length ? '' : '<div class="hint" style="margin:10px 0">未发现公式化指纹句式。</div>') +
+  panel.innerHTML = head + fpToolbar(selCount, allHits.length, hits.length) + guide +
+    (allHits.length ? '' : '<div class="hint" style="margin:10px 0">未发现公式化指纹句式。</div>') +
+    (fpState.showList ? filterEmptyHtml(allHits.length, hits.length, 'fpToggleType') : '') +
     (fpState.showList && hits.length
       ? hits.map(h => fpHitRow(h, names)).join('')
       : '') +
     (fpState.summary ? `<div class="fp-summary">${esc(fpState.summary)}</div>` : '');
 }
 
-function fpToolbar(selCount) {
+function fpToolbar(selCount, allCount, shownCount) {
+  const filtered = shownCount < allCount;
+  // 筛选只影响显示:按钮按全部勾选算,这里单独算出"筛掉了多少条仍在勾选"
+  const offSel = selCount - pickHits(fpState.scan.hits, fpState.filterTypes).filter(h => h.checked && h.status !== 'replaced').length;
   return `<div class="fp-toolbar">
-    <button class="ghost" onclick="fpToggleAll(true)">全选</button>
-    <button class="ghost" onclick="fpToggleAll(false)">全不选</button>
+    <button class="ghost" onclick="fpToggleAll(true)">全选${filtered ? '(筛选内)' : ''}</button>
+    <button class="ghost" onclick="fpToggleAll(false)">全不选${filtered ? '(筛选内)' : ''}</button>
     <button class="primary" id="fp-apply-btn" onclick="applyFpReplace()" ${selCount ? '' : 'disabled'}>替换选中(${selCount})</button>
     <button class="ghost" onclick="openFpPanel('${fpState.base}', true)" title="重新调用 LLM 检测并覆盖当前结果">重新检测</button>
     <button class="ghost" onclick="fpToggleList()">${fpState.showList ? '收起列表' : '列表视图'}</button>
-    <span class="hint" style="margin:0">替换后生成 ${fpState.base === 'v2' ? 'V2.5' : 'V1.5'}(底版原样保留);匹配不到的项标红说明,不会静默失败</span>
+    <span class="hint" style="margin:0">替换后生成 ${fpState.base === 'v2' ? 'V2.5' : 'V1.5'}(底版原样保留);${filtered ? '已筛选:显示 ' + shownCount + '/' + allCount + ' 处,全选只作用于显示项' + (offSel ? ',替换含 ' + offSel + ' 条筛选外勾选项' : '') + ';' : ''}匹配不到的项标红说明,不会静默失败</span>
   </div>`;
 }
 
@@ -4237,6 +4454,7 @@ function fpHitRow(h, names) {
   </div>`;
 }
 
+// 按钮计数与替换范围取全部勾选项:筛选只影响显示,不改变"已勾选要替换哪些"
 function fpRefreshApplyBtn() {
   const n = fpState.scan.hits.filter(h => h.checked && h.status !== 'replaced').length;
   const btn = document.getElementById('fp-apply-btn');
@@ -4251,14 +4469,16 @@ function fpToggleHit(id, checked) {
 }
 
 function fpToggleAll(checked) {
-  fpState.scan.hits.forEach(h => { if (h.status !== 'replaced') h.checked = checked; });
+  pickHits(fpState.scan.hits, fpState.filterTypes).forEach(h => { if (h.status !== 'replaced') h.checked = checked; });
   renderFpPanel();
   refreshFpMarks();
 }
 
+// 芯片单选:点一个类型 = 只看该类;再点同一个 = 取消;点另一个 = 直接切换(不叠加);'' = 还原全部
 function fpToggleType(type) {
-  fpState.hiddenTypes = fpState.hiddenTypes || {};
-  fpState.hiddenTypes[type] = !fpState.hiddenTypes[type];
+  const cur = fpState.filterTypes || [];
+  fpState.filterTypes = (!type || cur.includes(type)) ? [] : [type];
+  fpState.showList = true; // 点类型就是「要看这一类」,顺手展开列表,否则没有任何可见结果
   renderFpPanel();
   refreshFpMarks();
 }
@@ -4303,7 +4523,7 @@ async function applyFpReplace() {
 
 // ---------- YouTube 商业化检查 ----------
 // 结构与指纹检测一致:面板状态独立于 3s 轮询;两个面板互斥(打开一个关掉另一个),气泡弹层复用 #fp-popover
-let cpState = null; // { runId, version, loading, error, cached, scan, summary, hiddenTypes, showList }
+let cpState = null; // { runId, version, loading, error, cached, scan, summary, filterTypes, showList }
 let cpReqSeq = 0;   // 请求序号:只接受最后一次请求的响应
 
 const CP_VERSION_LABELS = { v1: 'V1', v2: 'V2', v1_5: 'V1.5', v2_5: 'V2.5' };
@@ -4340,7 +4560,7 @@ async function openCpPanel(version, force) {
     return;
   }
   const seq = ++cpReqSeq;
-  cpState = { runId: currentRunId, version, loading: true, error: null, cached: false, scan: null, summary: null, hiddenTypes: {}, showList: false };
+  cpState = { runId: currentRunId, version, loading: true, error: null, cached: false, scan: null, summary: null, filterTypes: [], showList: false };
   renderCpPanel();
   try {
     const r = await api('/api/runs/' + currentRunId + '/compliance/detect', {
@@ -4348,7 +4568,7 @@ async function openCpPanel(version, force) {
     });
     if (seq !== cpReqSeq) return; // 已有更新的请求,丢弃过期响应
     (r.scan.hits || []).forEach(h => { h.checked = h.status !== 'replaced'; });
-    cpState = { runId: currentRunId, version, loading: false, error: null, cached: r.cached, scan: r.scan, summary: null, hiddenTypes: {}, showList: false };
+    cpState = { runId: currentRunId, version, loading: false, error: null, cached: r.cached, scan: r.scan, summary: null, filterTypes: [], showList: false };
   } catch (e) {
     if (seq !== cpReqSeq) return;
     cpState.loading = false;
@@ -4371,7 +4591,7 @@ function refreshCpMarks() { renderScriptCards(); }
 // 命中区间计算复用 fpComputeMarks(同一套章节锚定),仅配色与类名不同
 function renderCpScript(elId, text, hits) {
   const el = document.getElementById(elId);
-  const visible = (hits || []).filter(h => !((cpState && cpState.hiddenTypes) || {})[h.type]);
+  const visible = pickHits(hits, cpState && cpState.filterTypes);
   if (!visible.length) { el.textContent = text; return; }
   const marks = fpComputeMarks(text, visible);
   let html = '', cur = 0;
@@ -4448,25 +4668,22 @@ function renderCpPanel() {
     return;
   }
   const scan = cpState.scan;
-  const hits = scan.hits || [];
+  const allHits = scan.hits || [];
   const names = scan.type_names || {};
-  const selCount = hits.filter(h => h.checked && h.status !== 'replaced').length;
-  const typeCounts = {};
-  hits.forEach(h => { typeCounts[h.type] = (typeCounts[h.type] || 0) + 1; });
-  const chips = Object.entries(typeCounts).map(([t, n]) =>
-    `<span class="chip${(cpState.hiddenTypes || {})[t] ? ' fp-chip-off' : ''}" onclick="cpToggleType('${t}')">${esc(names[t] || t)} ${n}</span>`
-  ).join('');
+  const hits = pickHits(allHits, cpState.filterTypes);
+  const selCount = allHits.filter(h => h.checked && h.status !== 'replaced').length;
   const head = `<h2 style="display:flex;justify-content:space-between;align-items:center">
-      <span>YouTube 商业化检查 — ${vLabel}文案 <span class="tag">${hits.length} 处命中</span></span>
+      <span>YouTube 商业化检查 — ${vLabel}文案 <span class="tag">${allHits.length} 处命中</span></span>
       <button class="ghost" onclick="closeCpPanel()">收起(同时清除高亮)</button></h2>
     <div class="fp-meta">检查时间 ${fmtTime(scan.scanned_at)} · 模型 ${esc(scan.model || '?')} · 用时 ${scan.secs || '?'}s${scan.target_language ? ' · 替换正文语言 ' + esc(scan.target_language) : ''}${cpState.cached ? ' · 已保存结果(未重新扣费)' : ''}</div>
     ${scan.stale ? '<div class="fp-legacy">文案已在本次检查后被修改,以下结果基于旧版文案,建议重新检测。</div>' : ''}`;
-  const guide = hits.length
-    ? `<div class="hint" style="margin:6px 0 0">命中内容已在上方 ${vLabel} 文案中高亮,点击高亮查看双语对照与改写、逐条采纳/忽略。类型筛选只影响高亮显示,不影响勾选。</div>
-       <div style="margin:2px 0 0">${chips}</div>`
+  const guide = allHits.length
+    ? `<div class="hint" style="margin:6px 0 0">命中内容已在上方 ${vLabel} 文案中高亮,点击高亮查看双语对照与改写、逐条采纳/忽略。类型筛选同时作用于下方列表与正文高亮;全选只作用于显示项,替换按全部已勾选项计算。</div>
+       <div style="margin:2px 0 0">${typeChipsHtml(allHits, names, cpState.filterTypes, 'cpToggleType')}</div>`
     : '';
-  panel.innerHTML = head + cpSummaryHtml(scan.summary, names) + cpToolbar(selCount) + guide +
-    (hits.length ? '' : '<div class="hint" style="margin:10px 0">未发现需要定位修改的风险表达。</div>') +
+  panel.innerHTML = head + cpSummaryHtml(scan.summary, names) + cpToolbar(selCount, allHits.length, hits.length) + guide +
+    (allHits.length ? '' : '<div class="hint" style="margin:10px 0">未发现需要定位修改的风险表达。</div>') +
+    (cpState.showList ? filterEmptyHtml(allHits.length, hits.length, 'cpToggleType') : '') +
     (cpState.showList && hits.length
       ? hits.map(h => cpHitRow(h, names)).join('')
       : '') +
@@ -4495,17 +4712,20 @@ function cpSummaryHtml(s, names) {
   </div>`;
 }
 
-function cpToolbar(selCount) {
+function cpToolbar(selCount, allCount, shownCount) {
+  const filtered = shownCount < allCount;
+  // 筛选只影响显示:按钮按全部勾选算,这里单独算出"筛掉了多少条仍在勾选"
+  const offSel = selCount - pickHits(cpState.scan.hits, cpState.filterTypes).filter(h => h.checked && h.status !== 'replaced').length;
   const targetHint = (cpState.version === 'v1' || cpState.version === 'v2')
     ? '替换后生成 ' + (cpState.version === 'v1' ? 'V1.5' : 'V2.5') + '(底版原样保留)'
     : '采纳后直接更新当前 ' + (CP_VERSION_LABELS[cpState.version] || '') + ' 文案';
   return `<div class="fp-toolbar">
-    <button class="ghost" onclick="cpToggleAll(true)">全选</button>
-    <button class="ghost" onclick="cpToggleAll(false)">全不选</button>
+    <button class="ghost" onclick="cpToggleAll(true)">全选${filtered ? '(筛选内)' : ''}</button>
+    <button class="ghost" onclick="cpToggleAll(false)">全不选${filtered ? '(筛选内)' : ''}</button>
     <button class="primary" id="cp-apply-btn" onclick="applyCpReplace()" ${selCount ? '' : 'disabled'}>替换选中(${selCount})</button>
     <button class="ghost" onclick="openCpPanel('${cpState.version}', true)" title="重新调用 LLM 检查并覆盖当前结果">重新检测</button>
     <button class="ghost" onclick="cpToggleList()">${cpState.showList ? '收起列表' : '列表视图'}</button>
-    <span class="hint" style="margin:0">${targetHint};匹配不到的项标红说明,不会静默失败</span>
+    <span class="hint" style="margin:0">${targetHint};${filtered ? '已筛选:显示 ' + shownCount + '/' + allCount + ' 处,全选只作用于显示项' + (offSel ? ',替换含 ' + offSel + ' 条筛选外勾选项' : '') + ';' : ''}匹配不到的项标红说明,不会静默失败</span>
   </div>`;
 }
 
@@ -4529,6 +4749,7 @@ function cpHitRow(h, names) {
   </div>`;
 }
 
+// 按钮计数与替换范围取全部勾选项:筛选只影响显示,不改变"已勾选要替换哪些"
 function cpRefreshApplyBtn() {
   const n = cpState.scan.hits.filter(h => h.checked && h.status !== 'replaced').length;
   const btn = document.getElementById('cp-apply-btn');
@@ -4543,14 +4764,16 @@ function cpToggleHit(id, checked) {
 }
 
 function cpToggleAll(checked) {
-  cpState.scan.hits.forEach(h => { if (h.status !== 'replaced') h.checked = checked; });
+  pickHits(cpState.scan.hits, cpState.filterTypes).forEach(h => { if (h.status !== 'replaced') h.checked = checked; });
   renderCpPanel();
   refreshCpMarks();
 }
 
+// 芯片单选:点一个类型 = 只看该类;再点同一个 = 取消;点另一个 = 直接切换(不叠加);'' = 还原全部
 function cpToggleType(type) {
-  cpState.hiddenTypes = cpState.hiddenTypes || {};
-  cpState.hiddenTypes[type] = !cpState.hiddenTypes[type];
+  const cur = cpState.filterTypes || [];
+  cpState.filterTypes = (!type || cur.includes(type)) ? [] : [type];
+  cpState.showList = true; // 点类型就是「要看这一类」,顺手展开列表,否则没有任何可见结果
   renderCpPanel();
   refreshCpMarks();
 }
@@ -4613,7 +4836,7 @@ async function applyCpReplace() {
 
 // ---------- 开头留存检查 ----------
 // 结构与商业化检查一致:面板状态独立于 3s 轮询;三个面板互斥(打开一个关掉另外两个),气泡弹层复用 #fp-popover
-let orState = null; // { runId, version, loading, error, cached, scan, summary, hiddenTypes, showList }
+let orState = null; // { runId, version, loading, error, cached, scan, summary, filterTypes, showList }
 let orReqSeq = 0;   // 请求序号:只接受最后一次请求的响应
 
 const OR_SEG_NAMES = { s0_30: '前30秒', s30_60: '30–60秒' };
@@ -4631,7 +4854,7 @@ async function openOrPanel(version, force) {
     return;
   }
   const seq = ++orReqSeq;
-  orState = { runId: currentRunId, version, loading: true, error: null, cached: false, scan: null, summary: null, hiddenTypes: {}, showList: false };
+  orState = { runId: currentRunId, version, loading: true, error: null, cached: false, scan: null, summary: null, filterTypes: [], showList: false };
   renderOrPanel();
   try {
     const r = await api('/api/runs/' + currentRunId + '/opening/detect', {
@@ -4639,7 +4862,7 @@ async function openOrPanel(version, force) {
     });
     if (seq !== orReqSeq) return; // 已有更新的请求,丢弃过期响应
     (r.scan.hits || []).forEach(h => { h.checked = h.status !== 'replaced'; });
-    orState = { runId: currentRunId, version, loading: false, error: null, cached: r.cached, scan: r.scan, summary: null, hiddenTypes: {}, showList: false };
+    orState = { runId: currentRunId, version, loading: false, error: null, cached: r.cached, scan: r.scan, summary: null, filterTypes: [], showList: false };
   } catch (e) {
     if (seq !== orReqSeq) return;
     orState.loading = false;
@@ -4662,7 +4885,7 @@ function refreshOrMarks() { renderScriptCards(); }
 // 命中区间计算复用 fpComputeMarks(同一套章节锚定),仅配色与类名不同
 function renderOrScript(elId, text, hits) {
   const el = document.getElementById(elId);
-  const visible = (hits || []).filter(h => !((orState && orState.hiddenTypes) || {})[h.type]);
+  const visible = pickHits(hits, orState && orState.filterTypes);
   if (!visible.length) { el.textContent = text; return; }
   const marks = fpComputeMarks(text, visible);
   let html = '', cur = 0;
@@ -4741,25 +4964,22 @@ function renderOrPanel() {
     return;
   }
   const scan = orState.scan;
-  const hits = scan.hits || [];
+  const allHits = scan.hits || [];
   const names = scan.type_names || {};
-  const selCount = hits.filter(h => h.checked && h.status !== 'replaced').length;
-  const typeCounts = {};
-  hits.forEach(h => { typeCounts[h.type] = (typeCounts[h.type] || 0) + 1; });
-  const chips = Object.entries(typeCounts).map(([t, n]) =>
-    `<span class="chip${(orState.hiddenTypes || {})[t] ? ' fp-chip-off' : ''}" onclick="orToggleType('${t}')">${esc(names[t] || t)} ${n}</span>`
-  ).join('');
+  const hits = pickHits(allHits, orState.filterTypes);
+  const selCount = allHits.filter(h => h.checked && h.status !== 'replaced').length;
   const head = `<h2 style="display:flex;justify-content:space-between;align-items:center">
-      <span>开头留存检查 — ${vLabel}文案 <span class="tag">${hits.length} 处命中</span></span>
+      <span>开头留存检查 — ${vLabel}文案 <span class="tag">${allHits.length} 处命中</span></span>
       <button class="ghost" onclick="closeOrPanel()">收起(同时清除高亮)</button></h2>
     <div class="fp-meta">检查时间 ${fmtTime(scan.scanned_at)} · 模型 ${esc(scan.model || '?')} · 用时 ${scan.secs || '?'}s${orState.cached ? ' · 已保存结果(未重新扣费)' : ''}</div>
     ${scan.stale ? '<div class="fp-legacy">文案已在本次检查后被修改,以下结果基于旧版文案,建议重新检测。</div>' : ''}`;
-  const guide = hits.length
-    ? `<div class="hint" style="margin:6px 0 0">命中内容已在上方 ${vLabel} 文案中高亮,点击高亮查看双语对照与修改建议、逐条采纳/忽略;「插入」类命中会把新句加到锚点句之后。类型筛选只影响高亮显示,不影响勾选。采纳后可对该版本重新检测,对比前后评分。</div>
-       <div style="margin:2px 0 0">${chips}</div>`
+  const guide = allHits.length
+    ? `<div class="hint" style="margin:6px 0 0">命中内容已在上方 ${vLabel} 文案中高亮,点击高亮查看双语对照与修改建议、逐条采纳/忽略;「插入」类命中会把新句加到锚点句之后。类型筛选同时作用于下方列表与正文高亮;全选只作用于显示项,采纳按全部已勾选项计算。采纳后可对该版本重新检测,对比前后评分。</div>
+       <div style="margin:2px 0 0">${typeChipsHtml(allHits, names, orState.filterTypes, 'orToggleType')}</div>`
     : '';
-  panel.innerHTML = head + orSummaryHtml(scan.summary) + orToolbar(selCount) + guide +
-    (hits.length ? '' : '<div class="hint" style="margin:10px 0">开头两段未发现需要定位修改的问题。</div>') +
+  panel.innerHTML = head + orSummaryHtml(scan.summary) + orToolbar(selCount, allHits.length, hits.length) + guide +
+    (allHits.length ? '' : '<div class="hint" style="margin:10px 0">开头两段未发现需要定位修改的问题。</div>') +
+    (orState.showList ? filterEmptyHtml(allHits.length, hits.length, 'orToggleType') : '') +
     (orState.showList && hits.length
       ? hits.map(h => orHitRow(h, names)).join('')
       : '') +
@@ -4801,17 +5021,20 @@ function orSummaryHtml(s) {
   </div>`;
 }
 
-function orToolbar(selCount) {
+function orToolbar(selCount, allCount, shownCount) {
+  const filtered = shownCount < allCount;
+  // 筛选只影响显示:按钮按全部勾选算,这里单独算出"筛掉了多少条仍在勾选"
+  const offSel = selCount - pickHits(orState.scan.hits, orState.filterTypes).filter(h => h.checked && h.status !== 'replaced').length;
   const targetHint = (orState.version === 'v1' || orState.version === 'v2')
     ? '采纳后生成 ' + (orState.version === 'v1' ? 'V1.5' : 'V2.5') + '(底版原样保留)'
     : '采纳后直接更新当前 ' + (CP_VERSION_LABELS[orState.version] || '') + ' 文案';
   return `<div class="fp-toolbar">
-    <button class="ghost" onclick="orToggleAll(true)">全选</button>
-    <button class="ghost" onclick="orToggleAll(false)">全不选</button>
+    <button class="ghost" onclick="orToggleAll(true)">全选${filtered ? '(筛选内)' : ''}</button>
+    <button class="ghost" onclick="orToggleAll(false)">全不选${filtered ? '(筛选内)' : ''}</button>
     <button class="primary" id="or-apply-btn" onclick="applyOrReplace()" ${selCount ? '' : 'disabled'}>采纳选中(${selCount})</button>
     <button class="ghost" onclick="openOrPanel('${orState.version}', true)" title="重新调用 LLM 检查并覆盖当前结果">重新检测</button>
     <button class="ghost" onclick="orToggleList()">${orState.showList ? '收起列表' : '列表视图'}</button>
-    <span class="hint" style="margin:0">${targetHint};匹配不到的项标红说明,不会静默失败</span>
+    <span class="hint" style="margin:0">${targetHint};${filtered ? '已筛选:显示 ' + shownCount + '/' + allCount + ' 处,全选只作用于显示项' + (offSel ? ',采纳含 ' + offSel + ' 条筛选外勾选项' : '') + ';' : ''}匹配不到的项标红说明,不会静默失败</span>
   </div>`;
 }
 
@@ -4836,6 +5059,7 @@ function orHitRow(h, names) {
   </div>`;
 }
 
+// 按钮计数与采纳范围取全部勾选项:筛选只影响显示,不改变"已勾选要采纳哪些"
 function orRefreshApplyBtn() {
   const n = orState.scan.hits.filter(h => h.checked && h.status !== 'replaced').length;
   const btn = document.getElementById('or-apply-btn');
@@ -4850,14 +5074,16 @@ function orToggleHit(id, checked) {
 }
 
 function orToggleAll(checked) {
-  orState.scan.hits.forEach(h => { if (h.status !== 'replaced') h.checked = checked; });
+  pickHits(orState.scan.hits, orState.filterTypes).forEach(h => { if (h.status !== 'replaced') h.checked = checked; });
   renderOrPanel();
   refreshOrMarks();
 }
 
+// 芯片单选:点一个类型 = 只看该类;再点同一个 = 取消;点另一个 = 直接切换(不叠加);'' = 还原全部
 function orToggleType(type) {
-  orState.hiddenTypes = orState.hiddenTypes || {};
-  orState.hiddenTypes[type] = !orState.hiddenTypes[type];
+  const cur = orState.filterTypes || [];
+  orState.filterTypes = (!type || cur.includes(type)) ? [] : [type];
+  orState.showList = true; // 点类型就是「要看这一类」,顺手展开列表,否则没有任何可见结果
   renderOrPanel();
   refreshOrMarks();
 }

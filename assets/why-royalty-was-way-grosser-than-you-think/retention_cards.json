@@ -1,0 +1,737 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-28T04:28:32.812Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "countdown_subversion_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0151,
+      "start_sec": 0.2,
+      "end_sec": 11.8,
+      "position_label": "0%–1.5%(0:00–0:12)",
+      "purpose": "用「你以为王室很光鲜」的认知反转设问开场,承诺展示「绝对进不了历史书」的肮脏习惯,宣告从第7名开始的倒数赛制并立即进入正片,零寒暄",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "premise_subversion",
+          "strength": 55,
+          "position_ratio": 0.0003,
+          "time_ms": 199,
+          "reason": "开场3秒内把「王室=光鲜」反转为「肮脏得进不了历史书」,建立全片认知缺口"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主承诺:这群被浪漫化的权贵究竟有多脏——「进不了历史书的肮脏习惯」到底是哪些",
+          "closes_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "倒数悬念:清单从第7名开始,尺度第1名是谁、能过分到什么程度",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "expectation_subversion",
+          "mechanism": "glamour_filter_break"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "countdown_contract",
+          "mechanism": "numbered_list_format"
+        }
+      ],
+      "required_retention_events": [
+        "expectation_subversion",
+        "taboo_promise",
+        "countdown_contract"
+      ],
+      "original_moves": [
+        "用反问「以为王室很光鲜?」直接挑战默认认知",
+        "预告「等着听他们肮脏恶心的习惯」",
+        "加码「这些绝对进不了历史书」制造禁忌感",
+        "立刻报出「第七名」进入正片,零寒暄"
+      ],
+      "abstract_move": "认知反转设问+禁忌感预告+倒数赛制宣告+立即进入首个单元",
+      "replacement_needs": [
+        "一个观众默认光鲜或正面的认知对象",
+        "一组5-9个可排序的同构猎奇素材",
+        "一个明确的倒数赛制宣告"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(55);打开的悬念 LOOP01→FS08、LOOP02→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 55
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "expectation_subversion_with_countdown_tease",
+        "first_stimulus_ms": 199,
+        "first_payoff_ms": 39559,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0010"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "catalog_unit_power_flex",
+      "start_ratio": 0.0115,
+      "end_ratio": 0.1948,
+      "start_sec": 9,
+      "end_sec": 151.6,
+      "position_label": "1.2%–19.5%(0:09–2:32)",
+      "purpose": "第7名单元:先铺华丽基线,用「最强势的场合不总在王座上」委婉预告,揭示君主把私密生理行为搬到王座上的怪癖,用贵族旁观的尴尬想象与每日围观仪式佐证,反转为「连最私密时刻都在统治」的权力展演,双关句收束",
+      "peaks": [
+        {
+          "peak_id": "PK02",
+          "peak_type": "information_reveal",
+          "strength": 72,
+          "position_ratio": 0.0508,
+          "time_ms": 39559,
+          "reason": "首单元重口揭示(王座内置私密装置)兑现标题承诺,并示范「私密即权力展演」解释框架"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "单元环:他最强势的场合「不总在传统王座上」是什么意思",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "euphemism_to_explicit_reveal",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE03",
+          "event_type": "euphemism_tease",
+          "mechanism": "implication_delay"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "information_reveal",
+          "mechanism": "explicit_gross_reveal"
+        },
+        {
+          "event_id": "RE05",
+          "event_type": "reframe_punchline",
+          "mechanism": "power_flex_reframe"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "ritual_evidence",
+          "mechanism": "institutional_detail"
+        }
+      ],
+      "required_retention_events": [
+        "euphemism_tease",
+        "gross_reveal",
+        "bystander_imagination",
+        "power_flex_reframe",
+        "ritual_evidence",
+        "pun_button"
+      ],
+      "original_moves": [
+        "先铺国王的华丽标配想象(宫殿、金吊灯、盛宴)",
+        "用「最强势的场合不总在传统王座上」委婉预告",
+        "揭示王座内置马桶、边如厕边理政",
+        "让观众想象贵族汇报时国王当众方便的尴尬",
+        "反转为权力炫耀:连如厕都是统治展演",
+        "用每日更衣围观仪式佐证权力展演逻辑",
+        "双关句「你在我之下,字面意义」收束"
+      ],
+      "abstract_move": "光鲜基线铺陈+委婉预告开环+私密行为揭示+旁观者想象节拍+怪癖等于权力的反转句+仪式佐证+双关闭环",
+      "replacement_needs": [
+        "一个可想象场景的私密怪癖事实",
+        "一个旁观者视角的尴尬冲突",
+        "一个支撑反转的仪式或制度细节",
+        "一个双关或绰号式落点"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK02(72)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK02",
+          "strength": 72
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "catalog_unit_public_norm_breach",
+      "start_ratio": 0.1906,
+      "end_ratio": 0.3611,
+      "start_sec": 148.4,
+      "end_sec": 281.1,
+      "position_label": "19.1%–36.1%(2:28–4:41)",
+      "purpose": "第6名单元:用「以为你的会议尴尬?」把观众日常拉来对照,揭示君主在正式场合的失仪怪癖,强调不是偶发而是常态,排比旁观者的尴尬应对,升级到行为逐年恶化与权力旁落,以「疯王」绰号收束",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.224,
+          "time_ms": 174400,
+          "reason": "正式会议场合的失仪揭示加确认句,震惊强度高于首单元"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "单元环:他「喜欢让手忙起来」到底是什么意思",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "euphemism_to_explicit_reveal",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "countdown_step",
+          "mechanism": "rank_advance_with_contrast_hook"
+        },
+        {
+          "event_id": "RE08",
+          "event_type": "information_reveal",
+          "mechanism": "euphemism_payoff"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "escalation",
+          "mechanism": "worsening_timeline"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "nickname_verdict",
+          "mechanism": "social_judgment_landing"
+        }
+      ],
+      "required_retention_events": [
+        "daily_life_contrast",
+        "euphemism_tease",
+        "norm_breach_reveal",
+        "frequency_emphasis",
+        "escalation_timeline",
+        "nickname_verdict"
+      ],
+      "original_moves": [
+        "用「以为你的会议尴尬?」把观众日常拉来对照",
+        "委婉预告「他喜欢让手忙起来」",
+        "揭示君主在正式会议上的失仪行为并强调是常态",
+        "排比旁观者的尴尬应对(咳嗽、掉东西、避免眼神)",
+        "升级到行为逐年恶化、决策权旁落他人",
+        "以「疯王」绰号收束"
+      ],
+      "abstract_move": "观众日常对照开题+委婉预告+失仪行为揭示+频率强调+旁观者反应排比+恶化时间线+权力旁落后果+社会判决式绰号落点",
+      "replacement_needs": [
+        "一个与观众日常可对照的失仪行为",
+        "频率或恶化的时间证据",
+        "权力或声誉层面的后果",
+        "一个流传绰号"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "catalog_unit_grotesque_keepsake",
+      "start_ratio": 0.3568,
+      "end_ratio": 0.4783,
+      "start_sec": 277.8,
+      "end_sec": 372.4,
+      "position_label": "35.7%–47.8%(4:38–6:12)",
+      "purpose": "第5名单元:先铺风流人设,预告「他想要更私密的纪念」,揭示把亲密关系物化为可佩戴纪念品的怪癖,用时代风尚佐证其表面合理性,以本人自豪展示的态度与「离心口更近」双关收束",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.4058,
+          "time_ms": 315919,
+          "reason": "毛发纪念品揭示把风流人设反转为病态占有"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "单元环:他想要的「更私密、能随身带着的纪念」是什么",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "teased_memento_reveal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "countdown_step",
+          "mechanism": "rank_advance_persona_hook"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "information_reveal",
+          "mechanism": "explicit_gross_reveal"
+        },
+        {
+          "event_id": "RE13",
+          "event_type": "countdown_step",
+          "mechanism": "rank_advance"
+        }
+      ],
+      "required_retention_events": [
+        "persona_setup",
+        "possession_tease",
+        "grotesque_reveal",
+        "era_context_evidence",
+        "pride_attitude",
+        "pun_button"
+      ],
+      "original_moves": [
+        "铺「风流君主」人设(情史丰富)",
+        "预告「他想要更私密、能随身带着的纪念」",
+        "揭示收集情人毛发制成假发并当众佩戴",
+        "用时代风尚(假发流行)佐证表面合理性",
+        "强调本人自豪展示、享受议论的态度",
+        "双关「离心口更近」收束"
+      ],
+      "abstract_move": "人设铺陈+占有欲预告+物证式怪癖揭示+时代合理性佐证+本人自豪态度+双关闭环",
+      "replacement_needs": [
+        "一个时代风尚背景",
+        "一个把情感物化的怪癖物证",
+        "本人不以为耻的态度证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(70)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "catalog_unit_mourning_transgression",
+      "start_ratio": 0.4757,
+      "end_ratio": 0.6015,
+      "start_sec": 370.4,
+      "end_sec": 468.4,
+      "position_label": "47.6%–60.2%(6:10–7:48)",
+      "purpose": "第4名单元:以英雄战死的悲剧铺垫,对照常人哀悼方式,揭示越界的哀悼执念并升级到随身不离、同床而眠,用双关与「这正常吗」的旁观质疑加码,以多年不放手的时间跨度收束,调性由滑稽转悲情不安",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "emotional_payoff",
+          "strength": 76,
+          "position_ratio": 0.541,
+          "time_ms": 421240,
+          "reason": "「每晚与亡夫心脏同眠」的贴身升级让恶心与悲悯交汇,调性由滑稽转不安"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "单元环:她做的「更极端一点的事」是什么",
+          "closes_in": "FS05"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "teased_transgression_reveal",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "information_reveal",
+          "mechanism": "transgression_reveal"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "escalation",
+          "mechanism": "intimacy_escalation"
+        }
+      ],
+      "required_retention_events": [
+        "tragic_setup",
+        "norm_contrast",
+        "transgression_reveal",
+        "escalation_detail",
+        "pun_button",
+        "duration_evidence"
+      ],
+      "original_moves": [
+        "铺垫战神国王战死的悲剧事件",
+        "用常人哀悼方式(画像、首饰)作对照",
+        "揭示取出心脏放入金盒",
+        "升级到随身携带、同床而眠",
+        "双关「伴着破碎的心入睡,字面意义」",
+        "旁观者质疑「这正常吗」",
+        "以多年不放手的时间跨度收束"
+      ],
+      "abstract_move": "悲剧事件铺垫+常人对照+越界行为揭示+贴身升级+双关按钮+旁观者质疑+时间跨度收束",
+      "replacement_needs": [
+        "一个突发丧亲事件",
+        "一个越界的哀悼行为及其贴身升级细节",
+        "一段持续多年的时间证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(76)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "catalog_unit_grief_possession",
+      "start_ratio": 0.5979,
+      "end_ratio": 0.7555,
+      "start_sec": 465.6,
+      "end_sec": 588.2,
+      "position_label": "59.8%–75.6%(7:46–9:48)",
+      "purpose": "第3名单元:绰号前置设问(她怎么疯的),以丈夫猝死触发,揭示拒绝下葬、开棺对话、携棺同行的执念,用死后仍嫉妒的非理性细节与社会恐惧加码,落在「也许不是疯,是爱得太深」的怜悯反转",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "surprise",
+          "strength": 71,
+          "position_ratio": 0.6697,
+          "time_ms": 521399,
+          "reason": "携棺旅行加开棺对话把执念升级为移动奇观"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "单元环:「疯女」绰号从何而来,她做了什么「真正不寻常的事」",
+          "closes_in": "FS06"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "nickname_motivation_reveal",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "countdown_step",
+          "mechanism": "rank_advance_with_nickname_question"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "escalation",
+          "mechanism": "mobile_escalation"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "reframe_punchline",
+          "mechanism": "sympathy_reframe"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "countdown_step",
+          "mechanism": "rank_advance"
+        }
+      ],
+      "required_retention_events": [
+        "nickname_question",
+        "refusal_reveal",
+        "mobile_escalation",
+        "irrational_detail",
+        "social_fear",
+        "sympathy_reframe"
+      ],
+      "original_moves": [
+        "绰号前置设问:「疯女」之名从何而来",
+        "丈夫猝死的触发事件",
+        "揭示拒绝下葬、留尸在侧、开棺对话",
+        "升级到携棺旅行、棺材当行李",
+        "加码死后仍嫉妒女性接近的非理性细节",
+        "旁观者恐惧与「她疯了吗」的议论",
+        "落在「也许不是疯,是爱得太深」的怜悯反转"
+      ],
+      "abstract_move": "绰号前置设问+丧亲触发+拒别行为揭示+移动升级+非理性细节+社会恐惧反应+怜悯式反转落点",
+      "replacement_needs": [
+        "一个自带绰号的当事人",
+        "一个拒绝告别的极端行为及持续证据",
+        "一个可反转动机的非理性细节"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(71)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 71
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "catalog_unit_filth_pride",
+      "start_ratio": 0.7524,
+      "end_ratio": 0.8653,
+      "start_sec": 585.8,
+      "end_sec": 673.8,
+      "position_label": "75.2%–86.5%(9:46–11:14)",
+      "purpose": "第2名单元:用「多数贵族痴迷权力财富」反衬,揭示对自体秽物的炫耀式执着与强迫展示行为,用求见者被迫目击的想象场景制造尴尬喜剧顶点,以「疯子」绰号和「说疯都是轻描淡写」的程度评价收束",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "humor_peak",
+          "strength": 68,
+          "position_ratio": 0.8062,
+          "time_ms": 627720,
+          "reason": "被迫目击「小袋子」的想象场景是全片尴尬喜剧顶点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "单元环:他把「怪」推到什么「全新境界」",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "expectation_contrast_reveal",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "information_reveal",
+          "mechanism": "explicit_gross_reveal"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "humor_beat",
+          "mechanism": "forced_witness_imagination"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "countdown_step",
+          "mechanism": "terminal_rank_advance"
+        }
+      ],
+      "required_retention_events": [
+        "expectation_contrast",
+        "filth_reveal",
+        "forced_witness_imagination",
+        "pride_attitude",
+        "nickname_verdict"
+      ],
+      "original_moves": [
+        "用「多数公爵痴迷权力财富,他不是」反预期开题",
+        "揭示随身携带自体秽物并向人展示",
+        "让观众想象求见者被迫欣赏的尴尬场景",
+        "强调本人视之为日常成就、毫不在意",
+        "以「疯子公爵」绰号和「说疯都是轻描淡写」评价收束"
+      ],
+      "abstract_move": "群体预期反衬+秽物怪癖揭示+被迫目击想象+本人自豪态度+绰号与程度评价落点",
+      "replacement_needs": [
+        "一个突破卫生禁忌的怪癖",
+        "一个被迫目击的旁观者场景",
+        "一个流传绰号"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(68)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 68
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "catalog_unit_cruelty_apex_closure",
+      "start_ratio": 0.8622,
+      "end_ratio": 1,
+      "start_sec": 671.3,
+      "end_sec": 778.6,
+      "position_label": "86.2%–100%(11:11–12:59)",
+      "purpose": "第1名单元:尺度从恶心升维到残酷恐怖——黑暗氛围开题,酷刑手段揭示,尸林盛宴场景升级,面包蘸血的感官细节顶点,宴请穷人后翻脸的背叛节拍,以接通后世吸血鬼传说的绰号落点,并用「载入史册,字面意义」双关总收束全片,回扣开场承诺",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 86,
+          "position_ratio": 0.9363,
+          "time_ms": 729000,
+          "reason": "面包蘸血的感官细节把尺度从恶心推入纯恐怖,信息线、情绪线与故事线交汇顶点"
+        },
+        {
+          "peak_id": "PK09",
+          "peak_type": "title_callback",
+          "strength": 85,
+          "position_ratio": 0.9894,
+          "time_ms": 770360,
+          "reason": "传说绰号接通加「载入史册,字面意义」双关收束,回扣开场「进不了历史书」的承诺"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "单元环:他的「招牌手段」是什么、受害者被如何对待",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "countdown_catalog_delivery_with_title_callback",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "countdown_terminal_reveal",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "method_tease_reveal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "escalation",
+          "mechanism": "scene_escalation"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "sensory_detail",
+          "mechanism": "gustatory_horror_detail"
+        },
+        {
+          "event_id": "RE25",
+          "event_type": "betrayal_twist",
+          "mechanism": "generosity_reversal"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "legend_bridge",
+          "mechanism": "cultural_legacy_callback"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "pun_closure",
+          "mechanism": "title_callback_pun"
+        }
+      ],
+      "required_retention_events": [
+        "dark_atmosphere",
+        "cruelty_reveal",
+        "scene_escalation",
+        "sensory_detail_apex",
+        "betrayal_twist",
+        "legend_bridge",
+        "title_callback_pun"
+      ],
+      "original_moves": [
+        "黑暗森林与残酷君主的氛围开题",
+        "揭示招牌酷刑手段",
+        "升级到尸林环绕的盛宴场景",
+        "面包蘸血的感官细节顶点",
+        "宴请穷人后翻脸的背叛节拍",
+        "绰号接通后世吸血鬼传说",
+        "「名字载入史册,字面意义」双关总收束全片"
+      ],
+      "abstract_move": "黑暗氛围开题+残酷手段揭示+场景升级+感官细节顶点+背叛翻脸节拍+传说接通+呼应开场的双关总收束",
+      "replacement_needs": [
+        "一个残酷度登顶的末位素材",
+        "一个感官级恐怖细节",
+        "一个接通后世文化的传说落点",
+        "一个呼应开场措辞的双关句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(86)、PK09(85);回收了前文的悬念 FS01→LOOP01、FS01→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 86
+        },
+        {
+          "peak_id": "PK09",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}
