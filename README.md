@@ -45,7 +45,7 @@ flowchart LR
 │   ├── prompts/            现行提示词（生产用，单一来源）
 │   ├── extension/          抓 Studio 真实数据的 Chrome 插件
 │   ├── public/             前端 SPA
-│   ├── data/runs/          83 条生成记录（含每步 attempts 与校验明细）
+│   ├── data/runs/          87 条生成记录（含每步 attempts 与校验明细）
 │   ├── data/logs/          运行日志（失败样本、留存卡批处理、探针输出）
 │   └── config.example.json 配置结构示例（不含真实 Key）
 ├── assets/                 210 个四层资产包，每包含原始 SRT 与留存卡
@@ -209,7 +209,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `title_audit.md` | 自写标题审核 | 26 |
 | `step1.md` | Blueprint 生成 | 89 |
 | `step2.md` | 脚本施工 | 52 |
-| `step3.md` | 质量审核 | 71 |
+| `step3.md` | 质量审核 | 72 |
 | `step4.md` | 终稿优化 | 58 |
 | `step5.md` | 开头逐句仿写（强化开头） | 27 |
 | `script_check.md` | 稿件检查 K1-K5 | 38 |
