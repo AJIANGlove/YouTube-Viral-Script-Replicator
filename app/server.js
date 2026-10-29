@@ -614,7 +614,7 @@ const server = http.createServer(async (req, res) => {
 
     // ---------- 先写后改:逐段对照审稿 ----------
     // GET 视图(每次按当前稿子现算);POST status/undo 立即返回;rewrite/fact 等模型返回再响应(单章约 0.5–2 分钟)
-    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch))?$/);
+    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening))?$/);
     if (rvMatch) {
       const [, id, action] = rvMatch;
       try {
@@ -635,6 +635,8 @@ const server = http.createServer(async (req, res) => {
           }
           // 看完二稿审稿报告:带着勾选的问题、修改路线和备注去终审(后台跑)
           if (action === 'final') return send(res, 200, review.startFinal(id, body));
+          // 开头单独审:开头 60 秒逐句 + 中文 + 好在哪 + 风险(后台跑)
+          if (action === 'opening') return send(res, 200, review.startOpeningCard(id));
           // 终稿之后去AI感(后台跑):生成多方案建议 → 人勾选改法 → 按选择修改
           if (action === 'deai') return send(res, 200, review.startDeai(id, body));
           // 复审没达标:按复审意见补改(后台跑):整理未解决问题清单(extract)或勾选问题+决定补改;以终稿为底,不从二稿重来
@@ -1339,7 +1341,7 @@ server.listen(PORT, HOST, () => {
   // (去AI感不加进来,它卡 running 会把 deaiGuard 永久挡死,任务再无入口)
   for (const r of store.listRuns().filter(x => x.status === 'done')) {
     const st = r.steps || {};
-    const stuck = ['draft_check', 'reverse_audit', 'final_review', 'deai', 'final_open'].filter(k => (st[k] || {}).status === 'running');
+    const stuck = ['draft_check', 'reverse_audit', 'final_review', 'deai', 'final_open', 'opening_card'].filter(k => (st[k] || {}).status === 'running');
     const stuckZh = (st.review_zh || {}).status === 'running'; // 翻译已移出审稿锁(v1.10.4),崩溃在翻译期会永挂「翻译中…」并置灰补翻按钮
     if (!stuck.length && !stuckZh) continue;
     if (stuck.length && r.draft_first && !r.cancel_requested && stuck.every(k => k === 'draft_check' || k === 'reverse_audit')) {

@@ -299,7 +299,7 @@ function buildView(run, asset) {
   const redFacts = facts.filter(f => usedFacts.has(f.id) && factState(f).state === 'red').map(f => f.id);
   const words = rows.reduce((n, r) => n + r.words, 0);
   const budget = rows.reduce((n, r) => n + (r.budget || 0), 0);
-  return {
+  const out = {
     run_id: run.id, status: run.status, target_language: lang,
     passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null, deai: (run.steps || {}).deai || null, final_open: (run.steps || {}).final_open || null },
     audit: state.audit ? { ...state.audit, issues: arr(state.audit.issues).map(x => ({ ...x, zh_problem: hasForeign(x.problem) ? zhOf(state, x.problem) : '', zh_direction: hasForeign(x.direction) ? zhOf(state, x.direction) : '', need_zh: hasForeign(x.problem) || hasForeign(x.direction) })), score: state.audit.score != null ? state.audit.score : reportScore(state.audit.report), stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
@@ -317,6 +317,7 @@ function buildView(run, asset) {
       const last = rechecks[rechecks.length - 1];
       return { ...f, rechecks, scores_before: fillScores(f.scores_before, f.audit_report, dims, 1), scores_after: last ? { ...last.scores, ...(f.scores_after || {}) } : f.scores_after };
     })() : null,
+    opening: openingView(run),
     tracks: trackList(), track_default: state.final_track || autoTrack(run, asset),
     translating: ((run.steps || {}).review_zh || {}).status === 'running',
     zh_error: ((run.steps || {}).review_zh || {}).error || '',
@@ -332,6 +333,26 @@ function buildView(run, asset) {
       thesis_note: (a.thesis_check || {}).note || ''
     }
   };
+  out.summary.publish = publishCheck(run, out);
+  return out;
+}
+
+// 「可发布」硬标准,和 AI 复审的「达标」分开:复审没有关键/结构遗留问题、事实没有红旗(没出处、账本对不上、反转被推翻)、听感检查通过
+function publishCheck(run, v) {
+  const s = v.summary, reasons = [];
+  const last = v.final ? arr(v.final.rechecks).slice(-1)[0] : null;
+  if (!v.final) reasons.push('还没跑终审');
+  else {
+    const hard = arr(last && last.open).filter(x => x.level === '关键' || x.level === '结构');
+    if (hard.length) reasons.push('复审还有 ' + hard.length + ' 个关键/结构问题(' + hard.map(x => x.id).join('、') + ')');
+  }
+  if (s.red_facts.length) reasons.push('稿里有 ' + s.red_facts.length + ' 个没出处的事实');
+  if (arr(s.ledger_mismatches).length) reasons.push('账本对不上');
+  if (arr(s.thesis_contradicts).length) reasons.push('反转被事实推翻');
+  const lc = checks.listenCheck(checks.extractFinalScript(currentScript(run)), {
+    wpm: require('./narration').narrationWpm(run, null).wpm, title: ((run.analysis || {}).title || {}).final_title || run.topic, lang: (run.audience || {}).target_language });
+  if (lc && !lc.ok) reasons.push('听感检查没过:' + lc.issues.join(';'));
+  return { ready: !reasons.length, reasons };
 }
 
 function loadRunAsset(runId) {
@@ -1327,7 +1348,7 @@ async function applyWithRepair(run, cfg, text, edits, label, limit) {
 }
 
 // 终审各步共用的提示词变量
-const OPEN_FORMAT = '在 ===OPEN=== 下面逐行列出还没解决的问题(达标且没有遗留问题就写「无」),每行一个,格式:\n- [R01][CH13][关键] 问题(中文,一两句;引用原句保留原语言) | 建议改法(中文)\n第三个方括号只能写 关键、次要、待核实 之一。「待核实」指需要人确认事实或数据才能改的问题。';
+const OPEN_FORMAT = '在 ===OPEN=== 下面逐行列出还没解决的问题(达标且没有遗留问题就写「无」),每行一个,格式:\n- [R01][CH13][关键] 问题(中文,一两句;引用原句保留原语言) | 建议改法(中文)\n第三个方括号只能写 关键、结构、次要、待核实 之一。「待核实」指需要人确认事实或数据才能改的问题。「结构」指章节顺序或时间线跳跃、论证骨架、某一章整体没完成它的功能这类逐句改不动、要整章重写的问题,第二个方括号写明是哪一章(只写一章)。';
 function finalCommon(run, tr, dims) {
   const a = run.analysis || {};
   const aud = run.audience || {};
@@ -1354,7 +1375,7 @@ function parseOpen(block) {
     const m = l.replace(/\*+/g, '').match(/^\s*[-*\d.)]*\s*\[\s*(R\d+)\s*\]\s*\[\s*([^\]]*)\]\s*\[\s*([^\]]*)\]\s*(.+)$/i);
     if (!m) return;
     const [problem, ...rest] = m[4].split(/\s*[|｜]\s*/);
-    const level = /待核实|核实/.test(m[3]) ? '待核实' : /次要/.test(m[3]) ? '次要' : '关键';
+    const level = /待核实|核实/.test(m[3]) ? '待核实' : /次要/.test(m[3]) ? '次要' : /结构/.test(m[3]) ? '结构' : '关键';
     out.push({ id: m[1].toUpperCase(), chapter: (m[2].match(/CH\d+/gi) || []).map(x => x.toUpperCase()).join('/') || m[2].trim(), level, problem: problem.trim(), suggestion: rest.join(' | ').replace(/^建议(改法)?[:：]\s*/, '').trim() });
   });
   return out;
@@ -1375,6 +1396,35 @@ async function ensureRecheckBlocks(run, cfg, common, dims, s3, label) {
     verdict = verdict || parseVerdict(tx.VERDICT);
     return { tb: { ...tx, ...Object.fromEntries(Object.entries(tb).filter(([, v]) => v)) }, scores, verdict, refilled: true };
   } catch (e) { return { tb, scores, verdict }; }
+}
+
+// 终审不空转:一轮下来七维平均涨不到 STALL_MIN 分,再逐句改也没用(实测一篇 POV 稿改了 59 处,5.7 → 6,复审 3 轮都未达标),
+// 停下来;复审标成「结构」的问题(时间线跳跃、论证骨架、整章没完成功能)交给整章重写,每轮最多 STRUCT_MAX 章
+const STALL_MIN = 0.3, STRUCT_MAX = 2;
+function avgScore(scores, dims) {
+  const xs = dims.map(d => scores && scores[d]).filter(x => typeof x === 'number');
+  return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null;
+}
+const stalledBy = (before, after, dims) => { const a = avgScore(before, dims), b = avgScore(after, dims); return a != null && b != null && b - a < STALL_MIN; };
+// 按复审的结构问题整章重写(在内存里的稿子上改,不落盘);改长、结构坏了的章不采用
+async function structuralRewrite(run, asset, cfg, text, items, limit, label) {
+  const byCh = {};
+  arr(items).filter(x => x.level === '结构').forEach(x => { const ch = (String(x.chapter).match(/CH\d+/i) || [''])[0].toUpperCase(); if (ch) (byCh[ch] = byCh[ch] || []).push(x); });
+  const done = [];
+  for (const ch of Object.keys(byCh).slice(0, STRUCT_MAX)) {
+    const note = '复审指出这一章有结构问题,逐句改解决不了,请整章重写解决:\n' + byCh[ch].map(x => '- ' + x.problem + (x.suggestion ? '(建议:' + x.suggestion + ')' : '')).join('\n') +
+      '\n只重写这一章,篇幅不超过现在这一章;和前后章的衔接、已核实的事实和数字保持不变。';
+    try {
+      const out = await an().callJson(run, cfg, rewritePrompt({ ...run, script_v1: text }, asset, ch, note, false), label + '·整章重写 ' + ch, o => typeof o.text === 'string' && o.text.trim());
+      const t = replaceChapter(text, ch, String(out.text).replace(/^\s*\[CH\d+[^\]]*\]\s*\n?/, '').trim());
+      if (!t || checks.chapterStructureError(t)) { done.push({ chapter: ch, ok: false, error: '重写后章节结构不对,没有采用' }); continue; }
+      const g = limitChapterGrowth(text, t, limit);
+      if (g.rejected.length) { done.push({ chapter: ch, ok: false, error: g.rejected[0].reason + ',没有采用' }); continue; }
+      text = t;
+      done.push({ chapter: ch, ok: true, ids: byCh[ch].map(x => x.id) });
+    } catch (e) { done.push({ chapter: ch, ok: false, error: e.message }); }
+  }
+  return { text, done };
 }
 
 async function runFinal(runId) {
@@ -1417,7 +1467,7 @@ async function runFinal(runId) {
       const r3 = await callLong(run, cfg, an().fillVars(readPrompt('final_recheck.md'), {
         ...common, scores_before: dims.map(d => d + ': ' + (scoresBefore[d] != null ? scoresBefore[d] : '—')).join('\n'),
         edits_done: editsText(round === 1 ? edits : rechecks[rechecks.length - 1].edits_applied || []),
-        edits_instruction: allowEdits ? '如果未达标,在 ===VERDICT=== 那一行后面接着输出要补的修改(格式同前:每处以 ===EDIT=== 开头,写 章节/类别/原句/改成/理由;原句从上面「修改后的完整稿子」逐字复制;只修尚未解决的问题;不许把稿子改长,前 2 分钟只许删和换,程序会退回加长的修改),然后再写 ===END===。达标就不要输出修改。' : '这是最后一轮复审,只出报告,不要输出修改。',
+        edits_instruction: allowEdits ? '如果未达标,在 ===VERDICT=== 那一行后面接着输出要补的修改(格式同前:每处以 ===EDIT=== 开头,写 章节/类别/原句/改成/理由;原句从上面「修改后的完整稿子」逐字复制;只修尚未解决的问题;标成「结构」的问题不要逐句改,程序会把那一章整章重写;不许把稿子改长,前 2 分钟只许删和换,程序会退回加长的修改),然后再写 ===END===。达标就不要输出修改。' : '这是最后一轮复审,只出报告,不要输出修改。',
         script: text
       }), '终审·复审' + round);
       const s3 = splitReport(r3.content);
@@ -1425,15 +1475,24 @@ async function runFinal(runId) {
       const rc = { round, report: s3.report, scores: sc3, verdict, open: parseOpen(tb.OPEN), edits_applied: [], ...(refilled ? { refilled: true } : {}), ...(r3.truncated ? { truncated: true } : {}) };
       rechecks.push(rc);
       if (!allowEdits || verdict !== '未达标') break;
-      let edits2 = parseEdits(s3.tail);
+      // 分数没涨:不再逐句改,只做结构问题的整章重写;没有结构问题就停
+      const stalled = stalledBy(round === 1 ? scoresBefore : rechecks[rechecks.length - 2].scores, sc3, dims);
+      if (stalled) rc.stalled = true;
+      let edits2 = stalled ? [] : parseEdits(s3.tail);
       if (r3.truncated && !/^===\s*END\s*===/m.test(s3.tail)) edits2 = edits2.slice(0, -1);
-      if (!edits2.length) break;
-      const a2 = await applyWithRepair(run, cfg, text, edits2, '终审·复审' + round, limit);
-      rc.edits_applied = a2.edits.filter(e => e.ok);
-      failed = failed.concat(a2.edits.filter(e => !e.ok).map(e => ({ ...e, round: '2' })));
-      if (!rc.edits_applied.length) break;
-      edits = mergeRounds(base, text, edits, a2.edits);
-      text = a2.next;
+      if (edits2.length) {
+        const a2 = await applyWithRepair(run, cfg, text, edits2, '终审·复审' + round, limit);
+        rc.edits_applied = a2.edits.filter(e => e.ok);
+        failed = failed.concat(a2.edits.filter(e => !e.ok).map(e => ({ ...e, round: '2' })));
+        if (rc.edits_applied.length) { edits = mergeRounds(base, text, edits, a2.edits); text = a2.next; }
+      }
+      if (rc.open.some(x => x.level === '结构')) {
+        setFinalStage(runId, '整章重写');
+        const sr = await structuralRewrite(run, asset, cfg, text, rc.open, limit, '终审·复审' + round);
+        rc.structural = sr.done;
+        text = sr.text;
+      }
+      if (!rc.edits_applied.length && !arr(rc.structural).some(x => x.ok)) break;
     }
     const allEdits = edits.map((e, i) => ({ ...e, n: i + 1 })).concat(failed.map((e, i) => ({ ...e, ok: false, n: edits.length + i + 1 })));
     const last = rechecks[rechecks.length - 1] || {};
@@ -1455,7 +1514,7 @@ async function runFinal(runId) {
     fresh.review.final = {
       at: new Date().toISOString(), track: tr.key, track_name: tr.name, dims,
       audit_report: s1.report, scores_before: scoresBefore,
-      rechecks: rechecks.map(r => ({ round: r.round, report: r.report, scores: r.scores, verdict: r.verdict, open: r.open, edits: r.edits_applied.length })),
+      rechecks: rechecks.map(r => ({ round: r.round, report: r.report, scores: r.scores, verdict: r.verdict, open: r.open, edits: r.edits_applied.length, ...(r.stalled ? { stalled: true } : {}), ...(r.structural ? { structural: r.structural } : {}) })),
       scores_after: last.scores || {}, verdict: last.verdict || ''
     };
     if (text !== start) writeScript(fresh, text);
@@ -1509,7 +1568,7 @@ async function extractOpen(runId) {
 
 async function runFinalPatch(runId, body) {
   const cfg = pl().loadConfig();
-  let { run } = loadRunAsset(runId);
+  let { run, asset } = loadRunAsset(runId);
   if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
   const start = currentScript(run);
   const vByKey = Object.fromEntries(arr(run.review.versions).map(v => [v.key, v]));
@@ -1526,13 +1585,28 @@ async function runFinalPatch(runId, body) {
   store.saveRun(run);
   try {
     const common = finalCommon(run, tr, dims);
-    const selected = picked.length ? picked.map(x => '- [' + x.id + '][' + x.chapter + '][' + x.level + '] ' + x.problem + (x.suggestion ? '\n  复审建议:' + x.suggestion : '')).join('\n') : '(没有勾选复审问题,只按下面人的决定改)';
-    const r = await callLong(run, cfg, an().fillVars(readPrompt('final_patch.md'), { ...common, selected, note: note || '(没有补充意见)', script: d3.text }), '终审·补改');
-    let edits = parseEdits(r.content);
-    if (r.truncated && !/^===\s*END\s*===/m.test(r.content)) edits = edits.slice(0, -1);
-    const a = await applyWithRepair(run, cfg, d3.text, edits.map(e => ({ ...e, round: '补改' })), '终审·补改', growthLimit(run, d3.text));
+    // 勾选的「结构」问题整章重写,其余问题照常逐句补改
+    const structPicked = picked.filter(x => x.level === '结构');
+    const sentPicked = picked.filter(x => x.level !== '结构');
+    const selected = sentPicked.length ? sentPicked.map(x => '- [' + x.id + '][' + x.chapter + '][' + x.level + '] ' + x.problem + (x.suggestion ? '\n  复审建议:' + x.suggestion : '')).join('\n') : '(没有勾选复审问题,只按下面人的决定改)';
+    const limit = growthLimit(run, d3.text);
+    let edits = [], a = { next: d3.text, edits: [] };
+    if (sentPicked.length || note) {
+      const r = await callLong(run, cfg, an().fillVars(readPrompt('final_patch.md'), { ...common, selected, note: note || '(没有补充意见)', script: d3.text }), '终审·补改');
+      edits = parseEdits(r.content);
+      if (r.truncated && !/^===\s*END\s*===/m.test(r.content)) edits = edits.slice(0, -1);
+      a = await applyWithRepair(run, cfg, d3.text, edits.map(e => ({ ...e, round: '补改' })), '终审·补改', limit);
+    }
     const okNew = a.edits.filter(e => e.ok);
-    if (!okNew.length) throw new Error(edits.length ? '补改的 ' + edits.length + ' 处都没对上原句,稿子没有变化,可以再点一次' : 'AI 没有给出补改,稿子没有变化');
+    let structural = null;
+    if (structPicked.length) {
+      setFinalStage(runId, '整章重写');
+      const sr = await structuralRewrite(run, asset, cfg, a.next, structPicked, limit, '终审·补改');
+      structural = sr.done;
+      a.next = sr.text;
+    }
+    const structOk = arr(structural).filter(x => x.ok);
+    if (!okNew.length && !structOk.length) throw new Error(structural && structural.length ? '整章重写没有成功:' + structural.map(x => x.chapter + ' ' + x.error).join(';') : edits.length ? '补改的 ' + edits.length + ' 处都没对上原句,稿子没有变化,可以再点一次' : 'AI 没有给出补改,稿子没有变化');
     const pure = await purifyText(run, cfg, a.next, '终审·补改');
     const text = pure.text;
     // 复审(只出报告)
@@ -1541,7 +1615,7 @@ async function runFinalPatch(runId, body) {
     const r3 = await callLong(run, cfg, an().fillVars(readPrompt('final_recheck.md'), {
       ...common, patch_note: patchNote,
       scores_before: dims.map(d => d + ': ' + ((fin.scores_before || {})[d] != null ? fin.scores_before[d] : '—')).join('\n'),
-      edits_done: editsText(okNew),
+      edits_done: editsText(okNew) + (structOk.length ? '\n整章重写了:' + structOk.map(x => x.chapter).join('、') + '(解决复审指出的结构问题)' : ''),
       edits_instruction: '这是最后一轮复审,只出报告,不要输出修改。',
       script: text
     }), '终审·补改后复审');
@@ -1562,7 +1636,8 @@ async function runFinalPatch(runId, body) {
     fresh.review.deai = null;
     if (fresh.steps) delete fresh.steps.deai;
     const f2 = fresh.review.final;
-    f2.rechecks = arr(f2.rechecks).concat([{ round: arr(f2.rechecks).length + 1, patch: true, picked: picked.map(x => x.id), note, report: s3.report, scores, verdict, open: parseOpen(tb.OPEN), edits: okNew.length }]);
+    f2.rechecks = arr(f2.rechecks).concat([{ round: arr(f2.rechecks).length + 1, patch: true, picked: picked.map(x => x.id), note, report: s3.report, scores, verdict, open: parseOpen(tb.OPEN), edits: okNew.length,
+      ...(structural ? { structural } : {}), ...(verdict === '未达标' && stalledBy(last.scores, scores, dims) ? { stalled: true } : {}) }]);
     f2.scores_after = scores;
     f2.verdict = verdict;
     if (text !== start) writeScript(fresh, text);
@@ -1778,13 +1853,91 @@ async function runPasses(runId, from) {
   if (passRunning.has(runId)) throw Object.assign(new Error('有审稿正在跑,等它跑完再重跑'), { status: 409 });
   passRunning.add(runId);
   try {
-    const order = from === 'final' ? ['final'] : from === 'audit' ? ['audit'] : ['check', 'audit'];
+    // 二稿和终稿出来后各单独审一次开头;开头分析失败不挡后面的步骤
+    const order = from === 'final' ? ['final', 'opening'] : from === 'audit' ? ['audit'] : ['check', 'opening', 'audit'];
     for (const k of order) {
+      if (k === 'opening') { try { await runOpeningCard(runId); } catch (e) {} continue; }
       try { if (k === 'audit') await runReverseAudit(runId); else if (k === 'final') await runFinal(runId); else await runPass(runId, k); } catch (e) { break; }
     }
   } finally { passRunning.delete(runId); }
   // 中文对照放在锁外:翻译可能要好几分钟,期间不该挡住换赛道重新终审(翻译保存前会重读任务,只合并译文)
   await translateRun(runId);
+}
+
+// ---------- 开头单独审(二稿出来后、终审后各生成一次) ----------
+// 开头约 60 秒逐句列出(时间按配音语速推算)+ 中文 + 好在哪 + 可能掉人的地方 + 程序硬指标,给人单独审开头
+const OPENING_SEC = 60;
+function openingSlice(run) {
+  const script = checks.extractFinalScript(currentScript(run));
+  const wpm = require('./narration').narrationWpm(run, null).wpm || 150;
+  const all = checks.narrationLines(script, wpm);
+  const lines = all.filter(l => l.start < OPENING_SEC).map((l, i) => ({ n: i + 1, sec: Math.round(l.start), text: l.text, nums: l.nums }));
+  const after = all.filter(l => l.start >= OPENING_SEC).slice(0, 6).map(l => l.text).join(' ');
+  return { script, wpm, lines, after, hash: hash(lines.map(l => l.text).join('\n')) };
+}
+async function runOpeningCard(runId) {
+  const { run } = loadRunAsset(runId);
+  const cfg = pl().loadConfig();
+  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
+  const sl = openingSlice(run);
+  if (!sl.lines.length) throw Object.assign(new Error('稿子还没写好'), { status: 400 });
+  run.steps = { ...(run.steps || {}), opening_card: { status: 'running', started_at: new Date().toISOString() } };
+  store.saveRun(run);
+  const a = run.analysis || {};
+  const title = ((a.title || {}).final_title) || run.topic;
+  const lc = checks.listenCheck(sl.script, { wpm: sl.wpm, title, lang: (run.audience || {}).target_language });
+  const o = (lc && lc.opening) || {};
+  const hard = {
+    nums_10s: o.nums_10s || 0,
+    title_words: arr(o.title_words),
+    dense: sl.lines.filter(l => l.nums > 2).map(l => l.n),
+    issues: arr(lc && lc.issues).filter(i => /前 \d+ 秒/.test(i))
+  };
+  let bpHook = '';
+  try { bpHook = JSON.stringify((JSON.parse(checks.stripFence((run.outputs || {}).step1 || '')) || {}).hook || {}); } catch (e) {}
+  try {
+    const out = await an().callJson(run, cfg, an().fillVars(readPrompt('opening_card.md'), {
+      target_language: (run.audience || {}).target_language || '', wpm: String(sl.wpm), title,
+      thesis: JSON.stringify(a.thesis_card || {}), hook: bpHook || '(无)',
+      hard: '- 前 10 秒念了 ' + hard.nums_10s + ' 个数字\n- 标题关键词出现时间:' + (hard.title_words.map(w => w.word + (w.sec == null ? ' 没出现' : ' ' + w.sec + ' 秒')).join('、') || '(无)') +
+        '\n- 一句超过 2 个数字的句子编号:' + (hard.dense.join('、') || '无'),
+      lines: sl.lines.map(l => l.n + ' | ' + checks.fmt(l.sec) + ' | ' + l.text).join('\n'),
+      after: sl.after || '(无)'
+    }), '开头单独审', x => Array.isArray(x.lines) && x.lines.length);
+    const zh = Object.fromEntries(arr(out.lines).map(x => [Number(x.n), String(x.zh || '')]));
+    const fresh = store.getRun(runId) || run;
+    fresh.review = fresh.review || {};
+    fresh.review.opening = {
+      at: new Date().toISOString(), hash: sl.hash, wpm: sl.wpm, title,
+      lines: sl.lines.map(l => ({ ...l, zh: zh[l.n] || '' })),
+      hook: String(out.hook || ''), title_conflict_sec: out.title_conflict_sec ?? null, first_payoff_sec: out.first_payoff_sec ?? null,
+      strengths: arr(out.strengths).filter(Boolean).map(String), risks: arr(out.risks).filter(Boolean).map(String),
+      verdict: hard.issues.length ? '建议改' : String(out.verdict || ''), hard
+    };
+    fresh.steps = { ...(fresh.steps || {}), opening_card: { status: 'done', finished_at: new Date().toISOString() } };
+    if (run.attempts) fresh.attempts = run.attempts;
+    store.saveRun(fresh);
+  } catch (e) {
+    const fresh = store.getRun(runId) || run;
+    fresh.steps = { ...(fresh.steps || {}), opening_card: { status: 'failed', error: e.message } };
+    store.saveRun(fresh);
+    throw e;
+  }
+}
+function startOpeningCard(runId) {
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  if (((run.steps || {}).opening_card || {}).status === 'running') throw Object.assign(new Error('开头分析正在跑'), { status: 409 });
+  runOpeningCard(runId).catch(() => {});
+  return { ok: true };
+}
+function openingView(run) {
+  const o = (run.review || {}).opening;
+  const st = (run.steps || {}).opening_card || null;
+  if (!o) return st ? { status: st } : null;
+  let stale = false;
+  try { stale = openingSlice(run).hash !== o.hash; } catch (e) {}
+  return { ...o, stale, status: st };
 }
 
 // ---------- 一键生成 ----------
@@ -1881,20 +2034,15 @@ function undo(runId, chId) {
 const COMPRESS_NOTE = '这一段在本题里撑不住,压成 1–2 句过渡:只保留它要交给下一章的悬念或问题,其他内容删掉。';
 
 // 只重写一章:前后章做衔接参考,不动
-async function rewriteChapter(runId, chId, note, opts) {
-  const { run, asset } = loadRunAsset(runId);
-  assertDone(run);
-  const cfg = pl().loadConfig();
-  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
-  if (!String(note || '').trim()) throw Object.assign(new Error('意见为空'), { status: 400 });
+// 单章重写的提示词;run 的当前稿就是要改的稿(终审整章重写时传入内存里的稿)
+function rewritePrompt(run, asset, chId, note, compress) {
   const view = buildView(run, asset);
   const i = view.rows.findIndex(r => r.id === chId);
   if (i < 0) throw Object.assign(new Error('找不到章节 ' + chId), { status: 400 });
   const row = view.rows[i];
   const bp = blueprintOf(run).find(c => c.id === chId) || {};
   const a = run.analysis || {};
-  const compress = !!(opts && opts.compress);
-  const prompt = an().fillVars(readPrompt('rewrite_segment.md'), {
+  return an().fillVars(readPrompt('rewrite_segment.md'), {
     today: pl().todayStr(),
     topic: run.topic,
     title: ((a.title || {}).final_title) || run.topic,
@@ -1912,6 +2060,16 @@ async function rewriteChapter(runId, chId, note, opts) {
     word_budget: compress ? '30 词以内' : String(row.budget || row.words),
     note: compress ? COMPRESS_NOTE + (String(note || '').trim() === COMPRESS_NOTE ? '' : '\n' + note) : note
   });
+}
+
+async function rewriteChapter(runId, chId, note, opts) {
+  const { run, asset } = loadRunAsset(runId);
+  assertDone(run);
+  const cfg = pl().loadConfig();
+  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
+  if (!String(note || '').trim()) throw Object.assign(new Error('意见为空'), { status: 400 });
+  const compress = !!(opts && opts.compress);
+  const prompt = rewritePrompt(run, asset, chId, note, compress);
   const out = await an().callJson(run, cfg, prompt, '单章重写 ' + chId, o => typeof o.text === 'string' && o.text.trim());
   const text = String(out.text).replace(/^\s*\[CH\d+[^\]]*\]\s*\n?/, '').trim(); // 模型偶尔把标签行带进来
   const fresh = store.getRun(runId) || run;
@@ -1960,4 +2118,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

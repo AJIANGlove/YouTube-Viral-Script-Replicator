@@ -391,20 +391,26 @@ function narrationLines(script, wpm) {
   return out;
 }
 // 标题关键词:按空格切,去标点;韩文取前 2 个字当词干(조사、어미不同也能对上),数字只认数字
+const TITLE_STOPWORDS = new Set(['the', 'a', 'an', 'of', 'to', 'in', 'on', 'at', 'for', 'and', 'or', 'but', 'is', 'are', 'was', 'were', 'be', 'do', 'did', 'does', 'how', 'what', 'when', 'why', 'who', 'which', 'where', 'it', 'its', 'you', 'your', 'if', 'with', 'from', 'by', 'as', 'that', 'this', 'they', 'their', 'can', 'could', 'would', 'without']);
 function titleStems(title) {
-  return [...new Set(String(title || '').split(/[\s,.!?…·:;'"“”‘’()\[\]-]+/).map(t => t.trim()).filter(t => t.length >= 2)
+  return [...new Set(String(title || '').split(/[\s,.!?…·:;'"“”‘’()\[\]-]+/).map(t => t.trim()).filter(t => t.length >= 2 && !TITLE_STOPWORDS.has(t.toLowerCase()))
     .map(t => /^\d/.test(t) ? t.match(/^\d[\d,.]*/)[0] : /[가-힯]/.test(t) ? t.slice(0, 2) : t.toLowerCase()))];
 }
 // 韩文语体:-다(반말/서술체)和 -니다/-요(존댓말)混用,听起来像两个人在说
 // 少数一方达到 3 句就算混用(实测两篇 -니다 体稿里各混进 6、11 句 -다 体,按比例算都不到 10%)
 const REGISTER_MAX_MINOR = 3;
+// -ㅂ니다/-습니다/-ㅂ니까:「니」前一个字带ㅂ收音。「아니다」也以「니다」结尾,但它是 -다 体(实测 POV 稿 22 句误判)
+function hamnida(t) {
+  const m = t.match(/([가-힣])니[다까]$/);
+  return !!m && (m[1] === '습' || (m[1].charCodeAt(0) - 0xAC00) % 28 === 17);
+}
 function koreanRegister(lines) {
   const c = { plain: [], formal: [] };
   lines.forEach(l => {
     if (/^["“「'‘]/.test(l.text)) return; // 引语不算
     const t = l.text.replace(/["”」'’)\]]+$/, '').replace(/[.!?。…]+$/, '');
-    if (/(니다|니까|세요|어요|아요|해요|에요|예요|죠|지요|군요|네요|까요|래요|대요|거든요|잖아요)$/.test(t)) c.formal.push(l);
-    else if (/[^니]다$|[가-힣](냐|자)$/.test(t)) c.plain.push(l); // 「…걸까?」这类自问在 -니다 体里也常用,不算
+    if (/(세요|어요|아요|해요|에요|예요|죠|지요|군요|네요|까요|래요|대요|거든요|잖아요)$/.test(t) || hamnida(t)) c.formal.push(l);
+    else if (/다$|[가-힣](냐|자)$/.test(t)) c.plain.push(l); // 「…걸까?」这类自问在 -니다 体里也常用,不算
   });
   const n = c.plain.length + c.formal.length;
   const minor = c.plain.length <= c.formal.length ? 'plain' : 'formal';
