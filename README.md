@@ -288,15 +288,15 @@ node app/server.js
 
 **运行日志**：
 
-`app/data/logs/` 下的批次与失败样本按约定公开，用于复现问题与核对批处理结果：
+`app/data/logs/` 下的批次、失败样本与渠道异常留痕全部公开，用于复现问题与核对批处理结果：
 
-| 文件 | 内容 | 是否入库 |
+| 文件 | 内容 | 入库 |
 |---|---|---|
 | `retention_ai_20261022.log` | 留存卡 AI 润色的逐资产进度与失败回退记录（179 个资产） | 是 |
 | `compliance_fail_*.txt` | 商业化检查被模型拒绝时的原始返回（失败样本） | 是 |
 | `opening_fail_*.txt` | 开头留存检查失败时的原始返回 | 是 |
 | `probes/*.txt` | 开头留存检查的模型原始输出（按 run + 版本存） | 是 |
-| `llm_*.txt` | 渠道异常留痕（HTTP 错误 / 空响应 / 断流时响应体前 4KB） | **否**，含完整响应体，已在 `.gitignore` |
+| `llm_*.txt` | 渠道异常留痕（HTTP 错误 / 空响应 / 断流时响应体前 4KB），含 label、model、耗时、字符数 | 是 |
 
 每个任务的 `attempts`、`checks`、`steps` 明细在 `app/data/runs/<id>.json` 内，与日志互为补充。
 
