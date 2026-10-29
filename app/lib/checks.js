@@ -371,15 +371,22 @@ function cleanForeignScript(text, lang) {
 // 时间按字数和配音语速(wpm)估,句子级的位置会差几秒。
 const NUM_TOKEN = /\d[\d,.]*/g;
 const OPEN_TITLE_SEC = 8, OPEN_NUM_SEC = 10, OPEN_MAX_NUMS = 1, LINE_MAX_NUMS = 2;
+// 句末标点后接空白才算断句(5.5시간 里的点不算);引号跟在句末标点后面的一起带走
+function sentencesOf(line) {
+  return String(line).split(/(?<=[.!?。！？…]["”’」)]?)\s+/).map(t => t.trim()).filter(Boolean);
+}
 function narrationLines(script, wpm) {
   const out = [];
   let acc = 0;
   String(script || '').split('\n').forEach(raw => {
     const l = raw.trim();
     if (!l || /^\[CH\d+/.test(l) || /^(---|#)/.test(l)) return;
-    const w = Math.max(countWords(l), 1);
-    out.push({ text: l, start: acc / wpm * 60, end: (acc + w) / wpm * 60, nums: (l.match(NUM_TOKEN) || []).length });
-    acc += w;
+    // 一行可能是一整段(run_7148b9d76755 每章只有一段):按句切开,时间和数字都按句算
+    sentencesOf(l).forEach(t => {
+      const w = Math.max(countWords(t), 1);
+      out.push({ text: t, start: acc / wpm * 60, end: (acc + w) / wpm * 60, nums: (t.match(NUM_TOKEN) || []).length });
+      acc += w;
+    });
   });
   return out;
 }
@@ -389,17 +396,19 @@ function titleStems(title) {
     .map(t => /^\d/.test(t) ? t.match(/^\d[\d,.]*/)[0] : /[가-힯]/.test(t) ? t.slice(0, 2) : t.toLowerCase()))];
 }
 // 韩文语体:-다(반말/서술체)和 -니다/-요(존댓말)混用,听起来像两个人在说
+// 少数一方达到 3 句就算混用(实测两篇 -니다 体稿里各混进 6、11 句 -다 体,按比例算都不到 10%)
+const REGISTER_MAX_MINOR = 3;
 function koreanRegister(lines) {
   const c = { plain: [], formal: [] };
   lines.forEach(l => {
     if (/^["“「'‘]/.test(l.text)) return; // 引语不算
     const t = l.text.replace(/["”」'’)\]]+$/, '').replace(/[.!?。…]+$/, '');
     if (/(니다|니까|세요|어요|아요|해요|에요|예요|죠|지요|군요|네요|까요|래요|대요|거든요|잖아요)$/.test(t)) c.formal.push(l);
-    else if (/[^니]다$|[가-힣](까|냐|자|라)$/.test(t)) c.plain.push(l);
+    else if (/[^니]다$|[가-힣](냐|자)$/.test(t)) c.plain.push(l); // 「…걸까?」这类自问在 -니다 体里也常用,不算
   });
   const n = c.plain.length + c.formal.length;
   const minor = c.plain.length <= c.formal.length ? 'plain' : 'formal';
-  return { plain: c.plain.length, formal: c.formal.length, mixed: n >= 10 && c[minor].length / n >= 0.1, minor, examples: c[minor].slice(0, 3).map(l => l.text) };
+  return { plain: c.plain.length, formal: c.formal.length, mixed: n >= 10 && c[minor].length >= REGISTER_MAX_MINOR, minor, examples: c[minor].slice(0, 8).map(l => l.text) };
 }
 function listenCheck(script, opts) {
   const o = opts || {};
