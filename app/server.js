@@ -473,6 +473,10 @@ const server = http.createServer(async (req, res) => {
         draft_first: !!body.draft_first,
         pre_analysis: !!body.pre_analysis || !!body.draft_first,
         track: typeof body.track === 'string' ? body.track.trim() : '',
+        // 频道方向(审稿赛道):建任务时按框架选定,之后审稿报告、终审、去AI感都锁定用它
+        review_track: review.TRACK_KEYS.includes(body.review_track) ? body.review_track : '',
+        // 写前分析的赛道证据卡也跟着频道方向走(通用方向没有专门的卡,照旧自动匹配)
+        ...(review.TRACK_KEYS.includes(body.review_track) && review.loadTrack(body.review_track).match ? { track_card_name: review.loadTrack(body.review_track).match } : {}),
         materials: typeof body.materials === 'string' ? body.materials.trim() : '',
         // 频道声音设定:'__auto__' 按频道名匹配(默认) / '__none__' 不用 / 设定名
         voice_name: typeof body.voice_name === 'string' ? body.voice_name : voice.AUTO
@@ -589,6 +593,16 @@ const server = http.createServer(async (req, res) => {
       r.analysis_saved_at = new Date().toISOString();
       store.saveRun(r);
       return send(res, 200, { ok: true, id: r.id, analysis: r.analysis, analysis_saved_at: r.analysis_saved_at });
+    }
+
+    // 换框架:写前分析判「换框架」时的推荐 / 换成推荐的框架重跑 / 仍按现在的框架写
+    const rfMatch = url.match(/^\/api\/runs\/([\w-]+)\/reframe$/);
+    if (rfMatch && method === 'POST') {
+      const body = await readBody(req);
+      const reframe = require('./lib/reframe');
+      if (body.action === 'switch') return send(res, 200, reframe.switchTo(rfMatch[1], String(body.asset_id || '')));
+      if (body.action === 'ignore') return send(res, 200, reframe.ignore(rfMatch[1]));
+      return send(res, 200, reframe.startSuggest(rfMatch[1]));
     }
 
     // 重新分析:可补充参考资料(materials)、指定赛道证据卡(track_card_name)
@@ -1362,5 +1376,12 @@ server.listen(PORT, HOST, () => {
       store.saveRun(r);
       console.log(`翻译中断落成失败(可重翻): ${r.id}`);
     }
+  }
+  // 换框架推荐卡在「推荐中」(状态在 run.reframe 不在 steps,上面的循环够不着):
+  // 崩溃后 startSuggest 的 409 会永久挡住「换一批推荐」,落成 failed 可手动重推
+  for (const r of store.listRuns().filter(x => (x.reframe || {}).status === 'suggesting')) {
+    r.reframe = { ...r.reframe, status: 'failed', error: '进程重启中断,可重新推荐' };
+    store.saveRun(r);
+    console.log(`换框架推荐中断落成失败(可重推): ${r.id}`);
   }
 });

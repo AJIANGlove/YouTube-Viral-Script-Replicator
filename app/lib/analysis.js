@@ -277,6 +277,8 @@ async function runAnalysis(runId) {
     run.steps.analysis = { ...run.steps.analysis, status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString() };
     run.status = 'awaiting_review';
     store.saveRun(run);
+    // 人工确认模式判了「换框架」:顺手出框架推荐,人在分析页直接换(先写后改模式在 finishDraftFirst 里停住并推荐)
+    if (!run.draft_first && a.verdict === '换框架') require('./reframe').suggest(runId).catch(() => {});
   } catch (e) {
     run.status = 'failed';
     run.error = '写前分析失败: ' + e.message;

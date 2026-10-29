@@ -556,7 +556,9 @@
         </div>
       </div>
       <div class="grid" style="margin-top:8px">
-        <div><label>新主题(选题)</label><input type="text" id="gen-topic" placeholder="例如:The Economics of Owning a Casino"></div>
+        <div><label>新主题(选题)</label><input type="text" id="gen-topic" placeholder="例如:The Economics of Owning a Casino">
+          <label style="margin-top:8px">频道方向(审稿赛道)</label><select id="gen-review-track"></select>
+          <div class="hint" id="gen-review-track-hint">按选的框架自动选好。之后的写前分析、审稿报告、终审和去AI感都按这个方向审,不用再选。</div></div>
         <div>
           <label>频道(选填 · 推送视频时使用)</label>
           <div class="combo">
@@ -690,6 +692,7 @@
       <div id="detail-error" class="err-list"></div>
     </div>
     <div class="card hidden" id="rv-panel"></div>
+    <div class="card hidden" id="rf-panel"></div>
     <div class="card hidden" id="an-panel"></div>
     <div class="card hidden" id="ret-panel"></div>
     <div class="card hidden" id="yt-panel"></div>
@@ -1202,6 +1205,10 @@ function gotoStep2() {
   if (a && a.source_duration_ms) {
     document.getElementById('gen-goal').value = Math.round(a.source_duration_ms / 60000) + '分钟';
   }
+  // 频道方向:框架库分类就是审稿赛道,默认取框架所在分类
+  const rt = document.getElementById('gen-review-track');
+  const keyOf = (a && a.track) || 'general';
+  rt.innerHTML = (assetTracks || []).map(t => `<option value="${escAttr(t.key)}"${t.key === keyOf ? ' selected' : ''}>${esc(t.name)}${t.key === keyOf ? '(框架所在分类)' : ''}</option>`).join('');
   document.getElementById('gen-status').textContent = '';
   setGenStep(2);
 }
@@ -1233,6 +1240,7 @@ async function createRun() {
     draft_first: genMode() === 'draft_first',
     pre_analysis: genMode() === 'pre_analysis',
     track: document.getElementById('gen-track').value.trim(),
+    review_track: (document.getElementById('gen-review-track') || {}).value || '',
     materials: document.getElementById('gen-materials').value.trim(),
     voice_name: document.getElementById('gen-voice').value
   };
@@ -1399,6 +1407,7 @@ const COUNTRY_LABELS = { US: '美国', IN: '印度', BR: '巴西', MX: '墨西�
 
 // 一键生成的任务在「待确认分析」只是 AI 先调整那几分钟,不需要人去确认
 function statusLabel(r) {
+  if (r.draft_first && r.status === 'awaiting_review' && r.analysis && r.analysis.verdict === '换框架' && (r.reframe || {}).status !== 'ignored') return '待换框架';
   if (r.draft_first && r.status === 'awaiting_review') return 'AI 调整中';
   const st = r.steps || {};
   if (r.draft_first && r.status === 'done' && (st.reverse_audit || {}).status === 'done' && !st.final_review) return '待选审稿意见';
@@ -1430,6 +1439,10 @@ function viralIcon(filled, cls) {
 }
 
 function runOpsCell(r) {
+  if (r.status === 'awaiting_review' && r.draft_first && statusLabel(r) === '待换框架') {
+    return `<button class="op-btn" onclick="event.stopPropagation();openRun('${r.id}')">去换框架</button> `
+      + `<button class="op-btn danger" onclick="event.stopPropagation();cancelRunById('${r.id}')">取消</button>`;
+  }
   if (r.status === 'awaiting_review' && !r.draft_first) {
     return `<button class="op-btn" onclick="event.stopPropagation();openRun('${r.id}')">去确认</button> `
       + `<button class="op-btn danger" onclick="event.stopPropagation();cancelRunById('${r.id}')">取消</button>`;
@@ -1787,6 +1800,7 @@ async function loadRunDetail() {
       ? ' <button class="primary" style="margin-left:8px" onclick="retryRun()">续跑此任务</button>' : '');
 
   renderReviewPanel(r);
+  renderReframePanel(r);
   renderAnalysisPanel(r);
   renderRetentionCheck(r);
   renderYtPanel(r);
@@ -1893,6 +1907,7 @@ async function renderReviewPanel(r) {
   el.classList.remove('hidden');
   if (!rvState || rvState.runId !== r.id) rvState = { runId: r.id, open: !!r.draft_first, key: null, view: null, busy: {}, panel: {}, onlyFlags: false, err: '', msg: {} };
   if (!(hasScript && r.status === 'done')) {
+    if (statusLabel(r) === '待换框架') { el.innerHTML = `<h2 class="v13">审稿:初稿 → 二稿 → 终稿</h2><div class="hint v13">写前分析判定这个框架套不上题目,已暂停写稿。在上面换一个框架,或选「不换」后会接着写。</div>`; return; }
     const step = r.status === 'analyzing' ? '写前分析' : r.status === 'awaiting_review' ? 'AI 先调整(查资料、补事实、定取舍)' : (r.status === 'failed' || r.status === 'cancelled') ? '' : '写稿';
     el.innerHTML = `<h2 class="v13">审稿:初稿 → 二稿 → 终稿</h2><div class="hint v13">${step ? 'AI 正在一键生成,现在在「' + step + '」。写完初稿后会自动检查出二稿,再对照原片出一份二稿审稿报告;你在报告里选要改的问题,再终审出终稿。这里会逐章展示改前改后。' : '任务没有写完,续跑后再审稿。'}</div>`;
     return;
@@ -2219,9 +2234,10 @@ function rvAuditHtml(v) {
     ${au.stale ? '<div class="rv-flag"><b>注意</b>:报告出来以后稿子又改过,报告里引用的原句可能对不上;可以在上面重跑审稿报告。</div>' : ''}
     ${au.truncated ? '<div class="rv-flag"><b>注意</b>:报告太长,续写几次后仍被截断,后半部分可能不全;可以在设置里调大 Max Tokens 再重跑。</div>' : ''}
     ${used ? `<div class="hint v13">终稿是按这次选择改的:${used.ids.length ? used.ids.map(esc).join('、') : '没选问题'}${used.route ? ',路线 ' + used.route + '. ' + RV_ROUTES[used.route] : ''}${used.note ? ',补充:' + esc(used.note) : ''}。换一组再终审,会从二稿重新改。</div>` : ''}
-    <div class="an-sec v13">0. 选赛道(终审按这个赛道的侧重点审稿、修改、复审)</div>
+    ${v.track_locked ? `<div class="an-sec v13">0. 赛道:${esc(rvTrackName(v, v.track_default))}(建任务时选定的频道方向,终审按它审稿、修改、复审)</div>
+    <div class="rv-ops"><span class="hint">${esc(RV_TRACK_TIPS[v.track_default] || '')}</span></div>` : `<div class="an-sec v13">0. 选赛道(终审按这个赛道的侧重点审稿、修改、复审)</div>
     <div class="rv-ops"><select onchange="rvState.auditSel.track = this.value; rvDraw()" ${busy ? 'disabled' : ''}>${(v.tracks || []).map(x => `<option value="${escAttr(x.key)}" ${sel.track === x.key ? 'selected' : ''}>${esc(x.name)}${x.key === v.track_default ? '(自动匹配)' : ''}</option>`).join('')}</select>
-      <span class="hint">${esc(RV_TRACK_TIPS[sel.track] || '')}</span></div>
+      <span class="hint">${esc(RV_TRACK_TIPS[sel.track] || '')}</span></div>`}
     <div class="an-sec v13">1. 勾选要改的问题(默认勾上 S/A 级和 P0/P1;不想改的取消勾选)</div>
     <div class="rv-ops"><button class="an-btn" onclick="rvAuditAll(true)" ${busy ? 'disabled' : ''}>全选</button><button class="an-btn" onclick="rvAuditAll(false)" ${busy ? 'disabled' : ''}>全不选</button><button class="an-btn" onclick="rvAuditAll('sa')" ${busy ? 'disabled' : ''}>只选 S/A 级</button><span class="hint">已选 ${sel.ids.size} 个</span></div>
     ${estLine}
@@ -2293,7 +2309,10 @@ function rvDocHtml(rev, clean, translating, baseLabel) {
     <div class="rv-doc">${body}</div>`;
 }
 
+const rvTrackName = (v, k) => ((v.tracks || []).find(x => x.key === k) || {}).name || k;
+// 建任务时选定了频道方向:只显示,不能换
 function rvTrackSelect(v, cur, onchange, busy) {
+  if (v.track_locked) return `<b>${esc(rvTrackName(v, v.track_default))}</b><span class="hint">(建任务时选定)</span>`;
   return `<select onchange="${onchange}" ${busy ? 'disabled' : ''}>${(v.tracks || []).map(x => `<option value="${escAttr(x.key)}" ${cur === x.key ? 'selected' : ''}>${esc(x.name)}${x.key === v.track_default ? '(自动匹配)' : ''}</option>`).join('')}</select>`;
 }
 
@@ -2327,7 +2346,7 @@ function rvRevisionHtml(rev, translating) {
       ${(fin.rechecks || []).map(r => `<details class="rv-md-box"><summary>复审报告(第 ${r.round} 轮${r.patch ? '·按复审意见补改后' : ''}:${esc(r.verdict || '—')}${r.edits ? (r.patch ? ',补改了 ' : ',又改了 ') + r.edits + ' 处' : ''}${(r.structural || []).length ? ',整章重写 ' + r.structural.map(x => x.chapter + (x.ok ? '' : '(没采用)')).join('、') : ''}${r.stalled ? ',分数没涨' : ''})</summary>${(r.structural || []).filter(x => !x.ok).map(x => `<div class="hint">${esc(x.chapter)} 整章重写没采用:${esc(x.error || '')}</div>`).join('')}${r.patch && r.note ? `<div class="hint">你的决定:${esc(r.note)}</div>` : ''}<div class="rv-md">${rvMd(r.report)}</div></details>`).join('')}
       ${rvPatchHtml(v, busy)}`;
   }
-  const ft = rvState.finalTrack || (fin && fin.track) || v.track_default || 'general';
+  const ft = v.track_locked ? v.track_default : rvState.finalTrack || (fin && fin.track) || v.track_default || 'general';
   const trackRow = `<div class="rv-ops v13"><b>终审赛道</b>${rvTrackSelect(v, ft, "rvState.finalTrack=this.value;rvDraw()", busy)}
       <span class="hint">${esc(RV_TRACK_TIPS[ft] || '')}</span>
       <button class="an-btn v13" onclick="rvRefinal()" ${busy ? 'disabled' : ''}>${(P.final || {}).status === 'running' ? '终审进行中…' : fin && ft !== fin.track ? '换这个赛道重新终审' : '重新终审'}</button></div>
@@ -2504,7 +2523,7 @@ function rvDeaiSel(d) {
 function rvDeaiHtml(v, translating, busy) {
   const d = v.deai;
   const st = (v.passes || {}).deai || {};
-  const dt = rvState.deaiTrack || (d && d.track) || ((v.final || {}).track) || v.track_default || 'general';
+  const dt = v.track_locked ? v.track_default : rvState.deaiTrack || (d && d.track) || ((v.final || {}).track) || v.track_default || 'general';
   const running = st.status === 'running';
   const pending = `<span class="hint">${translating ? '中文翻译中…' : '(还没有中文)'}</span>`;
   const ctrl = `<div class="hint v13">去AI感分两步:① AI 先诊断终稿里机械、重复、模板化的地方,每处给 3~5 种改法(都配中文,从改动最小排到最大),这一步不动稿子;② 你勾选要改的位置、挑一种改法(也可以在框里自己改),点「修改并去除AI感」,按你的选择替换,结果写回 V1 文案。</div>
@@ -3813,6 +3832,52 @@ function anRenderEditor() {
   anValidateNow();
 }
 
+// 写前分析判「换框架」:停下来推荐 3 个框架,选一个就换框架重跑分析(先写后改的任务一路接着写);也可以仍按现在的框架写
+let rfRenderedKey = null;
+function renderReframePanel(r) {
+  const el = document.getElementById('rf-panel');
+  const rf = r.reframe || {};
+  const show = r.analysis && r.analysis.verdict === '换框架' && !r.analysis_confirmed && r.status === 'awaiting_review' && rf.status !== 'ignored';
+  const switched = (rf.switched || []).slice(-1)[0];
+  if (!show && !(switched && !r.analysis_confirmed && ['analyzing', 'awaiting_review'].includes(r.status))) { el.classList.add('hidden'); rfRenderedKey = null; return; }
+  const key = JSON.stringify([r.id, r.status, rf, (r.analysis || {}).verdict]);
+  if (key === rfRenderedKey) return;
+  rfRenderedKey = key;
+  el.classList.remove('hidden');
+  if (!show) {
+    el.innerHTML = `<h2>换框架</h2><div class="hint">已从「${esc(switched.from_name || switched.from)}」换成「${esc(r.asset_name || r.asset_id)}」,${r.status === 'analyzing' ? '正在重新做写前分析…' : '写前分析已重新做完。'}</div>`;
+    return;
+  }
+  const reasons = (rf.reasons || r.analysis.reframe_reasons || []);
+  const picks = rf.picks || [];
+  const busy = rf.status === 'suggesting';
+  let h = `<h2 style="color:#b91c1c">写前分析判定「换框架」${r.draft_first ? ',已暂停写稿' : ''}</h2>
+    <div class="hint">现在的框架「${esc(r.asset_name || r.asset_id)}」套不上这个题目。照写的稿子进终审时平均低 1 分左右。从下面推荐的框架里选一个,会换框架重新做写前分析${r.draft_first ? ',然后接着自动写稿' : ''}。</div>
+    ${reasons.length ? `<details style="margin:6px 0"><summary style="cursor:pointer;font-size:13px">为什么套不上(${reasons.length} 条)</summary>${reasons.map((x, i) => `<div class="hint">${i + 1}. ${esc(x)}</div>`).join('')}</details>` : ''}`;
+  if (busy) h += `<div class="rv-flag"><b>AI 正在从框架库里挑更合适的框架…</b>一般一两分钟。</div>`;
+  else if (rf.status === 'failed') h += `<div class="err-list">推荐没出来:${esc(rf.error || '')}</div>`;
+  if (picks.length) {
+    h += picks.map((p, i) => `<div class="rv-ai${p.recommended ? ' on' : ''}" style="${p.recommended ? 'border-color:#16a34a;background:#f0fdf4' : ''}">
+      <div class="rv-ai-head"><b>${i + 1}. ${esc(p.name)}</b>${p.recommended ? ' <span class="rv-chip green">★ 推荐</span>' : ''} ${p.fit ? `<span class="rv-chip yellow">${esc(p.fit)}</span>` : ''}</div>
+      <div class="rv-ai-body">${p.source ? `<div class="hint">原片:${esc(p.source)}</div>` : ''}<div>${esc(p.why)}</div>
+        ${p.adjust ? `<div class="hint">要调的地方:${esc(p.adjust)}</div>` : ''}${p.risk ? `<div class="hint">风险:${esc(p.risk)}</div>` : ''}
+        <div class="rv-ops"><button class="an-btn v13" onclick="rfSwitch('${escAttr(p.asset_id)}', this)">换成这个框架${r.draft_first ? '并继续写稿' : '重新分析'}</button></div></div></div>`).join('');
+    if (rf.topic_note) h += `<div class="rv-flag"><b>题目建议</b>:${esc(rf.topic_note)}</div>`;
+  }
+  h += `<div class="rv-ops" style="margin-top:8px">${!busy ? `<button class="an-btn" onclick="rfAction('suggest', this)">${picks.length ? '换一批推荐' : '让 AI 推荐框架'}</button>` : ''}
+    <button class="an-btn" onclick="rfIgnore(this)">不换,仍按现在的框架${r.draft_first ? '写' : '(在下面确认分析)'}</button></div>`;
+  el.innerHTML = h;
+}
+async function rfAction(action, btn, extra) {
+  if (btn) btn.disabled = true;
+  try { await api('/api/runs/' + currentRunId + '/reframe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action, ...(extra || {}) }) }); }
+  catch (e) { alert(e.message); if (btn) btn.disabled = false; return; }
+  rfRenderedKey = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 600);
+}
+function rfSwitch(id, btn) { if (confirm('换成这个框架,重新做写前分析?')) rfAction('switch', btn, { asset_id: id }); }
+function rfIgnore(btn) { if (confirm('不换框架,仍按现在的框架写?分析判定套不上,写出来分数通常偏低。')) rfAction('ignore', btn); }
+
 function renderAnalysisPanel(r) {
   const el = document.getElementById('an-panel');
   const st = (r.steps || {}).analysis || {};
@@ -3821,7 +3886,7 @@ function renderAnalysisPanel(r) {
   if (anEdit && anEdit.runId !== r.id) anEdit = null;
   if (r.analysis_confirmed || r.status !== 'awaiting_review') anEdit = null;
 
-  const key = [r.id, r.status, r.analysis_confirmed, st.finished_at, st.status].join('|');
+  const key = [r.id, r.status, r.analysis_confirmed, st.finished_at, st.status, (r.reframe || {}).status].join('|');
 
   if (r.status === 'analyzing') {
     if (key === anRenderedKey) return;
@@ -3849,7 +3914,7 @@ function renderAnalysisPanel(r) {
     if (key === anRenderedKey) return;
     anRenderedKey = key;
     anEdit = null;
-    el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">先写后改模式:${r.status === 'awaiting_review' ? 'AI 正在自动调整事实、账本与留存取舍,完成后直接写稿,无需确认。' : '由 AI 自动分析与调整,无需人工确认。'}</div>
+    el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">先写后改模式:${statusLabel(r) === '待换框架' ? '分析判定「换框架」,等你在上面选框架。' : r.status === 'awaiting_review' ? 'AI 正在自动调整事实、账本与留存取舍,完成后直接写稿,无需确认。' : '由 AI 自动分析与调整,无需人工确认。'}</div>
       <details><summary style="cursor:pointer"><b>查看 AI 的分析与调整(只读)</b></summary>${analysisHtml(r.analysis)}</details>`;
     return;
   }

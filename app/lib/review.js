@@ -319,7 +319,7 @@ function buildView(run, asset) {
       return { ...f, rechecks, scores_before: fillScores(f.scores_before, f.audit_report, dims, 1), scores_after: last ? { ...last.scores, ...(f.scores_after || {}) } : f.scores_after };
     })() : null,
     opening: openingView(run),
-    tracks: trackList(), track_default: state.final_track || autoTrack(run, asset),
+    tracks: trackList(), track_default: lockedTrack(run) || state.final_track || autoTrack(run, asset), track_locked: !!lockedTrack(run),
     translating: ((run.steps || {}).review_zh || {}).status === 'running',
     zh_error: ((run.steps || {}).review_zh || {}).error || '',
     rows, dropped,
@@ -822,7 +822,7 @@ async function runFactCheck(run, cfg, script, asset) {
     analysis: run.analysis ? an().analysisBrief(a) : '(无写前分析)', script
   };
   // 赛道:已经选过终审赛道就用那个,否则按写前分析匹配的赛道
-  const trackKey = ((run.review || {}).final || {}).track || autoTrack(run, asset);
+  const trackKey = lockedTrack(run) || ((run.review || {}).final || {}).track || autoTrack(run, asset);
   const tr = loadTrack(trackKey);
   // ① 事实审计
   setStepStage(run.id, 'draft_check', '事实审计');
@@ -1206,6 +1206,7 @@ function startFinal(runId, body) {
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
   if (passBusy(runId)) throw Object.assign(new Error('有审稿正在跑,等它跑完再终审'), { status: 409 });
   if (((run.steps || {}).final_review || {}).status === 'running') throw Object.assign(new Error('终审正在进行'), { status: 400 });
+  if (lockedTrack(run)) body = { ...body, track: run.review_track };
   const au = (run.review || {}).audit;
   if (au) {
     const ids = arr(body.ids).map(String).filter(id => arr(au.issues).some(x => x.id === id));
@@ -1240,7 +1241,10 @@ function loadTrack(key) {
 function trackList() { return TRACK_KEYS.map(k => { const tr = loadTrack(k); return { key: k, name: tr.name }; }); }
 
 // 默认赛道:写前分析匹配到的赛道证据卡;没有就按题目和资产重新匹配一次
+// 建任务时选定的频道方向(run.review_track)优先,且锁定:审稿报告、终审、去AI感都只用它
+function lockedTrack(run) { return run && TRACK_KEYS.includes(run.review_track) ? run.review_track : ''; }
 function autoTrack(run, asset) {
+  if (lockedTrack(run)) return run.review_track;
   let name = run.track_card_name || '';
   if (!name) { try { const c = an().pickTrackCard(run.track, run.topic, asset); name = c ? c.name : ''; } catch (e) {} }
   return TRACK_KEYS.find(k => { const m = loadTrack(k).match; return m && m === name; }) || 'general';
@@ -1486,7 +1490,7 @@ async function runFinal(runId) {
   const untouched = (vByKey.d3 && vByKey.d3.text === start) || (vByKey.d4 && vByKey.d4.text === start);
   const base = vByKey.d2 && untouched ? vByKey.d2.text : start;
   const sel = ((run.review || {}).audit || {}).selection || null;
-  const trackKey = (sel && sel.track) || (run.review || {}).final_track || autoTrack(run, asset);
+  const trackKey = lockedTrack(run) || (sel && sel.track) || (run.review || {}).final_track || autoTrack(run, asset);
   const tr = loadTrack(trackKey);
   const dims = finalDims(tr);
   const t0 = Date.now();
@@ -1868,7 +1872,7 @@ async function runDeai(runId, trackKey) {
   if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
   const start = currentScript(run);
   const base = deaiBase(run);
-  const tr = loadTrack(TRACK_KEYS.includes(trackKey) ? trackKey : ((run.review || {}).final || {}).track || autoTrack(run, asset));
+  const tr = loadTrack(lockedTrack(run) || (TRACK_KEYS.includes(trackKey) ? trackKey : ((run.review || {}).final || {}).track || autoTrack(run, asset)));
   const t0 = Date.now();
   run.steps = { ...(run.steps || {}), deai: { status: 'running', stage: '诊断并给改法', track: tr.key, started_at: new Date().toISOString() } };
   store.saveRun(run);
@@ -2074,6 +2078,8 @@ async function runDraftFirst(runId) {
 async function finishDraftFirst(runId) {
   let run = store.getRun(runId);
   if (!run || run.status !== 'awaiting_review') return; // 分析失败或已取消
+  // 写前分析判「换框架」:不调整、不写稿,停下来推荐框架等人选(人选「仍按现在的框架写」后从这里续跑)
+  if (require('./reframe').shouldHold(run)) { await require('./reframe').suggest(runId); return; }
   try {
     await an().runAutoAdjust(runId, null, { search: true });
   } catch (e) {
@@ -2241,4 +2247,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
