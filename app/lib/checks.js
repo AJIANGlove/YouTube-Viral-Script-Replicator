@@ -429,7 +429,8 @@ function listenCheck(script, opts) {
   const seen = stems.map(st => { const l = lines.find(x => x.text.toLowerCase().includes(st)); return { word: st, sec: l ? Math.round(l.start) : null }; });
   const early = seen.filter(x => x.sec != null && x.sec < OPEN_TITLE_SEC).length;
   const titleHit = stems.length ? Math.round(early / stems.length * 100) / 100 : null;
-  if (stems.length >= 3 && titleHit < 0.34) issues.push('前 ' + OPEN_TITLE_SEC + ' 秒只出现了标题里 ' + early + '/' + stems.length + ' 个关键词' +
+  // 8 秒内出现 3 个以上标题关键词就算点题(长标题按比例算会误报)
+  if (stems.length >= 3 && titleHit < 0.34 && early < 3) issues.push('前 ' + OPEN_TITLE_SEC + ' 秒只出现了标题里 ' + early + '/' + stems.length + ' 个关键词' +
     (seen.some(x => x.sec != null && x.sec >= OPEN_TITLE_SEC) ? '(' + seen.filter(x => x.sec != null && x.sec >= OPEN_TITLE_SEC).map(x => x.word + ' 在 ' + fmt(x.sec)).join('、') + ')' : ''));
   // 数字串:一行(一句)最多 2 个数字
   const dense = lines.filter(l => l.nums > LINE_MAX_NUMS).map(l => ({ sec: Math.round(l.start), nums: l.nums, text: l.text }));

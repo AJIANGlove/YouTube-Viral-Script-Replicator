@@ -333,6 +333,8 @@ function buildView(run, asset) {
       thesis_note: (a.thesis_check || {}).note || ''
     }
   };
+  const lastRc = out.final ? arr(out.final.rechecks).slice(-1)[0] : null;
+  out.summary.thesis_resolved = lastRc && lastRc.thesis ? lastRc.thesis : null;
   out.summary.publish = publishCheck(run, out);
   return out;
 }
@@ -348,7 +350,9 @@ function publishCheck(run, v) {
   }
   if (s.red_facts.length) reasons.push('稿里有 ' + s.red_facts.length + ' 个没出处的事实');
   if (arr(s.ledger_mismatches).length) reasons.push('账本对不上');
-  if (arr(s.thesis_contradicts).length) reasons.push('反转被事实推翻');
+  // 反转被推翻:看最近一轮复审对终稿的判断;复审判定已解决就不再挡
+  const th = last && last.thesis;
+  if (arr(s.thesis_contradicts).length && !(th && th.resolved)) reasons.push('反转被事实推翻' + (th ? '(复审判定未解决:' + th.note + ')' : '(终审复审还没判断)'));
   const lc = checks.listenCheck(checks.extractFinalScript(currentScript(run)), {
     wpm: require('./narration').narrationWpm(run, null).wpm, title: ((run.analysis || {}).title || {}).final_title || run.topic, lang: (run.audience || {}).target_language });
   if (lc && !lc.ok) reasons.push('听感检查没过:' + lc.issues.join(';'));
@@ -519,6 +523,45 @@ function programFindings(run, asset) {
   if (s.budget) out.push('篇幅:' + s.words + ' 词,预算 ' + s.budget + ' 词');
   const len = (run.checks || {}).length;
   if (len && !len.ok) out.push('篇幅超标:' + len.detail);
+  return out.join('\n') || '(无)';
+}
+
+// 写前分析查出「反转被事实推翻」时,复审顺带判断终稿的论点是否已经和这些事实一致(这条是对着论点卡查的,稿子改对了它自己不会消失)
+function thesisVars(run) {
+  const tc = (run.analysis || {}).thesis_check || {};
+  if (!arr(tc.contradicts).length) return { thesis_check: '', thesis_block: '' };
+  return {
+    thesis_check: '【写前分析时程序查出的论点矛盾(请对照修改后的稿子判断是否已经解决)】\n论点卡:' + JSON.stringify((run.analysis || {}).thesis_card || {}) +
+      '\n与论点相反的事实:' + arr(tc.contradicts).join('、') + (tc.note ? '(' + tc.note + ')' : '') +
+      '\n判断标准:稿子现在的主张和结尾落点是否已经和这些事实一致(稿子可以已经换了说法,不必和论点卡一字不差);稿子里还在说和这些事实相反的话,就是未解决。\n\n',
+    thesis_block: '===THESIS===\n已解决 或 未解决 | 一句中文理由(引用稿子里现在的主张)\n'
+  };
+}
+function parseThesis(block) {
+  const t = String(block || '').trim();
+  if (!t) return null;
+  const [head, ...rest] = t.split(/\s*[|｜]\s*/);
+  const resolved = /未解决/.test(head) ? false : /已解决/.test(head) ? true : null;
+  return resolved == null ? null : { resolved, note: rest.join(' | ').trim() };
+}
+
+// 听感检查 + 开头卡片的「可能掉人的地方」:交给终审修改和复审,让它照着改、照着查(text 是这一步要改/要查的稿)
+function listenFindings(run, text) {
+  const r2 = { ...run, script_v1: text };
+  const title = ((run.analysis || {}).title || {}).final_title || run.topic;
+  const wpm = require('./narration').narrationWpm(run, null).wpm;
+  const lc = checks.listenCheck(checks.extractFinalScript(text), { wpm, title, lang: (run.audience || {}).target_language });
+  const out = [];
+  if (lc && !lc.ok) {
+    out.push('听感检查(程序按配音语速 ' + lc.wpm + ' 词/分钟推算时间):' + lc.issues.join(';'));
+    const fb = checks.listenFeedback(lc);
+    if (fb) out.push(fb);
+  }
+  const o = (run.review || {}).opening;
+  let fresh = false;
+  try { fresh = !!o && openingSlice(r2).hash === o.hash; } catch (e) {}
+  if (fresh && arr(o.risks).length) out.push('开头单独审指出的可能掉人的地方(句子编号对应开头 60 秒逐句):\n' + arr(o.risks).map(x => '- ' + x).join('\n') +
+    '\n开头逐句:\n' + arr(o.lines).map(l => l.n + '. ' + l.text).join('\n'));
   return out.join('\n') || '(无)';
 }
 
@@ -1453,7 +1496,7 @@ async function runFinal(runId) {
     const scoresBefore = fillScores(parseScores(parseBlocks(s1.tail, false).SCORES, dims), s1.report, dims, 1);
     // ② 修改
     setFinalStage(runId, '修改');
-    const r2 = await callLong(run, cfg, an().fillVars(readPrompt('final_revise.md'), { ...common, audit_report: s1.report, script: base }), '终审·修改');
+    const r2 = await callLong(run, cfg, an().fillVars(readPrompt('final_revise.md'), { ...common, audit_report: s1.report, listen_findings: listenFindings(run, base), script: base }), '终审·修改');
     let edits1 = parseEdits(r2.content);
     if (r2.truncated && !/^===\s*END\s*===/m.test(r2.content)) edits1 = edits1.slice(0, -1);
     const limit = growthLimit(run, base);
@@ -1465,14 +1508,15 @@ async function runFinal(runId) {
       setFinalStage(runId, '复审' + (round > 1 ? '(第 ' + round + ' 轮)' : ''));
       const allowEdits = round < FINAL_RECHECK_ROUNDS;
       const r3 = await callLong(run, cfg, an().fillVars(readPrompt('final_recheck.md'), {
-        ...common, scores_before: dims.map(d => d + ': ' + (scoresBefore[d] != null ? scoresBefore[d] : '—')).join('\n'),
+        ...common, ...thesisVars(run), scores_before: dims.map(d => d + ': ' + (scoresBefore[d] != null ? scoresBefore[d] : '—')).join('\n'),
         edits_done: editsText(round === 1 ? edits : rechecks[rechecks.length - 1].edits_applied || []),
         edits_instruction: allowEdits ? '如果未达标,在 ===VERDICT=== 那一行后面接着输出要补的修改(格式同前:每处以 ===EDIT=== 开头,写 章节/类别/原句/改成/理由;原句从上面「修改后的完整稿子」逐字复制;只修尚未解决的问题;标成「结构」的问题不要逐句改,程序会把那一章整章重写;不许把稿子改长,前 2 分钟只许删和换,程序会退回加长的修改),然后再写 ===END===。达标就不要输出修改。' : '这是最后一轮复审,只出报告,不要输出修改。',
+        listen_findings: listenFindings(run, text),
         script: text
       }), '终审·复审' + round);
       const s3 = splitReport(r3.content);
       const { tb, scores: sc3, verdict, refilled } = await ensureRecheckBlocks(run, cfg, common, dims, s3, '终审·复审' + round);
-      const rc = { round, report: s3.report, scores: sc3, verdict, open: parseOpen(tb.OPEN), edits_applied: [], ...(refilled ? { refilled: true } : {}), ...(r3.truncated ? { truncated: true } : {}) };
+      const rc = { round, report: s3.report, scores: sc3, verdict, open: parseOpen(tb.OPEN), thesis: parseThesis(tb.THESIS), edits_applied: [], ...(refilled ? { refilled: true } : {}), ...(r3.truncated ? { truncated: true } : {}) };
       rechecks.push(rc);
       if (!allowEdits || verdict !== '未达标') break;
       // 分数没涨:不再逐句改,只做结构问题的整章重写;没有结构问题就停
@@ -1514,7 +1558,7 @@ async function runFinal(runId) {
     fresh.review.final = {
       at: new Date().toISOString(), track: tr.key, track_name: tr.name, dims,
       audit_report: s1.report, scores_before: scoresBefore,
-      rechecks: rechecks.map(r => ({ round: r.round, report: r.report, scores: r.scores, verdict: r.verdict, open: r.open, edits: r.edits_applied.length, ...(r.stalled ? { stalled: true } : {}), ...(r.structural ? { structural: r.structural } : {}) })),
+      rechecks: rechecks.map(r => ({ round: r.round, report: r.report, scores: r.scores, verdict: r.verdict, open: r.open, edits: r.edits_applied.length, ...(r.thesis ? { thesis: r.thesis } : {}), ...(r.stalled ? { stalled: true } : {}), ...(r.structural ? { structural: r.structural } : {}) })),
       scores_after: last.scores || {}, verdict: last.verdict || ''
     };
     if (text !== start) writeScript(fresh, text);
@@ -1613,10 +1657,11 @@ async function runFinalPatch(runId, body) {
     setFinalStage(runId, '补改后复审');
     const patchNote = note ? '【人的决定(以此为准:与写前分析账本冲突的旧数字,按人的决定改过的不算错)】\n' + note + '\n\n' : '';
     const r3 = await callLong(run, cfg, an().fillVars(readPrompt('final_recheck.md'), {
-      ...common, patch_note: patchNote,
+      ...common, ...thesisVars(run), patch_note: patchNote,
       scores_before: dims.map(d => d + ': ' + ((fin.scores_before || {})[d] != null ? fin.scores_before[d] : '—')).join('\n'),
       edits_done: editsText(okNew) + (structOk.length ? '\n整章重写了:' + structOk.map(x => x.chapter).join('、') + '(解决复审指出的结构问题)' : ''),
       edits_instruction: '这是最后一轮复审,只出报告,不要输出修改。',
+      listen_findings: listenFindings(run, text),
       script: text
     }), '终审·补改后复审');
     const s3 = splitReport(r3.content);
@@ -1636,7 +1681,7 @@ async function runFinalPatch(runId, body) {
     fresh.review.deai = null;
     if (fresh.steps) delete fresh.steps.deai;
     const f2 = fresh.review.final;
-    f2.rechecks = arr(f2.rechecks).concat([{ round: arr(f2.rechecks).length + 1, patch: true, picked: picked.map(x => x.id), note, report: s3.report, scores, verdict, open: parseOpen(tb.OPEN), edits: okNew.length,
+    f2.rechecks = arr(f2.rechecks).concat([{ round: arr(f2.rechecks).length + 1, patch: true, picked: picked.map(x => x.id), note, report: s3.report, scores, verdict, open: parseOpen(tb.OPEN), thesis: parseThesis(tb.THESIS), edits: okNew.length,
       ...(structural ? { structural } : {}), ...(verdict === '未达标' && stalledBy(last.scores, scores, dims) ? { stalled: true } : {}) }]);
     f2.scores_after = scores;
     f2.verdict = verdict;
@@ -2118,4 +2163,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

@@ -45,15 +45,19 @@
 {{dims_score_lines}}
 ===OPEN===
 {{open_format}}
-===VERDICT===
+{{thesis_block}}===VERDICT===
 达标 或 未达标(只写这三个字之一)
 {{edits_instruction}}
 ===END===
 
 ---
 
-{{patch_note}}【第一轮审稿评分】
+{{thesis_check}}{{patch_note}}【第一轮审稿评分】
 {{scores_before}}
+
+【程序对修改后稿子的听感和开头检查(以程序为准)】
+{{listen_findings}}
+还没解决的开头问题(前 10 秒数字超标、8 秒内没说出标题冲突)和一口气念 3 个以上数字的句子,要列进 ===OPEN===,等级写「关键」。
 
 【这一轮已经做的修改】
 {{edits_done}}

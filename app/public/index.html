@@ -2034,7 +2034,9 @@ function rvDraw() {
       <span>稿里用到但没出处的事实 <b>${s.red_facts.length}</b> 个 ${redList}</span>
     </div>
     ${(s.ledger_mismatches || []).length ? `<div class="rv-flag"><b>账本对不上(程序按公式重算)</b>:${s.ledger_mismatches.map(esc).join(';')}</div>` : ''}
-    ${(s.thesis_contradicts || []).length ? `<div class="rv-flag"><b>反转被事实推翻</b>:${s.thesis_contradicts.map(esc).join('、')} 和反转结论相反${s.thesis_note ? '(' + esc(s.thesis_note) + ')' : ''}</div>` : ''}
+    ${(s.thesis_contradicts || []).length ? (s.thesis_resolved && s.thesis_resolved.resolved
+      ? `<div class="hint v13" style="color:#047857">✓ 写前分析查出的「反转被事实推翻」(${s.thesis_contradicts.map(esc).join('、')}),终审复审判定终稿已解决:${esc(s.thesis_resolved.note || '')}</div>`
+      : `<div class="rv-flag"><b>反转被事实推翻</b>:${s.thesis_contradicts.map(esc).join('、')} 和反转结论相反${s.thesis_note ? '(' + esc(s.thesis_note) + ')' : ''}${s.thesis_resolved ? '<br>终审复审判定还没解决:' + esc(s.thesis_resolved.note || '') : '<br>终审复审会自动判断终稿有没有改对'}</div>`) : ''}
     ${s.red_facts.length ? '<div class="hint v13">红色事实要先处理(补出处、改成估算或假设、或者让 AI 改掉这句话),再拿去发布。</div>' : ''}
     ${v.zh_error ? `<div class="err-list">中文对照翻译失败:${esc(v.zh_error)}</div>` : ''}
     ${rvState.err ? `<div class="err-list">${esc(rvState.err)}</div>` : ''}
