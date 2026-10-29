@@ -238,6 +238,10 @@
   .rv-dold { font-weight: 700; font-size: 14px; color: #111827; }
   .rv-dopt { display: flex; gap: 6px; align-items: flex-start; padding: 4px 8px; margin: 3px 0; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer; background: #fff; }
   .rv-dopt.on { border-color: #16a34a; background: #f0fdf4; }
+  .rv-opts { margin-top: 6px; display: flex; flex-direction: column; gap: 4px; }
+  .rv-opt { display: flex; gap: 6px; align-items: flex-start; padding: 5px 8px; border: 1px solid #e5e7eb; border-radius: 6px; background: #fff; cursor: pointer; line-height: 1.5; }
+  .rv-opt input { margin-top: 4px; flex: none; }
+  .rv-opt.on { border-color: #16a34a; background: #f0fdf4; }
   .rv-ai-detail { margin-top: 6px; padding: 6px 10px; background: #f9fafb; border-radius: 6px; }
   .rv-route { display: inline-flex; gap: 6px; align-items: center; padding: 4px 10px; border: 1px solid #e5e7eb; border-radius: 14px; font-size: 13px; cursor: pointer; }
   .rv-route.on { border-color: #dc2626; color: #dc2626; }
@@ -1872,7 +1876,7 @@ let rvState = null;
 
 function rvKeyOf(r) {
   const s = r.script_v1 || r.final_script || '';
-  return [r.id, r.status, s.length, s.slice(-80), JSON.stringify(r.review || {}).length, JSON.stringify((r.steps || {}).review_zh || {}), JSON.stringify((r.steps || {}).draft_check || {}), JSON.stringify((r.steps || {}).reverse_audit || {}), JSON.stringify((r.steps || {}).final_review || {}), JSON.stringify((r.steps || {}).deai || {}), JSON.stringify((r.steps || {}).final_open || {}), JSON.stringify((r.steps || {}).opening_card || {}), JSON.stringify(((r.analysis || {}).facts) || []).length].join('|');
+  return [r.id, r.status, s.length, s.slice(-80), JSON.stringify(r.review || {}).length, JSON.stringify((r.steps || {}).review_zh || {}), JSON.stringify((r.steps || {}).draft_check || {}), JSON.stringify((r.steps || {}).reverse_audit || {}), JSON.stringify((r.steps || {}).final_review || {}), JSON.stringify((r.steps || {}).deai || {}), JSON.stringify((r.steps || {}).final_open || {}), JSON.stringify((r.steps || {}).final_options || {}), JSON.stringify((r.steps || {}).opening_card || {}), JSON.stringify(((r.analysis || {}).facts) || []).length].join('|');
 }
 
 function rvEditing() {
@@ -2373,10 +2377,18 @@ function rvPublishHtml(v) {
   return p.ready ? '<div class="rv-bar v13"><span style="color:#047857"><b>✓ 可发布</b>(没有关键/结构遗留问题,事实没有红旗,听感检查通过;AI 复审的「达标」只作参考)</span></div>'
     : '<div class="rv-bar v13"><span><b>还不能发布</b>:' + p.reasons.map(esc).join(';') + '</span></div>';
 }
+// 每个遗留问题选一种改法:pick[id] = 'A'/'B'…(AI 出的方案)、'rv'(按复审建议)、'skip'(不改);没点过的用默认值(推荐的方案)
 function rvPatchSel(rc) {
-  const at = (rc.round || 0) + ':' + (rc.open || []).length;
-  if (!rvState.patchSel || rvState.patchSel.at !== at) rvState.patchSel = { at, ids: new Set((rc.open || []).filter(x => x.level !== '待核实').map(x => x.id)), note: '' };
+  const at = (rc.round || 0) + ':' + (rc.open || []).map(x => x.id).join(',');
+  if (!rvState.patchSel || rvState.patchSel.at !== at) rvState.patchSel = { at, pick: {}, note: '' };
   return rvState.patchSel;
+}
+function rvPatchPick(rc, x) {
+  const p = rvPatchSel(rc).pick[x.id];
+  const opts = (rc.options || {})[x.id] || [];
+  if (p && (p === 'skip' || p === 'rv' || opts.some(o => o.key === p))) return p;
+  const rec = opts.find(o => o.recommended) || opts[0];
+  return rec ? rec.key : x.level === '待核实' ? 'skip' : 'rv';
 }
 function rvPatchHtml(v, busy) {
   const fin = v.final;
@@ -2387,17 +2399,20 @@ function rvPatchHtml(v, busy) {
   if (!rc) return '';
   const running = st.status === 'running' && st.patch;
   const err = st.patch_error ? `<div class="err-list">上次补改没成功:${esc(st.patch_error)}</div>` : '';
-  if (rc.verdict !== '未达标' && !running && !(rc.open || []).length) return err;
+  const rv = (rc.reverted || []).slice(-1)[0];
+  const revFlag = st.patch_reverted && rv ? `<div class="rv-flag v13"><b>上次补改把分数改低了(${rv.before} → ${rv.after}),已退回,终稿没有换</b>:可以给问题换一种改法再试。
+      <details><summary class="hint">看那次补改改了什么和复审报告</summary>${(rv.structural || []).filter(x => x.ok).length ? `<div class="hint">整章重写了:${(rv.structural || []).filter(x => x.ok).map(x => esc(x.chapter)).join('、')}</div>` : ''}${(rv.edits || []).map(e => `<div class="hint">[${esc(e.chapter || '')}] ${esc(e.old)} → ${esc(e.new || '(删除)')}</div>`).join('')}<div class="hint" style="white-space:pre-wrap;margin-top:6px">${esc(rv.report || '')}</div></details></div>` : '';
+  if (rc.verdict !== '未达标' && !running && !(rc.open || []).length) return err + revFlag;
   const head = `<div class="an-sec v13">按复审意见再改一轮${rc.verdict === '未达标' ? '(复审没达标)' : ''}</div>
-    <div class="hint v13">以现在的终稿为底,只补改你勾选的问题,并按你写的决定改,改完自动再复审一次。不会从二稿重来,其他句子不动。标「结构」的问题会把那一章整章重写。</div>
-    ${rc.stalled ? '<div class="rv-flag v13"><b>上一轮分数没涨</b>:剩下的问题逐句改不动了,再补改也一样。要么勾上「结构」类问题让 AI 整章重写,要么看看是不是框架和题目对不上(换框架或换题),或者按上面的「可发布」标准判断直接发。</div>' : ''}`;
+    <div class="hint v13">以现在的终稿为底,AI 给每个问题出了几种改法并标了推荐,你选好后只按选中的方式改,改完自动再复审一次。不会从二稿重来,其他句子不动。标「结构」的问题会把那一章整章重写。</div>
+    ${rc.stalled ? '<div class="rv-flag v13"><b>上一轮分数没涨</b>:剩下的问题逐句改不动了,再补改也一样。要么给「结构」类问题选一种改法让 AI 整章重写,要么看看是不是框架和题目对不上(换框架或换题),或者按上面的「可发布」标准判断直接发。</div>' : ''}`;
   if (running) return head + `<div class="rv-flag v13"><b>补改进行中(${esc(st.stage || '')})</b>:一般几分钟,跑完自动刷新终稿和评分。</div>`;
   if (!(rc.open || []).length) {
-    return head + err + `<div class="rv-ops v13"><button class="an-btn v13" onclick="rvPatchExtract()" ${busy || ext.status === 'running' ? 'disabled' : ''}>${ext.status === 'running' ? '正在整理…' : '从复审报告里整理没解决的问题'}</button>
+    return head + err + revFlag + `<div class="rv-ops v13"><button class="an-btn v13" onclick="rvPatchExtract()" ${busy || ext.status === 'running' ? 'disabled' : ''}>${ext.status === 'running' ? '正在整理…' : '从复审报告里整理没解决的问题'}</button>
       <span class="hint">${ext.status === 'failed' ? '整理失败:' + esc(ext.error || '') : ext.status === 'done' ? '复审报告里没整理出问题,可以直接在下面写你的决定。' : '这份复审报告没有现成的问题清单,先让 AI 整理一下(只读报告,不改稿)。'}</span></div>
       ${ext.status === 'done' ? rvPatchForm(rc, busy) : ''}`;
   }
-  return head + err + rvPatchForm(rc, busy);
+  return head + err + revFlag + rvPatchForm(rc, busy);
 }
 // 复审问题里有韩文却还没有中文:翻译中就提示,没在翻就给个按钮
 function rvOpenZhWait(t) {
@@ -2406,31 +2421,56 @@ function rvOpenZhWait(t) {
 }
 function rvPatchForm(rc, busy) {
   const sel = rvPatchSel(rc);
-  const rows = (rc.open || []).map(x => `<div class="rv-ai${sel.ids.has(x.id) ? ' on' : ''}">
-      <label class="rv-ai-head"><input type="checkbox" ${sel.ids.has(x.id) ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="rvPatchToggle('${escAttr(x.id)}', this.checked)">
-        <b>${esc(x.id)}</b> <span class="rv-chip ${RV_OPEN_CLS[x.level] || ''}">${esc(x.level)}</span> <span class="hint">${esc(x.chapter)}</span></label>
-      <div class="rv-ai-body">${esc(x.problem)}${x.zh_problem ? `<div class="rv-zh">中文:${esc(x.zh_problem)}</div>` : rvOpenZhWait(x.problem)}${x.suggestion ? `<br><span class="hint">复审建议:${esc(x.suggestion)}</span>${x.zh_suggestion ? `<div class="rv-zh">建议中文:${esc(x.zh_suggestion)}</div>` : rvOpenZhWait(x.suggestion)}` : ''}</div></div>`).join('');
-  return `${rows ? `<div class="rv-ops"><span class="hint">默认勾上关键、结构和次要;「结构」会整章重写那一章;「待核实」要你先确认事实,写在下面的决定里再勾。已选 ${sel.ids.size} 个</span></div>${rows}` : ''}
-    <div class="rv-edit"><div class="v13" style="font-size:12px">你的决定和补充意见(AI 以这里为准,哪怕和复审建议、账本不一样):</div>
-      <textarea id="rv-patch-note" class="rv-keep" rows="3" ${busy ? 'disabled' : ''} placeholder="例如:CH13 A店租金改成月400万,相关的合计、占比、利润全部重算;B店老板人工4800万不包含在前面的3000万里;CH06 공헌이익률统一为65%" oninput="rvState.patchSel.note = this.value">${esc(sel.note)}</textarea>
-      <div class="rv-ops"><button class="an-btn v13" onclick="rvPatchRun()" ${busy ? 'disabled' : ''}>按勾选的问题补改,然后复审</button>
-      <span class="hint">现在的去AI感稿会被替换,补改后需要再跑一次去AI感。</span></div></div>`;
+  const P = (rvState.view || {}).passes || {};
+  const os = P.final_options || {};
+  const hasOpts = rc.options && Object.keys(rc.options).length;
+  const optsRunning = os.status === 'running';
+  const dis = busy ? 'disabled' : '';
+  const radio = (x, key, inner, cls) => `<label class="rv-opt${rvPatchPick(rc, x) === key ? ' on' : ''}${cls ? ' ' + cls : ''}"><input type="radio" name="rv-pick-${escAttr(x.id)}" ${rvPatchPick(rc, x) === key ? 'checked' : ''} ${dis} onchange="rvPatchChoose('${escAttr(x.id)}', '${key}')">${inner}</label>`;
+  const rows = (rc.open || []).map(x => {
+    const opts = (rc.options || {})[x.id] || [];
+    const pick = rvPatchPick(rc, x);
+    const choices = (opts.length
+      ? opts.map(o => radio(x, o.key, `<span><b>${esc(o.key)}</b>${o.recommended ? ' <span class="rv-chip green">★ 推荐</span>' : ''} ${esc(o.zh)}${o.why ? `<br><span class="hint">${esc(o.why)}</span>` : ''}</span>`)).join('')
+      : radio(x, 'rv', `<span>按复审建议改${x.suggestion ? `:<span class="hint">${esc(x.suggestion)}</span>${x.zh_suggestion ? `<div class="rv-zh">建议中文:${esc(x.zh_suggestion)}</div>` : rvOpenZhWait(x.suggestion)}` : ''}</span>`))
+      + radio(x, 'skip', '<span class="hint">这个不改</span>');
+    return `<div class="rv-ai${pick !== 'skip' ? ' on' : ''}">
+      <div class="rv-ai-head"><b>${esc(x.id)}</b> <span class="rv-chip ${RV_OPEN_CLS[x.level] || ''}">${esc(x.level)}</span> <span class="hint">${esc(x.chapter)}</span></div>
+      <div class="rv-ai-body">${esc(x.problem)}${x.zh_problem ? `<div class="rv-zh">中文:${esc(x.zh_problem)}</div>` : rvOpenZhWait(x.problem)}
+        ${opts.length && x.suggestion ? `<details class="hint"><summary>复审原建议</summary>${esc(x.suggestion)}${x.zh_suggestion ? `<div class="rv-zh">${esc(x.zh_suggestion)}</div>` : ''}</details>` : ''}
+        <div class="rv-opts">${choices}</div></div></div>`;
+  }).join('');
+  const n = (rc.open || []).filter(x => rvPatchPick(rc, x) !== 'skip').length;
+  const optsBar = !(rc.open || []).length ? '' : optsRunning ? '<div class="rv-flag v13"><b>AI 正在给每个问题出解决方案…</b>一般一两分钟,出好后自动显示,推荐的方案会默认选上。</div>'
+    : hasOpts ? `<div class="rv-ops"><span class="hint">每个问题已经默认选上 ★ 推荐的改法,不同意就换一个,或选「这个不改」。「结构」问题会按你选的方式整章重写那一章。要改 ${n} 个。</span></div>`
+    : `<div class="rv-ops v13"><button class="an-btn" onclick="rvPatchOptions()" ${busy ? 'disabled' : ''}>让 AI 给每个问题出 3 种解决方案</button><span class="hint">${os.status === 'failed' ? '上次没出成:' + esc(os.error || '') : '出好后直接选,不用自己写意见。'}</span></div>`;
+  return `${optsBar}${rows}
+    <details class="rv-edit" ${rvState.patchNoteOpen || sel.note ? 'open' : ''} ontoggle="rvState.patchNoteOpen = this.open"><summary class="v13" style="font-size:12px;cursor:pointer">补充意见(可不填;写了 AI 以这里为准,哪怕和上面的方案、账本不一样)</summary>
+      <textarea id="rv-patch-note" class="rv-keep" rows="3" ${dis} placeholder="例如:CH13 A店租金改成月400万,相关的合计、占比、利润全部重算" oninput="rvState.patchSel.note = this.value">${esc(sel.note)}</textarea></details>
+    <div class="rv-ops"><button class="an-btn v13" onclick="rvPatchRun()" ${busy || optsRunning ? 'disabled' : ''}>按选中的方式补改,然后复审</button>
+      <span class="hint">现在的去AI感稿会被替换,补改后需要再跑一次去AI感。</span></div>`;
 }
-function rvPatchToggle(id, on) { const s = rvState.patchSel; if (on) s.ids.add(id); else s.ids.delete(id); rvDraw(); }
+function rvPatchChoose(id, key) { rvState.patchSel.pick[id] = key; rvDraw(); }
+async function rvPatchOptions() {
+  try { await rvPost('final_patch', { options: true }); } catch (e) { rvState.err = e.message; alert('没能开始:' + e.message); return; }
+  rvState.key = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
+}
 async function rvPatchExtract() {
   try { await rvPost('final_patch', { extract: true }); } catch (e) { rvState.err = e.message; alert('没能开始整理:' + e.message); return; }
   rvState.key = null;
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
 }
 async function rvPatchRun() {
-  const s = rvState.patchSel;
-  if (!s) rvPatchSel((rvState.view.final.rechecks || []).slice(-1)[0]);
-  const sel = rvState.patchSel;
+  const rc = (rvState.view.final.rechecks || []).slice(-1)[0];
+  const sel = rvPatchSel(rc);
   const ta = document.getElementById('rv-patch-note');
   const note = ((ta && ta.value) || sel.note || '').trim();
-  if (!sel.ids.size && !note) { alert('至少勾一个问题,或写下你的决定'); return; }
-  if (!confirm(`按勾选的 ${sel.ids.size} 个问题${note ? '和你的决定' : ''}补改终稿,然后再复审一次?`)) return;
-  try { await rvPost('final_patch', { ids: [...sel.ids], note }); } catch (e) { rvState.err = e.message; alert('没能开始补改:' + e.message); return; }
+  const ids = [], choices = {};
+  (rc.open || []).forEach(x => { const p = rvPatchPick(rc, x); if (p === 'skip') return; ids.push(x.id); if (p !== 'rv') choices[x.id] = p; });
+  if (!ids.length && !note) { alert('所有问题都选了「这个不改」,也没写补充意见,没有要改的'); return; }
+  if (!confirm(`按选中的方式改 ${ids.length} 个问题${note ? '(带上你的补充意见)' : ''},然后再复审一次?`)) return;
+  try { await rvPost('final_patch', { ids, choices, note }); } catch (e) { rvState.err = e.message; alert('没能开始补改:' + e.message); return; }
   sel.note = '';
   if (ta) { ta.value = ''; ta.blur(); }
   rvState.key = null;

@@ -301,7 +301,7 @@ function buildView(run, asset) {
   const budget = rows.reduce((n, r) => n + (r.budget || 0), 0);
   const out = {
     run_id: run.id, status: run.status, target_language: lang,
-    passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null, deai: (run.steps || {}).deai || null, final_open: (run.steps || {}).final_open || null },
+    passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null, deai: (run.steps || {}).deai || null, final_open: (run.steps || {}).final_open || null, final_options: (run.steps || {}).final_options || null },
     audit: state.audit ? { ...state.audit, issues: arr(state.audit.issues).map(x => ({ ...x, zh_problem: hasForeign(x.problem) ? zhOf(state, x.problem) : '', zh_direction: hasForeign(x.direction) ? zhOf(state, x.direction) : '', need_zh: hasForeign(x.problem) || hasForeign(x.direction) })), score: state.audit.score != null ? state.audit.score : reportScore(state.audit.report), stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
     factcheck: state.factcheck ? { ...state.factcheck, items: arr(state.factcheck.items).map(x => ({ ...x, zh_claim: hasForeign(x.claim) ? zhOf(state, x.claim) : '' })) } : null,
     versions: arr(state.versions).map(v => ({ key: v.key, label: v.label, at: v.at, issues: arr(v.issues), changed: arr(v.changed), truncated: !!v.truncated })),
@@ -312,7 +312,8 @@ function buildView(run, asset) {
     final: state.final ? (() => {
       // 旧结果:清单里没读出的分数,按报告正文的评分表补上
       const f = state.final, dims = arr(f.dims);
-      const rechecks = arr(f.rechecks).map(r => ({ ...r, scores: fillScores(r.scores, r.report, dims, 2),
+      // 解决方案是给当时那组问题出的,问题列表变了就不再显示
+      const rechecks = arr(f.rechecks).map(r => ({ ...r, scores: fillScores(r.scores, r.report, dims, 2), options: r.options && r.options_for === openKey(r.open) ? r.options : null,
         open: arr(r.open).map(x => ({ ...x, zh_problem: hasForeign(x.problem) ? zhOf(state, x.problem) : '', zh_suggestion: hasForeign(x.suggestion) ? zhOf(state, x.suggestion) : '' })) }));
       const last = rechecks[rechecks.length - 1];
       return { ...f, rechecks, scores_before: fillScores(f.scores_before, f.audit_report, dims, 1), scores_after: last ? { ...last.scores, ...(f.scores_after || {}) } : f.scores_after };
@@ -575,7 +576,10 @@ const EDIT_FIELDS = {
   理由: 'reason', 原因: 'reason', 修改理由: 'reason', 说明: 'reason'
 };
 const EDIT_FIELD_RE = new RegExp('^\\s*[-*•]?\\s*\\**\\s*(' + Object.keys(EDIT_FIELDS).sort((a, b) => b.length - a.length).join('|') + ')\\s*\\**\\s*[:：]\\s*\\**\\s*(.*)$');
-const EDIT_DELETE = /^[(\uFF08\u3010\[]?\s*(删除|删掉|删去)[^)\uFF09\u3011\]]{0,8}[)\uFF09\u3011\]]?$/;
+const EDIT_DELETE = /^[(\uFF08\u3010\[]?\s*(删除|删掉|删去|삭제|delete|deleted|remove)[^)\uFF09\u3011\]]{0,8}[)\uFF09\u3011\]]?$/i;
+// 「改成」里夹着的删除记号(如「(삭제) 다음 문장」):模型用韩文或英文写了删除标记,又把下一句接在后面;
+// 不去掉就会原样进稿子被念出来(run_561940f3685f 终稿出现两处「(삭제)」)
+const EDIT_DELETE_MARK = /\s*[(\uFF08\u3010\[]\s*(删除|删掉|删去|삭제|delete|deleted|remove)\s*[)\uFF09\u3011\]]\s*/gi;
 // 模型常给原句加引号或书名号:成对的包裹符号去掉
 function unwrapQuote(s) {
   const pairs = [['「', '」'], ['『', '』'], ['“', '”'], ['"', '"'], ["'", "'"], ['‘', '’'], ['《', '》'], ['`', '`']];
@@ -603,6 +607,7 @@ function parseEdits(text) {
     if (tag) { e.old = e.old.replace(TAG, '').trim(); if (!e.chapter) e.chapter = tag[1]; }
     if (e.new) e.new = e.new.replace(TAG, '').trim();
     if (e.new != null && EDIT_DELETE.test(e.new)) e.new = '';
+    else if (e.new) { const x = e.new.replace(EDIT_DELETE_MARK, ' '); if (x !== e.new) e.new = x.replace(/[ \t]{2,}/g, ' ').trim(); }
     // 「改成」写成了一句删除说明(如「(删除三处中的后两处,只保留第一处)」):按删掉原句处理
     else if (e.new && /^[(（【\[]\s*(删除|删掉|删去|去掉)/.test(e.new.trim()) && checks.isMetaNoteLine(e.new)) e.new = '';
     e.chapter = (String(e.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase();
@@ -1443,6 +1448,7 @@ async function ensureRecheckBlocks(run, cfg, common, dims, s3, label) {
 
 // 终审不空转:一轮下来七维平均涨不到 STALL_MIN 分,再逐句改也没用(实测一篇 POV 稿改了 59 处,5.7 → 6,复审 3 轮都未达标),
 // 停下来;复审标成「结构」的问题(时间线跳跃、论证骨架、整章没完成功能)交给整章重写,每轮最多 STRUCT_MAX 章
+const REVERT_DROP = 0.3; // 补改后平均分掉这么多就退回
 const STALL_MIN = 0.3, STRUCT_MAX = 2;
 function avgScore(scores, dims) {
   const xs = dims.map(d => scores && scores[d]).filter(x => typeof x === 'number');
@@ -1610,6 +1616,52 @@ async function extractOpen(runId) {
   }
 }
 
+// 复审遗留问题的解决方案:每个问题出至少 3 种改法并标推荐,人在补改区直接选,不用自己写意见。
+// 存在最后一轮复审上(rc.options = { R01: [{key, zh, why, recommended}] }),rc.options_for 记下对应的问题编号,问题列表变了就算旧的
+const openKey = items => arr(items).map(x => x.id + ':' + x.problem).join('\n');
+async function runOpenOptions(runId) {
+  const { run } = loadRunAsset(runId);
+  const cfg = pl().loadConfig();
+  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
+  const fin = (run.review || {}).final || {};
+  const last = arr(fin.rechecks).slice(-1)[0];
+  const items = arr(last && last.open);
+  const d3 = arr(run.review.versions).find(v => v.key === 'd3');
+  if (!items.length || !d3) return null;
+  run.steps = { ...(run.steps || {}), final_options: { status: 'running', started_at: new Date().toISOString(), items: items.length } };
+  store.saveRun(run);
+  try {
+    const tr = loadTrack(fin.track);
+    const common = finalCommon(run, tr, arr(fin.dims).length ? fin.dims : finalDims(tr));
+    const out = await an().callJson(run, cfg, an().fillVars(readPrompt('final_open_options.md'), {
+      ...common, script: d3.text,
+      items: items.map(x => x.id + ' | ' + x.chapter + ' | ' + x.level + ' | ' + x.problem + ' | ' + (x.suggestion || '(无)')).join('\n')
+    }), '终审·出解决方案', o => arr(o.items).length && arr(o.items).every(it => arr(it.options).length >= 2));
+    const options = {};
+    arr(out.items).forEach(it => {
+      const id = String(it.id || '').toUpperCase();
+      if (!items.some(x => x.id === id)) return;
+      let opts = arr(it.options).filter(o => o && String(o.zh || '').trim()).map((o, i) => ({ key: String.fromCharCode(65 + i), zh: String(o.zh).trim(), why: String(o.why || '').trim(), recommended: o.recommended === true }));
+      // 只留一个推荐;模型没标就推荐第一种
+      const ri = Math.max(0, opts.findIndex(o => o.recommended));
+      opts = opts.map((o, i) => ({ ...o, recommended: i === ri }));
+      if (opts.length) options[id] = opts;
+    });
+    const fresh = store.getRun(runId) || run;
+    const rc = arr(((fresh.review || {}).final || {}).rechecks).slice(-1)[0];
+    if (rc && openKey(rc.open) === openKey(items)) { rc.options = options; rc.options_for = openKey(items); }
+    fresh.steps = { ...(fresh.steps || {}), final_options: { status: 'done', finished_at: new Date().toISOString(), items: Object.keys(options).length } };
+    if (run.attempts) fresh.attempts = run.attempts;
+    store.saveRun(fresh);
+    return options;
+  } catch (e) {
+    const fresh = store.getRun(runId) || run;
+    fresh.steps = { ...(fresh.steps || {}), final_options: { status: 'failed', error: e.message } };
+    store.saveRun(fresh);
+    throw e;
+  }
+}
+
 async function runFinalPatch(runId, body) {
   const cfg = pl().loadConfig();
   let { run, asset } = loadRunAsset(runId);
@@ -1622,9 +1674,12 @@ async function runFinalPatch(runId, body) {
   const dims = arr(fin.dims).length ? fin.dims : finalDims(tr);
   const last = arr(fin.rechecks).slice(-1)[0] || {};
   const picked = arr(last.open).filter(x => arr(body.ids).includes(x.id));
+  // 人选的解决方式:{ R01: 'B' };选了就照这个方式改,不再看复审的原建议
+  const chosen = x => { const k = (body.choices || {})[x.id]; return k ? arr((last.options || {})[x.id]).find(o => o.key === k) : null; };
+  const howTo = x => { const o = chosen(x); return o ? '\n  人选的改法(' + o.key + '):' + o.zh : x.suggestion ? '\n  复审建议:' + x.suggestion : ''; };
   const note = String(body.note || '').trim().slice(0, 3000);
   const t0 = Date.now();
-  const prevStep = (run.steps || {}).final_review || {};
+  const { patch_error, patch_failed_at, patch_reverted, ...prevStep } = (run.steps || {}).final_review || {};
   run.steps = { ...(run.steps || {}), final_review: { ...prevStep, status: 'running', stage: '补改', patch: true, started_at: new Date().toISOString() } };
   store.saveRun(run);
   try {
@@ -1632,7 +1687,7 @@ async function runFinalPatch(runId, body) {
     // 勾选的「结构」问题整章重写,其余问题照常逐句补改
     const structPicked = picked.filter(x => x.level === '结构');
     const sentPicked = picked.filter(x => x.level !== '结构');
-    const selected = sentPicked.length ? sentPicked.map(x => '- [' + x.id + '][' + x.chapter + '][' + x.level + '] ' + x.problem + (x.suggestion ? '\n  复审建议:' + x.suggestion : '')).join('\n') : '(没有勾选复审问题,只按下面人的决定改)';
+    const selected = sentPicked.length ? sentPicked.map(x => '- [' + x.id + '][' + x.chapter + '][' + x.level + '] ' + x.problem + howTo(x)).join('\n') : '(没有勾选复审问题,只按下面人的决定改)';
     const limit = growthLimit(run, d3.text);
     let edits = [], a = { next: d3.text, edits: [] };
     if (sentPicked.length || note) {
@@ -1645,7 +1700,7 @@ async function runFinalPatch(runId, body) {
     let structural = null;
     if (structPicked.length) {
       setFinalStage(runId, '整章重写');
-      const sr = await structuralRewrite(run, asset, cfg, a.next, structPicked, limit, '终审·补改');
+      const sr = await structuralRewrite(run, asset, cfg, a.next, structPicked.map(x => { const o = chosen(x); return o ? { ...x, suggestion: '按人选的方式重写:' + o.zh } : x; }), limit, '终审·补改');
       structural = sr.done;
       a.next = sr.text;
     }
@@ -1673,6 +1728,17 @@ async function runFinalPatch(runId, body) {
     const allEdits = merged.map((e, i) => ({ ...e, n: i + 1 })).concat(failed.map((e, i) => ({ ...e, ok: false, n: merged.length + i + 1 })));
     const fresh = store.getRun(runId) || run;
     if (currentScript(fresh) !== start) throw new Error('补改期间稿子被改过,结果没有保存,请重试');
+    // 补改后复审的平均分比补改前低 REVERT_DROP 以上:这次补改把稿子改坏了,不换终稿,只记下这次尝试(实测 run_77b4651152ef 第 3 轮 5.4→4.6 仍被存成终稿)
+    const before = avgScore(last.scores, dims), after = avgScore(scores, dims);
+    if (before != null && after != null && before - after >= REVERT_DROP) {
+      const rcF = arr(fresh.review.final.rechecks).slice(-1)[0];
+      const tried = { at: new Date().toISOString(), picked: picked.map(x => x.id), choices: Object.fromEntries(picked.filter(chosen).map(x => [x.id, chosen(x).key])), note, report: s3.report, scores, verdict, open: parseOpen(tb.OPEN), edits: okNew.map(e => ({ chapter: e.chapter, old: e.old, new: e.new, reason: e.reason })), ...(structural ? { structural } : {}), before: Math.round(before * 10) / 10, after: Math.round(after * 10) / 10 };
+      if (rcF) rcF.reverted = arr(rcF.reverted).concat([tried]);
+      fresh.steps = { ...(fresh.steps || {}), final_review: { ...prevStep, patch_reverted: { at: tried.at, before: tried.before, after: tried.after } } };
+      if (run.attempts) fresh.attempts = run.attempts;
+      store.saveRun(fresh);
+      return { ok: true, reverted: true };
+    }
     setForeign(fresh, pure, '终审·补改');
     const changed = [];
     scriptChapters(text).forEach(c => { const b = scriptChapters(d2.text).find(x => x.id === c.id); if (b && b.text !== c.text) changed.push(c.id); });
@@ -1681,7 +1747,7 @@ async function runFinalPatch(runId, body) {
     fresh.review.deai = null;
     if (fresh.steps) delete fresh.steps.deai;
     const f2 = fresh.review.final;
-    f2.rechecks = arr(f2.rechecks).concat([{ round: arr(f2.rechecks).length + 1, patch: true, picked: picked.map(x => x.id), note, report: s3.report, scores, verdict, open: parseOpen(tb.OPEN), thesis: parseThesis(tb.THESIS), edits: okNew.length,
+    f2.rechecks = arr(f2.rechecks).concat([{ round: arr(f2.rechecks).length + 1, patch: true, picked: picked.map(x => x.id), choices: Object.fromEntries(picked.filter(chosen).map(x => [x.id, chosen(x).key])), note, report: s3.report, scores, verdict, open: parseOpen(tb.OPEN), thesis: parseThesis(tb.THESIS), edits: okNew.length,
       ...(structural ? { structural } : {}), ...(verdict === '未达标' && stalledBy(last.scores, scores, dims) ? { stalled: true } : {}) }]);
     f2.scores_after = scores;
     f2.verdict = verdict;
@@ -1714,12 +1780,23 @@ function startFinalPatch(runId, body) {
   const last = arr(fin.rechecks).slice(-1)[0];
   if (!last) throw Object.assign(new Error('这次终审没有复审报告'), { status: 400 });
   if (body && body.extract) {
-    (async () => { try { await extractOpen(runId); } catch (e) {} await translateRun(runId); })();
+    (async () => { try { await extractOpen(runId); await runOpenOptions(runId); } catch (e) {} await translateRun(runId); })();
+    return { ok: true };
+  }
+  if (body && body.options) {
+    if ((st.final_options || {}).status === 'running') throw Object.assign(new Error('解决方案正在生成'), { status: 409 });
+    if (!arr(last.open).length) throw Object.assign(new Error('复审没有遗留问题'), { status: 400 });
+    runOpenOptions(runId).catch(() => {});
     return { ok: true };
   }
   if (!arr(body.ids).length && !String(body.note || '').trim()) throw Object.assign(new Error('至少勾一个问题,或写下你的决定'), { status: 400 });
   passRunning.add(runId);
-  (async () => { try { await runFinalPatch(runId, body); } catch (e) {} finally { passRunning.delete(runId); } await translateRun(runId); })();
+  (async () => {
+    let ok = false;
+    try { ok = !(await runFinalPatch(runId, body)).reverted; } catch (e) {} finally { passRunning.delete(runId); }
+    if (ok) { try { await runOpenOptions(runId); } catch (e) {} }
+    await translateRun(runId);
+  })();
   return { ok: true };
 }
 
@@ -1899,9 +1976,10 @@ async function runPasses(runId, from) {
   passRunning.add(runId);
   try {
     // 二稿和终稿出来后各单独审一次开头;开头分析失败不挡后面的步骤
-    const order = from === 'final' ? ['final', 'opening'] : from === 'audit' ? ['audit'] : ['check', 'opening', 'audit'];
+    const order = from === 'final' ? ['final', 'options', 'opening'] : from === 'audit' ? ['audit'] : ['check', 'opening', 'audit'];
     for (const k of order) {
       if (k === 'opening') { try { await runOpeningCard(runId); } catch (e) {} continue; }
+      if (k === 'options') { try { await runOpenOptions(runId); } catch (e) {} continue; }
       try { if (k === 'audit') await runReverseAudit(runId); else if (k === 'final') await runFinal(runId); else await runPass(runId, k); } catch (e) { break; }
     }
   } finally { passRunning.delete(runId); }
@@ -2163,4 +2241,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
