@@ -2331,12 +2331,13 @@ function rvRevisionHtml(rev, translating) {
 
 // 复审没达标:按复审意见再改一轮(只补改勾选的问题,再复审一次)
 // 开头单独审:开头约 60 秒逐句(时间按配音语速推算)+ 中文 + 好在哪 + 风险 + 程序硬指标
+// 默认收起;展开/收起记在页面状态里,轮询重绘不会弹回去,刷新页面回到收起
 function rvOpeningHtml(v) {
   const o = v.opening;
   const st = (o && o.status) || {};
   const running = st.status === 'running';
   const btn = `<button class="an-btn v13" onclick="rvOpeningRun()" ${running ? 'disabled' : ''}>${running ? '正在分析开头…' : o && o.lines ? '重新分析开头' : '分析开头'}</button>`;
-  if (!o || !o.lines) return `<details class="rv-md-box" open><summary><b>开头单独审</b>(开头 60 秒逐句 + 中文 + 好在哪)</summary><div class="rv-ops v13">${btn}
+  if (!o || !o.lines) return `<details class="rv-md-box"${rvState.openingOpen ? ' open' : ''} ontoggle="rvState.openingOpen=this.open"><summary><b>开头单独审</b>(开头 60 秒逐句 + 中文 + 好在哪)</summary><div class="rv-ops v13">${btn}
     <span class="hint">${st.status === 'failed' ? '上次失败:' + esc(st.error || '') : running ? '一般 1 分钟左右' : '二稿出来后会自动生成;也可以现在点'}</span></div></details>`;
   const fmt = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
   const h = o.hard || {};
@@ -2349,7 +2350,7 @@ function rvOpeningHtml(v) {
   ].join(' · ');
   const lines = o.lines.map(l => `<tr${dense.has(l.n) ? ' style="background:#fef2f2"' : ''}><td class="hint">${l.n}</td><td class="hint">${fmt(l.sec)}</td><td>${esc(l.text)}${l.zh ? `<div class="rv-zh" style="border:0;margin:2px 0 0;padding:0">${esc(l.zh)}</div>` : ''}</td></tr>`).join('');
   const list = (xs, color) => (xs || []).map(x => `<li style="color:${color}">${esc(x)}</li>`).join('');
-  return `<details class="rv-md-box" open><summary><b>开头单独审</b>:<span class="${o.verdict === '能用' ? '' : 'rv-flag'}">${esc(o.verdict || '—')}</span>${o.stale ? ' <span class="rv-flag">(稿子开头改过了,这份分析是旧的)</span>' : ''}</summary>
+  return `<details class="rv-md-box"${rvState.openingOpen ? ' open' : ''} ontoggle="rvState.openingOpen=this.open"><summary><b>开头单独审</b>:<span class="${o.verdict === '能用' ? '' : 'rv-flag'}">${esc(o.verdict || '—')}</span>${o.stale ? ' <span class="rv-flag">(稿子开头改过了,这份分析是旧的)</span>' : ''}</summary>
     <div class="hint v13" style="margin:6px 0">时间按配音语速 ${o.wpm} 词/分钟推算 · ${hard}</div>
     ${o.hook ? `<div class="v13" style="margin:6px 0"><b>靠什么留人</b>:${esc(o.hook)}</div>` : ''}
     <div class="rv-md"><div class="rv-md-table"><table><tr><th>#</th><th>时间</th><th>原文 / 中文</th></tr>${lines}</table></div></div>
