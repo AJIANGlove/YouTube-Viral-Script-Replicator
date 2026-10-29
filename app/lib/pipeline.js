@@ -238,6 +238,9 @@ async function llmCall(cfg, messages, label) {
         stopReason = data.stop_reason || (data.choices && data.choices[0] && data.choices[0].finish_reason) || null;
       }
       if (!content) throw new Error('空响应');
+      // 流没收到结束标记就断了(实测 2026-10-29 lk888 渠道每次约 90 秒就断流,stop_reason 为空,半截稿被当成完整输出,
+      // 下游报「章节不全」「缺少字段」)。当成断流重试,仍断流就明确报渠道问题
+      if (sse && isAnthropic && !stopReason) throw new Error('渠道中途断流:第 ' + Math.round((Date.now() - t0) / 1000) + ' 秒时连接结束,没有收到结束标记,输出不完整(已收到 ' + content.length + ' 字)。请换一个渠道,或联系渠道方');
       // 归一化截断信号:openai 系的 finish_reason='length' 等价于 anthropic 的 'max_tokens'(Step 2 截断续写依赖该标记)
       if (stopReason === 'length') stopReason = 'max_tokens';
       return { content, secs: (Date.now() - t0) / 1000, stopReason, streams };
