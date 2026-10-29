@@ -98,3 +98,16 @@
 - **顶部计数**改为「共 N 个框架 · 当前 M 个」（筛选生效才带后半句，`assetCountText`）。
 - **实现**：`facetBase(list, f, ignore)` 只对「另一维度 + 搜索」求交集；`facetChip(label, count, on, onclick)` 统一两行芯片；`channelChipsHtml(all, base, f, target)` 的 all 决定频道全集与顺序、base 只决定数字。
 - **不做**：筛选状态不写 URL（与资产库其余筛选一致）。
+
+## Step 2 分章生成与断流续写（2026-10-29，渠道 90 秒断流根治）
+
+渠道（lk888 等中转）会在约 90 秒处切断 SSE 流且不带 `message_delta.stop_reason`。27 分钟韩文稿 Step 2 需约 1.2 万字符，90 秒产能只有 5000–9000，单次必然写不完；原实现把断流当整步失败、4 次从头重写，重试必然复现。
+
+- **分章阈值**：`pipeline.CHAPTER_SPLIT_MIN_WORDS = 1200`。蓝图 `word_budget` 合计 ≥ 1200 且章数 ≥ 2 时，Step 2 走 `runScriptByChapters`：逐章调用（每章 200–400 词，30–60 秒），拼回整篇后照常过结构/篇幅/听感闸门。
+- **断点**：`run.steps.script.segments[CHxx] = { text, chars, secs, at }`，每章写完立即 `saveRun`；任务重试/进程重启后已完成章直接复用。**步骤初始化处已用 `prevStep.segments` 保留，改 Step 2 时不要清空**。
+- **断流续写**：`llmCall(cfg, messages, label, { allowPartial:true })` 断流时返回 `partial:true` 而不是抛错，分章内从断点续写本章；Step 4 整篇断流时按蓝图章节边界续写（最多 4 轮），不再整篇重来。
+- **空响应降级**：`fastFailEmpty:true` 时首轮空响应不原地重试 4 次（原实现每次白等约 90 秒），且**直接抛原始错误**（保留 `kind='empty'` 与留痕文件名）；分章层给每章 `CHAPTER_EMPTY_TRIES=3` 次机会，前两次空响应后分别等 `EMPTY_BACKOFF_MS=[5000,15000]` 并换「不要思考、直接写正文」的提示重发；三次仍空才报「Step 2 分章失败(CHxx)」。
+- **错误字段不能丢**：`llmCall` 包装"共 N 次调用均失败"时**必须**带上 `lastErr.kind` / `lastErr.partial`。2026-10-29 就因为这两行缺失，外层 `e.kind === 'empty'` 永远不成立，兜底重试被短路（日志显示「共 1 次」而非 3 次）。以后改这段务必保留。
+- **闸门重试**：分章模式下篇幅/听感闸门的整篇重写会再次撞断流，已改为 `reset:true` 逐章全量重写（`listenGate` 第 7 个参数 `rewriteAll`）。**以后新增任何闸门重试，若在分章模式走整篇 `callLlm`，会退化成必然失败**。
+- **失败留痕**：`llmCall` 对 HTTP 错误/空响应/断流把响应体前 4KB 写 `app/data/logs/llm_*.txt`（已 gitignore），错误信息带文件名。排查渠道问题先看这里：能区分「只吐 thinking」「渠道 200 带 error 体」「流被网关切断」。
+- **单测**：`runScriptByChapters` 是模块级导出，用桩 `callLlm` 可覆盖正常/空响应降级/断流续写/断点续跑/多写章节五条路径。

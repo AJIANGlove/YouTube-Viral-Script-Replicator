@@ -214,7 +214,7 @@ const server = http.createServer(async (req, res) => {
       const cfg = pipeline.loadConfig() || {};
       const providers = Object.entries(cfg.providers || {}).map(([id, p]) => ({
         id, name: p.name || id, has_key: !!p.api_key,
-        models: Array.isArray(p.models) && p.models.length ? p.models : DEFAULT_MODELS
+        models: pipeline.normalizeModels(p.models, DEFAULT_MODELS) // 统一成 [{id,label}]:别名渠道页面显示全称、调用仍用 id
       }));
       const tw = cfg.tweak || {};
       return send(res, 200, {
@@ -241,9 +241,9 @@ const server = http.createServer(async (req, res) => {
       const providerId = body.provider || (scope === 'tweak' ? (prev.tweak || {}).provider : prev.provider);
       const preset = providers[providerId];
       if (!preset) return send(res, 400, { error: '未知渠道商: ' + providerId });
-      const models = Array.isArray(preset.models) && preset.models.length ? preset.models : DEFAULT_MODELS;
-      const model = body.model || models[0];
-      if (!models.includes(model)) return send(res, 400, { error: '渠道 ' + (preset.name || providerId) + ' 不支持模型: ' + model });
+      const models = pipeline.normalizeModels(preset.models, DEFAULT_MODELS); // [{id,label}];校验按 id(实际传给渠道的 model 名)
+      const model = body.model || (models[0] || {}).id || '';
+      if (!models.some(m => m.id === model)) return send(res, 400, { error: '渠道 ' + (preset.name || providerId) + ' 不支持模型: ' + model });
       const picked = {
         provider: providerId,
         model,

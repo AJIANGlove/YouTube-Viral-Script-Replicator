@@ -5215,11 +5215,12 @@ function renderProviders(containerId, radioName, providers, selectedId) {
   ).join('');
 }
 
+// models 由服务端归一化成 [{id,label}]:id=实际传给渠道的 model 名,label=页面展示;兼容纯字符串(旧接口/旧缓存)
 function renderModels(containerId, radioName, models, selectedModel) {
-  const list = models || [];
-  const checked = list.includes(selectedModel) ? selectedModel : list[0];
+  const list = (models || []).map(m => (typeof m === 'string' ? { id: m, label: m } : m)).filter(m => m && m.id);
+  const checked = (list.find(m => m.id === selectedModel) || list[0] || {}).id || '';
   document.getElementById(containerId).innerHTML = list.map(m =>
-    `<label style="display:inline-block;margin-right:14px;font-weight:normal"><input type="radio" name="${radioName}" value="${esc(m)}"${m === checked ? ' checked' : ''}> ${esc(m)}</label>`
+    `<label style="display:inline-block;margin-right:14px;font-weight:normal"><input type="radio" name="${radioName}" value="${escAttr(m.id)}"${m.id === checked ? ' checked' : ''}> ${esc(m.label || m.id)}</label>`
   ).join('');
 }
 

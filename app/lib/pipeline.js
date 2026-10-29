@@ -26,6 +26,21 @@ const LLM_BACKOFF_MS = [30 * 1000, 60 * 1000, 120 * 1000];
 const GATE_MAX_RETRIES = 3;
 const PROBE_TIMEOUT_MS = 120 * 1000;
 
+// 失败留痕:HTTP 错误/空响应/断流时把原始响应体前 4KB 落盘(app/data/logs/llm_*.txt,不入库)。
+// 这三种在 run.attempts 里只留一句「空响应」/「断流」,无法区分「模型只思考没输出」「渠道 200 带错误体」
+// 「流被网关切断」。留痕后可直接看帧类型,是定位渠道问题唯一的一手证据。
+const LOG_DIR = path.join(__dirname, '..', 'data', 'logs');
+function dumpLlmFailure(kind, meta, text) {
+  try {
+    fs.mkdirSync(LOG_DIR, { recursive: true });
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const file = path.join(LOG_DIR, 'llm_' + kind + '_' + stamp + '.txt');
+    const head = Object.entries(meta || {}).map(([k, v]) => k + '=' + (v == null ? '' : v)).join('\n');
+    fs.writeFileSync(file, head + '\n\n----- 响应体前 4096 字节 -----\n' + String(text || '').slice(0, 4096), 'utf-8');
+    return file;
+  } catch (e) { return null; }
+}
+
 function loadConfig() {
   try { return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8')); }
   catch (e) { return null; }
@@ -46,6 +61,25 @@ function resolveProvider(cfg, providerId) {
     omit_temperature: !!preset.omit_temperature, // 部分渠道的模型拒收/固定 temperature 字段(如 CloseAI 的 claude-opus-4-8/5、Kimi K3)
     use_max_completion_tokens: !!preset.use_max_completion_tokens // 部分新模型的长度字段名为 max_completion_tokens(如 Kimi K3)
   };
+}
+
+// 渠道模型列表归一化:统一成 [{ id, label }],调用方只认 id(传给 API 的 model)与 label(页面展示)。
+// 兼容两种写法:纯字符串(旧配置,展示名与调用名相同)、对象 { id, label }(别名渠道:如 lk888 的 op-5-5 实际是 claude-opus-5-5)。
+// 无有效 id 的条目丢弃;整表无有效项时回退 fallback(server 的 DEFAULT_MODELS),避免设置页出现空模型列表
+function normalizeModels(list, fallback) {
+  const pick = arr => {
+    const out = [];
+    for (const m of (Array.isArray(arr) ? arr : [])) {
+      const id = typeof m === 'string' ? m.trim() : (m && typeof m.id === 'string' ? m.id.trim() : '');
+      if (!id) continue;
+      const label = m && typeof m === 'object' && typeof m.label === 'string' && m.label.trim() ? m.label.trim() : id;
+      out.push({ id, label });
+    }
+    return out;
+  };
+  const out = pick(list);
+  if (out.length) return out;
+  return fallback && fallback !== list ? pick(fallback) : [];
 }
 
 // 微调按钮(选题推荐/生成简介/指纹检测/商业化检查/开头留存检查/强化开头)的生效配置:
@@ -214,16 +248,25 @@ function isRetryable(e) {
   return true;
 }
 
-async function llmCall(cfg, messages, label) {
+// opts.allowPartial:断流时若已收到 >= minPartial(默认 200)字正文,不抛错、不丢弃,返回 partial:true 交给上层续写
+// opts.fastFailEmpty:空响应不做 4 次原地重试(每次白等约 90 秒),第一轮就抛给上层降级(拆小请求/换提示)
+async function llmCall(cfg, messages, label, opts) {
+  const o = opts || {};
   const { isAnthropic, url, headers, body } = buildRequest(cfg, messages);
 
   let lastErr;
+  let attempts = 0;
   for (let attempt = 0; attempt <= LLM_MAX_RETRIES; attempt++) {
     if (attempt > 0) await new Promise(r => setTimeout(r, LLM_BACKOFF_MS[Math.min(attempt - 1, LLM_BACKOFF_MS.length - 1)]));
     const t0 = Date.now();
+    const secs = () => (Date.now() - t0) / 1000;
+    attempts = attempt + 1;
     try {
       const resp = await postJson(url, headers, body, LLM_IDLE_TIMEOUT_MS);
-      if (resp.status < 200 || resp.status >= 300) throw httpError(resp.status, resp.text);
+      if (resp.status < 200 || resp.status >= 300) {
+        dumpLlmFailure('http', { label, model: cfg.model, status: resp.status, secs: Math.round(secs()) }, resp.text);
+        throw httpError(resp.status, resp.text);
+      }
       // 优先按 SSE 流式解析;渠道忽略 stream 参数返回普通 JSON 时自动回退
       const sse = parseSSE(resp.text, isAnthropic);
       let content, stopReason, streams = 1;
@@ -232,24 +275,172 @@ async function llmCall(cfg, messages, label) {
         stopReason = sse.stopReason;
         streams = sse.streams || 1;
       } else {
-        const data = JSON.parse(resp.text);
+        let data;
+        try { data = JSON.parse(resp.text); }
+        catch (e) {
+          const f = dumpLlmFailure('badjson', { label, model: cfg.model, secs: Math.round(secs()), bytes: resp.text.length }, resp.text);
+          throw new Error('响应既不是 SSE 也不是合法 JSON' + (f ? '(已留痕 ' + path.basename(f) + ')' : ''));
+        }
         if (isAnthropic) content = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n');
         else content = data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : '';
         stopReason = data.stop_reason || (data.choices && data.choices[0] && data.choices[0].finish_reason) || null;
       }
-      if (!content) throw new Error('空响应');
-      // 流没收到结束标记就断了(实测 2026-10-29 lk888 渠道每次约 90 秒就断流,stop_reason 为空,半截稿被当成完整输出,
-      // 下游报「章节不全」「缺少字段」)。当成断流重试,仍断流就明确报渠道问题
-      if (sse && isAnthropic && !stopReason) throw new Error('渠道中途断流:第 ' + Math.round((Date.now() - t0) / 1000) + ' 秒时连接结束,没有收到结束标记,输出不完整(已收到 ' + content.length + ' 字)。请换一个渠道,或联系渠道方');
+      if (!content) {
+        // 空响应 = 整条流里没有任何 text 增量(思考型模型只吐 thinking_delta,或渠道 200 带 error 体)。
+        // 原始响应留痕,错误带 kind='empty' 供上层降级
+        const f = dumpLlmFailure('empty', {
+          label, model: cfg.model, secs: Math.round(secs()), bytes: resp.text.length,
+          sse: !!sse, streams: sse ? sse.streams : 0
+        }, resp.text);
+        const e = new Error('空响应' + (f ? '(已留痕 ' + path.basename(f) + ')' : ''));
+        e.kind = 'empty';
+        throw e;
+      }
+      // 流没收到结束标记就断了(实测 lk888 渠道部分请求在约 90 秒断开,stop_reason 为空)。
+      // allowPartial:把已收到的正文交还上层按章节边界续写;否则当断流重试,仍断流就明确报渠道问题
+      if (sse && isAnthropic && !stopReason) {
+        const f = dumpLlmFailure('cut', {
+          label, model: cfg.model, secs: Math.round(secs()), chars: content.length, streams: streams
+        }, resp.text);
+        if (o.allowPartial && content.trim().length >= (o.minPartial || 200)) {
+          return { content, secs: secs(), stopReason: 'stream_cut', streams, partial: true, log: f };
+        }
+        const e = new Error('渠道中途断流:第 ' + Math.round(secs()) + ' 秒时连接结束,没有收到结束标记,输出不完整(已收到 ' + content.length + ' 字)' +
+          (f ? '(已留痕 ' + path.basename(f) + ')' : '') + '。请换一个渠道,或联系渠道方');
+        e.kind = 'cut';
+        e.partial = content;
+        throw e;
+      }
       // 归一化截断信号:openai 系的 finish_reason='length' 等价于 anthropic 的 'max_tokens'(Step 2 截断续写依赖该标记)
       if (stopReason === 'length') stopReason = 'max_tokens';
-      return { content, secs: (Date.now() - t0) / 1000, stopReason, streams };
+      return { content, secs: secs(), stopReason, streams };
     } catch (e) {
       lastErr = e;
+      if (e.kind === 'empty' && o.fastFailEmpty) break;
       if (!isRetryable(e)) break;
     }
   }
-  throw new Error(label + ' 共 ' + (LLM_MAX_RETRIES + 1) + ' 次调用均失败: ' + lastErr.message);
+  // fastFailEmpty:首轮空响应不做 4 次原地重试,直接抛原始错误(保留 kind='empty' 与留痕文件名),由上层退避重发
+  if (o.fastFailEmpty && lastErr && lastErr.kind === 'empty') throw lastErr;
+  // 包装错误必须带上 kind/partial:之前丢了这两个字段,上层「空响应换提示重试」判断永远不成立
+  const finalErr = new Error(label + ' 共 ' + attempts + ' 次调用均失败: ' + (lastErr ? lastErr.message : '未知错误'));
+  if (lastErr && lastErr.kind) finalErr.kind = lastErr.kind;
+  if (lastErr && lastErr.partial) finalErr.partial = lastErr.partial;
+  throw finalErr;
+}
+
+// ---------- 分章生成(Step 2)与断流续写 ----------
+// 渠道在约 90 秒切断流时,整篇一万多字的稿子永远写不完(实测 27 分钟韩文稿需 1.2 万字符,90 秒产能只有 5000-9000)。
+// 改成按蓝图逐章调用:每章 200-400 词,单次 30-60 秒,稳定落在断流阈值内;每章完成即落盘,重试/重启从断点续跑。
+const CHAPTER_SPLIT_MIN_WORDS = 1200; // 蓝图 word_budget 合计超过此值才分章(小稿子整篇写连贯性更好)
+// 空响应(上游只回 ping、不产出 token)是随机坏节点:短退避后换提示重发,比原地等 30/60/120 秒划算。
+// 分章内最多 3 次机会,第 1/2 次空响应后分别等 5s/15s
+const EMPTY_BACKOFF_MS = [5000, 15000];
+const CHAPTER_EMPTY_TRIES = 3;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function bpChaptersOf(blueprint) {
+  try { return JSON.parse(checks.stripFence(blueprint || '')).chapters || []; } catch (e) { return []; }
+}
+
+function bpWordBudget(chapters) {
+  return (chapters || []).reduce((n, c) => n + (Number(c.word_budget) || 0), 0);
+}
+
+function chapterTagLine(c) {
+  return '[' + (c.id || '') + ' | ' + (c.time_range || '') + ' | ' + (c.function || '') + ']';
+}
+
+// 从模型输出里截出目标章:只保留该章标签行到下一个标签行之前。
+// 模型偶尔不听话多写了几章,这里只取需要的那一章,避免重复内容被拼进正文
+function extractChapterBlock(text, id) {
+  const want = String(id || '').trim().toUpperCase();
+  if (!want) return null;
+  const lines = String(text || '').split('\n');
+  const isTag = l => /^\s*\[ch\d+\s*\|/i.test(l);
+  let start = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (!isTag(lines[i])) continue;
+    const m = lines[i].match(/^\s*\[(ch\d+)/i);
+    if (m && m[1].toUpperCase() === want) { start = i; break; }
+  }
+  if (start === -1) return null;
+  let end = lines.length;
+  for (let i = start + 1; i < lines.length; i++) if (isTag(lines[i])) { end = i; break; }
+  return lines.slice(start, end).join('\n').trim();
+}
+
+// Step 2 分章生成:逐章调用并落盘。返回拼接后的整篇脚本。
+// segments 存 run.steps.script.segments —— 任务重试/进程重启后已完成的章直接复用,不重写、不再看渠道脸色。
+// 抽成模块级函数(而非 runGeneration 内闭包)是为了能用桩 callLlm 单测三条路径:空响应降级、断流续写、断点续跑
+async function runScriptByChapters(opts) {
+  const { run, chapters, basePrompt, callLlm, onSave } = opts;
+  const save = () => { if (onSave) onSave(); };
+  const backoff = Array.isArray(opts.emptyBackoff) ? opts.emptyBackoff : EMPTY_BACKOFF_MS; // 单测可传更短的值
+  // reset=true:闸门重写时丢弃旧分段全量重写(否则会复用旧的、改不动的章)
+  const segs = opts.reset ? {} : { ...((run.steps.script || {}).segments || {}) };
+  const parts = [];
+  let totalSecs = 0;
+  for (let i = 0; i < chapters.length; i++) {
+    const c = chapters[i];
+    const id = String(c.id || ('CH' + String(i + 1).padStart(2, '0')));
+    if (segs[id] && segs[id].text) { parts.push(segs[id].text); totalSecs += segs[id].secs || 0; continue; }
+    const tagLine = chapterTagLine(c);
+    const tail = parts.length ? parts[parts.length - 1].slice(-500) : '';
+    const ahead = chapters.slice(i + 1, i + 3).map(x => '- ' + x.id + ' | ' + x.time_range + ' | ' + x.function).join('\n');
+    const brief = '\n\n【本次只写 ' + id + ' 一章】\n' +
+      '上面是整篇要求;本次只输出第 ' + (i + 1) + '/' + chapters.length + ' 章,禁止输出其它章节。\n' +
+      '第一行必须严格是:\n' + tagLine + '\n' +
+      '本章 word_budget=' + (c.word_budget || '(见蓝图)') + ';本章信息目标:' + (c.information_goal || c.function || '(见蓝图)') + '\n' +
+      (c.carries_peaks ? '本章必须承担的高峰:' + c.carries_peaks + '\n' : '') +
+      (tail ? '上一章结尾(仅用于衔接,不得重复):\n' + tail + '\n' : '') +
+      (ahead ? '后续章节(不要写,只用于把握铺垫与节奏):\n' + ahead + '\n' : '') +
+      '现在直接开始写正文,不要输出思考过程、提纲或解释。';
+    let msg = [{ role: 'user', content: basePrompt + brief }];
+    let block = null, lastErr = null, used = 0;
+    for (let attempt = 1; attempt <= CHAPTER_EMPTY_TRIES && !block; attempt++) {
+      let r2;
+      try {
+        // fastFailEmpty:首轮空响应立即抛回(保留 kind),由下面短退避后换提示重发,不原地白等 4×90 秒
+        r2 = await callLlm(msg, 'Step 2 ' + id + (attempt > 1 ? ' 重试' + (attempt - 1) : ''), { allowPartial: true, fastFailEmpty: true });
+      } catch (e) {
+        lastErr = e;
+        // 空响应=上游只回 ping、不产出 token(坏节点)。5s/15s 短退避后换「别思考、直接写」的提示重发,最多 3 次机会
+        if (e.kind === 'empty' && attempt < CHAPTER_EMPTY_TRIES) {
+          await sleep(backoff[Math.min(attempt - 1, backoff.length - 1)] || 0);
+          msg = [{ role: 'user', content: basePrompt + brief + '\n\n注意:上一次调用 90 秒内没有输出任何正文。不要再思考或列提纲,直接从标签行开始写正文。' }];
+          continue;
+        }
+        break; // 非空响应的硬错误(HTTP 4xx/鉴权/欠费)或 3 次都空:跳出,由下面统一包装成「分章失败(章号)」
+      }
+      used += r2.secs || 0;
+      let text = r2.content.trim();
+      if (r2.partial) {
+        // 断流:保留已收到的正文,从断点续写本章剩余部分(不重写标签行、不重复已写句子)
+        const r3 = await callLlm([
+          { role: 'user', content: basePrompt + brief },
+          { role: 'assistant', content: text },
+          { role: 'user', content: '上面的正文在第 ' + Math.round(r2.secs) + ' 秒处被渠道中断。请从中断处继续写完本章剩余正文:不要重写标签行,不要重复已经写过的句子,直接接着写。' }
+        ], 'Step 2 ' + id + ' 续写', { allowPartial: true, fastFailEmpty: true });
+        used += r3.secs || 0;
+        text = text + '\n' + r3.content.trim();
+      }
+      const picked = extractChapterBlock(text, id);
+      if (!picked) { lastErr = new Error('模型没有输出 ' + id + ' 的章节标签'); continue; }
+      const badTag = checks.malformedChapterTags(picked);
+      if (badTag.length) { lastErr = new Error(id + ' 标签格式不合法: ' + badTag[0].text); continue; }
+      const parsed = checks.parseChapters(picked);
+      if (parsed.length !== 1) { lastErr = new Error(id + ' 段落解析到 ' + parsed.length + ' 章'); continue; }
+      block = picked;
+    }
+    if (!block) throw new Error('Step 2 分章失败(' + id + '): ' + (lastErr ? lastErr.message : '未知'));
+    segs[id] = { text: block, chars: block.length, secs: Math.round(used * 10) / 10, at: new Date().toISOString() };
+    parts.push(block);
+    totalSecs += used;
+    run.steps.script = { ...(run.steps.script || {}), segments: segs };
+    save();
+  }
+  return { content: textnorm.normalizeChapterTags(parts.join('\n\n')), secs: totalSecs, segments: segs };
 }
 
 // 渠道连通性探测:单次调用(不重试),120s 有界;max_tokens 提到 512(思考型模型如 K3 会把 16 全烧在思考上,致 content 为空误判);
@@ -332,7 +523,8 @@ async function runGeneration(runId) {
   const listenOpts = () => ({ wpm: nw.wpm, title: (((run.analysis || {}).title || {}).final_title) || run.topic, lang: (run.audience || {}).target_language });
 
   // 听感闸门:不合格反馈重写一次;重写后结构完好、篇幅没坏、问题更少才采用,否则保留原稿,结果都记进 checks
-  const listenGate = async (step, content, messages, r, extract, valid) => {
+  // rewriteAll:整篇重写不可用时(Step 2 分章模式)的替身,按章重写并返回 { content, secs };不传则走原来的整篇反馈重试
+  const listenGate = async (step, content, messages, r, extract, valid, rewriteAll) => {
     const lc = checks.listenCheck(extract(content), listenOpts());
     if (!lc || lc.ok) return { content, r, messages, lc };
     const name = stepNames[step - 1];
@@ -342,7 +534,14 @@ async function runGeneration(runId) {
       '\n\n只改上面点到的句子和开头,其他句子原样保留,不要加长;章节标签和时间范围不变。' +
       (step === 4 ? '只输出一份完整终稿,格式要求不变(Change Log 与 fact_check_list 放在终稿之后)。' : '输出完整脚本,不要解释。');
     const m2 = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];
-    const r2 = await callLlm(m2, 'Step ' + step + ' 听感重试');
+    let r2;
+    if (rewriteAll) {
+      // 分章模式:整篇反馈重写必然再撞 90 秒断流,改为按章全量重写
+      const br = await rewriteAll();
+      r2 = { content: br.content, secs: br.secs, stopReason: 'end_turn' };
+    } else {
+      r2 = await callLlm(m2, 'Step ' + step + ' 听感重试');
+    }
     const c2 = textnorm.normalizeChapterTags(r2.content.trim());
     const lc2 = checks.listenCheck(extract(c2), listenOpts());
     if (r2.stopReason !== 'max_tokens' && lc2 && valid(c2) && checks.listenScore(lc2) < checks.listenScore(lc)) {
@@ -360,12 +559,13 @@ async function runGeneration(runId) {
     }].slice(-100);
     store.saveRun(run);
   };
-  const callLlm = async (messages, label) => {
+  const callLlm = async (messages, label, opts) => {
     const t0 = Date.now();
     try {
-      const r = await llmCall(cfg, messages, label);
+      const r = await llmCall(cfg, messages, label, opts);
       logAttempt(label, {
         ok: true, secs: Math.round(r.secs * 10) / 10, stop_reason: r.stopReason,
+        ...(r.partial ? { partial: true } : {}),
         ...(r.streams > 1 ? { streams: r.streams } : {}) // 中转层把多段流塞进一个响应体时留痕
       });
       return r;
@@ -374,6 +574,10 @@ async function runGeneration(runId) {
       throw e;
     }
   };
+
+  // Step 2 分章入口:具体实现在模块级 runScriptByChapters(可单测),这里只绑定本次 run 的持久化与调用器
+  const writeScriptByChapters = (basePrompt, chapters) =>
+    runScriptByChapters({ run, chapters, basePrompt, callLlm, onSave: () => store.saveRun(run) });
 
   run.status = 'running';
   if (!run.started_at) run.started_at = new Date().toISOString();
@@ -402,26 +606,46 @@ async function runGeneration(runId) {
       return;
     }
     run.current_step = step;
-    run.steps[stepNames[step - 1]] = { status: 'running', started_at: new Date().toISOString() };
+    const prevStep = run.steps[stepNames[step - 1]] || {};
+    // Step 2 分章产物(segments)必须跨重试保留:任务失败后点重试,已写好的章不再重写
+    run.steps[stepNames[step - 1]] = { status: 'running', started_at: new Date().toISOString(), ...(step === 2 && prevStep.segments ? { segments: prevStep.segments } : {}) };
     store.saveRun(run);
     try {
       const prompt = fillTemplate(templates[step - 1], ctx, tools);
       let messages = [{ role: 'user', content: prompt }];
-      let r = await callLlm(messages, 'Step ' + step);
-      let content = r.content.trim();
-      if (step === 1 || step === 3) content = checks.stripFence(content);
-      // Step 2/4 是脚本文本:模型偶尔把章节标签行写成 **[CH01 | m:ss - m:ss | fn]**
-      // (实测量产记录,见 tools/normalize_chapter_tags.js),下游闸门与解析器只认规范行。
-      // 在入库前统一归一化,后续闸门(2 的章节标记/截断续写)、校验、提示词上下文与 final_script 全部拿到干净文本;
-      // 原始模型字节不落盘,但保留"发生过归一化"这一事实,便于事后追查渠道格式漂移。
-      if (step === 2 || step === 4) {
-        const normed = textnorm.normalizeChapterTags(content);
-        if (normed !== content) {
-          const name = stepNames[step - 1];
-          const before = content.split('\n'), after = normed.split('\n'); // 归一化不改行数
-          const changed = after.filter((l, i) => l !== before[i]).length;
-          run.steps[name] = { ...(run.steps[name] || {}), tag_normalized: { lines: changed, at: new Date().toISOString() } };
-          content = normed;
+      let r, content = '';
+      let step2Split = false; // 分章模式下,闸门重试也必须按章重写(整篇重写必然再撞 90 秒断流)
+      // Step 2 分章:蓝图词数超过单次约 90 秒产能时逐章写(阈值与原因见 CHAPTER_SPLIT_MIN_WORDS 注释)。
+      // 分章产物已是规范化整篇,直接进下面的结构/篇幅/听感闸门,不再走整篇调用
+      if (step === 2) {
+        const chs = bpChaptersOf(ctx.blueprint);
+        const budget = bpWordBudget(chs);
+        if (chs.length >= 2 && budget >= CHAPTER_SPLIT_MIN_WORDS) {
+          step2Split = true;
+          run.steps.script = { ...(run.steps.script || {}), split: { threshold: CHAPTER_SPLIT_MIN_WORDS, budget, chapters: chs.length } };
+          store.saveRun(run);
+          const br = await writeScriptByChapters(prompt, chs);
+          content = br.content;
+          r = { content, secs: Math.round(br.secs * 10) / 10, stopReason: 'end_turn', streams: 1, split: true };
+        }
+      }
+      if (!content) {
+        r = await callLlm(messages, 'Step ' + step, step === 4 ? { allowPartial: true } : undefined);
+        content = r.content.trim();
+        if (step === 1 || step === 3) content = checks.stripFence(content);
+        // Step 2/4 是脚本文本:模型偶尔把章节标签行写成 **[CH01 | m:ss - m:ss | fn]**
+        // (实测量产记录,见 tools/normalize_chapter_tags.js),下游闸门与解析器只认规范行。
+        // 在入库前统一归一化,后续闸门(2 的章节标记/截断续写)、校验、提示词上下文与 final_script 全部拿到干净文本;
+        // 原始模型字节不落盘,但保留"发生过归一化"这一事实,便于事后追查渠道格式漂移。
+        if (step === 2 || step === 4) {
+          const normed = textnorm.normalizeChapterTags(content);
+          if (normed !== content) {
+            const name = stepNames[step - 1];
+            const before = content.split('\n'), after = normed.split('\n'); // 归一化不改行数
+            const changed = after.filter((l, i) => l !== before[i]).length;
+            run.steps[name] = { ...(run.steps[name] || {}), tag_normalized: { lines: changed, at: new Date().toISOString() } };
+            content = normed;
+          }
         }
       }
 
@@ -624,9 +848,16 @@ async function runGeneration(runId) {
           store.saveRun(run);
           const feedback = '上一次输出篇幅不合格:' + len.detail + '。请按 Blueprint 把每一章的旁白正文完整写出来(每章接近该章的 word_budget),' +
             '每章以 [CHxx | m:ss - m:ss | function] 标签行开头,章号从 CH01 起严格递增;不要只写开头和结尾,不要输出解释。';
-          messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];
-          r = await callLlm(messages, 'Step 2 篇幅重试');
-          content = textnorm.normalizeChapterTags(r.content.trim());
+          if (step2Split) {
+            // 分章模式:整篇反馈重写会再撞断流,改为逐章全量重写
+            const br2 = await runScriptByChapters({ run, chapters: bpChapters, basePrompt: prompt, callLlm, onSave: () => store.saveRun(run), reset: true });
+            content = br2.content;
+            r = { content, secs: Math.round(br2.secs * 10) / 10, stopReason: 'end_turn' };
+          } else {
+            messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];
+            r = await callLlm(messages, 'Step 2 篇幅重试');
+            content = textnorm.normalizeChapterTags(r.content.trim());
+          }
           const e2 = checks.chapterStructureError(content, wantChapters());
           if (e2) throw new Error('Step 2 篇幅重试后结构不合格: ' + e2);
           len = lengthCheck(content, ctx.blueprint, run.audience, tools.targetWpm);
@@ -640,10 +871,36 @@ async function runGeneration(runId) {
           if (checks.chapterStructureError(c2, bpChapters.length)) return false;
           const l2 = lengthCheck(c2, ctx.blueprint, run.audience, tools.targetWpm);
           return !(l2 && l2.short) && (!l2 || l2.words <= words0 * 1.05);
-        });
+        }, step2Split ? (async () => {
+          const br3 = await runScriptByChapters({ run, chapters: bpChapters, basePrompt: prompt, callLlm, onSave: () => store.saveRun(run), reset: true });
+          return { content: br3.content, secs: br3.secs };
+        }) : null);
         content = lg.content; r = lg.r; messages = lg.messages;
         run.checks.script_listen = lg.lc;
         if (lg.lc && lg.lc.retried && !lg.lc.retry_rejected) run.checks.script_length = lengthCheck(content, ctx.blueprint, run.audience, tools.targetWpm);
+      }
+
+      // Step 4 断流续写:终稿一万多字,单次常被渠道在约 90 秒切断。
+      // 保留已收到的正文,按蓝图章节边界继续写剩余章(最多 4 轮),不再整篇从头重写
+      if (step === 4 && r.partial) {
+        const bp4c = bpChaptersOf(ctx.blueprint);
+        let rounds = 0, secs4 = r.secs || 0;
+        while (r.partial && rounds < 4) {
+          const have = checks.parseChapters(checks.extractFinalScript(content));
+          const next = bp4c[have.length];
+          if (!next) break;
+          rounds++;
+          run.steps.optimized.gate_retry = { reason: '断流于 ' + (next.id || '') + ' 前,续写剩余章节(第' + rounds + '轮)' };
+          store.saveRun(run);
+          const cont = await callLlm([
+            { role: 'user', content: prompt },
+            { role: 'assistant', content: content },
+            { role: 'user', content: '上面的终稿在第 ' + Math.round(r.secs) + ' 秒处被渠道中断。请从下面这一行开始继续输出剩余章节,不要重复已完成章节;全部章节写完后,再补 Change Log 与 fact_check_list:\n' + chapterTagLine(next) }
+          ], 'Step 4 断流续写', { allowPartial: true });
+          secs4 += cont.secs || 0;
+          content = textnorm.normalizeChapterTags(content + '\n\n' + cont.content.trim());
+          r = { ...cont, secs: secs4 };
+        }
       }
 
       // Step 4 章节结构闸门:终稿必须是一份「CH01 起、章号严格递增不重复」的完整脚本。
@@ -695,12 +952,15 @@ async function runGeneration(runId) {
         run.checks.optimized_listen = lg.lc;
       }
 
+      const prevRec = run.steps[stepNames[step - 1]] || {};
       outputs['step' + step] = content;
       run.steps[stepNames[step - 1]] = {
         status: 'done', secs: Math.round(r.secs * 10) / 10, chars: content.length,
         stop_reason: r.stopReason, finished_at: new Date().toISOString(),
-        ...(run.steps[stepNames[step - 1]].gate_retry ? { gate_retry: run.steps[stepNames[step - 1]].gate_retry } : {}),
-        ...(run.steps[stepNames[step - 1]].tag_normalized ? { tag_normalized: run.steps[stepNames[step - 1]].tag_normalized } : {})
+        ...(prevRec.gate_retry ? { gate_retry: prevRec.gate_retry } : {}),
+        ...(prevRec.tag_normalized ? { tag_normalized: prevRec.tag_normalized } : {}),
+        ...(prevRec.split ? { split: prevRec.split } : {}),
+        ...(step === 2 && prevRec.segments ? { segments: prevRec.segments } : {})
       };
       // 每步校验结果即时持久化
       if (step === 1) run.checks = { ...(run.checks || {}), blueprint: checks.checkBlueprint(content, tools, (run.audience || {}).video_goal) };
@@ -746,4 +1006,5 @@ async function runGeneration(runId) {
   store.saveRun(done);
 }
 
-module.exports = { lengthCheck, todayStr, loadConfig, saveConfig, resolveProvider, loadTweakConfig, buildRequest, postJson, probeProvider, runGeneration, fillTemplate, loadTemplates, llmCall, parseSSE, isRetryable };
+module.exports = { lengthCheck, todayStr, loadConfig, saveConfig, resolveProvider, normalizeModels, loadTweakConfig, buildRequest, postJson, probeProvider, runGeneration, fillTemplate, loadTemplates, llmCall, parseSSE, isRetryable,
+  CHAPTER_SPLIT_MIN_WORDS, bpChaptersOf, bpWordBudget, chapterTagLine, extractChapterBlock, runScriptByChapters, dumpLlmFailure };

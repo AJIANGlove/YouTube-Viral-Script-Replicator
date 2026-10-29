@@ -70,7 +70,7 @@ node app/server.js
 
 ## 配置
 
-`app/config.json` 为全局 API 配置:`providers` 存各渠道预设(协议/base_url/Key/models,可选 omit_temperature、use_max_completion_tokens 标记;Key 仅在该文件维护,前端不展示);「主流程」(四阶段生成)与「微调按钮」(选题推荐/生成简介/指纹检测/YouTube 商业化检查/开头留存检查/强化开头)为两套独立配置,均可在页面"设置"中修改,互不干扰。
+`app/config.json` 为全局 API 配置:`providers` 存各渠道预设(协议/base_url/Key/models,可选 omit_temperature、use_max_completion_tokens 标记;Key 仅在该文件维护,前端不展示);「主流程」(四阶段生成)与「微调按钮」(选题推荐/生成简介/指纹检测/YouTube 商业化检查/开头留存检查/强化开头)为两套独立配置,均可在页面"设置"中修改,互不干扰。`models` 支持两种写法:纯字符串(展示名与调用名相同),或 `{ "id": "op-5-5", "label": "op-5-5（claude-opus-5-5）" }`(页面显示 label、实际调用传 id,用于渠道只认简称的场景);服务端统一归一化为 `[{ id, label }]` 后下发设置页。
 
 商业化检查的替换正文语言以任务 `audience.target_language` 为准,缺失时检测/采纳接口明确报错,不从原文推断或默认英文。提示词覆盖现有 12 种目标语言:`suggestion` 输出目标语言的可口播正文,`original_zh`/`suggestion_zh` 输出中文意译,分析说明使用中文;允许原文已有的外文专名、术语和短引文。主体语言明显冲突由模型返回 `TARGET_LANGUAGE_CONFLICT`,接口报错且不保存本次结果。此流程不增加程序语种识别或自动纠正重试。
 
