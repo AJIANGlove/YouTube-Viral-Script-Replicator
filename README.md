@@ -223,6 +223,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `final_revise.md` | 终审②按诊断修改（逐处原句→改成+理由） | 88 |
 | `final_recheck.md` | 终审③独立复审（评分对照，未达标补改一轮） | 75 |
 | `final_patch.md` | 按复审 OPEN 清单补改终稿 | 58 |
+| `final_patch_diagnose.md` | 补改掉分后找原因、定每题新改法 | 43 |
 | `final_open_options.md` | 复审遗留问题各出 ≥3 种改法并标推荐 | 33 |
 | `reframe_suggest.md` | 写前分析判「换框架」时推荐库内框架 | 30 |
 | `final_open_extract.md` | 从旧复审报告里抽出 OPEN 待改清单 | 17 |
@@ -243,7 +244,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 36 份 `.md`（2671 行）+ `final_tracks/` 5 份（202 行）+ `fingerprints.json` 模式库；物理文件 41 份，合计 2873 行。
+合计 37 份 `.md`（2714 行）+ `final_tracks/` 5 份（202 行）+ `fingerprints.json` 模式库；物理文件 42 份，合计 2916 行。
 
 ### 历史版本
 
