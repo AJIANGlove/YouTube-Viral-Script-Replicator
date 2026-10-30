@@ -15,7 +15,7 @@
   nav button { background: transparent; color: #9ca3af; border: none; padding: 6px 14px; font-size: 14px; cursor: pointer; border-radius: 5px; }
   nav button.active { background: #374151; color: #fff; }
   main { max-width: 1100px; margin: 0 auto; padding: 16px; transition: max-width .15s; }
-  main.wide { max-width: 1480px; }
+  main.wide { max-width: 1720px; }
   .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; }
   .card h2 { font-size: 15px; margin: 0 0 8px; }
   .detail-title-copy { padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
@@ -324,7 +324,7 @@
   .sc-item del { color: #b91c1c; }
   .sc-item ins { color: #047857; text-decoration: none; }
   .runs-empty { text-align: center; color: #9ca3af; font-size: 13px; padding: 36px 0; }
-  .op-btn { padding: 3px 10px; font-size: 12px; border-radius: 5px; cursor: pointer; background: #fff; border: 1px solid #d1d5db; color: #374151; }
+  .op-btn { padding: 3px 10px; font-size: 12px; border-radius: 5px; cursor: pointer; background: #fff; border: 1px solid #d1d5db; color: #374151; white-space: nowrap; }
   .op-btn:hover { border-color: #9ca3af; }
   .op-btn.danger { color: #dc2626; border-color: #fca5a5; }
   .op-btn.danger:hover { background: #fef2f2; }
@@ -503,7 +503,9 @@
   #detail-scripts h2 > span:first-child { flex-shrink: 0; white-space: nowrap; }
   #detail-scripts h2 > span:last-child { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; align-items: center; }
   #view-runs .card { overflow-x: auto; }
-  .runs-table { min-width: 1300px; }
+  /* 任务列表用固定列宽:auto 布局下浏览器按内容分配列宽,会让「操作」列被挤到 30 多像素、
+     爆款按钮竖排换行;fixed + 下面的百分比列宽才是真正生效的那份宽度表 */
+  .runs-table { min-width: 1340px; table-layout: fixed; }
   .script-peek { margin-top: 8px; max-height: 132px; overflow-y: auto; white-space: pre-wrap; font-size: 12px; line-height: 1.6;
     color: #374151; background: #fafafa; border: 1px solid #eef0f3; border-radius: 6px; padding: 8px 10px; }
   .bind-state { font-size: 12px; line-height: 1.7; }
@@ -696,18 +698,18 @@
     <div class="card" style="padding:6px 16px 12px">
       <table class="runs-table">
         <thead><tr>
-          <th style="width:17%">主题</th>
+          <th style="width:18.5%">主题</th>
           <th style="width:11%">框架</th>
-          <th style="width:9%">目标</th>
-          <th style="width:6%">频道</th>
-          <th style="width:10%">状态</th>
+          <th style="width:9.7%">目标</th>
+          <th style="width:5.5%">频道</th>
+          <th style="width:8%">状态</th>
           <th style="width:6%">评分</th>
-          <th style="width:6%">确认文案版本</th>
-          <th style="width:8%">是否生成视频</th>
-          <th style="width:4%">步骤</th>
-          <th style="width:9%">创建时间</th>
-          <th style="width:9%">结束时间</th>
-          <th style="width:6%">操作</th>
+          <th style="width:7%">确认文案版本</th>
+          <th style="width:6.8%">是否生成视频</th>
+          <th style="width:3.5%">步骤</th>
+          <th style="width:8.5%">创建时间</th>
+          <th style="width:8.5%">结束时间</th>
+          <th style="width:7%">操作</th>
         </tr></thead>
         <tbody id="runs-tbody"></tbody>
       </table>
@@ -1434,8 +1436,14 @@ const LANG_LABELS = { English: '英语', Hindi: '印地语', Spanish: '西班牙
 const COUNTRY_LABELS = { US: '美国', IN: '印度', BR: '巴西', MX: '墨西哥', JP: '日本', KR: '韩国', ID: '印尼', DE: '德国', GB: '英国', FR: '法国', VN: '越南', SA: '沙特' };
 
 // 一键生成的任务在「待确认分析」只是 AI 先调整那几分钟,不需要人去确认
+// 列表行来自索引(没有 analysis,只有 verdict / reframe.switched 次数),详情是完整任务,两种都要认
 function statusLabel(r) {
-  if (r.draft_first && r.status === 'awaiting_review' && r.analysis && r.analysis.verdict === '换框架' && (r.reframe || {}).status !== 'ignored') return '待换框架';
+  const verdict = r.verdict || (r.analysis || {}).verdict || '';
+  const rf = r.reframe || {};
+  const switched = typeof rf.switched === 'number' ? rf.switched : (rf.switched || []).length;
+  if (r.draft_first && r.status === 'awaiting_review' && verdict === '换框架' && rf.status !== 'ignored') return '待换框架';
+  // 换了框架、还没开始写稿:重新做写前分析和 AI 调整这段都显示「换框架中」,副标写跑到哪一步
+  if (switched && !r.analysis_confirmed && (r.status === 'analyzing' || (r.draft_first && r.status === 'awaiting_review'))) return '换框架中';
   if (r.draft_first && r.status === 'awaiting_review') return 'AI 调整中';
   const st = r.steps || {};
   if (r.draft_first && r.status === 'done' && (st.reverse_audit || {}).status === 'done' && !st.final_review) return '待选审稿意见';

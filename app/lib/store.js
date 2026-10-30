@@ -188,7 +188,9 @@ function listRuns() {
 const RUNS_INDEX = path.join(APP_ROOT, 'data', 'runs.index.json');
 // 3: 新增 active_pass(列表"进行中"副标),旧索引会因版本不符自动重建
 // 4: 新增 score(列表"评分"列:审稿报告分 + 终审七维平均),同上
-const INDEX_VERSION = 4;
+// 5: 合并上游 v1.21.5 的 verdict / reframe / analysis_confirmed(列表「待换框架」「换框架中」)。
+//    上游把这三个字段也叫 4,与本地 v1.23 评分列的 4 撞号;合并后升 5 强制重建一次,两 schema 字段齐全
+const INDEX_VERSION = 5;
 let indexCache = null;
 
 // 源标题中文只用于列表副标题,按资产 id 缓存,避免重复读 meta.json
@@ -297,6 +299,10 @@ function indexEntry(run) {
     active_pass: activePass(run),
     // 列表「评分」列:审稿报告分 + 终审七维平均(口径不同,分开存)
     score: scoreSummary(run),
+    // 列表「待换框架/换框架中」状态(上游 v1.21.5):索引里没有 analysis,没这三个字段时列表只能显示「AI 调整中」
+    verdict: (run.analysis || {}).verdict || '',
+    reframe: run.reframe ? { status: run.reframe.status || '', switched: Array.isArray(run.reframe.switched) ? run.reframe.switched.length : 0 } : null,
+    analysis_confirmed: !!run.analysis_confirmed,
     created_at: run.created_at || '',
     updated_at: run.updated_at || '',
     has_error: !!run.error,
