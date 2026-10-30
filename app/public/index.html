@@ -2482,11 +2482,25 @@ async function rvOpeningRun() {
 }
 const RV_OPEN_CLS = { 关键: 'red', 结构: 'red', 次要: 'yellow', 待核实: 'green' };
 // 「可发布」硬标准(和 AI 复审的达标分开):复审没有关键/结构问题、事实没有红旗、听感检查通过
+// 平均 8 分以上:复审剩下的问题和数字密句只提示不挡,开头没过就「自动改开头」(终审、补改跑完会自己改一次)
 function rvPublishHtml(v) {
   const p = (v.summary || {}).publish;
   if (!p) return '';
-  return p.ready ? '<div class="rv-bar v13"><span style="color:#047857"><b>✓ 可发布</b>(没有关键/结构遗留问题,事实没有红旗,听感检查通过;AI 复审的「达标」只作参考)</span></div>'
-    : '<div class="rv-bar v13"><span><b>还不能发布</b>:' + p.reasons.map(esc).join(';') + '</span></div>';
+  const fx = p.fix || {}, rec = p.fix_rec;
+  const running = fx.status === 'running';
+  const head = p.ready ? '<span style="color:#047857"><b>✓ 可发布</b>(' + (p.good ? '平均 ' + p.avg + ' 分,开头过关,事实没有红旗' : '没有关键/结构遗留问题,事实没有红旗,听感检查通过') + ';AI 复审的「达标」只作参考)</span>'
+    : '<span><b>还不能发布</b>:' + p.reasons.map(esc).join(';') + '</span>';
+  const btn = (p.opening_bad || []).length && !running ? `<span><button class="an-btn v13" onclick="rvOpeningFix()" ${v.running ? 'disabled' : ''}>自动改开头</button> <span class="hint">只改开头几句,改到前 10 秒最多 1 个数字、8 秒内点题;改完自动再数一遍,最多试 3 次</span></span>` : '';
+  const fix = running ? `<span class="rv-busy">正在自动改开头${fx.stage && fx.stage !== '改开头' ? '(' + esc(fx.stage) + ')' : ''}…一般 1–3 分钟</span>`
+    : fx.status === 'failed' ? `<span class="rv-flag">自动改开头没成功:${esc(fx.error || '')}</span>`
+    : rec && rec.passed && rec.edits ? `<span style="color:#047857">✓ 开头已自动改 ${rec.edits} 处,听感检查过了(在下面修订痕迹里,类别「开头」;复审分数是改开头之前打的)</span>` : '';
+  const notes = (p.notes || []).length ? `<span class="hint">平均 ${p.avg} 分,下面这些不挡发布,想改再改:${p.notes.map(esc).join(';')}</span>` : '';
+  return `<div class="rv-bar v13">${head}${btn}${fix}${notes}</div>`;
+}
+async function rvOpeningFix() {
+  try { await rvPost('opening_fix', {}); } catch (e) { alert('没能开始:' + e.message); return; }
+  rvState.key = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
 }
 // 每个遗留问题选一种改法:pick[id] = 'A'/'B'…(AI 出的方案)、'rv'(按复审建议)、'skip'(不改);没点过的用默认值(推荐的方案)
 function rvPatchSel(rc) {
@@ -2523,6 +2537,7 @@ function rvPatchHtml(v, busy) {
   const head = `<div class="an-sec v13">按复审意见再改一轮${rc.verdict === '未达标' ? '(复审没达标)' : ''}</div>
     <div class="hint v13">以现在的终稿为底,AI 给每个问题出了几种改法并标了推荐,你选好后只按选中的方式改,改完自动再复审一次。不会从二稿重来,其他句子不动。标「结构」的问题会把那一章整章重写。</div>
     ${rc.auto && rc.diagnosis ? `<div class="rv-flag v13" style="border-color:#86efac;background:#f0fdf4"><b>这一版是 AI 自动重试出来的</b>:之前的补改把分改低、被退回了 ${esc(rc.reverted_before || 1)} 次,AI 找到原因(${esc(rc.diagnosis.cause || '')})后换了改法重试,这次没掉分。${rvDiagList(rc.diagnosis)}</div>` : ''}
+    ${((v.summary || {}).publish || {}).good ? `<div class="hint v13" style="color:#047857">平均已经 ${esc(v.summary.publish.avg)} 分,不用再整篇补改;下面的问题想改再改,开头没过就点上面的「自动改开头」。</div>` : ''}
     ${rc.stalled ? '<div class="rv-flag v13"><b>上一轮分数没涨</b>:剩下的问题逐句改不动了,再补改也一样。要么给「结构」类问题选一种改法让 AI 整章重写,要么看看是不是框架和题目对不上(换框架或换题),或者按上面的「可发布」标准判断直接发。</div>' : ''}`;
   if (running) return head + `<div class="rv-flag v13"><b>补改进行中(${esc(st.stage || '')})</b>:一般几分钟,跑完自动刷新终稿和评分。</div>`;
   if (!(rc.open || []).length) {
