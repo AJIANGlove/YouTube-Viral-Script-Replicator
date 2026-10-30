@@ -2524,7 +2524,7 @@ function rvPatchForm(rc, busy) {
   const n = (rc.open || []).filter(x => rvPatchPick(rc, x) !== 'skip').length;
   const optsBar = !(rc.open || []).length ? '' : optsRunning ? '<div class="rv-flag v13"><b>AI 正在给每个问题出解决方案…</b>一般一两分钟,出好后自动显示,推荐的方案会默认选上。</div>'
     : hasOpts ? `<div class="rv-ops"><span class="hint">每个问题已经默认选上 ★ 推荐的改法,不同意就换一个,或选「这个不改」。「结构」问题会按你选的方式整章重写那一章。要改 ${n} 个。</span></div>`
-    : `<div class="rv-ops v13"><button class="an-btn" onclick="rvPatchOptions()" ${busy ? 'disabled' : ''}>让 AI 给每个问题出 3 种解决方案</button><span class="hint">${os.status === 'failed' ? '上次没出成:' + esc(os.error || '') : '出好后直接选,不用自己写意见。'}</span></div>`;
+    : `<div class="rv-ops v13"><button class="an-btn" onclick="rvPatchOptions()" ${busy ? 'disabled' : ''}>让 AI 给每个问题出 3 种解决方案</button><span class="hint">${os.status === 'failed' ? '<b style="color:#c0392b">上次没出成</b>:' + esc(os.error || '') + '。可以再点一次;也可以不等方案,直接点下面的补改,按每题的「复审建议」改。' : '出好后直接选,不用自己写意见。'}</span></div>`;
   return `${optsBar}${rows}
     <details class="rv-edit" ${rvState.patchNoteOpen || sel.note ? 'open' : ''} ontoggle="rvState.patchNoteOpen = this.open"><summary class="v13" style="font-size:12px;cursor:pointer">补充意见(可不填;写了 AI 以这里为准,哪怕和上面的方案、账本不一样)</summary>
       <textarea id="rv-patch-note" class="rv-keep" rows="3" ${dis} placeholder="例如:CH13 A店租金改成月400万,相关的合计、占比、利润全部重算" oninput="rvState.patchSel.note = this.value">${esc(sel.note)}</textarea></details>

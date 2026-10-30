@@ -204,7 +204,7 @@ function analysisShapeError(a) {
 
 function parseJsonLoose(text) {
   const s = checks.stripFence((text || '').trim());
-  return parse(s) || checks.extractJsonObject(s);
+  return parse(s) || checks.repairJsonQuotes(s) || checks.extractJsonObject(s);
 }
 
 // 单次 LLM 调用 + 流水记录(与 runGeneration 的 attempts 同结构)
@@ -537,11 +537,21 @@ async function callJson(run, cfg, prompt, label, ok) {
   for (let retry = 1; !(out && ok(out)) && retry <= GATE_MAX_RETRIES; retry++) {
     messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: r.stopReason === 'max_tokens'
       ? '上一次输出被长度上限截断。只输出改动的部分,理由一句话以内,一次性输出完整 JSON。'
-      : '上一次输出不是格式要求里的 JSON。请只输出那个 JSON 对象,禁止代码围栏和解释。' }];
+      : '上一次输出不是格式要求里的 JSON。请只输出那个 JSON 对象,禁止代码围栏和解释;字符串里引用原句用「」,不要用没转义的英文双引号,也不要换行。' }];
     r = await callWithLog(run, cfg, messages, label + '重试');
     out = parseJsonLoose(r.content);
   }
-  if (!(out && ok(out))) throw new Error(label + '输出不是合法 JSON');
+  if (!(out && ok(out))) {
+    // 留下最后一次的完整输出,才能看出是 JSON 写坏了还是缺字段
+    let file = '';
+    try {
+      const dir = path.join(__dirname, '..', 'data', 'logs');
+      fs.mkdirSync(dir, { recursive: true });
+      file = 'llm_badjson_' + new Date().toISOString().replace(/[:.]/g, '-') + '.txt';
+      fs.writeFileSync(path.join(dir, file), 'label=' + label + '\nparsed=' + !!out + '\nstop_reason=' + r.stopReason + '\n\n' + String(r.content || '').slice(0, 60000), 'utf-8');
+    } catch (e) { file = ''; }
+    throw new Error(label + (out ? '输出缺内容(格式对但没有要的字段)' : '输出不是合法 JSON') + (file ? '(已留痕 ' + file + ')' : ''));
+  }
   return out;
 }
 

@@ -485,6 +485,9 @@ const server = http.createServer(async (req, res) => {
         // 频道声音设定:'__auto__' 按频道名匹配(默认) / '__none__' 不用 / 设定名
         voice_name: typeof body.voice_name === 'string' ? body.voice_name : voice.AUTO
       });
+      // 主题中文译文:建任务时就点火(后台跑,不占建任务响应),列表页/详情页都能直接看到中文;
+      // 列表接口另有 ensure 兜底,漏掉的(翻译失败/进程重启)下次刷列表自动补
+      topiczh.ensure([run.topic]);
       if (run.draft_first) {
         review.runDraftFirst(run.id).catch(e => {
           const r = store.getRun(run.id);

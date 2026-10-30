@@ -57,6 +57,41 @@ function extractJsonObject(text) {
   }
   return null;
 }
+// 模型在字符串里直接写了英文双引号(引原句时常见:改成"월세는…")或裸换行,JSON.parse 会失败。
+// 兜底修复:字符串里遇到 " 时往后看,后面紧跟 , } ] : 才当作字符串结束(逗号后还要是 " { [ 数字 true/false/null 才算),否则当成正文里的引号转义;裸换行转成 \n。
+// 在直接解析失败后、花括号配平之前用:配平会退到里面的小对象,看起来解析成功,其实丢了整份(实测 run_1f67a92553fd「终审·出解决方案」连续 3 次 end_turn 仍判不是合法 JSON)。
+function repairJsonQuotes(text) {
+  const s = String(text || '');
+  const start = s.indexOf('{');
+  if (start < 0) return null;
+  let out = '', inStr = false, esc = false;
+  const nextSig = i => { while (i < s.length && /\s/.test(s[i])) i++; return i; };
+  for (let i = start; i < s.length; i++) {
+    const c = s[i];
+    if (!inStr) { out += c; if (c === '"') inStr = true; continue; }
+    if (esc) { out += c; esc = false; continue; }
+    if (c === '\\') { out += c; esc = true; continue; }
+    if (c === '\n') { out += '\\n'; continue; }
+    if (c === '\r' || c === '\t') { out += c === '\t' ? '\\t' : ''; continue; }
+    if (c === '"') {
+      const j = nextSig(i + 1), n = s[j];
+      const closes = n === undefined || n === '}' || n === ']' || n === ':' || (n === ',' && /^(["{\[]|-?\d|true\b|false\b|null\b)/.test(s.slice(nextSig(j + 1), nextSig(j + 1) + 6)));
+      if (closes) { out += c; inStr = false; } else out += '\\"';
+      continue;
+    }
+    out += c;
+  }
+  // 只认最外层那个对象:extractJsonObject 会退到里面某个小对象(例如只捞出一条 option),那样等于没修
+  let depth = 0, str = false, e2 = false;
+  for (let i = 0; i < out.length; i++) {
+    const c = out[i];
+    if (str) { if (e2) e2 = false; else if (c === '\\') e2 = true; else if (c === '"') str = false; continue; }
+    if (c === '"') str = true;
+    else if (c === '{') depth++;
+    else if (c === '}' && --depth === 0) { try { return JSON.parse(out.slice(0, i + 1)); } catch (e) { return null; } }
+  }
+  return null;
+}
 const toSec = ts => { const p = ts.split(':').map(Number); return p.length === 2 ? p[0] * 60 + p[1] : p[0] * 3600 + p[1] * 60 + p[2]; };
 const fmt = s => Math.floor(s / 60) + ':' + String(Math.round(s % 60)).padStart(2, '0');
 
@@ -522,4 +557,4 @@ function extractFinalScript(optText) {
   return stripLeadingPreamble(cleaned).text;
 }
 
-module.exports = { normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };
+module.exports = { normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, repairJsonQuotes, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };
