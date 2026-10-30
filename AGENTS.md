@@ -151,6 +151,15 @@
 - **三个触发点**：①建任务 `POST /api/runs` 后立刻 `ensure([topic])`；②`GET /api/runs` 兜底（漏译的、进程重启期间建的）；③启动时把存量任务主题全挂一遍（只排缺译的）。都有缓存/`isChinese` 拦截，不会重复烧 token。
 - **原文即中文**：`isChinese()` 判定（CJK 数 ≥ 拉丁/谚文/假名数）→ 缓存记 `skipped:'zh'`，前端不显示（显示就是重复一遍原文）。
 - **`max_tokens` 必须 ≥800**：给 200 实测出现「空响应」和截断（「汗蒸房门票30」），因为 DeepSeek 会先花 token 思考。
-- **只在列表展示**：详情页标题、搜索关键词匹配（`queryRuns` 的 `q` 仍只搜原文）都不动。
+- **只有列表展示**：详情页标题、搜索关键词匹配（`queryRuns` 的 `q` 仍只搜原文）都不动。
+
+## 详情页「开头留存检查」面板跨任务残留（2026-10-30 修复）
+
+切任务（换文章/新建任务/换框架跳到新任务）后，详情页下方仍显示上一篇任务的「开头留存检查 — V1.5 文案 · N 处命中」、评分与原文摘录，点「收起」才消失。
+
+- **根因**：`openRun()` 只清了 `fpState` / `cpState` 并隐藏 `#fp-panel` / `#cp-panel`，漏了 `orState` 与 `#or-panel`。面板是静态 `div`，不随 `loadRunDetail` 重绘，旧 innerHTML 一直留着；而 `orHitsFor()` 有 runId 守卫，所以正文高亮没了、面板内容还在，看起来像「结果还挂在这篇新文章上」。
+- **修法**：`openRun()` 里补 `orState = null` + `#or-panel` 加 `hidden`；`renderOrPanel()` 开头加兜底 `if (!orState || orState.runId !== currentRunId) { orState = null; 隐藏; return; }`。以后新增同类"检测面板"（有独立 state + 常驻 div）必须同时在这两处登记。
+- **不需要重启**：只改 `app/public/index.html`，刷新页面即生效。
+
 - **列宽**：主题 15%→17%、框架 12%→11%，`min-width` 1260→1300。
 

@@ -1819,7 +1819,11 @@ async function retryRunById(id) {
 function openRun(id) {
   if (anEdit && anEdit.dirty && anEdit.runId !== id && !confirm('当前分析的修改还没保存，切换任务会丢弃。继续？')) return;
   if (anEdit && anEdit.runId !== id) anEdit = null;
-  currentRunId = id; anRenderedKey = null; resetDetailTitleCopyFeedback(); fpState = null; cpState = null; Object.keys(descPending).forEach(k => delete descPending[k]); document.getElementById('fp-panel').classList.add('hidden'); document.getElementById('cp-panel').classList.add('hidden'); document.getElementById('fp-popover').classList.add('hidden'); showView('detail'); }
+  currentRunId = id; anRenderedKey = null; resetDetailTitleCopyFeedback(); fpState = null; cpState = null; orState = null;
+  // 进行中的检测请求一律作废:否则旧任务的响应回来会把结果挂到新任务上(三个面板同一口径)
+  fpReqSeq++; cpReqSeq++; orReqSeq++;
+  Object.keys(descPending).forEach(k => delete descPending[k]);
+  document.getElementById('fp-panel').classList.add('hidden'); document.getElementById('cp-panel').classList.add('hidden'); document.getElementById('or-panel').classList.add('hidden'); document.getElementById('fp-popover').classList.add('hidden'); showView('detail'); }
 
 // 确认文案版本:点即生效,再点同一版 = 取消(可逆、无下游副作用,不做二次确认);
 // 一个任务只有一个确认版本,确认 B 会自动顶掉 A(服务端按单一字段存)。列表返回时自然刷新
@@ -5338,7 +5342,8 @@ function orSetAccepted(id, accepted) {
 // ---------- 面板 ----------
 function renderOrPanel() {
   const panel = document.getElementById('or-panel');
-  if (!orState) { panel.classList.add('hidden'); return; }
+  // 兜底:状态不属于当前任务时一律不渲染(防止切任务后残留上一篇的检测结果)
+  if (!orState || orState.runId !== currentRunId) { orState = null; panel.classList.add('hidden'); return; }
   panel.classList.remove('hidden');
   const vLabel = CP_VERSION_LABELS[orState.version] || orState.version;
   if (orState.loading) {
