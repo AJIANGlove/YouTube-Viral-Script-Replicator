@@ -1393,4 +1393,15 @@ server.listen(PORT, HOST, () => {
     store.saveRun(r);
     console.log(`换框架推荐中断落成失败(可重推): ${r.id}`);
   }
+
+  // 主题中文译文:启动后把存量任务里还缺译的主题挂到后台并发池(已译的跳过、中文主题跳过),
+  // 一条条补,不阻塞启动也不占用任何请求;跑完的逐条落盘,列表下次轮询就能看到
+  try {
+    const topics = [...new Set(store.listRuns().map(r => r.topic).filter(Boolean))];
+    topiczh.ensure(topics);
+    const p = topiczh.pending();
+    if (p.queued || p.active) console.log(`主题译文后台补译: 待译 ${p.queued} 条(并发 ${p.concurrency})`);
+  } catch (e) {
+    console.log('主题译文补译启动失败(不影响运行): ' + e.message);
+  }
 });

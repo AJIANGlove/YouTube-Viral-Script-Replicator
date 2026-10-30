@@ -1685,7 +1685,7 @@ function runRowHtml(r) {
   const stepText = r.status === 'running' ? 'Step ' + r.current_step + '/' + steps : (r.status === 'done' ? steps + '/' + steps : '—');
   return `
     <tr class="clickable${marked ? ' viral-row' : ''}" onclick="openRun('${r.id}')">
-      <td>${marked ? viralIcon(true, 'viral-mark') : ''}${esc(r.topic)}${r.topic_zh ? `<span class="sub topic-zh" title="主题中文译文">${esc(r.topic_zh)}</span>` : ''}</td>
+      <td>${marked ? viralIcon(true, 'viral-mark') : ''}${esc(r.topic)}${r.topic_zh ? `<span class="sub topic-zh">${esc(r.topic_zh)}</span>` : ''}</td>
       <td>${esc(r.asset_name || r.asset_id)}${r.asset_zh ? `<span class="sub">源:${esc(r.asset_zh)}</span>` : ''}</td>
       <td style="font-size:12px;color:#4b5563">${audienceCell(r.audience)}</td>
       <td style="font-size:12px;color:#4b5563">${r.channel_name ? esc(r.channel_name) : '<span class="vb-none">—</span>'}</td>

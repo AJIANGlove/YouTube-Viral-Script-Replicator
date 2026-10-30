@@ -56,8 +56,13 @@ function saveCache() {
   }
 }
 
-// 外部(脚本/手工)改过文件时重新加载,不用重启进程
+// 外部(脚本/手工)改过文件时重新加载,不用重启进程。
+// 2 秒节流:一次列表请求要取 50 条译文,不能每条都 stat 一次。
+let lastStat = 0;
 function refreshIfChanged() {
+  const now = Date.now();
+  if (now - lastStat < 2000) return;
+  lastStat = now;
   try {
     const st = fs.statSync(CACHE_PATH);
     if (st.mtimeMs !== cacheMtime) cache = null;
@@ -100,12 +105,14 @@ const PROMPT = [
   '标题:'
 ].join('\n');
 
-// 单条翻译:成功返回中文(原文即中文时返回 ''),失败抛错
+// 单条翻译:成功返回中文(原文即中文时返回 ''),失败抛错。
+// max_tokens 给足 800:DeepSeek 这类渠道会先花 token 思考,给 200 时实测出现过「空响应」
+// 和被截断成「汗蒸房门票30」的情况(2026-10-30 补译 55 条时踩到)。
 async function translateOne(topic, cfg) {
   const c = cfg || loadTweakConfig();
   if (!c || !c.api_key) throw new Error('未配置微调渠道 API Key');
   const messages = [{ role: 'user', content: PROMPT + '\n' + topic }];
-  const r = await llmCall({ ...c, temperature: 0.2, max_tokens: 200 }, messages, '主题翻译');
+  const r = await llmCall({ ...c, temperature: 0.2, max_tokens: 800 }, messages, '主题翻译');
   const zh = cleanOutput(r.content);
   return zh && zh !== topic ? zh : '';
 }
@@ -118,10 +125,13 @@ function put(key, zh) {
   saveCache();
 }
 
-// ---------- 后台队列(列表轮询触发) ----------
+// ---------- 后台队列(建任务/列表轮询/启动补译 都会往里扔) ----------
+// 用固定并发池而不是串行:55 条串行要一分多钟,并发 4 只要十几秒;
+// 也不能无脑全放(DeepSeek 会限流),所以并发数可配,默认 4。
 const queue = [];
 const queued = new Set();
-let pumping = false;
+let active = 0;
+const CONCURRENCY = Math.max(1, Math.min(8, Number(process.env.TOPIC_ZH_CONCURRENCY) || 4));
 
 function enqueue(topic) {
   const key = String(topic || '').trim();
@@ -134,25 +144,29 @@ function enqueue(topic) {
   queue.push(key);
 }
 
-async function pump() {
-  if (pumping) return;
-  pumping = true;
-  try {
-    while (queue.length) {
-      const key = queue.shift();
-      queued.delete(key);
-      try {
-        const zh = await translateOne(key);
-        put(key, zh);
-      } catch (e) {
+// 并发池:空位就取下一个,直到队列排空。每条各自落盘,前端轮询会逐条补上译文
+function pump() {
+  while (active < CONCURRENCY && queue.length) {
+    const key = queue.shift();
+    queued.delete(key);
+    active += 1;
+    translateOne(key)
+      .then(zh => put(key, zh))
+      .catch(e => {
         const f = fails.get(key) || { count: 0, at: 0 };
         fails.set(key, { count: f.count + 1, at: Date.now() });
         console.error(`主题翻译失败(${key.slice(0, 24)}): ${e.message}`);
-      }
-    }
-  } finally {
-    pumping = false;
+      })
+      .then(() => {
+        active -= 1;
+        if (queue.length) pump(); // 接力补齐剩下的
+      });
   }
+}
+
+// 队列快照(日志/自检用)
+function pending() {
+  return { queued: queue.length, active, concurrency: CONCURRENCY };
 }
 
 // 列表接口调用:把本页还没译的主题排进队列,立刻返回(不 await)
@@ -200,4 +214,4 @@ async function backfill(opts) {
   return { total: topics.length, todo: todo.length, ok, skipped, failed };
 }
 
-module.exports = { get, ensure, translateOne, backfill, isChinese, CACHE_PATH, loadCache };
+module.exports = { get, ensure, translateOne, backfill, isChinese, pending, CACHE_PATH, loadCache };

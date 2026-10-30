@@ -138,4 +138,18 @@
 - **列宽**：新增列 6%，框架 13%→12%、目标 10%→9%、频道 7%→6%、确认文案版本 7%→6%、是否生成视频 9%→8%、步骤 5%→4%、操作 7%→6%（主题 15%、状态 10%、两个时间列 9% 不动，合计 100%），`min-width` 1200→1260。
 - **不动**：筛选/排序/CSV（本来就没有排序与导出）、详情页、爆款逻辑、`reverse_audit` 与 `review.final` 的写入路径。
 
+## 列表「主题」中文译文（2026-10-30 新增，本地功能）
+
+主题多是韩文/英文，列表里看不出讲什么。现在主题原文下方多一行小字中文译文（灰字，比「源:」那行深一档）：
+
+- **数据**：`app/data/topic_zh.json`（`{version, items:{"<主题原文>": {zh, at, skipped?}}}`），按**主题文本**缓存——同一选题的多个任务共用一条译文。**不入库**（`.gitignore` 已加，与 `runs.index.json` 同性质）；换机器重跑 `node app/bin/translate_topics.js` 即可。**不写 run 文件**，所以 `INDEX_VERSION` 没动。
+- **接口**：`GET /api/runs` 里 `topiczh.ensure(items.map(i=>i.topic))` 排后台队列，返回体每条 `{...it, topic_zh}` 现查现拼（不 await 翻译）。
+- **前端**：`runRowHtml` 主题单元格加 `<span class="sub topic-zh">`；`runsSig` **必须**含 `r.topic_zh`（否则译文补上后 3s 轮询不重绘）。
+- **翻译渠道**：走 `pipeline.loadTweakConfig()`（「微调按钮」渠道，本项目 = DeepSeek `deepseek-flash`），提示词内联在 `lib/topiczh.js`（三行指令，不进 `prompts/`、不用同步 README 表）。
+- **并发**：固定并发池 **4**（`TOPIC_ZH_CONCURRENCY` 环境变量可覆盖，上限 8），单进程内排队逐条落盘；同一主题失败 10 分钟冷却、连续 3 次放弃（仅内存，重启重置）。
+- **三个触发点**：①建任务 `POST /api/runs` 后立刻 `ensure([topic])`；②`GET /api/runs` 兜底（漏译的、进程重启期间建的）；③启动时把存量任务主题全挂一遍（只排缺译的）。都有缓存/`isChinese` 拦截，不会重复烧 token。
+- **原文即中文**：`isChinese()` 判定（CJK 数 ≥ 拉丁/谚文/假名数）→ 缓存记 `skipped:'zh'`，前端不显示（显示就是重复一遍原文）。
+- **`max_tokens` 必须 ≥800**：给 200 实测出现「空响应」和截断（「汗蒸房门票30」），因为 DeepSeek 会先花 token 思考。
+- **只在列表展示**：详情页标题、搜索关键词匹配（`queryRuns` 的 `q` 仍只搜原文）都不动。
+- **列宽**：主题 15%→17%、框架 12%→11%，`min-width` 1260→1300。
 
