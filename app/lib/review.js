@@ -2491,9 +2491,29 @@ function claimBlocking(cc) { return !!cc && (cc.verdict === '不成立' || arr(c
 function claimNote(cc) {
   const lines = ['论点核对发现的问题(按下面改;只改这些句子和由它们推出的结论,数字一律用稿子里已有的,不许编新数字;开头的说法要和稿子自己的账一致):'];
   if (cc.verdict === '不成立') lines.push('- 开头主张「' + cc.claim + '」被稿子自己的数字推翻:' + cc.calc + (cc.fix_claim ? '。改法:' + cc.fix_claim : ''));
+  if (cc.fix_title) lines.push('- 核对建议把标题改成「' + cc.fix_title + '」,但人选择保留标题「' + (cc.title_for || '') + '」、改稿:稿子里和这个标题冲突的说法(身份、视角、主张)要改到和标题一致');
   arr(cc.issues).filter(x => !x.not_found).sort((a, b) => (a.level === '关键' ? 0 : 1) - (b.level === '关键' ? 0 : 1))
     .forEach(x => lines.push('- [' + (x.chapter || '全篇') + '][' + x.level + '] ' + (x.quote ? '「' + x.quote + '」' : '') + x.problem + (x.fix ? ' → 改成:' + x.fix : '')));
   return lines.join('\n').slice(0, 2900);
+}
+// 模型偶尔把结果包一层({"result":{...}})、verdict 写成「部分成立」「对不上」或干脆漏写(实测 llm_badjson_2026-10-30T11-17-30:
+// 改完稿重新核对两次都「格式对但没有要的字段」,页面停在旧结果上,人不知道下一步)
+function claimUnwrap(o) {
+  if (!o || typeof o !== 'object') return o;
+  if (o.verdict != null || o.claim != null || Array.isArray(o.issues)) return o;
+  const inner = Object.values(o).find(v => v && typeof v === 'object' && !Array.isArray(v) && (v.verdict != null || v.claim != null));
+  return inner || o;
+}
+function claimVerdict(o) {
+  if (!o || typeof o !== 'object') return '';
+  const v = String(o.verdict == null ? '' : o.verdict);
+  if (/不成立|不一致|对不上|推翻|矛盾|^\s*(false|no)\s*$/i.test(v)) return '不成立';
+  if (/没算|算不出|无法|不足|缺/.test(v)) return '稿子没算';
+  if (/成立|一致|^\s*(true|yes)\s*$/i.test(v)) return '成立';
+  if (v.trim()) return '';
+  // 漏写 verdict:有「开头应该怎么说」就是不成立;只要有主张或问题清单,就当成立,关键问题照样会拦
+  if (String(o.fix_claim || o.fix_title || '').trim()) return '不成立';
+  return o.claim != null || Array.isArray(o.issues) ? '成立' : '';
 }
 async function runClaimCheck(runId) {
   const cfg = pl().loadConfig();
@@ -2505,11 +2525,12 @@ async function runClaimCheck(runId) {
   store.saveRun(run);
   try {
     const sl = openingSlice(run);
-    const out = await an().callJson(run, cfg, an().fillVars(readPrompt('claim_check.md'), {
+    const out0 = await an().callJson(run, cfg, an().fillVars(readPrompt('claim_check.md'), {
       target_language: (run.audience || {}).target_language || '', title: ((run.analysis || {}).title || {}).final_title || run.topic,
       opening: sl.lines.map(l => l.text).join('\n') || '(无)', script: checks.extractFinalScript(text)
-    }), '论点核对', o => typeof o.verdict === 'string' && /成立|没算/.test(o.verdict));
-    const verdict = /不成立/.test(out.verdict) ? '不成立' : /没算/.test(out.verdict) ? '稿子没算' : '成立';
+    }), '论点核对', o => !!claimVerdict(claimUnwrap(o)));
+    const out = claimUnwrap(out0);
+    const verdict = claimVerdict(out);
     const issues = arr(out.issues).filter(x => x && x.problem).map((x, i) => {
       const quote = String(x.quote || '').trim();
       return { id: 'L' + (i + 1), chapter: (String(x.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase(), level: /关键/.test(x.level) ? '关键' : '次要',
@@ -2518,7 +2539,10 @@ async function runClaimCheck(runId) {
     const fresh = store.getRun(runId) || run;
     if (currentScript(fresh) !== text) throw new Error('核对期间稿子被改过,请重新核对');
     const prevFixes = ((fresh.review.final.claim_check || {}).fixes) || [];
+    const curTitle = ((fresh.analysis || {}).title || {}).final_title || fresh.topic || '';
+    const fixTitle = String(out.fix_title || '').trim();
     fresh.review.final.claim_check = { at: new Date().toISOString(), hash: hash(text), claim: String(out.claim || ''), verdict, calc: String(out.calc || ''), fix_claim: String(out.fix_claim || ''),
+      ...(verdict === '不成立' && fixTitle && fixTitle !== curTitle ? { fix_title: fixTitle, fix_title_zh: String(out.fix_title_zh || '').trim(), title_for: curTitle } : {}),
       issues, protect: arr(out.protect).map(String).filter(q => q.trim() && locate(text, q)), fixes: prevFixes };
     fresh.steps = { ...(fresh.steps || {}), claim_check: { status: 'done', finished_at: new Date().toISOString(), verdict, blocking: claimBlocking(fresh.review.final.claim_check) } };
     if (run.attempts) fresh.attempts = run.attempts;
@@ -2548,6 +2572,8 @@ async function claimFixOnce(runId, cc, by) {
   try { after = res && !res.reverted ? await runClaimCheck(runId) : null; } catch (e) { rec.error = rec.error || ('改完重新核对失败:' + e.message); }
   if (after) rec.after = { verdict: after.verdict, issues: arr(after.issues).filter(x => x.level === '关键' && !x.not_found).length };
   const fresh = store.getRun(runId) || run;
+  // 稿子到底改没改、复审几分:页面「已经试过」里要说清楚
+  if (res && !res.reverted) { rec.patched = true; rec.edits = res.edits || 0; const a2 = finalAvg(fresh); if (a2 != null) rec.avg = Math.round(a2 * 10) / 10; }
   const c = fresh.review.final.claim_check;
   if (c) { c.fixes = arr(c.fixes).concat([rec]); store.saveRun(fresh); }
   return { ok: !!after && !claimBlocking(after), patched: !!res && !res.reverted };
@@ -2559,6 +2585,8 @@ async function claimCheckAndFix(runId) {
   let cc = claimFresh(run) || await runClaimCheck(runId);
   for (;;) {
     if (!claimBlocking(cc)) return;
+    // 核对判断该改标题(全文改不动):不自动改稿,等人在页面上决定换不换标题
+    if (cc.fix_title) return;
     run = store.getRun(runId);
     const fin = run.review.final;
     if ((fin.claim_fixes || 0) >= CLAIM_FIX_MAX) return;
@@ -2582,13 +2610,46 @@ function startClaimCheck(runId, body) {
   const st = run.steps || {};
   const busyStep = (st.final_review || {}).status === 'running' ? '终审' : (st.deai || {}).status === 'running' ? '去AI感' : (st.claim_check || {}).status === 'running' ? '论点核对' : '';
   if (passBusy(runId) || busyStep) throw Object.assign(new Error('「' + (passLabel(runId) || busyStep) + '」正在跑,等它跑完再核对'), { status: 409 });
+  // 采用核对给的新标题:标题和全文对不上、全文又改不动时(实测:标题说「며느리」,全文是入赘女婿视角),改标题再核对
+  if (body && body.title) {
+    const c0 = ((run.review || {}).final || {}).claim_check;
+    if (!c0 || !c0.fix_title) throw Object.assign(new Error('核对结果里没有建议的新标题'), { status: 400 });
+    run.analysis = run.analysis || {};
+    run.analysis.title = run.analysis.title || {};
+    const from = run.analysis.title.final_title || run.topic || '';
+    run.analysis.title.final_title = c0.fix_title;
+    run.review.final.title_changes = arr(run.review.final.title_changes).concat([{ at: new Date().toISOString(), from, to: c0.fix_title, by: 'claim' }]);
+    store.saveRun(run);
+    passRunning.set(runId, '论点核对(换了标题,重新核对)');
+    (async () => {
+      let patched = false;
+      try {
+        const c = await runClaimCheck(runId);
+        // 换了标题还有别的关键问题(账算错等):接着按核对结果改一次稿
+        if (claimBlocking(c) && !c.fix_title) patched = (await claimFixOnce(runId, c, 'manual')).patched;
+      } catch (e) {} finally { passRunning.delete(runId); }
+      if (patched) { try { await runOpenOptions(runId); } catch (e) {} }
+      // 开头单独审要对照新标题重新审(开头句子没变,refreshOpeningIfStale 不会重跑)
+      try { await runOpeningCard(runId); } catch (e) {}
+      await translateRun(runId);
+    })();
+    return { ok: true };
+  }
   const fix = !!(body && body.fix);
   const cc = claimFresh(run);
-  if (fix && !claimBlocking(cc)) throw Object.assign(new Error(cc ? '论点核对已经通过,不用改' : '先核对论点'), { status: 400 });
+  // 核对结果是稿子改之前的(实测:点「按核对结果改稿」弹「先核对论点」):先重新核对,还对不上再改
+  const old = ((run.review || {}).final || {}).claim_check;
+  if (fix && cc && !claimBlocking(cc)) throw Object.assign(new Error('论点核对已经通过,不用改'), { status: 400 });
+  if (fix && !cc && !old) throw Object.assign(new Error('先核对论点'), { status: 400 });
   passRunning.set(runId, fix ? '按论点核对改稿' : '论点核对');
   (async () => {
     let patched = false;
-    try { if (fix) patched = (await claimFixOnce(runId, cc, 'manual')).patched; else await runClaimCheck(runId); } catch (e) {} finally { passRunning.delete(runId); }
+    try {
+      let c = cc;
+      if (fix && !c) { passRunning.set(runId, '论点核对(稿子改过,先重新核对)'); c = await runClaimCheck(runId); passRunning.set(runId, '按论点核对改稿'); }
+      if (fix && claimBlocking(c)) patched = (await claimFixOnce(runId, c, 'manual')).patched;
+      else if (!fix) await runClaimCheck(runId);
+    } catch (e) {} finally { passRunning.delete(runId); }
     if (patched) { try { await runOpenOptions(runId); } catch (e) {} await autoOpeningFix(runId); await refreshOpeningIfStale(runId); await translateRun(runId); }
   })();
   return { ok: true };

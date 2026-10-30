@@ -2506,19 +2506,43 @@ function rvClaimHtml(p, v) {
   const c = p.claim, st = p.claim_step || {};
   const running = st.status === 'running' || /论点/.test(v.running || '');
   const busy = running || !!v.running;
-  if (running) return `<div class="rv-flag v13" style="border-color:#93c5fd;background:#eff6ff"><b>${esc(/改稿/.test(v.running || '') ? '正在按论点核对改稿' : '正在核对论点')}…</b> <span class="hint">用稿子自己的数字检验开头的主张,一般 1–3 分钟;对不上会自动改稿再核对</span></div>`;
+  if (running) return `<div class="rv-flag v13" style="border-color:#93c5fd;background:#eff6ff"><b>${esc(/改稿/.test(v.running || '') ? '正在按论点核对改稿' : /标题/.test(v.running || '') ? '换了标题,正在重新核对论点' : '正在核对论点')}…</b> <span class="hint">用稿子自己的数字检验开头的主张,一般 1–3 分钟;对不上会自动改稿再核对</span></div>`;
   if (!c) return `<div class="rv-ops v13"><button class="an-btn v13" onclick="rvClaim(false)" ${busy ? 'disabled' : ''}>核对论点</button> <span class="hint">${st.status === 'failed' ? '上次核对失败:' + esc(st.error || '') : '用稿子自己的数字检验开头的主张和账本(新终审会自动做)'}</span></div>`;
-  const fixes = (c.fixes || []).map(f => `<li>${f.by === 'auto' ? '自动' : '手动'}改稿:${f.error ? esc(f.error) : f.after ? (f.after.verdict === '不成立' || f.after.issues ? '改了,还有问题' : '改好了') : '已改'}</li>`).join('');
+  // 每次改稿:稿子改没改、复审几分、改完核对的结果,分开说清楚
+  const fixes = (c.fixes || []).map(f => {
+    const did = (f.patched || f.after) ? `稿子改了${f.edits ? ' ' + f.edits + ' 处' : ''}${f.avg != null ? ',改完复审平均 ' + f.avg + ' 分' : ''}` : '稿子没改';
+    const res = f.error ? esc(f.error) : f.after ? (f.after.verdict === '不成立' || f.after.issues ? '重新核对还有问题' : '重新核对通过') : '';
+    return `<li>${esc(fmtTime(f.at))} ${f.by === 'auto' ? '自动' : '手动'}改稿:${did}${res ? ';' + res : ''}</li>`;
+  }).join('');
   const list = (c.issues || []).filter(x => !x.not_found).map(x => `<li><b style="color:${x.level === '关键' ? '#b91c1c' : '#b45309'}">[${esc(x.level)}]</b> ${esc(x.chapter || '')} ${x.quote ? '「' + esc(x.quote) + '」' : ''}${esc(x.problem)}${x.fix ? `<div class="hint">改法:${esc(x.fix)}</div>` : ''}</li>`).join('');
   const stale = c.stale ? '<span class="hint">(稿子改过,这是改之前的核对结果)</span> ' : '';
   if (!c.blocking) return `<details class="rv-md-box v13"><summary><span style="color:#047857"><b>✓ 论点核对通过</b></span>:${esc(c.claim)} ${stale}<span class="hint">(${esc(fmtTime(c.at))})</span></summary>
     <div class="v13" style="margin:6px 0"><b>怎么算的</b>:${esc(c.calc || '')}</div>${list ? `<ul>${list}</ul>` : ''}${fixes ? `<div class="hint">之前的改稿:<ul>${fixes}</ul></div>` : ''}
     <div class="rv-ops v13"><button class="an-btn" onclick="rvClaim(false)" ${busy ? 'disabled' : ''}>重新核对</button></div></details>`;
+  // 下一步点哪里:按现在的状态只给一句话(实测:点了改稿,结果在哪、接下来点哪都看不出来)
+  const lastFix = (c.fixes || []).slice(-1)[0];
+  const checkFailed = st.status === 'failed' ? `<div class="err-list">上次核对没成功:${esc(st.error || '')}</div>` : '';
+  const next = c.fix_title
+    ? `<b>下一步</b>:这篇的问题在标题,全文都是另一种说法,改稿改不过来。建议把标题改成「<b>${esc(c.fix_title)}</b>」${c.fix_title_zh ? '(' + esc(c.fix_title_zh) + ')' : ''}。点「改用这个标题」,改完自动重新核对;想保留原标题就点「保留标题,改稿」。`
+    : c.stale ? `<b>下一步</b>:稿子${lastFix && lastFix.patched ? '已经按核对结果改过了(见下面「已经试过」)' : '改过了'},上面是改之前的核对结果。点「重新核对,还对不上就改稿」。`
+    : (c.fixes || []).filter(f => f.patched).length >= 2 ? '<b>下一步</b>:已经改了两次还对不上,可以再点「按核对结果改稿」试一次;还是不行,多半是题目和框架本身对不上,建议换题或换框架。'
+    : '<b>下一步</b>:点「按核对结果改稿」,改完自动复审、再核对一遍。';
+  const btns = c.fix_title
+    ? `<button class="an-btn v13" onclick="rvClaimTitle()" ${busy ? 'disabled' : ''}>改用这个标题</button> <button class="an-btn" onclick="rvClaim(true)" ${busy ? 'disabled' : ''}>保留标题,改稿</button> <button class="an-btn" onclick="rvClaim(false)" ${busy ? 'disabled' : ''}>重新核对</button>`
+    : `<button class="an-btn v13" onclick="rvClaim(true)" ${busy ? 'disabled' : ''}>${c.stale ? '重新核对,还对不上就改稿' : '按核对结果改稿'}</button> <button class="an-btn" onclick="rvClaim(false)" ${busy ? 'disabled' : ''}>重新核对</button>`;
   return `<div class="rv-flag v13"><b>论点对不上</b>:${c.verdict === '不成立' ? '开头的主张「' + esc(c.claim) + '」被稿子自己的数字推翻。' : '账本有关键错误。'} ${stale}
+    <div class="v13" style="margin:6px 0;padding:6px 8px;background:#fff;border:1px solid #fca5a5;border-radius:6px">${next}</div>${checkFailed}
     <div class="v13" style="margin:6px 0"><b>怎么算的</b>:${esc(c.calc || '')}${c.fix_claim ? `<br><b>开头应该怎么说</b>:${esc(c.fix_claim)}` : ''}</div>
     ${list ? `<ul>${list}</ul>` : ''}${fixes ? `<div class="hint">已经试过:<ul>${fixes}</ul></div>` : ''}
-    <div class="rv-ops v13"><button class="an-btn v13" onclick="rvClaim(true)" ${busy ? 'disabled' : ''}>按核对结果改稿</button> <button class="an-btn" onclick="rvClaim(false)" ${busy ? 'disabled' : ''}>重新核对</button>
+    <div class="rv-ops v13">${btns}
     <span class="hint">${c.auto_left ? '终审、补改跑完会自动改(这次终审还能自动改 ' + c.auto_left + ' 次)' : '自动改的次数用完了,点「按核对结果改稿」再改一次'};改完自动复审、再核对一遍</span></div></div>`;
+}
+async function rvClaimTitle() {
+  const c = ((rvState.view || {}).summary || {}).publish ? rvState.view.summary.publish.claim : null;
+  if (!confirm('把标题改成「' + ((c && c.fix_title) || '') + '」,然后重新核对论点?(写前分析里的定稿标题会一起改)')) return;
+  try { await rvPost('claim_check', { title: true }); } catch (e) { alert('没能开始:' + e.message); return; }
+  rvState.key = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
 }
 async function rvClaim(fix) {
   try { await rvPost('claim_check', { fix }); } catch (e) { alert('没能开始:' + e.message); return; }
@@ -3066,6 +3090,8 @@ function analysisHtml(a) {
       ${t.fix ? `<br>调整建议:${esc(t.fix)}` : ''}
       ${(t.candidates || []).length ? `<br>候选:${t.candidates.map(c => esc(c)).join(' / ')}` : ''}
     </div>`;
+  const pr = a.protagonist || {};
+  if (pr.who) html += `<div class="an-sec">主角设定</div><div style="font-size:13px;line-height:1.7"><b>${esc(pr.who)}</b>${[pr.gender, pr.era, pr.place].filter(Boolean).length ? '(' + esc([pr.gender, pr.era, pr.place].filter(Boolean).join(' · ')) + ')' : ''}${pr.source_role ? `<br><span class="hint">原片主角:${esc(pr.source_role)}${pr.mapping ? ';对应:' + esc(pr.mapping) : ''}</span>` : ''}</div>`;
   html += `<div class="an-sec">论点卡</div><div style="font-size:13px;line-height:1.7">
     原有认知:${esc(th.viewer_belief || '')}<br>真相:${esc(th.truth || '')}<br>
     一句话论点:<b>${esc(th.one_line_thesis || '')}</b><br>结尾落点:${esc(th.ending_landing || '')}

@@ -49,6 +49,9 @@
 - 判断标题类型：揭穿型 / 解释成功型 / 过程型 / 悬念型 / 其他。
 - 写出观众点进来最想知道的问题，和他们期待的答案方向。
 - 和框架核心动作比较：方向一致 / 相反 / 部分一致。相反时，说明是改标题、改论点还是换框架。
+- 主角设定（写进 protagonist）：按标题写出观众代入的主角是谁——身份（和谁是什么关系，例如「嫁进财阀家的儿媳」）、性别、年代、地点。题目没有主角（讲行业、讲一家店）时，写清讲的是哪个主体。
+- 原片的主角常常和本题不一样（例如原片是入赘的女婿、本题是嫁进去的儿媳；原片在 1930 年代、本题在今天）。后面的论点卡、事实表里的假设场景、模块取舍、留存地图、钩子，一律按本题的主角写，不许沿用原片主角的身份、性别、亲属称呼（妻子/丈夫、岳父/公公、他/她）和年代。原片 → 本题的对应关系写进 protagonist.mapping。
+- 标题里的年代、地名和主角设定要对得上（例如标题用「경성」，内容却是今天的首尔，就是对不上）：对不上时改标题，并在 adjustments 里记一条「改标题」。
 
 第 3 步 这个题自己的论点
 - 先根据参考资料和你确有把握的知识梳理这个题在目标国家的真实情况，再下结论。
@@ -93,6 +96,7 @@
   "verdict_reason": "",
   "fit_check": [{"trait": "", "type": "best|avoid", "result": "符合|不符合|不确定", "reason": ""}],
   "title": {"candidates": [""], "final_title": "", "title_type": "", "viewer_question": "", "expected_answer_direction": "", "framework_direction_match": "一致|相反|部分一致", "fix": ""},
+  "protagonist": {"who": "主角身份,一句话", "gender": "男|女|不限|无主角", "era": "", "place": "", "source_role": "原片主角是谁", "mapping": "原片 → 本题的对应(称呼、亲属关系怎么换)"},
   "thesis_card": {"viewer_belief": "", "truth": "", "one_line_thesis": "", "ending_landing": "", "differs_from_source_conclusion": ""},
   "adjustments": [{"type": "改标题|改论点|补料|换内容保功能|删段", "target": "title | thesis_card | facts.F04 | modules.FS09", "segments": ["FS03"], "peaks": ["PK02"], "fact_ids": ["F04"], "reason": ""}],
   "reframe_reasons": [""],

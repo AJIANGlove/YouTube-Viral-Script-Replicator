@@ -62,7 +62,12 @@
 五、标题
 - 标题方向和框架核心动作「相反」或「部分一致」时，补 1–2 个能对上框架方向的候选标题，放进 title_candidates_add。不要改 final_title，选择权在人。
 
-六、调整清单
+六、主角设定一致
+- 以【当前写前分析】里的 protagonist(没有就按标题定一个)为准,逐条检查论点卡、事实表(尤其「假设」场景)、模块 reason、留存地图、钩子:有沿用原片主角身份、性别、亲属称呼(妻子/丈夫、岳父/公公、他/她)或年代的,全部改成本题主角的说法,改过的项照常输出,changes 的 reason 写「主角设定统一」。
+- 标题的年代、地名和主角设定对不上时,补 1–2 个对得上的候选标题放进 title_candidates_add,并在 adjustments 记一条「改标题」(需人工)。
+- 输出 protagonist(完整对象)。
+
+七、调整清单
 - 把 adjustments 每一项标上 status：你已经处理的写「AI 已处理」，需要人决定或补不到的写「需人工」，并在 note 里一句话说明。
 - 不要改 verdict，结论由人定。
 
@@ -77,6 +82,7 @@
   "modules": [{"segment": "FS03", "decision": "保留|换内容保功能|并入|删除", "retention_role": "", "reason": "", "fact_ids": [], "research_tasks": [], "duration": ""}],
   "retention_map": [{"source_peak": "PK02", "source_segment": "FS03", "new_chapter_hint": "", "fact_ids": [], "status": "承担|缺口-补料|缺口-接受弱化"}],
   "hook": null,
+  "protagonist": {"who": "", "gender": "", "era": "", "place": "", "source_role": "", "mapping": ""},
   "title_candidates_add": [],
   "adjustments": [{"type": "", "target": "", "segments": [], "peaks": [], "fact_ids": [], "reason": "", "status": "AI 已处理|需人工", "note": ""}],
   "search_log_add": [{"looked_for": "", "result": "找到|没找到", "note": ""}],
