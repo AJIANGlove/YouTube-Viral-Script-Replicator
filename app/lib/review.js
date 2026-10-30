@@ -1107,10 +1107,12 @@ async function callLong(run, cfg, prompt, label) {
   let messages = [{ role: 'user', content: prompt }];
   let text = '', r = null, secs = 0;
   for (let round = 0; round < AUDIT_MAX_ROUNDS; round++) {
-    r = await an().callWithLog(run, cfg, messages, round ? label + '续写' + round : label);
+    // 渠道中途断流(实测 run 비빔밥 终审·审稿在第 202 秒断流,已收到 1.1 万字,原样重试 4 次全断):
+    // 收到的正文不丢,和 max_tokens 截断一样让模型接着写,不从头重来
+    r = await an().callWithLog(run, cfg, messages, round ? label + '续写' + round : label, { allowPartial: true, minPartial: 500 });
     text += r.content;
     secs += r.secs || 0;
-    if (r.stopReason !== 'max_tokens') return { content: text, secs, truncated: false };
+    if (r.stopReason !== 'max_tokens' && !r.partial) return { content: text, secs, truncated: false };
     messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: '输出被截断了。从你上一条最后一个字接着往下写,不要重复已经写过的内容,不要重新开头,最后照样输出结尾那段 === 开头的给程序读的清单。' }];
   }
   return { content: text, secs, truncated: true };
@@ -1201,6 +1203,22 @@ function selectedFixes(run) {
 }
 
 // 人确认审稿意见后开始终审:存下选择,后台跑终审和翻译
+// 二稿审稿报告的勾选:人每改一次就存到 audit.selection(之前只在点终审时存,终审前刷新或改了没点就丢了)。
+// 只存选择,不点火;终审跑的时候不改,免得改掉正在用的那份
+function saveAuditSelection(runId, body) {
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  const au = (run.review || {}).audit;
+  if (!au) throw Object.assign(new Error('还没有审稿报告'), { status: 400 });
+  if (String(body.audit_at || '') !== String(au.at || '')) return { ok: false, stale: true }; // 报告已经重跑过,旧页面的勾选不再适用
+  if (((run.steps || {}).final_review || {}).status === 'running') return { ok: false, running: true };
+  const ids = arr(body.ids).map(String).filter(id => arr(au.issues).some(x => x.id === id));
+  const track = lockedTrack(run) || (TRACK_KEYS.includes(body.track) ? body.track : '');
+  au.selection = { ids, route: ROUTE_NAMES[body.route] ? body.route : '', note: String(body.note || '').trim().slice(0, 2000), track, at: new Date().toISOString(), draft: true };
+  store.saveRun(run);
+  return { ok: true };
+}
+
 function startFinal(runId, body) {
   const run = store.getRun(runId);
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
@@ -2247,4 +2265,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

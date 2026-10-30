@@ -2265,7 +2265,7 @@ function rvAuditHtml(v) {
     ${used ? `<div class="hint v13">终稿是按这次选择改的:${used.ids.length ? used.ids.map(esc).join('、') : '没选问题'}${used.route ? ',路线 ' + used.route + '. ' + RV_ROUTES[used.route] : ''}${used.note ? ',补充:' + esc(used.note) : ''}。换一组再终审,会从二稿重新改。</div>` : ''}
     ${v.track_locked ? `<div class="an-sec v13">0. 赛道:${esc(rvTrackName(v, v.track_default))}(建任务时选定的频道方向,终审按它审稿、修改、复审)</div>
     <div class="rv-ops"><span class="hint">${esc(RV_TRACK_TIPS[v.track_default] || '')}</span></div>` : `<div class="an-sec v13">0. 选赛道(终审按这个赛道的侧重点审稿、修改、复审)</div>
-    <div class="rv-ops"><select onchange="rvState.auditSel.track = this.value; rvDraw()" ${busy ? 'disabled' : ''}>${(v.tracks || []).map(x => `<option value="${escAttr(x.key)}" ${sel.track === x.key ? 'selected' : ''}>${esc(x.name)}${x.key === v.track_default ? '(自动匹配)' : ''}</option>`).join('')}</select>
+    <div class="rv-ops"><select onchange="rvState.auditSel.track = this.value; rvAuditSaveSoon(); rvDraw()" ${busy ? 'disabled' : ''}>${(v.tracks || []).map(x => `<option value="${escAttr(x.key)}" ${sel.track === x.key ? 'selected' : ''}>${esc(x.name)}${x.key === v.track_default ? '(自动匹配)' : ''}</option>`).join('')}</select>
       <span class="hint">${esc(RV_TRACK_TIPS[sel.track] || '')}</span></div>`}
     <div class="an-sec v13">1. 勾选要改的问题(默认勾上 S/A 级和 P0/P1;不想改的取消勾选)</div>
     <div class="rv-ops"><button class="an-btn" onclick="rvAuditAll(true)" ${busy ? 'disabled' : ''}>全选</button><button class="an-btn" onclick="rvAuditAll(false)" ${busy ? 'disabled' : ''}>全不选</button><button class="an-btn" onclick="rvAuditAll('sa')" ${busy ? 'disabled' : ''}>只选 S/A 级</button><span class="hint">已选 ${sel.ids.size} 个</span></div>
@@ -2274,18 +2274,29 @@ function rvAuditHtml(v) {
     <div class="an-sec v13">2. 选修改路线</div>
     <div class="rv-ops">${routes}</div>${routeText}
     <div class="an-sec v13">3. 补充意见(可不填)</div>
-    <div class="rv-edit"><textarea id="rv-audit-note" rows="3" placeholder="比如:P05 的示范改法不要用,结尾保持原来的落点" ${busy ? 'disabled' : ''} oninput="rvState.auditSel.note = this.value">${esc(sel.note)}</textarea>
+    <div class="rv-edit"><textarea id="rv-audit-note" rows="3" placeholder="比如:P05 的示范改法不要用,结尾保持原来的落点" ${busy ? 'disabled' : ''} oninput="rvState.auditSel.note = this.value; rvAuditSaveSoon()">${esc(sel.note)}</textarea>
       <div class="rv-ops"><button class="an-btn v13" onclick="rvAuditFinal(false)" ${busy ? 'disabled' : ''}>${fin.status === 'running' ? '终审进行中…' : '按选中的问题改,然后终审'}</button>
       <button class="an-btn" onclick="rvAuditFinal(true)" ${busy ? 'disabled' : ''}>不按报告改,直接终审</button></div></div>
     <details class="rv-md-box" ${rvState.auditReportOpen ? 'open' : ''} ontoggle="rvState.auditReportOpen = this.open"><summary class="v13">完整审稿报告</summary><div class="rv-md">${rvMd(au.report)}</div></details>`;
 }
 
-function rvAuditToggle(id, on) { const s = rvState.auditSel; if (on) s.ids.add(id); else s.ids.delete(id); rvDraw(); }
+// 勾选、路线、补充意见一改就存到服务端(停手 0.8 秒后存一次):刷新页面、终审失败回来都还是这一组
+let rvAuditSaveTimer = null;
+function rvAuditSaveSoon() {
+  clearTimeout(rvAuditSaveTimer);
+  const runId = rvState.runId, s = rvState.auditSel, au = (rvState.view || {}).audit;
+  if (!s || !au) return;
+  rvAuditSaveTimer = setTimeout(() => {
+    api('/api/runs/' + runId + '/review/audit_sel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ audit_at: au.at, ids: [...s.ids], route: s.route, note: s.note || '', track: s.track }) }).catch(() => {});
+  }, 800);
+}
+function rvAuditToggle(id, on) { const s = rvState.auditSel; if (on) s.ids.add(id); else s.ids.delete(id); rvAuditSaveSoon(); rvDraw(); }
 function rvAuditOpen(id) { const s = rvState.auditSel; s.open[id] = !s.open[id]; rvDraw(); }
-function rvAuditRoute(k) { rvState.auditSel.route = k; rvDraw(); }
+function rvAuditRoute(k) { rvState.auditSel.route = k; rvAuditSaveSoon(); rvDraw(); }
 function rvAuditAll(mode) {
   const au = rvState.view.audit, s = rvState.auditSel;
   s.ids = new Set(au.issues.filter(x => mode === true || (mode === 'sa' && /^[SA]$/.test(x.severity))).map(x => x.id));
+  rvAuditSaveSoon();
   rvDraw();
 }
 async function rvAuditFinal(skip) {
@@ -2295,8 +2306,8 @@ async function rvAuditFinal(skip) {
   const msg = skip ? '不按审稿报告改,直接终审?' : `按选中的 ${ids.length} 个问题、路线 ${s.route}. ${RV_ROUTES[s.route]} 去终审?`;
   if (!confirm(msg)) return;
   try { await rvPost('final', { ids, route: skip ? '' : s.route, note, track: s.track }); } catch (e) { rvState.err = e.message; alert('没能开始终审:' + e.message); return; }
-  s.note = '';
-  const ta = document.getElementById('rv-audit-note'); if (ta) { ta.value = ''; ta.blur(); }
+  clearTimeout(rvAuditSaveTimer); // 终审已经带着这份选择存好了
+  const ta = document.getElementById('rv-audit-note'); if (ta) ta.blur();
   rvState.waitFinal = true; // 终稿出来后自动切到「二稿 → 终稿」对比
   rvState.key = null;
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);

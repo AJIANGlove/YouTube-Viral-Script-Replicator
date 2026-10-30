@@ -208,7 +208,8 @@ function parseJsonLoose(text) {
 }
 
 // 单次 LLM 调用 + 流水记录(与 runGeneration 的 attempts 同结构)
-async function callWithLog(run, cfg, messages, label) {
+// opts 原样交给 llmCall(如 allowPartial:断流时把已收到的正文交回,由调用方续写)
+async function callWithLog(run, cfg, messages, label, opts) {
   const pipeline = require('./pipeline'); // 延迟加载,避免与 pipeline 循环依赖
   const t0 = Date.now();
   // 只把 attempts / 取消标记并进盘上的最新版本,不整对象写回:
@@ -222,8 +223,8 @@ async function callWithLog(run, cfg, messages, label) {
     store.saveRun(fresh);
   };
   try {
-    const r = await pipeline.llmCall(cfg, messages, label);
-    log({ ok: true, secs: Math.round(r.secs * 10) / 10, stop_reason: r.stopReason });
+    const r = await pipeline.llmCall(cfg, messages, label, opts);
+    log({ ok: true, secs: Math.round(r.secs * 10) / 10, stop_reason: r.stopReason, ...(r.partial ? { partial: true } : {}) });
     return r;
   } catch (e) {
     log({ ok: false, secs: Math.round((Date.now() - t0) / 100) / 10, error: e.message });
