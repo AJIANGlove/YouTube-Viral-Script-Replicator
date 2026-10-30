@@ -94,6 +94,13 @@ function buildAnalysisPrompt(run, asset) {
 
 // 写进 step1–4 的 {{analysis}}:只放写稿需要的部分(论点、标题、事实、取舍、留存地图、钩子)
 // run 给了就在末尾加上按本篇赛道、语言筛好的【写法规则】(trackKey:终审用自己选的赛道)
+// 钩子类型(写法规则 R1):写前分析给每段标一种
+const HOOK_TYPES = ['问题清单', '分段答案', '揭秘预告', '反转', '延迟兑现', '预警', '回扣', '观众自测', '反方', '异常'];
+const HOOK_PLAN_AT = { background: '开头之后的背景段', midpoint: '中点(40%–65%)', final15: '最后 15%' };
+function hookType(t) {
+  const s = String(t || '').replace(/[①-⑩\d.、\s]/g, '');
+  return HOOK_TYPES.find(h => s.includes(h)) || s;
+}
 // mode='review':审稿、复审、补改用,写法规则只作参考,不按它扣分、不列为问题(不因此多出自动补改)
 function analysisBrief(a, run, trackKey, mode) {
   if (!a) return '(无写前分析,按原流程执行)';
@@ -116,11 +123,15 @@ function analysisBrief(a, run, trackKey, mode) {
   }
   const tc = a.thesis_check || {};
   if (Array.isArray(tc.contradicts) && tc.contradicts.length) out.push('反转验证:事实 ' + tc.contradicts.join('、') + ' 和反转结论相反(' + (tc.note || '') + ')。写稿时反转的说法必须和这些事实一致,不能回避。');
-  out.push('模块取舍(「保留」只保留功能和节奏,内容用本题事实):\n' + (a.modules || []).map(m => '- ' + m.segment + ' ' + m.decision + ':' + (m.reason || '') + (m.fact_ids && m.fact_ids.length ? '(' + m.fact_ids.join(',') + ')' : '') + staleTag(stale.modules, m.segment)).join('\n'));
+  out.push('模块取舍(「保留」只保留功能和节奏,内容用本题事实):\n' + (a.modules || []).map(m => '- ' + m.segment + ' ' + m.decision + (m.hook_type && !/删除/.test(m.decision || '') ? '[钩子:' + hookType(m.hook_type) + ']' : '') + ':' + (m.reason || '') + (m.fact_ids && m.fact_ids.length ? '(' + m.fact_ids.join(',') + ')' : '') + staleTag(stale.modules, m.segment)).join('\n'));
   out.push('留存地图:\n' + (a.retention_map || []).map(r => '- ' + r.source_peak + '(' + (r.source_segment || '') + ')→' + (r.new_chapter_hint || '') + ' ' + r.status + (r.fact_ids && r.fact_ids.length ? '(' + r.fact_ids.join(',') + ')' : '')).join('\n'));
   const h = a.hook || {};
   const chosen = (h.candidates || [])[h.chosen || 0];
   if (chosen) out.push('钩子(已选定):' + chosen.text + '(事实 ' + (chosen.fact_ids || []).join(',') + ';第一个甜头 ' + chosen.first_payoff_sec + ' 秒)');
+  // 钩子布局(写法规则 R5、R6、R8):观众最容易走神的三个位置
+  const hp = a.hook_plan || {};
+  const hpl = Object.keys(HOOK_PLAN_AT).filter(k => hp[k] && (hp[k].hook_type || hp[k].how)).map(k => '- ' + HOOK_PLAN_AT[k] + (hp[k].segment ? '(' + hp[k].segment + ')' : '') + ':' + hookType(hp[k].hook_type) + (hp[k].how ? ',' + hp[k].how : ''));
+  if (hpl.length) out.push('钩子布局(这三处观众最容易走神,写稿时按这里放钩子):\n' + hpl.join('\n'));
   // 埋点回收、核心两难、评论问题(写法规则 C1、D1、D2):写稿照着埋、照着收、结尾照着问
   const pp = a.planted_payoff || {};
   if (String(pp.what || '').trim()) out.push('埋点与回收:' + pp.what + '(' + [pp.plant_at && '在 ' + pp.plant_at + ' 埋', pp.payoff_at && '在 ' + pp.payoff_at + ' 回收'].filter(Boolean).join(',') + ');埋的时候明说「后面会回来」,回收时点明。');
@@ -610,6 +621,7 @@ function mergeAdjust(a, out, batches) {
   if (out.thesis_check && typeof out.thesis_check === 'object' && !Array.isArray(out.thesis_check)) a.thesis_check = out.thesis_check;
   // 写法规则要的几项(埋点回收、核心两难、评论问题):AI 调整补上或改了就收下
   if (out.planted_payoff && typeof out.planted_payoff === 'object' && !Array.isArray(out.planted_payoff) && String(out.planted_payoff.what || '').trim()) a.planted_payoff = out.planted_payoff;
+  if (out.hook_plan && typeof out.hook_plan === 'object' && !Array.isArray(out.hook_plan) && Object.keys(HOOK_PLAN_AT).some(k => out.hook_plan[k])) a.hook_plan = out.hook_plan;
   ['core_dilemma', 'comment_question'].forEach(k => { if (typeof out[k] === 'string' && out[k].trim()) a[k] = out[k].trim(); });
   // 主角设定:实测 run_658212aa497e 标题是「재벌가 며느리」,模块和假设场景却沿用原片的入赘女婿(妻子、岳父),稿子写成了男主角
   if (out.protagonist && typeof out.protagonist === 'object' && !Array.isArray(out.protagonist) && String(out.protagonist.who || '').trim()) a.protagonist = out.protagonist;
@@ -744,7 +756,7 @@ async function auditTitle(runId, draft, title) {
 }
 
 module.exports = {
-  loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, acceptedGaps, verifyLedger,
+  loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, HOOK_TYPES, hookType, acceptedGaps, verifyLedger,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,
   frameworkVars, fillVars, callJson, callWithLog, getTarget, setTarget, needsList, mergeAdjust, runAutoAdjust, reviseItem, auditTitle

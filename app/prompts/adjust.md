@@ -55,6 +55,7 @@
 - 每个「不可删」段都要有本题的事实承担；没有的，按卡上的「抽象动作」和「替换条件」从事实表里找，改成「换内容保功能」并写 fact_ids。
 - 原片每个高峰都要尽量有事实承担。原来标「缺口-补料」的，补到料就改成「承担」；补不到就保持，并在 reason 说明。
 - 删段只能删「可删」「可并入」的段。
+- 不删的段 hook_type 是空的就补上（十种钩子见【写法规则】R1，相邻两段不用同一种）；hook_plan（背景段、中点 40%–65%、最后 15% 各用哪种钩子）是空的就补上。改了模块，这两项要跟着改。
 - 留存要求：每段至少有一个具体的数，或者一个具体的人和场景（不要求每段都有数，数字太密观众记不住）；每段结尾要留下一个让观众想看下一段的问题；最反常识的事实放在高峰段，不要浪费在过渡段。
 
 四、钩子
@@ -81,9 +82,10 @@
   "thesis_card": null,
   "ledger": [{"id": "L1", "item": "", "value": "", "amount": 0, "unit": "", "formula": "", "fact_ids": []}],
   "thesis_check": {"supports": [], "contradicts": [], "note": ""},
-  "modules": [{"segment": "FS03", "decision": "保留|换内容保功能|并入|删除", "retention_role": "", "reason": "", "fact_ids": [], "research_tasks": [], "duration": ""}],
+  "modules": [{"segment": "FS03", "decision": "保留|换内容保功能|并入|删除", "retention_role": "", "hook_type": "", "reason": "", "fact_ids": [], "research_tasks": [], "duration": ""}],
   "retention_map": [{"source_peak": "PK02", "source_segment": "FS03", "new_chapter_hint": "", "fact_ids": [], "status": "承担|缺口-补料|缺口-接受弱化"}],
   "hook": null,
+  "hook_plan": null,
   "planted_payoff": null,
   "core_dilemma": null,
   "comment_question": null,

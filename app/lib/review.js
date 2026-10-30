@@ -576,6 +576,31 @@ function endQuestion(script) {
   const t = chs.length ? String(chs[chs.length - 1].text) : String(script || '');
   return /[?？]/.test(t);
 }
+// 平段(写法规则 R7、R8,待验证):一章里连续约 2 分钟没有问句、没有转折词、也没有新数字(前面没出现过的数),
+// 观众容易在这里走神。不调模型,时间按字数和配音语速估;只给人看
+const FLAT_SEC = 120;
+const TURN_RE = /그런데|하지만|그러나|근데|문제는|반면|오히려|사실은|그게 아니|\b(but|however|yet|until|except|actually|turns out)\b|但是|可是|然而|不过|其实|问题是|没想到|でも|しかし|ところが/i;
+const LEVEL_RE = /\b(level|rank|stage)\s*(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\b|레벨\s*\d+|\d+\s*단계|(첫|두|세|네|다섯|여섯|일곱|여덟|아홉|열[가-힣]*)\s*번째\s*(단계|레벨|계급)|第.{1,3}[级級]/i;
+function flatStretches(script, wpm) {
+  const chs = scriptChapters(script);
+  const out = [], seen = new Set();
+  let base = 0, total = 0;
+  const per = chs.map(c => { const ls = checks.narrationLines(c.text, wpm); const len = ls.length ? ls[ls.length - 1].end : 0; total += len; return { c, ls, len }; });
+  per.forEach(({ c, ls, len }) => {
+    let lastBeat = 0, from = null;
+    const check = (t, upto) => { if (t - lastBeat >= FLAT_SEC) out.push({ chapter: c.id, start: base + lastBeat, end: base + t, text: (upto || {}).text || '' }); };
+    ls.forEach(l => {
+      const nums = (l.text.match(/\d[\d,.]*/g) || []).map(n => n.replace(/[.,]$/, ''));
+      const fresh = nums.some(n => !seen.has(n));
+      nums.forEach(n => seen.add(n));
+      if (from == null) from = l;
+      if (/[?？]/.test(l.text) || TURN_RE.test(l.text) || LEVEL_RE.test(l.text) || fresh) { check(l.start, from); lastBeat = l.end; from = null; }
+    });
+    check(len, from);
+    base += len;
+  });
+  return out.map(f => ({ ...f, at: total ? f.start / total : 0 })).sort((x, y) => (y.end - y.start) - (x.end - x.start));
+}
 function craftHints(run, last) {
   const out = [];
   const c = last && last.craft;
@@ -584,6 +609,9 @@ function craftHints(run, last) {
   const script = currentScript(run);
   if (c && c.comment && c.comment.status === '对不上' && endQuestion(script)) out.push('结尾评论问题和全片主线对不上' + (c.comment.note ? '(' + c.comment.note + ')' : ''));
   const qs = midQuestions(script);
+  const flats = flatStretches(script, require('./narration').narrationWpm(run, null).wpm || 150);
+  if (flats.length) out.push('有 ' + flats.length + ' 处约 2 分钟以上没有问句、转折或新数字,观众容易走神:' + flats.slice(0, 3).map(f => f.chapter + ' ' + checks.fmt(Math.round(f.start)) + '–' + checks.fmt(Math.round(f.end)) +
+    (f.at >= 0.12 && f.at <= 0.35 ? '(开头之后的背景段,可以拆成小问题或往后挪)' : '') + (f.text ? '「' + f.text.slice(0, 30) + '…」起' : '')).join('、'));
   if (qs.length > 2) out.push('正文中间对观众的反问有 ' + qs.length + ' 次(同类爆款一般不超过 2 次),如 ' + qs.slice(0, 2).map(q => q.chapter + '「' + q.text.slice(0, 40) + '」').join('、'));
   return out;
 }

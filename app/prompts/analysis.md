@@ -87,6 +87,8 @@
 - 换内容时，新内容必须和一句话论点有关；只为接住高峰、和主线无关的内容，在 reason 里写明“与主线关系弱”。
 - 输出新的留存地图：原片每个高峰 → 新稿哪一段、用哪条事实承担。承担不了的标“缺口”，写清楚是补料还是接受弱化，交给人决定。
 - 按保住的高峰和事实量估算片长，不要为凑时长硬填。
+- 钩子类型（hook_type）：每个不删的段写一种这一段主要用的钩子，只能从这十种里选：问题清单、分段答案、揭秘预告、反转、延迟兑现、预警、回扣、观众自测、反方、异常（含义见【写法规则】R1）。相邻两段不要用同一种。
+- 钩子布局（hook_plan）：标出三个观众最容易走神的位置各用哪一段、哪种钩子、怎么做（一句话）：background 是开头之后的背景段（拆成小问题或往后挪）；midpoint 是全片 40%–65% 处（换一种和前面不同的钩子，例如真实案例、观众自测、反方或「还有一项没算」）；final15 是最后 15%（「最后一件事 / 你听过的版本不完整」，再回收开头的问题）。
 - 埋点与回收（planted_payoff）：选一个数字或一个早期出场的小人物，写清在哪一段埋、哪一段回收（回收放在高潮或结尾）。题目里找不到合适的就留空。
 - 核心两难与评论问题（core_dilemma、comment_question）：写出全片主角面对的核心两难（两个都有代价的选项），没有就留空。评论问题不是必需的，不合适就留空；要问只问一个，观众一句话就能回答：POV、历史这类故事问核心两难（例如「你会签约还是收戒指？」），科普、经济问观众自己的经历（例如「你的狗今晚睡在哪？」）。不要问「你怎么看」这种答不上来的。
 
@@ -110,8 +112,9 @@
   "search_log": [{"looked_for": "", "result": "找到|没找到", "note": ""}],
   "ledger": [{"id": "L1", "item": "", "value": "", "amount": 0, "unit": "", "formula": "", "fact_ids": []}],
   "thesis_check": {"supports": ["F01"], "contradicts": [], "note": "反转结论用哪些事实撑住;哪些事实和它相反、怎么处理"},
-  "modules": [{"segment": "FS01", "decision": "保留|换内容保功能|并入|删除", "retention_role": "", "reason": "", "fact_ids": [], "research_tasks": [], "duration": ""}],
+  "modules": [{"segment": "FS01", "decision": "保留|换内容保功能|并入|删除", "retention_role": "", "hook_type": "问题清单|分段答案|揭秘预告|反转|延迟兑现|预警|回扣|观众自测|反方|异常", "reason": "", "fact_ids": [], "research_tasks": [], "duration": ""}],
   "retention_map": [{"source_peak": "PK01", "source_segment": "FS02", "new_chapter_hint": "", "fact_ids": [], "status": "承担|缺口-补料|缺口-接受弱化"}],
+  "hook_plan": {"background": {"segment": "FS02", "hook_type": "", "how": ""}, "midpoint": {"segment": "", "hook_type": "", "how": ""}, "final15": {"segment": "", "hook_type": "", "how": ""}},
   "planted_payoff": {"what": "埋什么(一个数字或一个小人物)", "plant_at": "FS03 或第几段", "payoff_at": "FS09 或第几段"},
   "core_dilemma": "",
   "comment_question": "",

@@ -208,8 +208,8 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 
 | 文件 | 用途 | 行数 |
 |---|---|---|
-| `analysis.md` | 写前分析（题目与框架匹配、论点卡、事实表、主角设定、写法规则接入） | 121 |
-| `adjust.md` | AI 先调整（补待查、改论点、找事实、补标题、主角一致） | 95 |
+| `analysis.md` | 写前分析（题目与框架匹配、论点卡、事实表、主角设定、写法规则接入） | 124 |
+| `adjust.md` | AI 先调整（补待查、改论点、找事实、补标题、主角一致） | 97 |
 | `adjust_queries.md` | 生成联网搜索查询词 | 21 |
 | `revise.md` | 按人工意见只重做一行 | 29 |
 | `title_audit.md` | 自写标题审核 | 26 |
@@ -239,7 +239,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `translate.md` | 中文对照翻译（按文本哈希去重） | 12 |
 | `retention_card.md` | 留存卡后三项文字重写 | 15 |
 | `track_cards.md` | 赛道卡（各赛道的必备事实与查证路径） | 35 |
-| `craft_rules.md` | 写法规则库（通用/赛道/语言三层，建议制） | 45 |
+| `craft_rules.md` | 写法规则库（通用/赛道/语言三层，建议制） | 69 |
 | `voice_draft.md` | 频道声音设定起草 | 20 |
 | `fingerprint_detect.md` | 爆款声音指纹检测与改写 | 42 |
 | `fingerprints.json` | 指纹模式库（各语言正则 + 结构判定要点） | — |
@@ -251,7 +251,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 40 份 `.md`（2877 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 45 份，合计 3080 行。
+合计 40 份 `.md`（2906 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 45 份，合计 3109 行。
 
 ### 历史版本
 

@@ -37,18 +37,45 @@ function trackOf(run) {
   return CARD_TRACK[run.track_card_name] || 'general';
 }
 
-function applies(r, track, lang) {
-  const s = r.scope.replace(/\s+/g, '');
+// 历史的子类型:按本篇用的原片框架(meta.json 的 content_type、narrative_mode)判断,判断不了返回 ''(两种规则都用)
+const metaCache = {};
+function assetMeta(id) {
+  if (!id) return {};
+  if (!(id in metaCache)) {
+    try { metaCache[id] = JSON.parse(fs.readFileSync(path.join(require('./store').ASSETS_ROOT, id, 'meta.json'), 'utf-8')); } catch (e) { metaCache[id] = {}; }
+  }
+  return metaCache[id];
+}
+function styleOf(run) {
+  const m = assetMeta((run || {}).asset_id);
+  const s = String(m.content_type || '') + ' ' + String(m.narrative_mode || '');
+  if (/pov|immersive|second_person|first_person|roleplay|vlog|simulation|narrative/i.test(s)) return '故事式';
+  if (/explainer|documentary|listicle|countdown/i.test(s)) return '讲解式';
+  return '';
+}
+
+// 一个条件:「通用」「赛道:历史（故事式）」「语言:韩语」
+function cond(s, track, lang, style) {
   if (/^通用$/.test(s)) return true;
   let m;
-  if ((m = s.match(/^赛道[:：](.+)$/))) return m[1].split('/').some(n => TRACK_ALIAS[n.toLowerCase()] === track || TRACK_ALIAS[n] === track);
+  if ((m = s.match(/^赛道[:：](.+)$/))) return m[1].split('/').some(n => {
+    const sub = n.match(/^(.+?)[（(](.+?)[)）]$/);
+    const name = sub ? sub[1] : n;
+    if (TRACK_ALIAS[name.toLowerCase()] !== track && TRACK_ALIAS[name] !== track) return false;
+    return !sub || !style || sub[2] === style;
+  });
   if ((m = s.match(/^语言[:：](.+)$/))) return m[1].split('/').some(n => n === lang);
   return false;
 }
+// 范围里用「；」连起来的几个条件要同时满足
+function applies(r, track, lang, style) {
+  const parts = r.scope.replace(/\s+/g, '').split(/[；;]/).filter(Boolean);
+  return parts.length > 0 && parts.every(p => cond(p, track, lang, style));
+}
 
 function rulesFor(run, trackKey) {
-  const track = trackKey || trackOf(run), lang = langOf(run);
-  return loadRules().filter(r => applies(r, track, lang)).map(r => ({ ...r, must: /^确认/.test(r.status) }));
+  const track = trackKey || trackOf(run), lang = langOf(run), style = track === 'history' ? styleOf(run) : '';
+  return loadRules().filter(r => applies(r, track, lang, style)).map(r => ({ ...r, must: /^确认/.test(r.status) }));
 }
 
 // 发给 AI 的【写法规则】;没有适用的规则返回空字符串
@@ -62,4 +89,4 @@ function craftBrief(run, trackKey, mode) {
     + rs.map(r => '- [' + r.id + ' ' + r.dim + '|' + (r.must ? '要求' : '建议') + '] ' + r.rule).join('\n');
 }
 
-module.exports = { loadRules, rulesFor, craftBrief, trackOf, langOf };
+module.exports = { loadRules, rulesFor, craftBrief, trackOf, langOf, styleOf };

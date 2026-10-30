@@ -3114,8 +3114,12 @@ function analysisHtml(a) {
     notFound.map(s => `<tr class="an-warn"><td>${esc(s.looked_for)}</td><td>${esc(s.note)}</td></tr>`));
   if ((a.ledger || []).length) html += `<div class="an-sec">账本</div>` + anTable(['项目', '数值', '事实'],
     a.ledger.map(l => `<tr><td>${esc(l.item)}</td><td>${esc(l.value)}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`));
-  html += `<div class="an-sec">模块取舍</div>` + anTable(['原片段', '处理', '留存作用', '理由', '事实', '时长'],
-    (a.modules || []).map(m => `<tr class="${/删除/.test(m.decision || '') ? 'an-warn' : ''}"><td>${esc(m.segment)}</td><td>${esc(m.decision)}</td><td>${esc(m.retention_role)}</td><td>${esc(m.reason)}</td><td>${esc(anIds(m.fact_ids))}</td><td>${esc(m.duration)}</td></tr>`));
+  html += `<div class="an-sec">模块取舍</div>` + anTable(['原片段', '处理', '留存作用', '钩子', '理由', '事实', '时长'],
+    (a.modules || []).map(m => `<tr class="${/删除/.test(m.decision || '') ? 'an-warn' : ''}"><td>${esc(m.segment)}</td><td>${esc(m.decision)}</td><td>${esc(m.retention_role)}</td><td>${esc(m.hook_type || '')}</td><td>${esc(m.reason)}</td><td>${esc(anIds(m.fact_ids))}</td><td>${esc(m.duration)}</td></tr>`));
+  const hp = a.hook_plan || {};
+  const hpRows = [['background', '开头之后的背景段'], ['midpoint', '中点(40%–65%)'], ['final15', '最后 15%']].filter(([k]) => hp[k] && (hp[k].hook_type || hp[k].how));
+  if (hpRows.length) html += `<div class="an-sec">钩子布局(观众最容易走神的三处)</div>` + anTable(['位置', '段', '钩子', '怎么做'],
+    hpRows.map(([k, n]) => `<tr><td>${n}</td><td>${esc(hp[k].segment || '')}</td><td>${esc(hp[k].hook_type || '')}</td><td>${esc(hp[k].how || '')}</td></tr>`));
   html += `<div class="an-sec">留存地图(原片高峰由谁承担)</div>` + anTable(['高峰', '原片段', '新章节', '事实', '状态'],
     (a.retention_map || []).map(r => `<tr class="${/缺口/.test(r.status || '') ? 'an-warn' : ''}"><td>${esc(r.source_peak)}</td><td>${esc(r.source_segment)}</td><td>${esc(r.new_chapter_hint)}</td><td>${esc(anIds(r.fact_ids))}</td><td>${esc(r.status)}</td></tr>`));
   html += `<div class="an-sec">钩子候选</div><div class="hint">合约:${esc(h.contract || '')}</div>` + anTable(['', '开头', '事实', '第一个甜头(秒)'],
