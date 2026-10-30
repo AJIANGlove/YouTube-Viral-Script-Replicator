@@ -187,6 +187,7 @@ function listRuns() {
 // 正常写入路径由 saveRun 直接维护,不会触发重建。
 const RUNS_INDEX = path.join(APP_ROOT, 'data', 'runs.index.json');
 // 3: 新增 active_pass(列表"进行中"副标),旧索引会因版本不符自动重建
+// 4: 新增 score(列表"评分"列:审稿报告分 + 终审七维平均),同上
 const INDEX_VERSION = 4;
 let indexCache = null;
 
