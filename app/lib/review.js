@@ -1685,6 +1685,56 @@ async function runOpenOptions(runId) {
   }
 }
 
+// 补改把分改低、被退回后:AI 对照掉分的维度和复审报告找出是哪些改动改坏的,给每个问题重新定改法(照用/换候选/新写/不改),
+// 程序按它的决定自动再补改一次,不让人去猜 11 个问题里哪个改坏了。AUTO_RETRY_MAX 次还是掉分就停下,把 AI 的判断摆出来
+const AUTO_RETRY_MAX = 2;
+const usedKey = (tried, id) => (tried.choices || {})[id] || (arr(tried.picked).includes(id) ? 'rv' : 'skip');
+async function diagnosePatch(run, cfg, common, dims, last) {
+  const tried = arr(last.reverted).slice(-1)[0];
+  if (!tried) throw new Error('没有被退回的补改可以分析');
+  const items = arr(last.open);
+  const options = { ...(last.options || {}) };
+  const optText = (id, k) => k === 'skip' ? '不改' : k === 'rv' ? '按复审建议:' + ((items.find(x => x.id === id) || {}).suggestion || '(无)') : k + ' ' + ((arr(options[id]).find(o => o.key === k) || {}).zh || '');
+  const sc = (o, d) => (o && o[d] != null ? o[d] : '—');
+  const out = await an().callJson(run, cfg, an().fillVars(readPrompt('final_patch_diagnose.md'), {
+    ...common, before: tried.before, after: tried.after,
+    dim_changes: dims.map(d => d + ': ' + sc(last.scores, d) + ' → ' + sc(tried.scores, d)).join('\n'),
+    used: items.map(x => x.id + ' | ' + x.chapter + ' | ' + x.level + ' | ' + x.problem + ' | ' + optText(x.id, usedKey(tried, x.id))).join('\n'),
+    edits: arr(tried.edits).map(e => '- [' + (e.chapter || '') + '][' + (e.category || '') + '] ' + e.old + ' → ' + (e.new || '(删除)')).join('\n')
+      + (arr(tried.structural).filter(x => x.ok).length ? '\n整章重写了:' + arr(tried.structural).filter(x => x.ok).map(x => x.chapter).join('、') : '') || '(没有记录)',
+    report: tried.report || '(无)',
+    tried: arr(last.reverted).map((t, i) => '第' + (i + 1) + '次(' + t.before + ' → ' + t.after + '):' + items.map(x => x.id + '=' + usedKey(t, x.id)).join(' ')).join('\n'),
+    candidates: items.map(x => x.id + ':\n' + (arr(options[x.id]).map(o => '  ' + o.key + '. ' + o.zh).join('\n') || '  (没有候选,只有复审建议:' + (x.suggestion || '无') + ')')).join('\n'),
+    script: ((arr(run.review.versions).find(v => v.key === 'd3')) || {}).text || ''
+  }), '终审·补改退回找原因', o => Array.isArray(o.items));
+  const dec = {};
+  arr(out.items).forEach(it => { const id = String(it && it.id || '').toUpperCase(); if (items.some(x => x.id === id)) dec[id] = it; });
+  const pick = {}, decisions = [];
+  items.forEach(x => {
+    const prev = usedKey(tried, x.id);
+    const d = dec[x.id] || { action: 'keep' };
+    let act = String(d.action || 'keep').toLowerCase(), k = prev;
+    if (act === 'switch' && arr(options[x.id]).some(o => o.key === String(d.key || '').toUpperCase())) k = String(d.key).toUpperCase();
+    else if (act === 'new' && String(d.zh || '').trim()) {
+      const list = arr(options[x.id]);
+      const zh = String(d.zh).trim();
+      const same = list.find(o => o.zh === zh);
+      k = same ? same.key : String.fromCharCode(65 + list.length);
+      if (!same) options[x.id] = list.concat([{ key: k, zh, why: String(d.why || '').trim(), recommended: false, auto: true }]);
+    } else if (act === 'skip') k = 'skip';
+    else act = 'keep';
+    pick[x.id] = k;
+    decisions.push({ id: x.id, action: act, from: prev, to: k, why: String(d.why || '').trim() });
+  });
+  const diagnosis = { at: new Date().toISOString(), cause: String(out.cause || '').trim(), retry: out.retry !== false, items: decisions };
+  const ids = items.filter(x => pick[x.id] !== 'skip').map(x => x.id);
+  const same = items.every(x => pick[x.id] === usedKey(tried, x.id));
+  const repeat = arr(last.reverted).some(t => items.every(x => pick[x.id] === usedKey(t, x.id)));
+  const stop = !diagnosis.retry ? 'AI 判断不值得再试' : !ids.length ? 'AI 决定所有问题都先不改' : (same || repeat) ? 'AI 给出的改法和之前试过、掉了分的组合一样' : '';
+  if (stop) { diagnosis.retry = false; diagnosis.stop = stop; }
+  return { diagnosis, options, pick, body: { ids, choices: Object.fromEntries(ids.filter(id => pick[id] !== 'rv').map(id => [id, pick[id]])), note: tried.note || '' } };
+}
+
 async function runFinalPatch(runId, body) {
   const cfg = pl().loadConfig();
   let { run, asset } = loadRunAsset(runId);
@@ -1696,17 +1746,40 @@ async function runFinalPatch(runId, body) {
   const tr = loadTrack(fin.track);
   const dims = arr(fin.dims).length ? fin.dims : finalDims(tr);
   const last = arr(fin.rechecks).slice(-1)[0] || {};
-  const picked = arr(last.open).filter(x => arr(body.ids).includes(x.id));
-  // 人选的解决方式:{ R01: 'B' };选了就照这个方式改,不再看复审的原建议
-  const chosen = x => { const k = (body.choices || {})[x.id]; return k ? arr((last.options || {})[x.id]).find(o => o.key === k) : null; };
-  const howTo = x => { const o = chosen(x); return o ? '\n  人选的改法(' + o.key + '):' + o.zh : x.suggestion ? '\n  复审建议:' + x.suggestion : ''; };
-  const note = String(body.note || '').trim().slice(0, 3000);
+  const auto = Number(body.auto) || 0;
   const t0 = Date.now();
   const { patch_error, patch_failed_at, patch_reverted, ...prevStep } = (run.steps || {}).final_review || {};
-  run.steps = { ...(run.steps || {}), final_review: { ...prevStep, status: 'running', stage: '补改', patch: true, started_at: new Date().toISOString() } };
+  run.steps = { ...(run.steps || {}), final_review: { ...prevStep, status: 'running', stage: auto ? 'AI 找补改掉分的原因(自动重试第 ' + auto + ' 次)' : '补改', patch: true, started_at: new Date().toISOString() } };
   store.saveRun(run);
+  let diagnosis = null;
   try {
     const common = finalCommon(run, tr, dims);
+    // 自动重试:先让 AI 找出上次哪些改动改坏了、重新定改法;它判断不值得再试就停下,终稿不动
+    if (auto) {
+      const dg = await diagnosePatch(run, cfg, common, dims, last);
+      diagnosis = { ...dg.diagnosis, round: auto };
+      const fresh = store.getRun(runId) || run;
+      const rcF = arr(fresh.review.final.rechecks).slice(-1)[0];
+      const rv = rcF && arr(rcF.reverted).slice(-1)[0];
+      if (rv) rv.next = diagnosis;
+      if (rcF) { rcF.options = dg.options; if (!rcF.options_for) rcF.options_for = openKey(rcF.open); rcF.auto_pick = dg.pick; }
+      last.options = dg.options;
+      if (!diagnosis.retry) {
+        fresh.steps = { ...(fresh.steps || {}), final_review: { ...prevStep, ...(patch_reverted ? { patch_reverted: { ...patch_reverted, stopped: true } } : {}) } };
+        if (run.attempts) fresh.attempts = run.attempts;
+        store.saveRun(fresh);
+        return { ok: true, reverted: true, stop: true };
+      }
+      if (run.attempts) fresh.attempts = run.attempts;
+      store.saveRun(fresh);
+      body = dg.body;
+      setFinalStage(runId, '补改(自动重试第 ' + auto + ' 次)');
+    }
+    const picked = arr(last.open).filter(x => arr(body.ids).includes(x.id));
+    // 人选的解决方式:{ R01: 'B' };选了就照这个方式改,不再看复审的原建议
+    const chosen = x => { const k = (body.choices || {})[x.id]; return k ? arr((last.options || {})[x.id]).find(o => o.key === k) : null; };
+    const howTo = x => { const o = chosen(x); return o ? '\n  人选的改法(' + o.key + '):' + o.zh : x.suggestion ? '\n  复审建议:' + x.suggestion : ''; };
+    const note = String(body.note || '').trim().slice(0, 3000);
     // 勾选的「结构」问题整章重写,其余问题照常逐句补改
     const structPicked = picked.filter(x => x.level === '结构');
     const sentPicked = picked.filter(x => x.level !== '结构');
@@ -1755,7 +1828,7 @@ async function runFinalPatch(runId, body) {
     const before = avgScore(last.scores, dims), after = avgScore(scores, dims);
     if (before != null && after != null && before - after >= REVERT_DROP) {
       const rcF = arr(fresh.review.final.rechecks).slice(-1)[0];
-      const tried = { at: new Date().toISOString(), picked: picked.map(x => x.id), choices: Object.fromEntries(picked.filter(chosen).map(x => [x.id, chosen(x).key])), note, report: s3.report, scores, verdict, open: parseOpen(tb.OPEN), edits: okNew.map(e => ({ chapter: e.chapter, old: e.old, new: e.new, reason: e.reason })), ...(structural ? { structural } : {}), before: Math.round(before * 10) / 10, after: Math.round(after * 10) / 10 };
+      const tried = { at: new Date().toISOString(), picked: picked.map(x => x.id), choices: Object.fromEntries(picked.filter(chosen).map(x => [x.id, chosen(x).key])), note, report: s3.report, scores, verdict, open: parseOpen(tb.OPEN), edits: okNew.map(e => ({ chapter: e.chapter, category: e.category || '', old: e.old, new: e.new, reason: e.reason })), ...(structural ? { structural } : {}), ...(auto ? { auto, diagnosis } : {}), before: Math.round(before * 10) / 10, after: Math.round(after * 10) / 10 };
       if (rcF) rcF.reverted = arr(rcF.reverted).concat([tried]);
       fresh.steps = { ...(fresh.steps || {}), final_review: { ...prevStep, patch_reverted: { at: tried.at, before: tried.before, after: tried.after } } };
       if (run.attempts) fresh.attempts = run.attempts;
@@ -1770,7 +1843,7 @@ async function runFinalPatch(runId, body) {
     fresh.review.deai = null;
     if (fresh.steps) delete fresh.steps.deai;
     const f2 = fresh.review.final;
-    f2.rechecks = arr(f2.rechecks).concat([{ round: arr(f2.rechecks).length + 1, patch: true, picked: picked.map(x => x.id), choices: Object.fromEntries(picked.filter(chosen).map(x => [x.id, chosen(x).key])), note, report: s3.report, scores, verdict, open: parseOpen(tb.OPEN), thesis: parseThesis(tb.THESIS), edits: okNew.length,
+    f2.rechecks = arr(f2.rechecks).concat([{ round: arr(f2.rechecks).length + 1, patch: true, picked: picked.map(x => x.id), choices: Object.fromEntries(picked.filter(chosen).map(x => [x.id, chosen(x).key])), note, report: s3.report, scores, verdict, open: parseOpen(tb.OPEN), thesis: parseThesis(tb.THESIS), edits: okNew.length, ...(auto ? { auto, diagnosis, reverted_before: arr(last.reverted).length } : {}),
       ...(structural ? { structural } : {}), ...(verdict === '未达标' && stalledBy(last.scores, scores, dims) ? { stalled: true } : {}) }]);
     f2.scores_after = scores;
     f2.verdict = verdict;
@@ -1783,7 +1856,7 @@ async function runFinalPatch(runId, body) {
   } catch (e) {
     const fresh = store.getRun(runId) || run;
     // 补改失败不影响原终稿:状态回到上一次终审的结果,只记下这次的错误
-    fresh.steps = { ...(fresh.steps || {}), final_review: { ...prevStep, patch_error: e.message, patch_failed_at: new Date().toISOString() } };
+    fresh.steps = { ...(fresh.steps || {}), final_review: { ...prevStep, ...(auto && patch_reverted ? { patch_reverted } : {}), patch_error: e.message, patch_failed_at: new Date().toISOString() } };
     store.saveRun(fresh);
     throw e;
   }
@@ -1817,11 +1890,19 @@ function startFinalPatch(runId, body) {
     (async () => { try { await extractOpen(runId); await runOpenOptions(runId); } catch (e) {} await translateRun(runId); })();
     return { ok: true };
   }
-  if (!arr(body.ids).length && !String(body.note || '').trim()) throw Object.assign(new Error('至少勾一个问题,或写下你的决定'), { status: 400 });
+  // 人点「让 AI 再自动试」:不用选问题,直接从找原因开始
+  const autoOnly = !!(body && body.auto);
+  if (autoOnly && !arr(last.reverted).length) throw Object.assign(new Error('没有被退回的补改,不用自动重试'), { status: 400 });
+  if (!autoOnly && !arr(body.ids).length && !String(body.note || '').trim()) throw Object.assign(new Error('至少勾一个问题,或写下你的决定'), { status: 400 });
   passRunning.set(runId, '补改');
   (async () => {
     let ok = false;
-    try { ok = !(await runFinalPatch(runId, body)).reverted; } catch (e) {} finally { passRunning.delete(runId); }
+    try {
+      // 补改掉分被退回:自动找原因、换改法再试,最多 AUTO_RETRY_MAX 次;AI 判断不值得再试就停
+      let res = autoOnly ? { reverted: true } : await runFinalPatch(runId, body);
+      for (let n = 1; res && res.reverted && !res.stop && n <= AUTO_RETRY_MAX; n++) res = await runFinalPatch(runId, { auto: n });
+      ok = !!res && !res.reverted;
+    } catch (e) {} finally { passRunning.delete(runId); }
     if (ok) { try { await runOpenOptions(runId); } catch (e) {} }
     await translateRun(runId);
   })();
