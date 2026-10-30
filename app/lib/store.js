@@ -187,7 +187,7 @@ function listRuns() {
 // 正常写入路径由 saveRun 直接维护,不会触发重建。
 const RUNS_INDEX = path.join(APP_ROOT, 'data', 'runs.index.json');
 // 3: 新增 active_pass(列表"进行中"副标),旧索引会因版本不符自动重建
-const INDEX_VERSION = 3;
+const INDEX_VERSION = 4;
 let indexCache = null;
 
 // 源标题中文只用于列表副标题,按资产 id 缓存,避免重复读 meta.json
@@ -263,6 +263,23 @@ function activePass(run) {
   return null;
 }
 
+// 列表「评分」列:二稿审稿报告分(0-100) 与 终审七维平均分(0-10)。
+// 两个分数口径不同,只分开展示,不加权、不合成;还没跑到该阶段的就是 null。
+// 七维平均取 review.final.scores_after(最后一次复审/补改后的分数),按 dims 过滤,
+// dims 缺失时(极少见)退回对 scores_after 的全部数值取平均。
+function scoreSummary(run) {
+  const stepScore = ((run.steps || {}).reverse_audit || {}).score;
+  const fin = (run.review || {}).final || {};
+  const after = fin.scores_after || {};
+  const dims = Array.isArray(fin.dims) ? fin.dims : [];
+  const xs = (dims.length ? dims.map(d => after[d]) : Object.values(after))
+    .filter(x => typeof x === 'number' && isFinite(x));
+  return {
+    audit: typeof stepScore === 'number' && isFinite(stepScore) ? stepScore : null,
+    final: xs.length ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length * 10) / 10 : null
+  };
+}
+
 // 列表字段子集:视频推送只留原始字段,status_label/project_url 由调用方按当前绑定的 base_url 现算
 function indexEntry(run) {
   const pushes = Array.isArray(run.video_pushes) ? run.video_pushes : [];
@@ -277,6 +294,8 @@ function indexEntry(run) {
     current_step: run.current_step || 0,
     // 列表状态列第二行:当前跑到哪个阶段(仅进行中的任务有值)
     active_pass: activePass(run),
+    // 列表「评分」列:审稿报告分 + 终审七维平均(口径不同,分开存)
+    score: scoreSummary(run),
     created_at: run.created_at || '',
     updated_at: run.updated_at || '',
     has_error: !!run.error,

@@ -464,6 +464,13 @@
   .video-cell .ver { font-size: 11px; color: #6b7280; margin-left: 4px; }
   /* 确认文案版本:正向结果用绿色(红色在本项目已固定表示失败/危险) */
   .cf-ver { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 999px; background: #d1fae5; color: #047857; white-space: nowrap; }
+  /* 评分列:上=二稿审稿报告(0-100),下=终审七维平均(0-10);两个口径不同,分行标注、都偏中性色 */
+  .score-cell { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+  .score-cell .sc { display: inline-block; font-size: 11px; line-height: 1.5; padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
+  .score-cell .sc b { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .score-cell .sc-audit { background: #f3f4f6; color: #4b5563; }
+  .score-cell .sc-final { background: #dbeafe; color: #1d4ed8; }
+  .score-cell .sc-none { color: #cbd5e1; padding: 1px 0; }
   button.cf-btn { padding: 6px 12px; border: 1px solid #059669; border-radius: 5px; font-size: 12px; cursor: pointer; background: #059669; color: #fff; font-weight: 600; }
   button.cf-btn:hover { background: #047857; border-color: #047857; }
   button.cf-btn.on { background: #ecfdf5; color: #047857; border-color: #6ee7b7; }
@@ -478,7 +485,7 @@
   #detail-scripts h2 > span:first-child { flex-shrink: 0; white-space: nowrap; }
   #detail-scripts h2 > span:last-child { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; align-items: center; }
   #view-runs .card { overflow-x: auto; }
-  .runs-table { min-width: 1200px; }
+  .runs-table { min-width: 1260px; }
   .script-peek { margin-top: 8px; max-height: 132px; overflow-y: auto; white-space: pre-wrap; font-size: 12px; line-height: 1.6;
     color: #374151; background: #fafafa; border: 1px solid #eef0f3; border-radius: 6px; padding: 8px 10px; }
   .bind-state { font-size: 12px; line-height: 1.7; }
@@ -672,16 +679,17 @@
       <table class="runs-table">
         <thead><tr>
           <th style="width:15%">主题</th>
-          <th style="width:13%">框架</th>
-          <th style="width:10%">目标</th>
-          <th style="width:7%">频道</th>
+          <th style="width:12%">框架</th>
+          <th style="width:9%">目标</th>
+          <th style="width:6%">频道</th>
           <th style="width:10%">状态</th>
-          <th style="width:7%">确认文案版本</th>
-          <th style="width:9%">是否生成视频</th>
-          <th style="width:5%">步骤</th>
+          <th style="width:6%">评分</th>
+          <th style="width:6%">确认文案版本</th>
+          <th style="width:8%">是否生成视频</th>
+          <th style="width:4%">步骤</th>
           <th style="width:9%">创建时间</th>
           <th style="width:9%">结束时间</th>
-          <th style="width:7%">操作</th>
+          <th style="width:6%">操作</th>
         </tr></thead>
         <tbody id="runs-tbody"></tbody>
       </table>
@@ -1022,20 +1030,16 @@ function facetChip(label, count, on, onclick) {
 
 // 分类 chip：全部 / 各类（0 条也留位置，置灰）/ 未分类（未登记映射的资产，不并入"通用"）
 // all 用来判断要不要渲染本行；base 是已按「频道 + 搜索」过滤后的列表，只用来算数字
-// 排序：选中项钉在「全部」之后，其余按当前数字降序，数字相同按 cats 里的固定顺序兜底
+// 顺序固定为 cats[] 顺序：筛选时只变数字与置灰，chip 不重排（动态排序会让位置跳动，操作不便）
 function trackChipsHtml(all, base, f, target) {
   if (!all.some(a => a.track)) return ''; // 旧接口或尚未打标：不渲染分类行，避免整页显示"未分类 179"
   const counts = {};
   base.forEach(a => { const k = a.track || ''; counts[k] = (counts[k] || 0) + 1; });
-  const items = assetTracks.map((t, i) => ({ key: t.key, name: t.name, count: counts[t.key] || 0, idx: i }));
-  if (counts['']) items.push({ key: '__none', name: '未分类', count: counts[''], idx: 999 });
-  const pinned = items.filter(x => x.key === f.track);
-  const rest = items.filter(x => x.key !== f.track)
-    .sort((x, y) => y.count - x.count || x.idx - y.idx);
   const chips = [facetChip('全部', base.length, f.track === '', `setTrackFilter('${target}','')`)];
-  pinned.concat(rest).forEach(x => {
-    chips.push(facetChip(x.name, x.count, f.track === x.key, `setTrackFilter('${target}','${x.key}')`));
+  assetTracks.forEach(t => {
+    chips.push(facetChip(t.name, counts[t.key] || 0, f.track === t.key, `setTrackFilter('${target}','${t.key}')`));
   });
+  if (counts['']) chips.push(facetChip('未分类', counts[''], f.track === '__none', `setTrackFilter('${target}','__none')`));
   return chips.join('');
 }
 
@@ -1045,22 +1049,18 @@ function setTrackFilter(target, key) {
   if (target === 'lib') renderLibList(); else renderGenAssetList();
 }
 
-// 频道 chip：数字按「分类 + 搜索」算；排序同分类行——选中项钉前，其余按当前数字降序，
-// 并列按全量条数降序兜底（切筛选时相对位置尽量稳），空频道名走 '__none' 哨兵（否则会等于"全部"）
+// 频道 chip：数字按「分类 + 搜索」算；顺序按全量条数固定，筛选时不重排（动态排序会让 chip 位置跳动）
+// 空频道名走 '__none' 哨兵（否则会等于"全部"）
 function channelChipsHtml(all, base, f, target) {
   const total = {};
   all.forEach(a => { const c = a.channel || ''; total[c] = (total[c] || 0) + 1; });
   const counts = {};
   base.forEach(a => { const c = a.channel || ''; counts[c] = (counts[c] || 0) + 1; });
-  const items = Object.keys(total).map(c => ({
-    c, key: c === '' ? '__none' : c, name: c || '未分类', count: counts[c] || 0, base: total[c] || 0
-  }));
-  const pinned = items.filter(x => x.key === f.channel);
-  const rest = items.filter(x => x.key !== f.channel)
-    .sort((x, y) => y.count - x.count || y.base - x.base || x.c.localeCompare(y.c));
+  const chs = Object.keys(total).sort((x, y) => total[y] - total[x] || x.localeCompare(y));
   const chips = [facetChip('全部', base.length, f.channel === '', `setAssetFilter('${target}','')`)];
-  pinned.concat(rest).forEach(x => {
-    chips.push(facetChip(x.name, x.count, f.channel === x.key, `setAssetFilter('${target}','${x.c === '' ? '__none' : encodeURIComponent(x.c)}')`));
+  chs.forEach(c => {
+    const key = c === '' ? '__none' : c;
+    chips.push(facetChip(c || '未分类', counts[c] || 0, f.channel === key, `setAssetFilter('${target}','${c === '' ? '__none' : encodeURIComponent(c)}')`));
   });
   return chips.join('');
 }
@@ -1492,6 +1492,22 @@ function confirmVersionCell(c) {
   return `<span class="cf-ver" title="${esc(c.at ? '确认于 ' + fmtTime(c.at) : '')}">${esc(versionLabel(c.version))}</span>`;
 }
 
+// 列表"评分"列:上=二稿审稿报告分(0-100),下=终审七维平均分(0-10)。
+// 两个分数口径不同(报告分是审稿报告的总评,七维平均是终审最后一次复审的维度均分),
+// 所以分行标注、不相加;没跑到该阶段显示 —,与其它空值列一致。
+function scoreCell(s) {
+  const a = s && typeof s.audit === 'number' ? s.audit : null;
+  const f = s && typeof s.final === 'number' ? s.final : null;
+  if (a == null && f == null) return '<span class="vb-none">—</span>';
+  const audit = a == null
+    ? '<span class="sc sc-none" title="还没有二稿审稿报告">审稿 —</span>'
+    : `<span class="sc sc-audit" title="二稿审稿报告评分(0-100)">审稿 <b>${a}</b></span>`;
+  const fin = f == null
+    ? '<span class="sc sc-none" title="还没跑到终审,没有七维分数">终审 —</span>'
+    : `<span class="sc sc-final" title="终审七维平均分(0-10,最后一次复审)">终审 <b>${f}</b></span>`;
+  return `<span class="score-cell">${audit}${fin}</span>`;
+}
+
 // ---------- 任务列表:筛选 / 分页 / 爆款 ----------
 // 筛选与分页全部在服务端完成(见 GET /api/runs),前端只保存查询条件与当前页数据;
 // 3 秒轮询只在数据指纹变化时重绘,避免打断输入、翻页和滚动。
@@ -1618,6 +1634,7 @@ async function loadRuns(opts) {
   const sig = JSON.stringify([data.total, data.total_all, data.page, data.page_size,
     data.items.map(r => [r.id, r.topic, r.status, r.current_step, r.has_error, r.channel_name, r.asset_zh,
       r.active_pass ? [r.active_pass.key, r.active_pass.label, r.active_pass.stage, r.active_pass.at] : null,
+      r.score ? [r.score.audit, r.score.final] : null,
       r.video ? [r.video.status, r.video.stage_label, r.video.updated_at] : null,
       !!(r.viral && r.viral.marked),
       r.confirmed ? [r.confirmed.version, r.confirmed.at] : null])]);
@@ -1671,6 +1688,7 @@ function runRowHtml(r) {
       <td style="font-size:12px;color:#4b5563">${audienceCell(r.audience)}</td>
       <td style="font-size:12px;color:#4b5563">${r.channel_name ? esc(r.channel_name) : '<span class="vb-none">—</span>'}</td>
       <td><span class="badge badge-${r.status}">${statusLabel(r)}${r.has_error ? ' ✗' : ''}</span>${runProgressHtml(r)}</td>
+      <td>${scoreCell(r.score)}</td>
       <td>${confirmVersionCell(r.confirmed)}</td>
       <td>${videoStatusCell(r.video)}</td>
       <td class="time">${stepText}</td>
