@@ -635,7 +635,7 @@ const server = http.createServer(async (req, res) => {
 
     // ---------- 先写后改:逐段对照审稿 ----------
     // GET 视图(每次按当前稿子现算);POST status/undo 立即返回;rewrite/fact 等模型返回再响应(单章约 0.5–2 分钟)
-    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|audit_sel))?$/);
+    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel))?$/);
     if (rvMatch) {
       const [, id, action] = rvMatch;
       try {
@@ -662,6 +662,8 @@ const server = http.createServer(async (req, res) => {
           if (action === 'opening') return send(res, 200, review.startOpeningCard(id));
           // 自动改开头(后台跑):只改开头几句,改到听感检查的开头两条过关,最多试 3 次
           if (action === 'opening_fix') return send(res, 200, review.startOpeningFix(id));
+          // 论点核对(后台跑):用稿子自己的数字检验开头的主张;fix:true 按核对结果补改一次再核对
+          if (action === 'claim_check') return send(res, 200, review.startClaimCheck(id, body));
           // 终稿之后去AI感(后台跑):生成多方案建议 → 人勾选改法 → 按选择修改
           if (action === 'deai') return send(res, 200, review.startDeai(id, body));
           // 复审没达标:按复审意见补改(后台跑):整理未解决问题清单(extract)或勾选问题+决定补改;以终稿为底,不从二稿重来
@@ -1366,7 +1368,7 @@ server.listen(PORT, HOST, () => {
   // (去AI感不加进来,它卡 running 会把 deaiGuard 永久挡死,任务再无入口)
   for (const r of store.listRuns().filter(x => x.status === 'done')) {
     const st = r.steps || {};
-    const stuck = ['draft_check', 'reverse_audit', 'final_review', 'deai', 'final_open', 'opening_card', 'final_options', 'opening_fix'].filter(k => (st[k] || {}).status === 'running');
+    const stuck = ['draft_check', 'reverse_audit', 'final_review', 'deai', 'final_open', 'opening_card', 'final_options', 'opening_fix', 'claim_check'].filter(k => (st[k] || {}).status === 'running');
     const stuckZh = (st.review_zh || {}).status === 'running'; // 翻译已移出审稿锁(v1.10.4),崩溃在翻译期会永挂「翻译中…」并置灰补翻按钮
     if (!stuck.length && !stuckZh) continue;
     if (stuck.length && r.draft_first && !r.cancel_requested && stuck.every(k => k === 'draft_check' || k === 'reverse_audit')) {

@@ -309,7 +309,7 @@ function buildView(run, asset) {
     diffs: versionDiffs(state),
     revision: revisionView(state),
     deai_revision: revisionView(state, 'd4'),
-    deai: state.deai ? { ...state.deai, diagnosis: deaiReportOf(state.deai), items: deaiItemsOf(state.deai).map(x => ({ ...x, old_zh: x.old_zh || zhOf(state, x.old), options: x.options.map(o => ({ ...o, zh: o.zh || (o.text ? zhOf(state, o.text) : '') })) })), stale: !!state.deai.base_hash && state.deai.base_hash !== hash(arr(state.versions).some(v => v.key === 'd4' && v.text === script) ? ((arr(state.versions).find(v => v.key === 'd3') || {}).text || '') : script) } : null,
+    deai: state.deai ? { ...state.deai, diagnosis: deaiReportOf(state.deai), ...(sp => ({ skipped_opening: (state.deai.skipped_opening || 0) + sp.cut, skipped_claim: (state.deai.skipped_claim || 0) + sp.cut_claim }))(deaiOpeningSplit(run, deaiItemsOf(state.deai))), items: deaiOpeningSplit(run, deaiItemsOf(state.deai)).keep.map(x => ({ ...x, ...deaiQuoteView(run, x), old_zh: x.old_zh || zhOf(state, x.old), options: x.options.map(o => ({ ...o, zh: o.zh || (o.text ? zhOf(state, o.text) : '') })) })), stale: !!state.deai.base_hash && state.deai.base_hash !== hash(arr(state.versions).some(v => v.key === 'd4' && v.text === script) ? ((arr(state.versions).find(v => v.key === 'd3') || {}).text || '') : script) } : null,
     final: state.final ? (() => {
       // 旧结果:清单里没读出的分数,按报告正文的评分表补上
       const f = state.final, dims = arr(f.dims);
@@ -362,6 +362,10 @@ function publishCheck(run, v) {
   if (arr(s.thesis_contradicts).length && !(th && th.resolved)) reasons.push('反转被事实推翻' + (th ? '(复审判定未解决:' + th.note + ')' : '(终审复审还没判断)'));
   const lc = checks.listenCheck(checks.extractFinalScript(currentScript(run)), {
     wpm: require('./narration').narrationWpm(run, null).wpm, title: ((run.analysis || {}).title || {}).final_title || run.topic, lang: (run.audience || {}).target_language });
+  // 论点核对:主张被稿子自己的数字推翻、账本关键错误,不管平均几分都挡(改过稿还没重新核对的,按上次结果算)
+  const cc = v.final ? v.final.claim_check : null;
+  if (cc && claimBlocking(cc)) reasons.push('论点对不上(' + (cc.verdict === '不成立' ? '开头主张被稿子自己的数字推翻' : '账本有 ' + arr(cc.issues).filter(x => x.level === '关键' && !x.not_found).length + ' 处关键错误') + ')');
+  else if (v.final && !cc) notes.push('还没核对论点');
   const openBad = openingIssues(lc);
   if (lc && !lc.ok) {
     const rest = lc.issues.filter(i => !openBad.includes(i));
@@ -370,7 +374,8 @@ function publishCheck(run, v) {
     if (block.length) reasons.push('听感检查没过:' + block.join(';'));
     if (soft.length) notes.push(soft.join(';'));
   }
-  return { ready: !reasons.length, reasons, notes, avg: avg != null ? Math.round(avg * 10) / 10 : null, good, opening_bad: openBad, fix: (run.steps || {}).opening_fix || null, fix_rec: ((run.review || {}).final || {}).opening_fix || null };
+  return { ready: !reasons.length, reasons, notes, avg: avg != null ? Math.round(avg * 10) / 10 : null, good, opening_bad: openBad, fix: (run.steps || {}).opening_fix || null,
+    claim: cc ? { ...cc, stale: cc.hash !== hash(currentScript(run)), blocking: claimBlocking(cc), auto_left: Math.max(0, CLAIM_FIX_MAX - (v.final.claim_fixes || 0)) } : null, claim_step: (run.steps || {}).claim_check || null, fix_rec: ((run.review || {}).final || {}).opening_fix || null };
 }
 
 function loadRunAsset(runId) {
@@ -601,6 +606,29 @@ function unwrapQuote(s) {
   return x;
 }
 
+// 原句后面跟着的中文备注,如「오늘 우리는 그 이유를 찾아갑니다.(第二次出现)」:备注不是正文,去掉再定位;写了第几次出现就记下来,改那一处
+// (实测 run_1f67a92553fd 去AI感 D01:带备注找不到原句;这句开头出现了两次,校正后按第一处改,会删掉开头那句)
+const CN_NUM = { 一: 1, 二: 2, 两: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9, 十: 10 };
+function splitQuoteNote(s) {
+  const x = String(s || '');
+  const m = x.match(/\s*[（(]([^()（）]*?(?:出现|重复|第\s*[一二两三四五六七八九十\d]+\s*[次处遍])[^()（）]*)[)）]\s*$/);
+  if (!m || !/[\u4e00-\u9fff]/.test(m[1])) return { old: x, occ: 0 };
+  const n = (m[1].match(/第\s*([一二两三四五六七八九十]|\d+)\s*[次处遍]/) || [])[1];
+  return { old: unwrapQuote(x.slice(0, m.index)), occ: n ? (CN_NUM[n] || Number(n) || 0) : 0 };
+}
+// 同一句在稿子里出现多次时按第 occ 次定位(全篇按章节顺序数);没写第几次就用原来的规则(找第一处)
+function locateNth(chs, chapter, old, occ) {
+  const all = [];
+  for (const c of chs) {
+    let from = 0, p;
+    while ((p = locate(c.text.slice(from), old))) { all.push({ ch: c, start: from + p.start, end: from + p.end }); from += p.end; if (all.length > 20) break; }
+  }
+  if (!all.length) return null;
+  if (all.length === 1) return all[0];
+  if (occ >= 1) return all[Math.min(occ, all.length) - 1];
+  return all.find(h => h.ch.id === chapter) || all[0];
+}
+
 function parseEdits(text) {
   const parts = String(text || '').replace(/[*`]*(===\s*(?:EDIT|END|SCORES|VERDICT|OPEN)\s*===)[*`]*/gi, '\n$1\n').replace(/^[ \t]+(===)/gm, '$1').split(/^===\s*EDIT\s*===\s*$/m).slice(1);
   return parts.map(part => {
@@ -612,7 +640,7 @@ function parseEdits(text) {
       if (m && !(cur && e[EDIT_FIELDS[m[1]]] != null)) { cur = EDIT_FIELDS[m[1]]; e[cur] = m[2]; } else if (cur) e[cur] += '\n' + line;
     });
     Object.keys(e).forEach(k => { e[k] = e[k].trim(); });
-    if (e.old) e.old = unwrapQuote(e.old);
+    if (e.old) { const q = splitQuoteNote(unwrapQuote(e.old)); e.old = q.old; if (q.occ) e.occ = q.occ; }
     if (e.new) e.new = unwrapQuote(e.new);
     // 模型有时把整章连同章节标签行一起当原句:标签行不是正文,去掉再定位
     const TAG = /^\s*\[\s*(CH\d+)[^\]\n]*\]\s*(?:\n|$)/i;
@@ -721,7 +749,9 @@ function applyEdits(base, edits, limit) {
   edits.forEach((e, idx) => {
     e.n = idx + 1;
     let ch = chs.find(c => c.id === e.chapter);
-    let pos = ch ? locate(ch.text, e.old) : null;
+    let pos = null;
+    if (e.occ) { const h = locateNth(chs, e.chapter, e.old, e.occ); if (h) { ch = h.ch; pos = { start: h.start, end: h.end }; } }
+    if (!pos) pos = ch ? locate(ch.text, e.old) : null;
     if (!pos) { // 章节写错了:到别的章里找
       for (const c of chs) { const p = locate(c.text, e.old); if (p) { ch = c; pos = p; break; } }
     }
@@ -1421,7 +1451,7 @@ async function applyWithRepair(run, cfg, text, edits, label, limit) {
     const r = await callLong(run, cfg, prompt, label + '·补对原句');
     const fixed = parseEdits(r.content);
     if (!fixed.length) return res;
-    const keepOk = res.edits.filter(e => e.ok || (!/没找到/.test(e.error || '') && !e.growth_rejected)).map(e => ({ chapter: e.chapter, category: e.category, old: e.old, new: e.new, reason: e.reason }));
+    const keepOk = res.edits.filter(e => e.ok || (!/没找到/.test(e.error || '') && !e.growth_rejected)).map(e => ({ chapter: e.chapter, category: e.category, old: e.old, new: e.new, reason: e.reason, ...(e.occ ? { occ: e.occ } : {}) }));
     const again = applyEdits(text, keepOk.concat(fixed), limit);
     // 补了以后仍然找不到的,保留模型最初给的原句,方便人看
     const stillLost = lost.filter(l => !again.edits.some(e => e.ok && e.reason === l.reason && e.new === l.new));
@@ -1522,6 +1552,7 @@ async function ensureRecheckBlocks(run, cfg, common, dims, s3, label) {
 // 终审不空转:一轮下来七维平均涨不到 STALL_MIN 分,再逐句改也没用(实测一篇 POV 稿改了 59 处,5.7 → 6,复审 3 轮都未达标),
 // 停下来;复审标成「结构」的问题(时间线跳跃、论证骨架、整章没完成功能)交给整章重写,每轮最多 STRUCT_MAX 章
 const REVERT_DROP = 0.3; // 补改后平均分掉这么多就退回
+const CLAIM_REVERT_DROP = 1; // 按论点核对补改:论点对不上比 AI 打分要紧,掉 1 分以上才退回
 const STALL_MIN = 0.3, STRUCT_MAX = 2;
 function avgScore(scores, dims) {
   const xs = dims.map(d => scores && scores[d]).filter(x => typeof x === 'number');
@@ -1928,7 +1959,7 @@ async function runFinalPatch(runId, body) {
     if (currentScript(fresh) !== start) throw new Error('补改期间稿子被改过,结果没有保存,请重试');
     // 补改后复审的平均分比补改前低 REVERT_DROP 以上:这次补改把稿子改坏了,不换终稿,只记下这次尝试(实测 run_77b4651152ef 第 3 轮 5.4→4.6 仍被存成终稿)
     const before = avgScore(last.scores, dims), after = avgScore(scores, dims);
-    if (before != null && after != null && before - after >= REVERT_DROP) {
+    if (before != null && after != null && before - after >= (body.claim ? CLAIM_REVERT_DROP : REVERT_DROP)) {
       const rcF = arr(fresh.review.final.rechecks).slice(-1)[0];
       const tried = { at: new Date().toISOString(), picked: picked.map(x => x.id), choices: Object.fromEntries(picked.filter(chosen).map(x => [x.id, chosen(x).key])), note, report: s3.report, scores, verdict, open: markMissingQuotes(parseOpen(tb.OPEN), text, (run.audience || {}).target_language), edits: okNew.map(e => ({ chapter: e.chapter, category: e.category || '', old: e.old, new: e.new, reason: e.reason })), ...(structural ? { structural } : {}), ...(auto ? { auto, diagnosis } : {}), before: Math.round(before * 10) / 10, after: Math.round(after * 10) / 10 };
       if (rcF) rcF.reverted = arr(rcF.reverted).concat([tried]);
@@ -2049,7 +2080,7 @@ function startFinalPatch(runId, body) {
     (async () => {
       let ok = false;
       try { await rerunLastRecheck(runId); ok = true; } catch (e) {} finally { passRunning.delete(runId); }
-      if (ok) { try { await runOpenOptions(runId); } catch (e) {} await autoOpeningFix(runId); await refreshOpeningIfStale(runId); }
+      if (ok) { await claimAfterPatch(runId); try { await runOpenOptions(runId); } catch (e) {} await autoOpeningFix(runId); await refreshClaimIfStale(runId); await refreshOpeningIfStale(runId); }
       await translateRun(runId);
     })();
     return { ok: true };
@@ -2067,7 +2098,7 @@ function startFinalPatch(runId, body) {
       for (let n = 1; res && res.reverted && !res.stop && n <= AUTO_RETRY_MAX; n++) res = await runFinalPatch(runId, { auto: n });
       ok = !!res && !res.reverted;
     } catch (e) {} finally { passRunning.delete(runId); }
-    if (ok) { try { await runOpenOptions(runId); } catch (e) {} await autoOpeningFix(runId); await refreshOpeningIfStale(runId); }
+    if (ok) { await claimAfterPatch(runId); try { await runOpenOptions(runId); } catch (e) {} await autoOpeningFix(runId); await refreshClaimIfStale(runId); await refreshOpeningIfStale(runId); }
     await translateRun(runId);
   })();
   return { ok: true };
@@ -2109,7 +2140,7 @@ function parseDeaiItems(text) {
     return {
       chapter: (String(f['章节'] || f['位置'] || '').match(/CH\d+/i) || [''])[0].toUpperCase(),
       type: f['类型'] || f['类别'] || '', priority: (String(f['优先级'] || f['严重程度'] || '').match(/P[0-2]/i) || ['P1'])[0].toUpperCase(),
-      old: unwrapQuote(f['原句'] || f['原文'] || ''), old_zh: f['原句中文'] || '', problem: f['问题'] || f['原因'] || '', options,
+      ...(q => ({ old: q.old, ...(q.occ ? { occ: q.occ } : {}) }))(splitQuoteNote(unwrapQuote(f['原句'] || f['原文'] || ''))), old_zh: f['原句中文'] || '', problem: f['问题'] || f['原因'] || '', options,
       // 推荐:方案N(从 0 数);没写或越界就不标
       recommend: (n => n >= 1 && n <= options.length ? n - 1 : -1)(Number((String(f['推荐'] || '').match(/\d+/) || [0])[0])),
       recommend_reason: f['推荐理由'] || ''
@@ -2128,6 +2159,68 @@ function deaiReportOf(d) {
   return d && !arr(d.items).length && /===\s*ITEM/.test(d.diagnosis || '') ? parseDeaiItems(d.diagnosis).report : (d || {}).diagnosis || '';
 }
 
+// 去AI感不动开头(人定的:开头单独审过、自动改过,去AI感再改容易把数字和点题改回去)。
+// 开头 = 开头单独审的范围(按配音语速前 OPENING_SEC 秒),返回它在稿子里结束的位置
+function openingEndPos(run, text) {
+  const wpm = require('./narration').narrationWpm(run, null).wpm || 150;
+  let at = 0;
+  for (const l of checks.narrationLines(checks.extractFinalScript(text), wpm).filter(l => l.start < OPENING_SEC)) { const i = text.indexOf(l.text, at); if (i >= 0) at = i + l.text.length; }
+  return at;
+}
+// 去AI感不动论点:论点核对挑出的论点句不改;每种改法里的数字要和原句一模一样(实测:去AI感把账本句改写,数字和加减方向跟着变)
+const NUM_RE = /\d[\d,.]*/g;
+const numsOf = t => (String(t || '').match(NUM_RE) || []).map(n => n.replace(/[,.]$/, '')).sort().join('|');
+function deaiProtect(run, base) {
+  const cc = (((run || {}).review || {}).final || {}).claim_check;
+  return arr(cc && cc.protect).filter(q => locate(base, q));
+}
+function deaiGuardItems(run, base, items) {
+  const prot = deaiProtect(run, base);
+  let cutClaim = 0, cutOptions = 0;
+  const out = [];
+  for (const x of items) {
+    const q = splitQuoteNote(x.old).old;
+    if (prot.some(p => locate(p, q) || locate(q, p))) { cutClaim++; continue; }
+    const want = numsOf(q);
+    const options = x.options.filter(o => {
+      if (!o.text) { // 删句:句子里的数字别处还有(重复句)才允许
+        const nums = String(q).match(NUM_RE) || [];
+        const rest = base.replace(q, '');
+        return nums.every(n => rest.includes(n));
+      }
+      return numsOf(o.text) === want;
+    });
+    cutOptions += x.options.length - options.length;
+    if (!options.length) continue;
+    const rec = x.recommend >= 0 ? options.indexOf(x.options[x.recommend]) : -1;
+    out.push({ ...x, options, recommend: rec });
+  }
+  return { items: out, cut_claim: cutClaim, cut_options: cutOptions };
+}
+// 页面上不列开头的句子(旧结果里可能有)
+function deaiOpeningSplit(run, items) {
+  try {
+    const base = deaiBase(run), end = openingEndPos(run, base);
+    const keep0 = items.filter(x => !deaiInOpening(base, end, x));
+    const g = deaiGuardItems(run, base, keep0);
+    return { keep: g.items, cut: items.length - keep0.length, cut_claim: g.cut_claim };
+  } catch (e) { return { keep: items, cut: 0, cut_claim: 0 }; }
+}
+function deaiInOpening(text, end, x) {
+  const q = splitQuoteNote(x.old);
+  const h = locateNth(scriptChapters(text), x.chapter, q.old, x.occ || q.occ);
+  if (!h) return false;
+  const off = text.indexOf(h.ch.text);
+  return off >= 0 && off + h.start < end;
+}
+// 旧的诊断结果:原句带着「(第二次出现)」这类备注时标成了找不到;去掉备注重新判断,并带出要改第几处
+function deaiQuoteView(run, x) {
+  const q = splitQuoteNote(x.old), occ = x.occ || q.occ;
+  if (x.found !== false && !occ) return {};
+  let found = x.found;
+  try { if (found === false) found = !!locate(deaiBase(run), q.old); } catch (e) {}
+  return { found, ...(occ ? { occ } : {}) };
+}
 function deaiBase(run) {
   const start = currentScript(run);
   const vByKey = Object.fromEntries(arr((run.review || {}).versions).map(v => [v.key, v]));
@@ -2153,11 +2246,21 @@ async function runDeai(runId, trackKey) {
       target_language: lang, target_country: aud.target_country || '', title: ((a.title || {}).final_title) || run.topic,
       track_position: tr.position, track_audience: tr.audience, deai_protect: tr.deai_protect, deai_focus: tr.deai_focus,
       language_notes: /^Korean$/i.test(lang) ? '韩语里常见的是「그런데」「하지만」「문제는」「진짜 이유는」「결국」反复出现。' : '',
+      opening: openingSlice({ ...run, script_v1: base }).lines.map(l => l.text).join('\n') || '(无)',
+      protect: deaiProtect(run, base).map(q => '- ' + q).join('\n') || '(无)',
       script: base
     };
     const r = await callLong(run, cfg, an().fillVars(readPrompt('deai_diagnose.md'), vars), '去AI感·诊断');
-    const { report, items } = parseDeaiItems(r.content);
-    if (r.truncated && items.length && !/^===\s*END\s*===/m.test(r.content)) items.pop();
+    const parsed = parseDeaiItems(r.content);
+    const report = parsed.report;
+    if (r.truncated && parsed.items.length && !/^===\s*END\s*===/m.test(r.content)) parsed.items.pop();
+    // AI 还是提了开头的句子:不列出来
+    const openEnd = openingEndPos(run, base);
+    const items = parsed.items.filter(x => !deaiInOpening(base, openEnd, x));
+    const skippedOpening = parsed.items.length - items.length;
+    // 论点句不改;改法动了数字的不要(删句只在数字别处还有时允许)
+    const guarded = deaiGuardItems(run, base, items);
+    items.length = 0; items.push(...guarded.items);
     // 原句在终稿里找不到的,标出来(应用时还会再让 AI 校正一次引号)
     const byCh = Object.fromEntries(scriptChapters(base).map(c => [c.id, c.text]));
     items.forEach(x => { const t = byCh[x.chapter]; x.found = !!(t && locate(t, x.old)) || Object.values(byCh).some(t2 => locate(t2, x.old)); });
@@ -2168,7 +2271,7 @@ async function runDeai(runId, trackKey) {
     const zh = {};
     items.forEach(x => { if (x.old_zh) zh[hash(x.old)] = x.old_zh; x.options.forEach(o => { if (o.text && o.zh) zh[hash(o.text)] = o.zh; }); });
     fresh.review.zh = { ...(fresh.review.zh || {}), byHash: { ...((fresh.review.zh || {}).byHash || {}), ...zh } };
-    fresh.review.deai = { at: new Date().toISOString(), track: tr.key, track_name: tr.name, diagnosis: report, items, base_hash: hash(base), truncated: !!r.truncated, applied: null };
+    fresh.review.deai = { at: new Date().toISOString(), track: tr.key, track_name: tr.name, diagnosis: report, items, base_hash: hash(base), truncated: !!r.truncated, applied: null, ...(skippedOpening ? { skipped_opening: skippedOpening } : {}), ...(guarded.cut_claim ? { skipped_claim: guarded.cut_claim } : {}), ...(guarded.cut_options ? { dropped_options: guarded.cut_options } : {}) };
     fresh.steps = { ...(fresh.steps || {}), deai: { status: 'done', stage: '等你选改法', track: tr.key, secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: new Date().toISOString(), items: items.length } };
     if (run.attempts) fresh.attempts = run.attempts;
     store.saveRun(fresh);
@@ -2190,8 +2293,13 @@ async function applyDeai(runId, picks) {
   const base = deaiBase(run);
   const t0 = Date.now();
   const byId = Object.fromEntries(deaiItemsOf(d).map(x => [x.id, x]));
-  const chosen = arr(picks).filter(p => byId[p.id]);
-  const edits = chosen.map(p => { const x = byId[p.id]; return { chapter: x.chapter, category: x.type, old: x.old, new: String(p.text || '').trim(), reason: x.problem, deai_id: x.id }; });
+  // 旧的诊断结果里可能有开头的句子:不改
+  const openEnd = openingEndPos(run, base);
+  // 论点句、AI 给的动了数字的改法不改(人自己写的照用)
+  const guardedIds = new Map(deaiGuardItems(run, base, deaiItemsOf(d)).items.map(x => [x.id, x]));
+  const aiChanged = (x, t) => x.options.some(o => (o.text || '') === t) && !(guardedIds.get(x.id) || { options: [] }).options.some(o => (o.text || '') === t);
+  const chosen = arr(picks).filter(p => byId[p.id] && guardedIds.has(p.id) && !deaiInOpening(base, openEnd, byId[p.id]) && !aiChanged(byId[p.id], String(p.text || '').trim()));
+  const edits = chosen.map(p => { const x = byId[p.id]; const q = splitQuoteNote(x.old); return { chapter: x.chapter, category: x.type, old: q.old, ...(x.occ || q.occ ? { occ: x.occ || q.occ } : {}), new: String(p.text || '').trim(), reason: x.problem, deai_id: x.id }; });
   run.steps = { ...(run.steps || {}), deai: { ...((run.steps || {}).deai || {}), status: 'running', stage: '按你的选择修改' } };
   store.saveRun(run);
   try {
@@ -2233,7 +2341,7 @@ function startDeai(runId, body) {
     const d = (run.review || {}).deai;
     if (!d || !deaiItemsOf(d).length) throw Object.assign(new Error('还没有去AI感建议,先生成'), { status: 400 });
     if (d.base_hash !== hash(deaiBase(run))) throw Object.assign(new Error('生成建议以后稿子改过,原句可能对不上,请重新生成建议'), { status: 400 });
-    (async () => { try { await applyDeai(runId, body.picks); } catch (e) {} await translateRun(runId); })();
+    (async () => { try { await applyDeai(runId, body.picks); } catch (e) {} await refreshClaimIfStale(runId); await translateRun(runId); })();
     return { ok: true };
   }
   (async () => { try { await runDeai(runId, body && body.track); } catch (e) {} await translateRun(runId); })();
@@ -2248,18 +2356,19 @@ const passRunning = new Map();
 function passBusy(runId) { return passRunning.has(runId); }
 function passLabel(runId) { return passRunning.get(runId) || ''; }
 const busyMsg = (runId, what) => '「' + (passLabel(runId) || '审稿') + '」正在跑,等它跑完再' + what;
-const PASS_LABELS = { check: '初稿检查', audit: '二稿审稿报告', final: '终审', options: '出解决方案', openfix: '自动改开头', opening: '开头单独审' };
+const PASS_LABELS = { check: '初稿检查', audit: '二稿审稿报告', final: '终审', options: '出解决方案', claim: '论点核对', openfix: '自动改开头', opening: '开头单独审' };
 async function runPasses(runId, from) {
   if (passRunning.has(runId)) throw Object.assign(new Error(busyMsg(runId, '重跑')), { status: 409 });
   passRunning.set(runId, '审稿');
   try {
     // 二稿和终稿出来后各单独审一次开头;开头分析失败不挡后面的步骤
-    const order = from === 'final' ? ['final', 'options', 'openfix', 'opening'] : from === 'audit' ? ['audit'] : ['check', 'opening', 'audit'];
+    const order = from === 'final' ? ['final', 'claim', 'options', 'openfix', 'opening'] : from === 'audit' ? ['audit'] : ['check', 'opening', 'audit'];
     for (const k of order) {
       passRunning.set(runId, PASS_LABELS[k] || k);
       if (k === 'opening') { try { await runOpeningCard(runId); } catch (e) {} continue; }
       if (k === 'options') { try { await runOpenOptions(runId); } catch (e) {} continue; }
-      if (k === 'openfix') { await autoOpeningFixLocked(runId); continue; }
+      if (k === 'claim') { try { await claimCheckAndFix(runId); } catch (e) {} continue; }
+      if (k === 'openfix') { await autoOpeningFixLocked(runId); await refreshClaimIfStale(runId); continue; }
       try { if (k === 'audit') await runReverseAudit(runId); else if (k === 'final') await runFinal(runId); else await runPass(runId, k); } catch (e) { break; }
     }
   } finally { passRunning.delete(runId); }
@@ -2288,6 +2397,126 @@ async function refreshOpeningIfStale(runId) {
     if (openingSlice(run).hash === run.review.opening.hash) return;
     await runOpeningCard(runId);
   } catch (e) { /* 开头分析失败不影响改稿结果 */ }
+}
+
+// ---------- 论点核对(终审之后):用稿子自己的数字检验开头的主张,对不上就按核对结果自动补改 ----------
+// 实测 run_1f67a92553fd:终审 8.3 分,开头说「매출 올랐는데 업주 돈은 줄었다」,稿子自己的账算出大学街店每月多剩约 230 万;
+// 账本把业主劳动 300 万加进收入(前文说要扣掉)。七维打分几轮都没挑出来,所以单独核对、单独拦。
+const CLAIM_FIX_MAX = 2; // 一次终审里自动按核对结果补改的次数
+function claimBlocking(cc) { return !!cc && (cc.verdict === '不成立' || arr(cc.issues).some(x => x.level === '关键' && !x.not_found)); }
+function claimNote(cc) {
+  const lines = ['论点核对发现的问题(按下面改;只改这些句子和由它们推出的结论,数字一律用稿子里已有的,不许编新数字;开头的说法要和稿子自己的账一致):'];
+  if (cc.verdict === '不成立') lines.push('- 开头主张「' + cc.claim + '」被稿子自己的数字推翻:' + cc.calc + (cc.fix_claim ? '。改法:' + cc.fix_claim : ''));
+  arr(cc.issues).filter(x => !x.not_found).sort((a, b) => (a.level === '关键' ? 0 : 1) - (b.level === '关键' ? 0 : 1))
+    .forEach(x => lines.push('- [' + (x.chapter || '全篇') + '][' + x.level + '] ' + (x.quote ? '「' + x.quote + '」' : '') + x.problem + (x.fix ? ' → 改成:' + x.fix : '')));
+  return lines.join('\n').slice(0, 2900);
+}
+async function runClaimCheck(runId) {
+  const cfg = pl().loadConfig();
+  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
+  const run = store.getRun(runId);
+  if (!run || !(run.review || {}).final) throw Object.assign(new Error('还没跑终审'), { status: 400 });
+  const text = currentScript(run);
+  run.steps = { ...(run.steps || {}), claim_check: { status: 'running', started_at: new Date().toISOString() } };
+  store.saveRun(run);
+  try {
+    const sl = openingSlice(run);
+    const out = await an().callJson(run, cfg, an().fillVars(readPrompt('claim_check.md'), {
+      target_language: (run.audience || {}).target_language || '', title: ((run.analysis || {}).title || {}).final_title || run.topic,
+      opening: sl.lines.map(l => l.text).join('\n') || '(无)', script: checks.extractFinalScript(text)
+    }), '论点核对', o => typeof o.verdict === 'string' && /成立|没算/.test(o.verdict));
+    const verdict = /不成立/.test(out.verdict) ? '不成立' : /没算/.test(out.verdict) ? '稿子没算' : '成立';
+    const issues = arr(out.issues).filter(x => x && x.problem).map((x, i) => {
+      const quote = String(x.quote || '').trim();
+      return { id: 'L' + (i + 1), chapter: (String(x.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase(), level: /关键/.test(x.level) ? '关键' : '次要',
+        quote, problem: String(x.problem), fix: String(x.fix || ''), ...(quote && !locate(text, splitQuoteNote(quote).old) ? { not_found: true } : {}) };
+    });
+    const fresh = store.getRun(runId) || run;
+    if (currentScript(fresh) !== text) throw new Error('核对期间稿子被改过,请重新核对');
+    const prevFixes = ((fresh.review.final.claim_check || {}).fixes) || [];
+    fresh.review.final.claim_check = { at: new Date().toISOString(), hash: hash(text), claim: String(out.claim || ''), verdict, calc: String(out.calc || ''), fix_claim: String(out.fix_claim || ''),
+      issues, protect: arr(out.protect).map(String).filter(q => q.trim() && locate(text, q)), fixes: prevFixes };
+    fresh.steps = { ...(fresh.steps || {}), claim_check: { status: 'done', finished_at: new Date().toISOString(), verdict, blocking: claimBlocking(fresh.review.final.claim_check) } };
+    if (run.attempts) fresh.attempts = run.attempts;
+    store.saveRun(fresh);
+    return fresh.review.final.claim_check;
+  } catch (e) {
+    const fresh = store.getRun(runId) || run;
+    fresh.steps = { ...(fresh.steps || {}), claim_check: { status: 'failed', error: e.message, finished_at: new Date().toISOString() } };
+    store.saveRun(fresh);
+    throw e;
+  }
+}
+function claimFresh(run) {
+  const cc = (((run || {}).review || {}).final || {}).claim_check;
+  return cc && cc.hash === hash(currentScript(run)) ? cc : null;
+}
+// 按核对结果补改一次(走补改 + 复审的流程;复审掉分 1 分以上才退回,论点对不上比 AI 打分要紧),再核对一遍
+async function claimFixOnce(runId, cc, by) {
+  const run = store.getRun(runId);
+  const rec = { at: new Date().toISOString(), by, before: { verdict: cc.verdict, issues: arr(cc.issues).filter(x => x.level === '关键' && !x.not_found).length } };
+  let res = null;
+  passRunning.set(runId, '按论点核对改稿');
+  try { res = await runFinalPatch(runId, { note: claimNote(cc), claim: true }); } catch (e) { rec.error = e.message; }
+  if (res && res.reverted) rec.error = '改完复审掉分太多,没有采用';
+  passRunning.set(runId, '论点核对');
+  let after = null;
+  try { after = res && !res.reverted ? await runClaimCheck(runId) : null; } catch (e) { rec.error = rec.error || ('改完重新核对失败:' + e.message); }
+  if (after) rec.after = { verdict: after.verdict, issues: arr(after.issues).filter(x => x.level === '关键' && !x.not_found).length };
+  const fresh = store.getRun(runId) || run;
+  const c = fresh.review.final.claim_check;
+  if (c) { c.fixes = arr(c.fixes).concat([rec]); store.saveRun(fresh); }
+  return { ok: !!after && !claimBlocking(after), patched: !!res && !res.reverted };
+}
+// 终审、补改、重新复审之后(调用方已拿着锁):核对;对不上就自动补改,一次终审最多 CLAIM_FIX_MAX 次
+async function claimCheckAndFix(runId) {
+  passRunning.set(runId, '论点核对');
+  let run = store.getRun(runId);
+  let cc = claimFresh(run) || await runClaimCheck(runId);
+  for (;;) {
+    if (!claimBlocking(cc)) return;
+    run = store.getRun(runId);
+    const fin = run.review.final;
+    if ((fin.claim_fixes || 0) >= CLAIM_FIX_MAX) return;
+    fin.claim_fixes = (fin.claim_fixes || 0) + 1;
+    store.saveRun(run);
+    await claimFixOnce(runId, cc, 'auto');
+    cc = claimFresh(store.getRun(runId));
+    if (!cc) cc = await runClaimCheck(runId);
+  }
+}
+// 补改、重新复审成功之后(锁已经放开):占锁核对,对不上自动补改
+async function claimAfterPatch(runId) {
+  if (passBusy(runId)) return;
+  try { await claimCheckAndFix(runId); } catch (e) {} finally { passRunning.delete(runId); }
+}
+// 人点「核对论点」/「按论点核对改稿」
+function startClaimCheck(runId, body) {
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  if (!(run.review || {}).final) throw Object.assign(new Error('还没跑终审'), { status: 400 });
+  const st = run.steps || {};
+  const busyStep = (st.final_review || {}).status === 'running' ? '终审' : (st.deai || {}).status === 'running' ? '去AI感' : (st.claim_check || {}).status === 'running' ? '论点核对' : '';
+  if (passBusy(runId) || busyStep) throw Object.assign(new Error('「' + (passLabel(runId) || busyStep) + '」正在跑,等它跑完再核对'), { status: 409 });
+  const fix = !!(body && body.fix);
+  const cc = claimFresh(run);
+  if (fix && !claimBlocking(cc)) throw Object.assign(new Error(cc ? '论点核对已经通过,不用改' : '先核对论点'), { status: 400 });
+  passRunning.set(runId, fix ? '按论点核对改稿' : '论点核对');
+  (async () => {
+    let patched = false;
+    try { if (fix) patched = (await claimFixOnce(runId, cc, 'manual')).patched; else await runClaimCheck(runId); } catch (e) {} finally { passRunning.delete(runId); }
+    if (patched) { try { await runOpenOptions(runId); } catch (e) {} await autoOpeningFix(runId); await refreshOpeningIfStale(runId); await translateRun(runId); }
+  })();
+  return { ok: true };
+}
+// 稿子改过(自动改开头、去AI感)之后只重新核对,不再自动补改(补改可能又动到开头,来回改)
+async function refreshClaimIfStale(runId) {
+  try {
+    const run = store.getRun(runId);
+    if (!run || !((run.review || {}).final || {}).claim_check || claimFresh(run)) return;
+    if (((run.steps || {}).claim_check || {}).status === 'running') return;
+    await runClaimCheck(runId);
+  } catch (e) { /* 核对失败记在 steps.claim_check */ }
 }
 
 // ---------- 自动改开头(终审之后):只改开头几句,让听感检查的开头两条(前 10 秒数字、前 8 秒点题)过关 ----------
@@ -2424,6 +2653,7 @@ function startOpeningFix(runId) {
   passRunning.set(runId, '自动改开头');
   (async () => {
     try { await runOpeningFix(runId); } catch (e) {} finally { passRunning.delete(runId); }
+    await refreshClaimIfStale(runId);
     await refreshOpeningIfStale(runId);
     await translateRun(runId);
   })();
@@ -2688,4 +2918,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

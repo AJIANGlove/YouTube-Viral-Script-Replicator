@@ -2494,8 +2494,32 @@ function rvPublishHtml(v) {
   const fix = running ? `<span class="rv-busy">正在自动改开头${fx.stage && fx.stage !== '改开头' ? '(' + esc(fx.stage) + ')' : ''}…一般 1–3 分钟</span>`
     : fx.status === 'failed' ? `<span class="rv-flag">自动改开头没成功:${esc(fx.error || '')}</span>`
     : rec && rec.passed && rec.edits ? `<span style="color:#047857">✓ 开头已自动改 ${rec.edits} 处,听感检查过了(在下面修订痕迹里,类别「开头」;复审分数是改开头之前打的)</span>` : '';
-  const notes = (p.notes || []).length ? `<span class="hint">平均 ${p.avg} 分,下面这些不挡发布,想改再改:${p.notes.map(esc).join(';')}</span>` : '';
-  return `<div class="rv-bar v13">${head}${btn}${fix}${notes}</div>`;
+  const notes = (p.notes || []).length ? `<span class="hint">${p.good ? '平均 ' + p.avg + ' 分,' : ''}下面这些不挡发布,想改再改:${p.notes.map(esc).join(';')}</span>` : '';
+  return `<div class="rv-bar v13">${head}${btn}${fix}${notes}</div>` + rvClaimHtml(p, v);
+}
+// 论点核对:用稿子自己的数字检验开头的主张;对不上终审/补改后会自动按核对结果改,还没改好就挡发布
+function rvClaimHtml(p, v) {
+  const c = p.claim, st = p.claim_step || {};
+  const running = st.status === 'running' || /论点/.test(v.running || '');
+  const busy = running || !!v.running;
+  if (running) return `<div class="rv-flag v13" style="border-color:#93c5fd;background:#eff6ff"><b>${esc(/改稿/.test(v.running || '') ? '正在按论点核对改稿' : '正在核对论点')}…</b> <span class="hint">用稿子自己的数字检验开头的主张,一般 1–3 分钟;对不上会自动改稿再核对</span></div>`;
+  if (!c) return `<div class="rv-ops v13"><button class="an-btn v13" onclick="rvClaim(false)" ${busy ? 'disabled' : ''}>核对论点</button> <span class="hint">${st.status === 'failed' ? '上次核对失败:' + esc(st.error || '') : '用稿子自己的数字检验开头的主张和账本(新终审会自动做)'}</span></div>`;
+  const fixes = (c.fixes || []).map(f => `<li>${f.by === 'auto' ? '自动' : '手动'}改稿:${f.error ? esc(f.error) : f.after ? (f.after.verdict === '不成立' || f.after.issues ? '改了,还有问题' : '改好了') : '已改'}</li>`).join('');
+  const list = (c.issues || []).filter(x => !x.not_found).map(x => `<li><b style="color:${x.level === '关键' ? '#b91c1c' : '#b45309'}">[${esc(x.level)}]</b> ${esc(x.chapter || '')} ${x.quote ? '「' + esc(x.quote) + '」' : ''}${esc(x.problem)}${x.fix ? `<div class="hint">改法:${esc(x.fix)}</div>` : ''}</li>`).join('');
+  const stale = c.stale ? '<span class="hint">(稿子改过,这是改之前的核对结果)</span> ' : '';
+  if (!c.blocking) return `<details class="rv-md-box v13"><summary><span style="color:#047857"><b>✓ 论点核对通过</b></span>:${esc(c.claim)} ${stale}<span class="hint">(${esc(fmtTime(c.at))})</span></summary>
+    <div class="v13" style="margin:6px 0"><b>怎么算的</b>:${esc(c.calc || '')}</div>${list ? `<ul>${list}</ul>` : ''}${fixes ? `<div class="hint">之前的改稿:<ul>${fixes}</ul></div>` : ''}
+    <div class="rv-ops v13"><button class="an-btn" onclick="rvClaim(false)" ${busy ? 'disabled' : ''}>重新核对</button></div></details>`;
+  return `<div class="rv-flag v13"><b>论点对不上</b>:${c.verdict === '不成立' ? '开头的主张「' + esc(c.claim) + '」被稿子自己的数字推翻。' : '账本有关键错误。'} ${stale}
+    <div class="v13" style="margin:6px 0"><b>怎么算的</b>:${esc(c.calc || '')}${c.fix_claim ? `<br><b>开头应该怎么说</b>:${esc(c.fix_claim)}` : ''}</div>
+    ${list ? `<ul>${list}</ul>` : ''}${fixes ? `<div class="hint">已经试过:<ul>${fixes}</ul></div>` : ''}
+    <div class="rv-ops v13"><button class="an-btn v13" onclick="rvClaim(true)" ${busy ? 'disabled' : ''}>按核对结果改稿</button> <button class="an-btn" onclick="rvClaim(false)" ${busy ? 'disabled' : ''}>重新核对</button>
+    <span class="hint">${c.auto_left ? '终审、补改跑完会自动改(这次终审还能自动改 ' + c.auto_left + ' 次)' : '自动改的次数用完了,点「按核对结果改稿」再改一次'};改完自动复审、再核对一遍</span></div></div>`;
+}
+async function rvClaim(fix) {
+  try { await rvPost('claim_check', { fix }); } catch (e) { alert('没能开始:' + e.message); return; }
+  rvState.key = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
 }
 async function rvOpeningFix() {
   try { await rvPost('opening_fix', {}); } catch (e) { alert('没能开始:' + e.message); return; }
@@ -2699,7 +2723,7 @@ function rvDeaiHtml(v, translating, busy) {
     return `<div class="rv-ai${on ? ' on' : ''}">
       <label class="rv-ai-head"><input type="checkbox" ${on ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="rvDeaiToggle('${escAttr(x.id)}', this.checked)">
         <b>${esc(x.id)}</b> <span class="rv-chip">${esc(x.chapter)}</span> <span class="rv-chip ${pc(x.priority)}">${esc(x.priority)}</span> <span class="hint">${esc(x.type)}</span>
-        ${x.found === false ? '<span class="rv-chip red" title="应用时会让 AI 再校正一次原句">原句没在终稿里找到</span>' : ''}</label>
+        ${x.found === false ? '<span class="rv-chip red" title="应用时会让 AI 再校正一次原句">原句没在终稿里找到</span>' : ''}${x.occ ? `<span class="rv-chip" title="这句在稿子里出现了不止一次,只改 AI 指的那一处">改第 ${x.occ} 处</span>` : ''}</label>
       <div class="rv-ai-body">
         <div class="rv-ai-cols"><div><span class="hint">原句</span><div class="rv-dold">${esc(x.old)}</div></div><div class="rv-ai-zh">${x.old_zh ? esc(x.old_zh) : pending}</div></div>
         ${x.problem ? `<div class="hint" style="margin:2px 0 4px">为什么有 AI 感:${esc(x.problem)}</div>` : ''}
@@ -2710,7 +2734,7 @@ function rvDeaiHtml(v, translating, busy) {
   }).join('');
   const ap = d.applied;
   const applying = running && /修改/.test(st.stage || '');
-  return ctrl + `<div class="rv-bar v13"><span>赛道 <b>${esc(d.track_name || '')}</b></span><span>建议改 <b>${d.items.length}</b> 处(P0 ${d.items.filter(x => x.priority === 'P0').length}、P1 ${d.items.filter(x => x.priority === 'P1').length}、P2 ${d.items.filter(x => x.priority === 'P2').length})</span>${ap ? `<span>已按你的选择改了 <b>${ap.ok}</b> 处${ap.failed ? ',' + ap.failed + ' 处没对上原句' : ''}</span>` : '<span>还没应用</span>'}</div>
+  return ctrl + `<div class="rv-bar v13"><span>赛道 <b>${esc(d.track_name || '')}</b></span><span>建议改 <b>${d.items.length}</b> 处(P0 ${d.items.filter(x => x.priority === 'P0').length}、P1 ${d.items.filter(x => x.priority === 'P1').length}、P2 ${d.items.filter(x => x.priority === 'P2').length})</span>${d.skipped_opening ? `<span class="hint">开头 60 秒里的 ${d.skipped_opening} 处没列出(去AI感不动开头)</span>` : ''}${d.skipped_claim ? `<span class="hint">论点句里的 ${d.skipped_claim} 处没列出(去AI感不动论点)</span>` : ''}${d.dropped_options ? `<span class="hint">${d.dropped_options} 种改动了数字的改法已去掉</span>` : ''}${ap ? `<span>已按你的选择改了 <b>${ap.ok}</b> 处${ap.failed ? ',' + ap.failed + ' 处没对上原句' : ''}</span>` : '<span>还没应用</span>'}</div>
     ${d.stale ? '<div class="rv-flag"><b>注意</b>:生成建议以后稿子又改过,原句可能对不上,请重新生成建议。</div>' : ''}
     ${d.truncated ? '<div class="rv-flag"><b>注意</b>:AI 输出太长被截断,后面几处可能没列出来。</div>' : ''}
     <details class="rv-md-box"><summary>AI 感诊断报告(整体诊断、重复信息、结构节奏、可以保留、待核实)</summary><div class="rv-md">${rvMd(d.diagnosis)}</div></details>
