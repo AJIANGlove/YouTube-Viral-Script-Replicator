@@ -132,8 +132,24 @@
   .runs-table th { padding: 10px 8px; border-bottom: 2px solid #e5e7eb; white-space: nowrap; }
   .runs-table td { padding: 10px 8px; vertical-align: top; line-height: 1.5; }
   .runs-table td .sub { display: block; font-size: 11px; color: #9ca3af; margin-top: 2px; }
-  /* 主题列中文译文:比「源:」那行的灰再深一档,韩文/中文两行并排时中文要能读清 */
-  .runs-table td .sub.topic-zh { color: #6b7280; margin-top: 4px; }
+  /* 主题列中文译文:与主题同字号(继承 td,不再缩成 11px)、浅底 + 左侧色条做成「引文块」,
+     上下留 8px/4px 间距和主题分开;宽度 fit-content,长译文自动在块内换行 */
+  .runs-table td .sub.topic-zh {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: inherit;
+    font-weight: 500;
+    line-height: 1.45;
+    color: #1f2937;
+    background: #f1f5f9;
+    border-left: 3px solid #93c5fd;
+    border-radius: 0 5px 5px 0;
+    padding: 3px 8px;
+    margin: 8px 0 4px;
+    white-space: normal;
+  }
   .runs-table .time { font-variant-numeric: tabular-nums; color: #6b7280; white-space: nowrap; font-size: 12px; }
   .badge { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 999px; white-space: nowrap; }
   .badge-done { background: #d1fae5; color: #047857; }

@@ -144,7 +144,7 @@
 
 - **数据**：`app/data/topic_zh.json`（`{version, items:{"<主题原文>": {zh, at, skipped?}}}`），按**主题文本**缓存——同一选题的多个任务共用一条译文。**不入库**（`.gitignore` 已加，与 `runs.index.json` 同性质）；换机器重跑 `node app/bin/translate_topics.js` 即可。**不写 run 文件**，所以 `INDEX_VERSION` 没动。
 - **接口**：`GET /api/runs` 里 `topiczh.ensure(items.map(i=>i.topic))` 排后台队列，返回体每条 `{...it, topic_zh}` 现查现拼（不 await 翻译）。
-- **前端**：`runRowHtml` 主题单元格加 `<span class="sub topic-zh">`；`runsSig` **必须**含 `r.topic_zh`（否则译文补上后 3s 轮询不重绘）。
+- **前端**：`runRowHtml` 主题单元格加 `<span class="sub topic-zh">`；`runsSig` **必须**含 `r.topic_zh`（否则译文补上后 3s 轮询不重绘）。样式（2026-10-30 按要求加强）：**字号继承 td，与主题同大**（不再缩成 11px）；浅灰底 `#f1f5f9` + 左蓝条 `3px #93c5fd` + 右圆角做成引文块，`width:fit-content`（短译文只占文字宽、长的自动换行），`margin: 8px 0 4px` 与主题上下留空。
 - **翻译渠道**：走 `pipeline.loadTweakConfig()`（「微调按钮」渠道，本项目 = DeepSeek `deepseek-flash`），提示词内联在 `lib/topiczh.js`（三行指令，不进 `prompts/`、不用同步 README 表）。
 - **并发**：固定并发池 **4**（`TOPIC_ZH_CONCURRENCY` 环境变量可覆盖，上限 8），单进程内排队逐条落盘；同一主题失败 10 分钟冷却、连续 3 次放弃（仅内存，重启重置）。
 - **三个触发点**：①建任务 `POST /api/runs` 后立刻 `ensure([topic])`；②`GET /api/runs` 兜底（漏译的、进程重启期间建的）；③启动时把存量任务主题全挂一遍（只排缺译的）。都有缓存/`isChinese` 拦截，不会重复烧 token。
