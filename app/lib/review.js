@@ -301,6 +301,7 @@ function buildView(run, asset) {
   const budget = rows.reduce((n, r) => n + (r.budget || 0), 0);
   const out = {
     run_id: run.id, status: run.status, target_language: lang,
+    running: passLabel(run.id),
     passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null, deai: (run.steps || {}).deai || null, final_open: (run.steps || {}).final_open || null, final_options: (run.steps || {}).final_options || null },
     audit: state.audit ? { ...state.audit, issues: arr(state.audit.issues).map(x => ({ ...x, zh_problem: hasForeign(x.problem) ? zhOf(state, x.problem) : '', zh_direction: hasForeign(x.direction) ? zhOf(state, x.direction) : '', need_zh: hasForeign(x.problem) || hasForeign(x.direction) })), score: state.audit.score != null ? state.audit.score : reportScore(state.audit.report), stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
     factcheck: state.factcheck ? { ...state.factcheck, items: arr(state.factcheck.items).map(x => ({ ...x, zh_claim: hasForeign(x.claim) ? zhOf(state, x.claim) : '' })) } : null,
@@ -1222,7 +1223,7 @@ function saveAuditSelection(runId, body) {
 function startFinal(runId, body) {
   const run = store.getRun(runId);
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
-  if (passBusy(runId)) throw Object.assign(new Error('有审稿正在跑,等它跑完再终审'), { status: 409 });
+  if (passBusy(runId)) throw Object.assign(new Error(busyMsg(runId, '终审')), { status: 409 });
   if (((run.steps || {}).final_review || {}).status === 'running') throw Object.assign(new Error('终审正在进行'), { status: 400 });
   if (lockedTrack(run)) body = { ...body, track: run.review_track };
   const au = (run.review || {}).audit;
@@ -1792,7 +1793,18 @@ function startFinalPatch(runId, body) {
   const run = store.getRun(runId);
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
   const st = run.steps || {};
-  if (passBusy(runId) || (st.final_review || {}).status === 'running' || (st.deai || {}).status === 'running' || (st.final_open || {}).status === 'running') throw Object.assign(new Error('有审稿正在跑,等它跑完再补改'), { status: 409 });
+  // 只出解决方案(不改稿):开头单独审、中文对照这些在跑不碍事,只有终审/补改在跑时不行(它们会换掉复审问题)
+  if (body && body.options) {
+    const fin0 = (run.review || {}).final || {};
+    const last0 = arr(fin0.rechecks).slice(-1)[0];
+    if ((st.final_options || {}).status === 'running') throw Object.assign(new Error('解决方案正在生成'), { status: 409 });
+    if ((st.final_review || {}).status === 'running' || ['终审', '补改'].includes(passLabel(runId))) throw Object.assign(new Error(busyMsg(runId, '出方案')), { status: 409 });
+    if (!last0 || !arr(last0.open).length) throw Object.assign(new Error('复审没有遗留问题'), { status: 400 });
+    runOpenOptions(runId).catch(() => {});
+    return { ok: true };
+  }
+  const busyStep = (st.final_review || {}).status === 'running' ? '终审' : (st.deai || {}).status === 'running' ? '去AI感' : (st.final_open || {}).status === 'running' ? '整理复审问题' : '';
+  if (passBusy(runId) || busyStep) throw Object.assign(new Error('「' + (passLabel(runId) || busyStep) + '」正在跑,等它跑完再补改'), { status: 409 });
   const vs = arr((run.review || {}).versions);
   const d3 = vs.find(v => v.key === 'd3'), d4 = vs.find(v => v.key === 'd4');
   const fin = (run.review || {}).final;
@@ -1805,14 +1817,8 @@ function startFinalPatch(runId, body) {
     (async () => { try { await extractOpen(runId); await runOpenOptions(runId); } catch (e) {} await translateRun(runId); })();
     return { ok: true };
   }
-  if (body && body.options) {
-    if ((st.final_options || {}).status === 'running') throw Object.assign(new Error('解决方案正在生成'), { status: 409 });
-    if (!arr(last.open).length) throw Object.assign(new Error('复审没有遗留问题'), { status: 400 });
-    runOpenOptions(runId).catch(() => {});
-    return { ok: true };
-  }
   if (!arr(body.ids).length && !String(body.note || '').trim()) throw Object.assign(new Error('至少勾一个问题,或写下你的决定'), { status: 400 });
-  passRunning.add(runId);
+  passRunning.set(runId, '补改');
   (async () => {
     let ok = false;
     try { ok = !(await runFinalPatch(runId, body)).reverted; } catch (e) {} finally { passRunning.delete(runId); }
@@ -1991,15 +1997,20 @@ function startDeai(runId, body) {
 // 初稿检查 → 二稿审稿报告 → 停下等人选;人选完再终审 → 翻译。某一遍失败不影响已有稿子,页面上可以单独重跑
 // 并发守卫:同一任务同一时刻只许一个 pass 在跑(连点重跑/终审会并发烧 LLM 并竞争写 run 文件)。
 // 用进程内集合而不是 run 文件里的 running 状态:进程重启后集合自然清空,崩溃留下的假 running 不会挡续跑
-const passRunning = new Set();
+// 正在跑的审稿:任务 id → 现在在跑哪一步(给页面和 409 提示说清楚是什么在跑)
+const passRunning = new Map();
 function passBusy(runId) { return passRunning.has(runId); }
+function passLabel(runId) { return passRunning.get(runId) || ''; }
+const busyMsg = (runId, what) => '「' + (passLabel(runId) || '审稿') + '」正在跑,等它跑完再' + what;
+const PASS_LABELS = { check: '初稿检查', audit: '二稿审稿报告', final: '终审', options: '出解决方案', opening: '开头单独审' };
 async function runPasses(runId, from) {
-  if (passRunning.has(runId)) throw Object.assign(new Error('有审稿正在跑,等它跑完再重跑'), { status: 409 });
-  passRunning.add(runId);
+  if (passRunning.has(runId)) throw Object.assign(new Error(busyMsg(runId, '重跑')), { status: 409 });
+  passRunning.set(runId, '审稿');
   try {
     // 二稿和终稿出来后各单独审一次开头;开头分析失败不挡后面的步骤
     const order = from === 'final' ? ['final', 'options', 'opening'] : from === 'audit' ? ['audit'] : ['check', 'opening', 'audit'];
     for (const k of order) {
+      passRunning.set(runId, PASS_LABELS[k] || k);
       if (k === 'opening') { try { await runOpeningCard(runId); } catch (e) {} continue; }
       if (k === 'options') { try { await runOpenOptions(runId); } catch (e) {} continue; }
       try { if (k === 'audit') await runReverseAudit(runId); else if (k === 'final') await runFinal(runId); else await runPass(runId, k); } catch (e) { break; }
@@ -2265,4 +2276,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

@@ -23,6 +23,7 @@ const checks = require('./lib/checks');
 const narration = require('./lib/narration');
 const video = require('./lib/video');
 const ytdata = require('./lib/ytdata');
+const topiczh = require('./lib/topiczh');
 
 const PORT = Number(process.env.PORT) || 8080; // 默认 8080,可用 PORT 环境变量覆盖(如调试时不占用正式实例)
 const HOST = '0.0.0.0';
@@ -428,8 +429,11 @@ const server = http.createServer(async (req, res) => {
         page: query.get('page'),
         pageSize: query.get('page_size')
       });
+      // 列表「主题」列的中文对照:缺译的主题排队后台翻译(走微调渠道/DeepSeek),
+      // 本次响应先给空串,页面 3 秒轮询自动补上——不阻塞列表,也不在建任务时多等一次 LLM
+      topiczh.ensure(result.items.map(it => it.topic));
       return send(res, 200, {
-        items: result.items.map(it => ({ ...it, video: videoPushView(it.video, baseUrl) })),
+        items: result.items.map(it => ({ ...it, topic_zh: topiczh.get(it.topic), video: videoPushView(it.video, baseUrl) })),
         total: result.total,
         total_all: result.total_all,
         page: result.page,
@@ -642,7 +646,7 @@ const server = http.createServer(async (req, res) => {
           if (action === 'pass') {
             // 重跑初稿检查(会接着出审稿报告)、只重跑审稿报告或只重跑终审;后台跑,页面轮询看进度
             // 并发守卫:同一任务有 pass 在跑就拒(连点会并发烧 LLM 并竞争写 run 文件)
-            if (review.passBusy(id)) return send(res, 409, { error: '有审稿正在跑,等它跑完再重跑' });
+            if (review.passBusy(id)) return send(res, 409, { error: '「' + (review.passLabel(id) || '审稿') + '」正在跑,等它跑完再重跑' });
             const kind = ['final', 'audit'].includes(body.kind) ? body.kind : 'check';
             review.runPasses(id, kind).catch(() => {});
             return send(res, 200, { ok: true });

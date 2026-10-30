@@ -132,6 +132,8 @@
   .runs-table th { padding: 10px 8px; border-bottom: 2px solid #e5e7eb; white-space: nowrap; }
   .runs-table td { padding: 10px 8px; vertical-align: top; line-height: 1.5; }
   .runs-table td .sub { display: block; font-size: 11px; color: #9ca3af; margin-top: 2px; }
+  /* 主题列中文译文:比「源:」那行的灰再深一档,韩文/中文两行并排时中文要能读清 */
+  .runs-table td .sub.topic-zh { color: #6b7280; margin-top: 4px; }
   .runs-table .time { font-variant-numeric: tabular-nums; color: #6b7280; white-space: nowrap; font-size: 12px; }
   .badge { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 999px; white-space: nowrap; }
   .badge-done { background: #d1fae5; color: #047857; }
@@ -485,7 +487,7 @@
   #detail-scripts h2 > span:first-child { flex-shrink: 0; white-space: nowrap; }
   #detail-scripts h2 > span:last-child { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; align-items: center; }
   #view-runs .card { overflow-x: auto; }
-  .runs-table { min-width: 1260px; }
+  .runs-table { min-width: 1300px; }
   .script-peek { margin-top: 8px; max-height: 132px; overflow-y: auto; white-space: pre-wrap; font-size: 12px; line-height: 1.6;
     color: #374151; background: #fafafa; border: 1px solid #eef0f3; border-radius: 6px; padding: 8px 10px; }
   .bind-state { font-size: 12px; line-height: 1.7; }
@@ -678,8 +680,8 @@
     <div class="card" style="padding:6px 16px 12px">
       <table class="runs-table">
         <thead><tr>
-          <th style="width:15%">主题</th>
-          <th style="width:12%">框架</th>
+          <th style="width:17%">主题</th>
+          <th style="width:11%">框架</th>
           <th style="width:9%">目标</th>
           <th style="width:6%">频道</th>
           <th style="width:10%">状态</th>
@@ -1632,7 +1634,7 @@ async function loadRuns(opts) {
   runsFilter.page = data.page;
   runsFilter.page_size = data.page_size;
   const sig = JSON.stringify([data.total, data.total_all, data.page, data.page_size,
-    data.items.map(r => [r.id, r.topic, r.status, r.current_step, r.has_error, r.channel_name, r.asset_zh,
+    data.items.map(r => [r.id, r.topic, r.topic_zh, r.status, r.current_step, r.has_error, r.channel_name, r.asset_zh,
       r.active_pass ? [r.active_pass.key, r.active_pass.label, r.active_pass.stage, r.active_pass.at] : null,
       r.score ? [r.score.audit, r.score.final] : null,
       r.video ? [r.video.status, r.video.stage_label, r.video.updated_at] : null,
@@ -1683,7 +1685,7 @@ function runRowHtml(r) {
   const stepText = r.status === 'running' ? 'Step ' + r.current_step + '/' + steps : (r.status === 'done' ? steps + '/' + steps : '—');
   return `
     <tr class="clickable${marked ? ' viral-row' : ''}" onclick="openRun('${r.id}')">
-      <td>${marked ? viralIcon(true, 'viral-mark') : ''}${esc(r.topic)}</td>
+      <td>${marked ? viralIcon(true, 'viral-mark') : ''}${esc(r.topic)}${r.topic_zh ? `<span class="sub topic-zh" title="主题中文译文">${esc(r.topic_zh)}</span>` : ''}</td>
       <td>${esc(r.asset_name || r.asset_id)}${r.asset_zh ? `<span class="sub">源:${esc(r.asset_zh)}</span>` : ''}</td>
       <td style="font-size:12px;color:#4b5563">${audienceCell(r.audience)}</td>
       <td style="font-size:12px;color:#4b5563">${r.channel_name ? esc(r.channel_name) : '<span class="vb-none">—</span>'}</td>
@@ -2064,7 +2066,9 @@ function rvDraw() {
   const validTab = k => (k === 'current' && !diffs.length && !v.audit) || (k === 'audit' && v.audit) || diffs.some(d => d.key === k);
   if (rvState.waitFinal && finalDone && diffs.some(d => d.key === 'd3')) { rvState.waitFinal = false; rvState.tab = 'd3'; }
   if (!rvState.tab || !validTab(rvState.tab)) rvState.tab = v.audit && (!finalDone || v.audit.at > ((v.passes || {}).final || {}).finished_at) ? 'audit' : diffs.length ? diffs[diffs.length - 1].key : 'current';
-  const passLine = rvPassLine(v);
+  // 后台正在跑的审稿步骤(终审 / 补改 / 出解决方案 / 开头单独审…):明确告诉人现在在跑什么,别让按钮莫名变灰
+  const runStage = (v.passes && v.passes.final && v.passes.final.status === 'running' && v.passes.final.stage) || '';
+  const passLine = (v.running ? `<div class="rv-flag v13"><b>后台正在跑:${esc(v.running)}${runStage && /终审|补改/.test(v.running) ? '(' + esc(runStage) + ')' : ''}</b>…跑完页面会自动刷新,这期间终审、补改按钮会提示等它跑完。</div>` : '') + rvPassLine(v);
   const diffTab = d => `<button class="rv-tab${rvState.tab === d.key ? ' on' : ''}" onclick="rvSetTab('${d.key}')">${d.key === 'd3' && v.revision ? '终稿全文修订(改了 ' + v.revision.applied + ' 处)' : esc(d.from) + ' → ' + esc(d.to) + '(改了 ' + d.chapters.filter(c => c.changed).length + ' 章)'}</button>`;
   const auditTab = v.audit ? `<button class="rv-tab${rvState.tab === 'audit' ? ' on' : ''}" onclick="rvSetTab('audit')">二稿审稿报告${v.audit.score != null ? '(' + v.audit.score + ' 分)' : ''}</button>` : '';
   const tabs = `<div class="rv-tabs">${diffs.filter(d => d.key !== 'd3').map(diffTab).join('')}${auditTab}${diffs.filter(d => d.key === 'd3').map(diffTab).join('')}
