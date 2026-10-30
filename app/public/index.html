@@ -2495,6 +2495,8 @@ function rvPatchPick(rc, x) {
   // 补改被退回后 AI 重新定的改法
   const ap = (rc.auto_pick || {})[x.id];
   if (ap && (ap === 'skip' || ap === 'rv' || opts.some(o => o.key === ap))) return ap;
+  // 复审引用的原句稿子里找不到:默认不改
+  if (x.not_found) return 'skip';
   const rec = opts.find(o => o.recommended) || opts[0];
   return rec ? rec.key : x.level === '待核实' ? 'skip' : 'rv';
 }
@@ -2536,8 +2538,10 @@ function rvRevertHtml(rc, rv, busy) {
   const nx = rv.next;
   const stopped = nx && nx.retry === false;
   const tries = list.map(t => t.before + '→' + t.after).join('、');
+  const fromFinal = list[0] && list[0].from === '终审';
   const head = auto
-    ? `<b>补改把分数改低了,AI 已经自动找原因、换改法重试了 ${auto} 次,还是掉分(${esc(tries)}),都已退回,终稿没有换</b>`
+    ? `<b>${fromFinal ? '终审后面几轮的修改' : '补改'}把分数改低了,AI 已经自动找原因、换改法重试了 ${auto} 次,还是掉分(${esc(tries)}),都已退回,终稿没有换</b>`
+    : fromFinal ? `<b>终审第 ${esc(list[0].round)} 轮复审比上一轮分数低(${list[0].before} → ${list[0].after}),终稿已退回到上一轮复审看到的稿子</b>(上一轮复审之后的修改没有采用)`
     : `<b>补改把分数改低了(${rv.before} → ${rv.after}),已退回,终稿没有换</b>`;
   const steps = list.map((t, i) => t.diagnosis ? `<div class="hint">第 ${i + 1} 次前 AI 找的原因:${esc(t.diagnosis.cause || '(没写)')}</div>${rvDiagList(t.diagnosis)}` : '').join('');
   const why = stopped ? `<div class="hint"><b>停下来了:${esc(nx.stop || 'AI 判断不值得再试')}</b>。AI 找的原因:${esc(nx.cause || '')}</div>` : nx ? `<div class="hint">最后一次 AI 找的原因:${esc(nx.cause || '')}</div>` : '';
@@ -2575,7 +2579,7 @@ function rvPatchForm(rc, busy) {
       : rvRadio)
       + radio(x, 'skip', '<span class="hint">这个不改</span>');
     return `<div class="rv-ai${pick !== 'skip' ? ' on' : ''}">
-      <div class="rv-ai-head"><b>${esc(x.id)}</b> <span class="rv-chip ${RV_OPEN_CLS[x.level] || ''}">${esc(x.level)}</span> <span class="hint">${esc(x.chapter)}</span></div>
+      <div class="rv-ai-head"><b>${esc(x.id)}</b> <span class="rv-chip ${RV_OPEN_CLS[x.level] || ''}">${esc(x.level)}</span> <span class="hint">${esc(x.chapter)}</span>${x.not_found ? ' <span class="rv-chip" title="程序在稿子里找不到复审引用的原句,复审可能把写前分析或事实核验表里的句子当成了稿子内容;不挡发布,默认不改">稿子里找不到复审引用的这句</span>' : ''}</div>
       <div class="rv-ai-body">${esc(x.problem)}${x.zh_problem ? `<div class="rv-zh">中文:${esc(x.zh_problem)}</div>` : rvOpenZhWait(x.problem)}
         ${opts.length && x.suggestion ? `<details class="hint"><summary>复审原建议</summary>${esc(x.suggestion)}${x.zh_suggestion ? `<div class="rv-zh">${esc(x.zh_suggestion)}</div>` : ''}</details>` : ''}
         <div class="rv-opts">${choices}</div></div></div>`;

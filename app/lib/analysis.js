@@ -530,15 +530,28 @@ function saveRunMerge(run) {
   return fresh;
 }
 
+// 渠道中途断流时不丢已收到的内容,让模型接着写完 JSON(实测 run_7c467c8e0a71「AI 先调整」第 202 秒断流、已收到 2.1 万字,
+// 原样重试 4 次全断,调整失败后事实表 30 条全是「待查」就写了稿)
+async function callContinued(run, cfg, messages, label) {
+  let r = await callWithLog(run, cfg, messages, label, { allowPartial: true, minPartial: 500 });
+  let text = r.content, msgs = messages;
+  for (let k = 1; r.partial && k <= 3; k++) {
+    msgs = [...msgs, { role: 'assistant', content: r.content }, { role: 'user', content: '输出在中途断了。从你上一条最后一个字接着往下写,不要重复已经写过的内容,不要重新开头,不要代码围栏和解释,直到把整个 JSON 写完。' }];
+    r = await callWithLog(run, cfg, msgs, label + '续写' + k, { allowPartial: true, minPartial: 1 });
+    text += r.content;
+  }
+  return { ...r, content: text };
+}
+
 async function callJson(run, cfg, prompt, label, ok) {
   let messages = [{ role: 'user', content: prompt }];
-  let r = await callWithLog(run, cfg, messages, label);
+  let r = await callContinued(run, cfg, messages, label);
   let out = parseJsonLoose(r.content);
   for (let retry = 1; !(out && ok(out)) && retry <= GATE_MAX_RETRIES; retry++) {
     messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: r.stopReason === 'max_tokens'
       ? '上一次输出被长度上限截断。只输出改动的部分,理由一句话以内,一次性输出完整 JSON。'
       : '上一次输出不是格式要求里的 JSON。请只输出那个 JSON 对象,禁止代码围栏和解释;字符串里引用原句用「」,不要用没转义的英文双引号,也不要换行。' }];
-    r = await callWithLog(run, cfg, messages, label + '重试');
+    r = await callContinued(run, cfg, messages, label + '重试');
     out = parseJsonLoose(r.content);
   }
   if (!(out && ok(out))) {

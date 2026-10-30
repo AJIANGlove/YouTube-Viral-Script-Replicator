@@ -221,7 +221,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `reverse_audit.md` | 二稿逆向工程审稿报告（九部分 + 逐条预估加分） | 523 |
 | `final_audit.md` | 终审①独立审稿（七维评分 + P0–P3 清单） | 223 |
 | `final_revise.md` | 终审②按诊断修改（逐处原句→改成+理由） | 88 |
-| `final_recheck.md` | 终审③独立复审（评分对照，未达标补改一轮） | 75 |
+| `final_recheck.md` | 终审③独立复审（评分对照，未达标补改一轮） | 76 |
 | `final_patch.md` | 按复审 OPEN 清单补改终稿 | 58 |
 | `final_patch_diagnose.md` | 补改掉分后找原因、定每题新改法 | 43 |
 | `final_open_options.md` | 复审遗留问题各出 ≥3 种改法并标推荐 | 33 |
@@ -244,7 +244,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 37 份 `.md`（2714 行）+ `final_tracks/` 5 份（202 行）+ `fingerprints.json` 模式库；物理文件 42 份，合计 2916 行。
+合计 37 份 `.md`（2715 行）+ `final_tracks/` 5 份（202 行）+ `fingerprints.json` 模式库；物理文件 42 份，合计 2917 行。
 
 ### 历史版本
 
