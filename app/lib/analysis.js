@@ -76,7 +76,8 @@ function frameworkVars(run, asset) {
     retention_library: retention.librarySummary(4, 8),
     track_card: card ? card.text : '(没有匹配的赛道证据卡:事实按通用标准填写,来源、年份、地区缺一不可)',
     materials: run.materials || '(无)',
-    voice: voice.voiceBrief(voice.voiceForRun(run))
+    voice: voice.voiceBrief(voice.voiceForRun(run)),
+    craft_rules: require('./craft').craftBrief(run) || '(没有适用的写法规则)'
   };
   return { vars, card };
 }
@@ -92,7 +93,8 @@ function buildAnalysisPrompt(run, asset) {
 }
 
 // 写进 step1–4 的 {{analysis}}:只放写稿需要的部分(论点、标题、事实、取舍、留存地图、钩子)
-function analysisBrief(a) {
+// run 给了就在末尾加上按本篇赛道、语言筛好的【写法规则】(trackKey:终审用自己选的赛道)
+function analysisBrief(a, run, trackKey) {
   if (!a) return '(无写前分析,按原流程执行)';
   const out = [];
   const t = a.title || {};
@@ -100,7 +102,8 @@ function analysisBrief(a) {
   const pr = a.protagonist || {};
   if (String(pr.who || '').trim()) out.push('主角设定(全稿必须一致;原片主角的身份、性别、亲属称呼、年代一律不许沿用):' + [pr.who, pr.gender, pr.era, pr.place].filter(Boolean).join(' / ') + (pr.mapping ? '。原片→本题:' + pr.mapping : ''));
   const th = a.thesis_card || {};
-  out.push('论点卡:原有认知=' + (th.viewer_belief || '') + ';真相=' + (th.truth || '') + ';一句话论点=' + (th.one_line_thesis || '') + ';结尾落点=' + (th.ending_landing || ''));
+  out.push('论点卡:原有认知=' + (th.viewer_belief || '') + ';真相=' + (th.truth || '') + ';一句话论点=' + (th.one_line_thesis || '') + ';结尾落点=' + (th.ending_landing || '')
+    + (th.contrast ? ';反差=' + th.contrast : '') + (th.double_standard && !/^无$/.test(String(th.double_standard).trim()) ? ';同事不同命=' + th.double_standard : '') + (th.boundary ? ';不适用于=' + th.boundary : ''));
   out.push('事实表(只能用这些;[估算] 的数不用逐个声明,全片在开始算账时说一次「下面按公开数据估算」即可;[假设] 的在用到时说一次「假设」;[待查] 的数不要写成确定的事实):\n' + (a.facts || []).map(f => '- ' + f.id + ' [' + (f.kind || '') + '] ' + (f.content || '') + '(' + [f.source, f.year, f.region].filter(Boolean).join(',') + ')' + (f.method ? ' 算法:' + f.method : '')).join('\n'));
   const stale = a.stale || {};
   const staleTag = (arr, key) => (Array.isArray(arr) && arr.includes(key) ? '(依据的事实已更新,这一行的数作废,按事实表重算)' : '');
@@ -117,6 +120,12 @@ function analysisBrief(a) {
   const h = a.hook || {};
   const chosen = (h.candidates || [])[h.chosen || 0];
   if (chosen) out.push('钩子(已选定):' + chosen.text + '(事实 ' + (chosen.fact_ids || []).join(',') + ';第一个甜头 ' + chosen.first_payoff_sec + ' 秒)');
+  // 埋点回收、核心两难、评论问题(写法规则 C1、D1、D2):写稿照着埋、照着收、结尾照着问
+  const pp = a.planted_payoff || {};
+  if (String(pp.what || '').trim()) out.push('埋点与回收:' + pp.what + '(' + [pp.plant_at && '在 ' + pp.plant_at + ' 埋', pp.payoff_at && '在 ' + pp.payoff_at + ' 回收'].filter(Boolean).join(',') + ');埋的时候明说「后面会回来」,回收时点明。');
+  if (String(a.core_dilemma || '').trim()) out.push('核心两难:' + a.core_dilemma);
+  if (String(a.comment_question || '').trim()) out.push('结尾评论问题(从核心两难出,一句话能答;正文中间的反问不超过两次):' + a.comment_question);
+  if (run) { const cb = require('./craft').craftBrief(run, trackKey); if (cb) out.push(cb); }
   return out.join('\n\n');
 }
 
@@ -598,6 +607,9 @@ function mergeAdjust(a, out, batches) {
     modules: list(a.modules).filter(m => touches(m) && !list(out.modules).some(o => o && o.segment === m.segment)).map(m => m.segment)
   };
   if (out.thesis_check && typeof out.thesis_check === 'object' && !Array.isArray(out.thesis_check)) a.thesis_check = out.thesis_check;
+  // 写法规则要的几项(埋点回收、核心两难、评论问题):AI 调整补上或改了就收下
+  if (out.planted_payoff && typeof out.planted_payoff === 'object' && !Array.isArray(out.planted_payoff) && String(out.planted_payoff.what || '').trim()) a.planted_payoff = out.planted_payoff;
+  ['core_dilemma', 'comment_question'].forEach(k => { if (typeof out[k] === 'string' && out[k].trim()) a[k] = out[k].trim(); });
   // 主角设定:实测 run_658212aa497e 标题是「재벌가 며느리」,模块和假设场景却沿用原片的入赘女婿(妻子、岳父),稿子写成了男主角
   if (out.protagonist && typeof out.protagonist === 'object' && !Array.isArray(out.protagonist) && String(out.protagonist.who || '').trim()) a.protagonist = out.protagonist;
   if (out.thesis_card && typeof out.thesis_card === 'object' && !Array.isArray(out.thesis_card)) apply('thesis_card', out.thesis_card);

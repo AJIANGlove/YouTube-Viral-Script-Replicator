@@ -508,7 +508,7 @@ async function runGeneration(runId) {
     framework: asset.framework, timeline: asset.timeline, style: asset.style, examples: asset.examples,
     topic: run.topic, audience: audienceStr,
     // 写前分析经人工确认后才注入四步提示词(未确认/旧任务按原流程)
-    analysis: run.analysis_confirmed ? analysis.analysisBrief(run.analysis) : null,
+    analysis: run.analysis_confirmed ? analysis.analysisBrief(run.analysis, run) : null,
     // 频道声音设定(语体/称呼/自称/固定用语),写稿与优化时注入
     voice: voice.voiceBrief(voice.voiceForRun(run))
   };

@@ -18,6 +18,7 @@
 {{voice}}
 【人工提供的参考资料】
 {{materials}}
+{{craft_rules}}
 【联网搜索结果（[R编号] 标题 | 站点 | 日期 | 链接 + 摘要）】
 {{search_results}}
 
@@ -43,6 +44,7 @@
 - 引语、对话、法律条款、具体案件没有来源的，kind 改成「假设」；论坛帖子不能当「事实」的来源。
 
 二、论点卡（改论点）
+- 论点卡的 contrast、double_standard、boundary，以及 planted_payoff、core_dilemma、comment_question 是空的就补上（要求见【写法规则】；找不到合适的 double_standard 写「无」，不要硬凑）。改了论点，这几项要跟着改。
 - 观众原有认知要具体、常见、一句话能说清（观众会点头的那种）。
 - 真相要和原有认知形成反差，并且必须能被事实表里的某几条事实撑住（在 reason 里写出用了哪几条）。
 - 一句话论点要能回答标题里观众最想知道的问题；结尾落点要兑现标题的承诺，并留下一个让人想评论或转发的判断。
@@ -82,6 +84,9 @@
   "modules": [{"segment": "FS03", "decision": "保留|换内容保功能|并入|删除", "retention_role": "", "reason": "", "fact_ids": [], "research_tasks": [], "duration": ""}],
   "retention_map": [{"source_peak": "PK02", "source_segment": "FS03", "new_chapter_hint": "", "fact_ids": [], "status": "承担|缺口-补料|缺口-接受弱化"}],
   "hook": null,
+  "planted_payoff": null,
+  "core_dilemma": null,
+  "comment_question": null,
   "protagonist": {"who": "", "gender": "", "era": "", "place": "", "source_role": "", "mapping": ""},
   "title_candidates_add": [],
   "adjustments": [{"type": "", "target": "", "segments": [], "peaks": [], "fact_ids": [], "reason": "", "status": "AI 已处理|需人工", "note": ""}],

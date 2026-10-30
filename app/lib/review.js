@@ -374,7 +374,7 @@ function publishCheck(run, v) {
     if (block.length) reasons.push('听感检查没过:' + block.join(';'));
     if (soft.length) notes.push(soft.join(';'));
   }
-  return { ready: !reasons.length, reasons, notes, avg: avg != null ? Math.round(avg * 10) / 10 : null, good, opening_bad: openBad, fix: (run.steps || {}).opening_fix || null,
+  return { ready: !reasons.length, reasons, notes, craft_hints: v.final ? craftHints(run, last) : [], avg: avg != null ? Math.round(avg * 10) / 10 : null, good, opening_bad: openBad, fix: (run.steps || {}).opening_fix || null,
     claim: cc ? { ...cc, stale: cc.hash !== hash(currentScript(run)), blocking: claimBlocking(cc), auto_left: Math.max(0, CLAIM_FIX_MAX - (v.final.claim_fixes || 0)) } : null, claim_step: (run.steps || {}).claim_check || null, fix_rec: ((run.review || {}).final || {}).opening_fix || null };
 }
 
@@ -546,14 +546,49 @@ function programFindings(run, asset) {
 }
 
 // 写前分析查出「反转被事实推翻」时,复审顺带判断终稿的论点是否已经和这些事实一致(这条是对着论点卡查的,稿子改对了它自己不会消失)
+// 写法提示(写法规则 C1、D1):埋的有没有回收、评论问题和主线对不对得上。只给人看,不进分数、不进补改、不挡发布
+const CRAFT_BLOCK = '===CRAFT===\n回收: 有 或 没有 或 没埋 | 一句中文(埋了什么、在哪回收)\n评论问题: 对得上 或 对不上 或 没有 | 一句中文(结尾问了什么、和全片主线的关系)\n';
+function parseCraft(block) {
+  const out = {};
+  String(block || '').split('\n').forEach(l => {
+    const m = l.match(/^\s*[-*]?\s*(回收|评论问题)\s*[:：]\s*([^|｜]*)[|｜]?\s*(.*)$/);
+    if (!m) return;
+    const v = m[2].trim();
+    if (m[1] === '回收') out.payoff = { status: /没埋/.test(v) ? '没埋' : /没有|未|否/.test(v) ? '没有' : /有/.test(v) ? '有' : v, note: m[3].trim() };
+    else out.comment = { status: /对不上|不对/.test(v) ? '对不上' : /没有|无/.test(v) ? '没有' : /对得上|对上/.test(v) ? '对得上' : v, note: m[3].trim() };
+  });
+  return Object.keys(out).length ? out : null;
+}
+// 正文中间(第一章和最后一章以外)对观众的反问:同类爆款一般不超过两次
+function midQuestions(script) {
+  const chs = scriptChapters(script);
+  if (chs.length < 3) return [];
+  const qs = [];
+  chs.slice(1, -1).forEach(c => {
+    String(c.text).replace(/^\[CH[^\]]*\]\s*/, '').split(/(?<=[.?!。？！])\s+/).forEach(t => {
+      if (/[?？]\s*$/.test(t) && /당신|여러분|손님|\byou\b|你/i.test(t)) qs.push({ chapter: c.id, text: t.trim() });
+    });
+  });
+  return qs;
+}
+function craftHints(run, last) {
+  const out = [];
+  const c = last && last.craft;
+  if (c && c.payoff && c.payoff.status === '没有') out.push('埋下的东西结尾没有回收' + (c.payoff.note ? '(' + c.payoff.note + ')' : ''));
+  if (c && c.comment && c.comment.status === '对不上') out.push('结尾评论问题和全片主线对不上' + (c.comment.note ? '(' + c.comment.note + ')' : ''));
+  if (c && c.comment && c.comment.status === '没有') out.push('结尾没有评论问题,可以从核心两难里出一个一句话能答的问题');
+  const qs = midQuestions(currentScript(run));
+  if (qs.length > 2) out.push('正文中间对观众的反问有 ' + qs.length + ' 次(同类爆款一般不超过 2 次),如 ' + qs.slice(0, 2).map(q => q.chapter + '「' + q.text.slice(0, 40) + '」').join('、'));
+  return out;
+}
 function thesisVars(run) {
   const tc = (run.analysis || {}).thesis_check || {};
-  if (!arr(tc.contradicts).length) return { thesis_check: '', thesis_block: '' };
+  if (!arr(tc.contradicts).length) return { thesis_check: '', thesis_block: CRAFT_BLOCK };
   return {
     thesis_check: '【写前分析时程序查出的论点矛盾(请对照修改后的稿子判断是否已经解决)】\n论点卡:' + JSON.stringify((run.analysis || {}).thesis_card || {}) +
       '\n与论点相反的事实:' + arr(tc.contradicts).join('、') + (tc.note ? '(' + tc.note + ')' : '') +
       '\n判断标准:稿子现在的主张和结尾落点是否已经和这些事实一致(稿子可以已经换了说法,不必和论点卡一字不差);稿子里还在说和这些事实相反的话,就是未解决。\n\n',
-    thesis_block: '===THESIS===\n已解决 或 未解决 | 一句中文理由(引用稿子里现在的主张)\n'
+    thesis_block: '===THESIS===\n已解决 或 未解决 | 一句中文理由(引用稿子里现在的主张)\n' + CRAFT_BLOCK
   };
 }
 function parseThesis(block) {
@@ -862,7 +897,7 @@ async function runFactCheck(run, cfg, script, asset) {
   const ss = search.searchStatus(cfg);
   const common = {
     today: pl().todayStr(), topic: run.topic, target_language: aud.target_language || '', target_country: aud.target_country || '',
-    analysis: run.analysis ? an().analysisBrief(a) : '(无写前分析)', script
+    analysis: run.analysis ? an().analysisBrief(a, run) : '(无写前分析)', script
   };
   // 赛道:已经选过终审赛道就用那个,否则按写前分析匹配的赛道
   const trackKey = lockedTrack(run) || ((run.review || {}).final || {}).track || autoTrack(run, asset);
@@ -944,7 +979,7 @@ async function runPass(runId, kind) {
       target_country: aud.target_country || '',
       video_goal: aud.video_goal || '',
       voice: voice.voiceBrief(voice.voiceForRun(run)) || '(未设定)',
-      analysis: run.analysis ? an().analysisBrief(a) : '(无写前分析)',
+      analysis: run.analysis ? an().analysisBrief(a, run) : '(无写前分析)',
       chapter_map: chapterMap(run, asset),
       program_findings: programFindings(run, asset),
       selected_fixes: kind === 'final' ? selectedFixes(run) : '',
@@ -1185,7 +1220,7 @@ async function runReverseAudit(runId) {
       framework: frameworkText(asset),
       topic: run.topic,
       title: ((a.title || {}).final_title) || run.topic,
-      analysis: run.analysis ? an().analysisBrief(a) : '(无写前分析)',
+      analysis: run.analysis ? an().analysisBrief(a, run) : '(无写前分析)',
       script: base
     });
     const r = await callLong(run, cfg, prompt, '二稿审稿');
@@ -1470,7 +1505,7 @@ function finalCommon(run, tr, dims) {
     today: pl().todayStr(), topic: run.topic, title: ((a.title || {}).final_title) || run.topic,
     target_language: lang, target_country: aud.target_country || '', video_goal: aud.video_goal || '(未指定,按稿件实际长度判断)',
     voice: voice.voiceBrief(voice.voiceForRun(run)) || '(未设定)',
-    analysis: run.analysis ? an().analysisBrief(a) : '(无写前分析)',
+    analysis: run.analysis ? an().analysisBrief(a, run, tr.key) : '(无写前分析)',
     track_name: tr.name, track_audience: tr.audience, track_position: tr.position, track_mechanism: tr.mechanism,
     track_dim4: tr.dim4, track_retention: tr.retention, dim4_name: tr.dim4_name, dim4_role: tr.dim4_role, dim4_view: tr.dim4_view, dim4_recheck: tr.dim4_recheck,
     language_notes: /^Korean$/i.test(lang) ? '例如韩语里频繁使用「그런데」「하지만」「문제는」「진짜 이유는」。' : '',
@@ -1631,7 +1666,7 @@ async function runFinal(runId) {
       }), '终审·复审' + round);
       const s3 = splitReport(r3.content);
       const { tb, scores: sc3, verdict, refilled } = await ensureRecheckBlocks(run, cfg, common, dims, s3, '终审·复审' + round);
-      const rc = { round, report: s3.report, scores: sc3, verdict, open: markMissingQuotes(parseOpen(tb.OPEN), text, lang), thesis: parseThesis(tb.THESIS), edits_applied: [], ...(refilled ? { refilled: true } : {}), ...(r3.truncated ? { truncated: true } : {}) };
+      const rc = { round, report: s3.report, scores: sc3, verdict, open: markMissingQuotes(parseOpen(tb.OPEN), text, lang), thesis: parseThesis(tb.THESIS), craft: parseCraft(tb.CRAFT), edits_applied: [], ...(refilled ? { refilled: true } : {}), ...(r3.truncated ? { truncated: true } : {}) };
       rechecks.push(rc);
       if (!allowEdits || verdict !== '未达标') break;
       // 分数没涨:不再逐句改,只做结构问题的整章重写;没有结构问题就停
@@ -1976,7 +2011,7 @@ async function runFinalPatch(runId, body) {
     fresh.review.deai = null;
     if (fresh.steps) delete fresh.steps.deai;
     const f2 = fresh.review.final;
-    f2.rechecks = arr(f2.rechecks).concat([{ round: arr(f2.rechecks).length + 1, patch: true, picked: picked.map(x => x.id), choices: Object.fromEntries(picked.filter(chosen).map(x => [x.id, chosen(x).key])), note, report: s3.report, scores, verdict, open: markMissingQuotes(parseOpen(tb.OPEN), text, (run.audience || {}).target_language), thesis: parseThesis(tb.THESIS), edits: okNew.length, ...(auto ? { auto, diagnosis, reverted_before: arr(last.reverted).length } : {}), ...(body.autoRound ? { auto_round: body.autoRound } : {}),
+    f2.rechecks = arr(f2.rechecks).concat([{ round: arr(f2.rechecks).length + 1, patch: true, picked: picked.map(x => x.id), choices: Object.fromEntries(picked.filter(chosen).map(x => [x.id, chosen(x).key])), note, report: s3.report, scores, verdict, open: markMissingQuotes(parseOpen(tb.OPEN), text, (run.audience || {}).target_language), thesis: parseThesis(tb.THESIS), craft: parseCraft(tb.CRAFT), edits: okNew.length, ...(auto ? { auto, diagnosis, reverted_before: arr(last.reverted).length } : {}), ...(body.autoRound ? { auto_round: body.autoRound } : {}),
       ...(structural ? { structural } : {}), ...(verdict === '未达标' && stalledBy(last.scores, scores, dims) ? { stalled: true } : {}) }]);
     f2.scores_after = scores;
     f2.verdict = verdict;
@@ -2031,7 +2066,7 @@ async function rerunLastRecheck(runId) {
     if (avgScore(scores, dims) == null) throw new Error('重新复审两次都没给出分数,可以再点一次');
     const fresh = store.getRun(runId) || run;
     const rcF = arr(fresh.review.final.rechecks).slice(-1)[0];
-    Object.assign(rcF, { report: s3.report, scores, verdict, open: markMissingQuotes(parseOpen(tb.OPEN), text, (run.audience || {}).target_language), thesis: parseThesis(tb.THESIS), rechecked_at: new Date().toISOString() });
+    Object.assign(rcF, { report: s3.report, scores, verdict, open: markMissingQuotes(parseOpen(tb.OPEN), text, (run.audience || {}).target_language), thesis: parseThesis(tb.THESIS), craft: parseCraft(tb.CRAFT), rechecked_at: new Date().toISOString() });
     delete rcF.options; delete rcF.options_for; delete rcF.auto_pick;
     fresh.review.final.scores_after = scores;
     fresh.review.final.verdict = verdict;

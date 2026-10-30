@@ -2499,7 +2499,9 @@ function rvPublishHtml(v) {
     : fx.status === 'failed' ? `<span class="rv-flag">自动改开头没成功:${esc(fx.error || '')}</span>`
     : rec && rec.passed && rec.edits ? `<span style="color:#047857">✓ 开头已自动改 ${rec.edits} 处,听感检查过了(在下面修订痕迹里,类别「开头」;复审分数是改开头之前打的)</span>` : '';
   const notes = (p.notes || []).length ? `<span class="hint">${p.good ? '平均 ' + p.avg + ' 分,' : ''}下面这些不挡发布,想改再改:${p.notes.map(esc).join(';')}</span>` : '';
-  return `<div class="rv-bar v13">${head}${btn}${fix}${notes}</div>` + rvClaimHtml(p, v);
+  // 写法提示(从爆款学来的规则,还在验证):只提示,不进自动补改、不挡发布
+  const craft = (p.craft_hints || []).length ? `<span class="hint">写法提示(从同类爆款学来的,不挡发布,只供参考):${p.craft_hints.map(esc).join(';')}</span>` : '';
+  return `<div class="rv-bar v13">${head}${btn}${fix}${notes}${craft}</div>` + rvClaimHtml(p, v);
 }
 // 论点核对:用稿子自己的数字检验开头的主张;对不上终审/补改后会自动按核对结果改,还没改好就挡发布
 function rvClaimHtml(p, v) {
@@ -3095,7 +3097,12 @@ function analysisHtml(a) {
   html += `<div class="an-sec">论点卡</div><div style="font-size:13px;line-height:1.7">
     原有认知:${esc(th.viewer_belief || '')}<br>真相:${esc(th.truth || '')}<br>
     一句话论点:<b>${esc(th.one_line_thesis || '')}</b><br>结尾落点:${esc(th.ending_landing || '')}
-    ${th.differs_from_source_conclusion ? `<br>和原片结论的差别:${esc(th.differs_from_source_conclusion)}` : ''}</div>`;
+    ${th.differs_from_source_conclusion ? `<br>和原片结论的差别:${esc(th.differs_from_source_conclusion)}` : ''}
+    ${th.contrast ? `<br>反差:${esc(th.contrast)}` : ''}${th.double_standard ? `<br>同事不同命:${esc(th.double_standard)}` : ''}${th.boundary ? `<br>不适用于:${esc(th.boundary)}` : ''}</div>`;
+  const pp = a.planted_payoff || {};
+  if (pp.what || a.core_dilemma || a.comment_question) html += `<div class="an-sec">埋点、两难和评论问题</div><div style="font-size:13px;line-height:1.7">
+    ${pp.what ? `埋点:${esc(pp.what)}${pp.plant_at ? '(在 ' + esc(pp.plant_at) + ' 埋' : ''}${pp.payoff_at ? (pp.plant_at ? ',' : '(') + '在 ' + esc(pp.payoff_at) + ' 回收)' : pp.plant_at ? ')' : ''}<br>` : ''}
+    ${a.core_dilemma ? `核心两难:${esc(a.core_dilemma)}<br>` : ''}${a.comment_question ? `结尾评论问题:<b>${esc(a.comment_question)}</b>` : ''}</div>`;
   // 事实表:待查/估算标黄,时效风险标红(人工重点核对)
   html += `<div class="an-sec">事实表(写稿只能用这些)</div>` + anTable(['编号', '类型', '内容', '来源', '年份', '地区', '时效'],
     (a.facts || []).map(f => {

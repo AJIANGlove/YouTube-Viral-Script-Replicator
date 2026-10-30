@@ -208,8 +208,8 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 
 | 文件 | 用途 | 行数 |
 |---|---|---|
-| `analysis.md` | 写前分析（题目与框架匹配、论点卡、事实表、主角设定） | 112 |
-| `adjust.md` | AI 先调整（补待查、改论点、找事实、补标题、主角一致） | 90 |
+| `analysis.md` | 写前分析（题目与框架匹配、论点卡、事实表、主角设定、写法规则接入） | 121 |
+| `adjust.md` | AI 先调整（补待查、改论点、找事实、补标题、主角一致） | 95 |
 | `adjust_queries.md` | 生成联网搜索查询词 | 21 |
 | `revise.md` | 按人工意见只重做一行 | 29 |
 | `title_audit.md` | 自写标题审核 | 26 |
@@ -223,9 +223,9 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `fact_audit.md` | 事实审计（拆主张、标风险、给搜索词） | 51 |
 | `fact_verify.md` | 联网核验（按证据定级 A–E，必改或收窄） | 54 |
 | `reverse_audit.md` | 二稿逆向工程审稿报告（九部分 + 逐条预估加分） | 523 |
-| `final_audit.md` | 终审①独立审稿（七维评分 + P0–P3 清单，含论点自检） | 225 |
+| `final_audit.md` | 终审①独立审稿（七维评分 + P0–P3 清单，含论点自检） | 226 |
 | `final_revise.md` | 终审②按诊断修改（逐处原句→改成+理由） | 88 |
-| `final_recheck.md` | 终审③独立复审（评分对照，未达标补改一轮，含论点自检） | 77 |
+| `final_recheck.md` | 终审③独立复审（评分对照，未达标补改一轮，含论点自检） | 79 |
 | `final_patch.md` | 按复审 OPEN 清单补改终稿 | 58 |
 | `final_patch_diagnose.md` | 补改掉分后找原因、定每题新改法 | 43 |
 | `final_open_options.md` | 复审遗留问题各出 ≥3 种改法并标推荐 | 33 |
@@ -233,12 +233,13 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `final_open_extract.md` | 从旧复审报告里抽出 OPEN 待改清单 | 17 |
 | `final_fix_quotes.md` | 原句定位失败时让模型对照原章逐字重抄 | 20 |
 | `foreign_fix.md` | 外文稿混入汉字/假名的整行改写（规则修兜底） | 20 |
-| `final_tracks/*.md` | 终审与去AI感赛道配置（经济拆账/历史与古人/心理与动物科普/POV/通用） | 202 |
+| `final_tracks/*.md` | 终审与去AI感赛道配置（经济拆账/历史与古人/心理与动物科普/POV/通用） | 203 |
 | `deai_diagnose.md` | 去AI感诊断（A–K 类型、P0/P1/P2、每处 3–5 种改法，论点句与数字不动） | 118 |
 | `rewrite_segment.md` | 单章按意见重写（对照审稿） | 42 |
 | `translate.md` | 中文对照翻译（按文本哈希去重） | 12 |
 | `retention_card.md` | 留存卡后三项文字重写 | 15 |
-| `track_cards.md` | 赛道卡（各赛道的必备事实与查证路径） | 34 |
+| `track_cards.md` | 赛道卡（各赛道的必备事实与查证路径） | 35 |
+| `craft_rules.md` | 写法规则库（通用/赛道/语言三层，建议制） | 36 |
 | `voice_draft.md` | 频道声音设定起草 | 20 |
 | `fingerprint_detect.md` | 爆款声音指纹检测与改写 | 42 |
 | `fingerprints.json` | 指纹模式库（各语言正则 + 结构判定要点） | — |
@@ -250,7 +251,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 39 份 `.md`（2814 行）+ `final_tracks/` 5 份（202 行）+ `fingerprints.json` 模式库；物理文件 44 份，合计 3016 行。
+合计 40 份 `.md`（2868 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 45 份，合计 3071 行。
 
 ### 历史版本
 

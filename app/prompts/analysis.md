@@ -26,6 +26,7 @@
 {{voice}}
 【人工提供的参考资料（优先使用；没有则为空）】
 {{materials}}
+{{craft_rules}}
 
 请按顺序完成六步：
 
@@ -58,6 +59,9 @@
 - 写出：观众原有认知 / 真相 / 一句话论点 / 结尾要落在哪里。
 - 对照「原片结论」：说明两者哪里相同、哪里不同。如果你的论点和原片结论只是换了行业名字，必须证明它在新题目里确实成立，否则重写论点。
 - 禁止先定结论再找证据。
+- 反差（thesis_card.contrast）：写清观众原来以为的和本片要证明的差多远——翻案 / 揭示 / 只是加强已有印象。只是加强已有印象时，先试着找能翻案的角度改论点。
+- 同事不同命（thesis_card.double_standard）：这个题里有没有一对「同样的事、不同的人、不同的结果」（例如同样犯错，贵族罚款、平民砍手）。有就写出来，后面放进高峰段；没有写「无」，不要硬凑。
+- 边界（thesis_card.boundary）：论点不适用于哪些人、哪些情况，一句话。
 - 反转验证：把撑住「真相」和反转的事实编号写进 thesis_check.supports；把和它相反的事实（例如说「总部稳赚」，却查到总部营业利润率只有 0.7%）写进 contradicts。有相反的事实时，要改论点让它成立，不能留着矛盾进稿子。
 
 第 4 步 事实表
@@ -83,6 +87,8 @@
 - 换内容时，新内容必须和一句话论点有关；只为接住高峰、和主线无关的内容，在 reason 里写明“与主线关系弱”。
 - 输出新的留存地图：原片每个高峰 → 新稿哪一段、用哪条事实承担。承担不了的标“缺口”，写清楚是补料还是接受弱化，交给人决定。
 - 按保住的高峰和事实量估算片长，不要为凑时长硬填。
+- 埋点与回收（planted_payoff）：选一个数字或一个早期出场的小人物，写清在哪一段埋、哪一段回收（回收放在高潮或结尾）。题目里找不到合适的就留空。
+- 核心两难与评论问题（core_dilemma、comment_question）：写出全片主角面对的核心两难（两个都有代价的选项）；结尾的评论问题从这个两难出，观众一句话就能回答（例如「你会签约还是收戒指？」），不要问「你怎么看」这种答不上来的。
 
 第 6 步 钩子
 - 先完成第 4 步的账本，再写钩子。
@@ -97,7 +103,7 @@
   "fit_check": [{"trait": "", "type": "best|avoid", "result": "符合|不符合|不确定", "reason": ""}],
   "title": {"candidates": [""], "final_title": "", "title_type": "", "viewer_question": "", "expected_answer_direction": "", "framework_direction_match": "一致|相反|部分一致", "fix": ""},
   "protagonist": {"who": "主角身份,一句话", "gender": "男|女|不限|无主角", "era": "", "place": "", "source_role": "原片主角是谁", "mapping": "原片 → 本题的对应(称呼、亲属关系怎么换)"},
-  "thesis_card": {"viewer_belief": "", "truth": "", "one_line_thesis": "", "ending_landing": "", "differs_from_source_conclusion": ""},
+  "thesis_card": {"viewer_belief": "", "truth": "", "one_line_thesis": "", "ending_landing": "", "differs_from_source_conclusion": "", "contrast": "翻案|揭示|只是加强已有印象:一句话说明", "double_standard": "一对同事不同命,没有写「无」", "boundary": "论点不适用于谁"},
   "adjustments": [{"type": "改标题|改论点|补料|换内容保功能|删段", "target": "title | thesis_card | facts.F04 | modules.FS09", "segments": ["FS03"], "peaks": ["PK02"], "fact_ids": ["F04"], "reason": ""}],
   "reframe_reasons": [""],
   "facts": [{"id": "F01", "slot": "", "content": "", "kind": "事实|估算|假设|待查", "source": "", "url": "", "year": "", "region": "", "freshness": "近3年|时效风险|不适用", "method": "估算时写算法和每一步的数，其余为空"}],
@@ -106,6 +112,9 @@
   "thesis_check": {"supports": ["F01"], "contradicts": [], "note": "反转结论用哪些事实撑住;哪些事实和它相反、怎么处理"},
   "modules": [{"segment": "FS01", "decision": "保留|换内容保功能|并入|删除", "retention_role": "", "reason": "", "fact_ids": [], "research_tasks": [], "duration": ""}],
   "retention_map": [{"source_peak": "PK01", "source_segment": "FS02", "new_chapter_hint": "", "fact_ids": [], "status": "承担|缺口-补料|缺口-接受弱化"}],
+  "planted_payoff": {"what": "埋什么(一个数字或一个小人物)", "plant_at": "FS03 或第几段", "payoff_at": "FS09 或第几段"},
+  "core_dilemma": "",
+  "comment_question": "",
   "hook": {"contract": "", "candidates": [{"text": "", "fact_ids": [], "first_payoff_sec": 0}], "chosen": 0, "why": ""},
   "estimated_duration": "",
   "risks": [""]
