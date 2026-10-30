@@ -94,7 +94,8 @@ function buildAnalysisPrompt(run, asset) {
 
 // 写进 step1–4 的 {{analysis}}:只放写稿需要的部分(论点、标题、事实、取舍、留存地图、钩子)
 // run 给了就在末尾加上按本篇赛道、语言筛好的【写法规则】(trackKey:终审用自己选的赛道)
-function analysisBrief(a, run, trackKey) {
+// mode='review':审稿、复审、补改用,写法规则只作参考,不按它扣分、不列为问题(不因此多出自动补改)
+function analysisBrief(a, run, trackKey, mode) {
   if (!a) return '(无写前分析,按原流程执行)';
   const out = [];
   const t = a.title || {};
@@ -124,8 +125,8 @@ function analysisBrief(a, run, trackKey) {
   const pp = a.planted_payoff || {};
   if (String(pp.what || '').trim()) out.push('埋点与回收:' + pp.what + '(' + [pp.plant_at && '在 ' + pp.plant_at + ' 埋', pp.payoff_at && '在 ' + pp.payoff_at + ' 回收'].filter(Boolean).join(',') + ');埋的时候明说「后面会回来」,回收时点明。');
   if (String(a.core_dilemma || '').trim()) out.push('核心两难:' + a.core_dilemma);
-  if (String(a.comment_question || '').trim()) out.push('结尾评论问题(从核心两难出,一句话能答;正文中间的反问不超过两次):' + a.comment_question);
-  if (run) { const cb = require('./craft').craftBrief(run, trackKey); if (cb) out.push(cb); }
+  if (String(a.comment_question || '').trim()) out.push('结尾评论问题(可选,只问这一个,一句话能答;正文中间的反问不超过两次):' + a.comment_question);
+  if (run) { const cb = require('./craft').craftBrief(run, trackKey, mode); if (cb) out.push(cb); }
   return out.join('\n\n');
 }
 

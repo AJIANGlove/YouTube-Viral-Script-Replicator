@@ -239,7 +239,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `translate.md` | 中文对照翻译（按文本哈希去重） | 12 |
 | `retention_card.md` | 留存卡后三项文字重写 | 15 |
 | `track_cards.md` | 赛道卡（各赛道的必备事实与查证路径） | 35 |
-| `craft_rules.md` | 写法规则库（通用/赛道/语言三层，建议制） | 36 |
+| `craft_rules.md` | 写法规则库（通用/赛道/语言三层，建议制） | 45 |
 | `voice_draft.md` | 频道声音设定起草 | 20 |
 | `fingerprint_detect.md` | 爆款声音指纹检测与改写 | 42 |
 | `fingerprints.json` | 指纹模式库（各语言正则 + 结构判定要点） | — |
@@ -251,7 +251,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 40 份 `.md`（2868 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 45 份，合计 3071 行。
+合计 40 份 `.md`（2877 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 45 份，合计 3080 行。
 
 ### 历史版本
 

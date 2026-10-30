@@ -52,9 +52,12 @@ function rulesFor(run, trackKey) {
 }
 
 // 发给 AI 的【写法规则】;没有适用的规则返回空字符串
-function craftBrief(run, trackKey) {
+// mode='review'(审稿、复审、补改):全部只作参考,不按它扣分、不列为问题
+function craftBrief(run, trackKey, mode) {
   const rs = rulesFor(run, trackKey);
   if (!rs.length) return '';
+  if (mode === 'review') return '【写法规则(只供参考)】(从同类爆款里学来的写法。审稿时不按这些规则扣分,也不把没做到的规则列为问题;只有本来就违反了评分维度的才按评分维度处理)\n'
+    + rs.map(r => '- [' + r.id + ' ' + r.dim + '] ' + r.rule).join('\n');
   return '【写法规则】(从同类爆款里学来的写法。标「要求」的必须做到;标「建议」的能做到就做,做不到不要硬凑,也不要为了套规则改动事实和论点)\n'
     + rs.map(r => '- [' + r.id + ' ' + r.dim + '|' + (r.must ? '要求' : '建议') + '] ' + r.rule).join('\n');
 }

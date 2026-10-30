@@ -546,8 +546,8 @@ function programFindings(run, asset) {
 }
 
 // 写前分析查出「反转被事实推翻」时,复审顺带判断终稿的论点是否已经和这些事实一致(这条是对着论点卡查的,稿子改对了它自己不会消失)
-// 写法提示(写法规则 C1、D1):埋的有没有回收、评论问题和主线对不对得上。只给人看,不进分数、不进补改、不挡发布
-const CRAFT_BLOCK = '===CRAFT===\n回收: 有 或 没有 或 没埋 | 一句中文(埋了什么、在哪回收)\n评论问题: 对得上 或 对不上 或 没有 | 一句中文(结尾问了什么、和全片主线的关系)\n';
+// 写法提示(写法规则 C1、D1):埋的有没有回收、结尾有评论提问时和主线对不对得上(评论提问不是必需的)。只给人看,不进分数、不进补改、不挡发布
+const CRAFT_BLOCK = '===CRAFT===\n回收: 有 或 没有 或 没埋 | 一句中文(埋了什么、在哪回收)\n评论问题: 对得上 或 对不上 或 没有 | 一句中文(结尾问了什么、和全片主线的关系;结尾没有提问就写没有)\n';
 function parseCraft(block) {
   const out = {};
   String(block || '').split('\n').forEach(l => {
@@ -571,13 +571,19 @@ function midQuestions(script) {
   });
   return qs;
 }
+function endQuestion(script) {
+  const chs = scriptChapters(script);
+  const t = chs.length ? String(chs[chs.length - 1].text) : String(script || '');
+  return /[?？]/.test(t);
+}
 function craftHints(run, last) {
   const out = [];
   const c = last && last.craft;
   if (c && c.payoff && c.payoff.status === '没有') out.push('埋下的东西结尾没有回收' + (c.payoff.note ? '(' + c.payoff.note + ')' : ''));
-  if (c && c.comment && c.comment.status === '对不上') out.push('结尾评论问题和全片主线对不上' + (c.comment.note ? '(' + c.comment.note + ')' : ''));
-  if (c && c.comment && c.comment.status === '没有') out.push('结尾没有评论问题,可以从核心两难里出一个一句话能答的问题');
-  const qs = midQuestions(currentScript(run));
+  // 评论提问不是必需的(D1):结尾没有提问就不报,复审说「对不上」也要稿子最后一章真有问句才报
+  const script = currentScript(run);
+  if (c && c.comment && c.comment.status === '对不上' && endQuestion(script)) out.push('结尾评论问题和全片主线对不上' + (c.comment.note ? '(' + c.comment.note + ')' : ''));
+  const qs = midQuestions(script);
   if (qs.length > 2) out.push('正文中间对观众的反问有 ' + qs.length + ' 次(同类爆款一般不超过 2 次),如 ' + qs.slice(0, 2).map(q => q.chapter + '「' + q.text.slice(0, 40) + '」').join('、'));
   return out;
 }
@@ -897,7 +903,7 @@ async function runFactCheck(run, cfg, script, asset) {
   const ss = search.searchStatus(cfg);
   const common = {
     today: pl().todayStr(), topic: run.topic, target_language: aud.target_language || '', target_country: aud.target_country || '',
-    analysis: run.analysis ? an().analysisBrief(a, run) : '(无写前分析)', script
+    analysis: run.analysis ? an().analysisBrief(a, run, null, 'review') : '(无写前分析)', script
   };
   // 赛道:已经选过终审赛道就用那个,否则按写前分析匹配的赛道
   const trackKey = lockedTrack(run) || ((run.review || {}).final || {}).track || autoTrack(run, asset);
@@ -979,7 +985,7 @@ async function runPass(runId, kind) {
       target_country: aud.target_country || '',
       video_goal: aud.video_goal || '',
       voice: voice.voiceBrief(voice.voiceForRun(run)) || '(未设定)',
-      analysis: run.analysis ? an().analysisBrief(a, run) : '(无写前分析)',
+      analysis: run.analysis ? an().analysisBrief(a, run, null, 'review') : '(无写前分析)',
       chapter_map: chapterMap(run, asset),
       program_findings: programFindings(run, asset),
       selected_fixes: kind === 'final' ? selectedFixes(run) : '',
@@ -1220,7 +1226,7 @@ async function runReverseAudit(runId) {
       framework: frameworkText(asset),
       topic: run.topic,
       title: ((a.title || {}).final_title) || run.topic,
-      analysis: run.analysis ? an().analysisBrief(a, run) : '(无写前分析)',
+      analysis: run.analysis ? an().analysisBrief(a, run, null, 'review') : '(无写前分析)',
       script: base
     });
     const r = await callLong(run, cfg, prompt, '二稿审稿');
@@ -1505,7 +1511,7 @@ function finalCommon(run, tr, dims) {
     today: pl().todayStr(), topic: run.topic, title: ((a.title || {}).final_title) || run.topic,
     target_language: lang, target_country: aud.target_country || '', video_goal: aud.video_goal || '(未指定,按稿件实际长度判断)',
     voice: voice.voiceBrief(voice.voiceForRun(run)) || '(未设定)',
-    analysis: run.analysis ? an().analysisBrief(a, run, tr.key) : '(无写前分析)',
+    analysis: run.analysis ? an().analysisBrief(a, run, tr.key, 'review') : '(无写前分析)',
     track_name: tr.name, track_audience: tr.audience, track_position: tr.position, track_mechanism: tr.mechanism,
     track_dim4: tr.dim4, track_retention: tr.retention, dim4_name: tr.dim4_name, dim4_role: tr.dim4_role, dim4_view: tr.dim4_view, dim4_recheck: tr.dim4_recheck,
     language_notes: /^Korean$/i.test(lang) ? '例如韩语里频繁使用「그런데」「하지만」「문제는」「진짜 이유는」。' : '',
