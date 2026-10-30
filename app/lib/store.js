@@ -186,7 +186,8 @@ function listRuns() {
 // 读取前用 readdir+stat 校验文件指纹,不一致(新增/删除/被外部改写)就整体重建;
 // 正常写入路径由 saveRun 直接维护,不会触发重建。
 const RUNS_INDEX = path.join(APP_ROOT, 'data', 'runs.index.json');
-const INDEX_VERSION = 2; // 2: 新增 confirmed(确认文案版本),旧索引会因版本不符自动重建
+// 3: 新增 active_pass(列表"进行中"副标),旧索引会因版本不符自动重建
+const INDEX_VERSION = 3;
 let indexCache = null;
 
 // 源标题中文只用于列表副标题,按资产 id 缓存,避免重复读 meta.json
@@ -216,6 +217,52 @@ function runFileStats() {
   return out;
 }
 
+// 列表「进行中」副标:判断当前真正跑到哪个阶段。
+// 写稿四步与各 pass 都会往 steps[key] 写 status='running'(pass 还带 stage 细阶段),
+// 这里取 started_at 最新的那个;崩溃残留的假 running 会一起出现,取最近的才对得上用户看到的进度。
+const ACTIVE_STEP_LABELS = {
+  analysis: '写前分析',
+  auto_adjust: 'AI 调整',
+  blueprint: '第1步 蓝图',
+  script: '第2步 脚本',
+  audit: '第3步 审核',
+  optimized: '第4步 优化',
+  opening_boost: '第5步 强化开头',
+  opening_card: '强化开头',
+  script_check: '稿件检查',
+  draft_check: '初稿检查',
+  reverse_audit: '二稿审稿报告',
+  review_zh: '翻译对照',
+  final_review: '终审',
+  final_open: '复审补改',
+  final_options: '终审选改法',
+  deai: '去AI感'
+};
+const ACTIVE_STATUSES = new Set(['running', 'analyzing', 'awaiting_review']);
+const GEN_STEP_KEYS = ['', 'blueprint', 'script', 'audit', 'optimized'];
+
+function activePass(run) {
+  if (!ACTIVE_STATUSES.has(run.status || '')) return null;
+  const steps = run.steps || {};
+  let best = null;
+  for (const key of Object.keys(ACTIVE_STEP_LABELS)) {
+    const s = steps[key];
+    if (!s || s.status !== 'running') continue;
+    const at = s.started_at || '';
+    if (!best || at > best.at) best = { key, label: ACTIVE_STEP_LABELS[key], stage: s.stage || '', at };
+  }
+  // at 用 run.updated_at:阶段切换都会落盘,长时间没有新落盘 = 这一阶段卡住了,
+  // 前端据此把「呼吸圆点」转灰(stage 本身不带时间戳,用 started_at 会把长阶段误判成卡死)
+  if (best) return { ...best, at: run.updated_at || best.at };
+  // 兜底:步骤记录缺失(老任务/被外部清过)时按 current_step 推
+  if (run.status === 'running') {
+    const n = Number(run.current_step) || 0;
+    const key = GEN_STEP_KEYS[n];
+    if (key) return { key, label: ACTIVE_STEP_LABELS[key], stage: '', at: run.updated_at || '' };
+  }
+  return null;
+}
+
 // 列表字段子集:视频推送只留原始字段,status_label/project_url 由调用方按当前绑定的 base_url 现算
 function indexEntry(run) {
   const pushes = Array.isArray(run.video_pushes) ? run.video_pushes : [];
@@ -228,6 +275,8 @@ function indexEntry(run) {
     asset_zh: assetTitleZh(run.asset_id),
     status: run.status || '',
     current_step: run.current_step || 0,
+    // 列表状态列第二行:当前跑到哪个阶段(仅进行中的任务有值)
+    active_pass: activePass(run),
     created_at: run.created_at || '',
     updated_at: run.updated_at || '',
     has_error: !!run.error,

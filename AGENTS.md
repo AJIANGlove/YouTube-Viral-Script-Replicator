@@ -109,5 +109,18 @@
 - **空响应降级**：`fastFailEmpty:true` 时首轮空响应不原地重试 4 次（原实现每次白等约 90 秒），且**直接抛原始错误**（保留 `kind='empty'` 与留痕文件名）；分章层给每章 `CHAPTER_EMPTY_TRIES=3` 次机会，前两次空响应后分别等 `EMPTY_BACKOFF_MS=[5000,15000]` 并换「不要思考、直接写正文」的提示重发；三次仍空才报「Step 2 分章失败(CHxx)」。
 - **错误字段不能丢**：`llmCall` 包装"共 N 次调用均失败"时**必须**带上 `lastErr.kind` / `lastErr.partial`。2026-10-29 就因为这两行缺失，外层 `e.kind === 'empty'` 永远不成立，兜底重试被短路（日志显示「共 1 次」而非 3 次）。以后改这段务必保留。
 - **闸门重试**：分章模式下篇幅/听感闸门的整篇重写会再次撞断流，已改为 `reset:true` 逐章全量重写（`listenGate` 第 7 个参数 `rewriteAll`）。**以后新增任何闸门重试，若在分章模式走整篇 `callLlm`，会退化成必然失败**。
-- **失败留痕**：`llmCall` 对 HTTP 错误/空响应/断流把响应体前 4KB 写 `app/data/logs/llm_*.txt`（已 gitignore），错误信息带文件名。排查渠道问题先看这里：能区分「只吐 thinking」「渠道 200 带 error 体」「流被网关切断」。
+- **失败留痕**：`llmCall` 对 HTTP 错误/空响应/断流把响应体前 4KB 写 `app/data/logs/llm_*.txt`（已入库，2026-10-29 用户要求不排除），错误信息带文件名。排查渠道问题先看这里：能区分「只吐 thinking」「渠道 200 带 error 体」「流被网关切断」。
 - **单测**：`runScriptByChapters` 是模块级导出，用桩 `callLlm` 可覆盖正常/空响应降级/断流续写/断点续跑/多写章节五条路径。
+
+## 列表「进行中」阶段副标（2026-10-30 新增，本地功能）
+
+列表的「状态」列原来只显示 `run.status`（完成/生成中/失败），进行中的任务看不出卡在哪一步（详情页红圈那种「进行中（补改后复审）」列表里没有）。现在进行中的任务在徽标下方多一行深蓝药丸：`● 终审 · 复审`。
+
+- **数据**：`store.indexEntry` 新增 `active_pass = { key, label, stage, at }`，`INDEX_VERSION` 升到 **3**（旧索引自动重建）。`queryRuns` 整条 item 透传，无需再改接口。
+- **判定**（`store.activePass`）：仅 `status ∈ {running, analyzing, awaiting_review}` 有值；遍历 `ACTIVE_STEP_LABELS`，取 `steps[key].status === 'running'` 且 `started_at` 最新的一个；`at` **取 `run.updated_at`**（阶段切换才落盘，用它判「卡住」比 started_at 准，长阶段不会被误判）；过程记录缺失时按 `current_step` 兜底成「第N步 蓝图/脚本/审核/优化」。
+- **前端**（`index.html` 的 `runProgressHtml`）：药丸 `font-size:10.5px`、深蓝 `#1d4ed8` 实底 + 白点 `pulse` 动画 + 外发光；文本最多 2 行（`-webkit-line-clamp`），完整内容在 `title`；**与状态徽标重复时整块隐藏**（如徽标「AI 调整中」+ 副标「AI 调整」）。
+- **卡死转灰**：`Date.now() - at > 15 分钟` 时加 `.stale`（灰底、圆点停闪），title 提示「进程可能已停」，避免崩溃残留一直闪把警示用掉。
+- **必须同步的指纹**：`loadRuns` 的 `runsSig` 里已加 `active_pass`。**不加的话阶段变化不触发重绘，副标会一直停在旧阶段**（3s 轮询靠这个签名去抖）。
+- **列宽**：状态 7%→10%、主题 18%→15%（合计仍 101%）、`min-width` 1180→1200，避免挤到操作列换行。
+- **不动**：状态机、`STATUS_LABELS`/`statusLabel`（「待换赛道/待选审稿意见」等派生状态照旧）、筛选 chip、爆款、详情页。
+
