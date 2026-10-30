@@ -2296,7 +2296,7 @@ function rvAuditHtml(v) {
       <label class="rv-ai-head"><input type="checkbox" ${sel.ids.has(x.id) ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="rvAuditToggle('${escAttr(x.id)}', this.checked)">
         <b>${esc(x.id)}</b> <span class="rv-chip ${RV_SEV_CLS[x.severity] || ''}">${esc(x.severity)} 级</span> <span class="rv-chip ${x.priority === 'P0' ? 'red' : x.priority === 'P1' ? 'yellow' : 'green'}">${esc(x.priority)}</span>
         <span class="rv-gain" title="改好这一处,总分预计提高">+${G.gains[x.id]} 分</span>
-        <span class="hint">${esc(x.chapter)} · ${esc(x.type)}</span></label>
+        <span class="hint">${esc(x.chapter)} · ${esc(x.zh_type || x.type)}</span></label>
       <div class="rv-ai-body"><div class="rv-ai-cols"><div>${esc(x.problem)}${x.direction ? `<br><span class="hint">修改方向:${esc(x.direction)}</span>` : ''}</div>
         <div class="rv-ai-zh">${!x.need_zh ? '<span class="hint">(已是中文)</span>' : (x.zh_problem || x.zh_direction || !x.need_zh) ? `${esc(x.zh_problem || x.problem)}${x.direction ? `<br><span class="hint">修改方向:${esc(x.zh_direction || x.direction)}</span>` : ''}` : `<span class="hint">${v.translating ? '中文翻译中…' : '还没有中文,点上方「补齐中文对照」'}</span>`}</div></div>
         ${x.detail ? `<div><a href="javascript:void 0" onclick="rvAuditOpen('${escAttr(x.id)}')">${sel.open[x.id] ? '收起详情' : '看详情(原文位置、为什么不好、示范修改)'}</a></div>${sel.open[x.id] ? `<div class="rv-md rv-ai-detail">${rvMd(x.detail)}</div>` : ''}` : ''}</div>
@@ -2556,6 +2556,7 @@ function rvPatchHtml(v, busy) {
   const ext = P.final_open || {};
   if (!rc) return '';
   const running = st.status === 'running' && st.patch;
+  const autoNow = /自动补改/.test(v.running || '');
   const err = (st.patch_error ? `<div class="err-list">上次补改没成功:${esc(st.patch_error)}</div>` : '')
     // 最后一轮复审没读到分数(旧版本会把这样的稿子存成终稿):给个按钮只重新复审
     + (!running && !Object.values(rc.scores || {}).some(x => typeof x === 'number') ? `<div class="rv-flag v13"><b>这一轮复审没读到分数和结论</b>:稿子已经按这一轮改了,但不知道改得好不好。<button class="an-btn v13" onclick="rvRecheckOnly()" ${busy ? 'disabled' : ''}>重新复审这一版</button> <span class="hint">只复审,不改稿,一般 2–3 分钟</span></div>` : '');
@@ -2565,9 +2566,11 @@ function rvPatchHtml(v, busy) {
   const head = `<div class="an-sec v13">按复审意见再改一轮${rc.verdict === '未达标' ? '(复审没达标)' : ''}</div>
     <div class="hint v13">以现在的终稿为底,AI 给每个问题出了几种改法并标了推荐,你选好后只按选中的方式改,改完自动再复审一次。不会从二稿重来,其他句子不动。标「结构」的问题会把那一章整章重写。</div>
     ${rc.auto && rc.diagnosis ? `<div class="rv-flag v13" style="border-color:#86efac;background:#f0fdf4"><b>这一版是 AI 自动重试出来的</b>:之前的补改把分改低、被退回了 ${esc(rc.reverted_before || 1)} 次,AI 找到原因(${esc(rc.diagnosis.cause || '')})后换了改法重试,这次没掉分。${rvDiagList(rc.diagnosis)}</div>` : ''}
+    ${rc.auto_round ? `<div class="rv-flag v13" style="border-color:#86efac;background:#f0fdf4"><b>这一版是 AI 自动补改出来的(第 ${esc(rc.auto_round)} 轮)</b>:平均分不到 8 分,AI 按每个问题 ★ 推荐的改法自己改了一轮,改完复审没掉分才换上。</div>` : ''}
+    ${fin.auto_patch_stop && !running && !autoNow ? `<div class="hint v13">AI 自动补改停了:${esc(fin.auto_patch_stop)}。剩下的问题想改,选好改法后点下面的按钮。</div>` : ''}
     ${((v.summary || {}).publish || {}).good ? `<div class="hint v13" style="color:#047857">平均已经 ${esc(v.summary.publish.avg)} 分,不用再整篇补改;下面的问题想改再改,开头没过就点上面的「自动改开头」。</div>` : ''}
     ${rc.stalled ? '<div class="rv-flag v13"><b>上一轮分数没涨</b>:剩下的问题逐句改不动了,再补改也一样。要么给「结构」类问题选一种改法让 AI 整章重写,要么看看是不是框架和题目对不上(换框架或换题),或者按上面的「可发布」标准判断直接发。</div>' : ''}`;
-  if (running) return head + `<div class="rv-flag v13"><b>补改进行中(${esc(st.stage || '')})</b>:一般几分钟,跑完自动刷新终稿和评分。</div>`;
+  if (running) return head + `<div class="rv-flag v13"><b>${autoNow ? 'AI ' + esc(v.running) : '补改'}进行中(${esc(st.stage || '')})</b>:一般几分钟,跑完自动刷新终稿和评分。${autoNow ? '平均分不到 8 分,AI 按推荐改法自动在改,不用点。' : ''}</div>`;
   if (!(rc.open || []).length) {
     return head + err + revFlag + `<div class="rv-ops v13"><button class="an-btn v13" onclick="rvPatchExtract()" ${busy || ext.status === 'running' ? 'disabled' : ''}>${ext.status === 'running' ? '正在整理…' : '从复审报告里整理没解决的问题'}</button>
       <span class="hint">${ext.status === 'failed' ? '整理失败:' + esc(ext.error || '') : ext.status === 'done' ? '复审报告里没整理出问题,可以直接在下面写你的决定。' : '这份复审报告没有现成的问题清单,先让 AI 整理一下(只读报告,不改稿)。'}</span></div>
@@ -2641,7 +2644,7 @@ function rvPatchForm(rc, busy) {
         <div class="rv-opts">${choices}</div></div></div>`;
   }).join('');
   const n = (rc.open || []).filter(x => rvPatchPick(rc, x) !== 'skip').length;
-  const optsBar = !(rc.open || []).length ? '' : optsRunning ? '<div class="rv-flag v13"><b>AI 正在给每个问题出解决方案…</b>一般一两分钟,出好后自动显示,推荐的方案会默认选上。</div>'
+  const optsBar = !(rc.open || []).length ? '' : optsRunning ? `<div class="rv-flag v13"><b>AI 正在给每个问题出解决方案…</b>一般一两分钟,${/自动补改/.test((rvState.view || {}).running || '') ? '出好后 AI 会按推荐的方案自动补改一轮(平均分不到 8 分),不用点。' : '出好后自动显示,推荐的方案会默认选上。'}</div>`
     : hasOpts ? `<div class="rv-ops"><span class="hint">${rc.auto_pick ? '每个问题已经按 AI 最后一次找原因后的判断选好改法' : '每个问题已经默认选上 ★ 推荐的改法'},不同意就换一个,或选「这个不改」。「结构」问题会按你选的方式整章重写那一章。要改 ${n} 个。</span></div>`
     : `<div class="rv-ops v13"><button class="an-btn" onclick="rvPatchOptions()" ${busy ? 'disabled' : ''}>让 AI 给每个问题出 3 种解决方案</button><span class="hint">${os.status === 'failed' ? '<b style="color:#c0392b">上次没出成</b>:' + esc(os.error || '') + '。可以再点一次;也可以不等方案,直接点下面的补改,按每题的「复审建议」改。' : os.status === 'done' && os.finished_at ? '<b style="color:#c0392b">上次出的方案对不上现在这些问题</b>(' + esc(fmtTime(os.finished_at)) + ' 出的,之后问题列表变过),再点一次。' : '出好后直接选,不用自己写意见。'}</span></div>`;
   return `${optsBar}${rows}
