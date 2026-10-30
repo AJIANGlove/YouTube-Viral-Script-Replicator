@@ -1703,6 +1703,24 @@ async function extractOpen(runId) {
 // 复审遗留问题的解决方案:每个问题出至少 3 种改法并标推荐,人在补改区直接选,不用自己写意见。
 // 存在最后一轮复审上(rc.options = { R01: [{key, zh, why, recommended}] }),rc.options_for 记下对应的问题编号,问题列表变了就算旧的
 const openKey = items => arr(items).map(x => x.id + ':' + x.problem).join('\n');
+// 从模型输出里取每个问题的方案:编号容错(R1 / 「R01 」/ 小写)、options 写成数组或 {A:{…}}、改法字段写成 zh/text/content 或直接是字符串
+function optionsFrom(out, items) {
+  const options = {};
+  const normId = v => { const m = String(v || '').match(/R\s*0*(\d+)/i); return m ? 'R' + m[1].padStart(2, '0') : ''; };
+  const list = Array.isArray(out && out.items) ? out.items : (out && typeof out.items === 'object' ? Object.entries(out.items).map(([id, v]) => ({ id, ...(Array.isArray(v) ? { options: v } : v) })) : []);
+  list.forEach(it => {
+    const id = normId(it && it.id);
+    if (!items.some(x => x.id === id)) return;
+    const raw = Array.isArray(it.options) ? it.options : (it.options && typeof it.options === 'object' ? Object.values(it.options) : []);
+    let opts = raw.map(o => (typeof o === 'string' ? { zh: o } : o)).filter(o => o && String(o.zh || o.text || o.content || '').trim())
+      .map((o, i) => ({ key: String.fromCharCode(65 + i), zh: String(o.zh || o.text || o.content).trim(), why: String(o.why || o.reason || '').trim(), recommended: o.recommended === true }));
+    // 只留一个推荐;模型没标就推荐第一种
+    const ri = Math.max(0, opts.findIndex(o => o.recommended));
+    opts = opts.map((o, i) => ({ ...o, recommended: i === ri }));
+    if (opts.length) options[id] = opts;
+  });
+  return options;
+}
 async function runOpenOptions(runId) {
   const { run } = loadRunAsset(runId);
   const cfg = pl().loadConfig();
@@ -1720,20 +1738,14 @@ async function runOpenOptions(runId) {
     const out = await an().callJson(run, cfg, an().fillVars(readPrompt('final_open_options.md'), {
       ...common, script: d3.text,
       items: items.map(x => x.id + ' | ' + x.chapter + ' | ' + x.level + ' | ' + x.problem + (x.not_found ? '(程序查过:引用的原句稿子里找不到,复审可能看错了;推荐「不改」那类方式)' : '') + ' | ' + (x.suggestion || '(无)')).join('\n')
-    }), '终审·出解决方案', o => arr(o.items).length && arr(o.items).every(it => arr(it.options).length >= 2));
-    const options = {};
-    arr(out.items).forEach(it => {
-      const id = String(it.id || '').toUpperCase();
-      if (!items.some(x => x.id === id)) return;
-      let opts = arr(it.options).filter(o => o && String(o.zh || '').trim()).map((o, i) => ({ key: String.fromCharCode(65 + i), zh: String(o.zh).trim(), why: String(o.why || '').trim(), recommended: o.recommended === true }));
-      // 只留一个推荐;模型没标就推荐第一种
-      const ri = Math.max(0, opts.findIndex(o => o.recommended));
-      opts = opts.map((o, i) => ({ ...o, recommended: i === ri }));
-      if (opts.length) options[id] = opts;
-    });
+    }), '终审·出解决方案', o => Object.keys(optionsFrom(o, items)).length >= Math.max(1, Math.ceil(items.length / 2)));
+    const options = optionsFrom(out, items);
+    // 实测 run_1f67a92553fd:出方案两次都「成功」但一条都对不上,页面只是按钮还在,人不知道出没出
+    if (!Object.keys(options).length) throw new Error('AI 给的方案对不上问题编号,没有能用的方案');
     const fresh = store.getRun(runId) || run;
     const rc = arr(((fresh.review || {}).final || {}).rechecks).slice(-1)[0];
-    if (rc && openKey(rc.open) === openKey(items)) { rc.options = options; rc.options_for = openKey(items); }
+    if (!rc || openKey(rc.open) !== openKey(items)) throw new Error('出方案期间复审问题变了(又补改或重新整理过),这份方案作废,请再点一次');
+    rc.options = options; rc.options_for = openKey(items);
     fresh.steps = { ...(fresh.steps || {}), final_options: { status: 'done', finished_at: new Date().toISOString(), items: Object.keys(options).length } };
     if (run.attempts) fresh.attempts = run.attempts;
     store.saveRun(fresh);
