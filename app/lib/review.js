@@ -1485,13 +1485,21 @@ function parseOpen(block) {
 // 复审报告读不出评分或结论(模型没写 ===SCORES===/===VERDICT=== 清单、写错格式或被截断):
 // 把报告交回模型,只补这份清单,不重审;补出来的只填空缺,已经读到的不动
 const parseVerdict = v => /未达标/.test(v || '') ? '未达标' : /达标/.test(v || '') ? '达标' : '';
+// 复审没读到分数时把原文存下来,方便查是模型没写清单还是格式没认出来
+function dumpNoScore(run, content) {
+  try {
+    const dir = path.join(__dirname, '..', 'data', 'logs');
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'recheck_noscore_' + new Date().toISOString().replace(/[:.]/g, '-') + '.txt'), 'run=' + run.id + '\n\n' + String(content || '').slice(0, 80000), 'utf-8');
+  } catch (e) { /* 留痕失败不影响流程 */ }
+}
 async function ensureRecheckBlocks(run, cfg, common, dims, s3, label) {
   const tb = parseBlocks(s3.tail, false);
   let scores = fillScores(parseScores(tb.SCORES, dims), s3.report, dims, 2), verdict = parseVerdict(tb.VERDICT);
-  if (verdict && dims.every(d => scores[d] != null) || !String(s3.report || '').trim()) return { tb, scores, verdict };
+  if (verdict && dims.every(d => scores[d] != null) || !String(s3.report || s3.all || '').trim()) return { tb, scores, verdict };
   try {
     const r = await callLong(run, cfg, '下面是一份复审报告。按报告里已经写出的评分和结论,只输出给程序读取的清单,不要重写报告,不要改分数,报告里没写分数的维度按报告内容给分。\n' +
-      '格式(不要代码围栏):\n===SCORES===\n' + common.dims_score_lines + '\n===OPEN===\n' + OPEN_FORMAT + '\n===VERDICT===\n达标 或 未达标(只写这三个字之一)\n===END===\n\n【复审报告】\n' + s3.report, label + '·补评分');
+      '格式(不要代码围栏):\n===SCORES===\n' + common.dims_score_lines + '\n===OPEN===\n' + OPEN_FORMAT + '\n===VERDICT===\n达标 或 未达标(只写这三个字之一)\n===END===\n\n【复审报告】\n' + (String(s3.report || '').trim() ? s3.report : s3.all), label + '·补评分');
     const sx = splitReport(r.content), tx = parseBlocks(sx.tail || sx.all, false);
     scores = { ...parseScores(tx.SCORES, dims), ...Object.fromEntries(Object.entries(scores).filter(([, v]) => v != null)) };
     verdict = verdict || parseVerdict(tx.VERDICT);
@@ -1880,16 +1888,25 @@ async function runFinalPatch(runId, body) {
     // 复审(只出报告)
     setFinalStage(runId, '补改后复审');
     const patchNote = note ? '【人的决定(以此为准:与写前分析账本冲突的旧数字,按人的决定改过的不算错)】\n' + note + '\n\n' : '';
-    const r3 = await callLong(run, cfg, an().fillVars(readPrompt('final_recheck.md'), {
+    const recheckPrompt = an().fillVars(readPrompt('final_recheck.md'), {
       ...common, ...thesisVars(run), patch_note: patchNote, prev_round: prevRoundText(last, dims),
       scores_before: dims.map(d => d + ': ' + ((fin.scores_before || {})[d] != null ? fin.scores_before[d] : '—')).join('\n'),
       edits_done: editsText(okNew) + (structOk.length ? '\n整章重写了:' + structOk.map(x => x.chapter).join('、') + '(解决复审指出的结构问题)' : ''),
       edits_instruction: '这是最后一轮复审,只出报告,不要输出修改。',
       listen_findings: listenFindings(run, text),
       script: text
-    }), '终审·补改后复审');
-    const s3 = splitReport(r3.content);
-    const { tb, scores, verdict } = await ensureRecheckBlocks(run, cfg, common, dims, s3, '终审·补改后复审');
+    });
+    // 复审一个分数都没读到就再跑一次;还是没有就不采用这次补改(实测 run_1f67a92553fd 第 4 轮补改后复审没分数,没退回保护,无分数的稿子被存成终稿)
+    let s3, tb, scores, verdict;
+    for (let k = 0; k < 2; k++) {
+      if (k) setFinalStage(runId, '补改后复审(没读到分数,重跑)');
+      const r3 = await callLong(run, cfg, recheckPrompt, '终审·补改后复审' + (k ? '重跑' : ''));
+      s3 = splitReport(r3.content);
+      ({ tb, scores, verdict } = await ensureRecheckBlocks(run, cfg, common, dims, s3, '终审·补改后复审'));
+      if (avgScore(scores, dims) != null) break;
+      dumpNoScore(run, r3.content);
+    }
+    if (avgScore(scores, dims) == null) throw new Error('补改后复审两次都没给出分数,这次补改没有采用,终稿没换;可以再点一次');
     // 修订痕迹仍以二稿为底:把这次补改并进终稿原有的修改里
     const oldEdits = arr(d3.edits);
     const merged = mergeRounds(d2.text, d3.text, oldEdits.filter(e => e.ok), a.edits);
@@ -1935,6 +1952,57 @@ async function runFinalPatch(runId, body) {
   }
 }
 
+// 最后一轮复审没读到分数(旧版本没拦住,无分数的稿子已经是终稿):只对现在的终稿重新复审一次,补上分数、结论和遗留问题
+async function rerunLastRecheck(runId) {
+  const cfg = pl().loadConfig();
+  const { run } = loadRunAsset(runId);
+  const fin = run.review.final;
+  const tr = loadTrack(fin.track);
+  const dims = arr(fin.dims).length ? fin.dims : finalDims(tr);
+  const rcs = arr(fin.rechecks);
+  const prev = rcs.slice(-2)[0] === rcs[rcs.length - 1] ? null : rcs[rcs.length - 2];
+  const lastRc = rcs[rcs.length - 1];
+  const text = (arr(run.review.versions).find(v => v.key === 'd3') || {}).text || currentScript(run);
+  const { patch_error, patch_failed_at, patch_reverted, ...prevStep } = (run.steps || {}).final_review || {};
+  run.steps = { ...(run.steps || {}), final_review: { ...prevStep, status: 'running', stage: '重新复审', patch: true, started_at: new Date().toISOString() } };
+  store.saveRun(run);
+  try {
+    const common = finalCommon(run, tr, dims);
+    const prompt = an().fillVars(readPrompt('final_recheck.md'), {
+      ...common, ...thesisVars(run),
+      patch_note: lastRc.note ? '【人的决定(以此为准:与写前分析账本冲突的旧数字,按人的决定改过的不算错)】\n' + lastRc.note + '\n\n' : '',
+      prev_round: prevRoundText(prev, dims),
+      scores_before: dims.map(d => d + ': ' + ((fin.scores_before || {})[d] != null ? fin.scores_before[d] : '—')).join('\n'),
+      edits_done: '(上一次补改的 ' + (lastRc.edits || 0) + ' 处修改已经在稿子里;这次只重新复审,不改稿)',
+      edits_instruction: '这是最后一轮复审,只出报告,不要输出修改。',
+      listen_findings: listenFindings(run, text), script: text
+    });
+    let s3, tb, scores, verdict;
+    for (let k = 0; k < 2; k++) {
+      const r3 = await callLong(run, cfg, prompt, '终审·重新复审');
+      s3 = splitReport(r3.content);
+      ({ tb, scores, verdict } = await ensureRecheckBlocks(run, cfg, common, dims, s3, '终审·重新复审'));
+      if (avgScore(scores, dims) != null) break;
+      dumpNoScore(run, r3.content);
+    }
+    if (avgScore(scores, dims) == null) throw new Error('重新复审两次都没给出分数,可以再点一次');
+    const fresh = store.getRun(runId) || run;
+    const rcF = arr(fresh.review.final.rechecks).slice(-1)[0];
+    Object.assign(rcF, { report: s3.report, scores, verdict, open: markMissingQuotes(parseOpen(tb.OPEN), text, (run.audience || {}).target_language), thesis: parseThesis(tb.THESIS), rechecked_at: new Date().toISOString() });
+    delete rcF.options; delete rcF.options_for; delete rcF.auto_pick;
+    fresh.review.final.scores_after = scores;
+    fresh.review.final.verdict = verdict;
+    fresh.steps = { ...(fresh.steps || {}), final_review: { ...prevStep, status: 'done', verdict, finished_at: new Date().toISOString() } };
+    if (run.attempts) fresh.attempts = run.attempts;
+    store.saveRun(fresh);
+  } catch (e) {
+    const fresh = store.getRun(runId) || run;
+    fresh.steps = { ...(fresh.steps || {}), final_review: { ...prevStep, patch_error: e.message, patch_failed_at: new Date().toISOString() } };
+    store.saveRun(fresh);
+    throw e;
+  }
+}
+
 function startFinalPatch(runId, body) {
   const run = store.getRun(runId);
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
@@ -1963,6 +2031,17 @@ function startFinalPatch(runId, body) {
     (async () => { try { await extractOpen(runId); await runOpenOptions(runId); } catch (e) {} await translateRun(runId); })();
     return { ok: true };
   }
+  if (body && body.recheck) {
+    if (Object.values(last.scores || {}).some(v => typeof v === 'number')) throw Object.assign(new Error('最后一轮复审有分数,不用重新复审'), { status: 400 });
+    passRunning.set(runId, '补改');
+    (async () => {
+      let ok = false;
+      try { await rerunLastRecheck(runId); ok = true; } catch (e) {} finally { passRunning.delete(runId); }
+      if (ok) { try { await runOpenOptions(runId); } catch (e) {} await refreshOpeningIfStale(runId); }
+      await translateRun(runId);
+    })();
+    return { ok: true };
+  }
   // 人点「让 AI 再自动试」:不用选问题,直接从找原因开始
   const autoOnly = !!(body && body.auto);
   if (autoOnly && !arr(last.reverted).length) throw Object.assign(new Error('没有被退回的补改,不用自动重试'), { status: 400 });
@@ -1976,7 +2055,7 @@ function startFinalPatch(runId, body) {
       for (let n = 1; res && res.reverted && !res.stop && n <= AUTO_RETRY_MAX; n++) res = await runFinalPatch(runId, { auto: n });
       ok = !!res && !res.reverted;
     } catch (e) {} finally { passRunning.delete(runId); }
-    if (ok) { try { await runOpenOptions(runId); } catch (e) {} }
+    if (ok) { try { await runOpenOptions(runId); } catch (e) {} await refreshOpeningIfStale(runId); }
     await translateRun(runId);
   })();
   return { ok: true };
@@ -2119,6 +2198,7 @@ async function applyDeai(runId, picks) {
     fresh.steps = { ...(fresh.steps || {}), deai: { ...((fresh.steps || {}).deai || {}), status: 'done', stage: '已修改', secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: new Date().toISOString(), edits: okN } };
     if (run.attempts) fresh.attempts = run.attempts;
     store.saveRun(fresh);
+    refreshOpeningIfStale(runId);
   } catch (e) {
     const fresh = store.getRun(runId) || run;
     fresh.steps = { ...(fresh.steps || {}), deai: { ...((fresh.steps || {}).deai || {}), status: 'failed', error: e.message } };
@@ -2185,6 +2265,18 @@ function openingSlice(run) {
   const after = all.filter(l => l.start >= OPENING_SEC).slice(0, 6).map(l => l.text).join(' ');
   return { script, wpm, lines, after, hash: hash(lines.map(l => l.text).join('\n')) };
 }
+// 开头改过了(补改、单章重写、去AI感之后)就自动重审一次开头,让「开头单独审」一直对得上现在的稿子:
+// 实测 run_1f67a92553fd 补改了两轮,开头卡片一直停在终审后那份「建议改」,人看不出开头到底改好没有
+async function refreshOpeningIfStale(runId) {
+  try {
+    const run = store.getRun(runId);
+    if (!run || !(run.review || {}).opening) return;
+    if (((run.steps || {}).opening_card || {}).status === 'running') return;
+    if (openingSlice(run).hash === run.review.opening.hash) return;
+    await runOpeningCard(runId);
+  } catch (e) { /* 开头分析失败不影响改稿结果 */ }
+}
+
 async function runOpeningCard(runId) {
   const { run } = loadRunAsset(runId);
   const cfg = pl().loadConfig();
@@ -2413,6 +2505,7 @@ async function rewriteChapter(runId, chId, note, opts) {
   }
   if (run.attempts) fresh.attempts = run.attempts;
   store.saveRun(fresh);
+  refreshOpeningIfStale(runId);
   return { ok: true, chapter: chId, reply: out.reply || '' };
 }
 

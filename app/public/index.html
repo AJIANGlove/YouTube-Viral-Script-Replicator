@@ -2461,7 +2461,13 @@ function rvOpeningHtml(v) {
   ].join(' · ');
   const lines = o.lines.map(l => `<tr${dense.has(l.n) ? ' style="background:#fef2f2"' : ''}><td class="hint">${l.n}</td><td class="hint">${fmt(l.sec)}</td><td>${esc(l.text)}${l.zh ? `<div class="rv-zh" style="border:0;margin:2px 0 0;padding:0">${esc(l.zh)}</div>` : ''}</td></tr>`).join('');
   const list = (xs, color) => (xs || []).map(x => `<li style="color:${color}">${esc(x)}</li>`).join('');
-  return `<details class="rv-md-box"${rvState.openingOpen ? ' open' : ''} ontoggle="rvState.openingOpen=this.open"><summary><b>开头单独审</b>:<span class="${o.verdict === '能用' ? '' : 'rv-flag'}">${esc(o.verdict || '—')}</span>${o.stale ? ' <span class="rv-flag">(稿子开头改过了,这份分析是旧的)</span>' : ''}</summary>
+  // 一眼看出开头现在过没过:改过开头会自动重审;过了写「开头过关」,没过写还差什么
+  const left = (h.issues || []).map(x => x.replace(/\(.*?\)/g, ''));
+  const sum = running ? '<span class="hint">开头改过了,正在重新审…</span>'
+    : o.stale ? '<span class="rv-flag">稿子开头改过了,这份分析是旧的(点开后点「重新分析开头」)</span>'
+    : o.verdict === '能用' && !left.length ? '<span style="color:#047857"><b>✓ 开头过关</b></span>'
+    : `<span class="rv-flag">${esc(o.verdict || '建议改')}${left.length ? ':' + esc(left.join(';')) : ''}</span>`;
+  return `<details class="rv-md-box"${rvState.openingOpen ? ' open' : ''} ontoggle="rvState.openingOpen=this.open"><summary><b>开头单独审</b>:${sum}${o.at ? ` <span class="hint">(${esc(fmtTime(o.at))} 审的)</span>` : ''}</summary>
     <div class="hint v13" style="margin:6px 0">时间按配音语速 ${o.wpm} 词/分钟推算 · ${hard}</div>
     ${o.hook ? `<div class="v13" style="margin:6px 0"><b>靠什么留人</b>:${esc(o.hook)}</div>` : ''}
     <div class="rv-md"><div class="rv-md-table"><table><tr><th>#</th><th>时间</th><th>原文 / 中文</th></tr>${lines}</table></div></div>
@@ -2508,7 +2514,9 @@ function rvPatchHtml(v, busy) {
   const ext = P.final_open || {};
   if (!rc) return '';
   const running = st.status === 'running' && st.patch;
-  const err = st.patch_error ? `<div class="err-list">上次补改没成功:${esc(st.patch_error)}</div>` : '';
+  const err = (st.patch_error ? `<div class="err-list">上次补改没成功:${esc(st.patch_error)}</div>` : '')
+    // 最后一轮复审没读到分数(旧版本会把这样的稿子存成终稿):给个按钮只重新复审
+    + (!running && !Object.values(rc.scores || {}).some(x => typeof x === 'number') ? `<div class="rv-flag v13"><b>这一轮复审没读到分数和结论</b>:稿子已经按这一轮改了,但不知道改得好不好。<button class="an-btn v13" onclick="rvRecheckOnly()" ${busy ? 'disabled' : ''}>重新复审这一版</button> <span class="hint">只复审,不改稿,一般 2–3 分钟</span></div>` : '');
   const rv = (rc.reverted || []).slice(-1)[0];
   const revFlag = st.patch_reverted && rv ? rvRevertHtml(rc, rv, busy) : '';
   if (rc.verdict !== '未达标' && !running && !(rc.open || []).length) return err + revFlag;
@@ -2549,6 +2557,11 @@ function rvRevertHtml(rc, rv, busy) {
     <div class="rv-ops"><button class="an-btn v13" onclick="rvPatchAuto()" ${busy ? 'disabled' : ''}>让 AI 找原因、换改法再自动试</button>
     <span class="hint">不用自己挑问题。也可以不再补改,按上面「可发布」标准判断现在的终稿能不能直接用。下面的改法已经按 AI 最后一次的判断选好。</span></div>
     <details><summary class="hint">看最后一次补改改了什么和复审报告</summary>${(rv.structural || []).filter(x => x.ok).length ? `<div class="hint">整章重写了:${(rv.structural || []).filter(x => x.ok).map(x => esc(x.chapter)).join('、')}</div>` : ''}${(rv.edits || []).map(e => `<div class="hint">[${esc(e.chapter || '')}]${e.category ? '[' + esc(e.category) + ']' : ''} ${esc(e.old)} → ${esc(e.new || '(删除)')}</div>`).join('')}<div class="hint" style="white-space:pre-wrap;margin-top:6px">${esc(rv.report || '')}</div></details></div>`;
+}
+async function rvRecheckOnly() {
+  try { await rvPost('final_patch', { recheck: true }); } catch (e) { rvState.err = e.message; alert('没能开始:' + e.message); return; }
+  rvState.key = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
 }
 async function rvPatchAuto() {
   if (!confirm('让 AI 对照上次掉分的复审报告找原因,自己重新定每个问题的改法,再补改、复审(最多试 2 次)?')) return;
