@@ -84,7 +84,7 @@
 
 第 1 步「选择框架资产」与资料库「框架资产库」的筛选栏新增一行赛道 chip，按终审 5 赛道把现有 179 个框架人工归类；**只做浏览筛选，不参与 autoTrack**（终审赛道判定仍走 `track_card_name` → `MATCH` 精确相等，见 `app/lib/review.js` 的 `autoTrack`）。
 
-- **数据**：`assets/_library/asset_categories.json`。`cats[]` 定顺序与中文名（经济拆账 / 历史与古人 / POV 与等级沉浸 / 心理与动物科普 / 通用），`items{}` 为 `asset_id → key`。**以文件实际条目为准**（2026-10-28 中午扩充后为 209 条：econ 78 / history 87 / pov 24 / science 18 / general 2，随新增资产增长）。新增资产未登记时 `track = ''`，前端单列「未分类 N」，**不并入「通用」**。
+- **数据**：`assets/_library/asset_categories.json`。`cats[]` 定顺序与中文名（经济拆账 / 历史与古人 / POV 与等级沉浸 / 心理与动物科普 / 通用），`items{}` 为 `asset_id → key`。**以文件实际条目为准**（2026-10-31 扩充后为 213 条：econ 82 / history 87 / pov 24 / science 18 / general 2，随新增资产增长）。新增资产未登记时 `track = ''`，前端单列「未分类 N」，**不并入「通用」**。
 - **不写 framework.json**：`store.listAssets()` 读该文件后给每项附 `track` 字段，资产本体不动（避免被上游重跑覆盖）。按 mtime 缓存，改分类文件不需要重启进程。
 - **接口变更**：`GET /api/assets` 由「数组」改为 `{ items, tracks }`；前端 `normalizeAssetPayload()` 兼容旧数组——旧接口下分类行整行不渲染，不会出现「未分类 179」。
 - **前端**：`genFilter` / `libFilter` 加 `track`；`assetMatches` 先判分类、再判频道与关键词（三者「与」关系）；`trackChipsHtml()` 渲染芯片（该类有条目才显示，`:empty` 时整行隐藏）。分类行独占一行、位于频道行之上。

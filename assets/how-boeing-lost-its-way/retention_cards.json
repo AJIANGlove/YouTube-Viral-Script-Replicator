@@ -1,0 +1,1070 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-30T14:41:43.470Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "authority_pledge_cold_open",
+      "start_ratio": 0,
+      "end_ratio": 0.064,
+      "start_sec": 0.6,
+      "end_sec": 89,
+      "position_label": "0%–6.4%(0:01–1:29)",
+      "purpose": "以\"本片力求成为最准确评估\"的元声明与一线记者团队合作背书建立可信度契约;随即用\"它并非一直如此\"反转标题预期,以一场字面意义的地震作为冷开场,并把灾难重构为改革催化剂",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "surprise",
+          "strength": 62,
+          "position_ratio": 0.0276,
+          "time_ms": 38329,
+          "reason": "先提近年部件脱落与坠机危机,再说更早是\"一场字面意义的地震\",双关反转完成冷开场"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "worldview_shift",
+          "strength": 66,
+          "position_ratio": 0.0555,
+          "time_ms": 77200,
+          "reason": "\"不是灾难,而是催化剂\"的首次重构,奠定黄金时代的叙事方向"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题衰落机制承诺与全片编年因果链之间的主悬念",
+          "closes_in": "FS15"
+        },
+        {
+          "loop_id": "LOOP08",
+          "tension": "冷开场的即时悬念",
+          "closes_in": "FS02"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "authority_contract",
+          "mechanism": "accuracy_pledge"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "expectation_inversion",
+          "mechanism": "not_always_this_bad"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "literal_disaster_cold_open",
+          "mechanism": "literal_earthquake_tease"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "catalyst_reframe",
+          "mechanism": "catastrophe_as_catalyst"
+        }
+      ],
+      "required_retention_events": [
+        "authority_contract",
+        "expectation_inversion",
+        "literal_disaster_cold_open",
+        "catalyst_reframe"
+      ],
+      "original_moves": [
+        "开篇宣誓\"力求成为二十分钟内最准确的评估\"",
+        "声明剧本与一线航空记者团队合写、结论自负",
+        "一句\"它并非一直如此\"反转预期",
+        "抛出\"在舱门塞与两起坠机之前,是一场字面意义的地震\"",
+        "给出地震的精确时刻与震级",
+        "震坏厂房没有重建,团队反而\"搬到了湖边\""
+      ],
+      "abstract_move": "可信度契约宣誓 + 信源背书 + \"并非一直如此\"预期反转 + 字面灾难冷开场 + 灾难反成催化剂的反转",
+      "replacement_needs": [
+        "一个可公开背书的权威信源或数据合作方",
+        "一个与主题形成双关的真实灾难事件",
+        "一个灾难带来改革契机的具体事实"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(62)、PK02(66);打开的悬念 LOOP01→FS15、LOOP08→FS02 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 62
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 66
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "authority_pledge_then_expectation_inversion",
+        "first_stimulus_ms": 26560,
+        "first_payoff_ms": 71560,
+        "evidence_refs": [
+          "C0001",
+          "C0009",
+          "C0010",
+          "C0013",
+          "C0019"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "golden_era_baseline",
+      "start_ratio": 0.064,
+      "end_ratio": 0.1653,
+      "start_sec": 89,
+      "end_sec": 229.9,
+      "position_label": "6.4%–16.5%(1:29–3:50)",
+      "purpose": "建立黄金时代基线:主角为追赶对手推出新一代产品,赴海外学习精益方法,反直觉地\"不扩反缩\",借灾难与外部冲击把全体团队合署办公并引入移动流水线,以月产纪录、工时减半与销量纪录定格\"巅峰\"",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "emotional_payoff",
+          "strength": 64,
+          "position_ratio": 0.1612,
+          "time_ms": 224269,
+          "reason": "效率纪录连环兑现后定格\"巅峰\",黄金时代情感最高点,为落差蓄势"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP08",
+          "payoff_type": "catalyst_reframe_payoff",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "counterintuitive_move",
+          "mechanism": "shrink_to_grow"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "apex_marker",
+          "mechanism": "peak_labeling"
+        }
+      ],
+      "required_retention_events": [
+        "chrono_anchors",
+        "anaphoric_progress",
+        "counterintuitive_move",
+        "efficiency_records",
+        "apex_marker"
+      ],
+      "original_moves": [
+        "介绍老厂区的扩张史与需求压力",
+        "为追赶对手推出新一代产品",
+        "高管赴海外学习精益生产方法",
+        "清仓腾地\"不扩反缩\"",
+        "借灾难与外部冲击把全体团队合署办公",
+        "引入移动式流水线",
+        "月产纪录、工时减半、销量登顶",
+        "定格\"达到了巅峰\""
+      ],
+      "abstract_move": "历史扩张铺垫 + 竞争压力下的产品迭代 + 外部方法论引入 + 反直觉收缩决策 + 空间重组提升协作 + 一连串可数效率纪录 + 巅峰定格",
+      "replacement_needs": [
+        "一组可数的效率纪录(产量、工时、销量)",
+        "一个外部方法论来源",
+        "一个反直觉的收缩或重组决策",
+        "一个明确的时代顶点标记"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(64);回收了前文的悬念 FS01→LOOP08。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 64
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "apex_summary_turn_signal",
+      "start_ratio": 0.1653,
+      "end_ratio": 0.2022,
+      "start_sec": 229.9,
+      "end_sec": 281.2,
+      "position_label": "16.5%–20.2%(3:50–4:41)",
+      "purpose": "巅峰总结:旗舰产品成功与国民级声誉;随即给出\"维持巅峰与达到巅峰一样难\"的警告,把镜头移到几十公里外的另一座巨型工厂,明示\"麻烦最早出现在这里\"",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE07",
+          "event_type": "turn_signal_location",
+          "mechanism": "troubles_first_appeared_here"
+        }
+      ],
+      "required_retention_events": [
+        "peak_summary",
+        "maintenance_warning",
+        "turn_signal_location"
+      ],
+      "original_moves": [
+        "罗列同时期的旗舰成功与国民级声誉",
+        "一句\"维持巅峰和达到巅峰一样难\"",
+        "把镜头移到几十公里外的世界最大单体建筑",
+        "宣布\"麻烦最早出现在这里\""
+      ],
+      "abstract_move": "巅峰成就清单 + 盛极难继警告 + 地理锚点转移 + 衰落起点明示标记",
+      "replacement_needs": [
+        "一份巅峰成就清单",
+        "一句盛衰转折警告",
+        "一个可定位的衰落起点(地点或时刻)"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "ambition_constraint_setup",
+      "start_ratio": 0.2022,
+      "end_ratio": 0.2413,
+      "start_sec": 281.2,
+      "end_sec": 335.7,
+      "position_label": "20.2%–24.1%(4:41–5:36)",
+      "purpose": "衰落起点:决策层厌倦长周期投入,要求新一代产品以不到上一代一半的预算、更快回本完成,同时叠加一次材料革命级技术豪赌;以\"但他们有办法\"留下解决方案悬念",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "硬约束之后的解决方案悬念",
+          "closes_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP04",
+          "tension": "全片论题悬念:从单次失败升维到风格与系统",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "solution_tease",
+          "mechanism": "but_they_had_a_solution"
+        }
+      ],
+      "required_retention_events": [
+        "stakes_setup",
+        "budget_constraint_reveal",
+        "tech_revolution_promise",
+        "solution_tease"
+      ],
+      "original_moves": [
+        "先让步\"全新产品难免失手\"",
+        "把焦点转到\"错的是挥杆姿势\"",
+        "立项约束:预算不到上一代一半、回报要更快",
+        "叠加材料革命级技术豪赌",
+        "以\"但他们有办法\"收束"
+      ],
+      "abstract_move": "公平让步 + \"错不在失手在姿势\"论题 + 硬约束揭示 + 技术豪赌叠加 + 解决方案预告",
+      "replacement_needs": [
+        "一个硬性约束(预算、时限)",
+        "一项高风险技术赌注",
+        "一个待揭晓的解决方案"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS06、LOOP04→FS12 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "borrowed_playbook_origin",
+      "start_ratio": 0.2413,
+      "end_ratio": 0.2954,
+      "start_sec": 335.7,
+      "end_sec": 410.9,
+      "position_label": "24.1%–29.5%(5:36–6:51)",
+      "purpose": "揭示\"办法\"的出身:昔日最后一家本土对手曾让供应商自掏腰包共担研发风险,并购后其高管带着这套剧本并入;该款共担模式产品销量惨淡、风险未被回报,但面对新挑战,他们决定\"就用那套打法\"",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "surprise",
+          "strength": 72,
+          "position_ratio": 0.2933,
+          "time_ms": 408030,
+          "reason": "面对新挑战的答案竟是重用销量惨淡的旧剧本,戏剧性反讽峰值"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "戏剧性反讽:观众已知前科,等待重演",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE09",
+          "event_type": "playbook_reuse_irony",
+          "mechanism": "failed_playbook_reuse"
+        }
+      ],
+      "required_retention_events": [
+        "predecessor_backstory",
+        "flop_evidence",
+        "playbook_reuse_irony"
+      ],
+      "original_moves": [
+        "回讲昔日最后一家本土对手的困境",
+        "它当年如何让供应商自掏腰包共担研发风险",
+        "并购使该对手与其高管并入",
+        "那款共担产品销量惨淡、风险未被回报",
+        "面对新挑战,他们决定\"就用那套打法\""
+      ],
+      "abstract_move": "前传困境 + 旧模式机制说明 + 并购带来剧本携带者 + 旧剧本失败前科 + 失败剧本被重用的反讽",
+      "replacement_needs": [
+        "一段可追溯的方法论前史",
+        "一个该方法失败的前科证据",
+        "一个\"重用旧剧本\"的决策时刻"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(72);打开的悬念 LOOP05→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 72
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "risk_transfer_strategy",
+      "start_ratio": 0.2954,
+      "end_ratio": 0.3426,
+      "start_sec": 410.9,
+      "end_sec": 476.6,
+      "position_label": "29.5%–34.3%(6:51–7:57)",
+      "purpose": "展开新方案:顶级分包商既设计又出资,主角几乎不付开发费;点明条款对分包商明显不利但无所谓——市场份额即谈判碾压;乌托邦愿景与交易思维相撞;短判\"这回搞砸了\"",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "转嫁策略的后果悬念",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "strategy_reveal",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "verdict_stamp",
+          "mechanism": "this_went_poorly"
+        }
+      ],
+      "required_retention_events": [
+        "risk_transfer_reveal",
+        "leverage_logic",
+        "vision_collision",
+        "verdict_stamp"
+      ],
+      "original_moves": [
+        "列出顶级分包商名单",
+        "揭示新方案=分包商既设计又出资",
+        "点明条款对分包商明显不利但无所谓",
+        "用市场份额解释谈判碾压",
+        "乌托邦愿景与交易思维相撞",
+        "短判\"这回搞砸了\""
+      ],
+      "abstract_move": "利益方名单 + 风险与成本双转嫁机制揭示 + 权力不对等的合理化 + 愿景与现实相撞 + 短判盖章",
+      "replacement_needs": [
+        "一份利益相关方名单",
+        "一个风险与成本双转嫁的合同机制",
+        "一个证明权力不对等的市场结构事实"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP03→FS07 跨段;回收了前文的悬念 FS04→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "failure_evidence_chain",
+      "start_ratio": 0.3426,
+      "end_ratio": 0.394,
+      "start_sec": 476.6,
+      "end_sec": 548.1,
+      "position_label": "34.3%–39.4%(7:57–9:08)",
+      "purpose": "兑现\"搞砸了\":延期三年;亮相仪式上的产品是没有地板、线路、系统的空壳;再等两年半才可用;服役后关键部件起火导致全球停用;表面订单繁荣但财务承诺至今落空;反讽\"于是他们没再这么干\"",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 85,
+          "position_ratio": 0.3583,
+          "time_ms": 498440,
+          "reason": "隆重亮相的产品没有地板、线路与系统,\"为远拍照片而非飞行准备\"的荒诞实证冲击"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "failure_evidence_chain",
+          "opened_in": "FS06"
+        },
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "reused_playbook_failure",
+          "opened_in": "FS05"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "evidence_reveal",
+          "mechanism": "empty_shell_rollout"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "ironic_pivot",
+          "mechanism": "so_they_didnt_do_that_again"
+        }
+      ],
+      "required_retention_events": [
+        "delay_reveal",
+        "shell_rollout_evidence",
+        "grounding_event",
+        "financial_shortfall",
+        "ironic_pivot"
+      ],
+      "original_moves": [
+        "兑现\"搞砸了\":延期三年",
+        "亮相仪式上的飞机是没有地板、线路、系统的空壳",
+        "再等两年半才可用",
+        "服役后电池起火导致全球停飞",
+        "表面订单繁荣但财务承诺至今落空",
+        "反讽\"于是他们没再这么干\""
+      ],
+      "abstract_move": "延期证据 + 荒诞白描的实证细节 + 二次延迟 + 安全事故导致停用 + 表面成功与财务落空的对照 + 反讽过渡",
+      "replacement_needs": [
+        "一组延期时长证据",
+        "一个可白描的荒诞实证细节",
+        "一次安全停用事件",
+        "一组表面繁荣与财务落空的同口径对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(85);回收了前文的悬念 FS06→LOOP03、FS05→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 85
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "cornered_iteration_decision",
+      "start_ratio": 0.394,
+      "end_ratio": 0.4374,
+      "start_sec": 548.1,
+      "end_sec": 608.4,
+      "position_label": "39.4%–43.7%(9:08–10:08)",
+      "purpose": "第二次决策的处境:危机后需求回暖,对手高效新一代产品抢走独家客户;自身资源仍被上一个项目锁死,造不了全新产品,只能迭代近五十年的旧平台;\"被逼入墙角,就这么干了\"",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "权宜之计的后果悬念",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "cornered_decision",
+          "mechanism": "backed_into_a_corner"
+        }
+      ],
+      "required_retention_events": [
+        "competitive_pressure",
+        "resource_lockup",
+        "cornered_decision"
+      ],
+      "original_moves": [
+        "危机后需求回暖",
+        "对手高效新机型抢走独家客户",
+        "自身资源仍被上一个失败项目锁死",
+        "结论:造不了全新产品,只能迭代近五十年的旧平台",
+        "\"被逼入墙角,就这么干了\""
+      ],
+      "abstract_move": "外部环境反转 + 竞品抢客威胁 + 资源锁定约束 + 排除法推出唯一选项 + 被逼入墙角的决策",
+      "replacement_needs": [
+        "一个外部需求反转事件",
+        "一个竞品威胁证据",
+        "一组资源被占用的约束事实"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "divestiture_cash_out",
+      "start_ratio": 0.4374,
+      "end_ratio": 0.4909,
+      "start_sec": 608.4,
+      "end_sec": 682.9,
+      "position_label": "43.7%–49.1%(10:08–11:23)",
+      "purpose": "回归传统协作的同时揭示平行操作:最重要的核心部件供应商曾是自家分部;当年为同时推进新项目、安抚股东,把它连同多处资产变卖换一张支票;短判\"这回搞砸了\"",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "能力外流的长期后果悬念",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "verdict_stamp",
+          "mechanism": "this_went_poorly_echo"
+        }
+      ],
+      "required_retention_events": [
+        "legacy_origin",
+        "divestiture_cash_reveal",
+        "verdict_stamp"
+      ],
+      "original_moves": [
+        "宣布回归传统协作模式",
+        "引出最重要的机身供应商——它曾是自家分部",
+        "当年为同时推进新项目与安抚股东,把它连同多处资产变卖",
+        "支票落袋,独立公司诞生",
+        "短判\"这回搞砸了\""
+      ],
+      "abstract_move": "策略回摆声明 + 关键伙伴的\"血脉\"揭示 + 变现金的动机清单 + 一次资产变现决策 + 短判盖章",
+      "replacement_needs": [
+        "一个\"曾是自家人\"的关键伙伴",
+        "一份变现动机清单(多线作战加股东压力)",
+        "一笔变现金额证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP07→FS11 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "supplier_squeeze_program",
+      "start_ratio": 0.4909,
+      "end_ratio": 0.5668,
+      "start_sec": 682.9,
+      "end_sec": 788.4,
+      "position_label": "49.1%–56.7%(11:23–13:08)",
+      "purpose": "压价计划:用\"共赢\"名目对供应商同一零件压价,不换就丢单(给出被替换案例);点破这些供应商曾共同投资却被背叛;行业只剩两三家买家的权力失衡;结果是系统性质量恶化、共赢承诺落空",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 76,
+          "position_ratio": 0.5023,
+          "time_ms": 698709,
+          "reason": "\"甲方说辞 vs 乙方感受\"对照落地为\"他们觉得自己被宰了\",权力失衡的情绪峰值"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "conflict_pov_flip",
+          "mechanism": "their_words_vs_ours"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "power_imbalance_reveal",
+          "mechanism": "only_three_customers"
+        }
+      ],
+      "required_retention_events": [
+        "squeeze_program",
+        "pov_flip_contrast",
+        "power_imbalance",
+        "quality_deterioration"
+      ],
+      "original_moves": [
+        "给压价计划一个冠冕名称",
+        "对照\"甲方说辞 vs 乙方感受\"",
+        "同一零件压价、不换就丢单的被替换案例",
+        "点破对方曾共同投资却被背叛",
+        "行业只剩两三家买家的权力失衡",
+        "结果是系统性质量恶化、共赢承诺落空"
+      ],
+      "abstract_move": "美化命名 + 双方说辞对照 + 一个被替换的牺牲者案例 + 共同投资被背叛 + 买方垄断结构揭示 + 质量恶化后果",
+      "replacement_needs": [
+        "一个被替换或退出的牺牲者案例",
+        "一个证明买方垄断的市场结构事实",
+        "一组质量恶化的可数证据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(76)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "catastrophic_consequence_chain",
+      "start_ratio": 0.5668,
+      "end_ratio": 0.6474,
+      "start_sec": 788.4,
+      "end_sec": 900.5,
+      "position_label": "56.7%–64.7%(13:08–15:01)",
+      "purpose": "灾难顶点:旧平台迭代装上更大动力单元改变特性,用软件补丁让新产品\"用起来像旧产品\";补丁系于单一部件,两起致命事故导致二十个月停用、数百订单与巨额损失;停产复产后至今未恢复;供应商裁员失血、缺陷频出,关系仅在新管理层下开始修复",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "information_reveal",
+          "strength": 95,
+          "position_ratio": 0.5892,
+          "time_ms": 819519,
+          "reason": "补丁系于单一传感器并引发两起致命事故与二十个月停飞,标题承诺的最沉重兑现"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "catastrophic_consequence_chain",
+          "opened_in": "FS08"
+        },
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "partial_repair_update",
+          "opened_in": "FS09"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "catastrophe_reveal",
+          "mechanism": "single_sensor_flaw"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "supplier_fallout",
+          "mechanism": "defects_after_defects"
+        }
+      ],
+      "required_retention_events": [
+        "software_patch_reveal",
+        "catastrophe_chain",
+        "grounding_cost",
+        "supplier_fallout"
+      ],
+      "original_moves": [
+        "旧平台装上更大引擎改变飞行特性",
+        "用软件补丁让新机\"开起来像旧机\"",
+        "补丁系于单一传感器",
+        "两起致命事故与二十个月停飞",
+        "订单与金额损失、停产又复产至今未恢复",
+        "供应商裁员失血、缺陷频出",
+        "关系仅在新管理层下开始修复"
+      ],
+      "abstract_move": "物理变更引发特性差 + 补丁式掩盖 + 单点故障引爆灾难 + 停用与损失清单 + 供应链连带失血 + 迟来的修复信号",
+      "replacement_needs": [
+        "一个物理变更与补丁式应对",
+        "一个单点故障证据",
+        "一组停用与损失的可数后果",
+        "一条供应链连带损伤链"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(95);回收了前文的悬念 FS08→LOOP06、FS09→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 95
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "system_diagnosis_reveal",
+      "start_ratio": 0.6474,
+      "end_ratio": 0.6803,
+      "start_sec": 900.5,
+      "end_sec": 946.3,
+      "position_label": "64.7%–68%(15:01–15:46)",
+      "purpose": "归因第一步:并列全部异质故障(战略失误、软件缺陷、生产问题、外部冲击),排除共性后只剩\"它们同属一台协作机器\";落地诊断句\"造机器的机器坏了\",排除他因,并追问\"为什么\"",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "worldview_shift",
+          "strength": 90,
+          "position_ratio": 0.6651,
+          "time_ms": 925180,
+          "reason": "\"造机器的机器坏了\"的系统诊断,把全部碎片升维为一句可复述的归因"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "thesis_fulfillment_system_diagnosis",
+          "opened_in": "FS04"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "system_diagnosis",
+          "mechanism": "machine_building_machine_broken"
+        }
+      ],
+      "required_retention_events": [
+        "commonality_synthesis",
+        "system_diagnosis",
+        "responsibility_pinpoint"
+      ],
+      "original_moves": [
+        "把全部故障并列:战略失误、软件缺陷、生产问题、外部冲击,彼此毫无共性",
+        "指出唯一共性是它们同属一台庞大的协作机器",
+        "诊断句落地:\"造机器的机器坏了\"",
+        "排除他因:\"不是别人,是它自己\"",
+        "追问\"为什么\""
+      ],
+      "abstract_move": "异质故障清单并列 + 共性排除法 + 系统诊断金句 + 责任归因收束 + 根因追问",
+      "replacement_needs": [
+        "一份异质故障清单",
+        "一个能统称全部故障的系统隐喻",
+        "一句排除他因的归因句"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(90);回收了前文的悬念 FS04→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 90
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "root_cause_economics",
+      "start_ratio": 0.6803,
+      "end_ratio": 0.7373,
+      "start_sec": 946.3,
+      "end_sec": 1025.5,
+      "position_label": "68%–73.7%(15:46–17:06)",
+      "purpose": "归因第二步:产品已商品化,订单只看更快更便宜;双头垄断下双方都不愁订单,财务成败=建造速度×成本;对手也曾巨亏但未压榨供应商、反而收回环节自产;主角却全力押注现金流回报;短判\"这行不通\"",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "benchmark_contrast",
+          "mechanism": "competitor_didnt_squeeze"
+        }
+      ],
+      "required_retention_events": [
+        "commodity_economics",
+        "duopoly_logic",
+        "benchmark_contrast",
+        "fixation_reveal"
+      ],
+      "original_moves": [
+        "指出产品已商品化,订单只看更快更便宜",
+        "双头垄断下双方都不愁订单",
+        "对手也曾巨亏但未压榨供应商、反而收回环节自产",
+        "财务成败=建造速度乘建造成本",
+        "主角却全力押注现金流回报",
+        "短判\"这行不通\""
+      ],
+      "abstract_move": "商品化判断 + 买方只看价速的规则 + 双头躺赢结构 + 对手反面对照 + 财务公式归纳 + 执念揭示 + 短判盖章",
+      "replacement_needs": [
+        "一个商品化市场结构",
+        "一个对手的反面对照案例",
+        "一个\"速度乘成本\"式财务公式"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "analogy_worldview_reframe",
+      "start_ratio": 0.7373,
+      "end_ratio": 0.8159,
+      "start_sec": 1025.5,
+      "end_sec": 1135,
+      "position_label": "73.7%–81.6%(17:06–18:55)",
+      "purpose": "归因第三步:用四级难度梯子证明这门生意\"近乎太难\";与可规模化的日常制造划清界限;展开\"可规模化日常品类 vs 不可规模化极致品类\"类比——极致品质靠无数小事与人,不可系统化外包;落点:它想以规模化心态经营极致品类",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 86,
+          "position_ratio": 0.8111,
+          "time_ms": 1128280,
+          "reason": "\"以快餐心态经营顶级厨房\"的类比定案,错配本质一目了然"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE21",
+          "event_type": "escalation_ladder",
+          "mechanism": "manufacturing_is_hard_ladder"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "analogy_setup",
+          "mechanism": "burger_vs_fine_kitchen"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "metaphor_verdict",
+          "mechanism": "fastfood_mindset_fine_kitchen"
+        }
+      ],
+      "required_retention_events": [
+        "escalation_ladder",
+        "craft_analogy",
+        "mindset_verdict"
+      ],
+      "original_moves": [
+        "用四级难度梯子证明\"这可能太难了\"",
+        "与烤面包机式的日常制造划清界限",
+        "展开汉堡 vs 顶级厨房类比:汉堡可系统化外包而顶级菜不行",
+        "顶级菜靠无数小事与人而非流程",
+        "落点:\"它想以快餐心态经营顶级厨房\""
+      ],
+      "abstract_move": "难度递增梯子 + 划清类别界限 + 可规模化与不可规模化的对照类比 + \"靠人而非流程\"要素清单 + 类比定案",
+      "replacement_needs": [
+        "一个四级难度递增事实链",
+        "一个日常可规模化物与一个不可规模化极致物的对照",
+        "一份\"靠人\"的要素清单"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(86)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS15",
+      "function": "decline_loop_verdict",
+      "start_ratio": 0.8159,
+      "end_ratio": 0.91,
+      "start_sec": 1135,
+      "end_sec": 1265.8,
+      "position_label": "81.6%–91%(18:55–21:06)",
+      "purpose": "收束:承认它曾就是那家极致品质标杆,但回归能力随人才流失而衰减;命名恶性循环(省→超支→更省),点破\"最关注之处恰是失败最深处\";深坑判决与对手对照;拒绝速效救法,出路只有\"每一天、每件事都做得更好\";小零件定生死,错在压榨最需要的人",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "emotional_payoff",
+          "strength": 82,
+          "position_ratio": 0.8734,
+          "time_ms": 1214830,
+          "reason": "\"它在一个又深又黑的坑底,而对手不在\"的对比判决,终局的沉重感"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP09",
+          "tension": "赞助段的桥接悬念",
+          "closes_in": "FS16"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_causal_chain_with_system_diagnosis",
+          "opened_in": "FS01"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE24",
+          "event_type": "depth_contrast",
+          "mechanism": "deep_dark_hole_vs_competitor"
+        }
+      ],
+      "required_retention_events": [
+        "talent_drain",
+        "vicious_cycle",
+        "depth_contrast",
+        "no_quick_fix_verdict"
+      ],
+      "original_moves": [
+        "承认它曾就是那家顶级厨房",
+        "回归能力随时间衰减、最优秀的人正在离开",
+        "命名恶性循环:省、超支、更省",
+        "点破\"最关注之处恰是失败最深处\"",
+        "深坑判决,对手不在坑里",
+        "唯一出路是\"每一天、每件事都做得更好\"",
+        "小零件定生死,错在压榨最需要的人"
+      ],
+      "abstract_move": "承认昔日身份 + 能力衰减与人才流失 + 恶性循环命名 + 专注与失败的反讽重合 + 深坑对照 + 拒绝速效救法 + 长期主义出路 + 价值归因收束",
+      "replacement_needs": [
+        "一个人才流失证据",
+        "一个恶性循环因果链",
+        "一个与对手的处境对比",
+        "一句可复述的长期主义出路"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(82);打开的悬念 LOOP09→FS16 跨段;回收了前文的悬念 FS01→LOOP01。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS16",
+      "function": "sponsor_bridge_cta",
+      "start_ratio": 0.91,
+      "end_ratio": 1,
+      "start_sec": 1265.8,
+      "end_sec": 1391,
+      "position_label": "91%–100%(21:06–23:11)",
+      "purpose": "内容闭环后的赞助段:以\"本国唯一商用制造商\"的限定转折引出同量级的相邻领域巨头与天价产品话题,桥接友人在订阅平台的独占纪录片,堆叠平台价值(独占内容、免广告、价格锚定、折扣码),致谢收尾",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "sponsor_bridge_reveal",
+          "opened_in": "FS15"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "topic_bridge",
+          "mechanism": "adjacent_giant_bridge"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "sponsor_reveal",
+          "mechanism": "platform_reveal"
+        },
+        {
+          "event_id": "RE27",
+          "event_type": "value_stack",
+          "mechanism": "exclusive_content_stack"
+        },
+        {
+          "event_id": "RE28",
+          "event_type": "discount_cta",
+          "mechanism": "price_anchor_discount"
+        },
+        {
+          "event_id": "RE29",
+          "event_type": "signoff_gratitude",
+          "mechanism": "thank_you_close"
+        }
+      ],
+      "required_retention_events": [
+        "adjacent_topic_bridge",
+        "sponsor_reveal",
+        "value_stack",
+        "discount_cta"
+      ],
+      "original_moves": [
+        "用\"本国唯一商用制造商\"的限定句转折",
+        "引出同量级的军机公司与研发导向差异",
+        "举出天价轰炸机案例",
+        "顺势推介友人在订阅平台的独占纪录片",
+        "罗列平台独占内容与免广告权益",
+        "对比主流流媒体价格,给出折扣价与专属链接",
+        "致谢收尾"
+      ],
+      "abstract_move": "限定句制造转折 + 相邻领域巨物钩子 + 高价案例佐证 + 友人作品桥接 + 平台价值堆叠 + 价格锚定折扣 + 致谢",
+      "replacement_needs": [
+        "一个与主题相邻的高价或巨物话题",
+        "一部可推介的相关作品",
+        "一组平台权益与折扣条件"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS15→LOOP09。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}

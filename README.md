@@ -45,10 +45,10 @@ flowchart LR
 │   ├── prompts/            现行提示词（生产用，单一来源）
 │   ├── extension/          抓 Studio 真实数据的 Chrome 插件
 │   ├── public/             前端 SPA
-│   ├── data/runs/          90 条生成记录（含每步 attempts 与校验明细）
+│   ├── data/runs/          95 条生成记录（含每步 attempts 与校验明细）
 │   ├── data/logs/          运行日志（失败样本、留存卡批处理、探针输出）
 │   └── config.example.json 配置结构示例（不含真实 Key）
-├── assets/                 210 个四层资产包，每包含原始 SRT 与留存卡
+├── assets/                 214 个四层资产包，每包含原始 SRT 与留存卡
 ├── baselines/              v1-v3 历史基线（提示词快照 + 产物 + 归因）
 ├── docs/                   阶段 1-8 工作流文档（v1.1 docx + 文本版 + 使用流程）
 └── AGENTS.md               SRT 入库前置质检约定

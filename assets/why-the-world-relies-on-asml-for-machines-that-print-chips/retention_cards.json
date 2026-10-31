@@ -1,0 +1,796 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-30T14:41:43.458Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "spectacle_access_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.1028,
+      "start_sec": 0,
+      "end_sec": 113.6,
+      "position_label": "0%–10.3%(0:00–1:54)",
+      "purpose": "在工厂装配现场直接亮出主角机器:以体型与精度反差、全球独家宣告、天价数字三连建立震撼,再叠加缺货新闻语境抬高利害关系,最后以\"我们要进这家低调公司内部看看\"的探访承诺与罕见画面清单收束,同时埋下下一代更贵机器的伏笔",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 82,
+          "position_ratio": 0.0261,
+          "time_ms": 28800,
+          "reason": "全球唯一供应商宣告叠加两亿美元单价与单一公司命名,垄断事实三连在开场 40 秒内砸实"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "surprise",
+          "strength": 64,
+          "position_ratio": 0.0707,
+          "time_ms": 78150,
+          "reason": "下一代机器要价更高且\"突破已知物理边界\",在开场段尾抛出更大伏笔"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "标题机制承诺与全片十段证据链之间的主悬念",
+          "closes_in": "FS10"
+        },
+        {
+          "loop_id": "LOOP02",
+          "tension": "开场埋下的产品伏笔,维持\"还有更大家伙\"的前向期待",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "field_cold_open",
+          "mechanism": "in_medias_res_entry"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "exclusive_claim",
+          "mechanism": "only_provider_statement"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "stakes_context",
+          "mechanism": "shortage_news_anchor"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "access_promise",
+          "mechanism": "inside_look_tease"
+        }
+      ],
+      "required_retention_events": [
+        "spectacle_cold_open",
+        "exclusive_claim",
+        "price_tag_shock",
+        "stakes_context",
+        "access_promise",
+        "next_gen_tease"
+      ],
+      "original_moves": [
+        "旁白站在荷兰工厂装配现场,直接点名一台革命性机器",
+        "用城市公交车体型对比原子级精度,并说它是制造每颗先进芯片最贵的一步",
+        "亮出\"全球唯一供应商\"宣告与最高2亿美元单价,点名 ASML",
+        "叠加 PS5、特斯拉缺货与股价飙升的新闻语境",
+        "预告要价超3亿美元、突破已知物理边界的下一代机器",
+        "承诺进入加州与荷兰无尘室,预告激光、熔融锡与世界最平表面的画面"
+      ],
+      "abstract_move": "现场定位 + 体型精度反差 + 独家宣告 + 天价数字 + 新闻语境抬利害关系 + 下一代伏笔 + 内部探访承诺",
+      "replacement_needs": [
+        "一个可进入或可还原的核心现场画面",
+        "一组规模与精度的反差事实",
+        "独家性断言的事实凭据与天价数字",
+        "一个观众熟悉的时事痛感语境",
+        "一个可延迟到结尾兑现的下一代伏笔"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(82)、PK02(64);打开的悬念 LOOP01→FS10、LOOP02→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 82
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 64
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "field_spectacle_with_exclusive_claim",
+        "first_stimulus_ms": 24720,
+        "first_payoff_ms": 40830,
+        "evidence_refs": [
+          "C0001",
+          "C0006",
+          "C0009"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "origin_underdog_history",
+      "start_ratio": 0.1107,
+      "end_ratio": 0.2412,
+      "start_sec": 122.4,
+      "end_sec": 266.6,
+      "position_label": "11.1%–24.1%(2:02–4:27)",
+      "purpose": "用公司估值反超自己最大客户的事实切入成长史:从巨头边缘的漏水棚屋、被忽视的穷团队,到首年推出机器、上市与并购扩张;借外部专家之口点破\"发明地不敢赌、边缘者敢赌\"的换位,让观众对后来者产生支持心理",
+      "peaks": [
+        {
+          "peak_id": "PK03",
+          "peak_type": "surprise",
+          "strength": 60,
+          "position_ratio": 0.1395,
+          "time_ms": 154180,
+          "reason": "垄断者出身是巨头旁边漏水的棚屋、\"没人正眼看我们\",逆袭反差成立"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "valuation_reveal",
+          "mechanism": "worth_more_than_customer"
+        },
+        {
+          "event_id": "RE06",
+          "event_type": "underdog_origin",
+          "mechanism": "leaky_shed_detail"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "history_reframe",
+          "mechanism": "invented_elsewhere_twist"
+        }
+      ],
+      "required_retention_events": [
+        "valuation_reveal",
+        "underdog_origin",
+        "founder_voice",
+        "history_reframe",
+        "expert_chorus"
+      ],
+      "original_moves": [
+        "用市值反超最大客户英特尔的事实切入成长史",
+        "CEO 亲述 1984 年飞利浦楼旁漏水棚屋出身,\"我们穷、没人正眼看我们\"",
+        "首年推出首台机器,用投影仪比喻解释原理",
+        "交代技术发源于美国军方实验室、长期由美国公司主导",
+        "专家引语:美国公司不敢赌、它敢赌",
+        "1988 年设总部、1995 年上市、收购加州公司扩张"
+      ],
+      "abstract_move": "反超对照开场 + 寒微出身细节 + 亲历者白话引语 + 技术发源史 + 专家换位点评 + 扩张节点清单",
+      "replacement_needs": [
+        "一组反超对照的规模或估值事实",
+        "一个出身寒微的具体场地细节与亲历者引语",
+        "一段技术发源与主导权更替的史实",
+        "一位外部专家的换位点评",
+        "上市、并购等扩张节点材料"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK03(60)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK03",
+          "strength": 60
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "customer_alliance_bet",
+      "start_ratio": 0.2415,
+      "end_ratio": 0.3521,
+      "start_sec": 266.9,
+      "end_sec": 389.2,
+      "position_label": "24.2%–35.2%(4:27–6:29)",
+      "purpose": "讲清豪赌时刻:新技术研发太贵,公司被迫把大客户变成股东共担风险;随后用份额与代差数据呈现客户阵营分化——领先者与落后三年的追赶者,追赶者以押注下一代机器求翻盘,为结尾回收伏笔",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 70,
+          "position_ratio": 0.2797,
+          "time_ms": 309120,
+          "reason": "为让承诺变真,把最大客户变成股东——联盟共担机制的反直觉揭示"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "客户阵营分化的竞争悬念,把个人化 stakes 挂到结尾",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "component_tease",
+          "mechanism": "nozzle_closeup"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "alliance_reveal",
+          "mechanism": "customers_as_shareholders"
+        },
+        {
+          "event_id": "RE10",
+          "event_type": "rivalry_stakes",
+          "mechanism": "laggard_bold_bet"
+        }
+      ],
+      "required_retention_events": [
+        "alliance_reveal",
+        "concentration_number",
+        "rivalry_stakes",
+        "catchup_bet",
+        "question_pivot"
+      ],
+      "original_moves": [
+        "交代 EUV 研发太贵、公司自己没钱",
+        "被迫找伙伴:2012 年把约四分之一股份卖给英特尔、三星、台积电三大客户",
+        "专家解释\"让客户入股是让承诺变真的\"",
+        "给出台积电占近 40% 销售的集中度事实",
+        "呈现台积电领先量产、英特尔落后三年的代差",
+        "英特尔押注下一代 High NA 原型求翻盘",
+        "过渡句:来看 EUV 如何革命化芯片制造"
+      ],
+      "abstract_move": "资金困境 + 客户入股共担机制 + 机制动机引语 + 集中度数字 + 领先落后代差对照 + 追赶者押注伏笔 + 过渡设问",
+      "replacement_needs": [
+        "一个研发成本远超自身财力的困境",
+        "一种把客户变股东的共担安排及其动机引语",
+        "一组客户集中度数字",
+        "一组领先者与追赶者的代差对照",
+        "一个追赶者押注未来的具体动作"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(70);打开的悬念 LOOP03→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "mechanism_explainer_scale",
+      "start_ratio": 0.3523,
+      "end_ratio": 0.4881,
+      "start_sec": 389.4,
+      "end_sec": 539.5,
+      "position_label": "35.2%–48.8%(6:29–9:00)",
+      "purpose": "原理扫盲:从原材料到基板到曝光印刷的流程速成,用\"大到不知道怎么念\"的数字建立量级感,再用波长演进逻辑引出新一代光源的物理极限——被一切物质吸收、必须真空、与上一代的尺度对照,并交代新旧两代产品的分工",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "information_reveal",
+          "strength": 74,
+          "position_ratio": 0.4405,
+          "time_ms": 486910,
+          "reason": "新光源被空气吸收、过程必须真空、波长仅相当于几根DNA并列,物理极限三连"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE11",
+          "event_type": "scale_numbers",
+          "mechanism": "unpronounceable_scale"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "physics_marvel",
+          "mechanism": "absorbed_by_air_vacuum"
+        }
+      ],
+      "required_retention_events": [
+        "expert_anchor",
+        "scale_numbers",
+        "meta_comment",
+        "physics_marvel",
+        "generation_split",
+        "household_anchor"
+      ],
+      "original_moves": [
+        "专家惊叹其工程是诺贝尔奖级",
+        "从硅砂提纯到晶圆的制造流程速成",
+        "用每颗 iPhone 芯片超百亿晶体管乘以上亿销量给出\"念不出\"的量级",
+        "波长越窄芯片越快越小越省电的因果链",
+        "新光源被一切物质吸收、必须真空、13.5 纳米约等于五根 DNA 并列",
+        "与上一代 193 纳米对照,并给出 309 台中 268 台仍是旧代的销量分工",
+        "烤面包机、冰箱用旧代,iPhone 13 用新代的落地例子"
+      ],
+      "abstract_move": "权威惊叹定调 + 流程速成 + 超大量级加元评论 + 性能因果链 + 物理极限三连 + 两代分工数据 + 日用品落地对照",
+      "replacement_needs": [
+        "一句权威定调引语",
+        "一条原材料到成品的流程链",
+        "一组超出直觉的量级数字",
+        "一条参数到性能的因果链",
+        "一组物理极限事实与两代分工数据",
+        "一个日用品级别的落地对照"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(74)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "precision_engineering_marvels",
+      "start_ratio": 0.4886,
+      "end_ratio": 0.6187,
+      "start_sec": 540,
+      "end_sec": 683.8,
+      "position_label": "48.9%–61.9%(9:00–11:24)",
+      "purpose": "工艺巡礼高峰:洁净度等级与\"保护机器不被人污染\"的反常识、熔融金属射流与激光双击的每秒万次节奏、极低的光子到达率、世界最平镜面与两个尺度类比、缺陷零容忍与量产节拍,把\"为什么只有它能造\"落成具体画面",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "surprise",
+          "strength": 78,
+          "position_ratio": 0.5209,
+          "time_ms": 575770,
+          "reason": "每秒五万滴金属被激光各打两次、只有约百分之五的光到达工件,工艺奇观与效率坦白叠加"
+        },
+        {
+          "peak_id": "PK07",
+          "peak_type": "surprise",
+          "strength": 84,
+          "position_ratio": 0.5549,
+          "time_ms": 613320,
+          "reason": "镜面放大到国家大小凸起只有约一毫米,全片最强尺度类比,敬畏峰值"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "process_spectacle",
+          "mechanism": "molten_tin_jet"
+        },
+        {
+          "event_id": "RE14",
+          "event_type": "analogy_payoff",
+          "mechanism": "country_size_mirror_bump"
+        },
+        {
+          "event_id": "RE15",
+          "event_type": "zero_defect_stakes",
+          "mechanism": "single_particle_fail"
+        }
+      ],
+      "required_retention_events": [
+        "cleanroom_flipvoice",
+        "process_spectacle",
+        "efficiency_confession",
+        "analogy_downshift",
+        "zero_defect_stakes",
+        "throughput_number"
+      ],
+      "original_moves": [
+        "无尘室比外界干净一万倍,穿衣是为了保护机器不被人污染",
+        "熔融锡以 4000 psi 射出、每秒五万滴、永不停止",
+        "30 千瓦激光每秒把每滴打两次,只有约 5% 光子到达晶圆",
+        "蔡司镜面放大到国家大小、最大凸起仅约一毫米",
+        "对准精度相当于从月球照激光击中地上一枚硬币",
+        "任何微粒即失败,机器每天产出约 3000 片晶圆"
+      ],
+      "abstract_move": "洁净度反常识 + 射流节奏数字 + 激光双击 + 效率瓶颈坦白 + 极限部件类比两次 + 缺陷零容忍 + 量产节拍",
+      "replacement_needs": [
+        "一组环境控制或洁净度数字",
+        "一组射流或反应的节奏数字",
+        "一个效率瓶颈的坦白数字",
+        "一个外部供应商的极限部件",
+        "两个把精度转成日常尺度的类比",
+        "一句缺陷零容忍的引语与一组量产节拍数字"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(78)、PK07(84)。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 78
+        },
+        {
+          "peak_id": "PK07",
+          "strength": 84
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "scarcity_customer_concentration",
+      "start_ratio": 0.6213,
+      "end_ratio": 0.697,
+      "start_sec": 686.7,
+      "end_sec": 770.4,
+      "position_label": "62.1%–69.7%(11:27–12:50)",
+      "purpose": "从工艺转向账本:模块全球制造、总装测试再拆解运输的物流奇观,累计出货量与买得起的客户数两个稀缺数字,客户集中度数字与出局者案例;再以缺货反噬自身的\"自相矛盾\"制造黑色幽默,最后抛出\"它跟得上需求吗\"的直接提问",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 76,
+          "position_ratio": 0.6447,
+          "time_ms": 712550,
+          "reason": "累计出货仅约百余台、单价挡住几乎全部买家、前三家客户占绝大部分业务,稀缺三连"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "稀缺算账后的供需悬念,当段提出、下段即答的节奏型钩子",
+          "closes_in": "FS07"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE16",
+          "event_type": "scarcity_reveal",
+          "mechanism": "cumulative_shipment_count"
+        },
+        {
+          "event_id": "RE17",
+          "event_type": "direct_question_hook",
+          "mechanism": "can_it_keep_up"
+        }
+      ],
+      "required_retention_events": [
+        "logistics_spectacle",
+        "scarcity_reveal",
+        "concentration_number",
+        "elimination_case",
+        "irony_confession",
+        "direct_question_hook"
+      ],
+      "original_moves": [
+        "七个模块在全球六地制造,运回总部测试再拆解",
+        "运输要 20 辆卡车加 3 架满载 747",
+        "2021 年卖出 42 台、累计仅约 140 台",
+        "单价最高 2 亿美元,只有五家客户买得起,前三家占近 84%",
+        "GlobalFoundries 因此退出先进制程竞争",
+        "缺芯反噬:供应商交不了模块,管理层自嘲这是 catch-22",
+        "直接提问:它跟得上需求吗"
+      ],
+      "abstract_move": "物流奇观数字 + 累计稀缺数字 + 单价门槛 + 客户集中度 + 出局者案例 + 反噬困境自白 + 直接提问",
+      "replacement_needs": [
+        "一组组装与物流的规模数字",
+        "一组累计出货的稀缺数字",
+        "一个把多数买家挡在门外的单价门槛",
+        "一组客户集中度数字与一个出局者案例",
+        "一段反噬困境的第一人称引语",
+        "一个当段提出、下段作答的问题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(76);打开的悬念 LOOP04→FS07 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "moat_growth_outlook",
+      "start_ratio": 0.6972,
+      "end_ratio": 0.8008,
+      "start_sec": 770.6,
+      "end_sec": 885.1,
+      "position_label": "69.7%–80.1%(12:51–14:45)",
+      "purpose": "回答需求问题并验证护城河:专家给出肯定判断,管理层承诺数十年降本;竞争对手只剩旧代际、追赶需以十年计;排他供应商网络与\"比婚姻还难离\"的共生关系、十年认证门槛、收购供应商对冲风险与增长预测;最后把需求归因到\"是消费者在驱动\"",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "direct_answer_with_commitment",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE18",
+          "event_type": "moat_reveal",
+          "mechanism": "exclusive_supplier_web"
+        }
+      ],
+      "required_retention_events": [
+        "expert_verdict",
+        "cost_curve_commitment",
+        "competitor_inventory",
+        "moat_enumeration",
+        "symbiosis_metaphor",
+        "certification_barrier",
+        "demand_attribution"
+      ],
+      "original_moves": [
+        "专家作答:大概率跟得上、还在准备扩产",
+        "管理层承诺 38 年持续压低每晶体管成本、未来几十年继续",
+        "旧代际还剩尼康佳能两家竞品,新代际只有它,追赶需数十年",
+        "专有技术加近 800 家排他供应商构成护城河",
+        "共生关系\"比婚姻还难离,因为离不了婚\"",
+        "买方极度避险、认证要 10 年",
+        "收购柏林玻璃公司对冲供应链风险,火灾后仍预计 20% 增长",
+        "需求归因:是消费者你要传感器无处不在"
+      ],
+      "abstract_move": "专家肯定回答 + 管理层长期承诺 + 竞品代际清点 + 供应商网络数字 + 共生关系比喻 + 认证门槛年限 + 收购对冲案例 + 增长预测 + 需求归因转向",
+      "replacement_needs": [
+        "一位外部专家的肯定判断",
+        "一条管理层长期降本承诺引语",
+        "一组新旧代际竞品清点",
+        "一组排他供应商网络规模数字",
+        "一个共生关系的口语比喻",
+        "一个认证准入门槛年限",
+        "一个收购对冲风险的案例与增长预测"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "回收了前文的悬念 FS06→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "geopolitics_reshoring_wave",
+      "start_ratio": 0.8039,
+      "end_ratio": 0.8622,
+      "start_sec": 888.6,
+      "end_sec": 953,
+      "position_label": "80.4%–86.2%(14:49–15:53)",
+      "purpose": "地缘变量一:最先进产能的地理集中引发各国担忧,补贴法案潮与建厂潮清单铺开,公司视角下人才成为最大挑战;段尾转向另一面——不愿再向特定国家分享技术的封锁意愿",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE19",
+          "event_type": "policy_wave",
+          "mechanism": "subsidy_acts_list"
+        }
+      ],
+      "required_retention_events": [
+        "concentration_risk",
+        "policy_wave",
+        "fab_spree_numbers",
+        "subsidy_total",
+        "talent_challenge",
+        "topic_pivot"
+      ],
+      "original_moves": [
+        "最先进产能集中在亚洲的台积电与三星手上",
+        "缺货引发各国对海外依赖的担忧",
+        "美国、欧盟、韩国、日本、中国芯片法案清单",
+        "英特尔 200 亿美元俄亥俄建厂、台积电亚利桑那、三星 170 亿美元得州建厂",
+        "拜登提出 520 亿美元补贴",
+        "公司视角:要更早更多发货,最大挑战是人才",
+        "转向另一面:不愿再与中国分享技术的封锁意愿"
+      ],
+      "abstract_move": "地理集中事实 + 担忧定性 + 多国政策清单 + 建厂潮数字清单 + 补贴总额 + 公司视角挑战 + 转向争议的过渡",
+      "replacement_needs": [
+        "一组产能地理集中事实",
+        "一组多国政策或法案清单",
+        "一组建厂金额与地点清单",
+        "一组补贴总额数字",
+        "一条公司视角的挑战引语",
+        "一句转向争议面的过渡句"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "china_export_dilemma",
+      "start_ratio": 0.8625,
+      "end_ratio": 0.9429,
+      "start_sec": 953.3,
+      "end_sec": 1042.2,
+      "position_label": "86.3%–94.3%(15:53–17:22)",
+      "purpose": "地缘变量二:对华禁运时间线与多国出口管制,公司\"这不是我们的选择\"的立场声明;旧设备翻新输华的灰色地带与超高存活率;旧代际设备是否也该禁的开放争议及其对营收的冲击推演,以公司\"我们需要全球所有产能\"的反立场收束",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "worldview_shift",
+          "strength": 72,
+          "position_ratio": 0.8865,
+          "time_ms": 979810,
+          "reason": "数十国联合出口管制,公司一句\"这不是我们的选择,是政府的选择\"完成权力关系重构"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "地缘争议环:呈现辩论与公司反立场后刻意保持开放",
+          "closes_in": null
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [
+        "LOOP05"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "geopolitical_ban",
+          "mechanism": "blocked_from_race"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "counter_position",
+          "mechanism": "need_every_capacity"
+        }
+      ],
+      "required_retention_events": [
+        "export_ban_timeline",
+        "government_choice_disclaimer",
+        "gray_zone_business",
+        "survival_rate",
+        "open_debate",
+        "revenue_impact",
+        "counter_position"
+      ],
+      "original_moves": [
+        "2018 年起政府施压不得向中国出售 EUV,至今零成交",
+        "42 国同意出口管制:\"不是我们的选择,是政府的选择\"",
+        "旧机型翻新后仍大量销往中国,96% 历史售出机器仍在运转",
+        "旧代际设备是否也该禁的公开辩论",
+        "若管制扩大到旧代际将重创营收",
+        "公司反立场:指数级需求在这里,我们需要全球所有产能"
+      ],
+      "abstract_move": "禁运时间线 + 管制规模数字 + 公司立场声明 + 灰色地带存量业务 + 存活率数字 + 开放争议 + 冲击推演 + 公司反立场",
+      "replacement_needs": [
+        "一条禁运或管制的时间线",
+        "一组参与管制的国家数量",
+        "一句公司划清责任的立场引语",
+        "一块处于灰色地带的存量业务与存活率数字",
+        "一个尚未有结论的公开争议",
+        "一段营收冲击推演与一句公司反立场引语"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(72);打开的悬念 LOOP05(不闭合) 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 72
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "next_gen_closing_reaffirmation",
+      "start_ratio": 0.9432,
+      "end_ratio": 1,
+      "start_sec": 1042.5,
+      "end_sec": 1105.3,
+      "position_label": "94.3%–100%(17:23–18:25)",
+      "purpose": "结尾段三重闭合:下一代机器实物现身并回收开场伏笔(更贵、突破已知物理边界)与追赶者押注伏笔(首发归属);复述标题主承诺\"全世界的依赖只会加深\";以地缘风险承认、执行承诺与\"不会停止\"的宣言收束",
+      "peaks": [
+        {
+          "peak_id": "PK10",
+          "peak_type": "title_callback",
+          "strength": 70,
+          "position_ratio": 0.9678,
+          "time_ms": 1069690,
+          "reason": "\"全世界的依赖只会加深\"复述标题,叠加不停歇宣言完成主承诺闭合"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "layered_reveal_with_closing_reaffirmation",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "deferred_product_reveal",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "callback_confirmation",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE22",
+          "event_type": "next_gen_reveal",
+          "mechanism": "next_machine_first_customer"
+        },
+        {
+          "event_id": "RE23",
+          "event_type": "closing_commitment",
+          "mechanism": "risk_then_execution_vow"
+        }
+      ],
+      "required_retention_events": [
+        "imperative_lead",
+        "next_gen_reveal",
+        "callback_payoff",
+        "title_callback",
+        "risk_acknowledgment",
+        "closing_vow"
+      ],
+      "original_moves": [
+        "\"去看那个大家伙\":下一代 High NA 机器 EXE 5000 现身",
+        "英特尔宣布 2025 年首发、已另售四台,回收追赶者伏笔",
+        "复述主承诺:全世界的依赖只会加深",
+        "承认俄乌战争等地缘风险并希望可控",
+        "执行承诺:继续压低每晶体管成本、提供更强半导体",
+        "宣言收尾:'这不会停止'"
+      ],
+      "abstract_move": "祈使句带路 + 下一代实物现身 + 首发归属回收伏笔 + 主承诺复述 + 风险承认 + 执行承诺 + 不停歇宣言",
+      "replacement_needs": [
+        "一个下一代产品的实物与名称",
+        "一个首发客户的归属事实",
+        "一句复述标题主承诺的句子",
+        "一个对不可控风险的承认",
+        "一条面向未来的执行承诺",
+        "一句否定式的不停歇宣言"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK10(70);回收了前文的悬念 FS01→LOOP01、FS01→LOOP02、FS03→LOOP03。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK10",
+          "strength": 70
+        }
+      ],
+      "ai_refined": true
+    }
+  ]
+}

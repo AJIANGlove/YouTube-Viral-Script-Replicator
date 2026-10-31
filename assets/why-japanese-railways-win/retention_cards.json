@@ -1,0 +1,954 @@
+{
+  "version": "1.1",
+  "generated_at": "2026-10-30T14:41:43.474Z",
+  "source": "program + ai",
+  "field_sources": {
+    "position_peaks_loops": "timeline.json(normalized_pattern / peak_points / open_loops / retention_events)",
+    "original_moves": "LLM(prompts/retention_card.md)",
+    "abstract_move": "LLM(prompts/retention_card.md)",
+    "replacement_needs": "LLM(prompts/retention_card.md)",
+    "deletability": "程序规则:持有高峰/跨段悬念/开场段=不可删;只有段内小悬念=可并入;都没有=可删"
+  },
+  "cards": [
+    {
+      "stage_id": "FS01",
+      "function": "icon_association_reframe_hook",
+      "start_ratio": 0,
+      "end_ratio": 0.0489,
+      "start_sec": 0.6,
+      "end_sec": 61,
+      "position_label": "0%–4.9%(0:01–1:01)",
+      "purpose": "唤起观众对标志性符号的现成认知并确认其合理,用规模数据三连与零事故排比堆叠敬畏,最后一句\"这些才刚开始解释\"把符号降级为引子,挂起主悬念",
+      "peaks": [
+        {
+          "peak_id": "PK01",
+          "peak_type": "information_reveal",
+          "strength": 68,
+          "position_ratio": 0.0137,
+          "time_ms": 17119,
+          "reason": "首个硬数字兑现:数小时旅程被压缩成零头,规模叙事的第一次情绪抬升"
+        },
+        {
+          "peak_id": "PK02",
+          "peak_type": "awe_stat_climax",
+          "strength": 74,
+          "position_ratio": 0.0342,
+          "time_ms": 42680,
+          "reason": "数十亿运量叠加零事故纪录,敬畏感顶点,为标题问题充值"
+        },
+        {
+          "peak_id": "PK03",
+          "peak_type": "surprise",
+          "strength": 78,
+          "position_ratio": 0.0444,
+          "time_ms": 55520,
+          "reason": "\"才刚开始解释\"的翻转:熟悉答案被降级为引子,主悬念点火"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP01",
+          "tension": "主悬念:从熟悉符号翻转出的\"真正原因是什么\",驱动全片",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE01",
+          "event_type": "icon_association",
+          "mechanism": "familiar_image_entry"
+        },
+        {
+          "event_id": "RE02",
+          "event_type": "stat_cascade",
+          "mechanism": "time_compression_number"
+        },
+        {
+          "event_id": "RE03",
+          "event_type": "zero_incident_awe",
+          "mechanism": "safety_record_stack"
+        },
+        {
+          "event_id": "RE04",
+          "event_type": "reframe_tease",
+          "mechanism": "only_begins_to_explain"
+        }
+      ],
+      "required_retention_events": [
+        "icon_association",
+        "stat_cascade",
+        "zero_incident_awe",
+        "reframe_tease"
+      ],
+      "original_moves": [
+        "唤起观众脑中对日本铁路的默认画面:新干线",
+        "确认联想合理:世界首条高铁,东京-大阪 6 小时压到 3 小时",
+        "堆叠规模数据:日均 372 列、年运 1.58 亿人次、累计超 65 亿",
+        "零事故三连:无脱轨、无重大事故、零死亡",
+        "翻转预告:这些才刚开始解释日本客运铁路为何独树一帜"
+      ],
+      "abstract_move": "熟悉符号唤起 + 认同确认 + 规模数据三连 + 零失误排比 + 「只是开头」翻转预告",
+      "replacement_needs": [
+        "一个目标受众一眼认得的标志符号",
+        "一组同口径的规模/频次/累计数据",
+        "一项零失误或零事故类纪录",
+        "一个后文真能兑现的更深层答案"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "开场钩子段;持有高峰 PK01(68)、PK02(74)、PK03(78);打开的悬念 LOOP01→FS13 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK01",
+          "strength": 68
+        },
+        {
+          "peak_id": "PK02",
+          "strength": 74
+        },
+        {
+          "peak_id": "PK03",
+          "strength": 78
+        }
+      ],
+      "hook": {
+        "start_ms": 0,
+        "end_ms": 30000,
+        "start_timecode": "00:00:00.000",
+        "end_timecode": "00:00:30.000",
+        "hook_type": "familiar_icon_stat_stack_with_reframe_tease",
+        "first_stimulus_ms": 6799,
+        "first_payoff_ms": 17119,
+        "evidence_refs": [
+          "C0001",
+          "C0004",
+          "C0009",
+          "C0025"
+        ]
+      },
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS02",
+      "function": "subject_reframe_scope_reveal",
+      "start_ratio": 0.0471,
+      "end_ratio": 0.0945,
+      "start_sec": 58.9,
+      "end_sec": 118.1,
+      "position_label": "4.7%–9.5%(0:59–1:58)",
+      "purpose": "用国际量级对照与盈利声明重置主角:大部分里程与利润来自普通速度的服务;随后取景一个具体区域,揭示服务网络的真实构成(招牌产品只是零头)",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP02",
+          "tension": "主角归属悬念:颠覆观众对成功来源的默认假设",
+          "closes_in": "FS04"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE05",
+          "event_type": "case_zoom_in",
+          "mechanism": "take_a_place_pivot"
+        }
+      ],
+      "required_retention_events": [
+        "scale_comparison",
+        "case_zoom_in",
+        "map_reveal",
+        "conventional_majority_hint"
+      ],
+      "original_moves": [
+        "把日本铁路总运量与印度、中国两个大国并列",
+        "点明多数铁路公司盈利且服务高频",
+        "暗示大部分里程与利润来自普通速度的列车",
+        "取景九州:JR 九州除 2 条新干线外还有 8 条干线、13 条区域线、500 多个车站"
+      ],
+      "abstract_move": "量级对照 + 盈利声明 + 低速暗示 + 具体区域的网络构成揭示",
+      "replacement_needs": [
+        "一组同量级的横向对照对象",
+        "一张具体区域网络的构成清单(招牌项与常规项的数量对比)"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP02→FS04 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS03",
+      "function": "persona_scenario_walkthrough",
+      "start_ratio": 0.0929,
+      "end_ratio": 0.1554,
+      "start_sec": 116.1,
+      "end_sec": 194.1,
+      "position_label": "9.3%–15.5%(1:56–3:14)",
+      "purpose": "用一个没有招牌产品可用的具体出行者人设,让观众亲手验证普通服务网络的价值:两档方案的时刻、频率、时长与价格,怎么选都优于替代品",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP03",
+          "tension": "场景悬念:把网络价值押在一次具体出行决策上",
+          "closes_in": "FS03"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP03",
+          "payoff_type": "scenario_resolution",
+          "opened_in": "FS03"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE06",
+          "event_type": "persona_entry",
+          "mechanism": "for_a_student_scenario"
+        },
+        {
+          "event_id": "RE07",
+          "event_type": "reliability_proof",
+          "mechanism": "delay_minute_fact"
+        }
+      ],
+      "required_retention_events": [
+        "persona_entry",
+        "option_menu",
+        "price_time_contrast",
+        "reliability_proof"
+      ],
+      "original_moves": [
+        "给出人设:一个住在新干线到不了的地方的学生,要去另一个校区开会",
+        "列出两档方案:特急 Sonic 22 分钟 15 美元 vs 普通车 40-50 分钟约 5 美元",
+        "论证无论选哪档,铁路都比开车快、比找停车位省心",
+        "佐证可信与需求:全网平均延误约一分钟、车厢通常坐得满"
+      ],
+      "abstract_move": "具身人设与约束 + 两档方案菜单 + 时间价格对照 + 准点与满载佐证 + 「怎么选都合理」落点",
+      "replacement_needs": [
+        "一个具体用户画像及其使用约束",
+        "两档可比方案的时刻/时长/价格参数",
+        "一组可靠性(准点率/延误)与需求(上座)事实"
+      ],
+      "deletability": "可并入",
+      "deletability_reason": "没有高峰,只有段内小悬念 LOOP03。",
+      "merge_keep": "内容可以删,但相邻段要补一个小问答:场景悬念:把网络价值押在一次具体出行决策上",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS04",
+      "function": "bedrock_thesis_evidence",
+      "start_ratio": 0.1531,
+      "end_ratio": 0.1977,
+      "start_sec": 191.3,
+      "end_sec": 247,
+      "position_label": "15.3%–19.8%(3:11–4:07)",
+      "purpose": "用招牌产品的收入占比、载客距离倍数与运量倍数三组同口径数字钉死主角翻转,给出\"基石是平凡服务\"的定性句,并提出\"不止技术,更在于文化\"的双因命题",
+      "peaks": [
+        {
+          "peak_id": "PK04",
+          "peak_type": "information_reveal",
+          "strength": 80,
+          "position_ratio": 0.163,
+          "time_ms": 203599,
+          "reason": "普通产品运量数倍于招牌产品的硬对照,主角翻转被数字钉死"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP02",
+          "payoff_type": "stat_confirmed_subject_flip",
+          "opened_in": "FS02"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE08",
+          "event_type": "ratio_flip",
+          "mechanism": "volume_contrast_reveal"
+        },
+        {
+          "event_id": "RE09",
+          "event_type": "culture_thesis",
+          "mechanism": "beyond_technology_claim"
+        }
+      ],
+      "required_retention_events": [
+        "revenue_split_reveal",
+        "ratio_flip",
+        "bedrock_thesis",
+        "culture_thesis"
+      ],
+      "original_moves": [
+        "揭示新干线只占 JR 九州铁路收入约三分之一",
+        "普通铁路载客距离接近四倍",
+        "同年岛内客运 3 亿人次 vs 新干线 1200 万",
+        "定性句:成功的基石是普通客运列车",
+        "列出信任三要素:安全、准点、高频、线路选择多",
+        "提出双因命题:快有帮助,但成功同样在于铁路文化"
+      ],
+      "abstract_move": "占比揭示 + 两组倍数对照 + 基石定性句 + 信任要素清单 + 双因命题",
+      "replacement_needs": [
+        "一个招牌产品收入占比数据",
+        "两组普通产品与招牌产品的同口径运量对照",
+        "一个可展开论证的「文化/习惯」命题"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK04(80);回收了前文的悬念 FS02→LOOP02。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK04",
+          "strength": 80
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS05",
+      "function": "geographic_historical_foundation",
+      "start_ratio": 0.1963,
+      "end_ratio": 0.239,
+      "start_sec": 245.3,
+      "end_sec": 298.6,
+      "position_label": "19.6%–23.9%(4:05–4:59)",
+      "purpose": "给出成功的先天条件:地形决定人口密度、岛域决定城市间距、世纪之交的历史时点让铺轨与工业化绑定、战后货运让位使客运无竞争者",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "geography_logic",
+        "history_timeline",
+        "freight_absence_fact"
+      ],
+      "original_moves": [
+        "用多山地形解释人口中心密集集中",
+        "用岛国地理解释城市间距适中,利于早期连通",
+        "19 世纪末铺轨与工业化、国家连结绑定",
+        "战后货运让位卡车与港口,客运铁路不必与货运争线"
+      ],
+      "abstract_move": "地形因果 + 间距论证 + 历史时点绑定 + 竞争缺位事实",
+      "replacement_needs": [
+        "一组地理/人口结构事实",
+        "一段基础设施与经济发展同步的历史",
+        "一个竞争缺位或主动让位的事实"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS06",
+      "function": "crisis_escalation",
+      "start_ratio": 0.2373,
+      "end_ratio": 0.3245,
+      "start_sec": 296.4,
+      "end_sec": 405.4,
+      "position_label": "23.7%–32.5%(4:56–6:45)",
+      "purpose": "否定先天决定论:该主体同样是替代品大国;引入昔日国有巨头的档案,用\"辉煌同年首亏\"点火,经份额坍塌与债务量级类比把危机推到顶点,逼出改革呼声",
+      "peaks": [
+        {
+          "peak_id": "PK05",
+          "peak_type": "stakes_escalation",
+          "strength": 74,
+          "position_ratio": 0.3083,
+          "time_ms": 385120,
+          "reason": "债务被类比为国家级量级,危机弧线的压迫顶点"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP04",
+          "tension": "危机弧线:从首亏年份到债务量级的持续加压",
+          "closes_in": "FS10"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE10",
+          "event_type": "contradiction_turn",
+          "mechanism": "not_solely_responsible_pivot"
+        },
+        {
+          "event_id": "RE11",
+          "event_type": "ominous_first",
+          "mechanism": "same_year_dark_record"
+        },
+        {
+          "event_id": "RE12",
+          "event_type": "debt_scale_shock",
+          "mechanism": "national_debt_comparison"
+        }
+      ],
+      "required_retention_events": [
+        "contradiction_turn",
+        "deadpan_irony",
+        "decline_statistics",
+        "debt_scale_shock",
+        "reform_tease"
+      ],
+      "original_moves": [
+        "否定先天决定论:日本也是汽车大国(出口第三、保有率前列)",
+        "引入国有巨头 JNR:1949 年成立、占全网 80%",
+        "点出 1964 年:新干线通车同年首次亏损",
+        "60-70 年代份额坍塌:客运 50%→20% 中段,货运 50%→5%",
+        "80 年代债务达 20 万亿日元,堪比当时整个国家的债务",
+        "私有化方案从小组讨论变成唯一合逻辑选项"
+      ],
+      "abstract_move": "条件否定 + 冷面反转 + 巨头档案 + 辉煌同年首亏 + 份额坍塌 + 债务量级类比 + 改革呼声",
+      "replacement_needs": [
+        "一个「同样擅长替代品」的反证",
+        "一个昔日巨头的主体档案(成立时间、份额)",
+        "一组份额/亏损坍塌数据",
+        "一个跨量级的债务类比"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK05(74);打开的悬念 LOOP04→FS10 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK05",
+          "strength": 74
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS07",
+      "function": "reform_design_blueprint",
+      "start_ratio": 0.3225,
+      "end_ratio": 0.417,
+      "start_sec": 402.9,
+      "end_sec": 520.9,
+      "position_label": "32.3%–41.7%(6:43–8:41)",
+      "purpose": "展示改革蓝图的设计感:一分为多、按客流划界、境内完成率极高、盈亏线路搭配、关停受限下的交叉补贴,让拆分后的主体苦乐均摊",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP05",
+          "tension": "机制悬念:分配矛盾需要一个制度答案",
+          "closes_in": "FS08"
+        }
+      ],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE13",
+          "event_type": "border_logic",
+          "mechanism": "traffic_pattern_design"
+        }
+      ],
+      "required_retention_events": [
+        "division_blueprint",
+        "border_logic",
+        "balance_pairing",
+        "closure_constraint"
+      ],
+      "original_moves": [
+        "把 JNR 一拆为九",
+        "JR 西/中/东按客流划界,超 95% 出行在公司境内完成",
+        "盈亏线路搭配:通勤金矿的神户线与山区亏损的艺备线",
+        "关停线路审批困难,实际用高流量线的利润交叉补贴",
+        "苦乐在三家公司间大体均摊"
+      ],
+      "abstract_move": "一分为多 + 流量划界 + 境内完成率 + 盈亏搭配案例 + 退出受限约束 + 苦乐均摊",
+      "replacement_needs": [
+        "一个拆分方案及其划界逻辑",
+        "一组境内完成率数据",
+        "一对盈亏对照的具体案例",
+        "一个退出受限的制度约束"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP05→FS08 跨段。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS08",
+      "function": "imbalance_correction_mechanism",
+      "start_ratio": 0.415,
+      "end_ratio": 0.472,
+      "start_sec": 518.5,
+      "end_sec": 589.7,
+      "position_label": "41.5%–47.2%(8:38–9:50)",
+      "purpose": "处理王牌资产的分配不公:各家份额与需求落差悬殊,于是设立持有实体只租不卖,按各段利润比例计费,用机制矫正地理不公",
+      "peaks": [],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP06",
+          "tension": "边缘案例悬念:配方对弱者是否同样有效",
+          "closes_in": "FS12"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP05",
+          "payoff_type": "mechanism_answer",
+          "opened_in": "FS07"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE14",
+          "event_type": "crown_jewel_tension",
+          "mechanism": "unequal_inheritance_setup"
+        }
+      ],
+      "required_retention_events": [
+        "crown_jewel_tension",
+        "inequality_reveal",
+        "lease_correction_mechanism"
+      ],
+      "original_moves": [
+        "点出王牌资产:新干线在三家间分配天然不均",
+        "JR 中分得 344 英里最赚钱,JR 东 519 英里反而难赚",
+        "设立新干线持有公司,轨道只租不卖",
+        "租金不按资产成本而按各段利润比例计算,矫正地理不公"
+      ],
+      "abstract_move": "王牌资产登场 + 份额对照 + 需求落差 + 持有实体安排 + 按利润计费矫正",
+      "replacement_needs": [
+        "一项分配不均的核心资产",
+        "一组各主体份额与需求落差数据",
+        "一个按收益而非成本计费的矫正机制"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "打开的悬念 LOOP06→FS12 跨段;回收了前文的悬念 FS07→LOOP05。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS09",
+      "function": "edge_case_debt_architecture",
+      "start_ratio": 0.4697,
+      "end_ratio": 0.5744,
+      "start_sec": 586.7,
+      "end_sec": 717.6,
+      "position_label": "47%–57.4%(9:47–11:58)",
+      "purpose": "接住边缘主体与历史包袱:版图扩展揭示还有先天不足者(给补贴),亏损业务切出单设实体,伞形公司持股并分层承接债务,定性为\"先像私营一样经营的国有公司\"",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE15",
+          "event_type": "scope_expansion",
+          "mechanism": "map_boundary_break"
+        },
+        {
+          "event_id": "RE16",
+          "event_type": "debt_architecture",
+          "mechanism": "layered_liability_allocation"
+        }
+      ],
+      "required_retention_events": [
+        "scope_expansion",
+        "subsidy_exception",
+        "entity_spinoff",
+        "debt_architecture",
+        "quasi_private_reveal"
+      ],
+      "original_moves": [
+        "扩展版图:本州之外还有九州、四国、北海道三个离岛",
+        "离岛三社先天不足,获政府补贴兜底",
+        "货运业务切出,成立全国单一货运公司",
+        "设立伞形清算公司持有全部股权",
+        "债务分层:部分给三家本州公司、离岛豁免、部分给持有公司、大头给伞公司",
+        "定性:先做成「像私营公司一样追求利润的国有公司」"
+      ],
+      "abstract_move": "版图扩展 + 补贴例外 + 亏损业务切出 + 伞形持股实体 + 债务分层 + 准私营定性",
+      "replacement_needs": [
+        "一组先天不足的边缘主体清单",
+        "一个剥离亏损业务的安排",
+        "一个债务分层承接的结构设计"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS10",
+      "function": "turnaround_results_reveal",
+      "start_ratio": 0.573,
+      "end_ratio": 0.6909,
+      "start_sec": 715.8,
+      "end_sec": 863,
+      "position_label": "57.3%–69.1%(11:56–14:23)",
+      "purpose": "兑现危机弧线:上市门槛与利益相关复述蓄势,裁员与人均效率对照、服务反升、收支比跨过 1 的拐点接踵而至;主动承认混杂变量,五年一到立即上市还债",
+      "peaks": [
+        {
+          "peak_id": "PK06",
+          "peak_type": "emotional_payoff",
+          "strength": 82,
+          "position_ratio": 0.6488,
+          "time_ms": 810560,
+          "reason": "收支比跨过1的拐点,改革叙事的最大情绪回报"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP07",
+          "tension": "第二引擎悬念:暗示成功配方里还缺一味",
+          "closes_in": "FS11"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP04",
+          "payoff_type": "turnaround_confirmation",
+          "opened_in": "FS06"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE17",
+          "event_type": "stakes_recap",
+          "mechanism": "grand_plan_checklist"
+        },
+        {
+          "event_id": "RE18",
+          "event_type": "turnaround_metrics",
+          "mechanism": "headcount_cut_reveal"
+        },
+        {
+          "event_id": "RE19",
+          "event_type": "profit_inflection",
+          "mechanism": "ratio_crossover"
+        }
+      ],
+      "required_retention_events": [
+        "listing_constraints",
+        "stakes_recap",
+        "turnaround_metrics",
+        "confounder_admission",
+        "payoff_listing"
+      ],
+      "original_moves": [
+        "给出上市硬约束:税前利润达标、公司成立满 5 年",
+        "复述大计划的全部利益相关方,蓄势",
+        "裁员 9 万,人均服务乘客里程从 31.1 万英里升至 89.7 万英里",
+        "班次反升、严重事故减半、车站与车辆改善",
+        "收支比从 0.771 到 1.167,开始盈利,且不靠补贴与涨价",
+        "主动承认混杂变量:恰逢经济繁荣期",
+        "五年一到三家立即上市,售股还债、回购新干线"
+      ],
+      "abstract_move": "达标硬约束 + 利益相关复述 + 裁员效率对照 + 服务反升 + 收支比拐点 + 混杂变量承认 + 到期上市",
+      "replacement_needs": [
+        "一组上市/达标的硬约束条件",
+        "一组前后效率对照数据",
+        "一个跨过 1 的比值拐点",
+        "一个可坦然承认的混杂变量"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK06(82);打开的悬念 LOOP07→FS11 跨段;回收了前文的悬念 FS06→LOOP04。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK06",
+          "strength": 82
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS11",
+      "function": "second_engine_reveal",
+      "start_ratio": 0.6894,
+      "end_ratio": 0.8033,
+      "start_sec": 861.2,
+      "end_sec": 1003.5,
+      "position_label": "68.9%–80.3%(14:21–16:44)",
+      "purpose": "揭晓第二引擎:一个看似无关的行业;用具身街区案例展示其形态,追溯制度倒逼的历史起源,列出全员采纳清单与收入占比佐证",
+      "peaks": [
+        {
+          "peak_id": "PK07",
+          "peak_type": "surprise",
+          "strength": 76,
+          "position_ratio": 0.7024,
+          "time_ms": 877519,
+          "reason": "第二引擎竟是看似无关的行业,反直觉点名的顿悟时刻"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP07",
+          "payoff_type": "named_reveal",
+          "opened_in": "FS10"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE20",
+          "event_type": "second_engine_tease",
+          "mechanism": "another_crucial_change"
+        },
+        {
+          "event_id": "RE21",
+          "event_type": "place_embodiment",
+          "mechanism": "named_district_showcase"
+        },
+        {
+          "event_id": "RE22",
+          "event_type": "adoption_flip",
+          "mechanism": "incumbents_follow_pioneers"
+        }
+      ],
+      "required_retention_events": [
+        "second_engine_tease",
+        "place_embodiment",
+        "historical_origin",
+        "adoption_catalog",
+        "revenue_share_proof"
+      ],
+      "original_moves": [
+        "预告:除了铁路改革,还有另一个关键变化",
+        "点名:房地产",
+        "具身案例:东急电铁与自由之丘街区(11 分钟车程、181 日元、站城一体)",
+        "追溯起源:1906 年国有化法案限制私铁竞争,逼出沿线开发副业",
+        "全员采纳清单:JR 九州快餐零售、JR 东滑雪场、JR 西酒店",
+        "佐证:JR 西约两成收入来自地产"
+      ],
+      "abstract_move": "第二引擎预告 + 行业名单独收束 + 街区具身 + 制度倒逼起源 + 全员采纳清单 + 收入占比佐证",
+      "replacement_needs": [
+        "一个看似无关的第二收入行业",
+        "一个可具身展示的街区/项目案例",
+        "一段倒逼副业的制度史",
+        "一组采纳主体与收入占比数据"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK07(76);回收了前文的悬念 FS10→LOOP07。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK07",
+          "strength": 76
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS12",
+      "function": "caveat_counterevidence",
+      "start_ratio": 0.8017,
+      "end_ratio": 0.8876,
+      "start_sec": 1001.5,
+      "end_sec": 1108.8,
+      "position_label": "80.2%–88.8%(16:42–18:29)",
+      "purpose": "给颂歌加上代价注脚:配方复述后立即转折\"并非万能\",掉队主体的恶性循环、纾困受挫与工程延期、隐性补贴与纳税人兜底的总账,维持叙事诚实",
+      "peaks": [
+        {
+          "peak_id": "PK08",
+          "peak_type": "information_reveal",
+          "strength": 75,
+          "position_ratio": 0.8736,
+          "time_ms": 1091360,
+          "reason": "纳税人兜底的巨额账单,成功故事的代价注脚,诚实感高峰"
+        }
+      ],
+      "loops_opened": [
+        {
+          "loop_id": "LOOP08",
+          "tension": "开放悬念:现实尚未给出答案,合作纾困受挫、关键工程延期",
+          "closes_in": null
+        },
+        {
+          "loop_id": "LOOP09",
+          "tension": "归因校准悬念:防止观众带走过度简化的结论",
+          "closes_in": "FS13"
+        }
+      ],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP06",
+          "payoff_type": "mixed_outcome_reveal",
+          "opened_in": "FS08"
+        }
+      ],
+      "loops_open_ended": [
+        "LOOP08"
+      ],
+      "retention_events": [
+        {
+          "event_id": "RE23",
+          "event_type": "caveat_turn",
+          "mechanism": "not_one_size_fits_all"
+        },
+        {
+          "event_id": "RE24",
+          "event_type": "honesty_punch",
+          "mechanism": "taxpayer_bill_reveal"
+        }
+      ],
+      "required_retention_events": [
+        "recipe_recap",
+        "caveat_turn",
+        "decline_cycle",
+        "hidden_subsidy_reveal",
+        "taxpayer_cost"
+      ],
+      "original_moves": [
+        "复述成功配方:结构改革+地产副业+继承的网络",
+        "转折:并非万能方案",
+        "JR 九州 2016 年才上市,四国、北海道仍远远掉队",
+        "北海道:补贴占收入近半、人口下降、减班恶性循环",
+        "纾困合作只落地零星观光列车,札幌延伸工程延期到 2031",
+        "点破:铁路本就不为盈利,成功背后有隐性补贴",
+        "纳税人最终买单约 2000 亿美元债务"
+      ],
+      "abstract_move": "配方复述 + 非万能转折 + 掉队对照 + 恶性循环 + 纾困受挫 + 隐性补贴揭示 + 兜底总账",
+      "replacement_needs": [
+        "一组掉队主体的对照事实",
+        "一个恶性循环机制",
+        "一笔由公众兜底的总账"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK08(75);打开的悬念 LOOP08(不闭合)、LOOP09→FS13 跨段;回收了前文的悬念 FS08→LOOP06。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK08",
+          "strength": 75
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS13",
+      "function": "worldview_synthesis_closure",
+      "start_ratio": 0.8864,
+      "end_ratio": 0.9463,
+      "start_sec": 1107.3,
+      "end_sec": 1182.2,
+      "position_label": "88.6%–94.6%(18:27–19:42)",
+      "purpose": "用全球对照校准归因:不是标签而是结构;以互为因果的飞轮句压缩全部机制,把原点落到\"愿意先期投入的公共意志\",直接回答标题之问并收束于世代价值",
+      "peaks": [
+        {
+          "peak_id": "PK09",
+          "peak_type": "title_callback",
+          "strength": 86,
+          "position_ratio": 0.9364,
+          "time_ms": 1169760,
+          "reason": "飞轮回环后的原点归因,直接回答标题之问,全片语义最高点"
+        }
+      ],
+      "loops_opened": [],
+      "loops_closed": [
+        {
+          "loop_id": "LOOP01",
+          "payoff_type": "origin_answer_with_virtuous_cycle",
+          "opened_in": "FS01"
+        },
+        {
+          "loop_id": "LOOP09",
+          "payoff_type": "nuanced_attribution",
+          "opened_in": "FS12"
+        }
+      ],
+      "loops_open_ended": [],
+      "retention_events": [
+        {
+          "event_id": "RE25",
+          "event_type": "flywheel_synthesis",
+          "mechanism": "virtuous_cycle_loop"
+        },
+        {
+          "event_id": "RE26",
+          "event_type": "origin_answer",
+          "mechanism": "generational_investment_close"
+        }
+      ],
+      "required_retention_events": [
+        "global_contrast",
+        "attribution_nuance",
+        "virtuous_cycle_synthesis",
+        "origin_answer"
+      ],
+      "original_moves": [
+        "全球对照:英国、阿根廷的铁路私有化结果参差",
+        "校准:不能把成功归因于私有化标签本身",
+        "是结构:区域化运营+严格监管+竞争市场",
+        "飞轮句:快、频、准与公司成功互为因果",
+        "原点归因:政府与纳税人愿意先期巨额投入启动飞轮",
+        "收束:这张网滋养了几代人的经济与社会"
+      ],
+      "abstract_move": "全球对照 + 归因校准 + 结构三要素 + 飞轮回环 + 原点答案 + 世代价值收束",
+      "replacement_needs": [
+        "一组国际对照案例",
+        "一个「是结构而非标签」的校准判断",
+        "一个互为因果的飞轮表述",
+        "一个先期公共投入的 origin 事实"
+      ],
+      "deletability": "不可删",
+      "deletability_reason": "持有高峰 PK09(86);回收了前文的悬念 FS01→LOOP01、FS12→LOOP09。事实不够时只能换内容保功能,接不住就在写前分析里标缺口。",
+      "merge_keep": "",
+      "loss_if_deleted": [
+        {
+          "peak_id": "PK09",
+          "strength": 86
+        }
+      ],
+      "ai_refined": true
+    },
+    {
+      "stage_id": "FS14",
+      "function": "sponsor_message_tail",
+      "start_ratio": 0.9445,
+      "end_ratio": 1,
+      "start_sec": 1180,
+      "end_sec": 1249.2,
+      "position_label": "94.5%–100%(19:40–20:49)",
+      "purpose": "正片闭合后的商业口播:叙述者个人经历切入,痛点对照、产品机制、价格锚点、操作步骤与折扣码收束;与正片内容无涉,可独立裁切",
+      "peaks": [],
+      "loops_opened": [],
+      "loops_closed": [],
+      "loops_open_ended": [],
+      "retention_events": [],
+      "required_retention_events": [
+        "personal_anecdote",
+        "offer_mechanics",
+        "discount_code"
+      ],
+      "original_moves": [
+        "叙述者自述每年旅行 100 多天,境外流量是刚需",
+        "痛点:原运营商境外流量 10 美元/天且限速",
+        "解决方案:eSIM 产品覆盖 160 多个国家和 8 个地区",
+        "价格锚点:日本 5GB 11 美元、20GB 25 美元",
+        "操作三步:下载 App、选套餐、输入折扣码 Wendover 享 85 折",
+        "重复行动指令收束"
+      ],
+      "abstract_move": "个人经历切入 + 痛点价格对照 + 产品机制 + 价格锚点 + 操作步骤 + 折扣码收束",
+      "replacement_needs": [
+        "一个叙述者真实的使用场景",
+        "一组痛点与新品的价格对照",
+        "一个可重复的行动指令(折扣码/链接)"
+      ],
+      "deletability": "可删",
+      "deletability_reason": "没有高峰,也不开合任何悬念,删掉不丢爆点。",
+      "merge_keep": "",
+      "loss_if_deleted": [],
+      "ai_refined": true
+    }
+  ]
+}
