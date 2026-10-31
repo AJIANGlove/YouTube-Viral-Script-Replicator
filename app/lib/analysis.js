@@ -121,7 +121,8 @@ function analysisBrief(a, run, trackKey, mode) {
     // 每次改稿只改一两章,同一个量在稿子里同时有三个数,论点核对每轮都报账对不上)
     out.push('账本(程序已按公式重算;标「程序重算」的以程序的数为准)。金额锁定:稿子里的收入、成本、利润、时薪、倍数、回本时间,只能用这张账本里的数(或事实表里的数),照抄后面「稿中写」的写法,可以四舍五入但不许重算出别的数;同一个量全文只能有一个数值。账本里有的量(总收入、总成本、利润、时薪等),事实表里估算出来的合计和账本不一样时,一律用账本的(实测事实表 F18 估算利润 9,641만、账本 9,703만,稿子两个都用了)。账本里没有的项目(比如想多算一项调味料成本),不许自己加进合计重新算,只能不提或只做定性说明:\n' + a.ledger.map(l => '- ' + (l.id ? l.id + ' ' : '') + l.item + ' = ' + (l.value || ((l.amount != null ? l.amount : '') + (l.unit ? ' ' + l.unit : ''))) +
       (l.formula ? ' [= ' + l.formula + ']' : '') + (l.mismatch ? '(程序重算:' + l.program_amount + (l.unit ? ' ' + l.unit : '') + ',原来写错了)' : '') + krLedgerForm(l) +
-      (l.fact_ids && l.fact_ids.length ? '(' + l.fact_ids.join(',') + ')' : '') + staleTag(stale.ledger, l.item)).join('\n'));
+      (l.fact_ids && l.fact_ids.length ? '(' + l.fact_ids.join(',') + ')' : '') + staleTag(stale.ledger, l.item) +
+      (l.bad ? '(这一行有问题,稿子里不要用这个数:' + l.bad + ')' : '')).join('\n'));
     const sayText = ledgerSayOn(run, trackKey) ? ledgerSayText(ledgerSay(a.ledger), mode !== 'review') : '';
     if (sayText) out.push(sayText);
   }
@@ -200,12 +201,12 @@ function ledgerSay(ledger, valIn) {
   const unitKey = l => String((l && l.unit) || '').replace(/\s+/g, '');
   const isMoney = l => l && MONEY_RE.test(unitKey(l));
   const f = id => String((byId[id] || {}).formula || '').replace(/\s+/g, '');
-  const sumParts = id => { const m = f(id).replace(/^\((.*)\)$/, '$1'); return /^L\d+(\+L\d+)+$/.test(m) ? m.split('+') : null; };
+  const sumParts = id => { const m = f(id).replace(/^\((.*)\)$/, '$1'); return /^L\d+[a-z]?(\+L\d+[a-z]?)+$/i.test(m) ? m.split('+') : null; };
   const expand = (id, depth) => { const p = depth < 3 ? sumParts(id) : null; return p ? p.flatMap(x => expand(x, depth + 1)) : [id]; };
   // 公式「A - B - (C+D)」:返回 { first: A, minus: [B, C, D] };不是这种形状返回 null
   const subParts = id => {
     let s = f(id);
-    if (!s || !/^[L\d+\-()]+$/.test(s)) return null;
+    if (!s || !/^[L\da-z+\-()]+$/i.test(s)) return null;
     const terms = []; let depth = 0, cur = '', sign = '+';
     for (const ch of s) {
       if (ch === '(') depth++;
@@ -216,12 +217,12 @@ function ledgerSay(ledger, valIn) {
     if (cur) terms.push([sign, cur]);
     if (terms.length < 2 || terms[0][0] !== '+' || terms.slice(1).some(t => t[0] !== '-')) return null;
     const one = t => t.replace(/^\((.*)\)$/, '$1');
-    if (!/^L\d+$/.test(one(terms[0][1]))) return null;
+    if (!/^L\d+[a-z]?$/i.test(one(terms[0][1]))) return null;
     const minus = [];
     for (const [, t] of terms.slice(1)) {
       const x = one(t);
-      if (/^L\d+$/.test(x)) minus.push(x);
-      else if (/^L\d+(\+L\d+)+$/.test(x)) minus.push(...x.split('+'));
+      if (/^L\d+[a-z]?$/i.test(x)) minus.push(x);
+      else if (/^L\d+[a-z]?(\+L\d+[a-z]?)+$/i.test(x)) minus.push(...x.split('+'));
       else return null;
     }
     return { first: one(terms[0][1]), minus };
@@ -322,7 +323,7 @@ function verifyLedger(ledger) {
     const f = String(l.formula || '').trim();
     delete l.program_amount; delete l.mismatch;
     if (f) {
-      const expr = f.replace(/L\d+/g, ref => (ref in val ? '(' + val[ref] + ')' : 'NaN'));
+      const expr = f.replace(/L\d+[a-z]?(?![a-z\d])/gi, ref => (ref in val ? '(' + val[ref] + ')' : 'NaN'));
       let calc = NaN;
       if (/^[\d.\s+\-*/()NaN]+$/.test(expr)) { try { calc = Function('"use strict";return (' + expr + ')')(); } catch (e) { calc = NaN; } }
       if (!isFinite(calc)) { errors.push(id + ' 的公式算不了:' + f); val[id] = isFinite(amount) ? amount : NaN; return; }
@@ -336,6 +337,107 @@ function verifyLedger(ledger) {
     } else val[id] = isFinite(amount) ? amount : NaN;
   });
   return { rows: rows.length, mismatches, errors };
+}
+
+// ---------- 账本体检(写稿之前把账做对) ----------
+// 实测(2026-10-31 统计已推的 21 本带公式的账本):10 本有算错的行,共 33 行;稿子照错账写,终审再改一个数牵出好几章,补改基本改不成。
+// 所以在写稿之前:① 有公式的行一律改成程序按公式算的数(AI 只负责填原始数和写公式,合计、利润、保本这些由程序算);
+// ② 公式算不了、加减时单位混用(月和天、万韩元和韩元)、改正幅度很大(多半是公式引用错了行)、没出处的原始数,交给 AI 只修账本一轮;
+// ③ 还修不好的行标出来,写稿时不许用这个数(AI 改一轮,不行人看,用户 2026-10-31)。
+const LEDGER_BIG_FIX = 0.1;
+const ASSUME_RE = /假设|假定|가정|추정|估算|예시|assum/i;
+function ledgerId(l, i) { return String(l.id || ('L' + (i + 1))); }
+function ledgerValueText(l, n) {
+  const u = String(l.unit || '');
+  if (MONEY_RE.test(u) && Math.abs(n * moneyScale(u)) >= 100) return krMoney(n * moneyScale(u)) + (u.includes('/') ? ' /' + u.split('/').slice(1).join('/') : '');
+  const r = Math.abs(n) >= 100 ? Math.round(n) : Math.round(n * 100) / 100;
+  return r.toLocaleString('en-US') + (u ? ' ' + u : '');
+}
+// 有公式的行改成程序算的数(amount 和 value 都改,原来的记在 program_fixed),返回改了哪些
+function ledgerWriteBack(a) {
+  const rows = (a && Array.isArray(a.ledger) ? a.ledger : []).filter(l => l && typeof l === 'object');
+  if (!rows.length) return [];
+  verifyLedger(rows);
+  const fixes = [];
+  rows.forEach((l, i) => {
+    if (!l.mismatch || !isFinite(Number(l.program_amount))) return;
+    const to = Number(l.program_amount);
+    const from = Number(String(l.amount == null ? '' : l.amount).replace(/,/g, ''));
+    fixes.push({ id: ledgerId(l, i), item: l.item || '', from: isFinite(from) ? from : null, to, unit: l.unit || '', from_text: ledgerValueText(l, isFinite(from) ? from : 0), to_text: ledgerValueText(l, to) });
+    l.program_fixed = { from: isFinite(from) ? from : null, value: l.value || '' };
+    l.amount = Math.abs(to) >= 100 ? Math.round(to) : Math.round(to * 100) / 100;
+    l.value = ledgerValueText(l, to);
+  });
+  verifyLedger(rows);
+  // 公式行的 value 只写了「계산」「计算」这类字、没有数的,填上程序算的数(页面和写稿都看得到具体数)
+  rows.forEach(l => { if (l.formula && isFinite(Number(l.program_amount)) && !/\d/.test(String(l.value || ''))) l.value = ledgerValueText(l, Number(l.program_amount)); });
+  return fixes;
+}
+// 程序查得出来的账本问题(不调 AI):[{ id, kind, text }]
+function ledgerProblems(a, run, fixes) {
+  const rows = (a && Array.isArray(a.ledger) ? a.ledger : []).filter(l => l && typeof l === 'object');
+  if (!rows.length) return [];
+  const out = [];
+  const chk = verifyLedger(rows);
+  chk.errors.forEach(e => { const id = String(e).split(' ')[0]; out.push({ id, kind: 'formula', text: e + '(只能用行编号、数字和 + - * / ( ),引用的行要排在前面)' }); });
+  const byId = {};
+  rows.forEach((l, i) => { byId[ledgerId(l, i)] = l; });
+  const desc = l => { const u = String(l.unit || ''); const money = MONEY_RE.test(u); return { money, scale: money ? moneyScale(u) : 1, per: periodOf(l), pct: /%|비율|比率/.test(u) }; };
+  rows.forEach((l, i) => {
+    const id = ledgerId(l, i), f = String(l.formula || '').replace(/\s+/g, '');
+    if (f && !/[*/]/.test(f)) {
+      const refs = (f.match(/L\d+[a-z]?(?![a-z\d])/gi) || []).filter(r => byId[r]);
+      const ds = [l, ...refs.map(r => byId[r])].map(desc);
+      const known = ds.filter(d => d.money || d.pct);
+      const diff = (k, label) => { const vs = [...new Set(known.map(d => d[k]).filter(Boolean))]; return vs.length > 1 ? label : ''; };
+      const why = [known.some(d => d.money) && known.some(d => d.pct) ? '钱和百分比' : '', diff('scale', '万韩元和韩元'), diff('per', '每月、每天、每年这些不同周期的数')].filter(Boolean);
+      if (why.length) out.push({ id, kind: 'unit', text: id + ' ' + (l.item || '') + ' 的公式 ' + f + ' 把' + why.join('、') + '直接加减了(单位:' + [l, ...refs.map(r => byId[r])].map(x => (x.id || '') + '=' + (x.unit || '无')).join(',') + ')' });
+    }
+    if (!f && MONEY_RE.test(String(l.unit || '')) && !(Array.isArray(l.fact_ids) && l.fact_ids.length) && !ASSUME_RE.test([l.item, l.value].join(' ')))
+      out.push({ id, kind: 'nosource', text: id + ' ' + (l.item || '') + ' 是原始数,但没写来自哪条事实(fact_ids 为空),也没标「假设」' });
+  });
+  // 只报「源头」算错的行:引用的行本身也被改过的,是跟着上游变的,不单独报(实测一处加错牵出下面 6 行都差很多)
+  const fixedIds = new Set((fixes || []).map(x => x.id));
+  (fixes || []).forEach(x => {
+    if (x.from == null || !x.to) return;
+    if ((String((byId[x.id] || {}).formula || '').match(/L\d+[a-z]?(?![a-z\d])/gi) || []).some(r => fixedIds.has(r))) return;
+    if (Math.abs(x.to - x.from) / Math.abs(x.to) > LEDGER_BIG_FIX) out.push({ id: x.id, kind: 'bigfix', text: x.id + ' ' + x.item + ':账本写的是 ' + x.from_text + ',按公式 ' + ((byId[x.id] || {}).formula || '') + ' 算是 ' + x.to_text + ',差得多,程序已经改成按公式算的数;如果其实是公式引用错了行,要改公式' });
+  });
+  if (ledgerSayOn(run) && !ledgerSay(rows).waterfalls.length) out.push({ id: '', kind: 'shape', text: '经济拆账题的账本里没有一行「利润 = 收入 - 成本1 - 成本2 …」(或「收入 - 成本合计」)的公式,程序排不出念账顺序' });
+  return out;
+}
+// 写稿前的账本体检:程序改正 → 有问题交给 AI 只修账本一轮 → 再改正 → 还有问题的行标「不许用」。会改 a.ledger,结果记在 a.ledger_checkup
+async function ledgerCheckup(run, cfg, a, vars) {
+  if (!a || !Array.isArray(a.ledger) || !a.ledger.length) return null;
+  const rec = { at: new Date().toISOString(), program_fixed: ledgerWriteBack(a) };
+  const before = ledgerProblems(a, run, rec.program_fixed);
+  rec.problems = before.map(p => p.text);
+  let after = before;
+  const fixable = before.filter(p => p.kind !== 'shape' || ledgerSayOn(run));
+  if (fixable.length && cfg) {
+    try {
+      const prompt = fillVars(readPrompt('ledger_fix.md'), {
+        ...(vars || {}), topic: run.topic || '', title: ((a.title || {}).final_title) || run.topic || '',
+        track_hint: ledgerSayOn(run) ? '这是经济拆账题(一家店的账),按下面「经济拆账账本的样子」整理。' : '这不是经济拆账题,账本只要算对、单位一致,不用套店铺的样子。',
+        facts: (a.facts || []).map(f => '- ' + f.id + ' [' + (f.kind || '') + '] ' + (f.content || '')).join('\n') || '(无)',
+        ledger_json: JSON.stringify(a.ledger.map(l => { const { program_amount, mismatch, program_fixed, bad, ...rest } = l; return rest; })),
+        problems: fixable.map(p => '- ' + p.text).join('\n')
+      });
+      const n0 = a.ledger.length;
+      const out = await callJson(run, cfg, prompt, 'AI 修账本', o => o && Array.isArray(o.ledger) && o.ledger.filter(l => l && typeof l === 'object').length >= Math.ceil(n0 / 2));
+      a.ledger = out.ledger.filter(l => l && typeof l === 'object' && !Array.isArray(l));
+      rec.ai = { ran: true, notes: String(out.notes || '').slice(0, 500), rows_before: n0, rows_after: a.ledger.length };
+      rec.ai_fixed = ledgerWriteBack(a);
+      after = ledgerProblems(a, run, []);
+    } catch (e) { rec.ai = { ran: false, error: e.message }; }
+  }
+  // 还修不好的:公式算不了、单位混用的行,写稿时不许用它的数
+  a.ledger.forEach(l => { if (l && typeof l === 'object') delete l.bad; });
+  after.filter(p => p.kind === 'formula' || p.kind === 'unit').forEach(p => { const l = a.ledger.find((x, i) => x && ledgerId(x, i) === p.id); if (l) l.bad = p.text; });
+  rec.remaining = after.map(p => p.text);
+  a.ledger_checkup = rec;
+  a.ledger_check = verifyLedger(a.ledger);
+  return rec;
 }
 
 function acceptedGaps(a) {
@@ -464,6 +566,9 @@ async function runAnalysis(runId) {
       store.saveRun(run);
       return;
     }
+    // 有公式的行先改成程序算的数(AI 修账本在「AI 先调整」里做)
+    const pf = ledgerWriteBack(a);
+    if (pf.length) a.ledger_checkup = { at: new Date().toISOString(), program_fixed: pf, problems: ledgerProblems(a, run, pf).map(p => p.text) };
     a.ledger_check = verifyLedger(a.ledger);
     run.analysis = a;
     run.analysis_raw = r.content;
@@ -841,6 +946,8 @@ async function runAutoAdjust(runId, draft, opts) {
   const prompt = fillVars(readPrompt('adjust.md'), { ...vars, search_results: search.resultsBrief(batches), analysis_json: JSON.stringify(forModel) });
   const out = await callJson(run, cfg, prompt, 'AI 先调整', o => typeof o === 'object' && !Array.isArray(o));
   const n = mergeAdjust(a, out, batches);
+  // 写稿前的账本体检:程序改正算错的行,单位混用/算不了/没出处的交给 AI 只修账本一轮
+  await ledgerCheckup(run, cfg, a, vars);
   a.ledger_check = verifyLedger(a.ledger);
   const fresh = store.getRun(run.id) || run;
   // 这段可能跑了几分钟:期间任务若已确认、已进入写稿,这次结果就不能再写,
@@ -924,7 +1031,7 @@ async function auditTitle(runId, draft, title) {
   return out;
 }
 
-module.exports = { krMoney, moneyScale, ledgerSayOn, ledgerSay, ledgerSayText, ledgerSayAmounts,
+module.exports = { ledgerWriteBack, ledgerProblems, ledgerCheckup, krMoney, moneyScale, ledgerSayOn, ledgerSay, ledgerSayText, ledgerSayAmounts,
   loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, HOOK_TYPES, hookType, acceptedGaps, verifyLedger,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,

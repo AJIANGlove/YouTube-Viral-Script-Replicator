@@ -2172,7 +2172,7 @@ async function runFinalPatch(runId, body) {
     // 人选的解决方式:{ R01: 'B' };选了就照这个方式改,不再看复审的原建议
     const chosen = x => { const k = (body.choices || {})[x.id]; return k ? arr((last.options || {})[x.id]).find(o => o.key === k) : null; };
     const howTo = x => { const o = chosen(x); return o ? '\n  人选的改法(' + o.key + '):' + o.zh : x.suggestion ? '\n  复审建议:' + x.suggestion : ''; };
-    const note = String(body.note || '').trim().slice(0, 3000);
+    const note = String(body.note || '').trim().slice(0, body.claim ? 6000 : 3000);
     // 勾选的「结构」问题整章重写,其余问题照常逐句补改
     const structPicked = picked.filter(x => x.level === '结构');
     const sentPicked = picked.filter(x => x.level !== '结构');
@@ -2368,6 +2368,9 @@ function startFinalPatch(runId, body) {
   const autoOnly = !!(body && body.auto);
   if (autoOnly && !arr(last.reverted).length) throw Object.assign(new Error('没有被退回的补改,不用自动重试'), { status: 400 });
   if (!autoOnly && !arr(body.ids).length && !String(body.note || '').trim()) throw Object.assign(new Error('至少勾一个问题,或写下你的决定'), { status: 400 });
+  // 论点核对还挡着发布:人点「按选中的方式补改」时把核对的问题一起带上改(实测人不知道该先点哪个,两个按钮各改一轮还要复审两次)
+  const ccNow = autoOnly ? null : claimToFix(run);
+  if (ccNow) body = { ...body, note: [String(body.note || '').trim(), claimNote(ccNow)].filter(Boolean).join('\n\n'), claim: true };
   passRunning.set(runId, '补改');
   (async () => {
     let ok = false;

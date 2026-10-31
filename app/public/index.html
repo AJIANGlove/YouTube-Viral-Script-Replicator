@@ -2524,7 +2524,42 @@ function rvPublishHtml(v) {
   const notes = (p.notes || []).length ? `<span class="hint">${p.good ? '平均 ' + p.avg + ' 分,' : ''}下面这些不挡发布,想改再改:${p.notes.map(esc).join(';')}</span>` : '';
   // 写法提示(从爆款学来的规则,还在验证):只提示,不进自动补改、不挡发布
   const craft = (p.craft_hints || []).length ? `<span class="hint">写法提示(从同类爆款学来的,不挡发布,只供参考):${p.craft_hints.map(esc).join(';')}</span>` : '';
-  return rvAutoLogHtml(v, p) + `<div class="rv-bar v13">${head}${resolved}${auto}${btn}${fix}${notes}${craft}</div>` + rvFactBlocksHtml(p, v) + rvClaimHtml(p, v);
+  return rvNextHtml(v, p) + rvAutoLogHtml(v, p) + `<div class="rv-bar v13">${head}${resolved}${auto}${btn}${fix}${notes}${craft}</div>` + rvFactBlocksHtml(p, v) + rvClaimHtml(p, v);
+}
+// 下一步建议:按钮多(让 AI 接着改、按核对结果改稿、重新核对、按选中的方式补改、自动改开头……),人不知道先点哪个(用户 2026-10-31)。
+// 按现在的状态只推荐一个,写清楚为什么,按钮就放在建议里;其他按钮还在原处,备用。
+function rvNextStep(v, p) {
+  const f = v.final;
+  if (!f || !p) return null;
+  if (v.running) return { wait: true, text: '正在跑「' + v.running + '」,等它跑完这里会告诉你下一步。现在什么都不用点。' };
+  if (p.ready) return { ok: true, text: '可以发布了。下面的按钮都不用再点。' + ((p.notes || []).length ? '下面灰字是不挡发布的小提示,想改再改。' : '') };
+  const keys = new Set((p.blocks || []).map(b => b.key));
+  const c = p.claim;
+  const rc = (f.rechecks || []).slice(-1)[0] || {};
+  const open = (rc.open || []).filter(x => !x.not_found);
+  const autoUsed = !!(f.auto_log && f.auto_log.status !== 'running');
+  const claimBad = keys.has('claim');
+  const factBad = [...keys].some(k => /^red_facts/.test(k));
+  if (claimBad && c && c.fix_title && !c.stale) return { text: '论点核对认为问题出在标题:全文是另一种说法,改稿改不过来。在下面「论点核对」里二选一:改用它建议的标题,或者保留标题让 AI 改稿。', target: 'rv-claim-card' };
+  if (!autoUsed && p.can_autofix) {
+    const what = [claimBad || (c && c.stale) ? '论点和账' : '', open.length && !p.good ? '复审的 ' + open.length + ' 个问题' : '', (p.program_open || []).length ? '程序查出的 ' + p.program_open.length + ' 个问题' : ''].filter(Boolean);
+    return { text: 'AI 还没自己改过。点后面的按钮,它会' + (what.length ? '把' + what.join('、') + '一起' : '') + '改一轮就停(改低了会自动退回),一般 5–15 分钟。', act: 'rvAutoFix()', label: '让 AI 接着改到能发布' };
+  }
+  if (claimBad && c && c.stale) return { text: '稿子改过了,论点核对还是改之前的结果。点后面的按钮重新核对,还对不上会自动按核对结果改一次。', act: 'rvClaim(true)', label: '重新核对,还对不上就改稿' };
+  const lead = autoUsed ? 'AI 已经自己改过一轮,剩下的要你拿主意。' : '';
+  if (open.length && !p.good) return { text: lead + '复审还有 ' + open.length + ' 个问题,每个已经默认选好 ★推荐 的改法。想换改法或写补充意见,先在下面「按复审意见再改一轮」里改,再点后面的按钮' + (claimBad ? ';论点核对列的账的问题会一起带上改' : '') + '。', act: 'rvPatchRun()', label: '按选中的方式补改,然后复审' };
+  if (claimBad) return { text: lead + '只剩论点核对的账对不上。点后面的按钮按核对结果改一次,改完自动复审、再核对。', act: 'rvClaim(true)', label: '按核对结果改稿' };
+  if ((p.opening_bad || []).length) return { text: lead + '只剩开头没过(前 10 秒数字太多或没点题)。点后面的按钮只改开头几句。', act: 'rvOpeningFix()', label: '自动改开头' };
+  if (factBad) return { text: lead + '只剩没出处的数。看下面「没出处的数」:觉得不影响就点「不影响,不改了」;觉得有影响,在下面复审问题的「补充意见」里写要删哪句,再点「按选中的方式补改」。', target: 'rv-fact-blocks' };
+  return { text: lead + '剩下的问题看上面「还不能发布」后面的红字;拿不准的话,把截图发给我。' };
+}
+function rvNextHtml(v, p) {
+  const n = rvNextStep(v, p);
+  if (!n) return '';
+  const color = n.ok ? '#047857' : n.wait ? '#1d4ed8' : '#b45309';
+  const bg = n.ok ? '#ecfdf5' : n.wait ? '#eff6ff' : '#fffbeb';
+  const btn = n.act ? ` <button class="an-btn v13" style="border-color:${color};color:${color};font-weight:600" onclick="${n.act}">${esc(n.label)}</button>` : n.target ? ` <a href="javascript:void(0)" onclick="const e=document.getElementById('${n.target}');if(e)e.scrollIntoView({behavior:'smooth',block:'center'})">带我去看</a>` : '';
+  return `<div class="v13" style="margin:8px 0;padding:8px 10px;border:2px solid ${color};background:${bg};border-radius:8px"><b style="color:${color}">下一步${n.ok ? '' : '(只看这一条就行,其他按钮是备用的)'}</b>:${esc(n.text)}${btn}</div>`;
 }
 // 「还不能发布」里没出处的数:用中文写清是哪个数、为什么不算数、稿子哪几句用到;人看过觉得不影响就点「不影响,不改了」
 function rvFactBlocksHtml(p, v) {
@@ -2540,7 +2575,7 @@ function rvFactBlocksHtml(p, v) {
         <button class="an-btn" onclick="rvAcceptFact('${escAttr(f.id)}', true)" ${v.running ? 'disabled' : ''}>不影响,不改了</button></div>
     </div>`;
   const undo = acc.length ? `<div class="hint" style="margin:2px 0 6px">你确认不影响、不挡发布的事实:${acc.map(id => `${esc(id)} <a href="javascript:void 0" onclick="rvAcceptFact('${escAttr(id)}', false)">撤回</a>`).join('、')}</div>` : '';
-  return facts.map(one).join('') + undo;
+  return '<div id="rv-fact-blocks">' + facts.map(one).join('') + undo + '</div>';
 }
 async function rvAcceptFact(id, on) {
   try { await rvPost('accept_fact', { id, on }); } catch (e) { alert(e.message); return; }
@@ -2619,12 +2654,12 @@ function rvClaimHtml(p, v) {
   const btns = c.fix_title
     ? `<button class="an-btn v13" onclick="rvClaimTitle()" ${busy ? 'disabled' : ''}>改用这个标题</button> <button class="an-btn" onclick="rvClaim(true)" ${busy ? 'disabled' : ''}>保留标题,改稿</button> <button class="an-btn" onclick="rvClaim(false)" ${busy ? 'disabled' : ''}>重新核对</button>`
     : `<button class="an-btn v13" onclick="rvClaim(true)" ${busy ? 'disabled' : ''}>${c.stale ? '重新核对,还对不上就改稿' : '按核对结果改稿'}</button> <button class="an-btn" onclick="rvClaim(false)" ${busy ? 'disabled' : ''}>重新核对</button>`;
-  return `<div class="rv-flag v13"><b>${c.verdict === '不成立' ? '论点对不上' : '账对不上'}</b>:${c.verdict === '不成立' ? '开头的主张「' + esc(c.claim) + '」被稿子自己的数字推翻。' : '论点本身成立,但稿子里有算错的数,或者同一个数前后写得不一样。'} ${stale}
+  return `<div class="rv-flag v13" id="rv-claim-card"><b>${c.verdict === '不成立' ? '论点对不上' : '账对不上'}</b>:${c.verdict === '不成立' ? '开头的主张「' + esc(c.claim) + '」被稿子自己的数字推翻。' : '论点本身成立,但稿子里有算错的数,或者同一个数前后写得不一样。'} ${stale}
     <div class="v13" style="margin:6px 0;padding:6px 8px;background:#fff;border:1px solid #fca5a5;border-radius:6px">${next}</div>${checkFailed}
     <div class="v13" style="margin:6px 0"><b>怎么算的</b>:${esc(c.calc || '')}${c.fix_claim ? `<br><b>开头应该怎么说</b>:${esc(c.fix_claim)}` : ''}</div>
     ${list ? `<ul>${list}</ul>` : ''}${fixes ? `<div class="hint">已经试过:<ul>${fixes}</ul></div>` : ''}
     <div class="rv-ops v13">${btns}
-    <span class="hint">程序不会自己改:点上面「让 AI 接着改到能发布」(和复审问题一起改一轮),或点「按核对结果改稿」只按核对结果改;改完自动复审、再核对一遍</span></div></div>`;
+    <span class="hint">程序不会自己改:点上面「让 AI 接着改到能发布」(和复审问题一起改一轮),或点「按核对结果改稿」只按核对结果改;下面「按选中的方式补改」也会把这里的问题一起带上。改完自动复审、再核对一遍</span></div></div>`;
 }
 async function rvClaimTitle() {
   const c = ((rvState.view || {}).summary || {}).publish ? rvState.view.summary.publish.claim : null;
@@ -3195,6 +3230,18 @@ function matUse(a, materials) {
   return { facts, total: matSet.size, used: [...matSet].filter(n => used.has(n)).length, unusedLines };
 }
 
+// 账本体检(写稿前):程序按公式改正了哪些行、AI 修账本改了什么、还剩什么问题
+function ledgerCheckupHtml(c) {
+  if (!c) return '';
+  const pf = (c.program_fixed || []).concat(c.ai_fixed || []);
+  const rows = [];
+  if (pf.length) rows.push(`<div><b>程序按公式改正了 ${pf.length} 行</b>(AI 心算的数和它自己写的公式对不上,一律以公式为准):${pf.slice(0, 8).map(x => esc(x.id + ' ' + x.item + ' ' + x.from_text + ' → ' + x.to_text)).join(';')}${pf.length > 8 ? '…' : ''}</div>`);
+  if ((c.problems || []).length) rows.push(`<details><summary style="cursor:pointer">程序查出 ${c.problems.length} 个账本问题(点开看)</summary>${c.problems.map(t => '<div style="margin:2px 0">· ' + esc(t) + '</div>').join('')}</details>`);
+  if (c.ai) rows.push(c.ai.ran ? `<div><b>AI 修了一轮账本</b>${c.ai.notes ? ':' + esc(c.ai.notes) : ''}</div>` : `<div style="color:#b91c1c">AI 修账本没成功:${esc(c.ai.error || '')}</div>`);
+  if (c.remaining) rows.push((c.remaining || []).length ? `<div style="color:#b45309"><b>还剩 ${c.remaining.length} 个问题</b>(公式算不了、单位混用的行写稿不会用;其他的只提示):${c.remaining.map(esc).join(';')}</div>` : `<div style="color:#047857"><b>✓ 账本体检通过</b>,写稿只用程序算好的数</div>`);
+  if (!rows.length) return '';
+  return `<div class="v13" style="margin:4px 0 8px;padding:8px 10px;border:1px solid #fcd34d;background:#fffbeb;border-radius:6px;font-size:13px;line-height:1.7"><div><b>账本体检(写稿前)</b></div>${rows.join('')}</div>`;
+}
 // 账本念法:程序按账本算好的一项一项减、每步还剩多少、换成每天(写稿照这个念,不让 AI 自己加减)
 function sayKr(n) {
   n = Number(n); const a = Math.abs(n);
@@ -3263,8 +3310,8 @@ function analysisHtml(a, materials, say) {
   const notFound = (a.search_log || []).filter(s => /没找到/.test(s.result || ''));
   if (notFound.length) html += `<div class="an-sec">没找到的资料</div>` + anTable(['想找', '说明'],
     notFound.map(s => `<tr class="an-warn"><td>${esc(s.looked_for)}</td><td>${esc(s.note)}</td></tr>`));
-  if ((a.ledger || []).length) html += `<div class="an-sec">账本</div>` + anTable(['项目', '数值', '事实'],
-    a.ledger.map(l => `<tr><td>${esc(l.item)}</td><td>${esc(l.value)}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`))
+  if ((a.ledger || []).length) html += `<div class="an-sec">账本</div>` + ledgerCheckupHtml(a.ledger_checkup) + anTable(['项目', '数值', '事实'],
+    a.ledger.map(l => `<tr class="${l.bad ? 'an-bad' : ''}"><td>${esc(l.item)}${l.bad ? '<div class="hint" style="margin:0;color:#b91c1c">这一行有问题,写稿不会用它的数:' + esc(l.bad) + '</div>' : ''}</td><td>${esc(l.value)}${l.program_fixed ? '<div class="hint" style="margin:0">程序按公式改正(原来写 ' + esc(l.program_fixed.value || l.program_fixed.from) + ')</div>' : ''}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`))
     + ledgerSayHtml(say);
   html += `<div class="an-sec">模块取舍</div>` + anTable(['原片段', '处理', '留存作用', '钩子', '理由', '事实', '时长'],
     (a.modules || []).map(m => `<tr class="${/删除/.test(m.decision || '') ? 'an-warn' : ''}"><td>${esc(m.segment)}</td><td>${esc(m.decision)}</td><td>${esc(m.retention_role)}</td><td>${esc(m.hook_type || '')}</td><td>${esc(m.reason)}</td><td>${esc(anIds(m.fact_ids))}</td><td>${esc(m.duration)}</td></tr>`));
@@ -4140,8 +4187,8 @@ function anEditorShell() {
   const notFound = ((d.search_log) || []).filter(s => /没找到/.test(s.result || ''));
   if (notFound.length) html += `<div class="an-sec">没找到的资料</div>` + anTable(['想找', '说明'],
     notFound.map(s => `<tr class="an-warn"><td>${esc(s.looked_for)}</td><td>${esc(s.note)}</td></tr>`));
-  if ((d.ledger || []).length) html += `<div class="an-sec">账本（只读）</div>` + anTable(['项目', '数值', '事实'],
-    d.ledger.map(l => `<tr><td>${esc(l.item)}</td><td>${esc(l.value)}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`));
+  if ((d.ledger || []).length) html += `<div class="an-sec">账本（只读）</div>` + ledgerCheckupHtml(d.ledger_checkup) + anTable(['项目', '数值', '事实'],
+    d.ledger.map(l => `<tr class="${l.bad ? 'an-bad' : ''}"><td>${esc(l.item)}${l.bad ? '<div class="hint" style="margin:0;color:#b91c1c">这一行有问题,写稿不会用它的数:' + esc(l.bad) + '</div>' : ''}</td><td>${esc(l.value)}${l.program_fixed ? '<div class="hint" style="margin:0">程序按公式改正(原来写 ' + esc(l.program_fixed.value || l.program_fixed.from) + ')</div>' : ''}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`));
 
   html += `<div class="an-sec">模块取舍</div>
   <table class="an-table"><tr><th>原片段</th><th>处理</th><th>留存作用</th><th>理由（可改）</th><th>事实</th><th>时长</th><th></th></tr>

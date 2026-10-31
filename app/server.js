@@ -583,6 +583,8 @@ const server = http.createServer(async (req, res) => {
         r.analysis = body.analysis;
         r.analysis_edited = true;
       }
+      // 人改过账本:有公式的行改成程序算的数再开写(账本体检,不调 AI)
+      if (r.analysis && Array.isArray(r.analysis.ledger) && r.analysis.ledger.length) { const pf = analysis.ledgerWriteBack(r.analysis); if (pf.length) r.analysis.ledger_checkup = { ...(r.analysis.ledger_checkup || {}), at: new Date().toISOString(), program_fixed: pf }; }
       r.analysis_confirmed = true;
       r.analysis_confirmed_at = new Date().toISOString();
       r.status = 'queued';
