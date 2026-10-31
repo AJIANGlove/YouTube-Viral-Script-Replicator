@@ -657,8 +657,9 @@
           <input type="radio" name="gen-mode" value="direct" style="width:auto">
           <span>直接写稿(旧流程,不做写前分析)</span>
         </label>
-        <label style="margin-top:6px">参考资料(选填 · 写前分析用:粘贴你查到的数据、报道、链接摘要,AI 只能用这里和它已知的事实)</label>
+        <label style="margin-top:6px">参考资料(选填 · 写前分析用:粘贴你查到的数据、报道、链接摘要,或在下面上传表格;AI 只能用这里和它已知的事实)</label>
         <textarea id="gen-materials" rows="4" style="width:100%;box-sizing:border-box" placeholder="例如:2024 年韩国美发店平均月营业额 …(来源:统计厅)"></textarea>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px"><button type="button" class="ghost" onclick="matPick('gen-materials')">上传表格(xlsx / csv)</button><span id="gen-materials-up" class="hint" style="margin:0">表格会转成文字加到上面,AI 写前分析时自己读;只按主题找来、没有现成观点的资料也可以放</span></div>
         <label style="margin-top:6px">频道声音设定(语体、称呼、风格;在「设置」页管理)</label>
         <select id="gen-voice"><option value="__auto__">自动:按所选频道名匹配(未选频道时等于不使用)</option><option value="__none__">不使用</option></select>
       </div>
@@ -4153,9 +4154,44 @@ function anUpdateStatusOnly() {
   if (st && anEdit && anEdit.dirty && !st.textContent) { st.className = 'hint an-dirty'; st.textContent = '有未保存的修改'; }
 }
 
+// 参考资料上传表格:可多选;转成文字追加到参考资料框,并提示每个表放了多少行
+function matPick(target) {
+  let inp = document.getElementById('mat-file');
+  if (!inp) {
+    inp = document.createElement('input');
+    inp.type = 'file'; inp.id = 'mat-file'; inp.multiple = true; inp.accept = '.xlsx,.xlsm,.csv,.tsv,.xls'; inp.style.display = 'none';
+    document.body.appendChild(inp);
+  }
+  inp.onchange = () => { const fs = Array.from(inp.files || []); inp.value = ''; matUpload(target, fs); };
+  inp.click();
+}
+async function matUpload(target, files) {
+  const ta = document.getElementById(target), st = document.getElementById(target + '-up');
+  if (!ta || !files.length) return;
+  const notes = [];
+  for (const f of files) {
+    if (st) st.textContent = '正在读取 ' + f.name + ' …';
+    try {
+      const bytes = new Uint8Array(await f.arrayBuffer());
+      let bin = '';
+      for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+      const r = await api('/api/materials/table', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: f.name, data: btoa(bin) }) });
+      ta.value = (ta.value.trim() ? ta.value.trim() + '\n\n' : '') + r.text;
+      notes.push(f.name + ':' + r.sheets.map(s => (s.name ? s.name + ' ' : '') + (s.shown < s.rows ? '只放了前 ' + s.shown + ' 行(共 ' + s.rows + ' 行,截掉 ' + (s.rows - s.shown) + ' 行,需要的话把要用的行单独存一个表再传)' : s.rows + ' 行')).join(';'));
+    } catch (e) { notes.push(f.name + ' 没能读取:' + e.message); }
+  }
+  ta.dispatchEvent(new Event('input', { bubbles: true }));
+  if (st) {
+    const len = ta.value.length;
+    st.textContent = '已加入 ' + notes.join('。') + (len > 60000 ? '。参考资料一共约 ' + Math.round(len / 1000) + 'k 字,偏长,写前分析会变慢,可以删掉用不上的行' : '');
+    st.style.color = notes.some(n => /没能读取|只放了/.test(n)) ? '#b45309' : '';
+  }
+}
+
 function anRerunBox(materials) {
   return `<details style="margin-top:10px"><summary style="cursor:pointer">补充资料后重新分析</summary>
     <textarea id="an-materials" rows="4" style="width:100%">${esc(materials || '')}</textarea>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px"><button type="button" class="ghost" onclick="matPick('an-materials')">上传表格(xlsx / csv)</button><span id="an-materials-up" class="hint" style="margin:0"></span></div>
     <button style="margin-top:6px" onclick="rerunAnalysis()">重新分析</button></details>`;
 }
 

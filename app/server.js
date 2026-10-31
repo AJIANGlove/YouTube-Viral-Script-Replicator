@@ -612,6 +612,16 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, reframe.startSuggest(rfMatch[1]));
     }
 
+    // 参考资料上传表格:xlsx/csv 在本地转成文字,前端拼进参考资料框(写前分析照常读 materials)
+    if (url === '/api/materials/table' && method === 'POST') {
+      const body = await readBody(req);
+      const buf = Buffer.from(String(body.data || ''), 'base64');
+      if (!buf.length) return send(res, 400, { error: '文件是空的' });
+      if (buf.length > 10 * 1024 * 1024) return send(res, 400, { error: '文件超过 10MB,请只留需要的工作表或行再上传' });
+      try { return send(res, 200, { ok: true, ...require('./lib/sheets').tableToText(buf, String(body.name || 'table.csv')) }); }
+      catch (e) { return send(res, 400, { error: e.message }); }
+    }
+
     // 重新分析:可补充参考资料(materials)、指定赛道证据卡(track_card_name)
     const anRerunMatch = url.match(/^\/api\/runs\/([\w-]+)\/analysis\/rerun$/);
     if (anRerunMatch && method === 'POST') {
