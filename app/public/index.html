@@ -2557,19 +2557,24 @@ function rvGroupsHtml(v, p, busy) {
   if (open.length) pre.push(rvPatchOptsBar(rc, busy));
   else if (rc) pre.push(rvPatchHtml(v, busy, true));
   const fx = p.fix || {};
+  rvState.folds = rvState.folds || {};
   const groups = (p.blocks || []).map(b => {
     const g = b.key === 'red_facts' && b.fact ? 'fact:' + b.fact.id : b.key;
     const extra = [];
     if (b.key === 'red_facts' && b.fact) extra.push(rvFactCardHtml(b.fact));
     if (b.key === 'claim') extra.push(rvClaimHtml(p, v, true));
     if (b.key === 'listen_open') extra.push(`<div class="hint">「AI 改一轮」改完会自动改开头(只动开头几句,改到前 10 秒最多 1 个数字、8 秒内点题);开头逐句分析在页面最上面「开头单独审」。${fx.status === 'failed' ? '<span style="color:#b91c1c">上次自动改开头没成功:' + esc(fx.error || '') + '</span>' : ''}</div>`);
-    const rows = rowsOf(g);
+    const items = open.filter(x => grpOf(x) === g);
+    const rows = items.map(x => rvPatchRow(rc, x, busy));
+    const picks = items.map(x => { const k = rvPatchPick(rc, x); return esc(x.id) + ' ' + (k === 'skip' ? '不改' : k === 'rv' ? '按复审建议' : '选 ' + esc(k)); }).join('、');
     const ignBtn = b.key === 'red_facts' && b.fact ? `rvAcceptFact('${escAttr(b.fact.id)}', true)` : RV_IGNORABLE.includes(b.key) ? `rvIgnoreBlock('${b.key}', true)` : '';
     const body = extra.filter(Boolean).join('') + rows.join('');
-    return `<div class="rv-grp" style="margin:10px 0 4px;padding-top:8px;border-top:1px dashed #fcd34d">
-      <div style="font-size:13px;line-height:1.7"><span class="rv-chip red">${esc(RV_BLOCK_ZH[b.key] || '问题')}</span> ${esc(b.text)}${rows.length ? ` <span class="hint">(下面 ${rows.length} 条,选改法)</span>` : ''}
-        ${ignBtn ? `<button class="an-btn" style="font-size:12px;padding:1px 10px;margin-left:6px" onclick="${ignBtn}" ${busy ? 'disabled' : ''}>忽略</button>` : ''}</div>
-      <div style="margin:4px 0 0 14px">${body || '<div class="hint">没有单独列出的问题;「AI 改一轮」会按上面这句一起改。不想管就点「忽略」。</div>'}</div></div>`;
+    // 每一项默认折叠:标题行写清下面几条、现在各选的什么改法;点三角展开看详情、换改法(展开状态记住,刷新不丢)
+    const fk = 'grp_' + g;
+    return `<details class="rv-grp" style="margin:10px 0 4px;padding-top:8px;border-top:1px dashed #fcd34d"${rvState.folds[fk] ? ' open' : ''} ontoggle="rvState.folds['${escAttr(fk)}']=this.open">
+      <summary style="font-size:13px;line-height:1.7;background:#dbeafe;border:1px solid #93c5fd;border-left:4px solid #2563eb;border-radius:6px;padding:5px 10px;color:#1e3a8a;cursor:pointer"><span class="rv-chip" style="background:#2563eb;border-color:#2563eb;color:#fff;font-weight:600">${esc(RV_BLOCK_ZH[b.key] || '问题')}</span> <b>${esc(b.text)}</b>${items.length ? ` <span class="hint">(下面 ${items.length} 条:${picks};点开看详情、换改法)</span>` : extra.length ? ' <span class="hint">(点开看详情)</span>' : ''}
+        ${ignBtn ? `<button class="an-btn" style="font-size:12px;padding:1px 10px;margin-left:6px" onclick="event.preventDefault();event.stopPropagation();${ignBtn}" ${busy ? 'disabled' : ''}>忽略</button>` : ''}</summary>
+      <div style="margin:4px 0 0 14px">${body || '<div class="hint">没有单独列出的问题;「AI 改一轮」会按上面这句一起改。不想管就点「忽略」。</div>'}</div></details>`;
   }).join('');
   const minor = rowsOf('minor');
   const minorHtml = minor.length ? `<details class="rv-md-box v13" style="margin-top:10px"><summary>其他 ${minor.length} 个小问题(不挡发布;「AI 改一轮」会按选中的改法顺手改,不想改就选「这个不改」)</summary>${minor.join('')}</details>` : '';
