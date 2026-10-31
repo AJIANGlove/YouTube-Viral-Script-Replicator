@@ -2578,17 +2578,28 @@ function rvGroupsHtml(v, p, busy) {
   }).join('');
   const minor = rowsOf('minor');
   const minorHtml = minor.length ? `<details class="rv-md-box v13" style="margin-top:10px"><summary>其他 ${minor.length} 个小问题(不挡发布;「AI 改一轮」会按选中的改法顺手改,不想改就选「这个不改」)</summary>${minor.join('')}</details>` : '';
-  return pre.join('') + groups + minorHtml + (open.length ? rvPatchNote(rc, busy) : '') + rvIgnoredHtml(p, v);
+  return pre.join('') + groups + rvIgnoredHtml(p, v) + minorHtml + (open.length ? rvPatchNote(rc, busy) : '');
 }
 const RV_IGNORABLE = ['hard_open', 'ledger', 'thesis', 'claim', 'listen_open', 'listen_dense', 'listen_register', 'listen_other'];
-// 你点了「忽略」的项和没出处的数,带撤回
+// 你点了「忽略」的项:和上面的项一样一行一个(灰底),可以点开看下面的问题,右边「取消忽略」
 function rvIgnoredHtml(p, v) {
-  const ig = p.ignored || [], acc = p.accepted_facts || [];
-  if (!ig.length && !acc.length) return '';
-  const dis = v.running ? 'style="pointer-events:none;opacity:.5"' : '';
-  const items = ig.map(b => `<b>${esc(RV_BLOCK_ZH[b.key] || b.key)}</b>「${esc(b.text)}」 <a href="javascript:void 0" ${dis} onclick="rvIgnoreBlock('${escAttr(b.key)}', false)">撤回</a>`)
-    .concat(acc.map(id => `<b>没出处的数</b> 事实 ${esc(id)} <a href="javascript:void 0" ${dis} onclick="rvAcceptFact('${escAttr(id)}', false)">撤回</a>`));
-  return `<div class="hint v13" style="margin:8px 0 2px">你点了忽略的(不挡发布,AI 改一轮也不改):<ul style="margin:2px 0 0 18px">${items.map(t => '<li>' + t + '</li>').join('')}</ul></div>`;
+  const busy = !!v.running;
+  const rc = ((v.final || {}).rechecks || []).slice(-1)[0];
+  const open = rc ? (rc.open || []) : [];
+  const of = p.ignored_of || {};
+  const list = (p.ignored || []).map(b => ({ g: b.key, zh: RV_BLOCK_ZH[b.key] || b.key, text: b.text, undo: `rvIgnoreBlock('${escAttr(b.key)}', false)` }))
+    .concat((p.accepted_facts || []).map(id => ({ g: 'fact:' + id, zh: RV_BLOCK_ZH.red_facts, text: '事实 ' + id + ' 没有出处', undo: `rvAcceptFact('${escAttr(id)}', false)` })));
+  if (!list.length) return '';
+  rvState.folds = rvState.folds || {};
+  const rows = list.map(it => {
+    const items = open.filter(x => of[x.id] === it.g);
+    const fk = 'ign_' + it.g;
+    return `<details class="rv-grp rv-ign" style="margin:6px 0"${rvState.folds[fk] ? ' open' : ''} ontoggle="rvState.folds['${escAttr(fk)}']=this.open">
+      <summary style="font-size:13px;line-height:1.7;background:#f3f4f6;border:1px solid #d1d5db;border-left:4px solid #9ca3af;border-radius:6px;padding:5px 10px;color:#6b7280;cursor:pointer"><span class="rv-chip" style="background:#9ca3af;border-color:#9ca3af;color:#fff">${esc(it.zh)} · 已忽略</span> ${esc(it.text)}${items.length ? ` <span class="hint">(下面 ${items.length} 条都不改)</span>` : ''}
+        <button class="an-btn" style="font-size:12px;padding:1px 10px;margin-left:6px" onclick="event.preventDefault();event.stopPropagation();${it.undo}" ${busy ? 'disabled' : ''}>取消忽略</button></summary>
+      <div style="margin:4px 0 0 14px;opacity:.75">${items.map(x => `<div class="hint" style="margin:3px 0"><b>${esc(x.id)}</b> ${esc(x.level || '')} ${esc(x.chapter || '')}:${esc(String(x.zh_problem || x.problem || '').slice(0, 200))}</div>`).join('') || '<div class="hint">不挡发布,AI 改一轮也不改它。</div>'}</div></details>`;
+  }).join('');
+  return `<div class="v13" style="margin:12px 0 4px"><div class="hint" style="margin-bottom:2px">你点了忽略的 ${list.length} 项(不挡发布,「AI 改一轮」也不改;点「取消忽略」放回上面):</div>${rows}</div>`;
 }
 async function rvIgnoreBlock(key, on) {
   if (on && !confirm('忽略「' + (RV_BLOCK_ZH[key] || key) + '」这一项?\n忽略后它不挡发布,「AI 改一轮」也不会改它(下面列的问题都不改)。以后可以在「你点了忽略的」里撤回。')) return;

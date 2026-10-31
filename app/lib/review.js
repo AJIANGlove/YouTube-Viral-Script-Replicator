@@ -532,7 +532,7 @@ function publishCheck(run, v) {
   if (lc && arr(lc.dense_late).length) notes.push(checks.DENSE_OPEN_SEC / 60 + ' 分钟以后还有 ' + lc.dense_late.length + ' 句一口气念 3 个以上的数字,先不管,不挡发布');
   // 复审问题分到上面各项下面(开头的问题放「开头」下,账本的放「账本错数」下…),页面上每项下面直接列对应的问题;
   // 「复审问题」这一项只数没有别的项可归的关键/结构问题,不重复数
-  const item_groups = {};
+  const item_groups = {}, ignored_of = {};
   if (v.final) {
     const red = arr(s.red_fact_uses).map(x => x.id);
     const active = new Set(blocks.map(b => b.key === 'red_facts' && b.fact ? 'fact:' + b.fact.id : b.key));
@@ -542,21 +542,21 @@ function publishCheck(run, v) {
       const k = openBlockKey(x, red);
       const isHard = (x.level === '关键' || x.level === '结构') && !x.not_found;
       if (k !== 'hard_open' && active.has(k)) item_groups[x.id] = k;
-      else if (k !== 'hard_open' && off(k)) item_groups[x.id] = 'ignored';
+      else if (k !== 'hard_open' && off(k)) { item_groups[x.id] = 'ignored'; ignored_of[x.id] = k; }
       else if (isHard) hard.push(x);
       else item_groups[x.id] = 'minor';
     });
     if (hard.length) {
       const t = '复审还有 ' + hard.length + ' 个关键/结构问题(' + hard.map(x => x.id).join('、') + ')';
       const g = good ? 'minor' : ign.has('hard_open') ? 'ignored' : 'hard_open';
-      hard.forEach(x => { item_groups[x.id] = g; });
+      hard.forEach(x => { item_groups[x.id] = g; if (g === 'ignored') ignored_of[x.id] = 'hard_open'; });
       if (good) notes.push(t);
       else if (ign.has('hard_open')) ignored.unshift({ key: 'hard_open', text: t });
       else { reasons.unshift(t); blocks.unshift({ key: 'hard_open', text: t }); }
     }
   }
   const prog = v.final ? programOpen(run, s.red_fact_uses) : [];
-  return { ready: !reasons.length, ignored, item_groups, reasons, blocks, notes, can_autofix: !!reasons.length && !!v.final && ((avg != null && avg < PUBLISH_AVG) || prog.length > 0), program_open: prog.map(x => x.problem), craft_hints: v.final ? craftHints(run, last) : [], avg: avg != null ? Math.round(avg * 10) / 10 : null, good, opening_bad: ign.has('listen_open') ? [] : openBad, fix: (run.steps || {}).opening_fix || null,
+  return { ready: !reasons.length, ignored, item_groups, ignored_of, reasons, blocks, notes, can_autofix: !!reasons.length && !!v.final && ((avg != null && avg < PUBLISH_AVG) || prog.length > 0), program_open: prog.map(x => x.problem), craft_hints: v.final ? craftHints(run, last) : [], avg: avg != null ? Math.round(avg * 10) / 10 : null, good, opening_bad: ign.has('listen_open') ? [] : openBad, fix: (run.steps || {}).opening_fix || null,
     accepted_facts: [...accepted], claim: cc ? { ...cc, stale: cc.hash !== hash(currentScript(run)), blocking: claimBlocking(cc) } : null, claim_step: (run.steps || {}).claim_check || null, fix_rec: ((run.review || {}).final || {}).opening_fix || null };
 }
 
