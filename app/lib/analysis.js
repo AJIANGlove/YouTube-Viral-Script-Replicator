@@ -122,6 +122,8 @@ function analysisBrief(a, run, trackKey, mode) {
     out.push('账本(程序已按公式重算;标「程序重算」的以程序的数为准)。金额锁定:稿子里的收入、成本、利润、时薪、倍数、回本时间,只能用这张账本里的数(或事实表里的数),照抄后面「稿中写」的写法,可以四舍五入但不许重算出别的数;同一个量全文只能有一个数值。账本里有的量(总收入、总成本、利润、时薪等),事实表里估算出来的合计和账本不一样时,一律用账本的(实测事实表 F18 估算利润 9,641만、账本 9,703만,稿子两个都用了)。账本里没有的项目(比如想多算一项调味料成本),不许自己加进合计重新算,只能不提或只做定性说明:\n' + a.ledger.map(l => '- ' + (l.id ? l.id + ' ' : '') + l.item + ' = ' + (l.value || ((l.amount != null ? l.amount : '') + (l.unit ? ' ' + l.unit : ''))) +
       (l.formula ? ' [= ' + l.formula + ']' : '') + (l.mismatch ? '(程序重算:' + l.program_amount + (l.unit ? ' ' + l.unit : '') + ',原来写错了)' : '') + krLedgerForm(l) +
       (l.fact_ids && l.fact_ids.length ? '(' + l.fact_ids.join(',') + ')' : '') + staleTag(stale.ledger, l.item)).join('\n'));
+    const sayText = ledgerSayOn(run, trackKey) ? ledgerSayText(ledgerSay(a.ledger), mode !== 'review') : '';
+    if (sayText) out.push(sayText);
   }
   const tc = a.thesis_check || {};
   if (Array.isArray(tc.contradicts) && tc.contradicts.length) out.push('反转验证:事实 ' + tc.contradicts.join('、') + ' 和反转结论相反(' + (tc.note || '') + ')。写稿时反转的说法必须和这些事实一致,不能回避。');
@@ -153,9 +155,159 @@ function krMoney(n) {
   return sign + a.toLocaleString('en-US') + ' 원';
 }
 function krLedgerForm(l) {
-  if (!/KRW|원|won|₩/i.test([l.unit, l.value, l.item].join(' '))) return '';
-  const n = l.program_amount != null ? l.program_amount : Number(String(l.amount == null ? '' : l.amount).replace(/,/g, ''));
+  // 单位写了但不是钱(%、个、倍)的不给;单位写「韩元」「万韩元」的也给(原来只认「원」,账本里大半行单位是「韩元」,一直没有口播写法)
+  if (l.unit && !MONEY_RE.test(String(l.unit))) return '';
+  if (!MONEY_RE.test([l.unit, l.value, l.item].join(' '))) return '';
+  const n = (l.program_amount != null ? l.program_amount : Number(String(l.amount == null ? '' : l.amount).replace(/,/g, ''))) * moneyScale(l.unit);
   return isFinite(n) && Math.abs(n) >= 100 ? '(稿中写:' + krMoney(n) + ')' : '';
+}
+
+// 账本念法(学 Mr. Finance 的念账:一家店,从收入开始一项一项减,每减一项说一次还剩多少;大数换成每天)。
+// 「还剩多少」「每天多少」都由程序按账本算好,写稿照念,不让写手自己加减(实测写手自己凑合计、自己加成本项,论点核对每轮报账对不上)。
+// 只认公式是「某行 - 某行 - …」的行;被减的行如果本身是「加起来」的合计,拆成明细。单位都是钱且一致才出瀑布。
+const MONEY_RE = /KRW|원|won|₩|韩元|韓元/i;
+const VOLUME_RE = /^(个|개|份|그릇|줄|杯|잔|건|单|명|人|位|台|대|장|张|件|碗|봉지|판|마리|只)/;
+// 单位写成「万韩元」「만원」的,amount 要乘回去再写成口播(实测 run_eadb 账本 amount 3000、unit 万韩元,原来会写成 3,000 원)
+function moneyScale(unit) {
+  const u = String(unit || '').split('/')[0];
+  return /亿|억/.test(u) ? 1e8 : /万|萬|만/.test(u) ? 1e4 : /千|천/.test(u) ? 1e3 : 1;
+}
+// 这一行是每月、每年还是每天的量:先看单位斜杠后面,没有再看项目名里先出现的那个
+function periodOf(l) {
+  const u = String((l && l.unit) || '').split('/').slice(1).join('/');
+  if (u) return /月|월|month/i.test(u) ? 'month' : /年|년|연|year/i.test(u) ? 'year' : /日|일|天|day/i.test(u) ? 'day' : 'unit';
+  const t = String((l && l.item) || '');
+  const im = t.search(/月|월|한 ?달|monthly/i), iy = t.search(/年|연간|년간|annual|yearly/i);
+  if (im < 0 && iy < 0) return '';
+  return iy < 0 || (im >= 0 && im < iy) ? 'month' : 'year';
+}
+const KEY_RE = /收入|营收|營收|营业额|销售额|매출|수입|利润|盈利|이익|순익|수익|到手|结余|結餘|亏损|적자|손익|保本|profit|revenue|income/i;
+// 只看括号前的项目名(实测「월 식재료 원가 (매출의 34%)」括号里的「매출」让成本行也被换成每天)
+const headOf = t => String(t || '').split(/[(（]/)[0];
+// 只给「经济拆账」(账本赛道)用:历史、POV 这些赛道的账本只是背景,不需要一项一项念账(用户 2026-10-31)
+function ledgerSayOn(run, trackKey) {
+  if (!run) return false;
+  return (trackKey || require('./craft').trackOf(run)) === 'econ';
+}
+function ledgerSay(ledger, valIn) {
+  const rows = (Array.isArray(ledger) ? ledger : []).filter(l => l && typeof l === 'object');
+  const byId = {}, val = valIn || {};
+  rows.forEach((l, i) => {
+    const id = String(l.id || ('L' + (i + 1)));
+    byId[id] = l;
+    if (!(id in val)) { const n = l.program_amount != null ? Number(l.program_amount) : Number(String(l.amount == null ? '' : l.amount).replace(/,/g, '')); val[id] = n * (MONEY_RE.test(String(l.unit || '')) ? moneyScale(l.unit) : 1); }
+  });
+  const unitKey = l => String((l && l.unit) || '').replace(/\s+/g, '');
+  const isMoney = l => l && MONEY_RE.test(unitKey(l));
+  const f = id => String((byId[id] || {}).formula || '').replace(/\s+/g, '');
+  const sumParts = id => { const m = f(id).replace(/^\((.*)\)$/, '$1'); return /^L\d+(\+L\d+)+$/.test(m) ? m.split('+') : null; };
+  const expand = (id, depth) => { const p = depth < 3 ? sumParts(id) : null; return p ? p.flatMap(x => expand(x, depth + 1)) : [id]; };
+  // 公式「A - B - (C+D)」:返回 { first: A, minus: [B, C, D] };不是这种形状返回 null
+  const subParts = id => {
+    let s = f(id);
+    if (!s || !/^[L\d+\-()]+$/.test(s)) return null;
+    const terms = []; let depth = 0, cur = '', sign = '+';
+    for (const ch of s) {
+      if (ch === '(') depth++;
+      if (ch === ')') depth--;
+      if ((ch === '-' || ch === '+') && depth === 0) { if (cur) terms.push([sign, cur]); sign = ch; cur = ''; continue; }
+      cur += ch;
+    }
+    if (cur) terms.push([sign, cur]);
+    if (terms.length < 2 || terms[0][0] !== '+' || terms.slice(1).some(t => t[0] !== '-')) return null;
+    const one = t => t.replace(/^\((.*)\)$/, '$1');
+    if (!/^L\d+$/.test(one(terms[0][1]))) return null;
+    const minus = [];
+    for (const [, t] of terms.slice(1)) {
+      const x = one(t);
+      if (/^L\d+$/.test(x)) minus.push(x);
+      else if (/^L\d+(\+L\d+)+$/.test(x)) minus.push(...x.split('+'));
+      else return null;
+    }
+    return { first: one(terms[0][1]), minus };
+  };
+  const build = (id, depth) => {
+    const p = depth < 4 ? subParts(id) : null;
+    if (!p) return { top: id, steps: [] };
+    const base = build(p.first, depth + 1);
+    p.minus.flatMap(x => expand(x, 0)).forEach(x => base.steps.push(x));
+    return base;
+  };
+  const r0 = n => Math.round(n);
+  const pctOf = (x, top) => { const p = x / top * 100; return Math.abs(p) >= 10 ? Math.round(p) : Math.round(p * 10) / 10; };
+  const cand = [];
+  rows.forEach((l, i) => {
+    const id = String(l.id || ('L' + (i + 1)));
+    if (!subParts(id)) return;
+    const w = build(id, 0);
+    const ids = [w.top, ...w.steps, id];
+    if (!ids.every(x => byId[x] && isMoney(byId[x]) && isFinite(val[x]))) return;
+    const u = unitKey(byId[id]);
+    if (ids.some(x => unitKey(byId[x]) !== u)) return;
+    // 被减的行本身是「A - B」算出来的结果(比如拿利润减利润算差多少),不是一笔成本,不念成瀑布
+    if (w.steps.some(x => subParts(x))) return;
+    const steps = w.steps.filter(x => val[x]);
+    const top = val[w.top];
+    if (steps.length < 2 || !top) return;
+    let left = top;
+    const out = { id, item: l.item || '', unit: l.unit || '', top: { id: w.top, item: byId[w.top].item || '', amount: r0(top) }, steps: [], end: r0(val[id]) };
+    steps.forEach(x => { left -= val[x]; out.steps.push({ id: x, item: byId[x].item || '', amount: r0(val[x]), pct: pctOf(val[x], top), left: r0(left) }); });
+    out.end_pct = pctOf(val[id], top);
+    cand.push(out);
+  });
+  // 被别的瀑布当成中间一步(作为起点或被拆进去)的不单独列;步数多的在前,最多 3 张
+  const used = new Set();
+  cand.forEach(w => { cand.forEach(o => { if (o !== w && (o.top.id === w.id || o.steps.some(s => s.id === w.id))) used.add(w.id); }); });
+  // 同一个起点、减的项目是另一张的子集(那张多减一项老板人工),只留多的那张,少的那张的结果就是它中间的「还剩」
+  cand.forEach(w => cand.forEach(o => { if (o !== w && o.top.id === w.top.id && o.steps.length > w.steps.length && w.steps.every(s => o.steps.some(t => t.id === s.id))) used.add(w.id); }));
+  const waterfalls = cand.filter(w => !used.has(w.id)).sort((a, b) => b.steps.length - a.steps.length).slice(0, 3);
+  // 每天换算:按月的收入、利润、到手 ÷ 每月营业天数;按年的 ÷ 12 换成每月;按月的销量 ÷ 营业天数。
+  // 营业天数先看账本自己写的(公式里「×26」、项目名里「26일 영업」),没有才按 30 天(实测김밥집账本按 26 天算月营收,÷30 会和它的「하루 매출」对不上)
+  let days = 30;
+  for (const l of rows) {
+    const m = String(l.formula || '').match(/\*\s*(2[0-9]|3[01])(?![\d.])/) || String(l.item || '').match(/(2[0-9]|3[01])\s*(?:일|天|日)/);
+    if (m) { days = Number(m[1]); break; }
+  }
+  const daily = [];
+  rows.forEach((l, i) => {
+    const id = String(l.id || ('L' + (i + 1)));
+    const n = val[id];
+    if (!isFinite(n) || !n) return;
+    const per = periodOf(l);
+    const money = isMoney(l), vol = VOLUME_RE.test(unitKey(l));
+    if (money && KEY_RE.test(headOf(l.item)) && per === 'year') daily.push({ id, item: l.item || '', amount: r0(n), per: '月', value: r0(n / 12), money: true });
+    else if (money && KEY_RE.test(headOf(l.item)) && per === 'month') daily.push({ id, item: l.item || '', amount: r0(n), per: '天', value: r0(n / days), money: true });
+    else if (vol && per === 'month') daily.push({ id, item: l.item || '', amount: r0(n), per: '天', value: Math.ceil(n / days), money: false, unit: unitKey(l).replace(/\/.*$/, '') });
+  });
+  return { waterfalls, daily: daily.slice(0, 6), days };
+}
+// 账本念法里程序算出来的数(还剩多少、每天多少):账外的数扫描要认它们
+function ledgerSayAmounts(say) {
+  const out = [];
+  (say.waterfalls || []).forEach(w => w.steps.forEach(s => out.push(Math.abs(s.left), Math.abs(sayRound(s.left)))));
+  (say.daily || []).forEach(d => out.push(Math.abs(d.value), Math.abs(sayRound(d.value))));
+  return out.filter(n => n);
+}
+// 念出来的数四舍五入(Mr. Finance 也只说「대략 1.6만 달러」):100만 以上到「만」,10만 以上到「천」,1만 以上到「백」;账外的数扫描的容差本来就是 5,000 원
+function sayRound(n) { const a = Math.abs(n); return a >= 1e6 ? Math.round(n / 1e4) * 1e4 : a >= 1e5 ? Math.round(n / 1e3) * 1e3 : a >= 1e4 ? Math.round(n / 100) * 100 : Math.round(n); }
+function sayAmt(n, money, unit) { return money ? krMoney(sayRound(n)) : n.toLocaleString('en-US') + (unit || ''); }
+function ledgerSayText(say, withHints) {
+  const lines = [];
+  (say.waterfalls || []).forEach(w => {
+    lines.push('- 从' + w.top.item + '减到' + w.item + ':');
+    const m = n => sayAmt(n, true);
+    lines.push('  ' + w.top.id + ' ' + w.top.item + ' ' + m(w.top.amount));
+    w.steps.forEach(s => lines.push('  − ' + s.id + ' ' + s.item + ' ' + m(s.amount) + '(占 ' + s.pct + '%)→ 还剩 ' + m(s.left)));
+    lines.push('  = ' + w.id + ' ' + w.item + ' ' + m(w.end) + '(占 ' + w.end_pct + '%)');
+  });
+  if ((say.daily || []).length) {
+    lines.push('- 换成每天/每月(一个月按 ' + (say.days || 30) + ' 天营业算):');
+    say.daily.forEach(d => lines.push('  ' + d.id + ' ' + d.item + ' ' + sayAmt(d.amount, d.money, d.unit) + ' → 每' + d.per + '约 ' + sayAmt(d.value, d.money, d.unit)));
+  }
+  if (!lines.length) return '';
+  const head = '账本念法(程序按账本算好的,已四舍五入成好念的数,念账时照这个顺序一项一项减,每减一项说一次「还剩多少」;这里的「还剩」「每天」也是账本里的数,可以直接用,不许自己另算):';
+  const hints = withHints ? '\n念账写法:\n- 全片只用这一家店的账,前 2 分钟内说出它一天或一个月卖多少。\n- 说比例时紧接着换成这家店的钱(「매출의 30%, 우리 가게로 치면 1,200원」),比例和钱只各说一次。\n- 一句只放一个新数,数后面接一句它意味着什么(「그러니까…」「다시 말해…」)。\n- 大数换成每天、每份(「하루에 X개는 팔아야 본전」)更好记。\n- 老板自己干活的,老板工资和真正的利润分开说。' : '';
+  return head + '\n' + lines.join('\n') + hints;
 }
 
 // 账本由程序核算:有 formula 的行按引用的行重算,和模型写的 amount 差超过 1% 记为对不上,写稿以程序算的数为准。
@@ -772,7 +924,7 @@ async function auditTitle(runId, draft, title) {
   return out;
 }
 
-module.exports = { krMoney,
+module.exports = { krMoney, moneyScale, ledgerSayOn, ledgerSay, ledgerSayText, ledgerSayAmounts,
   loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, HOOK_TYPES, hookType, acceptedGaps, verifyLedger,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,

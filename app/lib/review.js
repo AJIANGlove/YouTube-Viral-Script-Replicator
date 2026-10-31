@@ -424,7 +424,9 @@ function offLedgerAmounts(run) {
   const a = run.analysis || {};
   an().verifyLedger(arr(a.ledger));
   const known = [];
-  arr(a.ledger).forEach(l => { const n = l.program_amount != null ? l.program_amount : Number(String(l.amount == null ? '' : l.amount).replace(/,/g, '')); if (isFinite(n) && n) known.push(Math.abs(n)); });
+  arr(a.ledger).forEach(l => { const n = l.program_amount != null ? l.program_amount : Number(String(l.amount == null ? '' : l.amount).replace(/,/g, '')); if (isFinite(n) && n) known.push(Math.abs(n), Math.abs(n * an().moneyScale(l.unit))); });
+  // 账本念法里程序算好的「还剩多少」「每天多少」也算账本里的数
+  an().ledgerSayAmounts(an().ledgerSay(arr(a.ledger))).forEach(n => known.push(n));
   arr(a.facts).forEach(f => { krAmountsIn(f.content).forEach(x => known.push(x.value)); numberTokensOf(f.content).forEach(n => known.push(Number(n))); });
   krAmountsIn(run.materials || '').forEach(x => known.push(x.value));
   numberTokensOf(run.materials || '').forEach(n => known.push(Number(n)));
@@ -2839,7 +2841,9 @@ function claimBlocking(cc) { return !!cc && (cc.verdict === '不成立' || arr(c
 function claimLedgerText(run) {
   const a = run.analysis || {};
   an().verifyLedger(arr(a.ledger));
-  return arr(a.ledger).map(l => { const n = l.program_amount != null ? l.program_amount : l.amount; const kr = /KRW|원|won|₩/i.test([l.unit, l.value, l.item].join(' ')) && isFinite(Number(n)) && Math.abs(Number(n)) >= 100 ? '(' + an().krMoney(n) + ')' : ''; return '- ' + (l.id || '') + ' ' + (l.item || '') + ' = ' + n + (l.unit ? ' ' + l.unit : '') + kr + (l.formula ? ' [= ' + l.formula + ']' : ''); }).join('\n') || '(无)';
+  const rows = arr(a.ledger).map(l => { const n = l.program_amount != null ? l.program_amount : l.amount; const kr = /KRW|원|won|₩|韩元/i.test([l.unit, l.value, l.item].join(' ')) && isFinite(Number(n)) && Math.abs(Number(n)) >= 100 ? '(' + an().krMoney(Number(n) * an().moneyScale(l.unit)) + ')' : ''; return '- ' + (l.id || '') + ' ' + (l.item || '') + ' = ' + n + (l.unit ? ' ' + l.unit : '') + kr + (l.formula ? ' [= ' + l.formula + ']' : ''); }).join('\n');
+  const say = rows && an().ledgerSayOn(run) ? an().ledgerSayText(an().ledgerSay(arr(a.ledger)), false) : '';
+  return (rows + (say ? '\n\n' + say : '')) || '(无)';
 }
 function claimNote(cc) {
   // 实测 08:33 按核对改稿 AI 一处没改:这里原来写「数字一律用稿子里已有的」,核对却要求改成账本里的 6,483만(稿子里没有),两头矛盾,模型干脆不改
@@ -3349,7 +3353,7 @@ function rewritePrompt(run, asset, chId, note, compress) {
     chapter_blueprint: JSON.stringify(bp),
     template: row.source.map(s => s.stage_id + ' ' + s.function + ':' + s.abstract_move + (s.peaks.length ? '(持有高峰 ' + s.peaks.map(p => p.peak_id).join('、') + ')' : '')).join('\n') || '(无)',
     facts: arr(a.facts).map(f => { const st = factState(f); return '- ' + f.id + ' [' + (f.kind || '') + (st.state === 'red' ? ',未核实' : '') + '] ' + (f.content || '') + (f.method ? '(算法:' + f.method + ')' : ''); }).join('\n') || '(无)',
-    ledger: arr(a.ledger).map(l => '- ' + l.item + ' = ' + l.value).join('\n') || '(无)',
+    ledger: (arr(a.ledger).map(l => '- ' + l.item + ' = ' + l.value).join('\n') + (arr(a.ledger).length && an().ledgerSayOn(run) ? (t => t ? '\n\n' + t : '')(an().ledgerSayText((an().verifyLedger(arr(a.ledger)), an().ledgerSay(arr(a.ledger))), false)) : '')) || '(无)',
     prev_text: i > 0 ? view.rows[i - 1].text.slice(-600) : '(这是第一章)',
     next_text: i + 1 < view.rows.length ? view.rows[i + 1].text.slice(0, 600) : '(这是最后一章)',
     current_text: row.text,

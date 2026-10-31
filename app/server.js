@@ -551,6 +551,8 @@ const server = http.createServer(async (req, res) => {
       if (!r) return send(res, 404, { error: '任务不存在' });
       // 编辑分析用的对照数据(原片高峰、第一个甜头),只随响应返回,不落盘
       r.analysis_context = analysis.analysisContext(r.asset_id);
+      // 账本念法(瀑布:一项一项减、每步还剩多少;换成每天),按账本现算给前端看,不落盘
+      try { if (r.analysis && Array.isArray(r.analysis.ledger) && r.analysis.ledger.length && analysis.ledgerSayOn(r)) { analysis.verifyLedger(r.analysis.ledger); r.ledger_say = analysis.ledgerSay(r.analysis.ledger); } } catch (e) { /* 账本格式不对:前端不显示念法 */ }
       // 听感检查(开头点题、前 10 秒数字、连念数字、语体)按当前稿现算,不落盘
       if (r.final_script) {
         const nw = (r.checks || {}).narration || narration.narrationWpm(r, null);

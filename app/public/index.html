@@ -3195,7 +3195,29 @@ function matUse(a, materials) {
   return { facts, total: matSet.size, used: [...matSet].filter(n => used.has(n)).length, unusedLines };
 }
 
-function analysisHtml(a, materials) {
+// 账本念法:程序按账本算好的一项一项减、每步还剩多少、换成每天(写稿照这个念,不让 AI 自己加减)
+function sayKr(n) {
+  n = Number(n); const a = Math.abs(n);
+  n = a >= 1e6 ? Math.round(n / 1e4) * 1e4 : a >= 1e5 ? Math.round(n / 1e3) * 1e3 : a >= 1e4 ? Math.round(n / 100) * 100 : Math.round(n);
+  const b = Math.abs(n), sg = n < 0 ? '-' : '';
+  if (b >= 1e8) { const e = Math.floor(b / 1e8), m = Math.round((b % 1e8) / 1e4); return sg + e + '억' + (m ? ' ' + m.toLocaleString('en-US') + '만' : '') + ' 원'; }
+  if (b >= 1e4) { const m = Math.floor(b / 1e4), r = Math.round(b % 1e4); return sg + m.toLocaleString('en-US') + '만' + (r ? ' ' + r.toLocaleString('en-US') : '') + ' 원'; }
+  return sg + b.toLocaleString('en-US') + ' 원';
+}
+function ledgerSayHtml(say) {
+  if (!say || (!(say.waterfalls || []).length && !(say.daily || []).length)) return '';
+  let h = `<div class="an-sec">账本念法(程序算好的,写稿照这个顺序一项一项减)</div><div class="hint v12" style="margin:2px 0 6px">学的是 Mr. Finance 的念账:只说一家店,从收入开始每减一项说一次「还剩多少」,大数换成每天。这里的数由程序按账本算,写稿只能照用,不会自己另算出别的数。</div>`;
+  (say.waterfalls || []).forEach(w => {
+    h += `<div style="font-size:13px;margin:6px 0 2px"><b>${esc(w.top.item)} → ${esc(w.item)}</b></div>` + anTable(['项目', '金额', '占收入', '还剩'],
+      [`<tr><td>${esc(w.top.id + ' ' + w.top.item)}</td><td>${sayKr(w.top.amount)}</td><td>100%</td><td></td></tr>`]
+        .concat(w.steps.map(st => `<tr><td>− ${esc(st.id + ' ' + st.item)}</td><td>${sayKr(st.amount)}</td><td>${st.pct}%</td><td${st.left < 0 ? ' class="an-bad"' : ''}>${sayKr(st.left)}</td></tr>`))
+        .concat([`<tr><td><b>= ${esc(w.id + ' ' + w.item)}</b></td><td><b>${sayKr(w.end)}</b></td><td>${w.end_pct}%</td><td></td></tr>`]));
+  });
+  if ((say.daily || []).length) h += `<div style="font-size:13px;margin:6px 0 2px"><b>换成每天/每月(一个月按 ${say.days || 30} 天营业算)</b></div>` + anTable(['项目', '账本里', '换算'],
+    say.daily.map(d => `<tr><td>${esc(d.id + ' ' + d.item)}</td><td>${d.money ? sayKr(d.amount) : esc(d.amount.toLocaleString('en-US') + (d.unit || ''))}</td><td>每${d.per}约 ${d.money ? sayKr(d.value) : esc(d.value.toLocaleString('en-US') + (d.unit || ''))}</td></tr>`));
+  return h;
+}
+function analysisHtml(a, materials, say) {
   const t = a.title || {};
   const th = a.thesis_card || {};
   const h = a.hook || {};
@@ -3242,7 +3264,8 @@ function analysisHtml(a, materials) {
   if (notFound.length) html += `<div class="an-sec">没找到的资料</div>` + anTable(['想找', '说明'],
     notFound.map(s => `<tr class="an-warn"><td>${esc(s.looked_for)}</td><td>${esc(s.note)}</td></tr>`));
   if ((a.ledger || []).length) html += `<div class="an-sec">账本</div>` + anTable(['项目', '数值', '事实'],
-    a.ledger.map(l => `<tr><td>${esc(l.item)}</td><td>${esc(l.value)}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`));
+    a.ledger.map(l => `<tr><td>${esc(l.item)}</td><td>${esc(l.value)}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`))
+    + ledgerSayHtml(say);
   html += `<div class="an-sec">模块取舍</div>` + anTable(['原片段', '处理', '留存作用', '钩子', '理由', '事实', '时长'],
     (a.modules || []).map(m => `<tr class="${/删除/.test(m.decision || '') ? 'an-warn' : ''}"><td>${esc(m.segment)}</td><td>${esc(m.decision)}</td><td>${esc(m.retention_role)}</td><td>${esc(m.hook_type || '')}</td><td>${esc(m.reason)}</td><td>${esc(anIds(m.fact_ids))}</td><td>${esc(m.duration)}</td></tr>`));
   const hp = a.hook_plan || {};
@@ -4277,7 +4300,7 @@ function renderAnalysisPanel(r) {
   if (r.analysis_confirmed) {
     if (key === anRenderedKey) return;
     anRenderedKey = key;
-    el.innerHTML = `<details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>⓪ 写前分析(已确认${r.analysis_edited ? ',人工改过' : ''} · ${fmtTime(r.analysis_confirmed_at)})</b></summary>${analysisHtml(r.analysis, r.materials || '')}</details>`;
+    el.innerHTML = `<details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>⓪ 写前分析(已确认${r.analysis_edited ? ',人工改过' : ''} · ${fmtTime(r.analysis_confirmed_at)})</b></summary>${analysisHtml(r.analysis, r.materials || '', r.ledger_say)}</details>`;
     return;
   }
   if (r.draft_first) {
@@ -4288,7 +4311,7 @@ function renderAnalysisPanel(r) {
     anRenderedKey = key;
     anEdit = null;
     el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">先写后改模式:${statusLabel(r) === '待换框架' ? '分析判定「换框架」,等你在上面选框架。' : r.status === 'awaiting_review' ? 'AI 正在自动调整事实、账本与留存取舍,完成后直接写稿,无需确认。' : '由 AI 自动分析与调整,无需人工确认。'}</div>
-      <details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>查看 AI 的分析与调整(只读)</b></summary>${analysisHtml(r.analysis, r.materials || '')}</details>`;
+      <details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>查看 AI 的分析与调整(只读)</b></summary>${analysisHtml(r.analysis, r.materials || '', r.ledger_say)}</details>`;
     return;
   }
   // 待确认:草稿脏时轮询只刷新提示,绝不重建 DOM
