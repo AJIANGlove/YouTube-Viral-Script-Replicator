@@ -456,26 +456,50 @@ const ledgerLine = x => x.id + ' ' + x.item + '(账本写 ' + x.amount + ',按 '
 // 「可发布」硬标准,和 AI 复审的「达标」分开:复审没有关键/结构遗留问题、事实没有红旗(没出处、账本对不上、反转被推翻)、听感检查通过
 // 平均分到 PUBLISH_AVG:复审剩下的关键/结构问题、数字密的句子只提示不挡,只要开头过关(人定的标准,之后按真实发布数据再调)
 const PUBLISH_AVG = 8;
+// 人点了「忽略」的挡发布项(按 key:hard_open、ledger、claim、listen_open…;没出处的数走 accepted_facts)
+const IGNORABLE = ['hard_open', 'ledger', 'thesis', 'claim', 'listen_open', 'listen_dense', 'listen_register', 'listen_other'];
+function ignoredBlocks(run) { return new Set(arr((run.review || {}).ignored_blocks).filter(k => IGNORABLE.includes(k))); }
+// 复审问题属于哪一项:提到挡发布的没出处事实 → fact:F05;账本 → ledger;开头/前几秒 → listen_open;一口气念数字 → listen_dense;语体 → listen_register;其他 → hard_open
+function openBlockKey(x, factIds) {
+  const t = String((x && x.problem) || '');
+  const f = arr(factIds).find(id => new RegExp('(^|[^A-Za-z0-9])' + id + '(?!\\d)').test(t));
+  if (f) return 'fact:' + f;
+  if (/账本|(^|[^A-Za-z])L\d+[a-z]?(?![a-z\d])/.test(t)) return 'ledger';
+  if (/开头|前 ?\d+ ?秒/.test(t)) return 'listen_open';
+  if (/一口气念|数字太密/.test(t)) return 'listen_dense';
+  if (/语体|书面语/.test(t)) return 'listen_register';
+  return 'hard_open';
+}
+function setIgnoreBlock(runId, body) {
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  const key = String((body || {}).key || '');
+  if (!IGNORABLE.includes(key)) throw Object.assign(new Error('这一项不能忽略:' + key), { status: 400 });
+  run.review = run.review || {};
+  const set = new Set(arr(run.review.ignored_blocks));
+  if (body.on === false) set.delete(key); else set.add(key);
+  run.review.ignored_blocks = [...set];
+  store.saveRun(run);
+  return { ok: true, ignored: run.review.ignored_blocks };
+}
 function publishCheck(run, v) {
   const s = v.summary, reasons = [], notes = [];
   // blocks:挡发布的问题一条一条带 key,页面上和 AI 自动改稿开始前那份对比,解决了的显示绿色
   const blocks = [];
-  const blk = (key, text) => { reasons.push(text); blocks.push({ key, text }); };
+  // 人点了「忽略」的项:不挡发布,AI 改一轮也不改它(可以撤回)
+  const ign = ignoredBlocks(run), ignored = [];
+  const blk = (key, text) => { if (ign.has(key)) { ignored.push({ key, text }); return false; } reasons.push(text); blocks.push({ key, text }); return true; };
   const last = v.final ? arr(v.final.rechecks).slice(-1)[0] : null;
   const dims = v.final ? (arr(v.final.dims).length ? v.final.dims : Object.keys((last || {}).scores || {})) : [];
   const avg = last ? avgScore(last.scores, dims) : null;
   const good = avg != null && avg >= PUBLISH_AVG;
   if (!v.final) blk('no_final', '还没跑终审');
-  else {
-    const hard = arr(last && last.open).filter(x => (x.level === '关键' || x.level === '结构') && !x.not_found);
-    if (hard.length) { const t = '复审还有 ' + hard.length + ' 个关键/结构问题(' + uniqOpen(hard).map(x => x.id).join('、') + ')'; if (good) notes.push(t); else blk('hard_open', t); }
-  }
   // 没出处的事实:人点了「不影响,不改了」的只提示;其余每个单独挡,写清是哪个数、用在哪几句
   const accepted = new Set(arr((run.review || {}).accepted_facts));
   arr(s.red_fact_uses).forEach(x => {
     const where = x.chapters.length ? '(用在 ' + x.chapters.join('、') + ')' : '';
     if (accepted.has(x.id)) notes.push('事实 ' + x.id + ' 没出处' + where + ',你确认不影响,不挡发布');
-    else { blk('red_facts', '稿里用了没出处的数:' + x.id + where); blocks[blocks.length - 1].fact = x; }
+    else if (blk('red_facts', '稿里用了没出处的数:' + x.id + where)) blocks[blocks.length - 1].fact = x;
   });
   if (arr(s.ledger_mismatches).length) {
     const lw = ledgerWrongUsed(run);
@@ -506,8 +530,33 @@ function publishCheck(run, v) {
     if (soft.length) notes.push(soft.join(';'));
   }
   if (lc && arr(lc.dense_late).length) notes.push(checks.DENSE_OPEN_SEC / 60 + ' 分钟以后还有 ' + lc.dense_late.length + ' 句一口气念 3 个以上的数字,先不管,不挡发布');
+  // 复审问题分到上面各项下面(开头的问题放「开头」下,账本的放「账本错数」下…),页面上每项下面直接列对应的问题;
+  // 「复审问题」这一项只数没有别的项可归的关键/结构问题,不重复数
+  const item_groups = {};
+  if (v.final) {
+    const red = arr(s.red_fact_uses).map(x => x.id);
+    const active = new Set(blocks.map(b => b.key === 'red_facts' && b.fact ? 'fact:' + b.fact.id : b.key));
+    const off = k => ign.has(k) || (/^fact:/.test(k) && accepted.has(k.slice(5)));
+    const hard = [];
+    uniqOpen(arr(last && last.open)).forEach(x => {
+      const k = openBlockKey(x, red);
+      const isHard = (x.level === '关键' || x.level === '结构') && !x.not_found;
+      if (k !== 'hard_open' && active.has(k)) item_groups[x.id] = k;
+      else if (k !== 'hard_open' && off(k)) item_groups[x.id] = 'ignored';
+      else if (isHard) hard.push(x);
+      else item_groups[x.id] = 'minor';
+    });
+    if (hard.length) {
+      const t = '复审还有 ' + hard.length + ' 个关键/结构问题(' + hard.map(x => x.id).join('、') + ')';
+      const g = good ? 'minor' : ign.has('hard_open') ? 'ignored' : 'hard_open';
+      hard.forEach(x => { item_groups[x.id] = g; });
+      if (good) notes.push(t);
+      else if (ign.has('hard_open')) ignored.unshift({ key: 'hard_open', text: t });
+      else { reasons.unshift(t); blocks.unshift({ key: 'hard_open', text: t }); }
+    }
+  }
   const prog = v.final ? programOpen(run, s.red_fact_uses) : [];
-  return { ready: !reasons.length, reasons, blocks, notes, can_autofix: !!reasons.length && !!v.final && ((avg != null && avg < PUBLISH_AVG) || prog.length > 0), program_open: prog.map(x => x.problem), craft_hints: v.final ? craftHints(run, last) : [], avg: avg != null ? Math.round(avg * 10) / 10 : null, good, opening_bad: openBad, fix: (run.steps || {}).opening_fix || null,
+  return { ready: !reasons.length, ignored, item_groups, reasons, blocks, notes, can_autofix: !!reasons.length && !!v.final && ((avg != null && avg < PUBLISH_AVG) || prog.length > 0), program_open: prog.map(x => x.problem), craft_hints: v.final ? craftHints(run, last) : [], avg: avg != null ? Math.round(avg * 10) / 10 : null, good, opening_bad: ign.has('listen_open') ? [] : openBad, fix: (run.steps || {}).opening_fix || null,
     accepted_facts: [...accepted], claim: cc ? { ...cc, stale: cc.hash !== hash(currentScript(run)), blocking: claimBlocking(cc) } : null, claim_step: (run.steps || {}).claim_check || null, fix_rec: ((run.review || {}).final || {}).opening_fix || null };
 }
 
@@ -2700,7 +2749,8 @@ function publishBlocks(runId) {
 function programOpen(run, rfu) {
   const out = [];
   if (!(run.review || {}).final) return out;
-  ledgerWrongUsed(run).filter(x => x.used).forEach(x => out.push({ level: '关键', chapter: '', problem: '稿子里写的「' + x.used + '」来自写前分析账本 ' + ledgerLine(x) + ',这个数算错了', suggestion: '按公式改成 ' + x.calc + (x.unit ? ' ' + x.unit : '') + ' 对应的说法,前后用到它的句子和结论一起改;改不顺就删掉这句' }));
+  const ign = ignoredBlocks(run);
+  if (!ign.has('ledger')) ledgerWrongUsed(run).filter(x => x.used).forEach(x => out.push({ level: '关键', chapter: '', problem: '稿子里写的「' + x.used + '」来自写前分析账本 ' + ledgerLine(x) + ',这个数算错了', suggestion: '按公式改成 ' + x.calc + (x.unit ? ' ' + x.unit : '') + ' 对应的说法,前后用到它的句子和结论一起改;改不顺就删掉这句' }));
   // 稿子里用了没出处的数(人没点「不影响」的):删掉这句或改成不带这个数的说法
   try {
     const accepted = new Set(arr((run.review || {}).accepted_facts));
@@ -2709,7 +2759,7 @@ function programOpen(run, rfu) {
       suggestion: '把这些句子删掉,或改成不带这个数字的说法(只说方向、比较或常识);不许换成别的没出处的数字;前后由它推出的结论一起改,删完上下文要接得上' }));
   } catch (e) {}
   const avg = finalAvg(run);
-  if (avg != null && avg < PUBLISH_AVG) {
+  if (avg != null && avg < PUBLISH_AVG && !ign.has('listen_dense')) {
     const lc = checks.listenCheck(checks.extractFinalScript(currentScript(run)), { wpm: require('./narration').narrationWpm(run, null).wpm, lang: (run.audience || {}).target_language });
     const dense = lc ? arr(lc.dense) : [];
     if (dense.length) out.push({ level: '次要', chapter: '', problem: '前 ' + checks.DENSE_OPEN_SEC / 60 + ' 分钟有 ' + dense.length + ' 句一口气念 3 个以上的数字,观众听不过来:' + dense.slice(0, 8).map(d => '「' + d.text + '」').join(' '), suggestion: '每句最多留 2 个数字:只留最关键的,其余拆成下一句或删掉;不要改数字本身' });
@@ -2717,7 +2767,7 @@ function programOpen(run, rfu) {
   return out.map((x, i) => ({ id: 'P' + String(i + 1).padStart(2, '0'), program: true, ...x }));
 }
 // 论点核对对不上、要改稿的(不是建议换标题的):并进「让 AI 接着改」那一轮一起改
-function claimToFix(run) { const c = claimFresh(run); return c && claimBlocking(c) && !c.fix_title ? c : null; }
+function claimToFix(run) { if (ignoredBlocks(run).has('claim')) return null; const c = claimFresh(run); return c && claimBlocking(c) && !c.fix_title ? c : null; }
 function autoPatchStop(run) {
   const fin = (run.review || {}).final;
   const rc = fin && arr(fin.rechecks).slice(-1)[0];
@@ -2788,7 +2838,10 @@ async function autoPatchLocked(runId) {
     const ids = [], choices = {};
     // 平均到 8 分:复审剩下的问题不再改(人定的「够好了」),只改程序查出的挡发布问题(没出处的数、账本错数)
     const onlyProg = avg != null && avg >= PUBLISH_AVG;
-    arr(rc.open).forEach(x => { if (onlyProg && !x.program) return; const k = autoPatchPick(rc, x); if (k === 'skip') return; ids.push(x.id); if (k !== 'rv') choices[x.id] = k; });
+    // 人点了「忽略」的项下面的问题不改
+    let groups = {};
+    try { groups = getView(runId).summary.publish.item_groups || {}; } catch (e) {}
+    arr(rc.open).forEach(x => { if (onlyProg && !x.program) return; if (!x.program && groups[x.id] === 'ignored') return; const k = autoPatchPick(rc, x); if (k === 'skip') return; ids.push(x.id); if (k !== 'rv') choices[x.id] = k; });
     const cc = claimToFix(run);
     if (!ids.length && !cc) return stopWith('每个问题推荐的都是「不改」');
     run.review.final.auto_patches = n;
@@ -3133,7 +3186,7 @@ async function autoOpeningFix(runId) {
     const run = store.getRun(runId);
     if (!run || passBusy(runId)) return;
     const avg = finalAvg(run);
-    if (avg == null || avg < PUBLISH_AVG) return;
+    if (avg == null || avg < PUBLISH_AVG || ignoredBlocks(run).has('listen_open')) return;
     if (!openingIssues(listenOf(run, currentScript(run))).length) return;
     passRunning.set(runId, '自动改开头');
     try { await runOpeningFix(runId); } finally { passRunning.delete(runId); }
@@ -3144,7 +3197,7 @@ async function autoOpeningFixLocked(runId) {
   try {
     const run = store.getRun(runId);
     const avg = finalAvg(run);
-    if (avg == null || avg < PUBLISH_AVG || !openingIssues(listenOf(run, currentScript(run))).length) return;
+    if (avg == null || avg < PUBLISH_AVG || ignoredBlocks(run).has('listen_open') || !openingIssues(listenOf(run, currentScript(run))).length) return;
     passRunning.set(runId, '自动改开头');
     await runOpeningFix(runId);
   } catch (e) { /* 失败已记在 steps.opening_fix */ }
@@ -3437,4 +3490,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { offLedgerAmounts, acceptFact, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

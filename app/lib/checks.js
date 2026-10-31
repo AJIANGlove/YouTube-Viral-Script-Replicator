@@ -461,7 +461,7 @@ function listenCheck(script, opts) {
   const issues = [];
   // 开头:前 10 秒最多 1 个数字;前 8 秒要出现标题里的说法
   const nums10 = lines.filter(l => l.start < OPEN_NUM_SEC).reduce((n, l) => n + l.nums, 0);
-  if (nums10 > OPEN_MAX_NUMS) issues.push('前 ' + OPEN_NUM_SEC + ' 秒念了 ' + nums10 + ' 个数字(最多 ' + OPEN_MAX_NUMS + ' 个)');
+  if (nums10 > OPEN_MAX_NUMS) issues.push('前 ' + OPEN_NUM_SEC + ' 秒一共念了 ' + nums10 + ' 个数字(不管是不是连着念,加起来最多 ' + OPEN_MAX_NUMS + ' 个)');
   const stems = titleStems(o.title);
   const seen = stems.map(st => { const l = lines.find(x => x.text.toLowerCase().includes(st)); return { word: st, sec: l ? Math.round(l.start) : null }; });
   const early = seen.filter(x => x.sec != null && x.sec < OPEN_TITLE_SEC).length;
