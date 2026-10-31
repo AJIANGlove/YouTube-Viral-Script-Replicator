@@ -2505,10 +2505,18 @@ function rvPublishHtml(v) {
   const fix = running ? `<span class="rv-busy">正在自动改开头${fx.stage && fx.stage !== '改开头' ? '(' + esc(fx.stage) + ')' : ''}…一般 1–3 分钟</span>`
     : fx.status === 'failed' ? `<span class="rv-flag">自动改开头没成功:${esc(fx.error || '')}</span>`
     : rec && rec.passed && rec.edits ? `<span style="color:#047857">✓ 开头已自动改 ${rec.edits} 处,听感检查过了(在下面修订痕迹里,类别「开头」;复审分数是改开头之前打的)</span>` : '';
+  const auto = p.can_autofix && !v.running ? `<span><button class="an-btn v13" onclick="rvAutoFix()">让 AI 接着改到能发布</button> <span class="hint">按复审问题${(p.program_open || []).length ? '和程序查出的问题(' + (p.program_open || []).length + ' 个:账本错数、一句念太多数字)' : ''}自动补改,最多 2 轮,改低了会自动退回;到 8 分后再自动改开头</span></span>` : '';
   const notes = (p.notes || []).length ? `<span class="hint">${p.good ? '平均 ' + p.avg + ' 分,' : ''}下面这些不挡发布,想改再改:${p.notes.map(esc).join(';')}</span>` : '';
   // 写法提示(从爆款学来的规则,还在验证):只提示,不进自动补改、不挡发布
   const craft = (p.craft_hints || []).length ? `<span class="hint">写法提示(从同类爆款学来的,不挡发布,只供参考):${p.craft_hints.map(esc).join(';')}</span>` : '';
-  return `<div class="rv-bar v13">${head}${btn}${fix}${notes}${craft}</div>` + rvClaimHtml(p, v);
+  return `<div class="rv-bar v13">${head}${auto}${btn}${fix}${notes}${craft}</div>` + rvClaimHtml(p, v);
+}
+async function rvAutoFix() {
+  try {
+    await api('/api/runs/' + currentRunId + '/review/pass', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind: 'autofix' }) });
+    if (rvState) rvState.key = null;
+    loadRunDetail();
+  } catch (e) { alert('没能开始:' + e.message); }
 }
 // 论点核对:用稿子自己的数字检验开头的主张;对不上终审/补改后会自动按核对结果改,还没改好就挡发布
 function rvClaimHtml(p, v) {
@@ -3149,6 +3157,8 @@ function analysisHtml(a, materials) {
   // 事实表:待查/估算标黄,时效风险标红(人工重点核对)
   const mu = matUse(a, materials);
   html += `<div class="an-sec">事实表(写稿只能用这些)</div>`;
+  if (materials !== undefined && !String(materials || '').trim()) html += `<div class="hint v12" style="margin:2px 0 6px">这篇建任务时没有填参考资料,事实都来自 AI 联网搜索(算法里的 R 编号)和它自己的知识;标「待查」的要人工核实。</div>`;
+  else if (materials !== undefined && !mu) html += `<div class="hint v12" style="margin:2px 0 6px">你的参考资料里没有可比对的数字,没法标出哪些事实来自你的资料。</div>`;
   if (mu) html += `<div class="hint v12" style="margin:2px 0 6px">你的参考资料里有 ${mu.total} 个数字,事实表和账本用上了 ${mu.used} 个;用上的事实在「来源」栏标了<span class="mat-tag">你的资料</span>(程序按数字比对,换算过单位的对不上)。`
     + (mu.unusedLines.length ? `<details style="margin-top:2px"><summary style="cursor:pointer">你的资料里有 ${mu.unusedLines.length} 条一个数字都没用上(点开看;不一定是漏了,也可能是和本题关系不大)</summary>${mu.unusedLines.slice(0, 30).map(t => '<div style="margin:2px 0">· ' + esc(t.length > 160 ? t.slice(0, 160) + '…' : t) + '</div>').join('')}${mu.unusedLines.length > 30 ? '<div>(只列前 30 条)</div>' : ''}</details>` : '') + `</div>`;
   html += anTable(['编号', '类型', '内容', '来源', '年份', '地区', '时效'],
@@ -4195,7 +4205,7 @@ function renderAnalysisPanel(r) {
   if (r.analysis_confirmed) {
     if (key === anRenderedKey) return;
     anRenderedKey = key;
-    el.innerHTML = `<details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>⓪ 写前分析(已确认${r.analysis_edited ? ',人工改过' : ''} · ${fmtTime(r.analysis_confirmed_at)})</b></summary>${analysisHtml(r.analysis, r.materials)}</details>`;
+    el.innerHTML = `<details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>⓪ 写前分析(已确认${r.analysis_edited ? ',人工改过' : ''} · ${fmtTime(r.analysis_confirmed_at)})</b></summary>${analysisHtml(r.analysis, r.materials || '')}</details>`;
     return;
   }
   if (r.draft_first) {
@@ -4206,7 +4216,7 @@ function renderAnalysisPanel(r) {
     anRenderedKey = key;
     anEdit = null;
     el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">先写后改模式:${statusLabel(r) === '待换框架' ? '分析判定「换框架」,等你在上面选框架。' : r.status === 'awaiting_review' ? 'AI 正在自动调整事实、账本与留存取舍,完成后直接写稿,无需确认。' : '由 AI 自动分析与调整,无需人工确认。'}</div>
-      <details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>查看 AI 的分析与调整(只读)</b></summary>${analysisHtml(r.analysis, r.materials)}</details>`;
+      <details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>查看 AI 的分析与调整(只读)</b></summary>${analysisHtml(r.analysis, r.materials || '')}</details>`;
     return;
   }
   // 待确认:草稿脏时轮询只刷新提示,绝不重建 DOM

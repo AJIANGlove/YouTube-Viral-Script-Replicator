@@ -660,7 +660,7 @@ const server = http.createServer(async (req, res) => {
             // 重跑初稿检查(会接着出审稿报告)、只重跑审稿报告或只重跑终审;后台跑,页面轮询看进度
             // 并发守卫:同一任务有 pass 在跑就拒(连点会并发烧 LLM 并竞争写 run 文件)
             if (review.passBusy(id)) return send(res, 409, { error: '「' + (review.passLabel(id) || '审稿') + '」正在跑,等它跑完再重跑' });
-            const kind = ['final', 'audit'].includes(body.kind) ? body.kind : 'check';
+            const kind = ['final', 'audit', 'autofix'].includes(body.kind) ? body.kind : 'check';
             review.runPasses(id, kind).catch(() => {});
             return send(res, 200, { ok: true });
           }

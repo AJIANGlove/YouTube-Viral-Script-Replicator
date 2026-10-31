@@ -341,6 +341,36 @@ function buildView(run, asset) {
   return out;
 }
 
+// 账本算错的行(写的数和按公式重算的不一样):稿子里真用了写错的数才挡发布,没用到只提示。
+// 金额在稿子里可能写成 560,000 / 560000 / 56만 / 1억 2,000만 / 1.2억,都试一遍;一两位数太常见,不判断
+const numRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function amountForms(n) {
+  const a = Math.abs(Number(n));
+  if (!isFinite(a) || a < 100) return [];
+  const forms = new Set([a.toLocaleString('en-US'), String(a)]);
+  if (a >= 10000 && a % 1000 === 0) {
+    const man = a / 10000;
+    forms.add(String(man) + '만'); forms.add(man.toLocaleString('en-US') + '만');
+  }
+  if (a >= 1e8) {
+    const eok = Math.floor(a / 1e8), rest = Math.round((a % 1e8) / 1e4);
+    if (rest === 0) forms.add(eok + '억');
+    else { forms.add(eok + '억 ' + rest.toLocaleString('en-US') + '만'); forms.add(eok + '억' + rest.toLocaleString('en-US') + '만'); if (rest % 1000 === 0) forms.add(String(a / 1e8) + '억'); }
+  }
+  return [...forms];
+}
+function ledgerWrongUsed(run) {
+  const a = run.analysis || {};
+  an().verifyLedger(arr(a.ledger));
+  const script = checks.extractFinalScript(currentScript(run));
+  return arr(a.ledger).filter(l => l.mismatch).map(l => {
+    const forms = amountForms(String(l.amount == null ? '' : l.amount).replace(/,/g, ''));
+    const hit = forms.find(f => new RegExp('(^|[^\\d.,])' + numRe(f) + '(?![\\d]|[.,]\\d)').test(script));
+    return { id: l.id, item: l.item || '', amount: l.amount, calc: l.program_amount, formula: l.formula, unit: l.unit || '', used: hit || '' };
+  });
+}
+const ledgerLine = x => x.id + ' ' + x.item + '(账本写 ' + x.amount + ',按 ' + x.formula + ' 算是 ' + x.calc + (x.unit ? ' ' + x.unit : '') + ')';
+
 // 「可发布」硬标准,和 AI 复审的「达标」分开:复审没有关键/结构遗留问题、事实没有红旗(没出处、账本对不上、反转被推翻)、听感检查通过
 // 平均分到 PUBLISH_AVG:复审剩下的关键/结构问题、数字密的句子只提示不挡,只要开头过关(人定的标准,之后按真实发布数据再调)
 const PUBLISH_AVG = 8;
@@ -356,7 +386,12 @@ function publishCheck(run, v) {
     if (hard.length) (good ? notes : reasons).push('复审还有 ' + hard.length + ' 个关键/结构问题(' + hard.map(x => x.id).join('、') + ')');
   }
   if (s.red_facts.length) reasons.push('稿里有 ' + s.red_facts.length + ' 个没出处的事实');
-  if (arr(s.ledger_mismatches).length) reasons.push('账本对不上');
+  if (arr(s.ledger_mismatches).length) {
+    const lw = ledgerWrongUsed(run);
+    const used = lw.filter(x => x.used), unused = lw.filter(x => !x.used);
+    if (used.length) reasons.push('稿子里用了账本算错的数:' + used.map(x => ledgerLine(x) + ',稿子里写的是「' + x.used + '」').join(';'));
+    if (unused.length) notes.push('写前分析的账本有 ' + unused.length + ' 行算错:' + unused.map(ledgerLine).join(';') + '。稿子里没用到写错的数,不挡发布');
+  }
   // 反转被推翻:看最近一轮复审对终稿的判断;复审判定已解决就不再挡
   const th = last && last.thesis;
   if (arr(s.thesis_contradicts).length && !(th && th.resolved)) reasons.push('反转被事实推翻' + (th ? '(复审判定未解决:' + th.note + ')' : '(终审复审还没判断)'));
@@ -374,7 +409,8 @@ function publishCheck(run, v) {
     if (block.length) reasons.push('听感检查没过:' + block.join(';'));
     if (soft.length) notes.push(soft.join(';'));
   }
-  return { ready: !reasons.length, reasons, notes, craft_hints: v.final ? craftHints(run, last) : [], avg: avg != null ? Math.round(avg * 10) / 10 : null, good, opening_bad: openBad, fix: (run.steps || {}).opening_fix || null,
+  const prog = v.final ? programOpen(run) : [];
+  return { ready: !reasons.length, reasons, notes, can_autofix: !!reasons.length && !!v.final && ((avg != null && avg < PUBLISH_AVG) || prog.length > 0), program_open: prog.map(x => x.problem), craft_hints: v.final ? craftHints(run, last) : [], avg: avg != null ? Math.round(avg * 10) / 10 : null, good, opening_bad: openBad, fix: (run.steps || {}).opening_fix || null,
     claim: cc ? { ...cc, stale: cc.hash !== hash(currentScript(run)), blocking: claimBlocking(cc), auto_left: Math.max(0, CLAIM_FIX_MAX - (v.final.claim_fixes || 0)) } : null, claim_step: (run.steps || {}).claim_check || null, fix_rec: ((run.review || {}).final || {}).opening_fix || null };
 }
 
@@ -2431,7 +2467,12 @@ async function runPasses(runId, from) {
   passRunning.set(runId, '审稿');
   try {
     // 二稿和终稿出来后各单独审一次开头;开头分析失败不挡后面的步骤
-    const order = from === 'final' ? ['final', 'claim', 'options', 'autopatch', 'openfix', 'opening'] : from === 'audit' ? ['audit'] : ['check', 'opening', 'audit'];
+    // autofix:人在「还不能发布」那里点「让 AI 接着改」:自动补改重新给 AUTO_PATCH_MAX 轮,再自动改开头
+    if (from === 'autofix') {
+      const r0 = store.getRun(runId);
+      if (r0 && (r0.review || {}).final) { r0.review.final.auto_patches = 0; r0.review.final.auto_patch_stop = ''; const rc = arr(r0.review.final.rechecks).slice(-1)[0]; if (rc) delete rc.stalled; store.saveRun(r0); }
+    }
+    const order = from === 'final' ? ['final', 'claim', 'options', 'autopatch', 'openfix', 'opening'] : from === 'autofix' ? ['autopatch', 'openfix', 'opening'] : from === 'audit' ? ['audit'] : ['check', 'opening', 'audit'];
     for (const k of order) {
       passRunning.set(runId, PASS_LABELS[k] || k);
       if (k === 'opening') { try { await runOpeningCard(runId); } catch (e) {} continue; }
@@ -2467,16 +2508,30 @@ function autoPatchPick(rc, x) {
   return rec ? rec.key : x.level === '待核实' ? 'skip' : 'rv';
 }
 // 不再自动补改的原因;空字符串 = 可以再改一轮
+// 程序查出、会挡发布、但 AI 复审不一定列出来的问题:稿子里用了账本算错的数;平均没到 8 分时一句连念 3 个以上数字。
+// 自动补改时当成复审问题(编号 P01…)一起改
+function programOpen(run) {
+  const out = [];
+  if (!(run.review || {}).final) return out;
+  ledgerWrongUsed(run).filter(x => x.used).forEach(x => out.push({ level: '关键', chapter: '', problem: '稿子里写的「' + x.used + '」来自写前分析账本 ' + ledgerLine(x) + ',这个数算错了', suggestion: '按公式改成 ' + x.calc + (x.unit ? ' ' + x.unit : '') + ' 对应的说法,前后用到它的句子和结论一起改;改不顺就删掉这句' }));
+  const avg = finalAvg(run);
+  if (avg != null && avg < PUBLISH_AVG) {
+    const lc = checks.listenCheck(checks.extractFinalScript(currentScript(run)), { wpm: require('./narration').narrationWpm(run, null).wpm, lang: (run.audience || {}).target_language });
+    const dense = lc ? arr(lc.dense) : [];
+    if (dense.length) out.push({ level: '次要', chapter: '', problem: '有 ' + dense.length + ' 句一口气念 3 个以上的数字,观众听不过来:' + dense.slice(0, 8).map(d => '「' + d.text + '」').join(' '), suggestion: '每句最多留 2 个数字:只留最关键的,其余拆成下一句或删掉;不要改数字本身' });
+  }
+  return out.map((x, i) => ({ id: 'P' + String(i + 1).padStart(2, '0'), program: true, ...x }));
+}
 function autoPatchStop(run) {
   const fin = (run.review || {}).final;
   const rc = fin && arr(fin.rechecks).slice(-1)[0];
   if (!rc) return '没有复审结果';
   const avg = finalAvg(run);
   if (avg == null) return '复审没读到分数';
-  if (avg >= PUBLISH_AVG) return '';
+  if (avg >= PUBLISH_AVG && !programOpen(run).length) return '';
   if ((fin.auto_patches || 0) >= AUTO_PATCH_MAX) return '已经自动补改 ' + AUTO_PATCH_MAX + ' 轮';
   if (rc.stalled) return '上一轮分数没涨';
-  if (!arr(rc.open).length) return '复审没有列出要改的问题';
+  if (!arr(rc.open).length && !programOpen(run).length) return '复审没有列出要改的问题';
   const vs = arr(run.review.versions);
   const d3 = vs.find(v => v.key === 'd3'), d4 = vs.find(v => v.key === 'd4');
   const cur = currentScript(run);
@@ -2491,10 +2546,11 @@ async function autoPatchLocked(runId) {
     let run = store.getRun(runId);
     if (!run || !(run.review || {}).final) return;
     const avg = finalAvg(run);
-    if (avg != null && avg >= PUBLISH_AVG) return run.review.final.auto_patches ? stopWith('') : undefined;
-    // 复审没达标却没有现成的问题清单:先从报告里整理(和人点「从复审报告里整理」一样),每轮只整理一次
+    const prog = programOpen(run);
+    if (avg != null && avg >= PUBLISH_AVG && !prog.length) return run.review.final.auto_patches ? stopWith('') : undefined;
+    // 平均没到 8 分却没有现成的问题清单(复审判了「达标」也一样):先从报告里整理(和人点「从复审报告里整理」一样),每轮只整理一次
     const rc0 = arr(run.review.final.rechecks).slice(-1)[0];
-    if (rc0 && !arr(rc0.open).length && rc0.verdict === '未达标' && !rc0.auto_extracted && avg != null) {
+    if (rc0 && !arr(rc0.open).length && avg != null && avg < PUBLISH_AVG && !rc0.auto_extracted) {
       rc0.auto_extracted = true;
       store.saveRun(run);
       passRunning.set(runId, '整理复审问题(之后自动补改)');
@@ -2504,6 +2560,10 @@ async function autoPatchLocked(runId) {
     const why = autoPatchStop(run);
     if (why) return stopWith(why);
     const fin = run.review.final;
+    // 程序查出的问题并进这一轮的问题清单(已经在里面的不重复加)
+    const rcP = arr(fin.rechecks).slice(-1)[0];
+    rcP.open = arr(rcP.open).filter(x => !x.program).concat(prog);
+    store.saveRun(run);
     const n = (fin.auto_patches || 0) + 1;
     passRunning.set(runId, '自动补改第 ' + n + ' 轮');
     // 方案还没出或对不上现在的问题:先出方案;出不来就按复审建议改
