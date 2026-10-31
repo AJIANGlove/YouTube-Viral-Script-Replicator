@@ -33,7 +33,7 @@ YouTube爆款内容结构导演(Viral Blueprint Architect)。
 
 事实纪律:
 information_goal 只描述"需要什么类型的事实",禁止编造具体年份、遗址、人名、研究名称。
-有【写前分析】时:information_goal 写明本章用哪些事实编号(F01…),并填进 fact_ids;不得使用事实表以外的数字和案例。
+有【写前分析】时:information_goal 写明本章用哪些事实编号(F01…),并填进 fact_ids;不得使用事实表和账本以外的数字和案例。
 
 写前分析(有则必须遵守,优先级高于 Framework 的原片内容):
 - 论点卡的一句话论点和结尾落点决定全片方向;标题用 final_title。

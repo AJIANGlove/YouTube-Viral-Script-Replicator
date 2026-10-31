@@ -115,12 +115,22 @@ function factNumbers(text) {
   return [...out];
 }
 
+// 事实类型有时被写成韩文/繁体(实测 추정 12 条、가정 6 条、记忆待核 12 条):추정 被当成有出处的事实显示绿色,这里统一成中文类型
+function factKind(k) {
+  k = String(k || '').trim();
+  if (/^(估算|추정|추산|estimate)/i.test(k)) return '估算';
+  if (/^(假设|假設|가정|assum)/i.test(k)) return '假设';
+  if (/待查|待核|확인 ?필요|미확인|unverified/i.test(k)) return '待查';
+  if (/^(事实|事實|사실|fact)/i.test(k)) return '事实';
+  return k;
+}
 function factState(f) {
   const src = [f.source, f.url].filter(Boolean).join(' ');
-  if (f.kind === '待查' || /模型记忆|待人工核实|待核/.test(src)) return { state: 'red', why: '没有查到出处' };
+  const kind = factKind(f.kind);
+  if (kind === '待查' || /模型记忆|待人工核实|待核/.test(src)) return { state: 'red', why: '没有查到出处' };
   if (WEAK_SOURCES.test(src)) return { state: 'red', why: '出处是论坛或个人博客,不能当事实' };
-  if (f.kind === '估算') return f.method ? { state: 'yellow', why: '估算:' + f.method } : { state: 'red', why: '估算但没写算法' };
-  if (f.kind === '假设') return { state: 'yellow', why: '假设,稿中要明说' };
+  if (kind === '估算') return f.method ? { state: 'yellow', why: '估算:' + f.method } : { state: 'red', why: '估算但没写算法' };
+  if (kind === '假设') return { state: 'yellow', why: '假设,稿中要明说' };
   if (!f.source && !f.url) return { state: 'red', why: '没有写来源' };
   return { state: 'green', why: f.url ? '有链接' : '有来源' };
 }
@@ -2166,10 +2176,18 @@ async function runFinalPatch(runId, body) {
     const sentPicked = picked.filter(x => x.level !== '结构');
     const selected = sentPicked.length ? sentPicked.map(x => '- [' + x.id + '][' + x.chapter + '][' + x.level + '] ' + x.problem + howTo(x)).join('\n') : '(没有勾选复审问题,只按下面人的决定改)';
     const limit = growthLimit(run, d3.text);
-    let edits = [], a = { next: d3.text, edits: [] };
+    let edits = [], a = { next: d3.text, edits: [] }, noEditsLog = '';
     if (sentPicked.length || note) {
-      const r = await callLong(run, cfg, an().fillVars(readPrompt('final_patch.md'), { ...common, selected, note: note || '(没有补充意见)', script: d3.text }), '终审·补改');
+      const patchPrompt = an().fillVars(readPrompt('final_patch.md'), { ...common, selected, note: note || '(没有补充意见)', script: d3.text });
+      let r = await callLong(run, cfg, patchPrompt, '终审·补改');
       edits = parseEdits(r.content);
+      // 一处修改都没读出来:原文存进 logs,带上提醒再要一次(模型有时只写分析不给 ===EDIT===,或觉得要求互相矛盾就不改)
+      if (!edits.length) {
+        noEditsLog = dumpRaw(run, 'patch_noedits', r.content);
+        r = await callLong(run, cfg, patchPrompt + '\n\n【注意】上一次你没有按格式给出任何修改。上面列的问题都要改:每处修改以 ===EDIT=== 开头,写 章节/类别/原句/改成/理由,最后写 ===END===。账本里的数可以直接用;实在改不了的问题,改成不带具体数字的说法或删掉那句,也要作为一处修改列出来。', '终审·补改·再要一次');
+        edits = parseEdits(r.content);
+        if (!edits.length) noEditsLog = dumpRaw(run, 'patch_noedits', r.content) || noEditsLog;
+      }
       if (r.truncated && !/^===\s*END\s*===/m.test(r.content)) edits = edits.slice(0, -1);
       a = await applyWithRepair(run, cfg, d3.text, edits.map(e => ({ ...e, round: '补改' })), '终审·补改', limit);
     }
@@ -2182,7 +2200,7 @@ async function runFinalPatch(runId, body) {
       a.next = sr.text;
     }
     const structOk = arr(structural).filter(x => x.ok);
-    if (!okNew.length && !structOk.length) throw new Error(structural && structural.length ? '整章重写没有成功:' + structural.map(x => x.chapter + ' ' + x.error).join(';') : edits.length ? '补改的 ' + edits.length + ' 处都没对上原句,稿子没有变化,可以再点一次' : 'AI 没有给出补改,稿子没有变化');
+    if (!okNew.length && !structOk.length) throw new Error(structural && structural.length ? '整章重写没有成功:' + structural.map(x => x.chapter + ' ' + x.error).join(';') : edits.length ? '补改的 ' + edits.length + ' 处都没对上原句,稿子没有变化,可以再点一次' : 'AI 两次都没有给出修改,稿子没有变化' + (noEditsLog ? '(模型原文存在 data/logs/' + noEditsLog + ',可以发给我看)' : ''));
     const pure = await purifyText(run, cfg, a.next, '终审·补改');
     const text = pure.text;
     // 复审(只出报告)
@@ -2824,7 +2842,8 @@ function claimLedgerText(run) {
   return arr(a.ledger).map(l => { const n = l.program_amount != null ? l.program_amount : l.amount; const kr = /KRW|원|won|₩/i.test([l.unit, l.value, l.item].join(' ')) && isFinite(Number(n)) && Math.abs(Number(n)) >= 100 ? '(' + an().krMoney(n) + ')' : ''; return '- ' + (l.id || '') + ' ' + (l.item || '') + ' = ' + n + (l.unit ? ' ' + l.unit : '') + kr + (l.formula ? ' [= ' + l.formula + ']' : ''); }).join('\n') || '(无)';
 }
 function claimNote(cc) {
-  const lines = ['论点核对发现的问题(按下面改;只改这些句子和由它们推出的结论,数字一律用稿子里已有的,不许编新数字;开头的说法要和稿子自己的账一致):',
+  // 实测 08:33 按核对改稿 AI 一处没改:这里原来写「数字一律用稿子里已有的」,核对却要求改成账本里的 6,483만(稿子里没有),两头矛盾,模型干脆不改
+  const lines = ['论点核对发现的问题(按下面改;只改这些句子和由它们推出的结论。数字以【写前分析】账本为准:账本里的数可以直接用,哪怕稿子里还没出现;事实表里估算的合计和账本不一样时用账本的;账本和事实表以外的数不许编;开头的说法要和账一致):',
     '- 改一个数,全文所有写到这个数、由它算出来的数(合计、利润、时薪、倍数、「两倍」这类说法)的句子都要一起改,每一处都单独列一条修改;改完全稿同一个量只能有一个数值(实测只改了 CH13,CH09、CH15 还是旧数,复审判前后矛盾)',
     '- 改成的数一律用【写前分析】账本里的数(程序重算的为准,照抄「稿中写」的写法);账本里没有的项目不许自己加进合计重新算,删掉或改成定性说法'];
   if (cc.verdict === '不成立') lines.push('- 开头主张「' + cc.claim + '」被稿子自己的数字推翻:' + cc.calc + (cc.fix_claim ? '。改法:' + cc.fix_claim : ''));
