@@ -406,6 +406,8 @@ function cleanForeignScript(text, lang) {
 // 时间按字数和配音语速(wpm)估,句子级的位置会差几秒。
 const NUM_TOKEN = /\d[\d,.]*/g;
 const OPEN_TITLE_SEC = 8, OPEN_NUM_SEC = 10, OPEN_MAX_NUMS = 1, LINE_MAX_NUMS = 2;
+// 一句连念 3 个以上数字:只有前 2 分钟内的算问题(挡发布、要改);之后的只提醒,等发布后看真实留存数据再定(用户 2026-10-31 定)
+const DENSE_OPEN_SEC = 120;
 // 句末标点后接空白才算断句(5.5시간 里的点不算);引号跟在句末标点后面的一起带走
 function sentencesOf(line) {
   return String(line).split(/(?<=[.!?。！？…]["”’」)]?)\s+/).map(t => t.trim()).filter(Boolean);
@@ -468,11 +470,12 @@ function listenCheck(script, opts) {
   if (stems.length >= 3 && titleHit < 0.34 && early < 3) issues.push('前 ' + OPEN_TITLE_SEC + ' 秒只出现了标题里 ' + early + '/' + stems.length + ' 个关键词' +
     (seen.some(x => x.sec != null && x.sec >= OPEN_TITLE_SEC) ? '(' + seen.filter(x => x.sec != null && x.sec >= OPEN_TITLE_SEC).map(x => x.word + ' 在 ' + fmt(x.sec)).join('、') + ')' : ''));
   // 数字串:一行(一句)最多 2 个数字
-  const dense = lines.filter(l => l.nums > LINE_MAX_NUMS).map(l => ({ sec: Math.round(l.start), nums: l.nums, text: l.text }));
-  if (dense.length) issues.push(dense.length + ' 句一口气念 3 个以上的数字(最早在 ' + fmt(dense[0].sec) + ')');
+  const denseAll = lines.filter(l => l.nums > LINE_MAX_NUMS).map(l => ({ sec: Math.round(l.start), nums: l.nums, text: l.text }));
+  const dense = denseAll.filter(d => d.sec < DENSE_OPEN_SEC), dense_late = denseAll.filter(d => d.sec >= DENSE_OPEN_SEC);
+  if (dense.length) issues.push('前 ' + DENSE_OPEN_SEC / 60 + ' 分钟有 ' + dense.length + ' 句一口气念 3 个以上的数字(最早在 ' + fmt(dense[0].sec) + ')');
   const register = /^(Korean|韩|한국|ko)/i.test(String(o.lang || '')) ? koreanRegister(lines) : null;
   if (register && register.mixed) issues.push('语体混用:-다 体 ' + register.plain + ' 句,-니다/-요 体 ' + register.formal + ' 句');
-  return { wpm, ok: !issues.length, issues, opening: { nums_10s: nums10, title_hit: titleHit, title_words: seen }, dense, register };
+  return { wpm, ok: !issues.length, issues, opening: { nums_10s: nums10, title_hit: titleHit, title_words: seen }, dense, dense_late, register };
 }
 // 问题轻重,用来比较重写前后哪版更好(越小越好)
 function listenScore(lc) {
@@ -557,4 +560,4 @@ function extractFinalScript(optText) {
   return stripLeadingPreamble(cleaned).text;
 }
 
-module.exports = { normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, repairJsonQuotes, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };
+module.exports = { normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, repairJsonQuotes, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, DENSE_OPEN_SEC, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };
