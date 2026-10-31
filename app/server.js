@@ -655,7 +655,7 @@ const server = http.createServer(async (req, res) => {
 
     // ---------- 先写后改:逐段对照审稿 ----------
     // GET 视图(每次按当前稿子现算);POST status/undo 立即返回;rewrite/fact 等模型返回再响应(单章约 0.5–2 分钟)
-    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel))?$/);
+    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact))?$/);
     if (rvMatch) {
       const [, id, action] = rvMatch;
       try {
@@ -678,6 +678,8 @@ const server = http.createServer(async (req, res) => {
           if (action === 'final') return send(res, 200, review.startFinal(id, body));
           // 审稿报告里的勾选、路线、补充意见:人一改就存,刷新、终审失败后都还在
           if (action === 'audit_sel') return send(res, 200, review.saveAuditSelection(id, body));
+          // 「还不能发布」里没出处的数:人确认不影响 → 不挡发布(on:false 撤回)
+          if (action === 'accept_fact') return send(res, 200, review.acceptFact(id, body));
           // 开头单独审:开头 60 秒逐句 + 中文 + 好在哪 + 风险(后台跑)
           if (action === 'opening') return send(res, 200, review.startOpeningCard(id));
           // 自动改开头(后台跑):只改开头几句,改到听感检查的开头两条过关,最多试 3 次

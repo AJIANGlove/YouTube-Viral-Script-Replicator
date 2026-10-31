@@ -117,8 +117,10 @@ function analysisBrief(a, run, trackKey, mode) {
   const staleTag = (arr, key) => (Array.isArray(arr) && arr.includes(key) ? '(依据的事实已更新,这一行的数作废,按事实表重算)' : '');
   if ((a.ledger || []).length) {
     verifyLedger(a.ledger);
-    out.push('账本(程序已按公式重算;标「程序重算」的以程序的数为准,稿中所有加总、占比必须和这张账本一致):\n' + a.ledger.map(l => '- ' + (l.id ? l.id + ' ' : '') + l.item + ' = ' + (l.value || ((l.amount != null ? l.amount : '') + (l.unit ? ' ' + l.unit : ''))) +
-      (l.formula ? ' [= ' + l.formula + ']' : '') + (l.mismatch ? '(程序重算:' + l.program_amount + (l.unit ? ' ' + l.unit : '') + ',原来写错了)' : '') +
+    // 账本锁数(实测 run_ee2e6bd16c05:写稿自己加了账本没有的「인심·양념 480만」,영업이익写成 9,641만/9,278만,账本是 9,703만;
+    // 每次改稿只改一两章,同一个量在稿子里同时有三个数,论点核对每轮都报账对不上)
+    out.push('账本(程序已按公式重算;标「程序重算」的以程序的数为准)。金额锁定:稿子里的收入、成本、利润、时薪、倍数、回本时间,只能用这张账本里的数(或事实表里的数),照抄后面「稿中写」的写法,可以四舍五入但不许重算出别的数;同一个量全文只能有一个数值。账本里没有的项目(比如想多算一项调味料成本),不许自己加进合计重新算,只能不提或只做定性说明:\n' + a.ledger.map(l => '- ' + (l.id ? l.id + ' ' : '') + l.item + ' = ' + (l.value || ((l.amount != null ? l.amount : '') + (l.unit ? ' ' + l.unit : ''))) +
+      (l.formula ? ' [= ' + l.formula + ']' : '') + (l.mismatch ? '(程序重算:' + l.program_amount + (l.unit ? ' ' + l.unit : '') + ',原来写错了)' : '') + krLedgerForm(l) +
       (l.fact_ids && l.fact_ids.length ? '(' + l.fact_ids.join(',') + ')' : '') + staleTag(stale.ledger, l.item)).join('\n'));
   }
   const tc = a.thesis_check || {};
@@ -139,6 +141,21 @@ function analysisBrief(a, run, trackKey, mode) {
   if (String(a.comment_question || '').trim()) out.push('结尾评论问题(可选,只问这一个,一句话能答;正文中间的反问不超过两次):' + a.comment_question);
   if (run) { const cb = require('./craft').craftBrief(run, trackKey, mode); if (cb) out.push(cb); }
   return out.join('\n\n');
+}
+
+// 账本里的金额写成韩文口播写法(9,703만 원、1억 8,720만 원),写稿和改稿照抄,同一个量不会写出好几个数
+function krMoney(n) {
+  n = Math.round(Number(n));
+  if (!isFinite(n)) return '';
+  const a = Math.abs(n), sign = n < 0 ? '-' : '';
+  if (a >= 1e8) { const eok = Math.floor(a / 1e8), man = Math.round((a % 1e8) / 1e4); return sign + eok + '억' + (man ? ' ' + man.toLocaleString('en-US') + '만' : '') + ' 원'; }
+  if (a >= 1e4) { const man = Math.floor(a / 1e4), rest = Math.round(a % 1e4); return sign + man.toLocaleString('en-US') + '만' + (rest ? ' ' + rest.toLocaleString('en-US') : '') + ' 원'; }
+  return sign + a.toLocaleString('en-US') + ' 원';
+}
+function krLedgerForm(l) {
+  if (!/KRW|원|won|₩/i.test([l.unit, l.value, l.item].join(' '))) return '';
+  const n = l.program_amount != null ? l.program_amount : Number(String(l.amount == null ? '' : l.amount).replace(/,/g, ''));
+  return isFinite(n) && Math.abs(n) >= 100 ? '(稿中写:' + krMoney(n) + ')' : '';
 }
 
 // 账本由程序核算:有 formula 的行按引用的行重算,和模型写的 amount 差超过 1% 记为对不上,写稿以程序算的数为准。
@@ -755,7 +772,7 @@ async function auditTitle(runId, draft, title) {
   return out;
 }
 
-module.exports = {
+module.exports = { krMoney,
   loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, HOOK_TYPES, hookType, acceptedGaps, verifyLedger,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,

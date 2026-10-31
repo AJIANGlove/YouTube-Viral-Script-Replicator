@@ -247,11 +247,11 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `opening_retention_check.md` | 开头留存检查 | 126 |
 | `opening_card.md` | 开头单独审（前 60 秒逐句 + 硬指标 + 掉人点） | 31 |
 | `opening_fix.md` | 自动改开头（只动前 30 秒、不许改长/编数字，最多 3 次） | 41 |
-| `claim_check.md` | 论点核对（只用稿内数字验算主张、账本加减与前后一致性） | 37 |
+| `claim_check.md` | 论点核对（账本锁数 + 账外的数 + 验算一致性） | 44 |
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 40 份 `.md`（2908 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 45 份，合计 3111 行。
+合计 40 份 `.md`（2915 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 45 份，合计 3118 行。
 
 ### 历史版本
 
