@@ -1812,7 +1812,8 @@ async function ensureRecheckBlocks(run, cfg, common, dims, s3, label) {
 
 // 终审不空转:一轮下来七维平均涨不到 STALL_MIN 分,再逐句改也没用(实测一篇 POV 稿改了 59 处,5.7 → 6,复审 3 轮都未达标),
 // 停下来;复审标成「结构」的问题(时间线跳跃、论证骨架、整章没完成功能)交给整章重写,每轮最多 STRUCT_MAX 章
-const REVERT_DROP = 0.3; // 补改后平均分掉这么多就退回
+// 补改后平均分掉这么多就退回。AI 打分同一篇再打一次就会差 0.3 左右,掉 0.3 左右(不到 0.4)算正常波动、保留这一轮;掉 0.4 及以上才退回(用户 2026-10-31)
+const REVERT_DROP = 0.4;
 const CLAIM_REVERT_DROP = 1; // 按论点核对补改:论点对不上比 AI 打分要紧,掉 1 分以上才退回
 const STALL_MIN = 0.3, STRUCT_MAX = 2;
 function avgScore(scores, dims) {
