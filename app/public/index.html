@@ -85,6 +85,11 @@
   .step-pill.running { background: #dbeafe; color: #1d4ed8; }
   .step-pill.done { background: #d1fae5; color: #047857; }
   .step-pill.failed { background: #fee2e2; color: #b91c1c; }
+  .step-pill.link { cursor: pointer; }
+  .mat-tag { display: inline-block; margin-top: 2px; padding: 0 6px; border-radius: 9px; font-size: 11px; background: #dbeafe; color: #1d4ed8; }
+  .mat-tag.part { background: #eef2ff; color: #6366f1; }
+  .step-pill.link:hover { outline: 2px solid #93c5fd; }
+  .card.jump-flash { box-shadow: 0 0 0 3px #93c5fd; transition: box-shadow .3s; }
   .hidden { display: none; }
   .hint { font-size: 11px; color: #9ca3af; margin-top: 4px; }
   .err-list { color: #dc2626; font-size: 12px; }
@@ -1820,7 +1825,7 @@ async function retryRunById(id) {
 function openRun(id) {
   if (anEdit && anEdit.dirty && anEdit.runId !== id && !confirm('当前分析的修改还没保存，切换任务会丢弃。继续？')) return;
   if (anEdit && anEdit.runId !== id) anEdit = null;
-  currentRunId = id; anRenderedKey = null; resetDetailTitleCopyFeedback(); fpState = null; cpState = null; orState = null;
+  currentRunId = id; anRenderedKey = null; anOpen = false; resetDetailTitleCopyFeedback(); fpState = null; cpState = null; orState = null;
   // 进行中的检测请求一律作废:否则旧任务的响应回来会把结果挂到新任务上(三个面板同一口径)
   fpReqSeq++; cpReqSeq++; orReqSeq++;
   Object.keys(descPending).forEach(k => delete descPending[k]);
@@ -1865,7 +1870,8 @@ async function loadRunDetail() {
     const cls = s.status === 'done' ? 'done' : (s.status === 'running' ? 'running' : (s.status === 'failed' ? 'failed' : ''));
     const extra = s.secs ? ` (${s.secs}s)` : '';
     const gate = s.gate_retry ? ' ⟳重试' : '';
-    return `<div class="step-pill ${cls}">${STEP_LABELS[k]}${extra}${gate}</div>`;
+    const jump = STEP_JUMP[k] && (k === 'analysis' ? !!r.analysis : !!r.draft_first || !!(r.review || {}).versions);
+    return `<div class="step-pill ${cls}${jump ? ' link' : ''}"${jump ? ` onclick="stepJump('${k}')" title="点击查看这一步的内容"` : ''}>${STEP_LABELS[k]}${extra}${gate}</div>`;
   }).join('');
   const ck = r.checks || {};
   const lenWarn = [['脚本', ck.script_length], ['终稿', ck.length]].filter(x => x[1] && (x[1].warn || x[1].short)).map(x => x[0] + '篇幅' + (x[1].short ? '不合格' : '偏短') + ':' + x[1].detail);
@@ -3073,7 +3079,43 @@ function anSetPath(o, p, v) {
   t[last] = v;
 }
 
-function analysisHtml(a) {
+// 事实表里哪些数出自你给的参考资料:不调模型,按数字比对(年份、日期、链接里的数和不带 % 的一两位整数不算,太常见)
+function matNums(text) {
+  const out = [];
+  // 链接和日期里的数字不算(2025-09-15、…/news/6518303)
+  const t = String(text || '').replace(/https?:\/\/\S+|\b(19|20)\d\d[-./]\d{1,2}(?:[-./]\d{1,2})?/g, s => ' '.repeat(s.length));
+  const re = /\d[\d,]*(?:\.\d+)?/g;
+  let m;
+  while ((m = re.exec(t))) {
+    const n = m[0].replace(/,(?=\d{3})/g, '').replace(/[,.]$/, '');
+    // 两位整数(10、15)太常见,只有带 % 的才算;年份不算
+    const digits = n.replace(/\D/g, '').length;
+    if (digits < 2 || /^(19|20)\d\d$/.test(n) || (digits === 2 && !/\./.test(n) && t[m.index + m[0].length] !== '%')) continue;
+    out.push(n);
+  }
+  return out;
+}
+// 返回 { facts:{F01:'full'|'part'}, total, used, unusedLines }:unusedLines 是资料里一个数字都没被用上的行
+function matUse(a, materials) {
+  const mat = matNums(materials);
+  if (!mat.length) return null;
+  const matSet = new Set(mat);
+  const facts = {};
+  const used = new Set();
+  (a.facts || []).forEach(f => {
+    if (/待查/.test(f.kind || '')) return;
+    const ns = [...new Set(matNums(f.content))];
+    const hit = ns.filter(n => matSet.has(n));
+    hit.forEach(n => used.add(n));
+    if (hit.length) facts[f.id] = hit.length >= ns.length / 2 || hit.length >= 2 ? 'full' : 'part';
+  });
+  (a.ledger || []).forEach(l => matNums([l.value, l.amount].join(' ')).forEach(n => { if (matSet.has(n)) used.add(n); }));
+  const unusedLines = String(materials).split('\n').map(l => l.trim()).filter(l => { const ns = matNums(l); return ns.length && !ns.some(n => used.has(n)); })
+    .map(l => l.replace(/https?:\/\/\S+/g, '').replace(/^\s*\||\|\s*$/g, '').split('|').map(c => c.trim()).filter(Boolean).join(' | '));
+  return { facts, total: matSet.size, used: [...matSet].filter(n => used.has(n)).length, unusedLines };
+}
+
+function analysisHtml(a, materials) {
   const t = a.title || {};
   const th = a.thesis_card || {};
   const h = a.hook || {};
@@ -3105,10 +3147,14 @@ function analysisHtml(a) {
     ${pp.what ? `埋点:${esc(pp.what)}${pp.plant_at ? '(在 ' + esc(pp.plant_at) + ' 埋' : ''}${pp.payoff_at ? (pp.plant_at ? ',' : '(') + '在 ' + esc(pp.payoff_at) + ' 回收)' : pp.plant_at ? ')' : ''}<br>` : ''}
     ${a.core_dilemma ? `核心两难:${esc(a.core_dilemma)}<br>` : ''}${a.comment_question ? `结尾评论问题:<b>${esc(a.comment_question)}</b>` : ''}</div>`;
   // 事实表:待查/估算标黄,时效风险标红(人工重点核对)
-  html += `<div class="an-sec">事实表(写稿只能用这些)</div>` + anTable(['编号', '类型', '内容', '来源', '年份', '地区', '时效'],
+  const mu = matUse(a, materials);
+  html += `<div class="an-sec">事实表(写稿只能用这些)</div>`;
+  if (mu) html += `<div class="hint v12" style="margin:2px 0 6px">你的参考资料里有 ${mu.total} 个数字,事实表和账本用上了 ${mu.used} 个;用上的事实在「来源」栏标了<span class="mat-tag">你的资料</span>(程序按数字比对,换算过单位的对不上)。`
+    + (mu.unusedLines.length ? `<details style="margin-top:2px"><summary style="cursor:pointer">你的资料里有 ${mu.unusedLines.length} 条一个数字都没用上(点开看;不一定是漏了,也可能是和本题关系不大)</summary>${mu.unusedLines.slice(0, 30).map(t => '<div style="margin:2px 0">· ' + esc(t.length > 160 ? t.slice(0, 160) + '…' : t) + '</div>').join('')}${mu.unusedLines.length > 30 ? '<div>(只列前 30 条)</div>' : ''}</details>` : '') + `</div>`;
+  html += anTable(['编号', '类型', '内容', '来源', '年份', '地区', '时效'],
     (a.facts || []).map(f => {
       const cls = /时效风险/.test(f.freshness || '') ? 'an-bad' : (/待查|估算|假设/.test(f.kind || '') ? 'an-warn' : '');
-      return `<tr class="${cls}"><td>${esc(f.id)}</td><td>${esc(f.kind)}</td><td>${esc(f.content)}${f.method ? '<div class="hint" style="margin:0">算法：' + esc(f.method) + '</div>' : ''}</td><td>${esc(f.source)}</td><td>${esc(f.year)}</td><td>${esc(f.region)}</td><td>${esc(f.freshness)}</td></tr>`;
+      return `<tr class="${cls}"><td>${esc(f.id)}</td><td>${esc(f.kind)}</td><td>${esc(f.content)}${f.method ? '<div class="hint" style="margin:0">算法：' + esc(f.method) + '</div>' : ''}</td><td>${esc(f.source)}${mu && mu.facts[f.id] ? `<br><span class="mat-tag${mu.facts[f.id] === 'part' ? ' part' : ''}">${mu.facts[f.id] === 'part' ? '部分来自你的资料' : '你的资料'}</span>` : ''}</td><td>${esc(f.year)}</td><td>${esc(f.region)}</td><td>${esc(f.freshness)}</td></tr>`;
     }));
   const notFound = (a.search_log || []).filter(s => /没找到/.test(s.result || ''));
   if (notFound.length) html += `<div class="an-sec">没找到的资料</div>` + anTable(['想找', '说明'],
@@ -4100,6 +4146,29 @@ async function rfAction(action, btn, extra) {
 function rfSwitch(id, btn) { if (confirm('换成这个框架,重新做写前分析?')) rfAction('switch', btn, { asset_id: id }); }
 function rfIgnore(btn) { if (confirm('不换框架,仍按现在的框架写?分析判定套不上,写出来分数通常偏低。')) rfAction('ignore', btn); }
 
+// 点上面的步骤条跳到这一步的内容:写前分析跳到分析卡并展开;初稿检查、二稿审稿报告、终审跳到审稿面板对应的页签
+const STEP_JUMP = { analysis: { panel: 'an-panel' }, draft_check: { panel: 'rv-panel', tab: 'd2' }, reverse_audit: { panel: 'rv-panel', tab: 'audit' }, final_review: { panel: 'rv-panel', tab: 'd3' } };
+let anOpen = false; // 写前分析的折叠框:人展开过就保持展开(轮询重画时不收起)
+function stepJump(k) {
+  const j = STEP_JUMP[k];
+  if (!j) return;
+  if (k === 'analysis') {
+    anOpen = true;
+    const d = document.querySelector('#an-panel details');
+    if (d) d.open = true;
+  } else if (rvState) {
+    rvState.open = true;
+    rvState.tab = j.tab;
+    rvState.key = null;
+    if (lastRunDetail) renderReviewPanel(lastRunDetail);
+  }
+  const el = document.getElementById(j.panel);
+  if (!el || el.classList.contains('hidden')) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  el.classList.add('jump-flash');
+  setTimeout(() => el.classList.remove('jump-flash'), 1200);
+}
+
 function renderAnalysisPanel(r) {
   const el = document.getElementById('an-panel');
   const st = (r.steps || {}).analysis || {};
@@ -4126,7 +4195,7 @@ function renderAnalysisPanel(r) {
   if (r.analysis_confirmed) {
     if (key === anRenderedKey) return;
     anRenderedKey = key;
-    el.innerHTML = `<details><summary style="cursor:pointer"><b>⓪ 写前分析(已确认${r.analysis_edited ? ',人工改过' : ''} · ${fmtTime(r.analysis_confirmed_at)})</b></summary>${analysisHtml(r.analysis)}</details>`;
+    el.innerHTML = `<details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>⓪ 写前分析(已确认${r.analysis_edited ? ',人工改过' : ''} · ${fmtTime(r.analysis_confirmed_at)})</b></summary>${analysisHtml(r.analysis, r.materials)}</details>`;
     return;
   }
   if (r.draft_first) {
@@ -4137,7 +4206,7 @@ function renderAnalysisPanel(r) {
     anRenderedKey = key;
     anEdit = null;
     el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">先写后改模式:${statusLabel(r) === '待换框架' ? '分析判定「换框架」,等你在上面选框架。' : r.status === 'awaiting_review' ? 'AI 正在自动调整事实、账本与留存取舍,完成后直接写稿,无需确认。' : '由 AI 自动分析与调整,无需人工确认。'}</div>
-      <details><summary style="cursor:pointer"><b>查看 AI 的分析与调整(只读)</b></summary>${analysisHtml(r.analysis)}</details>`;
+      <details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>查看 AI 的分析与调整(只读)</b></summary>${analysisHtml(r.analysis, r.materials)}</details>`;
     return;
   }
   // 待确认:草稿脏时轮询只刷新提示,绝不重建 DOM
