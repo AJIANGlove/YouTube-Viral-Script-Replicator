@@ -2486,7 +2486,7 @@ async function runPasses(runId, from) {
   passRunning.set(runId, '审稿');
   try {
     // 二稿和终稿出来后各单独审一次开头;开头分析失败不挡后面的步骤
-    // autofix:人在「还不能发布」那里点「让 AI 接着改」:自动补改重新给 AUTO_PATCH_MAX 轮,再自动改开头
+    // autofix:人在「还不能发布」那里点「让 AI 接着改」:先核对论点(对不上就按核对改稿),自动补改重新给 AUTO_PATCH_MAX 轮,再自动改开头
     if (from === 'autofix') {
       const r0 = store.getRun(runId);
       if (r0 && (r0.review || {}).final) {
@@ -2496,7 +2496,7 @@ async function runPasses(runId, from) {
         store.saveRun(r0);
       }
     }
-    const order = from === 'final' ? ['final', 'claim', 'options', 'autopatch', 'openfix', 'opening'] : from === 'autofix' ? ['autopatch', 'openfix', 'opening'] : from === 'audit' ? ['audit'] : ['check', 'opening', 'audit'];
+    const order = from === 'final' ? ['final', 'claim', 'options', 'autopatch', 'openfix', 'opening'] : from === 'autofix' ? ['claim', 'autopatch', 'openfix', 'opening'] : from === 'audit' ? ['audit'] : ['check', 'opening', 'audit'];
     for (const k of order) {
       passRunning.set(runId, PASS_LABELS[k] || k);
       if (k === 'opening') { try { await runOpeningCard(runId); } catch (e) {} continue; }

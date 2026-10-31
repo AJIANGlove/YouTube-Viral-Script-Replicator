@@ -522,6 +522,8 @@
 <body>
 <header>
   <h1>爆款文案生成平台</h1>
+  <div id="dlg-blocked" class="hidden" style="position:fixed;bottom:0;left:0;right:0;z-index:999;background:#b91c1c;color:#fff;padding:10px 16px;font-size:15px;text-align:center">浏览器把这个页面的确认框/提示框屏蔽了(之前弹窗里可能勾了「禁止此页再显示对话框」),所以刚才点的按钮没有反应。请按 F5 刷新页面,再点一次。</div>
+  <div id="code-stale" class="hidden" style="position:fixed;top:0;left:0;right:0;z-index:999;background:#b91c1c;color:#fff;padding:8px 16px;font-size:14px;text-align:center">程序文件已经更新,但正在运行的还是旧版本:请关掉程序(运行它的黑色窗口)再重新启动,然后刷新这个页面,新功能才会生效。</div>
   <nav>
     <button id="nav-generate" class="active" onclick="showView('generate')">文案创作</button>
     <button id="nav-runs" onclick="showView('runs')">任务</button>
@@ -2517,7 +2519,7 @@ function rvPublishHtml(v) {
   const fix = running ? `<span class="rv-busy">正在自动改开头${fx.stage && fx.stage !== '改开头' ? '(' + esc(fx.stage) + ')' : ''}…一般 1–3 分钟</span>`
     : fx.status === 'failed' ? `<span class="rv-flag">自动改开头没成功:${esc(fx.error || '')}</span>`
     : rec && rec.passed && rec.edits ? `<span style="color:#047857">✓ 开头已自动改 ${rec.edits} 处,听感检查过了(在下面修订痕迹里,类别「开头」;复审分数是改开头之前打的)</span>` : '';
-  const auto = p.can_autofix && !v.running ? `<span><button class="an-btn v13" onclick="rvAutoFix()">让 AI 接着改到能发布</button> <span class="hint">按复审问题${(p.program_open || []).length ? '和程序查出的问题(' + (p.program_open || []).length + ' 个:账本错数、一句念太多数字)' : ''}自动补改,最多 2 轮,改低了会自动退回;到 8 分后再自动改开头</span></span>` : '';
+  const auto = p.can_autofix && !v.running ? `<span><button class="an-btn v13" onclick="rvAutoFix()">让 AI 接着改到能发布</button> <span class="hint">先核对论点(对不上会先按核对结果改),再按复审问题${(p.program_open || []).length ? '和程序查出的问题(' + (p.program_open || []).length + ' 个:账本错数、一句念太多数字)' : ''}自动补改,最多 2 轮,改低了会自动退回;到 8 分后再自动改开头</span></span>` : '';
   const notes = (p.notes || []).length ? `<span class="hint">${p.good ? '平均 ' + p.avg + ' 分,' : ''}下面这些不挡发布,想改再改:${p.notes.map(esc).join(';')}</span>` : '';
   // 写法提示(从爆款学来的规则,还在验证):只提示,不进自动补改、不挡发布
   const craft = (p.craft_hints || []).length ? `<span class="hint">写法提示(从同类爆款学来的,不挡发布,只供参考):${p.craft_hints.map(esc).join(';')}</span>` : '';
@@ -2569,7 +2571,7 @@ function rvClaimHtml(p, v) {
   const running = st.status === 'running' || /论点/.test(v.running || '');
   const busy = running || !!v.running;
   if (running) return `<div class="rv-flag v13" style="border-color:#93c5fd;background:#eff6ff"><b>${esc(/改稿/.test(v.running || '') ? '正在按论点核对改稿' : /标题/.test(v.running || '') ? '换了标题,正在重新核对论点' : '正在核对论点')}…</b> <span class="hint">用稿子自己的数字检验开头的主张,一般 1–3 分钟;对不上会自动改稿再核对</span></div>`;
-  if (!c) return `<div class="rv-ops v13"><button class="an-btn v13" onclick="rvClaim(false)" ${busy ? 'disabled' : ''}>核对论点</button> <span class="hint">${st.status === 'failed' ? '上次核对失败:' + esc(st.error || '') : '用稿子自己的数字检验开头的主张和账本(新终审会自动做)'}</span></div>`;
+  if (!c) return `<div class="rv-ops v13"><button class="an-btn v13" onclick="rvClaim(false)" ${busy ? 'disabled' : ''}>核对论点</button> <span class="hint">${st.status === 'failed' ? '上次核对失败:' + esc(st.error || '') + '。再点一次「核对论点」重试;' + (p.can_autofix ? '或者直接点上面「让 AI 接着改到能发布」,它会先核对论点。' : '') + '一直失败就把提示里的日志文件发给我。' : '用稿子自己的数字检验开头的主张和账本(新终审会自动做)'}</span></div>`;
   // 每次改稿:稿子改没改、复审几分、改完核对的结果,分开说清楚
   const fixes = (c.fixes || []).map(f => {
     const did = (f.patched || f.after) ? `稿子改了${f.edits ? ' ' + f.edits + ' 处' : ''}${f.avg != null ? ',改完复审平均 ' + f.avg + ' 分' : ''}` : '稿子没改';
@@ -6257,6 +6259,24 @@ bindProviderModelLinkage('twk-provider', 'twk-model', 'twk-model');
 
 loadVideoBinding();
 showView('generate');
+// 浏览器屏蔽了弹窗时 confirm 会立刻返回 false、alert 立刻返回,按钮看起来像没点上:人不可能在 50 毫秒内点掉弹窗,据此判断并在页面底部红条提示
+(() => {
+  const show = () => document.getElementById('dlg-blocked').classList.remove('hidden');
+  const c0 = window.confirm.bind(window), a0 = window.alert.bind(window);
+  window.confirm = msg => { const t = Date.now(); const r = c0(msg); if (!r && Date.now() - t < 50) show(); return r; };
+  window.alert = msg => { const t = Date.now(); a0(msg); if (Date.now() - t < 50) show(); };
+})();
+// 装了新版本却没重启:页面顶部红条提示(每分钟查一次)
+async function checkCodeStale() {
+  try {
+    const resp = await fetch('/api/code-status');
+    // 404:页面是新的,跑着的程序还是没有这个接口的旧版本,同样要重启
+    const stale = resp.status === 404 || (resp.ok && (await resp.json()).stale);
+    document.getElementById('code-stale').classList.toggle('hidden', !stale);
+  } catch (e) { /* 程序没开,别的地方会报错 */ }
+}
+checkCodeStale();
+setInterval(checkCodeStale, 60000);
 </script>
 </body>
 </html>

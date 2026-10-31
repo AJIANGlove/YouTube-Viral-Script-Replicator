@@ -47,6 +47,15 @@ function send(res, status, data, type = 'application/json') {
   res.end(body);
 }
 
+// 代码更新了但程序没重启:启动时记下 server.js、lib、prompts 的修改时间,页面定时比对,不一样就提示重启
+function codeSig() {
+  const files = [path.join(__dirname, 'server.js')];
+  ['lib', 'prompts'].forEach(d => { try { fs.readdirSync(path.join(__dirname, d)).forEach(f => files.push(path.join(__dirname, d, f))); } catch (e) {} });
+  return files.map(f => { try { return f + ':' + fs.statSync(f).mtimeMs; } catch (e) { return f; } }).sort().join('|');
+}
+const CODE_SIG = codeSig();
+const STARTED_AT = new Date().toISOString();
+
 function readBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -284,6 +293,7 @@ const server = http.createServer(async (req, res) => {
 
     // ---------- 资产库 ----------
     // items=资产列表(每项带 track 分类 key);tracks=分类定义(顺序即前端 chip 顺序)
+    if (url === '/api/code-status' && method === 'GET') return send(res, 200, { stale: codeSig() !== CODE_SIG, started_at: STARTED_AT });
     if (url === '/api/assets' && method === 'GET') return send(res, 200, { items: store.listAssets(), tracks: store.assetCategories() });
 
     if (url === '/api/assets' && method === 'POST') {
