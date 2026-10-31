@@ -386,7 +386,7 @@ function publishCheck(run, v) {
   if (!v.final) blk('no_final', '还没跑终审');
   else {
     const hard = arr(last && last.open).filter(x => (x.level === '关键' || x.level === '结构') && !x.not_found);
-    if (hard.length) { const t = '复审还有 ' + hard.length + ' 个关键/结构问题(' + hard.map(x => x.id).join('、') + ')'; if (good) notes.push(t); else blk('hard_open', t); }
+    if (hard.length) { const t = '复审还有 ' + hard.length + ' 个关键/结构问题(' + uniqOpen(hard).map(x => x.id).join('、') + ')'; if (good) notes.push(t); else blk('hard_open', t); }
   }
   if (s.red_facts.length) blk('red_facts', '稿里有 ' + s.red_facts.length + ' 个没出处的事实');
   if (arr(s.ledger_mismatches).length) {
@@ -1622,6 +1622,19 @@ function prevRoundText(rc, dims) {
 }
 
 // ===OPEN=== 段:复审没解决的问题,一行一条 - [R01][CH13][关键] 问题 | 建议
+// 复审有时把问题全编成同一个号(实测 run_ee2e6bd16c05 复审 6 个问题都叫 R01):方案、勾选、补改都按编号对应,
+// 重号会让后面的问题拿不到改法、互相覆盖。重复的编号顺延成没用过的号
+function uniqOpen(list) {
+  const seen = new Set();
+  let max = 0;
+  arr(list).forEach(x => { const m = /^R(\d+)$/.exec(x.id || ''); if (m) max = Math.max(max, +m[1]); });
+  return arr(list).map(x => {
+    if (!x || !/^R\d+$/.test(x.id || '') || !seen.has(x.id)) { if (x && x.id) seen.add(x.id); return x; }
+    const id = 'R' + String(++max).padStart(2, '0');
+    seen.add(id);
+    return { ...x, id, renumbered_from: x.id };
+  });
+}
 function parseOpen(block) {
   const out = [];
   String(block || '').split('\n').forEach(l => {
@@ -1631,7 +1644,7 @@ function parseOpen(block) {
     const level = /待核实|核实/.test(m[3]) ? '待核实' : /次要/.test(m[3]) ? '次要' : /结构/.test(m[3]) ? '结构' : '关键';
     out.push({ id: m[1].toUpperCase(), chapter: (m[2].match(/CH\d+/gi) || []).map(x => x.toUpperCase()).join('/') || m[2].trim(), level, problem: problem.trim(), suggestion: rest.join(' | ').replace(/^建议(改法)?[:：]\s*/, '').trim() });
   });
-  return out;
+  return uniqOpen(out);
 }
 
 // 复审报告读不出评分或结论(模型没写 ===SCORES===/===VERDICT=== 清单、写错格式或被截断):
@@ -1899,7 +1912,8 @@ async function runOpenOptions(runId) {
     const out = await an().callJson(run, cfg, an().fillVars(readPrompt('final_open_options.md'), {
       ...common, script: d3.text,
       items: items.map(x => x.id + ' | ' + x.chapter + ' | ' + x.level + ' | ' + x.problem + (x.not_found ? '(程序查过:引用的原句稿子里找不到,复审可能看错了;推荐「不改」那类方式)' : '') + ' | ' + (x.suggestion || '(无)')).join('\n')
-    }), '终审·出解决方案', o => Object.keys(optionsFrom(o, items)).length >= Math.max(1, Math.ceil(items.length / 2)));
+    // 只给了部分问题的方案也收下(实测问题编号重复时只回了 P01,整份被判失败);没方案的问题补改时按复审建议改
+    }), '终审·出解决方案', o => Object.keys(optionsFrom(o, items)).length >= 1);
     const options = optionsFrom(out, items);
     // 实测 run_1f67a92553fd:出方案两次都「成功」但一条都对不上,页面只是按钮还在,人不知道出没出
     if (!Object.keys(options).length) throw new Error('AI 给的方案对不上问题编号,没有能用的方案');
@@ -2590,9 +2604,9 @@ async function autoPatchLocked(runId) {
     const why = autoPatchStop(run);
     if (why) return stopWith(why);
     const fin = run.review.final;
-    // 程序查出的问题并进这一轮的问题清单(已经在里面的不重复加)
+    // 程序查出的问题并进这一轮的问题清单(已经在里面的不重复加);旧结果里重复的编号顺延
     const rcP = arr(fin.rechecks).slice(-1)[0];
-    rcP.open = arr(rcP.open).filter(x => !x.program).concat(prog);
+    rcP.open = uniqOpen(arr(rcP.open).filter(x => !x.program)).concat(prog);
     store.saveRun(run);
     const n = (fin.auto_patches || 0) + 1;
     passRunning.set(runId, '自动补改第 ' + n + ' 轮');
@@ -2665,18 +2679,22 @@ function claimNote(cc) {
 // 模型偶尔把结果包一层({"result":{...}})、verdict 写成「部分成立」「对不上」或干脆漏写(实测 llm_badjson_2026-10-30T11-17-30:
 // 改完稿重新核对两次都「格式对但没有要的字段」,页面停在旧结果上,人不知道下一步)
 function claimUnwrap(o) {
+  if (Array.isArray(o)) o = o.find(x => x && typeof x === 'object') || null;
   if (!o || typeof o !== 'object') return o;
+  // 字段名写成中文、英文别名的(结论/判定/result/status、主张、问题),先换成程序认的名字
+  const alias = { verdict: ['结论', '判定', '判断', 'result', 'status', 'conclusion', 'judgement', 'judgment', '판정', '결론'], claim: ['主张', '开头主张', 'thesis', '주장'], issues: ['问题', 'problems', 'errors', '문제'] };
+  Object.entries(alias).forEach(([k, names]) => { if (o[k] == null) { const n = names.find(n => o[n] != null); if (n) o = { ...o, [k]: o[n] }; } });
   if (o.verdict != null || o.claim != null || Array.isArray(o.issues)) return o;
   const inner = Object.values(o).find(v => v && typeof v === 'object' && !Array.isArray(v) && (v.verdict != null || v.claim != null));
   return inner || o;
 }
 function claimVerdict(o) {
   if (!o || typeof o !== 'object') return '';
-  const v = String(o.verdict == null ? '' : o.verdict);
-  if (/不成立|不一致|对不上|推翻|矛盾|^\s*(false|no)\s*$/i.test(v)) return '不成立';
-  if (/没算|算不出|无法|不足|缺/.test(v)) return '稿子没算';
-  if (/成立|一致|^\s*(true|yes)\s*$/i.test(v)) return '成立';
-  if (v.trim()) return '';
+  const v = String(o.verdict == null ? '' : typeof o.verdict === 'object' ? JSON.stringify(o.verdict) : o.verdict);
+  if (/不成立|不一致|对不上|推翻|矛盾|불성립|성립하지|not hold|doesn't hold|does not hold|invalid|contradict|mismatch|refuted|^\s*(false|no)\s*$/i.test(v)) return '不成立';
+  if (/没算|算不出|无法|不足|缺|계산되지|not calculated|cannot|insufficient/i.test(v)) return '稿子没算';
+  if (/成立|一致|성립|holds|valid|consistent|supported|^\s*(true|yes|ok)\s*$/i.test(v)) return '成立';
+  // 认不出的结论词:不直接判失败,按下面的字段推断
   // 漏写 verdict:有「开头应该怎么说」就是不成立;只要有主张或问题清单,就当成立,关键问题照样会拦
   if (String(o.fix_claim || o.fix_title || '').trim()) return '不成立';
   return o.claim != null || Array.isArray(o.issues) ? '成立' : '';
@@ -2699,7 +2717,7 @@ async function runClaimCheck(runId) {
     const verdict = claimVerdict(out);
     const issues = arr(out.issues).filter(x => x && x.problem).map((x, i) => {
       const quote = String(x.quote || '').trim();
-      return { id: 'L' + (i + 1), chapter: (String(x.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase(), level: /关键/.test(x.level) ? '关键' : '次要',
+      return { id: 'L' + (i + 1), chapter: (String(x.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase(), level: /关键|關鍵|관건|중요|핵심|critical|key|major|high/i.test(String(x.level || '')) ? '关键' : '次要',
         quote, problem: String(x.problem), fix: String(x.fix || ''), ...(quote && !locate(text, splitQuoteNote(quote).old) ? { not_found: true } : {}) };
     });
     const fresh = store.getRun(runId) || run;
