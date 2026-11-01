@@ -393,6 +393,10 @@ async function runScriptByChapters(opts) {
       '第一行必须严格是:\n' + tagLine + '\n' +
       '本章 word_budget=' + (c.word_budget || '(见蓝图)') + ';本章信息目标:' + (c.information_goal || c.function || '(见蓝图)') + '\n' +
       (c.carries_peaks ? '本章必须承担的高峰:' + c.carries_peaks + '\n' : '') +
+      (c.answers_prev ? '本章开头先接住上一章留下的问题:' + c.answers_prev + '\n' : '') +
+      (c.new_lens ? '本章的新角度(只用本章分到的事实推进,前面章节讲过的事实和结论不要再展开):' + c.new_lens + '\n' : '') +
+      (Array.isArray(c.cases) && c.cases.length ? '本章出场的真人案例(按写前分析里写好的这次要带出的新信息写):' + c.cases.map(x => (typeof x === 'string' ? x : (x && (x.nick || x.name)) || '')).filter(Boolean).join('、') + '\n' : '') +
+      (c.leaves_question ? '本章结尾抛出留给下一章的问题:' + c.leaves_question + '\n' : '') +
       (tail ? '上一章结尾(仅用于衔接,不得重复):\n' + tail + '\n' : '') +
       (ahead ? '后续章节(不要写,只用于把握铺垫与节奏):\n' + ahead + '\n' : '') +
       '现在直接开始写正文,不要输出思考过程、提纲或解释。';
@@ -672,6 +676,22 @@ async function runGeneration(runId) {
         }
         if (gate && gate.duration.ok === false) throw new Error('Step 1 重试后仍不合格: ' + gate.duration.detail);
 
+        // 信息递进(v1.60):每章写清接上一章哪个问题、新角度、留给下一章的问题,一个事实只分给一章。
+        // 只对确认过写前分析的任务打回一次;改完时长坏了或问题没变少就保留原版,结果记在 run.checks.progression 交人看
+        let prog = checks.checkProgression(content);
+        if (run.analysis_confirmed && prog.ok === false) {
+          run.steps.blueprint.gate_retry = { reason: '信息递进: ' + prog.issues.join(';'), attempt: 1 };
+          store.saveRun(run);
+          const feedback = '蓝图的信息递进检查不合格:' + prog.issues.join(';') + '。请每章写 answers_prev(回答上一章留下的哪个问题)、new_lens(这一章对同一门生意加了什么新角度,每章不一样)、leaves_question(留给下一章的问题,最后一章可以空);' +
+            '一个事实编号只能写进一章的 fact_ids(最后一章可以回扣),其他章最多一句带过、不写进 fact_ids;某段没有新素材时换成本题自己的新角度,不要重讲前面的事实。总时长和其余要求不变,重新输出完整 JSON(禁止代码围栏)。';
+          messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];
+          const r2 = await callLlm(messages, 'Step 1 信息递进重试');
+          const c2 = checks.stripFence(r2.content.trim());
+          const g2 = checks.checkBlueprint(c2, tools, (run.audience || {}).video_goal);
+          const p2 = checks.checkProgression(c2);
+          if (g2.duration.ok !== false && (p2.ok || (p2.missing || 0) + (p2.dup_facts || 0) < (prog.missing || 0) + (prog.dup_facts || 0))) { r = r2; content = c2; gate = g2; prog = p2; }
+        }
+
         // 留存检查(流程 B⑪):蓝图每章的 carries_peaks 对照原片高峰、第一个甜头秒数、相邻高峰最大间隔。
         // 只对确认过写前分析的任务反馈重试;仍不合格不置失败,结果写进 run.checks.retention 交人工终审
         let ret = retention.checkBlueprintRetention(content, asset.timeline, analysis.acceptedGaps(run.analysis));
@@ -705,6 +725,8 @@ async function runGeneration(runId) {
           if (g2.duration.ok !== false && payoffOf(c2) && payoffOf(c2) < payoff) { r = r2; content = c2; gate = g2; payoff = payoffOf(c2); }
         }
         run.checks.first_payoff = { sec: payoff, max: FIRST_PAYOFF_MAX, ok: payoff == null ? null : payoff <= FIRST_PAYOFF_MAX };
+
+        run.checks.progression = checks.checkProgression(content);
 
         // 词数预算按配音语速重算:模型照原片字幕语速算的预算会把稿子写长
         if (nw.from !== 'source') {

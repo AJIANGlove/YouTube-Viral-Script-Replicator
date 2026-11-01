@@ -126,6 +126,9 @@ function analysisBrief(a, run, trackKey, mode) {
     const sayText = ledgerSayOn(run, trackKey) ? ledgerSayText(ledgerSay(a.ledger), mode !== 'review') : '';
     if (sayText) out.push(sayText);
   }
+  const cs = (Array.isArray(a.cases) ? a.cases : []).filter(c => c && String(c.nick || c.who || '').trim());
+  if (cs.length) out.push('真人案例(用外号称呼;按「出场」安排在对应的段出场,每次带出写好的新信息,不许重复同一句话;没有来源的要明说是假设或传闻):\n' + cs.map(c => '- 「' + (c.nick || c.who) + '」' + (c.nick && c.who ? c.who + ':' : ':') + (c.detail || '') + (c.source || c.year ? '(' + [c.source, c.year].filter(Boolean).join(',') + ')' : '(没有来源)') + (Array.isArray(c.fact_ids) && c.fact_ids.length ? '[' + c.fact_ids.join(',') + ']' : '') +
+    (Array.isArray(c.appear_at) && c.appear_at.length ? ' 出场:' + c.appear_at.map(x => (x && x.segment || '') + (x && x.reveals ? '(' + x.reveals + ')' : '')).join(';') : '')).join('\n'));
   const tc = a.thesis_check || {};
   if (Array.isArray(tc.contradicts) && tc.contradicts.length) out.push('反转验证:事实 ' + tc.contradicts.join('、') + ' 和反转结论相反(' + (tc.note || '') + ')。写稿时反转的说法必须和这些事实一致,不能回避。');
   out.push('模块取舍(「保留」只保留功能和节奏,内容用本题事实):\n' + (a.modules || []).map(m => '- ' + m.segment + ' ' + m.decision + (m.hook_type && !/删除/.test(m.decision || '') ? '[钩子:' + hookType(m.hook_type) + ']' : '') + ':' + (m.reason || '') + (m.fact_ids && m.fact_ids.length ? '(' + m.fact_ids.join(',') + ')' : '') + staleTag(stale.modules, m.segment)).join('\n'));
@@ -369,6 +372,8 @@ function ledgerWriteBack(a) {
     l.value = ledgerValueText(l, to);
   });
   verifyLedger(rows);
+  // 原始数行 value 空着的(AI 补的成本行常这样),按 amount 填上
+  rows.forEach(l => { const n = Number(String(l.amount == null ? '' : l.amount).replace(/,/g, '')); if (!l.formula && !String(l.value || '').trim() && String(l.amount == null ? '' : l.amount).trim() && isFinite(n)) l.value = ledgerValueText(l, n); });
   // 公式行的 value 只写了「계산」「计算」这类字、没有数的,填上程序算的数(页面和写稿都看得到具体数)
   rows.forEach(l => { if (l.formula && isFinite(Number(l.program_amount)) && !/\d/.test(String(l.value || ''))) l.value = ledgerValueText(l, Number(l.program_amount)); });
   return fixes;
@@ -406,11 +411,83 @@ function ledgerProblems(a, run, fixes) {
   if (ledgerSayOn(run) && !ledgerSay(rows).waterfalls.length) out.push({ id: '', kind: 'shape', text: '经济拆账题的账本里没有一行「利润 = 收入 - 成本1 - 成本2 …」(或「收入 - 成本合计」)的公式,程序排不出念账顺序' });
   return out;
 }
+// 账本「漏成本」(v1.60):合计/成本/保本行,模型写的数比按公式算的大很多 → 多半是公式里漏了成本项,不是写错了总数。
+// 实测 run_a8886e8f0744:L9 총비용写 5,462만、各项加起来只有 3,234만,程序锁成 3,234만 → 利润 2,766만、4 个月回本,和论点相反。
+// 这种行先不锁数,交给 AI 补上漏掉的成本(按面积的房租、够接待客流的人手、税…),补到对得上再锁
+const LEDGER_GAP_RE = /비용|원가|코스트|成本|费用|支出|开支|손익분기|保本|盈亏/;
+function ledgerGaps(a) {
+  const rows = (a && Array.isArray(a.ledger) ? a.ledger : []).filter(l => l && typeof l === 'object');
+  if (!rows.length) return [];
+  verifyLedger(rows);
+  const byId = {};
+  rows.forEach((l, i) => { byId[ledgerId(l, i)] = l; });
+  const written = l => (l.program_fixed && l.program_fixed.from != null ? Number(l.program_fixed.from) : Number(String(l.amount == null ? '' : l.amount).replace(/,/g, '')));
+  const changed = l => !!(l && (l.mismatch || l.program_fixed));
+  const out = [];
+  rows.forEach((l, i) => {
+    const id = ledgerId(l, i), f = String(l.formula || '').replace(/\s+/g, '');
+    if (!f || !changed(l)) return;
+    const to = Number(l.program_amount), from = written(l);
+    if (!isFinite(to) || !isFinite(from) || !from) return;
+    // 只报源头:引用的行自己也变过的,是跟着上游变的
+    if ((f.match(/L\d+[a-z]?(?![a-z\d])/gi) || []).some(r => changed(byId[r]))) return;
+    const sum = /\+/.test(f) && !/[*/]/.test(f);
+    if (!sum && !LEDGER_GAP_RE.test(String(l.item || ''))) return;
+    if (Math.abs(from) <= Math.abs(to) * (1 + LEDGER_BIG_FIX)) return;
+    const ft = ledgerValueText(l, from), tt = ledgerValueText(l, to);
+    out.push({ id, item: l.item || '', from, to, text: id + ' ' + (l.item || '') + ':你写的是 ' + ft + ',按公式 ' + f + ' 算只有 ' + tt + '。多半是漏了或低估了成本,不是总数写错了:对照题目(面积、座位、每天客流、营业时间)检查房租、人手(够不够接待当天的客流)、税、保险、折旧、设备维护、损耗;补上漏掉的成本行(事实表里有依据写 fact_ids,没有就在 item 里标「假设」并写清怎么估的),加进公式,直到按公式算出来和 ' + ft + ' 差不多。不要把 ' + id + ' 改小去迁就公式' });
+  });
+  return out;
+}
+// 合理性兜底(v1.60,只管经济拆账的餐饮题):经营利润率高于 25%、或回本短于 12 个月,多半是成本漏了,写稿前标出来重查
+const FOOD_RE = /음식|식당|가게|카페|커피|치킨|분식|김밥|고기|짜장|중국집|요식|외식|레스토랑|베이커리|빵집|국밥|떡볶이|피자|술집|호프|주점|포차|테이블|메뉴|餐|饭|面馆|咖啡|奶茶|小吃|食堂/;
+const SANE_MARGIN = 0.25, SANE_PAYBACK = 12;
+function ledgerSanity(a, run) {
+  const rows = (a && Array.isArray(a.ledger) ? a.ledger : []).filter(l => l && typeof l === 'object');
+  if (!rows.length || !ledgerSayOn(run)) return [];
+  if (!FOOD_RE.test([run && run.topic, ((a.title || {}).final_title) || ''].concat(rows.map(l => l.item || '')).join(' '))) return [];
+  verifyLedger(rows);
+  const val = l => (isFinite(Number(l.program_amount)) ? Number(l.program_amount) : Number(String(l.amount == null ? '' : l.amount).replace(/,/g, '')));
+  const out = [];
+  let best = null;
+  ledgerSay(rows).waterfalls.forEach(w => { if (w.top && w.top.amount > 0 && isFinite(Number(w.end))) { const m = Number(w.end) / w.top.amount; if (!best || m > best.m) best = { m, w }; } });
+  if (best && best.m > SANE_MARGIN) out.push({ id: best.w.id, kind: 'sanity', text: best.w.id + ' ' + (best.w.item || '') + ' 占收入 ' + Math.round(best.m * 100) + '%:餐饮店经营利润率一般在 5–15%,高于 ' + SANE_MARGIN * 100 + '% 多半是漏了成本。重查:房租和面积对不对得上、人手够不够接待每天的客流、有没有漏了税、保险、折旧、设备维护、食材损耗;漏了就补成本行。真的这么高,在 notes 里写依据' });
+  let months = null;
+  rows.filter(l => /회수|回本|回收|payback/i.test(String(l.item || '')) && /개월|月|month/i.test(String(l.unit || ''))).forEach(l => { const v = val(l); if (isFinite(v) && v > 0 && (months == null || v < months)) months = v; });
+  if (months == null && best && /월|月/.test(String(best.w.unit || ''))) {
+    const inv = rows.find(l => /투자|창업 ?비|창업 ?자금|초기 ?비용|开店|投资|启动资金/.test(String(l.item || '')) && MONEY_RE.test(String(l.unit || '')) && !String(l.unit || '').includes('/'));
+    if (inv && Number(best.w.end) > 0) months = val(inv) * moneyScale(inv.unit) / Number(best.w.end);
+  }
+  if (months != null && months > 0 && months < SANE_PAYBACK) out.push({ id: '', kind: 'sanity', text: '按账本 ' + (Math.round(months * 10) / 10) + ' 个月就回本:餐饮店一般要 2–4 年,短于 ' + SANE_PAYBACK + ' 个月多半是利润算高了(漏了成本)或投资算少了。重查成本和开店投资;真的这么快,在 notes 里写依据' });
+  return out;
+}
+// 给 AI 修账本看的账本:漏成本的行(和跟着它变的行)还原成模型原来写的数,让 AI 看到「写的数」和「公式」对不上的地方
+function gapClosure(a, gapIds) {
+  const rows = (a.ledger || []).filter(l => l && typeof l === 'object');
+  const set = new Set(gapIds);
+  rows.forEach((l, i) => { const f = String(l.formula || ''); if ((f.match(/L\d+[a-z]?(?![a-z\d])/gi) || []).some(r => set.has(r))) set.add(ledgerId(l, i)); });
+  return set;
+}
+function ledgerForFix(a, gapIds) {
+  const rows = (a.ledger || []).filter(l => l && typeof l === 'object');
+  const set = gapClosure(a, gapIds);
+  return rows.map((l, i) => {
+    const { program_amount, mismatch, program_fixed, bad, ...rest } = l;
+    if (set.has(ledgerId(l, i)) && program_fixed && program_fixed.from != null) { rest.amount = program_fixed.from; rest.value = program_fixed.value || rest.value; }
+    return rest;
+  });
+}
 // 写稿前的账本体检:程序改正 → 有问题交给 AI 只修账本一轮 → 再改正 → 还有问题的行标「不许用」。会改 a.ledger,结果记在 a.ledger_checkup
 async function ledgerCheckup(run, cfg, a, vars) {
   if (!a || !Array.isArray(a.ledger) || !a.ledger.length) return null;
+  // 漏成本的行在程序锁数之前找(锁过的按 program_fixed 里原来写的数比)
+  const gaps0 = ledgerGaps(a);
   const rec = { at: new Date().toISOString(), program_fixed: ledgerWriteBack(a) };
-  const before = ledgerProblems(a, run, rec.program_fixed);
+  const gapIds = new Set(gaps0.map(g => g.id));
+  if (gaps0.length) rec.gaps = gaps0.map(g => { const l = a.ledger.find((x, i) => x && ledgerId(x, i) === g.id) || {}; return { id: g.id, item: g.item, from_text: ledgerValueText(l, g.from), to_text: ledgerValueText(l, g.to) }; });
+  const closure = gapClosure(a, [...gapIds]);
+  const before = ledgerProblems(a, run, rec.program_fixed).filter(p => !(p.kind === 'bigfix' && gapIds.has(p.id)))
+    .concat(gaps0.map(g => ({ id: g.id, kind: 'gap', text: g.text })), ledgerSanity(a, run));
   rec.problems = before.map(p => p.text);
   let after = before;
   const fixable = before.filter(p => p.kind !== 'shape' || ledgerSayOn(run));
@@ -420,15 +497,18 @@ async function ledgerCheckup(run, cfg, a, vars) {
         ...(vars || {}), topic: run.topic || '', title: ((a.title || {}).final_title) || run.topic || '',
         track_hint: ledgerSayOn(run) ? '这是经济拆账题(一家店的账),按下面「经济拆账账本的样子」整理。' : '这不是经济拆账题,账本只要算对、单位一致,不用套店铺的样子。',
         facts: (a.facts || []).map(f => '- ' + f.id + ' [' + (f.kind || '') + '] ' + (f.content || '')).join('\n') || '(无)',
-        ledger_json: JSON.stringify(a.ledger.map(l => { const { program_amount, mismatch, program_fixed, bad, ...rest } = l; return rest; })),
+        ledger_json: JSON.stringify(ledgerForFix(a, [...gapIds])),
         problems: fixable.map(p => '- ' + p.text).join('\n')
       });
       const n0 = a.ledger.length;
       const out = await callJson(run, cfg, prompt, 'AI 修账本', o => o && Array.isArray(o.ledger) && o.ledger.filter(l => l && typeof l === 'object').length >= Math.ceil(n0 / 2));
       a.ledger = out.ledger.filter(l => l && typeof l === 'object' && !Array.isArray(l));
       rec.ai = { ran: true, notes: String(out.notes || '').slice(0, 500), rows_before: n0, rows_after: a.ledger.length };
+      // 漏成本的行(和跟着它变的行)交给 AI 补成本了,不算「程序改正」
+      rec.program_fixed = rec.program_fixed.filter(x => !closure.has(x.id));
+      const gaps1 = ledgerGaps(a);
       rec.ai_fixed = ledgerWriteBack(a);
-      after = ledgerProblems(a, run, []);
+      after = ledgerProblems(a, run, []).concat(gaps1.map(g => ({ id: g.id, kind: 'gap', text: g.text + '(AI 补了一轮还没对上,程序已按公式锁数,利润可能偏高,写稿前请人看一下)' })), ledgerSanity(a, run));
     } catch (e) { rec.ai = { ran: false, error: e.message }; }
   }
   // 还修不好的:公式算不了、单位混用的行,写稿时不许用它的数
@@ -765,7 +845,7 @@ function markChange(a, target, mark, batches) {
 }
 
 // 需要补的内容清单(给查询词提示词用)
-function needsList(a) {
+function needsList(a, run) {
   const out = [];
   (a.facts || []).forEach(f => {
     const miss = ['content', 'source', 'year', 'region'].filter(k => !String(f[k] || '').trim());
@@ -777,8 +857,15 @@ function needsList(a) {
   (a.adjustments || []).filter(x => x.type === '补料').forEach(x => out.push('- ' + (x.target || '补料') + ':' + (x.reason || '')));
   (a.retention_map || []).filter(r => /缺口-补料/.test(r.status || '')).forEach(r => out.push('- retention_map.' + r.source_peak + '(' + (r.source_segment || '') + ')缺事实承担'));
   (a.modules || []).forEach(m => (m.research_tasks || []).forEach(t => out.push('- modules.' + m.segment + ' 补料任务:' + t)));
+  // 经济拆账题要 4–5 个有来源的真人案例(v1.60:实测 run_a8886e8f0744 只有统计数,后半段反复讲同一组统计)
+  if (run && ledgerSayOn(run)) {
+    const cs = (Array.isArray(a.cases) ? a.cases : []).filter(c => c && String(c.nick || c.who || '').trim());
+    const sourced = cs.filter(c => String(c.source || c.url || '').trim()).length;
+    if (sourced < CASES_MIN) out.push('- cases 真人案例:现在有 ' + cs.length + ' 个(有来源的 ' + sourced + ' 个),要 ' + CASES_MIN + '–5 个有来源的真实店主或案例:店主采访、电视节目、判决、高赞评论里的具体店主,记细节(数字、原话、结果)和来源');
+  }
   return out;
 }
+const CASES_MIN = 4;
 
 async function planAndSearch(run, cfg, vars, a, needs, note, maxQ) {
   if (!needs.length && !note) return [];
@@ -898,6 +985,9 @@ function mergeAdjust(a, out, batches) {
   if (out.hook_plan && typeof out.hook_plan === 'object' && !Array.isArray(out.hook_plan) && Object.keys(HOOK_PLAN_AT).some(k => out.hook_plan[k])) a.hook_plan = out.hook_plan;
   ['core_dilemma', 'comment_question'].forEach(k => { if (typeof out[k] === 'string' && out[k].trim()) a[k] = out[k].trim(); });
   // 主角设定:实测 run_658212aa497e 标题是「재벌가 며느리」,模块和假设场景却沿用原片的入赘女婿(妻子、岳父),稿子写成了男主角
+  // 真人案例:整张替换(只收有外号或身份的)
+  const cases = list(out.cases).filter(c => c && typeof c === 'object' && !Array.isArray(c) && String(c.nick || c.who || '').trim());
+  if (cases.length) { a.cases = cases; markChange(a, 'cases', changeFor('cases').target ? changeFor('cases') : { fields: ['cases'], basis: '查到', reason: '补真人案例' }, batches); n++; }
   if (out.protagonist && typeof out.protagonist === 'object' && !Array.isArray(out.protagonist) && String(out.protagonist.who || '').trim()) a.protagonist = out.protagonist;
   if (out.thesis_card && typeof out.thesis_card === 'object' && !Array.isArray(out.thesis_card)) apply('thesis_card', out.thesis_card);
   if (out.hook && typeof out.hook === 'object' && !Array.isArray(out.hook) && Array.isArray(out.hook.candidates) && out.hook.candidates.length) apply('hook', out.hook);
@@ -940,7 +1030,7 @@ async function runAutoAdjust(runId, draft, opts) {
   const a = cloneJson(base);
   const { vars } = frameworkVars(run, asset);
   const useSearch = !!(opts && opts.search) && search.searchStatus(cfg).ready;
-  const batches = useSearch ? await planAndSearch(run, cfg, vars, a, needsList(a), '', search.MAX_QUERIES) : [];
+  const batches = useSearch ? await planAndSearch(run, cfg, vars, a, needsList(a, run), '', search.MAX_QUERIES) : [];
   const forModel = cloneJson(a);
   delete forModel.ai_marks;
   const prompt = fillVars(readPrompt('adjust.md'), { ...vars, search_results: search.resultsBrief(batches), analysis_json: JSON.stringify(forModel) });
@@ -1031,7 +1121,7 @@ async function auditTitle(runId, draft, title) {
   return out;
 }
 
-module.exports = { ledgerWriteBack, ledgerProblems, ledgerCheckup, krMoney, moneyScale, ledgerSayOn, ledgerSay, ledgerSayText, ledgerSayAmounts,
+module.exports = { ledgerWriteBack, ledgerProblems, ledgerCheckup, ledgerGaps, ledgerSanity, krMoney, moneyScale, ledgerSayOn, ledgerSay, ledgerSayText, ledgerSayAmounts,
   loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, HOOK_TYPES, hookType, acceptedGaps, verifyLedger,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,

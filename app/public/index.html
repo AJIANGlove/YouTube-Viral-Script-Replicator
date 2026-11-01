@@ -3277,6 +3277,13 @@ function anTable(head, rows) {
 }
 
 function anIds(ids) { return (ids || []).join(', '); }
+// 真人案例(v1.60):外号、细节、来源、在哪几段出场、每次带出什么新信息;没有来源的标黄
+function anCasesHtml(a) {
+  const cs = (a.cases || []).filter(c => c && (c.nick || c.who));
+  if (!cs.length) return '';
+  return `<div class="an-sec">真人案例(${cs.length} 个)</div>` + anTable(['外号', '是谁 / 细节', '来源', '在哪出场、带出什么'],
+    cs.map(c => `<tr class="${c.source || c.url ? '' : 'an-warn'}"><td><b>${esc(c.nick || '')}</b></td><td>${esc(c.who || '')}${c.detail ? '<div class="hint" style="margin:0">' + esc(c.detail) + '</div>' : ''}</td><td>${/^https?:\/\//i.test(c.url || "") ? `<a href="${escAttr(c.url)}" target="_blank" rel="noopener">${esc(c.source || c.url)}</a>` : esc(c.source || '没有来源')}${c.year ? ' ' + esc(c.year) : ''}${(c.fact_ids || []).length ? '<div class="hint" style="margin:0">' + esc(anIds(c.fact_ids)) + '</div>' : ''}</td><td>${(c.appear_at || []).map(x => esc((x && x.segment) || '') + (x && x.reveals ? ':' + esc(x.reveals) : '')).join('<br>')}</td></tr>`));
+}
 
 function escAttr(s) { return esc(String(s == null ? '' : s)).replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
 function anClone(v) { try { return JSON.parse(JSON.stringify(v)); } catch (e) { return null; } }
@@ -3329,6 +3336,7 @@ function ledgerCheckupHtml(c) {
   if (!c) return '';
   const pf = (c.program_fixed || []).concat(c.ai_fixed || []);
   const rows = [];
+  if ((c.gaps || []).length) rows.push(`<div><b>账本漏了成本 ${c.gaps.length} 处</b>(写的合计比按公式算的大很多,多半是漏了成本项,先不锁数,交给 AI 补上漏掉的成本):${c.gaps.map(x => esc(x.id + ' ' + x.item + ' 写的 ' + x.from_text + ',按公式只有 ' + x.to_text)).join(';')}</div>`);
   if (pf.length) rows.push(`<div><b>程序按公式改正了 ${pf.length} 行</b>(AI 心算的数和它自己写的公式对不上,一律以公式为准):${pf.slice(0, 8).map(x => esc(x.id + ' ' + x.item + ' ' + x.from_text + ' → ' + x.to_text)).join(';')}${pf.length > 8 ? '…' : ''}</div>`);
   if ((c.problems || []).length) rows.push(`<details><summary style="cursor:pointer">程序查出 ${c.problems.length} 个账本问题(点开看)</summary>${c.problems.map(t => '<div style="margin:2px 0">· ' + esc(t) + '</div>').join('')}</details>`);
   if (c.ai) rows.push(c.ai.ran ? `<div><b>AI 修了一轮账本</b>${c.ai.notes ? ':' + esc(c.ai.notes) : ''}</div>` : `<div style="color:#b91c1c">AI 修账本没成功:${esc(c.ai.error || '')}</div>`);
@@ -3401,6 +3409,7 @@ function analysisHtml(a, materials, say) {
       const cls = /时效风险/.test(f.freshness || '') ? 'an-bad' : (/待查|估算|假设/.test(f.kind || '') ? 'an-warn' : '');
       return `<tr class="${cls}"><td>${esc(f.id)}</td><td>${esc(f.kind)}</td><td>${esc(f.content)}${f.method ? '<div class="hint" style="margin:0">算法：' + esc(f.method) + '</div>' : ''}</td><td>${esc(f.source)}${mu && mu.facts[f.id] ? `<br><span class="mat-tag${mu.facts[f.id] === 'part' ? ' part' : ''}">${mu.facts[f.id] === 'part' ? '部分来自你的资料' : '你的资料'}</span>` : ''}</td><td>${esc(f.year)}</td><td>${esc(f.region)}</td><td>${esc(f.freshness)}</td></tr>`;
     }));
+  html += anCasesHtml(a);
   const notFound = (a.search_log || []).filter(s => /没找到/.test(s.result || ''));
   if (notFound.length) html += `<div class="an-sec">没找到的资料</div>` + anTable(['想找', '说明'],
     notFound.map(s => `<tr class="an-warn"><td>${esc(s.looked_for)}</td><td>${esc(s.note)}</td></tr>`));
@@ -4278,6 +4287,7 @@ function anEditorShell() {
   }).join('')}</table>
   <div><button class="an-btn" onclick="anAddFact()">+ 新增一条事实</button></div>`;
 
+  html += anCasesHtml(d);
   const notFound = ((d.search_log) || []).filter(s => /没找到/.test(s.result || ''));
   if (notFound.length) html += `<div class="an-sec">没找到的资料</div>` + anTable(['想找', '说明'],
     notFound.map(s => `<tr class="an-warn"><td>${esc(s.looked_for)}</td><td>${esc(s.note)}</td></tr>`));

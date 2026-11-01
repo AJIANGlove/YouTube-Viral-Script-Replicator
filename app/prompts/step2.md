@@ -34,6 +34,7 @@ YouTube爆款脚本执行写手(Viral Script Writer)。
 要求:
 - 严格按 Blueprint 的章节顺序与时间范围写作。
 - 每章开头标注 [CHxx | time_range | function]。
+- 信息递进:蓝图每章写了 answers_prev(接住上一章的哪个问题)、new_lens(这一章的新角度)、leaves_question(结尾留给下一章的问题)。每章开头先接住上一章的问题,正文用本章的新角度和本章分到的事实推进,结尾抛出下一章的问题;前面章节已经讲过的事实和结论不要再展开讲一遍(需要回顾账本时一句带过)。蓝图的 cases 里有真人案例外号的,让这个人在本章出场,带出写前分析里写好的新信息。
 - 每章词数必须达到该章 word_budget 的 90%-110%;超标压缩,不足则按本章 information_goal 扩充有效信息,禁止注水凑字。
 - Hook 窗口(0-30秒)内以 2-8 词短句为主,制造碎句密度。
 - 严禁与 Examples 的 example_text 出现连续重合:英文等按 6 词、韩文/中文/日文按 12 个字(不计空格标点)算(style.language_patterns 的公式句式不受此限)。Examples 和原片同语言时更要小心,只学节奏,不用其中任何一句话。

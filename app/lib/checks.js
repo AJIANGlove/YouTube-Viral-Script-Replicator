@@ -222,6 +222,30 @@ function checkBlueprint(text, tools, videoGoal) {
   return result;
 }
 
+// 蓝图信息递进(v1.60,实测 run_a8886e8f0744 后半段反复讲同一组统计):
+// 每章要写 answers_prev(接上一章哪个问题)、new_lens(新角度)、leaves_question(留给下一章的问题,最后一章可空);
+// 一个事实编号只能分给一章(最后一章可以回扣)
+const PROG_LABEL = { answers_prev: '接上一章哪个问题', new_lens: '新角度', leaves_question: '留给下一章的问题' };
+function checkProgression(text) {
+  let chs;
+  try { chs = (JSON.parse(stripFence(text)) || {}).chapters || []; } catch (e) { return { ok: null, issues: [], detail: '蓝图 JSON 解析失败' }; }
+  if (!Array.isArray(chs) || chs.length < 2) return { ok: null, issues: [], detail: '章节太少,不查' };
+  const n = chs.length, idOf = (c, i) => String((c && c.id) || ('CH' + String(i + 1).padStart(2, '0')));
+  const missing = [];
+  chs.forEach((c, i) => {
+    const need = ['answers_prev', 'new_lens'].concat(i < n - 1 ? ['leaves_question'] : []);
+    const miss = need.filter(k => !String((c || {})[k] || '').trim());
+    if (miss.length) missing.push(idOf(c, i) + ' 缺「' + miss.map(k => PROG_LABEL[k]).join('」「') + '」');
+  });
+  const owner = {};
+  chs.slice(0, n - 1).forEach((c, i) => (Array.isArray((c || {}).fact_ids) ? c.fact_ids : []).forEach(f => { const k = String(f).trim(); if (k) (owner[k] = owner[k] || new Set()).add(idOf(c, i)); }));
+  const dup = Object.keys(owner).filter(k => owner[k].size > 1).map(k => k + '(' + [...owner[k]].join('、') + ')');
+  const issues = [];
+  if (missing.length) issues.push('这些章没写清问题链或新角度:' + missing.join(';'));
+  if (dup.length) issues.push('这些事实分给了 2 章以上(最后一章除外):' + dup.join(';'));
+  return { ok: !issues.length, issues, missing: missing.length, dup_facts: dup.length };
+}
+
 // Step2: 查重 + 词密度
 function checkScript(text, tools) {
   return {
@@ -560,4 +584,4 @@ function extractFinalScript(optText) {
   return stripLeadingPreamble(cleaned).text;
 }
 
-module.exports = { normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, repairJsonQuotes, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, DENSE_OPEN_SEC, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };
+module.exports = { checkProgression, normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, repairJsonQuotes, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, DENSE_OPEN_SEC, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };

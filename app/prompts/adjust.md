@@ -70,7 +70,11 @@
 - 标题的年代、地名和主角设定对不上时,补 1–2 个对得上的候选标题放进 title_candidates_add,并在 adjustments 记一条「改标题」(需人工)。
 - 输出 protagonist(完整对象)。
 
-七、调整清单
+七、真人案例(cases)
+- 【需要补的内容】里有「真人案例」时:按查到的结果补到 4–5 个真实店主或案例(店主采访、电视节目、判决、高赞评论),每个写具体细节、来源、年份,起一个短外号(按细节起,观众一听就记住),在 appear_at 里安排到不同的段出场,每次出场写这次带出什么新信息(reveals),不重复同一句话;案例里的数字补进事实表。查不到来源的不要编。
+- 改了 cases 就输出**完整的** cases 数组(整张替换)。
+
+八、调整清单
 - 把 adjustments 每一项标上 status：你已经处理的写「AI 已处理」，需要人决定或补不到的写「需人工」，并在 note 里一句话说明。
 - 不要改 verdict，结论由人定。
 
@@ -92,6 +96,7 @@
   "protagonist": {"who": "", "gender": "", "era": "", "place": "", "source_role": "", "mapping": ""},
   "title_candidates_add": [],
   "adjustments": [{"type": "", "target": "", "segments": [], "peaks": [], "fact_ids": [], "reason": "", "status": "AI 已处理|需人工", "note": ""}],
+  "cases": null,
   "search_log_add": [{"looked_for": "", "result": "找到|没找到", "note": ""}],
   "changes": [{"target": "facts.F04", "fields": ["content", "source"], "basis": "查到|估算|记忆待核|推理", "reason": "", "evidence": ["R2"]}]
 }
