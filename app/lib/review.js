@@ -425,6 +425,12 @@ function offLedgerAmounts(run) {
   an().verifyLedger(arr(a.ledger));
   const known = [];
   arr(a.ledger).forEach(l => { const n = l.program_amount != null ? l.program_amount : Number(String(l.amount == null ? '' : l.amount).replace(/,/g, '')); if (isFinite(n) && n) known.push(Math.abs(n), Math.abs(n * an().moneyScale(l.unit))); });
+  // 账本假设对照的报道值、「两种都算」另算出来的数(v1.61),稿子里对照着讲,也算账本里的数
+  const addAmt = (n, unit) => { n = Number(n); if (isFinite(n) && n) known.push(Math.abs(n), Math.abs(n * an().moneyScale(unit))); };
+  arr(a.ledger).forEach(l => {
+    if (l.fact_check) addAmt(l.fact_check.fact_value, l.unit);
+    if (l.alt) { addAmt(l.alt.fact_value, l.unit); arr(l.alt.rows).forEach(r => addAmt(r.reported, (arr(a.ledger).find(y => y && y.id === r.id) || l).unit)); }
+  });
   // 账本念法里程序算好的「还剩多少」「每天多少」也算账本里的数
   an().ledgerSayAmounts(an().ledgerSay(arr(a.ledger))).forEach(n => known.push(n));
   arr(a.facts).forEach(f => { krAmountsIn(f.content).forEach(x => known.push(x.value)); numberTokensOf(f.content).forEach(n => known.push(Number(n))); });
@@ -3297,7 +3303,10 @@ async function finishDraftFirst(runId) {
   if (!run || run.status !== 'awaiting_review') return; // 分析失败或已取消
   // 写前分析判「换框架」:不调整、不写稿,停下来推荐框架等人选(人选「仍按现在的框架写」后从这里续跑)
   if (require('./reframe').shouldHold(run)) { await require('./reframe').suggest(runId); return; }
-  try {
+  // 账本假设和报道值差 1.5 倍以上又没写理由:停下等人选(v1.61);人选完从这里续跑,不再重做 AI 调整
+  const lc = (run.steps || {}).ledger_choice;
+  if (lc && lc.status === 'waiting') return;
+  if (!lc) try {
     await an().runAutoAdjust(runId, null, { search: true });
   } catch (e) {
     // AI 调整失败就停,不写稿:事实表还是写前分析里的「待查」占位,照写等于让模型自己编数字
@@ -3316,6 +3325,14 @@ async function finishDraftFirst(runId) {
   if (!run || run.cancel_requested || run.status === 'cancelled') {
     if (run && run.status !== 'cancelled') { run.status = 'cancelled'; store.saveRun(run); }
     return;
+  }
+  if (!lc) {
+    const pend = an().ledgerPending(run.analysis || {});
+    if (pend.length) {
+      run.steps = { ...(run.steps || {}), ledger_choice: { status: 'waiting', at: new Date().toISOString(), rows: pend.map(l => ({ id: l.id, item: l.item || '' })) } };
+      store.saveRun(run);
+      return;
+    }
   }
   run.analysis_confirmed = true;
   run.analysis_auto_confirmed = true;

@@ -724,6 +724,14 @@ const server = http.createServer(async (req, res) => {
       }
     }
 
+    // 账本假设和报道值差很多又没写理由(v1.61):人选 按报道值 / 按假设值 / 两种都算,程序重算账本;选完先写后改的任务接着写稿
+    const ledgerChoiceMatch = url.match(/^\/api\/runs\/([\w-]+)\/ledger-choice$/);
+    if (ledgerChoiceMatch && method === 'POST') {
+      const body = await readBody(req);
+      try { return send(res, 200, analysis.ledgerChoice(ledgerChoiceMatch[1], body)); }
+      catch (e) { return send(res, e.status || 500, { error: e.message }); }
+    }
+
     // 联网搜索设置(渠道适配器,当前接 DeepSeek):开关、渠道、每个查询取几条;Key 默认用同名渠道的 Key
     if (url === '/api/search-settings' && method === 'GET') {
       return send(res, 200, search.searchStatus());

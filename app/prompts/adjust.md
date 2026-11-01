@@ -25,6 +25,7 @@
 【当前写前分析】
 {{analysis_json}}
 
+{{round_note}}
 总原则：框架不动，只改题目这一侧。不得删「不可删」的段，不得去掉「必须保留的机制」。
 
 按下面顺序做：
@@ -40,6 +41,7 @@
 - 找不到的，在 search_log_add 记一条「没找到」，写清查过什么。
 - 改了某个数之后，账本里用到它的每一行、模块和留存地图 reason 里写到它的数，都要按新数重算，把**完整的新账本**放进 ledger（整张替换，不是只给改的行）；模块 reason 里的旧数也要改，放进 modules。
 - 账本每行写 id（L1、L2…）、amount（纯数字，统一单位）、unit；由其他行算出来的行写 formula（只用行编号和 + - * /，例如 "L1-L2-L3"），程序会按 formula 重算，对不上的行会被标红、写稿时以程序算的数为准。
+- 账本里的关键假设(营收、单价、客流、每台/每桌营收这类)和事实表里同一口径的数可以不一样,但不一样时(差 10% 以上)这一行必须写 deviation_reason,一句话说为什么这么取、比报道的数高/低多少(例如「按好商圈店算,高于报道平均的每台每天 3.3만 원」)。理由只写在账本里,不用写进事实表。
 - 账本只算「钱到了谁手里」：经营者人工算进成本时，最后必须有一行「经营者家庭实际到手 = 经营者人工 + 经营结余」。
 - 引语、对话、法律条款、具体案件没有来源的，kind 改成「假设」；论坛帖子不能当「事实」的来源。
 
@@ -84,8 +86,9 @@
 {
   "facts": [{"id": "F04", "slot": "", "content": "", "kind": "事实|估算|假设|待查", "source": "", "url": "", "year": "", "region": "", "freshness": "近3年|时效风险|不适用", "method": ""}],
   "thesis_card": null,
-  "ledger": [{"id": "L1", "item": "", "value": "", "amount": 0, "unit": "", "formula": "", "fact_ids": []}],
+  "ledger": [{"id": "L1", "item": "", "value": "", "amount": 0, "unit": "", "formula": "", "fact_ids": [], "deviation_reason": ""}],
   "thesis_check": {"supports": [], "contradicts": [], "note": ""},
+  "fit_check": null,
   "modules": [{"segment": "FS03", "decision": "保留|换内容保功能|并入|删除", "retention_role": "", "hook_type": "", "reason": "", "fact_ids": [], "research_tasks": [], "duration": ""}],
   "retention_map": [{"source_peak": "PK02", "source_segment": "FS03", "new_chapter_hint": "", "fact_ids": [], "status": "承担|缺口-补料|缺口-接受弱化"}],
   "hook": null,

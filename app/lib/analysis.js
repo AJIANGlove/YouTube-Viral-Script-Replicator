@@ -125,6 +125,13 @@ function analysisBrief(a, run, trackKey, mode) {
       (l.bad ? '(这一行有问题,稿子里不要用这个数:' + l.bad + ')' : '')).join('\n'));
     const sayText = ledgerSayOn(run, trackKey) ? ledgerSayText(ledgerSay(a.ledger), mode !== 'review') : '';
     if (sayText) out.push(sayText);
+    // 账本假设和报道值不一样的行(v1.61):第一次出现时说一句是假设、比报道高/低多少,点到为止
+    const devs = ledgerDeviations(a);
+    if (devs.length) out.push('账本假设和报道值不一样的行(这个数在稿子里第一次出现时,用一句话说明这是假设、比报道的数高还是低,例如「보도된 평균은 하루 3만 원대지만, 오늘은 목 좋은 가게 기준으로 6만 원으로 잡아볼게요」;只在第一次出现时说一次,后面照账本的数讲,不加「정확하지 않을 수 있습니다」这类免责句):\n' + devs.map(l => {
+      const fc = l.fact_check;
+      const alt = l.alt && Array.isArray(l.alt.rows) && l.alt.rows.length ? ';人选了「两种都算、对照着讲」:讲到这个数时把两种算法对照讲一次——按报道值算,' + l.alt.rows.slice(0, 6).map(r => r.id + ' ' + r.item + ' 是 ' + r.reported_text + '(按假设值是 ' + r.assumed_text + ')').join(',') + ';之后照账本(假设值)讲' : '';
+      return '- ' + l.id + ' ' + (l.item || '') + ':账本取 ' + fc.value_text + ',报道值约 ' + fc.fact_text + '(' + fc.fact_ids.join(',') + (fc.basis ? ';' + fc.basis : '') + '),' + devPct(fc) + (String(l.deviation_reason || '').trim() ? ';取这个数的理由:' + l.deviation_reason : '') + alt;
+    }).join('\n'));
   }
   const cs = (Array.isArray(a.cases) ? a.cases : []).filter(c => c && String(c.nick || c.who || '').trim());
   if (cs.length) out.push('真人案例(用外号称呼;按「出场」安排在对应的段出场,每次带出写好的新信息,不许重复同一句话;没有来源的要明说是假设或传闻):\n' + cs.map(c => '- 「' + (c.nick || c.who) + '」' + (c.nick && c.who ? c.who + ':' : ':') + (c.detail || '') + (c.source || c.year ? '(' + [c.source, c.year].filter(Boolean).join(',') + ')' : '(没有来源)') + (Array.isArray(c.fact_ids) && c.fact_ids.length ? '[' + c.fact_ids.join(',') + ']' : '') +
@@ -516,8 +523,152 @@ async function ledgerCheckup(run, cfg, a, vars) {
   after.filter(p => p.kind === 'formula' || p.kind === 'unit').forEach(p => { const l = a.ledger.find((x, i) => x && ledgerId(x, i) === p.id); if (l) l.bad = p.text; });
   rec.remaining = after.map(p => p.text);
   a.ledger_checkup = rec;
+  // 关键假设和事实表报道的数对一对(软约束:可以不一样,差很多又没写理由的才停下让人选)
+  if (cfg) rec.facts_compare = await ledgerFactCheck(run, cfg, a);
   a.ledger_check = verifyLedger(a.ledger);
   return rec;
+}
+
+// ---------- 账本假设 vs 事实表(v1.61,软约束,用户 2026-11-01 明确不要「必须一致」) ----------
+// 实测 run_902550ad6154:L3「기계 1대당 일평균 매출」按 40회 × 1,500원 = 6만 원/일,事实表 F03 报道的是每台每天约 3.3만 원(差 1.8 倍),
+// 账本和稿子都没说为什么,后面利润、时薪全跟着偏高。现在:差 10% 以上的行,稿子里第一次出现时说一句「是假设、比报道高/低多少」;
+// 差 1.5 倍以上又没写理由(deviation_reason)的,先写后改的任务停在分析后,让人选按报道值 / 按假设值 / 两种都算对照讲。
+const DEV_NOTE = 1.1, DEV_HOLD = 1.5;
+function ledgerNum(l) { return l.program_amount != null ? Number(l.program_amount) : Number(String(l.amount == null ? '' : l.amount).replace(/,/g, '')); }
+function ledgerRows(a) { return (a && Array.isArray(a.ledger) ? a.ledger : []).filter(l => l && typeof l === 'object' && !Array.isArray(l)); }
+const roundAmt = n => (Math.abs(n) >= 100 ? Math.round(n) : Math.round(n * 100) / 100);
+// 按现在的账本数重算每行和报道值差几倍
+function devRefresh(a) {
+  const rows = ledgerRows(a);
+  verifyLedger(rows);
+  rows.forEach(l => {
+    const fc = l.fact_check;
+    if (!fc || typeof fc !== 'object') return;
+    const v = ledgerNum(l), f = Number(fc.fact_value);
+    if (!(v > 0 && f > 0)) { fc.ratio = null; return; }
+    fc.ratio = Math.round(Math.max(v, f) / Math.min(v, f) * 100) / 100;
+    fc.dir = v > f ? 'higher' : v < f ? 'lower' : 'same';
+    fc.value_text = ledgerValueText(l, v);
+    fc.fact_text = ledgerValueText(l, f);
+  });
+}
+function ledgerDeviations(a) {
+  return ledgerRows(a).filter(l => l.fact_check && l.fact_check.ratio > DEV_NOTE && l.fact_check.dir !== 'same');
+}
+// 要人选的行:差 1.5 倍以上、没写理由、人还没选过。只报「源头」:公式引用的上游行已经要人选的,下游跟着变,不重复问
+function ledgerPending(a) {
+  const rows = ledgerRows(a);
+  const byId = {};
+  rows.forEach((l, i) => { byId[ledgerId(l, i)] = l; });
+  const p0 = new Set(rows.filter(l => l.fact_check && l.fact_check.ratio > DEV_HOLD && !String(l.deviation_reason || '').trim() && !l.ledger_choice).map((l, i) => ledgerId(l, rows.indexOf(l))));
+  const refs = l => (String(l.formula || '').match(/L\d+[a-z]?(?![a-z\d])/gi) || []).filter(r => byId[r]);
+  const upstreamPending = (id, seen) => refs(byId[id]).some(r => !seen.has(r) && (seen.add(r), p0.has(r) || upstreamPending(r, seen)));
+  return [...p0].filter(id => !upstreamPending(id, new Set([id]))).map(id => byId[id]);
+}
+function devPct(fc) {
+  const v = Number(fc.ratio);
+  if (!(v > 1)) return '';
+  if (v >= 2) return (fc.dir === 'higher' ? '是报道值的 ' : '只有报道值的 1/') + (Math.round(v * 10) / 10) + (fc.dir === 'higher' ? ' 倍' : '');
+  return (fc.dir === 'higher' ? '高 ' : '低 ') + Math.round(fc.dir === 'higher' ? (v - 1) * 100 : (1 - 1 / v) * 100) + '%';
+}
+async function ledgerFactCheck(run, cfg, a) {
+  const rows = ledgerRows(a);
+  const facts = (Array.isArray(a.facts) ? a.facts : []).filter(f => f && f.id && String(f.content || '').trim());
+  if (!rows.length || !facts.length) return null;
+  try {
+    const prompt = fillVars(readPrompt('ledger_vs_facts.md'), {
+      topic: run.topic || '',
+      facts: facts.map(f => '- ' + f.id + ' [' + (f.kind || '') + '] ' + f.content).join('\n'),
+      ledger: rows.map((l, i) => '- ' + ledgerId(l, i) + ' ' + (l.item || '') + ' = ' + ledgerValueText(l, ledgerNum(l)) + '(amount ' + roundAmt(ledgerNum(l)) + ',unit ' + (l.unit || '无') + ')' + (l.formula ? ' [= ' + l.formula + ']' : '') + (String(l.value || '') ? ' 说明:' + String(l.value).slice(0, 120) : '') + (Array.isArray(l.fact_ids) && l.fact_ids.length ? '(' + l.fact_ids.join(',') + ')' : '')).join('\n')
+    });
+    const out = await callJson(run, cfg, prompt, '账本对照事实', o => o && Array.isArray(o.rows));
+    const factIds = new Set(facts.map(f => f.id));
+    rows.forEach(l => { delete l.fact_check; });
+    let n = 0;
+    out.rows.forEach(r => {
+      if (!r || typeof r !== 'object') return;
+      const l = rows.find((x, i) => ledgerId(x, i) === String(r.id || ''));
+      const fv = Number(String(r.fact_value == null ? '' : r.fact_value).replace(/,/g, ''));
+      const ids = (Array.isArray(r.fact_ids) ? r.fact_ids : []).map(String).filter(id => factIds.has(id));
+      if (!l || !(fv > 0) || !ids.length) return;
+      l.fact_check = { fact_value: roundAmt(fv), fact_ids: ids, basis: String(r.basis || '').slice(0, 200) };
+      n++;
+    });
+    devRefresh(a);
+    return { ran: true, compared: n, deviations: ledgerDeviations(a).length, pending: ledgerPending(a).map(l => l.id) };
+  } catch (e) { return { ran: false, error: e.message }; }
+}
+// 「两种都算」:把这一行换成报道值另算一遍,记下跟着变的行(写稿时对照讲)
+function altScenario(a, l, fv) {
+  const rows = ledgerRows(a);
+  const clone = cloneJson(rows);
+  const i = rows.indexOf(l);
+  clone[i].amount = roundAmt(fv); clone[i].formula = '';
+  verifyLedger(rows); verifyLedger(clone);
+  const out = [];
+  rows.forEach((x, j) => {
+    if (j === i || !x.formula) return;
+    const v0 = ledgerNum(x), v1 = ledgerNum(clone[j]);
+    if (!isFinite(v0) || !isFinite(v1) || Math.abs(v0 - v1) <= Math.max(1, Math.abs(v0) * 0.01)) return;
+    out.push({ id: ledgerId(x, j), item: x.item || '', assumed_text: ledgerValueText(x, v0), reported_text: ledgerValueText(x, v1), reported: roundAmt(v1) });
+  });
+  // 收入、利润、到手这些观众最关心的行排前面(写稿只给前几行)
+  const key = x => (KEY_RE.test(headOf(x.item)) ? 0 : 1);
+  out.sort((x, y) => key(x) - key(y));
+  return { fact_value: roundAmt(fv), rows: out.slice(0, 10) };
+}
+const LEDGER_CHOICES = { reported: '按报道值算', assumed: '按假设值算', both: '两种都算、对照着讲' };
+// 人选完一行:程序重算账本;要选的都选完了,先写后改的任务接着写稿
+function ledgerChoice(runId, body) {
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  assertReviewable(run);
+  const a = run.analysis || {};
+  const rows = ledgerRows(a);
+  const id = String((body || {}).id || '');
+  const choice = String((body || {}).choice || '');
+  const l = rows.find((x, i) => ledgerId(x, i) === id);
+  if (!l || !l.fact_check) throw Object.assign(new Error('找不到要选的账本行: ' + id), { status: 400 });
+  if (!LEDGER_CHOICES[choice]) throw Object.assign(new Error('选项不对: ' + choice), { status: 400 });
+  const fc = l.fact_check, fv = Number(fc.fact_value);
+  const before = { amount: l.amount, formula: l.formula || '', value: l.value || '', value_text: fc.value_text || '' };
+  delete l.alt;
+  if (choice === 'reported') {
+    l.amount = roundAmt(fv);
+    l.formula = '';
+    l.value = ledgerValueText(l, fv) + '(按报道值,' + fc.fact_ids.join(',') + ')';
+    l.fact_ids = [...new Set([...(Array.isArray(l.fact_ids) ? l.fact_ids : []), ...fc.fact_ids])];
+    delete l.program_fixed;
+    delete l.deviation_reason;
+  } else {
+    if (!String(l.deviation_reason || '').trim()) l.deviation_reason = '你选了' + LEDGER_CHOICES[choice] + '(报道值约 ' + (fc.fact_text || fv) + ')';
+    if (choice === 'both') l.alt = altScenario(a, l, fv);
+  }
+  l.ledger_choice = { choice, label: LEDGER_CHOICES[choice], at: new Date().toISOString(), before };
+  const fixed = ledgerWriteBack(a); // 下游的合计、利润、时薪按新数重算
+  devRefresh(a);
+  // 下游行因为这次选择和报道值差开了(实测 L3 按报道值后,L7 月营收按 20 个营业日算,比报道的月营收低 34%):
+  // 是人选出来的结果,记上理由,不再追问第二次
+  const byId = {};
+  rows.forEach((x, i) => { byId[ledgerId(x, i)] = x; });
+  const dependsOn = (x, seen) => (String(x.formula || '').match(/L\d+[a-z]?(?![a-z\d])/gi) || []).some(r => byId[r] && !seen.has(r) && (seen.add(r), r === id || dependsOn(byId[r], seen)));
+  rows.forEach(x => {
+    if (x === l || !x.fact_check || !(x.fact_check.ratio > DEV_HOLD) || String(x.deviation_reason || '').trim() || x.ledger_choice) return;
+    if (dependsOn(x, new Set())) x.deviation_reason = '跟着 ' + id + ' 的选择(' + LEDGER_CHOICES[choice] + ')重算出来的数';
+  });
+  a.ledger_check = verifyLedger(a.ledger);
+  const pending = ledgerPending(a);
+  run.steps = run.steps || {};
+  const st = run.steps.ledger_choice;
+  let resume = false;
+  if (st && st.status === 'waiting') {
+    st.rows = pending.map(x => ({ id: x.id, item: x.item || '' }));
+    if (!pending.length) { st.status = 'done'; st.finished_at = new Date().toISOString(); resume = !!run.draft_first; }
+  }
+  run.analysis_edited = true;
+  store.saveRun(run);
+  if (resume) require('./review').resumeDraftFirst(run.id).catch(() => {});
+  return { ok: true, id, choice, recalculated: fixed.map(x => x.id), pending: pending.map(x => x.id), resumed: resume };
 }
 
 function acceptedGaps(a) {
@@ -620,6 +771,7 @@ async function runAnalysis(runId) {
   delete run.error;
   delete run.cancel_requested;
   run.steps = { ...(run.steps || {}), analysis: { status: 'running', started_at: new Date().toISOString() } };
+  delete run.steps.ledger_choice; // 重做分析(含换框架)后账本是新的,上一份分析的「账本选择」作废
   store.saveRun(run);
   try {
     const built = buildAnalysisPrompt(run, asset);
@@ -867,6 +1019,30 @@ function needsList(a, run) {
 }
 const CASES_MIN = 4;
 
+// 素材够不够(v1.61):事实少于 16 条,或 fit_check 里「证据/数据」类条目判了不符合,写稿前自动多搜一轮。
+// 实测 run_902550ad6154(인형뽑기방)只有 12 条事实、「공개 데이터…증거 체인 구성 → 불부합」照样写,二稿 56 分;
+// 38 篇统计里事实少的几篇分数都偏低。只看 trait 写的内容,不看 type(那篇把证据项错标成了 avoid)。
+const FACTS_MIN = 16;
+const FIT_BAD_RE = /不符合|不符|불부합|미부합|부적합|not ?fit/i;
+const EVIDENCE_RE = /证据|数据|资料|统计|报道|研究|实验|데이터|증거|자료|통계|보도|연구|실험|evidence|data/i;
+// 「只靠无法核实的指标」这类是反面条目,判不符合反而是好事
+const NEG_TRAIT_RE = /의존|依赖|只靠|불가능|无法|不可|검증 불가/;
+function evidenceWeak(a) {
+  const facts = (Array.isArray(a && a.facts) ? a.facts : []).filter(f => f && String(f.content || '').trim());
+  const fits = (Array.isArray(a && a.fit_check) ? a.fit_check : []).filter(x => x && typeof x === 'object'
+    && FIT_BAD_RE.test(String(x.result || '')) && EVIDENCE_RE.test(String(x.trait || '')) && !NEG_TRAIT_RE.test(String(x.trait || '')));
+  const why = [];
+  if (facts.length < FACTS_MIN) why.push('事实只有 ' + facts.length + ' 条(少于 ' + FACTS_MIN + ' 条)');
+  fits.forEach(x => why.push('证据项「' + String(x.trait).slice(0, 60) + '」判了' + x.result));
+  return { weak: why.length > 0, facts: facts.length, fits, why };
+}
+function evidenceNeeds(a, run, ev) {
+  const out = [];
+  if (ev.facts < FACTS_MIN) out.push('- facts 事实只有 ' + ev.facts + ' 条,要补到 ' + FACTS_MIN + ' 条以上:优先补能直接撑住论点和账本的硬数据(行业统计、政府/协会数据、财报、公开研究、媒体报道里的具体数字和具体店主案例),不要重复已有的事实');
+  ev.fits.forEach(x => out.push('- fit_check 证据不够:「' + x.trait + '」判了' + x.result + '(' + String(x.reason || '').slice(0, 200) + '),找能补上这条证据链的公开数据、研究或可归属的实验/调查'));
+  return out.concat(needsList(a, run)).slice(0, 30);
+}
+
 async function planAndSearch(run, cfg, vars, a, needs, note, maxQ) {
   if (!needs.length && !note) return [];
   const prompt = fillVars(readPrompt('adjust_queries.md'), {
@@ -980,6 +1156,14 @@ function mergeAdjust(a, out, batches) {
     modules: list(a.modules).filter(m => touches(m) && !list(out.modules).some(o => o && o.segment === m.segment)).map(m => m.segment)
   };
   if (out.thesis_check && typeof out.thesis_check === 'object' && !Array.isArray(out.thesis_check)) a.thesis_check = out.thesis_check;
+  // fit_check 重新判定(补素材那一轮):按 trait 合并,模型只给了改的条目时,其他条目保留
+  const fits = list(out.fit_check).filter(x => x && typeof x === 'object' && !Array.isArray(x) && String(x.trait || '').trim());
+  if (fits.length) {
+    const merged = list(a.fit_check).map(x => ({ ...x }));
+    fits.forEach(x => { const i = merged.findIndex(y => y && String(y.trait || '').trim() === String(x.trait).trim()); if (i >= 0) merged[i] = { ...merged[i], ...x }; else merged.push({ ...x }); });
+    a.fit_check = merged;
+    n++;
+  }
   // 写法规则要的几项(埋点回收、核心两难、评论问题):AI 调整补上或改了就收下
   if (out.planted_payoff && typeof out.planted_payoff === 'object' && !Array.isArray(out.planted_payoff) && String(out.planted_payoff.what || '').trim()) a.planted_payoff = out.planted_payoff;
   if (out.hook_plan && typeof out.hook_plan === 'object' && !Array.isArray(out.hook_plan) && Object.keys(HOOK_PLAN_AT).some(k => out.hook_plan[k])) a.hook_plan = out.hook_plan;
@@ -1019,6 +1203,8 @@ function mergeAdjust(a, out, batches) {
   return n;
 }
 
+const EVIDENCE_ROUND_NOTE = '【这一轮是补素材】上一轮调整后素材还不够:{{why}}。这一轮只做两件事:① 用上面的搜索结果补事实(新事实接着现有编号往后编,补到 {{facts_min}} 条以上,只收查得到来源的;已有事实里能补上来源、年份的也补上);② 补完后重新判定 fit_check,输出完整的 fit_check 数组(每条重新写 result 和 reason,证据补上了就改成符合或部分符合,还是不够就照实写)。其他部分只在新事实推翻了原来的数时才改。\n';
+
 // 「AI 先调整」:可先联网查询,再一次性改事实表、论点卡、模块、留存地图、钩子、候选标题。
 // draft:界面上当前的草稿(可能还没保存),以它为底;结果写回 run.analysis,改前版本存 analysis_before_adjust 便于撤回
 async function runAutoAdjust(runId, draft, opts) {
@@ -1033,9 +1219,28 @@ async function runAutoAdjust(runId, draft, opts) {
   const batches = useSearch ? await planAndSearch(run, cfg, vars, a, needsList(a, run), '', search.MAX_QUERIES) : [];
   const forModel = cloneJson(a);
   delete forModel.ai_marks;
-  const prompt = fillVars(readPrompt('adjust.md'), { ...vars, search_results: search.resultsBrief(batches), analysis_json: JSON.stringify(forModel) });
+  const prompt = fillVars(readPrompt('adjust.md'), { ...vars, search_results: search.resultsBrief(batches), analysis_json: JSON.stringify(forModel), round_note: '' });
   const out = await callJson(run, cfg, prompt, 'AI 先调整', o => typeof o === 'object' && !Array.isArray(o));
-  const n = mergeAdjust(a, out, batches);
+  let n = mergeAdjust(a, out, batches);
+  // 素材不够就自动多搜一轮(只一轮,v1.61):补事实、重新判定 fit_check;还不够只在分析页提示,不挡写稿
+  const ev0 = useSearch ? evidenceWeak(a) : { weak: false };
+  if (ev0.weak) {
+    const rec = { at: new Date().toISOString(), facts_before: ev0.facts, why: ev0.why };
+    try {
+      const b2 = await planAndSearch(run, cfg, vars, a, evidenceNeeds(a, run, ev0), '', search.MAX_QUERIES);
+      const fm2 = cloneJson(a);
+      delete fm2.ai_marks;
+      const p2 = fillVars(readPrompt('adjust.md'), { ...vars, search_results: search.resultsBrief(b2), analysis_json: JSON.stringify(fm2), round_note: EVIDENCE_ROUND_NOTE.replace('{{why}}', ev0.why.join(';')).replace('{{facts_min}}', FACTS_MIN) });
+      const o2 = await callJson(run, cfg, p2, 'AI 补素材', o => typeof o === 'object' && !Array.isArray(o));
+      n += mergeAdjust(a, o2, b2);
+      rec.queries = b2.length;
+    } catch (e) { rec.error = e.message; }
+    const ev1 = evidenceWeak(a);
+    rec.facts_after = ev1.facts;
+    rec.still_weak = ev1.weak;
+    rec.still_why = ev1.why;
+    a.evidence_round = rec;
+  }
   // 写稿前的账本体检:程序改正算错的行,单位混用/算不了/没出处的交给 AI 只修账本一轮
   await ledgerCheckup(run, cfg, a, vars);
   a.ledger_check = verifyLedger(a.ledger);
@@ -1125,5 +1330,5 @@ module.exports = { ledgerWriteBack, ledgerProblems, ledgerCheckup, ledgerGaps, l
   loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, HOOK_TYPES, hookType, acceptedGaps, verifyLedger,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,
-  frameworkVars, fillVars, callJson, callWithLog, getTarget, setTarget, needsList, mergeAdjust, runAutoAdjust, reviseItem, auditTitle
+  frameworkVars, fillVars, callJson, callWithLog, getTarget, setTarget, needsList, mergeAdjust, runAutoAdjust, reviseItem, auditTitle, evidenceWeak, FACTS_MIN, ledgerPending, ledgerDeviations, ledgerChoice, devPct, devRefresh, altScenario
 };

@@ -741,6 +741,7 @@
     </div>
     <div class="card hidden" id="rv-panel"></div>
     <div class="card hidden" id="rf-panel"></div>
+    <div class="card hidden" id="lc-panel"></div>
     <div class="card hidden" id="an-panel"></div>
     <div class="card hidden" id="ret-panel"></div>
     <div class="card hidden" id="yt-panel"></div>
@@ -1452,6 +1453,7 @@ function statusLabel(r) {
   const rf = r.reframe || {};
   const switched = typeof rf.switched === 'number' ? rf.switched : (rf.switched || []).length;
   if (r.draft_first && r.status === 'awaiting_review' && verdict === '换框架' && rf.status !== 'ignored') return '待换框架';
+  if (r.draft_first && r.status === 'awaiting_review' && ((r.steps || {}).ledger_choice || {}).status === 'waiting') return '待选账本假设';
   // 换了框架、还没开始写稿:重新做写前分析和 AI 调整这段都显示「换框架中」,副标写跑到哪一步
   if (switched && !r.analysis_confirmed && (r.status === 'analyzing' || (r.draft_first && r.status === 'awaiting_review'))) return '换框架中';
   if (r.draft_first && r.status === 'awaiting_review') return 'AI 调整中';
@@ -1485,8 +1487,8 @@ function viralIcon(filled, cls) {
 }
 
 function runOpsCell(r) {
-  if (r.status === 'awaiting_review' && r.draft_first && statusLabel(r) === '待换框架') {
-    return `<button class="op-btn" onclick="event.stopPropagation();openRun('${r.id}')">去换框架</button> `
+  if (r.status === 'awaiting_review' && r.draft_first && (statusLabel(r) === '待换框架' || statusLabel(r) === '待选账本假设')) {
+    return `<button class="op-btn" onclick="event.stopPropagation();openRun('${r.id}')">${statusLabel(r) === '待换框架' ? '去换框架' : '去选账本'}</button> `
       + `<button class="op-btn danger" onclick="event.stopPropagation();cancelRunById('${r.id}')">取消</button>`;
   }
   if (r.status === 'awaiting_review' && !r.draft_first) {
@@ -1889,6 +1891,7 @@ async function loadRunDetail() {
 
   renderReviewPanel(r);
   renderReframePanel(r);
+  renderLedgerChoicePanel(r);
   renderAnalysisPanel(r);
   renderRetentionCheck(r);
   renderYtPanel(r);
@@ -1996,6 +1999,7 @@ async function renderReviewPanel(r) {
   if (!rvState || rvState.runId !== r.id) rvState = { runId: r.id, open: !!r.draft_first, key: null, view: null, busy: {}, panel: {}, onlyFlags: false, err: '', msg: {} };
   if (!(hasScript && r.status === 'done')) {
     if (statusLabel(r) === '待换框架') { el.innerHTML = `<h2 class="v13">审稿:初稿 → 二稿 → 终稿</h2><div class="hint v13">写前分析判定这个框架套不上题目,已暂停写稿。在上面换一个框架,或选「不换」后会接着写。</div>`; return; }
+    if (statusLabel(r) === '待选账本假设') { el.innerHTML = `<h2 class="v13">审稿:初稿 → 二稿 → 终稿</h2><div class="hint v13">账本里有假设和报道的数差 1.5 倍以上、又没写理由,已暂停写稿。在上面选按哪个数算,选完会接着写。</div>`; return; }
     const step = r.status === 'analyzing' ? '写前分析' : r.status === 'awaiting_review' ? 'AI 先调整(查资料、补事实、定取舍)' : (r.status === 'failed' || r.status === 'cancelled') ? '' : '写稿';
     el.innerHTML = `<h2 class="v13">审稿:初稿 → 二稿 → 终稿</h2><div class="hint v13">${step ? 'AI 正在一键生成,现在在「' + step + '」。写完初稿后会自动检查出二稿,再对照原片出一份二稿审稿报告;你在报告里选要改的问题,再终审出终稿。这里会逐章展示改前改后。' : '任务没有写完,续跑后再审稿。'}</div>`;
     return;
@@ -3374,6 +3378,7 @@ function analysisHtml(a, materials, say) {
   const adjList = Array.isArray(a.adjustments) ? a.adjustments.filter(x => x && typeof x === 'object') : [];
   const reframeList = Array.isArray(a.reframe_reasons) ? a.reframe_reasons.filter(Boolean) : [];
   if (adjList.length) html += `<div class="an-adj v12"><b>调整清单：共 ${adjList.length} 项</b>${adjList.map((x, i) => `<div>${anNum(i)} <b>${esc(x.type || '')}</b> ${esc(anTargetLabel(x.target || ''))}${(Array.isArray(x.segments) ? x.segments : []).length ? '（影响 ' + esc((Array.isArray(x.segments) ? x.segments : []).join('/')) + '）' : ''}：${esc(x.reason || '')}${x.status ? ' · ' + esc(x.status) : ''}</div>`).join('')}</div>`;
+  html += anEvidenceHtml(a);
   if (reframeList.length) html += `<div class="an-adj v12 bad"><b>换框架的原因</b>${reframeList.map((r, i) => `<div>${anNum(i)} ${esc(r)}</div>`).join('')}</div>`;
   const aiN = Object.keys(a.ai_marks || {}).length;
   if (aiN) html += `<div class="hint v12">其中 ${aiN} 处由 AI 调整或按人工意见重做（依据见确认前的表格）。</div>`;
@@ -3414,7 +3419,7 @@ function analysisHtml(a, materials, say) {
   if (notFound.length) html += `<div class="an-sec">没找到的资料</div>` + anTable(['想找', '说明'],
     notFound.map(s => `<tr class="an-warn"><td>${esc(s.looked_for)}</td><td>${esc(s.note)}</td></tr>`));
   if ((a.ledger || []).length) html += `<div class="an-sec">账本</div>` + ledgerCheckupHtml(a.ledger_checkup) + anTable(['项目', '数值', '事实'],
-    a.ledger.map(l => `<tr class="${l.bad ? 'an-bad' : ''}"><td>${esc(l.item)}${l.bad ? '<div class="hint" style="margin:0;color:#b91c1c">这一行有问题,写稿不会用它的数:' + esc(l.bad) + '</div>' : ''}</td><td>${esc(l.value)}${l.program_fixed ? '<div class="hint" style="margin:0">程序按公式改正(原来写 ' + esc(l.program_fixed.value || l.program_fixed.from) + ')</div>' : ''}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`))
+    a.ledger.map((l, _i, LCA) => `<tr class="${l.bad ? 'an-bad' : lcRowWarn(l) ? 'an-warn' : ''}"><td>${esc(l.item)}${l.bad ? '<div class="hint" style="margin:0;color:#b91c1c">这一行有问题,写稿不会用它的数:' + esc(l.bad) + '</div>' : ''}</td><td>${esc(l.value)}${l.program_fixed ? '<div class="hint" style="margin:0">程序按公式改正(原来写 ' + esc(l.program_fixed.value || l.program_fixed.from) + ')</div>' : ''}${lcFactNote(l, LCA)}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`))
     + ledgerSayHtml(say);
   html += `<div class="an-sec">模块取舍</div>` + anTable(['原片段', '处理', '留存作用', '钩子', '理由', '事实', '时长'],
     (a.modules || []).map(m => `<tr class="${/删除/.test(m.decision || '') ? 'an-warn' : ''}"><td>${esc(m.segment)}</td><td>${esc(m.decision)}</td><td>${esc(m.retention_role)}</td><td>${esc(m.hook_type || '')}</td><td>${esc(m.reason)}</td><td>${esc(anIds(m.fact_ids))}</td><td>${esc(m.duration)}</td></tr>`));
@@ -4246,7 +4251,7 @@ function anEditorShell() {
       ${sel('verdict', ['可以写', '调整后可写', '换框架'], d.verdict)}
       <span class="hint" style="margin:2px 0 0;flex:1 1 320px">${esc(d.verdict_reason || '')}</span>
     </div>
-    ${anAdjustmentsHtml(d)}`;
+    ${anAdjustmentsHtml(d)}${anEvidenceHtml(d)}`;
 
   const aiTitles = new Set(t.ai_added || []);
   html += `<div data-an-target="title"><div class="an-sec">标题</div>
@@ -4292,7 +4297,7 @@ function anEditorShell() {
   if (notFound.length) html += `<div class="an-sec">没找到的资料</div>` + anTable(['想找', '说明'],
     notFound.map(s => `<tr class="an-warn"><td>${esc(s.looked_for)}</td><td>${esc(s.note)}</td></tr>`));
   if ((d.ledger || []).length) html += `<div class="an-sec">账本（只读）</div>` + ledgerCheckupHtml(d.ledger_checkup) + anTable(['项目', '数值', '事实'],
-    d.ledger.map(l => `<tr class="${l.bad ? 'an-bad' : ''}"><td>${esc(l.item)}${l.bad ? '<div class="hint" style="margin:0;color:#b91c1c">这一行有问题,写稿不会用它的数:' + esc(l.bad) + '</div>' : ''}</td><td>${esc(l.value)}${l.program_fixed ? '<div class="hint" style="margin:0">程序按公式改正(原来写 ' + esc(l.program_fixed.value || l.program_fixed.from) + ')</div>' : ''}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`));
+    d.ledger.map((l, _i, LCA) => `<tr class="${l.bad ? 'an-bad' : lcRowWarn(l) ? 'an-warn' : ''}"><td>${esc(l.item)}${l.bad ? '<div class="hint" style="margin:0;color:#b91c1c">这一行有问题,写稿不会用它的数:' + esc(l.bad) + '</div>' : ''}</td><td>${esc(l.value)}${l.program_fixed ? '<div class="hint" style="margin:0">程序按公式改正(原来写 ' + esc(l.program_fixed.value || l.program_fixed.from) + ')</div>' : ''}${lcFactNote(l, LCA)}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`));
 
   html += `<div class="an-sec">模块取舍</div>
   <table class="an-table"><tr><th>原片段</th><th>处理</th><th>留存作用</th><th>理由（可改）</th><th>事实</th><th>时长</th><th></th></tr>
@@ -4356,6 +4361,78 @@ function anRenderEditor() {
   anValidateNow();
 }
 
+// 素材不够自动补搜一轮(v1.61):事实少于 16 条,或 fit_check 里证据/数据类判了不符合
+function anEvidenceHtml(a) {
+  const e = a && a.evidence_round;
+  if (!e) return '';
+  const why = (e.why || []).map(esc).join(';');
+  let h = `<div class="an-adj v12" style="border-color:#93c5fd;background:#eff6ff"><b>素材不足,已自动补搜一轮:事实 ${esc(e.facts_before)} → ${esc(e.facts_after != null ? e.facts_after : e.facts_before)} 条</b>${why ? `<div class="hint" style="margin:2px 0 0">原因:${why}</div>` : ''}`;
+  if (e.error) h += `<div style="color:#b91c1c">补搜没成功:${esc(e.error)}</div>`;
+  if (e.still_weak) h += `<div style="color:#b45309;margin-top:2px">⚠ 补搜一轮后还是不够:${(e.still_why || []).map(esc).join(';')}。这篇的素材撑不住现在的框架,可以考虑换一个框架(不挡写稿)。</div>`;
+  else if (!e.error) h += `<div style="color:#047857;margin-top:2px">✓ 补完后素材够了</div>`;
+  return h + '</div>';
+}
+// 账本假设 vs 报道值(v1.61):差 10% 以上的行标出来;差 1.5 倍以上又没写理由的要人选
+function lcRowWarn(l) { const fc = l && l.fact_check; return !!(fc && fc.ratio > 1.5 && !String(l.deviation_reason || '').trim() && !l.ledger_choice); }
+function lcPct(fc) {
+  const v = Number(fc.ratio);
+  if (!(v > 1)) return '';
+  if (v >= 2) return fc.dir === 'higher' ? '是报道值的 ' + (Math.round(v * 10) / 10) + ' 倍' : '只有报道值的 1/' + (Math.round(v * 10) / 10);
+  return (fc.dir === 'higher' ? '高 ' : '低 ') + Math.round(fc.dir === 'higher' ? (v - 1) * 100 : (1 - 1 / v) * 100) + '%';
+}
+function lcFactNote(l, rows) {
+  const fc = l && l.fact_check;
+  const ch = l && l.ledger_choice;
+  let h = '';
+  // 要人选的只有「源头」行;公式引用了它的行跟着变,选完程序重算
+  const ask = lcRowWarn(l) && lcPending({ ledger: rows }).includes(l);
+  if (fc && fc.ratio > 1.1 && fc.dir !== 'same') h += `<div class="hint" style="margin:0;color:${ask ? '#b91c1c' : '#b45309'}">报道值约 ${esc(fc.fact_text || fc.fact_value)}(${esc((fc.fact_ids || []).join(','))}),账本${esc(lcPct(fc))}${String(l.deviation_reason || '').trim() ? ';理由:' + esc(l.deviation_reason) : ask ? ';<b>没写理由,要你选</b>' : lcRowWarn(l) ? ';跟着上面要选的行变,选完程序重算' : ';稿子里第一次出现时会说一句是假设'}</div>`;
+  if (ch) h += `<div class="hint" style="margin:0;color:#047857">你选了:${esc(ch.label || ch.choice)}${ch.choice === 'reported' && ch.before ? '(原来是 ' + esc(ch.before.value_text || ch.before.value || ch.before.amount) + ',程序已重算下面的行)' : ''}</div>`;
+  if (l && l.alt && (l.alt.rows || []).length) h += `<div class="hint" style="margin:0">按报道值算:${l.alt.rows.slice(0, 4).map(x => esc(x.id + ' ' + x.item + ' ' + x.reported_text)).join(';')}</div>`;
+  return h;
+}
+function lcPending(a) {
+  const rows = ((a && a.ledger) || []).filter(l => l && typeof l === 'object');
+  const byId = {}; rows.forEach((l, i) => { byId[l.id || 'L' + (i + 1)] = l; });
+  const p0 = new Set(rows.filter(lcRowWarn).map(l => l.id));
+  const refs = l => (String((l && l.formula) || '').match(/L\d+[a-z]?(?![a-z\d])/gi) || []).filter(x => byId[x]);
+  const up = (id, seen) => refs(byId[id]).some(x => !seen.has(x) && (seen.add(x), p0.has(x) || up(x, seen)));
+  return [...p0].filter(id => !up(id, new Set([id]))).map(id => byId[id]);
+}
+function lcKey(r) {
+  const a = r.analysis || {};
+  return JSON.stringify([((r.steps || {}).ledger_choice || {}).status || '', ((a.ledger) || []).map(l => l && l.ledger_choice ? l.id + ':' + l.ledger_choice.choice : '').join(',')]);
+}
+let lcRenderedKey = null;
+function renderLedgerChoicePanel(r) {
+  const el = document.getElementById('lc-panel');
+  const a = r.analysis || {};
+  const pend = !r.analysis_confirmed && r.status === 'awaiting_review' ? lcPending(a) : [];
+  const waiting = ((r.steps || {}).ledger_choice || {}).status === 'waiting';
+  if (!pend.length || (r.draft_first && !waiting)) { el.classList.add('hidden'); lcRenderedKey = null; return; }
+  const key = r.id + '|' + lcKey(r) + '|' + pend.map(l => l.id).join(',');
+  if (key === lcRenderedKey) return;
+  lcRenderedKey = key;
+  el.classList.remove('hidden');
+  el.innerHTML = `<h2 style="color:#b45309">账本假设和报道的数差很多${r.draft_first ? ',已暂停写稿' : ''}</h2>
+    <div class="hint">账本里下面${pend.length > 1 ? '这几行' : '这一行'}和事实表报道的数差 1.5 倍以上,又没写为什么这么取。选一种算法,程序会重算账本${r.draft_first ? ',全部选完后接着自动写稿' : ''}。不管选哪种,稿子里这个数第一次出现时都会说一句是假设、比报道的数高还是低。</div>`
+    + pend.map(l => { const fc = l.fact_check || {}; return `<div class="rv-ai" style="margin-top:8px">
+      <div class="rv-ai-head"><b>${esc(l.id + ' ' + (l.item || ''))}</b> <span class="rv-chip yellow">${esc(lcPct(fc))}</span></div>
+      <div class="rv-ai-body"><div>账本取 <b>${esc(fc.value_text || l.value || '')}</b>${l.formula ? '(' + esc(l.value || l.formula) + ')' : ''};报道值约 <b>${esc(fc.fact_text || fc.fact_value)}</b>(${esc((fc.fact_ids || []).join(','))})</div>
+        ${fc.basis ? `<div class="hint">报道值怎么来的:${esc(fc.basis)}</div>` : ''}
+        <div class="rv-ops"><button class="an-btn v13" onclick="lcPick('${escAttr(l.id)}','reported',this)">① 按报道值算</button>
+          <button class="an-btn" onclick="lcPick('${escAttr(l.id)}','assumed',this)">② 按假设值算</button>
+          <button class="an-btn" onclick="lcPick('${escAttr(l.id)}','both',this)">③ 两种都算、对照着讲</button></div></div></div>`; }).join('');
+}
+async function lcPick(id, choice, btn) {
+  if (anEdit && anEdit.dirty) { alert('写前分析有没保存的修改,先保存或放弃修改再选。'); return; }
+  if (btn) btn.disabled = true;
+  try { await api('/api/runs/' + currentRunId + '/ledger-choice', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, choice }) }); }
+  catch (e) { alert(e.message); if (btn) btn.disabled = false; return; }
+  lcRenderedKey = null; anRenderedKey = null; anEdit = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 400);
+}
+
 // 写前分析判「换框架」:停下来推荐 3 个框架,选一个就换框架重跑分析(先写后改的任务一路接着写);也可以仍按现在的框架写
 let rfRenderedKey = null;
 function renderReframePanel(r) {
@@ -4376,7 +4453,7 @@ function renderReframePanel(r) {
   const picks = rf.picks || [];
   const busy = rf.status === 'suggesting';
   let h = `<h2 style="color:#b91c1c">写前分析判定「换框架」${r.draft_first ? ',已暂停写稿' : ''}</h2>
-    <div class="hint">现在的框架「${esc(r.asset_name || r.asset_id)}」套不上这个题目。照写的稿子进终审时平均低 1 分左右。从下面推荐的框架里选一个,会换框架重新做写前分析${r.draft_first ? ',然后接着自动写稿' : ''}。</div>
+    <div class="hint">现在的框架「${esc(r.asset_name || r.asset_id)}」套不上这个题目。<b>之前判了换框架还照写的 11 篇,二稿平均 67 分,其他平均 72 分。</b>从下面推荐的框架里选一个,会换框架重新做写前分析${r.draft_first ? ',然后接着自动写稿' : ''}。</div>
     ${reasons.length ? `<details style="margin:6px 0"><summary style="cursor:pointer;font-size:13px">为什么套不上(${reasons.length} 条)</summary>${reasons.map((x, i) => `<div class="hint">${i + 1}. ${esc(x)}</div>`).join('')}</details>` : ''}`;
   if (busy) h += `<div class="rv-flag"><b>AI 正在从框架库里挑更合适的框架…</b>一般一两分钟。</div>`;
   else if (rf.status === 'failed') h += `<div class="err-list">推荐没出来:${esc(rf.error || '')}</div>`;
@@ -4400,7 +4477,7 @@ async function rfAction(action, btn, extra) {
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 600);
 }
 function rfSwitch(id, btn) { if (confirm('换成这个框架,重新做写前分析?')) rfAction('switch', btn, { asset_id: id }); }
-function rfIgnore(btn) { if (confirm('不换框架,仍按现在的框架写?分析判定套不上,写出来分数通常偏低。')) rfAction('ignore', btn); }
+function rfIgnore(btn) { if (confirm('不换框架,仍按现在的框架写?分析判定套不上。之前判了换框架还照写的 11 篇,二稿平均 67 分,其他平均 72 分。')) rfAction('ignore', btn); }
 
 // 点上面的步骤条跳到这一步的内容:写前分析跳到分析卡并展开;初稿检查、二稿审稿报告、终审跳到审稿面板对应的页签
 const STEP_JUMP = { analysis: { panel: 'an-panel' }, draft_check: { panel: 'rv-panel', tab: 'd2' }, reverse_audit: { panel: 'rv-panel', tab: 'audit' }, final_review: { panel: 'rv-panel', tab: 'd3' } };
@@ -4433,7 +4510,7 @@ function renderAnalysisPanel(r) {
   if (anEdit && anEdit.runId !== r.id) anEdit = null;
   if (r.analysis_confirmed || r.status !== 'awaiting_review') anEdit = null;
 
-  const key = [r.id, r.status, r.analysis_confirmed, st.finished_at, st.status, (r.reframe || {}).status].join('|');
+  const key = [r.id, r.status, r.analysis_confirmed, st.finished_at, st.status, (r.reframe || {}).status, lcKey(r)].join('|');
 
   if (r.status === 'analyzing') {
     if (key === anRenderedKey) return;
@@ -4461,7 +4538,7 @@ function renderAnalysisPanel(r) {
     if (key === anRenderedKey) return;
     anRenderedKey = key;
     anEdit = null;
-    el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">先写后改模式:${statusLabel(r) === '待换框架' ? '分析判定「换框架」,等你在上面选框架。' : r.status === 'awaiting_review' ? 'AI 正在自动调整事实、账本与留存取舍,完成后直接写稿,无需确认。' : '由 AI 自动分析与调整,无需人工确认。'}</div>
+    el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">先写后改模式:${statusLabel(r) === '待换框架' ? '分析判定「换框架」,等你在上面选框架。' : statusLabel(r) === '待选账本假设' ? '账本假设和报道的数差很多,等你在上面选按哪个数算。' : r.status === 'awaiting_review' ? 'AI 正在自动调整事实、账本与留存取舍,完成后直接写稿,无需确认。' : '由 AI 自动分析与调整,无需人工确认。'}</div>
       <details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>查看 AI 的分析与调整(只读)</b></summary>${analysisHtml(r.analysis, r.materials || '', r.ledger_say)}</details>`;
     return;
   }

@@ -208,9 +208,10 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 
 | 文件 | 用途 | 行数 |
 |---|---|---|
-| `analysis.md` | 写前分析（题目与框架匹配、论点卡、事实表、主角设定、写法规则接入、表格来源写法、经济题利润行写法、真人案例） | 132 |
-| `ledger_fix.md` | 账本体检后 AI 修账本一轮（只填原始数与公式，含补漏成本） | 36 |
-| `adjust.md` | AI 先调整（补待查、改论点、找事实、补标题、主角一致、补真人案例） | 102 |
+| `analysis.md` | 写前分析（题目与框架匹配、论点卡、事实表、主角设定、写法规则接入、表格来源写法、经济题利润行写法、真人案例、账本假设对照报道值） | 133 |
+| `ledger_fix.md` | 账本体检后 AI 修账本一轮（只填原始数与公式，含补漏成本） | 37 |
+| `ledger_vs_facts.md` | 账本关键假设对照事实表报道值（标偏差） | 17 |
+| `adjust.md` | AI 先调整（补待查、改论点、找事实、补标题、主角一致、补真人案例、素材不够自动补搜） | 105 |
 | `adjust_queries.md` | 生成联网搜索查询词 | 21 |
 | `revise.md` | 按人工意见只重做一行 | 29 |
 | `title_audit.md` | 自写标题审核 | 26 |
@@ -226,7 +227,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `reverse_audit.md` | 二稿逆向工程审稿报告（九部分 + 逐条预估加分） | 523 |
 | `final_audit.md` | 终审①独立审稿（七维评分 + P0–P3 清单，含论点自检） | 226 |
 | `final_revise.md` | 终审②按诊断修改（逐处原句→改成+理由） | 88 |
-| `final_recheck.md` | 终审③独立复审（评分对照，未达标补改一轮，含论点自检与原地打转检查） | 81 |
+| `final_recheck.md` | 终审③独立复审（评分对照，未达标补改一轮，含论点自检、原地打转与假设交代检查） | 82 |
 | `final_patch.md` | 按复审 OPEN 清单补改终稿 | 58 |
 | `final_patch_diagnose.md` | 补改掉分后找原因、定每题新改法 | 43 |
 | `final_open_options.md` | 复审遗留问题各出 ≥3 种改法并标推荐 | 33 |
@@ -252,7 +253,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 41 份 `.md`（2975 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 46 份，合计 3178 行。
+合计 42 份 `.md`（2998 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 47 份，合计 3201 行。
 
 ### 历史版本
 
