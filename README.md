@@ -45,7 +45,7 @@ flowchart LR
 │   ├── prompts/            现行提示词（生产用，单一来源）
 │   ├── extension/          抓 Studio 真实数据的 Chrome 插件
 │   ├── public/             前端 SPA
-│   ├── data/runs/          98 条生成记录（含每步 attempts 与校验明细）
+│   ├── data/runs/          100 条生成记录（含每步 attempts 与校验明细）
 │   ├── data/logs/          运行日志（失败样本、留存卡批处理、探针输出）
 │   └── config.example.json 配置结构示例（不含真实 Key）
 ├── assets/                 214 个四层资产包，每包含原始 SRT 与留存卡
@@ -313,6 +313,7 @@ node app/server.js
 | `probes/*.txt` | 开头留存检查的模型原始输出（按 run + 版本存） | 是 |
 | `llm_*.txt` | 渠道异常留痕（HTTP 错误 / 空响应 / 断流时响应体前 4KB），含 label、model、耗时、字符数 | 是 |
 | `recheck_noscore_*.txt` | 补改后复审两次都没读到分数时的模型原始输出（run id + 前 80KB），用于定位报告格式问题 | 是 |
+| `patch_noedits_*.txt` | 补改时模型只回了说明、没给出可采用的编辑（或编辑全部定位失败）时的原始输出 | 是 |
 
 每个任务的 `attempts`、`checks`、`steps` 明细在 `app/data/runs/<id>.json` 内，与日志互为补充。
 
