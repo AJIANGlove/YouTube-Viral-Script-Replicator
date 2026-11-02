@@ -551,6 +551,9 @@ const server = http.createServer(async (req, res) => {
       if (!r) return send(res, 404, { error: '任务不存在' });
       // 编辑分析用的对照数据(原片高峰、第一个甜头),只随响应返回,不落盘
       r.analysis_context = analysis.analysisContext(r.asset_id);
+      // 蓝图章节编号不是 CH01… 的、分章还没写完(还没续跑过):页面提示点续跑会自动改,不落盘(v1.66)。
+      // 以前整篇一次写的任务(22 篇蓝图是 FS01…,模型自己写成了 [CH01…])不提示
+      try { const fx = r.outputs && r.outputs.step1 && !r.outputs.step2 ? require('./lib/textnorm').normalizeChapterIds(r.outputs.step1).fixed : null; if (fx) r.blueprint_ids_bad = fx; } catch (e) {}
       // 账本念法(瀑布:一项一项减、每步还剩多少;换成每天),按账本现算给前端看,不落盘
       try { if (r.analysis && Array.isArray(r.analysis.ledger) && r.analysis.ledger.length && analysis.ledgerSayOn(r)) { analysis.verifyLedger(r.analysis.ledger); r.ledger_say = analysis.ledgerSay(r.analysis.ledger); } } catch (e) { /* 账本格式不对:前端不显示念法 */ }
       // 听感检查(开头点题、前 10 秒数字、连念数字、语体)按当前稿现算,不落盘
@@ -659,7 +662,7 @@ const server = http.createServer(async (req, res) => {
 
     // ---------- 先写后改:逐段对照审稿 ----------
     // GET 视图(每次按当前稿子现算);POST status/undo 立即返回;rewrite/fact 等模型返回再响应(单章约 0.5–2 分钟)
-    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact|ignore_block|apply_fix))?$/);
+    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact|ignore_block|apply_fix|suggest_fix))?$/);
     if (rvMatch) {
       const [, id, action] = rvMatch;
       try {
@@ -687,6 +690,8 @@ const server = http.createServer(async (req, res) => {
           if (action === 'ignore_block') return send(res, 200, review.setIgnoreBlock(id, body));
           // 问题旁边「直接应用」:改法里有完整替换句的,程序直接换掉终稿里的原句(不调 AI、不复审);undo:true 撤回
           if (action === 'apply_fix') return send(res, 200, review.applyFix(id, body));
+          // 「AI 出改法」:只针对这一条调一次 AI,落成具体的原句 → 改成(不改稿、不复审),出好后人点「直接应用」
+          if (action === 'suggest_fix') return send(res, 200, await review.suggestFix(id, body));
           // 开头单独审:开头 60 秒逐句 + 中文 + 好在哪 + 风险(后台跑)
           if (action === 'opening') return send(res, 200, review.startOpeningCard(id));
           // 自动改开头(后台跑):只改开头几句,改到听感检查的开头两条过关,最多试 3 次

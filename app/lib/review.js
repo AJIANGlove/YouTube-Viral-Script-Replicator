@@ -334,7 +334,7 @@ function buildView(run, asset) {
         open: arr(r.open).map(x => ({ ...x, zh_problem: hasForeign(x.problem) ? zhOf(state, x.problem) : '', zh_suggestion: hasForeign(x.suggestion) ? zhOf(state, x.suggestion) : '' })) }));
       const last = rechecks[rechecks.length - 1];
       // 最后一轮复审的问题:建议里写明了「原句」改成「新句」、原句只出现一次的,可以直接应用
-      if (last) last.open = last.open.map(x => { if (x.applied) return { ...x, applied: { ...x.applied, left: applyLeftovers(script, x.applied.old, x.applied.new) } }; const pa = planOpen(script, x, lang); return !pa ? x : pa.why ? { ...x, apply_why: pa.why } : { ...x, apply: applyPreview(pa) }; });
+      if (last) last.open = last.open.map(x => applyView(run.id, script, lang, 'recheck', x));
       return { ...f, manual_applies: arr(f.manual_applies).map(({ before_text, diff, ...r }) => r), rechecks, scores_before: fillScores(f.scores_before, f.audit_report, dims, 1), scores_after: last ? { ...last.scores, ...(f.scores_after || {}) } : f.scores_after };
     })() : null,
     opening: openingView(run),
@@ -570,10 +570,8 @@ function publishCheck(run, v) {
     manual_after: v.final ? manualAfterRecheck((run.review || {}).final) : 0,
     accepted_facts: [...accepted], claim: cc ? { ...cc, verdict_applied: cc.verdict === '不成立' && claimVerdictApplied(cc), issues: arr(cc.issues).map(x => {
       if (claimNoIssue(x)) return { ...x, no_issue: true };
-      if (x.applied) return { ...x, applied: { ...x.applied, left: applyLeftovers(currentScript(run), x.applied.old, x.applied.new) } };
       if (x.not_found) return x;
-      const pa = planApply(currentScript(run), x.quote, x.fix, (run.audience || {}).target_language);
-      return pa.why ? { ...x, apply_why: pa.why } : { ...x, apply: applyPreview(pa) };
+      return applyView(run.id, currentScript(run), (run.audience || {}).target_language, 'claim', x);
     }), stale: cc.hash !== hash(currentScript(run)), blocking: claimBlocking(cc) } : null, claim_step: (run.steps || {}).claim_check || null, fix_rec: ((run.review || {}).final || {}).opening_fix || null };
 }
 
@@ -3013,6 +3011,9 @@ function extractFix(fix, lang, quote) {
     return { new: m[1].trim(), ...(APPLY_MORE_RE.test(rest) ? { more: true } : {}) };
   }
   if (APPLY_DEL_RE.test(f)) { const q = f.match(/^\s*(?:直接)?(?:删掉|删除|删去|去掉)(?:这句话?|这一句|整句)?\s*[::]?\s*[「『]([^」』]{2,600})[」』]/); return { del: true, target: q ? q[1].trim() : '', ...(APPLY_MORE_RE.test(f) ? { more: true } : {}) }; }
+  // 「改为:평균 10회 투입…」这种没加「」的(v1.65,实测用户截图 b196 CH02):取冒号后面到第一个中文字为止,和原句够像才算
+  const m2 = f.match(/(?:改为|改成|换成|直接说|写成)\s*[::]\s*([^「」『』\u4e00-\u9fff]{4,600})/);
+  if (m2 && !zhLang(lang)) { const t = m2[1].trim().replace(/[\s,，;；(（]+$/, ''); if (t && bigramSim(t, quote) >= 0.35) return { new: t, ...(APPLY_MORE_RE.test(f.replace(m2[0], '')) ? { more: true } : {}) }; }
   // 英文稿的改法常常是英文说明(「Either keep the qualifier…」):和原句不像的不算替换句
   const bare = unwrapQuote(f);
   if (!zhLang(lang) && !HAN_RE.test(f) && /\p{L}/u.test(f) && bigramSim(bare, quote) >= 0.5) return { new: bare };
@@ -3132,6 +3133,108 @@ function undoByContext(text, d) {
   }
   return null;
 }
+// ---------- AI 出改法(v1.65,用户 2026-11-02):改法只是说明的条目,只针对这一条调一次 AI,落成具体的「原句 → 改成」,人确认后走直接应用 ----------
+// 实测 b196 CH14【关键】改法是「开头增加一句…;或在 CH14 总结时明确对比…」,人不懂韩文没法手改,又不想整轮重跑
+const AI_FIX_MAX = 3;
+const aiFixBusy = new Set();
+// AI 给的每一处:原句在稿子里唯一、改句是稿子的语言、几处不重叠 → 换成程序能直接应用的计划;不行给一句原因(重试时告诉 AI)
+function aiFixPlans(text, edits, lang) {
+  const list = arr(edits).filter(e => e && String(e.old || '').trim());
+  if (!list.length) return { why: '没有给出任何一处原句 → 改成' };
+  if (list.length > AI_FIX_MAX) return { why: '改了 ' + list.length + ' 处,最多 ' + AI_FIX_MAX + ' 处' };
+  const plans = [];
+  for (const e of list) {
+    const old = String(e.old).trim(), nw = String(e.new == null ? '' : e.new).trim();
+    if (/^\[CH\d+/m.test(old)) return { why: '原句里带了章节标签行「' + old.slice(0, 30) + '」' };
+    const h = findUnique(text, old);
+    if (h.start == null) return { why: h.count > 1 ? '原句「' + old.slice(0, 60) + '」在稿子里不止一处,要带上前后的字直到唯一' : '原句「' + old.slice(0, 60) + '」在稿子里找不到,必须逐字复制' };
+    if (!zhLang(lang) && HAN_RE.test(nw)) return { why: '改句「' + nw.slice(0, 40) + '」里有中文,改句只能用稿子的语言' };
+    const actual = text.slice(h.start, h.end);
+    if (actual === nw) return { why: '有一处改句和原句一模一样' };
+    const chapter = (String(e.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase();
+    if (!nw) plans.push({ start: h.start, end: h.end, ins: '', old: actual, new: '', del: true, chapter, new_zh: '' });
+    else { const d = minimalDiff(actual, nw); plans.push({ start: h.start + d.start, end: h.start + d.end, ins: d.ins, old: actual, new: nw, chapter, new_zh: String(e.new_zh || ''), span: [h.start, h.end] }); }
+  }
+  const spans = plans.map(p => p.span || [p.start, p.end]).sort((a, b) => a[0] - b[0]);
+  for (let i = 1; i < spans.length; i++) if (spans[i][0] < spans[i - 1][1]) return { why: '有两处原句重叠了,同一段只能改一次' };
+  return { plans };
+}
+// 几处一起换:从后往前换,前面的位置不受影响
+function applyPlansText(text, plans) {
+  return plans.slice().sort((a, b) => b.start - a.start).reduce((t, p) => applyPlanText(t, p), text);
+}
+const joinPlans = (plans, k) => plans.map(p => p[k]).join(' / ');
+function aiFixKey(runId, source, id) { return runId + ':' + source + ':' + id; }
+// 能不能点「AI 出改法」:论点核对里没问题的、找不到原句的不行;复审问题只给关键和次要(结构问题是整章重写,待核实是查事实)
+function aiFixAble(source, x) {
+  if (!x || x.applied || x.not_found || x.no_issue) return false;
+  return source === 'claim' ? !claimNoIssue(x) : (x.level === '关键' || x.level === '次要');
+}
+// 页面上每一条的「直接应用 / AI 出改法」状态
+function applyView(runId, text, lang, source, x) {
+  if (x.applied) return { ...x, applied: { ...x.applied, left: x.applied.edits ? [].concat(...x.applied.edits.map(e => applyLeftovers(text, e.old, e.new))).slice(0, 4) : applyLeftovers(text, x.applied.old, x.applied.new) } };
+  let af = x.ai_fix || null;
+  if (af && af.status === 'running' && !aiFixBusy.has(aiFixKey(runId, source, x.id))) af = { ...af, status: 'failed', error: '上次出改法被中断了(程序重启过),再点一次' };
+  if (af && af.status === 'done') {
+    const v = aiFixPlans(text, af.edits, lang);
+    if (!v.why) return { ...x, ai_fix: af, apply: { ai: true, why: af.why || '', edits: v.plans.map(p => ({ chapter: p.chapter, old: p.old, new: p.new, new_zh: p.new_zh, del: !!p.del })), old: joinPlans(v.plans, 'old'), new: joinPlans(v.plans, 'new') } };
+    af = { ...af, status: 'stale', error: '稿子之后改过,AI 给的原句现在找不到了,重新出一次' };
+  }
+  const pa = source === 'claim' ? (x.not_found || x.no_issue ? null : planApply(text, x.quote, x.fix, lang)) : planOpen(text, x, lang);
+  if (pa && !pa.why) return { ...x, ...(af ? { ai_fix: af } : {}), apply: applyPreview(pa) };
+  return { ...x, ...(pa && pa.why ? { apply_why: pa.why } : {}), ...(af ? { ai_fix: af } : {}), ai_able: aiFixAble(source, x) };
+}
+async function suggestFix(runId, body) {
+  if (passBusy(runId)) throw Object.assign(new Error('「' + (passLabel(runId) || '审稿') + '」正在跑,等它跑完再点'), { status: 409 });
+  const source = body.source === 'claim' ? 'claim' : 'recheck', id = String(body.id || '');
+  const key = aiFixKey(runId, source, id);
+  if (aiFixBusy.has(key)) throw Object.assign(new Error('这一条正在出改法,等一下'), { status: 409 });
+  const cfg = pl().loadConfig();
+  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
+  const run = store.getRun(runId);
+  if (!run || !(run.review || {}).final) throw Object.assign(new Error('还没跑终审'), { status: 400 });
+  const lang = (run.audience || {}).target_language || '';
+  const { item } = applyTarget(run.review.final, source, id);
+  if (!item) throw Object.assign(new Error('找不到这条问题(页面可能是旧的,刷新一下)'), { status: 404 });
+  if (!aiFixAble(source, item)) throw Object.assign(new Error(item.applied ? '这条已经应用过了' : '这条不需要出改法'), { status: 400 });
+  const text = currentScript(run);
+  const at = new Date().toISOString();
+  aiFixBusy.add(key);
+  item.ai_fix = { status: 'running', at };
+  store.saveRun(run);
+  const save = (af) => {
+    const fresh = store.getRun(runId) || run;
+    const it = applyTarget(fresh.review.final, source, id).item;
+    if (it) it.ai_fix = af;
+    if (run.attempts) fresh.attempts = run.attempts;
+    store.saveRun(fresh);
+    return fresh;
+  };
+  try {
+    const base = {
+      target_language: lang || '', chapter: item.chapter || '', level: item.level || '',
+      quote: item.quote || '(复审没有单独引原句,看问题描述)', problem: item.problem || '', fix: item.fix || item.suggestion || '(无)',
+      ledger: claimLedgerText(run), script: checks.extractFinalScript(text)
+    };
+    let why = '', got = null, out = null, tries = 0;
+    for (; tries < 2 && !got; tries++) {
+      out = await an().callJson(run, cfg, an().fillVars(readPrompt('apply_suggest.md'), { ...base, retry_note: why ? '\n【上一次给的改法不能用】' + why + '。按规则改正后重新输出。\n' : '' }),
+        'AI 出改法' + (tries ? '·重试' : ''), o => !!o && Array.isArray(o.edits));
+      const v = aiFixPlans(text, out.edits, lang);
+      if (v.why) why = v.why; else got = v;
+    }
+    const fresh0 = store.getRun(runId) || run;
+    if (currentScript(fresh0) !== text) throw new Error('出改法的时候稿子被改过了,再点一次');
+    const af = got
+      ? { status: 'done', at, tries, why: String(out.why_zh || ''), edits: got.plans.map(p => ({ chapter: p.chapter || item.chapter || '', old: p.old, new: p.new, new_zh: p.new_zh })) }
+      : { status: 'failed', at, tries, error: 'AI 没给出能直接替换的改法(试了 ' + tries + ' 次,最后一次:' + why + ')。可以再点一次,或者点上面「AI 改一轮」' };
+    save(af);
+    return af;
+  } catch (e) {
+    save({ status: 'failed', at, error: e.message });
+    throw e;
+  } finally { aiFixBusy.delete(key); }
+}
 function applyFix(runId, body) {
   if (passBusy(runId)) throw Object.assign(new Error('「' + (passLabel(runId) || '审稿') + '」正在跑,等它跑完再点'), { status: 409 });
   const run = store.getRun(runId);
@@ -3147,7 +3250,7 @@ function applyFix(runId, body) {
     let next;
     if (hash(text) === rec.after_hash) next = rec.before_text;
     else if (rec.diff && (next = undoByContext(text, rec.diff)) != null) {}
-    else if (rec.new) {
+    else if (rec.new && !rec.edits) {
       const h = findUnique(text, rec.new);
       if (h.start == null) throw Object.assign(new Error('之后稿子又改过,改成的那句' + (h.count > 1 ? '现在不止一处' : '现在找不到了') + ',没法自动撤回'), { status: 409 });
       next = text.slice(0, h.start) + rec.old + text.slice(h.end);
@@ -3160,14 +3263,28 @@ function applyFix(runId, body) {
   }
   if (!item) throw Object.assign(new Error('找不到这条问题(页面可能是旧的,刷新一下)'), { status: 404 });
   if (item.applied) throw Object.assign(new Error('这条已经直接应用过了'), { status: 400 });
-  const plan = source === 'claim' ? (item.not_found ? { why: '稿子里找不到这句原句' } : planApply(text, item.quote, item.fix, lang)) : planOpen(text, item, lang);
-  if (!plan || plan.why) throw Object.assign(new Error('这条没法直接应用' + (plan ? ':' + plan.why : '') + ',要 AI 改'), { status: 400 });
-  const after = saveApplied(run, text, applyPlanText(text, plan));
-  const chapter = item.chapter || ((scriptChapters(after).find(c => plan.new && c.text.includes(plan.new)) || {}).id) || '';
-  item.applied = { at, old: plan.old, new: plan.new, ...(plan.del ? { del: true } : {}) };
-  fin.manual_applies = arr(fin.manual_applies).concat([{ at, source, id, chapter, old: plan.old, new: plan.new, ...(plan.del ? { del: true } : {}), round: arr(fin.rechecks).length, before_text: text, after_hash: hash(after), diff: applyDiff(text, after) }]);
+  let plans;
+  // AI 出过改法的(v1.65):按 AI 给的几处换;稿子之后改过、原句找不到了就要重新出
+  if (item.ai_fix && item.ai_fix.status === 'done') {
+    const v = aiFixPlans(text, item.ai_fix.edits, lang);
+    if (v.why) throw Object.assign(new Error('稿子之后改过,AI 给的改法对不上了(' + v.why + '),请重新点「AI 出改法」'), { status: 409 });
+    plans = v.plans;
+  } else {
+    const plan = source === 'claim' ? (item.not_found ? { why: '稿子里找不到这句原句' } : planApply(text, item.quote, item.fix, lang)) : planOpen(text, item, lang);
+    if (!plan || plan.why) throw Object.assign(new Error('这条没法直接应用' + (plan ? ':' + plan.why : '') + ',要 AI 改'), { status: 400 });
+    plans = [plan];
+  }
+  const after = saveApplied(run, text, applyPlansText(text, plans));
+  const one = plans.length === 1 ? plans[0] : null;
+  const old = joinPlans(plans, 'old'), nw = joinPlans(plans, 'new'), del = plans.every(p => p.del);
+  const edits = one ? null : plans.map(p => ({ chapter: p.chapter || item.chapter || '', old: p.old, new: p.new, ...(p.del ? { del: true } : {}) }));
+  const chapter = item.chapter || ((scriptChapters(after).find(c => plans[0].new && c.text.includes(plans[0].new)) || {}).id) || '';
+  const by = item.ai_fix && item.ai_fix.status === 'done' ? { by_ai: true } : {};
+  item.applied = { at, old, new: nw, ...(del ? { del: true } : {}), ...(edits ? { edits } : {}), ...by };
+  fin.manual_applies = arr(fin.manual_applies).concat([{ at, source, id, chapter, old, new: nw, ...(del ? { del: true } : {}), ...(edits ? { edits } : {}), ...by, round: arr(fin.rechecks).length, before_text: text, after_hash: hash(after), diff: applyDiff(text, after) }]);
   store.saveRun(run);
-  return { ok: true, chapter, old: plan.old, new: plan.new, del: !!plan.del, left: applyLeftovers(after, plan.old, plan.new) };
+  const left = [].concat(...plans.map(p => applyLeftovers(after, p.old, p.new))).slice(0, 4);
+  return { ok: true, chapter, old, new: nw, del, ...(edits ? { edits } : {}), left };
 }
 // 论点核对、按核对改稿用的账本:程序重算的数 + 韩文写法
 function claimLedgerText(run) {
@@ -3776,4 +3893,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

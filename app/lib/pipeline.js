@@ -347,6 +347,19 @@ function bpWordBudget(chapters) {
   return (chapters || []).reduce((n, c) => n + (Number(c.word_budget) || 0), 0);
 }
 
+// 蓝图章节编号改成 CH01…(v1.66):改了就记在 steps.blueprint.ids_fixed(页面提示),按编号存的分章结果、留存检查的章节也跟着改
+function fixBlueprintIds(run, text) {
+  const r = textnorm.normalizeChapterIds(text);
+  if (!r.fixed) return text;
+  const map = Object.fromEntries(r.fixed.from.map((f, i) => [f, r.fixed.to[i]]));
+  run.steps = run.steps || {};
+  run.steps.blueprint = { ...(run.steps.blueprint || {}), ids_fixed: { from: r.fixed.from, to: r.fixed.to, at: new Date().toISOString() } };
+  const seg = (run.steps.script || {}).segments;
+  if (seg && typeof seg === 'object') run.steps.script.segments = Object.fromEntries(Object.entries(seg).map(([k, v]) => [map[k] && r.fixed.from.filter(x => x === k).length === 1 ? map[k] : k, v]));
+  const carried = (((run.checks || {}).retention || {}).carried) || null;
+  if (carried) Object.values(carried).forEach(x => { if (x && map[x.chapter]) x.chapter = map[x.chapter]; });
+  return r.text;
+}
 function chapterTagLine(c) {
   return '[' + (c.id || '') + ' | ' + textnorm.normalizeTimeSep(String(c.time_range || '')) + ' | ' + (c.function || '') + ']';
 }
@@ -594,6 +607,8 @@ async function runGeneration(runId) {
 
   // 断点续跑:沿用已完成的产物,从第一个空缺步骤开始
   const outputs = run.outputs || { step1: '', step2: '', step3: '', step4: '' };
+  // 旧蓝图章节编号不是 CH01… 的(如 FS01):续跑时按顺序改成 CH01…,不用重做蓝图(v1.66)
+  if (outputs.step1) { const fx = fixBlueprintIds(run, outputs.step1); if (fx !== outputs.step1) { outputs.step1 = fx; run.outputs = outputs; store.saveRun(run); } }
   if (outputs.step1) ctx.blueprint = textnorm.normalizeTimeSep(outputs.step1); // 旧蓝图里写成 0:00~1:47 的时间段,续跑时也按 0:00-1:47 用
   if (outputs.step2) ctx.script = outputs.step2;
   if (outputs.step3) ctx.audit = outputs.step3;
@@ -979,12 +994,14 @@ async function runGeneration(runId) {
 
       const prevRec = run.steps[stepNames[step - 1]] || {};
       if (step === 1) content = textnorm.normalizeTimeSep(content); // 蓝图 time_range 的 ~ 〜 至 统一成 -,写稿标签照抄也合格
+      if (step === 1) content = fixBlueprintIds(run, content); // 章节编号不是 CH01… 的按顺序改成 CH01…(v1.66)
       outputs['step' + step] = content;
       run.steps[stepNames[step - 1]] = {
         status: 'done', secs: Math.round(r.secs * 10) / 10, chars: content.length,
         stop_reason: r.stopReason, finished_at: new Date().toISOString(),
         ...(prevRec.gate_retry ? { gate_retry: prevRec.gate_retry } : {}),
         ...(prevRec.tag_normalized ? { tag_normalized: prevRec.tag_normalized } : {}),
+        ...(step === 1 && prevRec.ids_fixed ? { ids_fixed: prevRec.ids_fixed } : {}),
         ...(prevRec.split ? { split: prevRec.split } : {}),
         ...(step === 2 && prevRec.segments ? { segments: prevRec.segments } : {})
       };

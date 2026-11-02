@@ -40,4 +40,38 @@ function normalizeChapterTags(text) {
   return text.replace(TAG_LINE_RE, '$1$2').replace(TAG_RE, t => normalizeTimeSep(t));
 }
 
-module.exports = { normalizeChapterTags, normalizeTimeSep };
+// 蓝图章节编号(v1.66):下游只认 CH01、CH02…(写稿标签、分章截取、各解析器都是 [CHnn |)。
+// 实测 run_cb26dc06a1f8:蓝图把 14 章编号写成原片段编号 FS01–FS14,逐章写稿每次都「模型没有输出 FS01 的章节标签」,重试多少次都一样。
+// 编号都是 CHnn、不重复、从小到大的,一个字都不动;否则按位置改成 CH01…CHnn,只换 id,别的字段和内容都不动。
+// 返回 { text, fixed }:fixed 为 null 表示没改;改了时 fixed = { from: [...], to: [...] }
+function parseBlueprintJson(text) {
+  const t = String(text || '').trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
+  try { return JSON.parse(t); } catch (e) {}
+  const i = t.indexOf('{'), j = t.lastIndexOf('}');
+  if (i >= 0 && j > i) { try { return JSON.parse(t.slice(i, j + 1)); } catch (e) {} }
+  return null;
+}
+function chapterIdsOk(chapters) {
+  let prev = 0;
+  const seen = new Set();
+  for (const c of chapters) {
+    const m = /^CH(\d+)$/.exec(String((c || {}).id || ''));
+    if (!m || seen.has(m[1]) || +m[1] <= prev) return false;
+    seen.add(m[1]); prev = +m[1];
+  }
+  return true;
+}
+function normalizeChapterIds(text) {
+  if (typeof text !== 'string' || !text.trim()) return { text, fixed: null };
+  const bp = parseBlueprintJson(text);
+  const chs = bp && Array.isArray(bp.chapters) ? bp.chapters : null;
+  if (!chs || !chs.length || chapterIdsOk(chs)) return { text, fixed: null };
+  const from = chs.map(c => String((c || {}).id || ''));
+  const to = chs.map((c, i) => 'CH' + String(i + 1).padStart(2, '0'));
+  chs.forEach((c, i) => { if (c && typeof c === 'object') c.id = to[i]; });
+  return { text: JSON.stringify(bp, null, 2), fixed: { from, to } };
+}
+// 页面提示用:「FS01–FS14」这种首尾写法
+function idRange(ids) { const xs = (ids || []).map(x => x || '(空)'); return xs.length > 1 ? xs[0] + '–' + xs[xs.length - 1] : (xs[0] || ''); }
+
+module.exports = { normalizeChapterTags, normalizeTimeSep, normalizeChapterIds, idRange };

@@ -215,7 +215,8 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `adjust_queries.md` | 生成联网搜索查询词 | 21 |
 | `revise.md` | 按人工意见只重做一行 | 29 |
 | `title_audit.md` | 自写标题审核 | 26 |
-| `step1.md` | Blueprint 生成（问题链 + 新角度 + 事实只用一次） | 99 |
+| `step1.md` | Blueprint 生成（问题链 + 新角度 + 事实只用一次，编号一律 CH） | 100 |
+| `apply_suggest.md` | 单条问题出可替换改法（原句逐字+中文意思） | 32 |
 | `step2.md` | 脚本施工（含每章问题链与新角度要求） | 53 |
 | `step3.md` | 质量审核 | 72 |
 | `step4.md` | 终稿优化 | 58 |
@@ -253,7 +254,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 42 份 `.md`（2999 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 47 份，合计 3202 行。
+合计 43 份 `.md`（3032 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 48 份，合计 3235 行。
 
 ### 历史版本
 
