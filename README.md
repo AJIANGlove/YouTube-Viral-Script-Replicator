@@ -212,6 +212,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `ledger_fix.md` | 账本体检后 AI 修账本一轮（只填原始数与公式，含补漏成本） | 37 |
 | `ledger_vs_facts.md` | 账本关键假设对照事实表报道值（标偏差） | 17 |
 | `source_mapping.md` | 原片 → 本地对照表与叙事方式判断 | 39 |
+| `fit_check.md` | 快速适配判断（结构段+必须保留机制，先于完整分析） | 53 |
 | `adjust.md` | AI 先调整（补待查、改论点、找事实、补标题、主角一致、补真人案例、素材不够自动补搜） | 105 |
 | `adjust_queries.md` | 生成联网搜索查询词 | 21 |
 | `revise.md` | 按人工意见只重做一行 | 29 |
@@ -255,7 +256,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 44 份 `.md`（3087 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 49 份，合计 3290 行。
+合计 45 份 `.md`（3142 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 50 份，合计 3345 行。
 
 ### 历史版本
 

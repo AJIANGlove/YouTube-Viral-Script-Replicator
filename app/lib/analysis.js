@@ -828,6 +828,7 @@ async function runSourceMapping(runId) {
   const cfg = pipeline.loadConfig();
   const run = store.getRun(runId);
   if (!run || !run.analysis) throw Object.assign(new Error('这篇没有写前分析,没法生成对照表'), { status: 400 });
+  require('./fitcheck').assertFull(run);
   if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
   const asset = store.getAsset(run.asset_id);
   if (!asset) throw Object.assign(new Error('资产不存在: ' + run.asset_id), { status: 400 });
@@ -856,6 +857,7 @@ async function runSourceMapping(runId) {
 function setPovMode(runId, mode) {
   const run = store.getRun(runId);
   if (!run || !run.analysis) throw Object.assign(new Error('这篇没有写前分析'), { status: 400 });
+  require('./fitcheck').assertFull(run);
   if (!['climb', 'per_level', 'none'].includes(mode)) throw Object.assign(new Error('叙事方式只能是 climb / per_level / none'), { status: 400 });
   const sm = run.analysis.source_mapping || { at: new Date().toISOString(), by: 'user', levels: [], same_context: true, items: [], extra_residue: [], pov_basis: '' };
   run.analysis.source_mapping = { ...sm, pov_mode: mode, pov_mode_by: 'user' };
@@ -878,8 +880,52 @@ async function runAnalysis(runId) {
   delete run.cancel_requested;
   run.steps = { ...(run.steps || {}), analysis: { status: 'running', started_at: new Date().toISOString() } };
   delete run.steps.ledger_choice; // 重做分析(含换框架)后账本是新的,上一份分析的「账本选择」作废
+  // 快速适配判断(v1.70):推荐框架时已经预判过的(人选了那个框架)直接带进来,不再跑一次;
+  // 人选了「仍按现在的框架写」就不判,直接做完整分析
+  const fitcheck = require('./fitcheck');
+  const carry = run.fit_carry && run.fit_carry.asset_id === run.asset_id ? run.fit_carry : null;
+  delete run.fit_carry;
+  const skipQuick = (run.reframe || {}).status === 'ignored';
+  // 人坚持用这个框架时保留之前那次快速判断(判的是换框架),完整分析的结论记在它后面,以后统计两者一致率
+  if (!(skipQuick && run.fit_quick && run.fit_quick.asset_id === run.asset_id)) delete run.fit_quick;
+  if (carry) run.fit_quick = { ...carry, by: 'prejudge' };
   store.saveRun(run);
   try {
+    if (!carry && !skipQuick) {
+      const prevA = run.analysis && !run.analysis.quick_only ? run.analysis : null;
+      const prev = prevA ? { title: (prevA.title || {}).final_title, thesis_card: prevA.thesis_card, protagonist: prevA.protagonist } : ((run.reframe || {}).prev || {});
+      run.steps.analysis = { ...run.steps.analysis, stage: '快速适配判断' };
+      store.saveRun(run);
+      let fit = null;
+      try {
+        fit = await fitcheck.quickFit(run, cfg, asset, prev);
+        fitcheck.logQuick(run, fit, 'quick');
+        run.fit_quick = { ...fit, by: 'quick' };
+        run.steps.fit_quick = { status: 'done', secs: fit.secs, finished_at: fit.at };
+      } catch (e) {
+        // 快速判断失败不挡:照现在的流程直接做完整分析
+        run.steps.fit_quick = { status: 'failed', error: e.message };
+      }
+      if (run.cancel_requested) {
+        run.status = 'cancelled';
+        run.steps.analysis = { ...run.steps.analysis, status: 'failed' };
+        store.saveRun(run);
+        return;
+      }
+      if (fit && fit.verdict === '换框架') {
+        // 判了「换框架」:不做完整分析,也不生成原片对照表,直接去推荐框架(先写后改模式在 finishDraftFirst 里停住并推荐)
+        run.analysis = fitcheck.stubAnalysis(run, fit, prev);
+        delete run.analysis_raw;
+        run.steps.analysis = { ...run.steps.analysis, status: 'done', quick_only: true, secs: fit.secs, finished_at: new Date().toISOString() };
+        delete run.steps.analysis.stage;
+        run.status = 'awaiting_review';
+        store.saveRun(run);
+        if (!run.draft_first) require('./reframe').suggest(runId).catch(() => {});
+        return;
+      }
+      run.steps.analysis = { ...run.steps.analysis, stage: '写前分析' };
+      store.saveRun(run);
+    }
     const built = buildAnalysisPrompt(run, asset);
     run.track_card_name = built.track_card_name;
     let messages = [{ role: 'user', content: built.prompt }];
@@ -920,10 +966,13 @@ async function runAnalysis(runId) {
     run.analysis = a;
     run.analysis_raw = r.content;
     run.steps.analysis = { ...run.steps.analysis, status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString() };
+    delete run.steps.analysis.stage;
+    fitcheck.logFull(run, run.asset_id, a.verdict);
     run.status = 'awaiting_review';
     store.saveRun(run);
     // 人工确认模式判了「换框架」:顺手出框架推荐,人在分析页直接换(先写后改模式在 finishDraftFirst 里停住并推荐)
-    if (!run.draft_first && a.verdict === '换框架') require('./reframe').suggest(runId).catch(() => {});
+    // 人已经选了「仍按现在的框架写」(快速判断判了换框架,人坚持用这个框架才做的完整分析)就不再推荐
+    if (!run.draft_first && a.verdict === '换框架' && !skipQuick) require('./reframe').suggest(runId).catch(() => {});
   } catch (e) {
     run.status = 'failed';
     run.error = '写前分析失败: ' + e.message;
@@ -1190,6 +1239,7 @@ function loadRunAsset(runId) {
 }
 
 function assertReviewable(run) {
+  require('./fitcheck').assertFull(run); // 只做了快速判断(判了换框架)的没有完整分析可改(v1.70)
   if (run.status !== 'awaiting_review' || run.analysis_confirmed) {
     throw Object.assign(new Error('仅待确认且未确认的任务可调整分析(当前: ' + run.status + ')'), { status: 400 });
   }

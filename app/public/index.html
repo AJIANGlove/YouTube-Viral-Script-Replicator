@@ -4823,7 +4823,7 @@ function anEditorShell() {
   const sel = (path, opts, cur) => `<select class="an-edit-input" data-an-path="${path}" onchange="anSetSelect(this)">` +
     opts.map(v => `<option value="${escAttr(v)}"${v === cur ? ' selected' : ''}>${v === '' ? '未标' : esc(v)}</option>`).join('') + '</select>';
 
-  let html = `<h2>⓪ 写前分析 · 待你确认</h2>
+  let html = `<h2>⓪ 写前分析 · 待你确认</h2>${anFitLine(anCurRun || {})}
   <div class="hint">表格里直接改，改完可以「保存修改」稍后再确认；黄底=估算/待查/缺口，红底=超过 3 年的旧数据。</div>
   <div id="an-errbar" class="an-errbar"></div>
   ${anAiToolbar()}`;
@@ -5034,7 +5034,25 @@ async function lcPick(id, choice, btn) {
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 400);
 }
 
-// 写前分析判「换框架」:停下来推荐 3 个框架,选一个就换框架重跑分析(先写后改的任务一路接着写);也可以仍按现在的框架写
+// 写前分析判「换框架」:停下来推荐框架,选一个就换框架重跑分析(先写后改的任务一路接着写);也可以仍按现在的框架写
+// v1.70:推荐先挑 6 个,各做一次快速适配判断,按预判给 3 个;卡片上有预判结论、撑不住的段落和「详情」(框架详情弹窗)
+const RF_PJ = { '可以写': ['green', '预计合适'], '调整后可写': ['yellow', '调整后可写'], '换框架': ['red', '预计不合适'] };
+function rfPjChip(pj) {
+  if (!pj) return '';
+  if (pj.status === 'failed' || !pj.verdict) return `<span class="rv-chip" style="background:#f3f4f6;color:#4b5563">预判没成功</span>`;
+  const [c, t] = RF_PJ[pj.verdict] || ['', pj.verdict];
+  return `<span class="rv-chip ${c}">预判:${esc(t)}</span>${pj.secs != null ? `<span class="hint" style="margin:0 4px">${esc(pj.secs)} 秒</span>` : ''}`;
+}
+function rfPjBody(p) {
+  const pj = p.prejudge || {};
+  if (pj.status === 'failed') return `<div class="hint">预判没成功(${esc(pj.error || '')}),${p.fit ? '初选时 AI 认为「' + esc(p.fit) + '」,' : ''}选它会先做一次快速判断。</div>`;
+  if (!pj.verdict) return '';
+  const bl = (pj.blocking || []).filter(b => b && (b.segment || b.why));
+  let h = pj.verdict_reason ? `<div class="hint" style="color:#374151">预判理由:${esc(pj.verdict_reason)}</div>` : '';
+  if (bl.length) h += `<div class="hint" style="color:#374151"><b>${pj.verdict === '换框架' ? '撑不住的段落' : pj.verdict === '可以写' ? '要留意的段落' : '没把握的段落'}</b>:${bl.map(b => `<div style="margin-left:1em">· ${b.segment ? '<b>' + esc(b.segment) + '</b>:' : ''}${esc(b.why)}</div>`).join('')}</div>`;
+  if ((pj.adjust || []).length) h += `<div class="hint" style="color:#374151"><b>要调的地方</b>:${pj.adjust.map(x => `<div style="margin-left:1em">· ${esc(x)}</div>`).join('')}</div>`;
+  return h;
+}
 let rfRenderedKey = null;
 function renderReframePanel(r) {
   const el = document.getElementById('rf-panel');
@@ -5042,32 +5060,45 @@ function renderReframePanel(r) {
   const show = r.analysis && r.analysis.verdict === '换框架' && !r.analysis_confirmed && r.status === 'awaiting_review' && rf.status !== 'ignored';
   const switched = (rf.switched || []).slice(-1)[0];
   if (!show && !(switched && !r.analysis_confirmed && ['analyzing', 'awaiting_review'].includes(r.status))) { el.classList.add('hidden'); rfRenderedKey = null; return; }
-  const key = JSON.stringify([r.id, r.status, rf, (r.analysis || {}).verdict]);
+  const key = JSON.stringify([r.id, r.status, rf, (r.analysis || {}).verdict, ((r.steps || {}).analysis || {}).stage]);
   if (key === rfRenderedKey) return;
   rfRenderedKey = key;
   el.classList.remove('hidden');
   if (!show) {
-    el.innerHTML = `<h2>换框架</h2><div class="hint">已从「${esc(switched.from_name || switched.from)}」换成「${esc(r.asset_name || r.asset_id)}」,${r.status === 'analyzing' ? '正在重新做写前分析…' : '写前分析已重新做完。'}</div>`;
+    const pjT = switched.prejudge ? '(推荐时预判:' + ((RF_PJ[switched.prejudge] || [])[1] || switched.prejudge) + ',不再重新判断)' : '';
+    el.innerHTML = `<h2>换框架</h2><div class="hint">已从「${esc(switched.from_name || switched.from)}」换成「${esc(r.asset_name || r.asset_id)}」${esc(pjT)},${r.status === 'analyzing' ? '正在重新做写前分析…' : '写前分析已重新做完。'}</div>`;
     return;
   }
+  const quick = !!r.analysis.quick_only;
+  const fq = r.fit_quick || r.analysis.fit_quick || {};
   const reasons = (rf.reasons || r.analysis.reframe_reasons || []);
   const picks = rf.picks || [];
   const busy = rf.status === 'suggesting';
-  let h = `<h2 style="color:#b91c1c">写前分析判定「换框架」${r.draft_first ? ',已暂停写稿' : ''}</h2>
-    <div class="hint">现在的框架「${esc(r.asset_name || r.asset_id)}」套不上这个题目。<b>之前判了换框架还照写的 11 篇,二稿平均 67 分,其他平均 72 分。</b>从下面推荐的框架里选一个,会换框架重新做写前分析${r.draft_first ? ',然后接着自动写稿' : ''}。</div>
+  let h = `<h2 style="color:#b91c1c">${quick ? '快速适配判断' : '写前分析'}判定「换框架」${r.draft_first ? ',已暂停写稿' : ''}</h2>
+    <div class="hint">现在的框架「${esc(r.asset_name || r.asset_id)}」套不上这个题目。${quick ? `<b>这是快速判断的结论(用时 ${esc(fq.secs != null ? fq.secs : '?')} 秒),没有做完整写前分析,也没有生成原片对照表。</b>` : ''}<b>之前判了换框架还照写的 11 篇,二稿平均 67 分,其他平均 72 分。</b>从下面推荐的框架里选一个,会换框架重新做写前分析${r.draft_first ? ',然后接着自动写稿' : ''}。</div>
     ${reasons.length ? `<details style="margin:6px 0"><summary style="cursor:pointer;font-size:13px">为什么套不上(${reasons.length} 条)</summary>${reasons.map((x, i) => `<div class="hint">${i + 1}. ${esc(x)}</div>`).join('')}</details>` : ''}`;
-  if (busy) h += `<div class="rv-flag"><b>AI 正在从框架库里挑更合适的框架…</b>一般一两分钟。</div>`;
+  if (busy) h += `<div class="rv-flag"><b>AI 正在从框架库里挑框架,并逐个预判合不合适…</b>${rf.stage ? '(' + esc(rf.stage) + ')' : ''}一般半分钟到两分钟。</div>`;
   else if (rf.status === 'failed') h += `<div class="err-list">推荐没出来:${esc(rf.error || '')}</div>`;
+  const cands = rf.candidates || [];
+  if (!busy && rf.none_fit) h += `<div class="rv-flag" style="border-color:#fca5a5;background:#fef2f2"><b>库里没有合适的框架</b>:${rf.rounds > 1 ? '挑了两轮' : '挑了'} ${cands.length} 个,预判都套不上。可以按下面的「题目建议」改题目后重新建任务,或者点最下面「不换,仍按现在的框架写」。下面是最接近的 ${picks.length} 个,仍然可以试。</div>`;
+  else if (!busy && picks.length && cands.length) {
+    const n = v => cands.filter(c => c.verdict === v).length;
+    h += `<div class="hint">挑了 ${cands.length} 个候选${rf.rounds > 1 ? '(第一轮 6 个都预计不合适,又挑了一轮)' : ''},预判:预计合适 ${n('可以写')} 个、调整后可写 ${n('调整后可写')} 个、预计不合适 ${n('换框架')} 个${cands.some(c => !c.verdict) ? '、没判成 ' + cands.filter(c => !c.verdict).length + ' 个' : ''}。下面是最好的 ${picks.length} 个。</div>`;
+  }
   if (picks.length) {
     h += picks.map((p, i) => `<div class="rv-ai${p.recommended ? ' on' : ''}" style="${p.recommended ? 'border-color:#16a34a;background:#f0fdf4' : ''}">
-      <div class="rv-ai-head"><b>${i + 1}. ${esc(p.name)}</b>${p.recommended ? ' <span class="rv-chip green">★ 推荐</span>' : ''} ${p.fit ? `<span class="rv-chip yellow">${esc(p.fit)}</span>` : ''}</div>
+      <div class="rv-ai-head"><b>${i + 1}. ${esc(p.name)}</b>${p.recommended ? ' <span class="rv-chip green">★ 推荐</span>' : ''} ${p.prejudge ? rfPjChip(p.prejudge) : p.fit ? `<span class="rv-chip yellow">${esc(p.fit)}</span>` : ''}</div>
       <div class="rv-ai-body">${p.source ? `<div class="hint">原片:${esc(p.source)}</div>` : ''}<div>${esc(p.why)}</div>
-        ${p.adjust ? `<div class="hint">要调的地方:${esc(p.adjust)}</div>` : ''}${p.risk ? `<div class="hint">风险:${esc(p.risk)}</div>` : ''}
-        <div class="rv-ops"><button class="an-btn v13" onclick="rfSwitch('${escAttr(p.asset_id)}', this)">换成这个框架${r.draft_first ? '并继续写稿' : '重新分析'}</button></div></div></div>`).join('');
+        ${rfPjBody(p)}
+        ${p.adjust && !(p.prejudge || {}).verdict ? `<div class="hint">要调的地方:${esc(p.adjust)}</div>` : ''}${p.risk ? `<div class="hint">风险:${esc(p.risk)}</div>` : ''}
+        <div class="rv-ops"><button class="an-btn v13" onclick="rfSwitch('${escAttr(p.asset_id)}', this)">换成这个框架${r.draft_first ? '并继续写稿' : '重新分析'}</button>
+          <button class="an-btn" onclick="openAssetDetail('${escAttr(p.asset_id)}')">详情</button></div></div></div>`).join('');
     if (rf.topic_note) h += `<div class="rv-flag"><b>题目建议</b>:${esc(rf.topic_note)}</div>`;
+    const rest = cands.filter(c => !picks.some(p => p.asset_id === c.asset_id));
+    if (rest.length) h += `<details style="margin:6px 0"><summary style="cursor:pointer;font-size:13px">其他预判过的候选(${rest.length} 个)</summary>${rest.map(c => `<div class="hint" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">${esc(c.name)} ${rfPjChip(c.verdict ? { verdict: c.verdict } : { status: 'failed' })}<button class="an-btn" style="padding:1px 8px" onclick="openAssetDetail('${escAttr(c.asset_id)}')">详情</button></div>`).join('')}</details>`;
   }
   h += `<div class="rv-ops" style="margin-top:8px">${!busy ? `<button class="an-btn" onclick="rfAction('suggest', this)">${picks.length ? '换一批推荐' : '让 AI 推荐框架'}</button>` : ''}
-    <button class="an-btn" onclick="rfIgnore(this)">不换,仍按现在的框架${r.draft_first ? '写' : '(在下面确认分析)'}</button></div>`;
+    <button class="an-btn" onclick="rfIgnore(this)">不换,仍按现在的框架${quick ? '写(先做完整分析)' : r.draft_first ? '写' : '(在下面确认分析)'}</button></div>`;
   el.innerHTML = h;
 }
 async function rfAction(action, btn, extra) {
@@ -5077,8 +5108,18 @@ async function rfAction(action, btn, extra) {
   rfRenderedKey = null;
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 600);
 }
-function rfSwitch(id, btn) { if (confirm('换成这个框架,重新做写前分析?')) rfAction('switch', btn, { asset_id: id }); }
-function rfIgnore(btn) { if (confirm('不换框架,仍按现在的框架写?分析判定套不上。之前判了换框架还照写的 11 篇,二稿平均 67 分,其他平均 72 分。')) rfAction('ignore', btn); }
+function rfSwitch(id, btn) {
+  const p = (((lastRunDetail || {}).reframe || {}).picks || []).find(x => x.asset_id === id) || {};
+  const pj = p.prejudge || {};
+  const msg = pj.verdict === '换框架'
+    ? '预判这个框架也套不上这个题目。仍要换成它?会跳过快速判断,直接做完整写前分析(1.5–6 分钟)。'
+    : '换成这个框架,重新做写前分析?' + (pj.verdict ? '(推荐时已经预判过,不再重新判断)' : '');
+  if (confirm(msg)) rfAction('switch', btn, { asset_id: id });
+}
+function rfIgnore(btn) {
+  const quick = !!(((lastRunDetail || {}).analysis) || {}).quick_only;
+  if (confirm('不换框架,仍按现在的框架写?' + (quick ? '快速判断说套不上,会先做一次完整写前分析(1.5–6 分钟),' + ((lastRunDetail || {}).draft_first ? '然后接着写稿。' : '再等你确认。') : '分析判定套不上。') + '之前判了换框架还照写的 11 篇,二稿平均 67 分,其他平均 72 分。')) rfAction('ignore', btn);
+}
 
 // 点上面的步骤条跳到这一步的内容:写前分析跳到分析卡并展开;初稿检查、二稿审稿报告、终审跳到审稿面板对应的页签
 const STEP_JUMP = { analysis: { panel: 'an-panel' }, draft_check: { panel: 'rv-panel', tab: 'd2' }, reverse_audit: { panel: 'rv-panel', tab: 'audit' }, final_review: { panel: 'rv-panel', tab: 'd3' } };
@@ -5103,6 +5144,17 @@ function stepJump(k) {
   setTimeout(() => el.classList.remove('jump-flash'), 1200);
 }
 
+// 快速适配判断的结论和耗时(v1.70);做完完整分析后并排写完整分析的结论,两者不一样时标出来
+function anFitLine(r) {
+  const fq = (r && (r.fit_quick || ((r.analysis || {}).fit_quick))) || null;
+  const fs = ((r && r.steps) || {}).fit_quick || {};
+  if (!fq) return fs.status === 'failed' ? `<div class="hint">快速适配判断没成功(${esc(fs.error || '')}),直接做了完整分析。</div>` : '';
+  const [c, t] = RF_PJ[fq.verdict] || ['', fq.verdict || ''];
+  const full = r.analysis && !r.analysis.quick_only ? r.analysis.verdict : '';
+  const by = fq.by === 'prejudge' ? '推荐框架时预判' : '快速适配判断';
+  return `<div class="hint" style="color:#374151;margin:4px 0">${by}:<span class="rv-chip ${c}" style="cursor:default">${esc(fq.verdict || '')}</span>${fq.secs != null ? '用时 ' + esc(fq.secs) + ' 秒' : ''}${full ? `;完整分析:<b>${esc(full)}</b>${full !== fq.verdict ? '(两次结论不一样,以完整分析为准)' : ''}` : ''}</div>`;
+}
+
 function renderAnalysisPanel(r) {
   const el = document.getElementById('an-panel');
   anCurRun = r;
@@ -5112,12 +5164,26 @@ function renderAnalysisPanel(r) {
   if (anEdit && anEdit.runId !== r.id) anEdit = null;
   if (r.analysis_confirmed || r.status !== 'awaiting_review') anEdit = null;
 
-  const key = [r.id, r.status, r.analysis_confirmed, st.finished_at, st.status, (r.reframe || {}).status, lcKey(r), ((r.steps || {}).source_mapping || {}).status, (((r.analysis || {}).source_mapping) || {}).pov_mode].join('|');
+  const key = [r.id, r.status, r.analysis_confirmed, st.finished_at, st.status, st.stage || '', (r.reframe || {}).status, lcKey(r), ((r.steps || {}).source_mapping || {}).status, (((r.analysis || {}).source_mapping) || {}).pov_mode].join('|');
 
   if (r.status === 'analyzing') {
     if (key === anRenderedKey) return;
     anRenderedKey = key;
-    el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">AI 正在查事实、定论点和留存地图,通常 1-3 分钟…</div>`;
+    el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">${st.stage === '快速适配判断' ? '先快速判断这个框架合不合适(一般 20–30 秒),合适再做完整分析…'
+      : st.stage === '原片对照表' ? '完整分析已出,正在生成原片对照表(约 1 分钟)…' : 'AI 正在查事实、定论点和留存地图,通常 1-3 分钟…'}</div>${anFitLine(r)}`;
+    return;
+  }
+  if (r.analysis && r.analysis.quick_only) {
+    // 快速适配判断判了「换框架」(v1.70):没有完整分析,只给结论;换框架 / 仍按现在的框架写 都在上面的换框架卡片里
+    if (key === anRenderedKey) return;
+    anRenderedKey = key;
+    anEdit = null;
+    const fq = r.fit_quick || r.analysis.fit_quick || {};
+    const bl = (fq.blocking || []).filter(b => b && (b.segment || b.why));
+    el.innerHTML = `<h2>⓪ 写前分析</h2>${anFitLine(r)}
+      <div class="hint">快速判断套不上,所以<b>没有做完整写前分析</b>(省下 1.5–6 分钟),也没有生成原片对照表。在上面换一个框架,或者点「不换,仍按现在的框架写」,再做完整分析。</div>
+      ${fq.verdict_reason ? `<div class="hint" style="color:#374151">理由:${esc(fq.verdict_reason)}</div>` : ''}
+      ${bl.length ? `<div class="hint" style="color:#374151"><b>撑不住的段落</b>:${bl.map(b => `<div style="margin-left:1em">· ${b.segment ? '<b>' + esc(b.segment) + '</b>:' : ''}${esc(b.why)}</div>`).join('')}</div>` : ''}`;
     return;
   }
   if (!r.analysis) {
@@ -5130,7 +5196,7 @@ function renderAnalysisPanel(r) {
   if (r.analysis_confirmed) {
     if (key === anRenderedKey) return;
     anRenderedKey = key;
-    el.innerHTML = `<details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>⓪ 写前分析(已确认${r.analysis_edited ? ',人工改过' : ''} · ${fmtTime(r.analysis_confirmed_at)})</b></summary>${analysisHtml(r.analysis, r.materials || '', r.ledger_say)}</details>`;
+    el.innerHTML = `<details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>⓪ 写前分析(已确认${r.analysis_edited ? ',人工改过' : ''} · ${fmtTime(r.analysis_confirmed_at)})</b></summary>${anFitLine(r)}${analysisHtml(r.analysis, r.materials || '', r.ledger_say)}</details>`;
     return;
   }
   if (r.draft_first) {
@@ -5140,7 +5206,7 @@ function renderAnalysisPanel(r) {
     if (key === anRenderedKey) return;
     anRenderedKey = key;
     anEdit = null;
-    el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">先写后改模式:${statusLabel(r) === '待换框架' ? '分析判定「换框架」,等你在上面选框架。' : statusLabel(r) === '待选账本假设' ? '账本假设和报道的数差很多,等你在上面选按哪个数算。' : r.status === 'awaiting_review' ? 'AI 正在自动调整事实、账本与留存取舍,完成后直接写稿,无需确认。' : '由 AI 自动分析与调整,无需人工确认。'}</div>
+    el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">先写后改模式:${statusLabel(r) === '待换框架' ? '分析判定「换框架」,等你在上面选框架。' : statusLabel(r) === '待选账本假设' ? '账本假设和报道的数差很多,等你在上面选按哪个数算。' : r.status === 'awaiting_review' ? 'AI 正在自动调整事实、账本与留存取舍,完成后直接写稿,无需确认。' : '由 AI 自动分析与调整,无需人工确认。'}</div>${anFitLine(r)}
       <details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>查看 AI 的分析与调整(只读)</b></summary>${analysisHtml(r.analysis, r.materials || '', r.ledger_say)}</details>`;
     return;
   }

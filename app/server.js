@@ -587,6 +587,7 @@ const server = http.createServer(async (req, res) => {
       if (!r) return send(res, 404, { error: '任务不存在' });
       if (r.draft_first) return send(res, 409, { error: '先写后改任务由 AI 自动确认并写稿,无需人工确认' });
       if (r.status !== 'awaiting_review') return send(res, 400, { error: '仅待确认分析的任务可确认(当前: ' + r.status + ')' });
+      if (require('./lib/fitcheck').isQuickOnly(r)) return send(res, 409, { error: '这篇只做了快速适配判断(判了「换框架」),还没有完整的写前分析:请换一个框架,或点「仍按现在的框架写」先做完整分析' });
       if (body.analysis != null) {
         const shapeErr = analysis.analysisShapeError(body.analysis);
         if (shapeErr) return send(res, 400, { error: '分析结果不合格: ' + shapeErr });
@@ -619,6 +620,7 @@ const server = http.createServer(async (req, res) => {
       if (r.status !== 'awaiting_review' || r.analysis_confirmed) {
         return send(res, 400, { error: '仅待确认且未确认的任务可保存分析(当前: ' + r.status + ')' });
       }
+      if (require('./lib/fitcheck').isQuickOnly(r)) return send(res, 409, { error: '这篇只做了快速适配判断,还没有完整的写前分析,没有可保存的内容' });
       const shapeErr = analysis.analysisShapeError(body.analysis);
       if (shapeErr) return send(res, 400, { error: '分析结果不合格: ' + shapeErr });
       if (r.analysis && !r.analysis_original) r.analysis_original = analysis.cloneJson(r.analysis);
