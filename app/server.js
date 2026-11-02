@@ -662,7 +662,7 @@ const server = http.createServer(async (req, res) => {
 
     // ---------- 先写后改:逐段对照审稿 ----------
     // GET 视图(每次按当前稿子现算);POST status/undo 立即返回;rewrite/fact 等模型返回再响应(单章约 0.5–2 分钟)
-    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact|ignore_block|apply_fix|suggest_fix))?$/);
+    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact|ignore_block|apply_fix|suggest_fix|confirm_ok))?$/);
     if (rvMatch) {
       const [, id, action] = rvMatch;
       try {
@@ -690,6 +690,8 @@ const server = http.createServer(async (req, res) => {
           if (action === 'ignore_block') return send(res, 200, review.setIgnoreBlock(id, body));
           // 问题旁边「直接应用」:改法里有完整替换句的,程序直接换掉终稿里的原句(不调 AI、不复审);undo:true 撤回
           if (action === 'apply_fix') return send(res, 200, review.applyFix(id, body));
+          // 论点核对里 AI 自己结论没问题的条目:人点「确认没问题」→ 不挡发布(undo:true 撤回)
+          if (action === 'confirm_ok') return send(res, 200, review.confirmOk(id, body));
           // 「AI 出改法」:只针对这一条调一次 AI,落成具体的原句 → 改成(不改稿、不复审),出好后人点「直接应用」
           if (action === 'suggest_fix') return send(res, 200, await review.suggestFix(id, body));
           // 开头单独审:开头 60 秒逐句 + 中文 + 好在哪 + 风险(后台跑)

@@ -525,7 +525,8 @@ function publishCheck(run, v) {
   // 论点核对:主张被稿子自己的数字推翻、账本关键错误,不管平均几分都挡(改过稿还没重新核对的,按上次结果算)
   const cc = v.final ? v.final.claim_check : null;
   // 论点本身成立、只是账有错的,叫「账对不上」,别让人以为观点错了
-  if (cc && claimBlocking(cc)) blk('claim', cc.verdict === '不成立' && !claimVerdictApplied(cc) ? '论点对不上(开头主张被稿子自己的数字推翻)' : '账对不上(论点成立,但稿子里有 ' + arr(cc.issues).filter(x => x.level === '关键' && claimReal(x)).length + ' 处关键算错或同一个数前后不一致)');
+  if (cc && claimBlocking(cc)) blk('claim', cc.verdict === '不成立' && !claimVerdictApplied(cc) ? '论点对不上(开头主张被稿子自己的数字推翻)' : (n => n.bad ? '账对不上(论点成立,但稿子里有 ' + n.bad + ' 处关键算错或同一个数前后不一致' + (n.ok ? ';另有 ' + n.ok + ' 条 AI 核对后说没问题,等你确认' : '') + ')' : '账/论点:有 ' + n.ok + ' 条 AI 核对后说没问题,点开确认一下就不挡发布')(
+    { bad: arr(cc.issues).filter(x => x.level === '关键' && claimReal(x) && !claimLooksOk(x)).length, ok: arr(cc.issues).filter(x => x.level === '关键' && claimReal(x) && claimLooksOk(x)).length }));
   else if (v.final && !cc) notes.push('还没核对论点');
   const openBad = openingIssues(lc);
   if (lc && !lc.ok) {
@@ -568,8 +569,11 @@ function publishCheck(run, v) {
   const prog = v.final ? programOpen(run, s.red_fact_uses) : [];
   return { ready: !reasons.length, ignored, item_groups, ignored_of, reasons, blocks, notes, can_autofix: !!reasons.length && !!v.final && ((avg != null && avg < PUBLISH_AVG) || prog.length > 0), program_open: prog.map(x => x.problem), craft_hints: v.final ? craftHints(run, last) : [], avg: avg != null ? Math.round(avg * 10) / 10 : null, good, opening_bad: ign.has('listen_open') ? [] : openBad, fix: (run.steps || {}).opening_fix || null,
     manual_after: v.final ? manualAfterRecheck((run.review || {}).final) : 0,
-    accepted_facts: [...accepted], claim: cc ? { ...cc, verdict_applied: cc.verdict === '不成立' && claimVerdictApplied(cc), issues: arr(cc.issues).map(x => {
+    accepted_facts: [...accepted], claim: cc ? { ...cc, only_ok: claimBlocking(cc) && !(cc.verdict === '不成立' && !claimVerdictApplied(cc)) && !arr(cc.issues).some(x => x.level === '关键' && claimReal(x) && !claimLooksOk(x)), verdict_applied: cc.verdict === '不成立' && claimVerdictApplied(cc), issues: arr(cc.issues).map(x => {
       if (claimNoIssue(x)) return { ...x, no_issue: true };
+      // AI 自己结论没问题、改法写「无需修改…」的:只给「确认没问题」,不给「AI 出改法」,以前出改法失败的记录也不显示
+      const lo = !x.applied && claimLooksOk(x);
+      if (x.ok_confirmed || lo) { const { ai_fix, ...rest } = x; return { ...rest, looks_ok: lo || { note: '' } }; }
       if (x.not_found) return x;
       return applyView(run.id, currentScript(run), (run.audience || {}).target_language, 'claim', x);
     }), stale: cc.hash !== hash(currentScript(run)), blocking: claimBlocking(cc) } : null, claim_step: (run.steps || {}).claim_check || null, fix_rec: ((run.review || {}).final || {}).opening_fix || null };
@@ -2943,8 +2947,24 @@ function claimNoIssue(x) {
   const noFix = !fix || fix === quote || /^(?:无|不用改|不需要改|无需修改|不需要修改|保持原样|保持不变|保留原句|不改)[。.]?$/.test(fix);
   return noFix && CLAIM_OK_RE.test(String((x && x.problem) || ''));
 }
-// 直接应用过的条目不算问题(不挡发布,也不再交给 AI 改)
-const claimReal = x => !x.not_found && !x.applied && !claimNoIssue(x);
+// 核对 AI 自己结论「没问题」、改法却写成「无需修改,与账本一致」「검증 완료 - 수정 불필요」这类的(v1.67,实测 74a0 CH01 三条【关键】):
+// 改法有字,v1.63 的兜底认不出,照样挡发布;点「AI 出改法」只能抄回原句,红字报失败,人反复重试。
+// 这类不自动放行(用户要求):页面上绿色写明「AI 核对结论:这句没问题」,人点「确认没问题」才不挡发布,可以撤回
+const CLAIM_NOCHANGE_RE = /^\s*(?:(?:无需|无须|不需要|不用|不必|无需再)(?:修改|改动|更改|调整|改)|保持(?:原样|不变|原句)|保留原句|不改|维持原句|(?:검증\s*완료\s*[-–—:,]?\s*)?(?:수정|변경)\s*(?:불필요|필요\s*없|하지\s*않아도)|no (?:change|fix|edit)s? (?:needed|required))/i;
+const CLAIM_OK2_RE = /一致|无问题|没问题|无误|正确|合理|已标明|已注明|不影响|정확|일치|문제\s*없|맞음|맞다/;
+function claimLooksOk(x) {
+  if (!x || x.not_found || claimNoIssue(x)) return null;
+  const fix = String(x.fix || '').trim();
+  // 改法里给了和原句不同的替换句:是真要改的,不算
+  const q = String(x.quote || '').replace(/\s+/g, '');
+  const alt = [...fix.matchAll(/[「『]([^」』]{2,600})[」』]/g)].some(m => m[1].replace(/\s+/g, '') !== q && !q.includes(m[1].replace(/\s+/g, '')));
+  if (alt) return null;
+  if (CLAIM_NOCHANGE_RE.test(fix)) return { note: fix.replace(CLAIM_NOCHANGE_RE, '').replace(/^[\s,，。.、;;:：\-–—]+|[\s。.]+$/g, '') };
+  if (!fix && CLAIM_OK2_RE.test(String(x.problem || '').slice(-80))) return { note: '' };
+  return null;
+}
+// 直接应用过的、人确认没问题的条目不算问题(不挡发布,也不再交给 AI 改)
+const claimReal = x => !x.not_found && !x.applied && !x.ok_confirmed && !claimNoIssue(x);
 // 开头主张对不上:直接应用了开头那一章(或核对给的「开头应该怎么说」)的改法,就当已处理;没重新核对,页面上会注明
 function claimVerdictApplied(cc) {
   const fc = compactOf(cc.fix_claim);
@@ -3167,8 +3187,8 @@ const joinPlans = (plans, k) => plans.map(p => p[k]).join(' / ');
 function aiFixKey(runId, source, id) { return runId + ':' + source + ':' + id; }
 // 能不能点「AI 出改法」:论点核对里没问题的、找不到原句的不行;复审问题只给关键和次要(结构问题是整章重写,待核实是查事实)
 function aiFixAble(source, x) {
-  if (!x || x.applied || x.not_found || x.no_issue) return false;
-  return source === 'claim' ? !claimNoIssue(x) : (x.level === '关键' || x.level === '次要');
+  if (!x || x.applied || x.not_found || x.no_issue || x.ok_confirmed) return false;
+  return source === 'claim' ? !claimNoIssue(x) && !claimLooksOk(x) : (x.level === '关键' || x.level === '次要');
 }
 // 页面上每一条的「直接应用 / AI 出改法」状态
 function applyView(runId, text, lang, source, x) {
@@ -3234,6 +3254,17 @@ async function suggestFix(runId, body) {
     save({ status: 'failed', at, error: e.message });
     throw e;
   } finally { aiFixBusy.delete(key); }
+}
+// 「确认没问题」(v1.67):AI 核对结论没问题的条目,人确认后不挡发布;undo:true 撤回
+function confirmOk(runId, body) {
+  const run = store.getRun(runId);
+  if (!run || !(run.review || {}).final) throw Object.assign(new Error('还没跑终审'), { status: 400 });
+  const item = arr((run.review.final.claim_check || {}).issues).find(x => x.id === String(body.id || ''));
+  if (!item) throw Object.assign(new Error('找不到这条问题(页面可能是旧的,刷新一下)'), { status: 404 });
+  if (body.undo) delete item.ok_confirmed;
+  else item.ok_confirmed = { at: new Date().toISOString() };
+  store.saveRun(run);
+  return { ok: true, confirmed: !body.undo };
 }
 function applyFix(runId, body) {
   if (passBusy(runId)) throw Object.assign(new Error('「' + (passLabel(runId) || '审稿') + '」正在跑,等它跑完再点'), { status: 409 });
@@ -3301,7 +3332,7 @@ function claimNote(cc) {
     '- 改成的数一律用【写前分析】账本里的数(程序重算的为准,照抄「稿中写」的写法);账本里没有的项目不许自己加进合计重新算,删掉或改成定性说法'];
   if (cc.verdict === '不成立') lines.push('- 开头主张「' + cc.claim + '」被稿子自己的数字推翻:' + cc.calc + (cc.fix_claim ? '。改法:' + cc.fix_claim : ''));
   if (cc.fix_title) lines.push('- 核对建议把标题改成「' + cc.fix_title + '」,但人选择保留标题「' + (cc.title_for || '') + '」、改稿:稿子里和这个标题冲突的说法(身份、视角、主张)要改到和标题一致');
-  arr(cc.issues).filter(claimReal).sort((a, b) => (a.level === '关键' ? 0 : 1) - (b.level === '关键' ? 0 : 1))
+  arr(cc.issues).filter(x => claimReal(x) && !claimLooksOk(x)).sort((a, b) => (a.level === '关键' ? 0 : 1) - (b.level === '关键' ? 0 : 1))
     .forEach(x => lines.push('- [' + (x.chapter || '全篇') + '][' + x.level + '] ' + (x.quote ? '「' + x.quote + '」' : '') + x.problem + (x.fix ? ' → 改成:' + x.fix : '')));
   return lines.join('\n').slice(0, 2900);
 }
@@ -3893,4 +3924,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { confirmOk, claimLooksOk, suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

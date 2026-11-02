@@ -2546,6 +2546,23 @@ function rvApplyHtml(source, x, busy) {
   const err = af.status === 'failed' || af.status === 'stale' ? `<div style="color:#b91c1c">${esc(af.error || '上次没出成')}</div>` : '';
   return `<div class="hint" style="margin-top:3px">${need ? need + '。' : ''}${err}<button class="an-btn apply" style="margin:2px 6px 0 0" onclick="rvSuggestFix('${source}', '${escAttr(x.id)}')" ${dis}>${err ? '再出一次改法' : 'AI 出改法'}</button>只针对这一条调一次 AI,给出具体要换的句子和中文意思;不改稿、不复审,出好后你确认再点「直接应用」。</div>`;
 }
+// 核对 AI 自己结论没问题、改法写「无需修改…」的条目(v1.67):醒目的绿色结论 +「确认没问题」,不给「AI 出改法」、不显示红字
+function rvLooksOkHtml(x, busy) {
+  const dis = busy ? 'disabled' : '';
+  const note = (x.looks_ok || {}).note;
+  const q = x.quote ? `${esc(x.chapter || '')}「${esc(x.quote)}」` : esc(x.chapter || '');
+  if (x.ok_confirmed) return `<li style="list-style:none;margin:6px 0 6px -16px"><div style="padding:6px 10px;border:1px solid #10b981;background:#ecfdf5;border-radius:6px"><b style="color:#047857">✓ 你已确认没问题,不挡发布</b> <span class="hint">${q}</span> <button class="an-btn" style="font-size:11px;padding:0 8px" onclick="rvConfirmOk('${escAttr(x.id)}', true)" ${dis}>撤回</button></div></li>`;
+  return `<li style="list-style:none;margin:8px 0 8px -16px"><div style="padding:8px 10px;border:2px solid #10b981;background:#dcfce7;border-radius:8px;color:#14532d">
+    <div style="font-size:14px"><b>✓ AI 核对结论:这句没问题,不用改</b>${note ? '(' + esc(note) + ')' : ''} <span class="hint">[${esc(x.level)}]</span></div>
+    <div style="font-size:12px;margin:3px 0">${q}</div>
+    <details class="hint" style="font-size:12px"><summary>核对过程</summary>${esc(x.problem || '')}</details>
+    <div style="margin-top:4px"><button class="an-btn go" onclick="rvConfirmOk('${escAttr(x.id)}')" ${dis}>确认没问题</button> <span class="hint" style="color:#166534">点了这条就不挡发布,和「忽略」一样,以后可以撤回。</span></div></div></li>`;
+}
+async function rvConfirmOk(id, undo) {
+  try { await rvPost('confirm_ok', { id, undo: !!undo }); } catch (e) { alert(e.message); return; }
+  rvToast(undo ? '已撤回确认,这条重新算问题' : '已确认没问题,这条不挡发布了');
+  rvRefresh();
+}
 // 「AI 出改法」:只这一条,调一次 AI(同步,一般 1 分钟)
 async function rvSuggestFix(source, id) {
   const k = source + ':' + id;
@@ -2701,7 +2718,9 @@ function rvIgnoredHtml(p, v) {
   const open = rc ? (rc.open || []) : [];
   const of = p.ignored_of || {};
   const list = (p.ignored || []).map(b => ({ g: b.key, zh: RV_BLOCK_ZH[b.key] || b.key, text: b.text, undo: `rvIgnoreBlock('${escAttr(b.key)}', false)` }))
-    .concat((p.accepted_facts || []).map(id => ({ g: 'fact:' + id, zh: RV_BLOCK_ZH.red_facts, text: '事实 ' + id + ' 没有出处', undo: `rvAcceptFact('${escAttr(id)}', false)` })));
+    .concat((p.accepted_facts || []).map(id => ({ g: 'fact:' + id, zh: RV_BLOCK_ZH.red_facts, text: '事实 ' + id + ' 没有出处', undo: `rvAcceptFact('${escAttr(id)}', false)` })))
+    // 论点核对里你点了「确认没问题」的(v1.67):在这里撤回
+    .concat(((p.claim || {}).issues || []).filter(x => x.ok_confirmed).map(x => ({ g: 'okc:' + x.id, zh: '账/论点', text: '你确认没问题:' + (x.chapter || '') + '「' + String(x.quote || '').slice(0, 60) + '」', undo: `rvConfirmOk('${escAttr(x.id)}', true)` })));
   if (!list.length) return '';
   rvState.folds = rvState.folds || {};
   const rows = list.map(it => {
@@ -2818,6 +2837,7 @@ function rvClaimHtml(p, v, panel) {
     return `<li>${esc(fmtTime(f.at))} ${f.by === 'auto' ? '自动' : '手动'}改稿:${did}${res ? ';' + res : ''}</li>`;
   }).join('');
   const list = (c.issues || []).filter(x => !x.not_found).map(x => x.no_issue ? `<li style="color:#6b7280"><b>[核对后没问题,不挡发布]</b> ${esc(x.chapter || '')} ${x.quote ? '「' + esc(x.quote) + '」' : ''}<span class="hint">${esc(String(x.problem || '').slice(-120))}</span></li>`
+    : x.looks_ok ? rvLooksOkHtml(x, busy)
     : x.applied ? `<li><b style="color:#047857">[已应用,不挡发布]</b> ${esc(x.chapter || '')} <span class="hint">${esc(x.problem)}</span>${rvApplyHtml('claim', x, busy)}</li>`
     : `<li><b style="color:${x.level === '关键' ? '#b91c1c' : '#b45309'}">[${esc(x.level)}]</b> ${esc(x.chapter || '')} ${x.quote ? '「' + esc(x.quote) + '」' : ''}${esc(x.problem)}${x.fix ? `<div class="hint">改法:${esc(x.fix)}</div>` : ''}${rvApplyHtml('claim', x, busy)}</li>`).join('');
   const stale = c.stale ? '<span class="hint">(稿子改过,这是改之前的核对结果)</span> ' : '';
@@ -2840,6 +2860,8 @@ function rvClaimHtml(p, v, panel) {
     : `<button class="an-btn v13" onclick="rvClaim(true)" ${busy ? 'disabled' : ''}>${c.stale ? '重新核对,还对不上就改稿' : '按核对结果改稿'}</button> <button class="an-btn" onclick="rvClaim(false)" ${busy ? 'disabled' : ''}>重新核对</button>`;
   const vNo = c.verdict === '不成立' && !c.verdict_applied;
   const vApplied = c.verdict_applied ? '<div class="hint" style="color:#047857">开头主张那处已经直接应用了改法(没重新核对;想确认可以点「AI 改一轮」后自动核对)。</div>' : '';
+  if (panel && c.only_ok) return `<div id="rv-claim-card" style="margin:6px 0;color:#374151;font-size:13px;line-height:1.7"><b style="color:#047857">论点成立;剩下挡发布的几条,AI 核对后都说没问题</b>,逐条看一眼点「确认没问题」就不挡发布了。${stale}${checkFailed}
+    ${allAi}${list ? `<ul>${list}</ul>` : ''}</div>`;
   if (panel) return `<div class="rv-flag v13" id="rv-claim-card"><b>${vNo ? '论点对不上' : '账对不上'}</b>:${vNo ? '开头的主张「' + esc(c.claim) + '」被稿子自己的数字推翻。' : '论点本身成立,但稿子里有算错的数,或者同一个数前后写得不一样。'} ${stale}${checkFailed}${vApplied}
     ${c.fix_title ? `<div class="v13" style="margin:6px 0;padding:6px 8px;background:#fff;border:1px solid #fca5a5;border-radius:6px"><b>要你拿主意</b>:问题出在标题,全文都是另一种说法,改稿改不过来。建议把标题改成「<b>${esc(c.fix_title)}</b>」${c.fix_title_zh ? '(' + esc(c.fix_title_zh) + ')' : ''}。<button class="an-btn v13" onclick="rvClaimTitle()" ${busy ? 'disabled' : ''}>改用这个标题</button> 想保留原标题,直接点上面「AI 改一轮」。</div>` : ''}
     <div class="v13" style="margin:6px 0"><b>怎么算的</b>:${esc(c.calc || '')}${c.fix_claim ? `<br><b>开头应该怎么说</b>:${esc(c.fix_claim)}` : ''}</div>
