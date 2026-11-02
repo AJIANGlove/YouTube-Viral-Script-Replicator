@@ -348,7 +348,7 @@ function bpWordBudget(chapters) {
 }
 
 function chapterTagLine(c) {
-  return '[' + (c.id || '') + ' | ' + (c.time_range || '') + ' | ' + (c.function || '') + ']';
+  return '[' + (c.id || '') + ' | ' + textnorm.normalizeTimeSep(String(c.time_range || '')) + ' | ' + (c.function || '') + ']';
 }
 
 // 从模型输出里截出目标章:只保留该章标签行到下一个标签行之前。
@@ -429,12 +429,15 @@ async function runScriptByChapters(opts) {
         used += r3.secs || 0;
         text = text + '\n' + r3.content.trim();
       }
-      const picked = extractChapterBlock(text, id);
-      if (!picked) { lastErr = new Error('模型没有输出 ' + id + ' 的章节标签'); continue; }
+      const picked0 = extractChapterBlock(text, id);
+      // 标签不合格时把原因告诉模型再写(原来原样重发,模型照抄同一个错标签,三次都一样失败)
+      const retryWith = why => { msg = [{ role: 'user', content: basePrompt + brief + '\n\n注意:上一次输出不合格——' + why + '。第一行必须一字不差地写成:\n' + tagLine + '\n(时间段只能用半角「-」连接,不要用 ~ 或其他符号;方括号、竖线和空格照抄)' }]; };
+      if (!picked0) { lastErr = new Error('模型没有输出 ' + id + ' 的章节标签'); retryWith('没有输出 ' + id + ' 的章节标签行'); continue; }
+      const picked = textnorm.normalizeChapterTags(picked0);
       const badTag = checks.malformedChapterTags(picked);
-      if (badTag.length) { lastErr = new Error(id + ' 标签格式不合法: ' + badTag[0].text); continue; }
+      if (badTag.length) { lastErr = new Error(id + ' 标签格式不合法: ' + badTag[0].text); retryWith('标签行写成了「' + badTag[0].text + '」,格式不对'); continue; }
       const parsed = checks.parseChapters(picked);
-      if (parsed.length !== 1) { lastErr = new Error(id + ' 段落解析到 ' + parsed.length + ' 章'); continue; }
+      if (parsed.length !== 1) { lastErr = new Error(id + ' 段落解析到 ' + parsed.length + ' 章'); retryWith('解析到 ' + parsed.length + ' 章,只能写 ' + id + ' 这一章'); continue; }
       block = picked;
     }
     if (!block) throw new Error('Step 2 分章失败(' + id + '): ' + (lastErr ? lastErr.message : '未知'));
@@ -591,7 +594,7 @@ async function runGeneration(runId) {
 
   // 断点续跑:沿用已完成的产物,从第一个空缺步骤开始
   const outputs = run.outputs || { step1: '', step2: '', step3: '', step4: '' };
-  if (outputs.step1) ctx.blueprint = outputs.step1;
+  if (outputs.step1) ctx.blueprint = textnorm.normalizeTimeSep(outputs.step1); // 旧蓝图里写成 0:00~1:47 的时间段,续跑时也按 0:00-1:47 用
   if (outputs.step2) ctx.script = outputs.step2;
   if (outputs.step3) ctx.audit = outputs.step3;
   let startStep = 5;
@@ -975,6 +978,7 @@ async function runGeneration(runId) {
       }
 
       const prevRec = run.steps[stepNames[step - 1]] || {};
+      if (step === 1) content = textnorm.normalizeTimeSep(content); // 蓝图 time_range 的 ~ 〜 至 统一成 -,写稿标签照抄也合格
       outputs['step' + step] = content;
       run.steps[stepNames[step - 1]] = {
         status: 'done', secs: Math.round(r.secs * 10) / 10, chars: content.length,

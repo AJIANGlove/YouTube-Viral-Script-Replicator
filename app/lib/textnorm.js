@@ -7,7 +7,7 @@
 // 表现为「该版本无章节时间戳标签,无法强化」「该版本无章节时间戳,无法按 30 秒口径检查」。
 //
 // 本模块是唯一的归一化实现,不 require 任何项目模块(store 会在模块加载期 require 它)。
-// 不做:时间格式改写(如 0:00-0:30 重排)、标签行删除、标签内部空白整理、正文任何改动。
+// 不做:时间格式改写(如 0:00-0:30 重排;只把 ~ 〜 至 这类分隔符换成 -)、标签行删除、标签内部空白整理、正文任何改动。
 // 故意不修(宁可交给严格闸门报错,也不猜):
 //   - 行尾带正文的 "**[CH01 | ...]** 说明文字"(删掉会改正文,无法判断该不该删)
 //   - 行内代码 `[CH01 | ...]`、有序列表 "1. [CH01 | ...]"
@@ -23,9 +23,21 @@ const CLOSE = '(?:[ \\t]*(?:\\*\\*|__))?[ \\t]*';
 // 整行锚定:装饰 + 标签 + 闭合装饰 + 可选 \r(CRLF 保留)
 const TAG_LINE_RE = new RegExp('^' + DECOR + '(' + TAG + ')' + CLOSE + '(\\r?)$', 'gm');
 
+// 时间段分隔符(v1.62):模型偶尔把「0:00-1:47」写成「0:00~1:47」「0:00〜1:47」「0:00 至 1:47」,
+// 下游解析器只认 - – —,整章被判「标签格式不合法」,逐章写稿每次重试都原样失败(实测 [CH01 | 0:00~1:47 | paradox_hook])。
+// 只改两个时间之间的分隔符,别的字一律不动。
+const TIME = '\\d{1,2}:\\d{2}(?::\\d{2})?';
+const ODD_SEP_RE = new RegExp('(' + TIME + ')[ \\t]*(?:~|〜|～|∼|〰|至|到)[ \\t]*(' + TIME + ')', 'g');
+function normalizeTimeSep(text) {
+  if (typeof text !== 'string') return text;
+  return text.replace(ODD_SEP_RE, '$1-$2');
+}
+const TAG_RE = new RegExp(TAG, 'g');
+
 function normalizeChapterTags(text) {
   if (typeof text !== 'string' || text.indexOf('[CH') === -1) return text; // 快路径:绝大多数文本直接返回
-  return text.replace(TAG_LINE_RE, '$1$2');
+  // 标签行里的时间分隔符统一成「-」(只动 [CH… ] 里面,正文不动)
+  return text.replace(TAG_LINE_RE, '$1$2').replace(TAG_RE, t => normalizeTimeSep(t));
 }
 
-module.exports = { normalizeChapterTags };
+module.exports = { normalizeChapterTags, normalizeTimeSep };

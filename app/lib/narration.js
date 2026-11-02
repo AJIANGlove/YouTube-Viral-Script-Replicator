@@ -63,7 +63,7 @@ function rescaleBlueprint(text, wpm) {
   try { bp = JSON.parse(checks.stripFence(text)); } catch (e) { return { text, changed: 0 }; }
   let changed = 0;
   (bp.chapters || []).forEach(c => {
-    const [a, b] = String(c.time_range || '').split(/[-–—]/).map(s => checks.toSec(String(s).trim()));
+    const [a, b] = String(c.time_range || '').split(/[-–—~〜～∼至到]/).map(s => checks.toSec(String(s).trim()));
     if (!(b > a)) return;
     const want = Math.round((b - a) * wpm / 60);
     if (Number(c.word_budget) !== want) { c.word_budget = want; changed++; }
