@@ -659,7 +659,7 @@ const server = http.createServer(async (req, res) => {
 
     // ---------- 先写后改:逐段对照审稿 ----------
     // GET 视图(每次按当前稿子现算);POST status/undo 立即返回;rewrite/fact 等模型返回再响应(单章约 0.5–2 分钟)
-    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact|ignore_block))?$/);
+    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact|ignore_block|apply_fix))?$/);
     if (rvMatch) {
       const [, id, action] = rvMatch;
       try {
@@ -685,6 +685,8 @@ const server = http.createServer(async (req, res) => {
           // 「还不能发布」里没出处的数:人确认不影响 → 不挡发布(on:false 撤回)
           if (action === 'accept_fact') return send(res, 200, review.acceptFact(id, body));
           if (action === 'ignore_block') return send(res, 200, review.setIgnoreBlock(id, body));
+          // 问题旁边「直接应用」:改法里有完整替换句的,程序直接换掉终稿里的原句(不调 AI、不复审);undo:true 撤回
+          if (action === 'apply_fix') return send(res, 200, review.applyFix(id, body));
           // 开头单独审:开头 60 秒逐句 + 中文 + 好在哪 + 风险(后台跑)
           if (action === 'opening') return send(res, 200, review.startOpeningCard(id));
           // 自动改开头(后台跑):只改开头几句,改到听感检查的开头两条过关,最多试 3 次
