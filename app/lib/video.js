@@ -52,7 +52,7 @@ const STAGE_LABELS = {
 // 推送前清洗:必须与前端 index.html 的 cleanScriptText 逐条一致,
 // 否则同一版本文案「下载纯净稿」拿到的正文与推到视频网站的正文不是同一份
 // (历史 52 个有文案的版本里有 18 个不一致:推送多出 ---、## 小标题、整行加粗外壳)。
-// 规则:去 "Optimized Script / Final Script" 标题行、章节标签行([CH..] 会被后端当旁白念)、
+// 规则(v1.68 起另见 stripAnnotations):去 "Optimized Script / Final Script" 标题行、章节标签行([CH..] 会被后端当旁白念)、
 // Markdown 小标题行、分隔线,并剥掉整行加粗外壳。
 // 容错:允许行首 Markdown 装饰(#/>/列表符/加粗)与行尾加粗 —— 存量文案里出现过 **[CH01 | ..]** 形态
 const CH_TAG_LINE = /^[\s#>*+_\-]*\[CH\d+\s*\|\s*\d{1,2}:\d{2}(?::\d{2})?\s*[-–—~]\s*\d{1,2}:\d{2}(?::\d{2})?\s*\|[^\]]*\][\s*_]*$/;
@@ -61,14 +61,67 @@ const SCRIPT_TITLE_LINE = /^\s*(?:optimized script|final script)\b.*$/i;
 const MD_RULE_LINE = /^\s*[-–—*_=]{3,}\s*$/;
 const BOLD_WRAPPED_LINE = /^\s*(?:\*\*|__)(.*?)(?:\*\*|__)\s*$/;
 
+// v1.68 纯净稿去标注:给配音/剪辑看的标注(停顿、转场、音效、画面提示、改稿备注、待核实占位、章节编号、Markdown 符号)
+// 不进纯净稿。正文里的括号(算式、金额、补充说明、年龄等)保留。前端 index.html 有一份逐字相同的副本。
+const ANNO_GROUP = /\([^()\n]*\)|（[^（）\n]*）|\[[^\[\]\n]*\]|【[^【】\n]*】/g;
+const ANNO_KW_LATIN = /^(?:\d+(?:\.\d+)?\s*(?:초|秒|s|secs?|seconds?)\s*)?(?:(?:long|short|brief|dramatic|slight)\s+)?(?:pause|beat|silence|sfx|bgm|music|sound\s*effects?|fade(?:\s*(?:in|out))?|cut(?:\s+to)?|transition|b-?roll|zoom(?:\s*(?:in|out))?|on[-\s]?screen|screen|visuals?|graphics?|caption|subtitles?|overlay|title\s*card|lower\s*third|montage|camera|narrator|voice[-\s]?over|v\.o\.|breath|sighs?|laughs?|laughter|chuckles?|whispers?|end\s*card)(?![A-Za-z])(?=\s*(?:$|[:：,，;；\-–—/]|\d|(?:to|in|out|up|down|on|off|of|for|swells?|fades?|stops?|starts?|builds?|drops?|continues?|ends?)(?![A-Za-z])))/i;
+const ANNO_KW_CJK = /^(?:\d+\s*초\s*)?(?:효과음|음향\s*효과|배경\s*음악|음악|화면|자막|컷|정적|멈춤|침묵|쉼|일시\s*정지|장면\s*전환|전환|내레이션|나레이션|画面|音效|停顿|配乐|背景音乐|音乐|字幕|转场|镜头|旁白|静音|暂停)(?=\s*(?:$|[:：,，;；\-–—/]|\d|(?:전환|정지|시작|끝|아웃|인|페이드|넣기|삽입|표시|등장|on|off|in|out|切换|切入|淡出|淡入|开始|结束)))/i;
+const ANNO_EDIT = /删除|删掉|删去|保留|不变|改写|改为|改成|替换|插入|此句|下一句|上一句|原句|삭제됨|확인\s*필요|TODO|TBD/;
+const ANNO_EXACT = /^(?:空|unchanged|삭제|생략|\.{2,}|…+|[RFL]\d{1,3}(?:\s*[,，、·/]\s*[RFL]\d{1,3})*)$/i;
+const ANNO_CH_REF = /^CH\d+(?:\s*\|.*)?$/;
+const ANNO_LATIN_ONLY = /^[A-Za-z][A-Za-z\s,.'’\-]*$/;
+const ANNO_ACRONYM = /^[A-Z][A-Z&.\-]{0,7}$/;
+
+function scriptLangOf(text) {
+  const count = re => (text.match(re) || []).length;
+  if (count(/[가-힣]/g) >= 50) return 'ko';
+  if (count(/[぀-ヿ]/g) >= 50) return 'ja';
+  if (count(/[一-鿿]/g) >= 200) return 'zh';
+  return 'en';
+}
+
+function isAnnotationGroup(group, lang) {
+  const square = group[0] === '[' || group[0] === '【';
+  const inner = group.slice(1, -1).trim();
+  if (ANNO_CH_REF.test(inner) || ANNO_EXACT.test(inner) || inner === '') return true;
+  if (ANNO_KW_LATIN.test(inner) || ANNO_KW_CJK.test(inner) || ANNO_EDIT.test(inner)) return true;
+  if (lang === 'en') return false;
+  if (square) return true;
+  if (ANNO_LATIN_ONLY.test(inner) && !ANNO_ACRONYM.test(inner)) return true;
+  if (lang === 'ko' && /[一-鿿぀-ヿ]/.test(inner) && !/[가-힣]/.test(inner)) return true;
+  return false;
+}
+
+function stripAnnotations(lines) {
+  const lang = scriptLangOf(lines.join('\n'));
+  const out = [];
+  for (const raw of lines) {
+    let line = raw.replace(/\*\*|__/g, '').replace(/\*(?=\S)([^*\n]+?)\*/g, '$1').replace(/`/g, '');
+    let hit = false;
+    const bare = line.trim();
+    if (/^(?:\[[^\[\]\n]*\]|【[^【】\n]*】)$/.test(bare)) { hit = true; line = ''; }
+    line = line.replace(ANNO_GROUP, g => { if (!isAnnotationGroup(g, lang)) return g; hit = true; return '\u0000'; });
+    if (hit) {
+      line = line
+        .replace(/^[ \t]*(?:\u0000[ \t]*)+/, '')
+        .replace(/[ \t]*(?:\u0000[ \t]*)+(?=[.,!?;:。，、！？；：…)\]」』"'’]|$)/g, '')
+        .replace(/[ \t]*(?:\u0000[ \t]*)+/g, ' ');
+      if (!line.trim()) continue;
+    }
+    out.push(line.replace(/[ \t]+$/, ''));
+  }
+  return out;
+}
+
 function cleanScript(raw) {
   // 换行归一(前端拿到的是浏览器规范化后的 textContent,恒为 \n),保证两边逐字节相同
-  return String(raw || '')
+  const lines = String(raw || '')
     .replace(/\r\n?/g, '\n')
     .split('\n')
     .filter(line => !CH_TAG_LINE.test(line.trim()))
     .filter(line => !MD_HEADING_LINE.test(line) && !SCRIPT_TITLE_LINE.test(line) && !MD_RULE_LINE.test(line))
-    .map(line => line.replace(BOLD_WRAPPED_LINE, '$1'))
+    .map(line => line.replace(BOLD_WRAPPED_LINE, '$1'));
+  return stripAnnotations(lines)
     .join('\n')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
