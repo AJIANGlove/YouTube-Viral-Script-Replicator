@@ -89,7 +89,20 @@ function fillVars(tpl, vars) {
 
 function buildAnalysisPrompt(run, asset) {
   const { vars, card } = frameworkVars(run, asset);
-  return { prompt: fillVars(readPrompt('analysis.md'), vars), track_card_name: card ? card.name : null };
+  const keep = keepNotesText(run, 'analysis');
+  return { prompt: fillVars(readPrompt('analysis.md'), vars) + (keep ? '\n\n' + keep : ''), track_card_name: card ? card.name : null };
+}
+
+// 都套不上、人选了「不改,继续写」(v1.71):框架里写不成立的段落和换法,写前分析、蓝图、写稿、复审都带上
+// 只在 run.keep_notes 存在时出现,其他任务的提示词一字不变
+function keepNotesText(run, mode) {
+  const k = run && run.keep_notes;
+  if (!k || !Array.isArray(k.segments) || !k.segments.length) return '';
+  const lines = k.segments.map(x => '- ' + [x.segment, x.why].filter(Boolean).join(':') + (x.how ? '。换法:' + x.how : ''));
+  const head = mode === 'analysis'
+    ? '【人已决定:不改题目,仍用这个框架写】下面这几段在本题写不成立。不要因为它们判「换框架」:结论按「调整后可写」处理,这几段在 adjustments 里记成「换内容保功能」,用本题真实存在的事实换个讲法完成同一个留存动作;不能为了对上框架硬编一个题目里不存在的东西。'
+    : '【写不成立的段落(人选了「不改题目,仍按这个框架写」)】这几段照原片写会硬编。写的时候换个讲法,如实说明;审稿和复审时逐条检查这几段有没有硬编出题目里不存在的东西(制度、身份、等级、事件),有就算问题。';
+  return head + (k.summary ? '\n为什么写不成立:' + k.summary : '') + '\n' + lines.join('\n');
 }
 
 // 写进 step1–4 的 {{analysis}}:只放写稿需要的部分(论点、标题、事实、取舍、留存地图、钩子)
@@ -134,6 +147,8 @@ function analysisBrief(a, run, trackKey, mode) {
   if (String(pr.who || '').trim()) out.push('主角设定(全稿必须一致;原片主角的身份、性别、亲属称呼、年代一律不许沿用):' + [pr.who, pr.gender, pr.era, pr.place].filter(Boolean).join(' / ') + (pr.mapping ? '。原片→本题:' + pr.mapping : ''));
   const smText = sourceMappingBrief(a);
   if (smText) out.push(smText);
+  const keepText = keepNotesText(run, 'brief');
+  if (keepText) out.push(keepText);
   const th = a.thesis_card || {};
   out.push('论点卡:原有认知=' + (th.viewer_belief || '') + ';真相=' + (th.truth || '') + ';一句话论点=' + (th.one_line_thesis || '') + ';结尾落点=' + (th.ending_landing || '')
     + (th.contrast ? ';反差=' + th.contrast : '') + (th.double_standard && !/^无$/.test(String(th.double_standard).trim()) ? ';同事不同命=' + th.double_standard : '') + (th.boundary ? ';不适用于=' + th.boundary : ''));
@@ -920,7 +935,8 @@ async function runAnalysis(runId) {
         delete run.steps.analysis.stage;
         run.status = 'awaiting_review';
         store.saveRun(run);
-        if (!run.draft_first) require('./reframe').suggest(runId).catch(() => {});
+        // 人从推荐里选过框架:自动换下一个候选(v1.71);否则人工确认模式出推荐(先写后改在 finishDraftFirst 里停住并推荐)
+        if (!require('./reframe').autoNext(runId) && !run.draft_first) require('./reframe').suggest(runId).catch(() => {});
         return;
       }
       run.steps.analysis = { ...run.steps.analysis, stage: '写前分析' };
@@ -967,11 +983,13 @@ async function runAnalysis(runId) {
     run.analysis_raw = r.content;
     run.steps.analysis = { ...run.steps.analysis, status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString() };
     delete run.steps.analysis.stage;
-    fitcheck.logFull(run, run.asset_id, a.verdict);
+    fitcheck.logFull(run, run.asset_id, a.verdict, a.verdict === '换框架' ? a.reframe_reasons : null);
     run.status = 'awaiting_review';
     store.saveRun(run);
     // 人工确认模式判了「换框架」:顺手出框架推荐,人在分析页直接换(先写后改模式在 finishDraftFirst 里停住并推荐)
     // 人已经选了「仍按现在的框架写」(快速判断判了换框架,人坚持用这个框架才做的完整分析)就不再推荐
+    // 人从推荐里选过框架、这个仍判换框架:自动按预判换下一个候选(v1.71),换了或停了都不再出新推荐
+    if (a.verdict === '换框架' && !skipQuick && require('./reframe').autoNext(runId)) return;
     if (!run.draft_first && a.verdict === '换框架' && !skipQuick) require('./reframe').suggest(runId).catch(() => {});
   } catch (e) {
     run.status = 'failed';
@@ -1492,7 +1510,7 @@ async function auditTitle(runId, draft, title) {
   return out;
 }
 
-module.exports = { buildSourceMapping, runSourceMapping, setPovMode, sourceMappingBrief, cleanSourceMapping, POV_RULES, ledgerWriteBack, ledgerProblems, ledgerCheckup, ledgerGaps, ledgerSanity, krMoney, moneyScale, ledgerSayOn, ledgerSay, ledgerSayText, ledgerSayAmounts,
+module.exports = { keepNotesText, buildSourceMapping, runSourceMapping, setPovMode, sourceMappingBrief, cleanSourceMapping, POV_RULES, ledgerWriteBack, ledgerProblems, ledgerCheckup, ledgerGaps, ledgerSanity, krMoney, moneyScale, ledgerSayOn, ledgerSay, ledgerSayText, ledgerSayAmounts,
   loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, HOOK_TYPES, hookType, acceptedGaps, verifyLedger,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,

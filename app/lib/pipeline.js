@@ -360,8 +360,16 @@ function fixBlueprintIds(run, text) {
   if (carried) Object.values(carried).forEach(x => { if (x && map[x.chapter]) x.chapter = map[x.chapter]; });
   return r.text;
 }
+// 蓝图 time_range 规范成「m:ss-m:ss」(v1.71):「0:00-1:02 (62秒)」这种多带时长的改掉,改了记在 steps.blueprint.times_fixed(页面提示)
+function fixBlueprintTimes(run, text) {
+  const r = textnorm.normalizeBlueprintTimes(text);
+  if (!r.fixed) return text;
+  run.steps = run.steps || {};
+  run.steps.blueprint = { ...(run.steps.blueprint || {}), times_fixed: { items: r.fixed.slice(0, 30), at: new Date().toISOString() } };
+  return r.text;
+}
 function chapterTagLine(c) {
-  return '[' + (c.id || '') + ' | ' + textnorm.normalizeTimeSep(String(c.time_range || '')) + ' | ' + (c.function || '') + ']';
+  return '[' + (c.id || '') + ' | ' + textnorm.normalizeTimeRange(textnorm.normalizeTimeSep(String(c.time_range || ''))) + ' | ' + (c.function || '') + ']';
 }
 
 // 从模型输出里截出目标章:只保留该章标签行到下一个标签行之前。
@@ -400,7 +408,7 @@ async function runScriptByChapters(opts) {
     if (segs[id] && segs[id].text) { parts.push(segs[id].text); totalSecs += segs[id].secs || 0; continue; }
     const tagLine = chapterTagLine(c);
     const tail = parts.length ? parts[parts.length - 1].slice(-500) : '';
-    const ahead = chapters.slice(i + 1, i + 3).map(x => '- ' + x.id + ' | ' + x.time_range + ' | ' + x.function).join('\n');
+    const ahead = chapters.slice(i + 1, i + 3).map(x => '- ' + x.id + ' | ' + textnorm.normalizeTimeRange(String(x.time_range || '')) + ' | ' + x.function).join('\n');
     const brief = '\n\n【本次只写 ' + id + ' 一章】\n' +
       '上面是整篇要求;本次只输出第 ' + (i + 1) + '/' + chapters.length + ' 章,禁止输出其它章节。\n' +
       '第一行必须严格是:\n' + tagLine + '\n' +
@@ -609,6 +617,8 @@ async function runGeneration(runId) {
   const outputs = run.outputs || { step1: '', step2: '', step3: '', step4: '' };
   // 旧蓝图章节编号不是 CH01… 的(如 FS01):续跑时按顺序改成 CH01…,不用重做蓝图(v1.66)
   if (outputs.step1) { const fx = fixBlueprintIds(run, outputs.step1); if (fx !== outputs.step1) { outputs.step1 = fx; run.outputs = outputs; store.saveRun(run); } }
+  // 旧蓝图 time_range 多带了时长(如「0:00-1:02 (62秒)」):续跑时规范成 0:00-1:02,不用重做蓝图(v1.71)
+  if (outputs.step1) { const ft = fixBlueprintTimes(run, outputs.step1); if (ft !== outputs.step1) { outputs.step1 = ft; run.outputs = outputs; store.saveRun(run); } }
   if (outputs.step1) ctx.blueprint = textnorm.normalizeTimeSep(outputs.step1); // 旧蓝图里写成 0:00~1:47 的时间段,续跑时也按 0:00-1:47 用
   if (outputs.step2) ctx.script = outputs.step2;
   if (outputs.step3) ctx.audit = outputs.step3;
@@ -841,11 +851,11 @@ async function runGeneration(runId) {
           if (!expectedTag) {
             const c = bpChapters[doneCount];
             if (!c) throw new Error('Step 2 续写失败: 无法确定续写章节标签');
-            expectedTag = '[' + (c.id || '') + ' | ' + (c.time_range || '') + ' | ' + (c.function || '') + ']';
+            expectedTag = chapterTagLine(c);
           }
           const prefix = lastTag ? content.slice(0, lastTag.index).replace(/\s+$/, '') : content;
           const remaining = bpChapters.slice(doneCount).map(c =>
-            '- ' + (c.id || '') + ' | ' + (c.time_range || '') + ' | ' + (c.function || '') + ' | word_budget=' + (c.word_budget || '')
+            '- ' + (c.id || '') + ' | ' + textnorm.normalizeTimeRange(String(c.time_range || '')) + ' | ' + (c.function || '') + ' | word_budget=' + (c.word_budget || '')
           ).join('\n');
           run.steps.script.gate_retry = { reason: 'max_tokens 截断,于 ' + expectedTag + ' 边界续写(第' + contRound + '轮)' };
           store.saveRun(run);
@@ -1016,6 +1026,7 @@ async function runGeneration(runId) {
       const prevRec = run.steps[stepNames[step - 1]] || {};
       if (step === 1) content = textnorm.normalizeTimeSep(content); // 蓝图 time_range 的 ~ 〜 至 统一成 -,写稿标签照抄也合格
       if (step === 1) content = fixBlueprintIds(run, content); // 章节编号不是 CH01… 的按顺序改成 CH01…(v1.66)
+      if (step === 1) content = fixBlueprintTimes(run, content); // time_range 后面多写的时长去掉,规范成 m:ss-m:ss(v1.71)
       outputs['step' + step] = content;
       run.steps[stepNames[step - 1]] = {
         status: 'done', secs: Math.round(r.secs * 10) / 10, chars: content.length,
@@ -1023,6 +1034,7 @@ async function runGeneration(runId) {
         ...(prevRec.gate_retry ? { gate_retry: prevRec.gate_retry } : {}),
         ...(prevRec.tag_normalized ? { tag_normalized: prevRec.tag_normalized } : {}),
         ...(step === 1 && prevRec.ids_fixed ? { ids_fixed: prevRec.ids_fixed } : {}),
+        ...(step === 1 && prevRec.times_fixed ? { times_fixed: prevRec.times_fixed } : {}),
         ...(prevRec.split ? { split: prevRec.split } : {}),
         ...(step === 2 && prevRec.segments ? { segments: prevRec.segments } : {})
       };

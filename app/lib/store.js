@@ -290,6 +290,8 @@ function indexEntry(run) {
   return {
     id: run.id,
     topic: run.topic || '',
+    // 都套不上时改过题目(v1.71):列表悬停看原题目
+    ...(run.original_title ? { original_title: run.original_title } : {}),
     asset_id: run.asset_id || '',
     asset_name: run.asset_name || run.asset_id || '',
     asset_zh: assetTitleZh(run.asset_id),

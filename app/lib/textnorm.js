@@ -34,10 +34,46 @@ function normalizeTimeSep(text) {
 }
 const TAG_RE = new RegExp(TAG, 'g');
 
+// 蓝图 time_range 规范成「m:ss-m:ss」(v1.71):模型偶尔在时间段后面多写时长,
+// 实测「0:00-1:02 (62秒)」被原样拼进写稿要求的标签行,模型照抄,Step 2 每次都「CH01 标签格式不合法」。
+// 只认「时间 分隔符 时间」打头的写法:取出两个时间,用「-」连接,后面多余的括号、时长、文字一律去掉;
+// 找不到两个时间的(如「미할당」)原样返回,交给严格闸门报错,不猜。
+// 时间后面不许紧跟数字:「0:110」这种秒数写坏的不当成「0:11」截掉,原样留给闸门
+const TIME_X = TIME + '(?!\\d)';
+const RANGE_RE = new RegExp('^\\s*(' + TIME_X + ')\\s*(?:-|–|—|~|〜|～|∼|〰|至|到)\\s*(' + TIME_X + ')');
+function normalizeTimeRange(v) {
+  if (typeof v !== 'string') return v;
+  const m = RANGE_RE.exec(v);
+  if (!m) return v;
+  const to = m[1] + '-' + m[2];
+  // 只差空格或 – — 这类下游本来就认的写法(「0:00 - 0:30」「0:00–0:26」):不动,免得改一大批本来就能用的蓝图
+  return v.replace(/\s+/g, '').replace(/[–—]/g, '-') === to ? v : to;
+}
+// 标签里的时间段:「| 0:00-1:02 (62秒) |」→「| 0:00-1:02 |」(时间段本来就干净的不动)
+const TAG_TIME_RE = new RegExp('(\\|[ \\t]*)(' + TIME_X + '[ \\t]*[-–—][ \\t]*' + TIME_X + ')([^|\\]\\r\\n]*?)([ \\t]*\\|)');
+function cleanTagTime(t) {
+  return t.replace(TAG_TIME_RE, (all, a, range, junk, b) => (junk.trim() ? '| ' + normalizeTimeRange(range) + ' |' : all));
+}
+
 function normalizeChapterTags(text) {
   if (typeof text !== 'string' || text.indexOf('[CH') === -1) return text; // 快路径:绝大多数文本直接返回
-  // 标签行里的时间分隔符统一成「-」(只动 [CH… ] 里面,正文不动)
-  return text.replace(TAG_LINE_RE, '$1$2').replace(TAG_RE, t => normalizeTimeSep(t));
+  // 标签行里的时间分隔符统一成「-」,时间段后面多写的时长去掉(只动 [CH… ] 里面,正文不动)
+  return text.replace(TAG_LINE_RE, '$1$2').replace(TAG_RE, t => cleanTagTime(normalizeTimeSep(t)));
+}
+
+// 蓝图里每章的 time_range 规范一遍;返回 { text, fixed }:fixed 为 null 表示没改,改了时 fixed = [{ id, from, to }]
+function normalizeBlueprintTimes(text) {
+  if (typeof text !== 'string' || !text.trim()) return { text, fixed: null };
+  const bp = parseBlueprintJson(text);
+  const chs = bp && Array.isArray(bp.chapters) ? bp.chapters : null;
+  if (!chs) return { text, fixed: null };
+  const fixed = [];
+  chs.forEach(c => {
+    if (!c || typeof c !== 'object' || typeof c.time_range !== 'string') return;
+    const to = normalizeTimeRange(c.time_range);
+    if (to !== c.time_range) { fixed.push({ id: String(c.id || ''), from: c.time_range, to }); c.time_range = to; }
+  });
+  return fixed.length ? { text: JSON.stringify(bp, null, 2), fixed } : { text, fixed: null };
 }
 
 // 蓝图章节编号(v1.66):下游只认 CH01、CH02…(写稿标签、分章截取、各解析器都是 [CHnn |)。
@@ -74,4 +110,4 @@ function normalizeChapterIds(text) {
 // 页面提示用:「FS01–FS14」这种首尾写法
 function idRange(ids) { const xs = (ids || []).map(x => x || '(空)'); return xs.length > 1 ? xs[0] + '–' + xs[xs.length - 1] : (xs[0] || ''); }
 
-module.exports = { normalizeChapterTags, normalizeTimeSep, normalizeChapterIds, idRange };
+module.exports = { normalizeChapterTags, normalizeTimeSep, normalizeTimeRange, normalizeBlueprintTimes, normalizeChapterIds, idRange };

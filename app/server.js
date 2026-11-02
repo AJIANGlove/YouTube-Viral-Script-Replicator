@@ -562,6 +562,8 @@ const server = http.createServer(async (req, res) => {
       // 蓝图章节编号不是 CH01… 的、分章还没写完(还没续跑过):页面提示点续跑会自动改,不落盘(v1.66)。
       // 以前整篇一次写的任务(22 篇蓝图是 FS01…,模型自己写成了 [CH01…])不提示
       try { const fx = r.outputs && r.outputs.step1 && !r.outputs.step2 ? require('./lib/textnorm').normalizeChapterIds(r.outputs.step1).fixed : null; if (fx) r.blueprint_ids_bad = fx; } catch (e) {}
+      // 蓝图 time_range 多带了时长(v1.71):还没续跑的,页面提示点续跑会自动改
+      try { const ft = r.outputs && r.outputs.step1 && !r.outputs.step2 ? require('./lib/textnorm').normalizeBlueprintTimes(r.outputs.step1).fixed : null; if (ft) r.blueprint_times_bad = ft.slice(0, 30); } catch (e) {}
       // 账本念法(瀑布:一项一项减、每步还剩多少;换成每天),按账本现算给前端看,不落盘
       try { if (r.analysis && Array.isArray(r.analysis.ledger) && r.analysis.ledger.length && analysis.ledgerSayOn(r)) { analysis.verifyLedger(r.analysis.ledger); r.ledger_say = analysis.ledgerSay(r.analysis.ledger); } } catch (e) { /* 账本格式不对:前端不显示念法 */ }
       // 听感检查(开头点题、前 10 秒数字、连念数字、语体)按当前稿现算,不落盘
@@ -637,8 +639,13 @@ const server = http.createServer(async (req, res) => {
     if (rfMatch && method === 'POST') {
       const body = await readBody(req);
       const reframe = require('./lib/reframe');
-      if (body.action === 'switch') return send(res, 200, reframe.switchTo(rfMatch[1], String(body.asset_id || '')));
+      // keep:true =「仍按这个框架写」(换回自动试过的某个框架,不判、不推荐,直接完整分析往下走)
+      if (body.action === 'switch') return send(res, 200, reframe.switchTo(rfMatch[1], String(body.asset_id || ''), { keep: !!body.keep }));
       if (body.action === 'ignore') return send(res, 200, reframe.ignore(rfMatch[1]));
+      // 都套不上时的两条路(v1.71):① 改主题(新题目,全自动重新挑框架)② 不改,继续写(用最初的框架,写不成立的段落换个讲法)
+      if (body.action === 'retopic') return send(res, 200, reframe.retopic(rfMatch[1], String(body.title || '')));
+      if (body.action === 'keep_origin') return send(res, 200, reframe.keepOrigin(rfMatch[1]));
+      if (body.action === 'summary') return send(res, 200, reframe.startSummary(rfMatch[1]));
       return send(res, 200, reframe.startSuggest(rfMatch[1]));
     }
 
@@ -760,6 +767,13 @@ const server = http.createServer(async (req, res) => {
     }
 
     // 联网搜索设置(渠道适配器,当前接 DeepSeek):开关、渠道、每个查询取几条;Key 默认用同名渠道的 Key
+    // 换框架自动往下试(v1.71):最多自动试几个(0 = 不自动试,默认 3)
+    if (url === '/api/reframe-settings' && method === 'GET') return send(res, 200, { auto_max: require('./lib/reframe').autoMax() });
+    if (url === '/api/reframe-settings' && method === 'POST') {
+      const body = await readBody(req);
+      try { return send(res, 200, require('./lib/reframe').setAutoMax(body.auto_max)); }
+      catch (e) { return send(res, e.status || 500, { error: e.message }); }
+    }
     if (url === '/api/search-settings' && method === 'GET') {
       return send(res, 200, search.searchStatus());
     }

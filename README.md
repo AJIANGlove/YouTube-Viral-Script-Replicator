@@ -213,6 +213,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `ledger_vs_facts.md` | 账本关键假设对照事实表报道值（标偏差） | 17 |
 | `source_mapping.md` | 原片 → 本地对照表与叙事方式判断 | 39 |
 | `fit_check.md` | 快速适配判断（结构段+必须保留机制，先于完整分析） | 53 |
+| `reframe_summary.md` | 都套不上时的原因汇总与两个选项 | 29 |
 | `adjust.md` | AI 先调整（补待查、改论点、找事实、补标题、主角一致、补真人案例、素材不够自动补搜） | 105 |
 | `adjust_queries.md` | 生成联网搜索查询词 | 21 |
 | `revise.md` | 按人工意见只重做一行 | 29 |
@@ -234,7 +235,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `final_patch.md` | 按复审 OPEN 清单补改终稿 | 59 |
 | `final_patch_diagnose.md` | 补改掉分后找原因、定每题新改法 | 43 |
 | `final_open_options.md` | 复审遗留问题各出 ≥3 种改法并标推荐 | 33 |
-| `reframe_suggest.md` | 写前分析判「换框架」时推荐库内框架 | 30 |
+| `reframe_suggest.md` | 写前分析判「换框架」时推荐库内框架（带结构信息） | 32 |
 | `final_open_extract.md` | 从旧复审报告里抽出 OPEN 待改清单 | 17 |
 | `final_fix_quotes.md` | 原句定位失败时让模型对照原章逐字重抄 | 20 |
 | `foreign_fix.md` | 外文稿混入汉字/假名的整行改写（规则修兜底） | 20 |
@@ -256,7 +257,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 45 份 `.md`（3142 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 50 份，合计 3345 行。
+合计 46 份 `.md`（3171 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 51 份，合计 3374 行。
 
 ### 历史版本
 

@@ -925,6 +925,15 @@
         <span class="hint v12" id="srch-status" style="margin-top:0"></span>
       </div>
     </div>
+    <div class="card" id="reframe-card">
+      <h2>换框架自动往下试</h2>
+      <div class="hint" style="margin-bottom:6px">你从推荐里选了框架,写前分析仍判「换框架」时,程序按预判从这次推荐的候选里自动换下一个(只试预判合适、调整后可写的),通过就接着往下跑。填 0 = 不自动试,每次都停下来让你选。</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <label style="margin:0">最多自动试</label><input type="number" id="rf-auto-max" min="0" max="10" step="1" style="width:80px"><span>个</span>
+        <button class="primary" onclick="saveReframeSettings()">保存</button>
+        <span class="hint" id="rf-auto-status" style="margin-top:0"></span>
+      </div>
+    </div>
     <div class="card">
       <h2>视频生成网站绑定(全局单账号)</h2>
       <div id="video-binding-body" class="bind-state">加载中…</div>
@@ -1811,7 +1820,7 @@ function statusLabel(r) {
   if (r.draft_first && r.status === 'awaiting_review' && verdict === '换框架' && rf.status !== 'ignored') return '待换框架';
   if (r.draft_first && r.status === 'awaiting_review' && ((r.steps || {}).ledger_choice || {}).status === 'waiting') return '待选账本假设';
   // 换了框架、还没开始写稿:重新做写前分析和 AI 调整这段都显示「换框架中」,副标写跑到哪一步
-  if (switched && !r.analysis_confirmed && (r.status === 'analyzing' || (r.draft_first && r.status === 'awaiting_review'))) return '换框架中';
+  if (switched && !r.analysis_confirmed && (r.status === 'analyzing' || (r.draft_first && r.status === 'awaiting_review'))) return Array.isArray(rf.switched) && (rf.switched.slice(-1)[0] || {}).by === 'auto' ? '自动换框架中' : '换框架中';
   if (r.draft_first && r.status === 'awaiting_review') return 'AI 调整中';
   const st = r.steps || {};
   if (r.draft_first && r.status === 'done' && (st.reverse_audit || {}).status === 'done' && !st.final_review) return '待选审稿意见';
@@ -2077,7 +2086,7 @@ function runRowHtml(r) {
   const stepText = r.status === 'running' ? 'Step ' + r.current_step + '/' + steps : (r.status === 'done' ? steps + '/' + steps : '—');
   return `
     <tr class="clickable${marked ? ' viral-row' : ''}" onclick="openRun('${r.id}')">
-      <td>${marked ? viralIcon(true, 'viral-mark') : ''}${esc(r.topic)}${r.topic_zh ? `<span class="sub topic-zh">${esc(r.topic_zh)}</span>` : ''}</td>
+      <td${r.original_title ? ` title="原题目:${escAttr(r.original_title)}"` : ''}>${marked ? viralIcon(true, 'viral-mark') : ''}${esc(r.topic)}${r.original_title ? '<span class="sub">改过题目</span>' : ''}${r.topic_zh ? `<span class="sub topic-zh">${esc(r.topic_zh)}</span>` : ''}</td>
       <td>${esc(r.asset_name || r.asset_id)}${r.asset_zh ? `<span class="sub">源:${esc(r.asset_zh)}</span>` : ''}</td>
       <td style="font-size:12px;color:#4b5563">${audienceCell(r.audience)}</td>
       <td style="font-size:12px;color:#4b5563">${r.channel_name ? esc(r.channel_name) : '<span class="vb-none">—</span>'}</td>
@@ -2223,6 +2232,15 @@ function blueprintIdsNote(r) {
   if (fx) return `<div class="hint" style="color:#047857">ℹ 蓝图章节编号是 ${esc(rng(fx.from.map(x => x || '(空)')))},已自动改成 ${esc(rng(fx.to))}(只改编号,内容不动)。</div>`;
   return '';
 }
+// 蓝图章节时间段多带了时长(v1.71,如「0:00-1:02 (62秒)」):已经自动改了的写一句;还没续跑的提示点续跑会改
+function blueprintTimesNote(r) {
+  const ex = xs => xs.slice(0, 2).map(x => `${esc(x.id)}「${esc(x.from)}」→「${esc(x.to)}」`).join(',') + (xs.length > 2 ? ` 等 ${xs.length} 章` : '');
+  const bad = r.blueprint_times_bad;
+  if (bad && bad.length) return `<div class="hint" style="color:#b45309">⚠ 蓝图章节时间段多写了别的字:${ex(bad)}。写稿要求的标签行只认「0:00-1:02」这种写法,所以分章写不下去。点「续跑此任务」会自动改掉,蓝图不用重做。</div>`;
+  const fx = ((r.steps || {}).blueprint || {}).times_fixed;
+  if (fx && (fx.items || []).length) return `<div class="hint" style="color:#047857">ℹ 蓝图章节时间段多写了别的字:${ex(fx.items)},已自动改成标准写法(只改时间段,内容不动)。</div>`;
+  return '';
+}
 // 蓝图原片残留/等级跳号(v1.69):蓝图保存时程序扫过一遍,命中时已自动让 AI 重写一次
 function blueprintConsNote(r) {
   const c = (r.checks || {}).consistency;
@@ -2237,8 +2255,9 @@ function blueprintConsNote(r) {
 async function loadRunDetail() {
   const r = await api('/api/runs/' + currentRunId);
   document.getElementById('detail-title').textContent = r.topic;
+  document.getElementById('detail-title').title = r.original_title ? '原题目:' + r.original_title + '(点击复制标题)' : '点击复制标题';
   document.getElementById('detail-sub').textContent =
-    `${r.asset_name || r.asset_id} · ${statusLabel(r)}${r.draft_first ? ' · 先写后改' : ''} · 创建于 ${fmtTime(r.created_at)}` +
+    (r.original_title ? `原题目:${r.original_title} · ` : '') + `${r.asset_name || r.asset_id} · ${statusLabel(r)}${r.draft_first ? ' · 先写后改' : ''} · 创建于 ${fmtTime(r.created_at)}` +
     (r.voice_used ? ` · 频道声音:${r.voice_used}` : '') +
     (r.confirmed_version && r.confirmed_version.version ? ` · 确认 ${versionLabel(r.confirmed_version.version)}` : '');
   const stepKeys = ['blueprint', 'script', 'audit', 'optimized'];
@@ -2261,7 +2280,7 @@ async function loadRunDetail() {
     (r.error ? '错误: ' + esc(r.error) : '') +
     (ck.gate_fail && !r.error ? '闸门不合格(Step ' + esc(ck.gate_fail.step) + '):' + esc(ck.gate_fail.reason) : '') +
     (lenWarn.length ? '<div class="hint" style="color:#b45309">⚠ ' + esc(lenWarn.join(';')) + '</div>' : '') +
-    blueprintIdsNote(r) + blueprintConsNote(r) + foreignWarn(r) + listenWarn(r) +
+    blueprintIdsNote(r) + blueprintTimesNote(r) + blueprintConsNote(r) + foreignWarn(r) + listenWarn(r) +
     ((r.status === 'failed' || r.status === 'cancelled')
       ? ' <button class="primary" style="margin-left:8px" onclick="retryRun()">续跑此任务</button>' : '');
 
@@ -4823,7 +4842,7 @@ function anEditorShell() {
   const sel = (path, opts, cur) => `<select class="an-edit-input" data-an-path="${path}" onchange="anSetSelect(this)">` +
     opts.map(v => `<option value="${escAttr(v)}"${v === cur ? ' selected' : ''}>${v === '' ? '未标' : esc(v)}</option>`).join('') + '</select>';
 
-  let html = `<h2>⓪ 写前分析 · 待你确认</h2>${anFitLine(anCurRun || {})}
+  let html = `<h2>⓪ 写前分析 · 待你确认</h2>${anAutoNote(anCurRun || {})}${anFitLine(anCurRun || {})}
   <div class="hint">表格里直接改，改完可以「保存修改」稍后再确认；黄底=估算/待查/缺口，红底=超过 3 年的旧数据。</div>
   <div id="an-errbar" class="an-errbar"></div>
   ${anAiToolbar()}`;
@@ -5053,22 +5072,122 @@ function rfPjBody(p) {
   if ((pj.adjust || []).length) h += `<div class="hint" style="color:#374151"><b>要调的地方</b>:${pj.adjust.map(x => `<div style="margin-left:1em">· ${esc(x)}</div>`).join('')}</div>`;
   return h;
 }
+// 自动往下试(v1.71)的经过:你选的 X 不合适(原因)→ 自动换成 Y → …
+function rfCut(t, n) { t = String(t || ''); return t.length > n ? t.slice(0, n) + '…' : t; }
+function rfAutoHistory(r) {
+  const rf = r.reframe || {}, au = rf.auto;
+  if (!au || (!(au.steps || []).length && !au.stopped)) return '';
+  const nm = x => '「' + esc(x || '') + '」';
+  const why = f => (f.reasons || []).length ? '(原因:' + esc(f.reasons.slice(0, 2).map(x => rfCut(x, 90)).join(';')) + (f.reasons.length > 2 ? ' 等 ' + f.reasons.length + ' 条' : '') + ')' : (f.verdict_reason ? '(' + esc(rfCut(f.verdict_reason, 120)) + ')' : '');
+  const steps = au.steps || [];
+  const lines = steps.map((s, i) => `${i === 0 ? '你选的' : '自动换的'}${nm(s.from.name)}${s.from.quick_only ? '快速判断' : '完整分析'}仍判不合适${why(s.from)} → 自动换成${nm(s.to_name)}(预判:${esc((RF_PJ[s.prejudge] || [])[1] || s.prejudge)},自动第 ${i + 1}/${au.max} 个)`);
+  if (au.stopped && au.last_fail) {
+    const f = au.last_fail;
+    lines.push(`${steps.length ? '自动换的' : '你选的'}${nm(f.name)}${f.quick_only ? '快速判断' : '完整分析'}也判不合适${why(f)}`);
+    lines.push('<b>' + (au.stopped.why === 'max' ? `已经自动试了 ${steps.length} 个(上限 ${au.max} 个,可以在「设置」里改),停下了` : au.stopped.why === 'exhausted' ? (steps.length ? `自动试了 ${steps.length} 个,` : '') + '这次推荐里预判合适的候选都用完了,停下了' : '自动换框架出错,停下了:' + esc(au.stopped.error || '')) + '</b>');
+  } else if (r.status === 'analyzing') {
+    lines.push(`正在对${nm(r.asset_name || r.asset_id)}做完整写前分析…`);
+  } else if (r.analysis && r.analysis.verdict !== '换框架') {
+    lines.push(`<b>${nm(r.asset_name || r.asset_id)}完整分析通过(${esc(r.analysis.verdict)})</b>${r.draft_first ? ',已接着往下跑' : ',等你确认分析'}`);
+  }
+  return `<div class="hint" style="color:#374151;line-height:1.7">${lines.map(l => '· ' + l).join('<br>')}</div>`;
+}
+// 都套不上时(v1.71):两轮推荐都预计不合适,或者自动往下试停下了。
+// 最上面一段醒目的「为什么都套不上」(AI 汇总),只给两个大按钮:① 改主题 ② 不改,继续写;其他(手动选框架、重新推荐、仍按某个写)折叠
+function rfOriginName(r) { const sw = ((r.reframe || {}).switched || [])[0]; return sw ? (sw.from_name || sw.from) : (r.asset_name || r.asset_id); }
+function rfDeadEnd(r) {
+  const rf = r.reframe || {}, au = rf.auto || {}, sm = rf.summary;
+  const tc = (r.topic_changes || []).slice(-1)[0];
+  let h = `<h2 style="color:#b91c1c">为什么都套不上${r.draft_first ? '(已暂停写稿)' : ''}</h2>`;
+  if (tc) h += `<div class="hint">题目已从「${esc(tc.from)}」改成「${esc(tc.to)}」,按新题目重新挑过框架,还是都套不上。</div>`;
+  if (rf.status === 'auto_stopped' && au.stopped) {
+    const tried = [((au.steps || [])[0] || {}).from || au.last_fail].concat((au.steps || []).map(x => ({ name: x.to_name }))).filter(x => x && x.name);
+    h += `<div class="hint" style="color:#374151">已经${au.stopped.why === 'max' ? `自动试满 ${(au.steps || []).length} 个(上限 ${esc(au.max)} 个,可以在「设置」里改)` : au.stopped.why === 'error' ? '自动换框架时出错' : '把这次推荐里预判合适的候选都试过了'},完整分析都判不合适:${tried.map(x => '「' + esc(rfCut(x.name, 24)) + '」').join('、')}。每一步的原因在下面「细节」里。</div>`;
+  }
+  if (sm && sm.text) {
+    h += `<div style="font-size:15px;font-weight:600;line-height:1.8;padding:12px 14px;margin:8px 0;border:2px solid #fca5a5;background:#fef2f2;border-radius:8px;color:#7f1d1d">${esc(sm.text)}</div>
+      <div class="hint" style="color:#374151">判断:<b>问题出在${sm.cause === 'title' ? '题目本身' : '框架库(库里刚好没有合适的)'}</b>${sm.cause_why ? '。' + esc(sm.cause_why) : ''}</div>`;
+  } else if (rf.summary_status === 'failed') {
+    h += `<div class="err-list">原因汇总没出来:${esc(rf.summary_error || '')} <button class="an-btn" onclick="rfAction('summary', this)">重新汇总</button></div>`;
+  } else {
+    h += `<div class="rv-flag"><b>AI 正在汇总为什么都套不上…</b>一般半分钟。下面两个选项现在也能用。</div>`;
+  }
+  const rec = k => sm && sm.cause === k ? ' <span class="rv-chip green">★ 推荐</span>' : '';
+  const topics = (sm && sm.topics) || [];
+  const tips = (sm && sm.keep_tips) || [];
+  const box = 'flex:1 1 340px;border:1px solid #d1d5db;border-radius:8px;padding:10px 12px;background:#fff';
+  h += `<div style="display:flex;gap:12px;flex-wrap:wrap;margin:10px 0">
+    <div style="${box}${sm && sm.cause === 'title' ? ';border-color:#16a34a;background:#f0fdf4' : ''}">
+      <div style="font-size:15px;font-weight:700">① 改主题${rec('title')}</div>
+      ${topics.length ? `<div class="hint" style="color:#374151">AI 建议的题目(选一个,也可以在下面框里改):</div>` + topics.map((t, i) => `<label style="display:block;margin:6px 0;cursor:pointer;font-weight:400"><input type="radio" name="rf-topic-pick" style="width:auto" ${i === 0 ? 'checked' : ''} onchange="document.getElementById('rf-topic').value=this.value" value="${escAttr(t.title)}"> <b>${esc(t.title)}</b><div class="hint" style="margin:2px 0 0 22px">${esc(t.zh)}${t.why ? '。' + esc(t.why) : ''}</div></label>`).join('') : ''}
+      <input type="text" id="rf-topic" style="width:100%;box-sizing:border-box;margin-top:4px" value="${escAttr((topics[0] || {}).title || '')}" placeholder="新题目(${esc(((r.audience || {}).target_language) || '目标语言')})">
+      <div class="rv-ops" style="margin-top:6px"><button class="an-btn v13" style="font-size:14px;padding:6px 18px" onclick="rfRetopic(this)">继续</button></div>
+      <div class="hint">点「继续」后全自动:按新题目重新挑框架、预判、做写前分析,通过就${r.draft_first ? '接着写稿' : '停在分析等你确认'}。还是都不合适就再停一次,不会一直循环。原题目会留在记录里。</div>
+    </div>
+    <div style="${box}${sm && sm.cause === 'library' ? ';border-color:#16a34a;background:#f0fdf4' : ''}">
+      <div style="font-size:15px;font-weight:700">② 不改,继续写${rec('library')}</div>
+      <div class="hint" style="color:#374151">用你最初选的「${esc(rfOriginName(r))}」写。${tips.length ? '这几段写不成立,写稿时换个讲法,不硬编:' : '写不成立的段落交给写稿时换个讲法,不硬编。'}</div>
+      ${tips.map(t => `<div class="hint" style="color:#374151;margin-left:1em">· ${t.segment ? '<b>' + esc(t.segment) + '</b>:' : ''}${esc(t.how || t.why)}</div>`).join('')}
+      <div class="rv-ops" style="margin-top:6px"><button class="an-btn" style="font-size:14px;padding:6px 18px" onclick="rfKeepOrigin(this)">不改,继续写</button></div>
+      <div class="hint">之前判了换框架还照写的 11 篇,二稿平均 67 分,其他平均 72 分。</div>
+    </div></div>`;
+  // 细节:原来的原因、自动试的经过
+  const reasons = rf.reasons || (r.analysis || {}).reframe_reasons || [];
+  const cands = rf.candidates || [];
+  const hist = rfAutoHistory(r);
+  h += `<details style="margin:6px 0"><summary style="cursor:pointer;font-size:13px">细节:每个框架为什么不行</summary>
+    ${hist}${reasons.length ? `<div class="hint"><b>「${esc(r.asset_name || r.asset_id)}」</b>:</div>` + reasons.map((x, i) => `<div class="hint">${i + 1}. ${esc(x)}</div>`).join('') : ''}
+    ${(rf.pool || []).map(p => `<div class="hint" style="color:#374151">${esc(p.name)} ${rfPjChip(p.prejudge)}${((p.prejudge || {}).verdict_reason) ? '<br><span style="margin-left:1em">' + esc((p.prejudge || {}).verdict_reason) + '</span>' : ''}</div>`).join('')}
+    ${cands.length ? `<div class="hint">共预判 ${cands.length} 个候选${rf.rounds > 1 ? '(两轮)' : ''}。</div>` : ''}${rf.topic_note ? `<div class="hint">题目建议:${esc(rf.topic_note)}</div>` : ''}</details>`;
+  // 其他:手动选框架、重新推荐、仍按自动试过的某个写
+  const tried = new Set((rf.tried || []).concat([r.asset_id]));
+  const rest = (rf.pool || []).filter(p => !tried.has(p.asset_id));
+  const chain = [];
+  [au.user_pick].concat((au.steps || []).map(x => x.to)).forEach(id => { if (id && id !== r.asset_id && !chain.includes(id)) chain.push(id); });
+  const nameOf = id => id === au.user_pick ? au.user_pick_name : ((au.steps || []).find(x => x.to === id) || {}).to_name || id;
+  h += `<details style="margin:6px 0"><summary style="cursor:pointer;font-size:13px">其他:手动选框架</summary>
+    ${rest.map(p => `<div class="hint" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;color:#374151">${esc(p.name)} ${rfPjChip(p.prejudge)}
+      <button class="an-btn" style="padding:1px 8px" onclick="rfSwitch('${escAttr(p.asset_id)}', this)">换成这个</button><button class="an-btn" style="padding:1px 8px" onclick="openAssetDetail('${escAttr(p.asset_id)}')">详情</button></div>`).join('') || '<div class="hint">这次推荐的候选都试过了。</div>'}
+    <div class="rv-ops" style="margin-top:6px"><button class="an-btn" onclick="rfAction('suggest', this)">重新推荐框架</button>
+      ${r.asset_id !== (((rf.switched || [])[0] || {}).from || r.asset_id) ? `<button class="an-btn" onclick="rfIgnore(this)">仍按现在的「${esc(r.asset_name || r.asset_id)}」写</button>` : ''}
+      ${chain.map(id => `<button class="an-btn" onclick="rfKeep('${escAttr(id)}', this)">换回「${esc(nameOf(id))}」并按它写</button>`).join('')}</div></details>`;
+  return h;
+}
+async function rfRetopic(btn) {
+  const t = ((document.getElementById('rf-topic') || {}).value || '').trim();
+  if (!t) { alert('先选一个题目,或者在框里写新题目'); return; }
+  if (confirm('把题目改成「' + t + '」,按新题目重新挑框架?原题目会留在记录里。')) rfAction('retopic', btn, { title: t });
+}
+function rfKeepOrigin(btn) {
+  if (confirm('不改题目,用最初选的「' + rfOriginName(lastRunDetail || {}) + '」继续写?写不成立的段落会交给写稿时换个讲法。之前判了换框架还照写的 11 篇,二稿平均 67 分,其他平均 72 分。')) rfAction('keep_origin', btn);
+}
 let rfRenderedKey = null;
 function renderReframePanel(r) {
   const el = document.getElementById('rf-panel');
   const rf = r.reframe || {};
   const show = r.analysis && r.analysis.verdict === '换框架' && !r.analysis_confirmed && r.status === 'awaiting_review' && rf.status !== 'ignored';
   const switched = (rf.switched || []).slice(-1)[0];
-  if (!show && !(switched && !r.analysis_confirmed && ['analyzing', 'awaiting_review'].includes(r.status))) { el.classList.add('hidden'); rfRenderedKey = null; return; }
+  const tc = (r.topic_changes || []).slice(-1)[0];
+  if (!show && !((switched || tc || r.keep_notes) && !r.analysis_confirmed && ['analyzing', 'awaiting_review'].includes(r.status))) { el.classList.add('hidden'); rfRenderedKey = null; return; }
   const key = JSON.stringify([r.id, r.status, rf, (r.analysis || {}).verdict, ((r.steps || {}).analysis || {}).stage]);
   if (key === rfRenderedKey) return;
   rfRenderedKey = key;
   el.classList.remove('hidden');
   if (!show) {
-    const pjT = switched.prejudge ? '(推荐时预判:' + ((RF_PJ[switched.prejudge] || [])[1] || switched.prejudge) + ',不再重新判断)' : '';
-    el.innerHTML = `<h2>换框架</h2><div class="hint">已从「${esc(switched.from_name || switched.from)}」换成「${esc(r.asset_name || r.asset_id)}」${esc(pjT)},${r.status === 'analyzing' ? '正在重新做写前分析…' : '写前分析已重新做完。'}</div>`;
+    const parts = [];
+    // 改了题目(v1.71):重新挑框架的进度
+    if (tc) parts.push(`<div class="hint" style="color:#374151">题目已从「${esc(tc.from)}」改成「${esc(tc.to)}」${rf.status === 'suggesting' ? `,<b>正在按新题目重新挑框架${rf.stage ? '(' + esc(rf.stage) + ')' : ''}…</b>` : '。'}</div>`);
+    if (r.keep_notes) parts.push(`<div class="hint" style="color:#374151">你选了「不改,继续写」:用「${esc(r.asset_name || r.asset_id)}」写,写不成立的 ${r.keep_notes.segments.length} 段交给写稿时换个讲法。${r.status === 'analyzing' ? '正在做写前分析…' : ''}</div>`);
+    const hist = rfAutoHistory(r);
+    if (hist) parts.push(hist);
+    else if (switched && !r.keep_notes && (!tc || switched.at > tc.at)) {
+      const pjT = switched.prejudge ? '(推荐时预判:' + ((RF_PJ[switched.prejudge] || [])[1] || switched.prejudge) + ',不再重新判断)' : '';
+      parts.push(`<div class="hint">已从「${esc(switched.from_name || switched.from)}」换成「${esc(r.asset_name || r.asset_id)}」${esc(pjT)},${r.status === 'analyzing' ? '正在重新做写前分析…' : '写前分析已重新做完。'}</div>`);
+    } else if (tc && rf.status !== 'suggesting' && r.status === 'analyzing') parts.push(`<div class="hint">按新题目选了「${esc(r.asset_name || r.asset_id)}」,正在做写前分析…</div>`);
+    el.innerHTML = `<h2>${tc ? '改主题' : hist ? '自动换框架' : '换框架'}</h2>` + parts.join('');
     return;
   }
+  if (rf.status === 'auto_stopped' || (rf.status === 'done' && rf.none_fit)) { el.innerHTML = rfDeadEnd(r); return; }
   const quick = !!r.analysis.quick_only;
   const fq = r.fit_quick || r.analysis.fit_quick || {};
   const reasons = (rf.reasons || r.analysis.reframe_reasons || []);
@@ -5109,13 +5228,15 @@ async function rfAction(action, btn, extra) {
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 600);
 }
 function rfSwitch(id, btn) {
-  const p = (((lastRunDetail || {}).reframe || {}).picks || []).find(x => x.asset_id === id) || {};
+  const rf0 = (lastRunDetail || {}).reframe || {};
+  const p = (rf0.picks || []).find(x => x.asset_id === id) || (rf0.pool || []).find(x => x.asset_id === id) || {};
   const pj = p.prejudge || {};
   const msg = pj.verdict === '换框架'
     ? '预判这个框架也套不上这个题目。仍要换成它?会跳过快速判断,直接做完整写前分析(1.5–6 分钟)。'
     : '换成这个框架,重新做写前分析?' + (pj.verdict ? '(推荐时已经预判过,不再重新判断)' : '');
   if (confirm(msg)) rfAction('switch', btn, { asset_id: id });
 }
+function rfKeep(id, btn) { if (confirm('换回这个框架并仍按它写?它之前判过不合适。会不再判断、直接重新做完整写前分析(1.5–6 分钟)' + (((lastRunDetail || {}).draft_first) ? ',然后接着写稿。' : ',再等你确认。'))) rfAction('switch', btn, { asset_id: id, keep: true }); }
 function rfIgnore(btn) {
   const quick = !!(((lastRunDetail || {}).analysis) || {}).quick_only;
   if (confirm('不换框架,仍按现在的框架写?' + (quick ? '快速判断说套不上,会先做一次完整写前分析(1.5–6 分钟),' + ((lastRunDetail || {}).draft_first ? '然后接着写稿。' : '再等你确认。') : '分析判定套不上。') + '之前判了换框架还照写的 11 篇,二稿平均 67 分,其他平均 72 分。')) rfAction('ignore', btn);
@@ -5145,6 +5266,19 @@ function stepJump(k) {
 }
 
 // 快速适配判断的结论和耗时(v1.70);做完完整分析后并排写完整分析的结论,两者不一样时标出来
+// 自动换框架的经过(v1.71):写前分析通过后换框架卡片就收起了,分析页上留一份
+function anAutoNote(r) {
+  const au = ((r && r.reframe) || {}).auto;
+  const auto = (!au || !(au.steps || []).length || !r.analysis || r.analysis.verdict === '换框架') ? '' : `<div class="rv-flag" style="margin:6px 0"><b>换框架经过</b>${rfAutoHistory(r)}</div>`;
+  return auto + anKeepNote(r);
+}
+// 选了「不改,继续写」(v1.71):开始写稿后换框架区块会收起,这里一直写着哪几段写不成立、要换讲法
+function anKeepNote(r) {
+  const k = r && r.keep_notes;
+  if (!k || !(k.segments || []).length) return '';
+  const li = k.segments.map(x => `<li>${x.segment ? '<b>' + esc(x.segment) + '</b>:' : ''}${esc(x.why || '')}${x.how ? ' → <b>换成:</b>' + esc(x.how) : ''}</li>`).join('');
+  return `<div class="rv-flag" style="margin:6px 0"><b>你选了「不改,继续写」</b>:仍用这个框架,下面 ${k.segments.length} 段写不成立。写前分析、蓝图、写稿和复审都会要求这几段换个讲法,不硬编。<ul style="margin:4px 0 0 18px">${li}</ul></div>`;
+}
 function anFitLine(r) {
   const fq = (r && (r.fit_quick || ((r.analysis || {}).fit_quick))) || null;
   const fs = ((r && r.steps) || {}).fit_quick || {};
@@ -5196,7 +5330,7 @@ function renderAnalysisPanel(r) {
   if (r.analysis_confirmed) {
     if (key === anRenderedKey) return;
     anRenderedKey = key;
-    el.innerHTML = `<details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>⓪ 写前分析(已确认${r.analysis_edited ? ',人工改过' : ''} · ${fmtTime(r.analysis_confirmed_at)})</b></summary>${anFitLine(r)}${analysisHtml(r.analysis, r.materials || '', r.ledger_say)}</details>`;
+    el.innerHTML = `${anAutoNote(r)}<details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>⓪ 写前分析(已确认${r.analysis_edited ? ',人工改过' : ''} · ${fmtTime(r.analysis_confirmed_at)})</b></summary>${anFitLine(r)}${analysisHtml(r.analysis, r.materials || '', r.ledger_say)}</details>`;
     return;
   }
   if (r.draft_first) {
@@ -5206,7 +5340,7 @@ function renderAnalysisPanel(r) {
     if (key === anRenderedKey) return;
     anRenderedKey = key;
     anEdit = null;
-    el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">先写后改模式:${statusLabel(r) === '待换框架' ? '分析判定「换框架」,等你在上面选框架。' : statusLabel(r) === '待选账本假设' ? '账本假设和报道的数差很多,等你在上面选按哪个数算。' : r.status === 'awaiting_review' ? 'AI 正在自动调整事实、账本与留存取舍,完成后直接写稿,无需确认。' : '由 AI 自动分析与调整,无需人工确认。'}</div>${anFitLine(r)}
+    el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">先写后改模式:${statusLabel(r) === '待换框架' ? '分析判定「换框架」,等你在上面选框架。' : statusLabel(r) === '待选账本假设' ? '账本假设和报道的数差很多,等你在上面选按哪个数算。' : r.status === 'awaiting_review' ? 'AI 正在自动调整事实、账本与留存取舍,完成后直接写稿,无需确认。' : '由 AI 自动分析与调整,无需人工确认。'}</div>${anAutoNote(r)}${anFitLine(r)}
       <details${anOpen ? ' open' : ''} ontoggle="anOpen=this.open"><summary style="cursor:pointer"><b>查看 AI 的分析与调整(只读)</b></summary>${analysisHtml(r.analysis, r.materials || '', r.ledger_say)}</details>`;
     return;
   }
@@ -6825,8 +6959,20 @@ async function testSearch() {
   } catch (e) { st.textContent = '搜索失败:' + e.message; }
 }
 
+async function loadReframeSettings() {
+  try { const r = await api('/api/reframe-settings'); document.getElementById('rf-auto-max').value = r.auto_max; }
+  catch (e) { document.getElementById('rf-auto-status').textContent = '读取失败:' + e.message; }
+}
+async function saveReframeSettings() {
+  const st = document.getElementById('rf-auto-status');
+  try {
+    const r = await api('/api/reframe-settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ auto_max: Number(document.getElementById('rf-auto-max').value) }) });
+    st.textContent = r.auto_max ? '已保存:最多自动试 ' + r.auto_max + ' 个(下次你从推荐里选框架时生效)' : '已保存:不自动试';
+  } catch (e) { st.textContent = '保存失败:' + e.message; }
+}
 async function loadSettings() {
   loadSearchSettings();
+  loadReframeSettings();
   await loadVideoBinding(); // 视频网站绑定状态与会话有效性由此刷新
   const cfg = await api('/api/settings');
   settingsCache = cfg;

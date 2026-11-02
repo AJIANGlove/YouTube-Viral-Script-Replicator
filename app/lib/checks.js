@@ -209,7 +209,7 @@ function checkBlueprint(text, tools, videoGoal) {
   try {
     const bp = JSON.parse(stripFence(text));
     const last = (bp.chapters || [])[(bp.chapters || []).length - 1];
-    const lastEnd = last && last.time_range ? last.time_range.split(/[-–—~〜～∼至到]/).pop().trim() : null;
+    const lastEnd = last && last.time_range ? require('./textnorm').normalizeTimeRange(String(last.time_range)).split(/[-–—~〜～∼至到]/).pop().trim() : null;
     const goal = goalSeconds(videoGoal);
     if (!lastEnd || !goal) result.duration = { ok: null, detail: '未校验(末章时间或 video_goal 无法解析)' };
     else {

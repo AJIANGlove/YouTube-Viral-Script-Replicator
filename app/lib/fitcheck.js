@@ -136,14 +136,17 @@ function assertFull(run) {
 
 // 记录每次快速判断和完整分析的结论(run.fit_log),以后统计两者一致率。by: quick=写前分析前跑的 / prejudge=推荐时的预判
 function logQuick(run, fit, by) {
-  run.fit_log = arr(run.fit_log).concat([{ asset_id: fit.asset_id, quick: { verdict: fit.verdict, secs: fit.secs, by, at: fit.at } }]).slice(-60);
+  const reasons = fit.verdict === '换框架' ? (fit.reframe_reasons.length ? fit.reframe_reasons : fit.blocking.map(b => (b.segment ? b.segment + ':' : '') + b.why)).slice(0, 5) : [];
+  run.fit_log = arr(run.fit_log).concat([{ asset_id: fit.asset_id, quick: { verdict: fit.verdict, secs: fit.secs, by, at: fit.at, ...(reasons.length ? { reasons } : {}) } }]).slice(-60);
 }
-function logFull(run, assetId, verdict) {
+// reasons:完整分析判换框架时的原因(v1.71 自动往下试要写清每一次为什么不行),最多 5 条
+function logFull(run, assetId, verdict, reasons) {
+  const full = { verdict, at: new Date().toISOString(), ...(arr(reasons).length ? { reasons: arr(reasons).map(x => String(x).slice(0, 200)).slice(0, 5) } : {}) };
   const log = arr(run.fit_log);
   for (let i = log.length - 1; i >= 0; i--) {
-    if (log[i].asset_id === assetId && !log[i].full) { log[i] = { ...log[i], full: { verdict, at: new Date().toISOString() } }; run.fit_log = log; return; }
+    if (log[i].asset_id === assetId && !log[i].full) { log[i] = { ...log[i], full }; run.fit_log = log; return; }
   }
-  run.fit_log = log.concat([{ asset_id: assetId, full: { verdict, at: new Date().toISOString() } }]).slice(-60);
+  run.fit_log = log.concat([{ asset_id: assetId, full }]).slice(-60);
 }
 
 module.exports = { VERDICTS, rank, frameworkBrief, structureBrief, fixedSegments, topicVars, buildPrompt, fitOk, cleanFit, quickFit, stubAnalysis, isQuickOnly, assertFull, logQuick, logFull };
