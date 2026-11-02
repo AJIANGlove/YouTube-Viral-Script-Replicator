@@ -163,3 +163,12 @@
 
 - **列宽**：主题 15%→17%、框架 12%→11%，`min-width` 1260→1300。
 
+## 资产详情弹窗（2026-11-02 新增，本地功能，纯只读）
+
+资料库「框架资产库」与第 1 步「选择框架资产」的卡片各有一个「详情」入口（`assetCard` 共用渲染，一次改动两处生效），打开资产详情弹窗，五个 tab 展示四层资产 + 留存卡，**不加编辑、不改资产文件**。
+
+- **接口**：`GET /api/assets/:id` 由「仅 meta」扩展为 `{ id, meta, framework, timeline, style, examples, retention_cards }`（后五层解析成 JSON 对象，缺失/损坏为 null）。`source.srt` 不进首包，仍走既有的 `/api/assets/:id/source`（source.html 原文对照页在用）。
+- **前端**：`#asset-modal`（复用 `.modal-mask` 体系，`.ad-box` 加宽到 1080），状态 `adState` + `adCache`（按 id 缓存）；`openAssetDetail(id)` / `closeAssetDetail()` / `adTab(t)` / `adExFilter(t)`。五个 tab：框架（概览→核心引擎→标题契约→受众→故事引擎→结构段卡→留存机制→情绪曲线→迁移规则）、时间轴（纯 SVG：段带 + 高峰气泡(大小=强度) + 悬念开合线(虚线=未闭合、嵌套在第二行) + 留存事件刻度 + Hook 窗口琥珀带，悬停原生 title 出详情；下方段时间列表 + 节奏规则）、风格（人格/语气条/句长实测或低质量说明/节奏/语言模式/禁用）、样本（类型 chip 单选筛选 + 原文引文块 + 中文四行说明）、留存卡（7 项全展示，可删性 pill：不可删蓝/可并入琥珀/可删灰）。
+- **约定**：全部类名 `ad-` 前缀；红色只表失败/危险（弹窗内不用）；样本原文保持源语言、说明中文；`adState` 为常驻 state，开新弹窗时整体重置（不同资产不串数据，参考 or-panel 残留修复的教训）。
+- **验证方法**：`node tools/.work/test_asset_detail.js`（从 index.html 抽 ad* 模块喂真实资产做渲染冒烟：无 undefined/NaN、SVG 有图形、筛选工作、空数据降级 ad-empty）。改弹窗渲染后应重跑。
+

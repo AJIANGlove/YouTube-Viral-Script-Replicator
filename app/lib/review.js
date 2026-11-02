@@ -17,6 +17,7 @@ const { HEDGE_RE } = require('./compliance');
 const pl = () => require('./pipeline');
 const an = () => require('./analysis');
 const search = require('./search');
+const consistency = require('./consistency');
 
 const PROMPTS_DIR = path.join(__dirname, '..', 'prompts');
 const readPrompt = f => fs.readFileSync(path.join(PROMPTS_DIR, f), 'utf-8');
@@ -353,6 +354,7 @@ function buildView(run, asset) {
       thesis_note: (a.thesis_check || {}).note || ''
     }
   };
+  out.summary.consistency = consistencyView(run, rows, out.track_default);
   const lastRc = out.final ? arr(out.final.rechecks).slice(-1)[0] : null;
   out.summary.thesis_resolved = lastRc && lastRc.thesis ? lastRc.thesis : null;
   out.summary.publish = publishCheck(run, out);
@@ -465,7 +467,7 @@ const ledgerLine = x => x.id + ' ' + x.item + '(账本写 ' + x.amount + ',按 '
 // 平均分到 PUBLISH_AVG:复审剩下的关键/结构问题、数字密的句子只提示不挡,只要开头过关(人定的标准,之后按真实发布数据再调)
 const PUBLISH_AVG = 8;
 // 人点了「忽略」的挡发布项(按 key:hard_open、ledger、claim、listen_open…;没出处的数走 accepted_facts)
-const IGNORABLE = ['hard_open', 'ledger', 'thesis', 'claim', 'listen_open', 'listen_dense', 'listen_register', 'listen_other'];
+const IGNORABLE = ['hard_open', 'ledger', 'thesis', 'claim', 'listen_open', 'listen_dense', 'listen_register', 'listen_other', 'residue', 'pov', 'weak_claims'];
 function ignoredBlocks(run) { return new Set(arr((run.review || {}).ignored_blocks).filter(k => IGNORABLE.includes(k))); }
 // 复审问题属于哪一项:提到挡发布的没出处事实 → fact:F05;账本 → ledger;开头/前几秒 → listen_open;一口气念数字 → listen_dense;语体 → listen_register;其他 → hard_open
 function openBlockKey(x, factIds) {
@@ -473,6 +475,9 @@ function openBlockKey(x, factIds) {
   const f = arr(factIds).find(id => new RegExp('(^|[^A-Za-z0-9])' + id + '(?!\\d)').test(t));
   if (f) return 'fact:' + f;
   if (/账本|(^|[^A-Za-z])L\d+[a-z]?(?![a-z\d])/.test(t)) return 'ledger';
+  if (/原片残留|原片专属|原片那个国家/.test(t)) return 'residue';
+  if (/第二人称|당신|叙事方式|等级编号|跳号|主角做不到/.test(t)) return 'pov';
+  if (/核验 ?F\d+|没出处的说法|事实核验判 ?[CDE]/.test(t)) return 'weak_claims';
   if (/开头|前 ?\d+ ?秒/.test(t)) return 'listen_open';
   if (/一口气念|数字太密/.test(t)) return 'listen_dense';
   if (/语体|书面语/.test(t)) return 'listen_register';
@@ -489,6 +494,76 @@ function setIgnoreBlock(runId, body) {
   run.review.ignored_blocks = [...set];
   store.saveRun(run);
   return { ok: true, ignored: run.review.ignored_blocks };
+}
+// 原片残留 / 人物连贯 / 没出处的说法(v1.69):按当前稿子现算,带中文对照
+function consistencyView(run, rows, trackKey) {
+  const state = run.review || {};
+  const cs = consistency.scan(run, rows.map(r => ({ id: r.id, text: r.text })), trackKey);
+  const accepted = new Set(arr(state.accepted_claims));
+  const sm = (run.analysis || {}).source_mapping || null;
+  const reached = new Set(cs.levels.levels.map(l => l.n));
+  return {
+    ...cs,
+    // 主角做不到的等级:稿子里真写到了这一级才算
+    unreachable: cs.unreachable.filter(l => reached.has(Number(l.n))),
+    residue: cs.residue.map(h => ({ ...h, zh: zhOf(state, h.text) })),
+    weak: cs.weak.map(w => ({ ...w, accepted: accepted.has(w.id), zh_claim: hasForeign(w.claim) ? zhOf(state, w.claim) : '', zh_finding: hasForeign(w.finding) ? zhOf(state, w.finding) : '', uses: w.uses.map(u => ({ ...u, zh: zhOf(state, u.text) })) })),
+    mapping: sm ? { pov_mode: sm.pov_mode || '', pov_mode_by: sm.pov_mode_by || '', pov_basis: sm.pov_basis || '', same_context: !!sm.same_context, levels: arr(sm.levels), items: arr(sm.items), extra_residue: arr(sm.extra_residue), at: sm.at || '' } : null,
+    step: (run.steps || {}).source_mapping || null,
+    pov_modes: consistency.POV_MODES
+  };
+}
+// 挡发布的几项:原片残留、人物连贯(POV)、没出处的说法;每项一句话
+function consistencyBlocks(cs) {
+  const out = [];
+  if (!cs) return out;
+  if (cs.residue.length) out.push({ key: 'residue', text: '原片残留:' + cs.residue.length + ' 句用了原片的说法(' + [...new Set(cs.residue.flatMap(h => h.words))].slice(0, 6).join('、') + ')' });
+  if (cs.pov_on) {
+    const t = [];
+    if (cs.no_you.runs.length) t.push(cs.no_you.runs.map(r => r[0] + (r.length > 1 ? '–' + r[r.length - 1] : '')).join('、') + ' 连续 ' + Math.max(...cs.no_you.runs.map(r => r.length)) + ' 章没有「你」');
+    if (cs.levels.missing.length) t.push('等级缺第 ' + cs.levels.missing.join('、') + ' 级');
+    if (cs.unreachable.length) t.push(cs.unreachable.map(l => '第 ' + l.n + ' 级「' + l.local + '」主角做不到').join(';'));
+    if (t.length) out.push({ key: 'pov', text: '人物连贯:' + t.join(';') });
+  }
+  const weak = cs.weak.filter(w => !w.accepted);
+  if (weak.length) out.push({ key: 'weak_claims', text: '没出处的说法:' + weak.length + ' 条事实核验没核实的说法还在当论点用(核验 ' + weak.map(w => w.id).join('、') + ')' });
+  return out;
+}
+// 「AI 改一轮」要改的:原片残留、没有「你」的章、跳号、主角做不到的等级、没出处的说法
+function consistencyOpen(run, cs, ign) {
+  const out = [];
+  if (!cs) return out;
+  if (!ign.has('residue')) cs.residue.forEach(h => out.push({ level: '关键', chapter: h.ch,
+    problem: '原片残留:「' + h.text + '」里的「' + h.words.join('」「') + '」是原片' + (h.source ? '(' + h.source + ')' : '') + '那个国家、时代才有的说法,本题里不存在',
+    suggestion: h.local && !/^删掉$/.test(h.local) ? '换成本地说法「' + h.local + '」(写前分析的原片对照表),句子要自然;是比喻的话换成本题场景里的比喻,不要硬塞对照表的词' : '删掉这句,或改成本题真实存在的说法' }));
+  if (cs.pov_on && !ign.has('pov')) {
+    const mode = cs.pov_mode;
+    cs.no_you.runs.forEach(r => out.push({ level: '关键', chapter: r.join('/'),
+      problem: r[0] + '–' + r[r.length - 1] + ' 连续 ' + r.length + ' 章没有第二人称「당신」,变成了第三人称讲解,代入断了',
+      suggestion: '这几章每章至少用一两句把「당신」放回场景里(你在哪、你看到什么、这对你意味着什么)' + (mode === 'per_level' ? ';每一级开头明说「这次你是…」' : mode === 'climb' ? ';交代你是怎么从上一级来到这里的' : '') + ';不要整章重写,不要改数字' }));
+    if (cs.levels.missing.length) out.push({ level: '关键', chapter: '',
+      problem: '等级编号跳号:稿子里有第 ' + cs.levels.levels.map(l => l.n).join('、') + ' 级,缺第 ' + cs.levels.missing.join('、') + ' 级',
+      suggestion: '讲分岔、讲案例的章不占等级号;把后面的等级号连续改过来(包括总结章里的编号),或者按写前分析的等级表补上缺的那一级' });
+    cs.unreachable.forEach(l => out.push({ level: '关键', chapter: (cs.levels.levels.find(x => x.n === Number(l.n)) || {}).ch || '',
+      problem: '第 ' + l.n + ' 级「' + l.local + '」主角做不到' + (l.why ? '(' + l.why + ')' : ''),
+      suggestion: '这一级换成主角做得到的,或者改成「你」在旁边看着的视角,不要让主角当上去' }));
+  }
+  if (!ign.has('weak_claims')) cs.weak.filter(w => !w.accepted).forEach(w => out.push({ level: '关键', chapter: [...new Set(w.uses.map(u => u.ch))].join('/'),
+    problem: '事实核验判 ' + w.grade + ' 的说法还在当论点用(核验 ' + w.id + ':' + w.claim + ';核验结论:' + (w.finding || '没有核实') + '):' + w.uses.map(u => '「' + u.text + '」').join(' '),
+    suggestion: '删掉,或改成核验结论支持的说法' + (w.fix ? '(' + w.fix + ')' : '') + ';不要换成别的没出处的说法,前后由它推出的结论一起改' }));
+  return out;
+}
+function acceptClaim(runId, body) {
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  const id = String((body || {}).id || '');
+  if (!arr(((run.review || {}).factcheck || {}).items).some(i => i.id === id)) throw Object.assign(new Error('找不到核验 ' + id), { status: 400 });
+  run.review = run.review || {};
+  const set = new Set(arr(run.review.accepted_claims));
+  if (body.on === false) set.delete(id); else set.add(id);
+  run.review.accepted_claims = [...set];
+  store.saveRun(run);
+  return { ok: true, accepted: run.review.accepted_claims };
 }
 function publishCheck(run, v) {
   const s = v.summary, reasons = [], notes = [];
@@ -520,6 +595,7 @@ function publishCheck(run, v) {
   // 反转被推翻:看最近一轮复审对终稿的判断;复审判定已解决就不再挡
   const th = last && last.thesis;
   if (arr(s.thesis_contradicts).length && !(th && th.resolved)) blk('thesis', '反转被事实推翻' + (th ? '(复审判定未解决:' + th.note + ')' : '(终审复审还没判断)'));
+  consistencyBlocks(s.consistency).forEach(b => blk(b.key, b.text));
   const lc = checks.listenCheck(checks.extractFinalScript(currentScript(run)), {
     wpm: require('./narration').narrationWpm(run, null).wpm, title: ((run.analysis || {}).title || {}).final_title || run.topic, lang: (run.audience || {}).target_language });
   // 论点核对:主张被稿子自己的数字推翻、账本关键错误,不管平均几分都挡(改过稿还没重新核对的,按上次结果算)
@@ -566,7 +642,7 @@ function publishCheck(run, v) {
       else { reasons.unshift(t); blocks.unshift({ key: 'hard_open', text: t }); }
     }
   }
-  const prog = v.final ? programOpen(run, s.red_fact_uses) : [];
+  const prog = v.final ? programOpen(run, s.red_fact_uses, s.consistency) : [];
   return { ready: !reasons.length, ignored, item_groups, ignored_of, reasons, blocks, notes, can_autofix: !!reasons.length && !!v.final && ((avg != null && avg < PUBLISH_AVG) || prog.length > 0), program_open: prog.map(x => x.problem), craft_hints: v.final ? craftHints(run, last) : [], avg: avg != null ? Math.round(avg * 10) / 10 : null, good, opening_bad: ign.has('listen_open') ? [] : openBad, fix: (run.steps || {}).opening_fix || null,
     manual_after: v.final ? manualAfterRecheck((run.review || {}).final) : 0,
     accepted_facts: [...accepted], claim: cc ? { ...cc, only_ok: claimBlocking(cc) && !(cc.verdict === '不成立' && !claimVerdictApplied(cc)) && !arr(cc.issues).some(x => x.level === '关键' && claimReal(x) && !claimLooksOk(x)), verdict_applied: cc.verdict === '不成立' && claimVerdictApplied(cc), issues: arr(cc.issues).map(x => {
@@ -593,7 +669,9 @@ function getView(runId) {
   if (!currentScript(run)) throw Object.assign(new Error('稿子还没写好'), { status: 400 });
   const v = buildView(run, asset);
   // 挡发布的没出处事实还没有中文:后台补翻一次,页面轮询时就能看到
-  const miss = arr(v.summary.red_fact_uses).some(x => (hasForeign(x.content) && !x.zh) || x.uses.some(u => !u.zh));
+  const cs = v.summary.consistency || {};
+  const miss = arr(v.summary.red_fact_uses).some(x => (hasForeign(x.content) && !x.zh) || x.uses.some(u => !u.zh))
+    || arr(cs.residue).some(h => !h.zh) || arr(cs.weak).some(w => (hasForeign(w.claim) && !w.zh_claim) || (hasForeign(w.finding) && !w.zh_finding) || w.uses.some(u => !u.zh));
   if (miss && !v.translating && Date.now() - (zhKick.get(runId) || 0) > 300000) { zhKick.set(runId, Date.now()); translateFactBlocks(runId, v).catch(() => {}); }
   return v;
 }
@@ -603,7 +681,9 @@ async function translateFactBlocks(runId, v) {
   const run = store.getRun(runId);
   if (!run || !cfg || !cfg.api_key) return;
   const have = ((run.review || {}).zh || {}).byHash || {};
-  const texts = [...new Set(arr(v.summary.red_fact_uses).flatMap(x => [hasForeign(x.content) ? x.content : '', ...x.uses.map(u => u.text)]))].filter(t => t && !have[hash(t)]);
+  const cs = v.summary.consistency || {};
+  const texts = [...new Set(arr(v.summary.red_fact_uses).flatMap(x => [hasForeign(x.content) ? x.content : '', ...x.uses.map(u => u.text)])
+    .concat(arr(cs.residue).map(h => h.text), arr(cs.weak).flatMap(w => [hasForeign(w.claim) ? w.claim : '', hasForeign(w.finding) ? w.finding : '', ...w.uses.map(u => u.text)])))].filter(t => t && !have[hash(t)]);
   if (!texts.length) return;
   const tr = await translateTexts(run, cfg, texts, '中文对照·没出处的数');
   const fresh = store.getRun(runId) || run;
@@ -2792,7 +2872,7 @@ function publishBlocks(runId) {
 // 不再自动补改的原因;空字符串 = 可以再改一轮
 // 程序查出、会挡发布、但 AI 复审不一定列出来的问题:稿子里用了账本算错的数;平均没到 8 分时前 2 分钟里一句连念 3 个以上数字。
 // 自动补改时当成复审问题(编号 P01…)一起改
-function programOpen(run, rfu) {
+function programOpen(run, rfu, cs) {
   const out = [];
   if (!(run.review || {}).final) return out;
   const ign = ignoredBlocks(run);
@@ -2804,6 +2884,7 @@ function programOpen(run, rfu) {
       problem: '稿子里用了没有出处的数(事实 ' + x.id + ':' + x.content + ',' + x.why + ')' + (x.uses.length ? ':' + x.uses.map(u => '「' + u.text + '」').join(' ') : ''),
       suggestion: '把这些句子删掉,或改成不带这个数字的说法(只说方向、比较或常识);不许换成别的没出处的数字;前后由它推出的结论一起改,删完上下文要接得上' }));
   } catch (e) {}
+  try { consistencyOpen(run, cs || getView(run.id).summary.consistency, ign).forEach(x => out.push(x)); } catch (e) {}
   const avg = finalAvg(run);
   if (avg != null && avg < PUBLISH_AVG && !ign.has('listen_dense')) {
     const lc = checks.listenCheck(checks.extractFinalScript(currentScript(run)), { wpm: require('./narration').narrationWpm(run, null).wpm, lang: (run.audience || {}).target_language });
@@ -3924,4 +4005,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { confirmOk, claimLooksOk, suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

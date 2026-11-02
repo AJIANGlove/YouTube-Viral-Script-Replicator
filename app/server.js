@@ -315,7 +315,15 @@ const server = http.createServer(async (req, res) => {
     const assetMatch = url.match(/^\/api\/assets\/([\w-]+)$/);
     if (assetMatch && method === 'GET') {
       const a = store.getAsset(assetMatch[1]);
-      return a ? send(res, 200, { id: a.id, meta: a.meta }) : send(res, 404, { error: '资产不存在' });
+      if (!a) return send(res, 404, { error: '资产不存在' });
+      // 资产详情弹窗用:四层 JSON + 留存卡解析后随 meta 一起返回;source.srt 仍走 /source 按需加载
+      const parseJson = s => { try { return s ? JSON.parse(s) : null; } catch (e) { return null; } };
+      return send(res, 200, {
+        id: a.id, meta: a.meta,
+        framework: parseJson(a.framework), timeline: parseJson(a.timeline),
+        style: parseJson(a.style), examples: parseJson(a.examples),
+        retention_cards: parseJson(a.retention_cards)
+      });
     }
     if (assetMatch && method === 'DELETE') {
       store.deleteAsset(assetMatch[1]);
@@ -583,6 +591,8 @@ const server = http.createServer(async (req, res) => {
         const shapeErr = analysis.analysisShapeError(body.analysis);
         if (shapeErr) return send(res, 400, { error: '分析结果不合格: ' + shapeErr });
         if (r.analysis && !r.analysis_original) r.analysis_original = analysis.cloneJson(r.analysis);
+        // 对照表/叙事方式只由程序和「叙事方式」下拉框改,页面上的旧副本不覆盖它(v1.69)
+        if (r.analysis && r.analysis.source_mapping) body.analysis.source_mapping = r.analysis.source_mapping;
         r.analysis = body.analysis;
         r.analysis_edited = true;
       }
@@ -612,6 +622,7 @@ const server = http.createServer(async (req, res) => {
       const shapeErr = analysis.analysisShapeError(body.analysis);
       if (shapeErr) return send(res, 400, { error: '分析结果不合格: ' + shapeErr });
       if (r.analysis && !r.analysis_original) r.analysis_original = analysis.cloneJson(r.analysis);
+      if (r.analysis && r.analysis.source_mapping) body.analysis.source_mapping = r.analysis.source_mapping;
       r.analysis = body.analysis;
       r.analysis_edited = true;
       r.analysis_saved_at = new Date().toISOString();
@@ -662,7 +673,7 @@ const server = http.createServer(async (req, res) => {
 
     // ---------- 先写后改:逐段对照审稿 ----------
     // GET 视图(每次按当前稿子现算);POST status/undo 立即返回;rewrite/fact 等模型返回再响应(单章约 0.5–2 分钟)
-    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact|ignore_block|apply_fix|suggest_fix|confirm_ok))?$/);
+    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact|accept_claim|ignore_block|apply_fix|suggest_fix|confirm_ok|source_mapping|pov_mode))?$/);
     if (rvMatch) {
       const [, id, action] = rvMatch;
       try {
@@ -688,6 +699,11 @@ const server = http.createServer(async (req, res) => {
           // 「还不能发布」里没出处的数:人确认不影响 → 不挡发布(on:false 撤回)
           if (action === 'accept_fact') return send(res, 200, review.acceptFact(id, body));
           if (action === 'ignore_block') return send(res, 200, review.setIgnoreBlock(id, body));
+          // 「没出处的说法」里的一条:人确认不影响 → 不挡发布(on:false 撤回)
+          if (action === 'accept_claim') return send(res, 200, review.acceptClaim(id, body));
+          // 原片对照表 + 叙事方式(v1.69):旧任务补生成 / 重新生成(后台跑,只调一次 AI,不动稿子);人改叙事方式
+          if (action === 'source_mapping') return send(res, 200, await analysis.runSourceMapping(id));
+          if (action === 'pov_mode') return send(res, 200, analysis.setPovMode(id, String(body.mode || '')));
           // 问题旁边「直接应用」:改法里有完整替换句的,程序直接换掉终稿里的原句(不调 AI、不复审);undo:true 撤回
           if (action === 'apply_fix') return send(res, 200, review.applyFix(id, body));
           // 论点核对里 AI 自己结论没问题的条目:人点「确认没问题」→ 不挡发布(undo:true 撤回)

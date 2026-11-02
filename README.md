@@ -211,13 +211,14 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `analysis.md` | 写前分析（题目与框架匹配、论点卡、事实表、主角设定、写法规则接入、表格来源写法、经济题利润行写法、真人案例、账本假设对照报道值） | 133 |
 | `ledger_fix.md` | 账本体检后 AI 修账本一轮（只填原始数与公式，含补漏成本） | 37 |
 | `ledger_vs_facts.md` | 账本关键假设对照事实表报道值（标偏差） | 17 |
+| `source_mapping.md` | 原片 → 本地对照表与叙事方式判断 | 39 |
 | `adjust.md` | AI 先调整（补待查、改论点、找事实、补标题、主角一致、补真人案例、素材不够自动补搜） | 105 |
 | `adjust_queries.md` | 生成联网搜索查询词 | 21 |
 | `revise.md` | 按人工意见只重做一行 | 29 |
 | `title_audit.md` | 自写标题审核 | 26 |
-| `step1.md` | Blueprint 生成（问题链 + 新角度 + 事实只用一次，编号一律 CH） | 100 |
+| `step1.md` | Blueprint 生成（问题链 + 新角度 + 事实只用一次，编号一律 CH，含对照表与叙事方式） | 102 |
 | `apply_suggest.md` | 单条问题出可替换改法（原句逐字+中文意思） | 32 |
-| `step2.md` | 脚本施工（含每章问题链与新角度要求） | 53 |
+| `step2.md` | 脚本施工（含每章问题链与新角度要求、对照表） | 58 |
 | `step3.md` | 质量审核 | 72 |
 | `step4.md` | 终稿优化 | 58 |
 | `step5.md` | 开头逐句仿写（强化开头） | 27 |
@@ -226,10 +227,10 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `fact_audit.md` | 事实审计（拆主张、标风险、给搜索词） | 51 |
 | `fact_verify.md` | 联网核验（按证据定级 A–E，必改或收窄） | 54 |
 | `reverse_audit.md` | 二稿逆向工程审稿报告（九部分 + 逐条预估加分） | 523 |
-| `final_audit.md` | 终审①独立审稿（七维评分 + P0–P3 清单，含论点自检） | 226 |
+| `final_audit.md` | 终审①独立审稿（七维评分 + P0–P3 清单，含论点自检、人物身份一致） | 229 |
 | `final_revise.md` | 终审②按诊断修改（逐处原句→改成+理由） | 88 |
-| `final_recheck.md` | 终审③独立复审（评分对照，未达标补改一轮，含论点自检、原地打转与假设交代检查） | 82 |
-| `final_patch.md` | 按复审 OPEN 清单补改终稿 | 58 |
+| `final_recheck.md` | 终审③独立复审（评分对照，未达标补改一轮，含论点自检、原地打转、假设交代与人物一致） | 85 |
+| `final_patch.md` | 按复审 OPEN 清单补改终稿 | 59 |
 | `final_patch_diagnose.md` | 补改掉分后找原因、定每题新改法 | 43 |
 | `final_open_options.md` | 复审遗留问题各出 ≥3 种改法并标推荐 | 33 |
 | `reframe_suggest.md` | 写前分析判「换框架」时推荐库内框架 | 30 |
@@ -250,11 +251,11 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `opening_retention_check.md` | 开头留存检查 | 126 |
 | `opening_card.md` | 开头单独审（前 60 秒逐句 + 硬指标 + 掉人点） | 31 |
 | `opening_fix.md` | 自动改开头（只动前 30 秒、不许改长/编数字，最多 3 次） | 41 |
-| `claim_check.md` | 论点核对（账本锁数 + 账外的数 + 验算一致性 + 直接应用改法写法） | 45 |
+| `claim_check.md` | 论点核对（账本锁数 + 账外的数 + 验算一致性 + 直接应用改法写法 + 换算与基准数核对） | 47 |
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 43 份 `.md`（3032 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 48 份，合计 3235 行。
+合计 44 份 `.md`（3087 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 49 份，合计 3290 行。
 
 ### 历史版本
 

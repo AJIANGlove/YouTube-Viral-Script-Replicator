@@ -101,6 +101,29 @@ function hookType(t) {
   const s = String(t || '').replace(/[①-⑩\d.、\s]/g, '');
   return HOOK_TYPES.find(h => s.includes(h)) || s;
 }
+// 写进写前分析摘要(蓝图、写稿、审稿、复审都读它):对照表 + 叙事方式 + 等级
+const POV_RULES = {
+  climb: '同一个人往上爬:全片是同一个「你」。每一级开头交代你是怎么从上一级上来的(钱从哪来、身份怎么变、靠什么机会),写清这时你大概几岁、手里有什么;上一章刚说做不到的事,下一章不能直接写成已经做到。',
+  per_level: '每一级换一个人:每一级都是重新开始。每章开头明说「这次你生在…/如果你是…」,不能写成接着上一章的经历(不能出现上一章说不可能、这一章已经做到却不交代的情况),也不要交代怎么从上一级爬上来。',
+  none: ''
+};
+function sourceMappingBrief(a) {
+  const sm = a && a.source_mapping;
+  if (!sm) return '';
+  const out = [];
+  const mode = sm.pov_mode;
+  if (mode && mode !== 'none') {
+    out.push('叙事方式(按原片判断' + (sm.pov_mode_by === 'user' ? ',人确认过' : '') + ',不许改成另一种,也不许两种混写):' + POV_RULES[mode] + (sm.pov_basis ? '(依据:' + sm.pov_basis + ')' : '') +
+      '\n不管哪种:每一章都要有第二人称「你」(韩文 당신),不能写到后半篇变成第三人称讲解;等级从第 1 级连续编号,不跳号,讲案例、讲分岔的章不占等级号;每一级都必须是标题里的主角在本题设定下有可能做到的。');
+    const lv = (Array.isArray(sm.levels) ? sm.levels : []).filter(l => l && l.local);
+    if (lv.length) out.push('等级(按原片顺序;本题用右边的说法):\n' + lv.map(l => '- 第 ' + l.n + ' 级:' + (l.source ? l.source + ' → ' : '') + l.local + (l.reachable === false ? '(主角做不到' + (l.why ? ':' + l.why : '') + ';这一级要换成主角做得到的,或者删掉、改成旁观视角)' : '')).join('\n'));
+  }
+  const items = (Array.isArray(sm.items) ? sm.items : []).filter(x => x && x.source);
+  if (!sm.same_context && items.length) out.push('原片 → 本地对照表(原片的头衔、建筑、器物、制度、文化梗只属于原片那个国家和时代,蓝图和稿子里一律用右边的本地说法,写「删掉」的不写;不许照抄原片说法,也不许直译——程序会按「不许出现」里的词扫描,出现就挡发布):\n' +
+    items.map(x => '- ' + x.source + (x.kind ? '(' + x.kind + ')' : '') + ' → ' + (x.local || '删掉') + (x.residue && x.residue.length ? ';不许出现:' + x.residue.join('、') : '')).join('\n') +
+    ((sm.extra_residue || []).length ? '\n- 其他不许照抄的原片说法:' + sm.extra_residue.join('、') : ''));
+  return out.join('\n\n');
+}
 // mode='review':审稿、复审、补改用,写法规则只作参考,不按它扣分、不列为问题(不因此多出自动补改)
 function analysisBrief(a, run, trackKey, mode) {
   if (!a) return '(无写前分析,按原流程执行)';
@@ -109,6 +132,8 @@ function analysisBrief(a, run, trackKey, mode) {
   out.push('标题:' + (t.final_title || '') + (t.viewer_question ? '(观众想知道:' + t.viewer_question + ';期待方向:' + (t.expected_answer_direction || '') + ')' : ''));
   const pr = a.protagonist || {};
   if (String(pr.who || '').trim()) out.push('主角设定(全稿必须一致;原片主角的身份、性别、亲属称呼、年代一律不许沿用):' + [pr.who, pr.gender, pr.era, pr.place].filter(Boolean).join(' / ') + (pr.mapping ? '。原片→本题:' + pr.mapping : ''));
+  const smText = sourceMappingBrief(a);
+  if (smText) out.push(smText);
   const th = a.thesis_card || {};
   out.push('论点卡:原有认知=' + (th.viewer_belief || '') + ';真相=' + (th.truth || '') + ';一句话论点=' + (th.one_line_thesis || '') + ';结尾落点=' + (th.ending_landing || '')
     + (th.contrast ? ';反差=' + th.contrast : '') + (th.double_standard && !/^无$/.test(String(th.double_standard).trim()) ? ';同事不同命=' + th.double_standard : '') + (th.boundary ? ';不适用于=' + th.boundary : ''));
@@ -757,6 +782,87 @@ async function callWithLog(run, cfg, messages, label, opts) {
   }
 }
 
+// ---------- 原片 → 本地对照表 + 叙事方式(v1.69) ----------
+// 实测 run_cb26dc06a1f8:英格兰原片「农民→骑士→男爵→伯爵→王冠」被一级对一级换成朝鲜女性,稿子里留下城堡、王冠、
+// 「奇幻作品」、untitled 直译成「무작위」;第 8 级是国王(女主角做不到)。写前分析结束时单独问一次(写稿前就要有),
+// 旧任务可以在审稿页点按钮补一次。失败不挡写前分析,只记下错误
+const SOURCE_TEXT_MAX = 9000;
+function sourceTextBrief(asset) {
+  try {
+    const segs = require('./review').sourceSegments(asset);
+    let left = SOURCE_TEXT_MAX;
+    return segs.map(s => {
+      const t = String(s.text || '').slice(0, Math.max(0, Math.min(900, left)));
+      left -= t.length;
+      return '- ' + s.stage_id + ' ' + (s.function || '') + ':' + (t || '(无字幕)');
+    }).join('\n') || '(没有原片字幕)';
+  } catch (e) { return '(没有原片字幕)'; }
+}
+function sourceMappingOk(out) { return out && typeof out === 'object' && !Array.isArray(out) && typeof out.pov_mode === 'string' && Array.isArray(out.items); }
+function cleanSourceMapping(out) {
+  const list = v => (Array.isArray(v) ? v : []);
+  const str = v => String(v == null ? '' : v).trim();
+  const mode = ['climb', 'per_level', 'none'].includes(out.pov_mode) ? out.pov_mode : 'none';
+  return {
+    at: new Date().toISOString(), by: 'ai',
+    pov_mode: mode, pov_basis: str(out.pov_basis),
+    levels: list(out.levels).filter(l => l && typeof l === 'object').map((l, i) => ({ n: Number(l.n) || i + 1, source: str(l.source), local: str(l.local), reachable: l.reachable !== false, why: str(l.why) })).slice(0, 15),
+    same_context: out.same_context === true,
+    items: list(out.items).filter(x => x && typeof x === 'object' && str(x.source)).map(x => ({ source: str(x.source), kind: str(x.kind), local: str(x.local), residue: list(x.residue).map(str).filter(Boolean).slice(0, 12) })).slice(0, 40),
+    extra_residue: list(out.extra_residue).map(str).filter(Boolean).slice(0, 30)
+  };
+}
+async function buildSourceMapping(run, cfg, asset, a) {
+  const { vars } = frameworkVars(run, asset);
+  const t = (a && a.title) || {};
+  const prompt = fillVars(readPrompt('source_mapping.md'), {
+    ...vars, final_title: t.final_title || run.topic, protagonist: JSON.stringify((a && a.protagonist) || {}), source_text: sourceTextBrief(asset)
+  });
+  const out = await callJson(run, cfg, prompt, '原片对照表', sourceMappingOk);
+  return cleanSourceMapping(out);
+}
+// 审稿页「生成原片对照表」(旧任务没有)/ 重新生成:只调这一次,不动稿子
+const mappingBusy = new Set();
+async function runSourceMapping(runId) {
+  const pipeline = require('./pipeline');
+  const cfg = pipeline.loadConfig();
+  const run = store.getRun(runId);
+  if (!run || !run.analysis) throw Object.assign(new Error('这篇没有写前分析,没法生成对照表'), { status: 400 });
+  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
+  const asset = store.getAsset(run.asset_id);
+  if (!asset) throw Object.assign(new Error('资产不存在: ' + run.asset_id), { status: 400 });
+  if (mappingBusy.has(runId)) return { ok: true, running: true };
+  mappingBusy.add(runId);
+  const set = patch => { const f = store.getRun(runId); if (!f) return; f.steps = { ...(f.steps || {}), source_mapping: { ...((f.steps || {}).source_mapping || {}), ...patch } }; store.saveRun(f); return f; };
+  set({ status: 'running', started_at: new Date().toISOString(), error: '' });
+  (async () => {
+    try {
+      const sm = await buildSourceMapping(run, cfg, asset, run.analysis);
+      const f = store.getRun(runId);
+      const old = (f.analysis || {}).source_mapping;
+      // 人改过的叙事方式保留
+      if (old && old.pov_mode_by === 'user') { sm.pov_mode = old.pov_mode; sm.pov_mode_by = 'user'; }
+      f.analysis = { ...(f.analysis || {}), source_mapping: sm };
+      if (run.attempts) f.attempts = (store.getRun(runId) || run).attempts;
+      store.saveRun(f);
+      set({ status: 'done', finished_at: new Date().toISOString() });
+    } catch (e) {
+      set({ status: 'failed', error: e.message });
+    } finally { mappingBusy.delete(runId); }
+  })();
+  return { ok: true, started: true };
+}
+// 人改叙事方式(分析页、审稿页的下拉框)
+function setPovMode(runId, mode) {
+  const run = store.getRun(runId);
+  if (!run || !run.analysis) throw Object.assign(new Error('这篇没有写前分析'), { status: 400 });
+  if (!['climb', 'per_level', 'none'].includes(mode)) throw Object.assign(new Error('叙事方式只能是 climb / per_level / none'), { status: 400 });
+  const sm = run.analysis.source_mapping || { at: new Date().toISOString(), by: 'user', levels: [], same_context: true, items: [], extra_residue: [], pov_basis: '' };
+  run.analysis.source_mapping = { ...sm, pov_mode: mode, pov_mode_by: 'user' };
+  store.saveRun(run);
+  return { ok: true, pov_mode: mode };
+}
+
 // ---------- B②–⑧:写前分析 ----------
 async function runAnalysis(runId) {
   const pipeline = require('./pipeline');
@@ -802,6 +908,15 @@ async function runAnalysis(runId) {
     const pf = ledgerWriteBack(a);
     if (pf.length) a.ledger_checkup = { at: new Date().toISOString(), program_fixed: pf, problems: ledgerProblems(a, run, pf).map(p => p.text) };
     a.ledger_check = verifyLedger(a.ledger);
+    // 原片 → 本地对照表 + 叙事方式(v1.69):写稿前就要有;失败不挡分析,审稿页可以补
+    try {
+      run.steps.analysis = { ...run.steps.analysis, stage: '原片对照表' };
+      store.saveRun(run);
+      a.source_mapping = await buildSourceMapping(run, cfg, asset, a);
+      run.steps.source_mapping = { status: 'done', finished_at: new Date().toISOString() };
+    } catch (e) {
+      run.steps.source_mapping = { status: 'failed', error: e.message };
+    }
     run.analysis = a;
     run.analysis_raw = r.content;
     run.steps.analysis = { ...run.steps.analysis, status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString() };
@@ -1253,6 +1368,7 @@ async function runAutoAdjust(runId, draft, opts) {
   if (fresh.analysis && !fresh.analysis_original) fresh.analysis_original = cloneJson(fresh.analysis);
   // 撤销点取盘上最后一版(用户等待期间若保存过,撤销回到他保存的那版,而不是请求开始时的旧草稿)
   fresh.analysis_before_adjust = cloneJson(fresh.analysis || base);
+  if (fresh.analysis && fresh.analysis.source_mapping) a.source_mapping = fresh.analysis.source_mapping; // 调整期间人改过叙事方式,以盘上为准
   fresh.analysis = a;
   fresh.analysis_edited = true;
   fresh.analysis_ai_adjusted = true;
@@ -1326,7 +1442,7 @@ async function auditTitle(runId, draft, title) {
   return out;
 }
 
-module.exports = { ledgerWriteBack, ledgerProblems, ledgerCheckup, ledgerGaps, ledgerSanity, krMoney, moneyScale, ledgerSayOn, ledgerSay, ledgerSayText, ledgerSayAmounts,
+module.exports = { buildSourceMapping, runSourceMapping, setPovMode, sourceMappingBrief, cleanSourceMapping, POV_RULES, ledgerWriteBack, ledgerProblems, ledgerCheckup, ledgerGaps, ledgerSanity, krMoney, moneyScale, ledgerSayOn, ledgerSay, ledgerSayText, ledgerSayAmounts,
   loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, HOOK_TYPES, hookType, acceptedGaps, verifyLedger,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,

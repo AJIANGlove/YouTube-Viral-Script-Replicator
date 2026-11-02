@@ -744,6 +744,27 @@ async function runGeneration(runId) {
         }
         run.checks.first_payoff = { sec: payoff, max: FIRST_PAYOFF_MAX, ok: payoff == null ? null : payoff <= FIRST_PAYOFF_MAX };
 
+        // 原片残留 + 等级跳号(v1.69):写前分析有「原片 → 本地对照表」时扫蓝图,命中就打回一次;
+        // 改完时长坏了或命中没变少就保留原版,结果记在 run.checks.consistency 交人看(审稿页还会再扫稿子)
+        if (run.analysis && run.analysis.source_mapping) {
+          const consistency = require('./consistency');
+          let cs = consistency.scanBlueprint(run, content);
+          const bad = x => x.residue.length + x.levels.missing.length;
+          if (bad(cs)) {
+            const why = consistency.blueprintFeedback(run, cs);
+            run.steps.blueprint.gate_retry = { reason: '原片残留/等级: ' + why, attempt: 1 };
+            store.saveRun(run);
+            messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: why + '。总时长和其余要求不变,重新输出完整 JSON(禁止代码围栏)。' }];
+            const r2 = await callLlm(messages, 'Step 1 原片残留重试');
+            const c2 = checks.stripFence(r2.content.trim());
+            const g2 = checks.checkBlueprint(c2, tools, (run.audience || {}).video_goal);
+            const cs2 = consistency.scanBlueprint(run, c2);
+            if (g2.duration.ok !== false && bad(cs2) < bad(cs)) { r = r2; content = c2; gate = g2; cs = { ...cs2, retried: true }; }
+            else cs = { ...cs, retried: true, kept: true };
+          }
+          run.checks.consistency = cs;
+        }
+
         run.checks.progression = checks.checkProgression(content);
 
         // 词数预算按配音语速重算:模型照原片字幕语速算的预算会把稿子写长

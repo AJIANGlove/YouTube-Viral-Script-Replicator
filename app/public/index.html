@@ -483,6 +483,47 @@
   .notice.info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
   .modal-loading { font-size: 12px; color: #2563eb; }
 
+  /* ---------- 资产详情弹窗(纯只读) ---------- */
+  .modal-box.ad-box { max-width: 1080px; }
+  .modal-body.ad-body { max-height: 78vh; padding: 0 0 16px; }
+  .ad-meta { padding: 10px 18px 0; font-size: 12px; color: #6b7280; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+  .ad-tabs { display: flex; gap: 6px; padding: 10px 18px 0; border-bottom: 1px solid #e5e7eb; flex-wrap: wrap; }
+  .ad-tab { border: 1px solid #d1d5db; background: #fff; color: #4b5563; font-size: 12.5px; padding: 5px 14px; border-radius: 999px; cursor: pointer; margin-bottom: 10px; }
+  .ad-tab:hover { border-color: #93c5fd; color: #1d4ed8; }
+  .ad-tab.on { background: #1d4ed8; border-color: #1d4ed8; color: #fff; font-weight: 600; }
+  .ad-pane { padding: 14px 18px 0; }
+  .ad-sec { margin-bottom: 18px; }
+  .ad-sec-t { font-size: 13px; font-weight: 700; color: #111827; margin-bottom: 8px; padding-left: 8px; border-left: 3px solid #1d4ed8; }
+  .ad-pill { display: inline-block; font-size: 11px; padding: 2px 9px; border-radius: 999px; background: #f3f4f6; color: #4b5563; margin: 0 5px 5px 0; border: 1px solid #e5e7eb; }
+  .ad-pill.blue { background: #dbeafe; color: #1d4ed8; border-color: #bfdbfe; }
+  .ad-pill.amber { background: #fef3c7; color: #b45309; border-color: #fde68a; }
+  .ad-pill.green { background: #d1fae5; color: #047857; border-color: #a7f3d0; }
+  .ad-stage { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; background: #fff; }
+  .ad-stage-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+  .ad-stage-id { font-family: Consolas, "Courier New", monospace; font-size: 11px; color: #9ca3af; }
+  .ad-fn { font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+  .ad-purpose { font-size: 13px; line-height: 1.65; color: #1f2937; margin: 4px 0; }
+  .ad-sub { font-size: 12px; color: #6b7280; line-height: 1.7; margin: 3px 0; }
+  .ad-sub b { color: #4b5563; font-weight: 600; }
+  .ad-src { background: #f8fafc; border-left: 3px solid #93c5fd; border-radius: 0 6px 6px 0; padding: 8px 12px; font-size: 13.5px; line-height: 1.7; color: #1f2937; margin: 8px 0 6px; }
+  .ad-tl-wrap { overflow-x: auto; padding: 2px 0; }
+  .ad-tl-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 11.5px; color: #6b7280; margin: 8px 0 4px; }
+  .ad-tl-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+  .ad-score-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #4b5563; margin: 5px 0; }
+  .ad-score-row .k { flex: 0 0 110px; }
+  .ad-score-track { flex: 1; max-width: 320px; height: 8px; background: #f3f4f6; border-radius: 4px; overflow: hidden; }
+  .ad-score-fill { height: 100%; background: #60a5fa; border-radius: 4px; }
+  .ad-ex { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+  .ad-ex-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
+  .ad-tc { font-family: Consolas, "Courier New", monospace; font-size: 11px; color: #9ca3af; }
+  .ad-rc-del { font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; }
+  .ad-rc-del-keep { background: #dbeafe; color: #1d4ed8; }
+  .ad-rc-del-merge { background: #fef3c7; color: #b45309; }
+  .ad-rc-del-drop { background: #f3f4f6; color: #6b7280; }
+  .ad-empty { color: #9ca3af; font-size: 13px; text-align: center; padding: 30px 0; }
+  .ad-list-num { margin: 4px 0 0; padding-left: 20px; font-size: 12.5px; line-height: 1.7; color: #374151; }
+  .ad-highlight { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 8px 12px; font-size: 13px; color: #1e40af; line-height: 1.6; margin: 6px 0; }
+
   .video-badge { display: inline-block; font-size: 11px; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
   .vb-draft { background: #f3f4f6; color: #4b5563; }
   .vb-running { background: #dbeafe; color: #1d4ed8; }
@@ -932,6 +973,17 @@
   </div>
 </div>
 
+<!-- ========== 资产详情弹窗(纯只读:框架/时间轴/风格/样本/留存卡) ========== -->
+<div id="asset-modal" class="modal-mask hidden" onclick="onAssetModalMask(event)">
+  <div class="modal-box ad-box" role="dialog" aria-modal="true" aria-labelledby="asset-modal-title">
+    <div class="modal-head">
+      <h3 id="asset-modal-title">框架详情</h3>
+      <button class="modal-close" type="button" onclick="closeAssetDetail()" aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body ad-body" id="asset-modal-body"></div>
+  </div>
+</div>
+
 <script>
 let selectedAsset = null;
 let currentRunId = null;
@@ -1169,9 +1221,308 @@ function assetCard(a, forSelect, opts) {
     ${(a.description || '').length > 140 ? '<span class="desc-toggle" onclick="toggleDesc(event,this)">展开</span>' : ''}
     <div class="foot">
       <span class="stats" title="源视频语速 ${a.wpm || '?'} 词/分钟 · ${a.example_count || '?'} 个例句样本">语速 ${a.wpm || '?'} wpm · ${a.example_count || '?'} 样本</span>
+      <a class="src-link" href="javascript:void(0)" onclick="event.stopPropagation();openAssetDetail('${a.id}')">详情</a>
       <a class="src-link" href="/source.html?id=${encodeURIComponent(a.id)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">查看原文</a>
     </div>
   </div>`;
+}
+
+// ---------- 资产详情弹窗(纯只读) ----------
+const AD_TYPE_ZH = { hook: '钩子', transition: '过渡', information_reveal: '信息揭示', emotional_payoff: '情绪回报', humor: '幽默', worldview_shift: '世界观升级', ending: '结尾' };
+const AD_POS_ZH = { opening: '开场', early: '前段', early_middle: '中前段', middle: '中段', late_middle: '中后段', late: '后段', ending: '结尾' };
+let adState = null; // { id, data, tab, exType }
+const adCache = {};
+
+function adDur(ms) { if (ms == null || isNaN(ms)) return '-'; const s = Math.round(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+function adTc(ms) {
+  if (ms == null || isNaN(ms)) return '-';
+  const s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+  return (h ? String(h).padStart(2, '0') + ':' : '') + String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+}
+function adPills(arr, cls) {
+  const items = (arr || []).filter(x => x != null && x !== '');
+  return items.length ? items.map(x => `<span class="ad-pill ${cls || ''}">${esc(String(x))}</span>`).join('') : '<span class="ad-sub">—</span>';
+}
+function adBar(label, pct, note) {
+  const v = Math.max(0, Math.min(100, Math.round(pct || 0)));
+  return `<div class="ad-score-row"><span class="k">${esc(label)}</span><div class="ad-score-track"><div class="ad-score-fill" style="width:${v}%"></div></div><span>${note != null ? esc(note) : v}</span></div>`;
+}
+
+async function openAssetDetail(id) {
+  adState = { id, data: null, tab: 'fw', exType: '' };
+  document.getElementById('asset-modal').classList.remove('hidden');
+  renderAssetDetail();
+  if (!adCache[id]) {
+    try { adCache[id] = await api('/api/assets/' + encodeURIComponent(id)); }
+    catch (e) { adCache[id] = { __error: (e && e.message) || '加载失败' }; }
+  }
+  if (adState && adState.id === id) { adState.data = adCache[id]; renderAssetDetail(); }
+}
+function closeAssetDetail() { document.getElementById('asset-modal').classList.add('hidden'); adState = null; }
+function onAssetModalMask(ev) { if (ev.target === ev.currentTarget) closeAssetDetail(); }
+function adTab(t) { if (!adState) return; adState.tab = t; renderAssetDetail(); }
+function adExFilter(t) { if (!adState) return; adState.exType = adState.exType === t ? '' : t; renderAssetDetail(); }
+
+function renderAssetDetail() {
+  const body = document.getElementById('asset-modal-body');
+  if (!adState) return;
+  const d = adState.data;
+  if (!d) { document.getElementById('asset-modal-title').textContent = '框架详情'; body.innerHTML = '<div class="ad-empty">加载中…</div>'; return; }
+  if (d.__error) { document.getElementById('asset-modal-title').textContent = '框架详情'; body.innerHTML = `<div class="ad-empty">加载失败:${esc(d.__error)}</div>`; return; }
+  const m = d.meta || {};
+  document.getElementById('asset-modal-title').textContent = m.name || d.id;
+  const metaLine = [m.channel, contentTypeLabel(m.content_type), m.chapters ? m.chapters + ' 章' : null,
+    m.example_count ? m.example_count + ' 样本' : null, m.wpm ? m.wpm + ' wpm' : null,
+    m.source_duration_ms ? '片长 ' + adDur(m.source_duration_ms) : null].filter(Boolean)
+    .map(x => `<span>${esc(x)}</span>`).join('');
+  const tabs = [['fw', '框架'], ['tl', '时间轴'], ['st', '风格'], ['ex', '样本'], ['rc', '留存卡']];
+  const pane = adState.tab === 'fw' ? adFwHtml(d) : adState.tab === 'tl' ? adTlHtml(d) :
+    adState.tab === 'st' ? adStHtml(d) : adState.tab === 'ex' ? adExHtml(d) : adRcHtml(d);
+  body.innerHTML = `<div class="ad-meta">${metaLine}</div>` +
+    `<div class="ad-tabs">${tabs.map(([k, n]) => `<button class="ad-tab${adState.tab === k ? ' on' : ''}" onclick="adTab('${k}')">${n}</button>`).join('')}</div>` +
+    `<div class="ad-pane">${pane}</div>`;
+}
+
+// ---------- 框架 tab ----------
+function adFwHtml(d) {
+  const fw = d.framework || {}, x = fw.data || {}, m = d.meta || {};
+  if (!Object.keys(x).length) return '<div class="ad-empty">framework.json 缺失或解析失败</div>';
+  const cp = x.content_profile || {}, ce = x.core_engine || {}, atr = ce.audience_transformation || {};
+  const thc = x.title_hook_contract || {}, ap = x.audience_psychology || {}, se = x.story_engine || {}, bs = se.belief_shift || {};
+  const rs = x.retention_system || {}, tr = x.transferability || {}, mr = x.migration_rules || {};
+  const sp = x.structure_pattern || [], ec = x.emotion_curve || [];
+  const fnOf = sid => { const s = sp.find(s => s.stage_id === sid); return s ? s.function : ''; };
+  const out = [];
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">概览</div>
+    ${m.source_title_zh || m.source_title ? `<div class="kv"><span class="k">源标题</span><span class="v">${esc([m.source_title_zh, m.source_title].filter(Boolean).join(' · '))}</span></div>` : ''}
+    <div class="kv"><span class="k">状态</span><span class="v">${esc(fw.status || '-')}(单案例候选框架)</span></div>
+    ${x.description ? `<p class="ad-purpose">${esc(x.description)}</p>` : ''}
+    <div style="margin-top:6px">${adPills([cp.narrative_mode, ...(cp.genres || []), ce.deep_emotional_promise ? null : null])}</div></div>`);
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">核心引擎</div>
+    <div class="kv"><span class="k">表层承诺</span><span class="v">${esc(ce.surface_promise_pattern || '—')}</span></div>
+    <div class="kv"><span class="k">深层情绪</span><span class="v">${adPills(ce.deep_emotional_promise, 'blue')}</span></div>
+    <div class="kv"><span class="k">观众转变</span><span class="v">${esc(atr.before_state || '—')} → ${esc(atr.after_state || '—')}</span></div></div>`);
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">标题-Hook 契约</div>
+    <div class="kv"><span class="k">标题公式</span><span class="v">${esc(thc.title_formula || '—')}</span></div>
+    <div class="kv"><span class="k">兑现方式</span><span class="v">${esc(thc.opening_delivery_mode || '—')}</span></div>
+    <div class="kv"><span class="k">必须兑现</span><span class="v">${adPills(thc.must_deliver)}</span></div>
+    ${(thc.risk_flags || []).length ? `<div class="kv"><span class="k">风险</span><span class="v">${adPills(thc.risk_flags, 'amber')}</span></div>` : ''}</div>`);
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">受众心理</div>
+    <div class="kv"><span class="k">身份特征</span><span class="v">${adPills(ap.target_identity_traits)}</span></div>
+    <div class="kv"><span class="k">痛点</span><span class="v">${adPills(ap.pain_points)}</span></div>
+    <div class="kv"><span class="k">欲望</span><span class="v">${adPills(ap.desires)}</span></div>
+    <div class="kv"><span class="k">点击触发</span><span class="v">${adPills(ap.click_triggers, 'blue')}</span></div></div>`);
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">故事引擎</div>
+    <div class="kv"><span class="k">引擎类型</span><span class="v">${esc(se.engine_type || '—')}</span></div>
+    <div class="kv"><span class="k">核心问题</span><span class="v">${esc(se.core_question_pattern || '—')}</span></div>
+    <div class="kv"><span class="k">张力来源</span><span class="v">${adPills(se.tension_source)}</span></div>
+    <div class="kv"><span class="k">认知迁移</span><span class="v">${esc(bs.old_belief || '—')} → ${esc(bs.new_belief || '—')}</span></div></div>`);
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">功能结构(${sp.length} 段)</div>` +
+    (sp.map(s => `<div class="ad-stage">
+      <div class="ad-stage-head"><span class="ad-stage-id">${esc(s.stage_id || '')}</span><span class="ad-fn">${esc(s.function || '')}</span></div>
+      ${s.purpose ? `<p class="ad-purpose">${esc(s.purpose)}</p>` : ''}
+      <div class="ad-sub"><b>进入:</b>${esc(s.entry_condition || '—')}</div>
+      <div class="ad-sub"><b>退出:</b>${esc(s.exit_condition || '—')}</div>
+      ${(s.required_payload || []).length ? `<div class="ad-sub"><b>必备素材:</b>${adPills(s.required_payload)}</div>` : ''}
+      ${(s.optional_payload || []).length ? `<div class="ad-sub"><b>可选素材:</b>${adPills(s.optional_payload)}</div>` : ''}
+    </div>`).join('') || '<div class="ad-empty">无结构段</div>') + '</div>');
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">留存机制</div>
+    <div class="kv"><span class="k">机制</span><span class="v">${adPills(rs.mechanisms, 'blue')}</span></div>
+    <div class="kv"><span class="k">悬念策略</span><span class="v">${adPills(rs.open_loop_policy)}</span></div>
+    <div class="kv"><span class="k">回报策略</span><span class="v">${adPills(rs.payoff_policy)}</span></div>
+    ${rs.information_release_strategy ? `<div class="kv"><span class="k">释放策略</span><span class="v">${esc(rs.information_release_strategy)}</span></div>` : ''}</div>`);
+  if (ec.length) {
+    out.push(`<div class="ad-sec"><div class="ad-sec-t">情绪曲线</div>` +
+      ec.map(e => `<div class="ad-sub"><b>${esc(e.stage_id || '')}</b> ${esc(fnOf(e.stage_id) || '')} · <span class="ad-pill blue">${esc(e.emotion || '')}</span> ${esc(e.purpose || '')}</div>`).join('') + '</div>');
+  }
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">适用与迁移</div>
+    <div class="kv"><span class="k">适合主题</span><span class="v">${adPills(tr.best_topic_traits, 'green')}</span></div>
+    <div class="kv"><span class="k">避免主题</span><span class="v">${adPills(tr.avoid_topic_traits)}</span></div>
+    <div class="kv"><span class="k">使用前提</span><span class="v">${adPills(tr.prerequisites)}</span></div>
+    ${(tr.risk_flags || []).length ? `<div class="kv"><span class="k">迁移风险</span><span class="v">${adPills(tr.risk_flags, 'amber')}</span></div>` : ''}
+    <div class="kv"><span class="k">必须保留</span><span class="v">${adPills(mr.must_preserve, 'green')}</span></div>
+    <div class="kv"><span class="k">必须替换</span><span class="v">${adPills(mr.must_replace)}</span></div>
+    <div class="kv"><span class="k">禁止复制</span><span class="v">${adPills(mr.forbidden_copy_elements, 'amber')}</span></div></div>`);
+  return out.join('');
+}
+
+// ---------- 时间轴 tab ----------
+function adTlHtml(d) {
+  const tld = (d.timeline || {}).data || {};
+  if (!Object.keys(tld).length) return '<div class="ad-empty">timeline.json 缺失或解析失败</div>';
+  const segs = tld.observed_segments || [], peaks = tld.peak_points || [];
+  const loops = tld.open_loops || [], evs = tld.retention_events || [];
+  const hw = tld.hook_window || {}, sm = tld.subtitle_metrics || {}, dp = tld.duration_profile || {};
+  const dur = dp.observed_duration_ms || 0;
+  const W = 1000, H = 205;
+  const rx = v => Math.max(0, Math.min(W, (v || 0) * W));
+  const segRatio = (sg, k) => sg[k] != null ? sg[k] : (dur ? sg[k === 'start_ratio' ? 'start_ms' : 'end_ms'] / dur : 0);
+  const ptRatio = (p) => p.position_ratio != null ? p.position_ratio : (dur ? p.time_ms / dur : 0);
+  const blues = ['#dbeafe', '#bfdbfe', '#93c5fd', '#c7d2fe', '#bae6fd', '#a5b4fc'];
+  let svg = '';
+  if (dur) {
+    const hwW = Math.min(30000, dur) / dur * W;
+    svg += `<rect x="0" y="10" width="${hwW}" height="26" fill="#fef3c7" fill-opacity=".6"><title>Hook 窗口(0–30s)${hw.hook_type ? '\n' + hw.hook_type : ''}</title></rect>`;
+  }
+  segs.forEach((sg, i) => {
+    const x1 = rx(segRatio(sg, 'start_ratio')), x2 = rx(segRatio(sg, 'end_ratio'));
+    const w = Math.max(1.5, x2 - x1);
+    const tip = `${sg.segment_id || ''} ${sg.primary_function || ''}\n${adTc(sg.start_ms)}–${adTc(sg.end_ms)} · ${((segRatio(sg, 'end_ratio') - segRatio(sg, 'start_ratio')) * 100).toFixed(1)}%\n${sg.viewer_goal || ''}${sg.information_move ? '\n' + sg.information_move : ''}`;
+    svg += `<g><title>${esc(tip)}</title><rect x="${x1}" y="10" width="${w}" height="26" rx="4" fill="${blues[i % blues.length]}" stroke="#fff"/>` +
+      (w > 34 ? `<text x="${x1 + w / 2}" y="27" font-size="10.5" fill="#1e3a8a" text-anchor="middle">${esc(sg.stage_id || sg.segment_id || '')}</text>` : '') + `</g>`;
+  });
+  peaks.forEach(p => {
+    const x = rx(ptRatio(p));
+    const r = 3.5 + ((p.strength || 0) / 100) * 6.5;
+    const tip = `${p.peak_id || ''} ${p.peak_type || ''} · 强度 ${p.strength ?? '?'} · ${adTc(p.time_ms)}\n${p.reason || ''}`;
+    svg += `<g><title>${esc(tip)}</title><circle cx="${x}" cy="56" r="${r.toFixed(1)}" fill="#2563eb" fill-opacity="${(0.35 + ((p.strength || 0) / 100) * 0.5).toFixed(2)}" stroke="#1d4ed8"/></g>`;
+  });
+  loops.forEach(l => {
+    const x1 = rx(dur ? l.open_ms / dur : 0), closed = l.status === 'closed' && l.close_ms != null;
+    const x2 = closed ? rx(l.close_ms / dur) : W;
+    const y = l.parent_loop_id ? 100 : 84;
+    const tip = `${l.loop_id || ''}${l.parent_loop_id ? '(嵌套于 ' + l.parent_loop_id + ')' : ''} · ${closed ? '闭合' : '开放'} · ${adTc(l.open_ms)}${closed ? ' → ' + adTc(l.close_ms) : ' → 未闭合'}\n${l.open_question_or_tension || l.tension_function || ''}`;
+    svg += `<g><title>${esc(tip)}</title><line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${closed ? '#1d4ed8' : '#9ca3af'}" stroke-width="2.5"${closed ? '' : ' stroke-dasharray="5 4"'}/>` +
+      `<circle cx="${x1}" cy="${y}" r="3.2" fill="${closed ? '#1d4ed8' : '#9ca3af'}"/>` +
+      (closed ? `<circle cx="${x2}" cy="${y}" r="3.2" fill="#fff" stroke="#1d4ed8" stroke-width="2"/>` : '') + `</g>`;
+  });
+  evs.forEach(e => {
+    const x = rx(ptRatio(e));
+    const tip = `${e.event_id || ''} ${e.event_type || ''} · ${adTc(e.time_ms)}\n${e.viewer_reason_to_continue || ''}`;
+    svg += `<g><title>${esc(tip)}</title><line x1="${x}" y1="122" x2="${x}" y2="136" stroke="#60a5fa" stroke-width="1.6"/></g>`;
+  });
+  [0, 0.25, 0.5, 0.75, 1].forEach(t => {
+    const x = rx(t);
+    svg += `<line x1="${x}" y1="168" x2="${x}" y2="174" stroke="#d1d5db"/>` +
+      `<text x="${x}" y="190" font-size="11" fill="#9ca3af" text-anchor="${t === 0 ? 'start' : t === 1 ? 'end' : 'middle'}">${adDur(dur * t)}</text>`;
+  });
+  const legend = `<div class="ad-tl-legend">
+    <span><i style="background:#bfdbfe"></i>功能段(悬停看详情)</span>
+    <span><i style="background:#2563eb;border-radius:50%"></i>高峰(大小=强度)</span>
+    <span><i style="background:#1d4ed8;height:3px"></i>悬念开→合</span>
+    <span><i style="background:#9ca3af;height:3px"></i>未闭合悬念(虚线)</span>
+    <span><i style="background:#60a5fa;width:3px"></i>留存事件</span>
+    <span><i style="background:#fef3c7"></i>Hook 窗口(前30秒)</span></div>`;
+  const segList = segs.map(sg => `<div class="ad-sub"><b>${esc(sg.segment_id || '')}</b> ${adTc(sg.start_ms)}–${adTc(sg.end_ms)} · <span class="ad-pill">${esc(sg.primary_function || '')}</span> ${esc(sg.information_move || '')}</div>`).join('');
+  const pacing = (tld.pacing_rules || []).map(r => `<div class="ad-sub">· ${esc(r.rule || '')}<span class="ad-tc">(证据 ${r.evidence_count ?? '?'})</span></div>`).join('');
+  return `<div class="ad-sec"><div class="ad-sec-t">节奏总览</div>
+      <div class="ad-tl-wrap"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:640px;display:block" xmlns="http://www.w3.org/2000/svg">${svg}</svg></div>
+      ${legend}
+      <div class="ad-sub" style="margin-top:6px">片长 ${adDur(dur)} · ${sm.cue_count ?? '?'} 条字幕 · ${sm.average_words_per_minute ?? '?'} wpm · Hook 类型:${esc(hw.hook_type || '—')} · 第一刺激 ${adTc(hw.first_stimulus_ms)} · 第一回报 ${hw.first_payoff_ms != null ? adTc(hw.first_payoff_ms) : '—'}</div>
+    </div>
+    <div class="ad-sec"><div class="ad-sec-t">功能段时间轴(${segs.length} 段)</div>${segList || '<div class="ad-empty">无分段</div>'}</div>
+    ${pacing ? `<div class="ad-sec"><div class="ad-sec-t">节奏规则</div>${pacing}</div>` : ''}`;
+}
+
+// ---------- 风格 tab ----------
+function adStHtml(d) {
+  const st = (d.style || {}).data || {};
+  if (!Object.keys(st).length) return '<div class="ad-empty">style.json 缺失或解析失败</div>';
+  const vp = st.voice_persona || {}, tp = st.tone_profile || {}, msp = st.measured_sentence_profile || {};
+  const nr = st.narration_rules || {}, hs = st.humor_system || {}, lp = st.language_patterns || [], lx = st.lexicon_profile || {};
+  const out = [];
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">旁白人格</div>
+    <div class="kv"><span class="k">人格</span><span class="v">${esc(vp.name || '—')}</span></div>
+    ${vp.description ? `<p class="ad-purpose">${esc(vp.description)}</p>` : ''}
+    <div class="kv"><span class="k">与观众关系</span><span class="v">${esc(vp.relationship_to_viewer || '—')}</span></div>
+    <div class="kv"><span class="k">权威姿态</span><span class="v">${esc(vp.authority_posture || '—')}</span></div></div>`);
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">语气</div>
+    <div style="margin-bottom:6px">${adPills(tp.primary_tones, 'blue')}</div>
+    ${adBar('正式度(低→高)', tp.formality_score)}
+    ${adBar('情绪强度', tp.emotional_intensity_score)}
+    ${adBar('幽默浓度', tp.humor_level_score)}
+    ${tp.certainty_style ? `<div class="ad-sub"><b>确定性表达:</b>${esc(tp.certainty_style)}</div>` : ''}</div>`);
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">句长(实测)</div>` +
+    (msp.measurement_quality === 'low'
+      ? `<div class="ad-sub">源字幕缺少终止标点,句长分布不可测(已按规则降级登记),模仿时勿参考句长比例。</div>`
+      : `${adBar('短句(≤8词)', (msp.short_ratio || 0) * 100, Math.round((msp.short_ratio || 0) * 100) + '%')}${adBar('中句(9-20词)', (msp.medium_ratio || 0) * 100, Math.round((msp.medium_ratio || 0) * 100) + '%')}${adBar('长句(>20词)', (msp.long_ratio || 0) * 100, Math.round((msp.long_ratio || 0) * 100) + '%')}<div class="ad-sub">均句 ${msp.average_words_per_sentence ?? '—'} 词</div>`) + '</div>');
+  if ((st.rhythm_rules || []).length) {
+    out.push(`<div class="ad-sec"><div class="ad-sec-t">节奏规则</div>` +
+      st.rhythm_rules.map(r => `<div class="ad-sub">· <b>${esc(r.rule || '')}</b>${r.function ? ' — ' + esc(r.function) : ''}</div>`).join('') + '</div>');
+  }
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">叙述规则</div>
+    <div class="kv"><span class="k">人称</span><span class="v">${adPills(nr.person_usage, 'blue')}</span></div>
+    <div class="kv"><span class="k">对白用量</span><span class="v">${esc(nr.dialogue_usage || '—')}</span></div>
+    <div class="kv"><span class="k">停顿强调</span><span class="v">${adPills(nr.pause_and_emphasis)}</span></div>
+    <div class="kv"><span class="k">过渡风格</span><span class="v">${adPills(nr.transition_style)}</span></div></div>`);
+  if (Object.keys(hs).length) {
+    out.push(`<div class="ad-sec"><div class="ad-sec-t">幽默系统</div>
+      <div class="kv"><span class="k">类型</span><span class="v">${adPills(hs.humor_types, 'blue')}</span></div>
+      ${hs.frequency_pattern ? `<div class="kv"><span class="k">频率</span><span class="v">${esc(hs.frequency_pattern)}</span></div>` : ''}
+      <div class="kv"><span class="k">位置规则</span><span class="v">${adPills(hs.placement_rules)}</span></div>
+      <div class="kv"><span class="k">禁忌</span><span class="v">${adPills(hs.avoid_rules, 'amber')}</span></div></div>`);
+  }
+  if (lp.length) {
+    out.push(`<div class="ad-sec"><div class="ad-sec-t">语言模式(${lp.length})</div>` +
+      lp.map(p => `<div class="ad-stage"><div class="ad-stage-head"><span class="ad-fn">${esc(p.pattern_name || p.pattern_id || '')}</span></div>
+        <div class="ad-sub"><b>公式:</b>${esc(p.formula || '—')}</div>
+        <div class="ad-sub"><b>作用:</b>${esc(p.purpose || '—')}</div></div>`).join('') + '</div>');
+  }
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">词汇倾向</div>
+    <div class="kv"><span class="k">偏好</span><span class="v">${adPills(lx.preferred_traits, 'green')}</span></div>
+    <div class="kv"><span class="k">避免</span><span class="v">${adPills(lx.avoid_traits, 'amber')}</span></div></div>`);
+  if ((st.forbidden_style || []).length) {
+    out.push(`<div class="ad-sec"><div class="ad-sec-t">禁用表达</div>` +
+      st.forbidden_style.map(f => `<div class="ad-sub">· ${esc(f.rule || '')} <span class="ad-pill">${esc(f.source || '')}</span></div>`).join('') + '</div>');
+  }
+  if ((st.transfer_guardrails || []).length) {
+    out.push(`<div class="ad-sec"><div class="ad-sec-t">迁移护栏</div>` +
+      st.transfer_guardrails.map(g => `<div class="ad-sub">· ${esc(g)}</div>`).join('') + '</div>');
+  }
+  return out.join('');
+}
+
+// ---------- 样本 tab ----------
+function adExHtml(d) {
+  const list = ((d.examples || {}).examples) || [];
+  if (!list.length) return '<div class="ad-empty">examples.json 缺失或没有样本</div>';
+  const types = [...new Set(list.map(e => e.type))];
+  const cur = adState.exType;
+  const chips = [`<button class="ad-tab${!cur ? ' on' : ''}" onclick="adExFilter('')">全部 ${list.length}</button>`]
+    .concat(types.map(t => `<button class="ad-tab${cur === t ? ' on' : ''}" onclick="adExFilter('${t}')">${esc(AD_TYPE_ZH[t] || t || '?')} ${list.filter(e => e.type === t).length}</button>`));
+  const shown = cur ? list.filter(e => e.type === cur) : list;
+  return `<div class="ad-tabs" style="border:0;padding:0 0 6px">${chips.join('')}</div>` +
+    shown.map(e => `<div class="ad-ex">
+      <div class="ad-ex-head">
+        <span class="ad-fn">${esc(AD_TYPE_ZH[e.type] || e.type || '')}</span>
+        <span class="ad-pill">${esc(AD_POS_ZH[e.position] || e.position || '')}</span>
+        <span class="ad-pill">${esc(e.function || '')}</span>
+        <span class="ad-tc">${adTc(e.source_start_ms)}–${adTc(e.source_end_ms)} · ${e.word_count ?? '?'} 词</span>
+      </div>
+      <div class="ad-src">${esc(e.example_text || '')}</div>
+      <div class="ad-sub"><b>心理目的:</b>${esc(e.psychological_goal || '—')}</div>
+      <div class="ad-sub"><b>表达机制:</b>${esc(e.expression_mechanism || '—')}</div>
+      <div class="ad-sub"><b>学什么:</b>${esc(e.usage_instruction || '—')}</div>
+      <div class="ad-sub"><b>禁复制:</b>${esc(e.negative_instruction || '—')}</div>
+    </div>`).join('');
+}
+
+// ---------- 留存卡 tab ----------
+function adRcHtml(d) {
+  const cards = ((d.retention_cards || {}).cards) || [];
+  if (!cards.length) return '<div class="ad-empty">该资产暂无留存卡(retention_cards.json 缺失)</div>';
+  return cards.map(c => {
+    const delCls = c.deletability === '不可删' ? 'ad-rc-del-keep' : c.deletability === '可并入' ? 'ad-rc-del-merge' : 'ad-rc-del-drop';
+    const peaks = (c.peaks || []).map(p => `<span class="ad-pill amber" title="${esc(p.reason || '')}">${esc(p.peak_id || '')} ${esc(p.peak_type || '')} · 强度${p.strength ?? '?'}</span>`).join('');
+    const loopsO = (c.loops_opened || []).map(l => `<span class="ad-pill blue" title="${esc(l.tension || '')}">${esc(l.loop_id || '')} 开 → ${esc(l.closes_in || '不闭合')}</span>`).join('');
+    const loopsC = (c.loops_closed || []).map(l => `<span class="ad-pill green" title="回报类型:${esc(l.payoff_type || '')}">${esc(l.loop_id || '')} 合(自 ${esc(l.opened_in || '?')})</span>`).join('');
+    const loopsE = (c.loops_open_ended || []).map(l => `<span class="ad-pill">${esc(l)} 开放</span>`).join('');
+    return `<div class="ad-stage">
+      <div class="ad-stage-head">
+        <span class="ad-stage-id">${esc(c.stage_id || '')}</span>
+        <span class="ad-fn">${esc(c.function || '')}</span>
+        <span class="ad-tc">${esc(c.position_label || '')}</span>
+        <span class="ad-rc-del ${delCls}">${esc(c.deletability || '')}</span>
+      </div>
+      ${c.purpose ? `<div class="ad-sub"><b>目的:</b>${esc(c.purpose)}</div>` : ''}
+      ${peaks ? `<div class="ad-sub"><b>持有高峰:</b>${peaks}</div>` : ''}
+      ${(loopsO || loopsC || loopsE) ? `<div class="ad-sub"><b>悬念:</b>${loopsO}${loopsC}${loopsE}</div>` : ''}
+      ${(c.original_moves || []).length ? `<div class="ad-sub"><b>原片做法:</b></div><ol class="ad-list-num">${c.original_moves.map(mv => `<li>${esc(mv)}</li>`).join('')}</ol>` : ''}
+      ${c.abstract_move ? `<div class="ad-sub"><b>抽象动作:</b></div><div class="ad-highlight">${esc(c.abstract_move)}</div>` : ''}
+      ${(c.replacement_needs || []).length ? `<div class="ad-sub"><b>替换条件:</b>${adPills(c.replacement_needs)}</div>` : ''}
+      <div class="ad-sub"><b>可删性:</b>${esc(c.deletability_reason || '—')}${c.merge_keep ? ' · ' + esc(c.merge_keep) : ''}</div>
+    </div>`;
+  }).join('');
 }
 
 // ---------- 新建生成 ----------
@@ -1872,6 +2223,17 @@ function blueprintIdsNote(r) {
   if (fx) return `<div class="hint" style="color:#047857">ℹ 蓝图章节编号是 ${esc(rng(fx.from.map(x => x || '(空)')))},已自动改成 ${esc(rng(fx.to))}(只改编号,内容不动)。</div>`;
   return '';
 }
+// 蓝图原片残留/等级跳号(v1.69):蓝图保存时程序扫过一遍,命中时已自动让 AI 重写一次
+function blueprintConsNote(r) {
+  const c = (r.checks || {}).consistency;
+  if (!c) return '';
+  const nRes = (c.residue || []).length, miss = ((c.levels || {}).missing || []);
+  if (!nRes && !miss.length) return c.retried ? `<div class="hint" style="color:#047857">ℹ 蓝图第一版有原片残留/等级跳号,已自动让 AI 重写一次,现在没查出问题。</div>` : '';
+  const ws = [...new Set((c.residue || []).flatMap(h => h.words))];
+  const chs = [...new Set((c.residue || []).map(h => h.ch))];
+  const what = [nRes ? `原片残留词 ${ws.map(w => '「' + esc(w) + '」').join('')}(${esc(chs.join('、'))})` : '', miss.length ? `等级缺第 ${miss.map(esc).join('、')} 级` : ''].filter(Boolean).join(';');
+  return `<div class="hint" style="color:#b45309">⚠ 蓝图里还有${what}。${c.retried ? (c.kept ? '已自动让 AI 重写一次,但没改好,保留了原版。' : '已自动让 AI 重写一次,还剩这些。') : ''}写完后审稿页会再查一遍稿子,还有的话挡发布(可以忽略),「AI 改一轮」会一起改。</div>`;
+}
 async function loadRunDetail() {
   const r = await api('/api/runs/' + currentRunId);
   document.getElementById('detail-title').textContent = r.topic;
@@ -1899,7 +2261,7 @@ async function loadRunDetail() {
     (r.error ? '错误: ' + esc(r.error) : '') +
     (ck.gate_fail && !r.error ? '闸门不合格(Step ' + esc(ck.gate_fail.step) + '):' + esc(ck.gate_fail.reason) : '') +
     (lenWarn.length ? '<div class="hint" style="color:#b45309">⚠ ' + esc(lenWarn.join(';')) + '</div>' : '') +
-    blueprintIdsNote(r) + foreignWarn(r) + listenWarn(r) +
+    blueprintIdsNote(r) + blueprintConsNote(r) + foreignWarn(r) + listenWarn(r) +
     ((r.status === 'failed' || r.status === 'cancelled')
       ? ' <button class="primary" style="margin-left:8px" onclick="retryRun()">续跑此任务</button>' : '');
 
@@ -2133,7 +2495,7 @@ function rvDraw() {
   if (rvState.tab === 'audit') {
     el.innerHTML = `<h2 style="display:flex;justify-content:space-between;align-items:center"><span class="v13">审稿:初稿 → 二稿 → 审稿报告 → 终稿</span>
       <span><button class="an-btn v13" onclick="rvTranslate()" ${v.translating ? 'disabled' : ''}>${v.translating ? '中文对照翻译中…' : '补齐中文对照'}</button></span></h2>
-      ${passLine}${rvOpeningHtml(v)}${tabs}
+      ${passLine}${rvOpeningHtml(v)}${tabs}${rvConsCardHtml(v)}
       ${rvState.err ? `<div class="err-list">${esc(rvState.err)}</div>` : ''}
       ${rvAuditHtml(v)}`;
     return;
@@ -2141,7 +2503,7 @@ function rvDraw() {
   if (rvState.tab !== 'current') {
     el.innerHTML = `<h2 style="display:flex;justify-content:space-between;align-items:center"><span class="v13">审稿:初稿 → 二稿 → 终稿</span>
       <span><button class="an-btn v13" onclick="rvTranslate()" ${v.translating ? 'disabled' : ''}>${v.translating ? '中文对照翻译中…' : '补齐中文对照'}</button></span></h2>
-      ${passLine}${rvOpeningHtml(v)}${tabs}
+      ${passLine}${rvOpeningHtml(v)}${tabs}${rvConsCardHtml(v)}
       ${v.zh_error ? `<div class="err-list">中文对照翻译失败:${esc(v.zh_error)}</div>` : ''}
       ${rvState.err ? `<div class="err-list">${esc(rvState.err)}</div>` : ''}
       ${rvState.tab === 'd2' ? rvFactHtml(v.factcheck, v.translating) : ''}
@@ -2153,7 +2515,7 @@ function rvDraw() {
       <button class="an-btn v13" onclick="rvTranslate()" ${v.translating ? 'disabled' : ''}>${v.translating ? '中文对照翻译中…' : '补齐中文对照'}</button>
       ${lastRunDetail && !lastRunDetail.draft_first ? '<button class="an-btn" onclick="rvToggleOpen()">收起</button>' : ''}</span></h2>
     ${passLine}${rvOpeningHtml(v)}${tabs}
-    ${rvPublishBriefHtml(v)}
+    ${rvPublishBriefHtml(v)}${rvConsCardHtml(v)}
     <div class="rv-bar v13">
       <span>篇幅 <b>${s.words}</b>${s.budget ? ' / 预算 ' + s.budget + ' 词(' + ratio + ')' : ' 词'}</span>
       <span>已通过 <b>${s.passed}/${s.chapters}</b> 章 ${s.passed < s.chapters ? `<button class="an-btn v13" onclick="rvPassAll(true)">一键全部通过</button>` : `<button class="an-btn" onclick="rvPassAll(false)">全部取消通过</button>`}</span>
@@ -2522,7 +2884,7 @@ const RV_OPEN_CLS = { 关键: 'red', 结构: 'red', 次要: 'yellow', 待核实:
 // ---------- 终审页(合并版,用户 2026-10-31):一行状态 + 一个主按钮「AI 改一轮」→「还差什么」逐项 →「改稿记录」默认收起 ----------
 // 原来光改稿就有 6 个按钮(接着改到能发布 / 按选中的方式补改 / 按核对结果改稿 / 找原因再试 / 自动改开头 / 保留标题改稿),
 // 跑的都是「改一轮再复审」,同一个问题又在 3–4 个框里各写一遍,人不知道点哪个。
-const RV_BLOCK_ZH = { hard_open: '复审问题', red_facts: '没出处的数', ledger: '账本错数', thesis: '反转', claim: '账/论点', listen_open: '开头', listen_dense: '数字太密', listen_register: '语体', listen_other: '听感', no_final: '终审' };
+const RV_BLOCK_ZH = { hard_open: '复审问题', red_facts: '没出处的数', ledger: '账本错数', thesis: '反转', claim: '账/论点', listen_open: '开头', listen_dense: '数字太密', listen_register: '语体', listen_other: '听感', no_final: '终审', residue: '原片残留', pov: '人物连贯', weak_claims: '没出处的说法' };
 // 问题旁边「直接应用」(v1.64):改法里有完整的替换句、原句在终稿里只出现一次 → 程序直接换掉,不调 AI、不复审,可以撤回
 function rvApplyHtml(source, x, busy) {
   const p = ((rvState.view || {}).summary || {}).publish || {};
@@ -2693,6 +3055,10 @@ function rvGroupsHtml(v, p, busy) {
     if (b.key === 'red_facts' && b.fact) extra.push(rvFactCardHtml(b.fact));
     if (b.key === 'claim') extra.push(rvClaimHtml(p, v, true));
     if (b.key === 'thesis') extra.push(rvThesisHtml(v, rc));
+    const cs = (v.summary || {}).consistency;
+    if (cs && b.key === 'residue') extra.push(csResidueHtml(cs));
+    if (cs && b.key === 'pov') extra.push(csPovHtml(cs));
+    if (cs && b.key === 'weak_claims') extra.push(csWeakHtml(cs, busy));
     if (b.key === 'listen_open') extra.push(`<div class="hint">「AI 改一轮」改完会自动改开头(只动开头几句,改到前 10 秒最多 1 个数字、8 秒内点题);开头逐句分析在页面最上面「开头单独审」。${fx.status === 'failed' ? '<span style="color:#b91c1c">上次自动改开头没成功:' + esc(fx.error || '') + '</span>' : ''}</div>`);
     const items = open.filter(x => grpOf(x) === g);
     const rows = items.map(x => rvPatchRow(rc, x, busy));
@@ -2710,7 +3076,7 @@ function rvGroupsHtml(v, p, busy) {
   const minorHtml = minor.length ? `<details class="rv-md-box v13" style="margin-top:10px"><summary>其他 ${minor.length} 个小问题(不挡发布;「AI 改一轮」会按选中的改法顺手改,不想改就选「这个不改」)</summary>${minor.join('')}</details>` : '';
   return pre.join('') + groups + rvIgnoredHtml(p, v) + minorHtml + (open.length ? rvPatchNote(rc, busy) : '');
 }
-const RV_IGNORABLE = ['hard_open', 'ledger', 'thesis', 'claim', 'listen_open', 'listen_dense', 'listen_register', 'listen_other'];
+const RV_IGNORABLE = ['hard_open', 'ledger', 'thesis', 'claim', 'listen_open', 'listen_dense', 'listen_register', 'listen_other', 'residue', 'pov', 'weak_claims'];
 // 你点了「忽略」的项:和上面的项一样一行一个(灰底),可以点开看下面的问题,右边「取消忽略」
 function rvIgnoredHtml(p, v) {
   const busy = !!v.running;
@@ -2756,6 +3122,81 @@ async function rvMainFix() {
   if (p.can_autofix) return rvAutoFix();
   if ((p.opening_bad || []).length) return rvOpeningFix();
   alert('下面的问题都选了「这个不改」,没有要 AI 改的。剩下挡发布的项要你判断:觉得不影响就点那一项的「忽略」。');
+}
+// ---------- 原片残留 / 人物连贯 / 没出处的说法(v1.69) ----------
+const CS_POV_ZH = { climb: '同一个人往上爬', per_level: '每一级换一个人', none: '不是第二人称代入' };
+// 一句韩文原句 + 中文
+function csSent(ch, text, zhText) {
+  return `<div style="margin:3px 0 5px;padding:4px 8px;border-left:3px solid #fca5a5;background:#fff">${ch ? '<b>' + esc(ch) + '</b> ' : ''}${esc(text)}<div class="hint" style="margin:1px 0 0">${zhText ? '中文:' + esc(zhText) : '(中文还在翻,稍等一会儿刷新)'}</div></div>`;
+}
+function csResidueHtml(cs) {
+  const hits = cs.residue || [];
+  if (!hits.length) return '';
+  return `<div style="font-size:13px;line-height:1.7"><div class="hint">这些词只属于原片那个国家、时代(按写前分析的「原片 → 本地对照表」扫出来的):</div>`
+    + hits.map(h => csSent(h.ch, h.text, h.zh).replace('</div></div>', `</div><div style="color:#b45309">「${esc(h.words.join('」「'))}」是原片${h.source ? '的 ' + esc(h.source) : '的说法'} → 对照表写换成:<b>${esc(h.local || '删掉')}</b></div></div>`)).join('') + '</div>';
+}
+function csPovHtml(cs) {
+  if (!cs.pov_on) return '';
+  const rows = [];
+  (cs.no_you.runs || []).forEach(r => rows.push(`<div>· <b>${esc(r[0])}–${esc(r[r.length - 1])}</b> 连续 ${r.length} 章没有「당신」,变成第三人称讲解,代入断了</div>`));
+  const lone = (cs.no_you.missing || []).filter(id => !(cs.no_you.runs || []).some(r => r.includes(id)));
+  if (lone.length) rows.push(`<div class="hint">· ${esc(lone.join('、'))} 也没有「당신」(零散一两章,不挡发布)</div>`);
+  if ((cs.levels.missing || []).length) rows.push(`<div>· 等级编号跳号:稿子里有第 ${cs.levels.levels.map(l => esc(l.n) + ' 级(' + esc(l.ch) + ')').join('、')},<b>缺第 ${cs.levels.missing.map(esc).join('、')} 级</b></div>`);
+  (cs.unreachable || []).forEach(l => rows.push(`<div>· 第 ${esc(l.n)} 级「${esc(l.local)}」<b>主角做不到</b>${l.why ? '(' + esc(l.why) + ')' : ''}</div>`));
+  return rows.length ? `<div style="font-size:13px;line-height:1.7">${rows.join('')}</div>` : '';
+}
+function csWeakHtml(cs, busy) {
+  const list = cs.weak || [];
+  if (!list.length) return '';
+  return `<div style="font-size:13px;line-height:1.7"><div class="hint">事实核验判 C(只有部分证据)、D(证据不足)、E(和证据矛盾)的说法,稿子里还在当论点用。觉得不影响就点「这条不影响」。</div>` + list.map(w => `<div style="margin:6px 0 8px;padding:6px 10px;border:1px solid ${w.accepted ? '#d1d5db' : '#fecaca'};background:${w.accepted ? '#f9fafb' : '#fef2f2'};border-radius:6px${w.accepted ? ';opacity:.7' : ''}">
+    <b>核验 ${esc(w.id)}</b> <span class="rv-chip">${esc(w.grade)} 级</span> ${esc(w.zh_claim || w.claim)}
+    <div class="hint" style="margin:2px 0">核验结论:${esc(w.zh_finding || w.finding || '没有核实')}${w.fix ? ';改法:' + esc(w.fix) : ''}</div>
+    ${w.uses.map(u => csSent(u.ch, u.text, u.zh)).join('')}
+    ${w.accepted ? `<span class="hint">你确认不影响,不挡发布</span> <button class="an-btn" style="font-size:12px;padding:0 8px" onclick="rvAcceptClaim('${escAttr(w.id)}', false)" ${busy ? 'disabled' : ''}>撤回</button>` : `<button class="an-btn" style="font-size:12px;padding:0 8px" onclick="rvAcceptClaim('${escAttr(w.id)}', true)" ${busy ? 'disabled' : ''}>这条不影响</button>`}</div>`).join('') + '</div>';
+}
+// 对照表 + 叙事方式(可改)+ 生成按钮
+function csMappingHtml(cs, busy) {
+  const st = cs.step || {};
+  if (st.status === 'running') { if (!rvState.csPoll) rvState.csPoll = setTimeout(() => { rvState.csPoll = null; rvRefresh(); }, 6000); return `<div><span class="rv-spin"></span> <b>正在生成原片对照表…</b> <span class="hint">一般 1 分钟,跑完自动刷新</span></div>`; }
+  const fail = st.status === 'failed' ? `<div style="color:#b91c1c">上次生成原片对照表没成功:${esc(st.error || '')}</div>` : '';
+  const m = cs.mapping;
+  if (!m) return fail + `<div>这篇还没有<b>原片 → 本地对照表</b>(v1.69 以前的任务),查不了原片残留${cs.pov_on ? '' : ',也不知道是不是第二人称代入'}。<button class="an-btn v13" onclick="rvSourceMapping()" ${busy ? 'disabled' : ''}>生成原片对照表</button> <span class="hint">调一次 AI,约 1 分钟,不改稿子</span></div>`;
+  const sel = `<select style="width:auto;display:inline-block;padding:2px 6px" onchange="rvPovMode(this.value)" ${busy ? 'disabled' : ''}>${Object.keys(CS_POV_ZH).map(k => `<option value="${k}" ${m.pov_mode === k ? 'selected' : ''}>${CS_POV_ZH[k]}</option>`).join('')}</select>`;
+  const items = (m.items || []);
+  const tbl = items.length ? `<table class="an-table" style="font-size:12px;margin-top:4px"><tr><th>原片</th><th>类型</th><th>换成</th><th>不许出现</th></tr>${items.map(x => `<tr><td>${esc(x.source)}</td><td>${esc(x.kind)}</td><td>${esc(x.local || '删掉')}</td><td>${esc((x.residue || []).join('、'))}</td></tr>`).join('')}</table>` : '';
+  const lv = (m.levels || []).length ? `<div class="hint" style="margin-top:4px">等级:${m.levels.map(l => '第 ' + esc(l.n) + ' 级 ' + esc(l.local) + (l.reachable === false ? '<b style="color:#b91c1c">(主角做不到)</b>' : '')).join(' → ')}</div>` : '';
+  return fail + `<div style="color:#374151">叙事方式:${sel}${m.pov_mode_by === 'user' ? ' <span class="hint">(你改过)</span>' : ''} <span class="hint">${esc(m.pov_basis || '')}</span></div>`
+    + `<details style="margin-top:2px"><summary class="hint" style="cursor:pointer">原片 → 本地对照表 ${m.same_context ? '(原片和本题同一个国家、时代,不用换)' : items.length + ' 条'}(点开看) <button class="an-btn" style="font-size:11px;padding:0 6px" onclick="event.preventDefault();event.stopPropagation();rvSourceMapping()" ${busy ? 'disabled' : ''}>重新生成</button></summary>${lv}${tbl}</details>`;
+}
+// 审稿页上方:对照表 + 叙事方式;还没终审时把命中的问题列在这里(终审后列进「还不能发布」)
+function rvConsCardHtml(v) {
+  const cs = (v.summary || {}).consistency;
+  if (!cs) return '';
+  const busy = !!v.running;
+  const nYou = (cs.no_you.runs || []).length, nLv = (cs.levels.missing || []).length + (cs.unreachable || []).length;
+  const nWeak = (cs.weak || []).filter(w => !w.accepted).length;
+  const total = cs.residue.length + (cs.pov_on ? nYou + nLv : 0) + nWeak;
+  const parts = [];
+  if (!v.final) {
+    if (cs.residue.length) parts.push(`<details class="rv-grp"><summary><b>原片残留 ${cs.residue.length} 句</b></summary>${csResidueHtml(cs)}</details>`);
+    if (cs.pov_on && nYou + nLv) parts.push(`<details class="rv-grp"><summary><b>人物连贯 ${nYou + nLv} 处</b></summary>${csPovHtml(cs)}</details>`);
+    if ((cs.weak || []).length) parts.push(`<details class="rv-grp"><summary><b>没出处的说法 ${nWeak} 条</b>${nWeak < cs.weak.length ? ' <span class="hint">(另有 ' + (cs.weak.length - nWeak) + ' 条你确认不影响)</span>' : ''}</summary>${csWeakHtml(cs, busy)}</details>`);
+  }
+  const head = total ? `<b style="color:#b45309">原片残留 / 人物连贯 / 没出处的说法:${total} 处</b> <span class="hint">${v.final ? '已列进「终稿全文修订」的「还不能发布」,AI 改一轮会一起改' : '终审后会挡发布(可以忽略),「AI 改一轮」会一起改'}</span>` : `<b style="color:#047857">原片残留 / 人物连贯 / 没出处的说法:没查出问题</b>`;
+  return `<div class="v13" style="margin:8px 0;padding:8px 12px;border:1px solid #fcd34d;background:#fffbeb;border-radius:8px;font-size:13px;line-height:1.7">${head}<div style="margin-top:4px">${csMappingHtml(cs, busy)}</div>${parts.join('')}</div>`;
+}
+async function rvAcceptClaim(id, on) {
+  try { await rvPost('accept_claim', { id, on }); } catch (e) { alert(e.message); return; }
+  rvRefresh();
+}
+async function rvSourceMapping() {
+  if (!confirm('生成原片 → 本地对照表和叙事方式?\n调一次 AI(约 1 分钟),不改稿子;生成后按它查原片残留。')) return;
+  try { await rvPost('source_mapping', {}); } catch (e) { alert(e.message); return; }
+  rvRefresh();
+}
+async function rvPovMode(mode) {
+  try { await rvPost('pov_mode', { mode }); } catch (e) { alert(e.message); return; }
+  rvRefresh();
 }
 // 页面上方(看初稿、二稿时)只放一行状态,具体的在「终稿全文修订」里处理,不再整块重复
 function rvPublishBriefHtml(v) {
@@ -3534,6 +3975,7 @@ function analysisHtml(a, materials, say) {
     </div>`;
   const pr = a.protagonist || {};
   if (pr.who) html += `<div class="an-sec">主角设定</div><div style="font-size:13px;line-height:1.7"><b>${esc(pr.who)}</b>${[pr.gender, pr.era, pr.place].filter(Boolean).length ? '(' + esc([pr.gender, pr.era, pr.place].filter(Boolean).join(' · ')) + ')' : ''}${pr.source_role ? `<br><span class="hint">原片主角:${esc(pr.source_role)}${pr.mapping ? ';对应:' + esc(pr.mapping) : ''}</span>` : ''}</div>`;
+  html += anMappingHtml(a);
   html += `<div class="an-sec">论点卡</div><div style="font-size:13px;line-height:1.7">
     原有认知:${esc(th.viewer_belief || '')}<br>真相:${esc(th.truth || '')}<br>
     一句话论点:<b>${esc(th.one_line_thesis || '')}</b><br>结尾落点:${esc(th.ending_landing || '')}
@@ -4392,7 +4834,7 @@ function anEditorShell() {
       ${sel('verdict', ['可以写', '调整后可写', '换框架'], d.verdict)}
       <span class="hint" style="margin:2px 0 0;flex:1 1 320px">${esc(d.verdict_reason || '')}</span>
     </div>
-    ${anAdjustmentsHtml(d)}${anEvidenceHtml(d)}`;
+    ${anAdjustmentsHtml(d)}${anEvidenceHtml(d)}${anMappingHtml(d)}`;
 
   const aiTitles = new Set(t.ai_added || []);
   html += `<div data-an-target="title"><div class="an-sec">标题</div>
@@ -4494,6 +4936,24 @@ function anEditorShell() {
   return html;
 }
 
+// 写前分析:叙事方式 + 原片 → 本地对照表(v1.69),叙事方式可以改
+let anCurRun = null;
+const AN_POV_ZH = { climb: '同一个「你」一级一级往上爬', per_level: '每一级换一个「你」(每级重新开始)', none: '不是第二人称代入' };
+function anMappingHtml(a) {
+  const m = a.source_mapping;
+  const st = ((anCurRun || {}).steps || {}).source_mapping || {};
+  if (!m) return st.status === 'failed' ? `<div class="an-sec">叙事方式和原片对照表</div><div class="hint" style="color:#b91c1c">原片对照表没生成成功:${esc(st.error || '')}。不影响写稿,审稿页可以重新生成。</div>` : '';
+  const sel = `<select style="width:auto;display:inline-block;padding:2px 6px" onchange="anPovMode(this.value)">${Object.keys(AN_POV_ZH).map(k => `<option value="${k}" ${m.pov_mode === k ? 'selected' : ''}>${AN_POV_ZH[k]}</option>`).join('')}</select>`;
+  const lv = (m.levels || []).length ? `<div style="margin-top:4px">等级(按原片顺序):${m.levels.map(l => `第 ${esc(l.n)} 级 ${esc(l.local || '')}${l.source ? '<span class="hint">(原片:' + esc(l.source) + ')</span>' : ''}${l.reachable === false ? '<b style="color:#b91c1c">主角做不到' + (l.why ? ':' + esc(l.why) : '') + '</b>' : ''}`).join(' → ')}</div>` : '';
+  const items = m.items || [];
+  const tbl = items.length ? `<table class="an-table"><tr><th>原片</th><th>类型</th><th>换成</th><th>稿子里不许出现</th></tr>${items.map(x => `<tr><td>${esc(x.source)}</td><td>${esc(x.kind || '')}</td><td>${esc(x.local || '删掉')}</td><td>${esc((x.residue || []).join('、'))}</td></tr>`).join('')}</table>` : `<div class="hint">${m.same_context ? '原片和本题同一个国家、时代,不用换。' : '没有要换的原片专属元素。'}</div>`;
+  const extra = (m.extra_residue || []).length ? `<div class="hint">其他容易照抄原片的说法:${esc(m.extra_residue.join('、'))}</div>` : '';
+  return `<div class="an-sec">叙事方式和原片对照表</div><div style="font-size:13px;line-height:1.7">叙事方式:${sel}${m.pov_mode_by === 'user' ? ' <span class="hint">(你改过)</span>' : ''}<br><span class="hint">依据:${esc(m.pov_basis || '')}</span>${lv}</div>${tbl}${extra}<div class="hint">蓝图和写稿按这张表换成本地说法;写完后程序按「不许出现」一栏查稿子,查到的挡发布(可以忽略)。</div>`;
+}
+async function anPovMode(mode) {
+  try { await api('/api/runs/' + currentRunId + '/review/pov_mode', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode }) }); } catch (e) { alert(e.message); return; }
+  [((anCurRun || {}).analysis || {}).source_mapping, ((anEdit || {}).draft || {}).source_mapping].forEach(m => { if (m) { m.pov_mode = mode; m.pov_mode_by = 'user'; } });
+}
 function anRenderEditor() {
   const el = document.getElementById('an-panel');
   if (!el || !anEdit) return;
@@ -4645,13 +5105,14 @@ function stepJump(k) {
 
 function renderAnalysisPanel(r) {
   const el = document.getElementById('an-panel');
+  anCurRun = r;
   const st = (r.steps || {}).analysis || {};
   if (!r.pre_analysis && !r.analysis) { el.classList.add('hidden'); anRenderedKey = null; anEdit = null; return; }
   el.classList.remove('hidden');
   if (anEdit && anEdit.runId !== r.id) anEdit = null;
   if (r.analysis_confirmed || r.status !== 'awaiting_review') anEdit = null;
 
-  const key = [r.id, r.status, r.analysis_confirmed, st.finished_at, st.status, (r.reframe || {}).status, lcKey(r)].join('|');
+  const key = [r.id, r.status, r.analysis_confirmed, st.finished_at, st.status, (r.reframe || {}).status, lcKey(r), ((r.steps || {}).source_mapping || {}).status, (((r.analysis || {}).source_mapping) || {}).pov_mode].join('|');
 
   if (r.status === 'analyzing') {
     if (key === anRenderedKey) return;
