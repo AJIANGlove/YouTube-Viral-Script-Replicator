@@ -69,21 +69,35 @@ function frameworkBrief(asset) {
   };
 }
 
-// 题目这一侧:ctx = { title, thesis_card, protagonist }(换框架时取上一份分析的,第一次分析时没有)
+// v1.75:改过题目的任务,参考资料是按原题目准备的。提示词里在资料前写明这一点,免得 AI 把原题目的主角、设定带进新题目
+// topic:这次按哪个题目判(不传就是任务现在的题目;给「改主题」的建议题目预判时传建议的题目)
+function materialsFor(run, topic, max) {
+  const m = String(run.materials || '');
+  if (!m.trim()) return '(无)';
+  const body = max && m.length > max ? m.slice(0, max) + '……(后略)' : m;
+  const used = [run.original_title || ((arr(run.topic_changes)[0] || {}).from) || ''].concat(arr(run.topic_changes).map(x => x.to)).map(str).filter(Boolean);
+  const first = used[0] || '';
+  const now = str(topic) || run.topic || '';
+  if (!first || first === now) return body;
+  return '【注意:下面的资料是按原题目「' + first + '」准备的,题目现在是「' + now + '」。只用和现在题目有关的部分,不要把原题目的主角、身份、设定带进来。】\n' + body;
+}
+
+// 题目这一侧:ctx = { title, thesis_card, protagonist, topic }(换框架时取上一份分析的,第一次分析时没有)
 function topicVars(run, ctx) {
   const aud = run.audience || {};
   const c = ctx || {};
   const has = v => v && typeof v === 'object' && Object.keys(v).length;
+  const topic = str(c.topic) || run.topic || '';
   return {
-    topic: run.topic || '',
-    title: str(c.title) || run.topic || '',
+    topic,
+    title: str(c.title) || topic,
     target_language: aud.target_language || '',
     target_country: aud.target_country || '',
     video_goal: aud.video_goal || '',
     target_audience: aud.target_audience || '(未填)',
     thesis: has(c.thesis_card) ? JSON.stringify(c.thesis_card).slice(0, 1200) : '(还没有,按题目判断)',
     protagonist: has(c.protagonist) ? JSON.stringify(c.protagonist).slice(0, 600) : '(还没有,按题目判断)',
-    materials: run.materials ? String(run.materials).slice(0, MATERIALS_MAX) + (String(run.materials).length > MATERIALS_MAX ? '……(后略)' : '') : '(无)'
+    materials: materialsFor(run, topic, MATERIALS_MAX)
   };
 }
 
@@ -152,4 +166,4 @@ function logFull(run, assetId, verdict, reasons) {
   run.fit_log = log.concat([{ asset_id: assetId, full }]).slice(-60);
 }
 
-module.exports = { VERDICTS, rank, frameworkBrief, structureBrief, fixedSegments, topicVars, buildPrompt, fitOk, cleanFit, quickFit, stubAnalysis, isQuickOnly, assertFull, logQuick, logFull };
+module.exports = { VERDICTS, rank, frameworkBrief, structureBrief, fixedSegments, topicVars, materialsFor, buildPrompt, fitOk, cleanFit, quickFit, stubAnalysis, isQuickOnly, assertFull, logQuick, logFull };

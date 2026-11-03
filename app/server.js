@@ -462,6 +462,13 @@ const server = http.createServer(async (req, res) => {
       });
     }
 
+    // v1.75 建任务前预判:人选的框架能不能套上这个主题,并从库里另推荐 3 个(不建任务,不落盘)
+    if (url === '/api/fit-precheck' && method === 'POST') {
+      const body = await readBody(req);
+      try { return send(res, 200, await require('./lib/reframe').precheck(body)); }
+      catch (e) { return send(res, e.status || 500, { error: e.message }); }
+    }
+
     if (url === '/api/runs' && method === 'POST') {
       const body = await readBody(req);
       if (!body.asset_id || !body.topic) return send(res, 400, { error: '缺少 asset_id 或 topic' });
@@ -503,6 +510,11 @@ const server = http.createServer(async (req, res) => {
         // 频道声音设定:'__auto__' 按频道名匹配(默认) / '__none__' 不用 / 设定名
         voice_name: typeof body.voice_name === 'string' ? body.voice_name : voice.AUTO
       });
+      // v1.75:建任务前预判过这个框架和题目(30 分钟内、受众和资料没改),写前分析直接用那次的判断,不再判一次
+      if (run.pre_analysis) {
+        const pre = require('./lib/reframe').precheckCarry(body);
+        if (pre) { run.fit_carry = pre; run.precheck = { at: new Date().toISOString(), verdict: pre.verdict }; store.saveRun(run); }
+      }
       // 主题中文译文:建任务时就点火(后台跑,不占建任务响应),列表页/详情页都能直接看到中文;
       // 列表接口另有 ensure 兜底,漏掉的(翻译失败/进程重启)下次刷列表自动补
       topiczh.ensure([run.topic]);

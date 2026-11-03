@@ -323,30 +323,53 @@ async function summarize(runId) {
     const rf = run.reframe;
     const origin = originOf(run);
     const a = run.analysis || {};
-    const sw = arr(rf.switched);
-    const originReasons = origin.asset_id === run.asset_id && a.verdict === '换框架' ? arr(a.reframe_reasons) : arr((sw[0] || {}).from_reasons);
+    const tc = arr(run.topic_changes);
+    // v1.75:改过题目以后,只拿「改题目之后」的理由去汇总。以前拿的是原题目下最初那个框架被否的理由,
+    // AI 照着旧题目的毛病又判「问题出在题目」、又让人改题目(조선 여성 거상 改题后又被要求改题)
+    const since = tc.length ? String(tc[tc.length - 1].at || '') : '';
+    const sw = arr(rf.switched).filter(x => !since || String(x.at || '') > since);
+    const poolOrigin = arr(rf.pool).find(p => p.asset_id === origin.asset_id);
+    const originReasons = origin.asset_id === run.asset_id && a.verdict === '换框架' ? arr(a.reframe_reasons)
+      : since ? (sw[0] && sw[0].from === origin.asset_id && arr(sw[0].from_reasons).length ? arr(sw[0].from_reasons) : (poolOrigin ? [pjLine(poolOrigin).replace(/^- /, '按新题目预判:')] : []))
+      : arr((sw[0] || {}).from_reasons);
     const tried = sw.filter(x => arr(x.from_reasons).length && x.from !== origin.asset_id).map(x => '- ' + (x.from_name || x.from) + ':' + arr(x.from_reasons).slice(0, 3).join(';'));
     if (origin.asset_id !== run.asset_id && a.verdict === '换框架') tried.push('- ' + (run.asset_name || run.asset_id) + ':' + arr(a.reframe_reasons).slice(0, 3).join(';'));
-    const tc = arr(run.topic_changes);
+    const used = topicsUsed(run);
+    const targets = [{ asset_id: origin.asset_id, name: origin.name }].concat(arr(rf.pool).filter(p => p.asset_id !== origin.asset_id).map(p => ({ asset_id: p.asset_id, name: p.name })))
+      .filter(x => store.getAsset(x.asset_id)).slice(0, 12);
     const prompt = an().fillVars(fs.readFileSync(SUMMARY_PROMPT, 'utf-8'), {
       topic: run.topic || '',
-      topic_history: tc.length ? '【这个题目是改过的】原题目:' + (run.original_title || tc[0].from) + '。改了题目以后还是都套不上,汇总时要说明这一点。' : '',
+      topic_history: tc.length ? '【这个题目是改过的】原题目:' + (run.original_title || tc[0].from) + '。改了题目以后还是都套不上,汇总时要说明这一点。下面的理由都是按现在的题目判的,只根据它们写,不要沿用原题目的毛病。' : '',
+      used_topics: used.map(t => '- ' + t).join('\n'),
       target_language: (run.audience || {}).target_language || '', target_country: (run.audience || {}).target_country || '',
       origin: origin.name,
+      origin_id: origin.asset_id,
       origin_reasons: originReasons.map((r, i) => (i + 1) + '. ' + r).join('\n') || (a.verdict_reason || '(没有记录)'),
       tried: tried.join('\n') || '(没有)',
-      candidates: arr(rf.pool).map(pjLine).join('\n') || '(没有)'
+      candidates: arr(rf.pool).map(pjLine).join('\n') || '(没有)',
+      targets: targets.map(x => '- ' + x.asset_id + ' | ' + x.name).join('\n')
     });
     const out = await an().callJson(run, cfg, prompt, '换框架·为什么都套不上', summaryOk);
     const str = v => String(v == null ? '' : v).trim();
+    const usedKey = new Set(used.map(topicKey));
     const summary = {
       at: new Date().toISOString(), text: str(out.summary), cause: str(out.cause), cause_why: str(out.cause_why),
-      topics: arr(out.topics).filter(t => t && str(t.title)).map(t => ({ title: str(t.title), zh: str(t.zh), why: str(t.why) })).slice(0, 3),
+      // 已经用过的题目(原题目、改过的)不再建议
+      topics: arr(out.topics).filter(t => t && str(t.title) && !usedKey.has(topicKey(t.title))).map(t => ({ title: str(t.title), zh: str(t.zh), why: str(t.why), target: str(t.target) })).slice(0, 3),
       keep_tips: arr(out.keep_tips).filter(t => t && (str(t.segment) || str(t.how))).map(t => ({ segment: str(t.segment), why: str(t.why), how: str(t.how) })).slice(0, 8)
     };
+    // v1.75:建议的题目先各做一次快速判断(对着它说能套上的框架,没说或说错就对人最初选的框架),套得上的排前面
+    save(runId, { summary_status: 'checking' });
+    await checkTopics(run, cfg, summary.topics, origin, targets);
+    summary.topics.sort((x, y) => topicRank(x) - topicRank(y));
+    if (summary.topics.length && !summary.topics.some(t => AUTO_OK.includes((t.check || {}).verdict)) && summary.topics.some(t => (t.check || {}).verdict)) {
+      summary.topics_none_fit = true;
+      if (summary.cause === 'title') { summary.cause = 'library'; summary.cause_note = 'AI 原本判「问题出在题目」,但它建议的新题目预判也都套不上,所以改成推荐「不改,继续写」。'; }
+    }
     const fresh = store.getRun(runId);
     if (!fresh) return;
     if (run.attempts) fresh.attempts = run.attempts;
+    if (run.fit_log) fresh.fit_log = run.fit_log; // v1.75:建议题目的预判也记进 fit_log
     // 汇总期间人已经做了选择(换框架、改主题、不改继续写):这份汇总作废,只留调用记录
     if (!deadEnd(fresh.reframe) || JSON.stringify([fresh.reframe.status, fresh.reframe.at || '', (fresh.reframe.auto || {}).stopped || '']) !== key) { store.saveRun(fresh); return; }
     fresh.reframe = { ...fresh.reframe, summary, summary_status: 'done', summary_error: '' };
@@ -357,6 +380,100 @@ async function summarize(runId) {
     if (fresh) { if (run.attempts) fresh.attempts = run.attempts; if (fresh.reframe) fresh.reframe = { ...fresh.reframe, summary_status: 'failed', summary_error: e.message }; store.saveRun(fresh); }
   } finally { summaryBusy.delete(runId); }
 }
+// v1.75:用过的题目(原题目 + 每次改的),比较时去掉空格和标点
+function topicsUsed(run) {
+  const tc = arr(run.topic_changes);
+  const list = [run.original_title || (tc[0] || {}).from || run.topic].concat(tc.map(x => x.to)).concat([run.topic]).map(t => String(t || '').trim()).filter(Boolean);
+  return list.filter((t, i) => list.findIndex(x => topicKey(x) === topicKey(t)) === i);
+}
+function topicKey(t) { return String(t || '').replace(/[\s.,!?;:'"“”‘’「」『』()()\-—…?!,。、]/g, '').toLowerCase(); }
+const topicRank = t => { const v = (t.check || {}).verdict; return v === '可以写' ? 0 : v === '调整后可写' ? 1 : v ? 3 : 2; };
+// 建议的题目各快速判断一次(并行,最多 3 个)。题目侧只有题目本身(和改主题后重新挑框架时一样),结果记进 fit_log(by=topic_check)
+async function checkTopics(run, cfg, topics, origin, targets) {
+  const ids = new Set(targets.map(x => x.asset_id));
+  await Promise.all(topics.map(async t => {
+    const id = ids.has(t.target) ? t.target : origin.asset_id;
+    const asset = store.getAsset(id);
+    const name = (targets.find(x => x.asset_id === id) || {}).name || ((asset || {}).meta || {}).name || id;
+    if (!asset || !asset.framework) { t.check = { asset_id: id, name, status: 'failed', error: '框架不存在' }; return; }
+    try {
+      const fit = await fc().quickFit(run, cfg, asset, { title: t.title, topic: t.title });
+      fc().logQuick(run, fit, 'topic_check');
+      t.check = { status: 'done', name, keep_origin: id === origin.asset_id, title: t.title, ...fit };
+    } catch (e) { t.check = { asset_id: id, name, status: 'failed', error: e.message }; }
+  }));
+}
+// ---------- 建任务前预判(v1.75) ----------
+// 第 2 步填好题目后点「看看这个框架合不合适」:人选的框架快速判断一次,同时从库里挑 6 个候选并行预判,给人看最合适的 3 个。
+// 还没有任务:用一个只在内存里的对象(ephemeral)调 AI,不落盘。结果缓存 30 分钟,
+// 人照这个框架和题目建任务时,写前分析直接用这次的判断(和换框架时一样带 fit_carry),不再判一次。
+const PRE_TTL = 30 * 60 * 1000;
+const preCache = new Map();
+function preKey(b) {
+  const aud = b.audience || {};
+  return JSON.stringify([String(b.topic || '').trim(), aud.target_language || '', aud.target_country || '', aud.target_audience || '', aud.video_goal || '', String(b.materials || '').trim()]);
+}
+function preRemember(key, assetId, fit) {
+  const now = Date.now();
+  for (const [k, v] of preCache) if (now - v.at > PRE_TTL) preCache.delete(k);
+  const e = preCache.get(key) || { at: now, fits: {} };
+  e.at = now; e.fits[assetId] = fit;
+  preCache.set(key, e);
+}
+// 建任务时取这次预判(同题目、同受众、同资料、同框架,30 分钟内)
+function precheckCarry(body) {
+  const e = preCache.get(preKey(body));
+  if (!e || Date.now() - e.at > PRE_TTL) return null;
+  const fit = e.fits[body.asset_id];
+  return fit && fit.verdict ? { ...fit, asset_id: body.asset_id } : null;
+}
+const preBusy = new Set();
+async function precheck(body) {
+  const b = body || {};
+  const topic = String(b.topic || '').trim();
+  if (!topic) throw Object.assign(new Error('先填新主题'), { status: 400 });
+  if (topic.length > 300) throw Object.assign(new Error('主题太长(最多 300 字)'), { status: 400 });
+  const asset = store.getAsset(b.asset_id);
+  if (!asset || !asset.framework) throw Object.assign(new Error('框架不存在: ' + (b.asset_id || '')), { status: 404 });
+  const cfg = pl().loadConfig();
+  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key,请先在设置中填写'), { status: 400 });
+  const key = preKey(b) + '|' + b.asset_id;
+  if (preBusy.has(key)) throw Object.assign(new Error('这个题目和框架正在预判,等它出来'), { status: 409 });
+  preBusy.add(key);
+  const t0 = Date.now();
+  try {
+    const aud = b.audience || {};
+    const run = {
+      id: 'precheck', ephemeral: true, topic, asset_id: asset.id, asset_name: (asset.meta || {}).name || asset.id,
+      audience: { target_language: aud.target_language || 'English', target_country: aud.target_country || 'US', target_audience: aud.target_audience || '', video_goal: aud.video_goal || '10分钟' },
+      materials: typeof b.materials === 'string' ? b.materials.trim() : ''
+    };
+    const a = { title: { final_title: topic }, thesis_card: {}, protagonist: {} };
+    const exclude = [asset.id].concat(arr(b.exclude).map(String));
+    // 人选的框架和挑候选同时进行
+    const [selP, round] = await Promise.all([
+      fc().quickFit(run, cfg, asset, {}).then(f => ({ status: 'done', ...f }), e => ({ status: 'failed', error: e.message })),
+      pickRound(run, cfg, { ...a, reframe_reasons: [], verdict_reason: '还没开始写,建任务前先看看:人选了「' + run.asset_name + '」,从库里挑 6 个能套上这个题目的框架给人比较(人选的那个程序另外判,不要选它)' }, exclude, '')
+        .catch(e => ({ picks: [], topic_note: '', error: e.message }))
+    ]);
+    const picks = await prejudgeAll(run, cfg, a, round.picks || []);
+    const sorted = sortPicks(picks);
+    const key2 = preKey(b);
+    if (selP.status === 'done') preRemember(key2, asset.id, selP);
+    sorted.forEach(p => { if (p.prejudge && p.prejudge.status === 'done') preRemember(key2, p.asset_id, p.prejudge); });
+    const brief = p => ({ asset_id: p.asset_id, name: p.name, source: p.source, track: p.track, why: p.why, adjust: p.adjust, risk: p.risk, prejudge: p.prejudge });
+    return {
+      ok: true, secs: Math.round((Date.now() - t0) / 100) / 10,
+      selected: { asset_id: asset.id, name: run.asset_name, prejudge: selP },
+      picks: sorted.slice(0, SHOW).map(brief),
+      others: sorted.slice(SHOW).map(brief),
+      topic_note: String(round.topic_note || ''),
+      pick_error: round.error || '',
+      calls: arr(run.attempts).length
+    };
+  } finally { preBusy.delete(key); }
+}
+
 function startSummary(runId) {
   const run = store.getRun(runId);
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
@@ -409,6 +526,9 @@ function retopic(runId, title) {
   const rf = run.reframe || {};
   const origin = originOf(run);
   const now = new Date().toISOString();
+  // v1.75:选的是建议题目、而且它预判套得上:改题目后直接用那个框架做完整分析,不再判一次
+  const sug = arr((rf.summary || {}).topics).find(x => topicKey(x.title) === topicKey(t) && x.check && x.check.status === 'done' && AUTO_OK.includes(x.check.verdict) && store.getAsset(x.check.asset_id));
+  const carry = sug ? { asset_id: sug.check.asset_id, name: sug.check.name, prejudge: sug.check } : null;
   run.original_title = run.original_title || run.topic;
   run.topic_changes = arr(run.topic_changes).concat([{ from: run.topic, to: t, at: now }]);
   logEvent(run, { event: 'choice', choice: 'retopic', from: run.topic, to: t });
@@ -417,7 +537,7 @@ function retopic(runId, title) {
   ['analysis', 'analysis_raw', 'analysis_original', 'analysis_edited', 'analysis_saved_at', 'error', 'fit_quick', 'fit_carry'].forEach(k => { delete run[k]; });
   run.steps = { ...(run.steps || {}), analysis: { status: 'running', started_at: now, stage: '按新题目重新挑框架' } };
   delete run.steps.auto_adjust; delete run.steps.fit_quick;
-  run.reframe = { switched: arr(rf.switched), tried: [], origin, pool: arr(rf.pool), status: 'suggesting', stage: '按新题目预判框架', started_at: now, retopic: { from: run.topic_changes.slice(-1)[0].from, to: t, at: now }, picks: [], candidates: [] };
+  run.reframe = { switched: arr(rf.switched), tried: [], origin, pool: arr(rf.pool), status: 'suggesting', stage: '按新题目预判框架', started_at: now, retopic: { from: run.topic_changes.slice(-1)[0].from, to: t, at: now, ...(carry ? { carry } : {}) }, picks: [], candidates: [] };
   run.status = 'analyzing';
   store.saveRun(run);
   try { require('./topiczh').ensure([t]); } catch (e) { /* 中文译文补不上不影响 */ }
@@ -433,24 +553,44 @@ async function refit(runId) {
   const rf = run.reframe;
   const lib = library();
   const a = { title: { final_title: run.topic }, thesis_card: {}, protagonist: {} };
-  // 先判:最初的框架 + 现在的框架 + 上一轮的候选
-  const ids = [...new Set([rf.origin.asset_id, run.asset_id].concat(arr(rf.pool).map(p => p.asset_id)))].filter(id => store.getAsset(id)).slice(0, 13);
-  const cand = (id, i) => { const x = lib.find(l => l.id === id) || {}; const old = arr(rf.pool).find(p => p.asset_id === id) || {}; return { asset_id: id, name: x.name || id, source: x.source || '', track: x.track || '', why: old.why || '', risk: old.risk || '', recommended: id === rf.origin.asset_id, ai_order: i }; };
+  const carry = (rf.retopic || {}).carry || null;
+  const cand = (id, i) => { const x = lib.find(l => l.id === id) || {}; const old = arr(rf.pool).find(p => p.asset_id === id) || {}; return { asset_id: id, name: x.name || id, source: x.source || '', track: x.track || '', why: old.why || '', risk: old.risk || '', recommended: id === rf.origin.asset_id || !!(carry && id === carry.asset_id), ai_order: carry && id === carry.asset_id ? -1 : i }; };
   const setStage = st => { const f = store.getRun(runId); if (!f) return; if (run.attempts) f.attempts = run.attempts; if (run.fit_log) f.fit_log = run.fit_log; f.reframe = { ...(f.reframe || {}), stage: st }; f.steps = { ...(f.steps || {}), analysis: { ...((f.steps || {}).analysis || {}), stage: st } }; store.saveRun(f); };
-  setStage('按新题目预判 ' + ids.length + ' 个框架');
-  let all = await prejudgeAll(run, cfg, a, ids.map(cand));
-  let rounds = 1, topicNote = '';
+  // v1.75:先按新题目重新推荐一轮。以前只判「最初的框架 + 上一轮的候选」,上一轮的候选是按旧题目挑的
+  // (比如旧题目挑的全是阶梯框架),判得过快速判断、过不了完整分析,自动试完又停下让人改题目
+  const baseIds = [...new Set([carry && carry.asset_id, rf.origin.asset_id, run.asset_id].filter(Boolean))].filter(id => store.getAsset(id));
+  let topicNote = '';
+  let fresh1 = [];
+  try {
+    setStage('按新题目挑候选框架');
+    const last = arr(run.topic_changes).slice(-1)[0] || {};
+    const ra = { ...a, reframe_reasons: [], verdict_reason: '题目从「' + (last.from || '') + '」改成了「' + run.topic + '」,按新题目从头挑最合适的框架(不要因为旧题目的毛病排除框架)' };
+    const r1 = await pickRound(run, cfg, ra, baseIds, '');
+    fresh1 = r1.picks.map(p => ({ ...p, ai_order: p.ai_order + 10 }));
+    topicNote = r1.topic_note;
+  } catch (e) {
+    // 推荐失败:退回以前的做法,判上一轮的候选
+    topicNote = '按新题目推荐没成功(' + e.message + '),先判上一轮的候选';
+    fresh1 = arr(rf.pool).map(p => p.asset_id).filter(id => !baseIds.includes(id) && store.getAsset(id)).slice(0, 10).map((id, i) => cand(id, i + 10));
+  }
+  const first1 = baseIds.map((id, i) => cand(id, i)).concat(fresh1).slice(0, 13);
+  const carried = carry ? first1.filter(p => p.asset_id === carry.asset_id).map(p => ({ ...p, prejudge: { ...carry.prejudge, asset_id: carry.asset_id } })) : [];
+  const toJudge = first1.filter(p => !carried.includes(p) && !(carry && p.asset_id === carry.asset_id));
+  setStage('按新题目预判 ' + toJudge.length + ' 个框架' + (carried.length ? '(你选的题目已预判过「' + carried[0].name + '」)' : ''));
+  let all = carried.concat(await prejudgeAll(run, cfg, a, toJudge));
+  let rounds = 1;
   // 一个合适的都没有:按新题目重新推荐一轮(排除判过的)
   if (!all.some(p => AUTO_OK.includes((p.prejudge || {}).verdict))) {
     setStage('都不合适,按新题目重新推荐');
     const why = all.map(p => '- ' + p.name + ':' + arr((p.prejudge || {}).reframe_reasons).slice(0, 2).join(';')).join('\n');
-    const ra = { ...a, reframe_reasons: arr((rf.summary || {}).text ? [rf.summary.text] : []), verdict_reason: '改了题目,原来的框架和候选还是套不上' };
+    // v1.75:不再带旧题目的汇总(那是按原题目判的),只带按新题目判过的结论(下面 why)
+    const ra = { ...a, reframe_reasons: [], verdict_reason: '改了题目,按新题目挑的框架还是套不上' };
     // 重新推荐失败不算整篇失败:当作没有更多候选,下面照样停下来给原因汇总和两条路
     try {
-      const r2 = await pickRound(run, cfg, ra, ids, '## 按新题目判过的框架,都套不上(不要再选)\n' + why + '\n');
+      const r2 = await pickRound(run, cfg, ra, all.map(p => p.asset_id), '## 按新题目判过的框架,都套不上(不要再选)\n' + why + '\n');
       setStage('预判新推荐的 ' + r2.picks.length + ' 个候选');
       const c2 = await prejudgeAll(run, cfg, a, r2.picks.map(p => ({ ...p, round: 2, ai_order: p.ai_order + 100 })));
-      all = all.concat(c2); rounds = 2; topicNote = r2.topic_note;
+      all = all.concat(c2); rounds = 2; topicNote = r2.topic_note || topicNote;
     } catch (e) { topicNote = '按新题目重新推荐没成功:' + e.message; }
   }
   const sorted = sortPicks(all);
@@ -526,4 +666,4 @@ function startSuggest(runId) {
   return { ok: true };
 }
 
-module.exports = { isReframe, shouldHold, suggest, startSuggest, switchTo, autoNext, autoMax, setAutoMax, ignore, library, catalogText, summarize, startSummary, keepOrigin, retopic, originOf, deadEnd };
+module.exports = { precheck, precheckCarry, topicsUsed, checkTopics, isReframe, shouldHold, suggest, startSuggest, switchTo, autoNext, autoMax, setAutoMax, ignore, library, catalogText, summarize, startSummary, keepOrigin, retopic, originOf, deadEnd };

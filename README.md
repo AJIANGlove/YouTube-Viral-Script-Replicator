@@ -215,7 +215,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `fit_check.md` | 快速适配判断（结构段+必须保留机制，先于完整分析；蓝图方式「严格照原片」时用） | 53 |
 | `fit_check_function.md` | 快速适配判断，蓝图方式「按功能重排」时用（只看锁定项、核心套路、使用前提三样，卡住处标类别，普通段进 weak_segments） | 54 |
 | `analysis_fit_function.md` | 「按功能重排」时替换写前分析「第 1 步 适配判定」那一段（同样只看三样，输出 fit_blocking / weak_segments） | 20 |
-| `reframe_summary.md` | 都套不上时的原因汇总与两个选项 | 29 |
+| `reframe_summary.md` | 都套不上时的原因汇总与两个选项（建议题目带预判） | 38 |
 | `why_zh.md` | 给复审/核对问题补中文「问题在哪」 | 21 |
 | `adjust.md` | AI 先调整（补待查、改论点、找事实、补标题、主角一致、补真人案例、素材不够自动补搜） | 105 |
 | `adjust_queries.md` | 生成联网搜索查询词 | 21 |
@@ -263,7 +263,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 52 份 `.md`（3531 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 58 份，合计 3734 行。
+合计 52 份 `.md`（3540 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 58 份，合计 3743 行。
 
 ### 历史版本
 

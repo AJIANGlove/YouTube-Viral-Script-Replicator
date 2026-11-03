@@ -670,7 +670,8 @@
         </div>
       </div>
       <div class="grid" style="margin-top:8px">
-        <div><label>新主题(选题)</label><input type="text" id="gen-topic" placeholder="例如:The Economics of Owning a Casino">
+        <div><label>新主题(选题)</label><input type="text" id="gen-topic" placeholder="例如:The Economics of Owning a Casino" oninput="precheckStale()">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px"><button type="button" class="ghost" id="btn-precheck" onclick="precheckFit(this)">看看这个框架合不合适(并推荐 3 个)</button><span class="hint" style="margin:0">填好主题再点,约 30 秒到 1 分钟</span></div>
           <label style="margin-top:8px">频道方向(审稿赛道)</label><select id="gen-review-track"></select>
           <div class="hint" id="gen-review-track-hint">按选的框架自动选好。之后的写前分析、审稿报告、终审和去AI感都按这个方向审,不用再选。</div></div>
         <div>
@@ -719,6 +720,7 @@
         <div><label>目标受众</label><input type="text" id="gen-aud" placeholder="例如:18-45岁"></div>
         <div><label>视频目的(时长)</label><input type="text" id="gen-goal" value="10分钟"></div>
       </div>
+      <div id="precheck-result"></div>
       <div id="topics-result"></div>
       <div style="margin-top:8px">
         <div class="v13" style="font-size:13px;font-weight:600;margin-bottom:4px">写稿方式</div>
@@ -1639,6 +1641,7 @@ function gotoStep2() {
   if (!selectedAsset) return;
   loadVoiceOptions();
   clearTopics(); // 换框架后旧的推荐结果不再适用
+  if (!precheckKeep) { precheckLast = null; renderPrecheck(); }
   renderSelectedAsset();
   // 视频时长默认值取所选框架源视频时长(毫秒→分钟取整),可手动修改
   const a = genAssets.find(x => x.id === selectedAsset);
@@ -1651,6 +1654,99 @@ function gotoStep2() {
   rt.innerHTML = (assetTracks || []).map(t => `<option value="${escAttr(t.key)}"${t.key === keyOf ? ' selected' : ''}>${esc(t.name)}${t.key === keyOf ? '(框架所在分类)' : ''}</option>`).join('');
   document.getElementById('gen-status').textContent = '';
   setGenStep(2);
+}
+
+// ---------- 建任务前预判(v1.75):人选的框架能不能套上这个主题 + 库里另推荐 3 个 ----------
+let precheckLast = null, precheckKeep = false, precheckReq = 0;
+function precheckBody() {
+  return {
+    asset_id: selectedAsset,
+    topic: document.getElementById('gen-topic').value.trim(),
+    audience: {
+      target_language: document.getElementById('gen-lang').value,
+      target_country: document.getElementById('gen-country').value,
+      target_audience: document.getElementById('gen-aud').value,
+      video_goal: document.getElementById('gen-goal').value
+    },
+    materials: document.getElementById('gen-materials').value.trim()
+  };
+}
+async function precheckFit(btn) {
+  if (!selectedAsset) { alert('请先选择一个框架'); return; }
+  const body = precheckBody();
+  if (!body.topic) { alert('先填新主题'); return; }
+  const id = ++precheckReq;
+  btn.disabled = true;
+  precheckLast = { running: true, topic: body.topic };
+  renderPrecheck();
+  try {
+    const r = await api('/api/fit-precheck', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (id !== precheckReq) return;
+    precheckLast = { ...r, topic: body.topic };
+  } catch (e) {
+    if (id !== precheckReq) return;
+    precheckLast = { error: e.message, topic: body.topic };
+  } finally { if (id === precheckReq) btn.disabled = false; }
+  renderPrecheck();
+}
+// 主题改了:结果标成过时(不清掉,方便对照)
+function precheckStale() {
+  if (!precheckLast || precheckLast.running) return;
+  const t = document.getElementById('gen-topic').value.trim();
+  const el = document.getElementById('precheck-stale');
+  if (el) el.classList.toggle('hidden', t === precheckLast.topic);
+}
+function renderPrecheck() {
+  const el = document.getElementById('precheck-result');
+  if (!el) return;
+  const r = precheckLast;
+  if (!r) { el.innerHTML = ''; return; }
+  const box = 'border:1px solid #d1d5db;border-radius:8px;padding:10px 12px;margin:10px 0;background:#fff';
+  if (r.running) { el.innerHTML = `<div style="${box}"><b>正在预判「${esc(r.topic)}」…</b><div class="hint">先判你选的框架,同时从库里挑 6 个候选各判一次,给你看最合适的 3 个。</div></div>`; return; }
+  if (r.error) { el.innerHTML = `<div style="${box}" class="err-list">预判没成功:${esc(r.error)}</div>`; return; }
+  const sel = r.selected || {}, sp = sel.prejudge || {};
+  const bad = sp.verdict === '换框架';
+  const card = (p, isSel) => `<div style="border:1px solid ${isSel ? (bad ? '#fca5a5' : '#86efac') : '#e5e7eb'};border-radius:8px;padding:8px 10px;margin:6px 0;background:${isSel ? (bad ? '#fef2f2' : '#f0fdf4') : '#fafafa'}">
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><b>${isSel ? '你选的:' : ''}${esc(p.name)}</b> ${rfPjChip(p.prejudge)}
+        ${isSel ? '' : `<button class="an-btn" style="padding:1px 10px" onclick="precheckSwitch('${escAttr(p.asset_id)}')">换成这个框架</button>`}
+        <button class="an-btn" style="padding:1px 8px" onclick="openAssetDetail('${escAttr(p.asset_id)}')">详情</button></div>
+      ${p.source ? `<div class="hint" style="margin:2px 0">原片:${esc(p.source)}</div>` : ''}
+      ${!isSel && p.why ? `<div class="hint" style="color:#374151">为什么推荐:${esc(p.why)}</div>` : ''}
+      ${rfPjBody(p)}</div>`;
+  const best = (r.picks || [])[0];
+  const better = best && best.prejudge && RF_PJ[best.prejudge.verdict] && fitRankUi(best.prejudge.verdict) < fitRankUi(sp.verdict);
+  let h = `<div style="${box}"><div style="font-size:14px;font-weight:700">这个框架合不合适:「${esc(r.topic)}」 <span class="hint" style="margin:0">用时 ${esc(r.secs)} 秒</span></div>
+    <div id="precheck-stale" class="rv-flag hidden">主题改过了,下面是按旧主题判的,重新点一次按钮。</div>
+    ${card(sel, true)}
+    <div class="hint" style="color:#374151">${bad ? '<b>你选的框架预计套不上这个主题。</b>建议换成下面的一个,或者改主题。' : better ? '你选的框架能写,下面有预判更好的,可以比较一下。' : '你选的框架可以用,下面是库里另外几个能套上的,供比较。'}点「开始生成」时,写前分析会直接用这次的判断,不再判一次(30 分钟内、主题和受众没改)。</div>
+    ${(r.picks || []).length ? '<div style="font-weight:600;margin-top:8px">库里另推荐的 3 个</div>' + r.picks.map(p => card(p, false)).join('') : `<div class="hint">没挑出别的候选${r.pick_error ? '(' + esc(r.pick_error) + ')' : ''}。</div>`}
+    ${(r.others || []).length ? `<details><summary class="hint" style="cursor:pointer">其他预判过的 ${r.others.length} 个</summary>${r.others.map(p => card(p, false)).join('')}</details>` : ''}
+    ${r.topic_note ? `<div class="hint">题目建议:${esc(r.topic_note)}</div>` : ''}</div>`;
+  el.innerHTML = h;
+  precheckStale();
+}
+function fitRankUi(v) { return v === '可以写' ? 0 : v === '调整后可写' ? 1 : v === '换框架' ? 3 : 2; }
+// 换成推荐的框架:不回第 1 步,第 2 步填的东西都保留(视频时长、频道方向按新框架重设)
+function precheckSwitch(id) {
+  if (!genAssets.find(x => x.id === id)) { alert('框架列表里找不到这个框架,刷新页面再试'); return; }
+  const r = precheckLast || {};
+  const pick = [].concat(r.picks || [], r.others || []).find(p => p.asset_id === id);
+  const old = r.selected;
+  const goal = document.getElementById('gen-goal').value; // 视频时长保留人填的(预判是按它判的)
+  selectAsset(id);
+  precheckKeep = true;
+  try { gotoStep2(); } finally { precheckKeep = false; }
+  document.getElementById('gen-goal').value = goal;
+  if (pick && old) {
+    // 换过来的变成「你选的」,原来那个放回候选里,方便换回去
+    r.picks = (r.picks || []).filter(p => p.asset_id !== id);
+    r.others = (r.others || []).filter(p => p.asset_id !== id);
+    r.picks.push({ asset_id: old.asset_id, name: old.name, source: '', prejudge: old.prejudge, why: '你原来选的框架' });
+    r.picks.sort((x, y) => fitRankUi((x.prejudge || {}).verdict) - fitRankUi((y.prejudge || {}).verdict));
+    r.selected = { asset_id: pick.asset_id, name: pick.name, prejudge: pick.prejudge };
+  }
+  renderPrecheck();
+  document.getElementById('gen-selected-asset').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 async function createRun() {
@@ -1689,6 +1785,7 @@ async function createRun() {
     const r = await api('/api/runs', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     // 提交成功:清空选择与表单,回到第 1 步并提示
     selectedAsset = null;
+    precheckLast = null; renderPrecheck();
     document.getElementById('gen-topic').value = '';
     document.getElementById('gen-track').value = '';
     document.getElementById('gen-materials').value = '';
@@ -5167,6 +5264,14 @@ function rfAutoHistory(r) {
 }
 // 都套不上时(v1.71):两轮推荐都预计不合适,或者自动往下试停下了。
 // 最上面一段醒目的「为什么都套不上」(AI 汇总),只给两个大按钮:① 改主题 ② 不改,继续写;其他(手动选框架、重新推荐、仍按某个写)折叠
+// v1.75:建议题目的预判结果。keep_origin = 对准你最初选的框架(保留框架、只换角度)
+function rfTopicCheck(c) {
+  if (!c) return '';
+  const who = c.keep_origin ? '保留原框架换角度' : '对准「' + esc(rfCut(c.name, 20)) + '」';
+  if (c.status === 'failed' || !c.verdict) return `<span class="rv-chip" style="background:#f3f4f6;color:#4b5563">${who} · 预判没成功</span>`;
+  const [cl, t] = RF_PJ[c.verdict] || ['', c.verdict];
+  return `<span class="rv-chip ${cl}">${who} · 预判:${esc(t)}</span>`;
+}
 function rfOriginName(r) { const sw = ((r.reframe || {}).switched || [])[0]; return sw ? (sw.from_name || sw.from) : (r.asset_name || r.asset_id); }
 function rfDeadEnd(r) {
   const rf = r.reframe || {}, au = rf.auto || {}, sm = rf.summary;
@@ -5179,9 +5284,11 @@ function rfDeadEnd(r) {
   }
   if (sm && sm.text) {
     h += `<div style="font-size:15px;font-weight:600;line-height:1.8;padding:12px 14px;margin:8px 0;border:2px solid #fca5a5;background:#fef2f2;border-radius:8px;color:#7f1d1d">${esc(sm.text)}</div>
-      <div class="hint" style="color:#374151">判断:<b>问题出在${sm.cause === 'title' ? '题目本身' : '框架库(库里刚好没有合适的)'}</b>${sm.cause_why ? '。' + esc(sm.cause_why) : ''}</div>`;
+      <div class="hint" style="color:#374151">判断:<b>问题出在${sm.cause === 'title' ? '题目本身' : '框架库(库里刚好没有合适的)'}</b>${sm.cause_why ? '。' + esc(sm.cause_why) : ''}</div>${sm.cause_note ? `<div class="rv-flag">${esc(sm.cause_note)}</div>` : ''}`;
   } else if (rf.summary_status === 'failed') {
     h += `<div class="err-list">原因汇总没出来:${esc(rf.summary_error || '')} <button class="an-btn" onclick="rfAction('summary', this)">重新汇总</button></div>`;
+  } else if (rf.summary_status === 'checking') {
+    h += `<div class="rv-flag"><b>原因汇总好了,正在逐个预判建议的新题目能不能套上框架…</b>一般半分钟。</div>`;
   } else {
     h += `<div class="rv-flag"><b>AI 正在汇总为什么都套不上…</b>一般半分钟。下面两个选项现在也能用。</div>`;
   }
@@ -5192,7 +5299,7 @@ function rfDeadEnd(r) {
   h += `<div style="display:flex;gap:12px;flex-wrap:wrap;margin:10px 0">
     <div style="${box}${sm && sm.cause === 'title' ? ';border-color:#16a34a;background:#f0fdf4' : ''}">
       <div style="font-size:15px;font-weight:700">① 改主题${rec('title')}</div>
-      ${topics.length ? `<div class="hint" style="color:#374151">AI 建议的题目(选一个,也可以在下面框里改):</div>` + topics.map((t, i) => `<label style="display:block;margin:6px 0;cursor:pointer;font-weight:400"><input type="radio" name="rf-topic-pick" style="width:auto" ${i === 0 ? 'checked' : ''} onchange="document.getElementById('rf-topic').value=this.value" value="${escAttr(t.title)}"> <b>${esc(t.title)}</b><div class="hint" style="margin:2px 0 0 22px">${esc(t.zh)}${t.why ? '。' + esc(t.why) : ''}</div></label>`).join('') : ''}
+      ${topics.length ? `<div class="hint" style="color:#374151">AI 建议的题目(每个都先预判过能不能套上框架;选一个,也可以在下面框里改):</div>` + topics.map((t, i) => `<label style="display:block;margin:6px 0;cursor:pointer;font-weight:400"><input type="radio" name="rf-topic-pick" style="width:auto" ${i === 0 ? 'checked' : ''} onchange="document.getElementById('rf-topic').value=this.value" value="${escAttr(t.title)}"> <b>${esc(t.title)}</b> ${rfTopicCheck(t.check)}<div class="hint" style="margin:2px 0 0 22px">${esc(t.zh)}${t.why ? '。' + esc(t.why) : ''}${t.check && t.check.verdict_reason ? '<br>预判理由:' + esc(t.check.verdict_reason) : ''}</div></label>`).join('') + (sm.topics_none_fit ? '<div class="hint" style="color:#b91c1c">建议的题目预判都套不上,改主题不一定有用。</div>' : '') : ''}
       <input type="text" id="rf-topic" style="width:100%;box-sizing:border-box;margin-top:4px" value="${escAttr((topics[0] || {}).title || '')}" placeholder="新题目(${esc(((r.audience || {}).target_language) || '目标语言')})">
       <div class="rv-ops" style="margin-top:6px"><button class="an-btn v13" style="font-size:14px;padding:6px 18px" onclick="rfRetopic(this)">继续</button></div>
       <div class="hint">点「继续」后全自动:按新题目重新挑框架、预判、做写前分析,通过就${r.draft_first ? '接着写稿' : '停在分析等你确认'}。还是都不合适就再停一次,不会一直循环。原题目会留在记录里。</div>

@@ -75,7 +75,7 @@ function frameworkVars(run, asset) {
     hook_contract: retention.hookContract(asset.timeline),
     retention_library: retention.librarySummary(4, 8),
     track_card: card ? card.text : '(没有匹配的赛道证据卡:事实按通用标准填写,来源、年份、地区缺一不可)',
-    materials: run.materials || '(无)',
+    materials: require('./fitcheck').materialsFor(run), // v1.75:改过题目的,资料前注明是按原题目准备的
     voice: voice.voiceBrief(voice.voiceForRun(run)),
     craft_rules: require('./craft').craftBrief(run) || '(没有适用的写法规则)'
   };
@@ -781,6 +781,8 @@ async function callWithLog(run, cfg, messages, label, opts) {
   // 只把 attempts / 取消标记并进盘上的最新版本,不整对象写回:
   // 这个调用可能持续几分钟,期间接口可能已经保存过分析、确认过任务,旧快照写回会把它们覆盖掉。
   const log = extra => {
+    // v1.75:建任务前的预判(还没有任务)只记在内存对象上,不落盘,免得任务列表里多出一条假任务
+    if (run.ephemeral) { run.attempts = [...(run.attempts || []), { ts: new Date().toISOString(), label, provider: cfg.provider || '', model: cfg.model || '', ...extra }].slice(-100); return; }
     const fresh = store.getRun(run.id) || run;
     if (fresh.cancel_requested) run.cancel_requested = true;
     run.attempts = [...(run.attempts || []), { ts: new Date().toISOString(), label, provider: cfg.provider || '', model: cfg.model || '', ...extra }].slice(-100);
