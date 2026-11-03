@@ -77,7 +77,8 @@ function frameworkVars(run, asset) {
     track_card: card ? card.text : '(没有匹配的赛道证据卡:事实按通用标准填写,来源、年份、地区缺一不可)',
     materials: require('./fitcheck').materialsFor(run), // v1.75:改过题目的,资料前注明是按原题目准备的
     voice: voice.voiceBrief(voice.voiceForRun(run)),
-    craft_rules: require('./craft').craftBrief(run) || '(没有适用的写法规则)'
+    craft_rules: require('./craft').craftBrief(run) || '(没有适用的写法规则)',
+    thesis_research: require('./thesis').researchText(run.thesis_scout) // v1.77
   };
   return { vars, card };
 }
@@ -949,6 +950,16 @@ async function runAnalysis(runId) {
       run.steps.analysis = { ...run.steps.analysis, stage: '写前分析' };
       store.saveRun(run);
     }
+    // v1.77:先定论点 —— 出 3 个角度 → 联网搜正反资料 → 核对挑选,结果带进写前分析(失败不挡)
+    await require('./thesis').ensure(run, cfg, asset, stage => { run.steps.analysis = { ...run.steps.analysis, stage }; store.saveRun(run); });
+    if (run.cancel_requested || (store.getRun(run.id) || {}).cancel_requested) {
+      run.status = 'cancelled';
+      run.steps.analysis = { ...run.steps.analysis, status: 'failed' };
+      store.saveRun(run);
+      return;
+    }
+    run.steps.analysis = { ...run.steps.analysis, stage: '写前分析' };
+    store.saveRun(run);
     const built = buildAnalysisPrompt(run, asset);
     run.track_card_name = built.track_card_name;
     let messages = [{ role: 'user', content: built.prompt }];

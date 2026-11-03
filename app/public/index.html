@@ -5598,7 +5598,37 @@ function anFitRuleHtml(o) {
   if (!bl.length) h += `<div class="hint" style="margin:0">没有卡住的地方。</div>`;
   return h + '</div>';
 }
-function anFitLine(r) {
+function anFitLine(r) { return anFitLine0(r) + thesisScoutHtml(r); }
+// v1.77 写前论点调研:先想 3 个角度 → 联网搜正反资料 → 核对挑选
+function tsLinks(list) { return (list || []).map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener" title="${esc(s.title || '')}">${esc(s.ref || '')}${s.site ? ' ' + esc(s.site) : ''}</a>`).join(' · '); }
+function thesisScoutHtml(r) {
+  const ts = r && r.thesis_scout;
+  if (!ts) return '';
+  if (ts.error) return `<div class="hint">写前论点调研没成功(${esc(ts.error)}),写前分析照旧自己定了论点。</div>`;
+  const angles = ts.angles || [];
+  if (!angles.length) return '';
+  const p = ts.pick || null;
+  const VC = { '站得住': 'green', '收窄后站得住': 'yellow', '站不住': 'red' };
+  const chk = id => p ? (p.checks || []).find(c => c.id === id) : null;
+  let h = `<details style="border:1px solid #c4b5fd;background:#f5f3ff;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px;color:#1f2937"><summary style="cursor:pointer"><b>写前论点调研</b>:`;
+  if (p && p.final) h += `选定 <b>${esc(p.final.one_line)}</b>${p.chosen === 'NEW' ? '(资料里发现的新角度)' : ''}`;
+  else if (p) h += '3 个角度核对后都站不住,写前分析自己定了论点';
+  else h += esc(ts.note || '只出了角度,没有联网核对');
+  h += `<span class="hint">(${ts.searched ? '已联网核对' : '未联网'}${ts.secs != null ? ' · ' + esc(ts.secs) + ' 秒' : ''})</span></summary>`;
+  h += angles.map(a => {
+    const c = chk(a.id);
+    const on = p && p.chosen === a.id;
+    return `<div style="margin:6px 0;${on ? 'font-weight:600' : ''}">${on ? '✓ ' : ''}${esc(a.id)} ${esc(a.one_line)} ${c ? `<span class="rv-chip ${VC[c.verdict] || ''}" style="cursor:default">${esc(c.verdict)}</span>` : ''}
+      <div class="hint" style="font-weight:400">原来以为:${esc(a.belief)};要证明:${esc(a.claim)}${a.method && a.method.length ? ' · 定法 ' + esc(a.method.join('/')) : ''}</div>
+      ${c ? `<div class="hint" style="font-weight:400">${[esc(c.note) + (c.narrowed ? ' → 收窄为:' + esc(c.narrowed) : ''), c.pro.length ? '支持:' + tsLinks(c.pro) : '', c.con.length ? '反对:' + tsLinks(c.con) : ''].filter(Boolean).join('<br>')}</div>` : `<div class="hint" style="font-weight:400">关键事实:${esc(a.key_fact)}</div>`}</div>`;
+  }).join('');
+  if (p && p.why) h += `<div class="hint">为什么选它:${esc(p.why)}</div>`;
+  if (p && (p.facts || []).length) h += `<div style="margin-top:6px"><b>核对过的事实</b>${p.facts.map(x => `<div class="hint">· ${esc(x.content)}${x.year ? '(' + esc(x.year) + ')' : ''} ${tsLinks(x.sources)}</div>`).join('')}</div>`;
+  if (p && (p.con_facts || []).length) h += `<div style="margin-top:6px"><b>相反的事实(稿子里要正面处理)</b>${p.con_facts.map(x => `<div class="hint">· ${esc(x.content)} ${tsLinks(x.sources)}${x.how_to_handle ? ' → ' + esc(x.how_to_handle) : ''}</div>`).join('')}</div>`;
+  if (p && (p.missing || []).length) h += `<div class="hint" style="margin-top:6px">还没查到:${p.missing.map(esc).join(';')}</div>`;
+  return h + '</details>';
+}
+function anFitLine0(r) {
   const fq = (r && (r.fit_quick || ((r.analysis || {}).fit_quick))) || null;
   const fs = ((r && r.steps) || {}).fit_quick || {};
   if (!fq) return fs.status === 'failed' ? `<div class="hint">快速适配判断没成功(${esc(fs.error || '')}),直接做了完整分析。</div>` : '';
@@ -5623,7 +5653,8 @@ function renderAnalysisPanel(r) {
     if (key === anRenderedKey) return;
     anRenderedKey = key;
     el.innerHTML = `<h2>⓪ 写前分析</h2><div class="hint">${st.stage === '快速适配判断' ? '先快速判断这个框架合不合适(一般 20–30 秒),合适再做完整分析…'
-      : st.stage === '原片对照表' ? '完整分析已出,正在生成原片对照表(约 1 分钟)…' : 'AI 正在查事实、定论点和留存地图,通常 1-3 分钟…'}</div>${anFitLine(r)}`;
+      : st.stage === '原片对照表' ? '完整分析已出,正在生成原片对照表(约 1 分钟)…'
+      : /^定论点/.test(st.stage || '') ? esc(st.stage) + '…(先想 3 个论点角度,再联网查支持和反对的资料核对,一般 1–2 分钟;之后再做完整写前分析)' : 'AI 正在查事实、定论点和留存地图,通常 1-3 分钟…'}</div>${anFitLine(r)}`;
     return;
   }
   if (r.analysis && r.analysis.quick_only) {
