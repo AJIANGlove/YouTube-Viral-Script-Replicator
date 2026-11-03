@@ -45,7 +45,7 @@ flowchart LR
 │   ├── prompts/            现行提示词（生产用，单一来源）
 │   ├── extension/          抓 Studio 真实数据的 Chrome 插件
 │   ├── public/             前端 SPA
-│   ├── data/runs/          108 条生成记录（含每步 attempts 与校验明细）
+│   ├── data/runs/          111 条生成记录（含每步 attempts 与校验明细）
 │   ├── data/logs/          运行日志（失败样本、留存卡批处理、探针输出）
 │   └── config.example.json 配置结构示例（不含真实 Key）
 ├── assets/                 214 个四层资产包，每包含原始 SRT 与留存卡
@@ -122,7 +122,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
    - **我的意见**（`prompts/revise.md`）：只重做提意见的那一行，返回改前改后，人工点采用才写入。
    - **标题审核**（`prompts/title_audit.md`）：自写标题先过审，通过后同步观众问题与期待方向。
    - **联网搜索**（`lib/search.js`）：AI 先列查询词（`prompts/adjust_queries.md`），程序检索取前 N 条，AI 只能按结果填并带链接与日期。
-1. **Blueprint**：只做结构映射，不创作新结构；每章必须有功能、目标、Open Loop。
+1. **Blueprint**：两种方式——「严格照原图」直接做结构映射；「按功能重排」分两步：`function_table.md` 先出原片每段功能表（作用 / 必须保留 / 可以换 / 四选一处理，删要写查过的事实，合计不超过设定比例），`step1_function.md` 再按功能表排章。产出后过 `blueprint_review.md` 的 7 项检查（递进、揭示顺序、标题与主线、事实支撑、反转、硬套、删除是否成立），不过则改（≤2 次），仍不过停在「蓝图待定」，三选一：改主题 / 继续写 / 换框架。每章必须有功能、目标、Open Loop。
 2. **Script**：按蓝图逐章施工；资产优先级为 Blueprint > Examples > Style > Audience Context。
 3. **Audit**：逐项对照四层资产找偏差，结论必须引用证据；不依赖模型记忆。
 4. **Optimization**：Preservation Editing，只修问题、不重写；输出 Change Log。
