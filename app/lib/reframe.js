@@ -108,7 +108,7 @@ const unfit = p => (p.prejudge || {}).verdict === '换框架';
 async function pickRound(run, cfg, a, exclude, extra) {
   const cat = catalogText(run, exclude);
   const cur = library().find(x => x.id === run.asset_id) || { name: run.asset_name || run.asset_id };
-  const prompt = an().fillVars(fs.readFileSync(PROMPT, 'utf-8'), {
+  const prompt = an().fillVars(require('./fitrule').suggestPrompt(fs.readFileSync(PROMPT, 'utf-8')), { // v1.74:按功能重排时第 3 条换成新标准
     topic: run.topic || '', title: ((a.title || {}).final_title) || run.topic || '',
     target_country: (run.audience || {}).target_country || '', target_language: (run.audience || {}).target_language || '',
     thesis: JSON.stringify(a.thesis_card || {}),

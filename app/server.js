@@ -779,10 +779,17 @@ const server = http.createServer(async (req, res) => {
     // 联网搜索设置(渠道适配器,当前接 DeepSeek):开关、渠道、每个查询取几条;Key 默认用同名渠道的 Key
     // 换框架自动往下试(v1.71):最多自动试几个(0 = 不自动试,默认 3)
     // 蓝图方式(v1.73):function 按功能重排(默认)/ strict 严格照原片(和 v1.72 一样)
-    if (url === '/api/blueprint-settings' && method === 'GET') { const b = require('./lib/blueprint'); return send(res, 200, { mode: b.settingMode(), modes: b.MODES }); }
+    if (url === '/api/blueprint-settings' && method === 'GET') { const b = require('./lib/blueprint'); return send(res, 200, { mode: b.settingMode(), modes: b.MODES, delete_max: b.deleteMax(), delete_max_default: b.DELETE_MAX_DEFAULT }); }
     if (url === '/api/blueprint-settings' && method === 'POST') {
       const body = await readBody(req);
-      try { return send(res, 200, require('./lib/blueprint').setSettingMode(String(body.mode || ''))); }
+      // v1.74:mode 和 delete_max(删掉的段最多占原片百分之几)可以分开存,也可以一起存
+      try {
+        const b = require('./lib/blueprint');
+        if (body.mode == null && body.delete_max == null) throw Object.assign(new Error('没有要保存的设置(mode 或 delete_max)'), { status: 400 });
+        if (body.delete_max != null && body.delete_max !== '') b.setDeleteMax(body.delete_max);
+        if (body.mode != null) b.setSettingMode(String(body.mode || ''));
+        return send(res, 200, { ok: true, mode: b.settingMode(), label: b.MODES[b.settingMode()], delete_max: b.deleteMax() });
+      }
       catch (e) { return send(res, e.status || 500, { error: e.message }); }
     }
     if (url === '/api/reframe-settings' && method === 'GET') return send(res, 200, { auto_max: require('./lib/reframe').autoMax() });

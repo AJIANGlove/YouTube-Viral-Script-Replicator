@@ -180,6 +180,7 @@
   .bp-bad { color: #b91c1c; font-weight: 600; white-space: nowrap; }
   .bp-by { display: inline-block; font-size: 11px; padding: 0 6px; border-radius: 999px; background: #e5e7eb; color: #374151; margin-right: 4px; }
   .bp-tr-del { color: #9ca3af; }
+  .bp-del { border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 10px; margin: 8px 0; font-size: 13px; }
   .bp-chip { display: inline-block; font-size: 11px; padding: 1px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
   .bp-chip.ok { background: #d1fae5; color: #047857; } .bp-chip.bad { background: #fee2e2; color: #b91c1c; } .bp-chip.run { background: #dbeafe; color: #1d4ed8; }
   .bp-panel details { margin-top: 8px; } .bp-panel summary { cursor: pointer; font-weight: 600; font-size: 13px; }
@@ -949,10 +950,11 @@
     </div>
     <div class="card" id="bp-mode-card">
       <h2>蓝图方式</h2>
-      <div class="hint" style="margin-bottom:6px">按功能重排(新,默认):先给原片每一段写一行功能表(这一段起什么作用、必须保留什么、可以换什么),再按新题目的事实排章;开头钩子、每个高峰、每对悬念的开和收、结尾回扣必须有去处,其余可以合并、删、调序。蓝图画完先过「蓝图审」,不过就让 AI 改,最多 2 次,还不过就停下来让你选。<br>严格照原片(旧):原片一段对一段换内容,和 v1.72 一样,不做功能表和蓝图审。用来新旧对比。只对之后新画的蓝图生效。</div>
+      <div class="hint" style="margin-bottom:6px">按功能重排(新,默认):先给原片每一段写一行功能表(这一段起什么作用、必须保留什么、可以换什么),再按新题目的事实排章;开头钩子、每个高峰、每对悬念的开和收、结尾回扣必须有去处,其余可以换内容、合并,实在没有素材才删(优先顺序:换内容 > 合并 > 删;删要有事实依据,删掉的段合计不超过下面的上限,删出来的时间分给其他章,总时长不变)。判断框架合不合适时也只看锁定项、核心套路、使用前提三样,普通段做不到不算不合适。蓝图画完先过「蓝图审」,不过就让 AI 改,最多 2 次,还不过就停下来让你选。<br>严格照原片(旧):原片一段对一段换内容,和 v1.72 一样,不做功能表和蓝图审。用来新旧对比。只对之后新画的蓝图生效。</div>
       <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
         <label style="margin:0"><input type="radio" name="bp-mode" value="function"> 按功能重排(新)</label>
         <label style="margin:0"><input type="radio" name="bp-mode" value="strict"> 严格照原片(旧)</label>
+        <label style="margin:0" title="按功能重排时,功能表里判「删」的原片段加起来最多占原片时长的百分之几;超了程序会退回让 AI 重写,还超就把最长的几段改成合并">删掉的段最多占原片 <input id="bp-delete-max" type="number" min="0" max="50" step="1" style="width:56px"> %</label>
         <button class="primary" onclick="saveBlueprintSettings()">保存</button>
         <span class="hint" id="bp-mode-status" style="margin-top:0"></span>
       </div>
@@ -4046,7 +4048,7 @@ function analysisHtml(a, materials, say) {
   const t = a.title || {};
   const th = a.thesis_card || {};
   const h = a.hook || {};
-  let html = `<div class="an-sec">结论:${esc(a.verdict || '')}</div><div class="hint">${esc(a.verdict_reason || '')}</div>`;
+  let html = `<div class="an-sec">结论:${esc(a.verdict || '')}</div><div class="hint">${esc(a.verdict_reason || '')}</div>${anFitRuleHtml(a)}`;
   const adjList = Array.isArray(a.adjustments) ? a.adjustments.filter(x => x && typeof x === 'object') : [];
   const reframeList = Array.isArray(a.reframe_reasons) ? a.reframe_reasons.filter(Boolean) : [];
   if (adjList.length) html += `<div class="an-adj v12"><b>调整清单：共 ${adjList.length} 项</b>${adjList.map((x, i) => `<div>${anNum(i)} <b>${esc(x.type || '')}</b> ${esc(anTargetLabel(x.target || ''))}${(Array.isArray(x.segments) ? x.segments : []).length ? '（影响 ' + esc((Array.isArray(x.segments) ? x.segments : []).join('/')) + '）' : ''}：${esc(x.reason || '')}${x.status ? ' · ' + esc(x.status) : ''}</div>`).join('')}</div>`;
@@ -4924,7 +4926,7 @@ function anEditorShell() {
       ${sel('verdict', ['可以写', '调整后可写', '换框架'], d.verdict)}
       <span class="hint" style="margin:2px 0 0;flex:1 1 320px">${esc(d.verdict_reason || '')}</span>
     </div>
-    ${anAdjustmentsHtml(d)}${anEvidenceHtml(d)}${anMappingHtml(d)}`;
+    ${anFitRuleHtml(d)}${anAdjustmentsHtml(d)}${anEvidenceHtml(d)}${anMappingHtml(d)}`;
 
   const aiTitles = new Set(t.ai_added || []);
   html += `<div data-an-target="title"><div class="an-sec">标题</div>
@@ -5350,6 +5352,20 @@ function anKeepNote(r) {
   const li = k.segments.map(x => `<li>${x.segment ? '<b>' + esc(x.segment) + '</b>:' : ''}${esc(x.why || '')}${x.how ? ' → <b>换成:</b>' + esc(x.how) : ''}</li>`).join('');
   return `<div class="rv-flag" style="margin:6px 0"><b>你选了「不改,继续写」</b>:仍用这个框架,下面 ${k.segments.length} 段写不成立。写前分析、蓝图、写稿和复审都会要求这几段换个讲法,不硬编。<ul style="margin:4px 0 0 18px">${li}</ul></div>`;
 }
+// v1.74 判断框架合不合适按新标准(只看锁定项 / 核心套路 / 使用前提):改判说明 + 卡住的地方按类别分
+function anFitRuleHtml(o) {
+  if (!o || o.fit_standard !== 'function') return '';
+  const fr = o.fit_rule || {};
+  const bl = Array.isArray(o.fit_blocking) ? o.fit_blocking : [];
+  const hard = bl.filter(b => b.kind !== 'segment'), soft = bl.filter(b => b.kind === 'segment');
+  const item = b => `<div>· <b>${esc(b.kind_label || b.kind || '')}</b> ${esc((b.segment ? b.segment + ':' : '') + (b.why || ''))}${b.kind_by === '程序' ? ' <span class="hint" style="margin:0">(AI 没标类别,程序按文字分的)</span>' : ''}</div>`;
+  let h = `<div class="an-adj v12 an-fitrule${fr.downgraded ? '' : (o.verdict === '换框架' ? ' bad' : '')}" style="margin:4px 0${fr.downgraded || o.verdict !== '换框架' ? ';background:#f0fdf4;border-color:#bbf7d0;color:#14532d' : ''}"><b style="${fr.downgraded || o.verdict !== '换框架' ? 'color:#14532d' : ''}">按新标准判断(蓝图按功能重排:只看锁定项、核心套路、使用前提三样,普通段做不到不算不合适)</b>`;
+  if (fr.downgraded) h += `<div style="color:#047857">AI 原来判「换框架」,但卡住的 ${(fr.segment_only || []).length} 处都是普通段要求,程序改判「${esc(fr.to || '调整后可写')}」:这些段交给功能表换内容或合并处理。</div>`;
+  if (hard.length) h += `<div style="margin-top:2px">锁定项 / 核心套路 / 使用前提做不到(${hard.length} 处):</div>${hard.map(item).join('')}`;
+  if (soft.length) h += `<details><summary style="font-weight:400">普通段需要调整(${soft.length} 处,不算不合适)</summary>${soft.map(item).join('')}</details>`;
+  if (!bl.length) h += `<div class="hint" style="margin:0">没有卡住的地方。</div>`;
+  return h + '</div>';
+}
 function anFitLine(r) {
   const fq = (r && (r.fit_quick || ((r.analysis || {}).fit_quick))) || null;
   const fs = ((r && r.steps) || {}).fit_quick || {};
@@ -5357,7 +5373,7 @@ function anFitLine(r) {
   const [c, t] = RF_PJ[fq.verdict] || ['', fq.verdict || ''];
   const full = r.analysis && !r.analysis.quick_only ? r.analysis.verdict : '';
   const by = fq.by === 'prejudge' ? '推荐框架时预判' : '快速适配判断';
-  return `<div class="hint" style="color:#374151;margin:4px 0">${by}:<span class="rv-chip ${c}" style="cursor:default">${esc(fq.verdict || '')}</span>${fq.secs != null ? '用时 ' + esc(fq.secs) + ' 秒' : ''}${full ? `;完整分析:<b>${esc(full)}</b>${full !== fq.verdict ? '(两次结论不一样,以完整分析为准)' : ''}` : ''}</div>`;
+  return `<div class="hint" style="color:#374151;margin:4px 0">${by}:<span class="rv-chip ${c}" style="cursor:default">${esc(fq.verdict || '')}</span>${fq.secs != null ? '用时 ' + esc(fq.secs) + ' 秒' : ''}${(fq.fit_rule || {}).downgraded ? '(AI 原判换框架,卡住的都是普通段,程序按新标准改判)' : ''}${full ? `;完整分析:<b>${esc(full)}</b>${full !== fq.verdict ? '(两次结论不一样,以完整分析为准)' : ''}` : ''}</div>${full ? '' : anFitRuleHtml(fq)}`;
 }
 
 function renderAnalysisPanel(r) {
@@ -5542,17 +5558,30 @@ async function rerunAnalysis() {
 
 // ---------- v1.73 蓝图面板:蓝图方式、蓝图审(6 项)、功能表、每章排法;蓝图审没过停下时的三个选择 ----------
 let bpRenderedKey = null;
+// v1.74 删掉的原片段:「删 N 段,占原片 X%(上限 Y%)」+ 每段的时长和理由
+function bpDeletedHtml(v, strict) {
+  const t = v.table || {};
+  const list = (v.deleted_segments && v.deleted_segments.length) || v.deleted_ratio != null ? (v.deleted_segments || []) : (t.deleted || []);
+  const ratio = v.deleted_ratio != null ? v.deleted_ratio : (t.deleted_ratio || 0);
+  const max = v.delete_max != null ? v.delete_max : 15;
+  const mmss = x => { const n = Math.round(x || 0); return Math.floor(n / 60) + ':' + String(n % 60).padStart(2, '0'); };
+  const pct = x => Math.round((x || 0) * 100) + '%';
+  if (strict) return list.length ? `<div class="hint">蓝图没写到的原片段(只做统计):${list.length} 段,占原片 ${pct(ratio)}</div>` : '';
+  const over = ratio * 100 > max + 1e-9;
+  const head = list.length ? `删 ${list.length} 段,占原片 ${pct(ratio)}(上限 ${max}%)` : `没有删掉的段(上限 ${max}%)`;
+  return `<div class="bp-del"><b style="${over ? 'color:#b91c1c' : ''}">${head}</b>${list.length ? `<table class="bp-tbl"><tr><th>段</th><th>时长</th><th>占原片</th><th>理由</th></tr>${list.map(d => `<tr><td>${esc(d.segment)}</td><td>${d.secs ? mmss(d.secs) : '—'}</td><td>${pct(d.ratio)}</td><td>${esc(d.reason || '(没写理由)')}${d.treatment && d.treatment !== '新题目没有这块可删' ? `<div class="hint" style="margin:0;color:#b91c1c">功能表是「${esc(d.treatment)}」,蓝图却没写到</div>` : ''}${(d.checked_facts || []).length ? `<div class="hint" style="margin:0">查过的事实:${esc(d.checked_facts.join('、'))}</div>` : ''}</td></tr>`).join('')}</table>` : ''}<div class="hint" style="margin:2px 0 0">删出来的时间分给其他章,全片总时长不变。优先顺序:换内容 > 合并 > 删。</div></div>`;
+}
 function renderBlueprintPanel(r) {
   const el = document.getElementById('bp-panel');
   const v = r.blueprint_view;
   if (!v) { el.classList.add('hidden'); bpRenderedKey = null; return; }
   // 停下时有输入框:内容没变就不重绘,免得 3 秒轮询把人正在改的题目冲掉
-  const key = JSON.stringify([r.status, v.mode, (v.review || {}).status, (v.review || {}).finished_at, ((v.review || {}).rounds || []).length, (v.table || {}).at, (v.chapters || []).length]);
+  const key = JSON.stringify([r.status, v.mode, (v.review || {}).status, (v.review || {}).finished_at, ((v.review || {}).rounds || []).length, (v.table || {}).at, (v.chapters || []).length, v.deleted_ratio, (v.deleted_segments || []).length]);
   if (key === bpRenderedKey && !el.classList.contains('hidden')) return;
   bpRenderedKey = key;
   el.classList.remove('hidden');
   if (v.mode !== 'function') {
-    el.innerHTML = `<h2>蓝图方式:${esc(v.mode_label)}</h2><div class="hint">${v.mode_why ? esc(v.mode_why) + '。' : ''}原片一段对一段换内容(和 v1.72 一样),没有功能表和蓝图审。${v.setting !== v.mode ? '设置里现在是「按功能重排」。' : ''}</div>`;
+    el.innerHTML = `<h2>蓝图方式:${esc(v.mode_label)}</h2><div class="hint">${v.mode_why ? esc(v.mode_why) + '。' : ''}原片一段对一段换内容(和 v1.72 一样),没有功能表和蓝图审。${v.setting !== v.mode ? '设置里现在是「按功能重排」。' : ''}</div>${bpDeletedHtml(v, true)}`;
     return;
   }
   const rv = v.review || null;
@@ -5592,6 +5621,7 @@ function renderBlueprintPanel(r) {
       html += `<details><summary style="font-weight:400">${x.after_revise ? '改第 ' + x.after_revise + ' 次后' : '第一次审'}查出的问题(${bad.map(i => esc(i.name) + ' ' + (i.problems || []).length + ' 条').join('、')}),已交给 AI 改</summary><table class="bp-tbl">${bad.map(i => `<tr><td style="white-space:nowrap">${esc(i.name)}</td><td>${(i.problems || []).map(prob).join('')}</td></tr>`).join('')}</table></details>`;
     });
   }
+  if ((v.chapters || []).length || (v.table || {}).rows) html += bpDeletedHtml(v, false);
   const chs = v.chapters || [];
   if (chs.length) {
     html += `<details open><summary>每章怎么排(${chs.length} 章)</summary><table class="bp-tbl"><tr><th>章</th><th>时间</th><th>承接原片段</th><th>处理</th><th>锁定项</th><th>为什么这样排</th>${chs.some(c => c.level_focus) ? '<th>这一级的重点 / 新信息</th>' : ''}</tr>${chs.map(c => `<tr><td>${esc(c.id)}</td><td style="white-space:nowrap">${esc(c.time_range)}</td><td>${esc((c.source_segments || []).join('、') || '新加')}</td><td>${esc(c.treatment)}</td><td>${esc((c.locks || []).join('、'))}</td><td>${esc(c.layout_reason)}</td>${chs.some(x => x.level_focus) ? `<td>${c.level_focus ? '<b>' + esc(c.level_focus) + '</b>:' + esc(c.level_new_info) : ''}</td>` : ''}</tr>`).join('')}</table></details>`;
@@ -5602,8 +5632,11 @@ function renderBlueprintPanel(r) {
     const n = k => t.rows.filter(x => x.treatment === k).length;
     html += `<details><summary>功能表(原片 ${t.rows.length} 段:保留功能换内容 ${n('保留功能换内容')}、合并 ${n('合并到相邻章')}、可删 ${n('新题目没有这块可删')}、新题目自己的 ${n('必须是新题目自己的')})</summary>
       ${(t.ladder || {}).on ? `<div class="hint">等级 / 重复单元框架:${esc(t.ladder.why)}。每一级要写不同的重点和新信息。</div>` : ''}
+      ${(t.delete_issues || []).length ? `<div class="hint" style="color:#b45309">⚠ AI 第一次给的删除有 ${t.delete_issues.length} 处不成立:${t.delete_issues.map(x => esc(x.text)).join(';')}${t.delete_retried ? '(已退回让 AI 重排一次)' : ''}</div>` : ''}
+      ${(t.fixes || []).filter(x => /删除不成立|超上限/.test(x)).length ? `<div class="hint">程序兜底改了:${t.fixes.filter(x => /删除不成立|超上限/.test(x)).map(esc).join(';')}</div>` : ''}
+      ${(t.review_restored || []).length ? `<div class="hint">蓝图审判删除不成立、改回换内容的段:${t.review_restored.map(esc).join('、')}</div>` : ''}
       ${(t.source_hits || []).length ? `<div class="hint" style="color:#b45309">⚠ 功能表里还有原片的具体内容:${t.source_hits.map(h => esc(h.segment) + ' ' + h.words.map(w => '「' + esc(w) + '」').join('')).join(';')}${t.source_retried ? '(已让 AI 改过一次)' : ''}</div>` : ''}
-      <table class="bp-tbl"><tr><th>段</th><th>位置</th><th>作用</th><th>必须保留</th><th>可以换</th><th>处理</th><th>锁定项</th><th>理由</th></tr>${t.rows.map(x => `<tr class="${x.treatment === '新题目没有这块可删' ? 'bp-tr-del' : ''}"><td>${esc(x.segment)}</td><td style="white-space:nowrap">${pct(x.position[0])}–${pct(x.position[1])}</td><td>${esc(x.function)}</td><td>${esc(x.keep)}</td><td>${esc(x.swap)}</td><td>${esc(x.treatment)}${x.merge_into && x.treatment === '合并到相邻章' ? '→' + esc(x.merge_into) : ''}</td><td>${esc((x.locks || []).join('、'))}</td><td>${esc(x.reason)}${(x.notes || []).length ? `<div class="hint" style="margin:0">${x.notes.map(esc).join(';')}</div>` : ''}</td></tr>`).join('')}</table>
+      <table class="bp-tbl"><tr><th>段</th><th>位置</th><th>作用</th><th>必须保留</th><th>可以换</th><th>处理</th><th>锁定项</th><th>理由</th></tr>${t.rows.map(x => `<tr class="${x.treatment === '新题目没有这块可删' ? 'bp-tr-del' : ''}"><td>${esc(x.segment)}</td><td style="white-space:nowrap">${pct(x.position[0])}–${pct(x.position[1])}${x.treatment === '新题目没有这块可删' ? '<div class="hint" style="margin:0">占 ' + pct(x.position[1] - x.position[0]) + '</div>' : ''}</td><td>${esc(x.function)}</td><td>${esc(x.keep)}</td><td>${esc(x.swap)}</td><td>${esc(x.treatment)}${x.merge_into && x.treatment === '合并到相邻章' ? '→' + esc(x.merge_into) : ''}</td><td>${esc((x.locks || []).join('、'))}</td><td>${esc(x.reason)}${(x.notes || []).length ? `<div class="hint" style="margin:0">${x.notes.map(esc).join(';')}</div>` : ''}</td></tr>`).join('')}</table>
       ${t.reversal && t.reversal.new_reversal ? `<div style="font-size:13px">新题目自己的反转:${esc(t.reversal.new_reversal)}${(t.reversal.fact_ids || []).length ? '(' + esc(t.reversal.fact_ids.join(',')) + ')' : ''}${(t.reversal.conflicts || []).length ? `<div class="hint">相反的事实:${t.reversal.conflicts.map(c => esc(typeof c === 'string' ? c : JSON.stringify(c))).join(';')}</div>` : ''}</div>` : ''}
       <div class="hint">锁定项(必须有去处):${(t.locks || []).map(l => esc(l.id)).join('、')}</div></details>`;
   }
@@ -7127,14 +7160,15 @@ async function saveReframeSettings() {
 }
 // 蓝图方式(v1.73)
 async function loadBlueprintSettings() {
-  try { const r = await api('/api/blueprint-settings'); document.querySelectorAll('input[name=bp-mode]').forEach(x => { x.checked = x.value === r.mode; }); }
+  try { const r = await api('/api/blueprint-settings'); document.querySelectorAll('input[name=bp-mode]').forEach(x => { x.checked = x.value === r.mode; }); const dm = document.getElementById('bp-delete-max'); if (dm) dm.value = r.delete_max != null ? r.delete_max : 15; }
   catch (e) { document.getElementById('bp-mode-status').textContent = '读取失败:' + e.message; }
 }
 async function saveBlueprintSettings() {
   const st = document.getElementById('bp-mode-status');
   const v = (document.querySelector('input[name=bp-mode]:checked') || {}).value;
   if (!v) { st.textContent = '先选一种'; return; }
-  try { const r = await api('/api/blueprint-settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: v }) }); st.textContent = '已保存:' + r.label + '(之后新画的蓝图生效)'; }
+  const dm = (document.getElementById('bp-delete-max') || {}).value;
+  try { const r = await api('/api/blueprint-settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: v, ...(dm !== '' && dm != null ? { delete_max: Number(dm) } : {}) }) }); st.textContent = '已保存:' + r.label + ',删掉的段最多占原片 ' + r.delete_max + '%(之后新画的蓝图生效)'; }
   catch (e) { st.textContent = '保存失败:' + e.message; }
 }
 async function loadSettings() {

@@ -815,6 +815,8 @@ async function runGeneration(runId) {
         }
 
         run.checks.progression = checks.checkProgression(content);
+        // v1.74 删掉了哪些原片段、占原片多少(两种蓝图方式都记,严格照原片的只是统计,不影响流程)
+        bpm().recordDeletions(run, asset, content);
 
         // 词数预算按配音语速重算:模型照原片字幕语速算的预算会把稿子写长
         if (nw.from !== 'source') {

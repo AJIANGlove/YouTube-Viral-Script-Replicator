@@ -902,10 +902,13 @@ function parseIssues(text) {
 
 function chapterMap(run, asset) {
   const view = buildView(run, asset);
+  const fnc = require('./blueprint').chapterFunctions(run); // v1.74:按功能重排的蓝图才有,严格照原片是空的
   return view.rows.map(r => {
+    const fx = fnc[String(r.id || '').toUpperCase()];
     const tpl = r.source.map(s => s.stage_id + ' ' + (s.function || '') + ':' + (s.abstract_move || '') + (s.peaks.length ? '(持有高峰 ' + s.peaks.map(p => p.peak_id + ' ' + (p.peak_type || '')).join('、') + ')' : '') + (s.decision ? ';分析时的处理:' + s.decision : '')).join(' / ');
     return '- ' + r.id + ' ' + r.range + ' ' + r.fn + (r.budget ? ' 预算 ' + r.budget + ' 词,现 ' + r.words + ' 词' : '') + '\n  模板:' + (tpl || '(无)') +
       (r.purpose ? '\n  蓝图目标:' + r.purpose : '') +
+      (fx ? '\n  蓝图功能:必须保留的功能=' + (fx.keep.join(';') || '(无)') + ';可以换的内容=' + (fx.swap.join(';') || '(无)') + (fx.locks.length ? ';锁定项=' + fx.locks.join('、') : '') + '(只能换内容,不能丢功能)' : '') +
       (r.flags.length ? '\n  程序查出:' + r.flags.map(f => f.type + '「' + f.text.slice(0, 120) + '」').join(';') : '');
   }).join('\n');
 }
@@ -1394,6 +1397,7 @@ async function runPass(runId, kind) {
       analysis: run.analysis ? an().analysisBrief(a, run, null, 'review') : '(无写前分析)',
       chapter_map: chapterMap(run, asset),
       program_findings: programFindings(run, asset),
+      function_check: require('./blueprint').draftCheckItem(run),
       selected_fixes: kind === 'final' ? selectedFixes(run) : '',
       fact_check: kind === 'check' ? factBrief(factcheck) : factBrief((run.review || {}).factcheck),
       script: base

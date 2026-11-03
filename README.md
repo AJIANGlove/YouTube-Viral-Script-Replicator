@@ -212,7 +212,9 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `ledger_fix.md` | 账本体检后 AI 修账本一轮（只填原始数与公式，含补漏成本） | 37 |
 | `ledger_vs_facts.md` | 账本关键假设对照事实表报道值（标偏差） | 17 |
 | `source_mapping.md` | 原片 → 本地对照表与叙事方式判断 | 39 |
-| `fit_check.md` | 快速适配判断（结构段+必须保留机制，先于完整分析） | 53 |
+| `fit_check.md` | 快速适配判断（结构段+必须保留机制，先于完整分析；蓝图方式「严格照原片」时用） | 53 |
+| `fit_check_function.md` | 快速适配判断，蓝图方式「按功能重排」时用（只看锁定项、核心套路、使用前提三样，卡住处标类别，普通段进 weak_segments） | 54 |
+| `analysis_fit_function.md` | 「按功能重排」时替换写前分析「第 1 步 适配判定」那一段（同样只看三样，输出 fit_blocking / weak_segments） | 20 |
 | `reframe_summary.md` | 都套不上时的原因汇总与两个选项 | 29 |
 | `why_zh.md` | 给复审/核对问题补中文「问题在哪」 | 21 |
 | `adjust.md` | AI 先调整（补待查、改论点、找事实、补标题、主角一致、补真人案例、素材不够自动补搜） | 105 |
@@ -222,14 +224,14 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `step1.md` | Blueprint 生成（问题链 + 新角度 + 事实只用一次，编号一律 CH，含对照表与叙事方式） | 102 |
 | `apply_suggest.md` | 单条问题出可替换改法（原句逐字+中文意思） | 32 |
 | `step2.md` | 脚本施工（含每章问题链与新角度要求、对照表） | 58 |
-| `function_table.md` | 蓝图按功能重排第一步：原片每段一行功能表（作用、必须保留、可以换、四选一处理） | 77 |
-| `step1_function.md` | 蓝图按功能重排第二步：按功能表排章（锁定项、为什么这样排、等级重点） | 120 |
-| `blueprint_review.md` | 蓝图审（写稿前 6 项：递进、揭示顺序、标题和主线、事实支撑、反转、硬套） | 58 |
+| `function_table.md` | 蓝图按功能重排第一步：原片每段一行功能表（作用、必须保留、可以换、四选一处理；换内容 > 合并 > 删，删要写查过的事实，合计不超过 `{{delete_max}}`%） | 84 |
+| `step1_function.md` | 蓝图按功能重排第二步：按功能表排章（锁定项、为什么这样排、等级重点；没删的段都要有去处，删出来的时间分给其他章） | 121 |
+| `blueprint_review.md` | 蓝图审（写稿前 7 项：递进、揭示顺序、标题和主线、事实支撑、反转、硬套、删除是否成立） | 60 |
 | `step3.md` | 质量审核 | 72 |
 | `step4.md` | 终稿优化 | 58 |
 | `step5.md` | 开头逐句仿写（强化开头） | 27 |
 | `script_check.md` | 稿件检查 K1-K5 | 38 |
-| `draft_check.md` | 初稿检查出二稿 | 56 |
+| `draft_check.md` | 初稿检查出二稿（「按功能重排」的任务多第 9 项「蓝图功能是否落实」，由程序填进 `{{function_check}}`，严格照原片时为空） | 56 |
 | `fact_audit.md` | 事实审计（拆主张、标风险、给搜索词） | 51 |
 | `fact_verify.md` | 联网核验（按证据定级 A–E，必改或收窄） | 54 |
 | `reverse_audit.md` | 二稿逆向工程审稿报告（九部分 + 逐条预估加分） | 523 |
@@ -239,7 +241,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `final_patch.md` | 按复审 OPEN 清单补改终稿 | 59 |
 | `final_patch_diagnose.md` | 补改掉分后找原因、定每题新改法 | 43 |
 | `final_open_options.md` | 复审遗留问题各出 ≥3 种改法并标推荐 | 33 |
-| `reframe_suggest.md` | 写前分析判「换框架」时推荐库内框架（带结构信息） | 32 |
+| `reframe_suggest.md` | 写前分析判「换框架」时推荐库内框架（带结构信息；「按功能重排」时程序把第 3 条换成只看锁定项、核心套路、使用前提） | 32 |
 | `final_open_extract.md` | 从旧复审报告里抽出 OPEN 待改清单 | 17 |
 | `final_fix_quotes.md` | 原句定位失败时让模型对照原章逐字重抄 | 20 |
 | `foreign_fix.md` | 外文稿混入汉字/假名的整行改写（规则修兜底） | 20 |
@@ -261,7 +263,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 50 份 `.md`（3447 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 55 份，合计 3650 行。
+合计 52 份 `.md`（3531 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 58 份，合计 3734 行。
 
 ### 历史版本
 

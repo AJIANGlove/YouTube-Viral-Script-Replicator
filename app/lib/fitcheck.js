@@ -12,7 +12,8 @@ const arr = v => (Array.isArray(v) ? v : []);
 const str = v => String(v == null ? '' : v).trim();
 const list = a => (Array.isArray(a) && a.length ? a.join(';') : '(无)');
 const parse = t => { try { return JSON.parse(t); } catch (e) { return null; } };
-const PROMPT = path.join(__dirname, '..', 'prompts', 'fit_check.md');
+const fitrule = () => require('./fitrule'); // v1.74:按功能重排时换提示词、按新标准过一遍结论(严格照原片时不变)
+const promptPath = () => path.join(__dirname, '..', 'prompts', fitrule().fitPromptFile());
 const VERDICTS = ['可以写', '调整后可写', '换框架'];
 const STRUCTURE_MAX = 3000;
 const MATERIALS_MAX = 1500;
@@ -87,7 +88,7 @@ function topicVars(run, ctx) {
 }
 
 function buildPrompt(run, asset, ctx) {
-  return an().fillVars(fs.readFileSync(PROMPT, 'utf-8'), { ...topicVars(run, ctx), ...frameworkBrief(asset) });
+  return an().fillVars(fs.readFileSync(promptPath(), 'utf-8'), { ...topicVars(run, ctx), ...frameworkBrief(asset) });
 }
 
 const fitOk = o => !!(o && typeof o === 'object' && !Array.isArray(o) && VERDICTS.includes(str(o.verdict)));
@@ -108,7 +109,9 @@ function cleanFit(out) {
 async function quickFit(run, cfg, asset, ctx) {
   const t0 = Date.now();
   const out = await an().callJson(run, cfg, buildPrompt(run, asset, ctx), '快速适配判断', fitOk);
-  return { ...cleanFit(out), asset_id: asset.id, secs: Math.round((Date.now() - t0) / 100) / 10, at: new Date().toISOString() };
+  let fit = cleanFit(out);
+  if (fitrule().on()) fit = fitrule().applyQuick(fit, out);
+  return { ...fit, asset_id: asset.id, secs: Math.round((Date.now() - t0) / 100) / 10, at: new Date().toISOString() };
 }
 
 // 快速判断判了「换框架」:不跑完整分析,存一份只有结论的分析(quick_only),后面的换框架推荐照常读 verdict / reframe_reasons

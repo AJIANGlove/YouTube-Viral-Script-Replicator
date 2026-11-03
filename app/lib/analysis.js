@@ -90,7 +90,8 @@ function fillVars(tpl, vars) {
 function buildAnalysisPrompt(run, asset) {
   const { vars, card } = frameworkVars(run, asset);
   const keep = keepNotesText(run, 'analysis');
-  return { prompt: fillVars(readPrompt('analysis.md'), vars) + (keep ? '\n\n' + keep : ''), track_card_name: card ? card.name : null };
+  // v1.74:按功能重排时「第 1 步 适配判定」换成新标准(严格照原片时原样)
+  return { prompt: fillVars(require('./fitrule').analysisPrompt(readPrompt('analysis.md')), vars) + (keep ? '\n\n' + keep : ''), track_card_name: card ? card.name : null };
 }
 
 // 都套不上、人选了「不改,继续写」(v1.71):框架里写不成立的段落和换法,写前分析、蓝图、写稿、复审都带上
@@ -967,6 +968,8 @@ async function runAnalysis(runId) {
       return;
     }
     // 有公式的行先改成程序算的数(AI 修账本在「AI 先调整」里做)
+    // v1.74:按功能重排时,判了换框架但卡住的全是普通段的,程序改判「调整后可写」(原结论记在 verdict_before_fit_rule)
+    if (require('./fitrule').on()) require('./fitrule').applyFull(a);
     const pf = ledgerWriteBack(a);
     if (pf.length) a.ledger_checkup = { at: new Date().toISOString(), program_fixed: pf, problems: ledgerProblems(a, run, pf).map(p => p.text) };
     a.ledger_check = verifyLedger(a.ledger);

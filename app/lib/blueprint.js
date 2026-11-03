@@ -37,6 +37,22 @@ function setSettingMode(v) {
   pl().saveConfig(c);
   return { ok: true, mode: v, label: MODES[v] };
 }
+// 删掉的原片段合计最多占原片时长的百分之几(v1.74,用户定 15%,设置里可改 0–50)
+const DELETE_MAX_DEFAULT = 15;
+function deleteMax() {
+  const c = pl().loadConfig() || {};
+  const n = Number(c.blueprint_delete_max);
+  return c.blueprint_delete_max != null && c.blueprint_delete_max !== '' && Number.isFinite(n) && n >= 0 && n <= 50 ? n : DELETE_MAX_DEFAULT;
+}
+function setDeleteMax(v) {
+  const n = Number(v);
+  if (!Number.isFinite(n) || n < 0 || n > 50 || Math.round(n) !== n) throw Object.assign(new Error('删除上限要填 0–50 的整数(百分比)'), { status: 400 });
+  const c = pl().loadConfig();
+  if (!c) throw Object.assign(new Error('还没有配置文件,先在「主流程 API 配置」里保存一次'), { status: 400 });
+  c.blueprint_delete_max = n;
+  pl().saveConfig(c);
+  return { ok: true, delete_max: n };
+}
 // 这次蓝图用哪种方式:新方式要有确认过的写前分析(功能表和蓝图审都要用事实表、论点卡);没有就走旧方式,记下原因
 function decideMode(run) {
   const want = settingMode();
@@ -133,13 +149,14 @@ function segmentTable(run, segs, locks) {
   return segs.map(s => {
     const lk = locks.filter(l => l.segment === s.id);
     const m = mods[s.id];
-    return '- ' + s.id + ' | 位置 ' + pct(s.start) + '–' + pct(s.end) + (s.dur ? '(原片 ' + fmtSec(s.start * s.dur) + '–' + fmtSec(s.end * s.dur) + ')' : '') +
+    return '- ' + s.id + ' | 位置 ' + pct(s.start) + '–' + pct(s.end) + (s.dur ? '(原片 ' + fmtSec(s.start * s.dur) + '–' + fmtSec(s.end * s.dur) + ')' : '') + ' | 占原片 ' + pct(s.end - s.start) +
       ' | 原功能码 ' + s.function +
       ' | 这段在原片里干什么(抽象说法):' + cut(s.abstract_move || s.purpose, 220) +
       (s.replacement_needs.length ? ' | 换内容时需要:' + cut(s.replacement_needs.join(';'), 200) : '') +
       ' | 锁定项:' + (lk.length ? lk.map(l => l.id).join('、') : '无') +
       ' | 可删性:' + (s.deletability || '—') +
-      (m ? ' | 写前分析的决定:' + str(m.decision) + (m.reason ? '(' + cut(m.reason, 160) + ')' : '') : '');
+      (m ? ' | 写前分析的决定:' + str(m.decision) + (m.reason ? '(' + cut(m.reason, 160) + ')' : '') : '') +
+      (plannedFacts(run, s.id).length ? ' | 写前分析给这段备的事实:' + plannedFacts(run, s.id).join('、') : '');
   }).join('\n');
 }
 
@@ -177,7 +194,7 @@ function normalizeTable(run, j, segs, locks) {
       segment: s.id, position: [s.start, s.end], source_function: s.function,
       function: str(r && r.function).trim(), keep: str(r && r.keep).trim(), swap: str(r && r.swap).trim(),
       treatment: normTreatment(r && r.treatment), merge_into: str(r && r.merge_into).trim(), reason: str(r && r.reason).trim(),
-      is_reversal: !!(r && r.is_reversal), fact_ids: arr(r && r.fact_ids).map(String), locks: lk, notes: []
+      is_reversal: !!(r && r.is_reversal), fact_ids: arr(r && r.fact_ids).map(String), checked_facts: arr(r && r.checked_facts).map(String), locks: lk, notes: []
     };
     if (!r) { row.treatment = TREATMENTS[0]; row.notes.push('AI 没写这一段,程序按「保留功能换内容」补上'); fixes.push(s.id + ' 缺行'); }
     if (!row.treatment) { row.treatment = TREATMENTS[0]; row.notes.push('处理方式写的不是四种之一,程序改成「保留功能换内容」'); }
@@ -206,6 +223,74 @@ function tableSourceHits(run, rows, segs) {
   return out;
 }
 
+// ---------- 删除限制(v1.74) ----------
+// 优先顺序:保留功能换内容 > 合并到相邻章 > 删。删要有事实凭据;写前分析或功能表给这段备了事实的不准删;
+// 删掉的段合计不超过原片时长的 deleteMax()%(默认 15%)。
+const BAD_DELETE = /不好写|难写|不好讲|难讲|写不好|不适合|太复杂|没意思|不重要|可有可无|不必要|没必要|太长|冗长|拖沓|不好看|观众不感兴趣/;
+const EVIDENCE = /事实表|事实|F\d{2}|账本|L\d+|没查到|查不到|没有记录|没有资料|素材/;
+const segShare = s => Math.max(0, (s.end || 0) - (s.start || 0));
+// 写前分析给这一段备的事实(模块取舍的 fact_ids、留存地图承担这段高峰的 fact_ids)
+function plannedFacts(run, segId) {
+  const a = (run || {}).analysis || {};
+  const m = arr(a.modules).find(x => x && x.segment === segId);
+  const out = [];
+  if (m && !/删除/.test(str(m.decision))) out.push(...arr(m.fact_ids).map(String));
+  arr(a.retention_map).forEach(x => { if (x && x.source_segment === segId && /承担/.test(str(x.status))) out.push(...arr(x.fact_ids).map(String)); });
+  return [...new Set(out)].filter(Boolean);
+}
+function deletionCheck(run, rows, segs) {
+  const max = deleteMax();
+  const byId = {};
+  segs.forEach(s => { byId[s.id] = s; });
+  const del = rows.filter(r => r.treatment === TREATMENTS[2]);
+  const issues = [];
+  del.forEach(r => {
+    const reason = str(r.reason);
+    const planned = plannedFacts(run, r.segment);
+    if (BAD_DELETE.test(reason)) issues.push({ segment: r.segment, kind: 'bad_reason', text: r.segment + ' 的删除理由「' + cut(reason, 60) + '」不算:「不好写」「不适合」「太复杂」这类理由一律不算,删除要跟事实挂钩' });
+    else if (!EVIDENCE.test(reason) || !r.checked_facts.length) issues.push({ segment: r.segment, kind: 'no_evidence', text: r.segment + ' 的删除理由没有跟事实挂钩:要在 checked_facts 写查过哪些事实,在 reason 里写事实表为什么没有能完成这段作用的素材' });
+    if (r.fact_ids.length) issues.push({ segment: r.segment, kind: 'has_facts', text: r.segment + ' 自己写了要用的事实 ' + r.fact_ids.join('、') + ',有素材就不能删,改成「保留功能换内容」' });
+    else if (planned.length) issues.push({ segment: r.segment, kind: 'has_facts', text: r.segment + ' 写前分析给这段备了事实 ' + planned.join('、') + ',有素材就不能删,改成「保留功能换内容」' });
+  });
+  const ratio = del.reduce((n, r) => n + segShare(byId[r.segment] || {}), 0);
+  if (ratio * 100 > max + 1e-9) issues.push({ segment: '', kind: 'over_cap', text: '删掉的段合计占原片 ' + Math.round(ratio * 100) + '%,超过上限 ' + max + '%;先考虑「保留功能换内容」,其次「合并到相邻章」' });
+  return { issues, ratio, max };
+}
+// 程序兜底:理由不成立、有素材的删除改回「保留功能换内容」;还超上限的,从占比最大的开始改成「合并到相邻章」
+function enforceDeletions(run, rows, segs) {
+  const chk = deletionCheck(run, rows, segs);
+  const fixes = [];
+  const bad = new Set(chk.issues.filter(x => x.segment).map(x => x.segment));
+  rows.forEach(r => {
+    if (r.treatment === TREATMENTS[2] && bad.has(r.segment)) {
+      const why = chk.issues.filter(x => x.segment === r.segment).map(x => x.kind === 'bad_reason' ? '理由不算' : x.kind === 'no_evidence' ? '理由没跟事实挂钩' : '有素材').join('、');
+      r.notes.push('删除不成立(' + why + '),程序改成「保留功能换内容」');
+      r.treatment = TREATMENTS[0];
+      fixes.push(r.segment + ' 删除不成立(' + why + ')');
+    }
+  });
+  const max = deleteMax();
+  const byId = {};
+  segs.forEach(s => { byId[s.id] = s; });
+  let ratio = rows.filter(r => r.treatment === TREATMENTS[2]).reduce((n, r) => n + segShare(byId[r.segment] || {}), 0);
+  rows.filter(r => r.treatment === TREATMENTS[2]).sort((a, b) => segShare(byId[b.segment] || {}) - segShare(byId[a.segment] || {})).forEach(r => {
+    if (ratio * 100 <= max + 1e-9) return;
+    ratio -= segShare(byId[r.segment] || {});
+    const s = byId[r.segment] || {};
+    r.treatment = TREATMENTS[1];
+    r.merge_into = r.merge_into || (segs[s.order] || segs[s.order - 2] || {}).id || '';
+    r.notes.push('删掉的段合计超过上限 ' + max + '%,程序把这段改成「合并到相邻章」(并到 ' + r.merge_into + ')');
+    fixes.push(r.segment + ' 超上限改成合并');
+  });
+  return { fixes, ...deletedOf(rows, segs) };
+}
+function deletedOf(rows, segs) {
+  const byId = {};
+  segs.forEach(s => { byId[s.id] = s; });
+  const deleted = rows.filter(r => r.treatment === TREATMENTS[2]).map(r => { const s = byId[r.segment] || {}; return { segment: r.segment, ratio: Math.round(segShare(s) * 1000) / 1000, secs: Math.round(segShare(s) * (s.dur || 0)), reason: r.reason, checked_facts: r.checked_facts }; });
+  return { deleted, deleted_ratio: Math.round(deleted.reduce((n, d) => n + d.ratio, 0) * 1000) / 1000 };
+}
+
 function fillTablePrompt(run, asset, segs, locks, ladder) {
   const a = run.analysis || {};
   const th = a.thesis_card || {};
@@ -220,12 +305,13 @@ function fillTablePrompt(run, asset, segs, locks, ladder) {
     .replaceAll('{{segments}}', segmentTable(run, segs, locks))
     .replaceAll('{{locks}}', locks.map(l => '- ' + l.id + ' ' + l.label + '(原片 ' + Math.round((l.ratio || 0) * 100) + '% 处,在 ' + l.segment + ')').join('\n'))
     .replaceAll('{{thesis_check}}', arr((a.thesis_check || {}).contradicts).length ? '写前分析的反转验证:事实 ' + a.thesis_check.contradicts.join('、') + ' 和反转结论相反(' + str(a.thesis_check.note) + ')' : '(没有)')
-    .replaceAll('{{facts}}', facts || '(没有)');
+    .replaceAll('{{facts}}', facts || '(没有)')
+    .replaceAll('{{delete_max}}', String(deleteMax()));
 }
 
 // 功能表(新的一次 AI 调用):同一份写前分析、同一个框架做过就复用
 async function ensureTable(run, asset, callLlm) {
-  const analysisAt = str(((run.steps || {}).analysis || {}).finished_at) + '|' + str(run.analysis_confirmed_at);
+  const analysisAt = str(((run.steps || {}).analysis || {}).finished_at) + '|' + str(run.analysis_confirmed_at) + '|del' + deleteMax();
   const ft = run.function_table;
   if (ft && ft.asset_id === run.asset_id && ft.for_analysis === analysisAt && arr(ft.rows).length) return ft;
   const segs = segmentsOf(asset);
@@ -260,9 +346,27 @@ async function ensureTable(run, asset, callLlm) {
       if (h2.length < hits.length) { norm = n2; hits = h2; r = r2; }
     }
   }
+  // 删除限制(v1.74):理由不成立、有素材、超上限的,先退回让 AI 重排一次;改完问题更少才用,剩下的程序兜底
+  let dchk = deletionCheck(run, norm.rows, segs);
+  const delIssues = dchk.issues.slice();
+  let delRetried = false;
+  if (dchk.issues.length) {
+    const fb = '功能表的「删掉」不成立,按下面改。处理方式固定按「保留功能换内容 > 合并到相邻章 > 删掉」的顺序选,删掉是最后的选择;删掉要跟事实挂钩(checked_facts 写查过哪些事实),有素材的段不准删;删掉的段合计不超过原片时长的 ' + deleteMax() + '%:\n' + dchk.issues.map(x => '- ' + x.text).join('\n') + '\n其余不变,重新输出完整 JSON。';
+    messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: fb }];
+    const r3 = await callLlm(messages, 'Step 1 功能表 删除不成立');
+    const j3 = parseTable(r3.content);
+    delRetried = true;
+    if (j3) {
+      const n3 = normalizeTable(run, j3, segs, locks);
+      const d3 = deletionCheck(run, n3.rows, segs);
+      if (d3.issues.length < dchk.issues.length && tableSourceHits(run, n3.rows, segs).length <= hits.length) { norm = n3; dchk = d3; r = r3; hits = tableSourceHits(run, n3.rows, segs); }
+    }
+  }
+  const enf = enforceDeletions(run, norm.rows, segs);
   const out = {
     at: new Date().toISOString(), asset_id: run.asset_id, for_analysis: analysisAt, secs: Math.round((Date.now() - t0) / 100) / 10,
-    rows: norm.rows, reversal: norm.reversal, fixes: norm.fixes, source_hits: hits, source_retried: retried,
+    rows: norm.rows, reversal: norm.reversal, fixes: norm.fixes.concat(enf.fixes), source_hits: hits, source_retried: retried,
+    delete_max: deleteMax(), delete_issues: delIssues, delete_retried: delRetried, deleted: enf.deleted, deleted_ratio: enf.deleted_ratio,
     locks, ladder: { on: ladder.on, why: ladder.why, segments: ladder.repeated ? ladder.repeated.segments : [], pov_mode: ladder.pov_mode }
   };
   run.function_table = out;
@@ -274,9 +378,11 @@ async function ensureTable(run, asset, callLlm) {
 // 给蓝图(step1_function.md)看的功能表
 function tableBrief(ft) {
   const rows = arr(ft.rows).map(r => '- ' + r.segment + '(原片 ' + Math.round(r.position[0] * 100) + '%–' + Math.round(r.position[1] * 100) + '%)| 作用:' + r.function + ' | 必须保留:' + r.keep + ' | 可以换:' + r.swap +
-    ' | 处理:' + r.treatment + (r.treatment === TREATMENTS[1] && r.merge_into ? '(并到 ' + r.merge_into + ')' : '') + (r.locks.length ? ' | 锁定项:' + r.locks.join('、') : '') + (r.reason ? ' | 理由:' + r.reason : '')).join('\n');
+    ' | 处理:' + r.treatment + (r.treatment === TREATMENTS[1] && r.merge_into ? '(并到 ' + r.merge_into + ')' : '') + (r.treatment === TREATMENTS[2] ? '(占原片 ' + Math.round((r.position[1] - r.position[0]) * 100) + '%)' : '') + (r.locks.length ? ' | 锁定项:' + r.locks.join('、') : '') + (r.reason ? ' | 理由:' + r.reason : '')).join('\n');
   const rv = ft.reversal || {};
-  return rows + (str(rv.new_reversal).trim() ? '\n新题目自己的反转:' + rv.new_reversal + (arr(rv.fact_ids).length ? '(' + rv.fact_ids.join(',') + ')' : '') : '');
+  const dels = arr(ft.rows).filter(r => r.treatment === TREATMENTS[2]);
+  const delLine = dels.length ? '\n删掉的段:' + dels.map(r => r.segment).join('、') + ',合计占原片 ' + Math.round(dels.reduce((n, r) => n + (r.position[1] - r.position[0]), 0) * 100) + '%(上限 ' + (ft.delete_max != null ? ft.delete_max : deleteMax()) + '%)。这些段的时间分给其他章(讲得更细、多用事实),全片总时长不变;功能表没判删的段,每一段都要写进某一章的 source_segments(合并的写进并入的那一章)。' : '\n功能表没有删掉的段:每一段都要写进某一章的 source_segments(合并的写进并入的那一章)。';
+  return rows + delLine + (str(rv.new_reversal).trim() ? '\n新题目自己的反转:' + rv.new_reversal + (arr(rv.fact_ids).length ? '(' + rv.fact_ids.join(',') + ')' : '') : '');
 }
 function locksBrief(ft) {
   return arr(ft.locks).map(l => '- ' + l.id + ':' + l.label + ',原片在全片 ' + Math.round((l.ratio || 0) * 100) + '% 处(' + l.segment + ')').join('\n');
@@ -470,7 +576,8 @@ const ITEMS = [
   { key: 'thesis', name: '标题和主线' },
   { key: 'facts', name: '事实支撑' },
   { key: 'reversal', name: '反转' },
-  { key: 'forced', name: '硬套' }
+  { key: 'forced', name: '硬套' },
+  { key: 'deletion', name: '删除是否成立' }
 ];
 function programChecks(run, asset, text, ft) {
   const bp = bpOf(text);
@@ -518,7 +625,33 @@ function programChecks(run, asset, text, ft) {
   const cp = checkCopy(chs, segs);
   cp.forEach(x => add('forced', true, x.ch + ' 照搬了原片 ' + x.segment + ' 的小步:' + (x.codes.length ? '原片的机制代码 ' + x.codes.slice(0, 8).join('、') + '(' + x.codes.length + '/' + x.of + ')' : '原片必需内容 ' + x.payload.length + ' 条逐条出现'), x.ch));
 
-  return { items: P, consistency: cs, retention: ret, progression: prog, similar: sim, ladder: lad, locks: lk, copy: cp, unreachable: un, facts: fc, reversal: rv };
+  const dl = checkDeletions(run, chs, segs, ft);
+  dl.dropped.forEach(d => add('deletion', true, d.segment + ' 功能表是「' + d.treatment + '」,蓝图里没有落到任何一章(合并的也要写进并入那一章的 source_segments)', ''));
+  if (dl.ratio * 100 > dl.max + 1e-9) add('deletion', true, '蓝图里没有落到任何一章的原片段合计占原片 ' + Math.round(dl.ratio * 100) + '%,超过上限 ' + dl.max + '%');
+  dl.deleted.forEach(d => add('deletion', false, '删了 ' + d.segment + '(占原片 ' + Math.round(d.ratio * 100) + '%)。理由:' + (d.reason || '没写') + ';查过的事实:' + (arr(d.checked_facts).join('、') || '没写') + (dl.unused.length ? ';事实表里还没分给任何一章的事实:' + dl.unused.slice(0, 12).join('、') : '') + '。请判断删除成立不成立(事实表里有能完成这段作用的事实就不成立)', ''));
+  return { items: P, consistency: cs, retention: ret, progression: prog, similar: sim, ladder: lad, locks: lk, copy: cp, unreachable: un, facts: fc, reversal: rv, deletion: dl };
+}
+
+// 蓝图这一层的删除:没有落到任何一章的原片段就是删掉了。功能表没判删的不许悄悄丢;合计不超过上限
+function checkDeletions(run, chs, segs, ft) {
+  const rows = arr((ft || {}).rows);
+  const used = new Set(chs.flatMap(c => arr(c.source_segments).map(x => str(x).toUpperCase())));
+  const max = ft && ft.delete_max != null ? ft.delete_max : deleteMax();
+  // 「合并到相邻章」的段,并入的那一段落到了某一章也算有去处
+  const missing = segs.filter(s => {
+    if (used.has(s.id)) return false;
+    const r = rows.find(x => x.segment === s.id) || {};
+    return !(r.treatment === TREATMENTS[1] && r.merge_into && used.has(str(r.merge_into).toUpperCase()));
+  });
+  const dropped = [], deleted = [];
+  missing.forEach(s => {
+    const r = rows.find(x => x.segment === s.id) || {};
+    const d = { segment: s.id, ratio: Math.round(segShare(s) * 1000) / 1000, secs: Math.round(segShare(s) * (s.dur || 0)), treatment: r.treatment || '(功能表里没有)', reason: str(r.reason), checked_facts: arr(r.checked_facts) };
+    if (r.treatment === TREATMENTS[2]) deleted.push(d); else dropped.push(d);
+  });
+  const facts = arr(((run || {}).analysis || {}).facts).map(f => f && f.id).filter(Boolean);
+  const usedFacts = new Set(chs.flatMap(c => arr(c.fact_ids).map(String)));
+  return { deleted, dropped, ratio: missing.reduce((n, s) => n + segShare(s), 0), max, unused: facts.filter(f => !usedFacts.has(f)) };
 }
 
 // ---------- AI 审 ----------
@@ -559,7 +692,7 @@ function mergeReview(pc, ai) {
   const items = ITEMS.map(it => {
     const prog = pc.items[it.key];
     const x = ((ai || {}).items || {})[it.key] || {};
-    const aiProblems = arr(x.problems).map(p => ({ by: 'AI', hard: true, chapter: str(p.chapter), text: str(p.problem || p.text), fix: str(p.fix) })).filter(p => p.text);
+    const aiProblems = arr(x.problems).map(p => ({ by: 'AI', hard: true, chapter: str(p.chapter), ...(str(p.segment) ? { segment: str(p.segment).toUpperCase() } : {}), text: str(p.problem || p.text), fix: str(p.fix) })).filter(p => p.text);
     const aiPass = ai ? (x.pass === true || (x.pass !== false && !aiProblems.length)) : null;
     const hard = prog.filter(p => p.hard).map(p => ({ ...p }));
     // AI 常把程序已经确定的问题再说一遍:和程序的某条差不多的不重复列,AI 写的改法补到程序那条上
@@ -612,7 +745,9 @@ async function reviewLoop(opts) {
   let revised = 0;
   while (!cur.rv.pass && revised < MAX_REVISE) {
     revised++;
+    const restored = restoreDeletions(run, ft, cur.rv, asset);
     const fb = '蓝图审没通过,按下面的意见改蓝图。只改点到的章节和字段,功能表、锁定项、总时长和其余要求不变;重新输出完整 JSON(禁止代码围栏):\n' + failText(cur.rv) +
+      (restored.length ? '\n功能表已改:' + restored.join('、') + ' 的删除不成立,改成「保留功能换内容」,要排进某一章(可以和相邻章一起讲),写进那一章的 source_segments,时间从其他章匀出来,总时长不变。' : '') +
       (cur.pc.items.progression.some(p => /level_focus/.test(p.text)) ? '\n等级章每一级都要写 level_focus 和 level_new_info,相邻两级的 level_focus 不能一样。' : '');
     const m2 = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: fb }];
     let r2 = null, c2 = '', why = '';
@@ -635,6 +770,42 @@ async function reviewLoop(opts) {
   };
   store.saveRun(run);
   return { content, messages, r, held: !cur.rv.pass, pc: cur.pc, revised };
+}
+
+// 蓝图审判「删除不成立」的段:功能表改回「保留功能换内容」(v1.74),返回改了哪几段
+function restoreDeletions(run, ft, rv, asset) {
+  const it = arr(rv.items).find(i => i.key === 'deletion');
+  if (!ft || !it || it.pass) return [];
+  const ids = new Set();
+  it.problems.filter(p => p.by === 'AI').forEach(p => { (str(p.segment) + ' ' + str(p.chapter) + ' ' + str(p.text)).toUpperCase().replace(/FS\s?(\d+)/g, (m, n) => { ids.add('FS' + String(n).padStart(2, '0')); return m; }); });
+  const out = [];
+  arr(ft.rows).forEach(r => {
+    if (r.treatment === TREATMENTS[2] && ids.has(r.segment)) {
+      r.treatment = TREATMENTS[0];
+      r.notes.push('蓝图审判删除不成立,改成「保留功能换内容」');
+      out.push(r.segment);
+    }
+  });
+  if (out.length) {
+    Object.assign(ft, deletedOf(ft.rows, segmentsOf(asset)));
+    ft.review_restored = arr(ft.review_restored).concat(out);
+    run.function_table = ft;
+    store.saveRun(run);
+  }
+  return out;
+}
+
+// 写进任务记录(每篇都记,严格照原片的也记,方便以后统计):蓝图里没有落到任何一章的原片段
+function recordDeletions(run, asset, content) {
+  try {
+    const segs = segmentsOf(asset);
+    const chs = arr(bpOf(content).chapters);
+    if (!chs.length || !segs.length) return;
+    const dl = checkDeletions(run, chs, segs, modeOf(run) === 'function' ? run.function_table : null);
+    const rows = arr((run.function_table || {}).rows);
+    run.deleted_segments = dl.deleted.concat(dl.dropped).map(d => ({ segment: d.segment, secs: d.secs, ratio: d.ratio, reason: d.reason || (modeOf(run) === 'function' ? '' : '(严格照原片:蓝图没写这段)'), checked_facts: arr(d.checked_facts), treatment: (rows.find(r => r.segment === d.segment) || {}).treatment || '' }));
+    run.deleted_ratio = Math.round(dl.ratio * 1000) / 1000;
+  } catch (e) { /* 统计用,出错不挡 */ }
 }
 
 // ---------- 停下后的三个选择 ----------
@@ -698,12 +869,25 @@ function chapterKeep(run, c) {
   const rows = arr(((run || {}).function_table || {}).rows);
   return arr(c && c.source_segments).map(sid => rows.find(r => r.segment === sid)).filter(r => r && str(r.keep).trim() && r.treatment !== TREATMENTS[2]).map(r => r.keep);
 }
+// 这一章承接的原片段在功能表里「可以换」的东西(换成新题目自己的内容);反转段换成新题目自己的反转
+function chapterSwap(run, c) {
+  const ft = (run || {}).function_table || {};
+  const rows = arr(ft.rows);
+  return arr(c && c.source_segments).map(sid => rows.find(r => r.segment === sid)).filter(r => r && r.treatment !== TREATMENTS[2]).map(r => {
+    if (r.treatment === TREATMENTS[3] && str((ft.reversal || {}).new_reversal)) return '反转换成新题目自己的:' + str(ft.reversal.new_reversal);
+    return str(r.swap);
+  }).filter(Boolean);
+}
+const FN_ONLY = '只能换内容,不能丢功能:「必须保留的功能」是观众在这一章一定要经历的那一步,每一条都要写到;「可以换的内容」用新题目自己的事实换。写不好不能跳过或删掉,换一种内容把这一步写出来。';
 // 分章写稿时每章多给的几行(只在按功能重排的蓝图上加;严格照原片的蓝图没有这些字段,一行不加)
 function chapterBrief(run, c) {
   if (modeOf(run) !== 'function' || !c) return '';
   const keep = chapterKeep(run, c);
+  const swap = chapterSwap(run, c);
   return (str(c.layout_reason).trim() ? '本章为什么这样排(照这个作用写,不要回头照原片那一段的内容补):' + str(c.layout_reason).trim() + '\n' : '') +
-    (keep.length ? '本章必须让观众经历的那一步(功能表「必须保留」):' + keep.join(';') + '\n' : '') +
+    (keep.length ? '本章必须保留的功能(功能表「必须保留」,观众要经历的那一步):' + keep.join(';') + '\n' : '') +
+    (swap.length ? '本章可以换的内容(功能表「可以换」,换成新题目自己的):' + swap.join(';') + '\n' : '') +
+    (keep.length || swap.length ? FN_ONLY + '\n' : '') +
     (arr(c.locks).length ? '本章承担的锁定项(必须写到):' + arr(c.locks).join('、') + '\n' : '') +
     (str(c.level_focus).trim() ? '这一级只讲的重点:' + str(c.level_focus).trim() + '(其他方面一句带过,不要把身份、收入、代价、信条每样都走一遍)\n' : '') +
     (str(c.level_new_info).trim() ? '这一级观众第一次知道的新信息:' + str(c.level_new_info).trim() + '\n' : '');
@@ -713,8 +897,27 @@ function step2Rules(run, blueprintText) {
   if (modeOf(run) !== 'function') return '';
   const chs = arr(bpOf(blueprintText).chapters);
   const keeps = chs.map(c => { const k = chapterKeep(run, c); return k.length ? c.id + ':' + k.join(';') : ''; }).filter(Boolean);
+  const swaps = chs.map(c => { const k = chapterSwap(run, c); return k.length ? c.id + ':' + k.join(';') : ''; }).filter(Boolean);
   return '\n- 这份蓝图是「按功能重排」画的:章节不和原片一一对应,照每章的作用写,不要回头照原片那一段的内容补。每章的 layout_reason 说明这一章为什么这样排;locks 里的锁定项(开头钩子、高峰、悬念的开和收、结尾回扣)本章必须写到;等级章的 level_focus 是这一级只讲的重点(其他方面一句带过,不要每一级都把身份、收入、代价、信条走一遍),level_new_info 是这一级观众第一次知道的新信息,围绕它展开。' +
-    (keeps.length ? '\n- 各章必须让观众经历的那一步(功能表「必须保留」,写的是作用,不是原片内容):' + keeps.join(' / ') : '');
+    (keeps.length ? '\n- 各章必须保留的功能(功能表「必须保留」,写的是作用,不是原片内容):' + keeps.join(' / ') : '') +
+    (swaps.length ? '\n- 各章可以换的内容(功能表「可以换」,换成新题目自己的):' + swaps.join(' / ') : '') +
+    (keeps.length || swaps.length ? '\n- ' + FN_ONLY : '');
+}
+
+// 初稿检查 / 终审用:每章的「必须保留的功能」和「可以换的内容」(只在按功能重排的蓝图上有;严格照原片返回空对象)
+function chapterFunctions(run) {
+  if (modeOf(run) !== 'function') return {};
+  const out = {};
+  arr(bpOf(str(((run || {}).outputs || {}).step1)).chapters).forEach(c => {
+    const keep = chapterKeep(run, c), swap = chapterSwap(run, c);
+    if (keep.length || swap.length || arr(c.locks).length) out[str(c.id).toUpperCase()] = { keep, swap, locks: arr(c.locks) };
+  });
+  return out;
+}
+// 初稿检查第 9 项(严格照原片是空字符串,提示词和 v1.73 一字不差)
+function draftCheckItem(run) {
+  if (modeOf(run) !== 'function' || !Object.keys(chapterFunctions(run)).length) return '';
+  return '\n9. 蓝图功能是否落实:上面每章写了「蓝图功能」(必须保留的功能、可以换的内容)。必须保留的功能每一条都要在这一章写到(内容可以换成本题自己的,功能不能丢);因为不好写而跳过、一句带过、换成别的作用的,都算没落实。没落实的写进问题,类别用「模板出入」,说明以「蓝图功能:」开头,并在二稿里把这一步补上(补的时候也要守住篇幅规则,用替换而不是加长)。';
 }
 
 // 页面用:功能表 + 蓝图每章的排法 + 蓝图审
@@ -728,8 +931,8 @@ function view(run) {
   }
   if (!ft && !br && !run.blueprint_mode) return null;
   const fn = modeOf(run) === 'function';
-  return { mode: modeOf(run), mode_label: MODES[modeOf(run)], mode_why: str(run.blueprint_mode_why), setting: settingMode(), table: fn ? ft : null, chapters, review: fn ? br : null, held: run.status === 'blueprint_hold' };
+  return { mode: modeOf(run), mode_label: MODES[modeOf(run)], mode_why: str(run.blueprint_mode_why), setting: settingMode(), delete_max: ft && ft.delete_max != null ? ft.delete_max : deleteMax(), deleted_segments: arr(run.deleted_segments), deleted_ratio: run.deleted_ratio, table: fn ? ft : null, chapters, review: fn ? br : null, held: run.status === 'blueprint_hold' };
 }
 
-module.exports = { MODES, settingMode, setSettingMode, decideMode, modeOf, segmentsOf, locksOf, ladderOf, TREATMENTS, normTreatment, normalizeTable, tableSourceHits, sourceTerms, sourceHits, ensureTable, tableBrief, locksBrief, ladderBrief, frameworkCore, timelineCore, step1Template,
+module.exports = { chapterSwap, chapterFunctions, draftCheckItem, DELETE_MAX_DEFAULT, deleteMax, setDeleteMax, deletionCheck, enforceDeletions, deletedOf, checkDeletions, plannedFacts, restoreDeletions, recordDeletions, MODES, settingMode, setSettingMode, decideMode, modeOf, segmentsOf, locksOf, ladderOf, TREATMENTS, normTreatment, normalizeTable, tableSourceHits, sourceTerms, sourceHits, ensureTable, tableBrief, locksBrief, ladderBrief, frameworkCore, timelineCore, step1Template,
   checkLocks, adjacentSimilar, checkLadder, checkCopy, checkUnreachable, checkFacts, checkReversal, programChecks, ITEMS, reviewPrompt, parseReview, mergeReview, reasonsZh, reviewLoop, MAX_REVISE, holdChoice, backToAnalysis, view, jaccard, chapterKeep, chapterBrief, step2Rules };
