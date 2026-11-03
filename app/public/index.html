@@ -671,7 +671,7 @@
       </div>
       <div class="grid" style="margin-top:8px">
         <div><label>新主题(选题)</label><input type="text" id="gen-topic" placeholder="例如:The Economics of Owning a Casino" oninput="precheckStale()">
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px"><button type="button" class="ghost" id="btn-precheck" onclick="precheckFit(this)">看看这个框架合不合适(并推荐 3 个)</button><span class="hint" style="margin:0">填好主题再点,约 30 秒到 1 分钟</span></div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px"><button type="button" class="ghost" id="btn-precheck" onclick="precheckFit(this)">看看这个框架合不合适(并推荐 3 个)</button><span class="hint" id="precheck-status" style="margin:0">填好主题再点。你选的框架半分钟左右先出结果,另推荐的 3 个大约 2–3 分钟</span></div>
           <label style="margin-top:8px">频道方向(审稿赛道)</label><select id="gen-review-track"></select>
           <div class="hint" id="gen-review-track-hint">按选的框架自动选好。之后的写前分析、审稿报告、终审和去AI感都按这个方向审,不用再选。</div></div>
         <div>
@@ -1671,23 +1671,32 @@ function precheckBody() {
     materials: document.getElementById('gen-materials').value.trim()
   };
 }
+let precheckTimer = null;
 async function precheckFit(btn) {
   if (!selectedAsset) { alert('请先选择一个框架'); return; }
   const body = precheckBody();
   if (!body.topic) { alert('先填新主题'); return; }
   const id = ++precheckReq;
+  if (precheckTimer) { clearTimeout(precheckTimer); precheckTimer = null; }
   btn.disabled = true;
-  precheckLast = { running: true, topic: body.topic };
+  precheckLast = { running: true, topic: body.topic, stage: '开始', secs: 0 };
   renderPrecheck();
-  try {
-    const r = await api('/api/fit-precheck', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  document.getElementById('precheck-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  let job;
+  try { job = (await api('/api/fit-precheck', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })).job_id; }
+  catch (e) { if (id === precheckReq) { precheckLast = { error: e.message, topic: body.topic }; btn.disabled = false; renderPrecheck(); } return; }
+  const poll = async () => {
     if (id !== precheckReq) return;
-    precheckLast = { ...r, topic: body.topic };
-  } catch (e) {
-    if (id !== precheckReq) return;
-    precheckLast = { error: e.message, topic: body.topic };
-  } finally { if (id === precheckReq) btn.disabled = false; }
-  renderPrecheck();
+    try {
+      const r = await api('/api/fit-precheck/' + encodeURIComponent(job));
+      if (id !== precheckReq) return;
+      if (r.status === 'running') { precheckLast = { ...r, running: true, topic: body.topic }; renderPrecheck(); precheckTimer = setTimeout(poll, 2000); return; }
+      precheckLast = r.status === 'failed' ? { error: r.error || '预判出错', topic: body.topic } : { ...r, topic: body.topic };
+    } catch (e) { if (id !== precheckReq) return; precheckLast = { error: e.message, topic: body.topic }; }
+    btn.disabled = false;
+    renderPrecheck();
+  };
+  poll();
 }
 // 主题改了:结果标成过时(不清掉,方便对照)
 function precheckStale() {
@@ -1700,19 +1709,35 @@ function renderPrecheck() {
   const el = document.getElementById('precheck-result');
   if (!el) return;
   const r = precheckLast;
+  const st = document.getElementById('precheck-status');
+  if (st) st.innerHTML = !r ? '填好主题再点。你选的框架半分钟左右先出结果,另推荐的 3 个大约 2–3 分钟'
+    : r.running ? `<b style="color:#1d4ed8">正在预判…${esc(r.stage || '')},已用 ${Math.round(r.secs || 0)} 秒</b>(结果在下面)`
+    : r.error ? '<span style="color:#b91c1c">预判没成功,见下面</span>' : `预判完成,用时 ${esc(r.secs)} 秒(结果在下面)`;
   if (!r) { el.innerHTML = ''; return; }
   const box = 'border:1px solid #d1d5db;border-radius:8px;padding:10px 12px;margin:10px 0;background:#fff';
-  if (r.running) { el.innerHTML = `<div style="${box}"><b>正在预判「${esc(r.topic)}」…</b><div class="hint">先判你选的框架,同时从库里挑 6 个候选各判一次,给你看最合适的 3 个。</div></div>`; return; }
+  if (r.running) {
+    const sel = r.selected && r.selected.prejudge ? r.selected : null;
+    el.innerHTML = `<div style="${box}"><b>正在预判「${esc(r.topic)}」…已用 ${Math.round(r.secs || 0)} 秒</b>
+      <div class="hint">现在:${esc(r.stage || '开始')}。你选的框架一般半分钟内先出结果;另推荐的 3 个要先读完整个框架目录再挑,一般 2–3 分钟。</div>
+      ${sel ? precheckCard(sel, true) : ''}</div>`;
+    return;
+  }
   if (r.error) { el.innerHTML = `<div style="${box}" class="err-list">预判没成功:${esc(r.error)}</div>`; return; }
   const sel = r.selected || {}, sp = sel.prejudge || {};
   const bad = sp.verdict === '换框架';
-  const card = (p, isSel) => `<div style="border:1px solid ${isSel ? (bad ? '#fca5a5' : '#86efac') : '#e5e7eb'};border-radius:8px;padding:8px 10px;margin:6px 0;background:${isSel ? (bad ? '#fef2f2' : '#f0fdf4') : '#fafafa'}">
+  return renderPrecheckDone(el, r, sel, sp, bad, precheckCard, box);
+}
+function precheckCard(p, isSel) {
+  const bad = ((p.prejudge || {}).verdict) === '换框架';
+  return `<div style="border:1px solid ${isSel ? (bad ? '#fca5a5' : '#86efac') : '#e5e7eb'};border-radius:8px;padding:8px 10px;margin:6px 0;background:${isSel ? (bad ? '#fef2f2' : '#f0fdf4') : '#fafafa'}">
       <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><b>${isSel ? '你选的:' : ''}${esc(p.name)}</b> ${rfPjChip(p.prejudge)}
         ${isSel ? '' : `<button class="an-btn" style="padding:1px 10px" onclick="precheckSwitch('${escAttr(p.asset_id)}')">换成这个框架</button>`}
         <button class="an-btn" style="padding:1px 8px" onclick="openAssetDetail('${escAttr(p.asset_id)}')">详情</button></div>
       ${p.source ? `<div class="hint" style="margin:2px 0">原片:${esc(p.source)}</div>` : ''}
       ${!isSel && p.why ? `<div class="hint" style="color:#374151">为什么推荐:${esc(p.why)}</div>` : ''}
       ${rfPjBody(p)}</div>`;
+}
+function renderPrecheckDone(el, r, sel, sp, bad, card, box) {
   const best = (r.picks || [])[0];
   const better = best && best.prejudge && RF_PJ[best.prejudge.verdict] && fitRankUi(best.prejudge.verdict) < fitRankUi(sp.verdict);
   let h = `<div style="${box}"><div style="font-size:14px;font-weight:700">这个框架合不合适:「${esc(r.topic)}」 <span class="hint" style="margin:0">用时 ${esc(r.secs)} 秒</span></div>

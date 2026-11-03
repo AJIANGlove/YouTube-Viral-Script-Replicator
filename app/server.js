@@ -462,10 +462,15 @@ const server = http.createServer(async (req, res) => {
       });
     }
 
-    // v1.75 建任务前预判:人选的框架能不能套上这个主题,并从库里另推荐 3 个(不建任务,不落盘)
+    // v1.75 建任务前预判:人选的框架能不能套上这个主题,并从库里另推荐 3 个(不建任务,不落盘)。后台跑,GET 取进度
     if (url === '/api/fit-precheck' && method === 'POST') {
       const body = await readBody(req);
-      try { return send(res, 200, await require('./lib/reframe').precheck(body)); }
+      try { return send(res, 200, require('./lib/reframe').startPrecheck(body)); }
+      catch (e) { return send(res, e.status || 500, { error: e.message }); }
+    }
+    const preMatch = url.match(/^\/api\/fit-precheck\/([\w-]+)$/);
+    if (preMatch && method === 'GET') {
+      try { return send(res, 200, require('./lib/reframe').getPrecheck(preMatch[1])); }
       catch (e) { return send(res, e.status || 500, { error: e.message }); }
     }
 
@@ -512,8 +517,8 @@ const server = http.createServer(async (req, res) => {
       });
       // v1.75:建任务前预判过这个框架和题目(30 分钟内、受众和资料没改),写前分析直接用那次的判断,不再判一次
       if (run.pre_analysis) {
-        const pre = require('./lib/reframe').precheckCarry(body);
-        if (pre) { run.fit_carry = pre; run.precheck = { at: new Date().toISOString(), verdict: pre.verdict }; store.saveRun(run); }
+        // 预判推荐的候选也带上:完整分析仍判换框架时自动往下试(v1.75.2)
+        if (require('./lib/reframe').applyPrecheck(run, body)) store.saveRun(run);
       }
       // 主题中文译文:建任务时就点火(后台跑,不占建任务响应),列表页/详情页都能直接看到中文;
       // 列表接口另有 ensure 兜底,漏掉的(翻译失败/进程重启)下次刷列表自动补

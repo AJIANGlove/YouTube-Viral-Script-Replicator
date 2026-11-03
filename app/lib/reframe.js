@@ -427,8 +427,32 @@ function precheckCarry(body) {
   const fit = e.fits[body.asset_id];
   return fit && fit.verdict ? { ...fit, asset_id: body.asset_id } : null;
 }
-const preBusy = new Set();
-async function precheck(body) {
+// v1.75.2:这次预判判过的全部框架(按结论排好)。建任务时放进 run.reframe.pool,
+// 完整写前分析仍判「换框架」时,按 v1.71 的规则自动往下试预判合适的,不用再从头推荐
+function precheckPool(body) {
+  const e = preCache.get(preKey(body));
+  if (!e || Date.now() - e.at > PRE_TTL || !arr(e.pool).length) return null;
+  return e.pool;
+}
+// 建任务时调用:有预判就带上判断结果和候选池,并打开自动往下试(设置里是 0 就不开)
+function applyPrecheck(run, body) {
+  const fit = precheckCarry(body);
+  if (!fit) return false;
+  run.fit_carry = fit;
+  run.precheck = { at: new Date().toISOString(), verdict: fit.verdict };
+  const pool = arr(precheckPool(body)).filter(p => store.getAsset(p.asset_id));
+  const max = autoMax();
+  if (pool.some(p => p.asset_id !== run.asset_id && AUTO_OK.includes((p.prejudge || {}).verdict)) && max > 0) {
+    run.reframe = { pool, tried: [], switched: [], from_precheck: true, auto: { max, steps: [], user_pick: run.asset_id, user_pick_name: run.asset_name || run.asset_id, by: 'precheck', started_at: run.precheck.at } };
+    run.precheck.pool = pool.length;
+  }
+  return true;
+}
+// 预判要 2–3 分钟(挑候选要读整个同赛道目录),做成后台任务:页面每 2 秒来取一次进度;
+// 人选的框架先判完先给结果,推荐的候选判完再补上
+const preJobs = new Map();
+let preSeq = 0;
+function startPrecheck(body) {
   const b = body || {};
   const topic = String(b.topic || '').trim();
   if (!topic) throw Object.assign(new Error('先填新主题'), { status: 400 });
@@ -437,41 +461,58 @@ async function precheck(body) {
   if (!asset || !asset.framework) throw Object.assign(new Error('框架不存在: ' + (b.asset_id || '')), { status: 404 });
   const cfg = pl().loadConfig();
   if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key,请先在设置中填写'), { status: 400 });
-  const key = preKey(b) + '|' + b.asset_id;
-  if (preBusy.has(key)) throw Object.assign(new Error('这个题目和框架正在预判,等它出来'), { status: 409 });
-  preBusy.add(key);
-  const t0 = Date.now();
-  try {
-    const aud = b.audience || {};
-    const run = {
-      id: 'precheck', ephemeral: true, topic, asset_id: asset.id, asset_name: (asset.meta || {}).name || asset.id,
-      audience: { target_language: aud.target_language || 'English', target_country: aud.target_country || 'US', target_audience: aud.target_audience || '', video_goal: aud.video_goal || '10分钟' },
-      materials: typeof b.materials === 'string' ? b.materials.trim() : ''
-    };
-    const a = { title: { final_title: topic }, thesis_card: {}, protagonist: {} };
-    const exclude = [asset.id].concat(arr(b.exclude).map(String));
-    // 人选的框架和挑候选同时进行
-    const [selP, round] = await Promise.all([
-      fc().quickFit(run, cfg, asset, {}).then(f => ({ status: 'done', ...f }), e => ({ status: 'failed', error: e.message })),
-      pickRound(run, cfg, { ...a, reframe_reasons: [], verdict_reason: '还没开始写,建任务前先看看:人选了「' + run.asset_name + '」,从库里挑 6 个能套上这个题目的框架给人比较(人选的那个程序另外判,不要选它)' }, exclude, '')
-        .catch(e => ({ picks: [], topic_note: '', error: e.message }))
-    ]);
-    const picks = await prejudgeAll(run, cfg, a, round.picks || []);
-    const sorted = sortPicks(picks);
-    const key2 = preKey(b);
-    if (selP.status === 'done') preRemember(key2, asset.id, selP);
-    sorted.forEach(p => { if (p.prejudge && p.prejudge.status === 'done') preRemember(key2, p.asset_id, p.prejudge); });
-    const brief = p => ({ asset_id: p.asset_id, name: p.name, source: p.source, track: p.track, why: p.why, adjust: p.adjust, risk: p.risk, prejudge: p.prejudge });
-    return {
-      ok: true, secs: Math.round((Date.now() - t0) / 100) / 10,
-      selected: { asset_id: asset.id, name: run.asset_name, prejudge: selP },
-      picks: sorted.slice(0, SHOW).map(brief),
-      others: sorted.slice(SHOW).map(brief),
-      topic_note: String(round.topic_note || ''),
-      pick_error: round.error || '',
-      calls: arr(run.attempts).length
-    };
-  } finally { preBusy.delete(key); }
+  const now = Date.now();
+  for (const [k, j] of preJobs) if (now - j.t0 > PRE_TTL) preJobs.delete(k);
+  const sig = preKey(b) + '|' + asset.id;
+  for (const [k, j] of preJobs) if (j.sig === sig && j.status === 'running') return { job_id: k, reused: true };
+  const id = 'pre_' + now.toString(36) + '_' + (++preSeq);
+  const job = { sig, t0: now, status: 'running', stage: '判你选的框架,同时挑候选', topic, selected: { asset_id: asset.id, name: (asset.meta || {}).name || asset.id, prejudge: null }, picks: [], others: [], topic_note: '', pick_error: '', error: '' };
+  preJobs.set(id, job);
+  runPrecheck(job, b, asset, cfg).catch(e => { job.status = 'failed'; job.error = e.message; });
+  return { job_id: id };
+}
+function getPrecheck(id) {
+  const j = preJobs.get(String(id || ''));
+  if (!j) throw Object.assign(new Error('预判结果过期了(超过 30 分钟或程序重启过),重新点一次'), { status: 404 });
+  const { sig, t0, ...rest } = j;
+  return { ...rest, secs: Math.round((((j.done_at || Date.now()) - t0)) / 100) / 10 };
+}
+async function runPrecheck(job, b, asset, cfg) {
+  const topic = job.topic;
+  const aud = b.audience || {};
+  const run = {
+    id: 'precheck', ephemeral: true, topic, asset_id: asset.id, asset_name: job.selected.name,
+    audience: { target_language: aud.target_language || 'English', target_country: aud.target_country || 'US', target_audience: aud.target_audience || '', video_goal: aud.video_goal || '10分钟' },
+    materials: typeof b.materials === 'string' ? b.materials.trim() : ''
+  };
+  const a = { title: { final_title: topic }, thesis_card: {}, protagonist: {} };
+  const key2 = preKey(b);
+  const selDone = fc().quickFit(run, cfg, asset, {}).then(f => ({ status: 'done', ...f }), e => ({ status: 'failed', error: e.message })).then(p => {
+    job.selected = { ...job.selected, prejudge: p };
+    if (p.status === 'done') preRemember(key2, asset.id, p);
+    if (job.status === 'running') job.stage = '你选的框架判完了,还在挑候选';
+  });
+  const round = await pickRound(run, cfg, { ...a, reframe_reasons: [], verdict_reason: '还没开始写,建任务前先看看:人选了「' + run.asset_name + '」,从库里挑 6 个能套上这个题目的框架给人比较(人选的那个程序另外判,不要选它)' }, [asset.id], '')
+    .catch(e => ({ picks: [], topic_note: '', error: e.message }));
+  job.topic_note = String(round.topic_note || '');
+  job.pick_error = round.error || '';
+  job.stage = '预判 ' + (round.picks || []).length + ' 个候选';
+  const picks = await prejudgeAll(run, cfg, a, round.picks || []);
+  await selDone;
+  const sorted = sortPicks(picks);
+  sorted.forEach(p => { if (p.prejudge && p.prejudge.status === 'done') preRemember(key2, p.asset_id, p.prejudge); });
+  // 候选池:人选的框架 + 判过的候选,按结论排好(建任务后自动往下试从这里取)
+  const poolOf = p => ({ asset_id: p.asset_id, name: p.name, source: p.source || '', track: p.track || '', why: p.why || '', risk: p.risk || '', round: 1, prejudge: p.prejudge });
+  const all = sortPicks([{ asset_id: asset.id, name: job.selected.name, prejudge: job.selected.prejudge, ai_order: -1 }].concat(picks)).filter(p => p.prejudge && p.prejudge.status === 'done');
+  const ce = preCache.get(key2);
+  if (ce) ce.pool = all.map(poolOf);
+  const brief = p => ({ asset_id: p.asset_id, name: p.name, source: p.source, track: p.track, why: p.why, adjust: p.adjust, risk: p.risk, prejudge: p.prejudge });
+  job.picks = sorted.slice(0, SHOW).map(brief);
+  job.others = sorted.slice(SHOW).map(brief);
+  job.calls = arr(run.attempts).length;
+  job.done_at = Date.now();
+  job.stage = '';
+  job.status = 'done';
 }
 
 function startSummary(runId) {
@@ -666,4 +707,4 @@ function startSuggest(runId) {
   return { ok: true };
 }
 
-module.exports = { precheck, precheckCarry, topicsUsed, checkTopics, isReframe, shouldHold, suggest, startSuggest, switchTo, autoNext, autoMax, setAutoMax, ignore, library, catalogText, summarize, startSummary, keepOrigin, retopic, originOf, deadEnd };
+module.exports = { startPrecheck, getPrecheck, precheckCarry, precheckPool, applyPrecheck, topicsUsed, checkTopics, isReframe, shouldHold, suggest, startSuggest, switchTo, autoNext, autoMax, setAutoMax, ignore, library, catalogText, summarize, startSummary, keepOrigin, retopic, originOf, deadEnd };
