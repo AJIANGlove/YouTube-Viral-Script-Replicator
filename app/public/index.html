@@ -1838,9 +1838,10 @@ function renderPrecheckDone(el, r, sel, sp, bad, card, box) {
   let h = `<div style="${box}"><div style="font-size:14px;font-weight:700">这个框架合不合适:「${esc(r.topic)}」 <span class="hint" style="margin:0">用时 ${esc(r.secs)} 秒</span></div>
     <div id="precheck-stale" class="rv-flag hidden">主题改过了,下面是按旧主题判的,重新点一次按钮。</div>
     ${card(sel, true)}
-    <div class="hint" style="color:#374151">${bad ? '<b>你选的框架预计套不上这个主题。</b>建议换成下面的一个,或者改主题。不想换的话直接点「开始生成」,就按你选的框架写,之后不再提示换框架,套不上的段落写稿时换个讲法。' : better ? '你选的框架能写,下面有预判更好的,可以比较一下。' : '你选的框架可以用,下面是库里另外几个能套上的,供比较。'}点「开始生成」时,写前分析会直接用这次的判断,不再判一次(30 分钟内、主题和受众没改)。</div>
-    ${(r.picks || []).length ? '<div style="font-weight:600;margin-top:8px">库里另推荐的 3 个</div>' + r.picks.map(p => card(p, false)).join('') : `<div class="hint">没挑出别的候选${r.pick_error ? '(' + esc(r.pick_error) + ')' : ''}。</div>`}
-    ${(r.others || []).length ? `<details><summary class="hint" style="cursor:pointer">其他预判过的 ${r.others.length} 个</summary>${r.others.map(p => card(p, false)).join('')}</details>` : ''}
+    <div class="hint" style="color:#374151">${bad ? '<b>你选的框架预计套不上这个主题。</b>建议换成下面的一个,或者改主题。不想换的话直接点「开始生成」,就按你选的框架写,之后不再提示换框架,套不上的段落写稿时换个讲法。' : better ? '你选的框架能写,下面有预判更好的,可以比较一下。' : '你选的框架可以用,下面是库里另外几个能套上的,供比较。'}<b>框架只在这里定:</b>点「开始生成」以后不会再提示换框架,写前分析直接用这次的判断(30 分钟内、主题和受众没改)。</div>
+    ${(r.picks || []).length ? `<div style="font-weight:600;margin-top:8px">库里推荐的 ${r.picks.length} 个(只列预判合适的)</div>` + r.picks.map(p => card(p, false)).join('') : `<div class="rv-flag">库里没挑出预判合适的框架${r.rounds > 1 ? '(挑了两轮)' : ''}${r.pick_error ? '(' + esc(r.pick_error) + ')' : ''}。可以改主题再点一次,或者仍用你选的框架开始生成。</div>`}
+    ${r.hidden_unfit ? `<div class="hint">另有 ${esc(r.hidden_unfit)} 个预判不合适的框架,没列出来。</div>` : ''}
+    ${(r.others || []).length ? `<details><summary class="hint" style="cursor:pointer">其他预判合适的 ${r.others.length} 个</summary>${r.others.map(p => card(p, false)).join('')}</details>` : ''}
     ${r.topic_note ? `<div class="hint">题目建议:${esc(r.topic_note)}</div>` : ''}</div>`;
   el.innerHTML = h;
   precheckStale();
@@ -1861,7 +1862,7 @@ function precheckSwitch(id) {
     // 换过来的变成「你选的」,原来那个放回候选里,方便换回去
     r.picks = (r.picks || []).filter(p => p.asset_id !== id);
     r.others = (r.others || []).filter(p => p.asset_id !== id);
-    r.picks.push({ asset_id: old.asset_id, name: old.name, source: '', prejudge: old.prejudge, why: '你原来选的框架' });
+    if (['可以写', '调整后可写'].includes((old.prejudge || {}).verdict)) r.picks.push({ asset_id: old.asset_id, name: old.name, source: '', prejudge: old.prejudge, why: '你原来选的框架' }); // 红色的不列
     r.picks.sort((x, y) => fitRankUi((x.prejudge || {}).verdict) - fitRankUi((y.prejudge || {}).verdict));
     r.selected = { asset_id: pick.asset_id, name: pick.name, prejudge: pick.prejudge };
   }
@@ -5481,7 +5482,7 @@ function renderReframePanel(r) {
     const parts = [];
     // 改了题目(v1.71):重新挑框架的进度
     if (tc) parts.push(`<div class="hint" style="color:#374151">题目已从「${esc(tc.from)}」改成「${esc(tc.to)}」${rf.status === 'suggesting' ? `,<b>正在按新题目重新挑框架${rf.stage ? '(' + esc(rf.stage) + ')' : ''}…</b>` : '。'}</div>`);
-    if (r.keep_notes) parts.push(`<div class="hint" style="color:#374151">${r.keep_notes.by === 'precheck' ? '建任务前预判说这个框架套不上,你仍选了它' : '你选了「不改,继续写」'}:用「${esc(r.asset_name || r.asset_id)}」写,写不成立的 ${r.keep_notes.segments.length} 段交给写稿时换个讲法。${r.status === 'analyzing' ? '正在做写前分析…' : ''}</div>`);
+    if (r.keep_notes) parts.push(`<div class="hint" style="color:#374151">${r.keep_notes.by === 'precheck' ? '建任务前预判说这个框架套不上,你仍选了它' : r.keep_notes.by === 'analysis' ? '框架在建任务时已定,写前分析认为有几段写不成立' : '你选了「不改,继续写」'}:用「${esc(r.asset_name || r.asset_id)}」写,写不成立的 ${r.keep_notes.segments.length} 段交给写稿时换个讲法。${r.status === 'analyzing' ? '正在做写前分析…' : ''}</div>`);
     const hist = rfAutoHistory(r);
     if (hist) parts.push(hist);
     else if (switched && !r.keep_notes && (!tc || switched.at > tc.at)) {
@@ -5830,15 +5831,15 @@ function renderBlueprintPanel(r) {
       <div style="font-size:13px;margin-top:6px">选一个:</div>
       <div class="bp-choices">
         <button class="primary" onclick="bpHold('write', this)">仍然写(按现在的蓝图写稿)</button>
-        <button onclick="bpHold('reframe', this)">换框架(按这些原因推荐别的框架)</button>
+        ${r.no_reframe ? '' : `<button onclick="bpHold('reframe', this)">换框架(按这些原因推荐别的框架)</button>`}
       </div>
-      <div class="bp-choices">
+      ${r.no_reframe ? '<div class="hint">框架在建任务时已经定了,这里不再换框架或改题目;没过的地方写完在审稿里改。</div>' : `<div class="bp-choices">
         <input type="text" id="bp-retopic" list="bp-retopic-list" value="${escAttr(sug[0] || r.topic || '')}" placeholder="新题目">
         <datalist id="bp-retopic-list">${sug.map(t => `<option value="${escAttr(t)}">`).join('')}</datalist>
         <button onclick="bpHold('retopic', this)">改题目(按新题目重新挑框架)</button>
       </div>
       ${sug.length ? `<div class="hint">AI 建议的新题目:${sug.map(esc).join(' / ')}(下拉可选)</div>` : ''}
-      <div class="hint">改题目、换框架都会回到写前分析重新做,这份蓝图和蓝图审记录会留在任务记录里。</div></div>`;
+      <div class="hint">改题目、换框架都会回到写前分析重新做,这份蓝图和蓝图审记录会留在任务记录里。</div>`}</div>`;
   }
   if (rv && (rv.items || []).length) {
     const prob = p => `<div><span class="bp-by">${esc(p.by)}</span>${p.chapter && !String(p.text).startsWith(p.chapter) ? esc(p.chapter) + ' ' : ''}${esc(p.text)}${p.fix ? `<div class="hint" style="margin:0 0 0 4px">改法:${esc(p.fix)}</div>` : ''}</div>`;

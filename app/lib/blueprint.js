@@ -839,6 +839,8 @@ function holdChoice(runId, body) {
     else pl().runGeneration(runId).catch(() => {});
     return { ok: true, choice };
   }
+  // v1.76:框架在建任务时已定的任务,蓝图审没过只能「仍然写」,不能换框架或改题目
+  if (run.no_reframe && (choice === 'retopic' || choice === 'reframe')) throw Object.assign(new Error('这个任务的框架在建任务时已经定了,不能再换框架或改题目;蓝图审没过的地方可以「仍然写」后在审稿里改'), { status: 400 });
   if (choice === 'retopic') {
     const t = str((body || {}).title).trim();
     if (!t) throw Object.assign(new Error('新题目是空的'), { status: 400 });

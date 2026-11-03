@@ -516,10 +516,8 @@ const server = http.createServer(async (req, res) => {
         voice_name: typeof body.voice_name === 'string' ? body.voice_name : voice.AUTO
       });
       // v1.75:建任务前预判过这个框架和题目(30 分钟内、受众和资料没改),写前分析直接用那次的判断,不再判一次
-      if (run.pre_analysis) {
-        // 预判推荐的候选也带上:完整分析仍判换框架时自动往下试(v1.75.2)
-        if (require('./lib/reframe').applyPrecheck(run, body)) store.saveRun(run);
-      }
+      // v1.76:框架只在建任务时定,建好以后不再换框架;有这次预判就带上(写前分析不再判一次)
+      if (require('./lib/reframe').applyPrecheck(run, body)) store.saveRun(run);
       // 主题中文译文:建任务时就点火(后台跑,不占建任务响应),列表页/详情页都能直接看到中文;
       // 列表接口另有 ensure 兜底,漏掉的(翻译失败/进程重启)下次刷列表自动补
       topiczh.ensure([run.topic]);

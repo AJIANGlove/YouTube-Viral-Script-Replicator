@@ -435,28 +435,42 @@ function precheckPool(body) {
   return e.pool;
 }
 // 建任务时调用:有预判就带上判断结果和候选池,并打开自动往下试(设置里是 0 就不开)
+// v1.76:框架只在建任务时定。新建的任务一律不再走换框架(不快速判断、不判换框架停下、不推荐、不自动换、不改主题)。
+// 写前分析觉得写不成立的段落,和「不改,继续写」一样交给后面换个讲法,不硬编
+function lockFramework(run) {
+  run.no_reframe = true;
+  run.reframe = { status: 'ignored', ignored_at: new Date().toISOString(), by: 'no_reframe', tried: [], switched: [] };
+}
+// 建任务时调用:有这次预判就带上判断结果(写前分析不再判一次);预判说套不上人仍选它,撑不住的段落记进 keep_notes
 function applyPrecheck(run, body) {
+  lockFramework(run);
   const fit = precheckCarry(body);
-  if (!fit) return false;
+  if (!fit) return true;
   run.fit_carry = fit;
   run.precheck = { at: new Date().toISOString(), verdict: fit.verdict };
-  // v1.75.3:预判说这个框架套不上,人没换、仍点了开始生成 = 人决定用这个框架写。
-  // 和「不改,继续写」一样:不再判换框架、不再推荐、不自动换;套不上的段落交给写前分析、蓝图、写稿、审稿换个讲法,不硬编
   if (fit.verdict === '换框架') {
     const segs = arr(fit.blocking).filter(b => b && (b.segment || b.why)).map(b => ({ segment: String(b.segment || ''), why: String(b.why || ''), how: '' }));
     const reasons = segs.length ? segs : arr(fit.reframe_reasons).map(r => ({ segment: '', why: String(r), how: '' }));
     run.keep_notes = { at: run.precheck.at, by: 'precheck', summary: String(fit.verdict_reason || '建任务前预判:这个框架套不上这个题目,人决定仍用它写'), segments: reasons.slice(0, 8) };
-    run.reframe = { status: 'ignored', ignored_at: run.precheck.at, by: 'precheck_insist', tried: [], switched: [] };
     run.precheck.insist = true;
     logEvent(run, { event: 'choice', choice: 'keep', by: 'precheck', framework: run.asset_id, topic: run.topic });
-    return true;
   }
-  const pool = arr(precheckPool(body)).filter(p => store.getAsset(p.asset_id));
-  const max = autoMax();
-  if (pool.some(p => p.asset_id !== run.asset_id && AUTO_OK.includes((p.prejudge || {}).verdict)) && max > 0) {
-    run.reframe = { pool, tried: [], switched: [], from_precheck: true, auto: { max, steps: [], user_pick: run.asset_id, user_pick_name: run.asset_name || run.asset_id, by: 'precheck', started_at: run.precheck.at } };
-    run.precheck.pool = pool.length;
-  }
+  return true;
+}
+// 写前分析(完整分析)在框架已定的任务上仍判了「换框架」:改成「调整后可写」,写不成立的段落记进 keep_notes(蓝图、写稿、审稿都带上)
+function settleLocked(run, a) {
+  if (!run || !run.no_reframe || !a || a.verdict !== '换框架') return false;
+  const reasons = arr(a.reframe_reasons).map(String).filter(Boolean);
+  a.verdict_before_lock = '换框架';
+  a.verdict = '调整后可写';
+  a.verdict_reason = '(框架在建任务时已定,不换框架)写前分析认为下面几段写不成立,写稿时换个讲法' + (a.verdict_reason ? ';原结论:' + a.verdict_reason : '');
+  a.locked_reasons = reasons;
+  a.reframe_reasons = [];
+  const old = run.keep_notes && Array.isArray(run.keep_notes.segments) ? run.keep_notes.segments : [];
+  const add = reasons.map(r => ({ segment: (String(r).match(/FS\d+|PK\d+|CH\d+/) || [''])[0], why: r, how: '' }));
+  const seen = new Set(old.map(x => x.why));
+  run.keep_notes = { at: new Date().toISOString(), by: (run.keep_notes || {}).by || 'analysis', summary: (run.keep_notes || {}).summary || '写前分析认为这几段在本题写不成立', segments: old.concat(add.filter(x => !seen.has(x.why))).slice(0, 10) };
+  logEvent(run, { event: 'locked', framework: run.asset_id, reasons: reasons.slice(0, 5) });
   return true;
 }
 // 预判要 2–3 分钟(挑候选要读整个同赛道目录),做成后台任务:页面每 2 秒来取一次进度;
@@ -508,9 +522,21 @@ async function runPrecheck(job, b, asset, cfg) {
   job.topic_note = String(round.topic_note || '');
   job.pick_error = round.error || '';
   job.stage = '预判 ' + (round.picks || []).length + ' 个候选';
-  const picks = await prejudgeAll(run, cfg, a, round.picks || []);
+  let picks = await prejudgeAll(run, cfg, a, round.picks || []);
+  // v1.76:只给人看预判合适的(绿色)。一个都没有就排除判过的再挑一轮
+  if (!picks.some(p => AUTO_OK.includes((p.prejudge || {}).verdict))) {
+    job.stage = '第一轮 ' + picks.length + ' 个都不合适,再挑一轮';
+    const why = picks.map(p => '- ' + p.name + ':' + arr((p.prejudge || {}).reframe_reasons).concat(arr((p.prejudge || {}).blocking).map(x => (x.segment ? x.segment + ' ' : '') + x.why)).slice(0, 2).join(';')).join('\n');
+    const r2 = await pickRound(run, cfg, { ...a, reframe_reasons: [], verdict_reason: '还没开始写,建任务前先看看:从库里挑 6 个能套上这个题目的框架' }, [asset.id].concat(picks.map(p => p.asset_id)), '## 上一轮挑的框架,预判都套不上(不要再选,也不要选犯同样毛病的)\n' + why + '\n').catch(e => ({ picks: [], topic_note: '', error: e.message }));
+    if (r2.topic_note) job.topic_note = String(r2.topic_note);
+    job.stage = '预判第二轮 ' + (r2.picks || []).length + ' 个候选';
+    picks = picks.concat(await prejudgeAll(run, cfg, a, (r2.picks || []).map(p => ({ ...p, round: 2, ai_order: p.ai_order + 100 }))));
+    job.rounds = 2;
+  }
   await selDone;
-  const sorted = sortPicks(picks);
+  const sorted = sortPicks(picks).filter(p => AUTO_OK.includes((p.prejudge || {}).verdict));
+  job.hidden_unfit = picks.filter(p => (p.prejudge || {}).verdict === '换框架').length;
+  job.hidden_failed = picks.filter(p => !(p.prejudge || {}).verdict).length;
   sorted.forEach(p => { if (p.prejudge && p.prejudge.status === 'done') preRemember(key2, p.asset_id, p.prejudge); });
   // 候选池:人选的框架 + 判过的候选,按结论排好(建任务后自动往下试从这里取)
   const poolOf = p => ({ asset_id: p.asset_id, name: p.name, source: p.source || '', track: p.track || '', why: p.why || '', risk: p.risk || '', round: 1, prejudge: p.prejudge });
@@ -718,4 +744,4 @@ function startSuggest(runId) {
   return { ok: true };
 }
 
-module.exports = { startPrecheck, getPrecheck, precheckCarry, precheckPool, applyPrecheck, topicsUsed, checkTopics, isReframe, shouldHold, suggest, startSuggest, switchTo, autoNext, autoMax, setAutoMax, ignore, library, catalogText, summarize, startSummary, keepOrigin, retopic, originOf, deadEnd };
+module.exports = { startPrecheck, getPrecheck, precheckCarry, precheckPool, applyPrecheck, lockFramework, settleLocked, topicsUsed, checkTopics, isReframe, shouldHold, suggest, startSuggest, switchTo, autoNext, autoMax, setAutoMax, ignore, library, catalogText, summarize, startSummary, keepOrigin, retopic, originOf, deadEnd };

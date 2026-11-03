@@ -98,7 +98,11 @@ function buildAnalysisPrompt(run, asset) {
 // 只在 run.keep_notes 存在时出现,其他任务的提示词一字不变
 function keepNotesText(run, mode) {
   const k = run && run.keep_notes;
-  if (!k || !Array.isArray(k.segments) || !k.segments.length) return '';
+  if (!k || !Array.isArray(k.segments) || !k.segments.length) {
+    // v1.76:框架在建任务时已定,写前分析不判换框架
+    if (run && run.no_reframe && mode === 'analysis') return '【框架已在建任务时选定,不换框架】不要判「换框架」。有写不成立的段落,结论按「调整后可写」处理,这几段在 adjustments 里记成「换内容保功能」,用本题真实存在的事实换个讲法完成同一个留存动作;不能为了对上框架硬编一个题目里不存在的东西。';
+    return '';
+  }
   const lines = k.segments.map(x => '- ' + [x.segment, x.why].filter(Boolean).join(':') + (x.how ? '。换法:' + x.how : ''));
   const head = mode === 'analysis'
     ? '【人已决定:不改题目,仍用这个框架写】下面这几段在本题写不成立。不要因为它们判「换框架」:结论按「调整后可写」处理,这几段在 adjustments 里记成「换内容保功能」,用本题真实存在的事实换个讲法完成同一个留存动作;不能为了对上框架硬编一个题目里不存在的东西。'
@@ -972,6 +976,8 @@ async function runAnalysis(runId) {
     // 有公式的行先改成程序算的数(AI 修账本在「AI 先调整」里做)
     // v1.74:按功能重排时,判了换框架但卡住的全是普通段的,程序改判「调整后可写」(原结论记在 verdict_before_fit_rule)
     if (require('./fitrule').on()) require('./fitrule').applyFull(a);
+    // v1.76:框架在建任务时已定的任务,完整分析判了换框架也不换:改成调整后可写,写不成立的段落交给后面换个讲法
+    require('./reframe').settleLocked(run, a);
     const pf = ledgerWriteBack(a);
     if (pf.length) a.ledger_checkup = { at: new Date().toISOString(), program_fixed: pf, problems: ledgerProblems(a, run, pf).map(p => p.text) };
     a.ledger_check = verifyLedger(a.ledger);
