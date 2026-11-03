@@ -331,8 +331,8 @@ function buildView(run, asset) {
       // 旧结果:清单里没读出的分数,按报告正文的评分表补上
       const f = state.final, dims = arr(f.dims);
       // 解决方案是给当时那组问题出的,问题列表变了就不再显示
-      const rechecks = arr(f.rechecks).map(r => ({ ...r, scores: fillScores(r.scores, r.report, dims, 2), options: r.options && r.options_for === openKey(r.open) ? r.options : null,
-        open: arr(r.open).map(x => ({ ...x, zh_problem: hasForeign(x.problem) ? zhOf(state, x.problem) : '', zh_suggestion: hasForeign(x.suggestion) ? zhOf(state, x.suggestion) : '' })) }));
+      const rechecks = arr(f.rechecks).map(r => ({ ...r, scores: fillScores(r.scores, r.report, dims, 2), options: r.options && r.options_for === openKey(r.open) ? optionsZh(state, r.options) : null,
+        open: arr(r.open).map(x => ({ ...x, zh_problem: hasForeign(x.problem) ? zhOf(state, x.problem) : '', zh_suggestion: hasForeign(x.suggestion) ? zhOf(state, x.suggestion) : '', why_zh: whyOf(state, 'R', x) })) }));
       const last = rechecks[rechecks.length - 1];
       // 最后一轮复审的问题:建议里写明了「原句」改成「新句」、原句只出现一次的,可以直接应用
       if (last) last.open = last.open.map(x => applyView(run.id, script, lang, 'recheck', x));
@@ -342,6 +342,7 @@ function buildView(run, asset) {
     tracks: trackList(), track_default: lockedTrack(run) || state.final_track || autoTrack(run, asset), track_locked: !!lockedTrack(run),
     translating: ((run.steps || {}).review_zh || {}).status === 'running',
     zh_error: ((run.steps || {}).review_zh || {}).error || '',
+    why_error: ((run.steps || {}).review_zh || {}).why_error || '',
     rows, dropped,
     facts: facts.map(f => ({ ...factView(f, marks), used: usedFacts.has(f.id) })),
     ledger: arr(a.ledger),
@@ -646,6 +647,7 @@ function publishCheck(run, v) {
   return { ready: !reasons.length, ignored, item_groups, ignored_of, reasons, blocks, notes, can_autofix: !!reasons.length && !!v.final && ((avg != null && avg < PUBLISH_AVG) || prog.length > 0), program_open: prog.map(x => x.problem), craft_hints: v.final ? craftHints(run, last) : [], avg: avg != null ? Math.round(avg * 10) / 10 : null, good, opening_bad: ign.has('listen_open') ? [] : openBad, fix: (run.steps || {}).opening_fix || null,
     manual_after: v.final ? manualAfterRecheck((run.review || {}).final) : 0,
     accepted_facts: [...accepted], claim: cc ? { ...cc, only_ok: claimBlocking(cc) && !(cc.verdict === '不成立' && !claimVerdictApplied(cc)) && !arr(cc.issues).some(x => x.level === '关键' && claimReal(x) && !claimLooksOk(x)), verdict_applied: cc.verdict === '不成立' && claimVerdictApplied(cc), issues: arr(cc.issues).map(x => {
+      x = { ...x, why_zh: whyOf(run.review, 'C', x) }; // 问题在哪(v1.72)
       if (claimNoIssue(x)) return { ...x, no_issue: true };
       // AI 自己结论没问题、改法写「无需修改…」的:只给「确认没问题」,不给「AI 出改法」,以前出改法失败的记录也不显示
       const lo = !x.applied && claimLooksOk(x);
@@ -759,6 +761,67 @@ function zhOf(state, text) {
   return (z.byHash || {})[hash(text)] || '';
 }
 
+// ---------- 问题在哪(v1.72):每条问题一段中文大白话原因,人靠它判断能不能忽略 ----------
+// 复审问题(R)和论点核对问题(C):新跑的由提示词直接给 why_zh;老数据在「补齐中文对照」时调一次 AI 补,存在 review.why[key]
+const whyKey = (kind, x) => hash(kind + '|' + (kind === 'C' ? String(x.quote || '') + '|' + String(x.problem || '') : String(x.problem || '') + '|' + String(x.suggestion || '')));
+function whyOf(state, kind, x) { return String((x && x.why_zh) || ((state && state.why) || {})[whyKey(kind, x)] || '').trim(); }
+// 去掉引号里的原句后,外文字比汉字多:算「不是中文」
+function mostlyForeign(t) {
+  const s = String(t || '').replace(/「[^」]*」|“[^”]*”|"[^"]*"|『[^』]*』|'[^']*'/g, '');
+  const ko = (s.match(/[가-힯぀-ヿ]/g) || []).length, en = (s.match(/[A-Za-z]/g) || []).length, han = (s.match(/[一-鿿]/g) || []).length;
+  return ko + en / 2 > han;
+}
+function optionsZh(state, options) {
+  return Object.fromEntries(Object.entries(options || {}).map(([k, os]) => [k, arr(os).map(o => (o && o.why && mostlyForeign(o.why) ? { ...o, zh_why: zhOf(state, o.why) } : o))]));
+}
+// 还缺「问题在哪」的:最后一轮复审的问题 + 论点核对的问题(核对后没问题、AI 说没问题、引用找不到的不补)
+function whyTargets(run) {
+  const st = run.review || {}, fin = st.final;
+  if (!fin) return [];
+  const out = [];
+  const last = arr(fin.rechecks).slice(-1)[0];
+  arr(last && last.open).forEach(x => { if (!whyOf(st, 'R', x)) out.push({ kind: 'R', x }); });
+  const cc = fin.claim_check;
+  arr(cc && cc.issues).forEach(x => { if (x.not_found || claimNoIssue(x) || claimLooksOk(x) || whyOf(st, 'C', x)) return; out.push({ kind: 'C', x }); });
+  return out;
+}
+// 给 AI 的材料:这一章的稿子 + 问题里提到的、或者原句出自它的事实核验条目
+function whyItemText(run, t, n) {
+  const x = t.x;
+  const chs = scriptChapters(currentScript(run));
+  const ids = String(x.chapter || '').match(/CH\d+/gi) || [];
+  const all = [x.problem, x.suggestion, x.quote, x.fix].map(v => String(v || '')).join(' ');
+  // 引号里的原句:去掉句末标点,取前 20 字去比(事实核验的改法里常常就是这句,只差标点)
+  const quoted = [String(x.quote || '')].concat((all.match(/「([^」]{12,})」|"([^"]{12,})"|“([^”]{12,})”/g) || []).map(q => q.slice(1, -1)))
+    .map(q => q.trim().replace(/[.。!?！？…\s]+$/, '')).filter(q => q.length >= 12).map(q => q.slice(0, 20));
+  // 这一章的稿子:找得到原句就截原句前后各 700 字,找不到截开头 1500 字
+  const chText = ids.map(id => (chs.find(c => c.id === id.toUpperCase()) || {}).text || '').filter(Boolean).map(c => {
+    const at = quoted.map(q => c.indexOf(q)).find(i => i >= 0);
+    return at == null ? c.slice(0, 1500) : (at > 700 ? '…' : '') + c.slice(Math.max(0, at - 700), at + 700) + (at + 700 < c.length ? '…' : '');
+  }).join('\n…\n');
+  const fcs = arr(((run.review || {}).factcheck || {}).items).filter(f => new RegExp('\\b' + f.id + '\\b').test(all) || quoted.some(q => String(f.fix || '').includes(q) || String(f.claim || '').includes(q))).slice(0, 4);
+  const facts = fcs.map(f => '- 事实核验 ' + f.id + '(' + (f.grade || '?') + ' 级):' + String(f.claim || '').slice(0, 200) + ';核验结论:' + String(f.finding || f.check || '').slice(0, 200)).join('\n');
+  const zh = st => (hasForeign(st) ? zhOf(run.review || {}, st) : '');
+  return '===' + n + '===\n' + (t.kind === 'R'
+    ? '类别:AI 复审列出的问题;等级:' + (x.level || '') + ';章节:' + (x.chapter || '') + '\n复审写的问题:' + (x.problem || '') + (zh(x.problem) ? '\n(中文意思:' + zh(x.problem) + ')' : '') + '\n复审建议:' + (x.suggestion || '(无)') + (zh(x.suggestion) ? '\n(中文意思:' + zh(x.suggestion) + ')' : '')
+    : '类别:论点和账本核对;等级:' + (x.level || '') + ';章节:' + (x.chapter || '') + '\n原句:' + (x.quote || '') + '\n核对写的问题:' + (x.problem || '') + '\n改法:' + (x.fix || '(无)'))
+    + (facts ? '\n相关的事实核验:\n' + facts : '') + (chText ? '\n这一章的稿子(节选):\n' + chText : '');
+}
+const WHY_BATCH = 10;
+async function fillWhy(run, cfg) {
+  const targets = whyTargets(run);
+  const out = {};
+  for (let i = 0; i < targets.length; i += WHY_BATCH) {
+    const batch = targets.slice(i, i + WHY_BATCH);
+    const items = batch.map((t, k) => whyItemText(run, t, 'Q' + (k + 1))).join('\n\n');
+    const prompt = an().fillVars(readPrompt('why_zh.md'), { target_language: (run.audience || {}).target_language || '外语', topic: run.topic || '', items });
+    const r = await rawCall(run, cfg, prompt, '问题在哪');
+    const got = parseBlocks(r.content, r.stopReason === 'max_tokens');
+    batch.forEach((t, k) => { const w = String(got['Q' + (k + 1)] || '').trim(); if (w) out[whyKey(t.kind, t.x)] = w; });
+  }
+  return { out, asked: targets.length };
+}
+
 // 要翻的:当前稿每一章 + 各版本改过的章节(改前和改后)
 function textsToTranslate(run) {
   const texts = scriptChapters(currentScript(run)).map(c => c.text);
@@ -772,6 +835,8 @@ function textsToTranslate(run) {
   arr(((run.review || {}).audit || {}).issues).forEach(x => { if (hasForeign(x.type)) texts.push(x.type); if (hasForeign(x.problem)) texts.push(x.problem); if (hasForeign(x.direction)) texts.push(x.direction); });
   // 复审没解决的问题和建议(里面常引用韩文原句)
   arr(((run.review || {}).final || {}).rechecks).forEach(r => arr(r.open).forEach(x => { if (hasForeign(x.problem)) texts.push(x.problem); if (hasForeign(x.suggestion)) texts.push(x.suggestion); }));
+  // 改法选项下面那行灰字(why):不是中文的补翻(v1.72)
+  arr(((run.review || {}).final || {}).rechecks).forEach(r => Object.values(r.options || {}).forEach(os => arr(os).forEach(o => { if (o && o.why && mostlyForeign(o.why)) texts.push(o.why); })));
   // 挡发布的没出处事实:事实原文和稿子里用到它的句子(「还不能发布」那里要写中文)
   try { const { asset } = loadRunAsset(run.id); const v = buildView(run, asset); arr(v.summary.red_fact_uses).forEach(x => { if (hasForeign(x.content)) texts.push(x.content); x.uses.forEach(u => texts.push(u.text)); }); } catch (e) {}
   // 事实核验表里的原文主张
@@ -794,9 +859,18 @@ async function translateRun(runId) {
     fresh.review = fresh.review || {};
     fresh.review.zh = fresh.review.zh || {};
     fresh.review.zh.byHash = { ...(fresh.review.zh.byHash || {}), ...tr };
-    fresh.steps = { ...(fresh.steps || {}), review_zh: { status: 'done', finished_at: new Date().toISOString() } };
     if (run.attempts) fresh.attempts = run.attempts;
     store.saveRun(fresh);
+    // 问题在哪(v1.72):复审和论点核对的问题还没有中文大白话原因的,一起补(用上面刚翻好的中文)
+    let whyErr = '';
+    try {
+      const w = await fillWhy(store.getRun(runId) || fresh, cfg);
+      if (Object.keys(w.out).length) { const f2 = store.getRun(runId) || fresh; f2.review = f2.review || {}; f2.review.why = { ...(f2.review.why || {}), ...w.out }; store.saveRun(f2); }
+      if (w.asked > Object.keys(w.out).length) whyErr = (w.asked - Object.keys(w.out).length) + ' 条问题的原因没补出来,可以再点一次「补齐中文对照」';
+    } catch (e) { whyErr = '问题原因没补出来:' + e.message; }
+    const f3 = store.getRun(runId) || fresh;
+    f3.steps = { ...(f3.steps || {}), review_zh: { status: 'done', finished_at: new Date().toISOString(), ...(whyErr ? { why_error: whyErr } : {}) } };
+    store.saveRun(f3);
   } catch (e) {
     const fresh = store.getRun(runId) || run;
     fresh.steps = { ...(fresh.steps || {}), review_zh: { status: 'failed', error: e.message } };
@@ -1869,7 +1943,7 @@ async function applyWithRepair(run, cfg, text, edits, label, limit) {
 }
 
 // 终审各步共用的提示词变量
-const OPEN_FORMAT = '在 ===OPEN=== 下面逐行列出还没解决的问题(达标且没有遗留问题就写「无」),每行一个,格式:\n- [R01][CH13][关键] 问题(中文,一两句;引用原句保留原语言) | 建议改法(中文)\n第三个方括号只能写 关键、结构、次要、待核实 之一。「待核实」指需要人确认事实或数据才能改的问题。「结构」指章节顺序或时间线跳跃、论证骨架、某一章整体没完成它的功能这类逐句改不动、要整章重写的问题,第二个方括号写明是哪一章(只写一章)。';
+const OPEN_FORMAT = '在 ===OPEN=== 下面逐行列出还没解决的问题(达标且没有遗留问题就写「无」),每行一个,格式:\n- [R01][CH13][关键] 问题(中文,一两句;引用原句保留原语言) | 建议改法(中文) | 原因:中文大白话一到三句,写清错在哪、为什么算问题、不改会怎样(看稿的人不懂原文,要靠这句判断能不能忽略)\n第三个方括号只能写 关键、结构、次要、待核实 之一。「待核实」指需要人确认事实或数据才能改的问题。「结构」指章节顺序或时间线跳跃、论证骨架、某一章整体没完成它的功能这类逐句改不动、要整章重写的问题,第二个方括号写明是哪一章(只写一章)。';
 function finalCommon(run, tr, dims) {
   const a = run.analysis || {};
   const aud = run.audience || {};
@@ -1938,9 +2012,13 @@ function parseOpen(block) {
   String(block || '').split('\n').forEach(l => {
     const m = l.replace(/\*+/g, '').match(/^\s*[-*\d.)]*\s*\[\s*(R\d+)\s*\]\s*\[\s*([^\]]*)\]\s*\[\s*([^\]]*)\]\s*(.+)$/i);
     if (!m) return;
-    const [problem, ...rest] = m[4].split(/\s*[|｜]\s*/);
+    const [problem, ...parts] = m[4].split(/\s*[|｜]\s*/);
+    // 第三段「原因:…」(v1.72):给不懂原文的人看的中文大白话原因
+    const WHY = /^(原因|为什么|問題在哪|问题在哪)[:：]\s*/;
+    const why = parts.filter(p => WHY.test(p)).map(p => p.replace(WHY, '').trim()).join(' ');
+    const rest = parts.filter(p => !WHY.test(p));
     const level = /待核实|核实/.test(m[3]) ? '待核实' : /次要/.test(m[3]) ? '次要' : /结构/.test(m[3]) ? '结构' : '关键';
-    out.push({ id: m[1].toUpperCase(), chapter: (m[2].match(/CH\d+/gi) || []).map(x => x.toUpperCase()).join('/') || m[2].trim(), level, problem: problem.trim(), suggestion: rest.join(' | ').replace(/^建议(改法)?[:：]\s*/, '').trim() });
+    out.push({ id: m[1].toUpperCase(), chapter: (m[2].match(/CH\d+/gi) || []).map(x => x.toUpperCase()).join('/') || m[2].trim(), level, problem: problem.trim(), suggestion: rest.join(' | ').replace(/^建议(改法)?[:：]\s*/, '').trim(), ...(why ? { why_zh: why } : {}) });
   });
   return uniqOpen(out);
 }
@@ -3460,7 +3538,7 @@ async function runClaimCheck(runId) {
     const issues = arr(out.issues).filter(x => x && x.problem).map((x, i) => {
       const quote = String(x.quote || '').trim();
       return { id: 'L' + (i + 1), chapter: (String(x.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase(), level: /关键|關鍵|관건|중요|핵심|critical|key|major|high/i.test(String(x.level || '')) ? '关键' : '次要',
-        quote, problem: String(x.problem), fix: String(x.fix || ''), ...(quote && !locate(text, splitQuoteNote(quote).old) ? { not_found: true } : {}) };
+        quote, problem: String(x.problem), fix: String(x.fix || ''), ...(String(x.why_zh || '').trim() ? { why_zh: String(x.why_zh).trim() } : {}), ...(quote && !locate(text, splitQuoteNote(quote).old) ? { not_found: true } : {}) };
     });
     const fresh = store.getRun(runId) || run;
     if (currentScript(fresh) !== text) throw new Error('核对期间稿子被改过,请重新核对');
@@ -4005,4 +4083,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
