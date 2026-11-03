@@ -440,6 +440,17 @@ function applyPrecheck(run, body) {
   if (!fit) return false;
   run.fit_carry = fit;
   run.precheck = { at: new Date().toISOString(), verdict: fit.verdict };
+  // v1.75.3:预判说这个框架套不上,人没换、仍点了开始生成 = 人决定用这个框架写。
+  // 和「不改,继续写」一样:不再判换框架、不再推荐、不自动换;套不上的段落交给写前分析、蓝图、写稿、审稿换个讲法,不硬编
+  if (fit.verdict === '换框架') {
+    const segs = arr(fit.blocking).filter(b => b && (b.segment || b.why)).map(b => ({ segment: String(b.segment || ''), why: String(b.why || ''), how: '' }));
+    const reasons = segs.length ? segs : arr(fit.reframe_reasons).map(r => ({ segment: '', why: String(r), how: '' }));
+    run.keep_notes = { at: run.precheck.at, by: 'precheck', summary: String(fit.verdict_reason || '建任务前预判:这个框架套不上这个题目,人决定仍用它写'), segments: reasons.slice(0, 8) };
+    run.reframe = { status: 'ignored', ignored_at: run.precheck.at, by: 'precheck_insist', tried: [], switched: [] };
+    run.precheck.insist = true;
+    logEvent(run, { event: 'choice', choice: 'keep', by: 'precheck', framework: run.asset_id, topic: run.topic });
+    return true;
+  }
   const pool = arr(precheckPool(body)).filter(p => store.getAsset(p.asset_id));
   const max = autoMax();
   if (pool.some(p => p.asset_id !== run.asset_id && AUTO_OK.includes((p.prejudge || {}).verdict)) && max > 0) {

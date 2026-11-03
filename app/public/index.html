@@ -545,6 +545,10 @@
   .ad-empty { color: #9ca3af; font-size: 13px; text-align: center; padding: 30px 0; }
   .ad-list-num { margin: 4px 0 0; padding-left: 20px; font-size: 12.5px; line-height: 1.7; color: #374151; }
   .ad-highlight { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 8px 12px; font-size: 13px; color: #1e40af; line-height: 1.6; margin: 6px 0; }
+  .ad-check { margin: 4px 0 0; padding-left: 0; list-style: none; }
+  .ad-check li { font-size: 12.5px; line-height: 1.7; color: #374151; padding-left: 20px; position: relative; margin: 2px 0; }
+  .ad-check li::before { content: '☐'; position: absolute; left: 2px; color: #9ca3af; }
+  .ad-how-amount { font-size: 11px; color: #1d4ed8; background: #eff6ff; border-radius: 4px; padding: 1px 7px; white-space: nowrap; }
 
   .video-badge { display: inline-block; font-size: 11px; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
   .vb-draft { background: #f3f4f6; color: #4b5563; }
@@ -1018,7 +1022,7 @@
   </div>
 </div>
 
-<!-- ========== 资产详情弹窗(纯只读:框架/时间轴/风格/样本/留存卡) ========== -->
+<!-- ========== 资产详情弹窗(纯只读:怎么写/框架/时间轴/风格/样本/留存卡) ========== -->
 <div id="asset-modal" class="modal-mask hidden" onclick="onAssetModalMask(event)">
   <div class="modal-box ad-box" role="dialog" aria-modal="true" aria-labelledby="asset-modal-title">
     <div class="modal-head">
@@ -1026,6 +1030,7 @@
       <button class="modal-close" type="button" onclick="closeAssetDetail()" aria-label="关闭">×</button>
     </div>
     <div class="modal-body ad-body" id="asset-modal-body"></div>
+    <div class="modal-foot" id="asset-modal-foot" style="justify-content:space-between"></div>
   </div>
 </div>
 
@@ -1294,7 +1299,7 @@ function adBar(label, pct, note) {
 }
 
 async function openAssetDetail(id) {
-  adState = { id, data: null, tab: 'fw', exType: '' };
+  adState = { id, data: null, tab: 'how', exType: '' };
   document.getElementById('asset-modal').classList.remove('hidden');
   renderAssetDetail();
   if (!adCache[id]) {
@@ -1310,22 +1315,25 @@ function adExFilter(t) { if (!adState) return; adState.exType = adState.exType =
 
 function renderAssetDetail() {
   const body = document.getElementById('asset-modal-body');
+  const foot = document.getElementById('asset-modal-foot');
   if (!adState) return;
   const d = adState.data;
-  if (!d) { document.getElementById('asset-modal-title').textContent = '框架详情'; body.innerHTML = '<div class="ad-empty">加载中…</div>'; return; }
-  if (d.__error) { document.getElementById('asset-modal-title').textContent = '框架详情'; body.innerHTML = `<div class="ad-empty">加载失败:${esc(d.__error)}</div>`; return; }
+  if (!d) { document.getElementById('asset-modal-title').textContent = '框架详情'; body.innerHTML = '<div class="ad-empty">加载中…</div>'; foot.innerHTML = ''; return; }
+  if (d.__error) { document.getElementById('asset-modal-title').textContent = '框架详情'; body.innerHTML = `<div class="ad-empty">加载失败:${esc(d.__error)}</div>`; foot.innerHTML = ''; return; }
   const m = d.meta || {};
   document.getElementById('asset-modal-title').textContent = m.name || d.id;
   const metaLine = [m.channel, contentTypeLabel(m.content_type), m.chapters ? m.chapters + ' 章' : null,
     m.example_count ? m.example_count + ' 样本' : null, m.wpm ? m.wpm + ' wpm' : null,
     m.source_duration_ms ? '片长 ' + adDur(m.source_duration_ms) : null].filter(Boolean)
     .map(x => `<span>${esc(x)}</span>`).join('');
-  const tabs = [['fw', '框架'], ['tl', '时间轴'], ['st', '风格'], ['ex', '样本'], ['rc', '留存卡']];
-  const pane = adState.tab === 'fw' ? adFwHtml(d) : adState.tab === 'tl' ? adTlHtml(d) :
+  const tabs = [['how', '怎么写'], ['fw', '框架'], ['tl', '时间轴'], ['st', '风格'], ['ex', '样本'], ['rc', '留存卡']];
+  const pane = adState.tab === 'how' ? adHowHtml(d) : adState.tab === 'fw' ? adFwHtml(d) : adState.tab === 'tl' ? adTlHtml(d) :
     adState.tab === 'st' ? adStHtml(d) : adState.tab === 'ex' ? adExHtml(d) : adRcHtml(d);
   body.innerHTML = `<div class="ad-meta">${metaLine}</div>` +
     `<div class="ad-tabs">${tabs.map(([k, n]) => `<button class="ad-tab${adState.tab === k ? ' on' : ''}" onclick="adTab('${k}')">${n}</button>`).join('')}</div>` +
     `<div class="ad-pane">${pane}</div>`;
+  foot.innerHTML = `<a class="src-link" href="/source.html?id=${encodeURIComponent(d.id)}" target="_blank" rel="noopener">查看原文</a>` +
+    `<button type="button" class="primary" data-id="${esc(d.id)}" onclick="adWriteWith(this.dataset.id)">用这个框架写稿 →</button>`;
 }
 
 // ---------- 框架 tab ----------
@@ -1570,6 +1578,93 @@ function adRcHtml(d) {
   }).join('');
 }
 
+// ---------- 怎么写 tab(施工视角:留存卡+结构段+hook 编译成写作指令) ----------
+function adHowHtml(d) {
+  const fw = (d.framework || {}).data || {};
+  const tld = (d.timeline || {}).data || {};
+  const st = (d.style || {}).data || {};
+  const sp = fw.structure_pattern || [];
+  if (!sp.length) return '<div class="ad-empty">framework.json 缺失或解析失败</div>';
+  const cards = ((d.retention_cards || {}).cards) || [];
+  const cardOf = {};
+  cards.forEach(c => { if (c.stage_id) cardOf[c.stage_id] = c; });
+  const np = tld.normalized_pattern || [];
+  const npOf = {};
+  np.forEach(p => { if (p.stage_id) npOf[p.stage_id] = p; });
+  const dur = (tld.duration_profile || {}).observed_duration_ms || 0;
+  const totalWords = (tld.subtitle_metrics || {}).token_or_word_count || 0;
+  const thc = fw.title_hook_contract || {}, tr = fw.transferability || {}, hw = tld.hook_window || {};
+  const mr = fw.migration_rules || {}, tp = st.tone_profile || {};
+  const peaks = tld.peak_points || [];
+  const DELIVERY_ZH = { immediate_payoff: '即时兑现', partial_payoff: '部分兑现', delayed_payoff: '延迟兑现', promise_reframe: '重构承诺' };
+  const SRC_ZH = { observed: '原片习惯', system_guardrail: '系统规则' };
+  const out = [];
+
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">一句话套路</div>
+    <div class="ad-highlight">${esc(fw.name || '—')}</div>
+    <div class="kv"><span class="k">适合写</span><span class="v">${adPills(tr.best_topic_traits, 'green')}</span></div>
+    <div class="kv"><span class="k">别碰</span><span class="v">${adPills(tr.avoid_topic_traits, 'amber')}</span></div></div>`);
+
+  const pk0 = peaks[0];
+  const anchors = [
+    hw.first_stimulus_ms != null ? `第一刺激 ${adTc(hw.first_stimulus_ms)}` : null,
+    hw.first_payoff_ms != null ? `第一回报 ${adTc(hw.first_payoff_ms)}` : null,
+    pk0 ? `第一高峰 ${adTc(pk0.time_ms)}(强度${pk0.strength ?? '?'})` : null
+  ].filter(Boolean).join(' · ');
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">前 30 秒必须完成</div>
+    <div class="kv"><span class="k">标题公式</span><span class="v">${esc(thc.title_formula || '—')}</span></div>
+    <div class="kv"><span class="k">兑现方式</span><span class="v">${esc(DELIVERY_ZH[thc.opening_delivery_mode] || thc.opening_delivery_mode || '—')}</span></div>
+    ${anchors ? `<div class="kv"><span class="k">节奏锚点</span><span class="v">${esc(anchors)}</span></div>` : ''}
+    ${(thc.must_deliver || []).length ? `<ul class="ad-check">${thc.must_deliver.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}</div>`);
+
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">写作步骤(${sp.length} 步)${dur && totalWords ? `<span class="ad-sub" style="font-weight:400"> — 时长与词数按原片 ${adDur(dur)} / 约${totalWords}词的比例换算</span>` : ''}</div>` +
+    sp.map((s, i) => {
+      const c = cardOf[s.stage_id] || {}, p = npOf[s.stage_id] || {};
+      const span = (p.end_ratio != null && p.start_ratio != null) ? p.end_ratio - p.start_ratio : null;
+      const posLabel = c.position_label || (p.start_ratio != null
+        ? `${(p.start_ratio * 100).toFixed(1)}%–${(p.end_ratio * 100).toFixed(1)}%${dur ? `(${adTc(p.start_ratio * dur)}–${adTc(p.end_ratio * dur)})` : ''}` : '');
+      const amount = (span != null && dur && totalWords)
+        ? `约${Math.round(span * dur / 1000)}秒 / 约${Math.max(10, Math.round(span * totalWords / 10) * 10)}词` : '';
+      const delCls = c.deletability === '不可删' ? 'ad-rc-del-keep' : c.deletability === '可并入' ? 'ad-rc-del-merge' : 'ad-rc-del-drop';
+      return `<div class="ad-stage">
+        <div class="ad-stage-head">
+          <span class="ad-stage-id">第 ${i + 1} 步 · ${esc(s.stage_id || '')}</span>
+          <span class="ad-fn">${esc(s.function || '')}</span>
+          ${posLabel ? `<span class="ad-tc">${esc(posLabel)}</span>` : ''}
+          ${amount ? `<span class="ad-how-amount">${esc(amount)}</span>` : ''}
+          ${c.deletability ? `<span class="ad-rc-del ${delCls}" title="${esc(c.deletability_reason || '')}">${c.deletability === '不可删' ? '🔒' : ''}${esc(c.deletability)}</span>` : ''}
+        </div>
+        ${c.abstract_move ? `<div class="ad-sub"><b>你要写:</b>${esc(c.abstract_move)}</div>` : ''}
+        ${(c.replacement_needs || []).length ? `<div class="ad-sub"><b>备料:</b>${adPills(c.replacement_needs)}</div>` : ((s.required_payload || []).length ? `<div class="ad-sub"><b>备料:</b>${adPills(s.required_payload)}</div>` : '')}
+        ${s.purpose ? `<div class="ad-sub"><b>目的:</b>${esc(s.purpose)}</div>` : ''}
+      </div>`;
+    }).join('') + '</div>');
+
+  const forbidden = (st.forbidden_style || []);
+  if (forbidden.length || (mr.forbidden_copy_elements || []).length) {
+    out.push(`<div class="ad-sec"><div class="ad-sec-t">禁区(写完自查)</div>` +
+      forbidden.map(f => `<div class="ad-sub">· ${esc(f.rule || '')} <span class="ad-pill">${esc(SRC_ZH[f.source] || f.source || '')}</span></div>`).join('') +
+      ((mr.forbidden_copy_elements || []).length ? `<div class="ad-sub" style="margin-top:4px"><b>禁止复制:</b>${adPills(mr.forbidden_copy_elements, 'amber')}</div>` : '') + '</div>');
+  }
+
+  out.push(`<div class="ad-sec"><div class="ad-sec-t">语气速记</div>
+    <div style="margin-bottom:6px">${adPills(tp.primary_tones, 'blue')}</div>
+    ${adBar('正式度(低→高)', tp.formality_score)}
+    ${adBar('情绪强度', tp.emotional_intensity_score)}
+    ${adBar('幽默浓度', tp.humor_level_score)}
+    ${(st.rhythm_rules || []).slice(0, 3).map(r => `<div class="ad-sub">· ${esc(r.rule || '')}</div>`).join('')}</div>`);
+  return out.join('');
+}
+
+// 方案D:从详情直接跳到「新建生成」并预选该框架(loadGenAssets 幂等,重复调用安全)
+async function adWriteWith(id) {
+  closeAssetDetail();
+  showView('generate');
+  await loadGenAssets();
+  selectAsset(id);
+  gotoStep1(true);
+}
+
 // ---------- 新建生成 ----------
 let genAssets = [];
 const genFilter = { q: '', channel: '', track: '', sort: '' };
@@ -1743,7 +1838,7 @@ function renderPrecheckDone(el, r, sel, sp, bad, card, box) {
   let h = `<div style="${box}"><div style="font-size:14px;font-weight:700">这个框架合不合适:「${esc(r.topic)}」 <span class="hint" style="margin:0">用时 ${esc(r.secs)} 秒</span></div>
     <div id="precheck-stale" class="rv-flag hidden">主题改过了,下面是按旧主题判的,重新点一次按钮。</div>
     ${card(sel, true)}
-    <div class="hint" style="color:#374151">${bad ? '<b>你选的框架预计套不上这个主题。</b>建议换成下面的一个,或者改主题。' : better ? '你选的框架能写,下面有预判更好的,可以比较一下。' : '你选的框架可以用,下面是库里另外几个能套上的,供比较。'}点「开始生成」时,写前分析会直接用这次的判断,不再判一次(30 分钟内、主题和受众没改)。</div>
+    <div class="hint" style="color:#374151">${bad ? '<b>你选的框架预计套不上这个主题。</b>建议换成下面的一个,或者改主题。不想换的话直接点「开始生成」,就按你选的框架写,之后不再提示换框架,套不上的段落写稿时换个讲法。' : better ? '你选的框架能写,下面有预判更好的,可以比较一下。' : '你选的框架可以用,下面是库里另外几个能套上的,供比较。'}点「开始生成」时,写前分析会直接用这次的判断,不再判一次(30 分钟内、主题和受众没改)。</div>
     ${(r.picks || []).length ? '<div style="font-weight:600;margin-top:8px">库里另推荐的 3 个</div>' + r.picks.map(p => card(p, false)).join('') : `<div class="hint">没挑出别的候选${r.pick_error ? '(' + esc(r.pick_error) + ')' : ''}。</div>`}
     ${(r.others || []).length ? `<details><summary class="hint" style="cursor:pointer">其他预判过的 ${r.others.length} 个</summary>${r.others.map(p => card(p, false)).join('')}</details>` : ''}
     ${r.topic_note ? `<div class="hint">题目建议:${esc(r.topic_note)}</div>` : ''}</div>`;
@@ -1784,6 +1879,10 @@ async function createRun() {
     if (currentTopics.length) document.getElementById('topics-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     return;
   }
+  // v1.75.3:预判说套不上、人没换框架就开始生成 = 决定用这个框架写,之后不再提示换框架
+  const pc = precheckLast;
+  if (pc && !pc.running && !pc.error && pc.topic === topic && pc.selected && pc.selected.asset_id === selectedAsset && (pc.selected.prejudge || {}).verdict === '换框架'
+    && !confirm('预判说你选的框架套不上这个主题。仍用它写吗?\n\n点「确定」:按你选的框架写,之后不会再提示换框架;套不上的那几段写稿时换个讲法,不硬编。\n点「取消」:回去换推荐的框架。')) return;
   const pickedChannel = videoChannels.find(c => c.id === genChannelId) || null;
   const body = {
     asset_id: selectedAsset,
@@ -5382,7 +5481,7 @@ function renderReframePanel(r) {
     const parts = [];
     // 改了题目(v1.71):重新挑框架的进度
     if (tc) parts.push(`<div class="hint" style="color:#374151">题目已从「${esc(tc.from)}」改成「${esc(tc.to)}」${rf.status === 'suggesting' ? `,<b>正在按新题目重新挑框架${rf.stage ? '(' + esc(rf.stage) + ')' : ''}…</b>` : '。'}</div>`);
-    if (r.keep_notes) parts.push(`<div class="hint" style="color:#374151">你选了「不改,继续写」:用「${esc(r.asset_name || r.asset_id)}」写,写不成立的 ${r.keep_notes.segments.length} 段交给写稿时换个讲法。${r.status === 'analyzing' ? '正在做写前分析…' : ''}</div>`);
+    if (r.keep_notes) parts.push(`<div class="hint" style="color:#374151">${r.keep_notes.by === 'precheck' ? '建任务前预判说这个框架套不上,你仍选了它' : '你选了「不改,继续写」'}:用「${esc(r.asset_name || r.asset_id)}」写,写不成立的 ${r.keep_notes.segments.length} 段交给写稿时换个讲法。${r.status === 'analyzing' ? '正在做写前分析…' : ''}</div>`);
     const hist = rfAutoHistory(r);
     if (hist) parts.push(hist);
     else if (switched && !r.keep_notes && (!tc || switched.at > tc.at)) {

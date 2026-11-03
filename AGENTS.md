@@ -168,7 +168,8 @@
 资料库「框架资产库」与第 1 步「选择框架资产」的卡片各有一个「详情」入口（`assetCard` 共用渲染，一次改动两处生效），打开资产详情弹窗，五个 tab 展示四层资产 + 留存卡，**不加编辑、不改资产文件**。
 
 - **接口**：`GET /api/assets/:id` 由「仅 meta」扩展为 `{ id, meta, framework, timeline, style, examples, retention_cards }`（后五层解析成 JSON 对象，缺失/损坏为 null）。`source.srt` 不进首包，仍走既有的 `/api/assets/:id/source`（source.html 原文对照页在用）。
-- **前端**：`#asset-modal`（复用 `.modal-mask` 体系，`.ad-box` 加宽到 1080），状态 `adState` + `adCache`（按 id 缓存）；`openAssetDetail(id)` / `closeAssetDetail()` / `adTab(t)` / `adExFilter(t)`。五个 tab：框架（概览→核心引擎→标题契约→受众→故事引擎→结构段卡→留存机制→情绪曲线→迁移规则）、时间轴（纯 SVG：段带 + 高峰气泡(大小=强度) + 悬念开合线(虚线=未闭合、嵌套在第二行) + 留存事件刻度 + Hook 窗口琥珀带，悬停原生 title 出详情；下方段时间列表 + 节奏规则）、风格（人格/语气条/句长实测或低质量说明/节奏/语言模式/禁用）、样本（类型 chip 单选筛选 + 原文引文块 + 中文四行说明）、留存卡（7 项全展示，可删性 pill：不可删蓝/可并入琥珀/可删灰）。
+- **前端**：`#asset-modal`（复用 `.modal-mask` 体系，`.ad-box` 加宽到 1080），状态 `adState` + `adCache`（按 id 缓存）；`openAssetDetail(id)` / `closeAssetDetail()` / `adTab(t)` / `adExFilter(t)`。六个 tab：**怎么写（默认 tab，施工视角：一句话套路/适合与别碰 → 前 30 秒清单(标题公式+兑现方式+节奏锚点+must_deliver 勾选单) → 写作步骤卡(按 normalized_pattern×原片时长/总词数换算「约N秒/约N词」，任务取留存卡 abstract_move、备料取 replacement_needs，可删性 pill 同留存卡 tab) → 禁区(style.forbidden_style+migration_rules) → 语气速记；留存卡缺失时回退 structure_pattern 的 purpose/required_payload）**、框架（概览→核心引擎→标题契约→受众→故事引擎→结构段卡→留存机制→情绪曲线→迁移规则）、时间轴（纯 SVG：段带 + 高峰气泡(大小=强度) + 悬念开合线(虚线=未闭合、嵌套在第二行) + 留存事件刻度 + Hook 窗口琥珀带，悬停原生 title 出详情；下方段时间列表 + 节奏规则）、风格（人格/语气条/句长实测或低质量说明/节奏/语言模式/禁用）、样本（类型 chip 单选筛选 + 原文引文块 + 中文四行说明）、留存卡（7 项全展示，可删性 pill：不可删蓝/可并入琥珀/可删灰）。
+- **「用这个框架写稿」按钮**：弹窗 `modal-foot` 常驻（左「查看原文」链接、右主按钮），`adWriteWith(id)` = 关弹窗 → `showView('generate')` → `await loadGenAssets()` → `selectAsset(id)` → `gotoStep1(true)`。loadGenAssets 幂等，重复调用安全。
 - **约定**：全部类名 `ad-` 前缀；红色只表失败/危险（弹窗内不用）；样本原文保持源语言、说明中文；`adState` 为常驻 state，开新弹窗时整体重置（不同资产不串数据，参考 or-panel 残留修复的教训）。
-- **验证方法**：`node tools/.work/test_asset_detail.js`（从 index.html 抽 ad* 模块喂真实资产做渲染冒烟：无 undefined/NaN、SVG 有图形、筛选工作、空数据降级 ad-empty）。改弹窗渲染后应重跑。
+- **验证方法**：`node tools/.work/test_asset_detail.js`（从 index.html 抽 ad* 模块喂真实资产做渲染冒烟：六个 tab 无 undefined/NaN、SVG 有图形、样本筛选工作、空数据降级 ad-empty、无留存卡时「怎么写」回退正常、写稿跳转链路顺序正确）。改弹窗渲染后应重跑。
 
