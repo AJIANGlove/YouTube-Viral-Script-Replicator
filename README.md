@@ -45,7 +45,7 @@ flowchart LR
 │   ├── prompts/            现行提示词（生产用，单一来源）
 │   ├── extension/          抓 Studio 真实数据的 Chrome 插件
 │   ├── public/             前端 SPA
-│   ├── data/runs/          114 条生成记录（含每步 attempts 与校验明细）
+│   ├── data/runs/          118 条生成记录（含每步 attempts 与校验明细）
 │   ├── data/logs/          运行日志（失败样本、留存卡批处理、探针输出）
 │   └── config.example.json 配置结构示例（不含真实 Key）
 ├── assets/                 214 个四层资产包，每包含原始 SRT 与留存卡
@@ -208,7 +208,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 
 | 文件 | 用途 | 行数 |
 |---|---|---|
-| `analysis.md` | 写前分析（题目与框架匹配、论点卡、事实表、主角设定、写法规则接入、表格来源写法、经济题利润行写法、真人案例、账本假设对照报道值） | 133 |
+| `analysis.md` | 写前分析（题目与框架匹配、论点卡、事实表、主角设定、写法规则接入、表格来源写法、经济题利润行写法、真人案例、账本假设对照报道值） | 134 |
 | `ledger_fix.md` | 账本体检后 AI 修账本一轮（只填原始数与公式，含补漏成本） | 37 |
 | `ledger_vs_facts.md` | 账本关键假设对照事实表报道值（标偏差） | 17 |
 | `source_mapping.md` | 原片 → 本地对照表与叙事方式判断 | 39 |
@@ -228,8 +228,8 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `apply_suggest.md` | 单条问题出可替换改法（原句逐字+中文意思） | 32 |
 | `step2.md` | 脚本施工（含每章问题链与新角度要求、对照表） | 58 |
 | `function_table.md` | 蓝图按功能重排第一步：原片每段一行功能表（作用、必须保留、可以换、四选一处理；换内容 > 合并 > 删，删要写查过的事实，合计不超过 `{{delete_max}}`%） | 84 |
-| `step1_function.md` | 蓝图按功能重排第二步：按功能表排章（锁定项、为什么这样排、等级重点；没删的段都要有去处，删出来的时间分给其他章） | 121 |
-| `blueprint_review.md` | 蓝图审（写稿前 7 项：递进、揭示顺序、标题和主线、事实支撑、反转、硬套、删除是否成立） | 60 |
+| `step1_function.md` | 蓝图按功能重排第二步：按功能表排章（锁定项、为什么这样排、等级重点；没删的段都要有去处，删出来的时间分给其他章） | 122 |
+| `blueprint_review.md` | 蓝图审（写稿前 7 项：递进、揭示顺序、标题和主线、事实支撑、反转、硬套、删除是否成立） | 61 |
 | `step3.md` | 质量审核 | 72 |
 | `step4.md` | 终稿优化 | 58 |
 | `step5.md` | 开头逐句仿写（强化开头） | 27 |
@@ -266,7 +266,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 55 份 `.md`（3621 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 61 份，合计 3824 行。
+合计 55 份 `.md`（3623 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 61 份，合计 3826 行。
 
 ### 历史版本
 
