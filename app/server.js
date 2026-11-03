@@ -577,7 +577,17 @@ const server = http.createServer(async (req, res) => {
         const t = description.versionText(r, r.confirmed_version.version);
         r.confirmed_stale = !!(t && r.confirmed_version.hash && textHash(t) !== r.confirmed_version.hash);
       }
+      // v1.73 蓝图方式、功能表、每章排法、蓝图审结果(页面的「蓝图」面板用),不落盘
+      try { const bv = require('./lib/blueprint').view(r); if (bv) r.blueprint_view = bv; } catch (e) { /* 旧任务数据不全:不显示面板 */ }
       return send(res, 200, r);
+    }
+
+    // v1.73 蓝图审没过停下(蓝图待定)后的三个选择:write 仍然写 / retopic 改题目(title)/ reframe 换框架
+    const bhMatch = url.match(/^\/api\/runs\/([\w-]+)\/blueprint-hold$/);
+    if (bhMatch && method === 'POST') {
+      const body = await readBody(req);
+      try { return send(res, 200, require('./lib/blueprint').holdChoice(bhMatch[1], body)); }
+      catch (e) { return send(res, e.status || 500, { error: e.message }); }
     }
 
     // ---------- 写前分析:人工确认 / 保存修改 / 重新分析 ----------
@@ -768,6 +778,13 @@ const server = http.createServer(async (req, res) => {
 
     // 联网搜索设置(渠道适配器,当前接 DeepSeek):开关、渠道、每个查询取几条;Key 默认用同名渠道的 Key
     // 换框架自动往下试(v1.71):最多自动试几个(0 = 不自动试,默认 3)
+    // 蓝图方式(v1.73):function 按功能重排(默认)/ strict 严格照原片(和 v1.72 一样)
+    if (url === '/api/blueprint-settings' && method === 'GET') { const b = require('./lib/blueprint'); return send(res, 200, { mode: b.settingMode(), modes: b.MODES }); }
+    if (url === '/api/blueprint-settings' && method === 'POST') {
+      const body = await readBody(req);
+      try { return send(res, 200, require('./lib/blueprint').setSettingMode(String(body.mode || ''))); }
+      catch (e) { return send(res, e.status || 500, { error: e.message }); }
+    }
     if (url === '/api/reframe-settings' && method === 'GET') return send(res, 200, { auto_max: require('./lib/reframe').autoMax() });
     if (url === '/api/reframe-settings' && method === 'POST') {
       const body = await readBody(req);
@@ -993,7 +1010,7 @@ const server = http.createServer(async (req, res) => {
     if (cancelMatch && method === 'POST') {
       const r = store.getRun(cancelMatch[1]);
       if (!r) return send(res, 404, { error: '任务不存在' });
-      if (r.status === 'queued' || r.status === 'awaiting_review') {
+      if (r.status === 'queued' || r.status === 'awaiting_review' || r.status === 'blueprint_hold') {
         r.status = 'cancelled';
         store.saveRun(r);
         return send(res, 200, { ok: true, id: r.id, status: 'cancelled' });
@@ -1003,7 +1020,7 @@ const server = http.createServer(async (req, res) => {
         store.saveRun(r);
         return send(res, 200, { ok: true, id: r.id, status: 'cancelling' });
       }
-      return send(res, 400, { error: '仅排队中/分析中/待确认/生成中的任务可取消(当前: ' + r.status + ')' });
+      return send(res, 400, { error: '仅排队中/分析中/待确认/蓝图待定/生成中的任务可取消(当前: ' + r.status + ')' });
     }
 
     // ---------- 开头强化(外挂功能,不影响生成管线) ----------
@@ -1444,7 +1461,7 @@ server.listen(PORT, HOST, () => {
   // (去AI感不加进来,它卡 running 会把 deaiGuard 永久挡死,任务再无入口)
   for (const r of store.listRuns().filter(x => x.status === 'done')) {
     const st = r.steps || {};
-    const stuck = ['draft_check', 'reverse_audit', 'final_review', 'deai', 'final_open', 'opening_card', 'final_options', 'opening_fix', 'claim_check'].filter(k => (st[k] || {}).status === 'running');
+    const stuck = ['draft_check', 'reverse_audit', 'final_review', 'deai', 'final_open', 'opening_card', 'final_options', 'opening_fix', 'claim_check', 'function_table', 'blueprint_review'].filter(k => (st[k] || {}).status === 'running');
     const stuckZh = (st.review_zh || {}).status === 'running'; // 翻译已移出审稿锁(v1.10.4),崩溃在翻译期会永挂「翻译中…」并置灰补翻按钮
     if (!stuck.length && !stuckZh) continue;
     if (stuck.length && r.draft_first && !r.cancel_requested && stuck.every(k => k === 'draft_check' || k === 'reverse_audit')) {

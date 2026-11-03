@@ -13,6 +13,7 @@ const retention = require('./retention');
 const analysis = require('./analysis');
 const voice = require('./voice');
 const narration = require('./narration');
+const bpm = () => require('./blueprint'); // v1.73 蓝图按功能重排 + 蓝图审(lib/blueprint.js 反过来要用本模块的 loadConfig,延迟加载避免循环)
 
 const CONFIG_PATH = path.join(__dirname, '..', 'config.json');
 
@@ -132,6 +133,7 @@ function fillTemplate(tpl, ctx, tools) {
     .replaceAll('{{opening_anchor}}', ctx.opening_anchor || '(空)')
     .replaceAll('{{chapters}}', ctx.chapters || '(未指定)')
     .replaceAll('{{chapter_rules}}', ctx.chapter_rules || '')
+    .replaceAll('{{function_rules}}', ctx.function_rules || '')
     .replaceAll('{{analysis}}', ctx.analysis || '(无写前分析,按原流程执行)')
     .replaceAll('{{narration_wpm}}', String(ctx.narration_wpm || tools.targetWpm || ''))
     .replaceAll('{{listen_rules}}', checks.LISTEN_RULES)
@@ -418,6 +420,7 @@ async function runScriptByChapters(opts) {
       (c.new_lens ? '本章的新角度(只用本章分到的事实推进,前面章节讲过的事实和结论不要再展开):' + c.new_lens + '\n' : '') +
       (Array.isArray(c.cases) && c.cases.length ? '本章出场的真人案例(按写前分析里写好的这次要带出的新信息写):' + c.cases.map(x => (typeof x === 'string' ? x : (x && (x.nick || x.name)) || '')).filter(Boolean).join('、') + '\n' : '') +
       (c.leaves_question ? '本章结尾抛出留给下一章的问题:' + c.leaves_question + '\n' : '') +
+      bpm().chapterBrief(run, c) + // v1.73:按功能重排的蓝图才有(为什么这样排、必须保留的那一步、锁定项、这一级的重点和新信息)
       (tail ? '上一章结尾(仅用于衔接,不得重复):\n' + tail + '\n' : '') +
       (ahead ? '后续章节(不要写,只用于把握铺垫与节奏):\n' + ahead + '\n' : '') +
       '现在直接开始写正文,不要输出思考过程、提纲或解释。';
@@ -528,6 +531,12 @@ async function runGeneration(runId) {
   const asset = store.getAsset(run.asset_id);
   if (!asset || !asset.framework) {
     run.status = 'failed'; run.error = '资产不存在: ' + run.asset_id; store.saveRun(run); return;
+  }
+
+  // v1.73 蓝图审没过、停在「蓝图待定」的任务:人没选「仍然写」之前,重试 / 重启接管都不写稿
+  const brv = (run.steps || {}).blueprint_review || {};
+  if (bpm().modeOf(run) === 'function' && (run.outputs || {}).step1 && !(run.outputs || {}).step2 && brv.status === 'held' && !brv.override) {
+    run.status = 'blueprint_hold'; delete run.error; delete run.cancel_requested; store.saveRun(run); return;
   }
 
   const templates = loadTemplates();
@@ -643,7 +652,22 @@ async function runGeneration(runId) {
     run.steps[stepNames[step - 1]] = { status: 'running', started_at: new Date().toISOString(), ...(step === 2 && prevStep.segments ? { segments: prevStep.segments } : {}) };
     store.saveRun(run);
     try {
-      const prompt = fillTemplate(templates[step - 1], ctx, tools);
+      let tpl = templates[step - 1];
+      let ft = null;
+      if (step === 1) {
+        // v1.73 蓝图方式:按功能重排(先做功能表,换 step1_function.md)/ 严格照原片(原来的 step1.md,和 v1.72 一样)
+        const dm = bpm().decideMode(run);
+        run.blueprint_mode = dm.mode;
+        run.blueprint_mode_why = dm.why;
+        delete run.steps.blueprint_review;
+        if (dm.mode === 'function') {
+          ft = await bpm().ensureTable(run, asset, callLlm);
+          tpl = bpm().step1Template(run, asset, ft);
+        } else delete run.steps.function_table;
+        store.saveRun(run);
+      }
+      if (step === 2) ctx.function_rules = bpm().step2Rules(run, ctx.blueprint);
+      const prompt = fillTemplate(tpl, ctx, tools);
       let messages = [{ role: 'user', content: prompt }];
       let r, content = '';
       let step2Split = false; // 分章模式下,闸门重试也必须按章重写(整篇重写必然再撞 90 秒断流)
@@ -683,6 +707,8 @@ async function runGeneration(runId) {
 
       // Step 1 蓝图闸门:JSON 解析失败 / 输出过短 / 总时长漂移 >30s 时自动反馈重试(最多 GATE_MAX_RETRIES 次),仍不合格则置失败
       let gate = null;
+      let bpHeld = false;
+      const fnMode = step === 1 && run.blueprint_mode === 'function';
       if (step === 1) {
         gate = checks.checkBlueprint(content, tools, (run.audience || {}).video_goal);
         for (let retry = 1; gate.duration.ok === false && retry <= GATE_MAX_RETRIES; retry++) {
@@ -707,7 +733,7 @@ async function runGeneration(runId) {
         // 信息递进(v1.60):每章写清接上一章哪个问题、新角度、留给下一章的问题,一个事实只分给一章。
         // 只对确认过写前分析的任务打回一次;改完时长坏了或问题没变少就保留原版,结果记在 run.checks.progression 交人看
         let prog = checks.checkProgression(content);
-        if (run.analysis_confirmed && prog.ok === false) {
+        if (!fnMode && run.analysis_confirmed && prog.ok === false) { // 按功能重排:递进交给下面的蓝图审
           run.steps.blueprint.gate_retry = { reason: '信息递进: ' + prog.issues.join(';'), attempt: 1 };
           store.saveRun(run);
           const feedback = '蓝图的信息递进检查不合格:' + prog.issues.join(';') + '。请每章写 answers_prev(回答上一章留下的哪个问题)、new_lens(这一章对同一门生意加了什么新角度,每章不一样)、leaves_question(留给下一章的问题,最后一章可以空);' +
@@ -723,7 +749,7 @@ async function runGeneration(runId) {
         // 留存检查(流程 B⑪):蓝图每章的 carries_peaks 对照原片高峰、第一个甜头秒数、相邻高峰最大间隔。
         // 只对确认过写前分析的任务反馈重试;仍不合格不置失败,结果写进 run.checks.retention 交人工终审
         let ret = retention.checkBlueprintRetention(content, asset.timeline, analysis.acceptedGaps(run.analysis));
-        for (let retry = 1; run.analysis_confirmed && !ret.ok && retry <= GATE_MAX_RETRIES - 1; retry++) {
+        for (let retry = 1; !fnMode && run.analysis_confirmed && !ret.ok && retry <= GATE_MAX_RETRIES - 1; retry++) { // 按功能重排:留存交给蓝图审
           run.steps.blueprint.gate_retry = { reason: '留存检查: ' + ret.issues.join(';'), attempt: retry };
           store.saveRun(run);
           const feedback = '蓝图的留存检查不合格:' + ret.issues.join(';') + '。请按写前分析的留存地图,把每个应承担的高峰编号写进对应章节的 carries_peaks,' +
@@ -756,7 +782,20 @@ async function runGeneration(runId) {
 
         // 原片残留 + 等级跳号(v1.69):写前分析有「原片 → 本地对照表」时扫蓝图,命中就打回一次;
         // 改完时长坏了或命中没变少就保留原版,结果记在 run.checks.consistency 交人看(审稿页还会再扫稿子)
-        if (run.analysis && run.analysis.source_mapping) {
+        if (fnMode) {
+          // v1.73 蓝图审(程序检查 + AI 审,6 项):不过就按意见改,最多 2 次;还不过就停在「蓝图待定」等人选。
+          // 原来分开的递进重试、留存重试、v1.69 残留重写都并进这里,不再两套逻辑各改一遍
+          content = fixBlueprintTimes(run, fixBlueprintIds(run, textnorm.normalizeTimeSep(content)));
+          const vg = (run.audience || {}).video_goal;
+          const rl = await bpm().reviewLoop({ run, asset, content, messages, r, callLlm, ft, gate: c => checks.checkBlueprint(c, tools, vg) });
+          content = rl.content; messages = rl.messages; r = rl.r;
+          gate = checks.checkBlueprint(content, tools, vg);
+          bpHeld = rl.held;
+          run.checks.retention = retention.checkBlueprintRetention(content, asset.timeline, analysis.acceptedGaps(run.analysis));
+          payoff = payoffOf(content);
+          run.checks.first_payoff = { sec: payoff, max: FIRST_PAYOFF_MAX, ok: payoff == null ? null : payoff <= FIRST_PAYOFF_MAX };
+          if (run.analysis && run.analysis.source_mapping) run.checks.consistency = { ...rl.pc.consistency, ...(rl.revised ? { retried: true } : {}) };
+        } else if (run.analysis && run.analysis.source_mapping) {
           const consistency = require('./consistency');
           let cs = consistency.scanBlueprint(run, content);
           const bad = x => x.residue.length + x.levels.missing.length;
@@ -1058,6 +1097,14 @@ async function runGeneration(runId) {
       if (step === 3) ctx.audit = content;
       run.outputs = outputs; // 每步产物即时落盘,失败不丢
       store.saveRun(run);
+      if (step === 1 && bpHeld) {
+        // 蓝图审改了 2 次还不过:蓝图已经存下,停在「蓝图待定」,等人选 仍然写 / 改题目 / 换框架(用户这时点了取消就按取消)
+        const fresh2 = store.getRun(runId);
+        run.status = fresh2 && fresh2.cancel_requested ? 'cancelled' : 'blueprint_hold';
+        run.current_step = 1;
+        store.saveRun(run);
+        return;
+      }
     } catch (e) {
       run.status = 'failed';
       run.error = 'Step ' + step + ' 失败: ' + e.message;

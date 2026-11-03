@@ -275,7 +275,7 @@
     }
   },
   "created_at": "2026-11-02T13:56:36.970Z",
-  "updated_at": "2026-11-03T02:51:12.101Z",
+  "updated_at": "2026-11-03T04:45:06.360Z",
   "asset_id": "why-japanese-railways-win",
   "asset_name": "「符号降级-系统归因」标杆系统优势拆解(熟悉符号翻转-主角重置-危机弧线-机制蓝图-第二引擎-诚实校准-飞轮归因收束)",
   "topic": "The Wind That Decides Whether India Eats",
@@ -8648,6 +8648,251 @@
         ],
         "fixes": []
       }
+    }
+  },
+  "compliance_scans": {
+    "v1": {
+      "model": "deepseek-flash",
+      "target_language": "English",
+      "type_names": {
+        "originality": "原创性不足",
+        "template": "模板感",
+        "ai_feel": "AI生成感",
+        "reused": "YPP低原创风险"
+      },
+      "secs": 95.9,
+      "summary": {
+        "ratings": {
+          "originality": "中",
+          "template": "高",
+          "ai_feel": "高",
+          "reused": "中"
+        },
+        "risk_level": "需要优化",
+        "conclusion": "脚本主体为英文，没有目标语言冲突。整体有明确论点和若干有效场景，但模板化设问、对称排比和重复段落较多，部分精确数字缺少出处，原创辨识度不稳定；建议实质性重写后再用于变现发布。",
+        "structure": [
+          "整体采用“钩子—反转—历史危机—制度三层次—隐性成本—总结”的纪录片解说结构，逻辑完整但推进方式高度可预测。",
+          "章节之间反复用“问题—答案—下一问”衔接，形成明显YouTube财经解说模板感。",
+          "中后段多处自我重复，尤其是1876/1943饥荒、地下水债务、FCI/PDS数字，读起来像资料拼接和生成式扩写。",
+          "具体案例和作者判断存在，但被大量对称句、清单式总结和万能转场稀释，个人辨识度被削弱。"
+        ],
+        "directions": [
+          "删减重复段落和数字复述，保留一条最有力的数据链或场景链，避免每隔一章总结同一公式。",
+          "把“问题—反转—下一问”的转场改成由人物、地点或冲突自然推进，减少解说腔。",
+          "对关键统计补充原稿已有的出处，或删去无来源精确数字，改用具体场景和因果解释维持可信度。",
+          "强化已有农户案例的因果细节和作者判断，重点解释地下水、财政补贴与粮食安全之间的结构性矛盾。",
+          "减少“三层”“公式”“转折点”“真正的引擎”等清单式命名，改用更具体的动作和后果组织段落。"
+        ]
+      },
+      "hits": [
+        {
+          "chapter": "CH09",
+          "original": "India's food subsidy bill—covering FCI's procurement operations and PDS distribution—runs to approximately two trillion rupees annually, or about twenty-four billion dollars. That's the visible fiscal cost of keeping the grain flowing and the ration cards honored, funded by taxpayers. This is the visible fiscal cost of keeping the grain flowing and the ration cards honored, funded by taxpayers.",
+          "type": "ai_feel",
+          "severity": "high",
+          "suggestion": "India's food subsidy bill—covering FCI procurement and PDS distribution—runs to roughly two trillion rupees a year, about twenty-four billion dollars. That is the visible fiscal cost of keeping grain moving and ration cards honored, paid by taxpayers.",
+          "original_zh": "印度的粮食补贴账单——涵盖FCI采购业务和PDS分配——每年约为2万亿卢比，约合240亿美元。这是维持粮食流动和兑现配给卡的可见财政成本，由纳税人承担。这是维持粮食流动和兑现配给卡的可见财政成本，由纳税人承担。",
+          "suggestion_zh": "印度的粮食补贴账单——涵盖FCI采购和PDS分配——每年约为2万亿卢比，约合240亿美元。这就是维持粮食流动和兑现配给卡、由纳税人支付的可见财政成本。",
+          "reason": "同一句在相邻位置几乎原样重复，是明显的生成/编辑冗余；合并为一次陈述。",
+          "status": "replaced",
+          "id": "h1"
+        },
+        {
+          "chapter": "CH11",
+          "original": "Here's where the policy created the incentive. When the Green Revolution needed reliable irrigation to make the high-yield seeds work, the government did two things. It expanded canals where it could. And where it couldn't, it subsidized electricity for farm pumps. The subsidy made running a tubewell cheap enough that farmers could afford to drill. The high-yield crops made drilling profitable enough that farmers had to drill to stay competitive.",
+          "type": "ai_feel",
+          "severity": "high",
+          "suggestion": "That incentive was simple. Cheap power made the pump affordable; high-yield crops made drilling hard to avoid. Where the canal did not reach, the tubewell became the way to stay competitive.",
+          "original_zh": "这就是政策制造激励的地方。当绿色革命需要可靠灌溉来让高产种子发挥作用时，政府做了两件事。它在能扩运河的地方扩运河。在不能扩的地方，它补贴农用泵电费。补贴让运行管井便宜到农民用得起。高产品种让打井有利可图到农民不得不打井才能保持竞争力。",
+          "suggestion_zh": "这个激励很简单。便宜的电让水泵用得起；高产品种让打井变得难以回避。运河到不了的地方，管井就成了保持竞争力的办法。",
+          "reason": "该段与前文解释几乎逐句重复，生成式扩写痕迹明显；压缩为一次因果说明。",
+          "status": "pending",
+          "id": "h2"
+        },
+        {
+          "chapter": "CH02",
+          "original": "So the subject of this story shifts. Half of India eats because the wind shows up. The other half eats because somebody built a way around the wind.",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "That changes the question. Half of India eats when the wind arrives. The other half eats because someone built a route around it.",
+          "original_zh": "所以这个故事的主题发生了转移。一半印度人吃饭是因为风来了。另一半人吃饭是因为有人修了一条绕开风的路。",
+          "suggestion_zh": "这就改变了问题。一半印度人靠风来吃饭。另一半人吃饭，是因为有人修了一条绕开风的路。",
+          "reason": "“主题转移”和“一半/另一半”对称句是常见解说模板，改写为更直接的问题切换。",
+          "status": "pending",
+          "id": "h3"
+        },
+        {
+          "chapter": "CH03",
+          "original": "Rainfed farmers wait on the sky. Irrigated farmers own the supply. Either way, there's risk. That brings the next question: how much extra does irrigation actually buy?",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "One farmer is still tied to rain. The other controls his water. Both carry risk, but only one can plan around it. The next question is how much that control is worth in grain.",
+          "original_zh": "靠天吃饭的农民仰赖天空。灌溉农民掌握供水。不论哪种，都有风险。这就带来下一个问题：灌溉到底能多买到多少收成？",
+          "suggestion_zh": "一个农民仍然被雨水拴住。另一个农民控制着自己的水。两者都有风险，但只有后者能围绕风险做计划。下一个问题是，这种控制能在粮食上值多少。",
+          "reason": "对称短句加设问转场带有AI式排比感，改写为具体对照并保留问题推进。",
+          "status": "pending",
+          "id": "h4"
+        },
+        {
+          "chapter": "CH04",
+          "original": "That ratio is the hinge. The half of India's farmland that gets water on demand isn't just doing slightly better than the other half. It's outproducing it by multiples.",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "That gap changes the story. Irrigated land is not marginally ahead of rainfed land; it produces several times more.",
+          "original_zh": "这个比例是关键。印度得到按需供水的那一半农田，并不只是比另一半稍好。它以数倍产出超过另一半。",
+          "suggestion_zh": "这个差距改变了故事。灌溉地不是略胜靠雨水的地，而是产量高出数倍。",
+          "reason": "“isn't just... It's...”是典型强调模板，改成直接陈述差距。",
+          "status": "pending",
+          "id": "h5"
+        },
+        {
+          "chapter": "CH06",
+          "original": "Reports from Madras in 1877 described two scenes during the famine. On the beach, sacks of grain stacked and waiting for ships to Britain. Elsewhere in the city, lines of hungry children waiting for relief rations. The colonial administration's relief camps provided only about four hundred fifty grams of grain per day to those assigned heavy manual labor—roughly fifteen hundred calories, far below the twenty-five hundred needed. Same coast, same failed wind, two completely different fates, decided by whose name was on the sacks. Reports were published in London illustrated weeklies that year, including The Graphic.",
+          "type": "ai_feel",
+          "severity": "medium",
+          "suggestion": "Reports from Madras in 1877 described two scenes during the famine. On the beach, sacks of grain stacked and waiting for ships to Britain. Elsewhere in the city, lines of hungry children waiting for relief rations. Same coast, same failed wind, two different fates, decided by whose name was on the sacks. London illustrated weeklies, including The Graphic, published those reports that year.",
+          "original_zh": "1877年来自马德拉斯的报道描述了饥荒中的两个场景。海滩上，一袋袋粮食堆着，等待运往英国的船。城里另一处，饥饿的儿童排着队等待救济口粮。殖民政府的救济营只给被分配重体力劳动的人每天约450克粮食——大约1500卡路里，远低于所需的2500卡。同一片海岸，同一场失败的季风，两种完全不同的命运，由粮食袋上写着谁的名字决定。那一年，伦敦的插图周刊刊登了这些报道，包括《The Graphic》。",
+          "suggestion_zh": "1877年来自马德拉斯的报道描述了饥荒中的两个场景。海滩上，一袋袋粮食堆着，等待运往英国的船。城里另一处，饥饿的儿童排着队等待救济口粮。同一片海岸，同一场失败的季风，两种不同的命运，由粮食袋上写着谁的名字决定。那一年，伦敦的插图周刊，包括《The Graphic》，刊登了这些报道。",
+          "reason": "前一段已交代救济口粮和热量，这里再次复述同一数字，读起来像生成式冗余；删去重复并保留Madras场景。",
+          "status": "pending",
+          "id": "h6"
+        },
+        {
+          "chapter": "CH07",
+          "original": "Put the three layers together and you get a chain: seed to irrigation to procurement to storage to distribution. In a good monsoon year, FCI buys the surplus, the buffer grows, prices stay stable. In a bad year, the buffer releases, PDS keeps delivering, and the villages that would have starved in 1876 or 1943 still eat. The system does not eliminate dependence on the monsoon, but it builds a margin wide enough that a single monsoon failure no longer cascades into mass death.",
+          "type": "ai_feel",
+          "severity": "medium",
+          "suggestion": "Together they form a working supply chain: seed, irrigation, procurement, storage, distribution. FCI buys in surplus years and the buffer grows. In a failed year, the buffer releases and PDS keeps grain moving. The villages that starved in 1876 or 1943 now eat. The monsoon still matters, but one bad season no longer becomes mass death.",
+          "original_zh": "把三层放在一起，你得到一条链：种子到灌溉到采购到储存到分配。在季风好的年份，FCI买下余粮，缓冲库存增长，价格保持稳定。在坏年份，缓冲库存释放，PDS继续配送，那些在1876年或1943年本会饿死的村庄仍然有饭吃。这个系统没有消除对季风的依赖，但它建立了一个足够宽的余量，使一次季风失败不再连锁导致大规模死亡。",
+          "suggestion_zh": "它们合在一起形成一条运转中的供应链：种子、灌溉、采购、储存、分配。FCI在余粮年份买入，缓冲库存增长。在歉收年份，缓冲库存释放，PDS继续把粮食运出去。曾在1876年或1943年挨饿的村庄，现在有饭吃。季风仍然重要，但一个坏季节不再变成大规模死亡。",
+          "reason": "“好年份/坏年份”对称总结和链条复述过于完整，像AI收束段；改为更直接的经验判断。",
+          "status": "pending",
+          "id": "h7"
+        },
+        {
+          "chapter": "CH10",
+          "original": "That's the inflection point. Not because the wind got better. Because the system did.",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "The break came from the system, not from kinder weather.",
+          "original_zh": "那就是拐点。不是因为风变好了。而是因为系统变好了。",
+          "suggestion_zh": "转折来自系统，而不是更温和的天气。",
+          "reason": "“Not because... Because...”是常见反转句式，压缩后保留判断。",
+          "status": "pending",
+          "id": "h8"
+        },
+        {
+          "chapter": "CH10",
+          "original": "Pakistan's wheat prices jumped twenty percent in a single month in 2022. Sri Lanka faced food price spikes and currency collapse. India's buffer absorbed the shock.",
+          "type": "reused",
+          "severity": "medium",
+          "suggestion": "In 2022, Pakistan's wheat prices jumped in a single month, and Sri Lanka faced food price spikes and currency collapse. India's buffer absorbed the shock.",
+          "original_zh": "2022年，巴基斯坦小麦价格在一个月内上涨了20%。斯里兰卡面临食品价格飙升和货币崩溃。印度的缓冲库存吸收了冲击。",
+          "suggestion_zh": "2022年，巴基斯坦小麦价格在一个月内跳涨，斯里兰卡面临食品价格飙升和货币崩溃。印度的缓冲库存吸收了冲击。",
+          "reason": "精确涨幅没有给出处，容易削弱可信度；删去具体数字，保留比较作用。",
+          "status": "replaced",
+          "id": "h9"
+        },
+        {
+          "chapter": "CH12",
+          "original": "So here's the formula. Monsoon delivers seventy to seventy-five percent of the rain. Irrigation doubles yields. Central reserves sit at three to four times the legal minimum. The distribution system reaches eight hundred million people, five kilograms per person per month. Wind still comes, famine doesn't.",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "The mechanism is straightforward. The monsoon still supplies most of the rain. Irrigation lifts yields. FCI holds reserves at three to four times the legal minimum. PDS reaches eight hundred million people with five kilograms per person each month. The wind still comes, but famine no longer follows.",
+          "original_zh": "这就是公式。季风带来70%到75%的降雨。灌溉使产量翻倍。中央储备维持在法定最低量的三到四倍。分配系统覆盖8亿人，每人每月5公斤。风照来，饥荒不再来。",
+          "suggestion_zh": "机制很直接。季风仍然提供大部分降雨。灌溉提高产量。FCI把储备维持在法定最低量的三到四倍。PDS覆盖8亿人，每人每月5公斤。风仍然会来，但饥荒不再随之而来。",
+          "reason": "“So here's the formula”加清单式复述是典型总结模板，改为直接机制说明。",
+          "status": "pending",
+          "id": "h10"
+        }
+      ],
+      "scanned_at": "2026-11-03T04:19:59.619Z",
+      "stale": false
+    }
+  },
+  "script_v1_5": "# Optimized Script\n\n[CH01 | 0:00-1:02 | icon_association_reframe_hook]\n\nEvery June, a wind decides whether India eats.\n\nThe southwest monsoon is expected to make landfall on Kerala's coast on June first. The whole country is waiting for that wind.\n\nHere's what the wind controls. About seventy to seventy-five percent of India's annual rainfall comes from the southwest monsoon. Half to sixty percent of the country's farmland has no canal, no pump, nothing but sky. Those rains feed the crops, fill the reservoirs that power the dams, and recharge the aquifers that supply drinking water to cities. Three separate survival systems, all running on one seasonal wind.\n\nSounds like India's fate is written in the sky.\n\nBut in 1876, the monsoon failed. Estimates put the death toll between five hundred sixty thousand and nine hundred sixty thousand. Demographic research suggests around eight hundred twenty thousand. Today, the wind is the same wind. India hasn't had a famine like that in over sixty years.\n\nThe monsoon didn't change.\n\nSomething else did. The question is: what system lets India eat when the wind is late?\n\n---\n\n**Word count: 201**\n\n[CH02 | 1:02-2:28 | subject_reframe_scope_reveal]\n\nGo back to that figure. Between half and sixty percent of India's farmland drinks rain and nothing else. Which leaves the other forty to fifty percent. That land gets water too. Just not from a cloud. It gets water when a gate opens or a motor switches on.\n\nThat half of the country isn't waiting for the wind. It's scheduling around it.\n\nTake Punjab. Canal water, wells, and tubewells combined push the state's irrigated coverage close to ninety-eight percent. Not in a good year. Permanently. What that looks like on the ground is three layers stacked on each other. Rivers tapped at headworks. Main canals branching into smaller channels, then into field ditches, water arriving on a fixed rotation. And underneath all of it, wells. Hundreds of thousands of them, each one with a motor on top.\n\nWhen the rain runs late in Punjab, the harvest doesn't stop. The electricity use goes up.\n\nSo the subject of this story shifts. Half of India eats because the wind shows up. The other half eats because somebody built a way around the wind.\n\nTwo questions follow. How much more does irrigated land actually grow than rainfed land? And who's paying for the water to get there?\n\n---\n\n**Word count: 222**\n\n[CH03 | 2:28-4:02 | persona_scenario_walkthrough]\n\nTake two farmers—call one of them Priya, a composite based on real cases. Priya farms four acres of rainfed land. Some years she harvests two tons of wheat. Some years half that. One bad monsoon, almost nothing. Her neighbor drilled a well. His harvest doubled. Didn't matter if the rain came late. The pump ran whenever he needed it. Priya watched him sell twice the grain at the market. So she borrowed money. The well, the motor, the pipes, the electrical connection—about ten thousand dollars combined, two loans from a rural bank. The first year worked. Bigger harvest. She paid the first installment. The loan's there. The well works. But the cost? That comes later. Rainfed farmers wait on the sky. Irrigated farmers own the supply. Either way, there's risk. That brings the next question: how much extra does irrigation actually buy?\n\n---\n\n**Word count: 330**\n\n[CH04 | 4:02-5:08 | bedrock_thesis_evidence]\n\nHow much extra does irrigation actually buy?\n\nTake millet. Under irrigation, pearl millet yields roughly twenty to thirty percent more than rainfed crops. That's the conservative crop. For the staples that feed the country—wheat, rice—the gap widens. Irrigated land produces two to three times what rainfed land does.\n\nNot twenty percent more. Two to three times.\n\nThat ratio is the hinge. The half of India's farmland that gets water on demand isn't just doing slightly better than the other half. It's outproducing it by multiples. The system isn't as dependent on the monsoon as the maps suggest. It's bifurcated. One half waits for rain. The other half doesn't wait.\n\nSo the bedrock to India's success isn't that the wind got kinder. It's that irrigation systems doubled or tripled the yield where they exist, storage systems banked the surplus from good years, and distribution systems deliver grain to eight hundred million people regardless of what fell from the sky that season.\n\nBut that raises the next question. Where did all that irrigation come from? Was it always there, or did someone decide to build it?\n\n---\n\n**Word count: 190**\n\n[CH05 | 5:08-6:16 | geographic_historical_foundation]\n\nYou could argue it's geography and history. India sits in the monsoon belt. The Arabian Sea and Bay of Bengal create the moisture gradient that drives seasonal rainfall. The Ganges, the Indus, the Brahmaputra—these river systems carved out plains with soils agriculture could exploit.\n\nPart of it lies in history. Irrigation in this region is ancient. Canal networks date back thousands of years. The British colonial administration built large canal systems in the nineteenth and early twentieth centuries to stabilize tax revenue.\n\nSo you could argue the conditions were favorable. The geography was there. The rivers were there. The monsoon was there.\n\nExcept geography doesn't guarantee success.\n\nThe Indus Valley Civilization flourished in the same monsoon belt, along the same river systems, roughly four to five thousand years ago. It had urban planning, drainage systems, granaries. A civilization-scale agricultural system. And then it collapsed.\n\nA 2025 study identified four prolonged droughts, each lasting eighty-five years or longer, that align in time with the de-urbanization of those sites. Eighty-five consecutive years of drought, repeated across different periods. A civilization-level urban system can be dismantled by drought of that duration, even when the geography stays the same.\n\nSo favorable conditions are not insurance. Which brings us back to the question. If geography alone wasn't enough to protect an entire civilization, how did India get from repeated famines in the late nineteenth and mid-twentieth centuries to zero large-scale famines after the nineteen sixties?\n\n---\n\n**Word count: 259**\n\n[CH06 | 6:16-9:03 | crisis_escalation]\n\nTwo famines answer that, separated by sixty-six years.\n\nStart with 1876. The southwest monsoon failed across the Deccan and much of the south. Over the following two years, death estimates range from five hundred sixty thousand to nine hundred sixty thousand. Demographic reconstruction puts the likely figure near eight hundred twenty thousand.\n\nThat is the trigger. Not the mechanism.\n\nDuring those same two years, the colonial administration continued exporting wheat out of India to Britain. Inside the relief camps, a man assigned heavy manual labor was issued a ration of roughly four hundred fifty grams of grain a day. In energy terms it worked out to something near fifteen hundred calories, for work that needs closer to twenty-five hundred.\n\nReports from Madras in 1877 described two scenes during the famine. On the beach, sacks of grain stacked and waiting for ships to Britain. Elsewhere in the city, lines of hungry children waiting for relief rations. The colonial administration's relief camps provided only about four hundred fifty grams of grain per day to those assigned heavy manual labor—roughly fifteen hundred calories, far below the twenty-five hundred needed. Same coast, same failed wind, two completely different fates, decided by whose name was on the sacks. Reports were published in London illustrated weeklies that year, including The Graphic.\n\nThe famine was filed as a weather event. It was also a shipping schedule.\n\nSixty-six years later, the same structure ran again. Bengal, 1943: between two and three million dead. Economist Amartya Sen's study reached a conclusion that remains the standard reading. The famine came from a failure of distribution, not from an absolute shortage of food. The grain existed somewhere in the system. It did not arrive where it was needed, at a price the people there could pay.\n\nAdd the two episodes together and the toll crosses ten million people. A war-scale number, produced twice by rain that did not show up on time, and multiplied both times by decisions made far from the fields. Climate pulled the trigger. The size of the wound was set by policy: what left the ports, what the camps handed out, and who was served first.\n\nThat arithmetic is where the reform argument came from. By the time the country was running its own food policy, the lesson was narrow and specific. A population this size could not run its food supply on the hope that the wind would behave. It also could not run it on the goodwill of whoever happened to control the ports, the rations, and the ledgers. It needed grain it owned itself, grain it could store through a good year, and a channel that could put that grain in a village during a bad one.\n\nWhich is a clear statement of the problem and says nothing about the solution. So what did the reformers actually put on the table? And why is it that after the nineteen sixties, nothing on the scale of 1876 or 1943 has happened again?\n\n[CH07 | 9:03-11:42 | reform_design_blueprint]\n\nThe solution came in three layers, each building on the last.\n\nFirst layer: the seed. In the nineteen sixties, agronomist Norman Borlaug bred a high-yield wheat variety in Mexico. M.S. Swaminathan ran the field trials in Punjab and convinced the government to bet the country's food security on it. Traditional wheat, decent monsoon, maybe eight hundred kilograms per hectare. Swap in Borlaug's seed, add fertilizer and reliable water, and that same plot starts hitting two thousand, sometimes twenty-five hundred kilograms. The seed did not work alone. It needed water on schedule, which meant the second layer had to come next.\n\nSecond layer: irrigation infrastructure. The canal networks expanded, wells went deeper. Punjab expanded canal networks and groundwater access. Canal irrigation potential utilization climbed from about twenty-seven percent in twenty twenty-two to seventy-eight percent by twenty twenty-six—that's how efficiently the canal system was being used. But overall irrigation coverage, including groundwater wells, reached ninety-eight percent. The wheat that fed the Green Revolution did not grow in fields waiting for monsoon clouds. It grew in fields where water showed up whether the monsoon did or not.\n\nBut even with new seeds and expanded irrigation, a harvest sitting in a farmer's granary does not prevent famine three states away. Which brings up the third layer.\n\nThird layer: the institutional scaffold. In nineteen sixty-five, the government established the Food Corporation of India. Its job: buy grain directly from farmers at a guaranteed minimum support price, store it in a central buffer, and release it through a nationwide distribution system. Every crop year, FCI procures tens of millions of metric tons of rice and wheat. The central buffer stock is maintained at three to four times the legal minimum the government is required to hold. That buffer is not decorative. It is the gap between a monsoon failure and a repeat of 1943.\n\nThe grain does not stay in warehouses. It moves through the Public Distribution System, which covers about two hundred million households, reaching roughly eight hundred million people. Each month, the system distributes subsidized or free grain. In twenty thirteen, the National Food Security Act codified the coverage: seventy-five percent of the rural population, fifty percent of urban, with priority households receiving five kilograms per person per month.\n\nPut the three layers together and you get a chain: seed to irrigation to procurement to storage to distribution. In a good monsoon year, FCI buys the surplus, the buffer grows, prices stay stable. In a bad year, the buffer releases, PDS keeps delivering, and the villages that would have starved in 1876 or 1943 still eat. The system does not eliminate dependence on the monsoon, but it builds a margin wide enough that a single monsoon failure no longer cascades into mass death.\n\nThat margin, however, is not evenly distributed. The monsoon itself is not evenly distributed. Some states harvest far more than they need. Others, even in a normal year, run short. So how does grain grown in one state end up feeding people a thousand kilometers away?\n\n[CH08 | 11:42-13:14 | imbalance_correction_mechanism]\n\nThe monsoon itself is not evenly distributed. The southwest monsoon makes landfall on Kerala's coast in June, bringing heavy rains to the western and northeastern regions. By the time it reaches the northwest plains—Punjab, Haryana—it has weakened. The northwest gets less rain. But it's home to India's most productive irrigated farmland. Take Punjab. Despite receiving less monsoon rain than the coastal regions, Punjab's irrigated fields—ninety-eight percent coverage—produce far more wheat and rice than the state's thirty million people can eat. Take Rajasthan. Even with decent monsoon rains in some areas, much of Rajasthan's arid interior has lower irrigation coverage, and cannot grow enough grain to feed its own population. So there's a geographic mismatch: the states that produce the most surplus grain are not where the monsoon is most generous. The states that get the most monsoon rain are not always the biggest grain producers.\n\nThis is where the system's second corrective mechanism comes in. The Food Corporation of India does not just buy and store grain. It moves it. The central buffer stock is not locked in place. It flows—though the exact tonnage moved between states in a given year is not publicly reported in detail, the mechanism is clear: FCI procures heavily from surplus states like Punjab, Haryana, and Andhra Pradesh, and transfers grain to deficit states like Rajasthan, Odisha, the northeastern hill states, and the tribal belts of Madhya Pradesh and Chhattisgarh.\n\nThe Public Distribution System does not stop at state borders. A ration cardholder in a water-stressed district of Rajasthan receives the same entitlement as a cardholder in well-watered Kerala: five kilograms per person per month, at the same subsidized price nationwide. Currently, that price is effectively zero, but even under the National Food Security Act's base structure, the price is uniform: three rupees per kilogram of rice, two rupees per kilogram of wheat, one rupee per kilogram of coarse grains, regardless of which state you live in.\n\nThe monsoon decides where the water falls. The FCI and PDS together decide where the grain goes.\n\nBut does this system reach everyone? Or are there regions, and people, who remain outside the corrective mechanism—still waiting for the wind?\n\n---\n\n**Word count: 337**\n\n[CH09 | 13:14-15:50 | edge_case_debt_architecture]\n\nThe system reaches the granaries. It covers eight hundred million people. But that map is not complete.\n\nTake the rainfed zones. Half to sixty percent of India's farmland still depends entirely on whatever the sky drops. These farms sit in Rajasthan, parts of Andhra Pradesh, Maharashtra's drylands. For them, the FCI's central reserves and the PDS ration cards are a lifeline when the rains fail. But the production risk? Still theirs to carry.\n\nNow take the groundwater crisis zones. As of 2025, India assessed sixty-seven hundred forty-six groundwater units across the country. Seven hundred fifty-one of those units are classified as over-exploited—extraction exceeds annual recharge. Another two hundred six are critical. The national groundwater extraction rate stands at roughly sixty percent. And agriculture accounts for eighty-seven percent of that annual draw.\n\nThe hotspots? Punjab, Haryana, Rajasthan, Delhi. These are not marginal areas. Punjab and Haryana are the granaries. The irrigation that tripled their yields? It is not running on rivers anymore. It is running on debt. Three kinds.\n\nFirst layer: the farmer. Priya's two loans totaling about ten thousand dollars. Another farmer has been paying off his well loan for twenty years and still has not cleared it. Each harvest, a share goes to interest before the family sees a rupee. To service the loan, he plants high-water crops—rice, sugarcane—which drops the water table further, which means the next farmer down the road has to drill deeper.\n\nSecond layer: the state government. Indian states provide heavy subsidies for agricultural electricity—the power that runs those tubewells. The exact national figure is not published, but the mechanism is clear: cheap or free electricity for farm pumps makes groundwater effectively free to extract. Punjab's 2009 Groundwater Preservation Act tried to restrict early rice transplanting to reduce water use. The law exists. The water table has not stopped falling.\n\nThird layer: the central government. India's food subsidy bill—covering FCI procurement and PDS distribution—runs to roughly two trillion rupees a year, about twenty-four billion dollars. That is the visible fiscal cost of keeping grain moving and ration cards honored, paid by taxpayers.\n\nThree layers of debt. The farmer borrows against future income. The state government borrows fiscal space to subsidize electricity. The central government commits twenty-four billion dollars annually to keep the distribution network alive. All three are, in the end, borrowing against the same aquifer. Eighty-seven percent of India's agricultural groundwater comes out of the ground faster than the monsoon puts it back.\n\nThe corrective mechanism—FCI redistribution, PDS universal access—evens out the geographic lottery of rainfall. But it does not reach the source of the imbalance. It compensates for drought. It does not stop the wells from running dry.\n\nThat brings us to the report card. Did the system actually deliver? Did it break the famine cycle, or just delay the next crisis?\n\n---\n\n**Word count: 505**\n\n[CH10 | 15:50-18:36 | turnaround_results_reveal]\n\nThe scale of that question has a historical answer. Seventy years of it.\n\nIn 1943, Bengal starved. Two to three million people died in a famine that had nothing to do with grain shortage and everything to do with distribution failure. The food existed. The system to move it didn't. A century earlier, in 1876, the monsoon had failed across India. Estimates settle around eight hundred twenty thousand dead. Same trigger, same result, different century.\n\nAfter the Green Revolution, that cycle stopped.\n\nNo major famine since the 1960s. The monsoon still came and went unpredictably. The death toll didn't follow.\n\nThat's the inflection point. Not because the wind got better. Because the system did.\n\nPunjab and Haryana expanded irrigation coverage until irrigated farmland no longer waited for rain. The Food Corporation began buying harvests at guaranteed prices and stockpiling grain at reserves three to four times the minimum threshold. The Public Distribution System reached eight hundred million people with five kilograms of subsidized grain per person per month. When one region had surplus, the central government moved it to regions running short. When a harvest year produced plenty, reserves filled. When the next year didn't, reserves emptied into the system instead.\n\nIt was a formula. It worked.\n\nBut here's the honest part: it didn't work alone. The Green Revolution arrived during a global agricultural technology surge. High-yield seeds, synthetic fertilizers, mechanized farming—these weren't invented for India. They were invented globally, and India adopted them at scale. India's economic reforms in the 1990s freed up fiscal space to keep funding it all. Without those twin tailwinds, the system would have had to be leaner. But the structure—guaranteed procurement, buffer reserves held at three to four times the legal minimum, nationwide distribution reaching eight hundred million—was India's own design. Other countries in South Asia had access to the same seeds, the same technology. But they didn't build the same reserves or distribution systems. In 2022, Pakistan's wheat prices jumped in a single month, and Sri Lanka faced food price spikes and currency collapse. India's buffer absorbed the shock. The tailwinds gave resources. The structure decided how to use them.\n\nThe famine deaths dropped from millions to zero. That's the turnaround. The monsoon is still the monsoon. It still arrives late sometimes. It still disappoints. But now, when it does, eight hundred million people don't starve.\n\nYet there's a detail that nobody talks about, a second engine underneath the one everyone sees. The irrigation system that stopped the famines didn't just expand—it transformed into something else entirely.\n\n---\n\n**Word count: 375**\n\n[CH11 | 18:36-21:04 | second_engine_reveal]\n\nTake Haryana, one of India's breadbasket states. In the early 1980s, about fifty-four percent of its irrigated farmland relied on canals—government-built infrastructure, visible, official. Another forty-four percent used tubewells tapping groundwater. By the late 2010s, those numbers had flipped. Canals dropped to thirty-four percent. Tubewells climbed to somewhere between fifty-eight and sixty-three percent. The shift wasn't sudden. Through the 1980s and 1990s, as the Green Revolution demanded more reliable water, the government did two things. It expanded canals where it could. And where it couldn't, it subsidized electricity for farm pumps. The subsidy made running a tubewell cheap enough that farmers could afford it. The high-yield crops made drilling profitable enough that farmers had to drill to stay competitive. Why the shift? Canals deliver water on a fixed rotation. Farmers get their turn once every few days. Tubewells run whenever the farmer switches on the motor. When electricity became cheap, the flexibility was worth it. Farmers drilled.\n\nThat's not an accounting error. The total irrigated area kept growing, but the source shifted. The system didn't stop expanding irrigation. It just stopped expanding canals and started drilling deeper instead.\n\nNationwide, agriculture now pulls eighty-seven percent of its water from underground. Punjab's extraction rate hit one hundred fifty-six percent of annual recharge. Haryana's one hundred thirty-seven percent. They're pulling out more water each year than the aquifers can replenish.\n\nThe real second engine isn't the canals the government built. It's the hundreds of thousands of wells that farmers drilled themselves. Each one with a motor on top, running on subsidized electricity, extracting water that used to be free.\n\nHere's where the policy created the incentive. When the Green Revolution needed reliable irrigation to make the high-yield seeds work, the government did two things. It expanded canals where it could. And where it couldn't, it subsidized electricity for farm pumps. The subsidy made running a tubewell cheap enough that farmers could afford to drill. The high-yield crops made drilling profitable enough that farmers had to drill to stay competitive.\n\nTake the farmer from earlier. Her neighbor drilled and doubled his harvest. She followed. A few years later, the water table dropped. She drilled deeper. Now her second well is the primary source. The first one ran dry last year. The loan's still active. And there's another farmer two villages over who borrowed in the mid-two-thousands. Twenty years later, he's still paying. The debt didn't kill him, but it boxed him in. He can't let a field go fallow. He can't stop pumping. The loan schedule decides what he plants every season.\n\nThat's the second engine. Not a single infrastructure project you can point to on a map. A million small decisions, all made for the same reason, all pulling from the same reservoir. The government built the canals. The farmers built the second engine. And the second engine is what kept the food coming when the canals weren't enough.\n\nBut the second engine runs on something that's running out.\n\n---\n\n**Word count: 405**\n\n[CH12 | 21:04-23:38 | caveat_counterevidence]\n\nSo here's the formula. Monsoon delivers seventy to seventy-five percent of the rain. Irrigation doubles yields. Central reserves sit at three to four times the legal minimum. The distribution system reaches eight hundred million people, five kilograms per person per month. Wind still comes, famine doesn't.\n\nBut it's not a magic formula. It's not universal. And the costs are compounding.\n\nStart with the shift we just walked through. Haryana's canals used to irrigate fifty-four percent of its farmland. Now they handle thirty-four percent. Tubewells rose from forty-four percent to past fifty-eight percent. That shift from surface water to groundwater isn't efficiency. It's a sign the system is tilting toward something that can't last.\n\nNationwide, seven hundred fifty-one groundwater units are classified as over-exploited. Agriculture accounts for eighty-seven percent of annual groundwater extraction. In Punjab and Haryana, the extraction rate exceeds recharge. Water tables that sat thirty feet down a decade ago now require deeper borewells. To service the loan, farmers plant high-water crops—rice, sugarcane—which drops the water table further, which means the next farmer down the road has to drill deeper. It's a cycle that compounds.\n\nThen there's the fiscal burden. The central government spends roughly twenty-four billion dollars a year to keep FCI procurement and PDS distribution running. That's taxpayer money, every year, to maintain the buffer that prevents famine. Compare that to 1876, when the colonial administration exported wheat while Indians starved. Back then, the government profited from disaster. Today, the government pays twenty-four billion annually to prevent it. That's a moral reversal, but it's also a recurring cost with no exit date.\n\nAbout half to sixty percent of India's farmland still depends on rain. For those farmers, climate variability is still a direct threat. The system was designed for the historical monsoon pattern. Extreme events are increasing in frequency. The buffer has a load limit.\n\nThe formula worked. After the Green Revolution: zero large-scale famines. But the formula runs on three things that are all finite. Groundwater: seven hundred fifty-one units already over-extracted. Farmers' future income: pledged against loans that take twenty years to clear. The national treasury: twenty-four billion a year, indefinitely.\n\nEvery June, the wind comes back. The question now is who's waiting for it. Farmers with irrigation wait for yields to double, but the water table drops. Farmers without irrigation wait for rain to decide their fate. Farmers with tubewells wait for the next loan payment. Taxpayers wait for the next twenty-four-billion-dollar bill. The system fed multiple generations without famine. But flywheels have a service life.\n\n---\n\n**Word count: 468**\n\n[CH13 | 23:38-25:00 | worldview_synthesis_closure]\n\nCan you attribute India's success to the monsoon? Not really. Bangladesh, Pakistan, Sri Lanka—all depend on monsoon rainfall. But when floods hit Pakistan in 2022, wheat prices jumped twenty percent in a single month. Sri Lanka faced currency collapse and food price spikes. Their storage systems couldn't absorb the shock. India's did.\n\nThe difference isn't the wind. It's the structure underneath: irrigation systems that double yields, central reserves held at three to four times the legal minimum, nationwide distribution reaching eight hundred million people every month. Reliable irrigation leads to stable harvests. Good years build surplus. Bad years release reserves. Distribution keeps delivering. Trust sustains political will. Funding expands coverage. Coverage raises output. But someone had to turn the wheel first. In the 1960s, the Indian government and international foundations put in the initial investment. Seed research. Canal networks. Storage depots. The Public Distribution System. They built the first turn of the wheel.\n\nEvery June, the wind comes back. But the question now isn't whether the wind will come. It's who's still vulnerable when it doesn't. Farmers with irrigation wait for yields to double—but the water table drops. Farmers without irrigation still wait for rain to decide their fate. Farmers with tubewells wait for the next loan payment. Taxpayers wait for the next twenty-four-billion-dollar bill. The system fed multiple generations without famine. But every system has a carrying capacity. Groundwater, farmers' wallets, the treasury—which one runs out first? The wind doesn't decide whether India eats anymore. The debt does.\n\n---\n\n**Word count: 289**\n",
+  "compliance_log": [
+    {
+      "ts": "2026-11-03T04:31:29.186Z",
+      "version": "v1",
+      "target": "v1_5",
+      "replaced_count": 2,
+      "failed_count": 0,
+      "items": [
+        {
+          "chapter": "CH09",
+          "original": "India's food subsidy bill—covering FCI's procurement operations and PDS distribution—runs to approximately two trillion rupees annually, or about twenty-four billion dollars. That's the visible fiscal cost of keeping the grain flowing and the ration cards honored, funded by taxpayers. This is the visible fiscal cost of keeping the grain flowing and the ration cards honored, funded by taxpayers.",
+          "replacement": "India's food subsidy bill—covering FCI procurement and PDS distribution—runs to roughly two trillion rupees a year, about twenty-four billion dollars. That is the visible fiscal cost of keeping grain moving and ration cards honored, paid by taxpayers.",
+          "occurrences": 1
+        },
+        {
+          "chapter": "CH10",
+          "original": "Pakistan's wheat prices jumped twenty percent in a single month in 2022. Sri Lanka faced food price spikes and currency collapse. India's buffer absorbed the shock.",
+          "replacement": "In 2022, Pakistan's wheat prices jumped in a single month, and Sri Lanka faced food price spikes and currency collapse. India's buffer absorbed the shock.",
+          "occurrences": 1
+        }
+      ],
+      "failed": []
+    }
+  ],
+  "opening_scans": {
+    "v1_5": {
+      "model": "deepseek-flash",
+      "type_names": {
+        "phenomenon_missing": "现象缺失",
+        "conflict_weak": "冲突不足",
+        "essence_missing": "本质未点明",
+        "value_promise_missing": "价值承诺缺失",
+        "hook_weak": "钩子偏弱",
+        "promise_mismatch": "承诺与内容不符"
+      },
+      "secs": 49,
+      "summary": {
+        "score_0_30": 6,
+        "score_30_60": 8,
+        "content_type": "知识拆解",
+        "content_type_note": "全文按季风依赖—灌溉扩张—FCI/PDS 储备分配—地下水债务逐层解释印度粮食系统，属于知识拆解型。",
+        "biggest_problem": "开场首句用抽象拟人化的“风”作主语，8 秒内没有具体人物或场景承接标题冲突，触发硬规则上限。",
+        "conclusion": "内容结构和后文承诺成立，但前 8 秒钩子不够具象，需把开场改成具体农民与海岸等待场景。",
+        "seg_0_30": {
+          "phenomenon": {
+            "status": "ok",
+            "note": "季风登陆喀拉拉邦、70–75% 降雨依赖季风、半数农田无灌溉等具体事实已出现。"
+          },
+          "conflict": {
+            "status": "weak",
+            "note": "标题冲突存在，但首句拟人化抽象，8 秒内没有具体人物或场景，触发硬规则。"
+          },
+          "essence": {
+            "status": "ok",
+            "note": "点出粮食、水库、含水层三套生存系统都押在同一季风上。"
+          }
+        },
+        "seg_30_60": {
+          "value_promise": {
+            "status": "ok",
+            "note": "段末设问“什么系统让印度在风迟到时仍有饭吃”，明确暗示将拆解该系统。",
+            "category": "知识拆解"
+          }
+        }
+      },
+      "hits": [
+        {
+          "chapter": "CH01",
+          "original": "Every June, a wind decides whether India eats.\n\nThe southwest monsoon is expected to make landfall on Kerala's coast on June first.",
+          "type": "conflict_weak",
+          "segment": "s0_30",
+          "mode": "replace",
+          "suggestion": "Every June, a Kerala farmer waits for the southwest wind that decides whether India eats.",
+          "original_zh": "每年六月，一场风决定印度是否有饭吃。\n\n西南季风预计将于6月1日在喀拉拉邦海岸登陆。",
+          "suggestion_zh": "每年六月，一位喀拉拉邦农民等待着那场决定印度是否有饭吃的西南风。",
+          "reason": "0:00 的首句用拟人化的“风”作主语，8 秒内没有出现具体的人或可感知场景，标题冲突停留在抽象层面；按硬规则记 conflict_weak。",
+          "status": "pending",
+          "id": "h1"
+        }
+      ],
+      "scanned_at": "2026-11-03T04:45:06.353Z",
+      "stale": false
     }
   }
 }

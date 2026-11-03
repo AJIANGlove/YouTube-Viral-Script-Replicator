@@ -222,6 +222,9 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `step1.md` | Blueprint 生成（问题链 + 新角度 + 事实只用一次，编号一律 CH，含对照表与叙事方式） | 102 |
 | `apply_suggest.md` | 单条问题出可替换改法（原句逐字+中文意思） | 32 |
 | `step2.md` | 脚本施工（含每章问题链与新角度要求、对照表） | 58 |
+| `function_table.md` | 蓝图按功能重排第一步：原片每段一行功能表（作用、必须保留、可以换、四选一处理） | 77 |
+| `step1_function.md` | 蓝图按功能重排第二步：按功能表排章（锁定项、为什么这样排、等级重点） | 120 |
+| `blueprint_review.md` | 蓝图审（写稿前 6 项：递进、揭示顺序、标题和主线、事实支撑、反转、硬套） | 58 |
 | `step3.md` | 质量审核 | 72 |
 | `step4.md` | 终稿优化 | 58 |
 | `step5.md` | 开头逐句仿写（强化开头） | 27 |
@@ -258,7 +261,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 47 份 `.md`（3192 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 52 份，合计 3395 行。
+合计 50 份 `.md`（3447 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 55 份，合计 3650 行。
 
 ### 历史版本
 

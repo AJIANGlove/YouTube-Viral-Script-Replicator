@@ -226,7 +226,9 @@ function runFileStats() {
 const ACTIVE_STEP_LABELS = {
   analysis: '写前分析',
   auto_adjust: 'AI 调整',
+  function_table: '第1步 功能表',
   blueprint: '第1步 蓝图',
+  blueprint_review: '第1步 蓝图审',
   script: '第2步 脚本',
   audit: '第3步 审核',
   optimized: '第4步 优化',

@@ -166,6 +166,23 @@
   .badge-queued { background: #fef3c7; color: #b45309; }
   .badge-analyzing { background: #ede9fe; color: #6d28d9; }
   .badge-awaiting_review { background: #ffedd5; color: #c2410c; }
+  .badge-blueprint_hold { background: #fee2e2; color: #b91c1c; font-weight: 600; }
+  /* v1.73 蓝图面板:功能表、每章排法、蓝图审 */
+  .bp-hold { border: 2px solid #dc2626; background: #fef2f2; border-radius: 8px; padding: 12px 14px; margin: 8px 0 12px; }
+  .bp-hold h3 { margin: 0 0 6px; color: #b91c1c; font-size: 15px; }
+  .bp-hold ul { margin: 4px 0 8px 18px; padding: 0; font-size: 13px; line-height: 1.7; }
+  .bp-hold .bp-choices { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; }
+  .bp-hold input[type=text] { min-width: 260px; flex: 1; }
+  .bp-tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 6px 0; }
+  .bp-tbl th, .bp-tbl td { border-bottom: 1px solid #e5e7eb; padding: 5px 6px; text-align: left; vertical-align: top; }
+  .bp-tbl th { background: #f9fafb; font-weight: 600; white-space: nowrap; }
+  .bp-ok { color: #047857; font-weight: 600; white-space: nowrap; }
+  .bp-bad { color: #b91c1c; font-weight: 600; white-space: nowrap; }
+  .bp-by { display: inline-block; font-size: 11px; padding: 0 6px; border-radius: 999px; background: #e5e7eb; color: #374151; margin-right: 4px; }
+  .bp-tr-del { color: #9ca3af; }
+  .bp-chip { display: inline-block; font-size: 11px; padding: 1px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+  .bp-chip.ok { background: #d1fae5; color: #047857; } .bp-chip.bad { background: #fee2e2; color: #b91c1c; } .bp-chip.run { background: #dbeafe; color: #1d4ed8; }
+  .bp-panel details { margin-top: 8px; } .bp-panel summary { cursor: pointer; font-weight: 600; font-size: 13px; }
   /* 状态列第二行:「进行中」当前阶段,深蓝实底 + 呼吸圆点,一眼看出还在跑 */
   .run-prog { display: flex; width: fit-content; align-items: flex-start; gap: 4px; margin-top: 5px; padding: 2px 8px;
     border-radius: 999px; background: #1d4ed8; color: #fff; font-size: 10.5px; line-height: 1.45;
@@ -789,6 +806,7 @@
       <div class="steps" id="detail-steps"></div>
       <div id="detail-error" class="err-list"></div>
     </div>
+    <div class="card hidden bp-panel" id="bp-panel"></div>
     <div class="card hidden" id="rv-panel"></div>
     <div class="card hidden" id="rf-panel"></div>
     <div class="card hidden" id="lc-panel"></div>
@@ -927,6 +945,16 @@
         <button class="primary" onclick="saveSearchSettings()">保存</button>
         <button class="ghost" onclick="testSearch()">测试搜索</button>
         <span class="hint v12" id="srch-status" style="margin-top:0"></span>
+      </div>
+    </div>
+    <div class="card" id="bp-mode-card">
+      <h2>蓝图方式</h2>
+      <div class="hint" style="margin-bottom:6px">按功能重排(新,默认):先给原片每一段写一行功能表(这一段起什么作用、必须保留什么、可以换什么),再按新题目的事实排章;开头钩子、每个高峰、每对悬念的开和收、结尾回扣必须有去处,其余可以合并、删、调序。蓝图画完先过「蓝图审」,不过就让 AI 改,最多 2 次,还不过就停下来让你选。<br>严格照原片(旧):原片一段对一段换内容,和 v1.72 一样,不做功能表和蓝图审。用来新旧对比。只对之后新画的蓝图生效。</div>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+        <label style="margin:0"><input type="radio" name="bp-mode" value="function"> 按功能重排(新)</label>
+        <label style="margin:0"><input type="radio" name="bp-mode" value="strict"> 严格照原片(旧)</label>
+        <button class="primary" onclick="saveBlueprintSettings()">保存</button>
+        <span class="hint" id="bp-mode-status" style="margin-top:0"></span>
       </div>
     </div>
     <div class="card" id="reframe-card">
@@ -1810,8 +1838,8 @@ function setTrack(v) {
 }
 
 // ---------- 任务 ----------
-const STEP_LABELS = { analysis: '⓪ 写前分析', blueprint: '① 蓝图', script: '② 脚本', audit: '③ 审核', optimized: '④ 优化', opening_boost: '⑤ 强化开头', script_check: '⑥ 稿件检查', draft_check: '⑦ 初稿检查→二稿', reverse_audit: '⑧ 二稿审稿报告', final_review: '⑨ 终审→终稿', deai: '⑩ 去AI感' };
-const STATUS_LABELS = { analyzing: '写前分析中', awaiting_review: '待确认分析', queued: '排队中', running: '生成中', done: '完成', failed: '失败', cancelled: '已取消' };
+const STEP_LABELS = { analysis: '⓪ 写前分析', function_table: '① 功能表', blueprint: '① 蓝图', blueprint_review: '① 蓝图审', script: '② 脚本', audit: '③ 审核', optimized: '④ 优化', opening_boost: '⑤ 强化开头', script_check: '⑥ 稿件检查', draft_check: '⑦ 初稿检查→二稿', reverse_audit: '⑧ 二稿审稿报告', final_review: '⑨ 终审→终稿', deai: '⑩ 去AI感' };
+const STATUS_LABELS = { analyzing: '写前分析中', awaiting_review: '待确认分析', blueprint_hold: '蓝图待定', queued: '排队中', running: '生成中', done: '完成', failed: '失败', cancelled: '已取消' };
 const LANG_LABELS = { English: '英语', Hindi: '印地语', Spanish: '西班牙语', Portuguese: '葡萄牙语', Japanese: '日语', Korean: '韩语', Indonesian: '印尼语', German: '德语', French: '法语', Vietnamese: '越南语', Arabic: '阿拉伯语', Chinese: '中文' };
 const COUNTRY_LABELS = { US: '美国', IN: '印度', BR: '巴西', MX: '墨西哥', JP: '日本', KR: '韩国', ID: '印尼', DE: '德国', GB: '英国', FR: '法国', VN: '越南', SA: '沙特' };
 
@@ -1856,6 +1884,10 @@ function viralIcon(filled, cls) {
 }
 
 function runOpsCell(r) {
+  if (r.status === 'blueprint_hold') {
+    return `<button class="op-btn" onclick="event.stopPropagation();openRun('${r.id}')">去看蓝图</button> `
+      + `<button class="op-btn danger" onclick="event.stopPropagation();cancelRunById('${r.id}')">取消</button>`;
+  }
   if (r.status === 'awaiting_review' && r.draft_first && (statusLabel(r) === '待换框架' || statusLabel(r) === '待选账本假设')) {
     return `<button class="op-btn" onclick="event.stopPropagation();openRun('${r.id}')">${statusLabel(r) === '待换框架' ? '去换框架' : '去选账本'}</button> `
       + `<button class="op-btn danger" onclick="event.stopPropagation();cancelRunById('${r.id}')">取消</button>`;
@@ -1920,7 +1952,7 @@ function scoreCell(s) {
 // 3 秒轮询只在数据指纹变化时重绘,避免打断输入、翻页和滚动。
 const RUNS_PAGE_SIZES = [20, 50, 100];
 const VIDEO_STATUS_LABELS = { none: '未推送', draft: '草稿', running: '生产中', paused: '已暂停', completed: '已完成', failed: '失败' };
-const RUNS_STATUS_ORDER = ['done', 'awaiting_review', 'analyzing', 'running', 'queued', 'failed', 'cancelled'];
+const RUNS_STATUS_ORDER = ['done', 'blueprint_hold', 'awaiting_review', 'analyzing', 'running', 'queued', 'failed', 'cancelled'];
 const RUN_ENDED = s => ['done', 'failed', 'cancelled'].includes(s);
 const runsFilter = { q: '', status: [], lang: [], video: [], viral: false, range: 'all', page: 1, page_size: 50 };
 let runsData = null;
@@ -2249,6 +2281,7 @@ function blueprintTimesNote(r) {
 function blueprintConsNote(r) {
   const c = (r.checks || {}).consistency;
   if (!c) return '';
+  if ((r.blueprint_view || {}).mode === 'function') return ''; // 按功能重排:残留和等级在「蓝图」面板的蓝图审「硬套」一项里
   const nRes = (c.residue || []).length, miss = ((c.levels || {}).missing || []);
   if (!nRes && !miss.length) return c.retried ? `<div class="hint" style="color:#047857">ℹ 蓝图第一版有原片残留/等级跳号,已自动让 AI 重写一次,现在没查出问题。</div>` : '';
   const ws = [...new Set((c.residue || []).flatMap(h => h.words))];
@@ -2270,9 +2303,12 @@ async function loadRunDetail() {
   if (r.analysis_confirmed || (r.steps || {}).script_check) stepKeys.push('script_check');
   if (r.draft_first || (r.steps || {}).draft_check) stepKeys.push('draft_check', 'reverse_audit', 'final_review');
   if ((r.steps || {}).deai) stepKeys.push('deai');
+  // v1.73 按功能重排:蓝图前有功能表、蓝图后有蓝图审
+  if ((r.steps || {}).function_table) stepKeys.splice(stepKeys.indexOf('blueprint'), 0, 'function_table');
+  if ((r.steps || {}).blueprint_review) stepKeys.splice(stepKeys.indexOf('blueprint') + 1, 0, 'blueprint_review');
   document.getElementById('detail-steps').innerHTML = stepKeys.map((k, i) => {
     const s = (r.steps || {})[k] || {};
-    const cls = s.status === 'done' ? 'done' : (s.status === 'running' ? 'running' : (s.status === 'failed' ? 'failed' : ''));
+    const cls = s.status === 'done' || s.status === 'passed' ? 'done' : (s.status === 'running' ? 'running' : (s.status === 'failed' || s.status === 'held' ? 'failed' : ''));
     const extra = s.secs ? ` (${s.secs}s)` : '';
     const gate = s.gate_retry ? ' ⟳重试' : '';
     const jump = STEP_JUMP[k] && (k === 'analysis' ? !!r.analysis : !!r.draft_first || !!(r.review || {}).versions);
@@ -2288,6 +2324,7 @@ async function loadRunDetail() {
     ((r.status === 'failed' || r.status === 'cancelled')
       ? ' <button class="primary" style="margin-left:8px" onclick="retryRun()">续跑此任务</button>' : '');
 
+  renderBlueprintPanel(r);
   renderReviewPanel(r);
   renderReframePanel(r);
   renderLedgerChoicePanel(r);
@@ -5503,6 +5540,90 @@ async function rerunAnalysis() {
   } catch (e) { alert('重新分析失败:' + e.message); }
 }
 
+// ---------- v1.73 蓝图面板:蓝图方式、蓝图审(6 项)、功能表、每章排法;蓝图审没过停下时的三个选择 ----------
+let bpRenderedKey = null;
+function renderBlueprintPanel(r) {
+  const el = document.getElementById('bp-panel');
+  const v = r.blueprint_view;
+  if (!v) { el.classList.add('hidden'); bpRenderedKey = null; return; }
+  // 停下时有输入框:内容没变就不重绘,免得 3 秒轮询把人正在改的题目冲掉
+  const key = JSON.stringify([r.status, v.mode, (v.review || {}).status, (v.review || {}).finished_at, ((v.review || {}).rounds || []).length, (v.table || {}).at, (v.chapters || []).length]);
+  if (key === bpRenderedKey && !el.classList.contains('hidden')) return;
+  bpRenderedKey = key;
+  el.classList.remove('hidden');
+  if (v.mode !== 'function') {
+    el.innerHTML = `<h2>蓝图方式:${esc(v.mode_label)}</h2><div class="hint">${v.mode_why ? esc(v.mode_why) + '。' : ''}原片一段对一段换内容(和 v1.72 一样),没有功能表和蓝图审。${v.setting !== v.mode ? '设置里现在是「按功能重排」。' : ''}</div>`;
+    return;
+  }
+  const rv = v.review || null;
+  const chip = !rv ? '<span class="bp-chip run">蓝图审还没跑</span>'
+    : rv.status === 'running' ? '<span class="bp-chip run">蓝图审中…</span>'
+    : rv.status === 'passed' ? `<span class="bp-chip ok">蓝图审通过${rv.revised ? '(AI 按意见改了 ' + rv.revised + ' 次)' : ''}</span>`
+    : `<span class="bp-chip bad">蓝图审没通过${rv.override ? ' · 你选了仍然写' : ''}</span>`;
+  let html = `<h2>① 蓝图(按功能重排)${chip}</h2>`;
+  if (v.held && rv) {
+    const sug = (rv.retopic || []);
+    html += `<div class="bp-hold"><h3>⛔ 蓝图审没通过,已经停下,稿子还没开始写</h3>
+      <div style="font-size:13px">AI 按审的意见改了 ${rv.revised || 0} 次蓝图,下面这几项还是不过。照这份蓝图写,这些问题多半会出现在稿子里:</div>
+      <ul>${(rv.reasons_zh || []).map(x => '<li>' + esc(x) + '</li>').join('')}</ul>
+      ${rv.summary ? `<div style="font-size:13px">审稿结论:${esc(rv.summary)}</div>` : ''}
+      <div style="font-size:13px;margin-top:6px">选一个:</div>
+      <div class="bp-choices">
+        <button class="primary" onclick="bpHold('write', this)">仍然写(按现在的蓝图写稿)</button>
+        <button onclick="bpHold('reframe', this)">换框架(按这些原因推荐别的框架)</button>
+      </div>
+      <div class="bp-choices">
+        <input type="text" id="bp-retopic" list="bp-retopic-list" value="${escAttr(sug[0] || r.topic || '')}" placeholder="新题目">
+        <datalist id="bp-retopic-list">${sug.map(t => `<option value="${escAttr(t)}">`).join('')}</datalist>
+        <button onclick="bpHold('retopic', this)">改题目(按新题目重新挑框架)</button>
+      </div>
+      ${sug.length ? `<div class="hint">AI 建议的新题目:${sug.map(esc).join(' / ')}(下拉可选)</div>` : ''}
+      <div class="hint">改题目、换框架都会回到写前分析重新做,这份蓝图和蓝图审记录会留在任务记录里。</div></div>`;
+  }
+  if (rv && (rv.items || []).length) {
+    const prob = p => `<div><span class="bp-by">${esc(p.by)}</span>${p.chapter && !String(p.text).startsWith(p.chapter) ? esc(p.chapter) + ' ' : ''}${esc(p.text)}${p.fix ? `<div class="hint" style="margin:0 0 0 4px">改法:${esc(p.fix)}</div>` : ''}</div>`;
+    html += `<table class="bp-tbl"><tr><th>审的项</th><th>结果</th><th>问题</th></tr>${rv.items.map(it => `<tr><td style="white-space:nowrap">${esc(it.name)}</td><td>${it.pass ? '<span class="bp-ok">✓ 通过</span>' : '<span class="bp-bad">✗ 不过</span>'}</td><td>${(it.problems || []).map(prob).join('') || '<span class="hint">—</span>'}${(it.notes || []).length ? `<details><summary style="font-weight:400" class="hint">参考 ${it.notes.length} 条(程序提示 / AI 认为不算问题)</summary>${it.notes.map(prob).join('')}</details>` : ''}</td></tr>`).join('')}</table>`;
+    const rounds = (rv.rounds || []).map(x => x.rejected ? `改第 ${x.revise} 次:${esc(x.rejected)}` : `${x.after_revise ? '改第 ' + x.after_revise + ' 次后再审' : '第一次审'}:${x.pass ? '通过' : '不过(' + (x.items || []).filter(i => !i.pass).map(i => esc(i.name)).join('、') + ')'}${x.ai_error ? '(' + esc(x.ai_error) + ')' : ''}`);
+    if (rounds.length) html += `<div class="hint">过程:${rounds.join(' → ')}${rv.secs ? ',共 ' + rv.secs + ' 秒' : ''}</div>`;
+    // 前几轮审出来、AI 已经按意见改过的问题:折起来,方便对照这次改掉了什么
+    const earlier = (rv.rounds || []).filter(x => !x.rejected && !x.pass).slice(0, rv.status === 'held' ? -1 : undefined);
+    earlier.forEach(x => {
+      const bad = (x.items || []).filter(i => !i.pass);
+      html += `<details><summary style="font-weight:400">${x.after_revise ? '改第 ' + x.after_revise + ' 次后' : '第一次审'}查出的问题(${bad.map(i => esc(i.name) + ' ' + (i.problems || []).length + ' 条').join('、')}),已交给 AI 改</summary><table class="bp-tbl">${bad.map(i => `<tr><td style="white-space:nowrap">${esc(i.name)}</td><td>${(i.problems || []).map(prob).join('')}</td></tr>`).join('')}</table></details>`;
+    });
+  }
+  const chs = v.chapters || [];
+  if (chs.length) {
+    html += `<details open><summary>每章怎么排(${chs.length} 章)</summary><table class="bp-tbl"><tr><th>章</th><th>时间</th><th>承接原片段</th><th>处理</th><th>锁定项</th><th>为什么这样排</th>${chs.some(c => c.level_focus) ? '<th>这一级的重点 / 新信息</th>' : ''}</tr>${chs.map(c => `<tr><td>${esc(c.id)}</td><td style="white-space:nowrap">${esc(c.time_range)}</td><td>${esc((c.source_segments || []).join('、') || '新加')}</td><td>${esc(c.treatment)}</td><td>${esc((c.locks || []).join('、'))}</td><td>${esc(c.layout_reason)}</td>${chs.some(x => x.level_focus) ? `<td>${c.level_focus ? '<b>' + esc(c.level_focus) + '</b>:' + esc(c.level_new_info) : ''}</td>` : ''}</tr>`).join('')}</table></details>`;
+  }
+  const t = v.table;
+  if (t && (t.rows || []).length) {
+    const pct = x => Math.round((x || 0) * 100) + '%';
+    const n = k => t.rows.filter(x => x.treatment === k).length;
+    html += `<details><summary>功能表(原片 ${t.rows.length} 段:保留功能换内容 ${n('保留功能换内容')}、合并 ${n('合并到相邻章')}、可删 ${n('新题目没有这块可删')}、新题目自己的 ${n('必须是新题目自己的')})</summary>
+      ${(t.ladder || {}).on ? `<div class="hint">等级 / 重复单元框架:${esc(t.ladder.why)}。每一级要写不同的重点和新信息。</div>` : ''}
+      ${(t.source_hits || []).length ? `<div class="hint" style="color:#b45309">⚠ 功能表里还有原片的具体内容:${t.source_hits.map(h => esc(h.segment) + ' ' + h.words.map(w => '「' + esc(w) + '」').join('')).join(';')}${t.source_retried ? '(已让 AI 改过一次)' : ''}</div>` : ''}
+      <table class="bp-tbl"><tr><th>段</th><th>位置</th><th>作用</th><th>必须保留</th><th>可以换</th><th>处理</th><th>锁定项</th><th>理由</th></tr>${t.rows.map(x => `<tr class="${x.treatment === '新题目没有这块可删' ? 'bp-tr-del' : ''}"><td>${esc(x.segment)}</td><td style="white-space:nowrap">${pct(x.position[0])}–${pct(x.position[1])}</td><td>${esc(x.function)}</td><td>${esc(x.keep)}</td><td>${esc(x.swap)}</td><td>${esc(x.treatment)}${x.merge_into && x.treatment === '合并到相邻章' ? '→' + esc(x.merge_into) : ''}</td><td>${esc((x.locks || []).join('、'))}</td><td>${esc(x.reason)}${(x.notes || []).length ? `<div class="hint" style="margin:0">${x.notes.map(esc).join(';')}</div>` : ''}</td></tr>`).join('')}</table>
+      ${t.reversal && t.reversal.new_reversal ? `<div style="font-size:13px">新题目自己的反转:${esc(t.reversal.new_reversal)}${(t.reversal.fact_ids || []).length ? '(' + esc(t.reversal.fact_ids.join(',')) + ')' : ''}${(t.reversal.conflicts || []).length ? `<div class="hint">相反的事实:${t.reversal.conflicts.map(c => esc(typeof c === 'string' ? c : JSON.stringify(c))).join(';')}</div>` : ''}</div>` : ''}
+      <div class="hint">锁定项(必须有去处):${(t.locks || []).map(l => esc(l.id)).join('、')}</div></details>`;
+  }
+  el.innerHTML = html;
+}
+async function bpHold(choice, btn) {
+  const body = { choice };
+  if (choice === 'write' && !confirm('按现在的蓝图写稿?蓝图审没过的问题可能会出现在稿子里。')) return;
+  if (choice === 'reframe' && !confirm('回到写前分析,按蓝图审没过的原因推荐别的框架?')) return;
+  if (choice === 'retopic') {
+    const t = (document.getElementById('bp-retopic').value || '').trim();
+    if (!t) { alert('新题目是空的'); return; }
+    if (!confirm('把题目改成「' + t + '」,按新题目重新挑框架?原题目会留在记录里。')) return;
+    body.title = t;
+  }
+  btn.disabled = true;
+  try { await api('/api/runs/' + currentRunId + '/blueprint-hold', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); bpRenderedKey = null; loadRunDetail(); }
+  catch (e) { alert('没成功:' + e.message); btn.disabled = false; }
+}
+
 function renderRetentionCheck(r) {
   const el = document.getElementById('ret-panel');
   const c = r.checks && r.checks.retention;
@@ -7004,9 +7125,22 @@ async function saveReframeSettings() {
     st.textContent = r.auto_max ? '已保存:最多自动试 ' + r.auto_max + ' 个(下次你从推荐里选框架时生效)' : '已保存:不自动试';
   } catch (e) { st.textContent = '保存失败:' + e.message; }
 }
+// 蓝图方式(v1.73)
+async function loadBlueprintSettings() {
+  try { const r = await api('/api/blueprint-settings'); document.querySelectorAll('input[name=bp-mode]').forEach(x => { x.checked = x.value === r.mode; }); }
+  catch (e) { document.getElementById('bp-mode-status').textContent = '读取失败:' + e.message; }
+}
+async function saveBlueprintSettings() {
+  const st = document.getElementById('bp-mode-status');
+  const v = (document.querySelector('input[name=bp-mode]:checked') || {}).value;
+  if (!v) { st.textContent = '先选一种'; return; }
+  try { const r = await api('/api/blueprint-settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: v }) }); st.textContent = '已保存:' + r.label + '(之后新画的蓝图生效)'; }
+  catch (e) { st.textContent = '保存失败:' + e.message; }
+}
 async function loadSettings() {
   loadSearchSettings();
   loadReframeSettings();
+  loadBlueprintSettings();
   await loadVideoBinding(); // 视频网站绑定状态与会话有效性由此刷新
   const cfg = await api('/api/settings');
   settingsCache = cfg;
