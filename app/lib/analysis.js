@@ -780,6 +780,16 @@ function parseJsonLoose(text) {
 
 // 单次 LLM 调用 + 流水记录(与 runGeneration 的 attempts 同结构)
 // opts 原样交给 llmCall(如 allowPartial:断流时把已收到的正文交回,由调用方续写)
+function mergeAttempts(a, b) {
+  const seen = new Set(), out = [];
+  [...(Array.isArray(a) ? a : []), ...(Array.isArray(b) ? b : [])].forEach(x => {
+    if (!x) return;
+    const k = x.ts + '|' + x.label + '|' + x.secs + '|' + x.ok;
+    if (seen.has(k)) return;
+    seen.add(k); out.push(x);
+  });
+  return out.sort((x, y) => String(x.ts).localeCompare(String(y.ts))).slice(-100);
+}
 async function callWithLog(run, cfg, messages, label, opts) {
   const pipeline = require('./pipeline'); // 延迟加载,避免与 pipeline 循环依赖
   const t0 = Date.now();
@@ -790,7 +800,8 @@ async function callWithLog(run, cfg, messages, label, opts) {
     if (run.ephemeral) { run.attempts = [...(run.attempts || []), { ts: new Date().toISOString(), label, provider: cfg.provider || '', model: cfg.model || '', ...extra }].slice(-100); return; }
     const fresh = store.getRun(run.id) || run;
     if (fresh.cancel_requested) run.cancel_requested = true;
-    run.attempts = [...(run.attempts || []), { ts: new Date().toISOString(), label, provider: cfg.provider || '', model: cfg.model || '', ...extra }].slice(-100);
+    // v1.80:同一任务可能有两个检查同时跑,各自的 attempts 合并,不互相覆盖
+    run.attempts = mergeAttempts(fresh.attempts, [...(run.attempts || []), { ts: new Date().toISOString(), label, provider: cfg.provider || '', model: cfg.model || '', ...extra }]);
     fresh.attempts = run.attempts;
     if (run.cancel_requested) fresh.cancel_requested = run.cancel_requested;
     store.saveRun(fresh);
@@ -1536,5 +1547,5 @@ module.exports = { keepNotesText, buildSourceMapping, runSourceMapping, setPovMo
   loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, HOOK_TYPES, hookType, acceptedGaps, verifyLedger,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,
-  frameworkVars, fillVars, callJson, callWithLog, getTarget, setTarget, needsList, mergeAdjust, runAutoAdjust, reviseItem, auditTitle, evidenceWeak, FACTS_MIN, ledgerPending, ledgerDeviations, ledgerChoice, devPct, devRefresh, altScenario
+  frameworkVars, fillVars, callJson, callWithLog, mergeAttempts, getTarget, setTarget, needsList, mergeAdjust, runAutoAdjust, reviseItem, auditTitle, evidenceWeak, FACTS_MIN, ledgerPending, ledgerDeviations, ledgerChoice, devPct, devRefresh, altScenario
 };

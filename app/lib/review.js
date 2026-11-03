@@ -692,7 +692,7 @@ async function translateFactBlocks(runId, v) {
   fresh.review = fresh.review || {};
   fresh.review.zh = fresh.review.zh || {};
   fresh.review.zh.byHash = { ...(fresh.review.zh.byHash || {}), ...tr };
-  if (run.attempts) fresh.attempts = run.attempts;
+  if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
   store.saveRun(fresh);
 }
 
@@ -729,12 +729,19 @@ async function rawCall(run, cfg, prompt, label) {
   return an().callWithLog(run, cfg, [{ role: 'user', content: prompt }], label);
 }
 
+const TRANSLATE_PARALLEL = 3;
 async function translateTexts(run, cfg, texts, label) {
   const out = {};
   const items = [...new Set(texts.filter(t => t && (needsZh(t) || hasForeign(t))))];
+  // v1.80:先分好批,再最多 TRANSLATE_PARALLEL 批同时翻
+  const batches = [];
   let batch = [], size = 0;
-  const flush = async () => {
-    if (!batch.length) return;
+  for (const t of items) {
+    if (batch.length && size + t.length > TRANSLATE_BATCH_CHARS) { batches.push(batch); batch = []; size = 0; }
+    batch.push(t); size += t.length;
+  }
+  if (batch.length) batches.push(batch);
+  const one = async batch => {
     const keyed = {};
     batch.forEach((t, i) => { keyed['T' + (i + 1)] = t; });
     const prompt = an().fillVars(readPrompt('translate.md'), { items: Object.keys(keyed).map(k => '===' + k + '===\n' + keyed[k]).join('\n') });
@@ -746,13 +753,10 @@ async function translateTexts(run, cfg, texts, label) {
       Object.assign(got, parseBlocks(r2.content, r2.stopReason === 'max_tokens'));
     }
     Object.keys(keyed).forEach(k => { if (got[k]) out[hash(keyed[k])] = got[k]; });
-    batch = []; size = 0;
   };
-  for (const t of items) {
-    if (size + t.length > TRANSLATE_BATCH_CHARS) await flush();
-    batch.push(t); size += t.length;
-  }
-  await flush();
+  let next = 0;
+  const worker = async () => { while (next < batches.length) { const b = batches[next++]; await one(b); } };
+  await Promise.all(Array.from({ length: Math.min(TRANSLATE_PARALLEL, batches.length) }, worker));
   return out;
 }
 
@@ -859,7 +863,7 @@ async function translateRun(runId) {
     fresh.review = fresh.review || {};
     fresh.review.zh = fresh.review.zh || {};
     fresh.review.zh.byHash = { ...(fresh.review.zh.byHash || {}), ...tr };
-    if (run.attempts) fresh.attempts = run.attempts;
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
     // 问题在哪(v1.72):复审和论点核对的问题还没有中文大白话原因的,一起补(用上面刚翻好的中文)
     let whyErr = '';
@@ -1449,7 +1453,7 @@ async function runPass(runId, kind) {
     fresh.steps = { ...(fresh.steps || {}), [P.step]: { status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString(), issues: issues.length, changed: changed.length, ...(growthRejected.length ? { growth_rejected: growthRejected.length } : {}), ...(edits.length ? { edits: edits.filter(e => e.ok).length, edits_failed: edits.filter(e => !e.ok).length } : {}), ...(factcheck ? { facts: arr(factcheck.items).length, facts_wrong: arr(factcheck.items).filter(x => x.grade === 'E').length, facts_error: factcheck.error || '' } : {}) } };
     if (kind === 'check') { delete fresh.steps.final_review; delete fresh.steps.reverse_audit; if (fresh.review.audit) fresh.review.audit = null; }
     if (kind === 'final' && fresh.review.audit) fresh.review.audit.used_selection = (fresh.review.audit.selection || null);
-    if (run.attempts) fresh.attempts = run.attempts;
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
     return { ok: true, issues: issues.length, changed };
   } catch (e) {
@@ -1699,7 +1703,7 @@ async function runReverseAudit(runId) {
       truncated: r.truncated, selection: null
     };
     fresh.steps = { ...(fresh.steps || {}), reverse_audit: { status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString(), issues: issues.length, score } };
-    if (run.attempts) fresh.attempts = run.attempts;
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
     return { ok: true, issues: issues.length, score };
   } catch (e) {
@@ -2234,7 +2238,7 @@ async function runFinal(runId) {
       ...(finalReverted ? { patch_reverted: { at: finalReverted.at, before: finalReverted.before, after: finalReverted.after, from: '终审' } } : {})
     } };
     if (fresh.review.audit) fresh.review.audit.used_selection = (fresh.review.audit.selection || null);
-    if (run.attempts) fresh.attempts = run.attempts;
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
     return { ok: true, edits: allEdits.length };
   } catch (e) {
@@ -2266,7 +2270,7 @@ async function extractOpen(runId) {
     const rc = arr(fresh.review.final.rechecks).slice(-1)[0];
     if (rc) rc.open = items;
     fresh.steps = { ...(fresh.steps || {}), final_open: { status: 'done', finished_at: new Date().toISOString(), items: items.length } };
-    if (run.attempts) fresh.attempts = run.attempts;
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
   } catch (e) {
     const fresh = store.getRun(runId) || run;
@@ -2324,7 +2328,7 @@ async function runOpenOptions(runId) {
     if (!rc || openKey(rc.open) !== openKey(items)) throw new Error('出方案期间复审问题变了(又补改或重新整理过),这份方案作废,请再点一次');
     rc.options = options; rc.options_for = openKey(items);
     fresh.steps = { ...(fresh.steps || {}), final_options: { status: 'done', finished_at: new Date().toISOString(), items: Object.keys(options).length } };
-    if (run.attempts) fresh.attempts = run.attempts;
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
     return options;
   } catch (e) {
@@ -2416,11 +2420,11 @@ async function runFinalPatch(runId, body) {
       last.options = dg.options;
       if (!diagnosis.retry) {
         fresh.steps = { ...(fresh.steps || {}), final_review: { ...prevStep, ...(patch_reverted ? { patch_reverted: { ...patch_reverted, stopped: true } } : {}) } };
-        if (run.attempts) fresh.attempts = run.attempts;
+        if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
         store.saveRun(fresh);
         return { ok: true, reverted: true, stop: true };
       }
-      if (run.attempts) fresh.attempts = run.attempts;
+      if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
       store.saveRun(fresh);
       body = { ...dg.body, ...(body.autoRound ? { autoRound: body.autoRound } : {}) };
       setFinalStage(runId, '补改(自动重试第 ' + auto + ' 次)');
@@ -2499,7 +2503,7 @@ async function runFinalPatch(runId, body) {
       const tried = { at: new Date().toISOString(), picked: picked.map(x => x.id), choices: Object.fromEntries(picked.filter(chosen).map(x => [x.id, chosen(x).key])), note, report: s3.report, scores, verdict, open: markMissingQuotes(parseOpen(tb.OPEN), text, (run.audience || {}).target_language), edits: okNew.map(e => ({ chapter: e.chapter, category: e.category || '', old: e.old, new: e.new, reason: e.reason })), ...(structural ? { structural } : {}), ...(auto ? { auto, diagnosis } : {}), ...(body.autoRound ? { auto_round: body.autoRound } : {}), before: Math.round(before * 10) / 10, after: Math.round(after * 10) / 10 };
       if (rcF) rcF.reverted = arr(rcF.reverted).concat([tried]);
       fresh.steps = { ...(fresh.steps || {}), final_review: { ...prevStep, patch_reverted: { at: tried.at, before: tried.before, after: tried.after } } };
-      if (run.attempts) fresh.attempts = run.attempts;
+      if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
       store.saveRun(fresh);
       return { ok: true, reverted: true };
     }
@@ -2520,7 +2524,7 @@ async function runFinalPatch(runId, body) {
     if (text !== start) writeScript(fresh, text);
     fresh.steps = { ...(fresh.steps || {}), final_review: { ...prevStep, status: 'done', patch: true, secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: new Date().toISOString(),
       issues: issues.length, changed: changed.length, edits: allEdits.filter(e => e.ok).length, edits_failed: allEdits.filter(e => !e.ok).length, verdict } };
-    if (run.attempts) fresh.attempts = run.attempts;
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
     return { ok: true, edits: okNew.length };
   } catch (e) {
@@ -2573,7 +2577,7 @@ async function rerunLastRecheck(runId) {
     fresh.review.final.scores_after = scores;
     fresh.review.final.verdict = verdict;
     fresh.steps = { ...(fresh.steps || {}), final_review: { ...prevStep, status: 'done', verdict, finished_at: new Date().toISOString() } };
-    if (run.attempts) fresh.attempts = run.attempts;
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
   } catch (e) {
     const fresh = store.getRun(runId) || run;
@@ -2813,7 +2817,7 @@ async function runDeai(runId, trackKey) {
     fresh.review.zh = { ...(fresh.review.zh || {}), byHash: { ...((fresh.review.zh || {}).byHash || {}), ...zh } };
     fresh.review.deai = { at: new Date().toISOString(), track: tr.key, track_name: tr.name, diagnosis: report, items, base_hash: hash(base), truncated: !!r.truncated, applied: null, ...(skippedOpening ? { skipped_opening: skippedOpening } : {}), ...(guarded.cut_claim ? { skipped_claim: guarded.cut_claim } : {}), ...(guarded.cut_options ? { dropped_options: guarded.cut_options } : {}) };
     fresh.steps = { ...(fresh.steps || {}), deai: { status: 'done', stage: '等你选改法', track: tr.key, secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: new Date().toISOString(), items: items.length } };
-    if (run.attempts) fresh.attempts = run.attempts;
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
     return { ok: true };
   } catch (e) {
@@ -2856,7 +2860,7 @@ async function applyDeai(runId, picks) {
     fresh.review.deai = { ...fresh.review.deai, applied: { at: new Date().toISOString(), picks: chosen, ok: okN, failed: allEdits.length - okN } };
     if (applied.next !== start) writeScript(fresh, applied.next);
     fresh.steps = { ...(fresh.steps || {}), deai: { ...((fresh.steps || {}).deai || {}), status: 'done', stage: '已修改', secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: new Date().toISOString(), edits: okN } };
-    if (run.attempts) fresh.attempts = run.attempts;
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
     refreshOpeningIfStale(runId);
   } catch (e) {
@@ -2913,8 +2917,17 @@ async function runPasses(runId, from) {
       }
     }
     const order = from === 'final' ? ['final', 'claim', 'options', 'openfix', 'opening'] : from === 'autofix' ? ['claim', 'autopatch', 'openfix', 'opening'] : from === 'audit' ? ['audit'] : ['check', 'opening', 'audit'];
-    for (const k of order) {
+    for (let oi = 0; oi < order.length; oi++) {
+      const k = order[oi];
       passRunning.set(runId, PASS_LABELS[k] || k);
+      // v1.80:二稿出来后「开头单独审」和「二稿审稿报告」都只读二稿、各存各的结果,同时跑
+      if (k === 'opening' && order[oi + 1] === 'audit') {
+        passRunning.set(runId, PASS_LABELS.opening + ' + ' + PASS_LABELS.audit + '(同时跑)');
+        const [, au] = await Promise.allSettled([runOpeningCard(runId), runReverseAudit(runId)]);
+        oi++;
+        if (au.status === 'rejected') break;
+        continue;
+      }
       if (k === 'opening') { try { await runOpeningCard(runId); } catch (e) {} continue; }
       if (k === 'options') {
         // 平均不到 8 分:出好方案后接着自动补改,标签先说清楚,页面上提示不用点
@@ -3389,7 +3402,7 @@ async function suggestFix(runId, body) {
     const fresh = store.getRun(runId) || run;
     const it = applyTarget(fresh.review.final, source, id).item;
     if (it) it.ai_fix = af;
-    if (run.attempts) fresh.attempts = run.attempts;
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
     return fresh;
   };
@@ -3553,7 +3566,7 @@ async function runClaimCheck(runId) {
       ...(verdict === '不成立' && fixTitle && fixTitle !== curTitle ? { fix_title: fixTitle, fix_title_zh: String(out.fix_title_zh || '').trim(), title_for: curTitle } : {}),
       issues, protect: arr(out.protect).map(String).filter(q => q.trim() && locate(text, q)), fixes: prevFixes };
     fresh.steps = { ...(fresh.steps || {}), claim_check: { status: 'done', finished_at: new Date().toISOString(), verdict, blocking: claimBlocking(fresh.review.final.claim_check) } };
-    if (run.attempts) fresh.attempts = run.attempts;
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
     return fresh.review.final.claim_check;
   } catch (e) {
@@ -3756,7 +3769,7 @@ async function runOpeningFix(runId) {
     if (fresh.review.final) fresh.review.final.opening_fix = rec;
     fresh.steps = { ...(fresh.steps || {}), opening_fix: { status: passed ? 'done' : 'failed', secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: rec.at, edits: applied, passed,
       ...(passed ? {} : { error: '试了 ' + tries.length + ' 次开头还没过:' + rec.after.join(';') + (applied ? '(改好的 ' + applied + ' 处已保存)' : '(稿子没变)') }) } };
-    if (run.attempts) fresh.attempts = run.attempts;
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
     return { ok: passed, edits: applied };
   } catch (e) {
@@ -3845,7 +3858,7 @@ async function runOpeningCard(runId) {
       verdict: hard.issues.length ? '建议改' : String(out.verdict || ''), hard
     };
     fresh.steps = { ...(fresh.steps || {}), opening_card: { status: 'done', finished_at: new Date().toISOString() } };
-    if (run.attempts) fresh.attempts = run.attempts;
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
   } catch (e) {
     const fresh = store.getRun(runId) || run;
@@ -4042,7 +4055,7 @@ async function rewriteChapter(runId, chId, note, opts) {
     fresh.review.zh = fresh.review.zh || {};
     fresh.review.zh.byHash = { ...(fresh.review.zh.byHash || {}), [hash(text)]: out.zh.trim() };
   }
-  if (run.attempts) fresh.attempts = run.attempts;
+  if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
   store.saveRun(fresh);
   refreshOpeningIfStale(runId);
   return { ok: true, chapter: chId, reply: out.reply || '' };
@@ -4087,4 +4100,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

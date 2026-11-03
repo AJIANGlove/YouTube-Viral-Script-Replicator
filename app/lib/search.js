@@ -8,6 +8,7 @@ const pl = () => require('./pipeline');
 
 const SEARCH_TIMEOUT_MS = 60 * 1000;
 const MAX_QUERIES = 8;
+const SEARCH_PARALLEL = 3;
 const SUMMARY_MAX = 700;
 const CONTENT_MAX = 1500; // 事实核验要正文时的长度上限
 const QUOTE_MAX = 240; // 落盘的原文摘录长度
@@ -110,18 +111,20 @@ async function webSearch(query, oriQuestion, cfg, opt) {
 // opt.max 改查询上限,opt.content / opt.count 传给 webSearch
 async function runQueries(queries, oriQuestion, cfg, opt) {
   opt = opt || {};
-  const out = [];
-  let n = 0;
-  for (const item of (Array.isArray(queries) ? queries : []).slice(0, opt.max || MAX_QUERIES)) {
-    const q = typeof item === 'string' ? { query: item } : (item || {});
-    try {
-      const r = await webSearch(q.query, oriQuestion, cfg, opt);
-      r.results.forEach(x => { x.ref = 'R' + (++n); });
-      out.push({ ...q, results: r.results });
-    } catch (e) {
-      out.push({ ...q, results: [], error: e.message });
+  // v1.80:最多 SEARCH_PARALLEL 条同时搜;结果按原顺序排、按原顺序编号(和一条条搜时一样)
+  const list = (Array.isArray(queries) ? queries : []).slice(0, opt.max || MAX_QUERIES).map(item => typeof item === 'string' ? { query: item } : (item || {}));
+  const out = new Array(list.length);
+  let next = 0;
+  const worker = async () => {
+    while (next < list.length) {
+      const i = next++, q = list[i];
+      try { const r = await webSearch(q.query, oriQuestion, cfg, opt); out[i] = { ...q, results: r.results }; }
+      catch (e) { out[i] = { ...q, results: [], error: e.message }; }
     }
-  }
+  };
+  await Promise.all(Array.from({ length: Math.min(SEARCH_PARALLEL, list.length) }, worker));
+  let n = 0;
+  out.forEach(b => b.results.forEach(x => { x.ref = 'R' + (++n); }));
   return out;
 }
 
