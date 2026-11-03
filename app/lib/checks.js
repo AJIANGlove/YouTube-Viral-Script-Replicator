@@ -226,7 +226,9 @@ function checkBlueprint(text, tools, videoGoal) {
 // 每章要写 answers_prev(接上一章哪个问题)、new_lens(新角度)、leaves_question(留给下一章的问题,最后一章可空);
 // 一个事实编号只能分给一章(最后一章可以回扣)
 const PROG_LABEL = { answers_prev: '接上一章哪个问题', new_lens: '新角度', leaves_question: '留给下一章的问题' };
-function checkProgression(text) {
+// opt.loose(v1.79 按功能重排):回顾(recap_ids)、账本行(L…)、opt.skip 里的事实不算;一条事实在 3 章以上展开讲才列进 soft,不算硬问题
+function checkProgression(text, opt) {
+  opt = opt || {};
   let chs;
   try { chs = (JSON.parse(stripFence(text)) || {}).chapters || []; } catch (e) { return { ok: null, issues: [], detail: '蓝图 JSON 解析失败' }; }
   if (!Array.isArray(chs) || chs.length < 2) return { ok: null, issues: [], detail: '章节太少,不查' };
@@ -238,10 +240,19 @@ function checkProgression(text) {
     if (miss.length) missing.push(idOf(c, i) + ' 缺「' + miss.map(k => PROG_LABEL[k]).join('」「') + '」');
   });
   const owner = {};
-  chs.slice(0, n - 1).forEach((c, i) => (Array.isArray((c || {}).fact_ids) ? c.fact_ids : []).forEach(f => { const k = String(f).trim(); if (k) (owner[k] = owner[k] || new Set()).add(idOf(c, i)); }));
-  const dup = Object.keys(owner).filter(k => owner[k].size > 1).map(k => k + '(' + [...owner[k]].join('、') + ')');
+  const skip = new Set((opt.skip || []).map(x => String(x).trim()));
+  chs.slice(0, n - 1).forEach((c, i) => {
+    const recap = new Set((Array.isArray((c || {}).recap_ids) ? c.recap_ids : []).map(x => String(x).trim()));
+    (Array.isArray((c || {}).fact_ids) ? c.fact_ids : []).forEach(f => {
+      const k = String(f).trim();
+      if (!k || (opt.loose && (recap.has(k) || skip.has(k) || /^L\d+$/i.test(k)))) return;
+      (owner[k] = owner[k] || new Set()).add(idOf(c, i));
+    });
+  });
+  const dup = Object.keys(owner).filter(k => owner[k].size >= (opt.loose ? 3 : 2)).map(k => k + '(' + [...owner[k]].join('、') + ')');
   const issues = [];
   if (missing.length) issues.push('这些章没写清问题链或新角度:' + missing.join(';'));
+  if (opt.loose) return { ok: !issues.length, issues, soft: dup.length ? ['这些事实在 3 章以上都是展开讲(回顾不算,最后一章除外):' + dup.join(';')] : [], missing: missing.length, dup_facts: dup.length };
   if (dup.length) issues.push('这些事实分给了 2 章以上(最后一章除外):' + dup.join(';'));
   return { ok: !issues.length, issues, missing: missing.length, dup_facts: dup.length };
 }

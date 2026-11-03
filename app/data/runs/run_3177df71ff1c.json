@@ -1,6 +1,6 @@
 {
   "id": "run_3177df71ff1c",
-  "status": "running",
+  "status": "blueprint_hold",
   "current_step": 1,
   "steps": {
     "analysis": {
@@ -14,17 +14,630 @@
       "finished_at": "2026-11-03T11:14:22.459Z"
     },
     "blueprint": {
-      "status": "running",
-      "started_at": "2026-11-03T11:24:19.584Z"
+      "status": "done",
+      "secs": 222.9,
+      "chars": 19996,
+      "stop_reason": "end_turn",
+      "finished_at": "2026-11-03T11:44:02.514Z",
+      "gate_retry": {
+        "reason": "漂移:蓝图结束于 26:00,目标 24:00(差 120s)",
+        "attempt": 1
+      }
     },
     "function_table": {
       "status": "done",
       "secs": 114.8,
       "finished_at": "2026-11-03T11:26:14.364Z"
+    },
+    "blueprint_review": {
+      "status": "held",
+      "secs": 561.5,
+      "finished_at": "2026-11-03T11:44:02.494Z",
+      "revised": 2,
+      "rounds": [
+        {
+          "at": "2026-11-03T11:35:48.350Z",
+          "pass": false,
+          "items": [
+            {
+              "key": "progression",
+              "name": "递进",
+              "pass": false,
+              "ai_pass": false,
+              "problems": [
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "这些事实分给了 2 章以上(最后一章除外):F03(CH01、CH11);F01(CH02、CH03、CH09);L1(CH02、CH08、CH09);L2(CH02、CH07);L4(CH02、CH03、CH05);L5(CH03、CH09);L7(CH04、CH07);L8(CH04、CH07);L9(CH04、CH10);F34(CH04、CH10);L12(CH04、CH06);F10(CH04、CH06);L14(CH05、CH12);F28(CH09、CH12)"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH05 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH05"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH06 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH06"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH08 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH08"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH09 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH09"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH11 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH11"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH14 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH14"
+                },
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH03",
+                  "text": "F01原料费25%、L4夏季月收入1664万已在CH02用过,CH03再用是重复",
+                  "fix": "CH03直接报L5=416万、L6=240万扣除结果,删除F01、L4事实编号,只在purpose里回调'1664万'数字即可"
+                },
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH05",
+                  "text": "L4夏季月收入1664万、L14夏季月利润504万在CH05用过后,CH12又用L14,重复",
+                  "fix": "CH12删除L14事实编号,purpose里直接写'여름월경영이익504만'文字回调即可"
+                },
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH07",
+                  "text": "L2日销80个、L7租金、L8水电费在CH02、CH04已用,CH07再用是重复",
+                  "fix": "CH07删除L2、L7、L8事实编号,purpose里写'앞서본임대료·광열비'文字回调+F11/F12峰值时段新信息即可"
+                },
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH04",
+                  "text": "L12废弃损失、F10废弃率在CH04、CH06都用,重复",
+                  "fix": "CH04只报废弃数字29万作为隐性成本之一,删除F10;CH06用F09+F10展开废弃机制+F20案例,保留完整逻辑"
+                },
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH10",
+                  "text": "F34卡手续费、L9金额在CH04、CH10都用,重复",
+                  "fix": "CH04删除F34、L9事实编号,只报'카드수수료41만6천'数字;CH10用F37配送+F34卡费组合讲平台费,保留F34、L9"
+                },
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH09",
+                  "text": "F28最低工资在CH09、CH12都用,重复",
+                  "fix": "CH09删除F28事实编号,purpose里写'최저임금10,030원'文字即可;CH12保留F28作反转支撑"
+                },
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH11",
+                  "text": "F03季节差在CH01、CH11都用,重复",
+                  "fix": "CH11删除F03,换用F05冬季空荡观察作打穿案例,F03只在CH01归因用"
+                },
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH05",
+                  "text": "CH05是等级章标注但实际不是等级结构,缺level_focus、level_new_info不是问题;若确实要做等级可按夏季1-3个月逐月递减展示,但当前单月判决更清晰",
+                  "fix": "删除CH05的is_leveled标注,保持单月判决结构"
+                },
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH06",
+                  "text": "CH06标等级章但实际是废弃两难单一机制,缺level_focus、level_new_info不是问题",
+                  "fix": "删除CH06的is_leveled标注"
+                },
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH08",
+                  "text": "CH08标等级章但实际是基础款vs溢价款二元对照,不是逐级递进;若要做等级可按토핑0-1-2-3个逐级展示客单与毛利变化,但当前对照更有力",
+                  "fix": "删除CH08的is_leveled标注,保持引流款vs利润款对照结构"
+                },
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH09",
+                  "text": "CH09标等级章但实际是错误公式vs正确公式二元对照,不是等级",
+                  "fix": "删除CH09的is_leveled标注"
+                },
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH11",
+                  "text": "CH11标等级章但实际是盈亏平衡线判决,不是等级;若要做等级可按日销20-35-50-80个逐级展示盈亏状态,但当前判决更锐利",
+                  "fix": "删除CH11的is_leveled标注,保持盈亏线判决结构"
+                },
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH14",
+                  "text": "CH14标等级章但实际是留存vs获客成本对照,不是等级;若要做等级可按단골50-100-200名逐级展示终身价值与维护策略,但当前对照更清晰",
+                  "fix": "删除CH14的is_leveled标注"
+                }
+              ],
+              "notes": []
+            },
+            {
+              "key": "reveal",
+              "name": "揭示顺序",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": []
+            },
+            {
+              "key": "thesis",
+              "name": "标题和主线",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": []
+            },
+            {
+              "key": "facts",
+              "name": "事实支撑",
+              "pass": false,
+              "ai_pass": false,
+              "problems": [
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH15",
+                  "text": "CH15列举6项纪律清单但fact_ids为空,看不出각项对应哪些事实",
+                  "fix": "补充fact_ids:①원가占比관리对应F01/L5,②토핑挂载율对应F14/F15,③폐기관리对应F09/F10,④평당효율对应F11/F12,⑤가치정가对应F17/F18,⑥재방문对应F23/F24"
+                }
+              ],
+              "notes": [
+                {
+                  "by": "程序",
+                  "hard": false,
+                  "text": "CH15 没写事实编号"
+                }
+              ]
+            },
+            {
+              "key": "reversal",
+              "name": "反转",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": [
+                {
+                  "by": "程序",
+                  "hard": false,
+                  "text": "写前分析的反转验证:事实 F25 설빙 겨울 신메뉴로 월매출 회복(10월 78%→12월 115%) → 대형 체인은 사계절 메뉴 개발 성공 가능. 본 논점은 중소 빙수 전문점에 한정, FS13에서 '대형 체인 예외' 명시.、F26 빙수 사계절화 평가(시즌 메뉴→국민 디저트) → 커피전문점·디저트카페의 포트폴리오 전략. F06/F07 커피전문점은 빙수 외 음료 매출 70% 유지, 빙수 전문점과 다름. F19 빙수전문점 폐업으로 구분.、F27 월2천 순이익 사례 → 2024년 여름 폭염 예외 케이스('올해 특히 더워서'), 세금 600만·연평균 고려 시 일반화 불가. FS13에서 '극단 예외' 명시. 和反转结论相反(核心反转'12개월 고정비를 3개월이 갚는다'는 F02 설빙 재무제표(2014→2015 급락)와 F03/F04 계절 매출 격차 증언으로 확립. F01 원가율 25%는 '판매 시점 계산'이라는 오해의 기준점. F20/F21/F22는 자영업 구조적 취약성, L24/L29는 자가착취 반전. 상반 사실 F25/F26/F27은 모두 예외(대형 체인 신메뉴·사계절 포트폴리오·극단 폭염)로 경계 지어 본 논점 '빙수 전문점의 계절 집중 구조'를 보호. 장부 L24 연간 경영이익 -258만(점주 인건비 제외)과 L29 점주 인건비 3,852만을 대조하면 PK07 자가착취 반전 성립.)"
+                }
+              ]
+            },
+            {
+              "key": "forced",
+              "name": "硬套",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": []
+            },
+            {
+              "key": "deletion",
+              "name": "删除是否成立",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": []
+            }
+          ],
+          "summary": "两项不过:①同一批事实(原料费、夏季收入、租金水电等)在多个章节反复使用,后面章节没带来新信息,观众会觉得重复;6个等级章实际都不是等级结构,需要删除等级标注。②第15章的6项纪律清单缺少对应事实编号。其余各项通过。",
+          "ai_error": ""
+        },
+        {
+          "at": "2026-11-03T11:39:57.625Z",
+          "pass": false,
+          "items": [
+            {
+              "key": "progression",
+              "name": "递进",
+              "pass": false,
+              "ai_pass": false,
+              "problems": [
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "这些事实分给了 2 章以上(最后一章除外):F01(CH02、CH15);L5(CH03、CH15);F09(CH06、CH15);F10(CH06、CH15);F11(CH07、CH15);F12(CH07、CH15);F14(CH08、CH15);F15(CH08、CH15);F17(CH09、CH15);F18(CH09、CH15);F23(CH14、CH15);F24(CH14、CH15)"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH05 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH05",
+                  "fix": "补充字段或改为非等级章"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH06 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH06",
+                  "fix": "补充字段或改为非等级章"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH08 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH08",
+                  "fix": "补充字段或改为非等级章"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH09 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH09",
+                  "fix": "补充字段或改为非等级章"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH11 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH11",
+                  "fix": "补充字段或改为非等级章"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH14 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH14",
+                  "fix": "补充字段或改为非等级章"
+                },
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH15",
+                  "text": "CH15把F01/L5、F14/F15、F09/F10、F11/F12、F17/F18、F23/F24这些事实又重复列了一遍，但这些事实在CH02、CH08、CH06、CH07、CH09、CH14各章已经展开过，CH15没有带来新信息，只是把前面的事实编号重新排列",
+                  "fix": "CH15改为元认知层：不再重复前面的事实编号，而是讲'这六项纪律为什么单独容易、同时难'的机制（例如：원가관리压低时폐기增加、토핑율提高时제조时间拉长影响평당效율、재방문优惠侵蚀마진等trade-off），用新的trade-off机制作为CH15的新信息"
+                }
+              ],
+              "notes": []
+            },
+            {
+              "key": "reveal",
+              "name": "揭示顺序",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": []
+            },
+            {
+              "key": "thesis",
+              "name": "标题和主线",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": []
+            },
+            {
+              "key": "facts",
+              "name": "事实支撑",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": []
+            },
+            {
+              "key": "reversal",
+              "name": "反转",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": [
+                {
+                  "by": "程序",
+                  "hard": false,
+                  "text": "写前分析的反转验证:事实 F25 설빙 겨울 신메뉴로 월매출 회복(10월 78%→12월 115%) → 대형 체인은 사계절 메뉴 개발 성공 가능. 본 논점은 중소 빙수 전문점에 한정, FS13에서 '대형 체인 예외' 명시.、F26 빙수 사계절화 평가(시즌 메뉴→국민 디저트) → 커피전문점·디저트카페의 포트폴리오 전략. F06/F07 커피전문점은 빙수 외 음료 매출 70% 유지, 빙수 전문점과 다름. F19 빙수전문점 폐업으로 구분.、F27 월2천 순이익 사례 → 2024년 여름 폭염 예외 케이스('올해 특히 더워서'), 세금 600만·연평균 고려 시 일반화 불가. FS13에서 '극단 예외' 명시. 和反转结论相反(核心反转'12개월 고정비를 3개월이 갚는다'는 F02 설빙 재무제표(2014→2015 급락)와 F03/F04 계절 매출 격차 증언으로 확립. F01 원가율 25%는 '판매 시점 계산'이라는 오해의 기준점. F20/F21/F22는 자영업 구조적 취약성, L24/L29는 자가착취 반전. 상반 사실 F25/F26/F27은 모두 예외(대형 체인 신메뉴·사계절 포트폴리오·극단 폭염)로 경계 지어 본 논점 '빙수 전문점의 계절 집중 구조'를 보호. 장부 L24 연간 경영이익 -258만(점주 인건비 제외)과 L29 점주 인건비 3,852만을 대조하면 PK07 자가착취 반전 성립.)"
+                }
+              ]
+            },
+            {
+              "key": "forced",
+              "name": "硬套",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": []
+            },
+            {
+              "key": "deletion",
+              "name": "删除是否成立",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": []
+            }
+          ],
+          "summary": "第15章把前面各章已经讲过的事实又重复列了一遍，没有新信息，观众会觉得在听总结而不是新内容。另外有6个等级章缺少必填字段。其他各项通过。",
+          "ai_error": "",
+          "after_revise": 1
+        },
+        {
+          "at": "2026-11-03T11:44:02.484Z",
+          "pass": false,
+          "items": [
+            {
+              "key": "progression",
+              "name": "递进",
+              "pass": false,
+              "ai_pass": false,
+              "problems": [
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH05 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH05",
+                  "fix": "CH05不是真正的等级章(只是单一判决),删除等级章标记或补填字段"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH06 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH06",
+                  "fix": "CH06不是真正的等级章(只讲배치赌注机制),删除等级章标记或补填字段"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH08 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH08",
+                  "fix": "CH08不是真正的等级章(只讲토핑조합),删除等级章标记或补填字段"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH09 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH09",
+                  "fix": "CH09不是真正的等级章(只讲정가공식),删除等级章标记或补填字段"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH11 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH11",
+                  "fix": "CH11不是真正的等级章(只讲손익분기),删除等级章标记或补填字段"
+                },
+                {
+                  "by": "程序",
+                  "hard": true,
+                  "text": "CH14 是等级章,没写 level_focus、level_new_info",
+                  "chapter": "CH14",
+                  "fix": "CH14不是真正的等级章(只讲단골자산),删除等级章标记或补填字段"
+                }
+              ],
+              "notes": []
+            },
+            {
+              "key": "reveal",
+              "name": "揭示顺序",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": []
+            },
+            {
+              "key": "thesis",
+              "name": "标题和主线",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": []
+            },
+            {
+              "key": "facts",
+              "name": "事实支撑",
+              "pass": false,
+              "ai_pass": false,
+              "problems": [
+                {
+                  "by": "AI",
+                  "hard": true,
+                  "chapter": "CH15",
+                  "text": "没写事实编号,讲的trade-off机制(원가관리↔폐기、토핑율↔평당효율、재방문↔마진)在事实表里没有对应事实",
+                  "fix": "要么在事实表里补充这些trade-off关系的事实依据(比如某个案例显示提高토핑率后평당销量下降),要么把CH15改写成用已有事实(F09/F10/F14/F15/F23/F24)重新组合说明동시달성难度,不靠新推理"
+                }
+              ],
+              "notes": [
+                {
+                  "by": "程序",
+                  "hard": false,
+                  "text": "CH15 没写事实编号"
+                }
+              ]
+            },
+            {
+              "key": "reversal",
+              "name": "反转",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": [
+                {
+                  "by": "程序",
+                  "hard": false,
+                  "text": "写前分析的反转验证:事实 F25 설빙 겨울 신메뉴로 월매출 회복(10월 78%→12월 115%) → 대형 체인은 사계절 메뉴 개발 성공 가능. 본 논점은 중소 빙수 전문점에 한정, FS13에서 '대형 체인 예외' 명시.、F26 빙수 사계절화 평가(시즌 메뉴→국민 디저트) → 커피전문점·디저트카페의 포트폴리오 전략. F06/F07 커피전문점은 빙수 외 음료 매출 70% 유지, 빙수 전문점과 다름. F19 빙수전문점 폐업으로 구분.、F27 월2천 순이익 사례 → 2024년 여름 폭염 예외 케이스('올해 특히 더워서'), 세금 600만·연평균 고려 시 일반화 불가. FS13에서 '극단 예외' 명시. 和反转结论相反(核心反转'12개월 고정비를 3개월이 갚는다'는 F02 설빙 재무제표(2014→2015 급락)와 F03/F04 계절 매출 격차 증언으로 확립. F01 원가율 25%는 '판매 시점 계산'이라는 오해의 기준점. F20/F21/F22는 자영업 구조적 취약성, L24/L29는 자가착취 반전. 상반 사실 F25/F26/F27은 모두 예외(대형 체인 신메뉴·사계절 포트폴리오·극단 폭염)로 경계 지어 본 논점 '빙수 전문점의 계절 집중 구조'를 보호. 장부 L24 연간 경영이익 -258만(점주 인건비 제외)과 L29 점주 인건비 3,852만을 대조하면 PK07 자가착취 반전 성립.)"
+                }
+              ]
+            },
+            {
+              "key": "forced",
+              "name": "硬套",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": []
+            },
+            {
+              "key": "deletion",
+              "name": "删除是否成立",
+              "pass": true,
+              "ai_pass": true,
+              "problems": [],
+              "notes": []
+            }
+          ],
+          "summary": "两个问题:①第5、6、8、9、11、14章被标记为等级章但没填level_focus和level_new_info,实际上这些章都不是真正的分级结构,删掉等级章标记即可。②第15章讲六项纪律之间的trade-off机制但没有事实支撑,需要补充事实或改写成用已有事实组合说明。",
+          "ai_error": "",
+          "after_revise": 2
+        }
+      ],
+      "items": [
+        {
+          "key": "progression",
+          "name": "递进",
+          "pass": false,
+          "ai_pass": false,
+          "problems": [
+            {
+              "by": "程序",
+              "hard": true,
+              "text": "CH05 是等级章,没写 level_focus、level_new_info",
+              "chapter": "CH05",
+              "fix": "CH05不是真正的等级章(只是单一判决),删除等级章标记或补填字段"
+            },
+            {
+              "by": "程序",
+              "hard": true,
+              "text": "CH06 是等级章,没写 level_focus、level_new_info",
+              "chapter": "CH06",
+              "fix": "CH06不是真正的等级章(只讲배치赌注机制),删除等级章标记或补填字段"
+            },
+            {
+              "by": "程序",
+              "hard": true,
+              "text": "CH08 是等级章,没写 level_focus、level_new_info",
+              "chapter": "CH08",
+              "fix": "CH08不是真正的等级章(只讲토핑조합),删除等级章标记或补填字段"
+            },
+            {
+              "by": "程序",
+              "hard": true,
+              "text": "CH09 是等级章,没写 level_focus、level_new_info",
+              "chapter": "CH09",
+              "fix": "CH09不是真正的等级章(只讲정가공식),删除等级章标记或补填字段"
+            },
+            {
+              "by": "程序",
+              "hard": true,
+              "text": "CH11 是等级章,没写 level_focus、level_new_info",
+              "chapter": "CH11",
+              "fix": "CH11不是真正的等级章(只讲손익분기),删除等级章标记或补填字段"
+            },
+            {
+              "by": "程序",
+              "hard": true,
+              "text": "CH14 是等级章,没写 level_focus、level_new_info",
+              "chapter": "CH14",
+              "fix": "CH14不是真正的等级章(只讲단골자산),删除等级章标记或补填字段"
+            }
+          ],
+          "notes": []
+        },
+        {
+          "key": "reveal",
+          "name": "揭示顺序",
+          "pass": true,
+          "ai_pass": true,
+          "problems": [],
+          "notes": []
+        },
+        {
+          "key": "thesis",
+          "name": "标题和主线",
+          "pass": true,
+          "ai_pass": true,
+          "problems": [],
+          "notes": []
+        },
+        {
+          "key": "facts",
+          "name": "事实支撑",
+          "pass": false,
+          "ai_pass": false,
+          "problems": [
+            {
+              "by": "AI",
+              "hard": true,
+              "chapter": "CH15",
+              "text": "没写事实编号,讲的trade-off机制(원가관리↔폐기、토핑율↔평당효율、재방문↔마진)在事实表里没有对应事实",
+              "fix": "要么在事实表里补充这些trade-off关系的事实依据(比如某个案例显示提高토핑率后평당销量下降),要么把CH15改写成用已有事实(F09/F10/F14/F15/F23/F24)重新组合说明동시달성难度,不靠新推理"
+            }
+          ],
+          "notes": [
+            {
+              "by": "程序",
+              "hard": false,
+              "text": "CH15 没写事实编号"
+            }
+          ]
+        },
+        {
+          "key": "reversal",
+          "name": "反转",
+          "pass": true,
+          "ai_pass": true,
+          "problems": [],
+          "notes": [
+            {
+              "by": "程序",
+              "hard": false,
+              "text": "写前分析的反转验证:事实 F25 설빙 겨울 신메뉴로 월매출 회복(10월 78%→12월 115%) → 대형 체인은 사계절 메뉴 개발 성공 가능. 본 논점은 중소 빙수 전문점에 한정, FS13에서 '대형 체인 예외' 명시.、F26 빙수 사계절화 평가(시즌 메뉴→국민 디저트) → 커피전문점·디저트카페의 포트폴리오 전략. F06/F07 커피전문점은 빙수 외 음료 매출 70% 유지, 빙수 전문점과 다름. F19 빙수전문점 폐업으로 구분.、F27 월2천 순이익 사례 → 2024년 여름 폭염 예외 케이스('올해 특히 더워서'), 세금 600만·연평균 고려 시 일반화 불가. FS13에서 '극단 예외' 명시. 和反转结论相反(核心反转'12개월 고정비를 3개월이 갚는다'는 F02 설빙 재무제표(2014→2015 급락)와 F03/F04 계절 매출 격차 증언으로 확립. F01 원가율 25%는 '판매 시점 계산'이라는 오해의 기준점. F20/F21/F22는 자영업 구조적 취약성, L24/L29는 자가착취 반전. 상반 사실 F25/F26/F27은 모두 예외(대형 체인 신메뉴·사계절 포트폴리오·극단 폭염)로 경계 지어 본 논점 '빙수 전문점의 계절 집중 구조'를 보호. 장부 L24 연간 경영이익 -258만(점주 인건비 제외)과 L29 점주 인건비 3,852만을 대조하면 PK07 자가착취 반전 성립.)"
+            }
+          ]
+        },
+        {
+          "key": "forced",
+          "name": "硬套",
+          "pass": true,
+          "ai_pass": true,
+          "problems": [],
+          "notes": []
+        },
+        {
+          "key": "deletion",
+          "name": "删除是否成立",
+          "pass": true,
+          "ai_pass": true,
+          "problems": [],
+          "notes": []
+        }
+      ],
+      "summary": "两个问题:①第5、6、8、9、11、14章被标记为等级章但没填level_focus和level_new_info,实际上这些章都不是真正的分级结构,删掉等级章标记即可。②第15章讲六项纪律之间的trade-off机制但没有事实支撑,需要补充事实或改写成用已有事实组合说明。",
+      "retopic": [],
+      "reasons_zh": [
+        "递进:CH05 是等级章,没写 level_focus、level_new_info;CH06 是等级章,没写 level_focus、level_new_info;CH08 是等级章,没写 level_focus、level_new_info 等 6 条",
+        "事实支撑:CH15 没写事实编号,讲的trade-off机制(원가관리↔폐기、토핑율↔평당효율、재방문↔마진)在事实表里没有对应事实"
+      ]
     }
   },
   "created_at": "2026-11-03T11:03:10.598Z",
-  "updated_at": "2026-11-03T11:26:14.372Z",
+  "updated_at": "2026-11-03T11:44:02.538Z",
   "asset_id": "the-economics-of-owning-a-bakery",
   "asset_name": "显性繁荣生意的减法拆解（排队火爆为何月底无钱）",
   "topic": "여름 메뉴인 줄 알았지? 빙수 장사의 진짜 수익 구조",
@@ -132,6 +745,69 @@
       "model": "claude-opus-5",
       "ok": true,
       "secs": 114.7,
+      "stop_reason": "end_turn"
+    },
+    {
+      "ts": "2026-11-03T11:30:30.227Z",
+      "label": "Step 1",
+      "provider": "lk888",
+      "model": "claude-opus-5",
+      "ok": true,
+      "secs": 225.8,
+      "stop_reason": "end_turn"
+    },
+    {
+      "ts": "2026-11-03T11:34:40.943Z",
+      "label": "Step 1 闸门重试",
+      "provider": "lk888",
+      "model": "claude-opus-5",
+      "ok": true,
+      "secs": 220.7,
+      "stop_reason": "end_turn"
+    },
+    {
+      "ts": "2026-11-03T11:35:48.342Z",
+      "label": "Step 1 蓝图审",
+      "provider": "lk888",
+      "model": "claude-opus-5",
+      "ok": true,
+      "secs": 37.3,
+      "stop_reason": "end_turn"
+    },
+    {
+      "ts": "2026-11-03T11:39:29.614Z",
+      "label": "Step 1 按蓝图审改(第 1 次)",
+      "provider": "lk888",
+      "model": "claude-opus-5",
+      "ok": true,
+      "secs": 221.3,
+      "stop_reason": "end_turn"
+    },
+    {
+      "ts": "2026-11-03T11:39:57.617Z",
+      "label": "Step 1 蓝图审(改后第 1 次)",
+      "provider": "lk888",
+      "model": "claude-opus-5",
+      "ok": true,
+      "secs": 28,
+      "stop_reason": "end_turn"
+    },
+    {
+      "ts": "2026-11-03T11:43:40.550Z",
+      "label": "Step 1 按蓝图审改(第 2 次)",
+      "provider": "lk888",
+      "model": "claude-opus-5",
+      "ok": true,
+      "secs": 222.9,
+      "stop_reason": "end_turn"
+    },
+    {
+      "ts": "2026-11-03T11:44:02.474Z",
+      "label": "Step 1 蓝图审(改后第 2 次)",
+      "provider": "lk888",
+      "model": "claude-opus-5",
+      "ok": true,
+      "secs": 21.9,
       "stop_reason": "end_turn"
     }
   ],
@@ -8433,7 +9109,88 @@
       "wpm": 113,
       "from": "default",
       "source_wpm": 188,
-      "label": "113 词/分钟(语言默认值),原片 188"
+      "label": "113 词/分钟(语言默认值),原片 188",
+      "rescaled_chapters": 2
+    },
+    "retention": {
+      "ok": true,
+      "caught": 9,
+      "expected": 9,
+      "total_peaks": 9,
+      "accepted_gaps": [],
+      "missing": [],
+      "first_payoff_sec": 36,
+      "source_first_payoff_sec": 36.16,
+      "max_gap_ratio": 0.23,
+      "source_max_gap_ratio": 0.22,
+      "carried": {
+        "PK01": {
+          "chapter": "CH01",
+          "sec": 27.5
+        },
+        "PK02": {
+          "chapter": "CH05",
+          "sec": 357.5
+        },
+        "PK03": {
+          "chapter": "CH07",
+          "sec": 565
+        },
+        "PK04": {
+          "chapter": "CH08",
+          "sec": 702.5
+        },
+        "PK05": {
+          "chapter": "CH09",
+          "sec": 827.5
+        },
+        "PK06": {
+          "chapter": "CH11",
+          "sec": 1010
+        },
+        "PK07": {
+          "chapter": "CH12",
+          "sec": 1102.5
+        },
+        "PK08": {
+          "chapter": "CH14",
+          "sec": 1282.5
+        },
+        "PK09": {
+          "chapter": "CH16",
+          "sec": 1422.5
+        }
+      },
+      "issues": []
+    },
+    "first_payoff": {
+      "sec": 36,
+      "max": 45,
+      "ok": true
+    },
+    "consistency": {
+      "at": "2026-11-03T11:43:40.569Z",
+      "residue": [],
+      "levels": {
+        "levels": [],
+        "missing": []
+      },
+      "retried": true
+    },
+    "progression": {
+      "ok": true,
+      "issues": [],
+      "missing": 0,
+      "dup_facts": 0
+    },
+    "blueprint": {
+      "plagiarism": [],
+      "duration": {
+        "ok": true,
+        "detail": "24:00 ≈ 目标 24:00",
+        "endSec": 1440,
+        "goalSec": 1440
+      }
     }
   },
   "started_at": "2026-11-03T11:24:19.567Z",
@@ -9083,5 +9840,13 @@
       ],
       "pov_mode": "none"
     }
+  },
+  "deleted_segments": [],
+  "deleted_ratio": 0,
+  "outputs": {
+    "step1": "{\n  \"topic\": \"여름 메뉴인 줄 알았지? 빙수 장사의 진짜 수익 구조\",\n  \"chapters\": [\n    {\n      \"id\": \"CH01\",\n      \"time_range\": \"0:00-0:55\",\n      \"function\": \"钩子:观众进入빙수가게繁荣场景,抛出表象与实际收益悖论,归因季节集中结构\",\n      \"purpose\": \"你想象着开一家빙수전문점,여름오후줄늘어서있고계산대딸랑딸랑,但월말장부펴면손에쥐는돈거의없고적자인달도있다。이건운도아니고경기탓도아니다,빙수장사의구조가원래그렇다\",\n      \"information_goal\": \"需要F06여름카페빙수비중30%넘어섬대기줄场景、F04점주증언9월부터적자월말赤字、F02설빙매출39%급락·순이익91%급락归因F03계절매출격차的结构性原因\",\n      \"emotion_goal\": \"创业幻想与排队盛况的吸引,随即被悖论打破产生intrigue\",\n      \"retention_goal\": \"可见繁荣(대기줄)与不可见결과(적자)的悖论钩住观众,归因'계절집중구조'开启主悬念LOOP01\",\n      \"word_budget\": 104,\n      \"open_loop\": {\n        \"open\": \"LOOP01:이구조가어떻게당신을가난하게만드나?\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [\n        \"HOOK\",\n        \"PK01\",\n        \"LOOP01-open\"\n      ],\n      \"carries_peaks\": [\n        \"PK01\"\n      ],\n      \"fact_ids\": [\n        \"F06\",\n        \"F04\",\n        \"F02\",\n        \"F03\"\n      ],\n      \"source_segments\": [\n        \"FS01\"\n      ],\n      \"treatment\": \"保留功能换内容\",\n      \"layout_reason\": \"FS01承担开场钩子与PK01悖论高峰,F06夏季대기줄+F04월말적자构成悖论,F02/F03提供계절집중结构归因,完整支撑HOOK与PK01\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"回答标题前半:여름메뉴빙수가게는줄서니까많이남는거아냐?\",\n      \"new_lens\": \"可见的대기줄与不可见的월말적자悖论\",\n      \"leaves_question\": \"그렇다면여름에는실제로얼마나버는가?\",\n      \"cases\": [\n        \"설빙본사:2014→2015매출39%·순이익91%급락,계절집중증거\"\n      ]\n    },\n    {\n      \"id\": \"CH02\",\n      \"time_range\": \"0:55-1:50\",\n      \"function\": \"宣告追踪方法,纠正매출≠이익,锚定여름월수입模型作减法起点\",\n      \"purpose\": \"你要跟着钱走。빙수가게사장님들은매출과이익을혼동한다。우리는여름한달을잡아서,돈이어디로가는지逐项追踪해보겠다\",\n      \"information_goal\": \"需要F01원가율25%미신纠正기준、建立L1객단가8천원×L2하루80개×L3월26일=L4월매출1,664만원夏季月收入模型作为后续减法基准\",\n      \"emotion_goal\": \"建立'跟着钱走'的方法期待,curiosity\",\n      \"retention_goal\": \"开启LOOP02'실제로얼마남나?',预告逐项扣除,观众期待看到최종숫자\",\n      \"word_budget\": 104,\n      \"open_loop\": {\n        \"open\": \"LOOP02:1,664만원중실제로얼마남나?\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [\n        \"LOOP02-open\"\n      ],\n      \"carries_peaks\": [],\n      \"fact_ids\": [\n        \"F01\",\n        \"L1\",\n        \"L2\",\n        \"L3\",\n        \"L4\"\n      ],\n      \"source_segments\": [\n        \"FS02\"\n      ],\n      \"treatment\": \"保留功能换内容\",\n      \"layout_reason\": \"FS02承担방법선언与수입모델锚定,개LOOP02。F01提供원가율25%오해基础,L1~L4建立1,664만월매출모델,为后续减法准备起点\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"回答CH01留下的问题:여름실제수입은?\",\n      \"new_lens\": \"从可见매출到不可见이익的추적방법\",\n      \"leaves_question\": \"1,664만원을하나씩빼면최종적으로얼마남나?\",\n      \"cases\": []\n    },\n    {\n      \"id\": \"CH03\",\n      \"time_range\": \"1:50-3:10\",\n      \"function\": \"逐项扣除원재료비与인건비,纠正'扣完原价还剩七成'误解\",\n      \"purpose\": \"처음1,664만원에서첫번째:원재료비L5 416만(25%)빼면1,248만남음。두번째:아르바이트L6 240만(14%)빼면1,008만남음。많은사람이여기서'아직70%남았네'라고생각하지만,이제부터가진짜다\",\n      \"information_goal\": \"需要L5원재료비416만、L6인건비240만(F32아르바이트1.5명)逐项扣除后报还剩1,008만,纠正'扣完这两档还剩七成'误解\",\n      \"emotion_goal\": \"前两档已吃掉大半收入的sticker_shock\",\n      \"retention_goal\": \"每扣一项报一次还剩多少,观众看着钱变少产生紧张감,预告'이제부터가진짜'维持curiosity\",\n      \"word_budget\": 151,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [],\n      \"carries_peaks\": [],\n      \"fact_ids\": [\n        \"L5\",\n        \"L6\",\n        \"F32\"\n      ],\n      \"source_segments\": [\n        \"FS03\"\n      ],\n      \"treatment\": \"保留功能换内容\",\n      \"layout_reason\": \"FS03承担前两档减法与误解纠正。L5원재료비+L6인건비逐项扣,报还剩1,008만,纠正'扣完原价还剩七成'直觉,为后续隐性成本堆叠铺垫\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"开始回答CH02的逐项扣除\",\n      \"new_lens\": \"두항목만빼도30%사라짐,나머지가진짜비용\",\n      \"leaves_question\": \"나머지1,008만은어디로가나?\",\n      \"cases\": []\n    },\n    {\n      \"id\": \"CH04\",\n      \"time_range\": \"3:10-5:30\",\n      \"function\": \"堆叠선택두난임대료、因规模放大的냉동설비능耗、多项隐性成本与折旧\",\n      \"purpose\": \"세번째:임대료200만(12%)빼면808만。빙수전문점은목좋은곳잡으면임대료비싸고,싼곳잡으면손님없다는두난이있다。네번째:수도광열비85만,제빙기·냉장고24시간돌아가서전기료높다。다섯번째:카드수수료41만6천(2.5%)빼면681만。여섯번째:포장재30만빼면651만。일곱번째:설비감가상각65만빼면586만。여덟번째:폐기손실29만빼면557만。아홉번째:세금·보험33만빼면524만。열번째:설비유지보수20만빼면504만남음\",\n      \"information_goal\": \"需要L7임대료200만(F31범위150~300만,목좋은곳기준)두난说明、L8수도광열비85만(F33냉동설비高전력)、카드수수료41만6천원、L10포장재30만(F35)、L11감가상각65만(F36)、L12폐기손실29만、L35세금·보험33만、L36설비유지보수20만,逐项挂回모델累加\",\n      \"emotion_goal\": \"固定与隐性成本逐项堆叠的压迫感,heaviness\",\n      \"retention_goal\": \"每项都给구체금액并挂回모델,观众看到'보이지않던비용'逐个显形,유지curiosity至净利판결\",\n      \"word_budget\": 264,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [],\n      \"carries_peaks\": [],\n      \"fact_ids\": [\n        \"L7\",\n        \"F31\",\n        \"L8\",\n        \"F33\",\n        \"L10\",\n        \"F35\",\n        \"L11\",\n        \"F36\",\n        \"L12\",\n        \"L35\",\n        \"L36\"\n      ],\n      \"source_segments\": [\n        \"FS04\"\n      ],\n      \"treatment\": \"保留功能换内容\",\n      \"layout_reason\": \"FS04承担隐性成本堆叠。F31임대료두난+F33냉동설비高능耗+各项隐성费,逐项挂回모델,每项报还剩금额,累加압迫감。카드수수료与폐기只报数字,机制留给后续章节展开\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"继续回答CH03留下的나머지1,008만去向\",\n      \"new_lens\": \"십개항목중여덟개가'보이지않는비용'\",\n      \"leaves_question\": \"최종적으로504만남았는데,이게이익인가?\",\n      \"cases\": []\n    },\n    {\n      \"id\": \"CH05\",\n      \"time_range\": \"5:30-6:25\",\n      \"function\": \"回调总수入,报여름월경영이익与순이익률,但预警'이건여름만'\",\n      \"purpose\": \"처음1,664만에서총비용1,160만빼면,여름한달경영이익은504만원,순이익률30.3%다。들리나요?30%。그런데조심하세요,이건여름석달얘기입니다。나머지아홉달은?\",\n      \"information_goal\": \"需要回调1,664만,报L13총비용1,160만后여름월경영이익L14 504만、순이익률L15 30.3%,但立即预警'이건여름만',悬念转向비수기\",\n      \"emotion_goal\": \"净利率판결带来sobering,但'여름만'预警重新제기불안\",\n      \"retention_goal\": \"关闭LOOP02交付첫번째大답안,同时用'나머지9개월은?'开启비수기悬念,触发PK02\",\n      \"word_budget\": 104,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"LOOP02:여름월504만,순이익률30.3%\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [\n        \"PK02\",\n        \"LOOP02-close\"\n      ],\n      \"carries_peaks\": [\n        \"PK02\"\n      ],\n      \"fact_ids\": [\n        \"L13\",\n        \"L14\",\n        \"L15\"\n      ],\n      \"source_segments\": [\n        \"FS05\"\n      ],\n      \"treatment\": \"保留功能换内容\",\n      \"layout_reason\": \"FS05承担LOOP02关闭与PK02순이익률판결。L14/L15报여름월이익与률,완성LOOP02,但'이건여름만'预警개비수기悬념,触发PK02\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"回答CH04最终이익은504万\",\n      \"new_lens\": \"30%순이익률听起来不错,但仅限여름\",\n      \"leaves_question\": \"비수기9개월은어떻게되나?\",\n      \"cases\": [\n        \"설빙본사:순이익률2015년9%(11억/122억),한자릿수실례\"\n      ]\n    },\n    {\n      \"id\": \"CH06\",\n      \"time_range\": \"6:25-8:15\",\n      \"function\": \"揭示매일신선재료배치준비的赌注性质、폐기손실与품절두난\",\n      \"purpose\": \"빙수는매일신선한과일손질·얼음준비를배치단위로해야한다。많이준비하면폐기손실월29만원,적게준비하면품절로단골이영구이탈한다。조혜련씨는빙수가게5곳까지늘렸다가전부정리했다,본인말로'겨울에너무춥더라'\",\n      \"information_goal\": \"需要F09매일배치준비당일소진원칙、F10폐기율导致월29만손실、F20조혜련5곳폐업'겨울춥다'증언构成배치赌注与품절두난逻辑\",\n      \"emotion_goal\": \"短保배치赌注与품절영구유실的두난带来unease\",\n      \"retention_goal\": \"用조혜련真人사례强化계절리스크,배치두난机制留住관심\",\n      \"word_budget\": 207,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [],\n      \"carries_peaks\": [],\n      \"fact_ids\": [\n        \"F09\",\n        \"F10\",\n        \"F20\"\n      ],\n      \"source_segments\": [\n        \"FS06\"\n      ],\n      \"treatment\": \"保留功能换内容\",\n      \"layout_reason\": \"FS06承担배치赌注与두난机制。F09당일준비+F10폐기율기제+F20조혜련5곳폐업사례,구성'배치赌注+품절두난'逻辑,강화계절취약성\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"从CH05비수기질문引出운영리스크之一:배치두난\",\n      \"new_lens\": \"빙수는매일'판매량예측도박'\",\n      \"leaves_question\": \"그렇다면더많이팔면더많이남을까?\",\n      \"cases\": [\n        \"조혜련5곳폐업:유명인도5곳확장했다가전부폐업,'겨울너무춥다'계절리스크증언\"\n      ]\n    },\n    {\n      \"id\": \"CH07\",\n      \"time_range\": \"8:15-10:35\",\n      \"function\": \"抛出'더바쁜데더안남는다'反直觉,揭示피크타임집중与나머지시간고정비공전\",\n      \"purpose\": \"이상한점이있다:더바쁜날더안남는다。빙수카페매출은하루중저녁피크타임(20~23시)집중,하루80개중약60개가3~4시간에몰린다。나머지시간에도앞서본임대료·광열비(냉동설비24시간가동)계속발생하지만수입은없다。더바쁜데더안남는다\",\n      \"information_goal\": \"需要F11/F12피크타임집중보도(하루80개중60개가3~4시간집중)、나머지시간앞서본임대료·광열비계속발생但무수입,构成'더바쁜데안남는다'悖论\",\n      \"emotion_goal\": \"피크집중与고정비공전的双重긴장,tension\",\n      \"retention_goal\": \"开启LOOP03'왜더바쁜데안남나',立即用피크집중机制关闭,触发PK03\",\n      \"word_budget\": 264,\n      \"open_loop\": {\n        \"open\": \"LOOP03:왜더바쁜데더안남나?\",\n        \"close\": \"LOOP03:피크3시간매출집중,나머지고정비공전\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [\n        \"PK03\",\n        \"LOOP03-open\",\n        \"LOOP03-close\"\n      ],\n      \"carries_peaks\": [\n        \"PK03\"\n      ],\n      \"fact_ids\": [\n        \"F11\",\n        \"F12\",\n        \"F13\"\n      ],\n      \"source_segments\": [\n        \"FS07\"\n      ],\n      \"treatment\": \"保留功能换内容\",\n      \"layout_reason\": \"FS07承担피크집중悖论与PK03。F11/F12피크3시간집중新信息+F13나머지시간고정비,구성'더바쁜데안남는다'판词,개폐LOOP03并触发PK03\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"回答CH06'더팔면남나'질문:더팔아도시간집중때문에안남는다\",\n      \"new_lens\": \"하루중3시간만벌고21시간은비용만발생\",\n      \"leaves_question\": \"그렇다면어떤메뉴를팔아야이익이남나?\",\n      \"cases\": []\n    },\n    {\n      \"id\": \"CH08\",\n      \"time_range\": \"10:35-12:50\",\n      \"function\": \"展示토핑추가客单上升、토핑与사이드마진高、인기메뉴인流款vs프리미엄이익款角色分工\",\n      \"purpose\": \"여기서반전이온다。기본빙수8천원→토핑추가(과일·떡)시객단가1만~1만2천원상승。토핑원가율은기본25%보다낮고(추정15~20%)마진높음,사이드음료도마진높다。인기메뉴팥빙수는인流款이지만마진낮고,프리미엄토핑·사이드조합이이익款이다。조합挂载率낮으면인기메뉴로손님만끌고적자\",\n      \"information_goal\": \"需要F14토핑추가시객단8천→1만~1만2천상승、F15토핑원가율낮고마진높음(15~20%)、F16사이드음료마진높음,구성인流款vs이익款분공与조합함정\",\n      \"emotion_goal\": \"高마진조합杠杆的惊喜,surprise\",\n      \"retention_goal\": \"触发PK04产品조합경제학reveal,观众學会인流vs이익구분\",\n      \"word_budget\": 254,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [\n        \"PK04\"\n      ],\n      \"carries_peaks\": [\n        \"PK04\"\n      ],\n      \"fact_ids\": [\n        \"F14\",\n        \"F15\",\n        \"F16\"\n      ],\n      \"source_segments\": [\n        \"FS08\"\n      ],\n      \"treatment\": \"保留功能换内容\",\n      \"layout_reason\": \"FS08承担조합경제学与PK04。F14토핑객단상승+F15토핑마진高+F16사이드마진高,구성인流款vs이익款분공,촉발PK04\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"回答CH07어떤메뉴:프리미엄토핑·사이드조합이이익원천\",\n      \"new_lens\": \"줄선메뉴≠이익메뉴,조합이진짜\",\n      \"leaves_question\": \"그렇다면가격은어떻게정해야하나?\",\n      \"cases\": []\n    },\n    {\n      \"id\": \"CH09\",\n      \"time_range\": \"12:50-14:45\",\n      \"function\": \"重新定性수제빙수为손기술위탁,演示错误원가배수공식,计算공임,给出정확공식\",\n      \"purpose\": \"수제빙수는재료판매가아니라손기술위탁이다。많은사람이'원재료비×배수'공식쓴다,예를들어2천원×4배=8천원。하지만공임(10~15분제조→최저임금10,030원환산시1,672~2,508원)누락이다。정확공식은'원재료비2천+공임2천+운영비분담1,500~2,500=본전선5,200~7,000원',현행8천원판매가는이를반영한거다。원가배수정가는시스템적적자유발한다\",\n      \"information_goal\": \"需要손기술위탁정의、错误공식'원가×배수'演示、F17공임계산(10~15분→1,672~2,508원)、F18정확공식(원재료+공임+운영비=본전선5,200~7,000),증명원가배수시스템亏\",\n      \"emotion_goal\": \"手艺被错误공식贱卖的불평,indignation\",\n      \"retention_goal\": \"开启LOOP04'정확가격은?',立即交付정확공식关闭,触发PK05가치정가vs원가정가鸿沟\",\n      \"word_budget\": 217,\n      \"open_loop\": {\n        \"open\": \"LOOP04:정확한가격공식은?\",\n        \"close\": \"LOOP04:원재료+공임+운영비=본전선,원가배수는함정\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [\n        \"PK05\",\n        \"LOOP04-open\",\n        \"LOOP04-close\"\n      ],\n      \"carries_peaks\": [\n        \"PK05\"\n      ],\n      \"fact_ids\": [\n        \"F17\",\n        \"F18\"\n      ],\n      \"source_segments\": [\n        \"FS09\"\n      ],\n      \"treatment\": \"保留功能换内容\",\n      \"layout_reason\": \"FS09承担정가공식重构与PK05。错误공식演示+F17공임계算+F18정확공식,증명원가배수시스템亏,촉발PK05\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"回答CH08가격정하기:정확공식은원재료+공임+운영비\",\n      \"new_lens\": \"원가배수는재료장사공식,빙수는기술위탁\",\n      \"leaves_question\": \"그런데배달앱·카드수수료는또얼마나먹나?\",\n      \"cases\": []\n    },\n    {\n      \"id\": \"CH10\",\n      \"time_range\": \"14:45-16:10\",\n      \"function\": \"展示배달앱与카드수수료구간、소액거래占比放大、不调价倒贴情形\",\n      \"purpose\": \"마지막하나더。배달앱수수료5~12%+카드수수료2.5%(41만6천원)。소액거래일수록占比커진다。가격안올리면倒贴하는상황도생긴다\",\n      \"information_goal\": \"需要F37배달앱5~12%+F34카드수수료2.5%(L9금액41만6천원),소액거래占比放大效应,구성'안올리면倒贴'실효情形\",\n      \"emotion_goal\": \"平台与지불隐形비用的경각,wariness\",\n      \"retention_goal\": \"补完最后一项隐성费,관객理解'보이는매출'与'손에쥐는돈'격차又被放大\",\n      \"word_budget\": 160,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [],\n      \"carries_peaks\": [],\n      \"fact_ids\": [\n        \"F37\",\n        \"F34\",\n        \"L9\"\n      ],\n      \"source_segments\": [\n        \"FS10\"\n      ],\n      \"treatment\": \"保留功能换内容\",\n      \"layout_reason\": \"FS10补完평台与지불费。F37배달앱+F34/L9카드수수료,소액占比放大,구성'안올리면倒贴'실효,完善隐性费图景\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"从CH09정가后引出마지막숨은비용:평台·지불수수료\",\n      \"new_lens\": \"배달·카드는'보이지않는두번째원가'\",\n      \"leaves_question\": \"그렇다면하루에최소몇개팔아야본전인가?\",\n      \"cases\": []\n    },\n    {\n      \"id\": \"CH11\",\n      \"time_range\": \"16:10-17:30\",\n      \"function\": \"定义손익분기점,报월·일평衡额,판决'앞35개빚갚기',列举날씨·경쟁·돌발타격打穿机制\",\n      \"purpose\": \"손익분기점을정의하자。월724만,하루35개。다시말해하루앞35개는빚갚기,그뒤부터이익이다。그런데날씨·경쟁·돌발타격하나만와도이선이무너진다。겨울텅빈테이블이그예다\",\n      \"information_goal\": \"需要손익분기정의、L33월724만/L34일35개具体数字、'하루앞35개빚갚기'판결、날씨·경쟁·돌발3类타격打穿机制(F05겨울텅빈테이블관찰)\",\n      \"emotion_goal\": \"손익분기与脆弱性的불안,anxiety\",\n      \"retention_goal\": \"开启LOOP05'이익인가빚인가',용PK06판결촉발,예고'이건여름만'재차강조비수기위험\",\n      \"word_budget\": 151,\n      \"open_loop\": {\n        \"open\": \"LOOP05:여름이익은진짜이익인가,아니면빚인가?\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [\n        \"PK06\",\n        \"LOOP05-open\"\n      ],\n      \"carries_peaks\": [\n        \"PK06\"\n      ],\n      \"fact_ids\": [\n        \"L33\",\n        \"L34\",\n        \"F05\"\n      ],\n      \"source_segments\": [\n        \"FS11\"\n      ],\n      \"treatment\": \"保留功能换内容\",\n      \"layout_reason\": \"FS11承担손익분기与PK06。L33/L34报분기점,'앞35개빚갚기'판결,F05겨울텅빈타격打穿,촉발PK06并개LOOP05\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"回答CH10최소판매량:하루35개분기점\",\n      \"new_lens\": \"하루판매를'빚갚기구간+이익구간'으로분할\",\n      \"leaves_question\": \"비수기9개월까지합치면연간이익은얼마인가?\",\n      \"cases\": []\n    },\n    {\n      \"id\": \"CH12\",\n      \"time_range\": \"17:30-19:15\",\n      \"function\": \"금기예고,列举점주工时,报여름이익,계산본인인건비,揭示비수기적자与연간적자,판词'시급以下임금자가착취'\",\n      \"purpose\": \"금기를말하겠다。점주본인은주80시간일한다,최저임금환산하면월321만원인건비에해당한다。여름월경영이익504만괜찮아보이지만,비수기9개월총적자2,253만원이다。여름3개월흑자1,512만빼면연간-741만적자다。점주본인인건비321만은한푼도못챙긴거다。당신은경영이아니라본인에게시급以下로임금주는중이다\",\n      \"information_goal\": \"需要점주주80시간(F29/L25)×최저임금(F28/L27)=월321만(L28)、여름월경영이익504만回调、비수기9개월적자L23 2,253万、연간적자L24 -741萬、점주본인인건비未계,구성'시급以下임금자가착취'판词\",\n      \"emotion_goal\": \"自雇함정带来정의不适,discomfort\",\n      \"retention_goal\": \"关闭LOOP05交付최심反转,触发PK07세계관전환,개LOOP06'출로는?'\",\n      \"word_budget\": 198,\n      \"open_loop\": {\n        \"open\": \"LOOP06:그렇다면출로는무엇인가?\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [\n        \"PK07\",\n        \"LOOP05-close\",\n        \"LOOP06-open\"\n      ],\n      \"carries_peaks\": [\n        \"PK07\"\n      ],\n      \"fact_ids\": [\n        \"F29\",\n        \"L25\",\n        \"F28\",\n        \"L27\",\n        \"L28\",\n        \"L23\",\n        \"L24\"\n      ],\n      \"source_segments\": [\n        \"FS12\"\n      ],\n      \"treatment\": \"必须是新题目自己的\",\n      \"layout_reason\": \"FS12承担최심反转与PK07。반전必来自본题:F29/L25工时×F28/L27최저임금=L28월321만,대조여름월504만回调与L23/L24연간적자,구성'본인자가착취',촉발PK07并폐LOOP05개LOOP06\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"回答CH11연간이익:비수기9개월적자2,253만,연간-741만적자\",\n      \"new_lens\": \"여름이익은빚갚기,점주본인시급은최저임금이하\",\n      \"leaves_question\": \"자가착취에서벗어날출로는무엇인가?\",\n      \"cases\": [\n        \"9월적자점주:고정비(로열티·광고비)는본사가,비수기적자는점주혼자감당하는이중구조\"\n      ]\n    },\n    {\n      \"id\": \"CH13\",\n      \"time_range\": \"19:15-20:40\",\n      \"function\": \"列거시스템화、집중생산+소매、도매三条출로,各附취사판词,명시대형체인·사계절화·극단예외\",\n      \"purpose\": \"출로는세가지다。①시스템화:레시피문서화해서인신의존탈피。②집중생산+소매점:임대료套利。③도매:마진换확정성。각자취사있다。다만설빙신메뉴회복、사계절화、월2천사례는예외다,대형체인·사계절포트폴리오·극단폭염이조건이다。본논점은빙수전문중소점포에한정된다\",\n      \"information_goal\": \"需要三条출로①시스템화②집중생산+소매③도매各自취사、F25/F26/F27명시为예외(대형체인·사계절화·폭염극단)보护本논점\",\n      \"emotion_goal\": \"출로조합的신중한희망,cautious_hope\",\n      \"retention_goal\": \"关闭LOOP06交付출로,明确边계보护논점,관객得到가용선택지\",\n      \"word_budget\": 160,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"LOOP06:세가지출로,각자취사명확,예외경계설정\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [\n        \"LOOP06-close\"\n      ],\n      \"carries_peaks\": [],\n      \"fact_ids\": [\n        \"F25\",\n        \"F26\",\n        \"F27\"\n      ],\n      \"source_segments\": [\n        \"FS13\"\n      ],\n      \"treatment\": \"保留功能换内容\",\n      \"layout_reason\": \"FS13承担출로组合与LOOP06关闭。세가지출로각自취사,F25/F26/F27명시예외(대형체인·사계절·폭염)보护本논점,폐LOOP06\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"回答CH12출로질문:①시스템화②임대套利③도매,각자취사\",\n      \"new_lens\": \"출로는있지만각자다른대가를치른다\",\n      \"leaves_question\": \"그렇다면여름단골을어떻게유지할까?\",\n      \"cases\": [\n        \"월2천빙수집:월순이익2천만달성(2024여름폭염),댓글'세금600만'지적,올해특히더워서터진예외케이스\"\n      ]\n    },\n    {\n      \"id\": \"CH14\",\n      \"time_range\": \"20:40-22:05\",\n      \"function\": \"계산여름단골终身账与규모외推,대조유지与획득비용,판词'여름단골을겨울에붙잡기'\",\n      \"purpose\": \"마지막하나:단골의숨은가치。여름단골1명이주1회×12주×8천원=96,000원/시즌,재방문율80%가정시200명→시즌1,536만원기여。단골유지비용(문자·쿠폰)월10만vs신규획득(광고·전단)월50만,5배차이。원칙판词:'여름단골을겨울에도붙잡는일관성'\",\n      \"information_goal\": \"需要F23단골1명시즌96,000원,200명→1,536万기여、F24유지월10万vs획득월50万5배차이,구성'여름단골겨울붙잡기'원칙\",\n      \"emotion_goal\": \"단골等표외자산의珍视,appreciation\",\n      \"retention_goal\": \"触发PK08수요측자산reveal,강화겨울메뉴로단골유지필요성,为CH15纪律清单铺垫\",\n      \"word_budget\": 160,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [\n        \"PK08\"\n      ],\n      \"carries_peaks\": [\n        \"PK08\"\n      ],\n      \"fact_ids\": [\n        \"F23\",\n        \"F24\"\n      ],\n      \"source_segments\": [\n        \"FS14\"\n      ],\n      \"treatment\": \"保留功能换内容\",\n      \"layout_reason\": \"FS14承担단골자산与PK08。F23단골시즌96,000×200명=1,536万,F24유지vs획득5배차이,구성'여름단골겨울붙잡기'원칙,촉발PK08\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"从CH13출로引出마지막자산:여름단골을겨울유지\",\n      \"new_lens\": \"여름줄은'미래현금흐름',겨울에놓치면영원히잃는다\",\n      \"leaves_question\": \"이모든것을동시에달성하려면어떻게해야하나?\",\n      \"cases\": []\n    },\n    {\n      \"id\": \"CH15\",\n      \"time_range\": \"22:05-23:25\",\n      \"function\": \"총설问,列举6项纪律清单,揭示trade-off机制判词'동시달성이真난도'\",\n      \"purpose\": \"어떻게진짜로벌까?여섯가지다:①원가占比관리②토핑挂载율③폐기관리④평당효율⑤가치정가⑥재방문。각각은쉽지만동시달성이어렵다。왜냐하면원가관리압低하면폐기증가하고,토핑율높이면제조시간늘어나평당효율떨어지고,재방문우대는마진잠식하기때문이다。이여섯가지는서로밀고당기는관계다\",\n      \"information_goal\": \"需要원가관리压低时폐기增加的trade-off、토핑율提高时제조시간拉长影响평당效율的trade-off、재방문우대侵蚀마진的trade-off等六项纪律之间的trade-off机制,这是前面各章未展开的新信息\",\n      \"emotion_goal\": \"纪律清单带来통透,clarity\",\n      \"retention_goal\": \"关闭LOOP01交付총답안,六项纪律的trade-off机制是元认知层新信息,관객得到동시달성난도的本质理解\",\n      \"word_budget\": 151,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"LOOP01:여섯가지纪律동시달성이진짜일\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [\n        \"LOOP01-close\"\n      ],\n      \"carries_peaks\": [],\n      \"fact_ids\": [],\n      \"source_segments\": [\n        \"FS15\"\n      ],\n      \"treatment\": \"保留功能换内容\",\n      \"layout_reason\": \"FS15承担총纪律与LOOP01关闭。不重复前面事实编号,而是讲六项纪律之间的trade-off机制:원가관리↔폐기、토핑율↔평당효율、재방문우대↔마진等,이trade-off가동시달성난도,폐LOOP01\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"回答CH14동시달성방법:여섯가지纪律清单\",\n      \"new_lens\": \"각각은알려진방법,동시는아무도안말해준난도:서로밀고당기는trade-off\",\n      \"leaves_question\": \"이제다른질문을해보자\",\n      \"cases\": []\n    },\n    {\n      \"id\": \"CH16\",\n      \"time_range\": \"23:25-24:00\",\n      \"function\": \"回调F06대기줄,重구问법'12개월임대료갚을수있나',회성구枚举,승격통用판词\",\n      \"purpose\": \"다시그대기줄로돌아가자。이제다른질문을해보자:저줄이12개월임대료를갚을수있을까?원재료비,인건비,임대료,광열비,감가상각,폐기,수수료,세금……이건빙수만의이야기가아니다。당신의사업도'매출정점'만보고연간고정비를간과하고있진않나?다음에줄서는가게를보면이제다른질문을해보자:저줄이12개월임대료를갚을수있을까?\",\n      \"information_goal\": \"需要F06대기줄回调、重구问법'12개월임대료',회성구枚举전편成本,승격통用판词'모든벌어보이는장사는내부자에게만真實경제학'\",\n      \"emotion_goal\": \"换문제的释然수습,reflective_resolution\",\n      \"retention_goal\": \"触发PK09세계관전환,완성ENDING首尾呼应,관객带走가용시각\",\n      \"word_budget\": 66,\n      \"open_loop\": {\n        \"open\": \"\",\n        \"close\": \"\"\n      },\n      \"originality_constraint\": \"\",\n      \"locks\": [\n        \"PK09\",\n        \"ENDING\"\n      ],\n      \"carries_peaks\": [\n        \"PK09\"\n      ],\n      \"fact_ids\": [\n        \"F06\"\n      ],\n      \"source_segments\": [\n        \"FS16\"\n      ],\n      \"treatment\": \"保留功能换内容\",\n      \"layout_reason\": \"FS16承担结尾回扣与PK09。F06대기줄回调,重구'12개월임대료',회성구,승격통用판词,촉발PK09완성ENDING\",\n      \"level_focus\": \"\",\n      \"level_new_info\": \"\",\n      \"answers_prev\": \"从CH15清单升격为통용시각\",\n      \"new_lens\": \"이시각으로모든'줄서는장사'를다시본다\",\n      \"leaves_question\": \"당신사업도'매출정점'만보고연간고정비간과하고있진않나?(댓글한줄로)\",\n      \"cases\": []\n    }\n  ],\n  \"hook\": {\n    \"chosen_text\": \"당신이 빙수 가게를 열었다고 상상해 보세요. 여름 오후, 가게 밖까지 줄이 늘어서 있습니다. 카운터에선 주문이 끊이지 않고, 계산대는 하루 종일 딸랑딸랑. 그런데 월말에 장부를 펴면, 손에 쥐는 돈은 거의 없습니다. 심지어 적자인 달도 있죠. 이건 운도 아니고 경기 탓도 아닙니다. 빙수 장사의 구조가 원래 그렇습니다. 아무도 미리 말해주지 않았을 뿐이죠.\",\n    \"first_payoff_sec\": 36\n  }\n}",
+    "step2": "",
+    "step3": "",
+    "step4": ""
   }
 }

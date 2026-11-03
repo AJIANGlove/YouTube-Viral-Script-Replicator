@@ -579,6 +579,13 @@ const ITEMS = [
   { key: 'forced', name: '硬套' },
   { key: 'deletion', name: '删除是否成立' }
 ];
+// 钩子和埋点回收用到的事实:本来就要在开头和后面各出现一次,不算重复
+function hookFactIds(run) {
+  const a = (run && run.analysis) || {};
+  const h = a.hook || {};
+  const c = arr(h.candidates)[Number(h.chosen) || 0] || {};
+  return arr(c.fact_ids).map(String);
+}
 function programChecks(run, asset, text, ft) {
   const bp = bpOf(text);
   const chs = arr(bp.chapters);
@@ -587,8 +594,10 @@ function programChecks(run, asset, text, ft) {
   const P = {}; ITEMS.forEach(it => { P[it.key] = []; });
   const add = (k, hard, text_, ch) => P[k].push({ by: '程序', hard: !!hard, text: text_, ...(ch ? { chapter: ch } : {}) });
 
-  const prog = checks.checkProgression(text);
+  // v1.79 放松:事实重复只在 3 章以上展开讲时提出来,交给 AI 判断(后面的章带出新东西就不算问题)
+  const prog = checks.checkProgression(text, { loose: true, skip: hookFactIds(run) });
   if (prog.ok === false) prog.issues.forEach(x => add('progression', true, x));
+  arr(prog.soft).forEach(x => add('progression', false, x + '。请判断:后面的章是不是带出了新东西(新角度、新案例、新推论);只是换个说法把同一件事重讲一遍的才算问题'));
   const sim = adjacentSimilar(chs);
   sim.forEach(s => add('progression', s.hard, s.a + ' 和 ' + s.b + ' 的目的写得很像(相似度 ' + s.sim + ')', s.a));
   const lad = checkLadder(chs, ft);
@@ -659,7 +668,7 @@ function reviewPrompt(run, text, ft, pc) {
   const a = run.analysis || {};
   const th = a.thesis_card || {};
   const bp = bpOf(text);
-  const keep = ['id', 'time_range', 'function', 'purpose', 'information_goal', 'source_segments', 'treatment', 'layout_reason', 'locks', 'carries_peaks', 'open_loop', 'fact_ids', 'answers_prev', 'new_lens', 'leaves_question', 'level_focus', 'level_new_info'];
+  const keep = ['id', 'time_range', 'function', 'purpose', 'information_goal', 'source_segments', 'treatment', 'layout_reason', 'locks', 'carries_peaks', 'open_loop', 'fact_ids', 'recap_ids', 'answers_prev', 'new_lens', 'leaves_question', 'level_focus', 'level_new_info'];
   const slim = arr(bp.chapters).map(c => { const o = {}; keep.forEach(k => { if (c[k] != null && c[k] !== '') o[k] = c[k]; }); return o; });
   const facts = arr(a.facts).map(f => '- ' + f.id + ' [' + str(f.kind) + '] ' + cut(f.content, 200)).join('\n');
   const prog = ITEMS.map(it => '【' + it.name + '】\n' + (pc.items[it.key].length ? pc.items[it.key].map(p => '- ' + (p.hard ? '(程序确定)' : '(请判断)') + p.text).join('\n') : '- 程序没查出问题')).join('\n');
@@ -758,7 +767,10 @@ async function reviewLoop(opts) {
   while (!cur.rv.pass && revised < MAX_REVISE) {
     revised++;
     const restored = restoreDeletions(run, ft, cur.rv, asset);
-    const fb = '蓝图审没通过,按下面的意见改蓝图。只改点到的章节和字段,功能表、锁定项、总时长和其余要求不变;重新输出完整 JSON(禁止代码围栏):\n' + failText(cur.rv) +
+    const progFail = cur.rv.items.some(i => i.key === 'progression' && !i.pass);
+    const fb = '蓝图审没通过,按下面的意见改蓝图。' + (progFail
+      ? '「递进」的问题可以跨章调整:把一件事挪到最合适的一章讲透,其他章要提到它就写进 recap_ids 一句带过,或者换成事实表里还没用上的事实、新角度、新案例;挪完空出来的章可以并到相邻章或写短,不许为了凑时长编事实表里没有的东西。你觉得原来的安排更顺的地方可以不挪。其他问题只改点到的章节和字段。锁定项、功能表、总时长和其余要求不变'
+      : '只改点到的章节和字段,功能表、锁定项、总时长和其余要求不变') + ';重新输出完整 JSON(禁止代码围栏):\n' + failText(cur.rv) +
       (restored.length ? '\n功能表已改:' + restored.join('、') + ' 的删除不成立,改成「保留功能换内容」,要排进某一章(可以和相邻章一起讲),写进那一章的 source_segments,时间从其他章匀出来,总时长不变。' : '') +
       (cur.pc.items.progression.some(p => /level_focus/.test(p.text)) ? '\n等级章每一级都要写 level_focus 和 level_new_info,相邻两级的 level_focus 不能一样。' : '');
     const m2 = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: fb }];
@@ -774,15 +786,18 @@ async function reviewLoop(opts) {
     cur = await doReview('Step 1 蓝图审(改后第 ' + revised + ' 次)');
     record(cur, { after_revise: revised });
   }
-  const status = cur.rv.pass ? 'passed' : 'held';
+  // v1.79:改完只剩「递进」没过 → 不停,接着写稿;没过的点交给写稿时提醒(step2Rules)
+  const onlyProg = !cur.rv.pass && cur.rv.items.every(i => i.pass || i.key === 'progression');
+  const status = cur.rv.pass ? 'passed' : onlyProg ? 'passed_soft' : 'held';
   run.steps.blueprint_review = {
     status, secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: new Date().toISOString(), revised, rounds,
     items: cur.rv.items, summary: str((cur.ai || {}).summary), retopic: arr((cur.ai || {}).retopic).map(String).filter(Boolean).slice(0, 3),
     reasons_zh: cur.rv.pass ? [] : reasonsZh(cur.rv),
-    plain_zh: cur.rv.pass ? [] : cur.rv.items.filter(i => !i.pass).map(i => i.plain || '')
+    plain_zh: cur.rv.pass ? [] : cur.rv.items.filter(i => !i.pass).map(i => i.plain || ''),
+    ...(onlyProg ? { soft_notes: arr((cur.rv.items.find(i => i.key === 'progression') || {}).problems).slice().sort((x, y) => (y.by === 'AI') - (x.by === 'AI')).map(p => ((p.chapter && !str(p.text).startsWith(p.chapter)) ? p.chapter + ' ' : '') + cut(p.text, 160) + (p.fix ? '(改法:' + cut(p.fix, 100) + ')' : '')).slice(0, 8) } : {})
   };
   store.saveRun(run);
-  return { content, messages, r, held: !cur.rv.pass, pc: cur.pc, revised };
+  return { content, messages, r, held: status === 'held', pc: cur.pc, revised };
 }
 
 // 蓝图审判「删除不成立」的段:功能表改回「保留功能换内容」(v1.74),返回改了哪几段
@@ -916,7 +931,13 @@ function step2Rules(run, blueprintText) {
   return '\n- 这份蓝图是「按功能重排」画的:章节不和原片一一对应,照每章的作用写,不要回头照原片那一段的内容补。每章的 layout_reason 说明这一章为什么这样排;locks 里的锁定项(开头钩子、高峰、悬念的开和收、结尾回扣)本章必须写到;等级章的 level_focus 是这一级只讲的重点(其他方面一句带过,不要每一级都把身份、收入、代价、信条走一遍),level_new_info 是这一级观众第一次知道的新信息,围绕它展开。' +
     (keeps.length ? '\n- 各章必须保留的功能(功能表「必须保留」,写的是作用,不是原片内容):' + keeps.join(' / ') : '') +
     (swaps.length ? '\n- 各章可以换的内容(功能表「可以换」,换成新题目自己的):' + swaps.join(' / ') : '') +
-    (keeps.length || swaps.length ? '\n- ' + FN_ONLY : '');
+    (keeps.length || swaps.length ? '\n- ' + FN_ONLY : '') + softNotes(run);
+}
+// v1.79 蓝图审只剩「递进」没过、接着写的:写稿时提醒这几处别讲重复
+function softNotes(run) {
+  const br = (run.steps || {}).blueprint_review || {};
+  if (br.status !== 'passed_soft' || !arr(br.soft_notes).length) return '';
+  return '\n- 蓝图审提醒(这几处在蓝图里有点重复,写的时候注意):' + br.soft_notes.join(' / ') + '。同一件事在后面的章再出现时,要么一句带过当回顾,要么带出新东西(新角度、新案例、新推论),不要换个说法重讲一遍。';
 }
 
 // 初稿检查 / 终审用:每章的「必须保留的功能」和「可以换的内容」(只在按功能重排的蓝图上有;严格照原片返回空对象)

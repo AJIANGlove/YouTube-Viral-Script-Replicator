@@ -2532,7 +2532,7 @@ async function loadRunDetail() {
   if ((r.steps || {}).blueprint_review) stepKeys.splice(stepKeys.indexOf('blueprint') + 1, 0, 'blueprint_review');
   document.getElementById('detail-steps').innerHTML = stepKeys.map((k, i) => {
     const s = (r.steps || {})[k] || {};
-    const cls = s.status === 'done' || s.status === 'passed' ? 'done' : (s.status === 'running' ? 'running' : (s.status === 'failed' || s.status === 'held' ? 'failed' : ''));
+    const cls = s.status === 'done' || s.status === 'passed' || s.status === 'passed_soft' ? 'done' : (s.status === 'running' ? 'running' : (s.status === 'failed' || s.status === 'held' ? 'failed' : ''));
     const extra = s.secs ? ` (${s.secs}s)` : '';
     const gate = s.gate_retry ? ' ⟳重试' : '';
     const jump = STEP_JUMP[k] && (k === 'analysis' ? !!r.analysis : !!r.draft_first || !!(r.review || {}).versions);
@@ -5866,6 +5866,7 @@ function renderBlueprintPanel(r) {
   const chip = !rv ? '<span class="bp-chip run">蓝图审还没跑</span>'
     : rv.status === 'running' ? '<span class="bp-chip run">蓝图审中…</span>'
     : rv.status === 'passed' ? `<span class="bp-chip ok">蓝图审通过${rv.revised ? '(AI 按意见改了 ' + rv.revised + ' 次)' : ''}</span>`
+    : rv.status === 'passed_soft' ? '<span class="bp-chip ok">蓝图审基本通过(只剩「递进」,已接着写)</span>'
     : `<span class="bp-chip bad">蓝图审没通过${rv.override ? ' · 你选了仍然写' : ''}</span>`;
   let html = `<h2>① 蓝图(按功能重排)${chip}</h2>`;
   if (v.held && rv) {
@@ -5887,6 +5888,7 @@ function renderBlueprintPanel(r) {
       ${sug.length ? `<div class="hint">AI 建议的新题目:${sug.map(esc).join(' / ')}(下拉可选)</div>` : ''}
       <div class="hint">改题目、换框架都会回到写前分析重新做,这份蓝图和蓝图审记录会留在任务记录里。</div>`}</div>`;
   }
+  if (rv && rv.status === 'passed_soft') html += `<div class="hint" style="color:#92400e;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:8px 10px;margin:6px 0"><b>大白话:有几章讲的东西有点重复,问题不大,没停下来,已经接着写稿。</b>写稿时已提醒 AI 这几处别重讲:${(rv.soft_notes || []).map(esc).join(';')}</div>`;
   if (rv && (rv.items || []).length) {
     const prob = p => `<div><span class="bp-by">${esc(p.by)}</span>${p.chapter && !String(p.text).startsWith(p.chapter) ? esc(p.chapter) + ' ' : ''}${esc(p.text)}${p.fix ? `<div class="hint" style="margin:0 0 0 4px">改法:${esc(p.fix)}</div>` : ''}</div>`;
     html += `<table class="bp-tbl"><tr><th>审的项</th><th>结果</th><th>问题</th></tr>${rv.items.map(it => `<tr><td style="white-space:nowrap">${esc(it.name)}</td><td>${it.pass ? '<span class="bp-ok">✓ 通过</span>' : '<span class="bp-bad">✗ 不过</span>'}</td><td>${!it.pass && (it.plain || BP_PLAIN[it.name]) ? `<div style="margin-bottom:4px"><b>大白话:${esc(it.plain || BP_PLAIN[it.name])}</b></div>` : ''}${(it.problems || []).map(prob).join('') || '<span class="hint">—</span>'}${(it.notes || []).length ? `<details><summary style="font-weight:400" class="hint">参考 ${it.notes.length} 条(程序提示 / AI 认为不算问题)</summary>${it.notes.map(prob).join('')}</details>` : ''}</td></tr>`).join('')}</table>`;
