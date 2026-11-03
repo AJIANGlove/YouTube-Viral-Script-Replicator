@@ -688,6 +688,16 @@ function parseReview(text) {
 }
 
 // 合并程序和 AI 的结论:程序确定的问题直接不过;AI 判不过的也不过
+// 蓝图审每项没过时的通用大白话(AI 没写 plain 时用)
+const PLAIN = {
+  progression: '好几章在讲同一件事,后面的章节没带来新东西,观众会觉得「这个刚才不是说过了吗」。',
+  reveal: '答案或反转说早了,或者开头埋的悬念后面没收,观众没理由看到最后。',
+  thesis: '有的章跑题了,或者最后没回答标题提的问题,观众会觉得被标题骗了。',
+  facts: '有的章用的事实在事实表里没有,或者只靠「待查」「假设」撑着,写出来容易编、站不住。',
+  reversal: '反转不是这个题自己的(照搬原片),或者没有事实撑住,观众不会被说服。',
+  forced: '有原片的东西(头衔、制度、器物、例子)被硬塞进这个题,或者主角做了这个题里做不到的事。',
+  deletion: '删掉的段其实有素材能写,删了会少一个看点。'
+};
 function mergeReview(pc, ai) {
   const items = ITEMS.map(it => {
     const prog = pc.items[it.key];
@@ -702,7 +712,9 @@ function mergeReview(pc, ai) {
       return true;
     });
     const pass = !hard.length && aiPass !== false;
-    return { key: it.key, name: it.name, pass, ai_pass: aiPass, problems: hard.concat(aiPass === false ? own : []), notes: prog.filter(p => !p.hard).concat(aiPass !== false ? own.map(p => ({ ...p, hard: false })) : []) };
+    // v1.78:不过的项给一句大白话(AI 写的优先,没写就用程序的通用说法)
+    const plain = pass ? '' : (aiPass === false && str(x.plain).trim() ? cut(str(x.plain).trim(), 120) : PLAIN[it.key] || '');
+    return { key: it.key, name: it.name, pass, ai_pass: aiPass, plain, problems: hard.concat(aiPass === false ? own : []), notes: prog.filter(p => !p.hard).concat(aiPass !== false ? own.map(p => ({ ...p, hard: false })) : []) };
   });
   return { pass: items.every(i => i.pass), items };
 }
@@ -766,7 +778,8 @@ async function reviewLoop(opts) {
   run.steps.blueprint_review = {
     status, secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: new Date().toISOString(), revised, rounds,
     items: cur.rv.items, summary: str((cur.ai || {}).summary), retopic: arr((cur.ai || {}).retopic).map(String).filter(Boolean).slice(0, 3),
-    reasons_zh: cur.rv.pass ? [] : reasonsZh(cur.rv)
+    reasons_zh: cur.rv.pass ? [] : reasonsZh(cur.rv),
+    plain_zh: cur.rv.pass ? [] : cur.rv.items.filter(i => !i.pass).map(i => i.plain || '')
   };
   store.saveRun(run);
   return { content, messages, r, held: !cur.rv.pass, pc: cur.pc, revised };

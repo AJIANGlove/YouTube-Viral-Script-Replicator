@@ -17,7 +17,8 @@
 - 一项没问题就写 pass:true、problems 空数组,不要硬找问题。
 - 问题和改法用中文写,章节写 CHxx。
 - 如果你认为问题出在题目本身(新题目的事实撑不起这个框架,怎么改蓝图都会硬套),在 retopic 里给 1–3 个更合适的新题目(和原题目同一个方向,目标语言写),否则 retopic 写空数组。
-- summary:一两句话,中文,总的结论。
+- plain(每一项都有):这一项不过时,用一句大白话说清问题是什么、观众看了会有什么感受,给不懂写稿术语的人看(例:「蓝图里同一批事实被翻来覆去讲了好几章,后面的章节没带来新东西」)。不要写事实编号、段落编号、英文字段名;要指章节就写「第 3 章」。这一项通过就写空字符串。
+- summary:一两句大白话,中文,总的结论;同样不要堆编号和术语。
 
 【标题】
 {{title}}
@@ -47,13 +48,13 @@
 只输出 JSON(禁止代码围栏),格式:
 {
   "items": {
-    "progression": { "pass": true, "problems": [ { "chapter": "CH03", "problem": "", "fix": "" } ] },
-    "reveal": { "pass": true, "problems": [] },
-    "thesis": { "pass": true, "problems": [] },
-    "facts": { "pass": true, "problems": [] },
-    "reversal": { "pass": true, "problems": [] },
-    "forced": { "pass": true, "problems": [] },
-    "deletion": { "pass": true, "problems": [ { "segment": "FS05", "chapter": "", "problem": "", "fix": "" } ] }
+    "progression": { "pass": true, "plain": "", "problems": [ { "chapter": "CH03", "problem": "", "fix": "" } ] },
+    "reveal": { "pass": true, "plain": "", "problems": [] },
+    "thesis": { "pass": true, "plain": "", "problems": [] },
+    "facts": { "pass": true, "plain": "", "problems": [] },
+    "reversal": { "pass": true, "plain": "", "problems": [] },
+    "forced": { "pass": true, "plain": "", "problems": [] },
+    "deletion": { "pass": true, "plain": "", "problems": [ { "segment": "FS05", "chapter": "", "problem": "", "fix": "" } ] }
   },
   "summary": "",
   "retopic": []

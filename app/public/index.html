@@ -5598,6 +5598,21 @@ function anFitRuleHtml(o) {
   if (!bl.length) h += `<div class="hint" style="margin:0">没有卡住的地方。</div>`;
   return h + '</div>';
 }
+// v1.78 蓝图审不过的项:一句大白话(老任务没有就按项目给通用说法)
+const BP_PLAIN = {
+  '递进': '好几章在讲同一件事,后面的章节没带来新东西,观众会觉得「这个刚才不是说过了吗」。',
+  '揭示顺序': '答案或反转说早了,或者开头埋的悬念后面没收,观众没理由看到最后。',
+  '标题和主线': '有的章跑题了,或者最后没回答标题提的问题,观众会觉得被标题骗了。',
+  '事实支撑': '有的章用的事实在事实表里没有,或者只靠「待查」「假设」撑着,写出来容易编、站不住。',
+  '反转': '反转不是这个题自己的(照搬原片),或者没有事实撑住,观众不会被说服。',
+  '硬套': '有原片的东西(头衔、制度、器物、例子)被硬塞进这个题,或者主角做了这个题里做不到的事。',
+  '删除是否成立': '删掉的段其实有素材能写,删了会少一个看点。'
+};
+function bpPlain(rv, i) {
+  if ((rv.plain_zh || [])[i]) return rv.plain_zh[i];
+  const it = (rv.items || []).filter(x => !x.pass)[i];
+  return it ? (it.plain || BP_PLAIN[it.name] || '') : '';
+}
 function anFitLine(r) { return anFitLine0(r) + thesisScoutHtml(r); }
 // v1.77 写前论点调研:先想 3 个角度 → 联网搜正反资料 → 核对挑选
 function tsLinks(list) { return (list || []).map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener" title="${esc(s.title || '')}">${esc(s.ref || '')}${s.site ? ' ' + esc(s.site) : ''}</a>`).join(' · '); }
@@ -5857,7 +5872,7 @@ function renderBlueprintPanel(r) {
     const sug = (rv.retopic || []);
     html += `<div class="bp-hold"><h3>⛔ 蓝图审没通过,已经停下,稿子还没开始写</h3>
       <div style="font-size:13px">AI 按审的意见改了 ${rv.revised || 0} 次蓝图,下面这几项还是不过。照这份蓝图写,这些问题多半会出现在稿子里:</div>
-      <ul>${(rv.reasons_zh || []).map(x => '<li>' + esc(x) + '</li>').join('')}</ul>
+      <ul>${(rv.reasons_zh || []).map((x, i) => '<li>' + (bpPlain(rv, i) ? '<b>大白话:' + esc(bpPlain(rv, i)) + '</b><br><span style="color:#4b5563">' + esc(x) + '</span>' : esc(x)) + '</li>').join('')}</ul>
       ${rv.summary ? `<div style="font-size:13px">审稿结论:${esc(rv.summary)}</div>` : ''}
       <div style="font-size:13px;margin-top:6px">选一个:</div>
       <div class="bp-choices">
@@ -5874,7 +5889,7 @@ function renderBlueprintPanel(r) {
   }
   if (rv && (rv.items || []).length) {
     const prob = p => `<div><span class="bp-by">${esc(p.by)}</span>${p.chapter && !String(p.text).startsWith(p.chapter) ? esc(p.chapter) + ' ' : ''}${esc(p.text)}${p.fix ? `<div class="hint" style="margin:0 0 0 4px">改法:${esc(p.fix)}</div>` : ''}</div>`;
-    html += `<table class="bp-tbl"><tr><th>审的项</th><th>结果</th><th>问题</th></tr>${rv.items.map(it => `<tr><td style="white-space:nowrap">${esc(it.name)}</td><td>${it.pass ? '<span class="bp-ok">✓ 通过</span>' : '<span class="bp-bad">✗ 不过</span>'}</td><td>${(it.problems || []).map(prob).join('') || '<span class="hint">—</span>'}${(it.notes || []).length ? `<details><summary style="font-weight:400" class="hint">参考 ${it.notes.length} 条(程序提示 / AI 认为不算问题)</summary>${it.notes.map(prob).join('')}</details>` : ''}</td></tr>`).join('')}</table>`;
+    html += `<table class="bp-tbl"><tr><th>审的项</th><th>结果</th><th>问题</th></tr>${rv.items.map(it => `<tr><td style="white-space:nowrap">${esc(it.name)}</td><td>${it.pass ? '<span class="bp-ok">✓ 通过</span>' : '<span class="bp-bad">✗ 不过</span>'}</td><td>${!it.pass && (it.plain || BP_PLAIN[it.name]) ? `<div style="margin-bottom:4px"><b>大白话:${esc(it.plain || BP_PLAIN[it.name])}</b></div>` : ''}${(it.problems || []).map(prob).join('') || '<span class="hint">—</span>'}${(it.notes || []).length ? `<details><summary style="font-weight:400" class="hint">参考 ${it.notes.length} 条(程序提示 / AI 认为不算问题)</summary>${it.notes.map(prob).join('')}</details>` : ''}</td></tr>`).join('')}</table>`;
     const rounds = (rv.rounds || []).map(x => x.rejected ? `改第 ${x.revise} 次:${esc(x.rejected)}` : `${x.after_revise ? '改第 ' + x.after_revise + ' 次后再审' : '第一次审'}:${x.pass ? '通过' : '不过(' + (x.items || []).filter(i => !i.pass).map(i => esc(i.name)).join('、') + ')'}${x.ai_error ? '(' + esc(x.ai_error) + ')' : ''}`);
     if (rounds.length) html += `<div class="hint">过程:${rounds.join(' → ')}${rv.secs ? ',共 ' + rv.secs + ' 秒' : ''}</div>`;
     // 前几轮审出来、AI 已经按意见改过的问题:折起来,方便对照这次改掉了什么
