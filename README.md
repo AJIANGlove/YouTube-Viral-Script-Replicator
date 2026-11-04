@@ -224,7 +224,9 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `reframe_summary.md` | 都套不上时的原因汇总与两个选项（建议题目带预判） | 38 |
 | `why_zh.md` | 给复审/核对问题补中文「问题在哪」 | 21 |
 | `adjust.md` | AI 先调整（补待查、改论点、找事实、补标题、主角一致、补真人案例、素材不够自动补搜） | 105 |
-| `adjust_queries.md` | 生成联网搜索查询词 | 21 |
+| `adjust_queries.md` | 生成联网搜索查询词（找有经过的报道） | 21 |
+| `blueprint_research_queries.md` | 蓝图补搜的搜索词（找有经过的报道） | 20 |
+| `blueprint_research_fill.md` | 蓝图补搜摘事实（具体人和事也摘成一条） | 31 |
 | `revise.md` | 按人工意见只重做一行 | 29 |
 | `title_audit.md` | 自写标题审核 | 26 |
 | `step1.md` | Blueprint 生成（问题链 + 新角度 + 事实只用一次，编号一律 CH，含对照表与叙事方式） | 102 |
@@ -269,7 +271,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 58 份 `.md`（3710 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 64 份，合计 3911 行。
+合计 60 份 `.md`（3764 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 66 份，合计 3965 行。
 
 ### 历史版本
 

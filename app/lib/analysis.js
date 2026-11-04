@@ -192,8 +192,7 @@ function analysisBrief(a, run, trackKey, mode) {
     }).join('\n'));
   }
   const cs = (Array.isArray(a.cases) ? a.cases : []).filter(c => c && String(c.nick || c.who || '').trim());
-  if (cs.length) out.push('真人案例(用外号称呼;按「出场」安排在对应的段出场,每次带出写好的新信息,不许重复同一句话;没有来源的要明说是假设或传闻):\n' + cs.map(c => '- 「' + (c.nick || c.who) + '」' + (c.nick && c.who ? c.who + ':' : ':') + (c.detail || '') + (c.source || c.year ? '(' + [c.source, c.year].filter(Boolean).join(',') + ')' : '(没有来源)') + (Array.isArray(c.fact_ids) && c.fact_ids.length ? '[' + c.fact_ids.join(',') + ']' : '') +
-    (Array.isArray(c.appear_at) && c.appear_at.length ? ' 出场:' + c.appear_at.map(x => (x && x.segment || '') + (x && x.reveals ? '(' + x.reveals + ')' : '')).join(';') : '')).join('\n'));
+  if (cs.length) out.push(casesBrief(cs));
   const tc = a.thesis_check || {};
   if (Array.isArray(tc.contradicts) && tc.contradicts.length) out.push('反转验证:事实 ' + tc.contradicts.join('、') + ' 和反转结论相反(' + (tc.note || '') + ')。写稿时反转的说法必须和这些事实一致,不能回避。');
   out.push('模块取舍(「保留」只保留功能和节奏,内容用本题事实):\n' + (a.modules || []).map(m => '- ' + m.segment + ' ' + m.decision + (m.hook_type && !/删除/.test(m.decision || '') ? '[钩子:' + hookType(m.hook_type) + ']' : '') + ':' + (m.reason || '') + (m.fact_ids && m.fact_ids.length ? '(' + m.fact_ids.join(',') + ')' : '') + staleTag(stale.modules, m.segment)).join('\n'));
@@ -1299,6 +1298,28 @@ function needsList(a, run) {
 }
 const CASES_MIN = 4;
 
+// v1.87:原片每讲一个真人、案例、圈内人的话,开口就交代从哪来的(每 1000 字 2.8 次,我们 0.2 次);
+// 只有一个人的说法(本人采访、评论、宣传稿)时加半句点明(原片约每 1000 字 0.9 次);报道里的经过和细节要用上,不只用数字
+const ONE_VOICE = /本人|评论|帖子|宣传|自己的视频|个人/;
+function caseOneVoice(c) { return ONE_VOICE.test(String((c && c.source_kind) || '')); }
+function caseLine(c) {
+  const stories = (Array.isArray(c.stories) ? c.stories : []).map(x => String(x || '').trim()).filter(Boolean);
+  const src = c.source || c.year ? '(' + [c.source, c.year].filter(Boolean).join(',') + ')' : '(没有来源)';
+  return '- 「' + (c.nick || c.who) + '」' + (c.nick && c.who ? c.who + ':' : ':') + (c.detail || '') + src +
+    (String(c.source_kind || '').trim() ? ' 出处类型:' + c.source_kind + (caseOneVoice(c) ? '(只有一个人的说法)' : '') : '') +
+    (Array.isArray(c.fact_ids) && c.fact_ids.length ? '[' + c.fact_ids.join(',') + ']' : '') +
+    (stories.length ? ' 经过和细节:' + stories.join(';') : '') +
+    (Array.isArray(c.appear_at) && c.appear_at.length ? ' 出场:' + c.appear_at.map(x => (x && x.segment || '') + (x && x.reveals ? '(' + x.reveals + ')' : '')).join(';') : '');
+}
+function casesBrief(cs) {
+  const one = cs.some(caseOneVoice), anyStory = cs.some(c => Array.isArray(c.stories) && c.stories.some(x => String(x || '').trim()));
+  return '真人案例(用外号称呼;按「出场」安排在对应的段出场,每次带出写好的新信息,不许重复同一句话;没有来源的要明说是假设或传闻;' +
+    '每个案例第一次出场时用半句话交代从哪来的,照出处说,例如「방송에 나온 한 사장님은」「한 언론 인터뷰에서」「판결문을 보면」「한 커뮤니티 댓글에」,不要像是我们自己知道的' +
+    (one ? ';标了「只有一个人的说法」的,第一次出场时再加半句点明,例如「사장님 본인 말이에요」「한 사람의 경험이긴 해요」,只说一次,不要说成全行业都这样' : '') +
+    (anyStory ? ';「经过和细节」是来源里写着的具体经过,讲这个人时用上它,让中段有人有事,不要只报这个人的数字' : '') +
+    '):\n' + cs.map(caseLine).join('\n');
+}
+
 // 素材够不够(v1.61):事实少于 16 条,或 fit_check 里「证据/数据」类条目判了不符合,写稿前自动多搜一轮。
 // 实测 run_902550ad6154(인형뽑기방)只有 12 条事实、「공개 데이터…증거 체인 구성 → 불부합」照样写,二稿 56 分;
 // 38 篇统计里事实少的几篇分数都偏低。只看 trait 写的内容,不看 type(那篇把证据项错标成了 avoid)。
@@ -1613,7 +1634,7 @@ async function auditTitle(runId, draft, title) {
   return out;
 }
 
-module.exports = { keepNotesText, buildSourceMapping, runSourceMapping, setPovMode, sourceMappingBrief, cleanSourceMapping, POV_RULES, ledgerWriteBack, ledgerProblems, ledgerCheckup, ledgerGaps, ledgerSanity, krMoney, moneyScale, ledgerSayOn, ledgerSay, ledgerSayText, ledgerSayAmounts,
+module.exports = { casesBrief, caseOneVoice, keepNotesText, buildSourceMapping, runSourceMapping, setPovMode, sourceMappingBrief, cleanSourceMapping, POV_RULES, ledgerWriteBack, ledgerProblems, ledgerCheckup, ledgerGaps, ledgerSanity, krMoney, moneyScale, ledgerSayOn, ledgerSay, ledgerSayText, ledgerSayAmounts,
   loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, HOOK_TYPES, hookType, acceptedGaps, verifyLedger,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,
