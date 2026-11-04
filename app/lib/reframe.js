@@ -446,6 +446,7 @@ function applyPrecheck(run, body) {
   lockFramework(run);
   // v1.84:预判时按题目搜过的那一轮,写前分析定论点直接用,不重搜
   const ce = preCache.get(preKey(body));
+  if (ce && Date.now() - ce.at <= PRE_TTL && ce.usage && !run.usage_precheck_merged) { require('./usage').merge(run, ce.usage, '建任务前预判·'); run.usage_precheck_merged = true; }
   if (ce && Date.now() - ce.at <= PRE_TTL && ce.disc) run.precheck_search = { topic: String(run.topic || '').trim(), at: new Date().toISOString(), batches: ce.disc.batches };
   const fit = precheckCarry(body);
   if (!fit) return true;
@@ -561,6 +562,9 @@ async function runPrecheck(job, b, asset, cfg) {
   if (ce) ce.pool = all.map(poolOf);
   const discB = await discP;
   if (ce && Array.isArray(discB)) ce.disc = { topic, batches: discB };
+  // v1.85:预判花的 token,建任务时并进新任务的用量
+  if (ce && run.usage) ce.usage = run.usage;
+  job.usage = run.usage || null;
   const brief = p => ({ asset_id: p.asset_id, name: p.name, source: p.source, track: p.track, why: p.why, adjust: p.adjust, risk: p.risk, prejudge: p.prejudge });
   job.picks = sorted.slice(0, SHOW).map(brief);
   job.others = sorted.slice(SHOW).map(brief);

@@ -811,6 +811,7 @@
       </h2>
       <div class="hint" id="detail-sub"></div>
       <div class="steps" id="detail-steps"></div>
+      <div id="detail-usage"></div>
       <div id="detail-error" class="err-list"></div>
     </div>
     <div class="card hidden bp-panel" id="bp-panel"></div>
@@ -2524,6 +2525,43 @@ function blueprintConsNote(r) {
   const what = [nRes ? `原片残留词 ${ws.map(w => '「' + esc(w) + '」').join('')}(${esc(chs.join('、'))})` : '', miss.length ? `等级缺第 ${miss.map(esc).join('、')} 级` : ''].filter(Boolean).join(';');
   return `<div class="hint" style="color:#b45309">⚠ 蓝图里还有${what}。${c.retried ? (c.kept ? '已自动让 AI 重写一次,但没改好,保留了原版。' : '已自动让 AI 重写一次,还剩这些。') : ''}写完后审稿页会再查一遍稿子,还有的话挡发布(可以忽略),「AI 改一轮」会一起改。</div>`;
 }
+// v1.85 token 用量:按步骤汇总(续写、重试、分章并进同一步);可填单价估算花费,单价只存在这台电脑的浏览器里
+const USAGE_PRICE_KEY = 'usage_price_v185';
+function usagePrice() { try { return JSON.parse(localStorage.getItem(USAGE_PRICE_KEY) || 'null') || window._usagePriceMem || {}; } catch (e) { return window._usagePriceMem || {}; } }
+function saveUsagePrice() {
+  const v = id => { const x = parseFloat((document.getElementById(id) || {}).value); return isFinite(x) && x >= 0 ? x : null; };
+  const p = { in: v('up-in'), out: v('up-out'), cache_read: v('up-cr'), cache_write: v('up-cw') };
+  window._usagePriceMem = p;
+  try { localStorage.setItem(USAGE_PRICE_KEY, JSON.stringify(p)); } catch (e) {}
+  if (window._usageRun) renderUsage(window._usageRun);
+}
+function fmtTok(n) { n = n || 0; return n >= 1e6 ? (n / 1e6).toFixed(2) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1) + 'k' : String(n); }
+function usageCost(b, p) {
+  if (p.in == null && p.out == null) return null;
+  return ((b.in || 0) * (p.in || 0) + (b.out || 0) * (p.out || 0) + (b.cache_read || 0) * (p.cache_read != null ? p.cache_read : (p.in || 0) * 0.1) + (b.cache_write || 0) * (p.cache_write != null ? p.cache_write : (p.in || 0) * 1.25)) / 1e6;
+}
+function renderUsage(r) {
+  window._usageRun = r;
+  const el = document.getElementById('detail-usage');
+  if (!el) return;
+  const us = r.usage;
+  if (!us || !us.total || !us.total.calls) { el.innerHTML = '<div class="hint" style="margin-top:6px">token 用量:这个任务是 v1.85 之前建的(或还没调用过 AI),没有记录。</div>'; return; }
+  const wasOpen = !!(el.querySelector('details') || {}).open;
+  const p = usagePrice();
+  const sum = b => (b.in || 0) + (b.out || 0) + (b.cache_read || 0) + (b.cache_write || 0);
+  const T = us.total, tAll = sum(T) || 1;
+  const rows = Object.entries(us.steps || {}).sort((x, y) => sum(y[1]) - sum(x[1]));
+  const cost = b => { const c = usageCost(b, p); return c == null ? '' : '$' + c.toFixed(c < 1 ? 3 : 2); };
+  const hasCost = usageCost(T, p) != null;
+  const est = b => b.est_calls ? ` <span style="color:#b45309" title="渠道没返回用量,这 ${b.est_calls} 次按字数估算">估算${b.est_calls === b.calls ? '' : ' ' + b.est_calls + '次'}</span>` : '';
+  const head = `token 用量:共 ${T.calls} 次调用,输入 ${fmtTok(T.in)}、输出 ${fmtTok(T.out)}` + (T.cache_read || T.cache_write ? `、缓存读 ${fmtTok(T.cache_read)}、缓存写 ${fmtTok(T.cache_write)}` : '') + (hasCost ? `,约 ${cost(T)}` : '') + (T.est_calls ? `(其中 ${T.est_calls} 次是估算)` : '');
+  const tr = rows.map(([k, b]) => `<tr><td>${esc(k)}${est(b)}</td><td style="text-align:right">${b.calls}</td><td style="text-align:right">${fmtTok(b.in)}</td><td style="text-align:right">${fmtTok(b.out)}</td><td style="text-align:right">${fmtTok((b.cache_read || 0) + (b.cache_write || 0))}</td><td style="text-align:right">${Math.round(sum(b) / tAll * 1000) / 10}%</td>${hasCost ? `<td style="text-align:right">${cost(b)}</td>` : ''}</tr>`).join('');
+  const pin = (id, label, v) => `<label style="margin-right:10px">${label} <input id="${id}" type="number" min="0" step="0.01" style="width:70px" value="${v == null ? '' : v}" onchange="saveUsagePrice()"></label>`;
+  el.innerHTML = `<details style="margin-top:6px"${wasOpen ? ' open' : ''}><summary class="hint" style="cursor:pointer">${esc(head)}</summary>
+    <table style="width:100%;font-size:13px;margin-top:6px;border-collapse:collapse"><tr style="text-align:left;color:#666"><th>步骤</th><th style="text-align:right">次数</th><th style="text-align:right">输入</th><th style="text-align:right">输出</th><th style="text-align:right">缓存</th><th style="text-align:right">token 占比</th>${hasCost ? '<th style="text-align:right">花费</th>' : ''}</tr>${tr}</table>
+    <div class="hint" style="margin-top:6px">单价(美元 / 每 100 万 token,填了才算花费;缓存读不填按输入价的 1/10、缓存写按 1.25 倍,和你的渠道不一样就自己填):${pin('up-in', '输入', p.in)}${pin('up-out', '输出', p.out)}${pin('up-cr', '缓存读', p.cache_read)}${pin('up-cw', '缓存写', p.cache_write)}</div>
+    <div class="hint">从 ${esc(fmtTime(us.since))} 开始记。重跑、续跑、改稿的调用都累加。开头强化、商业化检查、视频简介等单独的小工具不算在内。</div></details>`;
+}
 async function loadRunDetail() {
   const r = await api('/api/runs/' + currentRunId);
   document.getElementById('detail-title').textContent = r.topic;
@@ -2549,6 +2587,7 @@ async function loadRunDetail() {
     const jump = STEP_JUMP[k] && (k === 'analysis' ? !!r.analysis : !!r.draft_first || !!(r.review || {}).versions);
     return `<div class="step-pill ${cls}${jump ? ' link' : ''}"${jump ? ` onclick="stepJump('${k}')" title="点击查看这一步的内容"` : ''}>${STEP_LABELS[k]}${extra}${gate}</div>`;
   }).join('');
+  renderUsage(r);
   const ck = r.checks || {};
   const lenWarn = [['脚本', ck.script_length], ['终稿', ck.length]].filter(x => x[1] && (x[1].warn || x[1].short)).map(x => x[0] + '篇幅' + (x[1].short ? '不合格' : '偏短') + ':' + x[1].detail);
   document.getElementById('detail-error').innerHTML =

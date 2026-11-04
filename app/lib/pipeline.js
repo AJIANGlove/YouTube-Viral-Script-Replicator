@@ -145,6 +145,7 @@ function fillTemplate(tpl, ctx, tools) {
 // 由生效配置构造一次对话请求的 url/headers/body(协议与渠道参数差异的唯一出口):
 // anthropic/openai 协议、omit_temperature(模型拒收或官方固定 temperature)、use_max_completion_tokens(如 Kimi K3 的长度字段);
 // 默认流式(stream:true,两种协议同名字段),opts.stream === false 时关闭(连通性探测保持非流式)
+const noUsageHosts = new Set(); // 拒收 stream_options 的渠道(按 base_url),这次进程里不再带
 function buildRequest(cfg, messages, opts) {
   const isAnthropic = cfg.protocol === 'anthropic';
   const url = cfg.base_url.replace(/\/+$/, '') + (isAnthropic ? '/v1/messages' : '/v1/chat/completions');
@@ -153,6 +154,8 @@ function buildRequest(cfg, messages, opts) {
   else headers['Authorization'] = 'Bearer ' + cfg.api_key;
   const body = { model: cfg.model, messages };
   if (!opts || opts.stream !== false) body.stream = true;
+  // v1.85:openai 协议流式默认不带用量,要 stream_options.include_usage 才在最后一帧给;渠道不认这个参数时自动去掉(见 llmCall)
+  if (body.stream && !isAnthropic && !cfg.no_stream_usage && !noUsageHosts.has(cfg.base_url)) body.stream_options = { include_usage: true };
   if (!isAnthropic && cfg.use_max_completion_tokens) body.max_completion_tokens = cfg.max_tokens || 8192; // 守卫:仅 openai 协议渠道适用,防标记误配到 anthropic 渠道
   else body.max_tokens = cfg.max_tokens || 8192;
   if (!cfg.omit_temperature) body.temperature = cfg.temperature ?? 0.7; // 渠道标记 omit_temperature 时省略该字段
@@ -200,10 +203,12 @@ function postJson(url, headers, payload, idleTimeoutMs) {
 function parseSSE(text, isAnthropic) {
   if (!/^data:/m.test(text)) return null;
   const segments = [];
-  let cur = { content: '', stopReason: null, sawRole: false };
+  let cur = { content: '', stopReason: null, sawRole: false, usage: null };
+  const usages = []; // v1.85:每段流的用量(多段流都计费,加起来)
   const flush = () => {
+    if (cur.usage) usages.push(cur.usage);
     if (cur.content) segments.push(cur);
-    cur = { content: '', stopReason: null, sawRole: false };
+    cur = { content: '', stopReason: null, sawRole: false, usage: null };
   };
   for (const line of text.split('\n')) {
     const t = line.trim();
@@ -217,6 +222,8 @@ function parseSSE(text, isAnthropic) {
       if (d.type === 'message_start') flush(); // 新的一条消息(第一帧时 cur 为空,flush 不产生空段)
       if (d.type === 'content_block_delta' && d.delta && typeof d.delta.text === 'string') cur.content += d.delta.text;
       if (d.type === 'message_delta' && d.delta && d.delta.stop_reason) cur.stopReason = d.delta.stop_reason;
+      if (d.type === 'message_start' && d.message && d.message.usage) cur.usage = { ...(cur.usage || {}), ...d.message.usage };
+      if (d.type === 'message_delta' && d.usage) cur.usage = { ...(cur.usage || {}), ...Object.fromEntries(Object.entries(d.usage).filter(([, v]) => v != null)) };
     } else {
       const ch = d.choices && d.choices[0];
       if (ch) {
@@ -226,12 +233,17 @@ function parseSSE(text, isAnthropic) {
         if (ch.delta && typeof ch.delta.content === 'string') cur.content += ch.delta.content;
         if (ch.finish_reason) cur.stopReason = ch.finish_reason;
       }
+      if (d.usage) cur.usage = d.usage; // include_usage 的最后一帧(choices 为空)
     }
   }
+  if (cur.usage) usages.push(cur.usage);
   if (cur.content) segments.push(cur);
-  if (!segments.length) return { content: '', stopReason: null, streams: 0 };
+  const U = require('./usage');
+  const conv = usages.map(u => (isAnthropic ? U.fromAnthropic(u) : U.fromOpenAI(u))).filter(Boolean);
+  const usage = conv.length ? conv.reduce((a, b) => ({ in: a.in + b.in, out: a.out + b.out, cache_read: a.cache_read + b.cache_read, cache_write: a.cache_write + b.cache_write })) : null;
+  if (!segments.length) return { content: '', stopReason: null, streams: 0, usage };
   const best = segments.reduce((a, b) => (b.content.length > a.content.length ? b : a));
-  return { content: best.content, stopReason: best.stopReason, streams: segments.length };
+  return { content: best.content, stopReason: best.stopReason, streams: segments.length, usage };
 }
 
 // 带状态码的 HTTP 错误,供 isRetryable 分类(不靠字符串匹配)
@@ -264,18 +276,25 @@ async function llmCall(cfg, messages, label, opts) {
     const secs = () => (Date.now() - t0) / 1000;
     attempts = attempt + 1;
     try {
-      const resp = await postJson(url, headers, body, LLM_IDLE_TIMEOUT_MS);
+      let resp = await postJson(url, headers, body, LLM_IDLE_TIMEOUT_MS);
+      // v1.85:渠道不认 stream_options(400 里提到它)就去掉再发一次,以后这个渠道都不带
+      if (resp.status === 400 && body.stream_options && /stream_options|include_usage/i.test(resp.text || '')) {
+        noUsageHosts.add(cfg.base_url);
+        delete body.stream_options;
+        resp = await postJson(url, headers, body, LLM_IDLE_TIMEOUT_MS);
+      }
       if (resp.status < 200 || resp.status >= 300) {
         dumpLlmFailure('http', { label, model: cfg.model, status: resp.status, secs: Math.round(secs()) }, resp.text);
         throw httpError(resp.status, resp.text);
       }
       // 优先按 SSE 流式解析;渠道忽略 stream 参数返回普通 JSON 时自动回退
       const sse = parseSSE(resp.text, isAnthropic);
-      let content, stopReason, streams = 1;
+      let content, stopReason, streams = 1, usage = null;
       if (sse) {
         content = sse.content;
         stopReason = sse.stopReason;
         streams = sse.streams || 1;
+        usage = sse.usage;
       } else {
         let data;
         try { data = JSON.parse(resp.text); }
@@ -286,7 +305,10 @@ async function llmCall(cfg, messages, label, opts) {
         if (isAnthropic) content = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n');
         else content = data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : '';
         stopReason = data.stop_reason || (data.choices && data.choices[0] && data.choices[0].finish_reason) || null;
+        usage = isAnthropic ? require('./usage').fromAnthropic(data.usage) : require('./usage').fromOpenAI(data.usage);
       }
+      // 渠道没给用量:按字数估(页面标「估算」)
+      if (!usage || !(usage.in || usage.out || usage.cache_read)) usage = require('./usage').estimate(messages, content);
       if (!content) {
         // 空响应 = 整条流里没有任何 text 增量(思考型模型只吐 thinking_delta,或渠道 200 带 error 体)。
         // 原始响应留痕,错误带 kind='empty' 供上层降级
@@ -305,7 +327,7 @@ async function llmCall(cfg, messages, label, opts) {
           label, model: cfg.model, secs: Math.round(secs()), chars: content.length, streams: streams
         }, resp.text);
         if (o.allowPartial && content.trim().length >= (o.minPartial || 200)) {
-          return { content, secs: secs(), stopReason: 'stream_cut', streams, partial: true, log: f };
+          return { content, secs: secs(), stopReason: 'stream_cut', streams, partial: true, log: f, usage };
         }
         const e = new Error('渠道中途断流:第 ' + Math.round(secs()) + ' 秒时连接结束,没有收到结束标记,输出不完整(已收到 ' + content.length + ' 字)' +
           (f ? '(已留痕 ' + path.basename(f) + ')' : '') + '。请换一个渠道,或联系渠道方');
@@ -315,7 +337,7 @@ async function llmCall(cfg, messages, label, opts) {
       }
       // 归一化截断信号:openai 系的 finish_reason='length' 等价于 anthropic 的 'max_tokens'(Step 2 截断续写依赖该标记)
       if (stopReason === 'length') stopReason = 'max_tokens';
-      return { content, secs: secs(), stopReason, streams };
+      return { content, secs: secs(), stopReason, streams, usage };
     } catch (e) {
       lastErr = e;
       if (e.kind === 'empty' && o.fastFailEmpty) break;
@@ -417,7 +439,7 @@ async function runScriptByChapters(opts) {
       '本章 word_budget=' + (c.word_budget || '(见蓝图)') + ';本章信息目标:' + (c.information_goal || c.function || '(见蓝图)') + '\n' +
       (c.carries_peaks ? '本章必须承担的高峰:' + c.carries_peaks + '\n' : '') +
       (c.answers_prev ? '本章开头先接住上一章留下的问题:' + c.answers_prev + '\n' : '') +
-      (c.new_lens ? '本章的新角度(只用本章分到的事实推进,前面章节讲过的事实和结论不要再展开):' + c.new_lens + '\n' : '') +
+      (c.new_lens ? '本章观众第一次知道的新信息 / 新角度(只用本章分到的事实推进,前面章节讲过的事实和结论不要再展开):' + c.new_lens + '\n' : '') +
       (Array.isArray(c.cases) && c.cases.length ? '本章出场的真人案例(按写前分析里写好的这次要带出的新信息写):' + c.cases.map(x => (typeof x === 'string' ? x : (x && (x.nick || x.name)) || '')).filter(Boolean).join('、') + '\n' : '') +
       (c.leaves_question ? '本章结尾抛出留给下一章的问题:' + c.leaves_question + '\n' : '') +
       bpm().chapterBrief(run, c) + // v1.73:按功能重排的蓝图才有(为什么这样排、必须保留的那一步、锁定项、这一级的重点和新信息)
@@ -593,7 +615,8 @@ async function runGeneration(runId) {
   };
 
   // 每次 LLM 调用(首轮/闸门重试/截断续写)都记一条流水到 run.attempts(封顶 100 条),失败原因不再随重试丢失
-  const logAttempt = (label, result) => {
+  const logAttempt = (label, result, usage) => {
+    if (usage) { const U = require('./usage'); const disk = store.getRun(run.id); run.usage = U.newer(run.usage, disk && disk.usage); U.record(run, label, usage); } // v1.85 token 用量(写前分析等可能同时在盘上记过)
     run.attempts = [...(run.attempts || []), {
       ts: new Date().toISOString(), label,
       provider: cfg.provider || '', model: cfg.model || '',
@@ -608,8 +631,9 @@ async function runGeneration(runId) {
       logAttempt(label, {
         ok: true, secs: Math.round(r.secs * 10) / 10, stop_reason: r.stopReason,
         ...(r.partial ? { partial: true } : {}),
-        ...(r.streams > 1 ? { streams: r.streams } : {}) // 中转层把多段流塞进一个响应体时留痕
-      });
+        ...(r.streams > 1 ? { streams: r.streams } : {}), // 中转层把多段流塞进一个响应体时留痕
+        ...require('./usage').attemptFields(r.usage)
+      }, r.usage);
       return r;
     } catch (e) {
       logAttempt(label, { ok: false, secs: Math.round((Date.now() - t0) / 100) / 10, error: e.message });

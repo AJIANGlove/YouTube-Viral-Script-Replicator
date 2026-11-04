@@ -136,7 +136,15 @@ function newRun(data) {
   return run;
 }
 
+// v1.85 token 用量只增不减:同一任务几路调用同时跑、各拿一份旧快照写回时,保留记得多的那份
+const usageSeen = new Map();
 function saveRun(run, opts) {
+  if (run && run.id) {
+    const n = x => (x && x.total && x.total.calls) || 0;
+    const seen = usageSeen.get(run.id);
+    if (n(seen) > n(run.usage)) run.usage = JSON.parse(JSON.stringify(seen));
+    if (run.usage) usageSeen.set(run.id, JSON.parse(JSON.stringify(run.usage)));
+  }
   normalizeRunText(run); // 落盘前归一化,保证磁盘上的标签行永远是规范形态
   // 标记爆款这类"非生成本身"的变更不刷新 updated_at,否则已完成任务的"结束时间"会被改写
   if (!opts || opts.touch !== false) run.updated_at = new Date().toISOString();

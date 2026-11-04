@@ -833,8 +833,11 @@ async function callWithLog(run, cfg, messages, label, opts) {
   // 这个调用可能持续几分钟,期间接口可能已经保存过分析、确认过任务,旧快照写回会把它们覆盖掉。
   const log = extra => {
     // v1.75:建任务前的预判(还没有任务)只记在内存对象上,不落盘,免得任务列表里多出一条假任务
-    if (run.ephemeral) { run.attempts = [...(run.attempts || []), { ts: new Date().toISOString(), label, provider: cfg.provider || '', model: cfg.model || '', ...extra }].slice(-100); return; }
+    const U = require('./usage');
+    if (run.ephemeral) { if (usage) U.record(run, label, usage); run.attempts = [...(run.attempts || []), { ts: new Date().toISOString(), label, provider: cfg.provider || '', model: cfg.model || '', ...extra }].slice(-100); return; }
     const fresh = store.getRun(run.id) || run;
+    // v1.85 token 用量:加在盘上最新的那份上(同一任务可能有几个调用同时跑),内存里的 run 跟着更新,免得后面整对象写回时丢掉
+    if (usage) { fresh.usage = U.newer(fresh.usage, run.usage); U.record(fresh, label, usage); run.usage = fresh.usage; }
     if (fresh.cancel_requested) run.cancel_requested = true;
     // v1.80:同一任务可能有两个检查同时跑,各自的 attempts 合并,不互相覆盖
     run.attempts = mergeAttempts(fresh.attempts, [...(run.attempts || []), { ts: new Date().toISOString(), label, provider: cfg.provider || '', model: cfg.model || '', ...extra }]);
@@ -842,9 +845,12 @@ async function callWithLog(run, cfg, messages, label, opts) {
     if (run.cancel_requested) fresh.cancel_requested = run.cancel_requested;
     store.saveRun(fresh);
   };
+  let usage = null;
   try {
     const r = await pipeline.llmCall(cfg, messages, label, opts);
-    log({ ok: true, secs: Math.round(r.secs * 10) / 10, stop_reason: r.stopReason, ...(r.partial ? { partial: true } : {}) });
+    usage = r.usage || null;
+    log({ ok: true, secs: Math.round(r.secs * 10) / 10, stop_reason: r.stopReason, ...(r.partial ? { partial: true } : {}), ...require('./usage').attemptFields(r.usage) });
+    usage = null;
     return r;
   } catch (e) {
     log({ ok: false, secs: Math.round((Date.now() - t0) / 100) / 10, error: e.message });
