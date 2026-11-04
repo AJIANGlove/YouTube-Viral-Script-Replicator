@@ -6420,6 +6420,8 @@ function filterEmptyHtml(allCount, shownCount, fnName) {
 let fpState = null; // { runId, base, loading, error, cached, scan, summary, filterTypes, showList }
 let fpReqSeq = 0;   // 请求序号:只接受最后一次请求的响应(防重复点击/快速切换的竞态)
 let lastRunDetail = null; // 最近一次详情数据,供高亮重渲染用
+// v1.81 某个版本现在的文案(检测面板用它判断「上次检测后文案改过没有」,改过就重新检测)
+function curVersionText(v) { const r = lastRunDetail || {}; return ({ v1: r.script_v1 || r.final_script, v2: r.script_v2, v1_5: r.script_v1_5, v2_5: r.script_v2_5 })[v] || ''; }
 
 function fpHitsFor(base) {
   return (fpState && fpState.scan && fpState.base === base && fpState.runId === currentRunId) ? fpState.scan.hits : null;
@@ -6428,7 +6430,7 @@ function fpHitsFor(base) {
 async function openFpPanel(base, force) {
   closeCpPanel(); closeOrPanel(); // 三个检测面板互斥,高亮不同时混显
   // 本地已有该版本结果且非强制重检:直接展示,不发请求(服务端同样会返回已保存结果)
-  if (!force && fpState && fpState.runId === currentRunId && fpState.base === base && fpState.scan) {
+  if (!force && fpState && fpState.runId === currentRunId && fpState.base === base && fpState.scan && !fpState.scan.stale && fpState.text === curVersionText(base)) {
     renderFpPanel();
     refreshFpMarks();
     return;
@@ -6442,7 +6444,7 @@ async function openFpPanel(base, force) {
     });
     if (seq !== fpReqSeq) return; // 已有更新的请求,丢弃过期响应
     (r.scan.hits || []).forEach(h => { h.checked = h.status !== 'replaced'; });
-    fpState = { runId: currentRunId, base, loading: false, error: null, cached: r.cached, scan: r.scan, summary: null, filterTypes: [], showList: false };
+    fpState = { runId: currentRunId, base, loading: false, error: null, cached: r.cached, scan: r.scan, text: curVersionText(base), summary: null, filterTypes: [], showList: false };
   } catch (e) {
     if (seq !== fpReqSeq) return;
     fpState.loading = false;
@@ -6749,7 +6751,7 @@ function renderScriptCards() {
 async function openCpPanel(version, force) {
   closeFpPanel(); closeOrPanel(); // 三个检测面板互斥,高亮不同时混显
   // 本地已有该版本结果且非强制重检:直接展示,不发请求(服务端同样会返回已保存结果)
-  if (!force && cpState && cpState.runId === currentRunId && cpState.version === version && cpState.scan) {
+  if (!force && cpState && cpState.runId === currentRunId && cpState.version === version && cpState.scan && !cpState.scan.stale && cpState.text === curVersionText(version)) {
     renderCpPanel();
     refreshCpMarks();
     return;
@@ -6763,7 +6765,7 @@ async function openCpPanel(version, force) {
     });
     if (seq !== cpReqSeq) return; // 已有更新的请求,丢弃过期响应
     (r.scan.hits || []).forEach(h => { h.checked = h.status !== 'replaced'; });
-    cpState = { runId: currentRunId, version, loading: false, error: null, cached: r.cached, scan: r.scan, summary: null, filterTypes: [], showList: false };
+    cpState = { runId: currentRunId, version, loading: false, error: null, cached: r.cached, scan: r.scan, text: curVersionText(version), summary: null, filterTypes: [], showList: false };
   } catch (e) {
     if (seq !== cpReqSeq) return;
     cpState.loading = false;
@@ -7043,7 +7045,7 @@ function orHitsFor(version) {
 async function openOrPanel(version, force) {
   closeFpPanel(); closeCpPanel(); // 三个检测面板互斥,高亮不同时混显
   // 本地已有该版本结果且非强制重检:直接展示,不发请求(服务端同样会返回已保存结果)
-  if (!force && orState && orState.runId === currentRunId && orState.version === version && orState.scan) {
+  if (!force && orState && orState.runId === currentRunId && orState.version === version && orState.scan && !orState.scan.stale && orState.text === curVersionText(version)) {
     renderOrPanel();
     refreshOrMarks();
     return;
@@ -7057,7 +7059,7 @@ async function openOrPanel(version, force) {
     });
     if (seq !== orReqSeq) return; // 已有更新的请求,丢弃过期响应
     (r.scan.hits || []).forEach(h => { h.checked = h.status !== 'replaced'; });
-    orState = { runId: currentRunId, version, loading: false, error: null, cached: r.cached, scan: r.scan, summary: null, filterTypes: [], showList: false };
+    orState = { runId: currentRunId, version, loading: false, error: null, cached: r.cached, scan: r.scan, text: curVersionText(version), summary: null, filterTypes: [], showList: false };
   } catch (e) {
     if (seq !== orReqSeq) return;
     orState.loading = false;

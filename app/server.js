@@ -35,6 +35,12 @@ const DEFAULT_MODELS = ['claude-opus-4-8', 'claude-opus-5']; // 渠道预设缺 
 function textHash(text) {
   return crypto.createHash('sha1').update(String(text || ''), 'utf-8').digest('hex');
 }
+// v1.81 已存的检测结果还能不能直接用:文案改过(标了 stale,或者存的文本指纹和现在对不上)就重新检测
+function cacheUsable(item, text) {
+  if (!item || item.stale) return false;
+  if (item.text_hash && item.text_hash !== textHash(text)) return false;
+  return true;
+}
 
 function send(res, status, data, type = 'application/json') {
   if (Buffer.isBuffer(data)) {
@@ -1146,12 +1152,13 @@ const server = http.createServer(async (req, res) => {
       const baseText = base === 'v2' ? r.script_v2 : (r.script_v1 || r.final_script);
       if (!baseText) return send(res, 400, { error: base === 'v2' ? '该任务无 V2 文案(未强化开头)' : '该任务暂无文案' });
       const scans = r.fingerprint_scans || {};
-      if (scans[base] && !body.force) return send(res, 200, { ok: true, cached: true, scan: scans[base] });
+      if (cacheUsable(scans[base], baseText) && !body.force) return send(res, 200, { ok: true, cached: true, scan: scans[base] });
       const cfg = pipeline.loadTweakConfig();
       if (!cfg || !cfg.api_key) return send(res, 400, { error: '未配置微调按钮的 API Key,请在设置页「微调按钮 API 配置」中选择有效渠道' });
       try {
         const scan = await fingerprint.detect(cfg, baseText);
         scan.scanned_at = new Date().toISOString();
+        scan.text_hash = textHash(baseText);
         // 等待 LLM 期间任务可能被其他操作改动(如强化开头),合入最新记录再存,避免整对象覆盖
         const fresh = store.getRun(r.id);
         if (!fresh) return send(res, 404, { error: '任务不存在' });
@@ -1224,13 +1231,14 @@ const server = http.createServer(async (req, res) => {
       try { targetLanguage = compliance.requireTargetLanguage((r.audience || {}).target_language); }
       catch (e) { return send(res, 400, { error: e.message, code: e.code }); }
       const scans = r.compliance_scans || {};
-      if (scans[version] && !body.force) return send(res, 200, { ok: true, cached: true, scan: scans[version] });
+      if (cacheUsable(scans[version], baseText) && !body.force) return send(res, 200, { ok: true, cached: true, scan: scans[version] });
       const cfg = pipeline.loadTweakConfig();
       if (!cfg || !cfg.api_key) return send(res, 400, { error: '未配置微调按钮的 API Key,请在设置页「微调按钮 API 配置」中选择有效渠道' });
       try {
         const scan = await compliance.detect(cfg, baseText, targetLanguage);
         scan.scanned_at = new Date().toISOString();
         scan.stale = false;
+        scan.text_hash = textHash(baseText);
         // 等待 LLM 期间任务可能被其他操作改动,合入最新记录再存,避免整对象覆盖
         const fresh = store.getRun(r.id);
         if (!fresh) return send(res, 404, { error: '任务不存在' });
@@ -1313,7 +1321,7 @@ const server = http.createServer(async (req, res) => {
       if (!baseText) return send(res, 400, { error: '该版本文案不存在' });
       if (!opening.hasChapterTimestamps(baseText)) return send(res, 400, { error: '该版本无章节时间戳,无法按 30 秒口径检查' });
       const scans = r.opening_scans || {};
-      if (scans[version] && !body.force) return send(res, 200, { ok: true, cached: true, scan: scans[version] });
+      if (cacheUsable(scans[version], baseText) && !body.force) return send(res, 200, { ok: true, cached: true, scan: scans[version] });
       const cfg = pipeline.loadTweakConfig();
       if (!cfg || !cfg.api_key) return send(res, 400, { error: '未配置微调按钮的 API Key,请在设置页「微调按钮 API 配置」中选择有效渠道' });
       try {
@@ -1322,6 +1330,7 @@ const server = http.createServer(async (req, res) => {
         const scan = await opening.detect(cfg, baseText, { topic: r.topic, audience: r.audience, listen });
         scan.scanned_at = new Date().toISOString();
         scan.stale = false;
+        scan.text_hash = textHash(baseText);
         // 等待 LLM 期间任务可能被其他操作改动,合入最新记录再存,避免整对象覆盖
         const fresh = store.getRun(r.id);
         if (!fresh) return send(res, 404, { error: '任务不存在' });
@@ -1398,12 +1407,13 @@ const server = http.createServer(async (req, res) => {
       const baseText = description.versionText(r, version);
       if (!baseText) return send(res, 400, { error: '该版本文案不存在' });
       const descs = r.descriptions || {};
-      if (descs[version] && !body.force) return send(res, 200, { ok: true, cached: true, description: descs[version] });
+      if (cacheUsable(descs[version], baseText) && !body.force) return send(res, 200, { ok: true, cached: true, description: descs[version] });
       const cfg = pipeline.loadTweakConfig();
       if (!cfg || !cfg.api_key) return send(res, 400, { error: '未配置微调按钮的 API Key,请在设置页「微调按钮 API 配置」中选择有效渠道' });
       try {
         const desc = await description.generate(cfg, r.topic, baseText, (r.audience || {}).target_language);
         desc.generated_at = new Date().toISOString();
+        desc.text_hash = textHash(baseText);
         // 等待 LLM 期间任务可能被其他操作改动,合入最新记录再存,避免整对象覆盖
         const fresh = store.getRun(r.id);
         if (!fresh) return send(res, 404, { error: '任务不存在' });
