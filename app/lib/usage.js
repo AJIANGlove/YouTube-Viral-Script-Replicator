@@ -11,7 +11,7 @@ function stepOf(label) {
   let s = String(label || '').trim();
   for (const [re, name] of STEP_RULES) if (re.test(s)) return name || s.replace(/(续写|重试|·被拒重试|JSON 重试|结构重试)\s*\d*$/g, '').trim();
   s = s.replace(/[((]第\s*\d+\s*次[))]/g, '')
-    .replace(/(·被拒重试\d*|续写\d*|重试\d*|JSON 重试|结构重试|·补评分)+$/g, '')
+    .replace(/(·调短|·被拒重试\d*|续写\d*|重试\d*|JSON 重试|结构重试|·补评分)+$/g, '')
     .replace(/\s+(CH|FS)\d+\b.*$/, '')
     .trim();
   return s || '其他';

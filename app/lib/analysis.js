@@ -826,7 +826,30 @@ function mergeAttempts(a, b) {
   });
   return out.sort((x, y) => String(x.ts).localeCompare(String(y.ts))).slice(-100);
 }
+// v1.86 渠道卡住(只发心跳、一个字都没写)时自动调短输出:opts.stall 是调用方带的一个对象,同一份输出的几轮续写共用。
+// 调短后被 max_tokens 截断,调用方照旧接着写;只对这一份输出有效,下一步用回设置里的值(设置不改)。
+const STALL_MIN_TOKENS = 2048;
+function stallCfg(cfg, st) { return st && st.max_tokens ? { ...cfg, max_tokens: st.max_tokens } : cfg; }
 async function callWithLog(run, cfg, messages, label, opts) {
+  const st = opts && opts.stall;
+  if (!st) return callWithLogOnce(run, cfg, messages, label, opts);
+  const o = { ...opts, stall: undefined, shortenOnStall: true }; // 卡住时 llmCall 不原样重试,马上交回这里
+  for (let lb = label; ; lb = label + '·调短') {
+    try { return await callWithLogOnce(run, stallCfg(cfg, st), messages, lb, o); }
+    catch (e) {
+      if (!e.stall) throw e;
+      const cur = st.max_tokens || cfg.max_tokens || 8192;
+      const next = Math.max(STALL_MIN_TOKENS, Math.floor(cur / 2));
+      if (st.tried || next >= cur) {
+        throw Object.assign(new Error('「' + label + '」渠道连续两次很久只发心跳、一个字都没写' + (st.max_tokens ? '(第二次已把这一份的输出调短到 ' + st.max_tokens + ' token)' : '') + ',多半是渠道卡住了。请换一个渠道,再点「重跑」。' + e.message), { kind: 'empty', stall: true });
+      }
+      st.tried = true; st.from = cur; st.max_tokens = next;
+    }
+  }
+}
+// 调短后续写的轮数要放宽(原来一轮的量现在要几轮)
+function stallRounds(base, cfg, st) { return st && st.max_tokens ? Math.ceil(base * (st.from || cfg.max_tokens || 8192) / st.max_tokens) : base; }
+async function callWithLogOnce(run, cfg, messages, label, opts) {
   const pipeline = require('./pipeline'); // 延迟加载,避免与 pipeline 循环依赖
   const t0 = Date.now();
   // 只把 attempts / 取消标记并进盘上的最新版本,不整对象写回:
@@ -1351,12 +1374,14 @@ function saveRunMerge(run) {
 // 渠道中途断流时不丢已收到的内容,让模型接着写完 JSON(实测 run_7c467c8e0a71「AI 先调整」第 202 秒断流、已收到 2.1 万字,
 // 原样重试 4 次全断,调整失败后事实表 30 条全是「待查」就写了稿)
 async function callContinued(run, cfg, messages, label) {
-  let r = await callWithLog(run, cfg, messages, label, { allowPartial: true, minPartial: 500 });
+  const stall = {};
+  let r = await callWithLog(run, cfg, messages, label, { allowPartial: true, minPartial: 500, stall });
   let text = r.content, msgs = messages;
+  const maxK = stallRounds(3, cfg, stall);
   // v1.83:被 max_tokens 截断的也接着写(原来只续断流的;账本变长后 JSON 更容易写到上限,用户 2026-11-04:一定不能截断)
-  for (let k = 1; (r.partial || (r.stopReason === 'max_tokens' && String(r.content || '').length >= 200)) && k <= 3; k++) {
+  for (let k = 1; (r.partial || (r.stopReason === 'max_tokens' && String(r.content || '').length >= 200)) && k <= maxK; k++) {
     msgs = [...msgs, { role: 'assistant', content: r.content }, { role: 'user', content: '输出在中途断了。从你上一条最后一个字接着往下写,不要重复已经写过的内容,不要重新开头,不要代码围栏和解释,直到把整个 JSON 写完。' }];
-    r = await callWithLog(run, cfg, msgs, label + '续写' + k, { allowPartial: true, minPartial: 1 });
+    r = await callWithLog(run, cfg, msgs, label + '续写' + k, { allowPartial: true, minPartial: 1, stall });
     text += r.content;
   }
   return { ...r, content: text };
@@ -1592,6 +1617,6 @@ module.exports = { keepNotesText, buildSourceMapping, runSourceMapping, setPovMo
   loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, HOOK_TYPES, hookType, acceptedGaps, verifyLedger,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,
-  frameworkVars, fillVars, callJson, callWithLog, mergeAttempts, getTarget, setTarget, needsList, mergeAdjust, runAutoAdjust, reviseItem, auditTitle, evidenceWeak, FACTS_MIN, ledgerPending, ledgerDeviations, ledgerChoice, devPct, devRefresh, altScenario,
+  frameworkVars, fillVars, callJson, callWithLog, stallRounds, mergeAttempts, getTarget, setTarget, needsList, mergeAdjust, runAutoAdjust, reviseItem, auditTitle, evidenceWeak, FACTS_MIN, ledgerPending, ledgerDeviations, ledgerChoice, devPct, devRefresh, altScenario,
   ledgerValueText, ledgerId, callContinued, ECON_ANALYSIS_NOTE
 };

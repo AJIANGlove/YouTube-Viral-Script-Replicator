@@ -23,6 +23,11 @@ const CONFIG_PATH = path.join(__dirname, '..', 'config.json');
 // 连通性探测 120 秒(思考型模型留余量,探测仍有界)
 const LLM_IDLE_TIMEOUT_MS = 10 * 60 * 1000;
 const LLM_MAX_RETRIES = 3;
+const STALL_MIN_SECS = Number(process.env.STALL_MIN_SECS) || 180; // v1.86:等过 3 分钟还只有心跳才算渠道卡住(短时间的空响应照旧按空响应重试)
+// 响应体里除了 ping / 注释 / 空行什么都没有
+function onlyPings(text) {
+  return String(text || '').split('\n').every(l => { const t = l.trim(); return !t || t[0] === ':' || /^event:\s*ping$/.test(t) || /^data:\s*\{\s*"type"\s*:\s*"ping"\s*\}$/.test(t); });
+}
 const LLM_BACKOFF_MS = [30 * 1000, 60 * 1000, 120 * 1000];
 const GATE_MAX_RETRIES = 3;
 const PROBE_TIMEOUT_MS = 120 * 1000;
@@ -316,8 +321,12 @@ async function llmCall(cfg, messages, label, opts) {
           label, model: cfg.model, secs: Math.round(secs()), bytes: resp.text.length,
           sse: !!sse, streams: sse ? sse.streams : 0
         }, resp.text);
-        const e = new Error('空响应' + (f ? '(已留痕 ' + path.basename(f) + ')' : ''));
+        // v1.86:等了很久、整条流只有 ping(连 message_start 都没有)= 渠道卡住。实测 도자기 那篇二稿审稿:6 次都是 600 秒只有心跳,
+        // 渠道多半在后台等上游整篇写完、到 10 分钟上限就断。原样再发结果一样,只白等、白扣钱
+        const stall = !!sse && !sse.streams && secs() >= STALL_MIN_SECS && onlyPings(resp.text);
+        const e = new Error((stall ? '渠道 ' + Math.round(secs()) + ' 秒只发心跳、一个字都没写' : '空响应') + (f ? '(已留痕 ' + path.basename(f) + ')' : ''));
         e.kind = 'empty';
+        if (stall) e.stall = true;
         throw e;
       }
       // 流没收到结束标记就断了(实测 lk888 渠道部分请求在约 90 秒断开,stop_reason 为空)。
@@ -341,6 +350,8 @@ async function llmCall(cfg, messages, label, opts) {
     } catch (e) {
       lastErr = e;
       if (e.kind === 'empty' && o.fastFailEmpty) break;
+      // v1.86 渠道卡住:能调短输出的调用(shortenOnStall)马上交回上层调短再试;其他调用最多再原样试一次
+      if (e.stall && (o.shortenOnStall || attempt >= 1)) break;
       if (!isRetryable(e)) break;
     }
   }
@@ -350,6 +361,7 @@ async function llmCall(cfg, messages, label, opts) {
   const finalErr = new Error(label + ' 共 ' + attempts + ' 次调用均失败: ' + (lastErr ? lastErr.message : '未知错误'));
   if (lastErr && lastErr.kind) finalErr.kind = lastErr.kind;
   if (lastErr && lastErr.partial) finalErr.partial = lastErr.partial;
+  if (lastErr && lastErr.stall) finalErr.stall = true;
   throw finalErr;
 }
 
@@ -1160,5 +1172,5 @@ async function runGeneration(runId) {
   store.saveRun(done);
 }
 
-module.exports = { lengthCheck, todayStr, loadConfig, saveConfig, resolveProvider, normalizeModels, loadTweakConfig, buildRequest, postJson, probeProvider, runGeneration, fillTemplate, loadTemplates, llmCall, parseSSE, isRetryable,
+module.exports = { onlyPings, STALL_MIN_SECS, lengthCheck, todayStr, loadConfig, saveConfig, resolveProvider, normalizeModels, loadTweakConfig, buildRequest, postJson, probeProvider, runGeneration, fillTemplate, loadTemplates, llmCall, parseSSE, isRetryable,
   CHAPTER_SPLIT_MIN_WORDS, bpChaptersOf, bpWordBudget, chapterTagLine, extractChapterBlock, runScriptByChapters, dumpLlmFailure };

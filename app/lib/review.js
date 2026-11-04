@@ -1679,10 +1679,11 @@ async function callLong(run, cfg, prompt, label, opts) {
 async function callLongOnce(run, cfg, prompt, label) {
   let messages = [{ role: 'user', content: prompt }];
   let text = '', r = null, secs = 0;
-  for (let round = 0; round < AUDIT_MAX_ROUNDS; round++) {
+  const stall = {}; // v1.86:渠道卡住时这一份调短输出,几轮续写共用
+  for (let round = 0; round < an().stallRounds(AUDIT_MAX_ROUNDS, cfg, stall); round++) {
     // 渠道中途断流(实测 run 비빔밥 终审·审稿在第 202 秒断流,已收到 1.1 万字,原样重试 4 次全断):
     // 收到的正文不丢,和 max_tokens 截断一样让模型接着写,不从头重来
-    r = await an().callWithLog(run, cfg, messages, round ? label + '续写' + round : label, { allowPartial: true, minPartial: 500 });
+    r = await an().callWithLog(run, cfg, messages, round ? label + '续写' + round : label, { allowPartial: true, minPartial: 500, stall });
     text += r.content;
     secs += r.secs || 0;
     if (r.stopReason !== 'max_tokens' && !r.partial) return { content: text, secs, truncated: false };
