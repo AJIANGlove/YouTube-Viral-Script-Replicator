@@ -90,14 +90,20 @@ async function scout(run, cfg, asset, setStage) {
   const t0 = Date.now();
   // 先摸底:按题目原文搜一次,让角度从真实资料里长出来(联网定论点)
   let disc = [];
-  if (ready) {
+  // v1.84:建任务前预判时已经按题目搜过同一条(reuseDiscovery),直接用,不重搜;预判核对过的反转角度带进出角度的提示词
+  const T = require('./twist');
+  const pre = ready ? T.reuseDiscovery(run) : null;
+  const tw = T.twistForRun(run);
+  if (tw) out.twist = tw;
+  if (pre) { disc = pre; out.reused_discovery = true; }
+  else if (ready) {
     setStage('定论点:先按题目搜一轮');
     disc = await search.runQueries([{ query: String(run.topic || '').slice(0, 100), target: '摸底' }], run.topic, cfg, { max: 1 });
   }
   setStage('定论点:想 3 个角度');
   const prompt = A.fillVars(readPrompt('thesis_angles.md'), {
     ...vars, thesis_methods: methods, keep_notes: keep, max_queries: MAX_Q,
-    discovery: disc.length && arr(disc[0].results).length ? '【先搜了一轮(按题目原文)】\n' + search.resultsBrief(disc) : ''
+    discovery: (disc.length && arr(disc[0].results).length ? '【先搜了一轮(按题目原文)】\n' + search.resultsBrief(disc) : '') + (tw ? '\n\n' + T.scoutHint(tw) : '')
   });
   const ao = await A.callJson(run, cfg, prompt, '定论点角度', anglesOk);
   out.angles = cleanAngles(ao);
@@ -145,6 +151,7 @@ function researchText(ts) {
   }
   const f = p.final;
   const lines = [head,
+    ...(ts.twist ? [require('./twist').scoutHint(ts.twist)] : []),
     '选定论点(' + (p.chosen === 'NEW' ? '资料里发现的新角度' : p.chosen) + '):' + f.one_line,
     '  原来以为:' + f.belief + '\n  要证明:' + f.claim + (f.ending_landing ? '\n  结尾落点:' + f.ending_landing : '') + (f.boundary ? '\n  边界:' + f.boundary : ''),
     '  为什么选它:' + p.why];

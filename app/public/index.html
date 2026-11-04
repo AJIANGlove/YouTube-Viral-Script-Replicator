@@ -1805,7 +1805,7 @@ function renderPrecheck() {
   if (!el) return;
   const r = precheckLast;
   const st = document.getElementById('precheck-status');
-  if (st) st.innerHTML = !r ? '填好主题再点。你选的框架半分钟左右先出结果,另推荐的 3 个大约 2–3 分钟'
+  if (st) st.innerHTML = !r ? '填好主题再点。你选的框架半分钟左右先出结果,另推荐的 3 个大约 2–3 分钟;同时会按题目搜一轮,看每个框架的反转在这个题上证不证得出'
     : r.running ? `<b style="color:#1d4ed8">正在预判…${esc(r.stage || '')},已用 ${Math.round(r.secs || 0)} 秒</b>(结果在下面)`
     : r.error ? '<span style="color:#b91c1c">预判没成功,见下面</span>' : `预判完成,用时 ${esc(r.secs)} 秒(结果在下面)`;
   if (!r) { el.innerHTML = ''; return; }
@@ -1830,7 +1830,17 @@ function precheckCard(p, isSel) {
         <button class="an-btn" style="padding:1px 8px" onclick="openAssetDetail('${escAttr(p.asset_id)}')">详情</button></div>
       ${p.source ? `<div class="hint" style="margin:2px 0">原片:${esc(p.source)}</div>` : ''}
       ${!isSel && p.why ? `<div class="hint" style="color:#374151">为什么推荐:${esc(p.why)}</div>` : ''}
-      ${rfPjBody(p)}</div>`;
+      ${rfPjBody(p)}${twistHtml((p.prejudge || {}).twist || p.twist)}</div>`;
+}
+// v1.84 反转证不证得出(只提醒不拦)
+function twistHtml(t) {
+  if (!t) return '';
+  if (t.status !== 'done') return `<div class="hint" style="margin:2px 0">反转核对:${esc(t.why || t.error || '没做')}</div>`;
+  const C = { '原角度能证': ['#047857', '#ecfdf5', '反转:原片的角度在本题就能证明'], '换角度能证': ['#047857', '#ecfdf5', '反转:换个角度能证明'], '有反证': ['#b91c1c', '#fef2f2', '反转:搜到了反证,建议换题或换框架'], '资料不够': ['#6b7280', '#f9fafb', '反转:按题目搜到的资料不够,证不了也推翻不了(冷门题常见,不拦你,写前分析会再搜)'] }[t.result] || ['#6b7280', '#f9fafb', '反转:' + t.result];
+  const src = list => (list || []).map(x => `<a href="${escAttr(x.url)}" target="_blank" rel="noopener">${esc(x.site || x.title || x.ref)}</a>`).join('、');
+  return `<div style="margin:4px 0;padding:4px 8px;border-radius:6px;background:${C[1]};font-size:13px;line-height:1.6"><b style="color:${C[0]}">${esc(C[2])}</b>${t.why ? ' · ' + esc(t.why) : ''}
+    ${t.against ? `<div>反证:${esc(t.against.text)}${(t.against.sources || []).length ? '(' + src(t.against.sources) + ')' : ''}</div>` : ''}
+    ${(t.angles || []).length && /能证/.test(t.result) ? `<div>能证明的角度(写前分析定论点、蓝图分章会用):${t.angles.map((g, i) => `<div style="margin-left:1em">${i + 1}. ${esc(g.angle)}${g.proves_with ? '<span class="hint" style="margin:0"> — ' + esc(g.proves_with) + (g.estimate ? '(估算)' : '') + '</span>' : ''}${(g.sources || []).length ? ' <span class="hint" style="margin:0">' + src(g.sources) + '</span>' : ''}</div>`).join('')}</div>` : ''}</div>`;
 }
 function renderPrecheckDone(el, r, sel, sp, bad, card, box) {
   const best = (r.picks || [])[0];
@@ -1838,6 +1848,7 @@ function renderPrecheckDone(el, r, sel, sp, bad, card, box) {
   let h = `<div style="${box}"><div style="font-size:14px;font-weight:700">这个框架合不合适:「${esc(r.topic)}」 <span class="hint" style="margin:0">用时 ${esc(r.secs)} 秒</span></div>
     <div id="precheck-stale" class="rv-flag hidden">主题改过了,下面是按旧主题判的,重新点一次按钮。</div>
     ${card(sel, true)}
+    ${((sp.twist || sel.twist || {}).result) === '有反证' ? '<div class="hint" style="color:#b91c1c"><b>按题目搜到了和这个框架的反转相反的资料。</b>照这个框架写,论点多半会被自己的数字推翻;建议换下面的框架,或者改题目。仍想用也可以直接开始生成,写前分析会按账本再核对一次论点。</div>' : ''}
     <div class="hint" style="color:#374151">${bad ? '<b>你选的框架预计套不上这个主题。</b>建议换成下面的一个,或者改主题。不想换的话直接点「开始生成」,就按你选的框架写,之后不再提示换框架,套不上的段落写稿时换个讲法。' : better ? '你选的框架能写,下面有预判更好的,可以比较一下。' : '你选的框架可以用,下面是库里另外几个能套上的,供比较。'}<b>框架只在这里定:</b>点「开始生成」以后不会再提示换框架,写前分析直接用这次的判断(30 分钟内、主题和受众没改)。</div>
     ${(r.picks || []).length ? `<div style="font-weight:600;margin-top:8px">库里推荐的 ${r.picks.length} 个(只列预判合适的)</div>` + r.picks.map(p => card(p, false)).join('') : `<div class="rv-flag">库里没挑出预判合适的框架${r.rounds > 1 ? '(挑了两轮)' : ''}${r.pick_error ? '(' + esc(r.pick_error) + ')' : ''}。可以改主题再点一次,或者仍用你选的框架开始生成。</div>`}
     ${r.hidden_unfit ? `<div class="hint">另有 ${esc(r.hidden_unfit)} 个预判不合适的框架,没列出来。</div>` : ''}

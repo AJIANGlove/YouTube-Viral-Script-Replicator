@@ -217,6 +217,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `thesis_pick.md` | 写前论点调研③按正反资料核对挑选 | 35 |
 | `ledger_extend.md` | 账本补推算行（如果行/全年行，只输出新增） | 34 |
 | `thesis_vs_ledger.md` | 论点与账本对账（对不上换角度保标题） | 30 |
+| `twist_check.md` | 锁框架前反转证不证得出（原角度/换角度/反证/资料不够） | 23 |
 | `fit_check.md` | 快速适配判断（结构段+必须保留机制，先于完整分析；蓝图方式「严格照原片」时用） | 53 |
 | `fit_check_function.md` | 快速适配判断，蓝图方式「按功能重排」时用（只看锁定项、核心套路、使用前提三样，卡住处标类别，普通段进 weak_segments） | 54 |
 | `analysis_fit_function.md` | 「按功能重排」时替换写前分析「第 1 步 适配判定」那一段（同样只看三样，输出 fit_blocking / weak_segments） | 20 |
@@ -268,7 +269,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 57 份 `.md`（3687 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 63 份，合计 3888 行。
+合计 58 份 `.md`（3710 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 64 份，合计 3911 行。
 
 ### 历史版本
 

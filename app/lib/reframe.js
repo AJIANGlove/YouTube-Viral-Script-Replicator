@@ -444,6 +444,9 @@ function lockFramework(run) {
 // 建任务时调用:有这次预判就带上判断结果(写前分析不再判一次);预判说套不上人仍选它,撑不住的段落记进 keep_notes
 function applyPrecheck(run, body) {
   lockFramework(run);
+  // v1.84:预判时按题目搜过的那一轮,写前分析定论点直接用,不重搜
+  const ce = preCache.get(preKey(body));
+  if (ce && Date.now() - ce.at <= PRE_TTL && ce.disc) run.precheck_search = { topic: String(run.topic || '').trim(), at: new Date().toISOString(), batches: ce.disc.batches };
   const fit = precheckCarry(body);
   if (!fit) return true;
   run.fit_carry = fit;
@@ -512,6 +515,12 @@ async function runPrecheck(job, b, asset, cfg) {
   };
   const a = { title: { final_title: topic }, thesis_card: {}, protagonist: {} };
   const key2 = preKey(b);
+  // v1.84:按题目搜一轮(和写前分析定论点的「先摸底」是同一条,建任务后复用),判每个框架的反转在本题证不证得出;失败不挡预判
+  const T = require('./twist');
+  const discP = T.discover(topic, cfg).catch(() => null);
+  const twFor = async list => T.judgeSafe(run, cfg, list.map(p => ({ asset_id: p.asset_id, asset: store.getAsset(p.asset_id) })).filter(x => x.asset && x.asset.framework), await discP);
+  const attach = (list, tw) => list.forEach(p => { if (p.prejudge && tw[p.asset_id]) p.prejudge.twist = tw[p.asset_id]; });
+  const twSel = twFor([{ asset_id: asset.id }]);
   const selDone = fc().quickFit(run, cfg, asset, {}).then(f => ({ status: 'done', ...f }), e => ({ status: 'failed', error: e.message })).then(p => {
     job.selected = { ...job.selected, prejudge: p };
     if (p.status === 'done') preRemember(key2, asset.id, p);
@@ -522,7 +531,9 @@ async function runPrecheck(job, b, asset, cfg) {
   job.topic_note = String(round.topic_note || '');
   job.pick_error = round.error || '';
   job.stage = '预判 ' + (round.picks || []).length + ' 个候选';
-  let picks = await prejudgeAll(run, cfg, a, round.picks || []);
+  const [p1, tw1] = await Promise.all([prejudgeAll(run, cfg, a, round.picks || []), twFor(round.picks || [])]);
+  attach(p1, tw1);
+  let picks = p1;
   // v1.76:只给人看预判合适的(绿色)。一个都没有就排除判过的再挑一轮
   if (!picks.some(p => AUTO_OK.includes((p.prejudge || {}).verdict))) {
     job.stage = '第一轮 ' + picks.length + ' 个都不合适,再挑一轮';
@@ -530,10 +541,15 @@ async function runPrecheck(job, b, asset, cfg) {
     const r2 = await pickRound(run, cfg, { ...a, reframe_reasons: [], verdict_reason: '还没开始写,建任务前先看看:从库里挑 6 个能套上这个题目的框架' }, [asset.id].concat(picks.map(p => p.asset_id)), '## 上一轮挑的框架,预判都套不上(不要再选,也不要选犯同样毛病的)\n' + why + '\n').catch(e => ({ picks: [], topic_note: '', error: e.message }));
     if (r2.topic_note) job.topic_note = String(r2.topic_note);
     job.stage = '预判第二轮 ' + (r2.picks || []).length + ' 个候选';
-    picks = picks.concat(await prejudgeAll(run, cfg, a, (r2.picks || []).map(p => ({ ...p, round: 2, ai_order: p.ai_order + 100 }))));
+    const r2p = (r2.picks || []).map(p => ({ ...p, round: 2, ai_order: p.ai_order + 100 }));
+    const [p2, tw2] = await Promise.all([prejudgeAll(run, cfg, a, r2p), twFor(r2p)]);
+    attach(p2, tw2);
+    picks = picks.concat(p2);
     job.rounds = 2;
   }
   await selDone;
+  const twS = (await twSel)[asset.id];
+  if (twS) { job.selected.twist = twS; if (job.selected.prejudge) job.selected.prejudge.twist = twS; }
   const sorted = sortPicks(picks).filter(p => AUTO_OK.includes((p.prejudge || {}).verdict));
   job.hidden_unfit = picks.filter(p => (p.prejudge || {}).verdict === '换框架').length;
   job.hidden_failed = picks.filter(p => !(p.prejudge || {}).verdict).length;
@@ -543,6 +559,8 @@ async function runPrecheck(job, b, asset, cfg) {
   const all = sortPicks([{ asset_id: asset.id, name: job.selected.name, prejudge: job.selected.prejudge, ai_order: -1 }].concat(picks)).filter(p => p.prejudge && p.prejudge.status === 'done');
   const ce = preCache.get(key2);
   if (ce) ce.pool = all.map(poolOf);
+  const discB = await discP;
+  if (ce && Array.isArray(discB)) ce.disc = { topic, batches: discB };
   const brief = p => ({ asset_id: p.asset_id, name: p.name, source: p.source, track: p.track, why: p.why, adjust: p.adjust, risk: p.risk, prejudge: p.prejudge });
   job.picks = sorted.slice(0, SHOW).map(brief);
   job.others = sorted.slice(SHOW).map(brief);

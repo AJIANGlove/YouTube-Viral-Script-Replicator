@@ -165,6 +165,8 @@ function analysisBrief(a, run, trackKey, mode) {
   const th = a.thesis_card || {};
   out.push('论点卡:原有认知=' + (th.viewer_belief || '') + ';真相=' + (th.truth || '') + ';一句话论点=' + (th.one_line_thesis || '') + ';结尾落点=' + (th.ending_landing || '')
     + (th.contrast ? ';反差=' + th.contrast : '') + (th.double_standard && !/^无$/.test(String(th.double_standard).trim()) ? ';同事不同命=' + th.double_standard : '') + (th.boundary ? ';不适用于=' + th.boundary : ''));
+  const twText = run ? require('./twist').briefText(run) : ''; // v1.84:建任务时核对过的能证明反转的角度
+  if (twText) out.push(twText);
   out.push('事实表(只能用这些;[估算] 的数不用逐个声明,全片在开始算账时说一次「下面按公开数据估算」即可;[假设] 的在用到时说一次「假设」;[待查] 的数不要写成确定的事实):\n' + (a.facts || []).map(f => '- ' + f.id + ' [' + (f.kind || '') + '] ' + (f.content || '') + '(' + [f.source, f.year, f.region].filter(Boolean).join(',') + ')' + (f.method ? ' 算法:' + f.method : '')).join('\n'));
   const stale = a.stale || {};
   const staleTag = (arr, key) => (Array.isArray(arr) && arr.includes(key) ? '(依据的事实已更新,这一行的数作废,按事实表重算)' : '');
