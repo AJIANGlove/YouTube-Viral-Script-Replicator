@@ -450,6 +450,49 @@ function offLedgerAmounts(run) {
     seen.add(x.value);
     out.push({ ch: c.id, amount: x.raw, text: t });
   })));
+  if (an().ledgerSayOn(run)) out.push(...econOffLedger(run, ok));
+  return out;
+}
+// v1.83 经济拆账:百分比也要来自账本或事实表;「如果」推算的数,句子里要说成假设(只核金额和百分比,日期、份数不核)
+const PCT_RE = /(\d+(?:\.\d+)?)\s*(?:%|퍼센트|프로(?![가-힣]))/g;
+const IF_WORD_RE = /만약|만일|가정|라면|다면|이라면|으로 치면|로 치면|친다면|경우|오르면|올라가면|늘면|늘어나면|줄면|줄어들면|바뀌면|되면|올리면|내리면|떨어지면|假如|如果/;
+function econOffLedger(run, moneyOk) {
+  const a = run.analysis || {};
+  const E = require('./econledger');
+  const rows = arr(a.ledger);
+  an().verifyLedger(rows);
+  const num = l => (l.program_amount != null ? Number(l.program_amount) : Number(String(l.amount == null ? '' : l.amount).replace(/,/g, '')));
+  const pcts = [];
+  rows.forEach(l => { const n = num(l); if (isFinite(n) && /%|비율|比率|比例|률|率/.test(String(l.unit || '') + ' ' + String(l.item || ''))) pcts.push(n, n * 100); });
+  const say = an().ledgerSay(rows);
+  arr(say.waterfalls).forEach(w => { pcts.push(w.end_pct); w.steps.forEach(st => pcts.push(st.pct)); });
+  arr(a.facts).forEach(f => { for (const m of String(f.content || '').matchAll(PCT_RE)) pcts.push(Number(m[1])); });
+  for (const m of String(run.materials || '').matchAll(PCT_RE)) pcts.push(Number(m[1]));
+  const pctOk = v => v === 0 || v === 100 || pcts.some(k => isFinite(k) && (Math.abs(k - v) <= 0.5 || Math.round(k) === Math.round(v)));
+  // 「如果」行的数:不是别的(非假设)行也有的那个数
+  const plain = rows.filter(l => !l.scenario);
+  const scen = rows.filter(l => l.scenario).map(l => {
+    const n = num(l); const money = /KRW|원|won|₩|韩元/i.test(String(l.unit || ''));
+    const v = money ? n * an().moneyScale(l.unit) : n;
+    return { l, v, money, pct: /%/.test(String(l.unit || '')) };
+  }).filter(x => isFinite(x.v) && Math.abs(x.v) >= (x.money ? 1e4 : 1) && !plain.some(p => { const n = num(p); return isFinite(n) && (Math.abs(n - x.v) <= Math.abs(x.v) * 0.003 || Math.abs(n * an().moneyScale(p.unit) - x.v) <= Math.abs(x.v) * 0.003); }));
+  const out = [], seen = new Set();
+  scriptChapters(checks.extractFinalScript(currentScript(run))).forEach(c => splitSentences(c.text).forEach(t => {
+    for (const m of t.matchAll(PCT_RE)) {
+      const v = Number(m[1]);
+      if (pctOk(v) || seen.has('p' + v)) continue;
+      seen.add('p' + v);
+      out.push({ ch: c.id, amount: m[0].trim(), text: t, why: '百分比账本和事实表里都没有' });
+    }
+    if (IF_WORD_RE.test(t)) return;
+    const amts = krAmountsIn(t).map(x => x.value), ps = [...t.matchAll(PCT_RE)].map(m => Number(m[1]));
+    scen.forEach(x => {
+      const hit = x.pct ? ps.some(v => Math.abs(v - x.v) <= 0.5) : amts.some(v => Math.abs(v - Math.abs(x.v)) <= Math.max(Math.abs(x.v) * 0.003, 5000));
+      if (!hit || seen.has('s' + x.l.id + c.id)) return;
+      seen.add('s' + x.l.id + c.id);
+      out.push({ ch: c.id, amount: an().ledgerValueText(x.l, num(x.l)), text: t, why: '是账本「如果」推算(' + x.l.id + ')的数,这句没说成「만약…」' });
+    });
+  }));
   return out;
 }
 function ledgerWrongUsed(run) {
@@ -592,7 +635,7 @@ function publishCheck(run, v) {
     if (unused.length) notes.push('写前分析的账本有 ' + unused.length + ' 行算错:' + unused.map(ledgerLine).join(';') + '。稿子里没用到写错的数,不挡发布');
   }
   const off = v.final ? offLedgerAmounts(run) : [];
-  if (off.length) notes.push('稿子里有 ' + off.length + ' 个金额在账本、事实表、你的资料里都找不到(多半是 AI 写稿时现算的,论点核对会重点查):' + off.slice(0, 6).map(x => x.ch + '「' + x.amount + '」').join('、') + (off.length > 6 ? ' 等' : ''));
+  if (off.length) notes.push('稿子里有 ' + off.length + ' 个' + (an().ledgerSayOn(run) ? '金额或百分比' : '金额') + '在账本、事实表、你的资料里都找不到(多半是 AI 写稿时现算的,论点核对会重点查):' + off.slice(0, 6).map(x => x.ch + '「' + x.amount + '」').join('、') + (off.length > 6 ? ' 等' : ''));
   // 反转被推翻:看最近一轮复审对终稿的判断;复审判定已解决就不再挡
   const th = last && last.thesis;
   if (arr(s.thesis_contradicts).length && !(th && th.resolved)) blk('thesis', '反转被事实推翻' + (th ? '(复审判定未解决:' + th.note + ')' : '(终审复审还没判断)'));
@@ -3497,9 +3540,10 @@ function applyFix(runId, body) {
 function claimLedgerText(run) {
   const a = run.analysis || {};
   an().verifyLedger(arr(a.ledger));
-  const rows = arr(a.ledger).map(l => { const n = l.program_amount != null ? l.program_amount : l.amount; const kr = /KRW|원|won|₩|韩元/i.test([l.unit, l.value, l.item].join(' ')) && isFinite(Number(n)) && Math.abs(Number(n)) >= 100 ? '(' + an().krMoney(Number(n) * an().moneyScale(l.unit)) + ')' : ''; return '- ' + (l.id || '') + ' ' + (l.item || '') + ' = ' + n + (l.unit ? ' ' + l.unit : '') + kr + (l.formula ? ' [= ' + l.formula + ']' : ''); }).join('\n');
+  const econ = an().ledgerSayOn(run) ? require('./econledger') : null; // v1.83:[如果] [全年] 标记和三条核对(只给经济拆账)
+  const rows = arr(a.ledger).map(l => { const n = l.program_amount != null ? l.program_amount : l.amount; const kr = /KRW|원|won|₩|韩元/i.test([l.unit, l.value, l.item].join(' ')) && isFinite(Number(n)) && Math.abs(Number(n)) >= 100 ? '(' + an().krMoney(Number(n) * an().moneyScale(l.unit)) + ')' : ''; return '- ' + (l.id || '') + (econ ? econ.markLedger(l) : '') + ' ' + (l.item || '') + ' = ' + n + (l.unit ? ' ' + l.unit : '') + kr + (l.formula ? ' [= ' + l.formula + ']' : ''); }).join('\n');
   const say = rows && an().ledgerSayOn(run) ? an().ledgerSayText(an().ledgerSay(arr(a.ledger)), false) : '';
-  return (rows + (say ? '\n\n' + say : '')) || '(无)';
+  return (rows + (say ? '\n\n' + say : '') + (econ && rows ? '\n\n' + econ.claimNote(a) : '')) || '(无)';
 }
 function claimNote(cc) {
   // 实测 08:33 按核对改稿 AI 一处没改:这里原来写「数字一律用稿子里已有的」,核对却要求改成账本里的 6,483만(稿子里没有),两头矛盾,模型干脆不改
@@ -3548,7 +3592,7 @@ async function runClaimCheck(runId) {
     const out0 = await an().callJson(run, cfg, an().fillVars(readPrompt('claim_check.md'), {
       target_language: (run.audience || {}).target_language || '', title: ((run.analysis || {}).title || {}).final_title || run.topic,
       opening: sl.lines.map(l => l.text).join('\n') || '(无)', script: checks.extractFinalScript(text),
-      ledger: claimLedgerText(run), off_ledger: offLedgerAmounts(run).map(x => '- ' + x.ch + '「' + x.amount + '」:' + x.text).join('\n') || '(无)'
+      ledger: claimLedgerText(run), off_ledger: offLedgerAmounts(run).map(x => '- ' + x.ch + '「' + x.amount + '」' + (x.why ? '(' + x.why + ')' : '') + ':' + x.text).join('\n') || '(无)'
     }), '论点核对', o => !!claimVerdict(claimUnwrap(o)));
     const out = claimUnwrap(out0);
     const verdict = claimVerdict(out);

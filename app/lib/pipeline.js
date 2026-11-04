@@ -539,6 +539,11 @@ async function runGeneration(runId) {
     run.status = 'blueprint_hold'; delete run.error; delete run.cancel_requested; store.saveRun(run); return;
   }
 
+  // v1.83 经济拆账:写稿前补一次「如果」推算行和论点对账(没跑过「AI 先调整」的人工确认任务;人选完账本假设后账变了的只重新对账)
+  if (run.analysis_confirmed && !(run.outputs || {}).step1) {
+    try { if (await require('./econledger').ensure(run, cfg)) store.saveRun(run); } catch (e) { /* 失败不挡写稿 */ }
+  }
+
   const templates = loadTemplates();
   const audienceStr = JSON.stringify(run.audience, null, 2);
   const ctx = {

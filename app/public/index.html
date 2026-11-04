@@ -4232,6 +4232,30 @@ function matUse(a, materials) {
 }
 
 // 账本体检(写稿前):程序按公式改正了哪些行、AI 修账本改了什么、还剩什么问题
+// v1.83 经济拆账:账本补的「如果」推算、全年合计,和论点对账的结果
+function ledgerThesisHtml(t) {
+  if (!t) return '';
+  const rows = [];
+  const ex = t.extend || {};
+  if (ex.ran && (ex.added || []).length) rows.push(`<div><b>程序补了 ${ex.added.length} 行推算</b>(「如果」推算、全年合计、百分比;AI 只写公式,数由程序算):${ex.added.map(x => esc(x.id + ' ' + x.item + ' = ' + x.value_text)).join(';')}</div>`);
+  else if (ex.ran) rows.push(`<div>论点里没有要另算的「如果」推算或全年合计,账本没补行</div>`);
+  else if (ex.error || ex.why) rows.push(`<div style="color:#b45309">补推算行没做:${esc(ex.error || ex.why)}</div>`);
+  if ((ex.dropped || []).length) rows.push(`<div style="color:#b45309">有 ${ex.dropped.length} 行公式算不了,没加:${ex.dropped.map(x => esc(x.id + ' ' + x.item)).join(';')}</div>`);
+  if (t.annual_missing) rows.push(`<div style="color:#b45309">论点涉及季节或全年,但账本里没有全年合计:稿子里不会下「一年下来」这类结论</div>`);
+  if (t.status === 'failed') rows.push(`<div style="color:#b91c1c">论点对账没成功:${esc(t.error || '')}(不挡写稿)</div>`);
+  else if (t.status === 'done') {
+    const r0 = (t.rounds || [])[0] || {};
+    if (r0.verdict === '对得上') rows.push(`<div style="color:#047857"><b>✓ 论点和账本对得上</b>${r0.calc ? ':' + esc(r0.calc) : ''}</div>`);
+    else {
+      rows.push(`<div><b>论点和账本${esc(r0.verdict || '对不上')}</b>:${esc(r0.calc || '')}${(r0.conflicts || []).map(x => '<div style="margin:2px 0">· ' + esc(x.claim + ' → ' + x.why) + '</div>').join('')}</div>`);
+      if ((t.changed || []).length) rows.push(`<div><b>已换成账本撑得住的角度</b>(${(t.changed || []).map(k => ({ thesis_card: '论点', title: '标题', hook: '钩子' })[k] || k).join('、')};记进了调整清单):${esc(((r0.new_thesis_card || {}).one_line_thesis) || ((r0.new_thesis_card || {}).truth) || '')}${(t.changed || []).includes('title') ? '<div>新标题:' + esc(r0.new_title) + (r0.new_title_zh ? '(' + esc(r0.new_title_zh) + ')' : '') + '</div>' : ''}</div>`);
+      rows.push(t.verdict === '对得上' ? `<div style="color:#047857">✓ 换角度后复核:对得上</div>` : `<div style="color:#b45309">换角度后复核还是${esc(t.verdict || '对不上')}:写稿会被提醒不许这么说${(t.remaining || []).length ? '(' + (t.remaining || []).map(x => esc(x.claim)).join(';') + ')' : ''}</div>`);
+    }
+    if ((t.assumption_only || []).length) rows.push(`<div>只在假设下成立、稿子里要说成「만약…」的:${(t.assumption_only || []).map(esc).join(';')}</div>`);
+  }
+  if (!rows.length) return '';
+  return `<div class="v13" style="margin:4px 0 8px;padding:8px 10px;border:1px solid #93c5fd;background:#eff6ff;border-radius:6px;font-size:13px;line-height:1.7"><div><b>论点对账(经济拆账,写稿前)</b></div>${rows.join('')}</div>`;
+}
 function ledgerCheckupHtml(c) {
   if (!c) return '';
   const pf = (c.program_fixed || []).concat(c.ai_fixed || []);
@@ -4315,7 +4339,7 @@ function analysisHtml(a, materials, say) {
   const notFound = (a.search_log || []).filter(s => /没找到/.test(s.result || ''));
   if (notFound.length) html += `<div class="an-sec">没找到的资料</div>` + anTable(['想找', '说明'],
     notFound.map(s => `<tr class="an-warn"><td>${esc(s.looked_for)}</td><td>${esc(s.note)}</td></tr>`));
-  if ((a.ledger || []).length) html += `<div class="an-sec">账本</div>` + ledgerCheckupHtml(a.ledger_checkup) + anTable(['项目', '数值', '事实'],
+  if ((a.ledger || []).length) html += `<div class="an-sec">账本</div>` + ledgerCheckupHtml(a.ledger_checkup) + ledgerThesisHtml(a.ledger_thesis) + anTable(['项目', '数值', '事实'],
     a.ledger.map((l, _i, LCA) => `<tr class="${l.bad ? 'an-bad' : lcRowWarn(l) ? 'an-warn' : ''}"><td>${esc(l.item)}${l.bad ? '<div class="hint" style="margin:0;color:#b91c1c">这一行有问题,写稿不会用它的数:' + esc(l.bad) + '</div>' : ''}</td><td>${esc(l.value)}${l.program_fixed ? '<div class="hint" style="margin:0">程序按公式改正(原来写 ' + esc(l.program_fixed.value || l.program_fixed.from) + ')</div>' : ''}${lcFactNote(l, LCA)}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`))
     + ledgerSayHtml(say);
   html += `<div class="an-sec">模块取舍</div>` + anTable(['原片段', '处理', '留存作用', '钩子', '理由', '事实', '时长'],
@@ -5193,7 +5217,7 @@ function anEditorShell() {
   const notFound = ((d.search_log) || []).filter(s => /没找到/.test(s.result || ''));
   if (notFound.length) html += `<div class="an-sec">没找到的资料</div>` + anTable(['想找', '说明'],
     notFound.map(s => `<tr class="an-warn"><td>${esc(s.looked_for)}</td><td>${esc(s.note)}</td></tr>`));
-  if ((d.ledger || []).length) html += `<div class="an-sec">账本（只读）</div>` + ledgerCheckupHtml(d.ledger_checkup) + anTable(['项目', '数值', '事实'],
+  if ((d.ledger || []).length) html += `<div class="an-sec">账本（只读）</div>` + ledgerCheckupHtml(d.ledger_checkup) + ledgerThesisHtml(d.ledger_thesis) + anTable(['项目', '数值', '事实'],
     d.ledger.map((l, _i, LCA) => `<tr class="${l.bad ? 'an-bad' : lcRowWarn(l) ? 'an-warn' : ''}"><td>${esc(l.item)}${l.bad ? '<div class="hint" style="margin:0;color:#b91c1c">这一行有问题,写稿不会用它的数:' + esc(l.bad) + '</div>' : ''}</td><td>${esc(l.value)}${l.program_fixed ? '<div class="hint" style="margin:0">程序按公式改正(原来写 ' + esc(l.program_fixed.value || l.program_fixed.from) + ')</div>' : ''}${lcFactNote(l, LCA)}</td><td>${esc(anIds(l.fact_ids))}</td></tr>`));
 
   html += `<div class="an-sec">模块取舍</div>

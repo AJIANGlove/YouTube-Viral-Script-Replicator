@@ -92,8 +92,15 @@ function buildAnalysisPrompt(run, asset) {
   const { vars, card } = frameworkVars(run, asset);
   const keep = keepNotesText(run, 'analysis');
   // v1.74:按功能重排时「第 1 步 适配判定」换成新标准(严格照原片时原样)
-  return { prompt: fillVars(require('./fitrule').analysisPrompt(readPrompt('analysis.md')), vars) + (keep ? '\n\n' + keep : ''), track_card_name: card ? card.name : null };
+  // v1.83:经济拆账另加账本规则(税前、论点要账本撑得住、账本行数上限);其他赛道提示词不变
+  const econ = ledgerSayOn(run) ? '\n\n' + ECON_ANALYSIS_NOTE : '';
+  return { prompt: fillVars(require('./fitrule').analysisPrompt(readPrompt('analysis.md')), vars) + econ + (keep ? '\n\n' + keep : ''), track_card_name: card ? card.name : null };
 }
+
+const ECON_ANALYSIS_NOTE = '【经济拆账账本补充规则(本题适用;和上面第 4 步说法冲突时以这里为准)】\n' +
+  '- 税:账本默认只算到「税前」,不放增值税、所得税的行,利润行 item 写「세전」;稿子里一句「세금은 따로예요」带过。只有事实表里有税率和计税方法的出处时才细算,而且要按规则:卖价含增值税,销项税 = 含税营业额 × 10/110(不是 × 10%);增值税 = 销项 - 进项(能抵扣的进货、平台手续费 × 10/110);所得税按利润算,不按营业额。拿不准的一律只算到税前。\n' +
+  '- 论点要账本撑得住:定论点时先想好用账本哪几行证明。要靠季节对比、「一年下来」才成立的论点,账本里必须能算出全年合计(旺季、淡季各几个月 × 每月结余);算不出来就换一个一张月账就能证明的角度(哪一项成本吃掉了钱、谁拿走了钱、保本线在哪)。\n' +
+  '- 「如果……会怎样」的推算和全年合计可以先不写进账本:写前分析之后程序会单独补这些行并按公式算数,再核对论点和账本对不对得上。这里的账本最多 30 行,只放原始数和一张月账,不要写长。';
 
 // 都套不上、人选了「不改,继续写」(v1.71):框架里写不成立的段落和换法,写前分析、蓝图、写稿、复审都带上
 // 只在 run.keep_notes 存在时出现,其他任务的提示词一字不变
@@ -165,12 +172,15 @@ function analysisBrief(a, run, trackKey, mode) {
     verifyLedger(a.ledger);
     // 账本锁数(实测 run_ee2e6bd16c05:写稿自己加了账本没有的「인심·양념 480만」,영업이익写成 9,641만/9,278만,账本是 9,703만;
     // 每次改稿只改一两章,同一个量在稿子里同时有三个数,论点核对每轮都报账对不上)
-    out.push('账本(程序已按公式重算;标「程序重算」的以程序的数为准)。金额锁定:稿子里的收入、成本、利润、时薪、倍数、回本时间,只能用这张账本里的数(或事实表里的数),照抄后面「稿中写」的写法,可以四舍五入但不许重算出别的数;同一个量全文只能有一个数值。账本里有的量(总收入、总成本、利润、时薪等),事实表里估算出来的合计和账本不一样时,一律用账本的(实测事实表 F18 估算利润 9,641만、账本 9,703만,稿子两个都用了)。账本里没有的项目(比如想多算一项调味料成本),不许自己加进合计重新算,只能不提或只做定性说明:\n' + a.ledger.map(l => '- ' + (l.id ? l.id + ' ' : '') + l.item + ' = ' + (l.value || ((l.amount != null ? l.amount : '') + (l.unit ? ' ' + l.unit : ''))) +
+    const econOn = ledgerSayOn(run, trackKey);
+    const econMark = l => (econOn ? require('./econledger').markLedger(l).trim() : '');
+    out.push('账本(程序已按公式重算;标「程序重算」的以程序的数为准)。金额锁定:稿子里的收入、成本、利润、时薪、倍数、回本时间,只能用这张账本里的数(或事实表里的数),照抄后面「稿中写」的写法,可以四舍五入但不许重算出别的数;同一个量全文只能有一个数值。账本里有的量(总收入、总成本、利润、时薪等),事实表里估算出来的合计和账本不一样时,一律用账本的(实测事实表 F18 估算利润 9,641만、账本 9,703만,稿子两个都用了)。账本里没有的项目(比如想多算一项调味料成本),不许自己加进合计重新算,只能不提或只做定性说明:\n' + a.ledger.map(l => '- ' + (l.id ? l.id + ' ' : '') + econMark(l) + (econMark(l) ? ' ' : '') + l.item + ' = ' + (l.value || ((l.amount != null ? l.amount : '') + (l.unit ? ' ' + l.unit : ''))) +
       (l.formula ? ' [= ' + l.formula + ']' : '') + (l.mismatch ? '(程序重算:' + l.program_amount + (l.unit ? ' ' + l.unit : '') + ',原来写错了)' : '') + krLedgerForm(l) +
       (l.fact_ids && l.fact_ids.length ? '(' + l.fact_ids.join(',') + ')' : '') + staleTag(stale.ledger, l.item) +
       (l.bad ? '(这一行有问题,稿子里不要用这个数:' + l.bad + ')' : '')).join('\n'));
     const sayText = ledgerSayOn(run, trackKey) ? ledgerSayText(ledgerSay(a.ledger), mode !== 'review') : '';
     if (sayText) out.push(sayText);
+    if (econOn) out.push(require('./econledger').briefText(a)); // v1.83:「如果」推算、全年合计、税前、百分比
     // 账本假设和报道值不一样的行(v1.61):第一次出现时说一句是假设、比报道高/低多少,点到为止
     const devs = ledgerDeviations(a);
     if (devs.length) out.push('账本假设和报道值不一样的行(这个数在稿子里第一次出现时,用一句话说明这是假设、比报道的数高还是低,例如「보도된 평균은 하루 3만 원대지만, 오늘은 목 좋은 가게 기준으로 6만 원으로 잡아볼게요」;只在第一次出现时说一次,后面照账本的数讲,不加「정확하지 않을 수 있습니다」这类免责句):\n' + devs.map(l => {
@@ -462,6 +472,8 @@ function ledgerProblems(a, run, fixes) {
     if (Math.abs(x.to - x.from) / Math.abs(x.to) > LEDGER_BIG_FIX) out.push({ id: x.id, kind: 'bigfix', text: x.id + ' ' + x.item + ':账本写的是 ' + x.from_text + ',按公式 ' + ((byId[x.id] || {}).formula || '') + ' 算是 ' + x.to_text + ',差得多,程序已经改成按公式算的数;如果其实是公式引用错了行,要改公式' });
   });
   if (ledgerSayOn(run) && !ledgerSay(rows).waterfalls.length) out.push({ id: '', kind: 'shape', text: '经济拆账题的账本里没有一行「利润 = 收入 - 成本1 - 成本2 …」(或「收入 - 成本合计」)的公式,程序排不出念账顺序' });
+  // v1.83 税(只管经济拆账):没出处的税、增值税按营业额 ×10%、所得税按营业额算,都交给 AI 修账本;修不好程序去掉税、利润只算到税前
+  if (ledgerSayOn(run)) out.push(...require('./econledger').taxProblems(a));
   return out;
 }
 // 账本「漏成本」(v1.60):合计/成本/保本行,模型写的数比按公式算的大很多 → 多半是公式里漏了成本项,不是写错了总数。
@@ -533,9 +545,14 @@ function ledgerForFix(a, gapIds) {
 // 写稿前的账本体检:程序改正 → 有问题交给 AI 只修账本一轮 → 再改正 → 还有问题的行标「不许用」。会改 a.ledger,结果记在 a.ledger_checkup
 async function ledgerCheckup(run, cfg, a, vars) {
   if (!a || !Array.isArray(a.ledger) || !a.ledger.length) return null;
+  // v1.83:上一轮补的「如果」推算、全年合计行先拿掉(连同引用它们的行),体检完重新补,不会越补越长
+  const econ = ledgerSayOn(run) ? require('./econledger') : null;
+  if (econ) stripEconRows(a);
+  // v1.83:没出处的税按规则直接去掉(默认只算到税前),不用 AI 修;有出处但算法错的交给 AI 修一轮
+  const detaxed0 = econ ? econ.detax(a, econ.taxProblems(a).filter(p => p.unsourced).map(p => p.id)) : [];
   // 漏成本的行在程序锁数之前找(锁过的按 program_fixed 里原来写的数比)
   const gaps0 = ledgerGaps(a);
-  const rec = { at: new Date().toISOString(), program_fixed: ledgerWriteBack(a) };
+  const rec = { at: new Date().toISOString(), program_fixed: ledgerWriteBack(a), ...(detaxed0.length ? { detaxed: detaxed0 } : {}) };
   const gapIds = new Set(gaps0.map(g => g.id));
   if (gaps0.length) rec.gaps = gaps0.map(g => { const l = a.ledger.find((x, i) => x && ledgerId(x, i) === g.id) || {}; return { id: g.id, item: g.item, from_text: ledgerValueText(l, g.from), to_text: ledgerValueText(l, g.to) }; });
   const closure = gapClosure(a, [...gapIds]);
@@ -564,15 +581,32 @@ async function ledgerCheckup(run, cfg, a, vars) {
       after = ledgerProblems(a, run, []).concat(gaps1.map(g => ({ id: g.id, kind: 'gap', text: g.text + '(AI 补了一轮还没对上,程序已按公式锁数,利润可能偏高,写稿前请人看一下)' })), ledgerSanity(a, run));
     } catch (e) { rec.ai = { ran: false, error: e.message }; }
   }
+  // v1.83:税还是不对(没出处、按营业额扣):程序去掉税的行,利润只算到税前,稿子里一句「세금은 따로」带过
+  if (econ && after.some(p => p.kind === 'tax')) {
+    rec.detaxed = (rec.detaxed || []).concat(econ.detax(a, after.filter(p => p.kind === 'tax').map(p => p.id)));
+    ledgerWriteBack(a);
+    after = after.filter(p => p.kind !== 'tax');
+  }
   // 还修不好的:公式算不了、单位混用的行,写稿时不许用它的数
-  a.ledger.forEach(l => { if (l && typeof l === 'object') delete l.bad; });
+  a.ledger.forEach(l => { if (l && typeof l === 'object' && !/税的行已删掉/.test(String(l.bad || ''))) delete l.bad; });
   after.filter(p => p.kind === 'formula' || p.kind === 'unit').forEach(p => { const l = a.ledger.find((x, i) => x && ledgerId(x, i) === p.id); if (l) l.bad = p.text; });
   rec.remaining = after.map(p => p.text);
   a.ledger_checkup = rec;
   // 关键假设和事实表报道的数对一对(软约束:可以不一样,差很多又没写理由的才停下让人选)
   if (cfg) rec.facts_compare = await ledgerFactCheck(run, cfg, a);
+  // v1.83 经济拆账:补「如果」推算和全年合计(单独小调用,只输出新增的行),再核对论点和账本对不对得上,对不上换账本撑得住的角度
+  if (econ && cfg) await econ.afterCheckup(run, cfg, a);
   a.ledger_check = verifyLedger(a.ledger);
   return rec;
+}
+// 拿掉上一轮补的经济拆账推算行(added_by=econ),以及公式引用它们的行
+function stripEconRows(a) {
+  const rows = (a && Array.isArray(a.ledger) ? a.ledger : []);
+  const drop = new Set(rows.filter(l => l && l.added_by === 'econ').map((l, i) => String(l.id || '')));
+  if (!drop.size) return 0;
+  for (let k = 0; k < 4; k++) rows.forEach(l => { if (l && !drop.has(String(l.id || '')) && (String(l.formula || '').match(/L\d+[a-z]?(?![a-z\d])/gi) || []).some(r => drop.has(r))) drop.add(String(l.id || '')); });
+  a.ledger = rows.filter(l => !(l && drop.has(String(l.id || ''))));
+  return drop.size;
 }
 
 // ---------- 账本假设 vs 事实表(v1.61,软约束,用户 2026-11-01 明确不要「必须一致」) ----------
@@ -1311,7 +1345,8 @@ function saveRunMerge(run) {
 async function callContinued(run, cfg, messages, label) {
   let r = await callWithLog(run, cfg, messages, label, { allowPartial: true, minPartial: 500 });
   let text = r.content, msgs = messages;
-  for (let k = 1; r.partial && k <= 3; k++) {
+  // v1.83:被 max_tokens 截断的也接着写(原来只续断流的;账本变长后 JSON 更容易写到上限,用户 2026-11-04:一定不能截断)
+  for (let k = 1; (r.partial || (r.stopReason === 'max_tokens' && String(r.content || '').length >= 200)) && k <= 3; k++) {
     msgs = [...msgs, { role: 'assistant', content: r.content }, { role: 'user', content: '输出在中途断了。从你上一条最后一个字接着往下写,不要重复已经写过的内容,不要重新开头,不要代码围栏和解释,直到把整个 JSON 写完。' }];
     r = await callWithLog(run, cfg, msgs, label + '续写' + k, { allowPartial: true, minPartial: 1 });
     text += r.content;
@@ -1435,6 +1470,7 @@ async function runAutoAdjust(runId, draft, opts) {
   const batches = useSearch ? await planAndSearch(run, cfg, vars, a, needsList(a, run), '', search.MAX_QUERIES) : [];
   const forModel = cloneJson(a);
   delete forModel.ai_marks;
+  if (ledgerSayOn(run)) { stripEconRows(forModel); delete forModel.ledger_thesis; } // v1.83:补的推算行体检后重新补,不让「AI 先调整」整本抄一遍
   const prompt = fillVars(readPrompt('adjust.md'), { ...vars, search_results: search.resultsBrief(batches), analysis_json: JSON.stringify(forModel), round_note: '' });
   const out = await callJson(run, cfg, prompt, 'AI 先调整', o => typeof o === 'object' && !Array.isArray(o));
   let n = mergeAdjust(a, out, batches);
@@ -1446,6 +1482,7 @@ async function runAutoAdjust(runId, draft, opts) {
       const b2 = await planAndSearch(run, cfg, vars, a, evidenceNeeds(a, run, ev0), '', search.MAX_QUERIES);
       const fm2 = cloneJson(a);
       delete fm2.ai_marks;
+      if (ledgerSayOn(run)) { stripEconRows(fm2); delete fm2.ledger_thesis; }
       const p2 = fillVars(readPrompt('adjust.md'), { ...vars, search_results: search.resultsBrief(b2), analysis_json: JSON.stringify(fm2), round_note: EVIDENCE_ROUND_NOTE.replace('{{why}}', ev0.why.join(';')).replace('{{facts_min}}', FACTS_MIN) });
       const o2 = await callJson(run, cfg, p2, 'AI 补素材', o => typeof o === 'object' && !Array.isArray(o));
       n += mergeAdjust(a, o2, b2);
@@ -1547,5 +1584,6 @@ module.exports = { keepNotesText, buildSourceMapping, runSourceMapping, setPovMo
   loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, HOOK_TYPES, hookType, acceptedGaps, verifyLedger,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,
-  frameworkVars, fillVars, callJson, callWithLog, mergeAttempts, getTarget, setTarget, needsList, mergeAdjust, runAutoAdjust, reviseItem, auditTitle, evidenceWeak, FACTS_MIN, ledgerPending, ledgerDeviations, ledgerChoice, devPct, devRefresh, altScenario
+  frameworkVars, fillVars, callJson, callWithLog, mergeAttempts, getTarget, setTarget, needsList, mergeAdjust, runAutoAdjust, reviseItem, auditTitle, evidenceWeak, FACTS_MIN, ledgerPending, ledgerDeviations, ledgerChoice, devPct, devRefresh, altScenario,
+  ledgerValueText, ledgerId, callContinued, ECON_ANALYSIS_NOTE
 };
