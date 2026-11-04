@@ -995,7 +995,7 @@
     </div>
     <div class="card">
       <h2>微调按钮 API 配置(服务端全局)</h2>
-      <div class="hint" style="margin-bottom:8px">作用于:选题推荐 / 生成简介 / 指纹检测 / YouTube 商业化检查 / 开头留存检查 / 强化开头</div>
+      <div class="hint" style="margin-bottom:8px">作用于:选题推荐 / 生成简介 / 指纹检测 / YouTube 商业化检查 / 开头留存检查 / 强化开头 / 稿子的中文对照(没配好就用主流程的)</div>
       <div class="grid">
         <div><label>渠道商</label><div id="twk-provider"></div></div>
         <div><label>模型</label><div id="twk-model"></div></div>
@@ -2546,7 +2546,9 @@ function renderUsage(r) {
   if (!el) return;
   const us = r.usage;
   if (!us || !us.total || !us.total.calls) { el.innerHTML = '<div class="hint" style="margin-top:6px">token 用量:这个任务是 v1.85 之前建的(或还没调用过 AI),没有记录。</div>'; return; }
-  const wasOpen = !!(el.querySelector('details') || {}).open;
+  // v1.87:默认折叠;只在同一个任务刷新时保留展开状态,换到别的任务一律折叠
+  const wasOpen = el.dataset.run === String(r.id || '') && !!(el.querySelector('details') || {}).open;
+  el.dataset.run = String(r.id || '');
   const p = usagePrice();
   const sum = b => (b.in || 0) + (b.out || 0) + (b.cache_read || 0) + (b.cache_write || 0);
   const T = us.total, tAll = sum(T) || 1;

@@ -773,7 +773,25 @@ async function rawCall(run, cfg, prompt, label) {
 }
 
 const TRANSLATE_PARALLEL = 3;
-async function translateTexts(run, cfg, texts, label) {
+// v1.87:中文对照只是给人看的翻译,走设置页「微调按钮」那套渠道(本项目一般是 DeepSeek,便宜很多);
+// 微调渠道没配好(没有 key 或模型)就用主流程的渠道;某一批在微调渠道上出错,这一批改用主流程渠道再翻一次
+const TRANSLATE_MIN_TOKENS = 4096;
+function translateCfg(cfg) {
+  if (process.env.TRANSLATE_USE_MAIN === '1') return null;
+  let tw = null;
+  try { tw = require('./pipeline').loadTweakConfig(); } catch (e) { tw = null; }
+  if (!tw || !tw.api_key || !tw.model || !tw.base_url) return null;
+  if (cfg && tw.provider === cfg.provider && tw.model === cfg.model) return null; // 和主流程是同一个,没必要换
+  return { ...tw, max_tokens: Math.max(Number(tw.max_tokens) || 0, TRANSLATE_MIN_TOKENS) };
+}
+async function translateTexts(run, mainCfg, texts, label) {
+  const cheap = translateCfg(mainCfg);
+  let cfg = cheap || mainCfg;
+  const call = async (prompt, lb) => {
+    if (cfg === mainCfg) return rawCall(run, mainCfg, prompt, lb);
+    try { return await rawCall(run, cfg, prompt, lb); }
+    catch (e) { cfg = mainCfg; return rawCall(run, mainCfg, prompt, lb + '·换主渠道'); } // 便宜渠道出错:后面的批次都回到主渠道
+  };
   const out = {};
   const items = [...new Set(texts.filter(t => t && (needsZh(t) || hasForeign(t))))];
   // v1.80:先分好批,再最多 TRANSLATE_PARALLEL 批同时翻
@@ -788,11 +806,11 @@ async function translateTexts(run, cfg, texts, label) {
     const keyed = {};
     batch.forEach((t, i) => { keyed['T' + (i + 1)] = t; });
     const prompt = an().fillVars(readPrompt('translate.md'), { items: Object.keys(keyed).map(k => '===' + k + '===\n' + keyed[k]).join('\n') });
-    let r = await rawCall(run, cfg, prompt, label);
+    let r = await call(prompt, label);
     let got = parseBlocks(r.content, r.stopReason === 'max_tokens');
     // 漏了的段单独再翻一次
     for (const k of Object.keys(keyed).filter(k => !got[k])) {
-      const r2 = await rawCall(run, cfg, an().fillVars(readPrompt('translate.md'), { items: '===' + k + '===\n' + keyed[k] }), label + '补翻');
+      const r2 = await call(an().fillVars(readPrompt('translate.md'), { items: '===' + k + '===\n' + keyed[k] }), label + '补翻');
       Object.assign(got, parseBlocks(r2.content, r2.stopReason === 'max_tokens'));
     }
     Object.keys(keyed).forEach(k => { if (got[k]) out[hash(keyed[k])] = got[k]; });
