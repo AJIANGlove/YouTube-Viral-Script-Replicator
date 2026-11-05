@@ -618,6 +618,7 @@
   .ctx-p { padding: 6px 8px; margin: 4px 0; border-radius: 6px; white-space: pre-wrap; }
   .ctx-p.on { background: #eff6ff; border: 2px solid #ef4444; }
   .ctx-hit { background: #bfdbfe; text-decoration: underline; text-decoration-color: #1d4ed8; font-weight: 600; }
+  .ctx-zh-hit { text-decoration: underline; text-decoration-color: #2563eb; text-decoration-thickness: 2px; text-underline-offset: 3px; color: #1e3a8a; }
   .ctx-zh { margin-top: 4px; color: #4b5563; font-size: 13px; border-left: 3px solid #a5b4fc; padding-left: 8px; }
   .ctx-foot { display: flex; justify-content: flex-end; padding: 8px 14px; border-top: 1px solid #e5e7eb; }
   .rv-plain-top { display: flex; gap: 10px; align-items: flex-start; }
@@ -3394,7 +3395,7 @@ const RV_BLOCK_ZH = { open_fact: '开头事实', hard_open: '复审问题', red_
 function rvApplyHtml(source, x, busy) {
   const p = ((rvState.view || {}).summary || {}).publish || {};
   const dis = busy ? 'disabled' : '';
-  const arrow = (o, n, del) => `原句「${esc(o)}」${ctxBtn(o)}<br>→ ${del ? '<b>删掉这句</b>' : '改成「<b>' + esc(n) + '</b>」'}`;
+  const arrow = (o, n, del) => `原句「${esc(o)}」${ctxBtn(o, x.chapter, '', ctxProb(x))}<br>→ ${del ? '<b>删掉这句</b>' : '改成「<b>' + esc(n) + '</b>」'}`;
   const editsHtml = es => es.map(e => `<div style="margin:3px 0">${e.chapter ? '<span class="hint">' + esc(e.chapter) + '</span> ' : ''}${arrow(e.old, e.new, e.del)}${e.new_zh ? `<div class="rv-zh">中文:${esc(e.new_zh)}</div>` : ''}</div>`).join('');
   const applyBtn = (what) => `<button class="an-btn ${p.good ? 'go' : 'apply'}" onclick="rvApplyFix('${source}', '${escAttr(x.id)}')" ${dis}>直接应用</button> <span class="hint">程序直接在终稿里${what},不调 AI、不重新打分,点完这条就不挡发布;改错了可以撤回</span>`;
   if (x.applied && x.applied.merged_into) return `<div class="rv-apply done"><b style="color:#047857">✓ 已和 ${esc(x.applied.merged_id || '')} 一起改好</b> <span class="hint">(要撤回就撤回 ${esc(x.applied.merged_id || '')} 那条)</span></div>`;
@@ -3552,7 +3553,7 @@ function rvClaimLi(x, busy) {
   return x.no_issue ? `<li style="color:#6b7280"><b>[核对后没问题,不挡发布]</b> ${esc(x.chapter || '')} ${x.quote ? '「' + esc(x.quote) + '」' : ''}<span class="hint">${esc(String(x.problem || '').slice(-120))}</span></li>`
     : x.looks_ok ? rvLooksOkHtml(x, busy)
     : x.applied ? `<li><b style="color:#047857">[已应用,不挡发布]</b> ${esc(x.chapter || '')} ${x.why_zh ? rvWhyBox(x.why_zh) : `<span class="hint">${esc(x.problem)}</span>`}${rvApplyHtml('claim', x, busy)}</li>`
-    : `<li><b style="color:${x.level === '关键' ? '#b91c1c' : '#b45309'}">[${esc(x.level)}]</b> ${esc(x.chapter || '')} ${x.quote ? '「' + esc(x.quote) + '」' + ctxBtn(x.quote) : ''}${rvWhyBox(x.why_zh, '')}<div class="rv-orig"><span class="hint">核对原话(含算式):</span>${esc(x.problem)}</div>${x.fix ? `<div class="hint">改法:${esc(x.fix)}</div>` : ''}${rvApplyHtml('claim', x, busy)}</li>`;
+    : `<li><b style="color:${x.level === '关键' ? '#b91c1c' : '#b45309'}">[${esc(x.level)}]</b> ${esc(x.chapter || '')} ${x.quote ? '「' + esc(x.quote) + '」' + ctxBtn(x.quote, x.chapter, '', ctxProb(x)) : ''}${rvWhyBox(x.why_zh, '')}<div class="rv-orig"><span class="hint">核对原话(含算式):</span>${esc(x.problem)}</div>${x.fix ? `<div class="hint">改法:${esc(x.fix)}</div>` : ''}${rvApplyHtml('claim', x, busy)}</li>`;
 }
 // ---------- v1.98 大白话列表(用户 2026-11-05):每条只显示一句话「问题 / 怎么改 / 不改会怎样」,细节点「查看详情」,每条能单独忽略 ----------
 const RV_IMP = { '大': ['big', '影响大'], '中': ['mid', '影响中'], '小': ['small', '影响小'] };
@@ -3617,13 +3618,14 @@ function ctxBtn(q, chapter, label, problem) {
 }
 // 没写原句的问题:从问题描述、建议、A/B/C 里挑引号中的原文(不是中文的那些),再带上章节;找不到就看整章
 function ctxBtnFor(x, opts) {
-  const prob = [x.problem, x.suggestion].filter(Boolean).join('\n');
+  const prob = [x.problem, x.suggestion, (x.plain || {}).problem, (x.plain || {}).fix].filter(Boolean).join('\n');
   if (x.quote && !x.not_found) return ctxBtn(x.quote, x.chapter, '', prob);
   const src = [x.problem, x.suggestion].concat((opts || []).map(o => o.zh)).join('\n');
   const qs = [];
   src.replace(/[「"“]([^」"”]{6,300})[」"”]/g, (m, q) => { if (/[\uac00-\ud7af]/.test(q) || !/[\u4e00-\u9fff]/.test(q)) qs.push(q); return m; });
   return ctxBtn(qs.slice(0, 6), x.chapter, '', prob);
 }
+function ctxProb(x) { return [x.problem, x.fix, x.suggestion, (x.plain || {}).problem, (x.plain || {}).fix].filter(Boolean).join('\n'); }
 function rvCtxPlain(rc, x) { return ctxBtnFor(x, ((rc || {}).options || {})[x.id] || []).replace('>查看原文详情<', '>看原文<').trim(); }
 function ctxMark(text, marks, hit) {
   const t = String(text);
@@ -3640,32 +3642,40 @@ function rvCtxDraw() {
   if (!el) { el = document.createElement('div'); el.id = 'ctx-modal'; el.onclick = e => { if (e.target === el) rvCtxClose(); }; document.body.appendChild(el); }
   const d = st.data;
   const body = !d ? (st.error ? `<div style="color:#b91c1c">${esc(st.error)}</div>` : '<div class="hint"><span class="rv-spin"></span> 正在找原句…(问题里没写原句的,AI 要找一下,十几秒)</div>')
-    : d.paras.map((p, k) => `<div class="ctx-p${p.hit ? ' on' : ''}"${p.hit ? ' id="ctx-hit"' : ''}>${k === 0 || p.chapter !== d.paras[k - 1].chapter ? `<div class="hint" style="margin-bottom:2px">${esc(rvChName(p.chapter) || p.chapter || '')}</div>` : ''}<div>${p.hit ? ctxMark(p.text, d.marks || [d.quote], true) : esc(p.text)}</div>${st.showZh && p.zh ? `<div class="ctx-zh">${esc(p.zh)}</div>` : ''}</div>`).join('');
+    : d.paras.map((p, k) => `${p.gap ? '<div class="hint" style="text-align:center;margin:8px 0">…… 中间省略 ……</div>' : ''}<div class="ctx-p${p.hit ? ' on' : ''}"${p.hit ? ' id="ctx-hit"' : ''}>${k === 0 || p.gap || p.chapter !== d.paras[k - 1].chapter ? `<div class="hint" style="margin-bottom:2px">${esc(rvChName(p.chapter) || p.chapter || '')}</div>` : ''}<div>${p.hit ? ctxMark(p.text, d.marks || [d.quote], true) : esc(p.text)}</div>${st.showZh && (p.zh_marked || p.zh) ? `<div class="ctx-zh">${p.zh_marked ? esc(p.zh_marked).replace(/⟦([^⟧]*)⟧/g, '<span class="ctx-zh-hit">$1</span>').replace(/[⟦⟧]/g, '') : esc(p.zh)}</div>` : ''}</div>`).join('');
   const hasZh = d && d.paras.every(p => p.zh);
   el.innerHTML = `<div class="ctx-box"><div class="ctx-head"><b>原文详情</b>${d ? ` <span class="hint">${esc(rvChName(d.chapter) || d.chapter || '')} · ${d.note ? esc(d.note) : '标出来的是原句,前后各至少 6 句'}</span>` : ''}<button class="an-btn" style="margin-left:auto" onclick="rvCtxClose()">关闭</button></div>
-    <div class="ctx-body">${body}</div>
+    <div class="ctx-body">${d && (d.ledger || []).length ? `<div style="margin:4px 0 10px;padding:8px 10px;background:#f0fdf4;border:1px solid #86efac;border-radius:6px;font-size:13px"><b style="color:#047857">核对用的标准:写前分析的账本</b> <span class="hint">(程序算好的数,论点核对就是拿稿子对这几行)</span>${d.ledger.map(l => `<div style="margin-top:3px"><b>${esc(l.id)}</b> ${esc(l.item)} = <b>${esc(String(l.amount))}${l.unit ? ' ' + esc(l.unit) : ''}</b>${l.kr ? ' <span class="hint">(稿子里应写成 ' + esc(l.kr) + ')</span>' : ''}${l.formula ? ' <span class="hint">[= ' + esc(l.formula) + ']</span>' : ''}</div>`).join('')}</div>` : ''}${body}</div>
     ${d ? `<div class="ctx-foot"><button class="an-btn ${st.showZh ? '' : 'apply'}" onclick="rvCtxZh()" ${st.busy ? 'disabled' : ''}>${st.busy ? '<span class="rv-spin"></span> 翻译中…' : st.showZh && hasZh ? '隐藏翻译' : '翻译'}</button></div>` : ''}</div>`;
 }
+// 翻过的中文页面上也记一份;点过「翻译」就记住,下次打开直接显示中文(没翻过的段自动补翻)
+const CTX_ZH = {};
+function ctxZhOn(on) { try { if (on === undefined) return localStorage.getItem('ctx_zh_on') === '1'; localStorage.setItem('ctx_zh_on', on ? '1' : '0'); } catch (e) {} return !!on; }
+function ctxFillZh(d) { (d && d.paras || []).forEach(p => { if (p.zh) CTX_ZH[p.text] = p.zh; else if (CTX_ZH[p.text]) p.zh = CTX_ZH[p.text]; }); return d; }
 async function rvCtxOpen(i) {
   const c = CTX_Q[i];
-  rvState.ctx = { q: { quotes: c.quotes, chapter: c.chapter, problem: c.problem }, data: null, showZh: false };
+  const st = rvState.ctx = { q: { quotes: c.quotes, chapter: c.chapter, problem: c.problem }, data: null, showZh: ctxZhOn() };
   rvCtxDraw();
-  try { rvState.ctx.data = await rvPost('quote_context', rvState.ctx.q); } catch (e) { rvState.ctx.error = e.message; }
+  try { st.data = ctxFillZh(await rvPost('quote_context', st.q)); } catch (e) { st.error = e.message; }
+  if (rvState.ctx !== st) return;
   rvCtxDraw();
+  if (st.showZh && st.data && !st.data.paras.every(p => p.zh && (!p.hit || p.zh_marked))) { st.showZh = false; rvCtxZh(); }
   const h = document.getElementById('ctx-hit'); if (h) h.scrollIntoView({ block: 'center' });
 }
 async function rvCtxZh() {
   const st = rvState.ctx; if (!st || !st.data) return;
-  if (st.showZh && st.data.paras.every(p => p.zh)) { st.showZh = false; return rvCtxDraw(); }
-  st.showZh = true;
-  if (st.data.paras.every(p => p.zh)) return rvCtxDraw();
+  if (st.showZh && st.data.paras.every(p => p.zh)) { st.showZh = false; ctxZhOn(false); return rvCtxDraw(); }
+  st.showZh = true; ctxZhOn(true);
+  if (st.data.paras.every(p => p.zh && (!p.hit || p.zh_marked || st.markTried))) return rvCtxDraw();
+  st.markTried = true;
   st.busy = true; rvCtxDraw();
-  try { st.data = await rvPost('quote_context', { ...st.q, translate: true }); } catch (e) { alert('没能翻译:' + e.message); }
+  try { st.data = ctxFillZh(await rvPost('quote_context', { ...st.q, translate: true })); } catch (e) { alert('没能翻译:' + e.message); }
   st.busy = false;
   if (rvState.ctx === st) rvCtxDraw();
 }
 function rvCtxClose() { rvState.ctx = null; const el = document.getElementById('ctx-modal'); if (el) el.remove(); }
-function rvCanAi(x) { return !!x && !x.applied && !x.ignored && !!(x.ai_able || (x.apply && x.apply.ai) || (x.ai_fix && x.ai_fix.status === 'merged')); }
+// 能勾的:要 AI 出改法的、AI 已经出好改法的。程序能直接替换的(账对不上那种「88만→103만」)不用勾,直接点它自己的「直接应用」(用户 2026-11-05)
+function rvCanAi(x) { return !!x && !x.applied && !x.ignored && !x.no_issue && !x.looks_ok && !x.ok_confirmed && !!(x.ai_able || (x.apply && x.apply.ai) || (x.ai_fix && x.ai_fix.status === 'merged')); }
 function rvSelList() { const all = rvState.selAll || [], sel = rvState.sel || {}; return all.filter(t => sel[t.k]); }
 function rvSelBarHtml(busy) {
   const all = rvState.selAll || [], picked = rvSelList();
@@ -3730,7 +3740,7 @@ function rvClaimPlainHtml(p, v, busy) {
   if (!c || st.status === 'running' || /论点/.test(v.running || '') || !c.blocking) return rvClaimHtml(p, v, true);
   const real = x => !x.not_found && !x.no_issue && !x.looks_ok && !x.applied && !x.ignored && !x.ok_confirmed;
   const issues = (c.issues || []).filter(x => !x.not_found);
-  const rows = issues.filter(real).map(x => rvPlainRow({ key: 'C_' + x.id, pick: { source: 'claim', id: x.id, x }, ctx: ctxBtn(x.quote, x.chapter, '看原文', x.problem).trim(), tag: rvChName(x.chapter), pl: x.plain, fb: x.why_zh || x.problem, detail: `<ul style="margin:0 0 0 18px">${rvClaimLi(x, busy)}</ul>`, ign: `rvIgnoreItem('claim', '${escAttr(x.id)}', true)` }, busy));
+  const rows = issues.filter(real).map(x => rvPlainRow({ key: 'C_' + x.id, pick: { source: 'claim', id: x.id, x }, ctx: ctxBtn(x.quote, x.chapter, '看原文', [x.problem, x.fix, (x.plain || {}).problem, (x.plain || {}).fix].filter(Boolean).join('\n')).trim(), tag: rvChName(x.chapter), pl: x.plain, fb: x.why_zh || x.problem, detail: `<ul style="margin:0 0 0 18px">${rvClaimLi(x, busy)}</ul>`, ign: `rvIgnoreItem('claim', '${escAttr(x.id)}', true)` }, busy));
   const rest = issues.filter(x => !real(x) && !x.ignored);
   const vNo = c.verdict === '不成立' && !c.verdict_applied;
   const head = vNo ? rvPlainRow({ key: 'C_verdict', tag: '', pl: { problem: '开头的主张被稿子自己的数推翻了:' + (c.claim || ''), fix: c.fix_claim ? '开头改成:' + c.fix_claim : '点「查看详情」看怎么算的', level: '大', impact: '论点站不住,整片立不住' }, detail: `<div class="v13"><b>怎么算的</b>:${esc(c.calc || '')}</div>` }, busy) : '';

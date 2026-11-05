@@ -3892,6 +3892,49 @@ function ctxQuotes(body) {
   return [...new Set([].concat(arr((body || {}).quotes), (body || {}).quote ? [body.quote] : [])
     .flatMap(q => String(q || '').split(/\.{3,}|…+/)).map(q => q.trim().replace(/^[「"'“]|[」"'”]$/g, '')).filter(q => ctxBare(q).length >= 4))];
 }
+// 问题里说到的金额(103万、1亿、30%),换成稿子的写法(103만、1억)到全文里找:数字前后对不上时,写这个数的几处都标出来
+function ctxNums(text) {
+  const out = new Set();
+  String(text || '').replace(/(\d[\d,]*(?:\.\d+)?)\s*(万|만|亿|억|%)/g, (m, n, u) => { out.add(n + ({ '万': '만', '亿': '억' }[u] || u)); return m; });
+  return [...out].slice(0, 8);
+}
+// 核对用的标准:问题里说到的数(103万)、点名的账本行(L21)在写前分析账本里的那几行
+function ctxLedger(run, problem) {
+  const rows = arr((run.analysis || {}).ledger);
+  if (!rows.length) return [];
+  const text = String(problem || '');
+  const ids = new Set((text.match(/\bL\d+\b/g) || []));
+  const wants = [];
+  text.replace(/(\d[\d,]*(?:\.\d+)?)\s*(万|만|亿|억|%)/g, (m, n, u) => { const v = Number(n.replace(/,/g, '')); if (isFinite(v)) wants.push(u === '%' ? { pct: v } : { won: v * (/亿|억/.test(u) ? 1e8 : 1e4) }); return m; });
+  const out = rows.filter(l => {
+    if (ids.has(String(l.id || ''))) return true;
+    const n = Number(l.program_amount != null ? l.program_amount : l.amount);
+    if (!isFinite(n)) return false;
+    const pct = /%/.test(String(l.unit || ''));
+    return wants.some(w => w.pct != null ? pct && Math.abs(n - w.pct) < 0.05 : !pct && Math.abs(n * an().moneyScale(l.unit) - w.won) < 5000);
+  }).slice(0, 8);
+  return out.map(l => { const n = l.program_amount != null ? l.program_amount : l.amount; const kr = /KRW|원|won|₩|韩元|万|만|亿|억/i.test([l.unit, l.value, l.item].join(' ')) && isFinite(Number(n)) && Math.abs(Number(n) * an().moneyScale(l.unit)) >= 100 ? an().krMoney(Number(n) * an().moneyScale(l.unit)) : ''; return { id: l.id || '', item: l.item || '', amount: n, unit: l.unit || '', kr, formula: l.formula || '' }; });
+}
+// 标出来的原文用 ⟦ ⟧ 括起来:翻译时让模型把对应的中文也括上,页面上画下划线
+function ctxMarked(text, marks) {
+  const t = String(text);
+  const ms = arr(marks).map(m => String(m || '').trim()).filter(m => m && t.includes(m)).sort((a, b) => b.length - a.length);
+  if (!ms.length) return '';
+  const taken = [];
+  ms.forEach(m => { let at = t.indexOf(m); while (at >= 0) { if (!taken.some(([a, b]) => at < b && a < at + m.length)) taken.push([at, at + m.length]); at = t.indexOf(m, at + m.length); } });
+  taken.sort((a, b) => b[0] - a[0]);
+  return taken.reduce((x, [a, b]) => x.slice(0, a) + '⟦' + x.slice(a, b) + '⟧' + x.slice(b), t);
+}
+async function translateMarked(run, cfg, texts) {
+  const keyed = {};
+  texts.forEach((t, i) => { keyed['T' + (i + 1)] = t; });
+  const prompt = an().fillVars(readPrompt('translate_marked.md'), { items: Object.keys(keyed).map(k => '===' + k + '===\n' + keyed[k]).join('\n') });
+  const r = await viaStep('explain', cfg, (c, sfx) => rawCall(run, c, prompt, '中文对照·原文详情(标对应)' + sfx));
+  const got = parseBlocks(r.content, r.stopReason === 'max_tokens');
+  const out = {};
+  Object.keys(keyed).forEach(k => { if (got[k]) out['M' + hash(keyed[k])] = got[k].trim(); }); // 没括出来的也存(就是没下划线),免得每次打开都重翻
+  return out;
+}
 async function quoteContext(runId, body) {
   const run = store.getRun(runId);
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
@@ -3899,10 +3942,16 @@ async function quoteContext(runId, body) {
   const paras = scriptParas(checks.extractFinalScript(currentScript(run)));
   const hits = new Set();
   qs.forEach(q => { const all = paras.map((p, k) => paraHas(p, q) ? k : -1).filter(k => k >= 0); if (all.length) all.forEach(k => hits.add(k)); else { const k = findPara(paras, q); if (k >= 0) hits.add(k); } });
+  const quoteHits = hits.size;
+  const nums = ctxNums((body || {}).problem).filter(n => !qs.includes(n));
+  const numHits = new Set();
+  nums.forEach(n => paras.forEach((p, k) => { if (new RegExp('(^|[^\\d,.])' + n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).test(p.text)) { numHits.add(k); hits.add(k); } }));
+  const foundNums = nums.filter(n => paras.some(p => p.text.includes(n)));
+  qs.push(...foundNums);
   // 引号里的话都找不到(或者问题里没引):让便宜渠道在这一章(不知道是哪章就全文)里找出对应的句子,找到的存着,下次不用再问
   const problem = String((body || {}).problem || '').trim();
   let byAi = false;
-  if (!hits.size && problem) {
+  if (!quoteHits && problem) {
     const ch0 = (String((body || {}).chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase();
     const scope = paras.map((p, k) => ({ p, k })).filter(({ p }) => !ch0 || p.chapter === ch0 || String(body.chapter).toUpperCase().includes(p.chapter));
     const pool = scope.length ? scope : paras.map((p, k) => ({ p, k }));
@@ -3924,15 +3973,24 @@ async function quoteContext(runId, body) {
         run.review = fresh.review;
       }
     }
+    const before = hits.size;
     found.forEach(q => { qs.push(q); paras.forEach((p, k) => { if (paraHas(p, q)) hits.add(k); }); });
-    byAi = hits.size > 0;
+    byAi = hits.size > before;
   }
-  let from, to, note = '';
+  let from, to, note = '', segs = null;
   if (hits.size) {
+    // 每处前后各带一段上下文;离得近的连起来,离得远的中间省略(最多 60 段)
     const hs = [...hits].sort((a, b) => a - b);
-    [from, to] = ctxWindow(paras, hs[0], hs[hs.length - 1]);
-    if (to - from > 40) { [from, to] = ctxWindow(paras, hs[0], hs[0]); }
-    note = (byAi ? '问题里没引原句,这几句是 AI 按问题找出来的' : '') + (hs.length > 1 ? (byAi ? ';' : '') + '找到 ' + hs.length + ' 处,都标出来了' : '');
+    segs = [];
+    hs.forEach(k => { const [f, t] = ctxWindow(paras, k, k); const last = segs[segs.length - 1]; if (last && f <= last[1]) last[1] = Math.max(last[1], t); else segs.push([f, t]); });
+    let total = 0;
+    segs = segs.filter(([f, t]) => { if (total >= 60) return false; total += t - f; return true; });
+    from = segs[0][0]; to = segs[segs.length - 1][1];
+    const parts = [];
+    if (byAi) parts.push('问题里没引原句,这几句是 AI 按问题找出来的');
+    if (foundNums.length) parts.push('问题里说到的数(' + foundNums.join('、') + ')在稿子里出现的地方也标出来了');
+    if (hs.length > 1) parts.push('一共 ' + hs.length + ' 处');
+    note = parts.join(';');
   } else {
     const ch = (String((body || {}).chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase();
     const idx = ch ? paras.map((p, k) => p.chapter === ch ? k : -1).filter(k => k >= 0) : [];
@@ -3940,7 +3998,8 @@ async function quoteContext(runId, body) {
     from = idx[0]; to = Math.min(idx[idx.length - 1] + 1, from + 24);
     note = qs.length ? '问题里引的话在终稿里没找到(可能已经改过),下面是这一章全文' : '这条没写原句,下面是这一章全文';
   }
-  const list = paras.slice(from, to);
+  const idxs = segs ? [].concat(...segs.map(([f, t]) => Array.from({ length: t - f }, (_, j) => f + j))) : Array.from({ length: to - from }, (_, j) => from + j);
+  const list = idxs.map(k => paras[k]);
   let have = ((run.review || {}).zh || {}).byHash || {};
   if ((body || {}).translate) {
     const miss = list.map(p => p.text).filter(t => !have[hash(t)]);
@@ -3956,9 +4015,24 @@ async function quoteContext(runId, body) {
       store.saveRun(fresh);
       have = fresh.review.zh.byHash;
     }
+    // 标出来的那几段:再按 ⟦ ⟧ 翻一次,中文对应的地方也括出来(翻过的存着)
+    const mk = list.map((p, k) => hits.has(idxs[k]) ? ctxMarked(p.text, qs) : '').filter(m => m && !have['M' + hash(m)]);
+    if (mk.length) {
+      const cfg = pl().loadConfig();
+      let tr = {};
+      try { tr = await translateMarked(run, cfg, [...new Set(mk)]); } catch (e) { tr = {}; }
+      if (Object.keys(tr).length) {
+        const fresh = store.getRun(runId) || run;
+        fresh.review = fresh.review || {};
+        fresh.review.zh = fresh.review.zh || {};
+        fresh.review.zh.byHash = { ...(fresh.review.zh.byHash || {}), ...tr };
+        store.saveRun(fresh);
+        have = fresh.review.zh.byHash;
+      }
+    }
   }
   const first = hits.size ? Math.min(...hits) : from;
-  return { quote: qs[0] || '', marks: qs, note, chapter: (paras[first] || {}).chapter || '', paras: list.map((p, k) => ({ chapter: p.chapter, text: p.text, zh: have[hash(p.text)] || '', hit: hits.has(from + k) })) };
+  return { quote: qs[0] || '', marks: qs, note, ledger: ctxLedger(run, (body || {}).problem), chapter: (paras[first] || {}).chapter || '', paras: list.map((p, k) => ({ chapter: p.chapter, text: p.text, zh: have[hash(p.text)] || '', zh_marked: hits.has(idxs[k]) ? (have['M' + hash(ctxMarked(p.text, qs))] || '') : '', hit: hits.has(idxs[k]), gap: k > 0 && idxs[k] !== idxs[k - 1] + 1 })) };
 }
 // 「确认没问题」(v1.67):AI 核对结论没问题的条目,人确认后不挡发布;undo:true 撤回
 function confirmOk(runId, body) {
@@ -4705,4 +4779,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
