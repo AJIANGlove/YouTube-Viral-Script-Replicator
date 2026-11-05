@@ -45,7 +45,7 @@ flowchart LR
 │   ├── prompts/            现行提示词（生产用，单一来源）
 │   ├── extension/          抓 Studio 真实数据的 Chrome 插件
 │   ├── public/             前端 SPA
-│   ├── data/runs/          123 条生成记录（含每步 attempts 与校验明细）
+│   ├── data/runs/          131 条生成记录（含每步 attempts 与校验明细）
 │   ├── data/logs/          运行日志（失败样本、留存卡批处理、探针输出）
 │   └── config.example.json 配置结构示例（不含真实 Key）
 ├── assets/                 214 个四层资产包，每包含原始 SRT 与留存卡
@@ -225,17 +225,17 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `reframe_summary.md` | 都套不上时的原因汇总与两个选项（建议题目带预判） | 38 |
 | `why_zh.md` | 给复审/核对问题补中文「问题在哪」 | 21 |
 | `adjust.md` | AI 先调整（补待查、改论点、找事实、补标题、主角一致、补真人案例、素材不够自动补搜） | 105 |
-| `adjust_queries.md` | 生成联网搜索查询词（找有经过的报道） | 21 |
+| `adjust_queries.md` | 生成联网搜索查询词（找有经过的报道） | 22 |
 | `blueprint_research_queries.md` | 蓝图补搜的搜索词（找有经过的报道） | 20 |
 | `blueprint_research_fill.md` | 蓝图补搜摘事实（具体人和事也摘成一条） | 31 |
 | `revise.md` | 按人工意见只重做一行 | 29 |
 | `title_audit.md` | 自写标题审核 | 26 |
 | `step1.md` | Blueprint 生成（问题链 + 新角度 + 事实只用一次，编号一律 CH，含对照表与叙事方式、照大纲排） | 105 |
 | `apply_suggest.md` | 单条问题出可替换改法（原句逐字+中文意思） | 32 |
-| `step2.md` | 脚本施工（含每章问题链与新角度要求、对照表） | 58 |
+| `step2.md` | 脚本施工（含每章问题链与新角度要求、对照表） | 60 |
 | `function_table.md` | 蓝图按功能重排第一步：原片每段一行功能表（作用、必须保留、可以换、四选一处理；换内容 > 合并 > 删，删要写查过的事实，合计不超过 `{{delete_max}}`%） | 84 |
-| `step1_function.md` | 蓝图按功能重排第二步：按功能表排章（锁定项、为什么这样排、等级重点、照大纲排写 outline_diff） | 125 |
-| `blueprint_review.md` | 蓝图审（写稿前 7 项：递进、揭示顺序、标题和主线、事实支撑、反转、硬套、删除是否成立） | 61 |
+| `step1_function.md` | 蓝图按功能重排第二步：按功能表排章（锁定项、为什么这样排、等级重点、照大纲排写 outline_diff） | 126 |
+| `blueprint_review.md` | 蓝图审（写稿前 7 项：递进、揭示顺序、标题和主线、事实支撑、反转、硬套、删除是否成立） | 64 |
 | `step3.md` | 质量审核 | 72 |
 | `step4.md` | 终稿优化 | 58 |
 | `step5.md` | 开头逐句仿写（强化开头） | 27 |
@@ -272,7 +272,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 61 份 `.md`（3801 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 67 份，合计 4004 行。
+合计 61 份 `.md`（3805 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 66 份，合计 4014 行。
 
 ### 历史版本
 

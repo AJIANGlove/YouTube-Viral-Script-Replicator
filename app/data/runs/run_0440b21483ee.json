@@ -764,12 +764,20 @@
       "verdict": "未达标"
     },
     "claim_check": {
-      "status": "running",
-      "started_at": "2026-11-05T04:27:01.086Z"
+      "status": "done",
+      "finished_at": "2026-11-05T04:29:37.262Z",
+      "verdict": "成立",
+      "blocking": true
+    },
+    "final_options": {
+      "status": "failed",
+      "started_at": "2026-11-05T04:29:37.293Z",
+      "items": 19,
+      "error": "进程重启中断,可在审稿页重跑"
     }
   },
   "created_at": "2026-11-04T14:18:39.861Z",
-  "updated_at": "2026-11-05T04:27:01.086Z",
+  "updated_at": "2026-11-05T04:30:04.878Z",
   "asset_id": "why-the-world-relies-on-asml-for-machines-that-print-chips",
   "asset_name": "「咽喉机器垄断」关键制程设备拆解(独家宣告-规格震慑-逆袭史-联盟共担-原理扫盲-极限工艺-稀缺算账-护城河验证-地缘夹击-依赖确认收束)",
   "topic": "Why Everyone Keeps Stealing Ukraine's Soil",
@@ -799,9 +807,9 @@
   "usage": {
     "since": "2026-11-04T14:19:15.489Z",
     "total": {
-      "calls": 73,
-      "in": 2009005,
-      "out": 522611,
+      "calls": 74,
+      "in": 2032048,
+      "out": 527868,
       "cache_read": 1138398,
       "cache_write": 675416,
       "est_calls": 0
@@ -1045,6 +1053,14 @@
         "out": 82,
         "cache_read": 3769,
         "cache_write": 1064,
+        "est_calls": 0
+      },
+      "论点核对": {
+        "calls": 1,
+        "in": 23043,
+        "out": 5257,
+        "cache_read": 0,
+        "cache_write": 0,
         "est_calls": 0
       }
     }
@@ -1913,6 +1929,17 @@
       "out_tok": 82,
       "cache_read": 3769,
       "cache_write": 1064
+    },
+    {
+      "ts": "2026-11-05T04:29:37.235Z",
+      "label": "论点核对",
+      "provider": "lk888",
+      "model": "claude-opus-5",
+      "ok": true,
+      "secs": 155.5,
+      "stop_reason": "end_turn",
+      "in_tok": 23043,
+      "out_tok": 5257
     }
   ],
   "thesis_scout": {
@@ -12428,7 +12455,82 @@
         "目标国家母语口播": 6,
         "结尾完整性与整体一致性": 7
       },
-      "verdict": "未达标"
+      "verdict": "未达标",
+      "claim_check": {
+        "at": "2026-11-05T04:29:37.261Z",
+        "hash": "db29bca9df1f",
+        "claim": "开头主张:乌克兰黑土是全球粮油供应的唯一来源级产区,而这场战争不只抢粮,是在摧毁未来几十年的生产能力(修复要十年以上、两百亿美元以上)。",
+        "verdict": "成立",
+        "calc": "产区地位:2024年葵花油出口占全球36.8%(52亿美元),小麦约9%、玉米约13%;农产品出口245亿美元=全国出口的59%——稿内各章(CH01/03/06/10)一致。破坏规模:23%国土=128,000平方公里被地雷污染(128,000平方公里=49,420平方英里,与「about 49,000 square miles、bigger than Pennsylvania」吻合);弹坑密度306,000个÷980,440公顷=每3.2公顷一个,与「about one crater for every three hectares」吻合;2024年有430万公顷退出耕种;卡霍夫卡灌区大部分失效,仅赫尔松+扎波罗热48,000公顷要重建,十年以上。修复账:排雷每公顷至少1,400美元,2025年农田预算2,400万美元÷1,400=约17,100公顷,与「about 17,000 hectares」吻合,而受影响农田近1,500万公顷(1,500万×1,400美元≈210亿美元,与「above $20 billion」同一量级)。结尾CH09回答了开头提出的「Can this land still feed the world?」。主张与稿内数字一致。",
+        "fix_claim": "",
+        "issues": [
+          {
+            "id": "L1",
+            "chapter": "CH05",
+            "level": "关键",
+            "quote": "In Mykolaiv and Kherson regions alone, surveyors documented over 600,000 craters from artillery shells and missiles. Across 980,440 hectares of damaged farmland, they identified 306,000 craters—and that count excludes the forty-kilometer buffer zone along the active front. Do the math: about one crater for every three hectares.",
+            "problem": "同一处调查的弹坑总数前后差一倍:先说「over 600,000」,紧接着说同一批调查人员「identified 306,000」。后面的密度结论只用了306,000(980,440÷306,000=3.2公顷/个);若用600,000,密度是1.6公顷/个,与「one crater for every three hectares」对不上。同一个量还出现在CH01「There are 600,000 shell craters in the fields.」",
+            "fix": "统一成一个有来源的数:删掉「over 600,000」那句,改为「Across 980,440 hectares of damaged farmland in Mykolaiv and Kherson, surveyors identified 306,000 craters—and that count excludes the forty-kilometer buffer zone along the active front.」;CH01同步改为「There are more than 300,000 shell craters in the surveyed fields of the south.」(若600,000确有另一来源、统计范围更大,必须在句中说明是哪一范围,不能与306,000并列。)",
+            "why_zh": "稿子在相邻两句里给了同一片区域两个相差一倍的弹坑数,又只拿小的那个算密度。观众听到「六十万」接着「三十万六千」会直接在评论区问哪个是真的,整段破坏规模的可信度就垮了。"
+          },
+          {
+            "id": "L2",
+            "chapter": "CH08",
+            "level": "次要",
+            "quote": "Ukraine's national soil science center counted more than 420,000 craters across one surveyed area in the Kharkiv region. The Mykolaiv region survey we covered earlier found a similar density.",
+            "problem": "哈尔科夫只给了弹坑数(420,000),没给面积,算不出密度,无法与前文密度比较。前文密度是306,000÷980,440公顷=每3.2公顷一个;没有哈尔科夫的调查面积,「similar density」在稿内无法验证。",
+            "fix": "给出哈尔科夫的调查面积,或改为不涉及密度的写法:「Ukraine's national soil science center counted more than 420,000 craters in one surveyed area of the Kharkiv region alone.」",
+            "why_zh": "说两地「密度差不多」,但稿子只给了一个地方的面积,另一个没有,这个比较是凭空的。懂行的观众一算就发现没法比。"
+          },
+          {
+            "id": "L3",
+            "chapter": "CH01",
+            "level": "次要",
+            "quote": "Corn, about thirteen—and both of those shares are slipping.",
+            "problem": "稿内唯一有份额下滑数据的是葵花油(CH03:2021年46%→2024年36.8%)。小麦和玉米的全球份额在全稿都只有单年数值(约9%、约13%),没有任何前后对比;CH08只给了出口量下降(「wheat exports were down about 39%」),不是份额。「both of those shares are slipping」在稿内无数字支撑。",
+            "fix": "改为稿内能支撑的说法:「Wheat, about nine percent. Corn, about thirteen. And the sunflower share is already down from 46% before the war.」",
+            "why_zh": "开头说小麦和玉米的全球份额在下滑,但全稿只证明了葵花油份额从46%掉到36.8%,小麦玉米只有一个年份的数字,没法说「在下滑」。"
+          },
+          {
+            "id": "L4",
+            "chapter": "CH07",
+            "level": "次要",
+            "quote": "That $20 billion is roughly an eighth of Ukraine's pre-war GDP.",
+            "problem": "全稿没给战前GDP数字,唯一相关的是CH03「less than 0.2% of global GDP」,无法据此算出「八分之一」。按200亿美元占八分之一反推,战前GDP要约1,600亿美元;公认的2021年乌克兰GDP约2,000亿美元,200÷2,000=十分之一,不是八分之一。",
+            "fix": "改为「That $20 billion is roughly a tenth of Ukraine's pre-war GDP of about $200 billion.」",
+            "why_zh": "稿子没给战前GDP,这个「八分之一」观众无法核对,而按常见的两千亿美元算其实是十分之一。给错比例会让人怀疑后面所有造价数字。"
+          },
+          {
+            "id": "L5",
+            "chapter": "CH04",
+            "level": "次要",
+            "quote": "A handful of chernozem carries more humus than ten handfuls of ordinary soil.",
+            "problem": "「十倍」在稿内算不出来。稿子给的黑土有机质是4%–16%,但没给「ordinary soil」的有机质含量;前文唯一的对比是腐殖质层厚度(EU 10–30厘米 vs 乌克兰40–60厘米),按厚度最多也只有约1.5–4倍,推不出十倍。",
+            "fix": "改为按稿内数字能站住的说法:「Ukraine's black belt holds 4% to 16% organic content—several times what ordinary cropland soil carries.」或补上普通土的有机质数值后再给倍数。",
+            "why_zh": "「一把黑土等于十把普通土」这个倍数是顺手编的,稿子里没有普通土的有机质数字可以支撑,按自己给的厚度数据只有几倍。"
+          },
+          {
+            "id": "L6",
+            "chapter": "CH02",
+            "level": "次要",
+            "quote": "Then came the Scythians, the Mongols, the Polish-Lithuanian Commonwealth, and the Russian Empire—each one taking control of the same fertile belt.",
+            "problem": "同一章前一段已写「The historian Herodotus wrote about the Scythian people who lived on these steppes」,即斯基泰人在2,500年前希腊殖民者时期已经在那里;这里又把斯基泰人排在希腊人之后作为后来者,前后时序矛盾(CH10也按「Scythians, Mongols, the Russian Empire, the Soviets」的顺序复述)。",
+            "fix": "改为「Then came the Mongols, the Polish-Lithuanian Commonwealth, and the Russian Empire—each one taking control of the same fertile belt.」(斯基泰人保留在前一段的同期叙述里)",
+            "why_zh": "稿子先说希腊人来的时候斯基泰人已经住在那片草原,后面又说希腊人之后「来了斯基泰人」,同一章自己打自己。懂历史的观众会抓这一条。"
+          }
+        ],
+        "protect": [
+          "Now the war is destroying the land that grows it.",
+          "The war isn't just stealing grain. It's destroying the capacity to produce it.",
+          "So when the world asks why it can't just grow more somewhere else, the answer is: the soil took millennia, the infrastructure took decades, and only one place had both.",
+          "That's the real cost. Not starvation today—decades of debt, risk, and reduced capacity.",
+          "This land will grow food again. Just not as much, not as cheaply, and not before somebody answers who pays for the cleanup.",
+          "Importing countries can diversify suppliers. They cannot grow this soil somewhere else.",
+          "The Soviets destroyed the people who farmed it. This war is destroying the field itself.",
+          "Land doesn't just get taken anymore. It gets destroyed."
+        ],
+        "fixes": []
+      }
     }
   }
 }
