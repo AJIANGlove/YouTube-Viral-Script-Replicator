@@ -2850,7 +2850,7 @@ function rvToggleFlags() { rvState.onlyFlags = !rvState.onlyFlags; rvDraw(); }
 
 function rvFactChip(f, ch) {
   const tip = [f.kind, f.why, f.source, f.year].filter(Boolean).join(' · ');
-  return `<span class="rv-chip ${f.state}" title="${escAttr(tip)}" onclick="rvOpenFact('${f.id}','${ch}')">${esc(f.id)} ${esc(String(f.content || '').slice(0, 28))}${f.content && f.content.length > 28 ? '…' : ''}</span>`;
+  return `<span class="rv-chip ${f.state}" title="${escAttr(tip)}" onclick="rvOpenFact('${f.id}','${ch}')">${f.voice ? '网友 ' : ''}${esc(f.id)} ${esc(String(f.content || '').slice(0, 28))}${f.content && f.content.length > 28 ? '…' : ''}</span>`;
 }
 
 function rvTemplateCell(row) {

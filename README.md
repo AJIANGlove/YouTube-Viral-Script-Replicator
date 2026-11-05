@@ -232,7 +232,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `title_audit.md` | 自写标题审核 | 26 |
 | `step1.md` | Blueprint 生成（问题链 + 新角度 + 事实只用一次，编号一律 CH，含对照表与叙事方式、照大纲排） | 105 |
 | `apply_suggest.md` | 单条问题出可替换改法（原句逐字+中文意思） | 32 |
-| `step2.md` | 脚本施工（含每章问题链与新角度要求、对照表） | 60 |
+| `step2.md` | 脚本施工（含每章问题链与新角度要求、对照表、网友说法带出处） | 61 |
 | `function_table.md` | 蓝图按功能重排第一步：原片每段一行功能表（作用、必须保留、可以换、四选一处理；换内容 > 合并 > 删，删要写查过的事实，合计不超过 `{{delete_max}}`%） | 84 |
 | `step1_function.md` | 蓝图按功能重排第二步：按功能表排章（锁定项、为什么这样排、等级重点、照大纲排写 outline_diff） | 126 |
 | `blueprint_review.md` | 蓝图审（写稿前 7 项：递进、揭示顺序、标题和主线、事实支撑、反转、硬套、删除是否成立） | 64 |
@@ -242,7 +242,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `script_check.md` | 稿件检查 K1-K5 | 38 |
 | `draft_check.md` | 初稿检查出二稿（「按功能重排」的任务多第 9 项「蓝图功能是否落实」，由程序填进 `{{function_check}}`，严格照原片时为空） | 56 |
 | `fact_audit.md` | 事实审计（拆主张、标风险、给搜索词） | 51 |
-| `fact_verify.md` | 联网核验（按证据定级 A–E，必改或收窄） | 54 |
+| `fact_verify.md` | 联网核验（按证据定级 A–E，必改或收窄；网友说法只核有没有人这样说） | 56 |
 | `reverse_audit.md` | 二稿逆向工程审稿报告（九部分 + 逐条预估加分） | 523 |
 | `final_audit.md` | 终审①独立审稿（七维评分 + P0–P3 清单，含论点自检、人物身份一致） | 229 |
 | `final_revise.md` | 终审②按诊断修改（逐处原句→改成+理由） | 88 |
@@ -272,7 +272,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 61 份 `.md`（3808 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 66 份，合计 4017 行。
+合计 61 份 `.md`（3811 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 66 份，合计 4020 行。
 
 ### 历史版本
 

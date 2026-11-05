@@ -126,11 +126,11 @@ function verify(item, results) {
   const nums = (str(item.content).match(/\d+(?:[.,]\d+)?/g) || []).map(x => x.replace(/,/g, ''));
   const qn = (quote + ' ' + (r ? r.title : '')).replace(/,/g, '');
   const numMiss = nums.filter(x => !qn.includes(x));
-  let kind = /估算/.test(str(item.kind)) ? '估算' : /假设/.test(str(item.kind)) ? '假设' : '事实';
+  let kind = /估算/.test(str(item.kind)) ? '估算' : /假设/.test(str(item.kind)) ? '假设' : /网友/.test(str(item.kind)) ? '网友说法' : '事实';
   const notes = [];
   if (!r) { notes.push('引用的搜索结果编号不存在'); kind = '假设'; }
-  else if (!quoteOk) { notes.push('原文摘录在搜索结果里找不到'); if (kind === '事实') kind = '假设'; }
-  if (kind === '事实' && ugc) { notes.push('来源是论坛/博客/维基/视频类网页,不能标事实'); kind = '假设'; }
+  else if (!quoteOk) { notes.push('原文摘录在搜索结果里找不到'); if (kind === '事实' || kind === '网友说法') kind = '假设'; }
+  if (kind === '事实' && ugc) { notes.push('来源是论坛/博客/维基/视频类网页,不能标事实,改标网友说法'); kind = '网友说法'; } // v1.93
   if (kind === '事实' && numMiss.length) { notes.push('数字 ' + numMiss.join('、') + ' 摘录里没有'); kind = str(item.method).trim() ? '估算' : '假设'; }
   if (kind === '估算' && !str(item.method).trim() && !quoteOk) kind = '假设';
   return { r, quoteOk, ugc, kind, notes };

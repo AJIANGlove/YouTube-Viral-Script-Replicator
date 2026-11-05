@@ -123,13 +123,18 @@ function factKind(k) {
   if (/^(假设|假設|가정|assum)/i.test(k)) return '假设';
   if (/待查|待核|확인 ?필요|미확인|unverified/i.test(k)) return '待查';
   if (/^(事实|事實|사실|fact)/i.test(k)) return '事实';
+  if (/^(网友说法|网友|網友|커뮤니티|댓글|후기|voice)/i.test(k)) return '网友说法';
   return k;
 }
+const VOICE_WHY = '网友说法(论坛/博客/评论):可以当感受、经历讲,第一次出现要带半句出处;不能当统计、不能进账本、不能当证明论点的主证据';
+// 稿子里交代「这是听来的说法、不是官方数据」的半句(韩文/英文/中文):网友、评论、听人说、看过一种说法、转述语气(-대요/-다더라)都算,说法不固定
+const VOICE_ATTR = /말이 있|말도 있|라는 말|라는 얘기|라는 이야기|얘기가 있|이야기가 있|얘기를 들|이야기를 들|들은 적|들었는데|들었어요|들어 보면|본 적이 있|봤는데|봤어요|이런 얘기|이런 말|그런 말|그런 얘기|주변에서|지인|누군가|다더라|라더라|다고 하더|라고 하더|다고들|대요|래요|커뮤니티|댓글|카페|블로그|게시판|게시글|후기|올라온|올린 글|글을 보면|글에는|네티즌|누리꾼|사연|SNS|인스타|스레드|맘카페|예비 ?신부|예비 ?신랑|한 (분|사람|네티즌|누리꾼|사용자|회원)|어떤 (분|사람|네티즌|누리꾼|사용자|회원)|reddit|forum|comment|blog|someone (wrote|posted)|one (user|commenter)|people say|i('ve)? heard|网友|评论|帖子|论坛|博客|听人说|听说|有一种说法|有人说/i;
 function factState(f) {
   const src = [f.source, f.url].filter(Boolean).join(' ');
   const kind = factKind(f.kind);
   if (kind === '待查' || /模型记忆|待人工核实|待核/.test(src)) return { state: 'red', why: '没有查到出处' };
-  if (WEAK_SOURCES.test(src)) return { state: 'red', why: '出处是论坛或个人博客,不能当事实' };
+  // v1.93:论坛、博客、评论里的话是「网友说法」:能当感受、故事讲(第一次出现带半句出处),不能当统计、不能进账本、不能当证明论点的主证据。不挡发布
+  if (kind === '网友说法' || (WEAK_SOURCES.test(src) && kind !== '估算' && kind !== '假设')) return { state: 'yellow', voice: true, why: VOICE_WHY };
   if (kind === '估算') return f.method ? { state: 'yellow', why: '估算:' + f.method } : { state: 'red', why: '估算但没写算法' };
   if (kind === '假设') return { state: 'yellow', why: '假设,稿中要明说' };
   if (!f.source && !f.url) return { state: 'red', why: '没有写来源' };
@@ -141,7 +146,7 @@ function factView(f, marks) {
   const mk = (marks || {})['facts.' + f.id] || {};
   return {
     id: f.id, kind: f.kind || '', content: f.content || '', source: f.source || '', url: f.url || '', year: f.year || '', region: f.region || '',
-    method: f.method || '', state: st.state, why: st.why,
+    method: f.method || '', state: st.state, why: st.why, ...(st.voice ? { voice: true } : {}),
     evidence: arr(mk.evidence).map(e => ({ title: e.title, url: e.url, date: e.date, quote: e.quote || '' }))
   };
 }
@@ -166,6 +171,9 @@ function chapterFlags(ch, ctx) {
   if (ch.isLast && sentences.length && HEDGE_RE.test(sentences[sentences.length - 1]) ) flags.push({ type: '结尾', text: '最后一句是免责/中性说法,不是结尾落点判断' });
   const unknown = [...new Set(numberTokensOf(ch.text).filter(n => !ctx.knownNumbers.has(n)))];
   if (unknown.length) flags.push({ type: '数字不在事实表', text: unknown.slice(0, 8).join('、') });
+  // v1.93 用了网友说法,这一章却没交代是网友说的
+  const voice = arr(ch.facts).filter(f => f && f.voice).map(f => f.id);
+  if (voice.length && !VOICE_ATTR.test(ch.text)) flags.push({ type: '网友说法没说出处', text: voice.join('、') + ' 是网友说法,这一章要用半句话说明这是听来的说法,说法不固定(例如「한 커뮤니티 댓글에」「이런 얘기를 들은 적이 있어요」「…라는 말도 있더라고요」),不要讲成确定的官方数据' });
   // 同一个数第 4 次(含)以后出现才算重复:开场的锚点数(如单价)前后呼应两三次是正常的;年份不算
   const repeated = [...new Set(numberTokensOf(ch.text).filter(n => !/^(19|20)\d{2}$/.test(n) && (ctx.numberChapters[n] || []).indexOf(ch.id) >= REPEAT_AFTER))];
   if (repeated.length) flags.push({ type: '重复', text: repeated.map(n => n + ' 已在 ' + ctx.numberChapters[n].slice(0, ctx.numberChapters[n].indexOf(ch.id)).join('、') + ' 出现过').join(';') });
@@ -352,7 +360,8 @@ function buildView(run, asset) {
       red_facts: redFacts, red_fact_uses: rfu, words, budget, ratio: budget ? Math.round(words / budget * 100) / 100 : null,
       ledger_mismatches: an().verifyLedger(arr(a.ledger)).mismatches,
       thesis_contradicts: arr((a.thesis_check || {}).contradicts),
-      thesis_note: (a.thesis_check || {}).note || ''
+      thesis_note: (a.thesis_check || {}).note || '',
+      voice_ledger: voiceLedger(a, facts)
     }
   };
   out.summary.consistency = consistencyView(run, rows, out.track_default);
@@ -394,6 +403,11 @@ function factForms(content) {
   return [...forms];
 }
 const splitSentences = t => String(t || '').split(/(?<=[.!?。…])\s+|\n+/).map(x => x.trim()).filter(Boolean);
+// v1.93 账本里拿网友说法当数用的行
+function voiceLedger(a, facts) {
+  const voice = new Set(arr(facts).filter(f => factState(f).voice).map(f => f.id));
+  return arr((a || {}).ledger).filter(l => arr(l.fact_ids).some(id => voice.has(String(id)))).map(l => ({ id: l.id, item: l.item || '', facts: arr(l.fact_ids).filter(id => voice.has(String(id))) }));
+}
 function redFactUses(facts, chapters) {
   // 有出处的事实里也有的数不算(实测 F04「数据没查到,参考:某店一天 300 杯」,稿里的 300 세트来自有出处的事实,被误判)
   const backed = new Set(facts.filter(f => factState(f).state !== 'red').flatMap(f => factForms(f.content)));
@@ -628,6 +642,13 @@ function publishCheck(run, v) {
     if (accepted.has(x.id)) notes.push('事实 ' + x.id + ' 没出处' + where + ',你确认不影响,不挡发布');
     else if (blk('red_facts', '稿里用了没出处的数:' + x.id + where)) blocks[blocks.length - 1].fact = x;
   });
+  // v1.93 网友说法:不挡发布,只提示用在哪、有没有交代出处、账本有没有拿它算账
+  const vUsed = arr(v.facts).filter(f => f.voice && f.used);
+  if (vUsed.length) {
+    const noAttr = arr(v.rows).filter(r => r.flags.some(f => f.type === '网友说法没说出处')).map(r => r.id);
+    notes.push('稿里用了 ' + vUsed.length + ' 条网友说法(' + vUsed.map(f => f.id).join('、') + '),当感受、经历讲没问题' + (noAttr.length ? ';' + noAttr.join('、') + ' 没说明这是听来的说法,建议补半句' : ''));
+  }
+  if (arr(s.voice_ledger).length) notes.push('账本有 ' + s.voice_ledger.length + ' 行拿网友说法当数用(' + s.voice_ledger.map(l => l.id).join('、') + '),网友说法不能算账,论点核对会重点查');
   if (arr(s.ledger_mismatches).length) {
     const lw = ledgerWrongUsed(run);
     const used = lw.filter(x => x.used), unused = lw.filter(x => !x.used);
@@ -985,6 +1006,9 @@ function programFindings(run, asset) {
   if (s.ledger_mismatches.length) out.push('账本对不上(程序按公式重算):' + s.ledger_mismatches.join(';'));
   if (s.thesis_contradicts.length) out.push('反转被事实推翻:' + s.thesis_contradicts.join('、') + (s.thesis_note ? '(' + s.thesis_note + ')' : ''));
   if (s.red_facts.length) out.push('稿里用到但没有出处的事实:' + s.red_facts.join('、') + '(要么删掉这句,要么改成不依赖它的说法)');
+  if (arr(s.voice_ledger).length) out.push('账本拿网友说法当数用:' + s.voice_ledger.map(l => l.id + ' ' + l.item + '(' + l.facts.join('、') + ')').join(';') + '(网友说法不能算账:稿子里这些数改成有出处的数,或者改成「한 커뮤니티 댓글에…」这样只当一个人的经历讲)');
+  const vf = arr(v.facts).filter(f => f.voice && f.used).map(f => f.id);
+  if (vf.length) out.push('稿里用到的网友说法:' + vf.join('、') + '(这是论坛、博客、评论里的话,可以留着当感受、经历讲,不要删;第一次出现带半句说明这是听来的说法(说法不固定:网友评论、听人说、看过这样一种说法都行);不要讲成确定的官方数据或统计,也不要拿它当证明论点的主证据)');
   if (s.budget) out.push('篇幅:' + s.words + ' 词,预算 ' + s.budget + ' 词');
   const len = (run.checks || {}).length;
   if (len && !len.ok) out.push('篇幅超标:' + len.detail);
@@ -4083,7 +4107,7 @@ function rewritePrompt(run, asset, chId, note, compress) {
     voice: voice.voiceBrief(voice.voiceForRun(run)) || '(未设定)',
     chapter_blueprint: JSON.stringify(bp),
     template: row.source.map(s => s.stage_id + ' ' + s.function + ':' + s.abstract_move + (s.peaks.length ? '(持有高峰 ' + s.peaks.map(p => p.peak_id).join('、') + ')' : '')).join('\n') || '(无)',
-    facts: arr(a.facts).map(f => { const st = factState(f); return '- ' + f.id + ' [' + (f.kind || '') + (st.state === 'red' ? ',未核实' : '') + '] ' + (f.content || '') + (f.method ? '(算法:' + f.method + ')' : ''); }).join('\n') || '(无)',
+    facts: arr(a.facts).map(f => { const st = factState(f); return '- ' + f.id + ' [' + (f.kind || '') + (st.state === 'red' ? ',未核实' : st.voice ? ',网友说法' : '') + '] ' + (f.content || '') + (f.method ? '(算法:' + f.method + ')' : ''); }).join('\n') || '(无)',
     ledger: (arr(a.ledger).map(l => '- ' + l.item + ' = ' + l.value).join('\n') + (arr(a.ledger).length && an().ledgerSayOn(run) ? (t => t ? '\n\n' + t : '')(an().ledgerSayText((an().verifyLedger(arr(a.ledger)), an().ledgerSay(arr(a.ledger))), false)) : '')) || '(无)',
     prev_text: i > 0 ? view.rows[i - 1].text.slice(-600) : '(这是第一章)',
     next_text: i + 1 < view.rows.length ? view.rows[i + 1].text.slice(0, 600) : '(这是最后一章)',
