@@ -5442,7 +5442,7 @@ function renderThesisPanel(r) {
   const st = (r.steps || {}).thesis_pick || {};
   const checking = r.status === 'analyzing' && st.status === 'checking';
   if (!ts || !(ts.angles || []).length || !(r.status === 'thesis_hold' || checking)) { el.classList.add('hidden'); thRenderedKey = null; return; }
-  const key = JSON.stringify([r.status, st.status, ts.at, (ts.angles || []).length, ts.request_error || '', thEditing]);
+  const key = JSON.stringify([r.status, st.status, ts.at, (ts.angles || []).length, ts.request_error || '', thEditing, !!st.translating, st.zh_error || '', thForeign(ts)]);
   if (key === thRenderedKey && !el.classList.contains('hidden')) return;
   thRenderedKey = key;
   el.classList.remove('hidden');
@@ -5453,6 +5453,9 @@ function renderThesisPanel(r) {
   let html = `<h2 style="color:#92400e">选一个论点${r.draft_first ? ',选完自动往下写' : ',选完接着做写前分析'}</h2>
     <div class="hint">论点是这篇最后想让观众相信的那句话。每张卡都联网核对过${ts.searched ? '' : '(这次没开联网搜索,没有核对资料)'}:「资料够不够」是程序数出来的有出处的来源个数,不是 AI 自己说的。「整篇大概会这样讲」是照原片的结构排的预告,后面写前分析和蓝图会照它排,哪里不一样会在蓝图页写明。</div>`;
   if (ts.request_error) html += `<div class="hint" style="color:#b91c1c">${esc(ts.request_error)}</div>`;
+  const zhErr = st.zh_error || ts.zh_error;
+  if (st.translating) html += `<div class="hint" style="color:#92400e">正在把论点卡翻成中文…一般不到 1 分钟,翻完自动刷新。</div>`;
+  else if (thForeign(ts)) html += `<div style="margin-top:6px"><button class="an-btn v13" onclick="thChoose('zh','',this)">卡上有韩文/外文,翻成中文</button>${zhErr ? ` <span class="hint" style="color:#b91c1c">${esc(zhErr)}</span>` : ''}</div>`;
   html += cards.map(({ a, c, card, facts, cons }) => {
     const en = c && c.enough;
     const chips = (c ? `<span class="rv-chip ${TH_VERDICT[c.verdict] || ''}">${esc(c.verdict)}</span> ` : '<span class="rv-chip">没核对</span> ')
@@ -5484,6 +5487,12 @@ function renderThesisPanel(r) {
     <div style="margin-top:10px"><button class="an-btn" onclick="thChoose('regen','',this)">都不满意,重出 3 个</button>
     <span class="hint">会换完全不同的方向再出 3 个,大约多花定论点这一步一样的 token。</span></div>`;
   el.innerHTML = html;
+}
+// 卡上的字外文比汉字多(人名、店名在引号里不算):要不要显示「翻成中文」
+function thForeign(ts) {
+  const t = s => { const x = String(s || '').replace(/「[^」]*」|“[^”]*”|"[^"]*"/g, ''); const ko = (x.match(/[가-힯぀-ヿ]/g) || []).length, en = (x.match(/[A-Za-z]/g) || []).length, han = (x.match(/[一-鿿]/g) || []).length; return ko + en / 2 > han; };
+  const cs = ((ts.pick || {}).checks || []);
+  return (ts.angles || []).some(a => t(a.one_line)) || cs.some(c => c.card && (t(c.card.one_line) || t(c.card.claim) || (c.card.outline || []).some(o => t(o.says))));
 }
 function thEdit(id) { thEditing = id; thRenderedKey = null; if (lastRunDetail) renderThesisPanel(lastRunDetail); }
 async function thChoose(action, id, btn) {

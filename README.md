@@ -213,8 +213,8 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `ledger_vs_facts.md` | 账本关键假设对照事实表报道值（标偏差） | 17 |
 | `source_mapping.md` | 原片 → 本地对照表与叙事方式判断 | 39 |
 | `thesis_methods.md` | 定论点的 8 种方法（从爆款文案整理） | 11 |
-| `thesis_angles.md` | 写前论点调研①想 3 个角度 | 34 |
-| `thesis_pick.md` | 写前论点调研③按正反资料核对挑选（每个论点写卡+整篇大纲预告） | 45 |
+| `thesis_angles.md` | 写前论点调研①想 3 个角度（中文卡、名字保留原文） | 35 |
+| `thesis_pick.md` | 写前论点调研③按正反资料核对挑选（中文卡+整篇大纲预告） | 46 |
 | `thesis_edit.md` | 把人改的那句整理成论点再核对 | 19 |
 | `ledger_extend.md` | 账本补推算行（如果行/全年行，只输出新增） | 34 |
 | `thesis_vs_ledger.md` | 论点与账本对账（对不上换角度保标题） | 30 |
@@ -272,7 +272,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 61 份 `.md`（3799 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 67 份，合计 4000 行。
+合计 61 份 `.md`（3801 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 67 份，合计 4004 行。
 
 ### 历史版本
 

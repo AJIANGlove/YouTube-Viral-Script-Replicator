@@ -26,6 +26,7 @@
 - con_facts 写和选定论点相反、写稿时必须正面处理的事实(不能藏)。
 - 一个都站不住时,chosen 写空字符串,why 写清缺什么,写前分析会自己再定论点。
 - 每个角度(不只是选中的)都要写好一张论点卡,人可能选你没推荐的那个。卡里的话全部用中文大白话,不用 FS01、PK02、LOOP、M3 这类代号:
+  · 卡里所有给人看的文字(belief、claim、one_line、ending_landing、boundary、opening_line、outline、missing、note、facts 和 con_facts 的 content、how_to_handle、why)一律用中文写,不要用目标语言写;人名、店名、地名、品牌和当地专门的说法保留原文,第一次出现时可以在后面括号里写中文意思(例如「원데이 클래스(一日体验课)」);卡里的话不要写 R 编号(出处由 refs、key_ref 字段带)。
   · belief / claim / one_line / ending_landing / boundary:和 final 一样的意思,按这个角度写;收窄后站得住的,按收窄后的说法写。
   · key_ref:撑住这个角度最关键那条事实的 R 编号;没查到写空字符串,不要硬填。
   · opening_line:开头第一句大概怎么说(中文,一句话,要具体到人或数)。

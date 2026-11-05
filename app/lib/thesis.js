@@ -178,6 +178,42 @@ async function editAngle(run, cfg, asset, ts, req, setStage) {
   await pickAll(run, cfg, asset, ts, all, setStage);
 }
 
+// v1.90:论点卡给人看,AI 还是写成了目标语言(韩文)的字段,用中文对照那套(便宜渠道)翻成中文;原文留在 <字段>_orig
+const CARD_FIELDS = ['belief', 'claim', 'one_line', 'ending_landing', 'boundary', 'opening_line'];
+const zhHash = t => require('crypto').createHash('sha1').update(String(t || '')).digest('hex').slice(0, 12);
+function foreignSlots(ts) {
+  const R = require('./review');
+  const slots = [];
+  const add = (obj, key) => { if (obj && typeof obj[key] === 'string' && obj[key].trim() && R.mostlyForeign(obj[key])) slots.push({ obj, key }); };
+  const addArr = list => arr(list).forEach((x, i) => add(list, i));
+  arr(ts && ts.angles).forEach(a => ['belief', 'claim', 'one_line', 'key_fact', 'risk', 'why_watch'].forEach(k => add(a, k)));
+  if (ts) add(ts, 'rec_why');
+  const p = ts && ts.pick;
+  if (p) {
+    add(p, 'why'); addArr(p.missing);
+    arr(p.checks).forEach(c => { add(c, 'note'); add(c, 'narrowed');
+      if (c.card) { CARD_FIELDS.forEach(k => add(c.card, k)); arr(c.card.outline).forEach(o => ['says', 'uses', 'leaves'].forEach(k => add(o, k))); addArr(c.card.missing); } });
+    arr(p.facts).forEach(f => add(f, 'content'));
+    arr(p.con_facts).forEach(f => { add(f, 'content'); add(f, 'how_to_handle'); });
+    if (p.final) CARD_FIELDS.forEach(k => add(p.final, k));
+  }
+  return slots;
+}
+async function zhCards(run, cfg, ts) {
+  const slots = foreignSlots(ts);
+  if (!slots.length) return 0;
+  const tr = await require('./review').translateTexts(run, cfg, slots.map(s => s.obj[s.key]), '中文对照·论点卡');
+  let n = 0;
+  slots.forEach(s => {
+    const z = tr[zhHash(s.obj[s.key])];
+    if (!z) return;
+    if (!Array.isArray(s.obj)) s.obj[s.key + '_orig'] = s.obj[s.key];
+    s.obj[s.key] = z; n++;
+  });
+  return n;
+}
+function cardsForeign(ts) { return foreignSlots(ts).length; }
+
 // 页面上的三个按钮:选这个 / 改一句再核对 / 重出 3 个
 function holdChoice(runId, body) {
   const store = require('./store');
@@ -186,6 +222,24 @@ function holdChoice(runId, body) {
   if (run.status !== 'thesis_hold') throw Object.assign(new Error('这个任务现在不是「待选论点」(当前: ' + run.status + ')'), { status: 400 });
   const b = body || {}, action = str(b.action);
   const now = new Date().toISOString();
+  if (action === 'zh') {
+    // 已经出好的卡是韩文:只翻译,不改状态、不重新核对
+    if (((run.steps || {}).thesis_pick || {}).translating) return { ok: true, action, busy: true };
+    run.steps = { ...(run.steps || {}), thesis_pick: { ...((run.steps || {}).thesis_pick || {}), translating: true } };
+    store.saveRun(run);
+    (async () => {
+      const r = store.getRun(runId);
+      let err = '';
+      try { await zhCards(r, require('./pipeline').loadConfig(), r.thesis_scout); } catch (e) { err = e.message; }
+      const fresh = store.getRun(runId) || r;
+      if (fresh.status === 'thesis_hold') fresh.thesis_scout = r.thesis_scout;
+      const tp = { ...((fresh.steps || {}).thesis_pick || {}) }; delete tp.translating; if (err) tp.zh_error = '翻译没成功:' + err; else delete tp.zh_error;
+      fresh.steps = { ...(fresh.steps || {}), thesis_pick: tp };
+      store.saveRun(fresh);
+    })().catch(() => {});
+    return { ok: true, action };
+  }
+  if (((run.steps || {}).thesis_pick || {}).translating) throw Object.assign(new Error('论点卡正在翻成中文,等一下再点'), { status: 409 });
   if (action === 'pick') {
     choose(run, str(b.id));
     run.steps = { ...(run.steps || {}), thesis_pick: { status: 'done', at: now, choice: str(b.id) } };
@@ -294,6 +348,13 @@ function researchText(ts) {
   return lines.join('\n');
 }
 
+// 人要看卡(我来选论点)才翻;自动选没人看,不花这个钱。翻译失败不挡,页面上还有「翻成中文」按钮
+async function zhIfChoose(run, cfg) {
+  const ts = run.thesis_scout;
+  if (!run.thesis_choose || !ts || ts.error || !arr(ts.angles).length || ts.user_pick) return;
+  try { await zhCards(run, cfg, ts); } catch (e) { ts.zh_error = '论点卡翻成中文没成功:' + e.message; }
+}
+
 // runAnalysis 里调用:成功写 run.thesis_scout;失败只记 error,不挡
 async function ensure(run, cfg, asset, setStage) {
   if (cfg && cfg.thesis_scout === false && !run.thesis_choose) return null;
@@ -315,6 +376,7 @@ async function ensure(run, cfg, asset, setStage) {
       ts.request_error = (req.action === 'regen' ? '重出论点没成功:' : '核对你改的论点没成功:') + e.message;
     }
     delete run.thesis_request;
+    await zhIfChoose(run, cfg);
     return run.thesis_scout;
   }
   delete run.thesis_request;
@@ -325,7 +387,8 @@ async function ensure(run, cfg, asset, setStage) {
   } catch (e) {
     run.thesis_scout = { key: scoutKey(run), at: new Date().toISOString(), error: e.message, angles: [] };
   }
+  await zhIfChoose(run, cfg);
   return run.thesis_scout;
 }
 
-module.exports = { ensure, scout, researchText, queriesOf, cleanAngles, cleanPick, scoutKey, needHold, choose, holdChoice, enoughOf, cardOf, chosenOutline, outlineText, batchesFrom, ENOUGH_MIN };
+module.exports = { zhCards, foreignSlots, cardsForeign, ensure, scout, researchText, queriesOf, cleanAngles, cleanPick, scoutKey, needHold, choose, holdChoice, enoughOf, cardOf, chosenOutline, outlineText, batchesFrom, ENOUGH_MIN };

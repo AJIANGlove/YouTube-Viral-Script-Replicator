@@ -421,14 +421,15 @@
       "finished_at": "2026-11-04T15:48:56.045Z"
     },
     "final_review": {
-      "status": "running",
-      "stage": "审稿",
+      "status": "failed",
+      "stage": "修改",
       "track": "pov",
-      "started_at": "2026-11-05T03:28:08.662Z"
+      "started_at": "2026-11-05T03:28:08.662Z",
+      "error": "进程重启中断,可在审稿页重跑"
     }
   },
   "created_at": "2026-11-04T14:38:24.771Z",
-  "updated_at": "2026-11-05T03:28:08.662Z",
+  "updated_at": "2026-11-05T03:34:52.029Z",
   "asset_id": "your-life-as-every-mexican-cartel-rank",
   "asset_name": "层级人生沉浸叙事（暴力为表、政商为里的帝国弧）",
   "topic": "Every Level of a Medieval Merchant",
@@ -459,11 +460,11 @@
   "usage": {
     "since": "2026-11-04T14:39:26.756Z",
     "total": {
-      "calls": 57,
+      "calls": 58,
       "in": 1372729,
-      "out": 284165,
+      "out": 309203,
       "cache_read": 305650,
-      "cache_write": 174626,
+      "cache_write": 285476,
       "est_calls": 0
     },
     "steps": {
@@ -641,6 +642,14 @@
         "out": 66017,
         "cache_read": 384,
         "cache_write": 0,
+        "est_calls": 0
+      },
+      "终审·审稿": {
+        "calls": 1,
+        "in": 0,
+        "out": 25038,
+        "cache_read": 0,
+        "cache_write": 110850,
         "est_calls": 0
       }
     }
@@ -1305,6 +1314,18 @@
       "stop_reason": "stop",
       "in_tok": 1064,
       "out_tok": 8163
+    },
+    {
+      "ts": "2026-11-05T03:32:40.667Z",
+      "label": "终审·审稿",
+      "provider": "lk888",
+      "model": "claude-opus-5",
+      "ok": true,
+      "secs": 271.9,
+      "stop_reason": "end_turn",
+      "in_tok": 0,
+      "out_tok": 25038,
+      "cache_write": 110850
     }
   ],
   "thesis_scout": {
