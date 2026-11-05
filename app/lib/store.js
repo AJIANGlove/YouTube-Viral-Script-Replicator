@@ -325,12 +325,20 @@ function scoreSummary(run) {
 }
 
 // v1.97 列表上提示「等你下一步」:任务停在要人点的地方时写一句(跑着的不提示)
+const BG_STEP_LABELS = { script_check: '初稿检查', reverse_audit: '二稿审稿报告', opening_card: '开头单独审', opening_fix: '自动改开头', final_review: '终审', final_options: '出解决方案', claim_check: '论点核对', deai: '去AI感' };
+const BG_STALE_MS = 40 * 60 * 1000;
 function waitFor(run) {
   const st = run.steps || {};
   const busy = x => x && (x.status === 'running' || x.status === 'queued');
   if (run.status === 'blueprint_hold') return '等你:点开蓝图,选「仍然写」';
   if (run.status !== 'done') return '';
-  if (['reverse_audit', 'final_review', 'draft_check', 'deai', 'claim_check', 'opening_fix'].some(k => busy(st[k]))) return '';
+  // 后台还在跑审稿这几步:提示在跑什么,跑完再提示下一步(超过 40 分钟没跑完的可能已停)
+  const on = Object.keys(BG_STEP_LABELS).filter(k => busy(st[k]));
+  if (on.length) {
+    const t0 = Math.min(...on.map(k => Date.parse(st[k].started_at || '') || Date.now()));
+    const names = on.map(k => BG_STEP_LABELS[k]).join(' + ');
+    return Date.now() - t0 > BG_STALE_MS ? '后台的' + names + '超过 40 分钟没跑完,可能已停,点开看看' : '后台在跑:' + names + '…跑完会提示下一步';
+  }
   const rv = run.review || {};
   if (rv.audit && !st.final_review && !rv.final) return '等你:选审稿意见,再开始终审';
   if (st.deai && st.deai.stage === '等你选改法') return '等你:选去AI感改法';
