@@ -606,6 +606,22 @@
     color: #374151; background: #fafafa; border: 1px solid #eef0f3; border-radius: 6px; padding: 8px 10px; }
   .bind-state { font-size: 12px; line-height: 1.7; }
   .bind-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  /* v1.98 大白话列表:每条一句话 + 查看详情 + 忽略 */
+  .rv-plain { margin: 6px 0; padding: 7px 10px; background: #fff; color: #1f2937; font-weight: normal; border: 1px solid #e5e7eb; border-left: 4px solid #f59e0b; border-radius: 6px; font-size: 13px; line-height: 1.7; }
+  .rv-plain.big { border-left-color: #dc2626; }
+  .rv-plain.small { border-left-color: #9ca3af; }
+  .rv-plain-top { display: flex; gap: 10px; align-items: flex-start; }
+  .rv-plain-text { flex: 1; min-width: 0; }
+  .rv-plain-btns { display: flex; gap: 6px; flex-shrink: 0; }
+  .rv-plain-btns .an-btn { font-size: 12px; padding: 1px 10px; }
+  .rv-plain-fix { color: #065f46; }
+  .rv-plain-imp { color: #6b7280; }
+  .rv-plain-detail { margin-top: 8px; padding-top: 6px; border-top: 1px dashed #e5e7eb; }
+  .rv-imp { display: inline-block; padding: 0 7px; border-radius: 10px; font-size: 12px; margin-right: 4px; }
+  .rv-imp.big { background: #fee2e2; color: #991b1b; }
+  .rv-imp.mid { background: #fef3c7; color: #92400e; }
+  .rv-imp.small { background: #f3f4f6; color: #4b5563; }
+  @media (max-width: 640px) { .rv-plain-top { flex-direction: column; } }
 </style>
 </head>
 <body>
@@ -3496,6 +3512,84 @@ function rvThesisHtml(v, rc) {
     + (th ? `<div style="margin-top:4px">${th.resolved ? '<span style="color:#047857">✓ 复审判定已解决</span>' : '<span style="color:#b91c1c">复审判定未解决</span>'}:${esc(th.note || '')}</div>`
       : `<div class="hint" style="margin-top:4px">最近一轮复审没有给出判断(稿子现在的说法和这些事实是否一致)。「AI 改一轮」或「重新复审这一版」后会再判断一次。</div>`) + '</div>';
 }
+// 论点核对的一条(原来写在 rvClaimHtml 里,v1.98 拆出来,大白话「查看详情」里也用)
+function rvClaimLi(x, busy) {
+  return x.no_issue ? `<li style="color:#6b7280"><b>[核对后没问题,不挡发布]</b> ${esc(x.chapter || '')} ${x.quote ? '「' + esc(x.quote) + '」' : ''}<span class="hint">${esc(String(x.problem || '').slice(-120))}</span></li>`
+    : x.looks_ok ? rvLooksOkHtml(x, busy)
+    : x.applied ? `<li><b style="color:#047857">[已应用,不挡发布]</b> ${esc(x.chapter || '')} ${x.why_zh ? rvWhyBox(x.why_zh) : `<span class="hint">${esc(x.problem)}</span>`}${rvApplyHtml('claim', x, busy)}</li>`
+    : `<li><b style="color:${x.level === '关键' ? '#b91c1c' : '#b45309'}">[${esc(x.level)}]</b> ${esc(x.chapter || '')} ${x.quote ? '「' + esc(x.quote) + '」' : ''}${rvWhyBox(x.why_zh, '')}<div class="rv-orig"><span class="hint">核对原话(含算式):</span>${esc(x.problem)}</div>${x.fix ? `<div class="hint">改法:${esc(x.fix)}</div>` : ''}${rvApplyHtml('claim', x, busy)}</li>`;
+}
+// ---------- v1.98 大白话列表(用户 2026-11-05):每条只显示一句话「问题 / 怎么改 / 不改会怎样」,细节点「查看详情」,每条能单独忽略 ----------
+const RV_IMP = { '大': ['big', '影响大'], '中': ['mid', '影响中'], '小': ['small', '影响小'] };
+const rvChName = ch => String(ch || '').replace(/CH0*(\d+)/gi, '第 $1 章').replace(/\//g, '、');
+// 程序查出来的几项(没有 AI 列的单条):按固定说法写大白话
+const RV_PLAIN_BLOCK = {
+  listen_dense: t => ({ problem: t + ',观众耳朵跟不上', fix: '把这句拆成两句,或者删掉不重要的数', level: '小', impact: '听着有点赶,不影响内容,可以忽略' }),
+  listen_open: t => ({ problem: '开头没抓住人:' + t, fix: '「AI 改一轮」会自动改开头几句', level: '大', impact: '开头决定观众留不留,建议改' }),
+  listen_register: t => ({ problem: '有的句子像书面语,不像说话:' + t, fix: '改成口语的说法', level: '小', impact: '听着有点别扭,可以忽略' }),
+  listen_other: t => ({ problem: t, fix: '按详情里的提示改', level: '中', impact: '听感上有点问题' }),
+  residue: t => ({ problem: '有几句用了原片那个国家、时代才有的说法', fix: '换成本地的说法', level: '中', impact: '懂行的观众会出戏' }),
+  pov: t => ({ problem: '「你」的代入感断了:' + t.replace(/^人物连贯[:：]/, ''), fix: '把「你」放回场景里', level: '中', impact: '观众会从「我在经历」变成「在听讲解」' }),
+  weak_claims: t => ({ problem: '有几句没核实过的说法,还在当论点用', fix: '删掉,或改成核实过的说法', level: '中', impact: '可能被懂行的观众挑错' }),
+  ledger: t => ({ problem: '稿子用了账本里算错的数', fix: '换成账本重算后的数', level: '大', impact: '数对不上,观众会质疑' }),
+  thesis: t => ({ problem: '反转的结论被查到的事实推翻了', fix: '改反转的说法,或者换个角度', level: '大', impact: '论点站不住' }),
+  open_fact: t => ({ problem: '开头有句话和网上查到的说法相反', fix: '改成查到的说法', level: '大', impact: '一开头就可能被挑错' }),
+  red_facts: t => ({ problem: '用了一个找不到出处的数' + t.replace(/^稿里用了没出处的数[:：]/, '(') + (/^稿里用了没出处的数/.test(t) ? ')' : ''), fix: '换成有出处的数,或者删掉', level: '中', impact: '被问到出处时答不上' }),
+  claim: t => ({ problem: /论点对不上/.test(t) ? '开头的主张被稿子自己的数推翻了' : t, fix: '「AI 改一轮」会按核对结果改', level: '大', impact: '论点站不住' }),
+  hard_open: t => ({ problem: t, fix: '「AI 改一轮」会按选中的改法改', level: '中', impact: '' })
+};
+function rvPlainToggle(btn, key) {
+  const d = btn.closest('.rv-plain').querySelector('.rv-plain-detail');
+  const open = d.style.display === 'none';
+  d.style.display = open ? '' : 'none';
+  btn.textContent = open ? '收起详情' : '查看详情';
+  rvState.folds = rvState.folds || {};
+  rvState.folds[key] = open;
+}
+// 一条:tag(第几章)、pl(大白话,没有时用 fb 顶上)、detail(原来的详情 HTML)、ign(忽略按钮的 onclick)
+function rvPlainRow(o, busy) {
+  const pl = o.pl || null;
+  const imp = RV_IMP[(pl && pl.level) || ''] || null;
+  const fk = 'pd_' + o.key;
+  const open = !!(rvState.folds || {})[fk];
+  const waiting = !pl ? `<div class="hint">${(rvState.view || {}).plain_running ? '大白话还在生成,稍等一会儿刷新' : '这条还没有大白话,先看上面这句;点「查看详情」看完整内容'}</div>` : '';
+  const text = pl
+    ? `${imp ? `<span class="rv-imp ${imp[0]}">${imp[1]}</span>` : ''}<b>${esc(pl.problem)}</b>${o.id ? ` <span class="hint">${esc(o.id)}</span>` : ''}
+       ${pl.fix ? `<div class="rv-plain-fix">怎么改:${esc(pl.fix)}</div>` : ''}
+       ${pl.impact ? `<div class="rv-plain-imp">不改会怎样:${esc(pl.impact)}</div>` : ''}`
+    : `${o.tag ? '<b>' + esc(o.tag) + '</b> ' : ''}${esc(String(o.fb || '').slice(0, 160))}${o.id ? ` <span class="hint">${esc(o.id)}</span>` : ''}${waiting}`;
+  return `<div class="rv-plain ${imp ? imp[0] : ''} v13">
+    <div class="rv-plain-top"><div class="rv-plain-text">${text}</div>
+      <div class="rv-plain-btns">${o.detail ? `<button class="an-btn" onclick="rvPlainToggle(this, '${escAttr(fk)}')">${open ? '收起详情' : '查看详情'}</button>` : ''}${o.ign ? `<button class="an-btn" onclick="${o.ign}" ${busy ? 'disabled' : ''} title="忽略后不挡发布,「AI 改一轮」也不改它;可以在下面「你点了忽略的」里撤回">忽略</button>` : ''}</div></div>
+    ${o.detail ? `<div class="rv-plain-detail" style="${open ? '' : 'display:none'}">${o.detail}</div>` : ''}</div>`;
+}
+async function rvIgnoreItem(source, id, on, block) {
+  if (on && !confirm('忽略这一条?\n忽略后它不挡发布,「AI 改一轮」也不会改它。以后可以在「你点了忽略的」里撤回。')) return;
+  try {
+    await rvPost('ignore_item', { source, id, on });
+    if (block) await rvPost('ignore_block', { key: block, on });
+  } catch (e) { alert(e.message); return; }
+  rvRefresh();
+}
+// 「账/论点」这一项:要紧的几条逐条大白话;核对的算式、已应用的、AI 说没问题的收进「查看核对详情」
+function rvClaimPlainHtml(p, v, busy) {
+  const c = p.claim, st = p.claim_step || {};
+  if (!c || st.status === 'running' || /论点/.test(v.running || '') || !c.blocking) return rvClaimHtml(p, v, true);
+  const real = x => !x.not_found && !x.no_issue && !x.looks_ok && !x.applied && !x.ignored && !x.ok_confirmed;
+  const issues = (c.issues || []).filter(x => !x.not_found);
+  const rows = issues.filter(real).map(x => rvPlainRow({ key: 'C_' + x.id, tag: rvChName(x.chapter), pl: x.plain, fb: x.why_zh || x.problem, detail: `<ul style="margin:0 0 0 18px">${rvClaimLi(x, busy)}</ul>`, ign: `rvIgnoreItem('claim', '${escAttr(x.id)}', true)` }, busy));
+  const rest = issues.filter(x => !real(x) && !x.ignored);
+  const vNo = c.verdict === '不成立' && !c.verdict_applied;
+  const head = vNo ? rvPlainRow({ key: 'C_verdict', tag: '', pl: { problem: '开头的主张被稿子自己的数推翻了:' + (c.claim || ''), fix: c.fix_claim ? '开头改成:' + c.fix_claim : '「AI 改一轮」会按核对结果改', level: '大', impact: '论点站不住,整片立不住' }, detail: `<div class="v13"><b>怎么算的</b>:${esc(c.calc || '')}</div>` }, busy) : '';
+  const titleBox = c.fix_title ? `<div class="v13" style="margin:6px 0;padding:6px 8px;background:#fff;border:1px solid #fca5a5;border-radius:6px"><b>要你拿主意</b>:问题出在标题,全文都是另一种说法,改稿改不过来。建议把标题改成「<b>${esc(c.fix_title)}</b>」${c.fix_title_zh ? '(' + esc(c.fix_title_zh) + ')' : ''}。<button class="an-btn v13" onclick="rvClaimTitle()" ${busy ? 'disabled' : ''}>改用这个标题</button> 想保留原标题,直接点上面「AI 改一轮」。</div>` : '';
+  const aiIds = issues.filter(x => x.ai_able && !(x.ai_fix && x.ai_fix.status === 'done') && !x.applied && !x.ignored).map(x => x.id);
+  const fk = 'claim_more';
+  const more = `<details class="hint v13" style="margin:4px 0"${(rvState.folds || {})[fk] ? ' open' : ''} ontoggle="rvState.folds['${fk}']=this.open"><summary>查看核对详情(账怎么算的${rest.length ? '、另外 ' + rest.length + ' 条已应用或核对后没问题的' : ''})</summary>
+    <div style="color:#374151;margin:4px 0"><b>怎么算的</b>:${esc(c.calc || '')}${c.fix_claim ? `<br><b>开头应该怎么说</b>:${esc(c.fix_claim)}` : ''}</div>
+    ${aiIds.length >= 2 ? `<div style="margin:4px 0"><button class="an-btn apply" onclick="rvSuggestAll('claim', ${escAttr(JSON.stringify(aiIds))})" ${busy ? 'disabled' : ''}>全部出改法(${aiIds.length} 条)</button> 每条调一次 AI 出具体句子,不改稿</div>` : ''}
+    ${rest.length ? `<ul style="color:#374151">${rest.map(x => rvClaimLi(x, busy)).join('')}</ul>` : ''}</details>`;
+  return `<div id="rv-claim-card">${c.stale ? '<div class="hint">(稿子改过,这是改之前的核对结果)</div>' : ''}${titleBox}${head}${rows.join('')}${more}</div>`;
+}
 // 「还差 N 项」的每一项 + 它下面对应的问题(复审问题按 item_groups 分到各项下面,服务端分好)
 function rvGroupsHtml(v, p, busy) {
   const rc = ((v.final || {}).rechecks || []).slice(-1)[0];
@@ -3527,13 +3621,32 @@ function rvGroupsHtml(v, p, busy) {
     const rows = items.map(x => rvPatchRow(rc, x, busy));
     const picks = items.map(x => { const k = rvPatchPick(rc, x); return esc(x.id) + ' ' + (k === 'skip' ? '不改' : k === 'rv' ? '按复审建议' : '选 ' + esc(k)); }).join('、');
     const ignBtn = b.key === 'red_facts' && b.fact ? `rvAcceptFact('${escAttr(b.fact.id)}', true)` : RV_IGNORABLE.includes(b.key) ? `rvIgnoreBlock('${b.key}', true)` : '';
-    const body = extra.filter(Boolean).join('') + rows.join('');
-    // 每一项默认折叠:标题行写清下面几条、现在各选的什么改法;点三角展开看详情、换改法(展开状态记住,刷新不丢)
+    // v1.98 大白话:复审列的问题、账/论点的问题逐条一句话;程序查出来的整项(数字太密、开头…)本身就是一条
+    let plainRows, n;
+    const shortText = String(b.text || '').replace(/^听感检查没过[:：]/, '');
+    if (b.key === 'claim') {
+      const cc = p.claim || {};
+      const claimRows = rvClaimPlainHtml(p, v, busy);
+      n = (cc.issues || []).filter(x => !x.not_found && !x.no_issue && !x.looks_ok && !x.applied && !x.ignored && !x.ok_confirmed).length;
+      plainRows = claimRows + rows.map((r, i) => rvPlainRow({ key: 'R_' + items[i].id, id: items[i].id, tag: rvChName(items[i].chapter), pl: items[i].plain, fb: items[i].why_zh || items[i].zh_problem || items[i].problem, detail: r, ign: `rvIgnoreItem('recheck', '${escAttr(items[i].id)}', true)` }, busy)).join('');
+    } else if (items.length) {
+      n = items.length;
+      plainRows = extra.filter(Boolean).length ? `<details class="hint v13" style="margin:4px 0"><summary>查看这一项的说明</summary>${extra.join('')}</details>` : '';
+      // 「数字太密」「开头」这类程序也查的项:只剩这一条时,忽略这条就连这一项一起忽略(不然程序那一项还挡着)
+      const alsoBlock = b.key !== 'hard_open' && RV_IGNORABLE.includes(b.key) && items.length === 1 ? b.key : '';
+      plainRows += items.map((x, i) => rvPlainRow({ key: 'R_' + x.id, id: x.id, tag: rvChName(x.chapter), pl: x.plain, fb: x.why_zh || x.zh_problem || x.problem, detail: rows[i], ign: alsoBlock ? `rvIgnoreItem('recheck', '${escAttr(x.id)}', true, '${alsoBlock}')` : `rvIgnoreItem('recheck', '${escAttr(x.id)}', true)` }, busy)).join('');
+    } else {
+      n = 0;
+      const tpl = RV_PLAIN_BLOCK[b.key];
+      plainRows = rvPlainRow({ key: 'B_' + g, tag: '', pl: tpl ? tpl(shortText) : null, fb: b.text, detail: extra.filter(Boolean).join('') || `<div class="hint">${esc(b.text)}</div>`, ign: ignBtn }, busy);
+    }
+    // v1.98:默认展开(大白话很短,一眼看完);你收起过的记住
     const fk = 'grp_' + g;
-    return `<details class="rv-grp" style="margin:10px 0 4px;padding-top:8px;border-top:1px dashed #fcd34d"${rvState.folds[fk] ? ' open' : ''} ontoggle="rvState.folds['${escAttr(fk)}']=this.open">
-      <summary style="font-size:13px;line-height:1.7;background:#dbeafe;border:1px solid #93c5fd;border-left:4px solid #2563eb;border-radius:6px;padding:5px 10px;color:#1e3a8a;cursor:pointer"><span class="rv-chip" style="background:#2563eb;border-color:#2563eb;color:#fff;font-weight:600">${esc(RV_BLOCK_ZH[b.key] || '问题')}</span> <b>${esc(b.text)}</b>${items.length ? ` <span class="hint">(下面 ${items.length} 条:${picks};点开看详情、换改法)</span>` : extra.length ? ' <span class="hint">(点开看详情)</span>' : ''}
-        ${ignBtn ? `<button class="an-btn" style="font-size:12px;padding:1px 10px;margin-left:6px" onclick="event.preventDefault();event.stopPropagation();${ignBtn}" ${busy ? 'disabled' : ''}>忽略</button>` : ''}</summary>
-      <div style="margin:4px 0 0 14px">${body || '<div class="hint">没有单独列出的问题;「AI 改一轮」会按上面这句一起改。不想管就点「忽略」。</div>'}</div></details>`;
+    const title = n ? (b.key === 'claim' ? (/论点对不上/.test(b.text) ? '论点对不上' : '账对不上') + ',' + n + ' 条' : n + ' 条') : '';
+    return `<details class="rv-grp" style="margin:10px 0 4px;padding-top:8px;border-top:1px dashed #fcd34d"${rvState.folds[fk] === false ? '' : ' open'} ontoggle="rvState.folds['${escAttr(fk)}']=this.open">
+      <summary style="font-size:13px;line-height:1.7;background:#dbeafe;border:1px solid #93c5fd;border-left:4px solid #2563eb;border-radius:6px;padding:5px 10px;color:#1e3a8a;cursor:pointer"><span class="rv-chip" style="background:#2563eb;border-color:#2563eb;color:#fff;font-weight:600">${esc(RV_BLOCK_ZH[b.key] || '问题')}</span> <b>${esc(title || shortText)}</b>${n ? ' <span class="hint">(每条点「查看详情」看原句、换改法;不要紧的点「忽略」)</span>' : ''}
+        ${ignBtn && n > 1 ? `<button class="an-btn" style="font-size:12px;padding:1px 10px;margin-left:6px" onclick="event.preventDefault();event.stopPropagation();${ignBtn}" ${busy ? 'disabled' : ''}>整项忽略</button>` : ''}</summary>
+      <div style="margin:4px 0 0 14px">${plainRows}</div></details>`;
   }).join('');
   const minor = rowsOf('minor');
   const minorHtml = minor.length ? `<details class="rv-md-box v13" style="margin-top:10px"><summary>其他 ${minor.length} 个小问题(不挡发布;「AI 改一轮」会按选中的改法顺手改,不想改就选「这个不改」)</summary>${minor.join('')}</details>` : '';
@@ -3546,7 +3659,9 @@ function rvIgnoredHtml(p, v) {
   const rc = ((v.final || {}).rechecks || []).slice(-1)[0];
   const open = rc ? (rc.open || []) : [];
   const of = p.ignored_of || {};
-  const list = (p.ignored || []).map(b => ({ g: b.key, zh: RV_BLOCK_ZH[b.key] || b.key, text: b.text, undo: `rvIgnoreBlock('${escAttr(b.key)}', false)` }))
+  const list = (p.ignored || []).map(b => b.item
+      ? { g: b.key, zh: b.item.source === 'claim' ? '账/论点 · 单条' : '复审问题 · 单条', text: b.text, undo: `rvIgnoreItem('${escAttr(b.item.source)}', '${escAttr(b.item.id)}', false)` }
+      : { g: b.key, zh: RV_BLOCK_ZH[b.key] || b.key, text: b.text, undo: `rvIgnoreBlock('${escAttr(b.key)}', false)` })
     .concat((p.accepted_facts || []).map(id => ({ g: 'fact:' + id, zh: RV_BLOCK_ZH.red_facts, text: '事实 ' + id + ' 没有出处', undo: `rvAcceptFact('${escAttr(id)}', false)` })))
     // 论点核对里你点了「确认没问题」的(v1.67):在这里撤回
     .concat(((p.claim || {}).issues || []).filter(x => x.ok_confirmed).map(x => ({ g: 'okc:' + x.id, zh: '账/论点', text: '你确认没问题:' + (x.chapter || '') + '「' + String(x.quote || '').slice(0, 60) + '」', undo: `rvConfirmOk('${escAttr(x.id)}', true)` })));
@@ -3756,10 +3871,7 @@ function rvClaimHtml(p, v, panel) {
     const res = f.error ? esc(f.error) : f.after ? (f.after.verdict === '不成立' || f.after.issues ? '重新核对还有问题' : '重新核对通过') : '';
     return `<li>${esc(fmtTime(f.at))} ${f.by === 'auto' ? '自动' : '手动'}改稿:${did}${res ? ';' + res : ''}</li>`;
   }).join('');
-  const list = (c.issues || []).filter(x => !x.not_found).map(x => x.no_issue ? `<li style="color:#6b7280"><b>[核对后没问题,不挡发布]</b> ${esc(x.chapter || '')} ${x.quote ? '「' + esc(x.quote) + '」' : ''}<span class="hint">${esc(String(x.problem || '').slice(-120))}</span></li>`
-    : x.looks_ok ? rvLooksOkHtml(x, busy)
-    : x.applied ? `<li><b style="color:#047857">[已应用,不挡发布]</b> ${esc(x.chapter || '')} ${x.why_zh ? rvWhyBox(x.why_zh) : `<span class="hint">${esc(x.problem)}</span>`}${rvApplyHtml('claim', x, busy)}</li>`
-    : `<li><b style="color:${x.level === '关键' ? '#b91c1c' : '#b45309'}">[${esc(x.level)}]</b> ${esc(x.chapter || '')} ${x.quote ? '「' + esc(x.quote) + '」' : ''}${rvWhyBox(x.why_zh, '')}<div class="rv-orig"><span class="hint">核对原话(含算式):</span>${esc(x.problem)}</div>${x.fix ? `<div class="hint">改法:${esc(x.fix)}</div>` : ''}${rvApplyHtml('claim', x, busy)}</li>`).join('');
+  const list = (c.issues || []).filter(x => !x.not_found).map(x => rvClaimLi(x, busy)).join('');
   const stale = c.stale ? '<span class="hint">(稿子改过,这是改之前的核对结果)</span> ' : '';
   const aiIds = (c.issues || []).filter(x => x.ai_able && !(x.ai_fix && x.ai_fix.status === 'done') && !x.applied).map(x => x.id);
   const allAi = aiIds.length >= 2 ? `<div class="v13" style="margin:4px 0"><button class="an-btn apply" onclick="rvSuggestAll('claim', ${escAttr(JSON.stringify(aiIds))})" ${busy ? 'disabled' : ''}>全部出改法(${aiIds.length} 条)</button> <span class="hint">下面「这条需要 AI 改」的,按顺序每条调一次 AI 出具体句子,不改稿</span></div>` : '';

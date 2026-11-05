@@ -314,7 +314,7 @@ function scoreSummary(run) {
     .filter(x => typeof x === 'number' && isFinite(x));
   // v1.95 不看分数:最后一轮复审的结论 + 还剩几个关键/结构问题(和 review.rcGood 同一口径)
   const last = Array.isArray(fin.rechecks) && fin.rechecks.length ? fin.rechecks[fin.rechecks.length - 1] : null;
-  const hard = last ? (Array.isArray(last.open) ? last.open : []).filter(x => x && (x.level === '关键' || x.level === '结构') && !x.not_found && !x.applied) : [];
+  const hard = last ? (Array.isArray(last.open) ? last.open : []).filter(x => x && (x.level === '关键' || x.level === '结构') && !x.not_found && !x.applied && !x.ignored) : []; // v1.98 单条忽略的不算
   return {
     audit: typeof stepScore === 'number' && isFinite(stepScore) ? stepScore : null,
     final: xs.length ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length * 10) / 10 : null,

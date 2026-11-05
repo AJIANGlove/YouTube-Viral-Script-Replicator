@@ -251,6 +251,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `final_patch_diagnose.md` | 补改掉分后找原因、定每题新改法 | 43 |
 | `final_compare.md` | 改前改后盲比（A/B 随机，观众更愿意看完哪版） | 25 |
 | `blueprint_left_check.md` | 终审后核对蓝图审留下的问题解决没有（已解决/还在/说不准） | 27 |
+| `plain_zh.md` | 把「还差 N 项」的每条问题写成三行大白话（问题/怎么改/不改会怎样） | 24 |
 | `final_open_options.md` | 复审遗留问题各出 ≥3 种改法并标推荐 | 33 |
 | `reframe_suggest.md` | 写前分析判「换框架」时推荐库内框架（带结构信息；「按功能重排」时程序把第 3 条换成只看锁定项、核心套路、使用前提） | 32 |
 | `final_open_extract.md` | 从旧复审报告里抽出 OPEN 待改清单 | 17 |
