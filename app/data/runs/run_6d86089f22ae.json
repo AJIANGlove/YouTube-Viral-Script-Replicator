@@ -800,7 +800,7 @@
     }
   },
   "created_at": "2026-11-05T09:52:11.426Z",
-  "updated_at": "2026-11-05T12:21:01.747Z",
+  "updated_at": "2026-11-05T14:28:29.936Z",
   "asset_id": "the-economics-of-owning-a-coffee-shop",
   "asset_name": "小生意经济学拆解（高毛利幻觉的解剖）",
   "topic": "커피 한 잔 팔아서 얼마나 남을까?",
@@ -832,11 +832,11 @@
   "usage": {
     "since": "2026-11-05T09:52:39.704Z",
     "total": {
-      "calls": 93,
-      "in": 6657242,
-      "out": 599560,
-      "cache_read": 248020,
-      "cache_write": 5216,
+      "calls": 94,
+      "in": 6659481,
+      "out": 600846,
+      "cache_read": 248360,
+      "cache_write": 5314,
       "est_calls": 0
     },
     "steps": {
@@ -1134,6 +1134,14 @@
         "out": 125,
         "cache_read": 0,
         "cache_write": 0,
+        "est_calls": 0
+      },
+      "大白话": {
+        "calls": 1,
+        "in": 2239,
+        "out": 1286,
+        "cache_read": 340,
+        "cache_write": 98,
         "est_calls": 0
       }
     }
@@ -2196,6 +2204,19 @@
       "stop_reason": "end_turn",
       "in_tok": 1054,
       "out_tok": 125
+    },
+    {
+      "ts": "2026-11-05T14:28:29.909Z",
+      "label": "大白话",
+      "provider": "lk888",
+      "model": "claude-opus-5",
+      "ok": true,
+      "secs": 17.6,
+      "stop_reason": "end_turn",
+      "in_tok": 2239,
+      "out_tok": 1286,
+      "cache_read": 340,
+      "cache_write": 98
     }
   ],
   "thesis_scout": {
@@ -16178,6 +16199,20 @@
       ],
       "scores_after": {},
       "verdict": "未达标"
+    },
+    "plain": {
+      "cb7c34ec1608": {
+        "problem": "第1章开头好几句话一口气塞了三四个数字，观众跟不上。",
+        "fix": "把含多个数字的句子拆开，数字之间插半句话过渡。",
+        "impact": "开头听着有点赶，但内容没问题，不影响理解。",
+        "level": "中"
+      },
+      "f6653704a20e": {
+        "problem": "第4章说固定成本吃掉四成，但实际算出来是39%，还把配送费混进了固定成本。",
+        "fix": "删掉四成的说法，改成房租加人工占39%，配送费单独算。",
+        "impact": "懂行的人一听就知道数字对不上，论点站不住。",
+        "level": "大"
+      }
     }
   }
 }

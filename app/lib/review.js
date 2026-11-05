@@ -345,7 +345,8 @@ function buildView(run, asset) {
       const last = rechecks[rechecks.length - 1];
       // 最后一轮复审的问题:建议里写明了「原句」改成「新句」、原句只出现一次的,可以直接应用
       if (last) last.open = last.open.map(x => applyView(run.id, script, lang, 'recheck', x));
-      return { ...f, manual_applies: arr(f.manual_applies).map(({ before_text, diff, ...r }) => r), rechecks, scores_before: fillScores(f.scores_before, f.audit_report, dims, 1), scores_after: last ? { ...last.scores, ...(f.scores_after || {}) } : f.scores_after };
+      const ti = thesisItem(run);
+      return { ...f, thesis_item: ti ? applyView(run.id, script, lang, 'thesis', ti) : null, manual_applies: arr(f.manual_applies).map(({ before_text, diff, ...r }) => r), rechecks, scores_before: fillScores(f.scores_before, f.audit_report, dims, 1), scores_after: last ? { ...last.scores, ...(f.scores_after || {}) } : f.scores_after };
     })() : null,
     opening: openingView(run),
     tracks: trackList(), track_default: lockedTrack(run) || state.final_track || autoTrack(run, asset), track_locked: !!lockedTrack(run),
@@ -700,7 +701,8 @@ function publishCheck(run, v) {
   if (off.length) notes.push('稿子里有 ' + off.length + ' 个' + (an().ledgerSayOn(run) ? '金额或百分比' : '金额') + '在账本、事实表、你的资料里都找不到(多半是 AI 写稿时现算的,论点核对会重点查):' + off.slice(0, 6).map(x => x.ch + '「' + x.amount + '」').join('、') + (off.length > 6 ? ' 等' : ''));
   // 反转被推翻:看最近一轮复审对终稿的判断;复审判定已解决就不再挡
   const th = last && last.thesis;
-  if (arr(s.thesis_contradicts).length && !(th && th.resolved)) blk('thesis', '反转被事实推翻' + (th ? '(复审判定未解决:' + th.note + ')' : '(终审复审还没判断)'));
+  const thApplied = v.final && v.final.thesis_item && v.final.thesis_item.applied && v.final.thesis_item.sig === arr(s.thesis_contradicts).join(',');
+  if (arr(s.thesis_contradicts).length && !(th && th.resolved) && !thApplied) blk('thesis', '反转被事实推翻' + (th ? '(复审判定未解决:' + th.note + ')' : '(终审复审还没判断)'));
   consistencyBlocks(s.consistency).forEach(b => blk(b.key, b.text));
   const ofc = openFactsContra(run);
   if (ofc.length) blk('open_fact', '开头有 ' + ofc.length + ' 句和网上查到的说法相反:' + ofc.map(f => '第 ' + f.n + ' 句「' + f.claim + '」' + (f.note ? '(' + f.note + ')' : '')).join(';'));
@@ -788,6 +790,7 @@ function getView(runId) {
   // 还差 N 项里的问题还没有大白话(旧任务、上次没补出来):后台补一次,5 分钟内不重复;有任务在跑时不补(跑完会自己补)
   if (!v.running && !passBusy(runId) && !plainBusy.has(runId) && ((run.steps || {}).review_zh || {}).status !== 'running' && plainTargets(run).length && Date.now() - (plainKick.get(runId) || 0) > 300000) { plainKick.set(runId, Date.now()); plainRun(runId).catch(() => {}); }
   v.plain_running = plainBusy.has(runId);
+  v.live_calls = require('./live').list(runId); // v1.99 正在用的模型
   return v;
 }
 // 只翻挡发布的事实原文和用到它的句子(不顺带翻整篇,省得一打开旧任务就花钱)
@@ -838,6 +841,14 @@ function parseBlocks(text, truncated) {
   return out;
 }
 
+// ---------- 按步骤选渠道(v1.99):设置页「步骤用哪个渠道」;这一步的渠道出错(Key、额度、模型不支持)时,自动用主流程再来一次,步骤名后加「·换主渠道」 ----------
+function stepCfg(key, mainCfg) { const c = pl().loadStepConfig(key); return c || mainCfg; }
+async function viaStep(key, mainCfg, fn) {
+  const c = stepCfg(key, mainCfg);
+  if (c === mainCfg) return fn(mainCfg, '');
+  try { return await fn(c, ''); }
+  catch (e) { if (e && (e.status === 409 || /已取消|cancel/i.test(e.message || ''))) throw e; return fn(mainCfg, '·换主渠道'); }
+}
 async function rawCall(run, cfg, prompt, label) {
   return an().callWithLog(run, cfg, [{ role: 'user', content: prompt }], label);
 }
@@ -950,7 +961,7 @@ async function fillWhy(run, cfg) {
     const batch = targets.slice(i, i + WHY_BATCH);
     const items = batch.map((t, k) => whyItemText(run, t, 'Q' + (k + 1))).join('\n\n');
     const prompt = an().fillVars(readPrompt('why_zh.md'), { target_language: (run.audience || {}).target_language || '外语', topic: run.topic || '', items });
-    const r = await rawCall(run, cfg, prompt, '问题在哪');
+    const r = await viaStep('explain', cfg, (c, sfx) => rawCall(run, c, prompt, '问题在哪' + sfx));
     const got = parseBlocks(r.content, r.stopReason === 'max_tokens');
     batch.forEach((t, k) => { const w = String(got['Q' + (k + 1)] || '').trim(); if (w) out[whyKey(t.kind, t.x)] = w; });
   }
@@ -992,7 +1003,7 @@ async function fillPlain(run, cfg) {
     const batch = targets.slice(i, i + PLAIN_BATCH);
     const items = batch.map((t, k) => plainItemText(run, t, 'Q' + (k + 1))).join('\n\n');
     const prompt = an().fillVars(readPrompt('plain_zh.md'), { target_language: (run.audience || {}).target_language || '外语', topic: run.topic || '', items });
-    const r = await rawCall(run, cfg, prompt, '大白话');
+    const r = await viaStep('explain', cfg, (c, sfx) => rawCall(run, c, prompt, '大白话' + sfx));
     const got = parseBlocks(r.content, r.stopReason === 'max_tokens');
     batch.forEach((t, k) => { const p = parsePlain(got['Q' + (k + 1)]); if (p) out[whyKey(t.kind, t.x)] = p; });
   }
@@ -1524,7 +1535,7 @@ async function runFactCheck(run, cfg, script, asset) {
   const tr = loadTrack(trackKey);
   // ① 事实审计
   setStepStage(run.id, 'draft_check', '事实审计');
-  const r1 = await callLong(run, cfg, an().fillVars(readPrompt('fact_audit.md'), { ...common, max_queries: FACT_MAX_QUERIES, track_name: tr.name, fact_focus: FACT_FOCUS[tr.key] || FACT_FOCUS.general }), '事实审计');
+  const r1 = await viaStep('fact_extract', cfg, (c, sfx) => callLong(run, c, an().fillVars(readPrompt('fact_audit.md'), { ...common, max_queries: FACT_MAX_QUERIES, track_name: tr.name, fact_focus: FACT_FOCUS[tr.key] || FACT_FOCUS.general }), '事实审计' + sfx));
   const b1 = parseBlocks(r1.content.replace(/[*`]*(===\s*(?:CLAIMS|QUERIES|END)\s*===)[*`]*/gi, '\n$1\n'), false);
   const claims = parseClaims(b1.CLAIMS);
   const overview = r1.content.split(/^===\s*CLAIMS/m)[0].trim();
@@ -2403,17 +2414,18 @@ async function runFinal(runId) {
   try {
     const common = { ...finalCommon(run, tr, dims), selected_fixes: selectedFixes(run) };
     // ① 审稿
-    const r1 = await callLong(run, cfg, an().fillVars(readPrompt('final_audit.md'), { ...common, chapter_map: chapterMap(run, asset), program_findings: programFindings(run, asset), script: base }), '终审·审稿');
+    const r1 = await viaStep('final_audit', cfg, (c, sfx) => callLong(run, c, an().fillVars(readPrompt('final_audit.md'), { ...common, chapter_map: chapterMap(run, asset), program_findings: programFindings(run, asset), script: base }), '终审·审稿' + sfx));
     const s1 = splitReport(r1.content);
     const scoresBefore = fillScores(parseScores(parseBlocks(s1.tail, false).SCORES, dims), s1.report, dims, 1);
     // ② 修改
     setFinalStage(runId, '修改');
-    const r2 = await callLong(run, cfg, an().fillVars(readPrompt('final_revise.md'), { ...common, audit_report: s1.report, listen_findings: listenFindings(run, base), script: base }), '终审·修改');
+    const reviseCfg = stepCfg('final_revise', cfg);
+    const r2 = await viaStep('final_revise', cfg, (c, sfx) => callLong(run, c, an().fillVars(readPrompt('final_revise.md'), { ...common, audit_report: s1.report, listen_findings: listenFindings(run, base), script: base }), '终审·修改' + sfx));
     let edits1 = parseEdits(r2.content);
     if (r2.truncated && !/^===\s*END\s*===/m.test(r2.content)) edits1 = edits1.slice(0, -1);
     const noEditsLog = edits1.length ? '' : dumpRaw(run, 'final_noedits', '【审稿报告】\n' + r1.content + '\n\n【修改】\n' + r2.content);
     const limit = growthLimit(run, base);
-    const a1 = await applyWithRepair(run, cfg, base, edits1, '终审·修改', limit);
+    const a1 = await applyWithRepair(run, reviseCfg, base, edits1, '终审·修改', limit);
     let text = a1.next, edits = a1.edits.filter(e => e.ok).map(e => ({ ...e })), failed = a1.edits.filter(e => !e.ok);
     // ③ 复审(没达标就再改一轮,再复审一次)
     const rechecks = [], snaps = [];
@@ -2593,11 +2605,11 @@ async function runOpenOptions(runId) {
   try {
     const tr = loadTrack(fin.track);
     const common = finalCommon(run, tr, arr(fin.dims).length ? fin.dims : finalDims(tr));
-    const out = await an().callJson(run, cfg, an().fillVars(readPrompt('final_open_options.md'), {
+    const out = await viaStep('final_options', cfg, (oc, sfx) => an().callJson(run, oc, an().fillVars(readPrompt('final_open_options.md'), {
       ...common, script: d3.text,
       items: items.map(x => x.id + ' | ' + x.chapter + ' | ' + x.level + ' | ' + x.problem + (x.not_found ? '(程序查过:引用的原句稿子里找不到,复审可能看错了;推荐「不改」那类方式)' : '') + ' | ' + (x.suggestion || '(无)')).join('\n')
     // 只给了部分问题的方案也收下(实测问题编号重复时只回了 P01,整份被判失败);没方案的问题补改时按复审建议改
-    }), '终审·出解决方案', o => Object.keys(optionsFrom(o, items)).length >= 1);
+    }), '终审·出解决方案' + sfx, o => Object.keys(optionsFrom(o, items)).length >= 1));
     const options = optionsFrom(out, items);
     // 实测 run_1f67a92553fd:出方案两次都「成功」但一条都对不上,页面只是按钮还在,人不知道出没出
     if (!Object.keys(options).length) throw new Error('AI 给的方案对不上问题编号,没有能用的方案');
@@ -3588,7 +3600,26 @@ function applyLeftovers(text, old, nw) {
 const applyPreview = p => (p && !p.why ? { old: p.old, new: p.new, del: !!p.del, more: !!p.more } : null);
 // 上一轮复审之后直接应用了几处(分数还是那一轮的)
 const manualAfterRecheck = fin => arr((fin || {}).manual_applies).filter(r => !r.undone && r.round === arr((fin || {}).rechecks).length).length;
+// v1.99:「反转被事实推翻」原来只能靠「AI 改一轮」改,现在也当成一条问题(id T1),能「AI 出改法」「直接应用」
+function thesisItem(run) {
+  const fin = (run.review || {}).final, a = run.analysis || {};
+  const ids = arr((a.thesis_check || {}).contradicts);
+  if (!fin || !ids.length) return null;
+  const last = arr(fin.rechecks).slice(-1)[0] || {};
+  const th = last.thesis;
+  const facts = arr(a.facts);
+  const rows = ids.map(id => { const f = facts.find(x => x.id === id) || {}; return id + ' ' + String(f.content || '').slice(0, 200); }).join(';');
+  const card = a.thesis_card || {};
+  const problem = '稿子的反转结论和事实相反:' + rows + ((a.thesis_check || {}).note ? '。写前分析的说明:' + String(a.thesis_check.note).slice(0, 300) : '') + (th && !th.resolved && th.note ? '。复审判定还没解决:' + th.note : '');
+  const fix = '只改稿子里和这些事实冲突的说法(多半是反转那几句或后面的结论),改到和事实一致:能改成「有条件成立」「不是所有人都这样」就不要整段推翻;数字以账本为准' + (card.one_line_thesis ? '。论点卡一句话论点:' + card.one_line_thesis : '');
+  const cur = fin.thesis_item;
+  if (cur && cur.sig === ids.join(',')) { cur.problem = problem; cur.fix = fix; return cur; }
+  fin.thesis_item = { id: 'T1', sig: ids.join(','), level: '关键', chapter: '', quote: '', problem, fix };
+  return fin.thesis_item;
+}
+function srcOf(body) { const s = (body || {}).source; return s === 'claim' || s === 'thesis' ? s : 'recheck'; }
 function applyTarget(fin, source, id) {
+  if (source === 'thesis') return { item: fin.thesis_item && fin.thesis_item.id === id ? fin.thesis_item : null };
   if (source === 'claim') return { item: arr((fin.claim_check || {}).issues).find(x => x.id === id) || null };
   const rc = arr(fin.rechecks).slice(-1)[0];
   const i = uniqOpen(arr(rc && rc.open)).findIndex(x => x.id === id);
@@ -3657,10 +3688,13 @@ function aiFixKey(runId, source, id) { return runId + ':' + source + ':' + id; }
 // 能不能点「AI 出改法」:论点核对里没问题的、找不到原句的不行;复审问题只给关键和次要(结构问题是整章重写,待核实是查事实)
 function aiFixAble(source, x) {
   if (!x || x.applied || x.not_found || x.no_issue || x.ok_confirmed) return false;
-  return source === 'claim' ? !claimNoIssue(x) && !claimLooksOk(x) : (x.level === '关键' || x.level === '次要');
+  // v1.99 去掉「AI 改一轮」后,结构问题也给「AI 出改法」(最多改 3 处,改不动整章就在那一章写意见)
+  if (source === 'thesis') return true;
+  return source === 'claim' ? !claimNoIssue(x) && !claimLooksOk(x) : (x.level === '关键' || x.level === '次要' || x.level === '结构');
 }
 // 页面上每一条的「直接应用 / AI 出改法」状态
 function applyView(runId, text, lang, source, x) {
+  if (x.applied && x.applied.merged_into) return x;
   if (x.applied) return { ...x, applied: { ...x.applied, left: x.applied.edits ? [].concat(...x.applied.edits.map(e => applyLeftovers(text, e.old, e.new))).slice(0, 4) : applyLeftovers(text, x.applied.old, x.applied.new) } };
   let af = x.ai_fix || null;
   if (af && af.status === 'running' && !aiFixBusy.has(aiFixKey(runId, source, x.id))) af = { ...af, status: 'failed', error: '上次出改法被中断了(程序重启过),再点一次' };
@@ -3669,13 +3703,13 @@ function applyView(runId, text, lang, source, x) {
     if (!v.why) return { ...x, ai_fix: af, apply: { ai: true, why: af.why || '', edits: v.plans.map(p => ({ chapter: p.chapter, old: p.old, new: p.new, new_zh: p.new_zh, del: !!p.del })), old: joinPlans(v.plans, 'old'), new: joinPlans(v.plans, 'new') } };
     af = { ...af, status: 'stale', error: '稿子之后改过,AI 给的原句现在找不到了,重新出一次' };
   }
-  const pa = source === 'claim' ? (x.not_found || x.no_issue ? null : planApply(text, x.quote, x.fix, lang)) : planOpen(text, x, lang);
+  const pa = source === 'thesis' ? null : source === 'claim' ? (x.not_found || x.no_issue ? null : planApply(text, x.quote, x.fix, lang)) : planOpen(text, x, lang);
   if (pa && !pa.why) return { ...x, ...(af ? { ai_fix: af } : {}), apply: applyPreview(pa) };
   return { ...x, ...(pa && pa.why ? { apply_why: pa.why } : {}), ...(af ? { ai_fix: af } : {}), ai_able: aiFixAble(source, x) };
 }
 async function suggestFix(runId, body) {
   if (passBusy(runId)) throw Object.assign(new Error('「' + (passLabel(runId) || '审稿') + '」正在跑,等它跑完再点'), { status: 409 });
-  const source = body.source === 'claim' ? 'claim' : 'recheck', id = String(body.id || '');
+  const source = srcOf(body), id = String(body.id || '');
   const key = aiFixKey(runId, source, id);
   if (aiFixBusy.has(key)) throw Object.assign(new Error('这一条正在出改法,等一下'), { status: 409 });
   const cfg = pl().loadConfig();
@@ -3683,10 +3717,15 @@ async function suggestFix(runId, body) {
   const run = store.getRun(runId);
   if (!run || !(run.review || {}).final) throw Object.assign(new Error('还没跑终审'), { status: 400 });
   const lang = (run.audience || {}).target_language || '';
+  if (source === 'thesis') thesisItem(run);
   const { item } = applyTarget(run.review.final, source, id);
   if (!item) throw Object.assign(new Error('找不到这条问题(页面可能是旧的,刷新一下)'), { status: 404 });
   if (!aiFixAble(source, item)) throw Object.assign(new Error(item.applied ? '这条已经应用过了' : '这条不需要出改法'), { status: 400 });
   const text = currentScript(run);
+  // v1.99:「AI 改一轮」去掉了,问题下面选的 A/B/C 改法交给「AI 出改法」:按人选的那个方案出具体句子
+  const lastRc = arr(run.review.final.rechecks).slice(-1)[0] || {};
+  const pickOpt = source === 'recheck' && body.pick && !/^(rv|skip)$/.test(body.pick) ? arr((lastRc.options || {})[id]).find(o => o.key === body.pick) : null;
+  const pickedFix = pickOpt ? '按人选的改法(' + pickOpt.key + '):' + pickOpt.zh + (pickOpt.why ? '(' + pickOpt.why + ')' : '') : '';
   const at = new Date().toISOString();
   aiFixBusy.add(key);
   item.ai_fix = { status: 'running', at };
@@ -3702,13 +3741,13 @@ async function suggestFix(runId, body) {
   try {
     const base = {
       target_language: lang || '', chapter: item.chapter || '', level: item.level || '',
-      quote: item.quote || '(复审没有单独引原句,看问题描述)', problem: item.problem || '', fix: item.fix || item.suggestion || '(无)',
+      quote: item.quote || '(复审没有单独引原句,看问题描述)', problem: item.problem || '', fix: pickedFix || item.fix || item.suggestion || '(无)',
       ledger: claimLedgerText(run), script: checks.extractFinalScript(text)
     };
     let why = '', got = null, out = null, tries = 0;
     for (; tries < 2 && !got; tries++) {
-      out = await an().callJson(run, cfg, an().fillVars(readPrompt('apply_suggest.md'), { ...base, retry_note: why ? '\n【上一次给的改法不能用】' + why + '。按规则改正后重新输出。\n' : '' }),
-        'AI 出改法' + (tries ? '·重试' : ''), o => !!o && Array.isArray(o.edits));
+      const prompt = an().fillVars(readPrompt('apply_suggest.md'), { ...base, retry_note: why ? '\n【上一次给的改法不能用】' + why + '。按规则改正后重新输出。\n' : '' });
+      out = await viaStep('ai_fix', cfg, (c, sfx) => an().callJson(run, c, prompt, 'AI 出改法' + (tries ? '·重试' : '') + sfx, o => !!o && Array.isArray(o.edits)));
       const v = aiFixPlans(text, out.edits, lang);
       if (v.why) why = v.why; else got = v;
     }
@@ -3716,13 +3755,94 @@ async function suggestFix(runId, body) {
     if (currentScript(fresh0) !== text) throw new Error('出改法的时候稿子被改过了,再点一次');
     const af = got
       ? { status: 'done', at, tries, why: String(out.why_zh || ''), edits: got.plans.map(p => ({ chapter: p.chapter || item.chapter || '', old: p.old, new: p.new, new_zh: p.new_zh })) }
-      : { status: 'failed', at, tries, error: 'AI 没给出能直接替换的改法(试了 ' + tries + ' 次,最后一次:' + why + ')。可以再点一次,或者点上面「AI 改一轮」' };
+      : { status: 'failed', at, tries, error: 'AI 没给出能直接替换的改法(试了 ' + tries + ' 次,最后一次:' + why + ')。可以再点一次,或者在下面逐章对比里那一章点「我的意见」写给 AI' };
     save(af);
     return af;
   } catch (e) {
     save({ status: 'failed', at, error: e.message });
     throw e;
   } finally { aiFixBusy.delete(key); }
+}
+// v1.99「勾选的一起出改法」(用户 2026-11-05):勾几条,只发一次全文,一次出这几条的改法;每条还是各自「直接应用」
+const AI_FIX_BATCH = 8;
+function fixTargets(fin) {
+  const rc = arr(fin.rechecks).slice(-1)[0];
+  return [].concat(uniqOpen(arr(rc && rc.open)).map(x => ({ source: 'recheck', x })), arr((fin.claim_check || {}).issues).map(x => ({ source: 'claim', x })), fin.thesis_item ? [{ source: 'thesis', x: fin.thesis_item }] : []);
+}
+function pickedFixOf(fin, source, id, pick) {
+  if (source !== 'recheck' || !pick || /^(rv|skip)$/.test(pick)) return '';
+  const rc = arr(fin.rechecks).slice(-1)[0] || {};
+  const o = arr((rc.options || {})[id]).find(o => o.key === pick);
+  return o ? '按人选的改法(' + o.key + '):' + o.zh + (o.why ? '(' + o.why + ')' : '') : '';
+}
+async function suggestFixBatch(runId, body) {
+  if (passBusy(runId)) throw Object.assign(new Error('「' + (passLabel(runId) || '审稿') + '」正在跑,等它跑完再点'), { status: 409 });
+  const cfg = pl().loadConfig();
+  if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
+  const run = store.getRun(runId);
+  if (!run || !(run.review || {}).final) throw Object.assign(new Error('还没跑终审'), { status: 400 });
+  const fin = run.review.final, lang = (run.audience || {}).target_language || '';
+  const want = arr((body || {}).items).map(t => ({ source: srcOf(t), id: String((t || {}).id || ''), pick: String((t || {}).pick || '') })).filter(t => t.id);
+  if (!want.length) throw Object.assign(new Error('先勾选要出改法的问题'), { status: 400 });
+  if (want.some(t => t.source === 'thesis')) thesisItem(run);
+  const seen = new Set(), list = [], skipped = [];
+  want.forEach(t => {
+    const k = t.source + ':' + t.id;
+    if (seen.has(k)) return; seen.add(k);
+    const item = applyTarget(fin, t.source, t.id).item;
+    if (!item || !aiFixAble(t.source, item)) return skipped.push(t.id);
+    if (aiFixBusy.has(aiFixKey(runId, t.source, t.id))) return skipped.push(t.id);
+    list.push({ ...t, k, item, fix: pickedFixOf(fin, t.source, t.id, t.pick) || item.fix || item.suggestion || '(无)' });
+  });
+  if (!list.length) throw Object.assign(new Error('勾选的这几条都不需要出改法(可能已经应用过,或者正在出)'), { status: 400 });
+  const text = currentScript(run), at = new Date().toISOString();
+  list.forEach(t => { aiFixBusy.add(aiFixKey(runId, t.source, t.id)); t.item.ai_fix = { status: 'running', at, batch: true }; });
+  store.saveRun(run);
+  const results = {};
+  try {
+    for (let i = 0; i < list.length; i += AI_FIX_BATCH) {
+      const chunk = list.slice(i, i + AI_FIX_BATCH);
+      const issues = chunk.map(t => '- id:' + t.id + '\n  章节:' + (t.item.chapter || '(全篇)') + '\n  等级:' + (t.item.level || '') + '\n  引用的原句:' + (t.item.quote || '(没有单独引原句,看问题描述)') + '\n  问题:' + String(t.item.problem || '').slice(0, 800) + '\n  原来的改法(说明):' + String(t.fix).slice(0, 600)).join('\n');
+      const prompt = an().fillVars(readPrompt('apply_suggest_batch.md'), { target_language: lang || '', issues, ledger: claimLedgerText(run), script: checks.extractFinalScript(text) });
+      let out = null, err = '';
+      try { out = await viaStep('ai_fix', cfg, (c, sfx) => an().callJson(run, c, prompt, 'AI 出改法·一起出' + sfx, o => !!o && Array.isArray(o.fixes))); }
+      catch (e) { if (e && e.status === 409) throw e; err = e.message || String(e); }
+      const fixes = arr(out && out.fixes);
+      const taken = []; // 前面几条已经占用的原句位置:后面的条目和它重叠就算没出成
+      chunk.forEach(t => {
+        const f = fixes.find(f => String((f || {}).id || '').trim() === t.id);
+        if (!f) return (results[t.k] = { status: 'failed', at, batch: true, error: err ? 'AI 没出成(' + err + '),可以单独点「AI 出改法」' : 'AI 漏了这一条,可以单独点「AI 出改法」' });
+        const into = String(f.merged_into || '').trim();
+        const host = into && into !== t.id ? chunk.find(c => c.id === into) : null;
+        if (host && !arr(f.edits).length) return (results[t.k] = { status: 'merged', at, batch: true, into: host.source + ':' + host.id, into_id: host.id, why: String(f.why_zh || '') });
+        const v = aiFixPlans(text, f.edits, lang);
+        if (v.why) return (results[t.k] = { status: 'failed', at, batch: true, error: 'AI 给的改法不能直接用(' + v.why + '),可以单独点「AI 出改法」再出一次' });
+        const spans = v.plans.map(p => p.span || [p.start, p.end]);
+        const hit = taken.find(o => spans.some(s => s[0] < o.span[1] && o.span[0] < s[1]));
+        if (hit) return (results[t.k] = { status: 'failed', at, batch: true, error: '和 ' + hit.id + ' 改的是同一句,先应用 ' + hit.id + ',再单独给这条出改法' });
+        spans.forEach(sp => taken.push({ id: t.id, span: sp }));
+        results[t.k] = { status: 'done', at, batch: true, why: String(f.why_zh || ''), edits: v.plans.map(p => ({ chapter: p.chapter || t.item.chapter || '', old: p.old, new: p.new, new_zh: p.new_zh })) };
+      });
+      // 合并到的那条没出成:这条也算没出成
+      chunk.forEach(t => { const r = results[t.k]; if (r && r.status === 'merged' && (results[r.into] || {}).status !== 'done') results[t.k] = { status: 'failed', at, batch: true, error: 'AI 说和 ' + r.into_id + ' 一起改,但 ' + r.into_id + ' 没出成,可以单独点「AI 出改法」' }; });
+    }
+  } catch (e) {
+    list.forEach(t => { if (!results[t.k]) results[t.k] = { status: 'failed', at, batch: true, error: e.message }; });
+    throw e;
+  } finally {
+    const fresh = store.getRun(runId) || run;
+    const same = currentScript(fresh) === text;
+    list.forEach(t => {
+      aiFixBusy.delete(aiFixKey(runId, t.source, t.id));
+      const it = applyTarget(fresh.review.final, t.source, t.id).item;
+      if (it) it.ai_fix = same ? (results[t.k] || { status: 'failed', at, error: '没出成' }) : { status: 'failed', at, error: '出改法的时候稿子被改过了,再点一次' };
+    });
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
+    if (run.usage) fresh.usage = require('./usage').newer(fresh.usage, run.usage);
+    store.saveRun(fresh);
+  }
+  const vals = list.map(t => ({ id: t.id, ...results[t.k] }));
+  return { done: vals.filter(v => v.status === 'done').length, merged: vals.filter(v => v.status === 'merged').map(v => ({ id: v.id, into: v.into_id })), failed: vals.filter(v => v.status === 'failed').map(v => ({ id: v.id, error: v.error })), skipped, calls: Math.ceil(list.length / AI_FIX_BATCH) };
 }
 // 「确认没问题」(v1.67):AI 核对结论没问题的条目,人确认后不挡发布;undo:true 撤回
 function confirmOk(runId, body) {
@@ -3740,7 +3860,7 @@ function applyFix(runId, body) {
   const run = store.getRun(runId);
   if (!run || !(run.review || {}).final) throw Object.assign(new Error('还没跑终审'), { status: 400 });
   const fin = run.review.final, lang = (run.audience || {}).target_language || '';
-  const source = body.source === 'claim' ? 'claim' : 'recheck', id = String(body.id || '');
+  const source = srcOf(body), id = String(body.id || '');
   const text = currentScript(run);
   const { item } = applyTarget(fin, source, id);
   const at = new Date().toISOString();
@@ -3758,6 +3878,7 @@ function applyFix(runId, body) {
     saveApplied(run, text, next);
     rec.undone = { at };
     if (item && item.applied && item.applied.at === rec.at) delete item.applied;
+    fixTargets(fin).forEach(({ x }) => { if (x.applied && x.applied.merged_into === source + ':' + id && x.applied.at === rec.at) delete x.applied; });
     store.saveRun(run);
     return { ok: true, undone: true, chapter: rec.chapter, old: rec.old, new: rec.new };
   }
@@ -3770,7 +3891,7 @@ function applyFix(runId, body) {
     if (v.why) throw Object.assign(new Error('稿子之后改过,AI 给的改法对不上了(' + v.why + '),请重新点「AI 出改法」'), { status: 409 });
     plans = v.plans;
   } else {
-    const plan = source === 'claim' ? (item.not_found ? { why: '稿子里找不到这句原句' } : planApply(text, item.quote, item.fix, lang)) : planOpen(text, item, lang);
+    const plan = source === 'thesis' ? { why: '这条要先点「AI 出改法」' } : source === 'claim' ? (item.not_found ? { why: '稿子里找不到这句原句' } : planApply(text, item.quote, item.fix, lang)) : planOpen(text, item, lang);
     if (!plan || plan.why) throw Object.assign(new Error('这条没法直接应用' + (plan ? ':' + plan.why : '') + ',要 AI 改'), { status: 400 });
     plans = [plan];
   }
@@ -3781,10 +3902,13 @@ function applyFix(runId, body) {
   const chapter = item.chapter || ((scriptChapters(after).find(c => plans[0].new && c.text.includes(plans[0].new)) || {}).id) || '';
   const by = item.ai_fix && item.ai_fix.status === 'done' ? { by_ai: true } : {};
   item.applied = { at, old, new: nw, ...(del ? { del: true } : {}), ...(edits ? { edits } : {}), ...by };
+  // 「一起出改法」时 AI 说和这条一起改的,跟着算改好
+  const merged = fixTargets(fin).filter(({ x }) => x !== item && !x.applied && x.ai_fix && x.ai_fix.status === 'merged' && x.ai_fix.into === source + ':' + id);
+  merged.forEach(({ x }) => { x.applied = { at, merged_into: source + ':' + id, merged_id: id }; });
   fin.manual_applies = arr(fin.manual_applies).concat([{ at, source, id, chapter, old, new: nw, ...(del ? { del: true } : {}), ...(edits ? { edits } : {}), ...by, round: arr(fin.rechecks).length, before_text: text, after_hash: hash(after), diff: applyDiff(text, after) }]);
   store.saveRun(run);
   const left = [].concat(...plans.map(p => applyLeftovers(after, p.old, p.new))).slice(0, 4);
-  return { ok: true, chapter, old, new: nw, del, ...(edits ? { edits } : {}), left };
+  return { ok: true, chapter, old, new: nw, del, ...(edits ? { edits } : {}), left, merged: merged.map(({ x }) => x.id) };
 }
 // 论点核对、按核对改稿用的账本:程序重算的数 + 韩文写法
 function claimLedgerText(run) {
@@ -4465,4 +4589,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

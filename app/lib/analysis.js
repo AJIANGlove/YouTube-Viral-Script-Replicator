@@ -864,10 +864,11 @@ async function callWithLogOnce(run, cfg, messages, label, opts) {
   const log = extra => {
     // v1.75:建任务前的预判(还没有任务)只记在内存对象上,不落盘,免得任务列表里多出一条假任务
     const U = require('./usage');
-    if (run.ephemeral) { if (usage) U.record(run, label, usage); run.attempts = [...(run.attempts || []), { ts: new Date().toISOString(), label, provider: cfg.provider || '', model: cfg.model || '', ...extra }].slice(-100); return; }
+    const tag = cfg.step_tag || ''; // v1.99:按步骤换了渠道的,用量单独记一行(写上模型名)
+    if (run.ephemeral) { if (usage) U.record(run, label, usage, tag); run.attempts = [...(run.attempts || []), { ts: new Date().toISOString(), label, provider: cfg.provider || '', model: cfg.model || '', ...extra }].slice(-100); return; }
     const fresh = store.getRun(run.id) || run;
     // v1.85 token 用量:加在盘上最新的那份上(同一任务可能有几个调用同时跑),内存里的 run 跟着更新,免得后面整对象写回时丢掉
-    if (usage) { fresh.usage = U.newer(fresh.usage, run.usage); U.record(fresh, label, usage); run.usage = fresh.usage; }
+    if (usage) { fresh.usage = U.newer(fresh.usage, run.usage); U.record(fresh, label, usage, tag); run.usage = fresh.usage; }
     if (fresh.cancel_requested) run.cancel_requested = true;
     // v1.80:同一任务可能有两个检查同时跑,各自的 attempts 合并,不互相覆盖
     run.attempts = mergeAttempts(fresh.attempts, [...(run.attempts || []), { ts: new Date().toISOString(), label, provider: cfg.provider || '', model: cfg.model || '', ...extra }]);
@@ -876,6 +877,7 @@ async function callWithLogOnce(run, cfg, messages, label, opts) {
     store.saveRun(fresh);
   };
   let usage = null;
+  const lid = require('./live').start(run.id, label, cfg);
   try {
     const r = await pipeline.llmCall(cfg, messages, label, opts);
     usage = r.usage || null;
@@ -885,7 +887,7 @@ async function callWithLogOnce(run, cfg, messages, label, opts) {
   } catch (e) {
     log({ ok: false, secs: Math.round((Date.now() - t0) / 100) / 10, error: e.message });
     throw e;
-  }
+  } finally { require('./live').end(lid); }
 }
 
 // ---------- 原片 → 本地对照表 + 叙事方式(v1.69) ----------

@@ -22,11 +22,12 @@ function addTo(b, u) {
   if (u.est) b.est_calls++;
 }
 // 记一次调用:run.usage = { total, steps: { 步骤: {...} }, since }
-function record(run, label, u) {
+// tag(v1.99):这次调用不是主流程的模型时,步骤名后面加「 · 模型名」,按渠道分开统计(单价不一样)
+function record(run, label, u, tag) {
   if (!run || !u) return;
   const us = run.usage && typeof run.usage === 'object' ? run.usage : (run.usage = { since: new Date().toISOString(), total: ZERO(), steps: {} });
   us.total = us.total || ZERO(); us.steps = us.steps || {};
-  const k = stepOf(label);
+  const k = stepOf(label) + (tag ? ' · ' + tag : '');
   addTo(us.total, u);
   addTo(us.steps[k] = us.steps[k] || ZERO(), u);
 }

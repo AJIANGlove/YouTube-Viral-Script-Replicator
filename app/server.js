@@ -282,6 +282,38 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true });
     }
 
+    // 按步骤选渠道(v1.99):GET 列出每一步现在用哪个渠道和可选项;POST { channels: { 步骤: 'main'|'tweak'|'渠道:模型' } }
+    if (url === '/api/step-channels' && method === 'GET') {
+      const cfg = pipeline.loadConfig() || {};
+      const tw = cfg.tweak || {};
+      const label = (pid, mid) => { const p = (cfg.providers || {})[pid] || {}; const m = pipeline.normalizeModels(p.models, DEFAULT_MODELS).find(x => x.id === mid); return (p.name || pid) + ' · ' + ((m && m.label) || mid); };
+      const options = [{ value: 'main', label: '主流程(' + label(cfg.provider, cfg.model) + ')' }, { value: 'tweak', label: '微调渠道(' + label(tw.provider || cfg.provider, tw.model || cfg.model) + ')' }];
+      Object.entries(cfg.providers || {}).forEach(([pid, p]) => {
+        if (!p || !p.api_key || /YOUR_API_KEY/.test(p.api_key)) return;
+        pipeline.normalizeModels(p.models, DEFAULT_MODELS).forEach(m => options.push({ value: pid + ':' + m.id, label: label(pid, m.id) }));
+      });
+      return send(res, 200, { steps: pipeline.STEP_CHANNELS.map(st => ({ key: st.key, name: st.name, value: pipeline.stepChannelValue(cfg, st.key), saved: !!((cfg.step_channels || {})[st.key]) })), options });
+    }
+    if (url === '/api/step-channels' && method === 'POST') {
+      const body = await readBody(req);
+      const cfg = pipeline.loadConfig() || {};
+      const keys = new Set(pipeline.STEP_CHANNELS.map(st => st.key));
+      const next = { ...(cfg.step_channels || {}) };
+      for (const [k, v] of Object.entries((body && body.channels) || {})) {
+        if (!keys.has(k)) return send(res, 400, { error: '没有这个步骤: ' + k });
+        const val = String(v || '');
+        if (val !== 'main' && val !== 'tweak') {
+          const at = val.indexOf(':'), pid = val.slice(0, at), mid = val.slice(at + 1);
+          const p = (cfg.providers || {})[pid];
+          if (at <= 0 || !p) return send(res, 400, { error: '未知渠道: ' + val });
+          if (!pipeline.normalizeModels(p.models, DEFAULT_MODELS).some(m => m.id === mid)) return send(res, 400, { error: '渠道 ' + (p.name || pid) + ' 不支持模型: ' + mid });
+        }
+        next[k] = val;
+      }
+      pipeline.saveConfig({ ...cfg, step_channels: next });
+      return send(res, 200, { ok: true });
+    }
+
     // 渠道连通性测试:探测实现收在 pipeline.probeProvider(与 llmCall 同一传输层,120s 有界单次,512 token 探针),
     // 此处只做作用域分流与前置校验;body: { scope: 'main'|'tweak'(默认 main), provider, model },provider/model 缺省取该作用域已保存值,即测的是页面当前选中项
     if (url === '/api/settings/test' && method === 'POST') {
@@ -591,6 +623,7 @@ const server = http.createServer(async (req, res) => {
     if (runMatch && method === 'GET') {
       const r = store.getRun(runMatch[1]);
       if (!r) return send(res, 404, { error: '任务不存在' });
+      r.live_calls = require('./lib/live').list(r.id); // v1.99 正在用的模型
       // 编辑分析用的对照数据(原片高峰、第一个甜头),只随响应返回,不落盘
       r.analysis_context = analysis.analysisContext(r.asset_id);
       // 蓝图章节编号不是 CH01… 的、分章还没写完(还没续跑过):页面提示点续跑会自动改,不落盘(v1.66)。
@@ -748,7 +781,7 @@ const server = http.createServer(async (req, res) => {
 
     // ---------- 先写后改:逐段对照审稿 ----------
     // GET 视图(每次按当前稿子现算);POST status/undo 立即返回;rewrite/fact 等模型返回再响应(单章约 0.5–2 分钟)
-    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact|accept_claim|ignore_block|ignore_item|apply_fix|suggest_fix|confirm_ok|source_mapping|pov_mode))?$/);
+    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact|accept_claim|ignore_block|ignore_item|apply_fix|suggest_fix|suggest_fix_batch|confirm_ok|source_mapping|pov_mode))?$/);
     if (rvMatch) {
       const [, id, action] = rvMatch;
       try {
@@ -787,6 +820,7 @@ const server = http.createServer(async (req, res) => {
           if (action === 'confirm_ok') return send(res, 200, review.confirmOk(id, body));
           // 「AI 出改法」:只针对这一条调一次 AI,落成具体的原句 → 改成(不改稿、不复审),出好后人点「直接应用」
           if (action === 'suggest_fix') return send(res, 200, await review.suggestFix(id, body));
+          if (action === 'suggest_fix_batch') return send(res, 200, await review.suggestFixBatch(id, body));
           // 开头单独审:开头 60 秒逐句 + 中文 + 好在哪 + 风险(后台跑)
           if (action === 'opening') return send(res, 200, review.startOpeningCard(id));
           // 自动改开头(后台跑):只改开头几句,改到听感检查的开头两条过关,最多试 3 次

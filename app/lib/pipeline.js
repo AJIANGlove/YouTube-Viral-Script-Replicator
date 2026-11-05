@@ -106,6 +106,47 @@ function loadTweakConfig() {
   };
 }
 
+// ---------- 按步骤选渠道(v1.99,用户 2026-11-05):写稿前后、复审用主流程(Opus);事实核验第一步用 DeepSeek;终审审稿/修改、AI 出改法用 GPT ----------
+// config.step_channels = { 步骤: 'main' | 'tweak' | '渠道id:模型id' };没设的按 STEP_CHANNELS 的默认值。
+// 默认值 'gpt' = 配置里第一个有 Key、模型名带 gpt 的渠道;没有就用主流程
+const STEP_CHANNELS = [
+  { key: 'fact_extract', name: '事实核验·第一步(找出要查的说法)', def: 'tweak' },
+  { key: 'final_audit', name: '终审·审稿', def: 'gpt' },
+  { key: 'final_revise', name: '终审·修改', def: 'gpt' },
+  { key: 'final_options', name: '给每个问题出 A/B/C 改法', def: 'gpt' },
+  { key: 'ai_fix', name: 'AI 出改法', def: 'gpt' },
+  { key: 'explain', name: '问题在哪 / 大白话(只给人看)', def: 'tweak' }
+];
+function gptChannel(cfg) {
+  for (const [id, p] of Object.entries((cfg && cfg.providers) || {})) {
+    if (!p || !p.api_key || /YOUR_API_KEY/.test(p.api_key)) continue;
+    const m = normalizeModels(p.models).find(x => /gpt/i.test(x.id));
+    if (m) return id + ':' + m.id;
+  }
+  return 'main';
+}
+function stepChannelValue(cfg, key) {
+  const st = STEP_CHANNELS.find(s => s.key === key);
+  const v = ((cfg && cfg.step_channels) || {})[key];
+  if (v) return v;
+  if (!st) return 'main';
+  return st.def === 'gpt' ? gptChannel(cfg) : st.def;
+}
+// 这一步的生效配置;用主流程时返回 null(调用方直接用主流程的 cfg)
+function loadStepConfig(key) {
+  const cfg = loadConfig();
+  if (!cfg) return null;
+  const v = stepChannelValue(cfg, key);
+  if (!v || v === 'main') return null;
+  if (v === 'tweak') { const tw = loadTweakConfig(); return tw && tw.api_key && tw.model && !(tw.provider === cfg.provider && tw.model === cfg.model) ? { ...tw, step_tag: tw.model } : null; }
+  const at = v.indexOf(':');
+  const providerId = at > 0 ? v.slice(0, at) : v, model = at > 0 ? v.slice(at + 1) : '';
+  const resolved = resolveProvider(cfg, providerId);
+  if (!resolved || !resolved.api_key || !model) return null;
+  if (providerId === cfg.provider && model === cfg.model) return null;
+  return { provider: providerId, ...resolved, model, temperature: cfg.temperature ?? 0.7, max_tokens: cfg.max_tokens || 8192, step_tag: model };
+}
+
 function loadTemplates() {
   const dir = path.join(__dirname, '..', 'prompts');
   return [1, 2, 3, 4, 5].map(i => fs.readFileSync(path.join(dir, 'step' + i + '.md'), 'utf-8'));
@@ -638,6 +679,7 @@ async function runGeneration(runId) {
   };
   const callLlm = async (messages, label, opts) => {
     const t0 = Date.now();
+    const lid = require('./live').start(run.id, label, cfg); // v1.99 页面上显示正在用的模型
     try {
       const r = await llmCall(cfg, messages, label, opts);
       logAttempt(label, {
@@ -650,7 +692,7 @@ async function runGeneration(runId) {
     } catch (e) {
       logAttempt(label, { ok: false, secs: Math.round((Date.now() - t0) / 100) / 10, error: e.message });
       throw e;
-    }
+    } finally { require('./live').end(lid); }
   };
 
   // Step 2 分章入口:具体实现在模块级 runScriptByChapters(可单测),这里只绑定本次 run 的持久化与调用器
@@ -1172,5 +1214,5 @@ async function runGeneration(runId) {
   store.saveRun(done);
 }
 
-module.exports = { onlyPings, STALL_MIN_SECS, lengthCheck, todayStr, loadConfig, saveConfig, resolveProvider, normalizeModels, loadTweakConfig, buildRequest, postJson, probeProvider, runGeneration, fillTemplate, loadTemplates, llmCall, parseSSE, isRetryable,
+module.exports = { STEP_CHANNELS, stepChannelValue, loadStepConfig, gptChannel, onlyPings, STALL_MIN_SECS, lengthCheck, todayStr, loadConfig, saveConfig, resolveProvider, normalizeModels, loadTweakConfig, buildRequest, postJson, probeProvider, runGeneration, fillTemplate, loadTemplates, llmCall, parseSSE, isRetryable,
   CHAPTER_SPLIT_MIN_WORDS, bpChaptersOf, bpWordBudget, chapterTagLine, extractChapterBlock, runScriptByChapters, dumpLlmFailure };
