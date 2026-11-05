@@ -1009,6 +1009,14 @@ function programFindings(run, asset) {
   if (arr(s.voice_ledger).length) out.push('账本拿网友说法当数用:' + s.voice_ledger.map(l => l.id + ' ' + l.item + '(' + l.facts.join('、') + ')').join(';') + '(网友说法不能算账:稿子里这些数改成有出处的数,或者改成「한 커뮤니티 댓글에…」这样只当一个人的经历讲)');
   const vf = arr(v.facts).filter(f => f.voice && f.used).map(f => f.id);
   if (vf.length) out.push('稿里用到的网友说法:' + vf.join('、') + '(这是论坛、博客、评论里的话,可以留着当感受、经历讲,不要删;第一次出现带半句说明这是听来的说法(说法不固定:网友评论、听人说、看过这样一种说法都行);不要讲成确定的官方数据或统计,也不要拿它当证明论点的主证据)');
+  // v1.94:整段重复、韩语稿夹英文、标题承诺没兑现
+  const scr = currentScript(run) || '';
+  const dup = checks.duplicateParagraphs(scr);
+  if (dup.length) out.push('整段重复:' + dup.slice(0, 4).map(d => '「' + d.text.slice(0, 40) + '…」出现 ' + d.n + ' 次').join(';') + '(删掉重复的那一次;有意回扣开头的,换个说法再说)');
+  const eng = checks.englishInKorean(scr);
+  if (eng.length) out.push('韩语稿里夹着英文:' + eng.slice(0, 8).map(e => '「' + e + '」').join('、') + '(英文原话翻成韩语;人名、地名、专有名词用韩文写法)');
+  const gaps = checks.titlePromiseGaps(run.topic, scr);
+  if (gaps.length) out.push('标题里的' + gaps.map(g => '「' + g.stem + '」').join('、') + '在开头之后的正文里几乎没再出现:检查标题承诺的东西正文有没有讲到;没讲到就在正文补上,补不了的写进报告建议改标题(改标题要先问人,不要自己改)');
   if (s.budget) out.push('篇幅:' + s.words + ' 词,预算 ' + s.budget + ' 词');
   const len = (run.checks || {}).length;
   if (len && !len.ok) out.push('篇幅超标:' + len.detail);
@@ -1678,6 +1686,7 @@ function frameworkText(asset) {
 // 长输出:被 max_tokens 截断就让模型接着写,拼起来
 // 保存前清掉非中文稿里混进的汉字/日文假名(规则修 + 模型逐行改写,见 purify.js)
 async function purifyText(run, cfg, text, label) {
+  text = checks.speechTidy(text); // v1.94:删掉混进稿子的「# Optimized Script」和念出来的出处括号
   return purify.purifyScript(text, run.audience, async p => (await callLong(run, cfg, p, label + '·外文字符修正')).content);
 }
 // 日志挂在 review.foreign 上,详情页显示;这一遍没发现问题就清掉旧日志
@@ -4188,4 +4197,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

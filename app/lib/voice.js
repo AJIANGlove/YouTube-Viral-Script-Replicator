@@ -46,16 +46,39 @@ function deleteVoice(name) {
   if (fs.existsSync(f)) fs.unlinkSync(f);
 }
 
-// 任务用哪份设定:显式选择 > 按频道名自动匹配 > 不用
+// 赛道默认口气:app/voices/_track_<赛道>_<语言>.json(程序自带,下划线开头不进频道列表)。
+// 只有从原片里学到了明确口气的组合才有文件;历史只给故事式(讲解式历史不套故事口气)。
+const LANG_CODE = { 韩语: 'ko', 英语: 'en', 日语: 'ja', 中文: 'zh' };
+function trackDefaultVoice(run, trackKey) {
+  const craft = require('./craft');
+  const track = trackKey || craft.trackOf(run || {});
+  const code = LANG_CODE[craft.langOf(run || {})];
+  if (!code) return null;
+  if (track === 'history' && run && craft.styleOf(run) === '讲解式') return null;
+  try {
+    const v = JSON.parse(fs.readFileSync(path.join(VOICES_DIR, '_track_' + track + '_' + code + '.json'), 'utf-8'));
+    return v && v.name ? { ...v, track_default: true } : null;
+  } catch (e) { return null; }
+}
+// 列出所有赛道默认口气(给「赛道」页看)
+function listTrackDefaults() {
+  if (!fs.existsSync(VOICES_DIR)) return [];
+  return fs.readdirSync(VOICES_DIR).map(f => f.match(/^_track_([a-z]+)_([a-z]+)\.json$/)).filter(Boolean).map(m => {
+    try { return { track: m[1], lang: m[2], voice: JSON.parse(fs.readFileSync(path.join(VOICES_DIR, m[0]), 'utf-8')) }; } catch (e) { return null; }
+  }).filter(Boolean);
+}
+
+// 任务用哪份设定:显式选择 > 按频道名自动匹配 > 赛道默认口气 > 不用(选了「不使用」就什么都不用)
 function voiceForRun(run) {
   const sel = run.voice_name == null ? AUTO : run.voice_name;
   if (sel === NONE || sel === '') return null;
   if (sel !== AUTO) return getVoice(sel);
-  return run.channel_name ? getVoice(run.channel_name) : null;
+  return (run.channel_name ? getVoice(run.channel_name) : null) || trackDefaultVoice(run);
 }
 
 function voiceBrief(v) {
   if (!v) return '(未设定频道声音,按 Style 执行)';
+  const head = v.track_default ? '(没有设定频道声音,用本赛道的默认口气;它和 Style 冲突时,语体、称呼、自称以这里为准)\n' : '';
   const list = a => (Array.isArray(a) ? a : (a ? [a] : [])).filter(Boolean);
   const sig = v.signature_lines || {};
   const out = [];
@@ -70,7 +93,7 @@ function voiceBrief(v) {
   if (list(v.do).length) out.push('必须:' + list(v.do).join(';'));
   if (list(v.dont).length) out.push('禁止:' + list(v.dont).join(';'));
   if (list(v.sample_lines).length) out.push('口吻样句(只学语感,不照抄):\n' + list(v.sample_lines).map(s => '- ' + s).join('\n'));
-  return out.join('\n');
+  return head + out.join('\n');
 }
 
 // AI 起草(不保存,交人工确认后 saveVoice)
@@ -93,4 +116,4 @@ async function draftVoice({ name, language, description, samples }) {
   return v;
 }
 
-module.exports = { VOICES_DIR, NONE, AUTO, listVoices, getVoice, saveVoice, deleteVoice, voiceShapeError, voiceForRun, voiceBrief, draftVoice };
+module.exports = { VOICES_DIR, NONE, AUTO, trackDefaultVoice, listTrackDefaults, listVoices, getVoice, saveVoice, deleteVoice, voiceShapeError, voiceForRun, voiceBrief, draftVoice };

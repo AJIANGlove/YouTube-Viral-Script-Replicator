@@ -973,6 +973,8 @@ const server = http.createServer(async (req, res) => {
     }
 
     // ---------- 频道声音设定(流程 A4):列表 / 读取 / 保存(即人工确认)/ 删除 / AI 起草 ----------
+    // v1.94「赛道」页(只读):程序实际在用的赛道规则
+    if (url === '/api/tracks' && method === 'GET') return send(res, 200, require('./lib/tracks').allTracks());
     if (url === '/api/voices' && method === 'GET') return send(res, 200, voice.listVoices());
     if (url === '/api/voices' && method === 'POST') {
       const body = await readBody(req);

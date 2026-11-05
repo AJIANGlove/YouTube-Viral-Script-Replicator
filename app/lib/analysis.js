@@ -175,7 +175,7 @@ function analysisBrief(a, run, trackKey, mode) {
   if (tsOut.length) out.push('人选论点时看到的「整篇大概会这样讲」(蓝图按这个顺序和内容排章;哪一章实在要不一样,在蓝图的 outline_diff 里写明哪里不一样、为什么):\n' + require('./thesis').outlineText(tsOut));
   const twText = run ? require('./twist').briefText(run) : ''; // v1.84:建任务时核对过的能证明反转的角度
   if (twText) out.push(twText);
-  out.push('事实表(只能用这些;[估算] 的数不用逐个声明,全片在开始算账时说一次「下面按公开数据估算」即可;[假设] 的在用到时说一次「假设」;[待查] 的数不要写成确定的事实;[网友说法] 是论坛、博客、评论里网友的经历和原话,可以当感受、故事讲,第一次出现带半句说明这是听来的说法(网友评论、听人说、看过这样一种说法都行,说法不固定),不能当确定的官方数据或统计、不能进账本、不能当证明论点的主证据):\n' + (a.facts || []).map(f => '- ' + f.id + ' [' + (f.kind || '') + '] ' + (f.content || '') + '(' + [f.source, f.year, f.region].filter(Boolean).join(',') + ')' + (f.method ? ' 算法:' + f.method : '')).join('\n'));
+  out.push('事实表(只能用这些;[估算] 的数不用逐个声明,全片在第一次拿估算的数算账时顺口说一次即可,开头 1 分钟内不说;[假设] 的在用到时说一次「假设」;[待查] 的数不要写成确定的事实;[网友说法] 是论坛、博客、评论里网友的经历和原话,可以当感受、故事讲,第一次出现带半句说明这是听来的说法(网友评论、听人说、看过这样一种说法都行,说法不固定),不能当确定的官方数据或统计、不能进账本、不能当证明论点的主证据):\n' + (a.facts || []).map(f => '- ' + f.id + ' [' + (f.kind || '') + '] ' + (f.content || '') + '(' + [f.source, f.year, f.region].filter(Boolean).join(',') + ')' + (f.method ? ' 算法:' + f.method : '')).join('\n'));
   const stale = a.stale || {};
   const staleTag = (arr, key) => (Array.isArray(arr) && arr.includes(key) ? '(依据的事实已更新,这一行的数作废,按事实表重算)' : '');
   if ((a.ledger || []).length) {

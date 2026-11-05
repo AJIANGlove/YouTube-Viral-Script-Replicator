@@ -89,4 +89,11 @@ function craftBrief(run, trackKey, mode) {
     + rs.map(r => '- [' + r.id + ' ' + r.dim + '|' + (r.must ? '要求' : '建议') + '] ' + r.rule).join('\n');
 }
 
-module.exports = { loadRules, rulesFor, craftBrief, trackOf, langOf, styleOf };
+// 「赛道」页用:列出和这个赛道有关的规则(通用 + 本赛道 + 只按语言限定的),不按语言筛,把范围原样带上
+function rulesForTrackView(track) {
+  const ok = p => /^通用$/.test(p) || /^语言[:：]/.test(p) || (() => { const m = p.match(/^赛道[:：](.+)$/); return !!m && m[1].split('/').some(n => { const name = n.replace(/[（(].*$/, ''); return TRACK_ALIAS[name.toLowerCase()] === track || TRACK_ALIAS[name] === track; }); })();
+  return loadRules().filter(r => { const parts = r.scope.replace(/\s+/g, '').split(/[；;]/).filter(Boolean); return parts.length && parts.every(ok); })
+    .map(r => ({ id: r.id, dim: r.dim, rule: r.rule, scope: r.scope, must: /^确认/.test(r.status), status: r.status }));
+}
+
+module.exports = { loadRules, rulesFor, rulesForTrackView, craftBrief, trackOf, langOf, styleOf, TRACK_ALIAS };

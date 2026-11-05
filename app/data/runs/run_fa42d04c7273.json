@@ -444,7 +444,7 @@
     }
   },
   "created_at": "2026-11-04T14:38:24.771Z",
-  "updated_at": "2026-11-05T04:27:36.582Z",
+  "updated_at": "2026-11-05T08:36:31.763Z",
   "asset_id": "your-life-as-every-mexican-cartel-rank",
   "asset_name": "层级人生沉浸叙事（暴力为表、政商为里的帝国弧）",
   "topic": "Every Level of a Medieval Merchant",
@@ -10693,6 +10693,168 @@
         ],
         "fixes": []
       }
+    }
+  },
+  "compliance_scans": {
+    "v1": {
+      "model": "deepseek-flash",
+      "target_language": "English",
+      "type_names": {
+        "originality": "原创性不足",
+        "template": "模板感",
+        "ai_feel": "AI生成感",
+        "reused": "YPP低原创风险"
+      },
+      "secs": 67.2,
+      "summary": {
+        "ratings": {
+          "originality": "中",
+          "template": "高",
+          "ai_feel": "中",
+          "reused": "中"
+        },
+        "risk_level": "需要优化",
+        "conclusion": "脚本有清晰的历史线索、具体场景和第二人称沉浸感，不是简单资料拼接；但章节结尾反复使用反问、格言式总结和升级闯关结构，整体模板感和AI感偏强，部分精确财务数字也缺少出处。发布前需要降低套路腔、补充可核验信息并强化独立判断，否则可能影响YPP原创性判断。",
+        "structure": [
+          "整体采用第二人称身份升级闯关结构，每章结尾用反问制造悬念，规律性过强，容易被识别为模板化商业纪录片解说。",
+          "大量金句式总结和对称排比承担观点推进，具体场景虽多，但作者判断常被抽象格言替代。",
+          "历史数字和金融细节密集，却缺少出处和范围说明，可信度与原创贡献会被削弱。",
+          "结尾回扣开头形成完整闭环，有利叙事但过度整齐，增加AI生成感。"
+        ],
+        "directions": [
+          "把每章结尾的反问改成基于原稿事实的具体动作、账目或场景，减少统一钩子。",
+          "为关键金额、年份、利率补充可核验来源，或删去无法核实的比较性判断。",
+          "增加作者对制度、风险和人物选择的独立解释，避免只用格言总结。",
+          "打散过度整齐的章节升级节奏，允许某些段落以证据或场景收束。",
+          "保留第二人称沉浸感，但减少重复的level、how long、what happens句式。"
+        ]
+      },
+      "hits": [
+        {
+          "chapter": "CH01",
+          "original": "That's the first lesson. There are rules. There are people who pay not to follow them. And there's a line you can't cross.",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "The guild mark could seize a man's goods; a handful of coins at the gate could let another man pass. Your master meant you to see both before you ever touched a loom.",
+          "original_zh": "这就是第一课。有规则。有人付钱来不遵守规则。还有一条你不能越过的线。",
+          "suggestion_zh": "行会标记可以扣押一个人的货物；门口的一把硬币可以让另一个人通过。你师父想让你在真正碰织机之前就看清这两件事。",
+          "reason": "结尾用三句格言式总结收束，模板感明显；改写为回到行会印记和城门口贿赂的前文场景，保留规则与腐败的双重信息。",
+          "status": "pending",
+          "id": "h1"
+        },
+        {
+          "chapter": "CH02",
+          "original": "You ask yourself: how many trips like this until you can afford to be the one who stays on land? How long until you're the investor, not the body on the ship?",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "You were nineteen, and 75 ducats was more money than seven years of apprenticeship had given you. The merchant stayed in Venice. You took the contract to Genoa and wondered how many crossings it would take to buy your way onto the shore.",
+          "original_zh": "你问自己：还要多少次这样的航行，你才付得起留在陆地上的资格？还要多久，你才能成为投资者，而不是船上那具身体？",
+          "suggestion_zh": "你十九岁，75杜卡特比七年学徒生涯给你的钱还多。商人留在威尼斯。你接下前往热那亚的合同，想着还要横渡多少次，才能买下上岸的资格。",
+          "reason": "连续反问是常见章节钩子，且抽象掉人物处境；改写为19岁、75杜卡特、商人留岸等具体信息，保留向上流动的动机。",
+          "status": "pending",
+          "id": "h2"
+        },
+        {
+          "chapter": "CH03",
+          "original": "You're making more than your father ever did. But you're also visible now. How much does it cost to become a master? How long until you set the rates instead of taking them?",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "You earned more than your father had, and you had a door you could lock. That also meant the guild could see you: the entry fee, the exam, the masters who set the rates while you worked by the day.",
+          "original_zh": "你赚得比你父亲曾经赚过的都多。但你现在也可见了。成为师傅要花多少钱？还要多久，你才能制定费率，而不是接受费率？",
+          "suggestion_zh": "你赚得比你父亲多，也有一扇能上锁的门。这也意味着行会能看见你：入门费、考试，以及那些在你按日工作时制定费率的师傅。",
+          "reason": "用两个反问收束属于固定模板；改写为行会入门费、考试和师傅定价的具体压力，保留阶层上升与可见性风险。",
+          "status": "pending",
+          "id": "h3"
+        },
+        {
+          "chapter": "CH04",
+          "original": "The system works. For you.\n\nBut you also know: this power exists because the magistrate looks away. Because the city watch enforces your monopoly, not the law.\n\nHow long does that last? What happens if someone stops looking away?",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "The seal kept your cloth moving. The magistrate took his 2,000 florins and called the complaint guild business. The city watch enforced your monopoly, not the law. You knew the arrangement depended on the watch and the magistrate continuing to look away.",
+          "original_zh": "这个体系运转着。为你运转。但你也知道：这种权力存在，是因为地方法官视而不见。因为城市守卫执行的是你的垄断，而不是法律。这能持续多久？如果有人不再视而不见，会发生什么？",
+          "suggestion_zh": "印记让你的布匹得以流通。地方法官收下他的2,000弗罗林，把那桩投诉称为行会内部事务。城市守卫执行的是你的垄断，而不是法律。你知道这套安排依赖于守卫和地方法官继续视而不见。",
+          "reason": "短句格言加结尾反问是典型解说模板；改写为地方法官收钱、行会投诉被压下的具体链条，减少抽象总结。",
+          "status": "pending",
+          "id": "h4"
+        },
+        {
+          "chapter": "CH05",
+          "original": "The distance between those two moments: one bad shipment. One customer who doesn't pay. One creditor who stops waiting.",
+          "type": "ai_feel",
+          "severity": "medium",
+          "suggestion": "Two years earlier he paid for wine. Now he sat in a cell with no window. One bad shipment or unpaid customer could put a master there.",
+          "original_zh": "那两个时刻之间的距离：一次糟糕的航运。一个不付钱的客户。一个不再等待的债权人。",
+          "suggestion_zh": "两年前他付了酒钱。现在他坐在一间隔无窗的牢房里。一次糟糕的航运或一个不付钱的客户，就可能把任何一个师傅送进去。",
+          "reason": "三项排比加抽象概括有明显AI总结感；改写为回到付酒钱与无窗牢房的具体对照，保留破产风险近在咫尺的判断。",
+          "status": "pending",
+          "id": "h5"
+        },
+        {
+          "chapter": "CH06",
+          "original": "1537. Archduke Ferdinand needs 83,000 florins for military supplies—more than a mid-sized city's annual tax revenue. Fourteen percent interest. You lend it.",
+          "type": "reused",
+          "severity": "medium",
+          "suggestion": "In 1537, Archduke Ferdinand needed money for military supplies. You lent it, and the loan tied him to you.",
+          "original_zh": "1537年。费迪南大公需要83,000弗罗林用于军需——超过一个中等城市一年的税收。14%利息。你借给了他。",
+          "suggestion_zh": "1537年，费迪南大公需要钱来购买军需。你借给了他，这笔贷款把他和你绑在了一起。",
+          "reason": "精确金额、利率和城市税收比较均无出处，容易显得资料拼接；改写为具体借贷场景，保留关系判断而删去不可核验比较。",
+          "status": "pending",
+          "id": "h6"
+        },
+        {
+          "chapter": "CH06",
+          "original": "You wonder: how much can one king owe? How much leverage is too much?\n\nWhat happens when the numbers get so large that you're not the one holding the ledger anymore—you're the one locked inside it?",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "Ferdinand owed you 83,000 florins. Charles owed more. You sat in a fortified house with their notes in front of you, and the question was no longer how much they owed, but whether you could stop lending before the debt pulled you down with them.",
+          "original_zh": "你想知道：一个国王能欠多少？多少杠杆才算太多？当数字大到不再是你在拿着账本——而是你被锁在账本里时，会发生什么？",
+          "suggestion_zh": "费迪南欠你83,000弗罗林。查理欠得更多。你坐在设防的房子里，面前是他们的票据；问题不再是他们欠多少，而是你能不能在债务把你也拖下水之前停止放贷。",
+          "reason": "连续设问和“被锁在账本里”的格言化表达模板感强；改写为费迪南、查理欠款和设防房屋中的具体决策困境。",
+          "status": "pending",
+          "id": "h7"
+        },
+        {
+          "chapter": "CH07",
+          "original": "Leverage works until the debt gets so large you can't pull out. That's when the chain goes both ways.",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "You had borrowed from Venetian bankers to finance Charles's loans. If he stopped paying, you could not pay them, and their agents would come for your assets.",
+          "original_zh": "杠杆有效，直到债务大到无法抽身。那时，锁链就变成双向的了。",
+          "suggestion_zh": "你曾向威尼斯银行家借钱来资助查理的贷款。如果他不还钱，你就无法还他们，他们的代理人就会来没收你的资产。",
+          "reason": "用“锁链双向”作抽象金句，缺少具体因果；改写为向威尼斯借款、查理停付、资产被追索的明确链条。",
+          "status": "pending",
+          "id": "h8"
+        },
+        {
+          "chapter": "CH07",
+          "original": "Will this leverage hold? Will the king keep paying?\n\nOr is there a point where the debt gets so large that threatening to stop becomes a threat to yourself?",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "You had made an emperor pay once by threatening to stop lending. Now you needed his interest payments to pay Venice, and the threat no longer worked the same way.",
+          "original_zh": "这种杠杆撑得住吗？国王会继续还钱吗？还是说，债务会大到停止放贷的威胁反而变成对自己的威胁？",
+          "suggestion_zh": "你曾用停止放贷的威胁让一位皇帝还钱。现在你需要他的利息来还威尼斯，这个威胁已经不再以同样的方式奏效。",
+          "reason": "结尾连续设问是重复模板；改写为回到1523年信件与当前威尼斯债务的对照，保留杠杆反噬的判断。",
+          "status": "pending",
+          "id": "h9"
+        },
+        {
+          "chapter": "CH09",
+          "original": "The most important person in any room isn't the one with the crown. It's the one the crown owes money to—until the debt gets so large they can't leave. That's when the creditor becomes the prisoner.",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "A crown could command a room, but the creditor who held its unpaid notes could make the crown wait. That advantage lasted only while the creditor could still walk away; once the debt grew too large, the same ledger held him in place.",
+          "original_zh": "任何房间里最重要的人不是戴王冠的人。而是王冠欠他钱的人——直到债务大到他们无法离开。那时，债权人就变成了囚徒。",
+          "suggestion_zh": "王冠可以号令一个房间，但持有其未付票据的债权人可以让王冠等待。这种优势只在债权人仍能抽身时有效；一旦债务过大，同一本账本就把他困在原地。",
+          "reason": "⚠ 这是全稿最后一句(结尾落点),改之前想清楚。全段是高度格言化的主题总结，AI感与模板感较强；改写为未付票据、王冠等待、债权人能否抽身的具体权力关系。",
+          "status": "pending",
+          "protected": true,
+          "id": "h10"
+        }
+      ],
+      "scanned_at": "2026-11-05T08:36:31.758Z",
+      "stale": false,
+      "text_hash": "6f0c4b5c670793f13dec93f0df8201347ab94e69"
     }
   }
 }

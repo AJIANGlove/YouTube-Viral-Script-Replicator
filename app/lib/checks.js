@@ -595,4 +595,56 @@ function extractFinalScript(optText) {
   return stripLeadingPreamble(cleaned).text;
 }
 
-module.exports = { checkProgression, normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, repairJsonQuotes, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, DENSE_OPEN_SEC, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble };
+
+// ---------- v1.94 口播稿整理:程序直接修的小毛病 ----------
+// 稿子中间混进来的格式标题(「# Optimized Script」这类),整行删掉;只删这几种固定说法,别的标题不动
+const SCRIPT_HEADING_RE = /^[ \t]*(?:#{1,6}[ \t]*)?(?:\*\*)?[ \t]*(?:optimized script|final script|revised script|최종 ?(?:원고|스크립트|대본)|수정 ?(?:원고|대본)|终稿|优化稿)[ \t]*(?:\*\*)?[ \t]*:?[ \t]*$/gim;
+// 写进口播里的出处括号(「(언론 보도, 한국 정부 데이터 인용)」),配音会照念,删掉;正文里说出处要用半句话说,不用括号
+const PAREN_CITE_RE = /[ \t]*[（(][ \t]*(?:언론|출처|자료|기사|보도|통계청?|정부 ?자료|source|sources|according to|via|data from)[^()（）\n]{0,80}[)）]/gi;
+function speechTidy(text) {
+  const t = String(text || '');
+  const out = t.replace(SCRIPT_HEADING_RE, '').replace(PAREN_CITE_RE, '').replace(/\n{3,}/g, '\n\n').replace(/^\s+/, '');
+  return out === t.replace(/^\s+/, '') ? t : out;
+}
+// 整段重复:去掉章节标签后,40 字以上的同一段话出现两次及以上(短句的有意回扣不算)
+function duplicateParagraphs(script) {
+  const seen = new Map();
+  String(script || '').split(/\n+/).map(l => l.trim()).filter(l => l.length >= 40 && !/^\[CH\d+/i.test(l)).forEach(l => seen.set(l, (seen.get(l) || 0) + 1));
+  return [...seen].filter(([, n]) => n >= 2).map(([text, n]) => ({ text, n }));
+}
+// 韩语稿里夹的英文词组(两个以上连着的英文单词);章节标签里的不算
+function englishInKorean(script) {
+  const t = String(script || '');
+  if ((t.match(/[\uac00-\ud7a3]/g) || []).length < t.length * 0.2) return [];
+  const hits = new Set();
+  t.split('\n').filter(l => !/^\s*\[CH\d+/i.test(l)).forEach(l => (l.match(/[A-Za-z][A-Za-z'-]+(?:[ \t]+[A-Za-z][A-Za-z'-]+)+/g) || []).forEach(m => hits.add(m.trim())));
+  return [...hits];
+}
+// 标题承诺:标题里的关键词在开头之后的正文里几乎没再出现 → 可能没兑现(只做提示,语义上的判断交给终审)
+// 英文:4 个字母以上的实词,出现不到 2 次;韩文:去掉助词后的名词(动词、形容词活用形跳过),一次都没出现
+const TITLE_KO_STOP = new Set(['진짜', '정말', '오히려', '이유', '어디', '얼마', '어떻게', '당신', '우리', '여러분', '사람', '사장님', '왜']);
+const KO_PARTICLE = /(이라면|라면|에서|으로|까지|부터|처럼|보다|들의|들이|들은|들을|의|은|는|이|가|을|를|에|로|과|와|도|만|나|인)$/;
+const KO_VERBISH = /(까|고|서|던|다|면|야|요|게|지|며|니|는|진|된|한|할|해|운|운데)$/;
+function titlePromiseGaps(title, script) {
+  const body = String(script || '').replace(/^\s*\[CH\d+[^\]]*\]\s*$/gm, ' ');
+  const rest = body.slice(Math.floor(body.length * 0.08)).toLowerCase();
+  const restKo = rest.replace(/\s+/g, '');
+  const count = w => (/[가-힣]/.test(w) ? restKo : rest).split(w.toLowerCase()).length - 1;
+  const out = [];
+  String(title || '').split(/[\s,.!?…·:;'"“”‘’()\[\]-]+/).map(t => t.trim()).filter(Boolean).forEach(t => {
+    if (/[가-힣]/.test(t)) {
+      if (/^\d/.test(t) || KO_VERBISH.test(t)) return;
+      const last = t.charCodeAt(t.length - 1) - 0xAC00;
+      if (last >= 0 && last % 28 === 8 && t.length <= 3) return; // ㄹ 收音的动词(올라갈、낼)
+      const n = t.replace(KO_PARTICLE, '');
+      if (n.length < 2 || TITLE_KO_STOP.has(n)) return;
+      if (count(n) === 0) out.push({ stem: n, n: 0 });
+    } else if (/^[A-Za-z]{4,}$/.test(t) && !TITLE_STOPWORDS.has(t.toLowerCase())) {
+      const n = count(t);
+      if (n < 2) out.push({ stem: t.toLowerCase(), n });
+    }
+  });
+  return out.filter((x, i, a) => a.findIndex(y => y.stem === x.stem) === i);
+}
+
+module.exports = { checkProgression, normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, repairJsonQuotes, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, DENSE_OPEN_SEC, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble, speechTidy, duplicateParagraphs, englishInKorean, titlePromiseGaps };

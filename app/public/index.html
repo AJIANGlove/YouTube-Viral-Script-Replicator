@@ -692,7 +692,8 @@
         <div><label>新主题(选题)</label><input type="text" id="gen-topic" placeholder="例如:The Economics of Owning a Casino" oninput="precheckStale()">
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px"><button type="button" class="ghost" id="btn-precheck" onclick="precheckFit(this)">看看这个框架合不合适(并推荐 3 个)</button><span class="hint" id="precheck-status" style="margin:0">填好主题再点。你选的框架半分钟左右先出结果,另推荐的 3 个大约 2–3 分钟</span></div>
           <label style="margin-top:8px">频道方向(审稿赛道)</label><select id="gen-review-track"></select>
-          <div class="hint" id="gen-review-track-hint">按选的框架自动选好。之后的写前分析、审稿报告、终审和去AI感都按这个方向审,不用再选。</div></div>
+          <div class="hint" id="gen-review-track-hint">按选的框架自动选好。之后的写前分析、审稿报告、终审和去AI感都按这个方向审,不用再选。</div>
+          <details id="gen-track-rules" ontoggle="genTrackRulesRender()" style="margin-top:4px"><summary style="cursor:pointer;font-size:13px">看这个赛道会用到的规则(只读)</summary><div id="gen-track-rules-body" style="margin-top:6px"></div></details></div>
         <div>
           <label>频道(选填 · 推送视频时使用)</label>
           <div class="combo">
@@ -768,7 +769,7 @@
         <textarea id="gen-materials" rows="4" style="width:100%;box-sizing:border-box" placeholder="例如:2024 年韩国美发店平均月营业额 …(来源:统计厅)"></textarea>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px"><button type="button" class="ghost" onclick="matPick('gen-materials')">上传表格(xlsx / csv)</button><span id="gen-materials-up" class="hint" style="margin:0">表格会转成文字加到上面,AI 写前分析时自己读;只按主题找来、没有现成观点的资料也可以放</span></div>
         <label style="margin-top:6px">频道声音设定(语体、称呼、风格;在「设置」页管理)</label>
-        <select id="gen-voice"><option value="__auto__">自动:按所选频道名匹配(未选频道时等于不使用)</option><option value="__none__">不使用</option></select>
+        <select id="gen-voice"><option value="__auto__">自动:按所选频道名匹配,匹配不到用本赛道默认口气(目前有韩语经济、韩语 POV、韩语故事式历史)</option><option value="__none__">不使用</option></select>
       </div>
       <div style="margin-top:12px; display:flex; align-items:center; gap:14px">
         <button class="primary" id="btn-run" onclick="createRun()">开始生成(约 3-8 分钟)</button>
@@ -943,6 +944,12 @@
 
   <!-- ========== 设置 ========== -->
   <div id="view-settings" class="hidden">
+    <div class="card" id="track-card">
+      <h2>赛道规则(只读)</h2>
+      <div class="hint" style="margin-bottom:8px">每个赛道写稿、审稿时程序实际在用的规则,直接从程序读的文件现读,和程序用的是同一份。这里不能改:想改哪条,跟 Claude 说,改代码同步过来。</div>
+      <div id="track-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"></div>
+      <div id="track-view"><span class="hint">加载中…</span></div>
+    </div>
     <div class="card" id="voice-card">
       <h2>频道声音设定(语体 · 称呼 · 风格)</h2>
       <div class="hint" style="margin-bottom:8px">每个频道一份,写稿和优化时自动带上。名字和频道名一致时,新建任务选「自动」就会用它。AI 起草后要人工核对再保存,保存即确认。</div>
@@ -1077,7 +1084,7 @@ function showView(v) {
   if (v === 'generate') loadGenAssets();
   if (v === 'runs') { parseRunsHash(); syncRunsToolbar(); loadRuns(); pollTimer = setInterval(() => loadRuns({ silent: true }), 3000); }
   if (v === 'detail' && currentRunId) { loadRunDetail(); pollTimer = setInterval(loadRunDetail, 3000); }
-  if (v === 'settings') { loadSettings(); loadVoiceList(); }
+  if (v === 'settings') { loadSettings(); loadVoiceList(); loadTrackRules(); }
 }
 
 function genMode() {
@@ -4260,13 +4267,72 @@ async function rvTranslate() {
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
 }
 
+
+// ---------- v1.94 赛道规则(只读) ----------
+let trackRulesCache = null, trackRulesCur = 'econ';
+async function trackRulesData() {
+  if (!trackRulesCache) trackRulesCache = await api('/api/tracks');
+  return trackRulesCache;
+}
+const trNl = t => esc(String(t || '')).replace(/\n/g, '<br>');
+function trRulesHtml(rules, mustOnly) {
+  const rs = (rules || []).filter(r => !mustOnly || r.must);
+  if (!rs.length) return '<span class="hint">(无)</span>';
+  const dims = [...new Set(rs.map(r => r.dim))];
+  return dims.map(d => '<div style="margin:6px 0 2px;font-weight:600">' + esc(d) + '</div>' + rs.filter(r => r.dim === d).map(r =>
+    '<div style="margin:2px 0 2px 8px;font-size:13px"><span style="display:inline-block;min-width:34px;font-size:12px;padding:0 4px;border-radius:4px;margin-right:4px;' + (r.must ? 'background:#e8f5e9;color:#1b5e20' : 'background:#f1f1f1;color:#666') + '">' + (r.must ? '要求' : '建议') + '</span>' +
+    '<b>' + esc(r.id) + '</b> ' + esc(r.rule) + (r.scope && r.scope !== '通用' ? ' <span class="hint" style="margin:0">(' + esc(r.scope) + ')</span>' : '') + '</div>').join('')).join('');
+}
+function trVoiceHtml(vs) {
+  if (!vs || !vs.length) return '<span class="hint">这个赛道还没有默认口气:没设频道声音时按原片的 Style 写。</span>';
+  return vs.map(v => '<div style="margin:4px 0;font-size:13px"><b>' + esc(v.lang) + '</b>:' + [
+    v.persona && '叙述者:' + esc(v.persona), v.register && '语体:' + esc(v.register), v.address_audience && '称呼观众:' + esc(v.address_audience),
+    v.self_reference && '自称:' + esc(v.self_reference), (v.tone || []).length && '风格:' + v.tone.map(esc).join(';'),
+    v.sentence_rhythm && '句子节奏:' + esc(v.sentence_rhythm), (v.do || []).length && '必须:' + v.do.map(esc).join(';'), (v.dont || []).length && '禁止:' + v.dont.map(esc).join(';')
+  ].filter(Boolean).join('<br>') + '</div>').join('');
+}
+function trSec(title, html, open) {
+  return '<details' + (open ? ' open' : '') + ' style="margin:6px 0"><summary style="cursor:pointer;font-weight:600">' + title + '</summary><div style="margin:6px 0 0 8px;font-size:13px">' + html + '</div></details>';
+}
+function trackRulesHtml(t, compact) {
+  if (compact) return trSec('这个赛道靠什么留人', trNl(t.retention), true) + trSec('默认口气(没设频道声音时用)', trVoiceHtml(t.voices), true) +
+    trSec('写法规则里标「要求」的', trRulesHtml(t.rules, true), false) + '<div class="hint">全部规则在「设置 → 赛道规则」里看。</div>';
+  return '<div style="font-size:13px;margin-bottom:6px"><b>观众:</b>' + esc(t.audience) + '<br><b>定位:</b>' + esc(t.position) + '</div>' +
+    trSec('这个赛道靠什么留人', trNl(t.retention), true) +
+    trSec('论点卡长什么样', t.thesis_fields.map(f => '<div style="font-size:13px">· ' + esc(f.label) + ' <span class="hint" style="margin:0">' + esc(f.key) + '</span></div>').join('') + '<div class="hint">' + esc(t.thesis_note) + '</div>', true) +
+    trSec('默认口气(没设频道声音时用)', trVoiceHtml(t.voices), true) +
+    trSec('写法规则(' + t.rules.length + ' 条,其中要求 ' + t.rules.filter(r => r.must).length + ' 条)', trRulesHtml(t.rules, false), false) +
+    trSec('终审怎么打分(七项,每项 0–10 分)', t.dims.map(d => '<div style="font-size:13px">· ' + esc(d) + '</div>').join('') + '<div style="margin-top:6px;font-size:13px"><b>' + esc(t.dim4_name) + ' 查什么:</b><br>' + trNl(t.dim4) + '</div>', false) +
+    trSec('去 AI 味时要保住的 / 重点改的', '<div style="font-size:13px"><b>要保住:</b><br>' + trNl(t.deai_protect) + '<br><b>重点改:</b><br>' + trNl(t.deai_focus) + '</div>', false) +
+    trSec('写前分析要找哪些资料', t.card ? trNl(t.card) : '<span class="hint">(无)</span>', false);
+}
+async function loadTrackRules() {
+  const box = document.getElementById('track-view'), tabs = document.getElementById('track-tabs');
+  if (!box) return;
+  let list;
+  try { list = await trackRulesData(); } catch (e) { box.innerHTML = '<span class="hint">读取失败:' + esc(e.message || e) + '</span>'; return; }
+  if (!list.find(t => t.key === trackRulesCur)) trackRulesCur = (list[0] || {}).key;
+  tabs.innerHTML = list.map(t => '<button type="button" class="' + (t.key === trackRulesCur ? 'primary' : 'ghost') + '" data-k="' + esc(t.key) + '">' + esc(String(t.name).replace(/[(（].*$/, '')) + '</button>').join('');
+  tabs.querySelectorAll('button').forEach(b => b.onclick = () => { trackRulesCur = b.dataset.k; loadTrackRules(); });
+  const t = list.find(x => x.key === trackRulesCur);
+  box.innerHTML = t ? trackRulesHtml(t, false) : '';
+}
+async function genTrackRulesRender() {
+  const d = document.getElementById('gen-track-rules'), body = document.getElementById('gen-track-rules-body');
+  if (!d || !d.open || !body) return;
+  const k = (document.getElementById('gen-review-track') || {}).value || 'general';
+  try { const t = (await trackRulesData()).find(x => x.key === k) || (await trackRulesData()).find(x => x.key === 'general'); body.innerHTML = t ? trackRulesHtml(t, true) : ''; }
+  catch (e) { body.innerHTML = '<span class="hint">读取失败:' + esc(e.message || e) + '</span>'; }
+}
+document.addEventListener('change', e => { if (e.target && e.target.id === 'gen-review-track') genTrackRulesRender(); });
+
 // ---------- 频道声音设定(流程 A4) ----------
 async function loadVoiceOptions() {
   const sel = document.getElementById('gen-voice');
   const keep = sel.value;
   try {
     const list = await api('/api/voices');
-    sel.innerHTML = '<option value="__auto__">自动:按所选频道名匹配(未选频道时等于不使用)</option><option value="__none__">不使用</option>' +
+    sel.innerHTML = '<option value="__auto__">自动:按所选频道名匹配,匹配不到用本赛道默认口气(目前有韩语经济、韩语 POV、韩语故事式历史)</option><option value="__none__">不使用</option>' +
       list.map(v => `<option value="${esc(v.name).replace(/"/g, '&quot;')}">${esc(v.name)}${v.confirmed === false ? '(未确认)' : ''}</option>`).join('');
     if ([...sel.options].some(o => o.value === keep)) sel.value = keep;
   } catch (e) {}
