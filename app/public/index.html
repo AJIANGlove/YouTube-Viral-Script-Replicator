@@ -5925,8 +5925,11 @@ function renderThesisPanel(r) {
     </div>`;
   }).join('');
   html += `${recWhy ? `<div class="hint" style="margin-top:8px">AI 为什么推荐 ${esc(rec)}:${esc(recWhy)}</div>` : ''}
+    ${(ts.common_takes || []).length ? `<div class="hint" style="margin-top:6px">这批特意避开的常见说法:${ts.common_takes.map(esc).join(';')}</div>` : ''}
     <div style="margin-top:10px"><button class="an-btn" onclick="thChoose('regen','',this)">都不满意,重出 3 个</button>
-    <span class="hint">会换完全不同的方向再出 3 个,大约多花定论点这一步一样的 token。</span></div>`;
+    <button class="an-btn apply" onclick="thChoose('novel','',this)">要更新颖的,重出 3 个</button>
+    <input id="th-hint" placeholder="想往哪个方向想(可不填),比如:从房东的角度" style="width:260px;font-size:12px;padding:3px 6px">
+    <div class="hint">「重出 3 个」换完全不同的方向;「要更新颖的」会先排除这个题目最常见的说法,再从钱流向谁、看不见的成本、换个参照、圈内规则等不同切口各出一个。两个都大约多花定论点这一步一样的 token。</div></div>`;
   el.innerHTML = html;
 }
 // 卡上的字外文比汉字多(人名、店名在引号里不算):要不要显示「翻成中文」
@@ -5939,7 +5942,11 @@ function thEdit(id) { thEditing = id; thRenderedKey = null; if (lastRunDetail) r
 async function thChoose(action, id, btn) {
   const body = { action, id };
   if (action === 'edit') { const t = (document.getElementById('th-edit-text') || {}).value || ''; if (!t.trim()) { alert('论点是空的'); return; } body.text = t.trim(); }
+  if (action === 'novel') { body.action = 'regen'; body.novel = true; }
+  const hint = ((document.getElementById('th-hint') || {}).value || '').trim();
+  if ((action === 'regen' || action === 'novel') && hint) body.hint = hint;
   if (action === 'regen' && !confirm('换完全不同的方向再出 3 个论点?')) return;
+  if (action === 'novel' && !confirm('避开常见说法,换几个新切口再出 3 个论点?')) return;
   if (btn) btn.disabled = true;
   try { await api('/api/runs/' + currentRunId + '/thesis-choice', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); }
   catch (e) { alert(e.message); if (btn) btn.disabled = false; return; }

@@ -250,8 +250,10 @@ function holdChoice(runId, body) {
     run.thesis_request = { action: 'edit', base: str(b.id), text };
     run.steps = { ...(run.steps || {}), thesis_pick: { status: 'checking', at: now, what: '核对你改的论点' } };
   } else if (action === 'regen') {
-    run.thesis_request = { action: 'regen' };
-    run.steps = { ...(run.steps || {}), thesis_pick: { status: 'checking', at: now, what: '重出 3 个论点' } };
+    // v1.99:novel 要更新颖的(换切口、避开大众说法);hint 人想往哪个方向想(可不填)
+    const novel = !!b.novel, hint = str(b.hint).trim().slice(0, 200);
+    run.thesis_request = { action: 'regen', ...(novel ? { novel: true } : {}), ...(hint ? { hint } : {}) };
+    run.steps = { ...(run.steps || {}), thesis_pick: { status: 'checking', at: now, what: novel ? '重出 3 个更新颖的论点' : '重出 3 个论点' } };
   } else throw Object.assign(new Error('不认识的操作:' + action), { status: 400 });
   run.thesis_resume = true; // 接着跑写前分析时不再做一遍快速适配判断
   run.status = 'analyzing';
@@ -286,13 +288,16 @@ async function scout(run, cfg, asset, setStage, opts) {
   setStage('定论点:想 3 个角度');
   const prompt = A.fillVars(readPrompt('thesis_angles.md'), {
     ...vars, thesis_methods: methods, max_queries: MAX_Q,
-    keep_notes: keep + (opts && arr(opts.avoid).length ? '\n【人已经看过、不要的论点(这次换完全不同的方向,不要换个说法再出一遍)】\n' + opts.avoid.map(x => '- ' + x).join('\n') : ''),
+    keep_notes: keep + (opts && arr(opts.avoid).length ? '\n【人已经看过、不要的论点(这次换完全不同的方向,不要换个说法再出一遍)】\n' + opts.avoid.map(x => '- ' + x).join('\n') : '')
+      + (opts && opts.novel ? '\n' + readPrompt('thesis_novel.md') : '')
+      + (opts && opts.hint ? '\n【人想往这个方向想(优先按这个出,至少 2 个角度要沾边)】' + opts.hint : ''),
     discovery: (disc.length && arr(disc[0].results).length ? '【先搜了一轮(按题目原文)】\n' + search.resultsBrief(disc) : '') + (tw ? '\n\n' + T.scoutHint(tw) : '')
   });
   const ao = await A.callJson(run, cfg, prompt, '定论点角度', anglesOk);
   out.angles = cleanAngles(ao);
   out.recommended = out.angles.some(a => a.id === str(ao.recommended)) ? str(ao.recommended) : (out.angles[0] || {}).id || '';
   out.rec_why = str(ao.why);
+  if (arr(ao.common_takes).length) out.common_takes = arr(ao.common_takes).map(str).filter(Boolean).slice(0, 5);
   if (!ready) {
     out.secs = Math.round((Date.now() - t0) / 100) / 10;
     out.note = '没开联网搜索:只出了角度,没有核对资料。';
@@ -366,7 +371,8 @@ async function ensure(run, cfg, asset, setStage) {
     try {
       if (req.action === 'regen') {
         const avoid = [...arr(ts.avoid), ...ts.angles.map(a => a.one_line)].filter(Boolean).slice(-12);
-        const fresh = await scout(run, cfg, asset, setStage, { avoid });
+        const fresh = await scout(run, cfg, asset, setStage, { avoid, novel: !!req.novel, hint: req.hint || '' });
+        if (req.novel) fresh.novel = true;
         fresh.avoid = avoid;
         run.thesis_scout = fresh;
       } else if (req.action === 'edit') {

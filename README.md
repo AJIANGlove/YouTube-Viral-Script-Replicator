@@ -235,6 +235,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `apply_suggest_batch.md` | 勾选的多条一起出改法（全文只发一次，最多 8 条一批） | 28 |
 | `locate_quote.md` | 问题里没引原句时按问题描述到稿子里找出对应句子 | 19 |
 | `translate_marked.md` | 原文详情翻译（标出的句子在中文里也括出来画线） | 13 |
+| `thesis_novel.md` | 「要更新颖的」——避开常见说法、六种切口出 3 个角度 | 11 |
 | `step2.md` | 脚本施工（含每章问题链与新角度要求、对照表、网友说法带出处） | 61 |
 | `function_table.md` | 蓝图按功能重排第一步：原片每段一行功能表（作用、必须保留、可以换、四选一处理；换内容 > 合并 > 删，删要写查过的事实，合计不超过 `{{delete_max}}`%） | 84 |
 | `step1_function.md` | 蓝图按功能重排第二步：按功能表排章（锁定项、为什么这样排、等级重点、照大纲排写 outline_diff） | 126 |
@@ -278,7 +279,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 66 份 `.md`（3951 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 71 份，合计 4160 行。
+合计 67 份 `.md`（3962 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 72 份，合计 4171 行。
 
 ### 历史版本
 

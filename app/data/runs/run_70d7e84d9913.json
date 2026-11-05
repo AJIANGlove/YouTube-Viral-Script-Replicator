@@ -794,7 +794,7 @@
     }
   },
   "created_at": "2026-11-05T09:29:32.422Z",
-  "updated_at": "2026-11-05T13:02:49.793Z",
+  "updated_at": "2026-11-05T15:34:31.299Z",
   "asset_id": "they-found-something-bizarre-in-her-bathtub",
   "asset_name": "冷开场闪前预告式真实罪案推演(预告钩-异常目录-嫌疑过堂-重建点名四幕)",
   "topic": "What Really Happened to the Maya Civilization?",
@@ -825,9 +825,9 @@
   "usage": {
     "since": "2026-11-05T09:29:50.100Z",
     "total": {
-      "calls": 89,
-      "in": 3014717,
-      "out": 402697,
+      "calls": 90,
+      "in": 3017075,
+      "out": 403687,
       "cache_read": 566684,
       "cache_write": 1063571,
       "est_calls": 0
@@ -1085,6 +1085,14 @@
         "calls": 1,
         "in": 26073,
         "out": 2573,
+        "cache_read": 0,
+        "cache_write": 0,
+        "est_calls": 0
+      },
+      "大白话 · deepseek-flash": {
+        "calls": 1,
+        "in": 2358,
+        "out": 990,
         "cache_read": 0,
         "cache_write": 0,
         "est_calls": 0
@@ -2147,6 +2155,17 @@
       "stop_reason": "end_turn",
       "in_tok": 26073,
       "out_tok": 2573
+    },
+    {
+      "ts": "2026-11-05T15:34:31.268Z",
+      "label": "大白话",
+      "provider": "deepseek",
+      "model": "deepseek-flash",
+      "ok": true,
+      "secs": 5.9,
+      "stop_reason": "stop",
+      "in_tok": 2358,
+      "out_tok": 990
     }
   ],
   "thesis_scout": {
@@ -12802,6 +12821,26 @@
           "War is a symptom. The investigators had to look somewhere else for the disease."
         ],
         "fixes": []
+      }
+    },
+    "plain": {
+      "5fa71467ee2c": {
+        "problem": "第 9 章说蒂卡尔水库能存九十多万立方米水,这个数其实没人能核实。",
+        "fix": "把这句数字删掉,改说水库的水够几万人撑过五个月旱季。",
+        "impact": "懂行的人会追问数字哪来的,这一段的可信度会掉。",
+        "level": "中"
+      },
+      "1041a7f5ec89": {
+        "problem": "第 12 章说降雨比现在少四到五成,可前面讲的是跟湿润期比。",
+        "fix": "改成比之前那段湿润期少了四到五成,前后就对得上了。",
+        "impact": "细心观众一算就发现对不上,干旱导致崩溃这条线会松。",
+        "level": "中"
+      },
+      "01c32384e70b": {
+        "problem": "第 14 章只说降雨少了四到五成,没交代是跟哪段时期比。",
+        "fix": "补一句「比之前那段湿润期」,跟第 12 章的说法对齐。",
+        "impact": "观众多半听不出来,只是这里说得含糊,可以忽略。",
+        "level": "小"
       }
     }
   }
