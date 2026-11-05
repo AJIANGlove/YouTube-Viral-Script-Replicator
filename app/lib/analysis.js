@@ -151,6 +151,9 @@ function sourceMappingBrief(a) {
   return out.join('\n\n');
 }
 // mode='review':审稿、复审、补改用,写法规则只作参考,不按它扣分、不列为问题(不因此多出自动补改)
+const PICKED_RULE = '论点是人亲自选的(选的时候已经联网核对过资料,确认站得住):写稿、改稿、终审都不能换论点的意思,结尾落点照它。核验或账本里有和论点对不上的数时,用这几种办法让论点站住:' +
+  '① 换成核验过的正确数字,论点照说;② 把范围缩小到证据支持的那部分(哪类人、哪段时间、哪种店),意思不变;③ 把相反的事实正面讲出来,再讲为什么论点仍然成立;④ 事实表里还有没用上、支持论点的事实,换上去。' +
+  '这几种都做不到时也不改论点,在问题清单里单独写一条「论点撑不住:哪条事实、为什么」给人看。';
 function analysisBrief(a, run, trackKey, mode) {
   if (!a) return '(无写前分析,按原流程执行)';
   const out = [];
@@ -165,6 +168,8 @@ function analysisBrief(a, run, trackKey, mode) {
   const th = a.thesis_card || {};
   out.push('论点卡:原有认知=' + (th.viewer_belief || '') + ';真相=' + (th.truth || '') + ';一句话论点=' + (th.one_line_thesis || '') + ';结尾落点=' + (th.ending_landing || '')
     + (th.contrast ? ';反差=' + th.contrast : '') + (th.double_standard && !/^无$/.test(String(th.double_standard).trim()) ? ';同事不同命=' + th.double_standard : '') + (th.boundary ? ';不适用于=' + th.boundary : ''));
+  // v1.92:论点是人亲自选的(选的时候联网核对过):写稿、改稿、终审都不换论点的意思,对不上的数用办法让它站住
+  if (run && run.thesis_scout && run.thesis_scout.user_pick) out.push(PICKED_RULE);
   // v1.89:人选论点时看到的大纲,蓝图和写稿照它排
   const tsOut = run && mode !== 'review' ? require('./thesis').chosenOutline(run.thesis_scout) : [];
   if (tsOut.length) out.push('人选论点时看到的「整篇大概会这样讲」(蓝图按这个顺序和内容排章;哪一章实在要不一样,在蓝图的 outline_diff 里写明哪里不一样、为什么):\n' + require('./thesis').outlineText(tsOut));
@@ -1648,7 +1653,7 @@ async function auditTitle(runId, draft, title) {
   return out;
 }
 
-module.exports = { casesBrief, caseOneVoice, keepNotesText, buildSourceMapping, runSourceMapping, setPovMode, sourceMappingBrief, cleanSourceMapping, POV_RULES, ledgerWriteBack, ledgerProblems, ledgerCheckup, ledgerGaps, ledgerSanity, krMoney, moneyScale, ledgerSayOn, ledgerSay, ledgerSayText, ledgerSayAmounts,
+module.exports = { PICKED_RULE, casesBrief, caseOneVoice, keepNotesText, buildSourceMapping, runSourceMapping, setPovMode, sourceMappingBrief, cleanSourceMapping, POV_RULES, ledgerWriteBack, ledgerProblems, ledgerCheckup, ledgerGaps, ledgerSanity, krMoney, moneyScale, ledgerSayOn, ledgerSay, ledgerSayText, ledgerSayAmounts,
   loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, HOOK_TYPES, hookType, acceptedGaps, verifyLedger,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,

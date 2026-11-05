@@ -3610,6 +3610,7 @@ async function runClaimCheck(runId) {
     const sl = openingSlice(run);
     const out0 = await an().callJson(run, cfg, an().fillVars(readPrompt('claim_check.md'), {
       target_language: (run.audience || {}).target_language || '', title: ((run.analysis || {}).title || {}).final_title || run.topic,
+      picked: run.thesis_scout && run.thesis_scout.user_pick ? an().PICKED_RULE + '\n一句话论点:' + (((run.analysis || {}).thesis_card || {}).one_line_thesis || '') : '(无)',
       opening: sl.lines.map(l => l.text).join('\n') || '(无)', script: checks.extractFinalScript(text),
       ledger: claimLedgerText(run), off_ledger: offLedgerAmounts(run).map(x => '- ' + x.ch + '「' + x.amount + '」' + (x.why ? '(' + x.why + ')' : '') + ':' + x.text).join('\n') || '(无)'
     }), '论点核对', o => !!claimVerdict(claimUnwrap(o)));

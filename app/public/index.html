@@ -6145,12 +6145,19 @@ function bpResearchHtml(x) {
     ${(x.against || []).length ? `<div class="hint" style="color:#b91c1c">和论点或反转相反的新事实:${x.against.map(esc).join('、')},蓝图必须正面处理</div>` : ''}
     <div class="hint">查询:${(x.queries || []).map(q => esc(q.query) + (q.chapter ? '(' + esc(q.chapter) + ')' : '') + (q.error ? ' 出错' : ' ' + q.hits + ' 条')).join(';')}</div></details>`;
 }
+async function bpZh(btn) {
+  if (btn) btn.disabled = true;
+  try { await api('/api/runs/' + currentRunId + '/blueprint-zh', { method: 'POST' }); }
+  catch (e) { alert('翻译没开始:' + e.message); if (btn) btn.disabled = false; return; }
+  bpRenderedKey = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 400);
+}
 function renderBlueprintPanel(r) {
   const el = document.getElementById('bp-panel');
   const v = r.blueprint_view;
   if (!v) { el.classList.add('hidden'); bpRenderedKey = null; return; }
   // 停下时有输入框:内容没变就不重绘,免得 3 秒轮询把人正在改的题目冲掉
-  const key = JSON.stringify([r.status, v.outline_diff || '', v.mode, (v.review || {}).status, (v.review || {}).finished_at, ((v.review || {}).rounds || []).length, ((v.review || {}).research || {}).status, (v.table || {}).at, (v.chapters || []).length, v.deleted_ratio, (v.deleted_segments || []).length]);
+  const key = JSON.stringify([r.status, v.outline_diff || '', v.mode, (v.review || {}).status, (v.review || {}).finished_at, ((v.review || {}).rounds || []).length, ((v.review || {}).research || {}).status, (v.table || {}).at, (v.chapters || []).length, v.deleted_ratio, (v.deleted_segments || []).length, v.zh_foreign || 0, !!v.zh_busy, v.zh_error || '']);
   if (key === bpRenderedKey && !el.classList.contains('hidden')) return;
   bpRenderedKey = key;
   el.classList.remove('hidden');
@@ -6166,6 +6173,9 @@ function renderBlueprintPanel(r) {
     : `<span class="bp-chip bad">蓝图审没通过${rv.override ? ' · 你选了仍然写' : ''}</span>`;
   let html = `<h2>① 蓝图(按功能重排)${chip}</h2>`;
   if (v.outline_picked) html += `<div class="hint" style="margin:-4px 0 8px">${v.outline_diff ? '<b>和你选论点时看到的大纲不一样的地方:</b>' + esc(v.outline_diff) : '照你选论点时看到的「整篇大概会这样讲」排的,没有改动。'}</div>`;
+  // v1.91 蓝图审写成韩文/外文的:翻成中文
+  if (v.zh_busy) html += `<div class="hint" style="color:#92400e;margin:0 0 8px">正在把蓝图审的说明翻成中文…一般不到 1 分钟,翻完自动刷新。</div>`;
+  else if (v.zh_foreign) html += `<div style="margin:0 0 8px"><button class="an-btn v13" onclick="bpZh(this)">蓝图审有韩文/外文,翻成中文</button>${v.zh_error ? ` <span class="hint" style="color:#b91c1c">${esc(v.zh_error)}</span>` : ''}</div>`;
   if (v.held && rv) {
     const sug = (rv.retopic || []);
     html += `<div class="bp-hold"><h3>⛔ 蓝图审没通过,已经停下,稿子还没开始写</h3>

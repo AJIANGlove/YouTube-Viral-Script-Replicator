@@ -268,7 +268,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `opening_retention_check.md` | 开头留存检查 | 126 |
 | `opening_card.md` | 开头单独审（前 60 秒逐句 + 硬指标 + 掉人点） | 31 |
 | `opening_fix.md` | 自动改开头（只动前 30 秒、不许改长/编数字，最多 3 次） | 41 |
-| `claim_check.md` | 论点核对（账本锁数 + 账外的数 + 验算一致性 + 直接应用改法写法 + 换算与基准数核对） | 47 |
+| `claim_check.md` | 论点核对（账本锁数 + 账外的数 + 验算一致性 + 直接应用改法写法 + 换算与基准数核对；人选论点不改标题不换论点） | 50 |
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 

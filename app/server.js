@@ -624,6 +624,13 @@ const server = http.createServer(async (req, res) => {
       catch (e) { return send(res, e.status || 500, { error: e.message }); }
     }
 
+    // v1.91 蓝图审写成韩文/外文的:翻成中文(只翻译,不改状态)
+    const bzMatch = url.match(/^\/api\/runs\/([\w-]+)\/blueprint-zh$/);
+    if (bzMatch && method === 'POST') {
+      try { return send(res, 200, require('./lib/blueprint').zhNow(bzMatch[1])); }
+      catch (e) { return send(res, e.status || 500, { error: e.message }); }
+    }
+
     // v1.89 待选论点:pick 选一个(id)/ edit 改一句再核对(id=在哪张卡上改,text)/ regen 重出 3 个
     const thMatch = url.match(/^\/api\/runs\/([\w-]+)\/thesis-choice$/);
     if (thMatch && method === 'POST') {

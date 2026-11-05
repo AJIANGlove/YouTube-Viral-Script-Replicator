@@ -830,7 +830,8 @@ async function reviewLoop(opts) {
       (cur.pc.items.progression.some(p => /level_focus/.test(p.text)) ? '\n等级章每一级都要写 level_focus 和 level_new_info,相邻两级的 level_focus 不能一样。' : '') +
       rs().feedback(((run.steps || {}).blueprint_review || {}).research) +
       spreadText(cur.pc.spread || []) +
-      '\n每章的 new_lens 用一句话写观众在这一章第一次知道的新信息;改完先把各章 new_lens 排成清单逐对核对,两章讲同一件事的合并或挪走,核对完再输出(清单不要输出)。';
+      '\n每章的 new_lens 用一句话写观众在这一章第一次知道的新信息;改完先把各章 new_lens 排成清单逐对核对,两章讲同一件事的合并或挪走,核对完再输出(清单不要输出)。' +
+      '\noutline_diff 只写和人选论点时看到的大纲哪里不一样、为什么,用中文大白话;不要把这次按意见改了什么写进去。';
     const m2 = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: fb }];
     let r2 = null, c2 = '', why = '';
     try {
@@ -856,8 +857,72 @@ async function reviewLoop(opts) {
     plain_zh: cur.rv.pass ? [] : cur.rv.items.filter(i => !i.pass).map(i => i.plain || ''),
     ...(onlyProg ? { soft_notes: arr((cur.rv.items.find(i => i.key === 'progression') || {}).problems).slice().sort((x, y) => (y.by === 'AI') - (x.by === 'AI')).map(p => ((p.chapter && !str(p.text).startsWith(p.chapter)) ? p.chapter + ' ' : '') + cut(p.text, 160) + (p.fix ? '(改法:' + cut(p.fix, 100) + ')' : '')).slice(0, 8) } : {})
   };
+  // v1.91 AI 写成韩文/外文的翻成中文(便宜渠道;失败不挡)
+  try { await zhReview(run, pl().loadConfig(), content); } catch (e) { run.steps.blueprint_review.zh_error = '翻成中文没成功:' + e.message; }
   store.saveRun(run);
   return { content, messages, r, held: status === 'held', pc: cur.pc, revised };
+}
+
+// v1.91 蓝图审的大白话/问题/结论、和论点大纲不一样的地方:AI 写成韩文/外文的,用便宜渠道翻成中文(原文留在 _orig)
+const zhHash = t => require('crypto').createHash('sha1').update(String(t || '')).digest('hex').slice(0, 12);
+function outlineDiffRaw(run, content) {
+  try { return str(bpOf(content != null ? content : (run.outputs || {}).step1).outline_diff).trim(); } catch (e) { return ''; }
+}
+function bpForeignSlots(run, content) {
+  const R = require('./review');
+  const slots = [];
+  const add = (obj, key) => { if (obj && typeof obj[key] === 'string' && obj[key].trim() && R.mostlyForeign(obj[key])) slots.push({ obj, key }); };
+  const addArr = list => arr(list).forEach((x, i) => add(list, i));
+  const items = list => arr(list).forEach(it => { add(it, 'plain'); arr(it.problems).concat(arr(it.notes)).forEach(p => { add(p, 'text'); add(p, 'fix'); }); });
+  const br = (run.steps || {}).blueprint_review;
+  if (br) {
+    items(br.items); add(br, 'summary'); addArr(br.reasons_zh); addArr(br.plain_zh); addArr(br.soft_notes);
+    arr(br.rounds).forEach(x => { items(x.items); add(x, 'summary'); });
+  }
+  const od = outlineDiffRaw(run, content);
+  if (od && R.mostlyForeign(od) && !(run.outline_diff_zh && run.outline_diff_zh.src === zhHash(od))) slots.push({ outline: od });
+  return slots;
+}
+async function zhReview(run, cfg, content) {
+  const slots = bpForeignSlots(run, content);
+  if (!slots.length) return 0;
+  const src = s => (s.outline != null ? s.outline : s.obj[s.key]);
+  const tr = await require('./review').translateTexts(run, cfg, slots.map(src), '中文对照·蓝图审');
+  let n = 0;
+  slots.forEach(s => {
+    const t = src(s), z = tr[zhHash(t)];
+    if (!z) return;
+    n++;
+    if (s.outline != null) { run.outline_diff_zh = { src: zhHash(t), zh: z }; return; }
+    if (!Array.isArray(s.obj)) s.obj[s.key + '_orig'] = t;
+    s.obj[s.key] = z;
+  });
+  return n;
+}
+// 页面上的「翻成中文」按钮(老任务用):只翻译,不改状态;任务在跑时不翻,免得和管线抢着存
+function zhNow(runId) {
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  if (['running', 'analyzing', 'queued'].includes(run.status)) throw Object.assign(new Error('任务还在跑,等它停下来再翻'), { status: 409 });
+  if (run.bp_zh_busy) return { ok: true, busy: true };
+  if (!bpForeignSlots(run).length) return { ok: true, n: 0 };
+  run.bp_zh_busy = true; delete run.bp_zh_error;
+  store.saveRun(run);
+  (async () => {
+    const r = store.getRun(runId);
+    let err = '';
+    try { await zhReview(r, pl().loadConfig()); } catch (e) { err = e.message; }
+    const fresh = store.getRun(runId) || r;
+    const a = (r.steps || {}).blueprint_review, b = (fresh.steps || {}).blueprint_review;
+    if (a && b && a.finished_at === b.finished_at) {
+      ['items', 'rounds', 'summary', 'summary_orig', 'reasons_zh', 'plain_zh', 'soft_notes'].forEach(k => { if (a[k] !== undefined) b[k] = a[k]; });
+    }
+    if (r.outline_diff_zh) fresh.outline_diff_zh = r.outline_diff_zh;
+    delete fresh.bp_zh_busy;
+    if (err) fresh.bp_zh_error = '翻译没成功:' + err; else delete fresh.bp_zh_error;
+    store.saveRun(fresh);
+  })().catch(() => {});
+  return { ok: true };
 }
 
 // 蓝图审判「删除不成立」的段:功能表改回「保留功能换内容」(v1.74),返回改了哪几段
@@ -1039,11 +1104,15 @@ function view(run) {
   // v1.89:人选论点时看到的大纲,蓝图哪里和它不一样
   let outlineDiff = '';
   try { if (s1) outlineDiff = str(bpOf(s1).outline_diff); } catch (e) {}
+  // v1.91 翻过中文的显示中文(原文改了就不用旧译文)
+  let outlineDiffOrig = '';
+  if (outlineDiff && run.outline_diff_zh && run.outline_diff_zh.src === zhHash(outlineDiff.trim())) { outlineDiffOrig = outlineDiff; outlineDiff = str(run.outline_diff_zh.zh); }
   const picked = !!(run.thesis_scout && run.thesis_scout.user_pick);
   if (!ft && !br && !run.blueprint_mode) return null;
   const fn = modeOf(run) === 'function';
-  return { mode: modeOf(run), mode_label: MODES[modeOf(run)], mode_why: str(run.blueprint_mode_why), setting: settingMode(), delete_max: ft && ft.delete_max != null ? ft.delete_max : deleteMax(), deleted_segments: arr(run.deleted_segments), deleted_ratio: run.deleted_ratio, table: fn ? ft : null, chapters, review: fn ? br : null, held: run.status === 'blueprint_hold', outline_diff: outlineDiff, outline_picked: picked && !!s1 };
+  return { mode: modeOf(run), mode_label: MODES[modeOf(run)], mode_why: str(run.blueprint_mode_why), setting: settingMode(), delete_max: ft && ft.delete_max != null ? ft.delete_max : deleteMax(), deleted_segments: arr(run.deleted_segments), deleted_ratio: run.deleted_ratio, table: fn ? ft : null, chapters, review: fn ? br : null, held: run.status === 'blueprint_hold', outline_diff: outlineDiff, outline_diff_orig: outlineDiffOrig, outline_picked: picked && !!s1,
+    zh_foreign: (() => { try { return bpForeignSlots(run).length; } catch (e) { return 0; } })(), zh_busy: !!run.bp_zh_busy, zh_error: str(run.bp_zh_error || (br || {}).zh_error) };
 }
 
 module.exports = { newInfoSimilar, factSpread, spreadText, researchNotes, chapterSwap, chapterFunctions, draftCheckItem, DELETE_MAX_DEFAULT, deleteMax, setDeleteMax, deletionCheck, enforceDeletions, deletedOf, checkDeletions, plannedFacts, restoreDeletions, recordDeletions, MODES, settingMode, setSettingMode, decideMode, modeOf, segmentsOf, locksOf, ladderOf, TREATMENTS, normTreatment, normalizeTable, tableSourceHits, sourceTerms, sourceHits, ensureTable, tableBrief, locksBrief, ladderBrief, frameworkCore, timelineCore, step1Template,
-  checkLocks, adjacentSimilar, checkLadder, checkCopy, checkUnreachable, checkFacts, checkReversal, programChecks, ITEMS, reviewPrompt, parseReview, mergeReview, reasonsZh, reviewLoop, MAX_REVISE, holdChoice, backToAnalysis, view, jaccard, chapterKeep, chapterBrief, step2Rules };
+  checkLocks, adjacentSimilar, checkLadder, checkCopy, checkUnreachable, checkFacts, checkReversal, programChecks, ITEMS, reviewPrompt, parseReview, mergeReview, reasonsZh, reviewLoop, MAX_REVISE, holdChoice, backToAnalysis, view, bpForeignSlots, zhReview, zhNow, jaccard, chapterKeep, chapterBrief, step2Rules };
