@@ -781,7 +781,7 @@ const server = http.createServer(async (req, res) => {
 
     // ---------- 先写后改:逐段对照审稿 ----------
     // GET 视图(每次按当前稿子现算);POST status/undo 立即返回;rewrite/fact 等模型返回再响应(单章约 0.5–2 分钟)
-    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact|accept_claim|ignore_block|ignore_item|apply_fix|suggest_fix|suggest_fix_batch|confirm_ok|source_mapping|pov_mode))?$/);
+    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact|accept_claim|ignore_block|ignore_item|apply_fix|suggest_fix|suggest_fix_batch|quote_context|confirm_ok|source_mapping|pov_mode))?$/);
     if (rvMatch) {
       const [, id, action] = rvMatch;
       try {
@@ -820,6 +820,7 @@ const server = http.createServer(async (req, res) => {
           if (action === 'confirm_ok') return send(res, 200, review.confirmOk(id, body));
           // 「AI 出改法」:只针对这一条调一次 AI,落成具体的原句 → 改成(不改稿、不复审),出好后人点「直接应用」
           if (action === 'suggest_fix') return send(res, 200, await review.suggestFix(id, body));
+          if (action === 'quote_context') return send(res, 200, await review.quoteContext(id, body));
           if (action === 'suggest_fix_batch') return send(res, 200, await review.suggestFixBatch(id, body));
           // 开头单独审:开头 60 秒逐句 + 中文 + 好在哪 + 风险(后台跑)
           if (action === 'opening') return send(res, 200, review.startOpeningCard(id));

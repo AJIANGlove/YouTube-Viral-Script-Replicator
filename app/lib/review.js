@@ -3844,6 +3844,63 @@ async function suggestFixBatch(runId, body) {
   const vals = list.map(t => ({ id: t.id, ...results[t.k] }));
   return { done: vals.filter(v => v.status === 'done').length, merged: vals.filter(v => v.status === 'merged').map(v => ({ id: v.id, into: v.into_id })), failed: vals.filter(v => v.status === 'failed').map(v => ({ id: v.id, error: v.error })), skipped, calls: Math.ceil(list.length / AI_FIX_BATCH) };
 }
+// v1.99「查看原文详情」(用户 2026-11-05):原句在终稿里的前后几段,去掉章节和时间标注;点翻译再出中文(便宜渠道,翻过的存着)
+const CTX_AROUND = 4;
+function scriptParas(script) {
+  const out = [];
+  let ch = '';
+  String(script || '').split(/\n\s*\n/).forEach(block => {
+    const lines = block.split('\n').filter(l => {
+      const m = l.match(/^\s*\[((?:CH|FS)\d+)[^\]]*\]\s*$/i);
+      if (m) { ch = m[1].toUpperCase(); return false; }
+      return true;
+    });
+    const t = lines.join('\n').trim();
+    if (t) out.push({ chapter: ch, text: t });
+  });
+  return out;
+}
+function findPara(paras, quote) {
+  const norm = s => String(s || '').replace(/\s+/g, ' ').trim();
+  const q = norm(quote).replace(/^[「"']|[」"']$/g, '');
+  if (!q) return -1;
+  let i = paras.findIndex(p => norm(p.text).includes(q));
+  if (i >= 0) return i;
+  const bare = s => norm(s).replace(/[\s.,!?·、,。!?…"'「」()()\-—~]/g, '');
+  const qb = bare(q);
+  i = paras.findIndex(p => bare(p.text).includes(qb));
+  if (i >= 0 || qb.length < 8) return i;
+  const head = qb.slice(0, 12), tail = qb.slice(-12);
+  i = paras.findIndex(p => bare(p.text).includes(head));
+  return i >= 0 ? i : paras.findIndex(p => bare(p.text).includes(tail));
+}
+async function quoteContext(runId, body) {
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  const quote = String((body || {}).quote || '');
+  const paras = scriptParas(checks.extractFinalScript(currentScript(run)));
+  const i = findPara(paras, quote);
+  if (i < 0) throw Object.assign(new Error('终稿里找不到这句(稿子可能已经改过了)'), { status: 404 });
+  const from = Math.max(0, i - CTX_AROUND), to = Math.min(paras.length, i + CTX_AROUND + 1);
+  const list = paras.slice(from, to);
+  let have = ((run.review || {}).zh || {}).byHash || {};
+  if ((body || {}).translate) {
+    const miss = list.map(p => p.text).filter(t => !have[hash(t)]);
+    if (miss.length) {
+      const cfg = pl().loadConfig();
+      if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
+      const tr = await translateTexts(run, cfg, miss, '中文对照·原文详情');
+      const fresh = store.getRun(runId) || run;
+      fresh.review = fresh.review || {};
+      fresh.review.zh = fresh.review.zh || {};
+      fresh.review.zh.byHash = { ...(fresh.review.zh.byHash || {}), ...tr };
+      if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
+      store.saveRun(fresh);
+      have = fresh.review.zh.byHash;
+    }
+  }
+  return { quote, chapter: paras[i].chapter, paras: list.map((p, k) => ({ chapter: p.chapter, text: p.text, zh: have[hash(p.text)] || '', hit: from + k === i })) };
+}
 // 「确认没问题」(v1.67):AI 核对结论没问题的条目,人确认后不挡发布;undo:true 撤回
 function confirmOk(runId, body) {
   const run = store.getRun(runId);
@@ -4589,4 +4646,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
