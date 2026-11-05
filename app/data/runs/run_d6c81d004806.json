@@ -879,7 +879,7 @@
     }
   },
   "created_at": "2026-11-03T14:24:32.001Z",
-  "updated_at": "2026-11-04T04:25:32.561Z",
+  "updated_at": "2026-11-04T14:29:27.552Z",
   "asset_id": "i-time-travelled-to-tudor-london-in-1536-vlog",
   "asset_name": "第一人称沉浸式穿越历史 Vlog（即时兑现-具身日程体验-明暗双轴-反讽收束）",
   "topic": "A Day in the Life of a Roman Plebeian — Nothing Like the Movies",
@@ -12417,5 +12417,299 @@
         "fixes": []
       }
     }
-  }
+  },
+  "compliance_scans": {
+    "v1": {
+      "model": "deepseek-flash",
+      "target_language": "English",
+      "type_names": {
+        "originality": "原创性不足",
+        "template": "模板感",
+        "ai_feel": "AI生成感",
+        "reused": "YPP低原创风险"
+      },
+      "secs": 56.9,
+      "summary": {
+        "ratings": {
+          "originality": "中",
+          "template": "中",
+          "ai_feel": "中",
+          "reused": "中"
+        },
+        "risk_level": "需要优化",
+        "conclusion": "整体不是高风险抄袭稿，沉浸式第一人称体验、patron晚宴冲突和身体细节提供了可辨识的人类创作贡献；但多处纪录片式提示句、抽象金句和数字堆叠会降低原创辨识度。建议按命中处去模板化并核对数据来源后，再进入变现审核会更稳。",
+        "structure": [
+          "采用“24小时体验+当日行程+晚宴警告”的叙事骨架，主线清楚，但整体仍接近常见历史体验类视频的“反差开场—街头奇观—揭秘—反转—升华”模板。",
+          "中段按Forum、竞技场、popina串联空间信息，密度高，但部分段落依靠“但真正……”和“人们看不到……”式推进，形成纪录片解说套路。",
+          "第一人称身体细节和社交尴尬是主要原创资产，例如猪撞倒、草垫、手抓面包、晚宴被逐，这些能抵消一部分资料拼接感。",
+          "结尾回收租金参照和现代生活对比，有个人视角，但“韧性”等抽象总结和金句削弱了辨识度。"
+        ],
+        "directions": [
+          "把模板提示句改成具体动作、感官事实或人物反应，减少空泛悬念和纪录片式转场。",
+          "为Colosseum尺寸、租金、sportula等数字补上原稿可用的出处；补不上就压缩为可感知的规模描述，避免伪精确。",
+          "强化patron晚宴中的个人判断、羞辱感和“仍是client”的代价，让这条冲突线成为独特叙事资产。",
+          "减少三段式复盘和连续金句，用更不规则的口语节奏保留沉浸感。",
+          "开头和结尾保留钩子强度，但用更具体的罗马场景替代通用YouTube话术。"
+        ]
+      },
+      "hits": [
+        {
+          "chapter": "CH01",
+          "original": "This is nothing like the movies.",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "No marble. Just timber, laundry, smoke.",
+          "original_zh": "这完全不像电影里那样。",
+          "suggestion_zh": "没有大理石。只有木架、晾衣绳和烟。",
+          "reason": "“不像电影”是常见开场反差套话，改为直接给出可见环境细节，保留判断但降低模板感。",
+          "status": "pending",
+          "id": "h1"
+        },
+        {
+          "chapter": "CH08",
+          "original": "I thought I was coming to see gladiator games. Entertainment.\n\nBut that's not what's happening.\n\nIt's an execution.",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "I expected a gladiator match. The arena is staging an execution instead.",
+          "original_zh": "我本以为我是来看角斗士比赛、看娱乐的。但正在发生的不是这个。这是一场处决。",
+          "suggestion_zh": "我原本以为会看到角斗士比赛。竞技场却在执行处决。",
+          "reason": "“我以为……但实际……”是典型反转模板；改成直接陈述预期与现场差异，保留信息但降低套路腔。",
+          "status": "pending",
+          "id": "h2"
+        },
+        {
+          "chapter": "CH09",
+          "original": "Two hundred and fifty thousand tons of stone. Each block weighs five tons. Three thousand tons of iron.",
+          "type": "reused",
+          "severity": "medium",
+          "suggestion": "Stone blocks cut to five-ton weights, thousands of tons of iron, and a workforce drawn largely from the Jewish War.",
+          "original_zh": "二十五万吨石头。每块重五吨。三千吨铁。",
+          "suggestion_zh": "切成五吨重石块的石料、数千吨铁，以及一支主要来自犹太战争的劳动力。",
+          "reason": "连续堆叠精确数字但未给出出处，像资料卡拼接；改为保留原稿已有信息并合并成工程规模描述，避免伪精确和资料感。",
+          "status": "pending",
+          "id": "h3"
+        },
+        {
+          "chapter": "CH09",
+          "original": "But here's the thing.\n\nBut here's what people don't see. The violence above required precision below.",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "The part that gets skipped is underneath: the violence above required precision below.",
+          "original_zh": "但问题是。但人们看不到的是这个。上面的暴力需要下面的精密。",
+          "suggestion_zh": "被略过的是地下部分：上面的暴力需要下面的精密。",
+          "reason": "连续使用纪录片式提示词会显得像批量解说；改为直接切入地下结构，保留原有反差。",
+          "status": "replaced",
+          "id": "h4"
+        },
+        {
+          "chapter": "CH12",
+          "original": "This isn't just dinner.",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "Dinner is cover for a warning.",
+          "original_zh": "这不仅仅是晚餐。",
+          "suggestion_zh": "晚餐是发出警告的掩护。",
+          "reason": "“不只是X”是常见钩子模板；改为具体说明晚餐的叙事功能，降低空泛悬念。",
+          "status": "replaced",
+          "id": "h5"
+        },
+        {
+          "chapter": "CH14",
+          "original": "I don't know if he means that literally.\n\nBut I'm about to find out.",
+          "type": "template",
+          "severity": "medium",
+          "suggestion": "I can't tell whether it's a joke or a warning.",
+          "original_zh": "我不知道他是不是字面意思。但我马上就要知道了。",
+          "suggestion_zh": "我分不清这是玩笑还是警告。",
+          "reason": "“我不知道……但我马上就会知道”是常见悬念套话；改为具体感受，保留紧张感但不使用模板悬念。",
+          "status": "replaced",
+          "id": "h6"
+        },
+        {
+          "chapter": "CH16",
+          "original": "But the people hold it together. That's resilience.",
+          "type": "ai_feel",
+          "severity": "medium",
+          "suggestion": "But the people keep filling the popinae and lining up for the sportula.",
+          "original_zh": "但人们把它维系在一起。这就是韧性。",
+          "suggestion_zh": "但人们依旧挤满小酒馆，依旧排队领取施舍。",
+          "reason": "抽象总结金句像AI式升华；改为用前文已有的popina和sportula场景收束，增加具体性。",
+          "status": "replaced",
+          "id": "h7"
+        },
+        {
+          "chapter": "CH07",
+          "original": "You're looking at Rome's internet.",
+          "type": "template",
+          "severity": "low",
+          "suggestion": "This is where Rome's news travels.",
+          "original_zh": "你看到的是罗马的互联网。",
+          "suggestion_zh": "这里是罗马消息流动的地方。",
+          "reason": "把古代论坛比作互联网是常见科普类比，容易显得模板化；改为直接说明其信息流动功能。",
+          "status": "replaced",
+          "id": "h8"
+        }
+      ],
+      "scanned_at": "2026-11-04T14:25:12.471Z",
+      "stale": false,
+      "text_hash": "c7213b623e5752fc3b6d9b7923549c8d118fa2a5"
+    }
+  },
+  "script_v1_5": "# Optimized Script\n\n[CH01 | 0:00-0:29 | 即时兑现穿越承诺，铺开当日行程地图，预告patron会面]\n\nI'm spending a day as a Roman plebeian. 100 AD.\n\nThis is nothing like the movies.\n\nI'm in a seven-story wooden apartment block that could collapse or burn any day.\n\nThe smell: street waste, roasted meat, sour wine, wood smoke.\n\nToday: the forum market, a thermopolium for food, the public baths, and tonight, my patron's house for dinner.\n\nBut I'm not going just to eat. I'm going to warn him about something he won't believe.\n\n[CH02 | 0:29-1:02 | 用insulae七层危楼的视觉异常建立空间质感，定位taberna为信息枢纽]\n\nWhere am I staying?\n\nThis building. Seven stories. Wood frame, balconies sticking out, laundry everywhere, shops at street level.\n\nThis is an insula. Most Romans live in these. By the end, you'll see what a day here was really like—and why it was nothing like the movies.\n\nCompare that to over there—a domus. Stone walls, private courtyard, garden with columns. That's for the wealthy.\n\nI'm crashing at a taberna on the ground floor.\n\nWhy do plebeians come here? The upper floors have nowhere to sit. No furniture, barely any space.\n\nSo this taberna is where news travels. Gossip about patrons, who's hiring, who got evicted.\n\nWhat's it like living up there?\n\n[CH03 | 1:02-2:07 | 用起居不适细节完成身体层面的穿越确认，换装过程与体感描述]\n\nThe mattress is straw. And it moves. There are things living in it.\n\nThe chamber pot sits in the corner. That pot is the bathroom.\n\nYou use it at night. In the morning, you dump it into the street. Or into the public cesspit if you're polite.\n\nMost people aren't polite at dawn.\n\nNow I get dressed. Tunic first—wool, scratchy. No buttons, tie it with a belt.\n\nRomans were short. Average plebeian, about 160 centimeters.\n\nI'm taller than most people on this floor. Makes the ceiling feel even lower.\n\nI'm paying 50 to 100 asses a month for this room. A day laborer makes maybe 8 to 12 asses a day. If you work 20 to 25 days a month, that's 160 to 300 asses. So rent takes a quarter to half my income. Sometimes more. Juvenal said the rent I'm paying here for one year could buy me a house with a garden in the provinces. He wasn't exaggerating.\n\nUp to half my pay. For a straw mattress and a pot.\n\nI need to get out before something falls on me.\n\nThe forum. And the streets are not what you think.\n\n[CH04 | 2:07-2:22 | 猝不及防的街头意外坐实沉浸式体验，创作者第一时间播报糗态形成肢体喜剧峰值]\n\nThe city manages pigs. Actual pigs roam the streets to clean up food scraps.\n\nA PIG.\n\nI just got knocked over by a Roman pig.\n\nNo one's stopping. Because this is normal.\n\nCan you believe this place?\n\nForum. Let's go.\n\n[CH05 | 2:22-3:14 | 市集的音量、密度、气味超负荷白描，第一种食物的试吃与意外维度评测]\n\nI'm at the Forum now.\n\nThe noise never stops, day or night. That's what Martial said. He was right.\n\nVendors shouting. Metal clanging. Wheels scraping stone. People arguing. Animals everywhere.\n\nBodies pressed shoulder to shoulder.\n\nThe smell. Roasted meat, garum fish sauce, sweat, smoke.\n\nThis is nothing like the movies.\n\nThis is chaos.\n\nI need food.\n\nThermopolium. Roman fast food.\n\nThe menu: panis, bread. Puls, porridge. Lucanica, sausage.\n\nI'm getting the sausage.\n\n(beat)\n\nThe sausage is salty. Very salty.\n\nSharp, sour kick. That's the garum. Fermented fish sauce. They put it in everything.\n\nI expected bland. I got the opposite.\n\nThe bread? Hard. You tear it with your hands and chew for a while.\n\nThis is what most people eat every day.\n\nEveryone around me is eating the same thing.\n\nWhich makes me wonder: where do they go after this?\n\n[CH06 | 3:14-3:36 | 用底层小人物白描其人生轨迹被制度锁死，一句现代概念缺席的点破]\n\nI'm walking past a domus.\n\nThis is salutatio. The morning greeting.\n\nEvery day, clients come to their patron's house. They wait. They greet him. In return, he gives them sportula. A little food, maybe a few coins. About six asses a day.\n\nThat's how they survive.\n\nThere's a kid. Maybe ten. Standing with his father. This is his life now. He won't learn a trade. He won't build skills. He'll learn how to bow, how to wait, how to depend on a patron. That's his apprenticeship. The concept of childhood doesn't exist in this system.\n\nWithout a patron, they have nothing.\n\n[CH07 | 3:36-3:59 | 用'古代版现代物'的类比点活Forum信息中枢，掌权者管制信息的揭示]\n\nI'm standing in the Forum.\n\nSenate decrees posted on the walls. Imperial announcements read aloud. Gossip, rumors, lies.\n\nThis is where Rome's news travels.\n\nThis is how news spreads, how power gets shaped.\n\nBut the people in charge know that. Augustus started treating criticism of the emperor as treason. Tiberius burned books. Domitian sent informants into the Forum to listen and report back.\n\nThey knew this place was dangerous. So they sent informants. People disappeared for a wrong word in the wrong ear.\n\n[CH08 | 3:59-4:46 | 预期误导后刑罚现场的直白揭示，秩序靠恐惧运转且同时也是娱乐的双联判词]\n\nI'm heading to the arena.\n\nThe Colosseum. Fifty to eighty thousand people. The stands are packed. The noise is unbelievable.\n\nI thought I was coming to see gladiator games. Entertainment.\n\nBut that's not what's happening.\n\nIt's an execution.\n\nDamnatio ad bestias. Criminals brought into the arena. Wild beasts released from cages underground. The crowd cheering.\n\nThis isn't a game. This is the state demonstrating what happens when you break the law.\n\nThe whole system runs on public fear.\n\nBut this is also just entertainment.\n\nThe same people cheering for the lion will cheer for a gladiator match right after. Fear and fun, mixed together.\n\nI'm watching the crowd. They're excited. Eating, drinking, laughing. A man dies, they applaud the beast.\n\nNo mourning. Just noise.\n\nThe arena shows imperial power. And it works because people keep coming back.\n\n[CH09 | 4:46-5:26 | 地标的量化奇观，骇人但日常化的细节，快闪知识节拍]\n\nHow did they build this place?\n\nThe Colosseum. Eight years. 72 to 80 AD. Thousands of workers, most of them slaves from the Jewish War. Two hundred and fifty thousand tons of stone. Each block weighs five tons. Three thousand tons of iron.\n\nIt holds fifty to eighty thousand people.\n\nThe part that gets skipped is underneath: the violence above required precision below. Underneath, there are over twenty main water channels. Each one custom-designed because no two are the same. Why? If the drains clog, blood, water, waste from the animals—it all backs up. The arena floor floods.\n\nThey built that underground in less than a decade.\n\nPeople walk past this every day. Vendors outside. Kids playing in the shade. No one thinks about the thousands who spent years underground installing pipes so executions could run on schedule.\n\nI need actual food.\n\n[CH10 | 5:26-6:31 | popina作为patron-client关系之外的平等社交窗口]\n\nThis is a popina. One of the few places in Rome where a freedman, a gladiator, and a mason might sit at the same table. No patrons. No salutatio. I walk in. Smell: posca, garum, sweat, smoke. I order lucanica. Dense lump of meat and fat, heavily salted, soaked in garum. Hot, filling, costs one as. I try the posca. Vinegar and water. Sour, slightly herbal. Cold, cuts through the grease. A gladiator in the corner. Scarred arms. Next to him, a mason. They're drinking, playing dice. No patron. They survive on skill. Free, but alone.\n\n[CH11 | 6:31-6:59 | popina日常娱乐中听到patron或禁卫军的八卦，为后续warning埋伏笔]\n\nI was planning to finish and leave. But a dock worker pulls out three dice. \"Venus,\" someone shouts. Three sixes. The lyre player starts. People clap. The music pulls me in. I need to go. I have a cena tonight.\n\n[CH12 | 6:59-7:55 | 一日三件事的盘点回放，温情判词，patron邀请函实体出现，真正目的不是他的钩子句]\n\nI step out into the street.\n\nToday I walked through all of it.\n\nThe Forum—Martial was right, the noise never stops. Vendors shouting, metal clanging, gossip flying faster than any scroll.\n\nThe arena—I thought I was going to see a show. I saw an execution. The system runs on fear, but the crowd cheered like it was entertainment.\n\nThe popina—the smell of posca and stew, the sound of the lyre, the clatter of dice. People laughing, betting, living.\n\nThese people live in buildings that collapse. They face violence every day. Their rent costs more than a house in the provinces. They have almost nothing.\n\nAnd still, they keep going.\n\nThat's what holds this place together. The people.\n\nA slave approaches me. Young, maybe fifteen. He holds out a small wooden tablet. Wax surface. A seal in red wax—my patron's family crest.\n\n\"Your patron invites you to cena tonight. He expects you at sunset.\"\n\nI take the tablet.\n\nDinner is cover for a warning.\n\nI'm going to warn him. About betrayal. About something he won't believe.\n\nAnd I need to do it without losing my place. Without losing that daily sportula.\n\nTonight, the real challenge begins.\n\n[CH13 | 7:55-8:46 | 礼服的物理重量与阶层标识，沿途贫富对比的一瞥，抵达patron家的紧张自白，双目标声明]\n\nThe toga.\n\nThis thing weighs several kilograms. Wool pressing against your chest. Arms pinned at a weird angle.\n\nAnd it is hot.\n\nBut only citizens can wear the toga. Slaves can't. This piece of fabric says, I belong here. I have rights.\n\nI'm wearing it. Because tonight, I need every bit of legitimacy.\n\nI'm walking from Subura toward the Palatine Hill. That's where my patron lives.\n\nThe contrast hits immediately.\n\nSubura to Palatine. The contrast is instant. Subura: seven stories, laundry, noise. Palatine: single-family homes, gardens, silence. I pass a domus. A slave is scrubbing the marble floor in the atrium. He's been at it all day. Just for tonight's dinner. This is the same city.\n\nMy hands are shaking. Not from the heat. From what I'm about to do.\n\nMy patron invited me to dinner. That's an honor.\n\nAnd I'm about to risk all of it.\n\nI have two goals. Warn him about betrayal. And walk out still a client. Because if I lose that, I lose everything.\n\nNo patron means no income. No legal protection. In Rome, that's a death sentence.\n\nI can't be too bold. I can't insult him. I can't make him think I'm disloyal.\n\nI have to warn him and stay in his good graces.\n\nI'm standing outside his door now.\n\nLet's see if I can pull this off.\n\n[CH14 | 8:46-9:52 | patron从罗马家族荣誉观出发，穿越者听到'背叛'触发warning，patron驳回后邀请进triclinium吃饭]\n\nI'm inside.\n\nThe atrium is huge. Columns on all sides. Marble floors. A pool in the center.\n\nOn the walls, dozens of wax masks. Imagines.\n\nMy patron walks me to the wall.\n\n\"Three generations. All friends of the Senate. All loyal to Rome. Our family has never betrayed an ally. Never broken faith. That is our honor.\" He turns to me. He's waiting. I need to say something. \"Your family's honor is clear, Dominus.\" He nods.\n\nBut that word. Betrayed.\n\nI know what happened just a few years ago.\n\n\"Your honor is clear, Dominus. But even loyal men can be betrayed by those they trust.\"\n\nHe raises an eyebrow.\n\n\"Domitian. Just four years ago. The Praetorian Guard turned on him. Their commander incited them to rebellion.\"\n\nMy patron's face hardens.\n\n\"That was chaos. A disgrace. But Trajan ended it. My allies are not palace guards. They are senators. Men of honor. Men like my family.\"\n\n\"You are a client. You don't understand politics. You see shadows where there is only light.\"\n\nI want to push back. But I can't.\n\nI just bow my head.\n\n\"Forgive me, Dominus. I only wished to—\"\n\n\"Enough.\"\n\nHe waves his hand.\n\nThen his face softens.\n\n\"You're young. You worry too much. Come.\"\n\nHe gestures toward the back of the house.\n\nThrough the atrium, past the peristyle garden. Fountains. Flowering plants.\n\nWe reach the triclinium. The dining room.\n\nThree couches arranged in a U-shape around a low table. Slaves setting out dishes.\n\nThe smell of roasted meat and garum sauce.\n\n\"Tonight,\" my patron says, \"you will dine with me. As my guest.\"\n\nI freeze.\n\nThis is an honor.\n\nBut it's also a test.\n\n\"Thank you, Dominus.\"\n\nHe smiles.\n\n\"Let's see if you can keep your head on straight at my table.\"\n\nI can't tell whether it's a joke or a warning.\n\n[CH15 | 9:52-11:09 | patron在triclinium上再提盟友信任，穿越者再次warning触发patron大怒，用recitation羞辱穿越者，穿越者出丑后被逐]\n\nThree couches arranged in a U. I'm reclining on one, leaning on my left elbow.\n\nMy right hand is for eating. Only my right hand.\n\nA slave comes with a water basin. Everyone washes hands in order. Patron first, then his guest, then me.\n\nThe food arrives.\n\nDormouse glazed in honey. Garum sauce drizzled over everything. Stewed meat.\n\nWay more refined than the popina.\n\nBut I can taste it. The hierarchy.\n\nEvery bite reminds me I'm the client.\n\nMy patron raises his cup.\n\n\"To loyal friends. To those who stand by their word.\"\n\nEveryone drinks.\n\nHe looks at his other guest.\n\n\"Lucius has been my ally in the Senate for ten years. Never once has he broken faith. That is what true loyalty looks like.\"\n\nThe other man nods.\n\nI should stay quiet.\n\nBut I can't.\n\n\"Dominus,\" I say, \"even the most loyal men can be turned.\"\n\nThe room goes quiet.\n\nMy patron looks at me.\n\n\"What did you say?\"\n\nI swallow.\n\n\"In Domitian's time, the Praetorian Guard turned on the emperor. Men who swore loyalty. It can happen.\"\n\nHis face darkens.\n\n\"That was chaos. A shameful moment. Trajan purged the traitors. My allies are not traitors.\"\n\n\"I'm just saying—\"\n\n\"You are a client. You know nothing about the loyalty of senators.\"\n\nMy patron leans back.\n\nHe's angry.\n\nInstead, he does something worse.\n\n\"You clearly have time to speak. So let's hear you recite. Recite something from Virgil. The Aeneid. Surely even a man of your station knows the opening lines.\"\n\nI don't.\n\nI open my mouth. \"Arma virumque cano...\" I get that far. Then I freeze. Five seconds. Ten. My patron: \"Continue.\" I try to improvise. Something about Aeneas and... Rome? The other guest laughs. My patron's face is stone.\n\n\"You can't even recite the most famous poem in Rome.\"\n\n\"I—\"\n\n\"Enough. Leave my table. Now.\"\n\nA slave escorts me to the door. But before I go, my patron stops. He sighs. \"Come to my house tomorrow morning. For salutatio. As usual.\" His voice is tired. I stop.\n\nHe's not cutting me off.\n\nHe's humiliated me. Thrown me out of his dinner.\n\nBut I'm still his client.\n\nI still get my sportula. My protection.\n\nI leave.\n\nOutside, I take a breath.\n\nAt least I still have my patron. And my head. In Rome, losing one often means losing the other.\n\nI didn't lose that.\n\n[CH16 | 11:09-12:00 | 从patron家走回insulae的路上，看到夜晚罗马城，意识到patron-client关系的韧性，回收Juvenal评论和现代锚点]\n\nMy patron humiliated me. Threw me out in front of his guests. But tomorrow, I'll still go. Because in Rome, no patron means no protection. No steady income. No one to turn to when you're sick or starving. This system is brutal. But for most people, it's the only safety net they have.\n\nWithout a patron, you're just another day laborer in a seven-story deathtrap.\n\nI look up as I pass one.\n\nLaundry hanging. Voices shouting from the top floors.\n\nJuvenal said it best.\n\nOne year's rent in Rome could buy you a whole house with a garden in Sora. A small town outside the city.\n\nA whole house.\n\nThat rent crisis existed two thousand years ago. Next time you complain about rent, remember: Juvenal did too. Same problem. Different city.\n\nThe movies show you marble and glory. They don't show you the seven-story deathtrap, the pig that knocked me over, or the chamber pot I had to empty into the street. That's the Rome most people lived in. It's loud. It smells. Buildings collapse. Fires. But the people keep filling the popinae and lining up for the sportula.\n\nThe food wasn't as bad as I thought. Posca grows on you.\n\nBut I'm ready to go home.\n\nTo hot running water. To a building with a fire escape. To renting laws that protect tenants.\n\nThings we take for granted.\n\nThey didn't have those here.\n\nNext time, we're going somewhere even stranger.\n\nSubscribe to join me.\n",
+  "compliance_log": [
+    {
+      "ts": "2026-11-04T14:27:35.273Z",
+      "version": "v1",
+      "target": "v1_5",
+      "replaced_count": 5,
+      "failed_count": 0,
+      "items": [
+        {
+          "chapter": "CH09",
+          "original": "But here's the thing.\n\nBut here's what people don't see. The violence above required precision below.",
+          "replacement": "The part that gets skipped is underneath: the violence above required precision below.",
+          "occurrences": 1
+        },
+        {
+          "chapter": "CH12",
+          "original": "This isn't just dinner.",
+          "replacement": "Dinner is cover for a warning.",
+          "occurrences": 1
+        },
+        {
+          "chapter": "CH14",
+          "original": "I don't know if he means that literally.\n\nBut I'm about to find out.",
+          "replacement": "I can't tell whether it's a joke or a warning.",
+          "occurrences": 1
+        },
+        {
+          "chapter": "CH16",
+          "original": "But the people hold it together. That's resilience.",
+          "replacement": "But the people keep filling the popinae and lining up for the sportula.",
+          "occurrences": 1
+        },
+        {
+          "chapter": "CH07",
+          "original": "You're looking at Rome's internet.",
+          "replacement": "This is where Rome's news travels.",
+          "occurrences": 1
+        }
+      ],
+      "failed": []
+    }
+  ],
+  "opening_scans": {
+    "v1_5": {
+      "model": "deepseek-flash",
+      "type_names": {
+        "phenomenon_missing": "现象缺失",
+        "conflict_weak": "冲突不足",
+        "essence_missing": "本质未点明",
+        "value_promise_missing": "价值承诺缺失",
+        "hook_weak": "钩子偏弱",
+        "promise_mismatch": "承诺与内容不符"
+      },
+      "secs": 51.7,
+      "summary": {
+        "score_0_30": 5,
+        "score_30_60": 4,
+        "content_type": "混合型",
+        "content_type_note": "全文以一天行程串联，穿插 insula、Forum、Colosseum 等知识拆解，并用结尾 warning 剧情和电影对比做认知纠偏。",
+        "biggest_problem": "前10秒出现两个数字违反硬规则，且前30秒只给“不像电影”的抽象反差、没有点明本质；30–60秒也没有明确价值承诺。",
+        "conclusion": "开头有具体场景和悬念，但需删掉一个数字并补上本质句与价值承诺，才能稳住前60秒留存。",
+        "seg_0_30": {
+          "phenomenon": {
+            "status": "ok",
+            "note": "七层木楼、气味、当日行程等具体可感。"
+          },
+          "conflict": {
+            "status": "ok",
+            "note": "电影想象与危楼现实、警告patron形成反差和悬念。"
+          },
+          "essence": {
+            "status": "missing",
+            "note": "只说“不像电影”，未点明多数平民住在危险木楼、非大理石荣耀这一核心问题。"
+          }
+        },
+        "seg_30_60": {
+          "value_promise": {
+            "status": "missing",
+            "note": "继续解释insula/taberna和空间质感，但没有明示看完能获得什么；承诺缺失。",
+            "category": "混合型"
+          }
+        },
+        "hard_fails": [
+          "前 10 秒一共念了 2 个数字(不管是不是连着念,加起来最多 1 个)"
+        ]
+      },
+      "hits": [
+        {
+          "chapter": "CH01",
+          "original": "I'm spending 24 hours as a Roman plebeian. 100 AD.",
+          "type": "hook_weak",
+          "segment": "s0_30",
+          "mode": "replace",
+          "suggestion": "I'm spending a day as a Roman plebeian. 100 AD.",
+          "original_zh": "我要作为罗马平民度过24小时。公元100年。",
+          "suggestion_zh": "我要作为罗马平民度过一天。公元100年。",
+          "reason": "前10秒出现“24”和“100”两个数字，超过“最多1个数字”的硬规则，开场数字堆叠削弱钩子。",
+          "status": "replaced",
+          "id": "h1"
+        },
+        {
+          "chapter": "CH01",
+          "original": "This is nothing like the movies.",
+          "type": "essence_missing",
+          "segment": "s0_30",
+          "mode": "replace",
+          "suggestion": "Movies lie: firetraps.",
+          "original_zh": "这和电影里完全不一样。",
+          "suggestion_zh": "电影骗人：是火灾陷阱。",
+          "reason": "只给出“不像电影”的抽象反差，没有点明现象背后的核心问题：多数罗马平民住在危险木楼，而非电影中的大理石荣耀。",
+          "status": "pending",
+          "id": "h2"
+        },
+        {
+          "chapter": "CH02",
+          "original": "This is an insula. Most Romans live in these.",
+          "type": "value_promise_missing",
+          "segment": "s30_60",
+          "mode": "insert_after",
+          "suggestion": "This is an insula. Most Romans live in these. By the end, you'll see what a day here was really like—and why it was nothing like the movies.",
+          "original_zh": "这就是insula。大多数罗马人住在这样的地方。",
+          "suggestion_zh": "这就是insula。大多数罗马人住在这样的地方。看完你会知道这里的一天到底什么样——以及为什么它和电影里完全不一样。",
+          "reason": "30–60秒继续解释insula/taberna和空间质感，但没有让观众明确预期“看完这条视频会得到什么”，属于价值承诺缺失。",
+          "status": "replaced",
+          "id": "h3"
+        }
+      ],
+      "scanned_at": "2026-11-04T14:28:31.602Z",
+      "stale": true,
+      "text_hash": "4cbebf3d2684f5b8613319f0946f4d9fd13cd751"
+    }
+  },
+  "opening_log": [
+    {
+      "ts": "2026-11-04T14:29:27.552Z",
+      "version": "v1_5",
+      "target": "v1_5",
+      "replaced_count": 2,
+      "failed_count": 0,
+      "items": [
+        {
+          "chapter": "CH01",
+          "original": "I'm spending 24 hours as a Roman plebeian. 100 AD.",
+          "replacement": "I'm spending a day as a Roman plebeian. 100 AD.",
+          "occurrences": 1
+        },
+        {
+          "chapter": "CH02",
+          "original": "This is an insula. Most Romans live in these.",
+          "replacement": "This is an insula. Most Romans live in these. By the end, you'll see what a day here was really like—and why it was nothing like the movies.",
+          "occurrences": 1
+        }
+      ],
+      "failed": []
+    }
+  ]
 }

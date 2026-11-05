@@ -167,6 +167,13 @@
   .badge-analyzing { background: #ede9fe; color: #6d28d9; }
   .badge-awaiting_review { background: #ffedd5; color: #c2410c; }
   .badge-blueprint_hold { background: #fee2e2; color: #b91c1c; font-weight: 600; }
+  .badge-thesis_hold { background: #fef3c7; color: #92400e; font-weight: 600; }
+  .th-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; margin-top: 10px; }
+  .th-card.rec { border-color: #10b981; box-shadow: 0 0 0 1px #10b98133; }
+  .th-card h3 { margin: 0 0 6px; font-size: 15px; }
+  .th-card .th-row { font-size: 13px; margin: 3px 0; }
+  .th-card ol { margin: 4px 0 4px 18px; padding: 0; font-size: 13px; }
+  .th-card ol li { margin: 2px 0; }
   /* v1.73 蓝图面板:功能表、每章排法、蓝图审 */
   .bp-hold { border: 2px solid #dc2626; background: #fef2f2; border-radius: 8px; padding: 12px 14px; margin: 8px 0 12px; }
   .bp-hold h3 { margin: 0 0 6px; color: #b91c1c; font-size: 15px; }
@@ -740,6 +747,15 @@
           <input type="radio" name="gen-mode" value="direct" style="width:auto">
           <span>直接写稿(旧流程,不做写前分析)</span>
         </label>
+        <div class="v13" style="font-size:13px;font-weight:600;margin:8px 0 4px">论点</div>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="radio" name="gen-thesis" value="choose" checked style="width:auto" onchange="thesisModeSave()">
+          <span>我来选论点:AI 出 3 张论点卡(核对过资料、写好整篇大概怎么讲),停下来等你选,选完全自动往下写</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="radio" name="gen-thesis" value="auto" style="width:auto" onchange="thesisModeSave()">
+          <span>自动选论点:AI 自己挑一个,不停(和以前一样)</span>
+        </label>
         <label style="margin-top:6px">参考资料(选填 · 写前分析用:粘贴你查到的数据、报道、链接摘要,或在下面上传表格;AI 只能用这里和它已知的事实)</label>
         <textarea id="gen-materials" rows="4" style="width:100%;box-sizing:border-box" placeholder="例如:2024 年韩国美发店平均月营业额 …(来源:统计厅)"></textarea>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px"><button type="button" class="ghost" onclick="matPick('gen-materials')">上传表格(xlsx / csv)</button><span id="gen-materials-up" class="hint" style="margin:0">表格会转成文字加到上面,AI 写前分析时自己读;只按主题找来、没有现成观点的资料也可以放</span></div>
@@ -817,6 +833,7 @@
     <div class="card hidden bp-panel" id="bp-panel"></div>
     <div class="card hidden" id="rv-panel"></div>
     <div class="card hidden" id="rf-panel"></div>
+    <div class="card hidden" id="th-panel"></div>
     <div class="card hidden" id="lc-panel"></div>
     <div class="card hidden" id="an-panel"></div>
     <div class="card hidden" id="ret-panel"></div>
@@ -1059,6 +1076,12 @@ function genMode() {
   const el = document.querySelector('input[name="gen-mode"]:checked');
   return el ? el.value : 'draft_first';
 }
+// v1.89 论点:我来选 / 自动选(记住上次选的)
+const THESIS_MODE_KEY = 'thesis_mode_v189';
+function thesisMode() { const el = document.querySelector('input[name="gen-thesis"]:checked'); return el ? el.value : 'choose'; }
+function thesisModeSave() { try { localStorage.setItem(THESIS_MODE_KEY, thesisMode()); } catch (e) {} }
+function thesisModeLoad() { let v = null; try { v = localStorage.getItem(THESIS_MODE_KEY); } catch (e) {} const el = v && document.querySelector('input[name="gen-thesis"][value="' + v + '"]'); if (el) el.checked = true; }
+document.addEventListener('DOMContentLoaded', thesisModeLoad);
 
 async function api(url, opts) {
   const resp = await fetch(url, opts);
@@ -1912,6 +1935,7 @@ async function createRun() {
     // 写稿方式:先写后改(一键生成,写完逐段审)/ 先审分析(停在「待确认分析」)/ 直接写稿
     draft_first: genMode() === 'draft_first',
     pre_analysis: genMode() === 'pre_analysis',
+    thesis_choose: genMode() !== 'direct' && thesisMode() === 'choose',
     track: document.getElementById('gen-track').value.trim(),
     review_track: (document.getElementById('gen-review-track') || {}).value || '',
     materials: document.getElementById('gen-materials').value.trim(),
@@ -2075,7 +2099,7 @@ function setTrack(v) {
 
 // ---------- 任务 ----------
 const STEP_LABELS = { analysis: '⓪ 写前分析', function_table: '① 功能表', blueprint: '① 蓝图', blueprint_review: '① 蓝图审', script: '② 脚本', audit: '③ 审核', optimized: '④ 优化', opening_boost: '⑤ 强化开头', script_check: '⑥ 稿件检查', draft_check: '⑦ 初稿检查→二稿', reverse_audit: '⑧ 二稿审稿报告', final_review: '⑨ 终审→终稿', deai: '⑩ 去AI感' };
-const STATUS_LABELS = { analyzing: '写前分析中', awaiting_review: '待确认分析', blueprint_hold: '蓝图待定', queued: '排队中', running: '生成中', done: '完成', failed: '失败', cancelled: '已取消' };
+const STATUS_LABELS = { analyzing: '写前分析中', awaiting_review: '待确认分析', thesis_hold: '待选论点', blueprint_hold: '蓝图待定', queued: '排队中', running: '生成中', done: '完成', failed: '失败', cancelled: '已取消' };
 const LANG_LABELS = { English: '英语', Hindi: '印地语', Spanish: '西班牙语', Portuguese: '葡萄牙语', Japanese: '日语', Korean: '韩语', Indonesian: '印尼语', German: '德语', French: '法语', Vietnamese: '越南语', Arabic: '阿拉伯语', Chinese: '中文' };
 const COUNTRY_LABELS = { US: '美国', IN: '印度', BR: '巴西', MX: '墨西哥', JP: '日本', KR: '韩国', ID: '印尼', DE: '德国', GB: '英国', FR: '法国', VN: '越南', SA: '沙特' };
 
@@ -2120,6 +2144,10 @@ function viralIcon(filled, cls) {
 }
 
 function runOpsCell(r) {
+  if (r.status === 'thesis_hold') {
+    return `<button class="op-btn" onclick="event.stopPropagation();openRun('${r.id}')">去选论点</button> `
+      + `<button class="op-btn danger" onclick="event.stopPropagation();cancelRunById('${r.id}')">取消</button>`;
+  }
   if (r.status === 'blueprint_hold') {
     return `<button class="op-btn" onclick="event.stopPropagation();openRun('${r.id}')">去看蓝图</button> `
       + `<button class="op-btn danger" onclick="event.stopPropagation();cancelRunById('${r.id}')">取消</button>`;
@@ -2188,7 +2216,7 @@ function scoreCell(s) {
 // 3 秒轮询只在数据指纹变化时重绘,避免打断输入、翻页和滚动。
 const RUNS_PAGE_SIZES = [20, 50, 100];
 const VIDEO_STATUS_LABELS = { none: '未推送', draft: '草稿', running: '生产中', paused: '已暂停', completed: '已完成', failed: '失败' };
-const RUNS_STATUS_ORDER = ['done', 'blueprint_hold', 'awaiting_review', 'analyzing', 'running', 'queued', 'failed', 'cancelled'];
+const RUNS_STATUS_ORDER = ['done', 'thesis_hold', 'blueprint_hold', 'awaiting_review', 'analyzing', 'running', 'queued', 'failed', 'cancelled'];
 const RUN_ENDED = s => ['done', 'failed', 'cancelled'].includes(s);
 const runsFilter = { q: '', status: [], lang: [], video: [], viral: false, range: 'all', page: 1, page_size: 50 };
 let runsData = null;
@@ -2603,6 +2631,7 @@ async function loadRunDetail() {
   renderBlueprintPanel(r);
   renderReviewPanel(r);
   renderReframePanel(r);
+  renderThesisPanel(r);
   renderLedgerChoicePanel(r);
   renderAnalysisPanel(r);
   renderRetentionCheck(r);
@@ -5390,6 +5419,83 @@ function lcPending(a) {
   const up = (id, seen) => refs(byId[id]).some(x => !seen.has(x) && (seen.add(x), p0.has(x) || up(x, seen)));
   return [...p0].filter(id => !up(id, new Set([id]))).map(id => byId[id]);
 }
+// ---------- v1.89 待选论点:3 张论点卡 ----------
+let thRenderedKey = null, thEditing = null;
+const TH_ENOUGH = { '够': 'green', '勉强': 'yellow', '不够': 'red' };
+const TH_VERDICT = { '站得住': 'green', '收窄后站得住': 'yellow', '站不住': 'red' };
+function thCards(ts) {
+  const p = ts.pick, angles = ts.angles || [];
+  return angles.map(a => {
+    const c = p ? (p.checks || []).find(x => x.id === a.id) : null;
+    const card = (c && c.card) || {};
+    const facts = p ? (p.facts || []).filter(f => !(f.for || []).length || f.for.includes(a.id)) : [];
+    const cons = p ? (p.con_facts || []).filter(f => !(f.for || []).length || f.for.includes(a.id)) : [];
+    return { a, c, card, facts, cons };
+  });
+}
+function thSrc(list) {
+  return (list || []).slice(0, 3).map(s => /^https?:\/\//i.test(s.url || '') ? `<a href="${escAttr(s.url)}" target="_blank" rel="noopener">${esc(s.site || s.title || s.url)}</a>` : esc(s.site || s.title || '')).join('、');
+}
+function renderThesisPanel(r) {
+  const el = document.getElementById('th-panel');
+  const ts = r.thesis_scout || null;
+  const st = (r.steps || {}).thesis_pick || {};
+  const checking = r.status === 'analyzing' && st.status === 'checking';
+  if (!ts || !(ts.angles || []).length || !(r.status === 'thesis_hold' || checking)) { el.classList.add('hidden'); thRenderedKey = null; return; }
+  const key = JSON.stringify([r.status, st.status, ts.at, (ts.angles || []).length, ts.request_error || '', thEditing]);
+  if (key === thRenderedKey && !el.classList.contains('hidden')) return;
+  thRenderedKey = key;
+  el.classList.remove('hidden');
+  if (checking) { el.innerHTML = `<h2 style="color:#92400e">论点:正在${esc(st.what || '核对')}…</h2><div class="hint">核对完会再停在这里给你看,一般 1–3 分钟。</div>`; return; }
+  const rec = (ts.pick && ts.pick.chosen) || ts.recommended || '';
+  const recWhy = (ts.pick && ts.pick.why) || ts.rec_why || '';
+  const cards = thCards(ts);
+  let html = `<h2 style="color:#92400e">选一个论点${r.draft_first ? ',选完自动往下写' : ',选完接着做写前分析'}</h2>
+    <div class="hint">论点是这篇最后想让观众相信的那句话。每张卡都联网核对过${ts.searched ? '' : '(这次没开联网搜索,没有核对资料)'}:「资料够不够」是程序数出来的有出处的来源个数,不是 AI 自己说的。「整篇大概会这样讲」是照原片的结构排的预告,后面写前分析和蓝图会照它排,哪里不一样会在蓝图页写明。</div>`;
+  if (ts.request_error) html += `<div class="hint" style="color:#b91c1c">${esc(ts.request_error)}</div>`;
+  html += cards.map(({ a, c, card, facts, cons }) => {
+    const en = c && c.enough;
+    const chips = (c ? `<span class="rv-chip ${TH_VERDICT[c.verdict] || ''}">${esc(c.verdict)}</span> ` : '<span class="rv-chip">没核对</span> ')
+      + (en ? `<span class="rv-chip ${TH_ENOUGH[en.level] || ''}">资料${esc(en.level)}(${en.sources} 个来源${en.key_found ? ',关键那条查到了' : ',关键那条没查到'})</span> ` : '')
+      + (a.id === rec ? '<span class="rv-chip green">AI 推荐</span>' : '')
+      + (/^U\d+$/.test(a.id) ? '<span class="rv-chip">你改的</span>' : '');
+    const one = card.one_line || a.one_line;
+    const outline = (card.outline || []);
+    const risk = [c && c.note, a.risk].filter(Boolean);
+    const editing = thEditing === a.id;
+    return `<div class="th-card${a.id === rec ? ' rec' : ''}">
+      <h3>${esc(one)}</h3><div>${chips}</div>
+      <div class="th-row"><b>观众原来以为:</b>${esc(card.belief || a.belief || '')}</div>
+      <div class="th-row"><b>真相:</b>${esc(card.claim || a.claim || '')}</div>
+      ${card.ending_landing ? `<div class="th-row"><b>结尾落在:</b>${esc(card.ending_landing)}</div>` : ''}
+      ${card.opening_line ? `<div class="th-row"><b>开头第一句大概:</b>${esc(card.opening_line)}</div>` : ''}
+      <div class="th-row"><b>靠这些资料撑着:</b>${facts.length ? '<ul style="margin:2px 0 2px 18px;padding:0">' + facts.slice(0, 5).map(f => `<li>${esc(f.content)}${f.year ? '(' + esc(f.year) + ')' : ''} — ${thSrc(f.sources)}</li>`).join('') + '</ul>' : (c && c.pro && c.pro.length ? thSrc(c.pro) : '<span style="color:#b91c1c">没查到有出处的资料</span>')}</div>
+      ${risk.length || cons.length ? `<div class="th-row"><b>可能站不住的地方:</b>${esc(risk.join(';'))}${cons.length ? '<ul style="margin:2px 0 2px 18px;padding:0">' + cons.slice(0, 3).map(f => `<li>反对:${esc(f.content)} — ${thSrc(f.sources)}</li>`).join('') + '</ul>' : ''}</div>` : ''}
+      ${(card.missing || []).length ? `<div class="th-row"><b>还没查到:</b>${esc(card.missing.join(';'))}</div>` : ''}
+      ${outline.length ? `<div class="th-row"><b>整篇大概会这样讲:</b><ol>${outline.map(x => `<li>${esc(x.says)}${x.uses ? '<span style="color:#4b5563">(用:' + esc(x.uses) + ')</span>' : ''}${x.leaves ? '<span style="color:#6b7280"> → ' + esc(x.leaves) + '</span>' : ''}</li>`).join('')}</ol></div>` : ''}
+      <div class="rv-ops" style="margin-top:6px"><button class="an-btn v13" onclick="thChoose('pick','${escAttr(a.id)}',this)">选这个</button>
+        <button class="an-btn" onclick="thEdit('${escAttr(a.id)}')">改一句再选</button></div>
+      ${editing ? `<div style="margin-top:6px"><textarea id="th-edit-text" rows="2" style="width:100%;box-sizing:border-box">${esc(one)}</textarea>
+        <div class="hint">改完会按你这句重新联网核对一次(1–3 分钟),核对完再停在这里给你看。</div>
+        <button class="an-btn v13" onclick="thChoose('edit','${escAttr(a.id)}',this)">按这句核对</button> <button class="an-btn" onclick="thEdit(null)">算了</button></div>` : ''}
+    </div>`;
+  }).join('');
+  html += `${recWhy ? `<div class="hint" style="margin-top:8px">AI 为什么推荐 ${esc(rec)}:${esc(recWhy)}</div>` : ''}
+    <div style="margin-top:10px"><button class="an-btn" onclick="thChoose('regen','',this)">都不满意,重出 3 个</button>
+    <span class="hint">会换完全不同的方向再出 3 个,大约多花定论点这一步一样的 token。</span></div>`;
+  el.innerHTML = html;
+}
+function thEdit(id) { thEditing = id; thRenderedKey = null; if (lastRunDetail) renderThesisPanel(lastRunDetail); }
+async function thChoose(action, id, btn) {
+  const body = { action, id };
+  if (action === 'edit') { const t = (document.getElementById('th-edit-text') || {}).value || ''; if (!t.trim()) { alert('论点是空的'); return; } body.text = t.trim(); }
+  if (action === 'regen' && !confirm('换完全不同的方向再出 3 个论点?')) return;
+  if (btn) btn.disabled = true;
+  try { await api('/api/runs/' + currentRunId + '/thesis-choice', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); }
+  catch (e) { alert(e.message); if (btn) btn.disabled = false; return; }
+  thEditing = null; thRenderedKey = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 400);
+}
 function lcKey(r) {
   const a = r.analysis || {};
   return JSON.stringify([((r.steps || {}).ledger_choice || {}).status || '', ((a.ledger) || []).map(l => l && l.ledger_choice ? l.id + ':' + l.ledger_choice.choice : '').join(',')]);
@@ -5930,7 +6036,7 @@ function renderBlueprintPanel(r) {
   const v = r.blueprint_view;
   if (!v) { el.classList.add('hidden'); bpRenderedKey = null; return; }
   // 停下时有输入框:内容没变就不重绘,免得 3 秒轮询把人正在改的题目冲掉
-  const key = JSON.stringify([r.status, v.mode, (v.review || {}).status, (v.review || {}).finished_at, ((v.review || {}).rounds || []).length, (v.table || {}).at, (v.chapters || []).length, v.deleted_ratio, (v.deleted_segments || []).length]);
+  const key = JSON.stringify([r.status, v.outline_diff || '', v.mode, (v.review || {}).status, (v.review || {}).finished_at, ((v.review || {}).rounds || []).length, ((v.review || {}).research || {}).status, (v.table || {}).at, (v.chapters || []).length, v.deleted_ratio, (v.deleted_segments || []).length]);
   if (key === bpRenderedKey && !el.classList.contains('hidden')) return;
   bpRenderedKey = key;
   el.classList.remove('hidden');
@@ -5945,6 +6051,7 @@ function renderBlueprintPanel(r) {
     : rv.status === 'passed_soft' ? '<span class="bp-chip ok">蓝图审基本通过(只剩「递进」,已接着写)</span>'
     : `<span class="bp-chip bad">蓝图审没通过${rv.override ? ' · 你选了仍然写' : ''}</span>`;
   let html = `<h2>① 蓝图(按功能重排)${chip}</h2>`;
+  if (v.outline_picked) html += `<div class="hint" style="margin:-4px 0 8px">${v.outline_diff ? '<b>和你选论点时看到的大纲不一样的地方:</b>' + esc(v.outline_diff) : '照你选论点时看到的「整篇大概会这样讲」排的,没有改动。'}</div>`;
   if (v.held && rv) {
     const sug = (rv.retopic || []);
     html += `<div class="bp-hold"><h3>⛔ 蓝图审没通过,已经停下,稿子还没开始写</h3>

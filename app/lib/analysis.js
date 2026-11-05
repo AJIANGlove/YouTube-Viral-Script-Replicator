@@ -165,6 +165,9 @@ function analysisBrief(a, run, trackKey, mode) {
   const th = a.thesis_card || {};
   out.push('论点卡:原有认知=' + (th.viewer_belief || '') + ';真相=' + (th.truth || '') + ';一句话论点=' + (th.one_line_thesis || '') + ';结尾落点=' + (th.ending_landing || '')
     + (th.contrast ? ';反差=' + th.contrast : '') + (th.double_standard && !/^无$/.test(String(th.double_standard).trim()) ? ';同事不同命=' + th.double_standard : '') + (th.boundary ? ';不适用于=' + th.boundary : ''));
+  // v1.89:人选论点时看到的大纲,蓝图和写稿照它排
+  const tsOut = run && mode !== 'review' ? require('./thesis').chosenOutline(run.thesis_scout) : [];
+  if (tsOut.length) out.push('人选论点时看到的「整篇大概会这样讲」(蓝图按这个顺序和内容排章;哪一章实在要不一样,在蓝图的 outline_diff 里写明哪里不一样、为什么):\n' + require('./thesis').outlineText(tsOut));
   const twText = run ? require('./twist').briefText(run) : ''; // v1.84:建任务时核对过的能证明反转的角度
   if (twText) out.push(twText);
   out.push('事实表(只能用这些;[估算] 的数不用逐个声明,全片在开始算账时说一次「下面按公开数据估算」即可;[假设] 的在用到时说一次「假设」;[待查] 的数不要写成确定的事实):\n' + (a.facts || []).map(f => '- ' + f.id + ' [' + (f.kind || '') + '] ' + (f.content || '') + '(' + [f.source, f.year, f.region].filter(Boolean).join(',') + ')' + (f.method ? ' 算法:' + f.method : '')).join('\n'));
@@ -984,12 +987,14 @@ async function runAnalysis(runId) {
   const carry = run.fit_carry && run.fit_carry.asset_id === run.asset_id ? run.fit_carry : null;
   delete run.fit_carry;
   const skipQuick = (run.reframe || {}).status === 'ignored';
+  // v1.89:人在论点卡上选完(或改一句、重出)接着跑:快速适配判断上次已经做过,不再做一遍
+  const thesisResume = !!run.thesis_resume && !!(run.fit_quick || (run.steps || {}).fit_quick);
   // 人坚持用这个框架时保留之前那次快速判断(判的是换框架),完整分析的结论记在它后面,以后统计两者一致率
-  if (!(skipQuick && run.fit_quick && run.fit_quick.asset_id === run.asset_id)) delete run.fit_quick;
+  if (!thesisResume && !(skipQuick && run.fit_quick && run.fit_quick.asset_id === run.asset_id)) delete run.fit_quick;
   if (carry) run.fit_quick = { ...carry, by: 'prejudge' };
   store.saveRun(run);
   try {
-    if (!carry && !skipQuick) {
+    if (!carry && !skipQuick && !thesisResume) {
       const prevA = run.analysis && !run.analysis.quick_only ? run.analysis : null;
       const prev = prevA ? { title: (prevA.title || {}).final_title, thesis_card: prevA.thesis_card, protagonist: prevA.protagonist } : ((run.reframe || {}).prev || {});
       run.steps.analysis = { ...run.steps.analysis, stage: '快速适配判断' };
@@ -1030,6 +1035,15 @@ async function runAnalysis(runId) {
     if (run.cancel_requested || (store.getRun(run.id) || {}).cancel_requested) {
       run.status = 'cancelled';
       run.steps.analysis = { ...run.steps.analysis, status: 'failed' };
+      store.saveRun(run);
+      return;
+    }
+    delete run.thesis_resume;
+    // v1.89:建任务时选了「我来选论点」:出完论点卡停下来等人选(选完从这里接着跑,一键生成的一路往下写)
+    if (require('./thesis').needHold(run)) {
+      run.status = 'thesis_hold';
+      run.steps.analysis = { ...run.steps.analysis, status: 'waiting', stage: '等你选论点' };
+      run.steps.thesis_pick = { status: 'waiting', at: new Date().toISOString() };
       store.saveRun(run);
       return;
     }

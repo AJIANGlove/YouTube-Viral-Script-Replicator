@@ -214,7 +214,8 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `source_mapping.md` | 原片 → 本地对照表与叙事方式判断 | 39 |
 | `thesis_methods.md` | 定论点的 8 种方法（从爆款文案整理） | 11 |
 | `thesis_angles.md` | 写前论点调研①想 3 个角度 | 34 |
-| `thesis_pick.md` | 写前论点调研③按正反资料核对挑选 | 35 |
+| `thesis_pick.md` | 写前论点调研③按正反资料核对挑选（每个论点写卡+整篇大纲预告） | 45 |
+| `thesis_edit.md` | 把人改的那句整理成论点再核对 | 19 |
 | `ledger_extend.md` | 账本补推算行（如果行/全年行，只输出新增） | 34 |
 | `thesis_vs_ledger.md` | 论点与账本对账（对不上换角度保标题） | 30 |
 | `twist_check.md` | 锁框架前反转证不证得出（原角度/换角度/反证/资料不够） | 23 |
@@ -229,11 +230,11 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `blueprint_research_fill.md` | 蓝图补搜摘事实（具体人和事也摘成一条） | 31 |
 | `revise.md` | 按人工意见只重做一行 | 29 |
 | `title_audit.md` | 自写标题审核 | 26 |
-| `step1.md` | Blueprint 生成（问题链 + 新角度 + 事实只用一次，编号一律 CH，含对照表与叙事方式） | 102 |
+| `step1.md` | Blueprint 生成（问题链 + 新角度 + 事实只用一次，编号一律 CH，含对照表与叙事方式、照大纲排） | 105 |
 | `apply_suggest.md` | 单条问题出可替换改法（原句逐字+中文意思） | 32 |
 | `step2.md` | 脚本施工（含每章问题链与新角度要求、对照表） | 58 |
 | `function_table.md` | 蓝图按功能重排第一步：原片每段一行功能表（作用、必须保留、可以换、四选一处理；换内容 > 合并 > 删，删要写查过的事实，合计不超过 `{{delete_max}}`%） | 84 |
-| `step1_function.md` | 蓝图按功能重排第二步：按功能表排章（锁定项、为什么这样排、等级重点；没删的段都要有去处，删出来的时间分给其他章） | 122 |
+| `step1_function.md` | 蓝图按功能重排第二步：按功能表排章（锁定项、为什么这样排、等级重点、照大纲排写 outline_diff） | 125 |
 | `blueprint_review.md` | 蓝图审（写稿前 7 项：递进、揭示顺序、标题和主线、事实支撑、反转、硬套、删除是否成立） | 61 |
 | `step3.md` | 质量审核 | 72 |
 | `step4.md` | 终稿优化 | 58 |
@@ -271,7 +272,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 60 份 `.md`（3764 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 66 份，合计 3965 行。
+合计 61 份 `.md`（3799 行）+ `final_tracks/` 5 份（203 行）+ `fingerprints.json` 模式库；物理文件 67 份，合计 4000 行。
 
 ### 历史版本
 

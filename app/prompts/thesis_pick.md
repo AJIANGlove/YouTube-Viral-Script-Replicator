@@ -8,6 +8,9 @@
 
 {{thesis_methods}}
 
+【原片的结构段落(写「整篇大概会这样讲」时照这个顺序)】
+{{structure}}
+
 【候选角度】
 {{angles}}
 
@@ -22,14 +25,21 @@
 - facts 只收搜索结果里真有的东西,每条带 R 编号;同一个数不同来源对不上时都列出来,在 note 里写明口径差。
 - con_facts 写和选定论点相反、写稿时必须正面处理的事实(不能藏)。
 - 一个都站不住时,chosen 写空字符串,why 写清缺什么,写前分析会自己再定论点。
+- 每个角度(不只是选中的)都要写好一张论点卡,人可能选你没推荐的那个。卡里的话全部用中文大白话,不用 FS01、PK02、LOOP、M3 这类代号:
+  · belief / claim / one_line / ending_landing / boundary:和 final 一样的意思,按这个角度写;收窄后站得住的,按收窄后的说法写。
+  · key_ref:撑住这个角度最关键那条事实的 R 编号;没查到写空字符串,不要硬填。
+  · opening_line:开头第一句大概怎么说(中文,一句话,要具体到人或数)。
+  · outline:「整篇大概会这样讲」,照上面原片结构段落的顺序,一段一行,每行写 says(这段讲什么)、uses(用哪个人、哪件事或哪个数;只能用搜索结果里有的,没查到的写「待查:要找什么」)、leaves(结尾留给下一段的问题;最后一段写结尾落在哪句话)。原片的段落可以合并成一行,但顺序不能乱,总共不超过 12 行。
+  · missing:这个角度还没查到、写稿前要补的东西。
+- facts 和 con_facts 每条写 for:它撑住或反对的是哪几个角度(id 列表)。
 
 只输出下面的 JSON,禁止代码围栏和解释:
 {
-  "checks": [{"id": "A1", "verdict": "站得住|收窄后站得住|站不住", "pro_refs": ["R1"], "con_refs": ["R4"], "note": "一句话:查到了什么、被什么削弱", "narrowed": "收窄后的说法,没有收窄写空"}],
+  "checks": [{"id": "A1", "verdict": "站得住|收窄后站得住|站不住", "pro_refs": ["R1"], "con_refs": ["R4"], "note": "一句话:查到了什么、被什么削弱", "narrowed": "收窄后的说法,没有收窄写空", "belief": "", "claim": "", "one_line": "", "ending_landing": "", "boundary": "", "key_ref": "R1", "opening_line": "", "outline": [{"says": "", "uses": "", "leaves": ""}], "missing": []}],
   "chosen": "A1",
   "why": "",
   "final": {"belief": "", "claim": "", "one_line": "", "method": ["M1"], "ending_landing": "结尾落在哪(可以外推到观众自己)", "boundary": "论点不适用于谁"},
-  "facts": [{"content": "", "refs": ["R1"], "year": "", "region": "", "note": ""}],
-  "con_facts": [{"content": "", "refs": ["R4"], "how_to_handle": "稿子里怎么正面处理"}],
+  "facts": [{"content": "", "refs": ["R1"], "year": "", "region": "", "note": "", "for": ["A1"]}],
+  "con_facts": [{"content": "", "refs": ["R4"], "how_to_handle": "稿子里怎么正面处理", "for": ["A1"]}],
   "missing": ["还没查到、写前分析要标「待查」的东西"]
 }

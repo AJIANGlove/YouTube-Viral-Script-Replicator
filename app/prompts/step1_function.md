@@ -85,6 +85,8 @@ information_goal 写明本章用哪些事实编号(F01…),并填进 fact_ids;�
 【Timeline(只给比例、高峰和悬念的位置)】
 {{timeline_core}}
 
+写前分析里有「人选论点时看到的『整篇大概会这样讲』」时:章节的顺序和每章讲的内容照它排(原片结构不变,只是内容照它放);哪一章实在要和它不一样(例如那一段没查到料、两段并成一章),在 outline_diff 里用中文大白话一句一条写清楚哪里不一样、为什么;完全照它排就写空字符串。没有这一段时 outline_diff 写空字符串。
+
 输出:
 只输出 JSON(禁止代码围栏),格式:
 {
@@ -116,7 +118,8 @@ information_goal 写明本章用哪些事实编号(F01…),并填进 fact_ids;�
       "cases": []
     }
   ],
-  "hook": { "chosen_text": "", "first_payoff_sec": 0 }
+  "hook": { "chosen_text": "", "first_payoff_sec": 0 },
+  "outline_diff": ""
 }
 
 今天的日期:{{today}}(法定数字如最低工资、税率、补贴标准,一律用今天所在年份的现行值;旧年份的数只能标明年份作对比)

@@ -69,6 +69,8 @@ information_goal 只描述"需要什么类型的事实",禁止编造具体年份
 【Timeline】
 {{timeline}}
 
+写前分析里有「人选论点时看到的『整篇大概会这样讲』」时:章节的顺序和每章讲的内容照它排(原片结构不变,只是内容照它放);哪一章实在要和它不一样(例如那一段没查到料、两段并成一章),在 outline_diff 里用中文大白话一句一条写清楚哪里不一样、为什么;完全照它排就写空字符串。没有这一段时 outline_diff 写空字符串。
+
 输出:
 只输出 JSON(禁止代码围栏),格式:
 {
@@ -95,7 +97,8 @@ information_goal 只描述"需要什么类型的事实",禁止编造具体年份
       "cases": []
     }
   ],
-  "hook": { "chosen_text": "", "first_payoff_sec": 0 }
+  "hook": { "chosen_text": "", "first_payoff_sec": 0 },
+  "outline_diff": ""
 }
 没有【写前分析】时,carries_peaks 按 Timeline 的 peak_points 位置比例填写,fact_ids 留空数组,hook 按 Timeline 的 hook_window 填写。
 

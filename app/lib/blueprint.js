@@ -14,6 +14,7 @@ const consistency = require('./consistency');
 
 const pl = () => require('./pipeline');
 const an = () => require('./analysis');
+const rs = () => require('./bpresearch'); // v1.82 事实支撑不过时先补搜
 const arr = v => (Array.isArray(v) ? v : []);
 const str = v => (v == null ? '' : String(v));
 const parse = t => { try { return typeof t === 'string' ? JSON.parse(t) : (t || null); } catch (e) { return null; } };
@@ -473,6 +474,36 @@ function adjacentSimilar(chs) {
   return out;
 }
 
+// v1.82 每章「观众第一次知道的新信息」(new_lens,一句话)两两比对:任意两章(不只相邻)写得太像就是在讲同一件事
+const NEWINFO_SOFT = 0.35, NEWINFO_HARD = 0.6;
+function newInfoSimilar(chs) {
+  const out = [];
+  for (let i = 0; i < chs.length; i++) for (let j = i + 1; j < chs.length; j++) {
+    const a = str(chs[i].new_lens), b = str(chs[j].new_lens);
+    if (!a.trim() || !b.trim()) continue;
+    const s = jaccard(a, b);
+    if (s > NEWINFO_SOFT) out.push({ a: chs[i].id, b: chs[j].id, sim: Math.round(s * 100) / 100, hard: s > NEWINFO_HARD, ta: cut(a, 50), tb: cut(b, 50) });
+  }
+  return out.sort((x, y) => y.sim - x.sim).slice(0, 6);
+}
+// v1.82 程序数出的「哪条事实在哪几章展开」(fact_ids 里的,回顾 recap_ids 不算;钩子用的事实、账本行另外标出来)
+function factSpread(run, chs) {
+  const hook = new Set(hookFactIds(run));
+  const at = {};
+  chs.forEach(c => {
+    const recap = new Set(arr(c.recap_ids).map(String));
+    arr(c.fact_ids).map(String).forEach(f => { if (!recap.has(f)) (at[f] = at[f] || []).push(c.id); });
+  });
+  return Object.keys(at).filter(f => at[f].length >= 2).sort((x, y) => at[y].length - at[x].length)
+    .map(f => ({ id: f, chapters: [...new Set(at[f])], note: hook.has(f) ? '钩子用的事实,开头和回扣各一次不算重复' : /^L\d+$/i.test(f) ? '账本行,回顾不算重复' : '' }))
+    .filter(x => x.chapters.length >= 2);
+}
+function spreadText(sp) {
+  if (!sp.length) return '';
+  return '\n程序数出的「哪条事实在哪几章展开」(fact_ids 里的,recap_ids 不算):\n' + sp.slice(0, 15).map(x => '- ' + x.id + ':' + x.chapters.join('、') + (x.note ? '(' + x.note + ')' : '')).join('\n') +
+    '\n一条事实只在最合适的一章讲透;其他章要提就写进 recap_ids 一句带过,或者从新角度带出新信息(在 new_lens 写清新在哪)。';
+}
+
 const LEVEL_TAG = /제\s*(\d{1,2})\s*급|第\s*(\d{1,2})\s*级|level\s*(\d{1,2})/i;
 const levelNo = c => { const m = str(c.purpose).match(LEVEL_TAG); return m ? Number(m[1] || m[2] || m[3]) : null; };
 function checkLadder(chs, ft) {
@@ -600,6 +631,8 @@ function programChecks(run, asset, text, ft) {
   arr(prog.soft).forEach(x => add('progression', false, x + '。请判断:后面的章是不是带出了新东西(新角度、新案例、新推论);只是换个说法把同一件事重讲一遍的才算问题'));
   const sim = adjacentSimilar(chs);
   sim.forEach(s => add('progression', s.hard, s.a + ' 和 ' + s.b + ' 的目的写得很像(相似度 ' + s.sim + ')', s.a));
+  const ni = newInfoSimilar(chs);
+  ni.forEach(s => add('progression', s.hard, s.a + ' 和 ' + s.b + ' 写的「观众第一次知道的新信息」很像(相似度 ' + s.sim + ':「' + s.ta + '」/「' + s.tb + '」)' + (s.hard ? ',两章在讲同一件事' : '。请判断是不是在讲同一件事'), s.a));
   const lad = checkLadder(chs, ft);
   lad.same.forEach(s => add('progression', true, s.a + ' 和 ' + s.b + ' 这两级的重点一样(都是「' + s.focus + '」),相邻两级要不一样', s.a));
   lad.empty.forEach(e => add('progression', true, e.ch + ' 是等级章,没写 ' + e.miss.join('、'), e.ch));
@@ -616,7 +649,16 @@ function programChecks(run, asset, text, ft) {
 
   const fc = checkFacts(run, chs);
   fc.unknown.forEach(u => add('facts', true, u.ch + ' 写的事实编号 ' + u.ids.join('、') + ' 不在事实表里', u.ch));
-  fc.thin.forEach(t => add('facts', false, t.ch + ' 只用了 ' + t.ids.map((x, i) => x + '[' + t.kinds[i] + ']').join('、') + ',事实不够', t.ch));
+  // v1.82 补搜过的:降级的章写成「可能」「有说法」了就不再提「事实不够」;还写成确定的算问题。相反的新事实要有章正面处理
+  const rec = ((run.steps || {}).blueprint_review || {}).research;
+  const ri = rs().programItems(rec, chs, fc.thin);
+  fc.thin.forEach(t => {
+    const id = str(t.ch).toUpperCase();
+    if (ri.hedged.has(id)) add('facts', false, t.ch + ' 补搜查不到实录,已经降级写成「可能」「有说法」,按降级后的说法判,不算问题', t.ch);
+    else if (ri.unhedged.includes(id)) add('facts', true, t.ch + ' 补搜查不到实录,这一章的主张要降一级写成「可能」「有说法认为」或者并掉,现在还写成确定的事实', t.ch);
+    else add('facts', false, t.ch + ' 只用了 ' + t.ids.map((x, i) => x + '[' + t.kinds[i] + ']').join('、') + ',事实不够', t.ch);
+  });
+  ri.against.forEach(id => add('reversal', true, '补搜到和论点或反转相反的事实 ' + id + ',蓝图没有一章正面处理(要写进某一章的 fact_ids,并写这一章怎么回应它)'));
   if (fc.none.length) add('facts', false, fc.none.join('、') + ' 没写事实编号');
   fc.weak.forEach(w => add('facts', true, '核验判 ' + w.grade + ' 的说法「' + cut(w.claim, 60) + '」在 ' + w.uses.map(u => u.ch).join('、') + ' 还当主张用', (w.uses[0] || {}).ch));
 
@@ -638,7 +680,7 @@ function programChecks(run, asset, text, ft) {
   dl.dropped.forEach(d => add('deletion', true, d.segment + ' 功能表是「' + d.treatment + '」,蓝图里没有落到任何一章(合并的也要写进并入那一章的 source_segments)', ''));
   if (dl.ratio * 100 > dl.max + 1e-9) add('deletion', true, '蓝图里没有落到任何一章的原片段合计占原片 ' + Math.round(dl.ratio * 100) + '%,超过上限 ' + dl.max + '%');
   dl.deleted.forEach(d => add('deletion', false, '删了 ' + d.segment + '(占原片 ' + Math.round(d.ratio * 100) + '%)。理由:' + (d.reason || '没写') + ';查过的事实:' + (arr(d.checked_facts).join('、') || '没写') + (dl.unused.length ? ';事实表里还没分给任何一章的事实:' + dl.unused.slice(0, 12).join('、') : '') + '。请判断删除成立不成立(事实表里有能完成这段作用的事实就不成立)', ''));
-  return { items: P, consistency: cs, retention: ret, progression: prog, similar: sim, ladder: lad, locks: lk, copy: cp, unreachable: un, facts: fc, reversal: rv, deletion: dl };
+  return { items: P, consistency: cs, retention: ret, progression: prog, similar: sim, new_info: ni, spread: factSpread(run, chs), ladder: lad, locks: lk, copy: cp, unreachable: un, facts: fc, reversal: rv, deletion: dl };
 }
 
 // 蓝图这一层的删除:没有落到任何一章的原片段就是删掉了。功能表没判删的不许悄悄丢;合计不超过上限
@@ -681,6 +723,7 @@ function reviewPrompt(run, text, ft, pc) {
     .replaceAll('{{unreachable}}', ul.length ? ul.map(u => '- 第 ' + u.n + ' 级「' + u.local + '」:' + u.why).join('\n') : '(没有)')
     .replaceAll('{{function_table}}', ft ? tableBrief(ft) : '(没有)')
     .replaceAll('{{program}}', prog)
+    .replaceAll('{{research}}', rs().reviewBrief(((run.steps || {}).blueprint_review || {}).research))
     .replaceAll('{{blueprint}}', JSON.stringify({ chapters: slim, hook: bp.hook || {} }, null, 1));
 }
 // 重画蓝图的老任务:上一版稿子做过联网核验,判 C/D/E 的说法(和核验找到的反例)给 AI 审反转和事实支撑用。
@@ -751,7 +794,7 @@ async function reviewLoop(opts) {
       ai = parseReview(rr.content);
       if (!ai) aiError = 'AI 审的输出不是合法 JSON,这一轮只按程序检查判';
     } catch (e) { aiError = 'AI 审调用失败(' + e.message + '),这一轮只按程序检查判'; }
-    const rv = mergeReview(pc, ai);
+    const rv = rs().applyKept(mergeReview(pc, ai), ((run.steps || {}).blueprint_review || {}).research, arr(bpOf(content).chapters));
     return { pc, ai, rv, aiError };
   };
   run.steps = { ...(run.steps || {}), blueprint_review: { status: 'running', started_at: new Date().toISOString(), rounds: [] } };
@@ -763,8 +806,20 @@ async function reviewLoop(opts) {
     store.saveRun(run);
   };
   record(cur);
-  let revised = 0;
+  let revised = 0, researched = false;
   while (!cur.rv.pass && revised < MAX_REVISE) {
+    // v1.82「事实支撑」不过:先按点名的章联网补搜(一次),查到的追加进事实表,再按新事实改蓝图
+    if (!researched && cur.rv.items.some(i => i.key === 'facts' && !i.pass)) {
+      researched = true;
+      const rec = await rs().research({ run, asset, ft, content, cur, callLlm });
+      rounds.push({ at: new Date().toISOString(), research: { status: rec.status, added: arr(rec.added).length, found: arr(rec.found), downgrade: arr(rec.downgrade).map(d => d.ch), kept: arr(rec.kept).map(d => d.ch), why: rec.why || rec.error || '', secs: rec.secs } });
+      run.steps.blueprint_review = { ...run.steps.blueprint_review, rounds: rounds.slice() };
+      store.saveRun(run);
+      if (rec.status === 'done') {
+        cur = { ...cur, rv: rs().applyKept(cur.rv, rec, arr(bpOf(content).chapters)) };
+        if (cur.rv.pass) break; // 只剩保持原样的章查不到:不用改了
+      }
+    }
     revised++;
     const restored = restoreDeletions(run, ft, cur.rv, asset);
     const progFail = cur.rv.items.some(i => i.key === 'progression' && !i.pass);
@@ -772,7 +827,10 @@ async function reviewLoop(opts) {
       ? '「递进」的问题可以跨章调整:把一件事挪到最合适的一章讲透,其他章要提到它就写进 recap_ids 一句带过,或者换成事实表里还没用上的事实、新角度、新案例;挪完空出来的章可以并到相邻章或写短,不许为了凑时长编事实表里没有的东西。你觉得原来的安排更顺的地方可以不挪。其他问题只改点到的章节和字段。锁定项、功能表、总时长和其余要求不变'
       : '只改点到的章节和字段,功能表、锁定项、总时长和其余要求不变') + ';重新输出完整 JSON(禁止代码围栏):\n' + failText(cur.rv) +
       (restored.length ? '\n功能表已改:' + restored.join('、') + ' 的删除不成立,改成「保留功能换内容」,要排进某一章(可以和相邻章一起讲),写进那一章的 source_segments,时间从其他章匀出来,总时长不变。' : '') +
-      (cur.pc.items.progression.some(p => /level_focus/.test(p.text)) ? '\n等级章每一级都要写 level_focus 和 level_new_info,相邻两级的 level_focus 不能一样。' : '');
+      (cur.pc.items.progression.some(p => /level_focus/.test(p.text)) ? '\n等级章每一级都要写 level_focus 和 level_new_info,相邻两级的 level_focus 不能一样。' : '') +
+      rs().feedback(((run.steps || {}).blueprint_review || {}).research) +
+      spreadText(cur.pc.spread || []) +
+      '\n每章的 new_lens 用一句话写观众在这一章第一次知道的新信息;改完先把各章 new_lens 排成清单逐对核对,两章讲同一件事的合并或挪走,核对完再输出(清单不要输出)。';
     const m2 = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: fb }];
     let r2 = null, c2 = '', why = '';
     try {
@@ -789,7 +847,9 @@ async function reviewLoop(opts) {
   // v1.79:改完只剩「递进」没过 → 不停,接着写稿;没过的点交给写稿时提醒(step2Rules)
   const onlyProg = !cur.rv.pass && cur.rv.items.every(i => i.pass || i.key === 'progression');
   const status = cur.rv.pass ? 'passed' : onlyProg ? 'passed_soft' : 'held';
+  const research = (run.steps.blueprint_review || {}).research;
   run.steps.blueprint_review = {
+    ...(research ? { research } : {}),
     status, secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: new Date().toISOString(), revised, rounds,
     items: cur.rv.items, summary: str((cur.ai || {}).summary), retopic: arr((cur.ai || {}).retopic).map(String).filter(Boolean).slice(0, 3),
     reasons_zh: cur.rv.pass ? [] : reasonsZh(cur.rv),
@@ -931,13 +991,24 @@ function step2Rules(run, blueprintText) {
   return '\n- 这份蓝图是「按功能重排」画的:章节不和原片一一对应,照每章的作用写,不要回头照原片那一段的内容补。每章的 layout_reason 说明这一章为什么这样排;locks 里的锁定项(开头钩子、高峰、悬念的开和收、结尾回扣)本章必须写到;等级章的 level_focus 是这一级只讲的重点(其他方面一句带过,不要每一级都把身份、收入、代价、信条走一遍),level_new_info 是这一级观众第一次知道的新信息,围绕它展开。' +
     (keeps.length ? '\n- 各章必须保留的功能(功能表「必须保留」,写的是作用,不是原片内容):' + keeps.join(' / ') : '') +
     (swaps.length ? '\n- 各章可以换的内容(功能表「可以换」,换成新题目自己的):' + swaps.join(' / ') : '') +
-    (keeps.length || swaps.length ? '\n- ' + FN_ONLY : '') + softNotes(run);
+    (keeps.length || swaps.length ? '\n- ' + FN_ONLY : '') + softNotes(run) + researchNotes(run, blueprintText);
 }
 // v1.79 蓝图审只剩「递进」没过、接着写的:写稿时提醒这几处别讲重复
 function softNotes(run) {
   const br = (run.steps || {}).blueprint_review || {};
   if (br.status !== 'passed_soft' || !arr(br.soft_notes).length) return '';
   return '\n- 蓝图审提醒(这几处在蓝图里有点重复,写的时候注意):' + br.soft_notes.join(' / ') + '。同一件事在后面的章再出现时,要么一句带过当回顾,要么带出新东西(新角度、新案例、新推论),不要换个说法重讲一遍。';
+}
+
+// v1.82 蓝图补搜查不到的章:写稿时也不许硬编(降级的写成「可能」「有说法」;保持原样的章照蓝图写,但只用事实表里有的)
+function researchNotes(run, text) {
+  const rec = ((run.steps || {}).blueprint_review || {}).research;
+  if (!rec || rec.status !== 'done') return '';
+  const chs = arr(bpOf(str(text || ((run || {}).outputs || {}).step1)).chapters);
+  const down = [...new Set(arr(rec.downgrade).flatMap(d => rs().mapNow(d, chs)))];
+  const kept = [...new Set(arr(rec.kept).flatMap(d => rs().mapNow(d, chs)))];
+  return (down.length ? '\n- 蓝图补搜没查到实录的章(' + down.join('、') + '):主张写成「可能」「有说法认为」,不许编具体的实例、人名、年份、数字。' : '') +
+    (kept.length ? '\n- 补搜没查到、但按规矩保持原样的章(' + kept.join('、') + '):照蓝图写,只用事实表里有的,不许编具体的实例、人名、年份、数字。' : '');
 }
 
 // 初稿检查 / 终审用:每章的「必须保留的功能」和「可以换的内容」(只在按功能重排的蓝图上有;严格照原片返回空对象)
@@ -965,10 +1036,14 @@ function view(run) {
   if (s1 && modeOf(run) === 'function') {
     chapters = arr(bpOf(s1).chapters).map(c => ({ id: c.id, time_range: c.time_range, source_segments: arr(c.source_segments), treatment: str(c.treatment), layout_reason: str(c.layout_reason), locks: arr(c.locks), level_focus: str(c.level_focus), level_new_info: str(c.level_new_info), purpose: cut(c.purpose, 160) }));
   }
+  // v1.89:人选论点时看到的大纲,蓝图哪里和它不一样
+  let outlineDiff = '';
+  try { if (s1) outlineDiff = str(bpOf(s1).outline_diff); } catch (e) {}
+  const picked = !!(run.thesis_scout && run.thesis_scout.user_pick);
   if (!ft && !br && !run.blueprint_mode) return null;
   const fn = modeOf(run) === 'function';
-  return { mode: modeOf(run), mode_label: MODES[modeOf(run)], mode_why: str(run.blueprint_mode_why), setting: settingMode(), delete_max: ft && ft.delete_max != null ? ft.delete_max : deleteMax(), deleted_segments: arr(run.deleted_segments), deleted_ratio: run.deleted_ratio, table: fn ? ft : null, chapters, review: fn ? br : null, held: run.status === 'blueprint_hold' };
+  return { mode: modeOf(run), mode_label: MODES[modeOf(run)], mode_why: str(run.blueprint_mode_why), setting: settingMode(), delete_max: ft && ft.delete_max != null ? ft.delete_max : deleteMax(), deleted_segments: arr(run.deleted_segments), deleted_ratio: run.deleted_ratio, table: fn ? ft : null, chapters, review: fn ? br : null, held: run.status === 'blueprint_hold', outline_diff: outlineDiff, outline_picked: picked && !!s1 };
 }
 
-module.exports = { chapterSwap, chapterFunctions, draftCheckItem, DELETE_MAX_DEFAULT, deleteMax, setDeleteMax, deletionCheck, enforceDeletions, deletedOf, checkDeletions, plannedFacts, restoreDeletions, recordDeletions, MODES, settingMode, setSettingMode, decideMode, modeOf, segmentsOf, locksOf, ladderOf, TREATMENTS, normTreatment, normalizeTable, tableSourceHits, sourceTerms, sourceHits, ensureTable, tableBrief, locksBrief, ladderBrief, frameworkCore, timelineCore, step1Template,
+module.exports = { newInfoSimilar, factSpread, spreadText, researchNotes, chapterSwap, chapterFunctions, draftCheckItem, DELETE_MAX_DEFAULT, deleteMax, setDeleteMax, deletionCheck, enforceDeletions, deletedOf, checkDeletions, plannedFacts, restoreDeletions, recordDeletions, MODES, settingMode, setSettingMode, decideMode, modeOf, segmentsOf, locksOf, ladderOf, TREATMENTS, normTreatment, normalizeTable, tableSourceHits, sourceTerms, sourceHits, ensureTable, tableBrief, locksBrief, ladderBrief, frameworkCore, timelineCore, step1Template,
   checkLocks, adjacentSimilar, checkLadder, checkCopy, checkUnreachable, checkFacts, checkReversal, programChecks, ITEMS, reviewPrompt, parseReview, mergeReview, reasonsZh, reviewLoop, MAX_REVISE, holdChoice, backToAnalysis, view, jaccard, chapterKeep, chapterBrief, step2Rules };
