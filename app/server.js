@@ -336,6 +336,17 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true });
     }
 
+    // 人工改分类(赛道):只允许 5 个已注册分类之一,不支持清空为未分类(用户 2026-11-05 口径)
+    const catMatch = url.match(/^\/api\/assets\/([\w-]+)\/category$/);
+    if (catMatch && method === 'POST') {
+      const body = await readBody(req);
+      const track = String(body.track || '').trim();
+      if (!track) return send(res, 400, { error: '缺少 track(不支持清空为未分类)' });
+      const r = store.setAssetTrack(catMatch[1], track);
+      if (!r.ok) return send(res, 400, { error: r.error });
+      return send(res, 200, { ok: true, id: catMatch[1], track: r.track, unchanged: !!r.unchanged });
+    }
+
     const sourceMatch = url.match(/^\/api\/assets\/([\w-]+)\/source$/);
     if (sourceMatch && method === 'GET') {
       const dir = path.join(store.ASSETS_ROOT, sourceMatch[1]);

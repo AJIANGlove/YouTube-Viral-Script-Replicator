@@ -82,7 +82,7 @@
 
 ## 框架库分类筛选（2026-10-27 新增，本地功能）
 
-第 1 步「选择框架资产」与资料库「框架资产库」的筛选栏新增一行赛道 chip，按终审 5 赛道把现有 179 个框架人工归类；**只做浏览筛选，不参与 autoTrack**（终审赛道判定仍走 `track_card_name` → `MATCH` 精确相等，见 `app/lib/review.js` 的 `autoTrack`）。
+第 1 步「选择框架资产」与资料库「框架资产库」的筛选栏新增一行赛道 chip，按终审 5 赛道把现有 179 个框架人工归类；**只做浏览筛选，不参与 autoTrack**（终审赛道判定仍走 `track_card_name` → `MATCH` 精确相等，见 `app/lib/review.js` 的 `autoTrack`）。**（2026-11-05 修正：分类还会作为第 2 步「频道方向（审稿赛道）」的默认值，见下下节；`autoTrack` 函数本身仍不读分类。）**
 
 - **数据**：`assets/_library/asset_categories.json`。`cats[]` 定顺序与中文名（经济拆账 / 历史与古人 / POV 与等级沉浸 / 心理与动物科普 / 通用），`items{}` 为 `asset_id → key`。**以文件实际条目为准**（2026-10-31 扩充后为 213 条：econ 82 / history 87 / pov 24 / science 18 / general 2，随新增资产增长）。新增资产未登记时 `track = ''`，前端单列「未分类 N」，**不并入「通用」**。
 - **不写 framework.json**：`store.listAssets()` 读该文件后给每项附 `track` 字段，资产本体不动（避免被上游重跑覆盖）。按 mtime 缓存，改分类文件不需要重启进程。
@@ -99,6 +99,20 @@
 - **顶部计数**改为「共 N 个框架 · 当前 M 个」（筛选生效才带后半句，`assetCountText`）。
 - **实现**：`facetBase(list, f, ignore)` 只对「另一维度 + 搜索」求交集；`facetChip(label, count, on, onclick)` 统一两行芯片；`channelChipsHtml(all, base, f, target)` 的 all 决定频道全集与顺序、base 只决定数字。
 - **不做**：筛选状态不写 URL（与资产库其余筛选一致）。
+
+## 框架分类手动更改（2026-11-05 新增，本地功能）
+
+框架卡底栏（「详情」与「查看原文」之间）新增「更改分类」小按钮，用于人工修正赛道分类；数据仍写 `assets/_library/asset_categories.json` 的 `items[asset_id]`，**不写 `meta.json` / `framework.json`**。
+
+- **口径（用户 2026-11-05 明确）**：只能从现有 5 个赛道里选，**不允许清空为「未分类」**，因此接口没有「清除」路径，面板也不列「未分类」。新导入资产（`POST /api/assets` 后未登记）仍是 `track:''`，可以在面板里"新增归类"，但已归类的永远回不到未分类。
+- **接口**：`POST /api/assets/:id/category`，body `{track}`；只接受 `cats[].key`（econ/history/pov/science/general），传空或未知 key 一律 400。返回 `{ok,id,track,unchanged}`。
+- **写入**：`store.setAssetTrack(id,key)` 读-改-写整份 JSON，保留 `version` / `note` / `cats` 与 `items` 原有键序、2 空格缩进、末尾换行；落盘走 `asset_categories.json.tmp` + `rename`（tmp 已加 `.gitignore`），写失败不留半截文件。同分类再点 = `unchanged:true` 且**不写盘、不动 mtime**。写完重置 `catCache`，下次读取按新 mtime 重载，**改分类不需要重启进程**。
+- **入口只有两处**：第 1 步选择框架、资料库框架资产库（`groupedAssetHtml(..., {allowTrackEdit:true, trackTarget})`）。第 2 步「已选框架」预览卡**不加**（避免建任务前手滑改掉刚定好的框架）。
+- **交互**：点按钮在下方弹 `.track-pop` 小面板（5 项，当前项打勾高亮，顶部写「当前：XX」），**选中即存、无二次确认**；再点同一按钮 / 点空白 / Esc / 滚动 / 缩放都收起。按钮 `title` 里带当前分类（卡面**仍不加**分类标签，避免与频道 tag 混淆）。
+- **保存后**：同时更新 `genAssets` / `libAssets` 内存值并双双重绘（重绘后补回「已选」蓝框，见 `renderGenAssetList` 尾部）；当前筛选是别的分类时卡片会立刻消失，toast 明确说「当前筛选下不再显示它」。
+- **影响面**：改完分类后，**新建任务**的第 2 步「频道方向」默认值会跟着变（index.html 的 `gotoStep2` 取 `a.track`）；**已建任务不受影响**（`run.review_track` 建任务时已锁定，`lockedTrack` 优先）。
+- **不改**：`app/prompts/final_tracks/*.md`、`track_cards.md`、`review.js` 的 `TRACK_KEYS` / `autoTrack`；新增赛道必须另配提示词，不能只往 json 里加 key。
+- **提交**：改分类只产生该 json 的一行 diff，**不自动 commit / 不自动 push**（`assets/` 在公开仓库里，对外动作由人决定）。
 
 ## Step 2 分章生成与断流续写（2026-10-29，渠道 90 秒断流根治）
 

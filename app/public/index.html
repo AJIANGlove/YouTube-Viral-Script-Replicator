@@ -52,6 +52,14 @@
   .asset-card .foot .stats { font-variant-numeric: tabular-nums; }
   .asset-card .foot .src-link { font-size: 12px; color: #2563eb; text-decoration: none; padding: 3px 10px; border: 1px solid #bfdbfe; border-radius: 5px; }
   .asset-card .foot .src-link:hover { background: #eff6ff; }
+  .asset-card .foot .foot-links { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+  /* 人工改分类小面板(点「更改分类」弹出,选中即存) */
+  .track-pop { position: absolute; z-index: 70; min-width: 196px; background: #fff; border: 1px solid #d1d5db; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.14); padding: 6px; }
+  .track-pop .tp-head { font-size: 11px; color: #6b7280; padding: 4px 8px 6px; border-bottom: 1px solid #f3f4f6; margin-bottom: 4px; line-height: 1.5; }
+  .track-pop .tp-item { display: flex; align-items: center; gap: 6px; padding: 7px 9px; border-radius: 6px; font-size: 13px; color: #111827; cursor: pointer; }
+  .track-pop .tp-item:hover { background: #f3f4f6; }
+  .track-pop .tp-item.on { background: #eff6ff; color: #1d4ed8; font-weight: 600; }
+  .track-pop .tp-item .tp-tick { width: 12px; flex: 0 0 12px; color: #2563eb; font-size: 12px; }
   .asset-card.selectable { cursor: pointer; position: relative; }
   .asset-card.selectable .src { margin-right: 58px; }
   .asset-card.selected { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(37,99,235,.22); background: #f5f8ff; }
@@ -1160,7 +1168,7 @@ function renderLibList() {
   document.getElementById('lib-channels').innerHTML = channelChipsHtml(libAssets, channelBase, libFilter, 'lib');
   const filtered = sortAssets(libAssets.filter(a => assetMatches(a, libFilter)), libFilter.sort);
   document.getElementById('asset-count').textContent = assetCountText(libAssets.length, filtered.length);
-  document.getElementById('asset-list').innerHTML = filtered.length ? groupedAssetHtml(filtered, false, libFilter.q) : emptyStateHtml(libFilter, 'lib');
+  document.getElementById('asset-list').innerHTML = filtered.length ? groupedAssetHtml(filtered, false, libFilter.q, { allowTrackEdit: true, trackTarget: 'lib' }) : emptyStateHtml(libFilter, 'lib');
 }
 
 function assetMatches(a, f) {
@@ -1255,7 +1263,7 @@ function resetAssetQuery(target) {
   if (target === 'lib') renderLibList(); else renderGenAssetList();
 }
 
-function groupedAssetHtml(list, forSelect, q) {
+function groupedAssetHtml(list, forSelect, q, opts) {
   const groups = {};
   list.forEach(a => { const c = a.channel || ''; (groups[c] = groups[c] || []).push(a); });
   const entries = Object.entries(groups)
@@ -1263,7 +1271,7 @@ function groupedAssetHtml(list, forSelect, q) {
   const single = entries.length === 1;
   return entries.map(([ch, items]) =>
       (single ? '' : `<div class="channel-head"><span class="channel-name">${esc(ch || '未分类')}</span><span class="hint">${items.length} 个框架</span></div>`) +
-      items.map(a => assetCard(a, forSelect, { hideChannel: single, q })).join('')
+      items.map(a => assetCard(a, forSelect, Object.assign({ hideChannel: single, q }, opts || {}))).join('')
     ).join('');
 }
 
@@ -1295,11 +1303,82 @@ function assetCard(a, forSelect, opts) {
     ${(a.description || '').length > 140 ? '<span class="desc-toggle" onclick="toggleDesc(event,this)">展开</span>' : ''}
     <div class="foot">
       <span class="stats" title="源视频语速 ${a.wpm || '?'} 词/分钟 · ${a.example_count || '?'} 个例句样本">语速 ${a.wpm || '?'} wpm · ${a.example_count || '?'} 样本</span>
-      <a class="src-link" href="javascript:void(0)" onclick="event.stopPropagation();openAssetDetail('${a.id}')">详情</a>
-      <a class="src-link" href="/source.html?id=${encodeURIComponent(a.id)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">查看原文</a>
+      <span class="foot-links"><a class="src-link" href="javascript:void(0)" onclick="event.stopPropagation();openAssetDetail('${a.id}')">详情</a>${opts.allowTrackEdit ? `<a class="src-link" href="javascript:void(0)" title="当前分类：${escAttr(trackName(a.track) || '未分类')}（点击更改）" onclick="event.stopPropagation();openTrackPicker(event,'${a.id}','${opts.trackTarget || ''}')">更改分类</a>` : ''}<a class="src-link" href="/source.html?id=${encodeURIComponent(a.id)}" target="_blank" rel="noopener" onclick="event.stopPropagation();closeTrackPicker()">查看原文</a></span>
     </div>
   </div>`;
 }
+
+// ---------- 人工改分类(2026-11-05):点按钮弹小面板,选中即存;只 5 个赛道,不支持清空 ----------
+let trackPop = null;
+function trackName(key) {
+  const t = (assetTracks || []).find(x => x.key === key);
+  return t ? t.name : '';
+}
+function closeTrackPicker() { if (trackPop) { trackPop.remove(); trackPop = null; } }
+
+// target: 'lib' | 'gen' —— 只用来决定存完重绘哪张列表(两份列表都会被同步改值)
+function openTrackPicker(ev, id, target) {
+  ev.stopPropagation();
+  const same = trackPop && trackPop.dataset.asset === id;
+  closeTrackPicker();
+  if (same) return; // 再点同一个按钮 = 收起
+  const a = (genAssets || []).find(x => x.id === id) || (libAssets || []).find(x => x.id === id);
+  if (!a) return;
+  const cur = a.track || '';
+  const el = document.createElement('div');
+  el.className = 'track-pop';
+  el.dataset.asset = id;
+  el.innerHTML = `<div class="tp-head">当前：${esc(trackName(cur) || '未分类')}<br>只能改成下列 5 个赛道之一</div>` +
+    (assetTracks || []).map(t => `<div class="tp-item${t.key === cur ? ' on' : ''}" onclick="saveTrackPick(event,'${id}','${t.key}','${target}')"><span class="tp-tick">${t.key === cur ? '✓' : ''}</span>${esc(t.name)}</div>`).join('');
+  document.body.appendChild(el);
+  // 贴着按钮下方展开;超出视窗右/下边界时回收到视窗内
+  const r = ev.currentTarget.getBoundingClientRect();
+  const vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight;
+  const w = el.offsetWidth, h = el.offsetHeight;
+  let left = r.left + window.scrollX;
+  let top = r.bottom + window.scrollY + 6;
+  if (left + w > window.scrollX + vw - 8) left = window.scrollX + vw - w - 8;
+  if (top + h > window.scrollY + vh - 8) top = r.top + window.scrollY - h - 6;
+  el.style.left = Math.max(8, left) + 'px';
+  el.style.top = Math.max(8, top) + 'px';
+  trackPop = el;
+}
+
+async function saveTrackPick(ev, id, key, target) {
+  ev.stopPropagation();
+  const item = (genAssets || []).find(x => x.id === id) || (libAssets || []).find(x => x.id === id);
+  if (item && item.track === key) { closeTrackPicker(); return; }
+  try {
+    await api('/api/assets/' + encodeURIComponent(id) + '/category', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ track: key })
+    });
+  } catch (e) { alert('没能保存分类：' + e.message); return; }
+  [genAssets, libAssets].forEach(list => { const it = (list || []).find(x => x.id === id); if (it) it.track = key; });
+  closeTrackPicker();
+  if ((genAssets || []).length) renderGenAssetList();
+  if ((libAssets || []).length) renderLibList();
+  // 当前筛选是别的分类的话,这张卡会立刻从列表里消失 —— 说清楚它去哪了
+  const f = target === 'lib' ? libFilter : genFilter;
+  const gone = f.track && f.track !== key;
+  assetToast(`已改为「${trackName(key)}」` + (gone ? '，当前筛选下不再显示它（切到新分类即可看到）' : ''));
+}
+
+function assetToast(msg) {
+  const old = document.getElementById('asset-toast');
+  if (old) old.remove();
+  const d = document.createElement('div');
+  d.id = 'asset-toast'; d.className = 'rv-toast'; d.textContent = msg;
+  document.body.appendChild(d);
+  setTimeout(() => { if (d.parentNode) d.remove(); }, 6000);
+}
+
+// 点空白处 / Esc / 滚动 / 缩放都收起面板(点面板内部已 stopPropagation)
+document.addEventListener('click', () => closeTrackPicker());
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTrackPicker(); });
+window.addEventListener('resize', () => closeTrackPicker());
+window.addEventListener('scroll', () => closeTrackPicker(), true);
 
 // ---------- 资产详情弹窗(纯只读) ----------
 const AD_TYPE_ZH = { hook: '钩子', transition: '过渡', information_reveal: '信息揭示', emotional_payoff: '情绪回报', humor: '幽默', worldview_shift: '世界观升级', ending: '结尾' };
@@ -1323,6 +1402,7 @@ function adBar(label, pct, note) {
 }
 
 async function openAssetDetail(id) {
+  closeTrackPicker(); // 详情弹窗 z-index 比改分类面板低,不收起会浮在弹窗上面
   adState = { id, data: null, tab: 'how', exType: '' };
   document.getElementById('asset-modal').classList.remove('hidden');
   renderAssetDetail();
@@ -1712,7 +1792,12 @@ function renderGenAssetList() {
   document.getElementById('gen-tracks').innerHTML = trackChipsHtml(genAssets, trackBase, genFilter, 'gen');
   document.getElementById('gen-channels').innerHTML = channelChipsHtml(genAssets, channelBase, genFilter, 'gen');
   const filtered = sortAssets(genAssets.filter(a => assetMatches(a, genFilter)), genFilter.sort);
-  document.getElementById('gen-asset-list').innerHTML = filtered.length ? groupedAssetHtml(filtered, true, genFilter.q) : emptyStateHtml(genFilter, 'gen');
+  document.getElementById('gen-asset-list').innerHTML = filtered.length ? groupedAssetHtml(filtered, true, genFilter.q, { allowTrackEdit: true, trackTarget: 'gen' }) : emptyStateHtml(genFilter, 'gen');
+  // 重绘后补回「已选」高亮(改分类会触发重绘,不补回会丢掉蓝框)
+  if (selectedAsset) {
+    const card = document.querySelector(`#gen-asset-list .asset-card[data-asset-id="${selectedAsset}"]`);
+    if (card) card.classList.add('selected');
+  }
 }
 
 function selectedAssetLabel() {
@@ -6040,6 +6125,26 @@ function bpDeletedHtml(v, strict) {
   const head = list.length ? `删 ${list.length} 段,占原片 ${pct(ratio)}(上限 ${max}%)` : `没有删掉的段(上限 ${max}%)`;
   return `<div class="bp-del"><b style="${over ? 'color:#b91c1c' : ''}">${head}</b>${list.length ? `<table class="bp-tbl"><tr><th>段</th><th>时长</th><th>占原片</th><th>理由</th></tr>${list.map(d => `<tr><td>${esc(d.segment)}</td><td>${d.secs ? mmss(d.secs) : '—'}</td><td>${pct(d.ratio)}</td><td>${esc(d.reason || '(没写理由)')}${d.treatment && d.treatment !== '新题目没有这块可删' ? `<div class="hint" style="margin:0;color:#b91c1c">功能表是「${esc(d.treatment)}」,蓝图却没写到</div>` : ''}${(d.checked_facts || []).length ? `<div class="hint" style="margin:0">查过的事实:${esc(d.checked_facts.join('、'))}</div>` : ''}</td></tr>`).join('')}</table>` : ''}<div class="hint" style="margin:2px 0 0">删出来的时间分给其他章,全片总时长不变。优先顺序:换内容 > 合并 > 删。</div></div>`;
 }
+// v1.82 蓝图审「事实支撑」不过时的联网补搜
+function bpResearchShort(x) {
+  if (x.status === 'skipped') return '没做(' + esc(x.why || '') + ')';
+  if (x.status === 'failed') return '失败(' + esc(x.why || '') + '),照原来的事实改';
+  return `补了 ${x.added || 0} 条事实` + ((x.downgrade || []).length ? `,${esc(x.downgrade.join('、'))} 查不到降级` : '') + ((x.kept || []).length ? `,${esc(x.kept.join('、'))} 查不到保持原样` : '');
+}
+function bpResearchHtml(x) {
+  if (x.status === 'running') return '<div class="hint">「事实支撑」没过,正在按点名的章联网补搜…</div>';
+  if (x.status === 'skipped') return `<div class="hint">「事实支撑」没过,没有补搜:${esc(x.why || '')}</div>`;
+  if (x.status === 'failed') return `<div class="hint" style="color:#b45309">「事实支撑」没过,联网补搜失败:${esc(x.error || '')}。照原来的事实表改蓝图。</div>`;
+  const role = d => (d.roles || []).length ? '(' + d.roles.map(esc).join('、') + '章)' : '';
+  const added = x.added || [];
+  return `<details ${added.length ? 'open' : ''}><summary>联网补搜:为 ${(x.chapters || []).map(c => esc(c.ch) + role(c)).join('、')} 补了 ${added.length} 条事实${x.secs ? '(' + x.secs + ' 秒)' : ''}</summary>
+    ${added.length ? `<table class="bp-tbl"><tr><th>编号</th><th>为哪章</th><th>标成</th><th>内容</th></tr>${added.map(f => `<tr><td>${esc(f.id)}</td><td>${esc(f.ch || '')}</td><td>${esc(f.kind)}${f.against ? '<div style="color:#b91c1c">和论点相反</div>' : ''}</td><td>${esc(f.content)}${/^https?:\/\//i.test(f.url || '') ? ` <a href="${escAttr(f.url)}" target="_blank" rel="noopener">出处</a>` : ''}${f.against_what ? `<div class="hint" style="margin:0">相反的是:${esc(f.against_what)}</div>` : ''}${(f.notes || []).length ? `<div class="hint" style="margin:0;color:#b45309">程序核对:${f.notes.map(esc).join(';')}</div>` : ''}</td></tr>`).join('')}</table>` : ''}
+    ${(x.found || []).length ? `<div class="hint">查到实录的章:${x.found.map(esc).join('、')}(按新事实改蓝图)</div>` : ''}
+    ${(x.downgrade || []).length ? `<div class="hint">查不到、主张降一级(写成「可能」「有说法认为」或并掉)的章:${x.downgrade.map(d => esc(d.ch)).join('、')}</div>` : ''}
+    ${(x.kept || []).length ? `<div class="hint">查不到、按规矩保持原样的章:${x.kept.map(d => esc(d.ch) + role(d)).join('、')}(反转、核心、开头、结尾不降级不改动)</div>` : ''}
+    ${(x.against || []).length ? `<div class="hint" style="color:#b91c1c">和论点或反转相反的新事实:${x.against.map(esc).join('、')},蓝图必须正面处理</div>` : ''}
+    <div class="hint">查询:${(x.queries || []).map(q => esc(q.query) + (q.chapter ? '(' + esc(q.chapter) + ')' : '') + (q.error ? ' 出错' : ' ' + q.hits + ' 条')).join(';')}</div></details>`;
+}
 function renderBlueprintPanel(r) {
   const el = document.getElementById('bp-panel');
   const v = r.blueprint_view;
@@ -6084,15 +6189,16 @@ function renderBlueprintPanel(r) {
   if (rv && (rv.items || []).length) {
     const prob = p => `<div><span class="bp-by">${esc(p.by)}</span>${p.chapter && !String(p.text).startsWith(p.chapter) ? esc(p.chapter) + ' ' : ''}${esc(p.text)}${p.fix ? `<div class="hint" style="margin:0 0 0 4px">改法:${esc(p.fix)}</div>` : ''}</div>`;
     html += `<table class="bp-tbl"><tr><th>审的项</th><th>结果</th><th>问题</th></tr>${rv.items.map(it => `<tr><td style="white-space:nowrap">${esc(it.name)}</td><td>${it.pass ? '<span class="bp-ok">✓ 通过</span>' : '<span class="bp-bad">✗ 不过</span>'}</td><td>${!it.pass && (it.plain || BP_PLAIN[it.name]) ? `<div style="margin-bottom:4px"><b>大白话:${esc(it.plain || BP_PLAIN[it.name])}</b></div>` : ''}${(it.problems || []).map(prob).join('') || '<span class="hint">—</span>'}${(it.notes || []).length ? `<details><summary style="font-weight:400" class="hint">参考 ${it.notes.length} 条(程序提示 / AI 认为不算问题)</summary>${it.notes.map(prob).join('')}</details>` : ''}</td></tr>`).join('')}</table>`;
-    const rounds = (rv.rounds || []).map(x => x.rejected ? `改第 ${x.revise} 次:${esc(x.rejected)}` : `${x.after_revise ? '改第 ' + x.after_revise + ' 次后再审' : '第一次审'}:${x.pass ? '通过' : '不过(' + (x.items || []).filter(i => !i.pass).map(i => esc(i.name)).join('、') + ')'}${x.ai_error ? '(' + esc(x.ai_error) + ')' : ''}`);
+    const rounds = (rv.rounds || []).map(x => x.research ? `联网补搜:${bpResearchShort(x.research)}` : x.rejected ? `改第 ${x.revise} 次:${esc(x.rejected)}` : `${x.after_revise ? '改第 ' + x.after_revise + ' 次后再审' : '第一次审'}:${x.pass ? '通过' : '不过(' + (x.items || []).filter(i => !i.pass).map(i => esc(i.name)).join('、') + ')'}${x.ai_error ? '(' + esc(x.ai_error) + ')' : ''}`);
     if (rounds.length) html += `<div class="hint">过程:${rounds.join(' → ')}${rv.secs ? ',共 ' + rv.secs + ' 秒' : ''}</div>`;
     // 前几轮审出来、AI 已经按意见改过的问题:折起来,方便对照这次改掉了什么
-    const earlier = (rv.rounds || []).filter(x => !x.rejected && !x.pass).slice(0, rv.status === 'held' ? -1 : undefined);
+    const earlier = (rv.rounds || []).filter(x => !x.rejected && !x.research && !x.pass).slice(0, rv.status === 'held' ? -1 : undefined);
     earlier.forEach(x => {
       const bad = (x.items || []).filter(i => !i.pass);
       html += `<details><summary style="font-weight:400">${x.after_revise ? '改第 ' + x.after_revise + ' 次后' : '第一次审'}查出的问题(${bad.map(i => esc(i.name) + ' ' + (i.problems || []).length + ' 条').join('、')}),已交给 AI 改</summary><table class="bp-tbl">${bad.map(i => `<tr><td style="white-space:nowrap">${esc(i.name)}</td><td>${(i.problems || []).map(prob).join('')}</td></tr>`).join('')}</table></details>`;
     });
   }
+  if (rv && rv.research) html += bpResearchHtml(rv.research);
   if ((v.chapters || []).length || (v.table || {}).rows) html += bpDeletedHtml(v, false);
   const chs = v.chapters || [];
   if (chs.length) {

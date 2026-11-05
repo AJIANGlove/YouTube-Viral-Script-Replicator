@@ -51,6 +51,30 @@ function loadAssetCategories() {
 // 分类定义(顺序即前端 chip 顺序)
 function assetCategories() { return loadAssetCategories().tracks; }
 
+// 人工改分类(2026-11-05 本地功能):只改 items[asset_id] 一行,保留 version/note/cats 与 2 空格缩进
+// 只接受 cats 里已有的 key —— 用户口径「不允许清空为未分类」,所以不存在写空值的路径
+// 临时文件 + rename 落盘:写失败不会留下半截 JSON,也不会把已有 213 条分类写丢
+function setAssetTrack(id, key) {
+  if (!fs.existsSync(assetDir(id))) return { ok: false, error: '资产不存在: ' + id };
+  if (!assetCategories().some(c => c.key === key)) return { ok: false, error: '未知分类: ' + key };
+  let raw;
+  try { raw = JSON.parse(fs.readFileSync(CATEGORIES_FILE, 'utf-8')); }
+  catch (e) { return { ok: false, error: '分类文件读取失败: ' + e.message }; }
+  raw.items = raw.items || {};
+  if (raw.items[id] === key) return { ok: true, track: key, unchanged: true };
+  raw.items[id] = key;
+  const tmp = CATEGORIES_FILE + '.tmp';
+  try {
+    fs.writeFileSync(tmp, JSON.stringify(raw, null, 2) + '\n', 'utf-8');
+    fs.renameSync(tmp, CATEGORIES_FILE);
+  } catch (e) {
+    try { fs.unlinkSync(tmp); } catch (e2) { /* 清理失败忽略 */ }
+    return { ok: false, error: '分类文件写入失败: ' + e.message };
+  }
+  catCache = { mtime: 0, tracks: [], items: {} }; // mtime 已变,下次读取自动重载
+  return { ok: true, track: key };
+}
+
 function listAssets() {
   ensureDirs();
   const cats = loadAssetCategories();
@@ -475,7 +499,7 @@ function queryRuns(opts) {
 
 module.exports = {
   APP_ROOT, ASSETS_ROOT, RUNS_ROOT, ensureDirs, slugify,
-  listAssets, getAsset, saveAsset, deleteAsset, newAssetId, assetCategories,
+  listAssets, getAsset, saveAsset, deleteAsset, newAssetId, assetCategories, setAssetTrack,
   newRun, saveRun, getRun, listRuns, setRunViral, setRunConfirmed,
   queryRuns, RUNS_INDEX, SCRIPT_TEXT_FIELDS, normalizeRunText
 };
