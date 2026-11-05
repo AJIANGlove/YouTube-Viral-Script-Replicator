@@ -466,8 +466,9 @@
       "facts_error": ""
     },
     "opening_card": {
-      "status": "done",
-      "finished_at": "2026-11-05T11:02:42.312Z"
+      "status": "failed",
+      "started_at": "2026-11-05T13:02:39.000Z",
+      "error": "进程重启中断,可在审稿页重跑"
     },
     "reverse_audit": {
       "status": "done",
@@ -498,13 +499,13 @@
       "blocking": true
     },
     "final_options": {
-      "status": "running",
-      "started_at": "2026-11-05T13:01:16.768Z",
+      "status": "done",
+      "finished_at": "2026-11-05T13:02:38.150Z",
       "items": 2
     }
   },
   "created_at": "2026-11-05T09:11:25.060Z",
-  "updated_at": "2026-11-05T13:01:16.769Z",
+  "updated_at": "2026-11-05T13:02:49.807Z",
   "asset_id": "why-red-bull-isn-t-a-drink-company",
   "asset_name": "「品类重定义」品牌逆袭史拆解(奇观揭幕-寒门双创始接力-反直觉决策链-游击战术清单-主体重定义-争议压力测试-法则蒸馏)",
   "topic": "Every Empire That Conquered Iran Became Persian",
@@ -535,10 +536,10 @@
   "usage": {
     "since": "2026-11-05T09:13:02.810Z",
     "total": {
-      "calls": 73,
-      "in": 2785485,
-      "out": 462750,
-      "cache_read": 420114,
+      "calls": 74,
+      "in": 2809907,
+      "out": 468517,
+      "cache_read": 429809,
       "cache_write": 876475,
       "est_calls": 0
     },
@@ -779,6 +780,14 @@
         "calls": 1,
         "in": 8505,
         "out": 6577,
+        "cache_read": 9695,
+        "cache_write": 0,
+        "est_calls": 0
+      },
+      "终审·出解决方案": {
+        "calls": 1,
+        "in": 24422,
+        "out": 5767,
         "cache_read": 9695,
         "cache_write": 0,
         "est_calls": 0
@@ -1633,6 +1642,18 @@
       "stop_reason": "end_turn",
       "in_tok": 8505,
       "out_tok": 6577,
+      "cache_read": 9695
+    },
+    {
+      "ts": "2026-11-05T13:02:38.122Z",
+      "label": "终审·出解决方案",
+      "provider": "lk888",
+      "model": "claude-opus-5",
+      "ok": true,
+      "secs": 81.3,
+      "stop_reason": "end_turn",
+      "in_tok": 24422,
+      "out_tok": 5767,
       "cache_read": 9695
     }
   ],
@@ -13582,7 +13603,62 @@
               "status": "对得上",
               "note": "CH09问\"Think about the layer your field uses every day but never builds\",对应全片主线\"波斯语是别人采购的底座\";CH10问\"You're either the product, or you're the platform under it\",同样扣住主线"
             }
-          }
+          },
+          "options": {
+            "R01": [
+              {
+                "key": "A",
+                "zh": "在第2段「In force that December.」之后立即插入一句：「Strange thing: that language had covered more ground when its homeland had no empire of its own.」，然后继续原第3段「Here is what those two paragraphs cancelled.」",
+                "why": "最小改动，在前10秒内完成核心冲突的预告，且「strange thing」自然呼应后面「Now the strange part」那段，不破坏后续结构；新增约18词，符合前2分钟不许改长的要求",
+                "recommended": true
+              },
+              {
+                "key": "B",
+                "zh": "把「The homeland of that language, during the centuries it covered the most ground, had no Persian empire of its own.」这句从CH01后段直接挪到第2段之后、第3段「Here is what」之前，其他不动",
+                "why": "符合复审建议的第一种方式，直接前置原句到第10秒内；但那句较长（22词），且后面还要重复同一信息，可能显得啰嗦",
+                "recommended": false
+              },
+              {
+                "key": "C",
+                "zh": "第1段结尾删掉「And whichever language replaces it? That gets named later.」这两句，把节省的时间用来在第2段后加一句短的核心冲突：「The language it ended had spread furthest when Persia had no empire.」",
+                "why": "同时解决R01和R02，既提前说出冲突又加快节奏；但R02有单独的解决方案，混在一起改可能让方案之间不够独立",
+                "recommended": false
+              },
+              {
+                "key": "D",
+                "zh": "开头整体重组，第1句直接说异常：「A language spread from the Balkans to Bengal while its homeland had no empire. 1837: two paragraphs cancelled it.」然后第2段再展开「Calcutta. A council chamber...」的画面",
+                "why": "把核心冲突前置到开头第1句，冲击力最强；但代价是丢掉原本「先摆物证再揭晓」的悬念节奏，且改动较大、风险高",
+                "recommended": false
+              }
+            ],
+            "R02": [
+              {
+                "key": "A",
+                "zh": "删掉「And whichever language replaces it? That gets named later.」和「Here is what those two paragraphs cancelled. Not some foreign tongue nobody used.」这4句，从「On the table, a law...」直接跳到「That was the language Indian offices had been run in for centuries.」，中间保留「Passed in 1837. In force that December.」作时间锚点",
+                "why": "完全按复审建议，删掉问答式冗余和过渡句，前22秒从7句压到4句，节奏最快且信息密度最高；「That was the language」这句本身已有揭晓感，不需要「Here is what」做铺垫",
+                "recommended": true
+              },
+              {
+                "key": "B",
+                "zh": "只删「And whichever language replaces it? That gets named later.」，把「Here is what those two paragraphs cancelled. Not some foreign tongue nobody used.」合并为一句「Here's what it ended:」，然后接「the language Indian offices had been run in for centuries」",
+                "why": "折中方案，删掉问答但保留一句简短过渡；比选项A多留1句、少省约10秒，节奏改善有限",
+                "recommended": false
+              },
+              {
+                "key": "C",
+                "zh": "删掉问答和「Here is what」那段，把后面的「One signature. A whole working language, gone from the machinery it ran.」这句提前插到「In force that December.」之后，再接「That was the language Indian offices had been run in for centuries.」",
+                "why": "用一句有画面感的短句替换冗余过渡，且「One signature」自然承接「Passed in 1837」的时间线；但那句原本在揭晓之后、此处提前可能让观众还没明白就先给了结论",
+                "recommended": false
+              },
+              {
+                "key": "D",
+                "zh": "第1段压缩成2句：「Calcutta, 1837. On the table: a law that lets the government replace Persian in court and tax papers — language to be named later.」删掉「A council chamber」「And whichever language...」「Passed in 1837」，直接接「In force that December. That was the language...」",
+                "why": "把4句压成2句，省时最多；但丢掉了「Passed in 1837」这个时间锚点，且「language to be named later」仍保留了原本要删的那条信息，与删除问答句的初衷矛盾",
+                "recommended": false
+              }
+            ]
+          },
+          "options_for": "R01:开头前8秒没说出标题核心冲突\nR02:前22秒用7句话描述一份法令,节奏慢且信息密度低"
         }
       ],
       "scores_after": {},

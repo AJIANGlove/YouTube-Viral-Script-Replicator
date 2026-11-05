@@ -781,12 +781,20 @@
       "verdict": "未达标"
     },
     "claim_check": {
-      "status": "running",
-      "started_at": "2026-11-05T13:01:36.376Z"
+      "status": "done",
+      "finished_at": "2026-11-05T13:01:59.767Z",
+      "verdict": "成立",
+      "blocking": false
+    },
+    "final_options": {
+      "status": "failed",
+      "started_at": "2026-11-05T13:01:59.809Z",
+      "items": 4,
+      "error": "进程重启中断,可在审稿页重跑"
     }
   },
   "created_at": "2026-11-05T09:29:32.422Z",
-  "updated_at": "2026-11-05T13:01:36.376Z",
+  "updated_at": "2026-11-05T13:02:49.793Z",
   "asset_id": "they-found-something-bizarre-in-her-bathtub",
   "asset_name": "冷开场闪前预告式真实罪案推演(预告钩-异常目录-嫌疑过堂-重建点名四幕)",
   "topic": "What Really Happened to the Maya Civilization?",
@@ -817,9 +825,9 @@
   "usage": {
     "since": "2026-11-05T09:29:50.100Z",
     "total": {
-      "calls": 88,
-      "in": 2988644,
-      "out": 400124,
+      "calls": 89,
+      "in": 3014717,
+      "out": 402697,
       "cache_read": 566684,
       "cache_write": 1063571,
       "est_calls": 0
@@ -1069,6 +1077,14 @@
         "calls": 1,
         "in": 1437,
         "out": 1118,
+        "cache_read": 0,
+        "cache_write": 0,
+        "est_calls": 0
+      },
+      "论点核对": {
+        "calls": 1,
+        "in": 26073,
+        "out": 2573,
         "cache_read": 0,
         "cache_write": 0,
         "est_calls": 0
@@ -2120,6 +2136,17 @@
       "stop_reason": "end_turn",
       "in_tok": 1437,
       "out_tok": 1118
+    },
+    {
+      "ts": "2026-11-05T13:01:59.735Z",
+      "label": "论点核对",
+      "provider": "lk888",
+      "model": "claude-opus-5",
+      "ok": true,
+      "secs": 22.5,
+      "stop_reason": "end_turn",
+      "in_tok": 26073,
+      "out_tok": 2573
     }
   ],
   "thesis_scout": {
@@ -12738,7 +12765,44 @@
         }
       ],
       "scores_after": {},
-      "verdict": "未达标"
+      "verdict": "未达标",
+      "claim_check": {
+        "at": "2026-11-05T13:01:59.761Z",
+        "hash": "77ae10134696",
+        "claim": "玛雅不是因为太原始而亡，而是因为太依赖一个它以为永不改变的好条件",
+        "verdict": "成立",
+        "calc": "论点在全文中得到完整支撑：CH03 建立 440–660 CE 异常湿润期（「unusually wet stretch of centuries」），CH09 揭示单一依赖（「all that stored water had exactly one source. Rain」），CH12 提供干旱证据（「rainfall dropped somewhere between 41 and 54 percent」），CH13 明确陷阱机制（「Two hundred years of extraordinary conditions made a civilization more fragile, not less」），CH14 重建因果链（「The drought didn't destroy a resilient civilization. It triggered a system that the good conditions had spent two centuries making completely dependent on one thing」），CH15 点名成就与脆弱同源（「The prosperity and the fragility were the same thing」）。全文逻辑完整：不是原始（水利工程运行千年、供养千万人口），而是依赖（单一水源、无备份），以为永不改变（两百年湿润期训练出的决策惯性），条件改变时崩溃（干旱触发连锁反应）。",
+        "fix_claim": "",
+        "issues": [
+          {
+            "id": "L1",
+            "chapter": "CH12",
+            "level": "次要",
+            "quote": "annual rainfall across the Yucatán lowlands had dropped somewhere between 41 and 54 percent compared to modern levels",
+            "problem": "基准混淆：41–54% 的降雨减少是相对于「modern levels」（现代水平），但全文其他地方（CH03 的「unusually wet」、CH13 的「440 to 660 AD wet period」、CH14 的「Rainfall down 41 to 54 percent」）暗示基准应该是 Classic 期湿润期的峰值水平，而非现代水平。若基准是现代水平，则无法支撑「湿润期训练出依赖 → 干旱期触发崩溃」的核心逻辑；若基准是湿润期峰值，则「compared to modern levels」表述错误。",
+            "fix": "改为「annual rainfall had dropped somewhere between 41 and 54 percent compared to the wet period that preceded it」或删掉「compared to modern levels」，让读者理解为相对于湿润期基线的降幅。",
+            "why_zh": "观众会察觉：前面说湿润期是陷阱、干旱期触发崩溃，后面却说干旱是相对于现代而非相对于湿润期，逻辑线断了。"
+          },
+          {
+            "id": "L2",
+            "chapter": "CH14",
+            "level": "次要",
+            "quote": "Rainfall down 41 to 54 percent.",
+            "problem": "同 CH12 问题：此处未明确基准，结合 CH12 的「compared to modern levels」和 CH13 的湿润期叙述，应统一为「相对于 440–660 CE 湿润期」的降幅。",
+            "fix": "改为「Rainfall down 41 to 54 percent from the wet period baseline」。",
+            "why_zh": "两处都提到 41–54% 降幅，一处说相对现代、一处不说基准，观众算账时会发现矛盾。"
+          }
+        ],
+        "protect": [
+          "The Maya didn't disappear.",
+          "Two completely independent archives — gypsum from a lakebed in Yucatán, calcite from a cave in Belize — analyzed by different teams, using different methods, in different locations. Both pointed to the same centuries. The same droughts. The same outcome.",
+          "The drought didn't destroy a resilient civilization. It triggered a system that the good conditions had spent two centuries making completely dependent on one thing.",
+          "The prosperity and the fragility were the same thing.",
+          "The more advanced a system becomes, the more it depends on conditions staying the same.",
+          "War is a symptom. The investigators had to look somewhere else for the disease."
+        ],
+        "fixes": []
+      }
     }
   }
 }
