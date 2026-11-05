@@ -3602,39 +3602,55 @@ function rvPlainRow(o, busy) {
     : `${o.tag ? '<b>' + esc(o.tag) + '</b> ' : ''}${esc(String(o.fb || '').slice(0, 160))}${o.id ? ` <span class="hint">${esc(o.id)}</span>` : ''}${waiting}`;
   return `<div class="rv-plain ${imp ? imp[0] : ''} v13">
     <div class="rv-plain-top">${cb}<div class="rv-plain-text">${text}</div>
-      <div class="rv-plain-btns">${o.detail ? `<button class="an-btn" onclick="rvPlainToggle(this, '${escAttr(fk)}')">${open ? '收起详情' : '查看详情'}</button>` : ''}${o.ign ? `<button class="an-btn" onclick="${o.ign}" ${busy ? 'disabled' : ''} title="忽略后不挡发布;可以在下面「你点了忽略的」里撤回">忽略</button>` : ''}</div></div>
+      <div class="rv-plain-btns">${o.ctx || ''}${o.detail ? `<button class="an-btn" onclick="rvPlainToggle(this, '${escAttr(fk)}')">${open ? '收起详情' : '查看详情'}</button>` : ''}${o.ign ? `<button class="an-btn" onclick="${o.ign}" ${busy ? 'disabled' : ''} title="忽略后不挡发布;可以在下面「你点了忽略的」里撤回">忽略</button>` : ''}</div></div>
     ${o.detail ? `<div class="rv-plain-detail" style="${open ? '' : 'display:none'}">${o.detail}</div>` : ''}</div>`;
 }
 // v1.99「查看原文详情」:原句在终稿里的前后几段,原句标出来;右下角「翻译」出每段中文
 const CTX_Q = [];
-function ctxBtn(q) {
-  if (!q || !String(q).trim()) return '';
-  let i = CTX_Q.indexOf(q);
-  if (i < 0) { CTX_Q.push(q); i = CTX_Q.length - 1; }
-  return ` <button class="an-btn" style="font-size:11px;padding:0 8px;vertical-align:middle" onclick="event.stopPropagation();rvCtxOpen(${i})">查看原文详情</button>`;
+function ctxBtn(q, chapter, label, problem) {
+  const quotes = [].concat(q || []).map(x => String(x || '').trim()).filter(Boolean);
+  if (!quotes.length && !chapter && !problem) return '';
+  const key = JSON.stringify([quotes, chapter || '', problem || '']);
+  let i = CTX_Q.findIndex(x => x.key === key);
+  if (i < 0) { CTX_Q.push({ key, quotes, chapter: chapter || '', problem: problem || '' }); i = CTX_Q.length - 1; }
+  return ` <button class="an-btn" style="font-size:11px;padding:0 8px;vertical-align:middle" onclick="event.stopPropagation();rvCtxOpen(${i})">${label || '查看原文详情'}</button>`;
 }
-function ctxMark(text, q) {
-  const t = String(text), qq = String(q || '').trim();
-  const at = qq ? t.indexOf(qq) : -1;
-  if (at < 0) return `<span class="ctx-hit">${esc(t)}</span>`;
-  return esc(t.slice(0, at)) + `<mark class="ctx-hit">${esc(qq)}</mark>` + esc(t.slice(at + qq.length));
+// 没写原句的问题:从问题描述、建议、A/B/C 里挑引号中的原文(不是中文的那些),再带上章节;找不到就看整章
+function ctxBtnFor(x, opts) {
+  const prob = [x.problem, x.suggestion].filter(Boolean).join('\n');
+  if (x.quote && !x.not_found) return ctxBtn(x.quote, x.chapter, '', prob);
+  const src = [x.problem, x.suggestion].concat((opts || []).map(o => o.zh)).join('\n');
+  const qs = [];
+  src.replace(/[「"“]([^」"”]{6,300})[」"”]/g, (m, q) => { if (/[\uac00-\ud7af]/.test(q) || !/[\u4e00-\u9fff]/.test(q)) qs.push(q); return m; });
+  return ctxBtn(qs.slice(0, 6), x.chapter, '', prob);
+}
+function rvCtxPlain(rc, x) { return ctxBtnFor(x, ((rc || {}).options || {})[x.id] || []).replace('>查看原文详情<', '>看原文<').trim(); }
+function ctxMark(text, marks, hit) {
+  const t = String(text);
+  const ms = (marks || []).map(m => String(m || '').trim()).filter(m => m && t.includes(m)).sort((a, b) => b.length - a.length);
+  if (!ms.length) return hit ? `<span class="ctx-hit">${esc(t)}</span>` : esc(t);
+  const re = new RegExp(ms.map(m => m.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+  let out = '', last = 0;
+  t.replace(re, (m, at) => { out += esc(t.slice(last, at)) + `<mark class="ctx-hit">${esc(m)}</mark>`; last = at + m.length; return m; });
+  return out + esc(t.slice(last));
 }
 function rvCtxDraw() {
   const st = rvState.ctx; if (!st) return;
   let el = document.getElementById('ctx-modal');
   if (!el) { el = document.createElement('div'); el.id = 'ctx-modal'; el.onclick = e => { if (e.target === el) rvCtxClose(); }; document.body.appendChild(el); }
   const d = st.data;
-  const body = !d ? (st.error ? `<div style="color:#b91c1c">${esc(st.error)}</div>` : '<div class="hint"><span class="rv-spin"></span> 读取中…</div>')
-    : d.paras.map((p, k) => `<div class="ctx-p${p.hit ? ' on' : ''}"${p.hit ? ' id="ctx-hit"' : ''}>${k === 0 || p.chapter !== d.paras[k - 1].chapter ? `<div class="hint" style="margin-bottom:2px">${esc(rvChName(p.chapter) || p.chapter || '')}</div>` : ''}<div>${p.hit ? ctxMark(p.text, d.quote) : esc(p.text)}</div>${st.showZh && p.zh ? `<div class="ctx-zh">${esc(p.zh)}</div>` : ''}</div>`).join('');
+  const body = !d ? (st.error ? `<div style="color:#b91c1c">${esc(st.error)}</div>` : '<div class="hint"><span class="rv-spin"></span> 正在找原句…(问题里没写原句的,AI 要找一下,十几秒)</div>')
+    : d.paras.map((p, k) => `<div class="ctx-p${p.hit ? ' on' : ''}"${p.hit ? ' id="ctx-hit"' : ''}>${k === 0 || p.chapter !== d.paras[k - 1].chapter ? `<div class="hint" style="margin-bottom:2px">${esc(rvChName(p.chapter) || p.chapter || '')}</div>` : ''}<div>${p.hit ? ctxMark(p.text, d.marks || [d.quote], true) : esc(p.text)}</div>${st.showZh && p.zh ? `<div class="ctx-zh">${esc(p.zh)}</div>` : ''}</div>`).join('');
   const hasZh = d && d.paras.every(p => p.zh);
-  el.innerHTML = `<div class="ctx-box"><div class="ctx-head"><b>原文详情</b>${d ? ` <span class="hint">${esc(rvChName(d.chapter) || d.chapter || '')} · 标出来的是原句,前后各 4 段</span>` : ''}<button class="an-btn" style="margin-left:auto" onclick="rvCtxClose()">关闭</button></div>
+  el.innerHTML = `<div class="ctx-box"><div class="ctx-head"><b>原文详情</b>${d ? ` <span class="hint">${esc(rvChName(d.chapter) || d.chapter || '')} · ${d.note ? esc(d.note) : '标出来的是原句,前后各至少 6 句'}</span>` : ''}<button class="an-btn" style="margin-left:auto" onclick="rvCtxClose()">关闭</button></div>
     <div class="ctx-body">${body}</div>
     ${d ? `<div class="ctx-foot"><button class="an-btn ${st.showZh ? '' : 'apply'}" onclick="rvCtxZh()" ${st.busy ? 'disabled' : ''}>${st.busy ? '<span class="rv-spin"></span> 翻译中…' : st.showZh && hasZh ? '隐藏翻译' : '翻译'}</button></div>` : ''}</div>`;
 }
 async function rvCtxOpen(i) {
-  rvState.ctx = { q: CTX_Q[i], data: null, showZh: false };
+  const c = CTX_Q[i];
+  rvState.ctx = { q: { quotes: c.quotes, chapter: c.chapter, problem: c.problem }, data: null, showZh: false };
   rvCtxDraw();
-  try { rvState.ctx.data = await rvPost('quote_context', { quote: CTX_Q[i] }); } catch (e) { rvState.ctx.error = e.message; }
+  try { rvState.ctx.data = await rvPost('quote_context', rvState.ctx.q); } catch (e) { rvState.ctx.error = e.message; }
   rvCtxDraw();
   const h = document.getElementById('ctx-hit'); if (h) h.scrollIntoView({ block: 'center' });
 }
@@ -3644,7 +3660,7 @@ async function rvCtxZh() {
   st.showZh = true;
   if (st.data.paras.every(p => p.zh)) return rvCtxDraw();
   st.busy = true; rvCtxDraw();
-  try { st.data = await rvPost('quote_context', { quote: st.q, translate: true }); } catch (e) { alert('没能翻译:' + e.message); }
+  try { st.data = await rvPost('quote_context', { ...st.q, translate: true }); } catch (e) { alert('没能翻译:' + e.message); }
   st.busy = false;
   if (rvState.ctx === st) rvCtxDraw();
 }
@@ -3714,7 +3730,7 @@ function rvClaimPlainHtml(p, v, busy) {
   if (!c || st.status === 'running' || /论点/.test(v.running || '') || !c.blocking) return rvClaimHtml(p, v, true);
   const real = x => !x.not_found && !x.no_issue && !x.looks_ok && !x.applied && !x.ignored && !x.ok_confirmed;
   const issues = (c.issues || []).filter(x => !x.not_found);
-  const rows = issues.filter(real).map(x => rvPlainRow({ key: 'C_' + x.id, pick: { source: 'claim', id: x.id, x }, tag: rvChName(x.chapter), pl: x.plain, fb: x.why_zh || x.problem, detail: `<ul style="margin:0 0 0 18px">${rvClaimLi(x, busy)}</ul>`, ign: `rvIgnoreItem('claim', '${escAttr(x.id)}', true)` }, busy));
+  const rows = issues.filter(real).map(x => rvPlainRow({ key: 'C_' + x.id, pick: { source: 'claim', id: x.id, x }, ctx: ctxBtn(x.quote, x.chapter, '看原文', x.problem).trim(), tag: rvChName(x.chapter), pl: x.plain, fb: x.why_zh || x.problem, detail: `<ul style="margin:0 0 0 18px">${rvClaimLi(x, busy)}</ul>`, ign: `rvIgnoreItem('claim', '${escAttr(x.id)}', true)` }, busy));
   const rest = issues.filter(x => !real(x) && !x.ignored);
   const vNo = c.verdict === '不成立' && !c.verdict_applied;
   const head = vNo ? rvPlainRow({ key: 'C_verdict', tag: '', pl: { problem: '开头的主张被稿子自己的数推翻了:' + (c.claim || ''), fix: c.fix_claim ? '开头改成:' + c.fix_claim : '点「查看详情」看怎么算的', level: '大', impact: '论点站不住,整片立不住' }, detail: `<div class="v13"><b>怎么算的</b>:${esc(c.calc || '')}</div>` }, busy) : '';
@@ -3765,13 +3781,13 @@ function rvGroupsHtml(v, p, busy) {
       const cc = p.claim || {};
       const claimRows = rvClaimPlainHtml(p, v, busy);
       n = (cc.issues || []).filter(x => !x.not_found && !x.no_issue && !x.looks_ok && !x.applied && !x.ignored && !x.ok_confirmed).length;
-      plainRows = claimRows + rows.map((r, i) => rvPlainRow({ key: 'R_' + items[i].id, id: items[i].id, pick: { source: 'recheck', id: items[i].id, x: items[i] }, tag: rvChName(items[i].chapter), pl: items[i].plain, fb: items[i].why_zh || items[i].zh_problem || items[i].problem, detail: r, ign: `rvIgnoreItem('recheck', '${escAttr(items[i].id)}', true)` }, busy)).join('');
+      plainRows = claimRows + rows.map((r, i) => rvPlainRow({ key: 'R_' + items[i].id, id: items[i].id, pick: { source: 'recheck', id: items[i].id, x: items[i] }, ctx: rvCtxPlain(rc, items[i]), tag: rvChName(items[i].chapter), pl: items[i].plain, fb: items[i].why_zh || items[i].zh_problem || items[i].problem, detail: r, ign: `rvIgnoreItem('recheck', '${escAttr(items[i].id)}', true)` }, busy)).join('');
     } else if (items.length) {
       n = items.length;
       plainRows = extra.filter(Boolean).length ? `<details class="hint v13" style="margin:4px 0"><summary>查看这一项的说明</summary>${extra.join('')}</details>` : '';
       // 「数字太密」「开头」这类程序也查的项:只剩这一条时,忽略这条就连这一项一起忽略(不然程序那一项还挡着)
       const alsoBlock = b.key !== 'hard_open' && RV_IGNORABLE.includes(b.key) && items.length === 1 ? b.key : '';
-      plainRows += items.map((x, i) => rvPlainRow({ key: 'R_' + x.id, id: x.id, pick: { source: 'recheck', id: x.id, x }, tag: rvChName(x.chapter), pl: x.plain, fb: x.why_zh || x.zh_problem || x.problem, detail: rows[i], ign: alsoBlock ? `rvIgnoreItem('recheck', '${escAttr(x.id)}', true, '${alsoBlock}')` : `rvIgnoreItem('recheck', '${escAttr(x.id)}', true)` }, busy)).join('');
+      plainRows += items.map((x, i) => rvPlainRow({ key: 'R_' + x.id, id: x.id, pick: { source: 'recheck', id: x.id, x }, ctx: rvCtxPlain(rc, x), tag: rvChName(x.chapter), pl: x.plain, fb: x.why_zh || x.zh_problem || x.problem, detail: rows[i], ign: alsoBlock ? `rvIgnoreItem('recheck', '${escAttr(x.id)}', true, '${alsoBlock}')` : `rvIgnoreItem('recheck', '${escAttr(x.id)}', true)` }, busy)).join('');
     } else {
       n = 0;
       const tpl = RV_PLAIN_BLOCK[b.key];
@@ -4201,7 +4217,7 @@ function rvPatchRow(rc, x, busy) {
     const ap = rvApplyHtml('recheck', x, busy);
     if (x.applied) return `<div class="rv-ai"><div class="rv-ai-head"><b>${esc(x.id)}</b> <span class="rv-chip green">已应用</span> <span class="hint">${esc(x.chapter)}</span></div><div class="rv-ai-body">${rvOpenWhy(x).box}${ap}</div></div>`;
     return `<div class="rv-ai${pick !== 'skip' ? ' on' : ''}">
-      <div class="rv-ai-head"><b>${esc(x.id)}</b> <span class="rv-chip ${RV_OPEN_CLS[x.level] || ''}">${esc(x.level)}</span> <span class="hint">${esc(x.chapter)}</span>${x.quote && !x.not_found ? ctxBtn(x.quote) : ''}${x.not_found ? ' <span class="rv-chip" title="程序在稿子里找不到复审引用的原句,复审可能把写前分析或事实核验表里的句子当成了稿子内容;不挡发布,默认不改">稿子里找不到复审引用的这句</span>' : ''}</div>
+      <div class="rv-ai-head"><b>${esc(x.id)}</b> <span class="rv-chip ${RV_OPEN_CLS[x.level] || ''}">${esc(x.level)}</span> <span class="hint">${esc(x.chapter)}</span>${ctxBtnFor(x, opts)}${x.not_found ? ' <span class="rv-chip" title="程序在稿子里找不到复审引用的原句,复审可能把写前分析或事实核验表里的句子当成了稿子内容;不挡发布,默认不改">稿子里找不到复审引用的这句</span>' : ''}</div>
       <div class="rv-ai-body">${(w => w.box + (w.used ? '' : `<div class="rv-orig"><span class="hint">复审原话:</span>${esc(x.problem)}${x.zh_problem ? `<div class="rv-zh">中文:${esc(x.zh_problem)}</div>` : rvOpenZhWait(x.problem)}</div>`))(rvOpenWhy(x))}
         ${opts.length && x.suggestion ? `<details class="hint"><summary>复审原建议</summary>${esc(x.suggestion)}${x.zh_suggestion ? `<div class="rv-zh">${esc(x.zh_suggestion)}</div>` : ''}</details>` : ''}
         ${ap}<div class="rv-opts">${choices}</div></div></div>`;

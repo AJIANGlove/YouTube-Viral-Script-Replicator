@@ -3846,6 +3846,15 @@ async function suggestFixBatch(runId, body) {
 }
 // v1.99「查看原文详情」(用户 2026-11-05):原句在终稿里的前后几段,去掉章节和时间标注;点翻译再出中文(便宜渠道,翻过的存着)
 const CTX_AROUND = 4;
+const CTX_SENT = 6; // 前后各至少 6 句(用户 2026-11-05:要看得出前后在讲什么);段落短就多带几段
+const ctxSentN = t => Math.max(1, (String(t).match(/[.?!。？！](?=\s|$)/g) || []).length);
+function ctxWindow(paras, first, last) {
+  let from = first, to = last + 1, n = 0;
+  while (from > 0 && (n < CTX_SENT || first - from < 2) && first - from < 20) { from--; n += ctxSentN(paras[from].text); }
+  n = 0;
+  while (to < paras.length && (n < CTX_SENT || to - last - 1 < 2) && to - last - 1 < 20) { n += ctxSentN(paras[to].text); to++; }
+  return [from, to];
+}
 function scriptParas(script) {
   const out = [];
   let ch = '';
@@ -3860,28 +3869,77 @@ function scriptParas(script) {
   });
   return out;
 }
+const ctxNorm = s => String(s || '').replace(/\s+/g, ' ').trim();
+const ctxBare = s => ctxNorm(s).replace(/[\s.,!?·、,。!?…"'「」“”()()\-—~]/g, '');
+function paraHas(p, quote) {
+  const q = ctxNorm(quote).replace(/^[「"'“]|[」"'”]$/g, '');
+  if (!q) return false;
+  if (ctxNorm(p.text).includes(q)) return true;
+  const qb = ctxBare(q);
+  return qb.length >= 4 && ctxBare(p.text).includes(qb);
+}
 function findPara(paras, quote) {
-  const norm = s => String(s || '').replace(/\s+/g, ' ').trim();
-  const q = norm(quote).replace(/^[「"']|[」"']$/g, '');
-  if (!q) return -1;
-  let i = paras.findIndex(p => norm(p.text).includes(q));
+  let i = paras.findIndex(p => paraHas(p, quote));
   if (i >= 0) return i;
-  const bare = s => norm(s).replace(/[\s.,!?·、,。!?…"'「」()()\-—~]/g, '');
-  const qb = bare(q);
-  i = paras.findIndex(p => bare(p.text).includes(qb));
-  if (i >= 0 || qb.length < 8) return i;
+  const qb = ctxBare(quote);
+  if (qb.length < 8) return -1;
   const head = qb.slice(0, 12), tail = qb.slice(-12);
-  i = paras.findIndex(p => bare(p.text).includes(head));
-  return i >= 0 ? i : paras.findIndex(p => bare(p.text).includes(tail));
+  i = paras.findIndex(p => ctxBare(p.text).includes(head));
+  return i >= 0 ? i : paras.findIndex(p => ctxBare(p.text).includes(tail));
+}
+// 没有原句的(v1.99):问题描述里引号中的话拆开(「…」中间省略的拆成两段)一段段找;都找不到就给那一章全文
+function ctxQuotes(body) {
+  return [...new Set([].concat(arr((body || {}).quotes), (body || {}).quote ? [body.quote] : [])
+    .flatMap(q => String(q || '').split(/\.{3,}|…+/)).map(q => q.trim().replace(/^[「"'“]|[」"'”]$/g, '')).filter(q => ctxBare(q).length >= 4))];
 }
 async function quoteContext(runId, body) {
   const run = store.getRun(runId);
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
-  const quote = String((body || {}).quote || '');
+  const qs = ctxQuotes(body);
   const paras = scriptParas(checks.extractFinalScript(currentScript(run)));
-  const i = findPara(paras, quote);
-  if (i < 0) throw Object.assign(new Error('终稿里找不到这句(稿子可能已经改过了)'), { status: 404 });
-  const from = Math.max(0, i - CTX_AROUND), to = Math.min(paras.length, i + CTX_AROUND + 1);
+  const hits = new Set();
+  qs.forEach(q => { const all = paras.map((p, k) => paraHas(p, q) ? k : -1).filter(k => k >= 0); if (all.length) all.forEach(k => hits.add(k)); else { const k = findPara(paras, q); if (k >= 0) hits.add(k); } });
+  // 引号里的话都找不到(或者问题里没引):让便宜渠道在这一章(不知道是哪章就全文)里找出对应的句子,找到的存着,下次不用再问
+  const problem = String((body || {}).problem || '').trim();
+  let byAi = false;
+  if (!hits.size && problem) {
+    const ch0 = (String((body || {}).chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase();
+    const scope = paras.map((p, k) => ({ p, k })).filter(({ p }) => !ch0 || p.chapter === ch0 || String(body.chapter).toUpperCase().includes(p.chapter));
+    const pool = scope.length ? scope : paras.map((p, k) => ({ p, k }));
+    const ck = hash(problem + '|' + pool.map(x => x.p.text).join('\n'));
+    let found = arr((((run.review || {}).ctx_locate) || {})[ck]);
+    if (!found.length && !(((run.review || {}).ctx_locate) || {})[ck]) {
+      const cfg = pl().loadConfig();
+      if (cfg && cfg.api_key) {
+        const prompt = an().fillVars(readPrompt('locate_quote.md'), { problem: problem.slice(0, 1500), paras: pool.slice(0, 80).map(x => '[' + (x.k + 1) + '] ' + x.p.text).join('\n\n') });
+        try {
+          const out = await viaStep('explain', cfg, (c, sfx) => an().callJson(run, c, prompt, '查看原文·找原句' + sfx, o => !!o && Array.isArray(o.quotes)));
+          found = arr(out.quotes).map(q => String(q || '').replace(/^\[\d+\]\s*/, '').trim()).filter(q => q && pool.some(x => paraHas(x.p, q))).slice(0, 6);
+        } catch (e) { found = []; }
+        const fresh = store.getRun(runId) || run;
+        fresh.review = fresh.review || {};
+        fresh.review.ctx_locate = { ...(fresh.review.ctx_locate || {}), [ck]: found };
+        if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
+        store.saveRun(fresh);
+        run.review = fresh.review;
+      }
+    }
+    found.forEach(q => { qs.push(q); paras.forEach((p, k) => { if (paraHas(p, q)) hits.add(k); }); });
+    byAi = hits.size > 0;
+  }
+  let from, to, note = '';
+  if (hits.size) {
+    const hs = [...hits].sort((a, b) => a - b);
+    [from, to] = ctxWindow(paras, hs[0], hs[hs.length - 1]);
+    if (to - from > 40) { [from, to] = ctxWindow(paras, hs[0], hs[0]); }
+    note = (byAi ? '问题里没引原句,这几句是 AI 按问题找出来的' : '') + (hs.length > 1 ? (byAi ? ';' : '') + '找到 ' + hs.length + ' 处,都标出来了' : '');
+  } else {
+    const ch = (String((body || {}).chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase();
+    const idx = ch ? paras.map((p, k) => p.chapter === ch ? k : -1).filter(k => k >= 0) : [];
+    if (!idx.length) throw Object.assign(new Error(qs.length ? '终稿里找不到这句(稿子可能已经改过了)' : '这条没写原句,也没写是第几章'), { status: 404 });
+    from = idx[0]; to = Math.min(idx[idx.length - 1] + 1, from + 24);
+    note = qs.length ? '问题里引的话在终稿里没找到(可能已经改过),下面是这一章全文' : '这条没写原句,下面是这一章全文';
+  }
   const list = paras.slice(from, to);
   let have = ((run.review || {}).zh || {}).byHash || {};
   if ((body || {}).translate) {
@@ -3899,7 +3957,8 @@ async function quoteContext(runId, body) {
       have = fresh.review.zh.byHash;
     }
   }
-  return { quote, chapter: paras[i].chapter, paras: list.map((p, k) => ({ chapter: p.chapter, text: p.text, zh: have[hash(p.text)] || '', hit: from + k === i })) };
+  const first = hits.size ? Math.min(...hits) : from;
+  return { quote: qs[0] || '', marks: qs, note, chapter: (paras[first] || {}).chapter || '', paras: list.map((p, k) => ({ chapter: p.chapter, text: p.text, zh: have[hash(p.text)] || '', hit: hits.has(from + k) })) };
 }
 // 「确认没问题」(v1.67):AI 核对结论没问题的条目,人确认后不挡发布;undo:true 撤回
 function confirmOk(runId, body) {

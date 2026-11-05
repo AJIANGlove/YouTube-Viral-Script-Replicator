@@ -1,16 +1,20 @@
 {
   "id": "run_014fcb59506d",
-  "status": "analyzing",
+  "status": "thesis_hold",
   "current_step": 0,
   "steps": {
     "analysis": {
-      "status": "running",
+      "status": "waiting",
       "started_at": "2026-11-05T14:54:10.053Z",
-      "stage": "定论点:核对资料、挑论点"
+      "stage": "等你选论点"
+    },
+    "thesis_pick": {
+      "status": "waiting",
+      "at": "2026-11-05T15:01:09.161Z"
     }
   },
   "created_at": "2026-11-05T14:54:10.031Z",
-  "updated_at": "2026-11-05T14:59:53.552Z",
+  "updated_at": "2026-11-05T15:01:09.161Z",
   "asset_id": "the-economics-of-owning-a-cafe",
   "asset_name": "「浪漫小生意经济解剖」拥有者经济学拆解（幻想复述-失败悖论-成本栈减法-产品重定义-总账兑现-规模化出路-压缩收束）",
   "topic": "도자기 팔아서 월세나 낼 수 있을까? 공방 사장들의 진짜 숨은 수입원",
@@ -42,9 +46,9 @@
   "usage": {
     "since": "2026-11-05T14:55:25.194Z",
     "total": {
-      "calls": 2,
-      "in": 85193,
-      "out": 25008,
+      "calls": 5,
+      "in": 89986,
+      "out": 64975,
       "cache_read": 0,
       "cache_write": 0,
       "est_calls": 0
@@ -62,6 +66,14 @@
         "calls": 1,
         "in": 68581,
         "out": 20930,
+        "cache_read": 0,
+        "cache_write": 0,
+        "est_calls": 0
+      },
+      "中文对照": {
+        "calls": 3,
+        "in": 4793,
+        "out": 39967,
         "cache_read": 0,
         "cache_write": 0,
         "est_calls": 0
@@ -90,6 +102,1380 @@
       "stop_reason": "end_turn",
       "in_tok": 68581,
       "out_tok": 20930
+    },
+    {
+      "ts": "2026-11-05T15:00:55.430Z",
+      "label": "中文对照·论点卡",
+      "provider": "deepseek",
+      "model": "deepseek-flash",
+      "ok": true,
+      "secs": 61.9,
+      "stop_reason": "stop",
+      "in_tok": 1988,
+      "out_tok": 12132
+    },
+    {
+      "ts": "2026-11-05T15:01:05.883Z",
+      "label": "中文对照·论点卡",
+      "provider": "deepseek",
+      "model": "deepseek-flash",
+      "ok": true,
+      "secs": 72.3,
+      "stop_reason": "stop",
+      "in_tok": 823,
+      "out_tok": 13117
+    },
+    {
+      "ts": "2026-11-05T15:01:09.150Z",
+      "label": "中文对照·论点卡",
+      "provider": "deepseek",
+      "model": "deepseek-flash",
+      "ok": true,
+      "secs": 75.6,
+      "stop_reason": "stop",
+      "in_tok": 1982,
+      "out_tok": 14718
     }
-  ]
+  ],
+  "thesis_scout": {
+    "key": "도자기 팔아서 월세나 낼 수 있을까? 공방 사장들의 진짜 숨은 수입원|the-economics-of-owning-a-cafe|0:0",
+    "at": "2026-11-05T14:54:10.064Z",
+    "searched": true,
+    "angles": [
+      {
+        "id": "A1",
+        "belief": "陶瓷工坊靠卖手工陶器制品赚钱维持运营",
+        "claim": "零售产品几乎不产生净利润，真正收入来自按小时计费的체험클래스（体验课程）——工坊本质上是在售卖「3小时空间使用权+指导服务」的时间切片，陶瓷作品只是营销道具",
+        "one_line": "工坊老板卖的不是陶器，是按小时出租的工作台和指导时间",
+        "method": [
+          "M2",
+          "M1"
+        ],
+        "key_fact": "需查：韩国원데이클래스（one-day class）市场规模与增长率；典型도자기공방的收入结构中体验课程vs产品零售占比；单次3小时体验课价格（预估3-6万韩元）vs单件作品制作时间成本与售价对比；[R1]提到的「월세는 낼 수 있을지」焦虑背后的实际收入来源分布",
+        "why_watch": "把「手工艺人梦想」的浪漫想象替换成「小时工位出租+指导服务商」的现实结构，解释为什么Instagram上的精美作品集不等于利润",
+        "risk": "可能存在高端定制路线或网店为主的工坊确实以产品销售为主要收入；原데이클래스市场可能已饱和导致这个模式也不稳定",
+        "queries": [
+          {
+            "query": "원데이클래스 시장 규모",
+            "side": "pro"
+          },
+          {
+            "query": "도자기 공방 수익 구조",
+            "side": "pro"
+          },
+          {
+            "query": "핸드메이드 도자기 판매 수익",
+            "side": "con"
+          }
+        ]
+      },
+      {
+        "id": "A2",
+        "belief": "应该找便宜地段开工坊以降低租金压力",
+        "claim": "체험형 공방必须在高租金核心商圈才能生存，因为客流转化是生命线，「节省租金」的选择等于主动切断收入来源——真正决定能否付月租的不是租金绝对值，而是「每平米能产生多少人次」",
+        "one_line": "省租金的工坊会因为客流不足更快倒闭，租金贵的地段反而是活下去的前提",
+        "method": [
+          "M7",
+          "M4"
+        ],
+        "key_fact": "需查：首尔/主要城市不同区域（홍대/강남 vs 외곽）工坊租金差异与客流转化率对比；租金占总收入的行业标准比例（预估20-30%）；小商工인시장振兴公团关于公방创业的地段选择与存活率数据；闭店案例中「选址失误」占比",
+        "why_watch": "揭示小生意的地段悖论——不是「租得起」就能活，而是「租对地方」才有收入，解释为什么初期省钱反而是失败开始",
+        "risk": "可能有依靠线上引流和口碑传播成功的郊区工坊案例；疫情后线上课程可能改变了地段依赖",
+        "queries": [
+          {
+            "query": "공방 입지 선정 실패 사례",
+            "side": "pro"
+          },
+          {
+            "query": "체험 공방 상권별 매출 차이",
+            "side": "pro"
+          },
+          {
+            "query": "저렴한 임대료 공방 성공",
+            "side": "con"
+          }
+        ]
+      },
+      {
+        "id": "A3",
+        "belief": "主要开店成本是窑炉、拉坯机等设备投入",
+        "claim": "设备是一次性沉没成本，真正持续侵蚀利润的是「空转时间成本」——已支付租金人工但没有客人的时段无法回收，开业前3-6个月的零收入期和淡季空窗期才是压垮现金流的真凶",
+        "one_line": "杀死工坊的不是设备投入，是付了场地和人但没人来的那些小时",
+        "method": [
+          "M1",
+          "M5",
+          "M3"
+        ],
+        "key_fact": "需查：韩国소상공인시장진흥공단对공방类小商工人的创业失败率与失败原因统计；从开业到盈亏平衡的平均月数；设备折旧vs租金人工的年度成本占比；[R1][R2]中提到的「그래서 돈을 벌 수 있을까?」焦虑背后的真实现金流陷阱数据；淡旺季课程预约率差异（预估旺季80% vs淡季30%以下）",
+        "why_watch": "把创业失败归因从「不够努力」或「作品不够好」拉回到结构性现金流陷阱，揭示时间的不可逆性如何吃掉利润",
+        "risk": "可能通过社交媒体和预售策略可以在开业前建立客源；可能设备维护成本确实很高",
+        "queries": [
+          {
+            "query": "소상공인 공방 폐업률",
+            "side": "pro"
+          },
+          {
+            "query": "공방 창업 손익분기점",
+            "side": "pro"
+          }
+        ]
+      }
+    ],
+    "recommended": "A1",
+    "rec_why": "最直接对应标题「숨은 수입원」，且M2方法（真正卖的是什么）是框架核心反差，观众期待值最高",
+    "search_runs": [
+      {
+        "query": "원데이클래스 시장 규모",
+        "target": "A1 支持",
+        "error": null,
+        "hits": [
+          {
+            "ref": "R1",
+            "title": "조종엽 차장 - 《“피아노 한 곡쯤은 하루 만에 완성한다",
+            "url": "https://www.donga.com/Journalist?p=1181&pid=jjj@donga.com#5",
+            "date": "2026-09-10",
+            "site": "동아일보",
+            "quote": "《“피아노 한 곡쯤은 하루 만에 완성한다?” “수영은 잘 못해도 하루 만에 서핑한다?” 짧은 시간을 투자해 효율적으로 새로운 취미를 배우는 ‘원데이 클래스’(하루 만에 특정 분야를 배우는 수업)가 뜨고 있다. 저렴한 비용으로 짧게는 2시간부터 길게는 5∼6시간 동안 자기계발을 하는 동시에 소소한 성취감을 느낄 수 있기 때문이다. 원데이 클래스의 주요 소비층으로 자리 잡은 2030 직장인들은 새로운 분야에 도전하기 위해 정기휴가"
+          },
+          {
+            "ref": "R2",
+            "title": "‘가성비+가심비’ 노린다…2030이 원데이 클래스에 빠지는 이유 [쿠키청년기자단]",
+            "url": "https://www.kukinews.com/article/view/kuk202503210156",
+            "date": "2025-03-22",
+            "site": "쿠키뉴스",
+            "quote": "‘가성비+가심비’ 노린다…2030이 원데이 클래스에 빠지는 이유 [쿠키청년기자단] ... 기사승인 2025-03-23 16:00:06 20~30세대 사이에서 하루 동안 원하는 분야를 체험할 수 있는 ‘원데이 클래스’가 여전히 높은 인기를 끌고 있다. 저성장·고물가 시대 속에서 가볍게 도전할 수 있으면서도 즉각적인 성취감을 줄 수 있다는 점에서 주목받고 있다. 원데이 클래스는 하루의 3~4시간을 쏟아 관심 분야를 배워볼 수 있는"
+          },
+          {
+            "ref": "R3",
+            "title": "피아노-서핑-○○만들기… 설레는 ‘한여름 낮의 꿈’",
+            "url": "https://www.donga.com/news/shareiframe?idx=article/all/20190715/96474287/1",
+            "date": "",
+            "site": "동아일보",
+            "quote": "설레는 ‘한여름 낮의 꿈’ ... 짧은 시간을 투자해 효율적으로 새로운 취미를 배우는 ‘원데이 클래스’(하루 만에 특정 분야를 배우는 수업)가 뜨고 있다. 저렴한 비용으로 짧게는 2시간부터 길게는 5∼6시간 동안 자기계발을 하는 동시에 소소한 성취감을 느낄 수 있기 때문이다. 원데이 클래스의 주요 소비층으로 자리 잡은 2030 직장인들은 새로운 분야에 도전하기 위해 정기휴가를 이용하기보다는 평일 반차나 주말 시간을 주로 활용하"
+          },
+          {
+            "ref": "R4",
+            "title": "이루마 곡을 하루만에 배워 친다고? 원데이 클래스 2030에 인기",
+            "url": "https://www.donga.com/news/shareiframe?idx=article/all/20190714/96467900/1",
+            "date": "",
+            "site": "동아일보",
+            "quote": "원데이 클래스 2030에 인기 ... 짧은 시간을 투자해 효율적으로 새로운 분야나 취미를 배우는 ‘원데이 클래스(하루만에 특정 분야를 배우는 수업)’가 뜨고 있다. 저렴한 비용으로 짧게는 2시간부터 길게는 5~6시간 동안 자기계발을 하는 동시에 소소한 성취감을 느낄 수 있다는 장점 때문이다. 원데이 클래스의 주요 소비층으로 자리 잡은 2030 직장인들은 새로운 분야에 도전하기 위해 정기휴가를 이용하기 보다는 평일 반차나 주말 "
+          },
+          {
+            "ref": "R5",
+            "title": "원데이클래스 가격 총정리 648개｜분야별 1인 단가 구간 비교 - 🌈 모카클래스 B2B Blog",
+            "url": "https://mochaclass.com/blog/one-day-class-price-range-2026",
+            "date": "2026-09-20",
+            "site": "Mochaclass",
+            "quote": "# 원데이클래스 가격 총정리 648개｜분야별 1인 단가 구간 비교 원데이클래스 가격은 1인 6,000원부터 50만 원까지 벌어지며, 모카클래스 648개의 중위값은 4만 원입니다. 3만~5만 원 구간에 352개가 몰려 있고, 핸드메이드는 분야 안에서만 16배 차이가 납니다. 구간 분포표와 예산 확정 5단계를 정리했습니다. Sep 21, 2026 ... 이 글은 모카클래스에 등록된 단체·출강 클래스 720개의 1인 단가를 전부 모"
+          }
+        ]
+      },
+      {
+        "query": "공방 입지 선정 실패 사례",
+        "target": "A2 支持",
+        "error": null,
+        "hits": [
+          {
+            "ref": "R6",
+            "title": "한국전통공예촌 중단…“사업 불가 판단” vs “행정권 남용”",
+            "url": "https://news.kbs.co.kr/news/mobile/view/view.do?ncd=8317066",
+            "date": "2025-07-29",
+            "site": "KBS 뉴스",
+            "quote": "#### 한국전통공예촌 중단…“사업 불가 판단” vs “행정권 남용” 입력 2025.07.30 (07:46) 수정 2025.07.30 (14:11) 청주시는 공예의 도시로서 위상 강화를 위해 한국전통공예촌 조성을 추진해 왔는데요, 최근 청주시가 사업 진척이 더디다며 사업 시행자 지정을 취소하자 시행자 측이 강하게 반발하고 있습니다. 이만영 기자입니다. ... 청주시 미원면 일대 한국 전통공예촌 복합 문화산업단지 예정지입니다. "
+          },
+          {
+            "ref": "R7",
+            "title": "고준위 방폐장 연구시설 입지 공방 '평행선' > 뉴스데스크 - MBC 강원영동",
+            "url": "https://www.mbceg.co.kr/post/127524?category_id=6&page=59",
+            "date": "2025-07-22",
+            "site": "MBC 강원영동",
+            "quote": "# 고준위 방폐장 연구시설 입지 공방 '평행선' 추천뉴스,태백시,뉴스리포트 2025.07.23 20:30 ... - 방송일자 2025-07-23 태백시에 고준위 방사성 폐기물 연구용 지하연구시설을 짓는 계획을 두고 논란이 뜨거워지고 있습니다. 원자력환경공단이 입지 선정에 문제없다는 입장을 밝혔지만, 관련 학계는 원점 재추진을 공식적으로 제안했습니다. 조규한 기자입니다. 원자력 관련 학자와 종사자로 구성된 원자력학회 특별위원회가"
+          },
+          {
+            "ref": "R8",
+            "title": "순천시의회 시정질의…쓰레기 소각장 입지 선정 절차 '공방'",
+            "url": "https://www.nocutnews.co.kr/news/6144315?utm_source=naver&utm_medium=article&utm_campaign=20240514060322",
+            "date": "2024-05-13",
+            "site": "노컷뉴스",
+            "quote": "## 순천시의회 시정질의…쓰레기 소각장 입지 선정 절차 '공방' - 전남CBS 박사라 기자 메일보내기 - 2024-05-14 10:30 전남 순천시의회 최미희 의원이 13일 제277회 임시회 제2차 본회의에서 노관규 시장을 상대로 한 시정 질문에서 폐기물 처리시설(쓰레기 소각장) 절차 및 규정 미준수, 행정력 낭비, 주민 소통 부재, 용역보고서 조작 의혹 등에 대해 질타했다. 입선위가 2023년 6월 22일 연향동 814-25"
+          },
+          {
+            "ref": "R9",
+            "title": "(나라-출연물)취재 후",
+            "url": "http://news.lghellovision.net/news/articleView.html?idxno=179530",
+            "date": "2017-02-22",
+            "site": "LG헬로비전",
+            "quote": "- 기자명 이지훈 - 입력 2017.02.23 18:19 ... 앞서 리포트에서 보신대로 동두천 디자인 빌리지 사업이 시작부터 순조로워 보이지 않습니다. 취재기자와 함께 자세한 이야기 나눠보겠습니다. ... 디자인 빌리지 사업을 이해하려면 동두천 보산동 관광특구의 상황을 먼저 알아야 하는데요 보산동 관광특구는 인근에 있는 미군부대 병사를 상대로 영업하던 곳입니다. 한때 3백개가 넘는 점포가 있었는데 '개도 달러를 물고 다녔다'"
+          },
+          {
+            "ref": "R10",
+            "title": "[우리 동네 이 문제] 천안 골재공장 신축 공방 | 중앙일보 - 사회 전국",
+            "url": "https://www.joongang.co.kr/article/15838556#1",
+            "date": "2014-09-17",
+            "site": "중앙일보",
+            "quote": "# [우리 동네 이 문제] 천안 골재공장 신축 공방 중앙일보 ... 골재공장 신축을 놓고 업체 대표와 천안시의원·충남도의원이 법정 공방을 벌이게 됐다. Y골재는 2012년 11월 천안시 북면 상동리에 골재공장을 짓기 위해 천안시에 중소기업창업사업계획서를 내고 승인을 신청했다. 하지만 시는 “주변 환경에 미치는 영향이 클 것으로 판단돼 공장 입지로는 부적합하다”며 승인하지 않았다. 시의 불승인에 대해 Y골재 측은 공장 건립을 반"
+          }
+        ]
+      },
+      {
+        "query": "소상공인 공방 폐업률",
+        "target": "A3 支持",
+        "error": null,
+        "hits": [
+          {
+            "ref": "R11",
+            "title": "[그래픽] 소상공인 폐업률 현황 | 연합뉴스",
+            "url": "https://www.yna.co.kr/amp/view/GYH20260630000500044",
+            "date": "2026-06-29",
+            "site": "연합뉴스",
+            "quote": "# [그래픽] 소상공인 폐업률 현황 송고 2026년06월30일 14시28분 (서울=연합뉴스) 김민지 기자 = 30일 중소벤처기업부가 발표한 '폐업자 통계분석 및 폐업 소상공인 실태조사'에 따르면, 지난해 소상공인 주요 6대 업종의 폐업률은 11.08%로 전체 사업자 폐업률(8.64%)을 상회했다."
+          },
+          {
+            "ref": "R12",
+            "title": "거시경제 변수를 활용한 서울 소상공인 폐업률 영향요인 분석 - KCI 등재",
+            "url": "https://kci.go.kr/kciportal/landing/article.kci?arti_id=ART003101448#1",
+            "date": "",
+            "site": "KCI",
+            "quote": "## 거시경제 변수를 활용한 서울 소상공인 폐업률 영향요인 분석 Analyzing the Impact of Macroeconomic Variables on the Closure Rate of Small Businesses in Seoul 중소기업금융연구 ... 2024 vol.44, no.2, pp.31 - 51 ... 진승화 1 , 이민준 2 1과학기술정책연구원 R&D혁신연구단 2서울신용보증재단 소상공인정책연구센터 최근 코로"
+          },
+          {
+            "ref": "R13",
+            "title": "[그래픽] 소상공인 폐업률 현황",
+            "url": "https://www.wowtv.co.kr/NewsCenter/News/Read?articleId=AKR20260630120400044",
+            "date": "2026-06-29",
+            "site": "한국경제TV",
+            "quote": "# [그래픽] 소상공인 폐업률 현황 ... (서울=연합뉴스) 김민지 기자 = 30일 중소벤처기업부가 발표한 '폐업자 통계분석 및 폐업 소상공인 실태조사'에 따르면, 지난해 소상공인 주요 6대 업종의 폐업률은 11.08%로 전체 사업자 폐업률(8.64%)을 상회했다."
+          },
+          {
+            "ref": "R14",
+            "title": "소상공인 10곳 중 4곳 “3년도 안돼 폐업”…평균 부채 1억",
+            "url": "http://www.kbsm.net/news/view.php?idx=468196",
+            "date": "2025-03-19",
+            "site": "경북신문",
+            "quote": "소상공인 10곳 중 4곳은 3년을 버티지 못하고 폐업하며 평균 부채액은 1억원이 넘는 것으로 조사됐다.중소기업중앙회는 19일 이 같은 내용의 '2025 폐업 소상공인 실태조사' 결과를 발표했다. 이번 조사는 2021년 이후 노란우산(소기업소상공인공제) 폐업공제금을 지급 받은 폐업 소상공인 820개사를 대상으로 진행됐다.조사에 따르면 창업 후 폐업까지의 영업 기간은 평균 6.5년으로 나타났다. 1년 미만 폐업자는 5.6%, 1~"
+          },
+          {
+            "ref": "R15",
+            "title": "“소상공인 40%, 창업 3년 만에 접었다”…폐업하고 떠안은 빚이 무려 - 매일경제",
+            "url": "https://www.mk.co.kr/news/business/11268343",
+            "date": "2025-03-18",
+            "site": "매일경제",
+            "quote": "## “소상공인 40%, 창업 3년 만에 접었다”…폐업하고 떠안은 빚이 무려 중소기업중앙회 실태조사 빚만 1억 넘게 떠안고 폐업 폐업한 소상공인 10명 중 4명은 창업 3년 안에 폐업을 하고, 사업을 접기로 결심할 당시 1억236만원의 빚을 진 상태인 것으로 조사됐다. 19일 중소기업중앙회가 발표한 ‘2025 폐업 소상공인 실태조사’에 따르면 폐업 소상공인의 평균 영업기간은 6년6개월로 나타났다. 영업기간별로는 △1년 미만 5"
+          }
+        ]
+      },
+      {
+        "query": "핸드메이드 도자기 판매 수익",
+        "target": "A1 反对",
+        "error": null,
+        "hits": [
+          {
+            "ref": "R16",
+            "title": "[Hotel Ceramics] Sara Victorio Unit Economics | iHeart",
+            "url": "https://www.iheart.com/podcast/1333-unit-economics-311300015/episode/hotel-ceramics-sara-victorio-322466872",
+            "date": "2026-02-11",
+            "site": "iHeart",
+            "quote": "February 12, 2026 • 39 min #### Episode Description In today's episode, I sit down with Sara Victorio, founder of Hotel Ceramics, a one-person handmade ceramics studio based in Portland, Oregon. We talk about how Hotel operates as a solo ma"
+          },
+          {
+            "ref": "R17",
+            "title": "Ep 621: Can You Make a Living from a $45 Mug? The Maker's Playbook | iHeart",
+            "url": "https://www.iheart.com/podcast/269-the-makers-playbook-96185802/episode/ep-621-can-you-make-a-living-from-a-45-mug-278430315/",
+            "date": "2025-05-29",
+            "site": "iHeart",
+            "quote": "May 30, 2025 • 27 min #### Episode Description Can you make a viable living from creating a wheelthrown mug that you charge $45 for? According to a video currently racing around the internet, the answer is no. But is that true? According to"
+          },
+          {
+            "ref": "R18",
+            "title": "Handmade Pottery and Ceramics Market Analytics & Retailer Insights | Grips",
+            "url": "https://gripsintelligence.com/insights/industries/home-garden/handmade-pottery-and-ceramics",
+            "date": "",
+            "site": "Grips",
+            "quote": "Home/Insights/Industries/Home & Garden/Handmade Pottery and CeramicsOnline Industry Intelligence — Home & Garden — Jun 2026 # Handmade Pottery and Ceramics ... Handcrafted ceramic tableware, decorative pottery, and home goods made by artisa"
+          },
+          {
+            "ref": "R19",
+            "title": "feltandfat.com - Grips",
+            "url": "https://gripsintelligence.com/insights/retailers/feltandfat.com#1",
+            "date": "",
+            "site": "Grips",
+            "quote": "Jan 2026 ... TRANSACTION INTELLIGENCE - JAN 2026 GLOBALLY # feltandfat.com 72K Revenue ... 12.7K Sessions ... 4.5-5.0% Conv. rate ... $100-125 AOV ... The website feltandfat.com offers a range of handmade ceramic dishware products. Customer"
+          },
+          {
+            "ref": "R20",
+            "title": "How to Start a Homemade Ceramic Mug Business: 9 Steps From Clay to First Sale-Custom Ceramic Mugs & Tableware Manufacturer | Huarui Ceramic",
+            "url": "https://www.huaruiceramic.com/Blog_1/how-to-start-a-homemade-ceramic-mug-business-9-steps-from-clay-to-first-sale.html",
+            "date": "2026-10-18",
+            "site": "Custom Ceramic Mugs & Tableware Manufacturer | Huarui Ceramic",
+            "quote": "# How to Start a Homemade Ceramic Mug Business: 9 Steps From Clay to First Sale The homemade ceramic mug market is one of those rare categories where small producers genuinely compete with factories. A handmade mug carries something mass pr"
+          }
+        ]
+      },
+      {
+        "query": "저렴한 임대료 공방 성공",
+        "target": "A2 反对",
+        "error": null,
+        "hits": [
+          {
+            "ref": "R21",
+            "title": "성동구 민관 공동 청년문화예술 안심상가 조성",
+            "url": "https://www.asiae.co.kr/article/2017090709215236883",
+            "date": "2017-09-06",
+            "site": "아시아경제",
+            "quote": "# 성동구 민관 공동 청년문화예술 안심상가 조성 ... ## 시세의 30~40% 임대료로 청년문화예술 공방 지원 [아시아경제 박종일 기자] 성동구(구청장 정원오)는 타이쿤 피앤에이치(회장 박치석)와 ‘문화예술공방 조성’을 통한 청년 일자리창출 업무협약을 체결했다. 주요 협약은 타이쿤 피앤에이치는 성수동에 위치한 갤러리아포레 지하 3층에 문화예술 공방을 조성, 청년예술가들에게 저렴한 임대료로 공간을 지원, 성동구는 문화예술공방 "
+          },
+          {
+            "ref": "R22",
+            "title": "성동구 민관 공동 청년문화예술 안심상가 조성 - 아시아경제",
+            "url": "http://www.asiae.co.kr/news/view.htm?sec=life4&idxno=2017090709215236883",
+            "date": "2017-09-06",
+            "site": "아시아경제",
+            "quote": "# 성동구 민관 공동 청년문화예술 안심상가 조성 ... 입력2017.09.07 09:26 ... [아시아경제 박종일 기자] 성동구(구청장 정원오)는 타이쿤 피앤에이치(회장 박치석)와 ‘문화예술공방 조성’을 통한 청년 일자리창출 업무협약을 체결했다. #### 시세의 30~40% 임대료로 청년문화예술 공방 지원 주요 협약은 타이쿤 피앤에이치는 성수동에 위치한 갤러리아포레 지하 3층에 문화예술 공방을 조성, 청년예술가들에게 저렴한 "
+          },
+          {
+            "ref": "R23",
+            "title": "(나라)동두천 디자인아트빌리지 공방 인기",
+            "url": "http://news.lghellovision.net/news/articleView.html?idxno=169709",
+            "date": "2016-12-01",
+            "site": "LG헬로비전",
+            "quote": "(나라)동두천 디자인아트빌리지 공방 인기 ... ### (나라)동두천 디자인아트빌리지 공방 인기 - 기자명 김호 - 입력 2016.12.02 16:39 ... 리모델링 해 공방으로 사용하는 디자인아트빌리지 사업이 순조롭게 진행되고 있습니다 동두천시에 따르면 지난 6월부터 입주자 모집을 시작한 아트빌리지는 현재까지 10명이 입주를 완료했습니다 또 11명이 입주를 준비하고 있고 내년까지 모두 60명의 수공예자가 입주를 마칠 예정입"
+          },
+          {
+            "ref": "R24",
+            "title": "- 저렴한 임대료와 양호한 접근성이 예술가들의 창작활동에 좋은 기회 요인",
+            "url": "https://e-archive.bscf.or.kr/27_policy/download.php?idx=1092&file=1604894710_1136_f.pdf#12#25#12",
+            "date": "",
+            "site": "전자아카이브",
+            "quote": "- 저렴한 임대료와 양호한 접근성이 예술가들의 창작활동에 좋은 기회 요인 - 주민들의 민원으로부터 비교적 자유로운 창작활동 - 빈 점포가 많기 때문에 젠트리피케이션에 대해서는 아직 우려할 단계는 아 니지만 대응책 마련이 현안 과제라는 인식임. - 다양한 장르의 예술인들이 활동함으로써 서로의 이해관계가 다르며, 따라 서 대표성을 지닌 커뮤니티 조성의 어려움. - 문래예술공장은 예술인 창작활동의 생태계구성에 구심점 역할을 하고 있"
+          },
+          {
+            "ref": "R25",
+            "title": "다산쯔 798 예술특구는 넓은 부지와 저렴한 임대료에 매력을 느낀 많은 예술가들이 자발적으로 집결하면서 예술지대로서 형성이 시작되었지만, 이 후 베이징 시와 국유기업의 행정 및 재정지원을 받으면서 정부와 기업이 공 동으로 계획하고...",
+            "url": "https://kookmin.dcollection.net/common/orgView/000002228197#14#18#14",
+            "date": "",
+            "site": "dCollection 디지털 학술정보 유통시스템",
+            "quote": "다산쯔 798 예술특구는 넓은 부지와 저렴한 임대료에 매력을 느낀 많은 예술가들이 자발적으로 집결하면서 예술지대로서 형성이 시작되었지만, 이 후 베이징 시와 국유기업의 행정 및 재정지원을 받으면서 정부와 기업이 공 동으로 계획하고 건설한 집결지로 변화하였다. 현재 798 예술특구는 국가가 공장 부지를 소유하고 있으며, 조양구의회, 구 정부, 철성기업 등과 같은 조직으로 구성되어 있다. 또한 베이징 시와 국유기업이 합동으로 관리"
+          }
+        ]
+      },
+      {
+        "query": "도자기 공방 수익 구조",
+        "target": "A1 支持",
+        "error": null,
+        "hits": [
+          {
+            "ref": "R26",
+            "title": "경기신문 - 기본에 충실한 경기·인천 지역 바른 신문",
+            "url": "https://www.kgnews.co.kr/news/tag_list_all.html?tag=8%eb%8c%80+%ed%95%b5%ec%8b%ac+%ea%b3%bc%ec%a0%9c",
+            "date": "2026-02-06",
+            "site": "경기신문",
+            "quote": "## 문화 한국도자재단, 경기 공예산업화 위한 '8대 핵심 과제' 발표 ... ▲오픈 클래스 ▲시설·장비 개방 ▲공예인 창작지원 ▲공예 굿즈 모델링 ▲입주 창업자 모집 등 총 8대 핵심 과제 가운데 가장 주목을 받은 내용은 공예인의 실질적인 수익 창출을 지원하는 방안이다. 센터는 작가가 직접 교육 콘텐츠를 기획하고 운영하는 ‘오픈 클래스’를 도입해 수강료 수익의 100%를 작가에게 귀속하는 제도를 운영한다. 또 개인 공방에서 "
+          },
+          {
+            "ref": "R27",
+            "title": "한국도자재단, 2026 경기 공예인 간담회 개최",
+            "url": "https://www.ksmnews.co.kr/news/view.php?idx=589396",
+            "date": "2026-02-04",
+            "site": "경상매일신문",
+            "quote": "[경상매일신문=서상진기자]한국도자재단이 5일 경기공예창작지원센터에서 경기도 공예인 100여 명이 참석한 가운데 ‘2026 경기 공예인 간담회’를 개최하고, 경기 공예산업의 자생력 강화를 위한 8대 핵심 과제를 발표했다. 이번 간담회는 기존의 체험 중심 교육 지원을 넘어 경기 공예가 전문 비즈니스로 자립할 수 있도록 정책 패러다임을 전환하기 위해 마련됐다. ... △오픈 클래스△시설·장비 개방 △공예인 창작지원 △공예 굿즈 모델"
+          },
+          {
+            "ref": "R28",
+            "title": "\"방송 1회에 1억 주문\"…도예 공방의 한계를 깬 '무자기'의 비결",
+            "url": "https://www.wowtv.co.kr/NewsCenter/News/Read?articleId=202512194574O",
+            "date": "2025-12-21",
+            "site": "한국경제TV",
+            "quote": "# \"방송 1회에 1억 주문\"…도예 공방의 한계를 깬 '무자기'의 비결 ... 우아한 백자 접시가 홈쇼핑 생방송 화면을 채우자마자 주문 전화가 폭주했다. “도자기를 TV 홈쇼핑에서 판다고?”라는 우려가 무색하게, 단 1회 방송 만에 매출 1억 원을 기록하며 시장의 예상을 뒤집었다. 도예 브랜드 ‘무자기(대표 심보근)’의 행보는 전통 공예 업계의 통념을 완전히 벗어난다. 공예품은 소량 제작해 갤러리나 편집숍에서 판매해야 한다는 "
+          },
+          {
+            "ref": "R29",
+            "title": "자유 채색 도자기 공방 장부 관리: 소성 비용, 생지 파손, 그리고 보증금 - 본문으로 건너뛰기",
+            "url": "https://beancount.io/ko/blog/2026/08/21/paint-your-own-pottery-studio-bookkeeping-firing-fees-greenware-breakage-deposits-guide#1",
+            "date": "2026-08-20",
+            "site": "Beancount.io",
+            "quote": "# 자유 채색 도자기 공방 장부 관리: 소성 비용, 생지 파손, 그리고 보증금 ... 8명의 테이블이 2시간 만에 $248을 지출했습니다 — $28 머그, 1인당 $8 공방 수수료, 추가 유약 업그레이드 — 그리고 여러분은 벌써 마음속으로 그 이익을 계산하고 있습니다. 그런데 가마가 식었을 때: 머그 하나가 금이 갔고, 두 개의 색상이 번졌으며, 생일 엄마가 토요일 $395 파티를 취소했는데 이미 두 팀의 워크인 손님을 돌려보"
+          },
+          {
+            "ref": "R30",
+            "title": "자유 채색 도자기 공방 장부 관리: 소성 비용, 생지 파손, 그리고 보증금 - 기프트 카드도 동일합니다: 판매 시 차변 Cash, 대변Liabilities:Deferred Revenue:Gift Cards",
+            "url": "https://beancount.io/ko/blog/2026/08/21/paint-your-own-pottery-studio-bookkeeping-firing-fees-greenware-breakage-deposits-guide#2",
+            "date": "2026-08-20",
+            "site": "Beancount.io",
+            "quote": "기프트 카드도 동일합니다: 판매 시 차변 Cash, 대변Liabilities:Deferred Revenue:Gift Cards. 사용 시에만 수익을 인식하십시오. 파손(미사용 카드)은 보수적으로 추적하십시오. 대부분의 소규모 공방은 카드 만료 또는 관할권의 에스체트 창구가 지나갈 때까지 파손을 인식해서는 안 됩니다; 조기 인식은 수익을 과대 계상하고 판매세 및 에스체트 노출을 만들 수 있습니다. ### 이것이 손익계산서에 미치"
+          }
+        ]
+      },
+      {
+        "query": "체험 공방 상권별 매출 차이",
+        "target": "A2 支持",
+        "error": null,
+        "hits": [
+          {
+            "ref": "R31",
+            "title": "[매경TV 핫플레이스] 체험에 감성까지 더해진 ‘부산’ 낭만의 소비 시대를 이끌다",
+            "url": "https://mbnmoney.com/news/view?news_no=MM1005553845",
+            "date": "2025-05-13",
+            "site": "mbnmoney.com",
+            "quote": "소비가 가장 많이 발생한 업종은 일일체험공방이었고, 그 중심에는 부산과 서울에서 공통으로 나타난 키워드가 있었습니다. ... 전포의 매출액 상승률이 6.5%로, 지난해 같은 기간 대비 최근 1년(24Q2-25Q1) 동안 부산에서 가장 뛰었습니다. ... 상위 TOP3 모두 체험 관련 업종입니다. ▲ 일일체험공방 +54.0% ↑ ... 특히 일일체험공방은 54.0% 성장해 1위를 기록했으며, 상권별로는 해운대(+95.7%)와 부"
+          },
+          {
+            "ref": "R32",
+            "title": "서순라길에서 공방 창업하고 싶다면? | KB의 생각",
+            "url": "https://kbthink.com/main/asset-management/for-manager/dicon_ceo_content/ceo_content_business_zone_analysis/2024/business-zone-202409.notrack.html",
+            "date": "2024-09-24",
+            "site": "KB Think",
+            "quote": "# 서순라길에서 공방 창업하고 싶다면? 사장님의 사업성공을 위한 상권정보 24.09.25. ... - 전통적인 매력을 지닌 서순라길 상권 특징과 공방 창업 팁을 알려드려요. - 공방 창업 전, 꼭 확인해야 할 사항을 짚어봐요. ... 코로나19 이후 비대면 생활이 보편화되면서 여가 생활의 중요도가 높아졌어요. 그에 따라 새로운 취미를 찾는 사람들이 늘어났습니다. 이러한 관심을 충족시키는 공간으로 공방이 주목받기 시작했어요. 일"
+          },
+          {
+            "ref": "R33",
+            "title": "- 창작자 지원 : 테마별 공방투어 상품 개발, 로컬 메이커스페이스 연계",
+            "url": "https://nowon.kr/component/file/ND_fileDownload.do?q_fileSn=261951&q_fileId=40fc3e91-167a-4d6e-b7ed-3b68bd40b9d6#26#34#26",
+            "date": "",
+            "site": "노원구청",
+            "quote": "- 창작자 지원 : 테마별 공방투어 상품 개발, 로컬 메이커스페이스 연계 - 콘텐츠 제작: 공예가 스토리텔링 시리즈, 공방 투어 가이드 제작, 웰컴 센 터와 체험 상품 연계 강화 ... - 숨겨진 골목길, 아기자기함, 브런치 길, 상권 활성화 부족 - 패션 편집숍, 빈티지 숍, 코타브레드 - 경춘선 공릉숲길웰컴센터 ... ## (8) 웰컴센터 운영방안 ## ◦ 기존 운영 방식 - 웰컴센터 상시 운영: 상권 안내, 포토존, 이벤"
+          },
+          {
+            "ref": "R34",
+            "title": "<table><tr><td>단계 (Stage)</td><td>1. 도착 전(Pre-Visit)</td><td>2. 현장 체험(On-Site)</td><td>3. 소비-참여(Engage)</td><td>4. 종료-이탈(Leave)<...",
+            "url": "https://www.seogu.gwangju.kr/boardDownload.es?bid=0169&list_no=141960&seq=1#8#21#8",
+            "date": "",
+            "site": "전남광주통합특별시 서구청 #착한도시 서구",
+            "quote": "<table><tr><td>단계 (Stage)</td><td>1. 도착 전(Pre-Visit)</td><td>2. 현장 체험(On-Site)</td><td>3. 소비-참여(Engage)</td><td>4. 종료-이탈(Leave)</td><td>5. 재방문(Revisit)</td></tr><tr><td>고객 행동<br/>(Action)</td><td>• 지인 요인 장소 물색·주차<br/>가능 여부 확인</td><td>• 자가용 "
+          },
+          {
+            "ref": "R35",
+            "title": "[돈 되는 상권분석] 100만 방문객의 비밀, 영등포 창업 전략 가이드",
+            "url": "https://www.fcmedia.co.kr/news/articleView.html?idxno=28322",
+            "date": "2025-11-20",
+            "site": "창업&프랜차이즈",
+            "quote": "[돈 되는 상권분석] 100만 방문객의 비밀, 영등포 창업 전략 가이드 ... - 승인 2025.11.21 10:38 ... GTX-B 및 신안산선 개통, 대규모 재개발 프로젝트라는 ‘호재 3종 세트’가 몰려온 영등포는 2025년 창업 최적지다. 주말 100만 명을 기록한 방문객 파워를 기반으로, 감성형 카페부터 체험형 서비스, 동네 밀착형 로컬 매장까지 다양한 아이템이 기회를 잡을 수 있다. 다만 과밀화된 점포 경쟁과 빠른 "
+          }
+        ]
+      },
+      {
+        "query": "도자기 팔아서 월세나 낼 수 있을까? 공방 사장들의 진짜 숨은 수입원",
+        "target": "摸底",
+        "error": null,
+        "hits": [
+          {
+            "ref": "R36",
+            "title": "초보 공방 사장을 위한 공방 창업 바이블",
+            "url": "https://ebook-product.kyobobook.co.kr/dig/epd/sam/E000006851624?tabType=SAM",
+            "date": "2023-11-14",
+            "site": "교보문고",
+            "quote": "# 초보 공방 사장을 위한 공방 창업 바이블 ... 2024년 03월 14일 출간 ... 손재주는 좋지만 공방 창업이 막막한 분들에게 꼭 필요한 책 《초보 공방 사장을 위한 공방 창업 바이블》이 출간되었다. 캔들, 베이킹, 떡, 도자기, 라탄, 가죽 공예 등 손으로 만드는 시간을 즐기는 사람들이 본업 또는 부업으로 공방 창업을 생각할 때, 미리 알아보고 준비할 사항들이 많다. 또한 창업을 한 후에는 고객을 모으고 알리는 전략,"
+          },
+          {
+            "ref": "R37",
+            "title": "울주통합도서관 전자책도서관",
+            "url": "https://uljuebook.ulju.ulsan.kr/ebook/detail/?goods_id=125327067",
+            "date": "",
+            "site": "울주통합도서관 전자책도서관",
+            "quote": "공방 창업 바이블 ... 좋아하는 일로 돈 버는 공방 창업의 모든 것 창업부터 운영, 마케팅, 브랜딩까지 공방 비즈니스 가이드북 손재주는 좋지만 공방 창업이 막막한 분들에게 꼭 필요한 책 『초보 공방 사장을 위한 공방 창업 바이블』이 출간되었다. 캔들, 베이킹, 떡, 도자기, 라탄, 가죽 공예 등 손으로 만드는 시간을 즐기는 사람들이 본업 또는 부업으로 공방 창업을 생각할 때, 미리 알아보고 준비할 사항들이 많다. 또한 창업을"
+          },
+          {
+            "ref": "R38",
+            "title": "\"I wanted to create something by myself, so I need a studio, and I tried to discuss this with previous studio if I can for examp...",
+            "url": "https://insis.vse.cz/zp/95409#7#13#7",
+            "date": "",
+            "site": "InSIS",
+            "quote": "Karmin Studio by Yuliya, 12/3/2026, interview excerpt) ... KeraKult by Roksolana, 13/3/2026, interview excerpt). ... The platform was used to respond to inquiries, provide information about classes, or facilitate bookings. ... Instagram was"
+          },
+          {
+            "ref": "R39",
+            "title": "초보 공방 사장을 위한 공방 창업 바이블(큰글자책) - 교보문고",
+            "url": "https://product.kyobobook.co.kr/detail/S000212723936",
+            "date": "",
+            "site": "국내도서",
+            "quote": "# 초보 공방 사장을 위한 공방 창업 바이블(큰글자책) ... 좋아하는 일로 돈 버는 공방 창업의 모든 것 창업부터 운영, 마케팅, 브랜딩까지 공방 비즈니스 가이드북 손재주는 좋지만 공방 창업이 막막한 분들에게 꼭 필요한 책 《초보 공방 사장을 위한 공방 창업 바이블》이 출간되었다. 캔들, 베이킹, 떡, 도자기, 라탄, 가죽 공예 등 손으로 만드는 시간을 즐기는 사람들이 본업 또는 부업으로 공방 창업을 생각할 때, 미리 알아보"
+          },
+          {
+            "ref": "R40",
+            "title": "도서관 통합 자료 검색",
+            "url": "https://lib.daedeok.go.kr:8443/index.php?mod=wdDataSearch&act=searchResultDetail&ctrl=000005300801&viewType=table&loca=H0000029&srchKey[0]=4&vSType=KWRD&srchText[0]=%EA%B3%B5%EB%B0%A9",
+            "date": "",
+            "site": "대덕구 도서관",
+            "quote": "(초보 공방 사장을 위한) 공방 창업 바이블 : 손재주는 좋지만 공방 운영이 막막한 당신에게 ... 좋아하는 일로 돈 버는 공방 창업의 모든 것 창업부터 운영, 마케팅, 브랜딩까지 공방 비즈니스 가이드북 손재주는 좋지만 공방 창업이 막막한 분들에게 꼭 필요한 책 《초보 공방 사장을 위한 공방 창업 바이블》이 출간되었다. 캔들, 베이킹, 떡, 도자기, 라탄, 가죽 공예 등 손으로 만드는 시간을 즐기는 사람들이 본업 또는 부업으로"
+          }
+        ]
+      }
+    ],
+    "pick": {
+      "checks": [
+        {
+          "id": "A1",
+          "verdict": "站得住",
+          "note": "原데이클래스(一日体验课)市场2030占比72.8%,单次课程3-6万韩元,公方收入结构中体验课占主导已被多个案例证实;反对资料主要来自欧美市场的手工陶瓷零售案例,不适用于韩国体验经济主导的公方模式",
+          "narrowed": "",
+          "pro": [
+            {
+              "ref": "R1",
+              "title": "조종엽 차장 - 《“피아노 한 곡쯤은 하루 만에 완성한다",
+              "url": "https://www.donga.com/Journalist?p=1181&pid=jjj@donga.com#5",
+              "date": "2026-09-10",
+              "site": "동아일보"
+            },
+            {
+              "ref": "R2",
+              "title": "‘가성비+가심비’ 노린다…2030이 원데이 클래스에 빠지는 이유 [쿠키청년기자단]",
+              "url": "https://www.kukinews.com/article/view/kuk202503210156",
+              "date": "2025-03-22",
+              "site": "쿠키뉴스"
+            },
+            {
+              "ref": "R5",
+              "title": "원데이클래스 가격 총정리 648개｜분야별 1인 단가 구간 비교 - 🌈 모카클래스 B2B Blog",
+              "url": "https://mochaclass.com/blog/one-day-class-price-range-2026",
+              "date": "2026-09-20",
+              "site": "Mochaclass"
+            },
+            {
+              "ref": "R26",
+              "title": "경기신문 - 기본에 충실한 경기·인천 지역 바른 신문",
+              "url": "https://www.kgnews.co.kr/news/tag_list_all.html?tag=8%eb%8c%80+%ed%95%b5%ec%8b%ac+%ea%b3%bc%ec%a0%9c",
+              "date": "2026-02-06",
+              "site": "경기신문"
+            },
+            {
+              "ref": "R27",
+              "title": "한국도자재단, 2026 경기 공예인 간담회 개최",
+              "url": "https://www.ksmnews.co.kr/news/view.php?idx=589396",
+              "date": "2026-02-04",
+              "site": "경상매일신문"
+            },
+            {
+              "ref": "R28",
+              "title": "\"방송 1회에 1억 주문\"…도예 공방의 한계를 깬 '무자기'의 비결",
+              "url": "https://www.wowtv.co.kr/NewsCenter/News/Read?articleId=202512194574O",
+              "date": "2025-12-21",
+              "site": "한국경제TV"
+            },
+            {
+              "ref": "R29",
+              "title": "자유 채색 도자기 공방 장부 관리: 소성 비용, 생지 파손, 그리고 보증금 - 본문으로 건너뛰기",
+              "url": "https://beancount.io/ko/blog/2026/08/21/paint-your-own-pottery-studio-bookkeeping-firing-fees-greenware-breakage-deposits-guide#1",
+              "date": "2026-08-20",
+              "site": "Beancount.io"
+            }
+          ],
+          "con": [
+            {
+              "ref": "R16",
+              "title": "[Hotel Ceramics] Sara Victorio Unit Economics | iHeart",
+              "url": "https://www.iheart.com/podcast/1333-unit-economics-311300015/episode/hotel-ceramics-sara-victorio-322466872",
+              "date": "2026-02-11",
+              "site": "iHeart"
+            },
+            {
+              "ref": "R17",
+              "title": "Ep 621: Can You Make a Living from a $45 Mug? The Maker's Playbook | iHeart",
+              "url": "https://www.iheart.com/podcast/269-the-makers-playbook-96185802/episode/ep-621-can-you-make-a-living-from-a-45-mug-278430315/",
+              "date": "2025-05-29",
+              "site": "iHeart"
+            },
+            {
+              "ref": "R18",
+              "title": "Handmade Pottery and Ceramics Market Analytics & Retailer Insights | Grips",
+              "url": "https://gripsintelligence.com/insights/industries/home-garden/handmade-pottery-and-ceramics",
+              "date": "",
+              "site": "Grips"
+            },
+            {
+              "ref": "R19",
+              "title": "feltandfat.com - Grips",
+              "url": "https://gripsintelligence.com/insights/retailers/feltandfat.com#1",
+              "date": "",
+              "site": "Grips"
+            }
+          ],
+          "card": {
+            "belief": "观众以为陶瓷工坊靠卖手工陶器制品赚钱维持运营",
+            "claim": "工坊老板卖的不是陶器,是按小时出租的工作台和指导时间——零售产品几乎不产生净利润,真正收入来自按小时计费的체험클래스(体验课程)",
+            "one_line": "你花3万韩元在工坊做的那个歪歪扭扭的杯子,老板赚的不是杯子钱,是你坐在那3小时的座位费",
+            "ending_landing": "不只是陶瓷工坊——你以为在为产品付费的那些小生意,可能都在卖你看不见的东西",
+            "boundary": "不适用于高端定制路线或纯线上销售的工坊,也不适用于原데이클래스市场尚未成熟的地区",
+            "opening_line": "首尔弘大一家陶瓷工坊的货架上,摆着三十多个手工杯,标价每个4万5千韩元,但老板一个月只能卖出去两三个",
+            "key": {
+              "ref": "R26",
+              "title": "경기신문 - 기본에 충실한 경기·인천 지역 바른 신문",
+              "url": "https://www.kgnews.co.kr/news/tag_list_all.html?tag=8%eb%8c%80+%ed%95%b5%ec%8b%ac+%ea%b3%bc%ec%a0%9c",
+              "date": "2026-02-06",
+              "site": "경기신문"
+            },
+            "outline": [
+              {
+                "says": "用第二人称幻想复述建立代入(你开了间陶瓷工坊,满心以为靠卖杯子碗盘维持生计),随即以실적(实绩)数据重定向制造悖论",
+                "uses": "R26提到的공예인(工艺人)收入结构中오픈클래스(开放课程)占主导,R28提到传统공방(工坊)难以单靠产品零售存活",
+                "leaves": "那这些工坊到底靠什么活下来?"
+              },
+              {
+                "says": "拆解收入真相:观众最先看到的货架产品其实是道具,真正赚钱的是원데이클래스(一日体验课)",
+                "uses": "R1、R2提到2030세대(20-30岁群体)占원데이클래스用户72.8%,单次课程2-6万韩元、时长2-5小时,R5提到中位价4万韩元",
+                "leaves": "但为什么产品不赚钱,课程就赚钱?"
+              },
+              {
+                "says": "算清单位经济账:手工陶器的制作时间成本与售价对比,揭示毛利幻觉被工时侵蚀的真相",
+                "uses": "R29提到도자기공방(陶瓷工坊)的直接成本占比低但工时成本高,워크인(walk-in散客)작품单价2.4-3.2万韩元但제작시간(制作时间)长,待查:典型手工杯从拉坯到烧制的总工时与인건비(人工费)折算",
+                "leaves": "那체험클래스为什么能把同样的时间变成利润?"
+              },
+              {
+                "says": "重新定义产品:工坊卖的不是陶器,是'3小时空间使用权+지도서비스(指导服务)'的时间切片,陶瓷作品只是营销道具和带走的纪念品",
+                "uses": "R26、R27提到공예창작지원센터(工艺创作支援中心)推动오픈클래스模式,수강료수익(听课费收入)100%归작가(作家),R29提到공방수수료(工坊手续费)为按人头收取",
+                "leaves": "这个模式在韩国有多普遍?"
+              },
+              {
+                "says": "给出行业标尺:원데이클래스市场规模与增长,핸드메이드(手工制作)、공예(工艺)类체험在2030세대中的渗透率",
+                "uses": "R1、R2提到最近5年间(最近5年间)使用者比例(使用者比例)增长2倍以上，Instagram(Instagram)话题标签达616万条，待查：韩国一日课堂市场总规模与年增长率(年增长率)",
+                "leaves": "但不是所有工坊都能靠체험클래스活,什么条件下这个模式才成立?",
+                "uses_orig": "R1、R2提到최근5년사이(最近5年间)이용자비율(使用者比例)增长2倍以上,인스타그램(Instagram)해시태그达616万条,待查:韩国원데이클래스市场总规模与년성장률(年增长率)"
+              },
+              {
+                "says": "点明成立条件:고객유입(客流导入)是生命线,사진찍기좋은(适合拍照的)공간与SNS전파력(SNS传播力)决定예약률(预约率)",
+                "uses": "R31提到一日体验工坊在釜山海云台(釜山海云台)销售增长率(销售增长率)+95.7%、釜山大学区(釜山大学区)+63.2%，按商圈(按商圈)差异明显，R32提到一日课堂顾客以MZ世代为主，重视定制化(定制化)与体验型项目(体验型项目)",
+                "leaves": "那些没客流或转化不了的工坊,会面临什么?",
+                "uses_orig": "R31提到일일체험공방在부산해운대(釜山海云台)매출증가율(销售增长率)+95.7%、부산대(釜山大学区)+63.2%,상권별(按商圈)차이明显,R32提到원데이클래스고객以MZ세대为主,重视커스터마이징(定制化)与체험형프로그램(体验型项目)"
+              },
+              {
+                "says": "揭示失败陷阱:입지선정실패(选址失败)与고객모집실패(客源招募失败)导致공방在개업3년이내(开业3年内)폐업(闭店)",
+                "uses": "R11、R13提到소상공인폐업률(小商工人闭店率)11.08%,R14、R15提到창업후3년미만폐업비율(创业后3年内闭店比例)39.9%,폐업사유(闭店原因)首位是수익성악화및매출부진(收益性恶化及销售不振)86.7%",
+                "leaves": "所以产品零售不是不行,而是在这个商业模式里它被重新定位了"
+              },
+              {
+                "says": "回收情绪并压缩论点:陶瓷工坊是时间切片与空间体验的복합시스템(复合系统),产品从利润中心变成营销도구(工具)与기념품(纪念品)",
+                "uses": "综合R26、R27、R28的공예산업화(工艺产业化)转型案例",
+                "leaves": "这个逻辑不只适用于陶瓷——任何把'产品'当幌子、真正卖'时间'或'体验'的小生意,都在用同一套경제학(经济学)"
+              }
+            ],
+            "missing": [
+              "韩国一日课堂市场总规模(亿韩元)与2020-2026年增长率",
+              "典型도자기공방的收入结构:체험클래스 vs 제품판매占比(最好有行业调查数据)",
+              "单次3小时体验课程的实际成本结构：材料费、人工费、空间费用分解",
+              "手工陶器(예:머그컵)从拉坯到완성的总工시与판매가대비",
+              "一日课堂顾客的再访问率与购买转化率"
+            ]
+          },
+          "enough": {
+            "level": "够",
+            "sources": 9,
+            "key_found": true,
+            "facts": 7
+          }
+        },
+        {
+          "id": "A2",
+          "verdict": "站得住",
+          "note": "체험형공방(体验型工坊)在핵심상권(核心商圈)如해운대、강남与郊区매출차이达95.7% vs 외곽低增长,客流转化是생명선(生命线);反对资料主要是정부보조(政府补贴)项目或예술인집결지(艺术人聚集地)的저렴한임대료(便宜租金)案例,不代表일반상업공방(一般商业工坊)可复制",
+          "narrowed": "",
+          "pro": [
+            {
+              "ref": "R31",
+              "title": "[매경TV 핫플레이스] 체험에 감성까지 더해진 ‘부산’ 낭만의 소비 시대를 이끌다",
+              "url": "https://mbnmoney.com/news/view?news_no=MM1005553845",
+              "date": "2025-05-13",
+              "site": "mbnmoney.com"
+            },
+            {
+              "ref": "R32",
+              "title": "서순라길에서 공방 창업하고 싶다면? | KB의 생각",
+              "url": "https://kbthink.com/main/asset-management/for-manager/dicon_ceo_content/ceo_content_business_zone_analysis/2024/business-zone-202409.notrack.html",
+              "date": "2024-09-24",
+              "site": "KB Think"
+            },
+            {
+              "ref": "R35",
+              "title": "[돈 되는 상권분석] 100만 방문객의 비밀, 영등포 창업 전략 가이드",
+              "url": "https://www.fcmedia.co.kr/news/articleView.html?idxno=28322",
+              "date": "2025-11-20",
+              "site": "창업&프랜차이즈"
+            }
+          ],
+          "con": [
+            {
+              "ref": "R21",
+              "title": "성동구 민관 공동 청년문화예술 안심상가 조성",
+              "url": "https://www.asiae.co.kr/article/2017090709215236883",
+              "date": "2017-09-06",
+              "site": "아시아경제"
+            },
+            {
+              "ref": "R22",
+              "title": "성동구 민관 공동 청년문화예술 안심상가 조성 - 아시아경제",
+              "url": "http://www.asiae.co.kr/news/view.htm?sec=life4&idxno=2017090709215236883",
+              "date": "2017-09-06",
+              "site": "아시아경제"
+            },
+            {
+              "ref": "R23",
+              "title": "(나라)동두천 디자인아트빌리지 공방 인기",
+              "url": "http://news.lghellovision.net/news/articleView.html?idxno=169709",
+              "date": "2016-12-01",
+              "site": "LG헬로비전"
+            },
+            {
+              "ref": "R24",
+              "title": "- 저렴한 임대료와 양호한 접근성이 예술가들의 창작활동에 좋은 기회 요인",
+              "url": "https://e-archive.bscf.or.kr/27_policy/download.php?idx=1092&file=1604894710_1136_f.pdf#12#25#12",
+              "date": "",
+              "site": "전자아카이브"
+            },
+            {
+              "ref": "R25",
+              "title": "다산쯔 798 예술특구는 넓은 부지와 저렴한 임대료에 매력을 느낀 많은 예술가들이 자발적으로 집결하면서 예술지대로서 형성이 시작되었지만, 이 후 베이징 시와 국유기업의 행정 및 재정지원을 받으면서 정부와 기업이 공 동으로 계획하고...",
+              "url": "https://kookmin.dcollection.net/common/orgView/000002228197#14#18#14",
+              "date": "",
+              "site": "dCollection 디지털 학술정보 유통시스템"
+            }
+          ],
+          "card": {
+            "belief": "应该找便宜地段开工坊以降低租金压力",
+            "claim": "체험형공방必须在高租金核心商圈才能生存,因为客流转化是生命线,'节省租金'的选择等于主动切断收入来源——真正决定能否付月세(月租)的不是租金绝对值,而是'每平米能产生多少人次'",
+            "one_line": "在弘大月租300万韩元的工坊能活,搬到郊区省下200万却会死——因为客流掉了80%,省下的租金填不了空转的座位",
+            "ending_landing": "不只是工坊——所有靠'人来了才有收入'的小生意,选址时算的都不该是租金绝对值,而是'每一块租金能换回多少客流'",
+            "boundary": "不适用于依靠온라인주문(线上订单)或입소문전파(口碑传播)、不依赖walk-in客流的郊区工坊,也不适用于获得정부임대지원(政府租金支援)的특수사례(特殊案例)",
+            "opening_line": "首尔一家陶瓷工坊从弘大搬到외곽(郊区)后,月租从300万韩元降到100万,但三个月后闭店了——因为客流从周末80人掉到15人",
+            "key": {
+              "ref": "R31",
+              "title": "[매경TV 핫플레이스] 체험에 감성까지 더해진 ‘부산’ 낭만의 소비 시대를 이끌다",
+              "url": "https://mbnmoney.com/news/view?news_no=MM1005553845",
+              "date": "2025-05-13",
+              "site": "mbnmoney.com"
+            },
+            "outline": [
+              {
+                "says": "用第二人称幻想复述(你盘算着'租金省一半就能多撑半年'),随即以실제폐업사례(实际闭店案例)制造悖论",
+                "uses": "待查:具体的공방이전후폐업(工坊搬迁后闭店)案例,R14、R15提到폐업사유중임대료등고정비용상승(闭店原因中租金等固定费用上升)44.6%但내수부진에따른고객감소(内需不振导致客户减少)52.2%更高",
+                "leaves": "为什么省租金反而更快死?"
+              },
+              {
+                "says": "拆解체험형공방的收入공식(公式):고객유입是第一变量,입지가客流转化率决定월매출천장(月销售天花板)",
+                "uses": "R31提到釜山按商圈(釜山按商圈)一日体验工坊销售增长率：海云台+95.7%、釜山大学区+63.2%，R32提到西顺拉路等核心商圈(核心商圈)的工坊创业建议",
+                "leaves": "那租金占比到底该是多少?",
+                "uses_orig": "R31提到부산상권별(釜山按商圈)일일체험공방매출증가율:해운대+95.7%、부산대+63.2%,R32提到서순라길等핵심상권(核心商圈)的공방创业建议"
+              },
+              {
+                "says": "给出행업표준(行业标准):체험형공방租金占총수익(总收入)20-30%是건강비율(健康比例),但核心是'租金换来的客流能否覆盖공간공전비용(空间空转费用)'",
+                "uses": "待查：韩国小工商业者市场振兴公团关于工坊创业的地区选择与生存率数据，R29提到工坊的固定费用包括租金、公共费用、人工费等",
+                "leaves": "具体来说,核心商圈和郊区的客流差距有多大?",
+                "uses_orig": "待查:韩国소상공인시장진흥공단关于공방창업的지역선택与생존율数据,R29提到공방的고정비용包括임대료、공과금、인건비等"
+              },
+              {
+                "says": "量化各地区客流差异：以首尔为例，弘大、江南等核心商圈 vs 外围住宅区的未预约进店客流与预约转化率对比",
+                "uses": "R31提到永登浦商圈周末访客100万名，时代广场周边与文来站一带适合不同业态，R35提到GTX-B开通后流动人口变化加速选址分化，待查：首尔主要商圈各工坊平均日客流与预约率",
+                "leaves": "那为什么有些郊区工坊还是活下来了?",
+                "says_orig": "量化지역별객류차이:以首尔为例,홍대、강남등핵심상권 vs 외곽주택가的walk-in客流与예약전환율对比",
+                "uses_orig": "R31提到영등포상권주말방문객100万명,타임스퀘어주변与문래역일대适合불同业태,R35提到GTX-B개통后유동인구변화加速입지분화,待查:서울주요상권별공방평균일객류与예약률"
+              },
+              {
+                "says": "点明例外条件：政府补助项目、艺术人聚集地或以在线订单为主的工坊不依赖未预约进店客流，但一般商业工坊无法复制",
+                "uses": "R21、R22提到城东区Galleria Fore的市价30-40%便宜的租金【原文语序生硬，直译为“市价30-40%便宜的租金”】但配套展示空间与政策支持，R23提到东豆川设计艺术村每平方米1.5万韩元便宜的租金但内部修理费支持，R24、R25提到文来创作村、大山子798艺术特区的便宜租金与艺术家自发聚集",
+                "leaves": "对于没有这些条件的일반공방主,选择是什么?",
+                "says_orig": "点明例外조건:정부보조项목、예술인집결지或온라인주문为主的공방不依赖walk-in客流,但일반상업공방无法复制",
+                "uses_orig": "R21、R22提到성동구갤러리아포레的시세30-40%저렴한임대료但配套전시공간与정책지원,R23提到동두천디자인아트빌리지제곱미터당1.5万韩元저렴한임대료但内부수리비지원,R24、R25提到문래창작촌、다산쯔798예술특구的저렴한임대료与예술가자발집결"
+              },
+              {
+                "says": "揭示두난(两难):选核心商圈意味着高租금压力但有客流보장,选郊区省租금但客流불확실성可能导致更快폐업",
+                "uses": "R11、R13的小工商业者停业率11.08%，R14、R15的3年未满停业比率39.9%，R6、R8、R9、R10的选址相关工坊与纠纷案例(虽非工坊但显示选址决定的复杂性)",
+                "leaves": "那些活下来的공방,是怎么在高租금商圈站稳的?",
+                "uses_orig": "R11、R13的소상공인폐업률11.08%,R14、R15的3년미만폐업비율39.9%,R6、R8、R9、R10的입지선정관련공방与분쟁案例(虽非공방但显示입지결정的복잡성)"
+              },
+              {
+                "says": "给出生存战略：高密度安排课程【原文“고밀도배치클래스”生硬，直译“高密度配置课程”】、复合收益模型(咖啡+课程)、SNS营销拉高客单价与再访问率，用效率抵消租金",
+                "uses": "R28提到Mujagi通过家庭购物、Market Kurly Live等大众流通渠道确保30个流通渠道、销售额32亿韩元，R29提到工坊通过工坊手续费、追加釉料升级、派对预约等多层收益，R32提到一日课堂与定期课程结合",
+                "leaves": "所以论点的边界在哪?",
+                "says_orig": "给出생존전략:고밀도배치클래스、복합수익모델(커피+클래스)、SNS마케팅拉高객단价与재방문율,用효율抵消租금",
+                "uses_orig": "R28提到무자기(Mujagi)통过홈쇼핑、마켓컬리라이브등대중유통채널확보30개유통채널、매출32억원,R29提到公방通过공방수수료、추가유약업그레이드、파티예약等다층수익,R32提到원데이클래스与정기클래스结合"
+              },
+              {
+                "says": "压缩论点并回收:체험형공방是'客流转租금'的게임,입지决定客流천장,省租금但失去客流是致命的역선택(逆选择)",
+                "uses": "综合R31、R32、R35的商圈分析与工坊创业建议",
+                "leaves": "这个逻辑推到所有'人来了才有钱'的小생의:매장选址时,算的不是租금绝对값,而是'每块租금能换多少客流'",
+                "uses_orig": "综合R31、R32、R35的상권분석与공방창업建议"
+              }
+            ],
+            "missing": [
+              "首尔、釜山等主要城市불同구역(홍대/강남 vs 외곽)공방租금차이与客流转화율对比数据",
+              "租金占总收益的小工商业者行业标准比例(最好有中小风险企业部或小工商业者市场振兴公团调查)",
+              "구체적인공방이전후폐업案例:租금节省多少、客流下降多少、多久폐업",
+              "政府租赁支持项目(城东区、东豆川等)的入驻工坊生存率与一般工坊对比",
+              "体验型工坊的按商圈平均日客流与预约转化率"
+            ]
+          },
+          "enough": {
+            "level": "够",
+            "sources": 10,
+            "key_found": true,
+            "facts": 7
+          }
+        },
+        {
+          "id": "A3",
+          "verdict": "站得住",
+          "note": "小工商业者3年未满停业比率39.9%、决定停业时平均负债1亿236万韩元，停业原因首位是收益性恶化及销售不振86.7%；工坊创业者最担心“能不能交月租”，工坊账簿管理实务明确指出空间空转费用【原文“공간공전비용”生硬，直译“空间空转费用”】是利润侵蚀主因；未查到明确反对资料",
+          "narrowed": "",
+          "pro": [
+            {
+              "ref": "R11",
+              "title": "[그래픽] 소상공인 폐업률 현황 | 연합뉴스",
+              "url": "https://www.yna.co.kr/amp/view/GYH20260630000500044",
+              "date": "2026-06-29",
+              "site": "연합뉴스"
+            },
+            {
+              "ref": "R13",
+              "title": "[그래픽] 소상공인 폐업률 현황",
+              "url": "https://www.wowtv.co.kr/NewsCenter/News/Read?articleId=AKR20260630120400044",
+              "date": "2026-06-29",
+              "site": "한국경제TV"
+            },
+            {
+              "ref": "R14",
+              "title": "소상공인 10곳 중 4곳 “3년도 안돼 폐업”…평균 부채 1억",
+              "url": "http://www.kbsm.net/news/view.php?idx=468196",
+              "date": "2025-03-19",
+              "site": "경북신문"
+            },
+            {
+              "ref": "R15",
+              "title": "“소상공인 40%, 창업 3년 만에 접었다”…폐업하고 떠안은 빚이 무려 - 매일경제",
+              "url": "https://www.mk.co.kr/news/business/11268343",
+              "date": "2025-03-18",
+              "site": "매일경제"
+            },
+            {
+              "ref": "R29",
+              "title": "자유 채색 도자기 공방 장부 관리: 소성 비용, 생지 파손, 그리고 보증금 - 본문으로 건너뛰기",
+              "url": "https://beancount.io/ko/blog/2026/08/21/paint-your-own-pottery-studio-bookkeeping-firing-fees-greenware-breakage-deposits-guide#1",
+              "date": "2026-08-20",
+              "site": "Beancount.io"
+            },
+            {
+              "ref": "R36",
+              "title": "초보 공방 사장을 위한 공방 창업 바이블",
+              "url": "https://ebook-product.kyobobook.co.kr/dig/epd/sam/E000006851624?tabType=SAM",
+              "date": "2023-11-14",
+              "site": "교보문고"
+            },
+            {
+              "ref": "R37",
+              "title": "울주통합도서관 전자책도서관",
+              "url": "https://uljuebook.ulju.ulsan.kr/ebook/detail/?goods_id=125327067",
+              "date": "",
+              "site": "울주통합도서관 전자책도서관"
+            },
+            {
+              "ref": "R40",
+              "title": "도서관 통합 자료 검색",
+              "url": "https://lib.daedeok.go.kr:8443/index.php?mod=wdDataSearch&act=searchResultDetail&ctrl=000005300801&viewType=table&loca=H0000029&srchKey[0]=4&vSType=KWRD&srchText[0]=%EA%B3%B5%EB%B0%A9",
+              "date": "",
+              "site": "대덕구 도서관"
+            }
+          ],
+          "con": [],
+          "card": {
+            "belief": "主要开店成本是窑炉、拉坯机等设备投入",
+            "claim": "设备是一次性沉没成本,真正持续侵蚀利润的是'空转时间成本'——已支付租금、인건비但没有客人的时段无法回收,개업전3-6개월的零收入期和淡季空窗期才是压垮현금흐름(现金流)的真凶",
+            "one_line": "你花500万韩元买的窑炉只痛一次,但每个월세已付、客人没来的下午,都在悄悄吃掉你的본전(本钱)",
+            "ending_landing": "不只是工坊——所有'固定成本已发生、收入靠人来'的小생의,真正的杀手都不是一次性투자,而是日复一日的공전시간",
+            "boundary": "不适用于온라인판매为主、无需维持线下공간的공방,也不适用于已有稳定예약률、无淡旺季波동的成熟공방",
+            "opening_line": "一家首尔陶瓷工坊的사장在개업第四个月关门,불是因为500万韩元的窑炉买贵了,而是因为三个月里每周有四天下午无人예약,월세、전기비、자기급여照付",
+            "key": {
+              "ref": "R29",
+              "title": "자유 채색 도자기 공방 장부 관리: 소성 비용, 생지 파손, 그리고 보증금 - 본문으로 건너뛰기",
+              "url": "https://beancount.io/ko/blog/2026/08/21/paint-your-own-pottery-studio-bookkeeping-firing-fees-greenware-breakage-deposits-guide#1",
+              "date": "2026-08-20",
+              "site": "Beancount.io"
+            },
+            "outline": [
+              {
+                "says": "用第二人称幻想복述(你盘算着'设备투자咬咬牙,分几년摊销就好'),随即以실제폐업시간선重定向제造悖论",
+                "uses": "R14、R15提到创业后到停业为止平均营业期间6.5年，但3年未满停业比率39.9%，决定停业时平均负债1亿236万韩元，R36、R37、R40提到工坊创业者最担心“能不能交月租”",
+                "leaves": "如果设备是一次性투자,那이빚是怎么堆起来的?",
+                "uses_orig": "R14、R15提到창업후폐업까지평균영업기간6.5년,但3년미만폐업비율39.9%,폐업결심시평균부채1억236万원,R36、R37、R40提到공방창업者最担心'월세는낼수있을지'"
+              },
+              {
+                "says": "拆解现金流陷阱【原文“现금흐름”为混合写法，直译“现金流”】：开业前准备期与开业初期的零收入期间，租金、人工费、公共费用持续发生但收益为零",
+                "uses": "R29提到工坊的固定费用包括租金、公共费用、保险、软件、清洁等每月4,500-6,000美元（约600-800万韩元），人工费每月11,500-18,300美元（约1,500-2,400万韩元），待查：韩国工坊从开业到损益平衡的平均月数",
+                "leaves": "那개업后为什么还会持续失血?",
+                "says_orig": "拆解现금흐름陷阱:개업전준비기与개업초기的零收入기间,租금、인건비、공과금持续발생但수익为零",
+                "uses_orig": "R29提到공방의고정비용包括임대료、공과금、보험、소프트웨어、청소等월4,500-6,000달러(约600-800万韩元),인건비월11,500-18,300달러(约1,500-2,400万韩元),待查:韩国공방从개업到손익분기的평균월수"
+              },
+              {
+                "says": "量화공전시간成本:이미支付的租금、인건비在无客예약时段无法回수,淡旺季예약률差异导致실제가동률远低于예상",
+                "uses": "R29提到月$39,000收入、65%销售毛利率的工坊在扣除固定费用后所剩无几【原文“무几”生硬，像中文“无几”混写】，待查：体验型工坊的年度淡旺季预订率差异（例如：旺季80% vs 淡季30%）",
+                "leaves": "具体来说,这个공전时间有多严重?",
+                "uses_orig": "R29提到월$39,000수익、65%매출총이익률的공방在扣除고정비용后所剩무几,待查:체험형공방的연간淡旺季예약률차异(예:旺季80% vs 淡季30%)"
+              },
+              {
+                "says": "给出行业实情【原文用词生硬，像是从中文“行业实情”直译】：开业前3-6个月无收入准备期+开业初期客源积累期，多数工坊在第1年无法【原文用词生硬，像是从中文“无法”直译】损益平衡，现金储备【原文用词生硬，像是从中文“现金储备”直译】不足者在此期间停业",
+                "uses": "R11、R13提到小工商业者主要6大行业停业率11.08%，R14提到1年以下停业者5.6%、1-3年以下34.3%，停业原因中盈利能力恶化和销售不振86.7%、内需不振导致的顾客减少52.2%，待查：工坊创业者从开业到盈利的平均月数与资金储备建议金额【原文用词生硬，像是从中文“资金储备”直译】",
+                "leaves": "那设备투자在总成본中占比到底多少?",
+                "says_orig": "给出행업실상:개업전3-6개월무수익준비期+개업초기客源积累期,多数공방在第1년无법손익분기,现금저비축不足者在此期间폐업",
+                "uses_orig": "R11、R13提到소상공인주요6대업종폐업률11.08%,R14提到1년미만폐업자5.6%、1-3년미만34.3%,폐업사유중수익성악화및매출부진86.7%、내수부진에따른고객감소52.2%,待查:공방창업자从개업到흑자的평균월수与자금저비축권고금액"
+              },
+              {
+                "says": "对比설비折旧 vs 공간공전成本:设备(窑炉、拉坯机等)是一次性투자、可분년摊销,但租금、인건비是매월固定발생、无법递延",
+                "uses": "待查：典型陶瓷工坊的设备初期投资总额与年度租金、人工费对比，R29提到人工费是‘最大且最容易失控’的费用项目",
+                "leaves": "所以真正的致命伤在哪?",
+                "uses_orig": "待查:典型도자기공방的설비초기투자总额与연간租금、인건비对比,R29提到인건비是'가장크고가장쉽게失控'的비용항目"
+              },
+              {
+                "says": "揭示실패根源:공방폐업不是因为设备买贵了,而是因为低估了'공간이돌지않는시간'的持续侵蚀——这是现금흐름的慢性출혈",
+                "uses": "R29明确指出'$248테이블当晚입금但가마식었을때머그하나금이가고생일엄마취소$395파티',公방장부需区分수익인식与현금흐름,R36、R37、R40提到공방창업者对'월세는낼수있을지'的焦虑实质是对공전时间的担忧",
+                "leaves": "那活下来的공방是怎么对抗这个的?"
+              },
+              {
+                "says": "给出应对策略：开业前积累3-6个月运营资金储备、通过事前预订与押金制度平滑现金流【原文用词生硬，像是从中文“平滑现金流”直译】、淡季配置定期课程填补空转时段【原文用词生硬，像是从中文“填补空转时段”直译】",
+                "uses": "R29提到预订保证金需作为递延收益处理、不可提前确认为收入，待查：成功工坊的淡季应对策略与月平均预订开工率维持方法",
+                "leaves": "所以论点的경계在哪?",
+                "says_orig": "给出대응策略:개업전축적3-6개월운영자금저비、통过사전예약与디파짓制도평滑现금흐름、비수기배치정기클래스填충공전시段",
+                "uses_orig": "R29提到예약보증금需作为이연수익처理、不可提前인식为收入,待查:성공공방的비수기대응전략与월평균예약가동률维持방법"
+              },
+              {
+                "says": "压缩论点并回收：工坊不是设备系统而是时间销售系统，成败由‘空转时间【原文用词生硬，像是从中文“空转时间”直译】的财务纪律’决定，设备只是入场券",
+                "uses": "综合R11-R15的停业统计、R29的工坊账务实务、R36-R40的工坊创业焦虑",
+                "leaves": "这个逻辑推到所有선付고정비用、후收变동收入的小생의:진짜杀手不是一次性大투자,而是每个월、每周、每天的固정비用在무인시간里的静默消耗",
+                "says_orig": "压缩论点并回收:공방은설비시스템이아니라시간판매시스템,성패由'공전시간的财务纪律'决定,설비只是입장券",
+                "uses_orig": "综合R11-R15的폐업통계、R29的공방장부실무、R36-R40的공방창업焦虑"
+              }
+            ],
+            "missing": [
+              "韩国小工商业者市场振兴公团关于工坊类小工商业者的创业失败率与失败原因统计",
+              "从开业到损益平衡的平均月数（最好按行业细分）",
+              "典型陶瓷工坊的设备初期投资总额（窑炉、拉坯机、工作台等）与年度租金、人工费对比",
+              "体验型工坊的年度淡旺季预订率差异（旺季 vs 淡季具体比率）",
+              "停业工坊的平均营业期间与开业后现金储备【原文用词生硬，像是从中文“现金储备”直译】耗尽时间",
+              "成功工坊的淡季应对策略与月平均预订开工率维持水平"
+            ]
+          },
+          "enough": {
+            "level": "够",
+            "sources": 8,
+            "key_found": true,
+            "facts": 6
+          },
+          "note_orig": "소상공인3년미만폐업비율39.9%、폐업결심시평균부채1억236만원,폐업사유首位是수익성악화및매출부진86.7%;공방창업가最担心'월세는낼수있을지',공방장부관리실务明确指出공간공전비용是利润侵蚀主因;未查到明确反对资料"
+        }
+      ],
+      "chosen": "A1",
+      "why": "三个角度都站得住,但A1的반차(反差)最강:观众普遍认知是'공방卖도자기',拆开后发现'도자기只是道具、真正卖的是시간切片',这个重新정의带来的인지冲击最直接。A2(입지悖论)和A3(공전时간杀手)也很강,但A2的논점观众可能已有모호感知('好地段贵但人多'),A3偏경영细节、需要较多财务지식才能完全이해反차。A1符合M2(真正卖的是什么)+'一听就想확인'的爆款특征,且능直接接住框架핵心'표면상품只是筹资도구'。从구조上看,A1可以자연引出A2(为什么需要核心상권)和A3(为什么공전时间致명)作为后续단락,세개논점可串成완整경제학해부。A1的key_ref(R26)来自한국도자재단관방간담회,공신력强,수강료수익100%归작가的제도설계直接증명체험클래스是수익주력。facts충분、con_facts(유럽미주手工도자기零售案例)可通过'시장차이'正면처리。종합판단A1是最优선택。",
+      "final": {
+        "belief": "观众以为陶瓷工坊靠卖手工陶器制品赚钱维持运营",
+        "claim": "工坊老板卖的不是陶器,是按小时出租的工作台和指导时间——零售产品几乎不产生净利润,真正收入来自按小时计费的체험클래스(体验课程)",
+        "one_line": "你花3万韩元在工坊做的那个歪歪扭扭的杯子,老板赚的不是杯子钱,是你坐在那3小时的座位费",
+        "method": [
+          "M2",
+          "M1"
+        ],
+        "ending_landing": "不只是陶瓷工坊——你以为在为产品付费的那些小生意,可能都在卖你看不见的东西:时间、空间、体验、或者别的什么。表面商品只是让你走进来的理由,真正让老板活下去的,是你愿意为那个理由付出的那几个小时",
+        "boundary": "这个论点不适用于高端定制路线(单件작품卖几十万韩元、不开체험클래스)或纯온라인판매(Instagram接单、快递발송)的공방,也不适用于원데이클래스시장尚未성熟的지역。但对于面向2030세대、在도심상권开체험형공방的대다수창업者,这就是现실"
+      },
+      "facts": [
+        {
+          "content": "2030世代（20-30岁群体）占一日体验课（一日体验课）用户的72.8%，Instagram上一日体验课话题标签达616万条，最近5年间使用者比例增长2倍以上",
+          "year": "2025-2026",
+          "region": "韩国",
+          "note": "R1为2026年9月报道、R2为2025年3月报道,두数据来源일치确认원데이클래스在2030세대중的高渗透率",
+          "for": [
+            "A1"
+          ],
+          "sources": [
+            {
+              "ref": "R1",
+              "title": "조종엽 차장 - 《“피아노 한 곡쯤은 하루 만에 완성한다",
+              "url": "https://www.donga.com/Journalist?p=1181&pid=jjj@donga.com#5",
+              "date": "2026-09-10",
+              "site": "동아일보"
+            },
+            {
+              "ref": "R2",
+              "title": "‘가성비+가심비’ 노린다…2030이 원데이 클래스에 빠지는 이유 [쿠키청년기자단]",
+              "url": "https://www.kukinews.com/article/view/kuk202503210156",
+              "date": "2025-03-22",
+              "site": "쿠키뉴스"
+            }
+          ],
+          "content_orig": "2030세대(20-30岁群体)占원데이클래스(一日体验课)用户的72.8%,Instagram上원데이클래스해시태그达616万条,최근5년间이용자比例增长2倍以上"
+        },
+        {
+          "content": "원데이클래스单次价格구간为2-6万韩元、时长2-5小时,중위값为4万韩元,3-5万韩元구간集中了352个클래스(占648个统计样本的54%)",
+          "year": "2026",
+          "region": "韩国",
+          "note": "R5为모카클래스평台2026年9月实际통계648개클래스的1인단가数据,구간분포명확",
+          "for": [
+            "A1"
+          ],
+          "sources": [
+            {
+              "ref": "R1",
+              "title": "조종엽 차장 - 《“피아노 한 곡쯤은 하루 만에 완성한다",
+              "url": "https://www.donga.com/Journalist?p=1181&pid=jjj@donga.com#5",
+              "date": "2026-09-10",
+              "site": "동아일보"
+            },
+            {
+              "ref": "R5",
+              "title": "원데이클래스 가격 총정리 648개｜분야별 1인 단가 구간 비교 - 🌈 모카클래스 B2B Blog",
+              "url": "https://mochaclass.com/blog/one-day-class-price-range-2026",
+              "date": "2026-09-20",
+              "site": "Mochaclass"
+            }
+          ]
+        },
+        {
+          "content": "韩国陶瓷财团京畿工艺创作支援中心推动开放课程制度：作家直接策划运营教育内容【原文用词生硬，像是从中文“教育内容”直译】、听课费收入100%归作家，中心提供高级专业设备（3D打印机、CNC、激光刻印机、陶瓷玻璃窑等）以实际费用水平开放【原文用词生硬，像是从中文“实际费用水平开放”直译】",
+          "year": "2026",
+          "region": "경기도",
+          "note": "2026년2월경기공예인간담회发表8대핵심과제,명확定位오픈클래스为공예인실질적수익창출支援방안",
+          "for": [
+            "A1"
+          ],
+          "sources": [
+            {
+              "ref": "R26",
+              "title": "경기신문 - 기본에 충실한 경기·인천 지역 바른 신문",
+              "url": "https://www.kgnews.co.kr/news/tag_list_all.html?tag=8%eb%8c%80+%ed%95%b5%ec%8b%ac+%ea%b3%bc%ec%a0%9c",
+              "date": "2026-02-06",
+              "site": "경기신문"
+            },
+            {
+              "ref": "R27",
+              "title": "한국도자재단, 2026 경기 공예인 간담회 개최",
+              "url": "https://www.ksmnews.co.kr/news/view.php?idx=589396",
+              "date": "2026-02-04",
+              "site": "경상매일신문"
+            }
+          ],
+          "content_orig": "한국도자재단경기공예창작지원센터推动오픈클래스제도:작가직접기획운영教육콘텐츠,수강료수익100%归작가,센터제공고급전문장비(3D프린터、CNC、레이저각인기、도자유리가마等)실비수준개방"
+        },
+        {
+          "content": "陶瓷品牌Mujagi通过家庭购物（仅1次节目销售额1亿韩元）、Market Kurly直播等大众流通渠道，确保30个流通渠道、同比30%增长，销售额达32亿韩元，从传统工坊成长为企业规模【原文用词生硬，像是从中文“企业规模”直译】",
+          "year": "2025",
+          "region": "韩国",
+          "note": "案例显示도자기공방通过기술혁신(3D프린팅+전통제작)与유통채널확대可실현规模화,但문章强조这需要기술与정부지원,非일반공방可직접복제",
+          "for": [
+            "A1"
+          ],
+          "sources": [
+            {
+              "ref": "R28",
+              "title": "\"방송 1회에 1억 주문\"…도예 공방의 한계를 깬 '무자기'의 비결",
+              "url": "https://www.wowtv.co.kr/NewsCenter/News/Read?articleId=202512194574O",
+              "date": "2025-12-21",
+              "site": "한국경제TV"
+            }
+          ],
+          "content_orig": "도자기브랜드무자기(Mujagi)通过홈쇼핑(단1회방송매출1억원)、마켓컬리라이브等대중유통채널,확보30개유통채널、전년대비30%增长,매출达32억원,从전통공방成长为기업규모"
+        },
+        {
+          "content": "体验型工坊（一日体验工坊）在釜山商圈中销售额增长率：海云台+95.7%、釜山大+63.2%，田浦商圈整体销售额增长率+6.5%（釜山最高）",
+          "year": "2024Q2-2025Q1",
+          "region": "부산",
+          "note": "매경TV핫플레이스보도,명확显示체험형공방의매출증가与상권입지강상关,해운대등핵심관광상권增长率远超其他지역",
+          "for": [
+            "A1",
+            "A2"
+          ],
+          "sources": [
+            {
+              "ref": "R31",
+              "title": "[매경TV 핫플레이스] 체험에 감성까지 더해진 ‘부산’ 낭만의 소비 시대를 이끌다",
+              "url": "https://mbnmoney.com/news/view?news_no=MM1005553845",
+              "date": "2025-05-13",
+              "site": "mbnmoney.com"
+            }
+          ],
+          "content_orig": "체험형공방(일일체험공방)在부산상권중매출증가율:해운대+95.7%、부산대+63.2%,전포상권整体매출증가율+6.5%(부산최고)"
+        },
+        {
+          "content": "西巡罗路等传统魅力商圈推荐工坊创业时确认：① 差异化商品策划比类别选择更重要；② 体验型项目（一日体验课）与销售结合；③ 选址选择需考虑流动人口与可达性",
+          "year": "2024",
+          "region": "首尔",
+          "note": "KB의생각商圈정보분석,针对공방창업给出구체건议,强조차别化与체험형공간的重要성",
+          "for": [
+            "A1",
+            "A2"
+          ],
+          "sources": [
+            {
+              "ref": "R32",
+              "title": "서순라길에서 공방 창업하고 싶다면? | KB의 생각",
+              "url": "https://kbthink.com/main/asset-management/for-manager/dicon_ceo_content/ceo_content_business_zone_analysis/2024/business-zone-202409.notrack.html",
+              "date": "2024-09-24",
+              "site": "KB Think"
+            }
+          ],
+          "content_orig": "서순라길등전통매력상권추천공방창업时확인:① 차별화상품기획比카테고리选择更重要;② 체험형프로그램(원데이클래스)与판매结合;③ 입지选择需考虑유동인구与접근성"
+        },
+        {
+          "content": "小工商业者主要6大行业停业率11.08%，高于全体事业者停业率8.64%",
+          "year": "2025",
+          "region": "韩国",
+          "note": "중소벤처기업부2026년6월발표'폐업자통계분석및폐업소상공인실태조사',두来源보도일치",
+          "for": [
+            "A2",
+            "A3"
+          ],
+          "sources": [
+            {
+              "ref": "R11",
+              "title": "[그래픽] 소상공인 폐업률 현황 | 연합뉴스",
+              "url": "https://www.yna.co.kr/amp/view/GYH20260630000500044",
+              "date": "2026-06-29",
+              "site": "연합뉴스"
+            },
+            {
+              "ref": "R13",
+              "title": "[그래픽] 소상공인 폐업률 현황",
+              "url": "https://www.wowtv.co.kr/NewsCenter/News/Read?articleId=AKR20260630120400044",
+              "date": "2026-06-29",
+              "site": "한국경제TV"
+            }
+          ],
+          "content_orig": "소상공인주요6대업종폐업률11.08%,高于전체사업자폐업률8.64%"
+        },
+        {
+          "content": "创业后到停业为止平均营业期间6.5年，但3年以下停业比率39.9%（1年以下5.6%、1-3年以下34.3%）",
+          "year": "2025",
+          "region": "韩国",
+          "note": "중소기업중앙회2025년3월발표'2025폐업소상공인실태조사',针对2021년이후노란우산폐업공제금지급받은820개사조사,두来源보도일치",
+          "for": [
+            "A3"
+          ],
+          "sources": [
+            {
+              "ref": "R14",
+              "title": "소상공인 10곳 중 4곳 “3년도 안돼 폐업”…평균 부채 1억",
+              "url": "http://www.kbsm.net/news/view.php?idx=468196",
+              "date": "2025-03-19",
+              "site": "경북신문"
+            },
+            {
+              "ref": "R15",
+              "title": "“소상공인 40%, 창업 3년 만에 접었다”…폐업하고 떠안은 빚이 무려 - 매일경제",
+              "url": "https://www.mk.co.kr/news/business/11268343",
+              "date": "2025-03-18",
+              "site": "매일경제"
+            }
+          ],
+          "content_orig": "창업후폐업까지평균영업기간6.5년,但3년미만폐업비율39.9%(1년미만5.6%、1-3년미만34.3%)"
+        },
+        {
+          "content": "停业原因（多项应答）：盈利能力恶化销售不振86.7%、适性【原文用词生硬，像是从中文“适性”直译】、家庭等个人情况28.7%、新事业创业准备26.0%、租赁期间届满、行政处分等不可避免事由21.8%",
+          "year": "2025",
+          "region": "韩国",
+          "note": "同上조사,폐업사유首位압倒성为수익성문제",
+          "for": [
+            "A3"
+          ],
+          "sources": [
+            {
+              "ref": "R14",
+              "title": "소상공인 10곳 중 4곳 “3년도 안돼 폐업”…평균 부채 1억",
+              "url": "http://www.kbsm.net/news/view.php?idx=468196",
+              "date": "2025-03-19",
+              "site": "경북신문"
+            },
+            {
+              "ref": "R15",
+              "title": "“소상공인 40%, 창업 3년 만에 접었다”…폐업하고 떠안은 빚이 무려 - 매일경제",
+              "url": "https://www.mk.co.kr/news/business/11268343",
+              "date": "2025-03-18",
+              "site": "매일경제"
+            }
+          ],
+          "content_orig": "폐업사유(복수응답):수익성악화매출부진86.7%、적성가족等개인사정28.7%、신규사업창업준비26.0%、임대기간만료행정처분等불가피한사유21.8%"
+        },
+        {
+          "content": "盈利能力恶化原因（多项应答）：内需不振导致的顾客减少52.2%、人工费上升49.4%、物价上升导致原材料费负担增加46.0%、租金等固定费用上升44.6%",
+          "year": "2025",
+          "region": "韩国",
+          "note": "同上조사,고객감소为首要원인,超过비용상승类원인",
+          "for": [
+            "A2",
+            "A3"
+          ],
+          "sources": [
+            {
+              "ref": "R14",
+              "title": "소상공인 10곳 중 4곳 “3년도 안돼 폐업”…평균 부채 1억",
+              "url": "http://www.kbsm.net/news/view.php?idx=468196",
+              "date": "2025-03-19",
+              "site": "경북신문"
+            },
+            {
+              "ref": "R15",
+              "title": "“소상공인 40%, 창업 3년 만에 접었다”…폐업하고 떠안은 빚이 무려 - 매일경제",
+              "url": "https://www.mk.co.kr/news/business/11268343",
+              "date": "2025-03-18",
+              "site": "매일경제"
+            }
+          ],
+          "content_orig": "수익성악화원인(복수응답):내수부진에따른고객감소52.2%、인건비상승49.4%、물가상승으로인한원재료비부담증가46.0%、임대료等고정비용상승44.6%"
+        },
+        {
+          "content": "决定停业时平均负债额1亿236万韩元，停业所需费用平均2,188万韩元",
+          "year": "2025",
+          "region": "韩国",
+          "note": "同上조사,폐업시재무부담량화数据",
+          "for": [
+            "A3"
+          ],
+          "sources": [
+            {
+              "ref": "R14",
+              "title": "소상공인 10곳 중 4곳 “3년도 안돼 폐업”…평균 부채 1억",
+              "url": "http://www.kbsm.net/news/view.php?idx=468196",
+              "date": "2025-03-19",
+              "site": "경북신문"
+            },
+            {
+              "ref": "R15",
+              "title": "“소상공인 40%, 창업 3년 만에 접었다”…폐업하고 떠안은 빚이 무려 - 매일경제",
+              "url": "https://www.mk.co.kr/news/business/11268343",
+              "date": "2025-03-18",
+              "site": "매일경제"
+            }
+          ],
+          "content_orig": "폐업결심시평균부채액1억236万韩元,폐업소요비용평균2,188万韩元"
+        },
+        {
+          "content": "自己彩绘陶器（自由彩色陶瓷）工坊的典型收入结构：无预约到店作品$24-32、工坊手续费$8/人、追加釉药升级，月$39,000收入、65%销售毛利率，但扣除人工费$11,500-18,300、租金公共费用保险费$4,500-6,000、营销$800-1,500后所剩无几【原文“무几”生硬，像中文“无几”混写】",
+          "year": "2026",
+          "region": "미국(但商业模型可참고)",
+          "note": "Beancount.io发表的공방장부관리实무가이드,详细拆解고정비용对매출총이익的侵蚀,명확指出인건비是'가장크고가장쉽게失控'的비용항目,강调이미支付的租금인건비在무客시段无法회수",
+          "for": [
+            "A1",
+            "A3"
+          ],
+          "sources": [
+            {
+              "ref": "R29",
+              "title": "자유 채색 도자기 공방 장부 관리: 소성 비용, 생지 파손, 그리고 보증금 - 본문으로 건너뛰기",
+              "url": "https://beancount.io/ko/blog/2026/08/21/paint-your-own-pottery-studio-bookkeeping-firing-fees-greenware-breakage-deposits-guide#1",
+              "date": "2026-08-20",
+              "site": "Beancount.io"
+            }
+          ],
+          "content_orig": "Paint-Your-Own-Pottery(자유채색도자기)공방的전형收入구조:워크인작품$24-32、공방수수료$8/인、추가유약업그레이드,월$39,000수익、65%매출총이익률,但扣除인건비$11,500-18,300、임대료공과금보험$4,500-6,000、마케팅$800-1,500后所剩무几"
+        },
+        {
+          "content": "永登浦商圈周末访客达100万名，GTX-B开通与新安山线开通、大规模再开发项目带来利好，体验型卖场（VR、DIY工坊、AR菜单板、快闪活动空间）人气高",
+          "year": "2025",
+          "region": "首尔영등포",
+          "note": "창업&프랜차이즈2025년11월보도,强조체험형플래그십매장확대与MZ세대SNS확산的重要성",
+          "for": [
+            "A2"
+          ],
+          "sources": [
+            {
+              "ref": "R35",
+              "title": "[돈 되는 상권분석] 100만 방문객의 비밀, 영등포 창업 전략 가이드",
+              "url": "https://www.fcmedia.co.kr/news/articleView.html?idxno=28322",
+              "date": "2025-11-20",
+              "site": "창업&프랜차이즈"
+            }
+          ],
+          "content_orig": "영등포상권주말방문객达100万명,GTX-B개통与신안산선개통、대규모재개발프로젝트带来호재,체험형매장(VR、DIY공방、AR메뉴판、팝업이벤트공간)높은인기"
+        },
+        {
+          "content": "城东区官民共同打造青年文化艺术安心商铺：泰坤P&H（타이쿤피앤에이치）提供Galleria Foret（갤러리아포레）地下3层340㎡内30个工坊中的20个，市价30-40%水平的低廉租金，城东区提供教育与创业咨询，配套2层展览空间支援宣传与作品销售",
+          "year": "2017",
+          "region": "首尔성동구",
+          "note": "정부보조项목特例,비일반상업공방可복제,但显示저렴한임대료需配套其他支援才能实현작가수익",
+          "for": [
+            "A2"
+          ],
+          "sources": [
+            {
+              "ref": "R21",
+              "title": "성동구 민관 공동 청년문화예술 안심상가 조성",
+              "url": "https://www.asiae.co.kr/article/2017090709215236883",
+              "date": "2017-09-06",
+              "site": "아시아경제"
+            },
+            {
+              "ref": "R22",
+              "title": "성동구 민관 공동 청년문화예술 안심상가 조성 - 아시아경제",
+              "url": "http://www.asiae.co.kr/news/view.htm?sec=life4&idxno=2017090709215236883",
+              "date": "2017-09-06",
+              "site": "아시아경제"
+            }
+          ],
+          "content_orig": "성동구민관공동조성청년문화예술안심상가:타이쿤피앤에이치제공갤러리아포레지하3층340㎡공방30개중20개,시세30-40%수준저렴한임대료,성동구제공교육与창업컨설팅,配套2층전시공간支援홍보与作품판매"
+        },
+        {
+          "content": "东豆川设计艺术村：每平方米1.5万韩元的低廉租金与内部修缮费支援，从过去的6月起招募入驻者，目前10人入驻完成、11人准备中，目标明年60人入驻",
+          "year": "2016",
+          "region": "동두천",
+          "note": "정부보조项目,但R9提到该项목后续出现전문가부재等문제,显示정책支援项목也面临운영难题",
+          "for": [
+            "A2"
+          ],
+          "sources": [
+            {
+              "ref": "R23",
+              "title": "(나라)동두천 디자인아트빌리지 공방 인기",
+              "url": "http://news.lghellovision.net/news/articleView.html?idxno=169709",
+              "date": "2016-12-01",
+              "site": "LG헬로비전"
+            }
+          ],
+          "content_orig": "동두천디자인아트빌리지:제곱미터당1.5万韩元저렴한임대료与내부수리비지원,지난6월부터입주자모집현재10명입주완료、11명준비중,목표내년60명입주"
+        }
+      ],
+      "con_facts": [
+        {
+          "content": "美国波特兰（Portland）的Hotel Ceramics（萨拉·维多利奥（사라빅토리오））与其他美国手工陶瓷工作室通过注浆成型（slip casting）替代拉坯（wheel throwing）提高产量，部分陶艺家通过Etsy、自有网站等在线销售实现$1.1M年销售额（feltandfat.com 2025），手工陶瓷在线市场2025总收入$15M",
+          "how_to_handle": "稿中需明确区分美国与韩国市场差异：① 美国手工陶瓷主要通过在线销售（Etsy、独立网站）与批发（批发给零售店），客户为陶瓷收藏者与家居装饰购买者；② 韩国体验经济主导，20-30岁世代通过一日课程消费“制作过程体验”，作品是附带产物，非购买目标；③ 美国案例中也成功的（如Hotel Ceramics、feltandfat）【原文“도성功的”为韩文“도”与中文“成功的”混写，语义不清】强调技术创新【原文“强조技术창신”为韩中混杂，疑为“强调技术创新”】（注浆成型）与流通渠道扩大，这与韩国工坊依赖未预约到店（walk-in）客流的体验课程模型完全不同。可用一段话点明：‘在美国或欧洲，手工陶瓷可能真的靠卖杯子活，但那是另一套经济学——他们卖的是审美与收藏价值，客户在网上下单、等两周收货。韩国工坊卖的是“你亲手做杯子”的那3小时，客户现场付钱、当天带走作品。两者表面都是陶瓷，实质卖的东西完全不同。’",
+          "for": [
+            "A1"
+          ],
+          "sources": [
+            {
+              "ref": "R16",
+              "title": "[Hotel Ceramics] Sara Victorio Unit Economics | iHeart",
+              "url": "https://www.iheart.com/podcast/1333-unit-economics-311300015/episode/hotel-ceramics-sara-victorio-322466872",
+              "date": "2026-02-11",
+              "site": "iHeart"
+            },
+            {
+              "ref": "R17",
+              "title": "Ep 621: Can You Make a Living from a $45 Mug? The Maker's Playbook | iHeart",
+              "url": "https://www.iheart.com/podcast/269-the-makers-playbook-96185802/episode/ep-621-can-you-make-a-living-from-a-45-mug-278430315/",
+              "date": "2025-05-29",
+              "site": "iHeart"
+            },
+            {
+              "ref": "R18",
+              "title": "Handmade Pottery and Ceramics Market Analytics & Retailer Insights | Grips",
+              "url": "https://gripsintelligence.com/insights/industries/home-garden/handmade-pottery-and-ceramics",
+              "date": "",
+              "site": "Grips"
+            },
+            {
+              "ref": "R19",
+              "title": "feltandfat.com - Grips",
+              "url": "https://gripsintelligence.com/insights/retailers/feltandfat.com#1",
+              "date": "",
+              "site": "Grips"
+            }
+          ],
+          "content_orig": "미국Portland的Hotel Ceramics(사라빅토리오)与其他미국수공도자기스튜디오通过slip casting(注浆成型)替代wheel throwing(拉坯)提高产量,部分작가通过Etsy、自有网站等온라인판매实현$1.1M연매출(feltandfat.com 2025),핸드메이드도자기在线시장2025总收入$15M",
+          "how_to_handle_orig": "稿中需명확区分미국与한국시장差异:① 미국수공도자기주로通过온라인판매(Etsy、独立网站)与wholesale(批发给零售店),客户为도자기收藏者与home decor구매자;② 한국체험경제주导,2030세대通过원데이클래스消费'제작过정体验',作品是부수产물非구매目标;③ 미국案例中도성功的(如Hotel Ceramics、feltandfat)强조技术창신(slip casting)与유통채널확대,这与한국공방依赖walk-in客流的체험클래스模型完全불同。可用一단话点明:'在미국或유럽,手工도자기可能真的靠卖杯子活,但那是另一套경제학——他们卖的是审美与收藏价값,客户在网上下单、等두주收货。한국공방卖的是'你亲手做杯子'的那3小时,客户现场付钱、当天带走작품。두者表面都是도자기,실质卖的동西完全불同。'"
+        }
+      ],
+      "missing": [
+        "韩国一日课堂市场总规模(亿韩元)与2020-2026年增长率(最好有产业报告书或政府统计)",
+        "典型陶瓷工坊的收益结构：体验课程 vs 产品销售占比(需韩国本土数据，非美国案例【原文“비미국案例”生硬，直译“非美国案例”】)",
+        "单次3小时体验课程的实际成本结构：材料费(黏土、釉料)、人工费(讲师)、空间费用(租金分摊)、设备折旧分解【原文“분해”直译“分解”，此处生硬】",
+        "手工陶瓷(例：马克杯)从拉坯到烧成完成的总公示【原文“총공시”字面为“总公示”，生硬且疑为误用，按上下文疑指总工时】与销售价对比(需量化“做一个杯子老板实际赚多少”)",
+        "一日课堂顾客的再访问率【原文“재방문율”直译“再访问率”，生硬】与产品购买转化率(即：参加体验课的客人中有多大比例会额外购买货架上的作品)",
+        "首尔、釜山等主要城市不同商圈(弘大/江南/海云台 vs 外围住宅区)工坊租金差异与未预约进店客流、预约转化率对比",
+        "租金占总收益的小工商业者行业标准比例(需中小风险企业部或小工商业者市场振兴公团劝告数值【原文“권고수치”直译“劝告数值”，生硬】)",
+        "具体的工坊迁移前后停业案例：从核心商圈搬到外围后租金节省金额、客流下降比率、停业时间"
+      ]
+    },
+    "secs": 343.5
+  }
 }

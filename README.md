@@ -233,6 +233,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `step1.md` | Blueprint 生成（问题链 + 新角度 + 事实只用一次，编号一律 CH，含对照表与叙事方式、照大纲排） | 105 |
 | `apply_suggest.md` | 单条问题出可替换改法（原句逐字+中文意思，按选的 A/B/C 出） | 32 |
 | `apply_suggest_batch.md` | 勾选的多条一起出改法（全文只发一次，最多 8 条一批） | 28 |
+| `locate_quote.md` | 问题里没引原句时按问题描述到稿子里找出对应句子 | 19 |
 | `step2.md` | 脚本施工（含每章问题链与新角度要求、对照表、网友说法带出处） | 61 |
 | `function_table.md` | 蓝图按功能重排第一步：原片每段一行功能表（作用、必须保留、可以换、四选一处理；换内容 > 合并 > 删，删要写查过的事实，合计不超过 `{{delete_max}}`%） | 84 |
 | `step1_function.md` | 蓝图按功能重排第二步：按功能表排章（锁定项、为什么这样排、等级重点、照大纲排写 outline_diff） | 126 |
@@ -276,7 +277,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 64 份 `.md`（3919 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 69 份，合计 4128 行。
+合计 65 份 `.md`（3938 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 70 份，合计 4147 行。
 
 ### 历史版本
 
