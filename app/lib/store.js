@@ -223,7 +223,7 @@ const RUNS_INDEX = path.join(APP_ROOT, 'data', 'runs.index.json');
 // 5: 合并上游 v1.21.5 的 verdict / reframe / analysis_confirmed(列表「待换框架」「换框架中」)。
 //    上游把这三个字段也叫 4,与本地 v1.23 评分列的 4 撞号;合并后升 5 强制重建一次,两 schema 字段齐全
 // 6: v1.95 评分列改成「能发 / 还差几项」(score 里加 verdict、left、good)
-const INDEX_VERSION = 6;
+const INDEX_VERSION = 7;
 let indexCache = null;
 
 // 源标题中文只用于列表副标题,按资产 id 缓存,避免重复读 meta.json
@@ -324,6 +324,24 @@ function scoreSummary(run) {
   };
 }
 
+// v1.97 列表上提示「等你下一步」:任务停在要人点的地方时写一句(跑着的不提示)
+function waitFor(run) {
+  const st = run.steps || {};
+  const busy = x => x && (x.status === 'running' || x.status === 'queued');
+  if (run.status === 'blueprint_hold') return '等你:点开蓝图,选「仍然写」';
+  if (run.status !== 'done') return '';
+  if (['reverse_audit', 'final_review', 'draft_check', 'deai', 'claim_check', 'opening_fix'].some(k => busy(st[k]))) return '';
+  const rv = run.review || {};
+  if (rv.audit && !st.final_review && !rv.final) return '等你:选审稿意见,再开始终审';
+  if (st.deai && st.deai.stage === '等你选改法') return '等你:选去AI感改法';
+  const s = scoreSummary(run);
+  if (s.verdict != null && !s.good) return '等你:终审' + (s.left ? '还差 ' + s.left + ' 项' : '还不能发') + '';
+  const lc = (st.blueprint_review || {}).left_check;
+  const still = lc && lc.status === 'done' ? (Array.isArray(lc.items) ? lc.items : []).filter(x => x.state === '还在').length : 0;
+  if (still) return '等你:蓝图留下的问题还在 ' + still + ' 项';
+  return '';
+}
+
 // 列表字段子集:视频推送只留原始字段,status_label/project_url 由调用方按当前绑定的 base_url 现算
 function indexEntry(run) {
   const pushes = Array.isArray(run.video_pushes) ? run.video_pushes : [];
@@ -342,6 +360,7 @@ function indexEntry(run) {
     active_pass: activePass(run),
     // 列表「评分」列:审稿报告分 + 终审七维平均(口径不同,分开存)
     score: scoreSummary(run),
+    wait: waitFor(run),
     // 列表「待换框架/换框架中」状态(上游 v1.21.5):索引里没有 analysis,没这三个字段时列表只能显示「AI 调整中」
     verdict: (run.analysis || {}).verdict || '',
     reframe: run.reframe ? { status: run.reframe.status || '', switched: Array.isArray(run.reframe.switched) ? run.reframe.switched.length : 0 } : null,
@@ -504,7 +523,7 @@ function queryRuns(opts) {
   };
 }
 
-module.exports = {
+module.exports = { waitFor,
   APP_ROOT, ASSETS_ROOT, RUNS_ROOT, ensureDirs, slugify,
   listAssets, getAsset, saveAsset, deleteAsset, newAssetId, assetCategories, setAssetTrack,
   newRun, saveRun, getRun, listRuns, setRunViral, setRunConfirmed,

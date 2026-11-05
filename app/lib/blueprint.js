@@ -755,12 +755,126 @@ const SOFT_KEYS = ['progression', 'facts'];
 const LATER = {
   progression: '后面会处理:写稿时会提醒 AI 这几处别重讲;二稿检查和终审还会再抓重复。',
   facts: '后面会处理:写稿只许用事实表里的数,查不到的写成大概的说法;写完还有联网核验、论点核对和终审里查事实的那一项;稿子里用了没出处的数,发布前会挡住。',
-  reveal: '后面不一定改得好:终审会查答案是不是说早了,但要挪章节顺序,逐句改很难改干净。照写的话,建议到终审时在「补充意见」里写明哪个答案留到哪一章再说。',
-  thesis: '后面不一定改得好:终审会查标题有没有兑现,但整章跑题,逐句改是改不回来的。',
-  reversal: '后面不一定改得好:反转是整条稿子的骨架,终审只能逐句补,换不了反转。',
-  forced: '后面能改一部分:终审会查照搬原片的地方,但整章逻辑是照搬的就得整章重写。照写的话,建议在终审「补充意见」里点名哪一章、哪个说法不适合这个题。',
+  reveal: '后面不一定改得好:点了「仍然写」,这一条会自动交给终审重点查、重点改(不用你自己写补充意见)。要挪章节顺序的,逐句改很难改干净;终审完会自动对一遍,标出解决了没有。',
+  thesis: '后面不一定改得好:点了「仍然写」,这一条会自动交给终审重点查;整章跑题逐句改改不回来。终审完会自动对一遍,标出解决了没有。',
+  reversal: '后面不一定改得好:点了「仍然写」,这一条会自动交给终审重点补;反转是整条稿子的骨架,终审只能逐句补,换不了反转。终审完会自动对一遍,标出解决了没有。',
+  forced: '后面能改一部分:点了「仍然写」,这一条会自动交给终审重点查照搬原片的地方;整章逻辑照搬的得整章重写。终审完会自动对一遍,标出解决了没有。',
   deletion: '后面改不回来:删掉的段写稿时就不会写,后面的步骤不会再加回来。'
 };
+// v1.97 停下页面上每项「交给谁」的短说法
+const LATER_WHO = {
+  progression: '写稿时提醒 AI 别重讲 + 二稿检查 + 终审',
+  facts: '写稿只用事实表 + 联网核验 + 论点核对 + 终审',
+  reveal: '终审(自动交过去重点改)',
+  thesis: '终审(自动交过去重点查)',
+  reversal: '终审(自动交过去重点补)',
+  forced: '终审(自动交过去重点查)',
+  deletion: '后面改不回来(删掉的段不会再写)'
+};
+// v1.97 蓝图审没过、人选了照写(或只剩递进/事实没过自动接着写)的问题:交给终审,终审完对一遍解决没有
+function leftItems(run) {
+  const br = (run.steps || {}).blueprint_review;
+  if (!br || !arr(br.items).length) return [];
+  if (!(br.status === 'passed_soft' || (br.status === 'held' && br.override))) return [];
+  return br.items.filter(i => !i.pass && i.key !== 'deletion').map((i, n) => ({
+    id: 'L' + (n + 1), key: i.key, name: str(i.name), plain: str(i.plain), soft: SOFT_KEYS.includes(i.key),
+    problems: arr(i.problems).slice().sort((x, y) => (y.by === 'AI') - (x.by === 'AI')).slice(0, 4).map(p => ((p.chapter && !str(p.text).startsWith(p.chapter)) ? p.chapter + ' ' : '') + cut(p.text, 200))
+  }));
+}
+const leftText = items => items.map(i => i.id + ' ' + i.name + ':' + (i.plain || '') + (i.problems.length ? '\n  ' + i.problems.join('\n  ') : '')).join('\n');
+// 终审审稿时一起看(只交「后面不一定改得好」的几项;递进、事实已有别的步骤管)
+function leftFindings(run) {
+  const items = leftItems(run).filter(i => !i.soft);
+  if (!items.length) return '';
+  return '蓝图审留下的问题(写稿前蓝图审就没过,人选了照写,交给终审重点处理):逐条对着稿子查,还在的列进问题清单当「关键」问题并给出改法;要挪章节、整章改才能解决的标「结构」:\n' + leftText(items);
+}
+const leftKey = (run, items) => zhHash(str(require('./review').currentScript(run)) + '\n' + JSON.stringify(items.map(i => [i.key, i.problems])));
+const LEFT_STATES = ['已解决', '还在', '说不准'];
+const leftBusy = new Set();
+const normQ = t => str(t).replace(/[\s「」"'“”‘’.,!?…·,。!?、]/g, '');
+async function leftCheck(runId, opts) {
+  const o = opts || {};
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  const items = leftItems(run);
+  const R = require('./review');
+  const script = str(R.currentScript(run));
+  if (!items.length || !script) return null;
+  const key = leftKey(run, items);
+  const br = run.steps.blueprint_review;
+  if (!o.force && br.left_check && br.left_check.key === key && br.left_check.status === 'done') return br.left_check;
+  if (leftBusy.has(runId)) return { status: 'running' };
+  leftBusy.add(runId);
+  const save = lc => {
+    const fresh = store.getRun(runId);
+    if (!fresh || !(fresh.steps || {}).blueprint_review) return;
+    fresh.steps.blueprint_review.left_check = lc;
+    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
+    store.saveRun(fresh);
+  };
+  const prev = br.left_check && br.left_check.status === 'done' ? br.left_check : null;
+  save({ ...(prev || {}), status: 'running', started_at: new Date().toISOString() });
+  try {
+    const mainCfg = pl().loadConfig();
+    const cheap = R.translateCfg(mainCfg);
+    const prompt = an().fillVars(readPrompt('blueprint_left_check.md'), { topic: str(run.topic), target_language: str((run.audience || {}).target_language), items: leftText(items), script });
+    let r;
+    try { r = await R.rawCall(run, cheap || mainCfg, prompt, '蓝图留下的问题·终审后核对'); }
+    catch (e) { if (!cheap) throw e; r = await R.rawCall(run, mainCfg, prompt, '蓝图留下的问题·终审后核对·换主渠道'); }
+    const txt = checks.stripFence(str(r.content));
+    const j = parse(txt) || checks.extractJsonObject(txt) || {};
+    const got = Object.fromEntries(arr(j.items).map(x => [str(x.id).trim().toUpperCase(), x]));
+    const flat = normQ(script);
+    const out = items.map(i => {
+      const x = got[i.id];
+      if (!x) return { id: i.id, key: i.key, state: '说不准', why: '核对时没给出这一条的结论' };
+      const state = LEFT_STATES.find(s => str(x.state).includes(s)) || '说不准';
+      const q = str(x.quote).trim();
+      return { id: i.id, key: i.key, state, why: cut(x.why, 300), ...(state === '还在' && q && normQ(q).length >= 4 && flat.includes(normQ(q)) ? { quote: cut(q, 200) } : {}) };
+    });
+    if (!arr(j.items).length) throw new Error('核对结果读不出来');
+    const lc = { status: 'done', at: new Date().toISOString(), key, items: out };
+    save(lc);
+    return lc;
+  } catch (e) {
+    save({ ...(prev || {}), status: 'failed', error: e.message, at: new Date().toISOString() });
+    return null;
+  } finally { leftBusy.delete(runId); }
+}
+// 终审、补改跑完调用:终审跑过、稿子或问题变了才核对(不重复花钱)
+async function leftCheckIfStale(runId) {
+  try {
+    const run = store.getRun(runId);
+    if (!run || !((run.review || {}).final)) return null;
+    if (!leftItems(run).length) return null;
+    return await leftCheck(runId);
+  } catch (e) { return null; }
+}
+// 页面按钮「再查一次」
+function leftCheckNow(runId) {
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  if (!leftItems(run).length) throw Object.assign(new Error('没有蓝图审留下的问题'), { status: 400 });
+  if (!require('./review').currentScript(run)) throw Object.assign(new Error('稿子还没写好'), { status: 400 });
+  if (leftBusy.has(runId)) return { ok: true, busy: true };
+  leftCheck(runId, { force: true }).catch(() => {});
+  return { ok: true };
+}
+function leftView(run) {
+  const items = leftItems(run);
+  if (!items.length) return null;
+  const br = run.steps.blueprint_review;
+  const lc = br.left_check || null;
+  const fresh = !!(lc && lc.key && lc.key === leftKey(run, items));
+  const res = Object.fromEntries(arr((lc || {}).items).map(x => [x.id + '|' + x.key, x]));
+  const rows = items.map(i => ({ ...i, later: LATER_WHO[i.key] || '', check: res[i.id + '|' + i.key] || null }));
+  const count = s => rows.filter(x => x.check && x.check.state === s).length;
+  return {
+    items: rows, status: lc ? (leftBusy.has(run.id) ? 'running' : lc.status) : 'none', at: lc && lc.at, error: lc && lc.status === 'failed' ? str(lc.error) : '',
+    stale: !!(lc && lc.items && !fresh), final_done: !!((run.review || {}).final), has_script: !!require('./review').currentScript(run),
+    solved: count('已解决'), still: count('还在'), unsure: count('说不准')
+  };
+}
 function mergeReview(pc, ai) {
   const items = ITEMS.map(it => {
     const prog = pc.items[it.key];
@@ -1127,8 +1241,10 @@ function view(run) {
   if (!ft && !br && !run.blueprint_mode) return null;
   const fn = modeOf(run) === 'function';
   return { mode: modeOf(run), mode_label: MODES[modeOf(run)], mode_why: str(run.blueprint_mode_why), setting: settingMode(), delete_max: ft && ft.delete_max != null ? ft.delete_max : deleteMax(), deleted_segments: arr(run.deleted_segments), deleted_ratio: run.deleted_ratio, table: fn ? ft : null, chapters, review: fn ? br : null, held: run.status === 'blueprint_hold', outline_diff: outlineDiff, outline_diff_orig: outlineDiffOrig, outline_picked: picked && !!s1,
-    zh_foreign: (() => { try { return bpForeignSlots(run).length; } catch (e) { return 0; } })(), zh_busy: !!run.bp_zh_busy, zh_error: str(run.bp_zh_error || (br || {}).zh_error) };
+    zh_foreign: (() => { try { return bpForeignSlots(run).length; } catch (e) { return 0; } })(), zh_busy: !!run.bp_zh_busy, zh_error: str(run.bp_zh_error || (br || {}).zh_error),
+    left: fn ? (() => { try { return leftView(run); } catch (e) { return null; } })() : null,
+    later_now: br && br.status !== 'passed' ? arr(br.items).filter(i => !i.pass).map(i => LATER[i.key] || '') : [], later_who: br ? arr(br.items).filter(i => !i.pass).map(i => ({ key: i.key, name: str(i.name), who: LATER_WHO[i.key] || '' })) : [] };
 }
 
-module.exports = { SOFT_KEYS, LATER, newInfoSimilar, factSpread, spreadText, researchNotes, chapterSwap, chapterFunctions, draftCheckItem, DELETE_MAX_DEFAULT, deleteMax, setDeleteMax, deletionCheck, enforceDeletions, deletedOf, checkDeletions, plannedFacts, restoreDeletions, recordDeletions, MODES, settingMode, setSettingMode, decideMode, modeOf, segmentsOf, locksOf, ladderOf, TREATMENTS, normTreatment, normalizeTable, tableSourceHits, sourceTerms, sourceHits, ensureTable, tableBrief, locksBrief, ladderBrief, frameworkCore, timelineCore, step1Template,
+module.exports = { LATER_WHO, leftItems, leftFindings, leftCheck, leftCheckIfStale, leftCheckNow, leftView, SOFT_KEYS, LATER, newInfoSimilar, factSpread, spreadText, researchNotes, chapterSwap, chapterFunctions, draftCheckItem, DELETE_MAX_DEFAULT, deleteMax, setDeleteMax, deletionCheck, enforceDeletions, deletedOf, checkDeletions, plannedFacts, restoreDeletions, recordDeletions, MODES, settingMode, setSettingMode, decideMode, modeOf, segmentsOf, locksOf, ladderOf, TREATMENTS, normTreatment, normalizeTable, tableSourceHits, sourceTerms, sourceHits, ensureTable, tableBrief, locksBrief, ladderBrief, frameworkCore, timelineCore, step1Template,
   checkLocks, adjacentSimilar, checkLadder, checkCopy, checkUnreachable, checkFacts, checkReversal, programChecks, ITEMS, reviewPrompt, parseReview, mergeReview, reasonsZh, reviewLoop, MAX_REVISE, holdChoice, backToAnalysis, view, bpForeignSlots, zhReview, zhNow, jaccard, chapterKeep, chapterBrief, step2Rules };

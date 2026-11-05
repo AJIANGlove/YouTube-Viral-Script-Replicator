@@ -1027,6 +1027,8 @@ function programFindings(run, asset) {
   if (eng.length) out.push('韩语稿里夹着英文:' + eng.slice(0, 8).map(e => '「' + e + '」').join('、') + '(英文原话翻成韩语;人名、地名、专有名词用韩文写法)');
   const gaps = checks.titlePromiseGaps(run.topic, scr);
   if (gaps.length) out.push('标题里的' + gaps.map(g => '「' + g.stem + '」').join('、') + '在开头之后的正文里几乎没再出现:检查标题承诺的东西正文有没有讲到;没讲到就在正文补上,补不了的写进报告建议改标题(改标题要先问人,不要自己改)');
+  // v1.97 蓝图审没过、人选了照写的问题:交给终审重点处理
+  try { const bl = require('./blueprint').leftFindings(run); if (bl) out.push(bl); } catch (e) {}
   if (s.budget) out.push('篇幅:' + s.words + ' 词,预算 ' + s.budget + ' 词');
   const len = (run.checks || {}).length;
   if (len && !len.ok) out.push('篇幅超标:' + len.detail);
@@ -2830,6 +2832,7 @@ function startFinalPatch(runId, body) {
       ok = !!res && !res.reverted;
     } catch (e) {} finally { passRunning.delete(runId); }
     if (ok) { await claimAfterPatch(runId); try { await runOpenOptions(runId); } catch (e) {} await autoOpeningFix(runId); await refreshClaimIfStale(runId); await refreshOpeningIfStale(runId); }
+    await require('./blueprint').leftCheckIfStale(runId);
     await translateRun(runId);
   })();
   return { ok: true };
@@ -3129,6 +3132,8 @@ async function runPasses(runId, from) {
       try { if (k === 'audit') await runReverseAudit(runId); else if (k === 'final') await runFinal(runId); else await runPass(runId, k); } catch (e) { break; }
     }
   } finally { passRunning.delete(runId); }
+  // v1.97 终审跑过:对一遍蓝图审留下的问题解决没有(便宜渠道;稿子没变不重复查)
+  await require('./blueprint').leftCheckIfStale(runId);
   // 中文对照放在锁外:翻译可能要好几分钟,期间不该挡住换赛道重新终审(翻译保存前会重读任务,只合并译文)
   await translateRun(runId);
 }
@@ -4359,4 +4364,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

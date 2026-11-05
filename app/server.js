@@ -631,6 +631,13 @@ const server = http.createServer(async (req, res) => {
       catch (e) { return send(res, e.status || 500, { error: e.message }); }
     }
 
+    // v1.97 蓝图审留下的问题:对着现在的稿子再查一次解决没有
+    const blMatch = url.match(/^\/api\/runs\/([\w-]+)\/blueprint-left-check$/);
+    if (blMatch && method === 'POST') {
+      try { return send(res, 200, require('./lib/blueprint').leftCheckNow(blMatch[1])); }
+      catch (e) { return send(res, e.status || 500, { error: e.message }); }
+    }
+
     // v1.89 待选论点:pick 选一个(id)/ edit 改一句再核对(id=在哪张卡上改,text)/ regen 重出 3 个
     const thMatch = url.match(/^\/api\/runs\/([\w-]+)\/thesis-choice$/);
     if (thMatch && method === 'POST') {
