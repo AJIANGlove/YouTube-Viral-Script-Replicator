@@ -244,9 +244,9 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `fact_audit.md` | 事实审计（拆主张、标风险、给搜索词） | 51 |
 | `fact_verify.md` | 联网核验（按证据定级 A–E，必改或收窄；网友说法只核有没有人这样说） | 56 |
 | `reverse_audit.md` | 二稿逆向工程审稿报告（九部分 + 逐条预估加分） | 523 |
-| `final_audit.md` | 终审①独立审稿（七维评分 + P0–P3 清单，含论点自检、人物身份一致） | 229 |
+| `final_audit.md` | 终审①独立审稿（七方面 + P0–P3 清单 + 结论能发/还不能发，不再打分） | 224 |
 | `final_revise.md` | 终审②按诊断修改（逐处原句→改成+理由） | 88 |
-| `final_recheck.md` | 终审③独立复审（评分对照，未达标补改一轮，含论点自检、原地打转、假设交代与人物一致） | 85 |
+| `final_recheck.md` | 终审③独立复审（只列问题+结论能发/还不能发，含论点自检、原地打转、假设交代与人物一致） | 80 |
 | `final_patch.md` | 按复审 OPEN 清单补改终稿 | 59 |
 | `final_patch_diagnose.md` | 补改掉分后找原因、定每题新改法 | 43 |
 | `final_open_options.md` | 复审遗留问题各出 ≥3 种改法并标推荐 | 33 |
@@ -266,13 +266,13 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `fingerprints.json` | 指纹模式库（各语言正则 + 结构判定要点） | — |
 | `compliance_check.md` | YouTube 商业化检查 | 287 |
 | `opening_retention_check.md` | 开头留存检查 | 126 |
-| `opening_card.md` | 开头单独审（前 60 秒逐句 + 硬指标 + 掉人点） | 31 |
+| `opening_card.md` | 开头单独审（前 60 秒逐句打分 + 硬指标 + 掉人点 + 联网核对数字与观众疑问） | 45 |
 | `opening_fix.md` | 自动改开头（只动前 30 秒、不许改长/编数字，最多 3 次） | 41 |
 | `claim_check.md` | 论点核对（账本锁数 + 账外的数 + 验算一致性 + 直接应用改法写法 + 换算与基准数核对；人选论点不改标题不换论点） | 50 |
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 61 份 `.md`（3811 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 66 份，合计 4020 行。
+合计 61 份 `.md`（3840 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 66 份，合计 4049 行。
 
 ### 历史版本
 

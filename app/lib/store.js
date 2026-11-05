@@ -222,7 +222,8 @@ const RUNS_INDEX = path.join(APP_ROOT, 'data', 'runs.index.json');
 // 4: 新增 score(列表"评分"列:审稿报告分 + 终审七维平均),同上
 // 5: 合并上游 v1.21.5 的 verdict / reframe / analysis_confirmed(列表「待换框架」「换框架中」)。
 //    上游把这三个字段也叫 4,与本地 v1.23 评分列的 4 撞号;合并后升 5 强制重建一次,两 schema 字段齐全
-const INDEX_VERSION = 5;
+// 6: v1.95 评分列改成「能发 / 还差几项」(score 里加 verdict、left、good)
+const INDEX_VERSION = 6;
 let indexCache = null;
 
 // 源标题中文只用于列表副标题,按资产 id 缓存,避免重复读 meta.json
@@ -311,9 +312,15 @@ function scoreSummary(run) {
   const dims = Array.isArray(fin.dims) ? fin.dims : [];
   const xs = (dims.length ? dims.map(d => after[d]) : Object.values(after))
     .filter(x => typeof x === 'number' && isFinite(x));
+  // v1.95 不看分数:最后一轮复审的结论 + 还剩几个关键/结构问题(和 review.rcGood 同一口径)
+  const last = Array.isArray(fin.rechecks) && fin.rechecks.length ? fin.rechecks[fin.rechecks.length - 1] : null;
+  const hard = last ? (Array.isArray(last.open) ? last.open : []).filter(x => x && (x.level === '关键' || x.level === '结构') && !x.not_found && !x.applied) : [];
   return {
     audit: typeof stepScore === 'number' && isFinite(stepScore) ? stepScore : null,
-    final: xs.length ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length * 10) / 10 : null
+    final: xs.length ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length * 10) / 10 : null,
+    verdict: last ? (last.verdict || '') : null,
+    left: last ? hard.length : null,
+    good: last && last.verdict ? last.verdict === '达标' && !hard.some(x => x.level === '结构') : null
   };
 }
 

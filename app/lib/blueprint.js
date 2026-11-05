@@ -750,6 +750,17 @@ const PLAIN = {
   forced: '有原片的东西(头衔、制度、器物、例子)被硬塞进这个题,或者主角做了这个题里做不到的事。',
   deletion: '删掉的段其实有素材能写,删了会少一个看点。'
 };
+// v1.95 每项没过时,后面的步骤能不能接住(给人看的大白话)。SOFT_KEYS 里的项后面能处理,不挡写稿
+const SOFT_KEYS = ['progression', 'facts'];
+const LATER = {
+  progression: '后面会处理:写稿时会提醒 AI 这几处别重讲;二稿检查和终审还会再抓重复。',
+  facts: '后面会处理:写稿只许用事实表里的数,查不到的写成大概的说法;写完还有联网核验、论点核对和终审里查事实的那一项;稿子里用了没出处的数,发布前会挡住。',
+  reveal: '后面不一定改得好:终审会查答案是不是说早了,但要挪章节顺序,逐句改很难改干净。照写的话,建议到终审时在「补充意见」里写明哪个答案留到哪一章再说。',
+  thesis: '后面不一定改得好:终审会查标题有没有兑现,但整章跑题,逐句改是改不回来的。',
+  reversal: '后面不一定改得好:反转是整条稿子的骨架,终审只能逐句补,换不了反转。',
+  forced: '后面能改一部分:终审会查照搬原片的地方,但整章逻辑是照搬的就得整章重写。照写的话,建议在终审「补充意见」里点名哪一章、哪个说法不适合这个题。',
+  deletion: '后面改不回来:删掉的段写稿时就不会写,后面的步骤不会再加回来。'
+};
 function mergeReview(pc, ai) {
   const items = ITEMS.map(it => {
     const prog = pc.items[it.key];
@@ -846,7 +857,9 @@ async function reviewLoop(opts) {
     record(cur, { after_revise: revised });
   }
   // v1.79:改完只剩「递进」没过 → 不停,接着写稿;没过的点交给写稿时提醒(step2Rules)
-  const onlyProg = !cur.rv.pass && cur.rv.items.every(i => i.pass || i.key === 'progression');
+  // v1.95:「事实支撑」也不挡(写稿只用事实表;后面有联网核验、论点核对、终审事实,发布前没出处的数会挡),写稿时提醒
+  const onlyProg = !cur.rv.pass && cur.rv.items.every(i => i.pass || SOFT_KEYS.includes(i.key));
+  const softOf = key => arr((cur.rv.items.find(i => i.key === key && !i.pass) || {}).problems).slice().sort((x, y) => (y.by === 'AI') - (x.by === 'AI')).map(p => ((p.chapter && !str(p.text).startsWith(p.chapter)) ? p.chapter + ' ' : '') + cut(p.text, 160) + (p.fix ? '(改法:' + cut(p.fix, 100) + ')' : '')).slice(0, 8);
   const status = cur.rv.pass ? 'passed' : onlyProg ? 'passed_soft' : 'held';
   const research = (run.steps.blueprint_review || {}).research;
   run.steps.blueprint_review = {
@@ -855,7 +868,9 @@ async function reviewLoop(opts) {
     items: cur.rv.items, summary: str((cur.ai || {}).summary), retopic: arr((cur.ai || {}).retopic).map(String).filter(Boolean).slice(0, 3),
     reasons_zh: cur.rv.pass ? [] : reasonsZh(cur.rv),
     plain_zh: cur.rv.pass ? [] : cur.rv.items.filter(i => !i.pass).map(i => i.plain || ''),
-    ...(onlyProg ? { soft_notes: arr((cur.rv.items.find(i => i.key === 'progression') || {}).problems).slice().sort((x, y) => (y.by === 'AI') - (x.by === 'AI')).map(p => ((p.chapter && !str(p.text).startsWith(p.chapter)) ? p.chapter + ' ' : '') + cut(p.text, 160) + (p.fix ? '(改法:' + cut(p.fix, 100) + ')' : '')).slice(0, 8) } : {})
+    later_zh: cur.rv.pass ? [] : cur.rv.items.filter(i => !i.pass).map(i => LATER[i.key] || ''),
+    soft_keys: cur.rv.pass ? [] : cur.rv.items.filter(i => !i.pass && SOFT_KEYS.includes(i.key)).map(i => i.key),
+    ...(onlyProg ? { soft_notes: softOf('progression'), soft_facts: softOf('facts') } : {})
   };
   // v1.91 AI 写成韩文/外文的翻成中文(便宜渠道;失败不挡)
   try { await zhReview(run, pl().loadConfig(), content); } catch (e) { run.steps.blueprint_review.zh_error = '翻成中文没成功:' + e.message; }
@@ -876,7 +891,7 @@ function bpForeignSlots(run, content) {
   const items = list => arr(list).forEach(it => { add(it, 'plain'); arr(it.problems).concat(arr(it.notes)).forEach(p => { add(p, 'text'); add(p, 'fix'); }); });
   const br = (run.steps || {}).blueprint_review;
   if (br) {
-    items(br.items); add(br, 'summary'); addArr(br.reasons_zh); addArr(br.plain_zh); addArr(br.soft_notes);
+    items(br.items); add(br, 'summary'); addArr(br.reasons_zh); addArr(br.plain_zh); addArr(br.soft_notes); addArr(br.soft_facts);
     arr(br.rounds).forEach(x => { items(x.items); add(x, 'summary'); });
   }
   const od = outlineDiffRaw(run, content);
@@ -915,7 +930,7 @@ function zhNow(runId) {
     const fresh = store.getRun(runId) || r;
     const a = (r.steps || {}).blueprint_review, b = (fresh.steps || {}).blueprint_review;
     if (a && b && a.finished_at === b.finished_at) {
-      ['items', 'rounds', 'summary', 'summary_orig', 'reasons_zh', 'plain_zh', 'soft_notes'].forEach(k => { if (a[k] !== undefined) b[k] = a[k]; });
+      ['items', 'rounds', 'summary', 'summary_orig', 'reasons_zh', 'plain_zh', 'soft_notes', 'soft_facts'].forEach(k => { if (a[k] !== undefined) b[k] = a[k]; });
     }
     if (r.outline_diff_zh) fresh.outline_diff_zh = r.outline_diff_zh;
     delete fresh.bp_zh_busy;
@@ -1061,8 +1076,9 @@ function step2Rules(run, blueprintText) {
 // v1.79 蓝图审只剩「递进」没过、接着写的:写稿时提醒这几处别讲重复
 function softNotes(run) {
   const br = (run.steps || {}).blueprint_review || {};
-  if (br.status !== 'passed_soft' || !arr(br.soft_notes).length) return '';
-  return '\n- 蓝图审提醒(这几处在蓝图里有点重复,写的时候注意):' + br.soft_notes.join(' / ') + '。同一件事在后面的章再出现时,要么一句带过当回顾,要么带出新东西(新角度、新案例、新推论),不要换个说法重讲一遍。';
+  if (br.status !== 'passed_soft') return '';
+  return (arr(br.soft_notes).length ? '\n- 蓝图审提醒(这几处在蓝图里有点重复,写的时候注意):' + br.soft_notes.join(' / ') + '。同一件事在后面的章再出现时,要么一句带过当回顾,要么带出新东西(新角度、新案例、新推论),不要换个说法重讲一遍。' : '') +
+    (arr(br.soft_facts).length ? '\n- 蓝图审提醒(这几章的事实支撑弱,写的时候注意):' + br.soft_facts.join(' / ') + '。只用事实表里有的数和事;标「待查」「假设」的数当估算讲(第一次拿来算的时候顺口说一句是估算);事实表里没有的,写成方向或比较,不写具体数字、人名、年份。' : '');
 }
 
 // v1.82 蓝图补搜查不到的章:写稿时也不许硬编(降级的写成「可能」「有说法」;保持原样的章照蓝图写,但只用事实表里有的)
@@ -1114,5 +1130,5 @@ function view(run) {
     zh_foreign: (() => { try { return bpForeignSlots(run).length; } catch (e) { return 0; } })(), zh_busy: !!run.bp_zh_busy, zh_error: str(run.bp_zh_error || (br || {}).zh_error) };
 }
 
-module.exports = { newInfoSimilar, factSpread, spreadText, researchNotes, chapterSwap, chapterFunctions, draftCheckItem, DELETE_MAX_DEFAULT, deleteMax, setDeleteMax, deletionCheck, enforceDeletions, deletedOf, checkDeletions, plannedFacts, restoreDeletions, recordDeletions, MODES, settingMode, setSettingMode, decideMode, modeOf, segmentsOf, locksOf, ladderOf, TREATMENTS, normTreatment, normalizeTable, tableSourceHits, sourceTerms, sourceHits, ensureTable, tableBrief, locksBrief, ladderBrief, frameworkCore, timelineCore, step1Template,
+module.exports = { SOFT_KEYS, LATER, newInfoSimilar, factSpread, spreadText, researchNotes, chapterSwap, chapterFunctions, draftCheckItem, DELETE_MAX_DEFAULT, deleteMax, setDeleteMax, deletionCheck, enforceDeletions, deletedOf, checkDeletions, plannedFacts, restoreDeletions, recordDeletions, MODES, settingMode, setSettingMode, decideMode, modeOf, segmentsOf, locksOf, ladderOf, TREATMENTS, normTreatment, normalizeTable, tableSourceHits, sourceTerms, sourceHits, ensureTable, tableBrief, locksBrief, ladderBrief, frameworkCore, timelineCore, step1Template,
   checkLocks, adjacentSimilar, checkLadder, checkCopy, checkUnreachable, checkFacts, checkReversal, programChecks, ITEMS, reviewPrompt, parseReview, mergeReview, reasonsZh, reviewLoop, MAX_REVISE, holdChoice, backToAnalysis, view, bpForeignSlots, zhReview, zhNow, jaccard, chapterKeep, chapterBrief, step2Rules };

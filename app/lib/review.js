@@ -525,7 +525,14 @@ const ledgerLine = x => x.id + ' ' + x.item + '(账本写 ' + x.amount + ',按 '
 // 平均分到 PUBLISH_AVG:复审剩下的关键/结构问题、数字密的句子只提示不挡,只要开头过关(人定的标准,之后按真实发布数据再调)
 const PUBLISH_AVG = 8;
 // 人点了「忽略」的挡发布项(按 key:hard_open、ledger、claim、listen_open…;没出处的数走 accepted_facts)
-const IGNORABLE = ['hard_open', 'ledger', 'thesis', 'claim', 'listen_open', 'listen_dense', 'listen_register', 'listen_other', 'residue', 'pov', 'weak_claims'];
+const IGNORABLE = ['hard_open', 'ledger', 'thesis', 'claim', 'listen_open', 'listen_dense', 'listen_register', 'listen_other', 'residue', 'pov', 'weak_claims', 'open_fact'];
+// v1.95 开头审联网核对:开头里和网上资料说法相反的句子(开头改过、卡片过期了就不算)
+function openFactsContra(run) {
+  const o = (run.review || {}).opening;
+  if (!o || !arr(o.facts).length) return [];
+  try { if (openingSlice(run).hash !== o.hash) return []; } catch (e) { return []; }
+  return arr(o.facts).filter(f => f.status === '说反了');
+}
 function ignoredBlocks(run) { return new Set(arr((run.review || {}).ignored_blocks).filter(k => IGNORABLE.includes(k))); }
 // 复审问题属于哪一项:提到挡发布的没出处事实 → fact:F05;账本 → ledger;开头/前几秒 → listen_open;一口气念数字 → listen_dense;语体 → listen_register;其他 → hard_open
 function openBlockKey(x, factIds) {
@@ -633,7 +640,8 @@ function publishCheck(run, v) {
   const last = v.final ? arr(v.final.rechecks).slice(-1)[0] : null;
   const dims = v.final ? (arr(v.final.dims).length ? v.final.dims : Object.keys((last || {}).scores || {})) : [];
   const avg = last ? avgScore(last.scores, dims) : null;
-  const good = avg != null && avg >= PUBLISH_AVG;
+  // v1.95 不看分数:复审判「达标」、没有结构问题,剩下的关键问题只提示不挡
+  const good = rcGood(last) === true;
   if (!v.final) blk('no_final', '还没跑终审');
   // 没出处的事实:人点了「不影响,不改了」的只提示;其余每个单独挡,写清是哪个数、用在哪几句
   const accepted = new Set(arr((run.review || {}).accepted_facts));
@@ -661,6 +669,8 @@ function publishCheck(run, v) {
   const th = last && last.thesis;
   if (arr(s.thesis_contradicts).length && !(th && th.resolved)) blk('thesis', '反转被事实推翻' + (th ? '(复审判定未解决:' + th.note + ')' : '(终审复审还没判断)'));
   consistencyBlocks(s.consistency).forEach(b => blk(b.key, b.text));
+  const ofc = openFactsContra(run);
+  if (ofc.length) blk('open_fact', '开头有 ' + ofc.length + ' 句和网上查到的说法相反:' + ofc.map(f => '第 ' + f.n + ' 句「' + f.claim + '」' + (f.note ? '(' + f.note + ')' : '')).join(';'));
   const lc = checks.listenCheck(checks.extractFinalScript(currentScript(run)), {
     wpm: require('./narration').narrationWpm(run, null).wpm, title: ((run.analysis || {}).title || {}).final_title || run.topic, lang: (run.audience || {}).target_language });
   // 论点核对:主张被稿子自己的数字推翻、账本关键错误,不管平均几分都挡(改过稿还没重新核对的,按上次结果算)
@@ -708,7 +718,7 @@ function publishCheck(run, v) {
     }
   }
   const prog = v.final ? programOpen(run, s.red_fact_uses, s.consistency) : [];
-  return { ready: !reasons.length, ignored, item_groups, ignored_of, reasons, blocks, notes, can_autofix: !!reasons.length && !!v.final && ((avg != null && avg < PUBLISH_AVG) || prog.length > 0), program_open: prog.map(x => x.problem), craft_hints: v.final ? craftHints(run, last) : [], avg: avg != null ? Math.round(avg * 10) / 10 : null, good, opening_bad: ign.has('listen_open') ? [] : openBad, fix: (run.steps || {}).opening_fix || null,
+  return { ready: !reasons.length, ignored, item_groups, ignored_of, reasons, blocks, notes, can_autofix: !!reasons.length && !!v.final && (rcGood(last) === false || prog.length > 0), program_open: prog.map(x => x.problem), craft_hints: v.final ? craftHints(run, last) : [], avg: avg != null ? Math.round(avg * 10) / 10 : null, good, left: last ? hardLeft(last).length : null, verdict: last ? (last.verdict || "") : "", opening_bad: ign.has('listen_open') ? [] : openBad, fix: (run.steps || {}).opening_fix || null,
     manual_after: v.final ? manualAfterRecheck((run.review || {}).final) : 0,
     accepted_facts: [...accepted], claim: cc ? { ...cc, only_ok: claimBlocking(cc) && !(cc.verdict === '不成立' && !claimVerdictApplied(cc)) && !arr(cc.issues).some(x => x.level === '关键' && claimReal(x) && !claimLooksOk(x)), verdict_applied: cc.verdict === '不成立' && claimVerdictApplied(cc), issues: arr(cc.issues).map(x => {
       x = { ...x, why_zh: whyOf(run.review, 'C', x) }; // 问题在哪(v1.72)
@@ -1707,12 +1717,12 @@ const hasMarker = (t, k) => new RegExp('^[ \\t#*`]*===\\s*' + (k || '[A-Z]+') + 
 const looksRefused = (t, opts) => {
   t = String(t || '');
   // 要打分的调用:没有 ===SCORES===、也没有评分表,又很短或像拒绝,就当作拒绝
-  if (opts && opts.scores) return !hasMarker(t, 'SCORES') && !/\|[^\n]*\d[^\n]*\|/.test(t) && (t.length < REFUSE_SHORT || (t.length < 8000 && REFUSAL_RE.test(t)));
+  if (opts && opts.scores) return !hasMarker(t, 'SCORES') && !hasMarker(t, 'OPEN') && !hasMarker(t, 'VERDICT') && !/\|[^\n]*\d[^\n]*\|/.test(t) && (t.length < REFUSE_SHORT || (t.length < 8000 && REFUSAL_RE.test(t)));
   return t.length < 8000 && !hasMarker(t) && REFUSAL_RE.test(t);
 };
 // 被拒后换个说法重发(同一个模型、同一个渠道;用户 2026-11-02:不换模型,换说法)
-const REFRAME_NOTE = '【说明】这是作者自己写的视频稿,在作者自己的内部编辑流程里做质量自查。评分只是给作者自己排修改优先级用的参考,不是出版决定,也不需要你替任何人做发布判断;拿不准的地方照实写「不确定」即可。请直接完成下面的复审,并且一定按格式输出 ===SCORES===(每个维度一个分数)、===OPEN===(问题清单)和 ===VERDICT===。\n'
-  + '(Note: this is the author\'s own draft in an internal self-review workflow. The scores are only a rough guide for the author to prioritise edits, not a publication decision. Please complete the review below and output the ===SCORES===, ===OPEN=== and ===VERDICT=== blocks in the required format.)\n\n';
+const REFRAME_NOTE = '【说明】这是作者自己写的视频稿,在作者自己的内部编辑流程里做质量自查。问题清单和结论只是给作者自己排修改优先级用的参考,不是出版决定,也不需要你替任何人做发布判断;拿不准的地方照实写「不确定」即可。请直接完成下面的复审,并且一定按格式输出 ===OPEN===(问题清单)和 ===VERDICT===。\n'
+  + '(Note: this is the author\'s own draft in an internal self-review workflow. The issue list and verdict are only a rough guide for the author to prioritise edits, not a publication decision. Please complete the review below and output the ===OPEN=== and ===VERDICT=== blocks in the required format.)\n\n';
 async function callLong(run, cfg, prompt, label, opts) {
   opts = opts || {};
   for (let k = 0; ; k++) {
@@ -1722,7 +1732,7 @@ async function callLong(run, cfg, prompt, label, opts) {
       const log = dumpRaw(run, 'refused', r.content);
       const where = log ? '模型回的原文存在 data/logs/' + log : '';
       if (opts.noThrow) return { ...r, refused: true, refused_log: log };
-      if (opts.scores) throw new Error('模型拒绝打分(「' + label + '」连试 ' + (k + 1) + ' 次,换了说法也不行' + (where ? ';' + where : '') + '),可以再点一次');
+      if (opts.scores) throw new Error('模型拒绝复审(「' + label + '」连试 ' + (k + 1) + ' 次,换了说法也不行' + (where ? ';' + where : '') + '),可以再点一次');
       throw new Error('模型拒绝做「' + label + '」(连试 ' + (k + 1) + ' 次,换了说法也不行,回的是:「' + String(r.content).trim().slice(0, 80) + '…」' + (where ? ';' + where : '') + '),可以再点一次');
     }
   }
@@ -1917,7 +1927,8 @@ function splitReport(content) {
   // v1.63:THESIS、CRAFT 也拆;标记前面带 # 标题符号的(「## ===THESIS===」)先去掉 #(实测 run_b196cf53e243 R1 的 THESIS 判断整段丢了)
   const c = String(content || '').replace(/^[ \t]*#{1,6}[ \t]*(?=[*`]*===\s*(?:SCORES|VERDICT|OPEN|EDIT|END|THESIS|CRAFT)\s*===)/gim, '')
     .replace(/[*`]*(===\s*(?:SCORES|VERDICT|OPEN|EDIT|END|THESIS|CRAFT)\s*===)[*`]*/gi, '\n$1\n').replace(/^[ \t]+(===)/gm, '$1');
-  const cut = c.search(/^===\s*SCORES\s*===\s*$/m);
+  // v1.95 不打分以后清单从 ===OPEN=== 开始(老数据从 ===SCORES===):从第一个清单标记切开
+  const cut = c.search(/^===\s*(?:SCORES|OPEN|THESIS|CRAFT|VERDICT|END)\s*===\s*$/m);
   return { report: (cut >= 0 ? c.slice(0, cut) : c).replace(/\n```[a-z]*\s*$/, '').trim(), tail: cut >= 0 ? c.slice(cut).replace(/^```.*$/gm, '') : '', all: c };
 }
 
@@ -2090,9 +2101,9 @@ function markMissingQuotes(open, script, lang) {
 }
 // 上一轮复审的分数和遗留问题:第 2 轮复审、补改后复审以它为起点,分数变动要对应到之后的改动(实测同一篇第 1 轮 7.1、只改了 3 句后第 2 轮 5.7)
 function prevRoundText(rc, dims) {
-  if (!rc || !rc.scores) return '';
-  return '【上一轮复审(同一篇稿子上一次复审的评分;这一轮以它为起点,分数变动要对应到之后的改动,或写明是上一轮漏判、稿子里一直存在的问题)】\n'
-    + dims.map(d => d + ': ' + (rc.scores[d] != null ? rc.scores[d] : '—')).join('\n')
+  if (!rc) return '';
+  return '【上一轮复审(同一篇稿子上一次复审的结论;这一轮以它为起点,「变好」「变差」要对应到之后的改动,或写明是上一轮漏判、稿子里一直存在的问题)】\n'
+    + '上一轮结论:' + (rc.verdict || '—')
     + '\n上一轮列出的未解决问题:\n' + (arr(rc.open).filter(x => !x.not_found && !x.applied).map(x => '- [' + x.id + '][' + x.chapter + '][' + x.level + '] ' + x.problem).join('\n') || '(无)') + '\n\n';
 }
 
@@ -2150,12 +2161,13 @@ function dumpRaw(run, kind, content) {
 async function ensureRecheckBlocks(run, cfg, common, dims, s3, label) {
   const tb = parseBlocks(s3.tail, false);
   let scores = fillScores(parseScores(tb.SCORES, dims), s3.report, dims, 2), verdict = parseVerdict(tb.VERDICT);
-  if (verdict && dims.every(d => scores[d] != null) || !String(s3.report || s3.all || '').trim()) return { tb, scores, verdict };
-  // 模型拒绝打分的回复不拿去「补评分」(实测把拒绝原文喂回去,还是没有分数)
+  // v1.95 不打分:有结论就够了
+  if (verdict || !String(s3.report || s3.all || '').trim()) return { tb, scores, verdict };
+  // 模型拒绝复审的回复不拿去「补结论」(实测把拒绝原文喂回去,还是没有清单)
   if (s3.refused) return { tb, scores, verdict };
   try {
-    const r = await callLong(run, cfg, '下面是一份复审报告。按报告里已经写出的评分和结论,只输出给程序读取的清单,不要重写报告,不要改分数,报告里没写分数的维度按报告内容给分。\n' +
-      '格式(不要代码围栏):\n===SCORES===\n' + common.dims_score_lines + '\n===OPEN===\n' + OPEN_FORMAT + '\n===VERDICT===\n达标 或 未达标(只写这三个字之一)\n===END===\n\n【复审报告】\n' + (String(s3.report || '').trim() ? s3.report : s3.all), label + '·补评分');
+    const r = await callLong(run, cfg, '下面是一份复审报告。按报告里已经写出的问题和结论,只输出给程序读取的清单,不要重写报告。\n' +
+      '格式(不要代码围栏):\n===OPEN===\n' + OPEN_FORMAT + '\n===VERDICT===\n达标 或 未达标(只写这三个字之一)\n===END===\n\n【复审报告】\n' + (String(s3.report || '').trim() ? s3.report : s3.all), label + '·补结论');
     const sx = splitReport(r.content), tx = parseBlocks(sx.tail || sx.all, false);
     scores = { ...parseScores(tx.SCORES, dims), ...Object.fromEntries(Object.entries(scores).filter(([, v]) => v != null)) };
     verdict = verdict || parseVerdict(tx.VERDICT);
@@ -2174,6 +2186,83 @@ function avgScore(scores, dims) {
   return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null;
 }
 const stalledBy = (before, after, dims) => { const a = avgScore(before, dims), b = avgScore(after, dims); return a != null && b != null && b - a < STALL_MIN; };
+
+// ---------- v1.95 不打分:能不能发、停不停、退不退,都按问题和程序体检判断 ----------
+// 复审剩下的关键/结构问题(稿子里找不到原句的、已经直接应用的不算)
+function hardLeft(rc) { return uniqOpen(arr(rc && rc.open)).filter(x => (x.level === '关键' || x.level === '结构') && !x.not_found && !x.applied); }
+// 能发 = 复审判「达标」,而且没有剩下的结构问题;没有复审结论 → null
+function rcGood(rc) {
+  if (!rc || !rc.verdict) return null;
+  return rc.verdict === '达标' && !hardLeft(rc).some(x => x.level === '结构');
+}
+const bigrams = t => { const x = String(t || '').toLowerCase().replace(/[^\p{L}\p{N}]/gu, ''); const out = new Set(); for (let i = 0; i < x.length - 1; i++) out.add(x.slice(i, i + 2)); return out; };
+function similar(a, b) { const A = bigrams(a), B = bigrams(b); if (!A.size || !B.size) return 0; let n = 0; A.forEach(x => { if (B.has(x)) n++; }); return n / (A.size + B.size - n); }
+// 改不动了:这一轮的关键/结构问题有一半以上和上一轮是同一个问题(同一章、说法相近)
+function stalledOpen(prev, cur) {
+  const a = hardLeft(prev), b = hardLeft(cur);
+  if (!a.length || !b.length) return false;
+  const same = b.filter(x => a.some(y => (!x.chapter || !y.chapter || x.chapter === y.chapter) && similar(x.problem, y.problem) >= 0.35));
+  return same.length * 2 >= b.length;
+}
+// 程序体检:整段重复、韩语夹英文、听感问题(开头数字、点题、数字串、语体)、钩子空档、章节结构
+function healthOf(run, text) {
+  const t = checks.extractFinalScript(text);
+  const lang = (run.audience || {}).target_language;
+  const wpm = require('./narration').narrationWpm(run, null).wpm;
+  const lc = checks.listenCheck(t, { wpm, title: ((run.analysis || {}).title || {}).final_title || run.topic, lang });
+  const hg = checks.hookGap(t, { wpm, lang });
+  return {
+    dup: checks.duplicateParagraphs(t).length,
+    english: checks.englishInKorean(t).length,
+    listen: checks.listenScore(lc),
+    gap: hg ? hg.gap : 0,
+    structure: checks.chapterStructureError(t) ? 1 : 0
+  };
+}
+const HEALTH_NAMES = { dup: '整段重复', english: '韩语稿里夹英文', listen: '听感问题(开头数字、点题、数字串、语体)', gap: '最长没有钩子的时间', structure: '章节结构出错' };
+const GAP_WORSE_SEC = 30;
+function healthDiff(run, before, after) {
+  const a = healthOf(run, before), b = healthOf(run, after);
+  const worse = [];
+  ['dup', 'english', 'listen', 'structure'].forEach(k => { if (b[k] > a[k]) worse.push(HEALTH_NAMES[k] + ' ' + a[k] + ' → ' + b[k]); });
+  if (b.gap - a.gap >= GAP_WORSE_SEC) worse.push(HEALTH_NAMES.gap + ' ' + a.gap + ' 秒 → ' + b.gap + ' 秒');
+  return { before: a, after: b, worse };
+}
+// 两版盲比:只把改了的章拿出来,随机当 A/B(不告诉 AI 哪版是改后的),问观众更愿意看完哪一版、会在哪句走
+const COMPARE_MAX_CHARS = 9000;
+async function compareVersions(run, cfg, before, after, label) {
+  const ca = scriptChapters(before), cb = scriptChapters(after);
+  const changed = cb.filter(c => { const o = ca.find(x => x.id === c.id); return o && o.text !== c.text; }).map(c => ({ id: c.id, a: ca.find(x => x.id === c.id).text, b: c.text }));
+  if (!changed.length) return null;
+  let size = 0;
+  const pick = changed.filter(c => { size += c.a.length + c.b.length; return size <= COMPARE_MAX_CHARS || c === changed[0]; });
+  const flip = Math.random() < 0.5; // flip:A = 改后
+  const side = after => pick.map(c => '[' + c.id + ']\n' + (after ? c.b : c.a)).join('\n\n'); // c.a 改前,c.b 改后
+  const a = run.analysis || {};
+  const tr = loadTrack(((run.review || {}).final || {}).track || lockedTrack(run) || (run.review || {}).final_track || 'econ');
+  const prompt = an().fillVars(readPrompt('final_compare.md'), {
+    title: ((a.title || {}).final_title) || run.topic, topic: run.topic, track_name: tr.name,
+    target_language: (run.audience || {}).target_language || '', target_country: (run.audience || {}).target_country || '',
+    chapters: pick.map(c => c.id).join('、'), version_a: side(flip), version_b: side(!flip)
+  });
+  try {
+    const out = await an().callJson(run, cfg, prompt, label, o => /^(A|B|same)$/i.test(String(o.better || '').trim()));
+    const better = String(out.better).trim().toUpperCase();
+    const pickAfter = better === 'SAME' ? 'same' : ((better === 'A') === flip ? 'after' : 'before');
+    return { pick: pickAfter, why: String(out.why || '').slice(0, 300), leave_before: String((flip ? out.leave_b : out.leave_a) || '').slice(0, 200), leave_after: String((flip ? out.leave_a : out.leave_b) || '').slice(0, 200), chapters: pick.map(c => c.id) };
+  } catch (e) { return { pick: 'same', why: '两版对比没跑成(' + e.message + '),按程序体检判断,保留这次修改', error: true, chapters: pick.map(c => c.id) }; }
+}
+// 要不要退回:程序体检变差 → 退回;按论点核对改的(改数字、改账)只看体检,不盲比(看得下去不等于账对);
+// 其余再盲比一次,AI 选「改前」才退回,「差不多」保留
+async function judgeRevert(run, cfg, before, after, label, opts) {
+  const h = healthDiff(run, before, after);
+  if (h.worse.length) return { revert: true, by: 'program', why: '程序体检变差:' + h.worse.join(';'), health: h };
+  if (opts && opts.claim) return { revert: false, by: 'program', why: '', health: h };
+  const cmp = await compareVersions(run, cfg, before, after, label);
+  if (!cmp) return { revert: false, by: 'none', why: '', health: h };
+  return { revert: cmp.pick === 'before', by: 'compare', why: cmp.why, compare: cmp, health: h };
+}
+const judgeRecord = jd => ({ revert: !!jd.revert, by: jd.by, why: jd.why || '', ...(jd.compare ? { pick: jd.compare.pick, leave_before: jd.compare.leave_before, leave_after: jd.compare.leave_after, chapters: jd.compare.chapters } : {}), health: jd.health });
 // 按复审的结构问题整章重写(在内存里的稿子上改,不落盘);改长、结构坏了的章不采用
 async function structuralRewrite(run, asset, cfg, text, items, limit, label) {
   const byCh = {};
@@ -2230,6 +2319,7 @@ async function runFinal(runId) {
     let text = a1.next, edits = a1.edits.filter(e => e.ok).map(e => ({ ...e })), failed = a1.edits.filter(e => !e.ok);
     // ③ 复审(没达标就再改一轮,再复审一次)
     const rechecks = [], snaps = [];
+    let finalReverted = null;
     const lang = (run.audience || {}).target_language;
     for (let round = 1; round <= FINAL_RECHECK_ROUNDS; round++) {
       setFinalStage(runId, '复审' + (round > 1 ? '(第 ' + round + ' 轮)' : ''));
@@ -2238,7 +2328,7 @@ async function runFinal(runId) {
       snaps.push({ text, edits: edits.slice(), failed: failed.slice() });
       const prev = rechecks[rechecks.length - 1];
       const r3 = await callLong(run, cfg, an().fillVars(readPrompt('final_recheck.md'), {
-        ...common, ...thesisVars(run), scores_before: dims.map(d => d + ': ' + (scoresBefore[d] != null ? scoresBefore[d] : '—')).join('\n'),
+        ...common, ...thesisVars(run),
         prev_round: prevRoundText(prev, dims),
         edits_done: round === 1 ? editsText(edits) : editsText(prev.edits_applied || []) + (arr(prev.structural).some(x => x.ok) ? '\n整章重写了:' + arr(prev.structural).filter(x => x.ok).map(x => x.chapter).join('、') + '(解决上一轮指出的结构问题)' : ''),
         edits_instruction: allowEdits ? '如果未达标,在 ===VERDICT=== 那一行后面接着输出要补的修改(格式同前:每处以 ===EDIT=== 开头,写 章节/类别/原句/改成/理由;原句从上面「修改后的完整稿子」逐字复制;只修尚未解决的问题;标成「结构」的问题不要逐句改,程序会把那一章整章重写;不许把稿子改长,前 2 分钟只许删和换,程序会退回加长的修改),然后再写 ===END===。达标就不要输出修改。' : '这是最后一轮复审,只出报告,不要输出修改。',
@@ -2251,10 +2341,10 @@ async function runFinal(runId) {
       const rc = { round, report: s3.report, scores: sc3, verdict, open: markMissingQuotes(parseOpen(tb.OPEN), text, lang), thesis: parseThesis(tb.THESIS), craft: parseCraft(tb.CRAFT), edits_applied: [], ...(refilled ? { refilled: true } : {}), ...(r3.truncated ? { truncated: true } : {}) };
       rechecks.push(rc);
       if (r3.refused) { rc.refused = true; rc.raw_log = r3.refused_log; }
-      else if (!verdict && avgScore(sc3, dims) == null) rc.raw_log = dumpRaw(run, 'recheck_noscore', r3.content);
+      else if (!verdict) rc.raw_log = dumpRaw(run, 'recheck_noscore', r3.content);
       if (!allowEdits || verdict !== '未达标') break;
-      // 分数没涨:不再逐句改,只做结构问题的整章重写;没有结构问题就停
-      const stalled = stalledBy(round === 1 ? scoresBefore : rechecks[rechecks.length - 2].scores, sc3, dims);
+      // v1.95 不看分数:这一轮的关键/结构问题有一半以上和上一轮一样,说明逐句改改不动了,只做结构问题的整章重写
+      const stalled = round > 1 && stalledOpen(rechecks[rechecks.length - 2], rc);
       if (stalled) rc.stalled = true;
       let edits2 = stalled ? [] : parseEdits(s3.tail);
       // 复审引用了稿子里没有的句子的问题,不拿去整章重写
@@ -2273,36 +2363,30 @@ async function runFinal(runId) {
         text = sr.text;
       }
       if (!rc.edits_applied.length && !arr(rc.structural).some(x => x.ok)) break;
-    }
-    // 最后一轮复审比分数最高的那一轮低 REVERT_DROP 以上:退回那一轮复审看到的稿子(之后的修改不要),
-    // 后面几轮记成被退回的尝试,和补改退回一样可以让 AI 找原因再试(实测 run_7c467c8e0a71 第 1 轮 7.1,第 2 轮 5.7 仍存成终稿)
-    let finalReverted = null;
-    const avgs = rechecks.map(r => avgScore(r.scores, dims));
-    const bi = avgs.reduce((b, v, i) => (v != null && (b < 0 || v > avgs[b]) ? i : b), -1);
-    const li = rechecks.length - 1;
-    if (bi >= 0 && bi < li && avgs[li] != null && avgs[bi] - avgs[li] >= REVERT_DROP) {
-      const best = rechecks[bi];
-      const r1 = n => Math.round(n * 10) / 10;
-      const later = rechecks.slice(bi + 1);
-      const lastLater = later[later.length - 1];
-      finalReverted = {
-        at: new Date().toISOString(), from: '终审', round: lastLater.round, picked: arr(best.open).filter(x => !x.not_found).map(x => x.id), choices: {}, note: '',
-        report: lastLater.report, scores: lastLater.scores, verdict: lastLater.verdict, open: lastLater.open,
-        edits: arr(best.edits_applied).map(e => ({ chapter: e.chapter, category: e.category || '', old: e.old, new: e.new, reason: e.reason })),
-        ...(best.structural ? { structural: best.structural } : {}), before: r1(avgs[bi]), after: r1(avgs[li])
-      };
-      best.reverted = [finalReverted];
-      best.edits_applied = [];
-      delete best.structural;
-      rechecks.length = bi + 1;
-      ({ text, edits, failed } = snaps[bi]);
+      // v1.95 这一轮按复审改完:先过程序体检,再让 AI 盲比改前改后(只看改了的章);判改前更好就退回这一轮复审看到的稿子,不再复审
+      const snap = snaps[snaps.length - 1];
+      const jd = await judgeRevert(run, cfg, snap.text, text, '终审·复审' + round + '·两版对比');
+      rc.judge = judgeRecord(jd);
+      if (jd.revert) {
+        finalReverted = {
+          at: new Date().toISOString(), from: '终审', round, picked: arr(rc.open).filter(x => !x.not_found).map(x => x.id), choices: {}, note: '',
+          report: '', verdict: rc.verdict, open: rc.open, judge: rc.judge,
+          edits: arr(rc.edits_applied).map(e => ({ chapter: e.chapter, category: e.category || '', old: e.old, new: e.new, reason: e.reason })),
+          ...(rc.structural ? { structural: rc.structural } : {}), before: null, after: null
+        };
+        rc.reverted = [finalReverted];
+        rc.edits_applied = [];
+        delete rc.structural;
+        ({ text, edits, failed } = snap);
+        break;
+      }
     }
     const allEdits = edits.map((e, i) => ({ ...e, n: i + 1 })).concat(failed.map((e, i) => ({ ...e, ok: false, n: edits.length + i + 1 })));
     const last = rechecks[rechecks.length - 1] || {};
     // 一处修改都没读出来、复审也没给出结论和分数:模型回的不是程序认得的格式,不能当「完成」(不存结果,二稿不动,可直接重跑)
-    if (!allEdits.length && !last.verdict && avgScore(last.scores, dims) == null) {
+    if (!allEdits.length && !last.verdict) {
       const logs = [noEditsLog, last.raw_log].filter(Boolean);
-      throw new Error('模型回的格式程序读不出来:一处修改都没读到,复审也没有结论和分数。稿子没动,请点「重跑」再终审一次;连续这样请把 data/logs 里的 ' + (logs.length ? logs.join('、') : 'final_noedits 开头的文件') + ' 发给我');
+      throw new Error('模型回的格式程序读不出来:一处修改都没读到,复审也没有结论。稿子没动,请点「重跑」再终审一次;连续这样请把 data/logs 里的 ' + (logs.length ? logs.join('、') : 'final_noedits 开头的文件') + ' 发给我');
     }
     const pure = await purifyText(run, cfg, text, '终审');
     text = pure.text;
@@ -2322,7 +2406,7 @@ async function runFinal(runId) {
     fresh.review.final = {
       at: new Date().toISOString(), track: tr.key, track_name: tr.name, dims,
       audit_report: s1.report, scores_before: scoresBefore,
-      rechecks: rechecks.map(r => ({ round: r.round, report: r.report, scores: r.scores, verdict: r.verdict, open: r.open, edits: r.edits_applied.length, ...(r.thesis ? { thesis: r.thesis } : {}), ...(r.craft ? { craft: r.craft } : {}), ...(r.refused ? { refused: true, raw_log: r.raw_log } : {}), ...(r.stalled ? { stalled: true } : {}), ...(r.structural ? { structural: r.structural } : {}), ...(r.reverted ? { reverted: r.reverted } : {}) })),
+      rechecks: rechecks.map(r => ({ round: r.round, report: r.report, scores: r.scores, verdict: r.verdict, open: r.open, edits: r.edits_applied.length, ...(r.judge ? { judge: r.judge } : {}), ...(r.thesis ? { thesis: r.thesis } : {}), ...(r.craft ? { craft: r.craft } : {}), ...(r.refused ? { refused: true, raw_log: r.raw_log } : {}), ...(r.stalled ? { stalled: true } : {}), ...(r.structural ? { structural: r.structural } : {}), ...(r.reverted ? { reverted: r.reverted } : {}) })),
       scores_after: last.scores || {}, verdict: last.verdict || ''
     };
     if (text !== start) writeScript(fresh, text);
@@ -2330,7 +2414,7 @@ async function runFinal(runId) {
     fresh.steps = { ...(fresh.steps || {}), final_review: {
       status: 'done', secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: new Date().toISOString(), track: tr.key,
       issues: issues.length, changed: changed.length, edits: allEdits.filter(e => e.ok).length, edits_failed: allEdits.filter(e => !e.ok).length, verdict: last.verdict || '',
-      ...(finalReverted ? { patch_reverted: { at: finalReverted.at, before: finalReverted.before, after: finalReverted.after, from: '终审' } } : {})
+      ...(finalReverted ? { patch_reverted: { at: finalReverted.at, before: finalReverted.before, after: finalReverted.after, why: (finalReverted.judge || {}).why || '', from: '终审' } } : {})
     } };
     if (fresh.review.audit) fresh.review.audit.used_selection = (fresh.review.audit.selection || null);
     if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
@@ -2437,6 +2521,13 @@ async function runOpenOptions(runId) {
 // 补改把分改低、被退回后:AI 对照掉分的维度和复审报告找出是哪些改动改坏的,给每个问题重新定改法(照用/换候选/新写/不改),
 // 程序按它的决定自动再补改一次,不让人去猜 11 个问题里哪个改坏了。AUTO_RETRY_MAX 次还是掉分就停下,把 AI 的判断摆出来
 const AUTO_RETRY_MAX = 0; // 掉分退回后不再自动换改法重试:改一轮就停,人点「让 AI 再自动试」才试
+const cutStr = (t, n) => { t = String(t || ''); return t.length > n ? t.slice(0, n) + '…' : t; };
+// v1.95 退回原因(给 AI 找原因用):程序体检哪项变差,或两版盲比时选了改前、观众会在哪句走;老数据是分数变化
+function revertWhy(t) {
+  const j = t && t.judge;
+  if (!j) return t && t.before != null ? '复审七维平均分从 ' + t.before + ' 掉到 ' + t.after : '(没有记录)';
+  return (j.by === 'compare' ? '两版盲比:看了改前、改后两版,判断观众更愿意看完改前那版。' + (j.why ? '理由:' + j.why + '。' : '') + (j.leave_after ? '改后那版观众可能在这句走:「' + j.leave_after + '」。' : '') : '') + (j.by === 'program' ? j.why : '');
+}
 const usedKey = (tried, id) => (tried.choices || {})[id] || (arr(tried.picked).includes(id) ? 'rv' : 'skip');
 async function diagnosePatch(run, cfg, common, dims, last) {
   const tried = arr(last.reverted).slice(-1)[0];
@@ -2446,13 +2537,12 @@ async function diagnosePatch(run, cfg, common, dims, last) {
   const optText = (id, k) => k === 'skip' ? '不改' : k === 'rv' ? '按复审建议:' + ((items.find(x => x.id === id) || {}).suggestion || '(无)') : k + ' ' + ((arr(options[id]).find(o => o.key === k) || {}).zh || '');
   const sc = (o, d) => (o && o[d] != null ? o[d] : '—');
   const out = await an().callJson(run, cfg, an().fillVars(readPrompt('final_patch_diagnose.md'), {
-    ...common, before: tried.before, after: tried.after,
-    dim_changes: dims.map(d => d + ': ' + sc(last.scores, d) + ' → ' + sc(tried.scores, d)).join('\n'),
+    ...common, revert_why: revertWhy(tried),
     used: items.map(x => x.id + ' | ' + x.chapter + ' | ' + x.level + ' | ' + x.problem + ' | ' + optText(x.id, usedKey(tried, x.id))).join('\n'),
     edits: arr(tried.edits).map(e => '- [' + (e.chapter || '') + '][' + (e.category || '') + '] ' + e.old + ' → ' + (e.new || '(删除)')).join('\n')
       + (arr(tried.structural).filter(x => x.ok).length ? '\n整章重写了:' + arr(tried.structural).filter(x => x.ok).map(x => x.chapter).join('、') : '') || '(没有记录)',
-    report: tried.report || '(无)',
-    tried: arr(last.reverted).map((t, i) => '第' + (i + 1) + '次(' + t.before + ' → ' + t.after + '):' + items.map(x => x.id + '=' + usedKey(t, x.id)).join(' ')).join('\n'),
+    report: tried.report || '(这次退回前没有复审,看上面的退回原因)',
+    tried: arr(last.reverted).map((t, i) => '第' + (i + 1) + '次(' + (t.judge && t.judge.why ? cutStr(t.judge.why, 80) : t.before != null ? t.before + ' → ' + t.after : '退回') + '):' + items.map(x => x.id + '=' + usedKey(t, x.id)).join(' ')).join('\n'),
     candidates: items.map(x => x.id + ':\n' + (arr(options[x.id]).map(o => '  ' + o.key + '. ' + o.zh).join('\n') || '  (没有候选,只有复审建议:' + (x.suggestion || '无') + ')')).join('\n'),
     script: ((arr(run.review.versions).find(v => v.key === 'd3')) || {}).text || ''
   }), '终审·补改退回找原因', o => Array.isArray(o.items));
@@ -2562,28 +2652,42 @@ async function runFinalPatch(runId, body) {
     if (!okNew.length && !structOk.length) throw new Error(structural && structural.length ? '整章重写没有成功:' + structural.map(x => x.chapter + ' ' + x.error).join(';') : edits.length ? '补改的 ' + edits.length + ' 处都没对上原句,稿子没有变化,可以再点一次' : 'AI 两次都没有给出修改,稿子没有变化' + (noEditsLog ? '(模型原文存在 data/logs/' + noEditsLog + ',可以发给我看)' : ''));
     const pure = await purifyText(run, cfg, a.next, '终审·补改');
     const text = pure.text;
+    // v1.95 先判这次补改有没有改差:程序体检变差,或两版盲比选了改前,就不换终稿、不再复审,记成退回的尝试
+    // (按论点核对改的只看程序体检:它是为了把账改对,「看得下去」不能拿来否掉它)
+    setFinalStage(runId, '补改后对比');
+    const jd = await judgeRevert(run, cfg, d3.text, text, '终审·补改·两版对比', { claim: !!body.claim });
+    if (jd.revert) {
+      const fresh = store.getRun(runId) || run;
+      if (currentScript(fresh) !== start) throw new Error('补改期间稿子被改过,结果没有保存,请重试');
+      const rcF = arr(fresh.review.final.rechecks).slice(-1)[0];
+      const tried = { at: new Date().toISOString(), picked: picked.map(x => x.id), choices: Object.fromEntries(picked.filter(chosen).map(x => [x.id, chosen(x).key])), note, report: '', verdict: '', open: [], judge: judgeRecord(jd), edits: okNew.map(e => ({ chapter: e.chapter, category: e.category || '', old: e.old, new: e.new, reason: e.reason })), ...(structural ? { structural } : {}), ...(auto ? { auto, diagnosis } : {}), ...(body.autoRound ? { auto_round: body.autoRound } : {}), before: null, after: null };
+      if (rcF) rcF.reverted = arr(rcF.reverted).concat([tried]);
+      fresh.steps = { ...(fresh.steps || {}), final_review: { ...prevStep, patch_reverted: { at: tried.at, before: null, after: null, why: jd.why || '' } } };
+      if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
+      store.saveRun(fresh);
+      return { ok: true, reverted: true };
+    }
     // 复审(只出报告)
     setFinalStage(runId, '补改后复审');
     const patchNote = note ? '【人的决定(以此为准:与写前分析账本冲突的旧数字,按人的决定改过的不算错)】\n' + note + '\n\n' : '';
     const recheckPrompt = an().fillVars(readPrompt('final_recheck.md'), {
       ...common, ...thesisVars(run), patch_note: patchNote, prev_round: prevRoundText(last, dims),
-      scores_before: dims.map(d => d + ': ' + ((fin.scores_before || {})[d] != null ? fin.scores_before[d] : '—')).join('\n'),
       edits_done: editsText(okNew) + (structOk.length ? '\n整章重写了:' + structOk.map(x => x.chapter).join('、') + '(解决复审指出的结构问题)' : ''),
       edits_instruction: '这是最后一轮复审,只出报告,不要输出修改。',
       listen_findings: listenFindings(run, text),
       script: text
     });
-    // 复审一个分数都没读到就再跑一次;还是没有就不采用这次补改(实测 run_1f67a92553fd 第 4 轮补改后复审没分数,没退回保护,无分数的稿子被存成终稿)
+    // 复审没读到结论就再跑一次;还是没有就不采用这次补改(实测 run_1f67a92553fd 第 4 轮补改后复审没读到结果,无结论的稿子被存成终稿)
     let s3, tb, scores, verdict;
     for (let k = 0; k < 2; k++) {
-      if (k) setFinalStage(runId, '补改后复审(没读到分数,重跑)');
+      if (k) setFinalStage(runId, '补改后复审(没读到结论,重跑)');
       const r3 = await callLong(run, cfg, recheckPrompt, '终审·补改后复审' + (k ? '重跑' : ''), { scores: true });
       s3 = splitReport(r3.content);
       ({ tb, scores, verdict } = await ensureRecheckBlocks(run, cfg, common, dims, s3, '终审·补改后复审'));
-      if (avgScore(scores, dims) != null) break;
+      if (verdict) break;
       dumpNoScore(run, r3.content);
     }
-    if (avgScore(scores, dims) == null) throw new Error('补改后复审两次都没给出分数,这次补改没有采用,终稿没换;可以再点一次');
+    if (!verdict) throw new Error('补改后复审两次都没给出结论,这次补改没有采用,终稿没换;可以再点一次');
     // 修订痕迹仍以二稿为底:把这次补改并进终稿原有的修改里
     const oldEdits = arr(d3.edits);
     const merged = mergeRounds(d2.text, d3.text, oldEdits.filter(e => e.ok), a.edits);
@@ -2591,17 +2695,6 @@ async function runFinalPatch(runId, body) {
     const allEdits = merged.map((e, i) => ({ ...e, n: i + 1 })).concat(failed.map((e, i) => ({ ...e, ok: false, n: merged.length + i + 1 })));
     const fresh = store.getRun(runId) || run;
     if (currentScript(fresh) !== start) throw new Error('补改期间稿子被改过,结果没有保存,请重试');
-    // 补改后复审的平均分比补改前低 REVERT_DROP 以上:这次补改把稿子改坏了,不换终稿,只记下这次尝试(实测 run_77b4651152ef 第 3 轮 5.4→4.6 仍被存成终稿)
-    const before = avgScore(last.scores, dims), after = avgScore(scores, dims);
-    if (before != null && after != null && before - after >= (body.claim ? CLAIM_REVERT_DROP : REVERT_DROP)) {
-      const rcF = arr(fresh.review.final.rechecks).slice(-1)[0];
-      const tried = { at: new Date().toISOString(), picked: picked.map(x => x.id), choices: Object.fromEntries(picked.filter(chosen).map(x => [x.id, chosen(x).key])), note, report: s3.report, scores, verdict, open: markMissingQuotes(parseOpen(tb.OPEN), text, (run.audience || {}).target_language), edits: okNew.map(e => ({ chapter: e.chapter, category: e.category || '', old: e.old, new: e.new, reason: e.reason })), ...(structural ? { structural } : {}), ...(auto ? { auto, diagnosis } : {}), ...(body.autoRound ? { auto_round: body.autoRound } : {}), before: Math.round(before * 10) / 10, after: Math.round(after * 10) / 10 };
-      if (rcF) rcF.reverted = arr(rcF.reverted).concat([tried]);
-      fresh.steps = { ...(fresh.steps || {}), final_review: { ...prevStep, patch_reverted: { at: tried.at, before: tried.before, after: tried.after } } };
-      if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
-      store.saveRun(fresh);
-      return { ok: true, reverted: true };
-    }
     setForeign(fresh, pure, '终审·补改');
     const changed = [];
     scriptChapters(text).forEach(c => { const b = scriptChapters(d2.text).find(x => x.id === c.id); if (b && b.text !== c.text) changed.push(c.id); });
@@ -2613,7 +2706,7 @@ async function runFinalPatch(runId, body) {
     f2.rechecks = arr(f2.rechecks).concat([{ round: arr(f2.rechecks).length + 1, patch: true, picked: picked.map(x => x.id), choices: Object.fromEntries(picked.filter(chosen).map(x => [x.id, chosen(x).key])), note, report: s3.report, scores, verdict, open: markMissingQuotes(parseOpen(tb.OPEN), text, (run.audience || {}).target_language), thesis: parseThesis(tb.THESIS), craft: parseCraft(tb.CRAFT), edits: okNew.length, ...(auto ? { auto, diagnosis, reverted_before: arr(last.reverted).length } : {}), ...(body.autoRound ? { auto_round: body.autoRound } : {}),
       ...(structural ? { structural } : {}), ...(body.claim ? { claim_fix: true } : {}),
       // 按论点核对改的那轮不算「分数没涨」:它是为了把账改对,分数常常先掉(实测 run_ee2e6bd16c05 改对 CH13 后 CH09 没跟着改,7.7 → 7.1),后面还要接着补改
-      ...(!body.claim && verdict === '未达标' && stalledBy(last.scores, scores, dims) ? { stalled: true } : {}) }]);
+      ...(!body.claim && verdict === '未达标' && stalledOpen(last, { open: markMissingQuotes(parseOpen(tb.OPEN), text, (run.audience || {}).target_language) }) ? { stalled: true } : {}), judge: judgeRecord(jd) }]);
     f2.scores_after = scores;
     f2.verdict = verdict;
     if (text !== start) writeScript(fresh, text);
@@ -2631,7 +2724,7 @@ async function runFinalPatch(runId, body) {
   }
 }
 
-// 最后一轮复审没读到分数(旧版本没拦住,无分数的稿子已经是终稿):只对现在的终稿重新复审一次,补上分数、结论和遗留问题
+// 最后一轮复审没读到结论(旧版本没拦住,无结论的稿子已经是终稿):只对现在的终稿重新复审一次,补上结论和遗留问题
 async function rerunLastRecheck(runId) {
   const cfg = pl().loadConfig();
   const { run } = loadRunAsset(runId);
@@ -2651,7 +2744,6 @@ async function rerunLastRecheck(runId) {
       ...common, ...thesisVars(run),
       patch_note: lastRc.note ? '【人的决定(以此为准:与写前分析账本冲突的旧数字,按人的决定改过的不算错)】\n' + lastRc.note + '\n\n' : '',
       prev_round: prevRoundText(prev, dims),
-      scores_before: dims.map(d => d + ': ' + ((fin.scores_before || {})[d] != null ? fin.scores_before[d] : '—')).join('\n'),
       edits_done: '(上一次补改的 ' + (lastRc.edits || 0) + ' 处修改已经在稿子里;这次只重新复审,不改稿)',
       edits_instruction: '这是最后一轮复审,只出报告,不要输出修改。',
       listen_findings: listenFindings(run, text), script: text
@@ -2661,10 +2753,10 @@ async function rerunLastRecheck(runId) {
       const r3 = await callLong(run, cfg, prompt, '终审·重新复审', { scores: true });
       s3 = splitReport(r3.content);
       ({ tb, scores, verdict } = await ensureRecheckBlocks(run, cfg, common, dims, s3, '终审·重新复审'));
-      if (avgScore(scores, dims) != null) break;
+      if (verdict) break;
       dumpNoScore(run, r3.content);
     }
-    if (avgScore(scores, dims) == null) throw new Error('重新复审两次都没给出分数,可以再点一次');
+    if (!verdict) throw new Error('重新复审两次都没给出结论,可以再点一次');
     const fresh = store.getRun(runId) || run;
     const rcF = arr(fresh.review.final.rechecks).slice(-1)[0];
     Object.assign(rcF, { report: s3.report, scores, verdict, open: markMissingQuotes(parseOpen(tb.OPEN), text, (run.audience || {}).target_language), thesis: parseThesis(tb.THESIS), craft: parseCraft(tb.CRAFT), rechecked_at: new Date().toISOString() });
@@ -2711,7 +2803,7 @@ function startFinalPatch(runId, body) {
     return { ok: true };
   }
   if (body && body.recheck) {
-    if (Object.values(last.scores || {}).some(v => typeof v === 'number')) throw Object.assign(new Error('最后一轮复审有分数,不用重新复审'), { status: 400 });
+    if (last.verdict) throw Object.assign(new Error('最后一轮复审有结论,不用重新复审'), { status: 400 });
     passRunning.set(runId, '补改');
     (async () => {
       let ok = false;
@@ -3007,7 +3099,7 @@ async function runPasses(runId, from) {
       if (r0 && (r0.review || {}).final) {
         r0.review.final.auto_patches = 0; r0.review.final.auto_patch_stop = '';
         const rc = arr(r0.review.final.rechecks).slice(-1)[0]; if (rc) delete rc.stalled;
-        r0.review.final.auto_log = { status: 'running', by: 'button', started_at: new Date().toISOString(), avg_start: finalAvg(r0), rounds: [], blocks_start: publishBlocks(runId) };
+        r0.review.final.auto_log = { status: 'running', by: 'button', started_at: new Date().toISOString(), left_start: finalLeft(r0), rounds: [], blocks_start: publishBlocks(runId) };
         store.saveRun(r0);
       }
     }
@@ -3027,7 +3119,7 @@ async function runPasses(runId, from) {
       if (k === 'options') {
         // 平均不到 8 分:出好方案后接着自动补改,标签先说清楚,页面上提示不用点
         const r0 = store.getRun(runId);
-        if (r0 && finalAvg(r0) != null && finalAvg(r0) < PUBLISH_AVG && !autoPatchStop(r0)) passRunning.set(runId, '出解决方案(出好后自动补改)');
+        if (r0 && finalGood(r0) === false && !autoPatchStop(r0)) passRunning.set(runId, '出解决方案(出好后自动补改)');
         try { await runOpenOptions(runId); } catch (e) {}
         continue;
       }
@@ -3075,8 +3167,10 @@ function programOpen(run, rfu, cs) {
       suggestion: '把这些句子删掉,或改成不带这个数字的说法(只说方向、比较或常识);不许换成别的没出处的数字;前后由它推出的结论一起改,删完上下文要接得上' }));
   } catch (e) {}
   try { consistencyOpen(run, cs || getView(run.id).summary.consistency, ign).forEach(x => out.push(x)); } catch (e) {}
-  const avg = finalAvg(run);
-  if (avg != null && avg < PUBLISH_AVG && !ign.has('listen_dense')) {
+  if (!ign.has('open_fact')) openFactsContra(run).forEach(f => out.push({ level: '关键', chapter: 'CH01',
+    problem: '开头第 ' + f.n + ' 句「' + f.claim + '」和网上查到的说法相反' + (f.note ? ':' + f.note : '') + (f.source ? '(资料:' + f.source.title + ' ' + f.source.url + ')' : ''),
+    suggestion: '按资料改成对的说法;拿不准就换成不带这个数的说法。只许删和换,开头不能变长' }));
+  if (finalGood(run) === false && !ign.has('listen_dense')) {
     const lc = checks.listenCheck(checks.extractFinalScript(currentScript(run)), { wpm: require('./narration').narrationWpm(run, null).wpm, lang: (run.audience || {}).target_language });
     const dense = lc ? arr(lc.dense) : [];
     if (dense.length) out.push({ level: '次要', chapter: '', problem: '前 ' + checks.DENSE_OPEN_SEC / 60 + ' 分钟有 ' + dense.length + ' 句一口气念 3 个以上的数字,观众听不过来:' + dense.slice(0, 8).map(d => '「' + d.text + '」').join(' '), suggestion: '每句最多留 2 个数字:只留最关键的,其余拆成下一句或删掉;不要改数字本身' });
@@ -3089,11 +3183,11 @@ function autoPatchStop(run) {
   const fin = (run.review || {}).final;
   const rc = fin && arr(fin.rechecks).slice(-1)[0];
   if (!rc) return '没有复审结果';
-  const avg = finalAvg(run);
-  if (avg == null) return '复审没读到分数';
-  if (avg >= PUBLISH_AVG && !programOpen(run).length && !claimToFix(run)) return '';
+  const good = finalGood(run);
+  if (good == null) return '复审没读到结论';
+  if (good && !programOpen(run).length && !claimToFix(run)) return '';
   if ((fin.auto_patches || 0) >= AUTO_PATCH_MAX) return 'AI 已经改了一轮,剩下的你看过再决定:可以再点一次「让 AI 接着改到能发布」,也可以在复审问题里自己选改法';
-  if (rc.stalled) return '上一轮分数没涨';
+  if (rc.stalled) return '上一轮剩下的问题和再上一轮基本一样,改不动了';
   if (!arr(rc.open).length && !programOpen(run).length && !claimToFix(run)) return '复审没有列出要改的问题';
   const vs = arr(run.review.versions);
   const d3 = vs.find(v => v.key === 'd3'), d4 = vs.find(v => v.key === 'd4');
@@ -3108,14 +3202,14 @@ async function autoPatchLocked(runId) {
     const r = store.getRun(runId); if (!r || !(r.review || {}).final) return;
     r.review.final.auto_patch_stop = why;
     const lg = r.review.final.auto_log;
-    if (lg && lg.status === 'running') Object.assign(lg, { status: 'done', stop: why, finished_at: new Date().toISOString(), avg_end: finalAvg(r) });
+    if (lg && lg.status === 'running') Object.assign(lg, { status: 'done', stop: why, finished_at: new Date().toISOString(), left_end: finalLeft(r), good_end: finalGood(r) });
     store.saveRun(r);
   };
   // 自动补改的中文记录(页面上「AI 自动改稿」那一栏):每轮改了哪些问题、怎么改、改了几处、分数变化
   const logRound = (patch) => {
     const r = store.getRun(runId); if (!r || !(r.review || {}).final) return;
     const f = r.review.final;
-    if (!f.auto_log || f.auto_log.status !== 'running') f.auto_log = { status: 'running', by: 'auto', started_at: new Date().toISOString(), avg_start: finalAvg(r), rounds: [], blocks_start: publishBlocks(runId) };
+    if (!f.auto_log || f.auto_log.status !== 'running') f.auto_log = { status: 'running', by: 'auto', started_at: new Date().toISOString(), left_start: finalLeft(r), rounds: [], blocks_start: publishBlocks(runId) };
     const rounds = f.auto_log.rounds;
     const cur = rounds.find(x => x.n === patch.n);
     if (cur) Object.assign(cur, patch); else rounds.push(patch);
@@ -3124,12 +3218,12 @@ async function autoPatchLocked(runId) {
   for (;;) {
     let run = store.getRun(runId);
     if (!run || !(run.review || {}).final) return;
-    const avg = finalAvg(run);
+    const good = finalGood(run);
     const prog = programOpen(run);
-    if (avg != null && avg >= PUBLISH_AVG && !prog.length && !claimToFix(run)) return run.review.final.auto_patches || (run.review.final.auto_log || {}).status === 'running' ? stopWith('') : undefined;
-    // 平均没到 8 分却没有现成的问题清单(复审判了「达标」也一样):先从报告里整理(和人点「从复审报告里整理」一样),每轮只整理一次
+    if (good === true && !prog.length && !claimToFix(run)) return run.review.final.auto_patches || (run.review.final.auto_log || {}).status === 'running' ? stopWith('') : undefined;
+    // 还不能发却没有现成的问题清单:先从报告里整理(和人点「从复审报告里整理」一样),每轮只整理一次
     const rc0 = arr(run.review.final.rechecks).slice(-1)[0];
-    if (rc0 && !arr(rc0.open).length && avg != null && avg < PUBLISH_AVG && !rc0.auto_extracted) {
+    if (rc0 && !arr(rc0.open).length && good === false && !rc0.auto_extracted) {
       rc0.auto_extracted = true;
       store.saveRun(run);
       passRunning.set(runId, '整理复审问题(之后自动补改)');
@@ -3153,8 +3247,8 @@ async function autoPatchLocked(runId) {
       rc = arr(run.review.final.rechecks).slice(-1)[0];
     }
     const ids = [], choices = {};
-    // 平均到 8 分:复审剩下的问题不再改(人定的「够好了」),只改程序查出的挡发布问题(没出处的数、账本错数)
-    const onlyProg = avg != null && avg >= PUBLISH_AVG;
+    // 复审判能发:复审剩下的问题不再改(「够好了」),只改程序查出的挡发布问题(没出处的数、账本错数)
+    const onlyProg = good === true;
     // 人点了「忽略」的项下面的问题不改
     let groups = {};
     try { groups = getView(runId).summary.publish.item_groups || {}; } catch (e) {}
@@ -3165,7 +3259,7 @@ async function autoPatchLocked(runId) {
     store.saveRun(run);
     const how = x => { const k = choices[x.id]; const o = k ? arr((rc.options || {})[x.id]).find(o => o.key === k) : null; return o ? (o.zh || o.text || '') : x.suggestion || '按复审建议改'; };
     const claimItem = cc ? [{ id: '论点', level: '关键', chapter: '', program: true, problem: '论点核对对不上:' + (cc.verdict === '不成立' ? '开头主张「' + cc.claim + '」被稿子自己的数字推翻' : '账有 ' + arr(cc.issues).filter(x => x.level === '关键' && claimReal(x)).length + ' 处关键错误'), how: '按核对结果改,改一个数全文跟着改' }] : [];
-    logRound({ n, status: 'running', at: new Date().toISOString(), avg_before: finalAvg(run), items: claimItem.concat(arr(rc.open).filter(x => ids.includes(x.id)).map(x => ({ id: x.id, level: x.level, chapter: x.chapter || '', program: !!x.program, problem: x.problem, how: how(x) }))) });
+    logRound({ n, status: 'running', at: new Date().toISOString(), left_before: finalLeft(run), items: claimItem.concat(arr(rc.open).filter(x => ids.includes(x.id)).map(x => ({ id: x.id, level: x.level, chapter: x.chapter || '', program: !!x.program, problem: x.problem, how: how(x) }))) });
     let res;
     try {
       // 论点核对的问题和复审问题一起改,只改这一轮(论点对不上比 AI 打分要紧,掉 1 分以上才退回)
@@ -3175,9 +3269,9 @@ async function autoPatchLocked(runId) {
     {
       const r2 = store.getRun(runId);
       const lastRc = arr(((r2.review || {}).final || {}).rechecks).slice(-1)[0] || {};
-      logRound({ n, status: res && !res.reverted ? 'done' : 'reverted', avg_after: finalAvg(r2), edits: res && !res.reverted ? (lastRc.edits || 0) : 0, verdict: lastRc.verdict || '', left: arr(lastRc.open).length });
+      logRound({ n, status: res && !res.reverted ? 'done' : 'reverted', left_after: finalLeft(r2), good_after: finalGood(r2), edits: res && !res.reverted ? (lastRc.edits || 0) : 0, verdict: lastRc.verdict || '', left: arr(lastRc.open).length });
     }
-    if (!res || res.reverted) return stopWith('这一轮改完分数反而低了,已退回改之前的稿子;可以点「让 AI 再自动试」换个改法,或者自己选改法');
+    if (!res || res.reverted) return stopWith('这一轮改完反而变差了(程序体检或两版对比),已退回改之前的稿子;可以点「让 AI 再自动试」换个改法,或者自己选改法');
     // 改完重新核对论点(只核对,不再改),结果显示在页面上
     try { const after = await claimCheckAndFix(runId); if (cc && after) { const r3 = store.getRun(runId); const c3 = r3.review.final.claim_check; if (c3) { c3.fixes = arr(c3.fixes).concat([{ at: new Date().toISOString(), by: 'auto', before: { verdict: cc.verdict, issues: arr(cc.issues).filter(x => x.level === '关键' && claimReal(x)).length }, after: { verdict: after.verdict, issues: arr(after.issues).filter(x => x.level === '关键' && claimReal(x)).length }, patched: true }]); store.saveRun(r3); } } } catch (e) {}
     try { await runOpenOptions(runId); } catch (e) {}
@@ -3681,23 +3775,23 @@ function claimFresh(run) {
 async function claimFixOnce(runId, cc, by) {
   const run = store.getRun(runId);
   const rec = { at: new Date().toISOString(), by, before: { verdict: cc.verdict, issues: arr(cc.issues).filter(x => x.level === '关键' && claimReal(x)).length } };
-  const avgBefore = finalAvg(run);
+  const leftBefore = finalLeft(run);
   let res = null;
   passRunning.set(runId, '按论点核对改稿');
   try { res = await runFinalPatch(runId, { note: claimNote(cc), claim: true }); } catch (e) { rec.error = e.message; }
-  if (res && res.reverted) rec.error = '改完复审掉分太多,没有采用';
+  if (res && res.reverted) rec.error = '改完程序体检变差了(整段重复、夹英文、听感问题或钩子空档),没有采用';
   passRunning.set(runId, '论点核对');
   let after = null;
   try { after = res && !res.reverted ? await runClaimCheck(runId) : null; } catch (e) { rec.error = rec.error || ('改完重新核对失败:' + e.message); }
   if (after) rec.after = { verdict: after.verdict, issues: arr(after.issues).filter(x => x.level === '关键' && claimReal(x)).length };
   const fresh = store.getRun(runId) || run;
   // 稿子到底改没改、复审几分:页面「已经试过」里要说清楚
-  if (res && !res.reverted) { rec.patched = true; rec.edits = res.edits || 0; const a2 = finalAvg(fresh); if (a2 != null) rec.avg = Math.round(a2 * 10) / 10; }
+  if (res && !res.reverted) { rec.patched = true; rec.edits = res.edits || 0; rec.left = finalLeft(fresh); rec.good = finalGood(fresh); }
   const c = fresh.review.final.claim_check;
   if (c) c.fixes = arr(c.fixes).concat([rec]);
   // 「让 AI 接着改」进行中:按论点核对改的这一次也记进自动改稿记录,分数变化别算到补改头上
   const lg = fresh.review.final.auto_log;
-  if (lg && lg.status === 'running') lg.claim_fixes = arr(lg.claim_fixes).concat([{ at: rec.at, avg_before: avgBefore, avg_after: res && !res.reverted ? finalAvg(fresh) : avgBefore, edits: rec.edits || 0, reverted: !!(res && res.reverted), error: rec.error || '', before: rec.before, after: rec.after || null }]);
+  if (lg && lg.status === 'running') lg.claim_fixes = arr(lg.claim_fixes).concat([{ at: rec.at, left_before: leftBefore, left_after: res && !res.reverted ? finalLeft(fresh) : leftBefore, edits: rec.edits || 0, reverted: !!(res && res.reverted), error: rec.error || '', before: rec.before, after: rec.after || null }]);
   if (c || lg) store.saveRun(fresh);
   return { ok: !!after && !claimBlocking(after), patched: !!res && !res.reverted };
 }
@@ -3786,6 +3880,17 @@ function openingFixScore(lc) {
 function listenOf(run, text) {
   return checks.listenCheck(checks.extractFinalScript(text), {
     wpm: require('./narration').narrationWpm(run, null).wpm, title: ((run.analysis || {}).title || {}).final_title || run.topic, lang: (run.audience || {}).target_language });
+}
+// v1.95 不打分:能不能发看最后一轮复审的结论(达标且没有结构问题);null = 还没有复审结论
+function finalGood(run) {
+  const f = (run.review || {}).final;
+  return rcGood(f && arr(f.rechecks).slice(-1)[0]);
+}
+// 最后一轮复审还剩几个关键/结构问题(列表、自动改稿记录里显示)
+function finalLeft(run) {
+  const f = (run.review || {}).final;
+  const last = f && arr(f.rechecks).slice(-1)[0];
+  return last ? hardLeft(last).length : null;
 }
 function finalAvg(run) {
   const f = (run.review || {}).final;
@@ -3881,8 +3986,7 @@ async function autoOpeningFix(runId) {
   try {
     const run = store.getRun(runId);
     if (!run || passBusy(runId)) return;
-    const avg = finalAvg(run);
-    if (avg == null || avg < PUBLISH_AVG || ignoredBlocks(run).has('listen_open')) return;
+    if (finalGood(run) !== true || ignoredBlocks(run).has('listen_open')) return;
     if (!openingIssues(listenOf(run, currentScript(run))).length) return;
     passRunning.set(runId, '自动改开头');
     try { await runOpeningFix(runId); } finally { passRunning.delete(runId); }
@@ -3892,8 +3996,7 @@ async function autoOpeningFix(runId) {
 async function autoOpeningFixLocked(runId) {
   try {
     const run = store.getRun(runId);
-    const avg = finalAvg(run);
-    if (avg == null || avg < PUBLISH_AVG || ignoredBlocks(run).has('listen_open') || !openingIssues(listenOf(run, currentScript(run))).length) return;
+    if (finalGood(run) !== true || ignoredBlocks(run).has('listen_open') || !openingIssues(listenOf(run, currentScript(run))).length) return;
     passRunning.set(runId, '自动改开头');
     await runOpeningFix(runId);
   } catch (e) { /* 失败已记在 steps.opening_fix */ }
@@ -3915,8 +4018,49 @@ function startOpeningFix(runId) {
   return { ok: true };
 }
 
+// ---------- v1.95 开头审:联网查开头的数和事实、查真实观众在问什么;拿原片前 60 秒当参照;开头照样打分 ----------
+const OPEN_WEB_MAX = 4; // 一次开头审最多搜几次(按次收费)
+const OPEN_SCORE_CAP = 6; // 硬规则没过,前 30 秒最多 6 分(和开头留存检查同一口径)
+const isKo = run => /^(Korean|韩|한국|ko)/i.test(String((run.audience || {}).target_language || ''));
+function openingWebQueries(run, sl, title) {
+  const qs = [];
+  // 开头里带数字的句子(最多 3 句):原句去掉引号当查询,查出处
+  sl.lines.filter(l => l.nums > 0).slice(0, 3).forEach(l => qs.push({ query: l.text.replace(/["“”「」『』]/g, '').slice(0, 100), target: '开头第 ' + l.n + ' 句' }));
+  // 真实观众在问什么:韩语去论坛、问答里搜「현실 / 궁금」,英语搜 reddit
+  const topic = String(run.topic || title || '').slice(0, 60);
+  qs.push({ query: topic + (isKo(run) ? ' 현실 궁금' : ' reddit'), target: '观众真实问法' });
+  return qs.slice(0, OPEN_WEB_MAX);
+}
+async function openingWeb(run, cfg, sl, title) {
+  const search = require('./search');
+  // 开头改过会自动重审:要查的句子没变就用上次的结果,不重复花搜索费
+  const qs = openingWebQueries(run, sl, title);
+  const prev = (run.review || {}).opening;
+  const pw = prev && prev.web;
+  if (pw && pw.status === 'done' && pw.brief && JSON.stringify(pw.queries) === JSON.stringify(qs.map(q => q.query)) && prev.web_refs) return { status: 'done', queries: pw.queries, brief: pw.brief, refs: prev.web_refs, reused: true };
+  if (!search.searchStatus(cfg).ready) return { status: 'off', brief: '(没有开联网搜索:设置页里开了联网搜索才会查。这次 facts 和 viewer_questions 都写空数组)' };
+  try {
+    const batches = await search.runQueries(qs, run.topic, cfg, { max: OPEN_WEB_MAX });
+    const refs = {};
+    batches.forEach(b => arr(b.results).forEach(r => { refs[r.ref] = { title: r.title, url: r.url, date: r.date }; }));
+    return { status: 'done', queries: batches.map(b => b.query), brief: search.resultsBrief(batches), refs };
+  } catch (e) { return { status: 'failed', error: e.message, brief: '(联网搜索失败:' + e.message + '。这次 facts 和 viewer_questions 都写空数组)' }; }
+}
+// 原片前 60 秒当参照:开头几句原文 + 每分钟提问/预告/转折几处(韩语字幕有标点才算得准;英语原片字幕没标点,只给原文)
+function originalOpening(asset, run) {
+  const cues = srtCues(asset && asset.srt).filter(c => c.sec < OPENING_SEC);
+  if (!cues.length) return '(没有原片字幕)';
+  const text = cues.map(c => c.text).join(' ');
+  const ko = (text.match(/[가-힣]/g) || []).length > text.length * 0.2;
+  const hooks = ko ? (text.match(new RegExp(checks.HOOK_RE.ko.source, 'g')) || []).length : null;
+  return '原片前 60 秒(' + cues.length + ' 句字幕)开头:「' + text.slice(0, 260) + (text.length > 260 ? '…' : '') + '」' +
+    (hooks != null ? '\n原片前 60 秒里提问、预告、转折一共 ' + hooks + ' 处。' : '\n(英语原片字幕没有标点,提问和转折的次数算不准,只看原文。)');
+}
+function ourHooks(sl) {
+  return sl.lines.reduce((n, l) => n + ((l.text.match(new RegExp(checks.HOOK_RE.ko.source + '|' + checks.HOOK_RE.en.source, 'gi')) || []).length), 0);
+}
 async function runOpeningCard(runId) {
-  const { run } = loadRunAsset(runId);
+  const { run, asset } = loadRunAsset(runId);
   const cfg = pl().loadConfig();
   if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
   const sl = openingSlice(run);
@@ -3936,7 +4080,11 @@ async function runOpeningCard(runId) {
   let bpHook = '';
   try { bpHook = JSON.stringify((JSON.parse(checks.stripFence((run.outputs || {}).step1 || '')) || {}).hook || {}); } catch (e) {}
   try {
+    const web = await openingWeb(run, cfg, sl, title);
+    const otr = loadTrack(((run.review || {}).final || {}).track || lockedTrack(run) || (run.review || {}).final_track || autoTrack(run, asset));
     const out = await an().callJson(run, cfg, an().fillVars(readPrompt('opening_card.md'), {
+      track_name: otr.name || '', track_retention: otr.retention || '(无)',
+      web: web.brief, original: originalOpening(asset, run) + '\n本稿前 60 秒里提问、预告、转折一共 ' + ourHooks(sl) + ' 处。',
       target_language: (run.audience || {}).target_language || '', wpm: String(sl.wpm), title,
       thesis: JSON.stringify(a.thesis_card || {}), hook: bpHook || '(无)',
       hard: '- 前 10 秒念了 ' + hard.nums_10s + ' 个数字\n- 标题关键词出现时间:' + (hard.title_words.map(w => w.word + (w.sec == null ? ' 没出现' : ' ' + w.sec + ' 秒')).join('、') || '(无)') +
@@ -3945,6 +4093,16 @@ async function runOpeningCard(runId) {
       after: sl.after || '(无)'
     }), '开头单独审', x => Array.isArray(x.lines) && x.lines.length);
     const zh = Object.fromEntries(arr(out.lines).map(x => [Number(x.n), String(x.zh || '')]));
+    // 打分:0–10 的整数;硬规则没过,前 30 秒最多 OPEN_SCORE_CAP 分
+    const sc = v => { const n = Math.round(Number(v)); return isFinite(n) && v !== null && v !== '' ? Math.max(0, Math.min(10, n)) : null; };
+    let s030 = sc(out.score_0_30); const s3060 = sc(out.score_30_60);
+    if (hard.issues.length && s030 != null && s030 > OPEN_SCORE_CAP) s030 = OPEN_SCORE_CAP;
+    // 联网核对:引用的编号换回链接;只认开头里真有的句子编号
+    const refs = web.refs || {};
+    const facts = arr(out.facts).map(f => ({ n: Number(f.n), claim: String(f.claim || ''), status: /说反|相反|矛盾/.test(f.status || '') ? '说反了' : /有出处|支持|对得上/.test(f.status || '') ? '有出处' : '查不到', note: String(f.note || ''),
+      source: refs[String(f.ref || '').toUpperCase()] ? { title: refs[String(f.ref).toUpperCase()].title, url: refs[String(f.ref).toUpperCase()].url, date: refs[String(f.ref).toUpperCase()].date } : null }))
+      .filter(f => sl.lines.some(l => l.n === f.n) && f.claim);
+    const contra = facts.filter(f => f.status === '说反了');
     const fresh = store.getRun(runId) || run;
     fresh.review = fresh.review || {};
     fresh.review.opening = {
@@ -3952,7 +4110,11 @@ async function runOpeningCard(runId) {
       lines: sl.lines.map(l => ({ ...l, zh: zh[l.n] || '' })),
       hook: String(out.hook || ''), title_conflict_sec: out.title_conflict_sec ?? null, first_payoff_sec: out.first_payoff_sec ?? null,
       strengths: arr(out.strengths).filter(Boolean).map(String), risks: arr(out.risks).filter(Boolean).map(String),
-      verdict: hard.issues.length ? '建议改' : String(out.verdict || ''), hard
+      verdict: hard.issues.length || contra.length ? '建议改' : String(out.verdict || ''), hard,
+      score_0_30: s030, score_30_60: s3060, score_why: String(out.score_why || ''),
+      web: { status: web.status, ...(web.error ? { error: web.error } : {}), queries: arr(web.queries), ...(web.status === 'done' ? { brief: String(web.brief || '').slice(0, 12000) } : {}), ...(web.reused ? { reused: true } : {}) },
+      ...(web.refs ? { web_refs: web.refs } : {}),
+      facts, viewer_questions: arr(out.viewer_questions).filter(Boolean).map(String).slice(0, 4), hook_match: String(out.hook_match || ''), hook_match_why: String(out.hook_match_why || '')
     };
     fresh.steps = { ...(fresh.steps || {}), opening_card: { status: 'done', finished_at: new Date().toISOString() } };
     if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
@@ -4197,4 +4359,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

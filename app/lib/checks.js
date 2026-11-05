@@ -464,9 +464,23 @@ function narrationLines(script, wpm) {
 }
 // 标题关键词:按空格切,去标点;韩文取前 2 个字当词干(조사、어미不同也能对上),数字只认数字
 const TITLE_STOPWORDS = new Set(['the', 'a', 'an', 'of', 'to', 'in', 'on', 'at', 'for', 'and', 'or', 'but', 'is', 'are', 'was', 'were', 'be', 'do', 'did', 'does', 'how', 'what', 'when', 'why', 'who', 'which', 'where', 'it', 'its', 'you', 'your', 'if', 'with', 'from', 'by', 'as', 'that', 'this', 'they', 'their', 'can', 'could', 'would', 'without']);
+// v1.95 韩文:和标题承诺检查同一套过滤(去助词,跳过动词/形容词活用形和虚词),取整个名词;带单位的数字取整词(8년、3억),
+// 光秃秃的数字 3 位以上才算(实测把「내가、않은、원을、8、3」都当成关键词,开头检查误报)
 function titleStems(title) {
-  return [...new Set(String(title || '').split(/[\s,.!?…·:;'"“”‘’()\[\]-]+/).map(t => t.trim()).filter(t => t.length >= 2 && !TITLE_STOPWORDS.has(t.toLowerCase()))
-    .map(t => /^\d/.test(t) ? t.match(/^\d[\d,.]*/)[0] : /[가-힯]/.test(t) ? t.slice(0, 2) : t.toLowerCase()))];
+  const out = [];
+  String(title || '').split(/[\s,.!?…·:;'"“”‘’()\[\]-]+/).map(t => t.trim()).filter(Boolean).forEach(t => {
+    if (/[가-힯]/.test(t)) {
+      if (/^\d/.test(t)) { const n = t.replace(KO_PARTICLE, ''); if (/[가-힯]/.test(n)) out.push(n); return; }
+      if (KO_VERBISH.test(t)) return;
+      const last = t.charCodeAt(t.length - 1) - 0xAC00;
+      if (last >= 0 && last % 28 === 8 && t.length <= 3) return;
+      const n = t.replace(KO_PARTICLE, '');
+      if (n.length < 2 || TITLE_KO_STOP.has(n) || /^(내가|제가|나는|저는|너는|그게|이게|그건|이건)$/.test(t)) return;
+      out.push(n);
+    } else if (/^\d/.test(t)) { const n = t.match(/^\d[\d,.]*/)[0]; if (n.replace(/\D/g, '').length >= 3 || /\D/.test(t.slice(n.length))) out.push(/^\d[\d,.]*$/.test(t) ? n : t.toLowerCase()); }
+    else if (t.length >= 2 && !TITLE_STOPWORDS.has(t.toLowerCase())) out.push(t.toLowerCase());
+  });
+  return [...new Set(out)];
 }
 // 韩文语体:-다(반말/서술체)和 -니다/-요(존댓말)混用,听起来像两个人在说
 // 少数一方达到 3 句就算混用(实测两篇 -니다 体稿里各混进 6、11 句 -다 体,按比例算都不到 10%)
@@ -521,7 +535,7 @@ function listenScore(lc) {
 }
 // 写稿、优化、审稿共用的听感规则(提示词里也是这几条)
 const LISTEN_RULES = '听感规则(稿子是配音给人听的,观众不能回看):\n' +
-  '- 开头 ' + OPEN_TITLE_SEC + ' 秒内,用一个人或一个场景说出标题里的冲突;前 ' + OPEN_NUM_SEC + ' 秒最多 ' + OPEN_MAX_NUMS + ' 个数字;45 秒前给出第一个答案。\n' +
+  '- 开头 ' + OPEN_TITLE_SEC + ' 秒内,用一个人或一个场景说出标题里的冲突;前 ' + OPEN_NUM_SEC + ' 秒最多 ' + OPEN_MAX_NUMS + ' 个数字;45 秒前给出第一个答案(一半答案或甜头;全片最终的答案留到后面再揭晓)。\n' +
   '- 一句最多 ' + LINE_MAX_NUMS + ' 个数字;价格表、配料克数这类清单不要一口气念完,只留最关键的一两个,其余拆开或删掉。\n' +
   '- 全篇只用一种语体(韩文:-다 体和 -니다/-요 体二选一),引用别人的话除外。';
 // 给模型的修改意见(写稿重试、复审用)
@@ -647,4 +661,21 @@ function titlePromiseGaps(title, script) {
   return out.filter((x, i, a) => a.findIndex(y => y.stem === x.stem) === i);
 }
 
-module.exports = { checkProgression, normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, repairJsonQuotes, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, DENSE_OPEN_SEC, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble, speechTidy, duplicateParagraphs, englishInKorean, titlePromiseGaps };
+// v1.95 钩子空档:1 分钟以后,最长多少秒没有提问、「后面告诉你」这类预告、或转折(数据来自同赛道原片的对比研究;用来比改前改后有没有变差)
+const HOOK_RE = {
+  ko: /\?|영상 끝|끝에서|마지막에|뒤에서|끝까지|보여 ?드릴|잠시 후|이따가|나중에 다시|다시 돌아|기억해 ?두|기억하세요|알려 ?드릴|근데 진짜|문제는|여기서 반전|이상하죠|이상한 건|그런데 말이죠|진짜는 지금부터|이게 다가 아니|끝이 아니|더 놀라운|아무도 말하지|모르는 사실|그게 아니라|반전/,
+  en: /\?|\blater\b|in a (minute|moment|second)|by the end|we'?ll get (to|back)|come back to|more on that|keep that in mind|stick around|hold that thought|you'?ll see (why|how)|i'?ll show you|stay with me|here'?s the thing|the problem (is|was)|turns? out|but here'?s|what nobody|no one tells|nobody tells|the (real|strange|weird|crazy|dark) (part|thing)|it gets worse|that'?s not (all|the worst)|even worse|the twist|but that'?s not/i
+};
+function hookGap(script, opts) {
+  const o = opts || {};
+  const lines = narrationLines(script, o.wpm || 150);
+  if (!lines.length) return null;
+  const re = /^(Korean|韩|한국|ko)/i.test(String(o.lang || '')) ? HOOK_RE.ko : HOOK_RE.en;
+  const end = lines[lines.length - 1].end;
+  let last = 60, gap = 0, at = 60;
+  lines.forEach(l => { if (l.start < 60) return; if (re.test(l.text)) { if (l.start - last > gap) { gap = l.start - last; at = last; } last = l.start; } });
+  if (end - last > gap) { gap = end - last; at = last; }
+  return { gap: Math.round(gap), at: Math.round(at) };
+}
+
+module.exports = { HOOK_RE, hookGap, checkProgression, normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, repairJsonQuotes, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, DENSE_OPEN_SEC, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble, speechTidy, duplicateParagraphs, englishInKorean, titlePromiseGaps };

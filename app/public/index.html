@@ -812,7 +812,7 @@
           <th style="width:9.7%">目标</th>
           <th style="width:5.5%">频道</th>
           <th style="width:8%">状态</th>
-          <th style="width:6%">评分</th>
+          <th style="width:6%">终审</th>
           <th style="width:7%">确认文案版本</th>
           <th style="width:6.8%">是否生成视频</th>
           <th style="width:3.5%">步骤</th>
@@ -2287,20 +2287,12 @@ function confirmVersionCell(c) {
   return `<span class="cf-ver" title="${esc(c.at ? '确认于 ' + fmtTime(c.at) : '')}">${esc(versionLabel(c.version))}</span>`;
 }
 
-// 列表"评分"列:上=二稿审稿报告分(0-100),下=终审七维平均分(0-10)。
-// 两个分数口径不同(报告分是审稿报告的总评,七维平均是终审最后一次复审的维度均分),
-// 所以分行标注、不相加;没跑到该阶段显示 —,与其它空值列一致。
+// 列表「终审」列(v1.95 不打分):最后一轮复审判能发 → 「能发」;否则「还差 N 项」(剩下的关键/结构问题);没跑到终审显示 —
 function scoreCell(s) {
-  const a = s && typeof s.audit === 'number' ? s.audit : null;
-  const f = s && typeof s.final === 'number' ? s.final : null;
-  if (a == null && f == null) return '<span class="vb-none">—</span>';
-  const audit = a == null
-    ? '<span class="sc sc-none" title="还没有二稿审稿报告">审稿 —</span>'
-    : `<span class="sc sc-audit" title="二稿审稿报告评分(0-100)">审稿 <b>${a}</b></span>`;
-  const fin = f == null
-    ? '<span class="sc sc-none" title="还没跑到终审,没有七维分数">终审 —</span>'
-    : `<span class="sc sc-final" title="终审七维平均分(0-10,最后一次复审)">终审 <b>${f}</b></span>`;
-  return `<span class="score-cell">${audit}${fin}</span>`;
+  if (!s || s.verdict == null) return '<span class="vb-none">—</span>';
+  if (s.good) return '<span class="score-cell"><span class="sc sc-final" style="background:#d1fae5;color:#047857" title="最后一轮复审判能发(没有结构问题)">能发</span></span>';
+  if (!s.verdict) return '<span class="score-cell"><span class="sc sc-none" title="最后一轮复审没读到结论">没结论</span></span>';
+  return `<span class="score-cell"><span class="sc sc-audit" style="background:#fffbeb;color:#b45309" title="最后一轮复审判还不能发;剩下的关键/结构问题">${s.left ? '还差 <b>' + s.left + '</b> 项' : '还不能发'}</span></span>`;
 }
 
 // ---------- 任务列表:筛选 / 分页 / 爆款 ----------
@@ -2946,7 +2938,7 @@ function rvDraw() {
   const runStage = (v.passes && v.passes.final && v.passes.final.status === 'running' && v.passes.final.stage) || '';
   const passLine = (v.running ? `<div class="rv-flag v13"><b>后台正在跑:${esc(v.running)}${runStage && /终审|补改/.test(v.running) ? '(' + esc(runStage) + ')' : ''}</b>…跑完页面会自动刷新,这期间终审、补改按钮会提示等它跑完。</div>` : '') + rvPassLine(v);
   const diffTab = d => `<button class="rv-tab${rvState.tab === d.key ? ' on' : ''}" onclick="rvSetTab('${d.key}')">${d.key === 'd3' && v.revision ? '终稿全文修订(改了 ' + v.revision.applied + ' 处)' : esc(d.from) + ' → ' + esc(d.to) + '(改了 ' + d.chapters.filter(c => c.changed).length + ' 章)'}</button>`;
-  const auditTab = v.audit ? `<button class="rv-tab${rvState.tab === 'audit' ? ' on' : ''}" onclick="rvSetTab('audit')">二稿审稿报告${v.audit.score != null ? '(' + v.audit.score + ' 分)' : ''}</button>` : '';
+  const auditTab = v.audit ? `<button class="rv-tab${rvState.tab === 'audit' ? ' on' : ''}" onclick="rvSetTab('audit')">二稿审稿报告${(v.audit.issues || []).length ? '(' + v.audit.issues.length + ' 个问题)' : ''}</button>` : '';
   const tabs = `<div class="rv-tabs">${diffs.filter(d => d.key !== 'd3').map(diffTab).join('')}${auditTab}${diffs.filter(d => d.key === 'd3').map(diffTab).join('')}
     </div>`;
   if (rvState.tab === 'audit') {
@@ -3023,8 +3015,8 @@ function rvPassLine(v) {
   const one = k => {
     const st = p[k];
     const txt = !st ? (k === 'final' && v.audit ? '等你在审稿报告里选要改的问题' : '没跑') : st.status === 'running' ? '<span class="rv-busy">进行中' + (st.stage ? '(' + esc(st.stage) + ')' : '') + '…</span>' : st.status === 'failed' ? '<span class="err-list">失败:' + esc(st.error || '') + '</span>'
-      : k === 'audit' ? (sc => '完成(' + (sc != null ? sc + ' 分,' : '') + (st.issues || 0) + ' 个问题)')(v.audit && v.audit.score != null ? v.audit.score : st.score)
-      : st.edits != null ? '完成(改了 ' + st.edits + ' 处' + (st.edits_failed ? ',' + st.edits_failed + ' 处没采用' : '') + (st.verdict ? ',复审' + esc(st.verdict) : '') + ')'
+      : k === 'audit' ? '完成(' + (st.issues || 0) + ' 个问题)'
+      : st.edits != null ? '完成(改了 ' + st.edits + ' 处' + (st.edits_failed ? ',' + st.edits_failed + ' 处没采用' : '') + (st.verdict ? ',复审判' + (st.verdict === '达标' ? '能发' : st.verdict === '未达标' ? '还不能发' : esc(st.verdict)) : '') + ')'
       : '完成(' + (st.facts ? '核验 ' + st.facts + ' 条事实' + (st.facts_wrong ? ',' + st.facts_wrong + ' 条与证据矛盾' : '') + ';' : '') + (st.issues || 0) + ' 个问题,改了 ' + (st.changed || 0) + ' 章' + (st.growth_rejected ? ',' + st.growth_rejected + ' 章因改长被退回' : '') + ')';
     const busy = st && st.status === 'running';
     // 有审稿报告时,终审从报告页发起(带上勾选的问题和路线)
@@ -3155,7 +3147,6 @@ function rvAuditHtml(v) {
   const routeTip = `<div class="hint v13" style="margin:4px 0">${sel.route}. ${RV_ROUTES[sel.route]}:${RV_ROUTE_TIPS[sel.route]}</div>`;
   const routeText = routeTip + (au.routes && au.routes[sel.route] ? `<details class="rv-md-box"><summary>报告里对「${sel.route}. ${RV_ROUTES[sel.route]}」的说明</summary><div class="rv-md">${rvMd(au.routes[sel.route])}</div></details>` : '');
   return `<div class="rv-bar v13">
-      <span>总分 <b>${au.score != null ? esc(au.score) : '—'}</b> / 100${au.score == null ? '<span class="hint">(报告里没读出总分,请看下面完整报告第 2 部分)</span>' : ''}</span>
       <span>问题 <b>${au.issues.length}</b> 个(S/A 级 ${au.issues.filter(x => /^[SA]$/.test(x.severity)).length} 个)</span>
       <span>AI 推荐路线 <b>${au.recommended ? au.recommended + '. ' + RV_ROUTES[au.recommended] : '—'}</b>${au.route_reason ? '(' + esc(au.route_reason) + ')' : ''}</span>
     </div>
@@ -3283,10 +3274,15 @@ function rvRevisionHtml(rev, translating) {
     const val = (o, d) => (o && o[d] != null ? o[d] : '—');
     const avg = o => { const xs = dims.map(d => o && o[d]).filter(x => typeof x === 'number'); return xs.length ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length * 10) / 10 : '—'; };
     const rows = dims.map(d => { const b = val(fin.scores_before, d), a = val(fin.scores_after, d); const up = typeof a === 'number' && typeof b === 'number' ? (a > b ? ' <span class="rv-ins">↑' + Math.round((a - b) * 10) / 10 + '</span>' : a < b ? ' <span class="rv-del">↓' + Math.round((b - a) * 10) / 10 + '</span>' : '') : ''; return `<tr><td>${esc(d)}</td><td>${b}</td><td>${a}${up}</td></tr>`; }).join('');
-    head = rvFinalPanelHtml(v, busy, `<div class="rv-bar v13"><span>赛道 <b>${esc(fin.track_name || '')}</b></span><span>复审结论 <b class="${fin.verdict === '达标' ? '' : 'rv-flag'}">${esc(fin.verdict || '—')}</b></span><span>七维平均 <b>${avg(fin.scores_before)} → ${avg(fin.scores_after)}</b></span><span>复审 ${(fin.rechecks || []).length} 轮</span></div>
-      <div class="rv-md"><div class="rv-md-table"><table><tr><th>维度</th><th>修改前</th><th>修改后</th></tr>${rows}</table></div></div>
-      <details class="rv-md-box"><summary>终审审稿报告(修改前:七维评分、P0–P3 问题、结构方案、待核实事实)</summary><div class="rv-md">${rvMd(fin.audit_report)}</div></details>
-      ${(fin.rechecks || []).map(r => `<details class="rv-md-box"><summary>复审报告(第 ${r.round} 轮${r.patch ? '·按复审意见补改后' : ''}:${esc(r.verdict || '—')}${r.edits ? (r.patch ? ',补改了 ' : ',又改了 ') + r.edits + ' 处' : ''}${(r.structural || []).length ? ',整章重写 ' + r.structural.map(x => x.chapter + (x.ok ? '' : '(没采用)')).join('、') : ''}${r.stalled ? ',分数没涨' : ''})</summary>${(r.structural || []).filter(x => !x.ok).map(x => `<div class="hint">${esc(x.chapter)} 整章重写没采用:${esc(x.error || '')}</div>`).join('')}${r.patch && r.note ? `<div class="hint">你的决定:${esc(r.note)}</div>` : ''}<div class="rv-md">${rvMd(r.report)}</div></details>`).join('')}
+    // v1.95 不打分:显示结论和还剩几个关键/结构问题;老任务有分数的,分数表折起来只作记录
+    const lastRc = (fin.rechecks || []).slice(-1)[0] || {};
+    const hardN = (lastRc.open || []).filter(x => (x.level === '关键' || x.level === '结构') && !x.not_found && !x.applied).length;
+    const hasScores = dims.some(d => typeof (fin.scores_before || {})[d] === 'number' || typeof (fin.scores_after || {})[d] === 'number');
+    const verdictZh = fin.verdict === '达标' ? '能发' : fin.verdict === '未达标' ? '还不能发' : '—';
+    head = rvFinalPanelHtml(v, busy, `<div class="rv-bar v13"><span>赛道 <b>${esc(fin.track_name || '')}</b></span><span>复审结论 <b class="${fin.verdict === '达标' ? '' : 'rv-flag'}">${verdictZh}</b></span><span>还剩关键/结构问题 <b>${hardN}</b> 个</span><span>复审 ${(fin.rechecks || []).length} 轮</span></div>
+      ${hasScores ? `<details class="rv-md-box"><summary>老版本的七维分数(v1.95 起不再打分,只作记录)</summary><div class="rv-md"><div class="rv-md-table"><table><tr><th>维度</th><th>修改前</th><th>修改后</th></tr>${rows}</table></div><div class="hint">平均 ${avg(fin.scores_before)} → ${avg(fin.scores_after)}</div></div></details>` : ''}
+      <details class="rv-md-box"><summary>终审审稿报告(修改前:七个方面的问题、P0–P3 问题、结构方案、待核实事实)</summary><div class="rv-md">${rvMd(fin.audit_report)}</div></details>
+      ${(fin.rechecks || []).map(r => `<details class="rv-md-box"><summary>复审报告(第 ${r.round} 轮${r.patch ? '·按复审意见补改后' : ''}:${esc(r.verdict || '—')}${r.edits ? (r.patch ? ',补改了 ' : ',又改了 ') + r.edits + ' 处' : ''}${(r.structural || []).length ? ',整章重写 ' + r.structural.map(x => x.chapter + (x.ok ? '' : '(没采用)')).join('、') : ''}${r.stalled ? ',剩下的问题和上一轮基本一样' : ''}${r.judge && r.judge.by === 'compare' ? ',两版对比:' + (r.judge.pick === 'after' ? '改后更好' : r.judge.pick === 'before' ? '改前更好' : '差不多') : ''})</summary>${r.judge && (r.judge.why || r.judge.leave_after) ? `<div class="hint">${r.judge.why ? '对比理由:' + esc(r.judge.why) : ''}${r.judge.leave_after ? (r.judge.why ? '<br>' : '') + '改后观众可能在这句走:「' + esc(r.judge.leave_after) + '」' : ''}</div>` : ''}${(r.structural || []).filter(x => !x.ok).map(x => `<div class="hint">${esc(x.chapter)} 整章重写没采用:${esc(x.error || '')}</div>`).join('')}${r.patch && r.note ? `<div class="hint">你的决定:${esc(r.note)}</div>` : ''}<div class="rv-md">${rvMd(r.report)}</div></details>`).join('')}
 `);
   }
   const ft = v.track_locked ? v.track_default : rvState.finalTrack || (fin && fin.track) || v.track_default || 'general';
@@ -3324,12 +3320,20 @@ function rvOpeningHtml(v) {
     : o.stale ? '<span class="rv-flag">稿子开头改过了,这份分析是旧的(点开后点「重新分析开头」)</span>'
     : o.verdict === '能用' && !left.length ? '<span style="color:#047857"><b>✓ 开头过关</b></span>'
     : `<span class="rv-flag">${esc(o.verdict || '建议改')}${left.length ? ':' + esc(left.join(';')) : ''}</span>`;
-  return `<details class="rv-md-box"${rvState.openingOpen ? ' open' : ''} ontoggle="rvState.openingOpen=this.open"><summary><b>开头单独审</b>:${sum}${o.at ? ` <span class="hint">(${esc(fmtTime(o.at))} 审的)</span>` : ''}</summary>
+  // v1.95 开头打分 + 联网核对 + 真实观众问法
+  const scoreTxt = o.score_0_30 != null || o.score_30_60 != null ? ` <span class="hint">前 30 秒 <b>${o.score_0_30 != null ? o.score_0_30 : '—'}</b> 分 · 30–60 秒 <b>${o.score_30_60 != null ? o.score_30_60 : '—'}</b> 分</span>` : '';
+  const FC = { '有出处': '#047857', '查不到': '#6b7280', '说反了': '#b91c1c' };
+  const factsHtml = (o.facts || []).length ? `<div class="v13"><b>联网核对开头的数和事实</b><ul>${o.facts.map(f => `<li><span style="color:${FC[f.status] || '#6b7280'}"><b>${esc(f.status)}</b></span> 第 ${f.n} 句「${esc(f.claim)}」${f.note ? ':' + esc(f.note) : ''}${f.source && /^https?:\/\//i.test(f.source.url || '') ? ` <a href="${escAttr(f.source.url)}" target="_blank" rel="noopener noreferrer">${esc(f.source.title || '资料')}</a>${f.source.date ? ' ' + esc(f.source.date) : ''}` : ''}</li>`).join('')}</ul></div>` : '';
+  const webNote = o.web && o.web.status === 'off' ? '<div class="hint v13">没开联网搜索,开头的数和观众问法这次没查(设置页里开了联网搜索才会查)。</div>' : o.web && o.web.status === 'failed' ? `<div class="hint v13">联网搜索没成功:${esc(o.web.error || '')}</div>` : '';
+  const vqHtml = (o.viewer_questions || []).length || o.hook_match ? `<div class="v13"><b>真实观众在问什么</b>${o.hook_match ? `(开头的问题和它们<b>${esc(o.hook_match)}</b>${o.hook_match_why ? ':' + esc(o.hook_match_why) : ''})` : ''}<ul>${list(o.viewer_questions, '#1d4ed8')}</ul></div>` : '';
+  return `<details class="rv-md-box"${rvState.openingOpen ? ' open' : ''} ontoggle="rvState.openingOpen=this.open"><summary><b>开头单独审</b>:${sum}${scoreTxt}${o.at ? ` <span class="hint">(${esc(fmtTime(o.at))} 审的)</span>` : ''}</summary>
     <div class="hint v13" style="margin:6px 0">时间按配音语速 ${o.wpm} 词/分钟推算 · ${hard}</div>
     ${o.hook ? `<div class="v13" style="margin:6px 0"><b>靠什么留人</b>:${esc(o.hook)}</div>` : ''}
     <div class="rv-md"><div class="rv-md-table"><table><tr><th>#</th><th>时间</th><th>原文 / 中文</th></tr>${lines}</table></div></div>
     ${(o.strengths || []).length ? `<div class="v13"><b>好在哪</b><ul>${list(o.strengths, '#047857')}</ul></div>` : ''}
     ${(o.risks || []).length ? `<div class="v13"><b>可能掉人的地方</b><ul>${list(o.risks, '#b45309')}</ul></div>` : ''}
+    ${o.score_why ? `<div class="hint v13">打分理由:${esc(o.score_why)}</div>` : ''}
+    ${factsHtml}${vqHtml}${webNote}
     <div class="rv-ops v13">${btn}<span class="hint">要改哪句,在下面 CH01 点「我的意见」写给 AI,改完再点「重新分析开头」。</span></div></details>`;
 }
 async function rvOpeningRun() {
@@ -3341,7 +3345,7 @@ const RV_OPEN_CLS = { 关键: 'red', 结构: 'red', 次要: 'yellow', 待核实:
 // ---------- 终审页(合并版,用户 2026-10-31):一行状态 + 一个主按钮「AI 改一轮」→「还差什么」逐项 →「改稿记录」默认收起 ----------
 // 原来光改稿就有 6 个按钮(接着改到能发布 / 按选中的方式补改 / 按核对结果改稿 / 找原因再试 / 自动改开头 / 保留标题改稿),
 // 跑的都是「改一轮再复审」,同一个问题又在 3–4 个框里各写一遍,人不知道点哪个。
-const RV_BLOCK_ZH = { hard_open: '复审问题', red_facts: '没出处的数', ledger: '账本错数', thesis: '反转', claim: '账/论点', listen_open: '开头', listen_dense: '数字太密', listen_register: '语体', listen_other: '听感', no_final: '终审', residue: '原片残留', pov: '人物连贯', weak_claims: '没出处的说法' };
+const RV_BLOCK_ZH = { open_fact: '开头事实', hard_open: '复审问题', red_facts: '没出处的数', ledger: '账本错数', thesis: '反转', claim: '账/论点', listen_open: '开头', listen_dense: '数字太密', listen_register: '语体', listen_other: '听感', no_final: '终审', residue: '原片残留', pov: '人物连贯', weak_claims: '没出处的说法' };
 // 问题旁边「直接应用」(v1.64):改法里有完整的替换句、原句在终稿里只出现一次 → 程序直接换掉,不调 AI、不复审,可以撤回
 function rvApplyHtml(source, x, busy) {
   const p = ((rvState.view || {}).summary || {}).publish || {};
@@ -3429,7 +3433,7 @@ async function rvApplyFix(source, id, undo) {
   rvRefresh();
 }
 // 上一轮复审之后直接应用的几处:分数还是那一轮的
-function rvManualNote(p) { return p && p.manual_after ? `<span class="hint" style="color:#047857">(分数是上次复审的;之后直接应用了 ${p.manual_after} 处,未重新复审)</span>` : ''; }
+function rvManualNote(p) { return p && p.manual_after ? `<span class="hint" style="color:#047857">(结论是上次复审的;之后直接应用了 ${p.manual_after} 处,未重新复审)</span>` : ''; }
 function rvManualHtml(v, busy) {
   const fin = v.final || {};
   const list = (fin.manual_applies || []);
@@ -3448,7 +3452,7 @@ function rvFinalPanelHtml(v, busy, record) {
   // ① 状态 + 主按钮
   let top;
   if (v.running) top = autoRunning ? rvAutoLogHtml(v, p) : `<div class="rv-flag v13" style="border:2px solid #3b82f6;background:#eff6ff;color:#1e3a8a;padding:10px 12px"><span class="rv-spin"></span> <b>正在${esc(v.running)}…</b> <span class="hint">跑完自动刷新,现在什么都不用点。</span></div>`;
-  else if (p.ready) top = `<div class="v13" style="margin:8px 0;padding:10px 12px;border:2px solid #047857;background:#ecfdf5;border-radius:8px"><b style="color:#047857;font-size:15px">✓ 可以发布</b>${rvManualNote(p)} <span class="hint">${p.good ? '平均 ' + esc(p.avg) + ' 分,开头过关,事实没有红旗' : '没有关键/结构遗留问题,事实没有红旗,听感检查通过'}${(p.accepted_facts || []).length ? '(没出处的 ' + p.accepted_facts.map(esc).join('、') + ' 你确认不影响)' : ''}。下面的按钮都不用再点。</span></div>`;
+  else if (p.ready) top = `<div class="v13" style="margin:8px 0;padding:10px 12px;border:2px solid #047857;background:#ecfdf5;border-radius:8px"><b style="color:#047857;font-size:15px">✓ 可以发布</b>${rvManualNote(p)} <span class="hint">${p.good ? '复审判能发,开头过关,事实没有红旗' : '没有关键/结构遗留问题,事实没有红旗,听感检查通过'}${(p.accepted_facts || []).length ? '(没出处的 ' + p.accepted_facts.map(esc).join('、') + ' 你确认不影响)' : ''}。下面的按钮都不用再点。</span></div>`;
   else {
     const reverted = !!(((v.passes || {}).final || {}).patch_reverted && rc && (rc.reverted || []).length);
     // 「还差 N 项」每项下面直接列对应的问题和改法,在这里选,不用再到下面去对
@@ -3456,7 +3460,7 @@ function rvFinalPanelHtml(v, busy, record) {
       <div style="position:sticky;top:0;z-index:5;background:#fffbeb;padding:10px 0 6px;border-bottom:1px solid #fcd34d">
         <b style="color:#b91c1c;font-size:15px">还不能发布,还差 ${blocks.length} 项</b>${rvManualNote(p)}
         <button class="an-btn v13" style="border-color:#b45309;color:#b45309;font-weight:600;margin-left:8px" onclick="rvMainFix()" ${busy ? 'disabled' : ''}>AI 改一轮</button>
-        <div class="hint">按每项下面选好的改法改一轮,改完自动复审、重新核对账、改开头;分数掉 0.4 以上整轮撤回。${reverted ? '上一轮掉分被撤回了,这次 AI 会先找原因、换改法。' : ''}某一项不想管,点那一项的「忽略」:不挡发布,AI 也不改它,以后可以撤回。</div>
+        <div class="hint">按每项下面选好的改法改一轮,改完先过程序体检、再把改前改后两版盲比,改差了整轮撤回;没改差才复审、重新核对账、改开头。${reverted ? '上一轮改差被撤回了,这次 AI 会先找原因、换改法。' : ''}某一项不想管,点那一项的「忽略」:不挡发布,AI 也不改它,以后可以撤回。</div>
       </div>
       ${rvGroupsHtml(v, p, busy)}</div>`;
   }
@@ -3474,7 +3478,7 @@ function rvFinalPanelHtml(v, busy, record) {
   const rvRev = rc && (rc.reverted || []).length ? rvRevertHtml(rc, (rc.reverted || []).slice(-1)[0], busy, true) : '';
   const autoDone = !autoRunning ? rvAutoLogHtml(v, p).replace(/<details([^>]*) open /, '<details$1 ') : '';
   rvState.folds = rvState.folds || {};
-  const rec = `<details class="rv-md-box v13"${rvState.folds.finalRecord ? ' open' : ''} ontoggle="rvState.folds.finalRecord=this.open"><summary><b>改稿记录</b> <span class="hint">(分数、每一轮改了什么、撤回的、原始报告;点开看)</span></summary>${autoDone}${rvRev}${rvManualHtml(v, busy)}${record}</details>`;
+  const rec = `<details class="rv-md-box v13"${rvState.folds.finalRecord ? ' open' : ''} ontoggle="rvState.folds.finalRecord=this.open"><summary><b>改稿记录</b> <span class="hint">(每一轮改了什么、撤回的和原因、原始报告;点开看)</span></summary>${autoDone}${rvRev}${rvManualHtml(v, busy)}${record}</details>`;
   return top + parts.join('') + rec;
 }
 // 「反转被事实推翻」展开后列出和反转相反的事实、写前分析的说明、复审的判断(v1.63:原来展开是空的)
@@ -3500,8 +3504,8 @@ function rvGroupsHtml(v, p, busy) {
   const pre = [];
   const st = (v.passes || {}).final || {};
   if (st.patch_error) pre.push(`<div class="err-list">上次补改没成功:${esc(st.patch_error)}</div>`);
-  if (rc && !Object.values(rc.scores || {}).some(x => typeof x === 'number')) pre.push(`<div class="rv-flag v13"><b>这一轮复审没读到分数和结论</b>${rc.refused ? '(模型拒绝打分,换了说法也没给' + (rc.raw_log ? ';原文在 data/logs/' + esc(rc.raw_log) : '') + ')' : ''}:稿子已经按这一轮改了,但不知道改得好不好。<button class="an-btn v13" onclick="rvRecheckOnly()" ${busy ? 'disabled' : ''}>重新复审这一版</button> <span class="hint">只复审,不改稿,一般 2–3 分钟</span></div>`);
-  if (st.patch_reverted && rc && (rc.reverted || []).length) pre.push(`<div class="hint v13" style="color:#b45309;margin-top:6px">上一轮改完分数掉了,已整轮撤回(原因在下面「改稿记录」)。${rc.auto_pick ? '下面的改法已经按 AI 找到的原因换过;' : ''}不换改法直接点「AI 改一轮」,AI 会先找掉分的原因、换改法再改。</div>`);
+  if (rc && !rc.verdict) pre.push(`<div class="rv-flag v13"><b>这一轮复审没读到结论</b>${rc.refused ? '(模型拒绝复审,换了说法也没给' + (rc.raw_log ? ';原文在 data/logs/' + esc(rc.raw_log) : '') + ')' : ''}:稿子已经按这一轮改了,但不知道改得好不好。<button class="an-btn v13" onclick="rvRecheckOnly()" ${busy ? 'disabled' : ''}>重新复审这一版</button> <span class="hint">只复审,不改稿,一般 2–3 分钟</span></div>`);
+  if (st.patch_reverted && rc && (rc.reverted || []).length) pre.push(`<div class="hint v13" style="color:#b45309;margin-top:6px">上一轮改完反而变差了,已整轮撤回(原因在下面「改稿记录」)。${rc.auto_pick ? '下面的改法已经按 AI 找到的原因换过;' : ''}不换改法直接点「AI 改一轮」,AI 会先找改差的原因、换改法再改。</div>`);
   if (open.length) pre.push(rvPatchOptsBar(rc, busy));
   else if (rc) pre.push(rvPatchHtml(v, busy, true));
   const fx = p.fix || {};
@@ -3533,7 +3537,7 @@ function rvGroupsHtml(v, p, busy) {
   const minorHtml = minor.length ? `<details class="rv-md-box v13" style="margin-top:10px"><summary>其他 ${minor.length} 个小问题(不挡发布;「AI 改一轮」会按选中的改法顺手改,不想改就选「这个不改」)</summary>${minor.join('')}</details>` : '';
   return pre.join('') + groups + rvIgnoredHtml(p, v) + minorHtml + (open.length ? rvPatchNote(rc, busy) : '');
 }
-const RV_IGNORABLE = ['hard_open', 'ledger', 'thesis', 'claim', 'listen_open', 'listen_dense', 'listen_register', 'listen_other', 'residue', 'pov', 'weak_claims'];
+const RV_IGNORABLE = ['hard_open', 'ledger', 'thesis', 'claim', 'listen_open', 'listen_dense', 'listen_register', 'listen_other', 'residue', 'pov', 'weak_claims', 'open_fact'];
 // 你点了「忽略」的项:和上面的项一样一行一个(灰底),可以点开看下面的问题,右边「取消忽略」
 function rvIgnoredHtml(p, v) {
   const busy = !!v.running;
@@ -3692,19 +3696,23 @@ async function rvAcceptFact(id, on) {
 function rvAutoLogHtml(v, p) {
   const lg = (v.final || {}).auto_log;
   const fmtAvg = x => (x == null ? '—' : Math.round(x * 10) / 10);
+  // v1.95 记录里存的是「还剩几个关键/结构问题」;老记录是平均分
+  const chg = (o, a, b) => o['left_' + a] !== undefined || o['left_' + b] !== undefined
+    ? '关键/结构问题 ' + (o['left_' + a] == null ? '—' : o['left_' + a]) + ' → ' + (o['left_' + b] == null ? '—' : o['left_' + b]) + ' 个'
+    : '复审平均 ' + fmtAvg(o['avg_' + a]) + ' → ' + fmtAvg(o['avg_' + b]) + ' 分';
   const itemsHtml = items => (items || []).map(x => `<div style="margin:3px 0 3px 8px">· <b>${esc(x.id)}</b>${x.level ? '(' + esc(x.level) + ')' : ''}${x.chapter ? ' ' + esc(x.chapter) : ''}${x.program ? ' <span class="hint">程序查出</span>' : ''}:${esc(String(x.problem || '').slice(0, 160))}<br><span style="margin-left:14px;color:#047857">→ 改法:${esc(String(x.how || '').slice(0, 160))}</span></div>`).join('');
-  const rvRoundHtml = r => `<div style="margin-top:6px"><b>第 ${r.n} 轮</b>:${r.status === 'reverted' ? '改完分数反而低了,已退回改之前的稿子' : r.status === 'failed' ? '没改成(' + esc(r.error || '') + ')' : '改了 ' + (r.edits || 0) + ' 处,复审平均 ' + fmtAvg(r.avg_before) + ' → ' + fmtAvg(r.avg_after) + ' 分' + (r.verdict ? ',复审结论「' + esc(r.verdict) + '」' : '') + (r.left != null ? ',复审还列了 ' + r.left + ' 个问题' : '')}${itemsHtml(r.items)}</div>`;
-  const claimFixText = c => c.error && !c.edits ? '没改成(' + esc(c.error) + ')' : c.reverted ? '改完分数掉得太多,已退回' : '改了 ' + (c.edits || 0) + ' 处' + (c.before ? ',论点核对的关键问题 ' + c.before.issues + ' → ' + (c.after ? c.after.issues : '?') + ' 个' : '') + ',复审平均 ' + fmtAvg(c.avg_before) + ' → ' + fmtAvg(c.avg_after) + ' 分' + (c.avg_before != null && c.avg_after != null && c.avg_after < c.avg_before - 0.25 ? '(为了把账改对,分数先掉了,后面会接着补改)' : '');
+  const rvRoundHtml = r => `<div style="margin-top:6px"><b>第 ${r.n} 轮</b>:${r.status === 'reverted' ? '改完反而变差了,已退回改之前的稿子' : r.status === 'failed' ? '没改成(' + esc(r.error || '') + ')' : '改了 ' + (r.edits || 0) + ' 处,' + chg(r, 'before', 'after') + (r.verdict ? ',复审结论「' + esc(r.verdict) + '」' : '') + (r.left != null ? ',复审还列了 ' + r.left + ' 个问题' : '')}${itemsHtml(r.items)}</div>`;
+  const claimFixText = c => c.error && !c.edits ? '没改成(' + esc(c.error) + ')' : c.reverted ? '改完程序体检变差了,已退回' : '改了 ' + (c.edits || 0) + ' 处' + (c.before ? ',论点核对的关键问题 ' + c.before.issues + ' → ' + (c.after ? c.after.issues : '?') + ' 个' : '') + ',' + chg(c, 'before', 'after');
   const running = !!v.running && (/自动补改|整理复审问题|出好后自动补改/.test(v.running) || (lg && lg.status === 'running'));
   if (running) {
     const stage = ((v.passes || {}).final || {}).status === 'running' ? ((v.passes || {}).final || {}).stage || '' : '';
     const cur = lg && (lg.rounds || []).slice(-1)[0];
     return `<div class="rv-flag v13 rv-autolog" style="border:2px solid #3b82f6;background:#eff6ff;color:#1e3a8a;padding:10px 12px">
       <div style="font-size:15px"><span class="rv-spin"></span> <b>AI 正在自动改稿:${esc(v.running)}${stage ? '(' + esc(stage) + ')' : ''}…</b></div>
-      <div class="hint" style="margin:4px 0">只改一轮:出改法 → 改稿 → 重新复审打分,一般 5–10 分钟;改低了会自动退回。改完就停,剩下的交给你决定。这期间可以关掉页面,跑完回来这里会用中文写改了什么、改好没有。${lg && lg.avg_start != null ? '开始时平均 ' + fmtAvg(lg.avg_start) + ' 分。' : ''}</div>
+      <div class="hint" style="margin:4px 0">只改一轮:出改法 → 改稿 → 程序体检和两版对比 → 重新复审,一般 5–10 分钟;改差了会自动退回。改完就停,剩下的交给你决定。这期间可以关掉页面,跑完回来这里会用中文写改了什么、改好没有。${lg && lg.left_start != null ? '开始时还剩 ' + lg.left_start + ' 个关键/结构问题。' : lg && lg.avg_start != null ? '开始时平均 ' + fmtAvg(lg.avg_start) + ' 分。' : ''}</div>
       ${cur && cur.status === 'running' ? `<div style="margin-top:4px"><b>第 ${cur.n} 轮正在改这 ${(cur.items || []).length} 个问题:</b>${itemsHtml(cur.items)}</div>` : ''}
       ${(lg && lg.claim_fixes || []).map(c => `<div class="hint">按论点核对改稿已完成:${claimFixText(c)}</div>`).join('')}
-      ${(lg && lg.rounds || []).filter(r => r.status !== 'running').map(r => `<div class="hint">第 ${r.n} 轮已完成:${r.status === 'reverted' ? '改低了,已退回' : '改了 ' + (r.edits || 0) + ' 处,平均 ' + fmtAvg(r.avg_before) + ' → ' + fmtAvg(r.avg_after)}</div>`).join('')}
+      ${(lg && lg.rounds || []).filter(r => r.status !== 'running').map(r => `<div class="hint">第 ${r.n} 轮已完成:${r.status === 'reverted' ? '改差了,已退回' : '改了 ' + (r.edits || 0) + ' 处,' + chg(r, 'before', 'after')}</div>`).join('')}
     </div>`;
   }
   if (!lg || lg.status !== 'done') return '';
@@ -3714,7 +3722,7 @@ function rvAutoLogHtml(v, p) {
   const totalEdits = okRounds.reduce((n, r) => n + (r.edits || 0), 0) + cfx.filter(c => !c.reverted && !c.error).reduce((n, c) => n + (c.edits || 0), 0);
   const verdict = p.ready ? '<b style="color:#047857">✓ 改好了,现在可以发布</b>' : '<b style="color:#b91c1c">还没完全改好</b>:' + p.reasons.map(esc).join(';');
   const head = rounds.length || cfx.length
-    ? `AI 自动改了 ${rounds.length} 轮${cfx.length ? (rounds.length ? ',另外' : '') + '按论点核对改了 ' + cfx.length + ' 次' : ''},一共改了 ${totalEdits} 处,平均 ${fmtAvg(lg.avg_start)} → ${fmtAvg(lg.avg_end)} 分`
+    ? `AI 自动改了 ${rounds.length} 轮${cfx.length ? (rounds.length ? ',另外' : '') + '按论点核对改了 ' + cfx.length + ' 次' : ''},一共改了 ${totalEdits} 处,${chg(lg, 'start', 'end')}`
     : 'AI 这次没有改稿';
   return `<details class="rv-md-box v13 rv-autolog" open style="border:1px solid ${p.ready ? '#6ee7b7' : '#fcd34d'};background:${p.ready ? '#ecfdf5' : '#fffbeb'}">
     <summary><b>AI 自动改稿结果</b>(${esc(fmtTime(lg.finished_at || lg.started_at))}):${head}</summary>
@@ -3742,7 +3750,7 @@ function rvClaimHtml(p, v, panel) {
   if (!c) return `<div class="rv-ops v13"><button class="an-btn v13" onclick="rvClaim(false)" ${busy ? 'disabled' : ''}>核对论点</button> <span class="hint">${st.status === 'failed' ? '上次核对失败:' + esc(st.error || '') + '。再点一次「核对论点」重试;' + (p.can_autofix ? '或者直接点上面「让 AI 接着改到能发布」,它会先核对论点。' : '') + '一直失败就把提示里的日志文件发给我。' : '用稿子自己的数字检验开头的主张和账本(新终审会自动做)'}</span></div>`;
   // 每次改稿:稿子改没改、复审几分、改完核对的结果,分开说清楚
   const fixes = (c.fixes || []).map(f => {
-    const did = (f.patched || f.after) ? `稿子改了${f.edits ? ' ' + f.edits + ' 处' : ''}${f.avg != null ? ',改完复审平均 ' + f.avg + ' 分' : ''}` : '稿子没改';
+    const did = (f.patched || f.after) ? `稿子改了${f.edits ? ' ' + f.edits + ' 处' : ''}${f.left != null ? ',改完还剩 ' + f.left + ' 个关键/结构问题' : f.avg != null ? ',改完复审平均 ' + f.avg + ' 分' : ''}` : '稿子没改';
     const res = f.error ? esc(f.error) : f.after ? (f.after.verdict === '不成立' || f.after.issues ? '重新核对还有问题' : '重新核对通过') : '';
     return `<li>${esc(fmtTime(f.at))} ${f.by === 'auto' ? '自动' : '手动'}改稿:${did}${res ? ';' + res : ''}</li>`;
   }).join('');
@@ -3834,7 +3842,7 @@ function rvPatchHtml(v, busy, panel) {
   const autoNow = /自动补改/.test(v.running || '');
   const err = (st.patch_error ? `<div class="err-list">上次补改没成功:${esc(st.patch_error)}</div>` : '')
     // 最后一轮复审没读到分数(旧版本会把这样的稿子存成终稿):给个按钮只重新复审
-    + (!running && !Object.values(rc.scores || {}).some(x => typeof x === 'number') ? `<div class="rv-flag v13"><b>这一轮复审没读到分数和结论</b>${rc.refused ? '(模型拒绝打分,换了说法也没给' + (rc.raw_log ? ';原文在 data/logs/' + esc(rc.raw_log) : '') + ')' : ''}:稿子已经按这一轮改了,但不知道改得好不好。<button class="an-btn v13" onclick="rvRecheckOnly()" ${busy ? 'disabled' : ''}>重新复审这一版</button> <span class="hint">只复审,不改稿,一般 2–3 分钟</span></div>` : '');
+    + (!running && !rc.verdict ? `<div class="rv-flag v13"><b>这一轮复审没读到结论</b>${rc.refused ? '(模型拒绝复审,换了说法也没给' + (rc.raw_log ? ';原文在 data/logs/' + esc(rc.raw_log) : '') + ')' : ''}:稿子已经按这一轮改了,但不知道改得好不好。<button class="an-btn v13" onclick="rvRecheckOnly()" ${busy ? 'disabled' : ''}>重新复审这一版</button> <span class="hint">只复审,不改稿,一般 2–3 分钟</span></div>` : '');
   const rv = (rc.reverted || []).slice(-1)[0];
   const revFlag = st.patch_reverted && rv ? rvRevertHtml(rc, rv, busy, panel) : '';
   if (rc.verdict !== '未达标' && !running && !(rc.open || []).length) return err + revFlag;
@@ -3844,15 +3852,15 @@ function rvPatchHtml(v, busy, panel) {
     const ph = `<div class="an-sec v13">逐条问题和改法(复审 ${(rc.open || []).length} 条)</div>`;
     if (!(rc.open || []).length) return ph + err + `<div class="rv-ops v13"><button class="an-btn v13" onclick="rvPatchExtract()" ${busy || ext.status === 'running' ? 'disabled' : ''}>${ext.status === 'running' ? '正在整理…' : '从复审报告里整理没解决的问题'}</button>
       <span class="hint">${ext.status === 'failed' ? '整理失败:' + esc(ext.error || '') : '这份复审报告没有现成的问题清单,先让 AI 整理一下(只读报告,不改稿)。'}</span></div>${ext.status === 'done' ? rvPatchForm(rc, busy, true) : ''}`;
-    return ph + err + (revFlag ? `<div class="hint v13" style="color:#b45309">上一轮改完分数掉了,已整轮撤回。${rc.auto_pick ? '下面的改法已经按 AI 找到的原因换过;' : ''}不换改法直接点「AI 改一轮」,AI 会先找掉分的原因、换改法再改。</div>` : '') + rvPatchForm(rc, busy, true);
+    return ph + err + (revFlag ? `<div class="hint v13" style="color:#b45309">上一轮改完反而变差了,已整轮撤回。${rc.auto_pick ? '下面的改法已经按 AI 找到的原因换过;' : ''}不换改法直接点「AI 改一轮」,AI 会先找改差的原因、换改法再改。</div>` : '') + rvPatchForm(rc, busy, true);
   }
   const head = `<div class="an-sec v13">按复审意见再改一轮${rc.verdict === '未达标' ? '(复审没达标)' : ''}</div>
     <div class="hint v13">以现在的终稿为底,AI 给每个问题出了几种改法并标了推荐,你选好后只按选中的方式改,改完自动再复审一次。不会从二稿重来,其他句子不动。标「结构」的问题会把那一章整章重写。</div>
     ${rc.auto && rc.diagnosis ? `<div class="rv-flag v13" style="border-color:#86efac;background:#f0fdf4"><b>这一版是 AI 自动重试出来的</b>:之前的补改把分改低、被退回了 ${esc(rc.reverted_before || 1)} 次,AI 找到原因(${esc(rc.diagnosis.cause || '')})后换了改法重试,这次没掉分。${rvDiagList(rc.diagnosis)}</div>` : ''}
     ${rc.auto_round ? `<div class="rv-flag v13" style="border-color:#86efac;background:#f0fdf4"><b>这一版是 AI 自动补改出来的(第 ${esc(rc.auto_round)} 轮)</b>:平均分不到 8 分,AI 按每个问题 ★ 推荐的改法自己改了一轮,改完复审没掉分才换上。</div>` : ''}
     ${fin.auto_patch_stop && !running && !autoNow ? `<div class="hint v13">AI 自动补改停了:${esc(fin.auto_patch_stop)}。剩下的问题想改,选好改法后点下面的按钮。</div>` : ''}
-    ${((v.summary || {}).publish || {}).good ? `<div class="hint v13" style="color:#047857">平均已经 ${esc(v.summary.publish.avg)} 分,不用再整篇补改;下面的问题想改再改,开头没过就点上面的「自动改开头」。</div>` : ''}
-    ${rc.stalled ? '<div class="rv-flag v13"><b>上一轮分数没涨</b>:剩下的问题逐句改不动了,再补改也一样。要么给「结构」类问题选一种改法让 AI 整章重写,要么看看是不是框架和题目对不上(换框架或换题),或者按上面的「可发布」标准判断直接发。</div>' : ''}`;
+    ${((v.summary || {}).publish || {}).good ? `<div class="hint v13" style="color:#047857">复审已经判能发,不用再整篇补改;下面的问题想改再改,开头没过就点上面的「自动改开头」。</div>` : ''}
+    ${rc.stalled ? '<div class="rv-flag v13"><b>剩下的问题和上一轮基本一样</b>:逐句改不动了,再补改也一样。要么给「结构」类问题选一种改法让 AI 整章重写,要么看看是不是框架和题目对不上(换框架或换题),或者按上面的「可发布」标准判断直接发。</div>' : ''}`;
   if (running) return head + `<div class="rv-flag v13"><b>${autoNow ? 'AI ' + esc(v.running) : '补改'}进行中(${esc(st.stage || '')})</b>:一般几分钟,跑完自动刷新终稿和评分。${autoNow ? '平均分不到 8 分,AI 按推荐改法自动在改,不用点。' : ''}</div>`;
   if (!(rc.open || []).length) {
     return head + err + revFlag + `<div class="rv-ops v13"><button class="an-btn v13" onclick="rvPatchExtract()" ${busy || ext.status === 'running' ? 'disabled' : ''}>${ext.status === 'running' ? '正在整理…' : '从复审报告里整理没解决的问题'}</button>
@@ -3874,15 +3882,18 @@ function rvRevertHtml(rc, rv, busy, panel) {
   const auto = list.filter(t => t.auto).length;
   const nx = rv.next;
   const stopped = nx && nx.retry === false;
-  const tries = list.map(t => t.before + '→' + t.after).join('、');
+  // v1.95 退回原因:程序体检哪项变差,或两版盲比选了改前(老记录是分数 before → after)
+  const whyOf = t => t.judge ? (t.judge.by === 'compare' ? '两版对比判改前更好' + (t.judge.why ? ':' + t.judge.why : '') : t.judge.why || '程序体检变差') : (t.before != null ? '分数 ' + t.before + ' → ' + t.after : '');
+  const tries = list.map(whyOf).filter(Boolean).join('、');
   const fromFinal = list[0] && list[0].from === '终审';
+  const leave = rv.judge && rv.judge.leave_after ? `<div class="hint">改后那版观众可能在这句走:「${esc(rv.judge.leave_after)}」</div>` : '';
   const head = auto
-    ? `<b>${fromFinal ? '终审后面几轮的修改' : '补改'}把分数改低了,AI 已经自动找原因、换改法重试了 ${auto} 次,还是掉分(${esc(tries)}),都已退回,终稿没有换</b>`
-    : fromFinal ? `<b>终审第 ${esc(list[0].round)} 轮复审比上一轮分数低(${list[0].before} → ${list[0].after}),终稿已退回到上一轮复审看到的稿子</b>(上一轮复审之后的修改没有采用)`
-    : `<b>补改把分数改低了(${rv.before} → ${rv.after}),已退回,终稿没有换</b>`;
+    ? `<b>${fromFinal ? '终审后面几轮的修改' : '补改'}把稿子改差了,AI 已经自动找原因、换改法重试了 ${auto} 次,还是改差(${esc(tries)}),都已退回,终稿没有换</b>`
+    : fromFinal ? `<b>终审第 ${esc(list[0].round)} 轮按复审改完反而变差(${esc(whyOf(list[0]))}),终稿已退回到这一轮复审看到的稿子</b>(这一轮复审之后的修改没有采用)`
+    : `<b>补改把稿子改差了(${esc(whyOf(rv))}),已退回,终稿没有换</b>`;
   const steps = list.map((t, i) => t.diagnosis ? `<div class="hint">第 ${i + 1} 次前 AI 找的原因:${esc(t.diagnosis.cause || '(没写)')}</div>${rvDiagList(t.diagnosis)}` : '').join('');
   const why = stopped ? `<div class="hint"><b>停下来了:${esc(nx.stop || 'AI 判断不值得再试')}</b>。AI 找的原因:${esc(nx.cause || '')}</div>` : nx ? `<div class="hint">最后一次 AI 找的原因:${esc(nx.cause || '')}</div>` : '';
-  return `<div class="rv-flag v13">${head}。${steps}${why}
+  return `<div class="rv-flag v13">${head}。${leave}${steps}${why}
     ${panel ? '' : `<div class="rv-ops"><button class="an-btn v13" onclick="rvPatchAuto()" ${busy ? 'disabled' : ''}>让 AI 找原因、换改法再自动试</button>
     <span class="hint">不用自己挑问题。也可以不再补改,按上面「可发布」标准判断现在的终稿能不能直接用。下面的改法已经按 AI 最后一次的判断选好。</span></div>`}
     <details><summary class="hint">看最后一次补改改了什么和复审报告</summary>${(rv.structural || []).filter(x => x.ok).length ? `<div class="hint">整章重写了:${(rv.structural || []).filter(x => x.ok).map(x => esc(x.chapter)).join('、')}</div>` : ''}${(rv.edits || []).map(e => `<div class="hint">[${esc(e.chapter || '')}]${e.category ? '[' + esc(e.category) + ']' : ''} ${esc(e.old)} → ${esc(e.new || '(删除)')}</div>`).join('')}<div class="hint" style="white-space:pre-wrap;margin-top:6px">${esc(rv.report || '')}</div></details></div>`;
@@ -4302,7 +4313,7 @@ function trackRulesHtml(t, compact) {
     trSec('论点卡长什么样', t.thesis_fields.map(f => '<div style="font-size:13px">· ' + esc(f.label) + ' <span class="hint" style="margin:0">' + esc(f.key) + '</span></div>').join('') + '<div class="hint">' + esc(t.thesis_note) + '</div>', true) +
     trSec('默认口气(没设频道声音时用)', trVoiceHtml(t.voices), true) +
     trSec('写法规则(' + t.rules.length + ' 条,其中要求 ' + t.rules.filter(r => r.must).length + ' 条)', trRulesHtml(t.rules, false), false) +
-    trSec('终审怎么打分(七项,每项 0–10 分)', t.dims.map(d => '<div style="font-size:13px">· ' + esc(d) + '</div>').join('') + '<div style="margin-top:6px;font-size:13px"><b>' + esc(t.dim4_name) + ' 查什么:</b><br>' + trNl(t.dim4) + '</div>', false) +
+    trSec('终审看哪七个方面(不打分,只列问题)', t.dims.map(d => '<div style="font-size:13px">· ' + esc(d) + '</div>').join('') + '<div style="margin-top:6px;font-size:13px"><b>' + esc(t.dim4_name) + ' 查什么:</b><br>' + trNl(t.dim4) + '</div>', false) +
     trSec('去 AI 味时要保住的 / 重点改的', '<div style="font-size:13px"><b>要保住:</b><br>' + trNl(t.deai_protect) + '<br><b>重点改:</b><br>' + trNl(t.deai_focus) + '</div>', false) +
     trSec('写前分析要找哪些资料', t.card ? trNl(t.card) : '<span class="hint">(无)</span>', false);
 }
@@ -5950,6 +5961,16 @@ const BP_PLAIN = {
   '硬套': '有原片的东西(头衔、制度、器物、例子)被硬塞进这个题,或者主角做了这个题里做不到的事。',
   '删除是否成立': '删掉的段其实有素材能写,删了会少一个看点。'
 };
+// v1.95 蓝图审基本通过时,没过的是哪几项;后面谁接住
+const BP_SOFT_NAME = { progression: '「递进」', facts: '「事实支撑」' };
+function bpSoftNames(rv) {
+  const ks = (rv.soft_keys || []).length ? rv.soft_keys : ['progression'];
+  return ks.map(k => BP_SOFT_NAME[k] || k).join('、');
+}
+function bpLaterHtml(rv) {
+  const xs = (rv.later_zh || []).filter(Boolean);
+  return xs.length ? '<div style="margin-top:4px;color:#047857">' + xs.map(esc).join('<br>') + '</div>' : '';
+}
 function bpPlain(rv, i) {
   if ((rv.plain_zh || [])[i]) return rv.plain_zh[i];
   const it = (rv.items || []).filter(x => !x.pass)[i];
@@ -6235,7 +6256,7 @@ function renderBlueprintPanel(r) {
   const chip = !rv ? '<span class="bp-chip run">蓝图审还没跑</span>'
     : rv.status === 'running' ? '<span class="bp-chip run">蓝图审中…</span>'
     : rv.status === 'passed' ? `<span class="bp-chip ok">蓝图审通过${rv.revised ? '(AI 按意见改了 ' + rv.revised + ' 次)' : ''}</span>`
-    : rv.status === 'passed_soft' ? '<span class="bp-chip ok">蓝图审基本通过(只剩「递进」,已接着写)</span>'
+    : rv.status === 'passed_soft' ? '<span class="bp-chip ok">蓝图审基本通过(没过的只有' + esc(bpSoftNames(rv)) + ',后面会处理,已接着写)</span>'
     : `<span class="bp-chip bad">蓝图审没通过${rv.override ? ' · 你选了仍然写' : ''}</span>`;
   let html = `<h2>① 蓝图(按功能重排)${chip}</h2>`;
   if (v.outline_picked) html += `<div class="hint" style="margin:-4px 0 8px">${v.outline_diff ? '<b>和你选论点时看到的大纲不一样的地方:</b>' + esc(v.outline_diff) : '照你选论点时看到的「整篇大概会这样讲」排的,没有改动。'}</div>`;
@@ -6246,7 +6267,7 @@ function renderBlueprintPanel(r) {
     const sug = (rv.retopic || []);
     html += `<div class="bp-hold"><h3>⛔ 蓝图审没通过,已经停下,稿子还没开始写</h3>
       <div style="font-size:13px">AI 按审的意见改了 ${rv.revised || 0} 次蓝图,下面这几项还是不过。照这份蓝图写,这些问题多半会出现在稿子里:</div>
-      <ul>${(rv.reasons_zh || []).map((x, i) => '<li>' + (bpPlain(rv, i) ? '<b>大白话:' + esc(bpPlain(rv, i)) + '</b><br><span style="color:#4b5563">' + esc(x) + '</span>' : esc(x)) + '</li>').join('')}</ul>
+      <ul>${(rv.reasons_zh || []).map((x, i) => '<li>' + (bpPlain(rv, i) ? '<b>大白话:' + esc(bpPlain(rv, i)) + '</b><br><span style="color:#4b5563">' + esc(x) + '</span>' : esc(x)) + ((rv.later_zh || [])[i] ? '<div style="color:' + (/^后面会处理/.test(rv.later_zh[i]) ? '#047857' : '#92400e') + ';font-size:13px;margin-top:2px">' + esc(rv.later_zh[i]) + '</div>' : '') + '</li>').join('')}</ul>
       ${rv.summary ? `<div style="font-size:13px">审稿结论:${esc(rv.summary)}</div>` : ''}
       <div style="font-size:13px;margin-top:6px">选一个:</div>
       <div class="bp-choices">
@@ -6261,7 +6282,7 @@ function renderBlueprintPanel(r) {
       ${sug.length ? `<div class="hint">AI 建议的新题目:${sug.map(esc).join(' / ')}(下拉可选)</div>` : ''}
       <div class="hint">改题目、换框架都会回到写前分析重新做,这份蓝图和蓝图审记录会留在任务记录里。</div>`}</div>`;
   }
-  if (rv && rv.status === 'passed_soft') html += `<div class="hint" style="color:#92400e;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:8px 10px;margin:6px 0"><b>大白话:有几章讲的东西有点重复,问题不大,没停下来,已经接着写稿。</b>写稿时已提醒 AI 这几处别重讲:${(rv.soft_notes || []).map(esc).join(';')}</div>`;
+  if (rv && rv.status === 'passed_soft') html += `<div class="hint" style="color:#92400e;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:8px 10px;margin:6px 0"><b>大白话:没过的这几项后面的步骤能接住,所以没停下来,已经接着写稿。</b>${(rv.soft_notes || []).length ? '<div style="margin-top:4px">重复:写稿时已提醒 AI 这几处别重讲:' + rv.soft_notes.map(esc).join(';') + '</div>' : ''}${(rv.soft_facts || []).length ? '<div style="margin-top:4px">事实支撑弱:写稿时已提醒 AI 只用事实表里的数,待查的当估算讲:' + rv.soft_facts.map(esc).join(';') + '</div>' : ''}${bpLaterHtml(rv)}</div>`;
   if (rv && (rv.items || []).length) {
     const prob = p => `<div><span class="bp-by">${esc(p.by)}</span>${p.chapter && !String(p.text).startsWith(p.chapter) ? esc(p.chapter) + ' ' : ''}${esc(p.text)}${p.fix ? `<div class="hint" style="margin:0 0 0 4px">改法:${esc(p.fix)}</div>` : ''}</div>`;
     html += `<table class="bp-tbl"><tr><th>审的项</th><th>结果</th><th>问题</th></tr>${rv.items.map(it => `<tr><td style="white-space:nowrap">${esc(it.name)}</td><td>${it.pass ? '<span class="bp-ok">✓ 通过</span>' : '<span class="bp-bad">✗ 不过</span>'}</td><td>${!it.pass && (it.plain || BP_PLAIN[it.name]) ? `<div style="margin-bottom:4px"><b>大白话:${esc(it.plain || BP_PLAIN[it.name])}</b></div>` : ''}${(it.problems || []).map(prob).join('') || '<span class="hint">—</span>'}${(it.notes || []).length ? `<details><summary style="font-weight:400" class="hint">参考 ${it.notes.length} 条(程序提示 / AI 认为不算问题)</summary>${it.notes.map(prob).join('')}</details>` : ''}</td></tr>`).join('')}</table>`;
