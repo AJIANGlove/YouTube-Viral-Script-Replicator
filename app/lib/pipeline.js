@@ -192,12 +192,34 @@ function fillTemplate(tpl, ctx, tools) {
 // anthropic/openai 协议、omit_temperature(模型拒收或官方固定 temperature)、use_max_completion_tokens(如 Kimi K3 的长度字段);
 // 默认流式(stream:true,两种协议同名字段),opts.stream === false 时关闭(连通性探测保持非流式)
 const noUsageHosts = new Set(); // 拒收 stream_options 的渠道(按 base_url),这次进程里不再带
+// v1.102 提示缓存:每次都一样的前半段(cachePrefix)单独成块、打 cache_control,后面不一样的部分另起一块。
+// 只对 anthropic 协议加(openai 协议的渠道按前缀自动缓存,不用标记)。渠道不认这个标记(400)就去掉重发,这次进程里不再带
+const noCacheHosts = new Set();
+const CACHE_MIN_CHARS = 2000; // 太短的前缀缓存不了(模型有最小长度),不打标记
+function withCache(messages, prefix) {
+  if (!prefix || String(prefix).length < CACHE_MIN_CHARS) return { messages, used: false };
+  let used = false;
+  const out = messages.map(m => {
+    if (used || m.role !== 'user' || typeof m.content !== 'string' || !m.content.startsWith(prefix)) return m;
+    used = true;
+    const rest = m.content.slice(prefix.length);
+    const content = [{ type: 'text', text: prefix, cache_control: { type: 'ephemeral' } }];
+    if (rest) content.push({ type: 'text', text: rest });
+    return { ...m, content };
+  });
+  return { messages: out, used };
+}
 function buildRequest(cfg, messages, opts) {
   const isAnthropic = cfg.protocol === 'anthropic';
   const url = cfg.base_url.replace(/\/+$/, '') + (isAnthropic ? '/v1/messages' : '/v1/chat/completions');
   const headers = { 'Content-Type': 'application/json' };
   if (isAnthropic) { headers['x-api-key'] = cfg.api_key; headers['anthropic-version'] = '2023-06-01'; }
   else headers['Authorization'] = 'Bearer ' + cfg.api_key;
+  let cached = false;
+  if (isAnthropic && opts && opts.cachePrefix && !cfg.no_cache && !noCacheHosts.has(cfg.base_url)) {
+    const w = withCache(messages, opts.cachePrefix);
+    messages = w.messages; cached = w.used;
+  }
   const body = { model: cfg.model, messages };
   if (!opts || opts.stream !== false) body.stream = true;
   // v1.85:openai 协议流式默认不带用量,要 stream_options.include_usage 才在最后一帧给;渠道不认这个参数时自动去掉(见 llmCall)
@@ -205,7 +227,7 @@ function buildRequest(cfg, messages, opts) {
   if (!isAnthropic && cfg.use_max_completion_tokens) body.max_completion_tokens = cfg.max_tokens || 8192; // 守卫:仅 openai 协议渠道适用,防标记误配到 anthropic 渠道
   else body.max_tokens = cfg.max_tokens || 8192;
   if (!cfg.omit_temperature) body.temperature = cfg.temperature ?? 0.7; // 渠道标记 omit_temperature 时省略该字段
-  return { isAnthropic, url, headers, body };
+  return { isAnthropic, url, headers, body, cached };
 }
 
 // 传输层:POST JSON 并读完整响应文本(基于 node:http/https,零依赖)。
@@ -312,7 +334,9 @@ function isRetryable(e) {
 // opts.fastFailEmpty:空响应不做 4 次原地重试(每次白等约 90 秒),第一轮就抛给上层降级(拆小请求/换提示)
 async function llmCall(cfg, messages, label, opts) {
   const o = opts || {};
-  const { isAnthropic, url, headers, body } = buildRequest(cfg, messages);
+  const built = buildRequest(cfg, messages, o.cachePrefix ? { cachePrefix: o.cachePrefix } : undefined);
+  const { isAnthropic, url, headers } = built;
+  let body = built.body;
 
   let lastErr;
   let attempts = 0;
@@ -328,6 +352,13 @@ async function llmCall(cfg, messages, label, opts) {
         noUsageHosts.add(cfg.base_url);
         delete body.stream_options;
         resp = await postJson(url, headers, body, LLM_IDLE_TIMEOUT_MS);
+      }
+      // v1.102:带了缓存标记被渠道 400 拒了,去掉标记(内容原样)再发一次;不带能过,以后这个渠道都不带
+      if (resp.status === 400 && built.cached && !noCacheHosts.has(cfg.base_url)) {
+        const plain = buildRequest(cfg, messages, undefined).body;
+        const resp2 = await postJson(url, headers, plain, LLM_IDLE_TIMEOUT_MS);
+        if (resp2.status >= 200 && resp2.status < 300) { noCacheHosts.add(cfg.base_url); body = plain; }
+        resp = resp2;
       }
       if (resp.status < 200 || resp.status >= 300) {
         dumpLlmFailure('http', { label, model: cfg.model, status: resp.status, secs: Math.round(secs()) }, resp.text);
@@ -506,7 +537,7 @@ async function runScriptByChapters(opts) {
       let r2;
       try {
         // fastFailEmpty:首轮空响应立即抛回(保留 kind),由下面短退避后换提示重发,不原地白等 4×90 秒
-        r2 = await callLlm(msg, 'Step 2 ' + id + (attempt > 1 ? ' 重试' + (attempt - 1) : ''), { allowPartial: true, fastFailEmpty: true });
+        r2 = await callLlm(msg, 'Step 2 ' + id + (attempt > 1 ? ' 重试' + (attempt - 1) : ''), { allowPartial: true, fastFailEmpty: true, cachePrefix: basePrompt });
       } catch (e) {
         lastErr = e;
         // 空响应=上游只回 ping、不产出 token(坏节点)。5s/15s 短退避后换「别思考、直接写」的提示重发,最多 3 次机会
@@ -525,7 +556,7 @@ async function runScriptByChapters(opts) {
           { role: 'user', content: basePrompt + brief },
           { role: 'assistant', content: text },
           { role: 'user', content: '上面的正文在第 ' + Math.round(r2.secs) + ' 秒处被渠道中断。请从中断处继续写完本章剩余正文:不要重写标签行,不要重复已经写过的句子,直接接着写。' }
-        ], 'Step 2 ' + id + ' 续写', { allowPartial: true, fastFailEmpty: true });
+        ], 'Step 2 ' + id + ' 续写', { allowPartial: true, fastFailEmpty: true, cachePrefix: basePrompt });
         used += r3.secs || 0;
         text = text + '\n' + r3.content.trim();
       }
@@ -1216,4 +1247,4 @@ async function runGeneration(runId) {
 }
 
 module.exports = { STEP_CHANNELS, stepChannelValue, loadStepConfig, gptChannel, onlyPings, STALL_MIN_SECS, lengthCheck, todayStr, loadConfig, saveConfig, resolveProvider, normalizeModels, loadTweakConfig, buildRequest, postJson, probeProvider, runGeneration, fillTemplate, loadTemplates, llmCall, parseSSE, isRetryable,
-  CHAPTER_SPLIT_MIN_WORDS, bpChaptersOf, bpWordBudget, chapterTagLine, extractChapterBlock, runScriptByChapters, dumpLlmFailure };
+  CHAPTER_SPLIT_MIN_WORDS, withCache, noCacheHosts, bpChaptersOf, bpWordBudget, chapterTagLine, extractChapterBlock, runScriptByChapters, dumpLlmFailure };
