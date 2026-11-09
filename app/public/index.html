@@ -3031,6 +3031,7 @@ function rvDraw() {
       ${rvState.err ? `<div class="err-list">${esc(rvState.err)}</div>` : ''}
       ${rvState.tab === 'd2' ? rvFactHtml(v.factcheck, v.translating) : ''}
       ${rvState.tab === 'd2' ? rvInfoDraftHtml(v.info_draft) : ''}
+      ${rvState.tab === 'd3' ? rvInfoStatusHtml(v) : ''}
       ${rvState.tab === 'd3' && v.revision ? rvRevisionHtml(v.revision, v.translating) : rvDiffHtml(diffs.find(d => d.key === rvState.tab), v.translating)}`;
     return;
   }
@@ -3789,6 +3790,22 @@ function rvInfoDetail(x, busy) {
     ${row('问题在哪:', pl.problem, '#b91c1c')}${row('怎么改:', pl.fix, '#1d4ed8')}${row('不改会怎样:', pl.impact)}${row('改了有什么风险:', pl.risk, '#92400e')}
     <div class="hint" style="margin:3px 0">AI 出改法时:观点、论点本身不删,第一次讲透的地方不动,只改这一处;压掉的字数用这一章已有内容的细节补,不加新事实、新数字;出好后你看过原句 → 改成再点「直接应用」,改错了可以撤回。</div>
     ${rvApplyHtml('info', x, busy)}</div>`;
+}
+// v1.104 终审页一直有一行「信息重复检查」:老任务(v1.104 以前终审的)没查过,点一下就查;全部处理完后也能再查
+function rvInfoStatusHtml(v) {
+  if (!v || !v.final) return '';
+  const ic = v.final.info_check;
+  const open = ((ic || {}).problems || []).filter(x => !x.applied && !x.ignored && !x.gone).length;
+  if (open) return ''; // 有没处理的,在「还不能发布」的「信息重复」里显示(那里有重新检查按钮)
+  const st = (v.passes || {}).info_check || {};
+  const running = st.status === 'running';
+  const busy = !!(v.running || v.busy);
+  const msg = running ? '<span class="rv-spin"></span> 正在按终稿查重讲、缺回顾…(一般 1–2 分钟)'
+    : st.status === 'failed' ? '上次没查成:' + esc(st.error || '')
+    : ic ? '查过了(' + esc(fmtTime(ic.at)) + '):' + (((ic.problems || []).length) ? '查出的问题都处理完了' : '没查出重讲、缺回顾、双重总结')
+    : '这篇终审时还没有这项检查。点右边查一次(调一次 AI,读一遍全文)';
+  const btn = running ? '' : `<button class="an-btn" style="font-size:12px;padding:0 8px" onclick="rvInfoRecheck()" ${busy ? 'disabled' : ''}>${ic ? '重新检查' : '查一次'}</button>`;
+  return `<div class="hint" style="margin:6px 0;font-size:13px"><b>信息重复检查</b>:${msg} ${btn}</div>`;
 }
 async function rvInfoRecheck() {
   try { await rvPost('info_check', {}); } catch (e) { alert(e.message); return; }
