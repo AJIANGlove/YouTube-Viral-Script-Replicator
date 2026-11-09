@@ -23,13 +23,22 @@ function addTo(b, u) {
 }
 // 记一次调用:run.usage = { total, steps: { 步骤: {...} }, since }
 // tag(v1.99):这次调用不是主流程的模型时,步骤名后面加「 · 模型名」,按渠道分开统计(单价不一样)
-function record(run, label, u, tag) {
-  if (!run || !u) return;
+// secs(v1.101):这次调用花了几秒(成功、失败都算),按步骤累加,页面上「每一步花了多久」用
+function record(run, label, u, tag, secs) {
+  const s = Number(secs) > 0 ? Number(secs) : 0;
+  if (!run || (!u && !s)) return;
   const us = run.usage && typeof run.usage === 'object' ? run.usage : (run.usage = { since: new Date().toISOString(), total: ZERO(), steps: {} });
   us.total = us.total || ZERO(); us.steps = us.steps || {};
   const k = stepOf(label) + (tag ? ' · ' + tag : '');
-  addTo(us.total, u);
-  addTo(us.steps[k] = us.steps[k] || ZERO(), u);
+  const b = us.steps[k] = us.steps[k] || ZERO();
+  if (u) { addTo(us.total, u); addTo(b, u); }
+  if (s) {
+    us.total.secs = Math.round(((us.total.secs || 0) + s) * 10) / 10;
+    b.secs = Math.round(((b.secs || 0) + s) * 10) / 10;
+    b.timed = (b.timed || 0) + 1;
+    b.max_secs = Math.max(b.max_secs || 0, s);
+    b.last_at = new Date().toISOString();
+  }
 }
 // 同一任务在内存和盘上各有一份时,取记得多的那份(两路调用同时跑时不互相盖掉)
 function newer(a, b) {
@@ -45,6 +54,7 @@ function merge(run, other, prefix) {
     const key = (prefix || '') + k;
     const t = us.steps[key] = us.steps[key] || ZERO();
     ['calls', 'in', 'out', 'cache_read', 'cache_write', 'est_calls'].forEach(f => { t[f] += b[f] || 0; us.total[f] += b[f] || 0; });
+    if (b.secs) { t.secs = Math.round(((t.secs || 0) + b.secs) * 10) / 10; t.timed = (t.timed || 0) + (b.timed || 0); t.max_secs = Math.max(t.max_secs || 0, b.max_secs || 0); us.total.secs = Math.round(((us.total.secs || 0) + b.secs) * 10) / 10; }
   });
 }
 // 调用记录里每条带的 token 字段

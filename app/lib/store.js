@@ -162,7 +162,21 @@ function newRun(data) {
 
 // v1.85 token 用量只增不减:同一任务几路调用同时跑、各拿一份旧快照写回时,保留记得多的那份
 const usageSeen = new Map();
+// v1.101 写稿管线手里拿着整份任务、会整份写回;别处在它跑的时候写进来的字段(蓝图审说明的中文 bp_zh)记在这里,写回时按时间取新的,不被盖掉
+const STICKY = ['bp_zh'];
+const stickySeen = new Map();
+function keepSticky(run) {
+  const st = stickySeen.get(run.id) || {};
+  STICKY.forEach(k => {
+    const a = run[k], b = st[k];
+    const ta = (a && a.at) || '', tb = (b && b.at) || '';
+    if (b && tb > ta) run[k] = JSON.parse(JSON.stringify(b));
+    else if (a) st[k] = JSON.parse(JSON.stringify(a));
+  });
+  stickySeen.set(run.id, st);
+}
 function saveRun(run, opts) {
+  if (run && run.id) keepSticky(run);
   if (run && run.id) {
     const n = x => (x && x.total && x.total.calls) || 0;
     const seen = usageSeen.get(run.id);

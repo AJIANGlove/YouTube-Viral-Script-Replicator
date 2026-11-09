@@ -1081,6 +1081,19 @@ async function translateRun(runId) {
   }
 }
 
+// v1.101(用户 2026-11-09):审稿、补改完不再自动翻「中文对照」,要看中文点「补齐中文对照」(translateRun);
+// 只给人看的「问题在哪」「大白话」照旧自动补(便宜渠道,不用先翻译)
+async function explainRun(runId) {
+  const cfg = pl().loadConfig();
+  const run = store.getRun(runId);
+  if (!run || !cfg || !cfg.api_key) return;
+  try {
+    const w = await fillWhy(run, cfg);
+    if (Object.keys(w.out).length) { const f2 = store.getRun(runId) || run; f2.review = f2.review || {}; f2.review.why = { ...(f2.review.why || {}), ...w.out }; store.saveRun(f2); }
+  } catch (e) { /* 页面上还能点「补齐中文对照」补 */ }
+  try { await plainRun(runId); } catch (e) { /* 页面打开时会再补 */ }
+}
+
 // ---------- 初稿检查 → 二稿,终审 → 终稿 ----------
 // 两遍都是:模型先列问题清单,再只重写有问题的章节(整章正文);程序换进稿子、校验章节结构,存成新版本。
 // 版本存在 review.versions(初稿 / 二稿 / 终稿),页面按相邻两版逐章对比。
@@ -2912,7 +2925,7 @@ function startFinalPatch(runId, body) {
   const last = arr(fin.rechecks).slice(-1)[0];
   if (!last) throw Object.assign(new Error('这次终审没有复审报告'), { status: 400 });
   if (body && body.extract) {
-    (async () => { try { await extractOpen(runId); await runOpenOptions(runId); } catch (e) {} await translateRun(runId); })();
+    (async () => { try { await extractOpen(runId); await runOpenOptions(runId); } catch (e) {} await explainRun(runId); })();
     return { ok: true };
   }
   if (body && body.recheck) {
@@ -2921,8 +2934,8 @@ function startFinalPatch(runId, body) {
     (async () => {
       let ok = false;
       try { await rerunLastRecheck(runId); ok = true; } catch (e) {} finally { passRunning.delete(runId); }
-      if (ok) { await claimAfterPatch(runId); try { await runOpenOptions(runId); } catch (e) {} await autoOpeningFix(runId); await refreshClaimIfStale(runId); await refreshOpeningIfStale(runId); }
-      await translateRun(runId);
+      if (ok) { await Promise.allSettled([claimAfterPatch(runId), runOpenOptions(runId)]); /* v1.101 同时跑 */ await autoOpeningFix(runId); await refreshClaimIfStale(runId); await refreshOpeningIfStale(runId); }
+      await explainRun(runId);
     })();
     return { ok: true };
   }
@@ -2942,9 +2955,9 @@ function startFinalPatch(runId, body) {
       for (let n = 1; res && res.reverted && !res.stop && n <= AUTO_RETRY_MAX; n++) res = await runFinalPatch(runId, { auto: n });
       ok = !!res && !res.reverted;
     } catch (e) {} finally { passRunning.delete(runId); }
-    if (ok) { await claimAfterPatch(runId); try { await runOpenOptions(runId); } catch (e) {} await autoOpeningFix(runId); await refreshClaimIfStale(runId); await refreshOpeningIfStale(runId); }
+    if (ok) { await Promise.allSettled([claimAfterPatch(runId), runOpenOptions(runId)]); /* v1.101 同时跑 */ await autoOpeningFix(runId); await refreshClaimIfStale(runId); await refreshOpeningIfStale(runId); }
     await require('./blueprint').leftCheckIfStale(runId);
-    await translateRun(runId);
+    await explainRun(runId);
   })();
   return { ok: true };
 }
@@ -3186,10 +3199,10 @@ function startDeai(runId, body) {
     const d = (run.review || {}).deai;
     if (!d || !deaiItemsOf(d).length) throw Object.assign(new Error('还没有去AI感建议,先生成'), { status: 400 });
     if (d.base_hash !== hash(deaiBase(run))) throw Object.assign(new Error('生成建议以后稿子改过,原句可能对不上,请重新生成建议'), { status: 400 });
-    (async () => { try { await applyDeai(runId, body.picks); } catch (e) {} await refreshClaimIfStale(runId); await translateRun(runId); })();
+    (async () => { try { await applyDeai(runId, body.picks); } catch (e) {} await refreshClaimIfStale(runId); await explainRun(runId); })();
     return { ok: true };
   }
-  (async () => { try { await runDeai(runId, body && body.track); } catch (e) {} await translateRun(runId); })();
+  (async () => { try { await runDeai(runId, body && body.track); } catch (e) {} await explainRun(runId); })();
   return { ok: true };
 }
 
@@ -3217,7 +3230,8 @@ async function runPasses(runId, from) {
         store.saveRun(r0);
       }
     }
-    const order = from === 'final' ? ['final', 'claim', 'options', 'openfix', 'opening'] : from === 'autofix' ? ['claim', 'autopatch', 'openfix', 'opening'] : from === 'audit' ? ['audit'] : ['check', 'opening', 'audit'];
+    // v1.101:终审后论点核对、出解决方案、开头单独审互不依赖,同时跑;改开头会动稿子,放在它们之后,改了再重审开头
+    const order = from === 'final' ? ['final', 'claim', 'options', 'opening', 'openfix'] : from === 'autofix' ? ['claim', 'autopatch', 'openfix', 'opening'] : from === 'audit' ? ['audit'] : ['check', 'opening', 'audit'];
     for (let oi = 0; oi < order.length; oi++) {
       const k = order[oi];
       passRunning.set(runId, PASS_LABELS[k] || k);
@@ -3229,6 +3243,12 @@ async function runPasses(runId, from) {
         if (au.status === 'rejected') break;
         continue;
       }
+      if (k === 'claim' && order[oi + 1] === 'options' && order[oi + 2] === 'opening') {
+        passRunning.set(runId, PASS_LABELS.claim + ' + ' + PASS_LABELS.options + ' + ' + PASS_LABELS.opening + '(同时跑)');
+        await Promise.allSettled([claimCheckAndFix(runId), runOpenOptions(runId), runOpeningCard(runId)]);
+        oi += 2;
+        continue;
+      }
       if (k === 'opening') { try { await runOpeningCard(runId); } catch (e) {} continue; }
       if (k === 'options') {
         // 平均不到 8 分:出好方案后接着自动补改,标签先说清楚,页面上提示不用点
@@ -3238,7 +3258,7 @@ async function runPasses(runId, from) {
         continue;
       }
       if (k === 'claim') { try { await claimCheckAndFix(runId); } catch (e) {} continue; }
-      if (k === 'openfix') { await autoOpeningFixLocked(runId); await refreshClaimIfStale(runId); continue; }
+      if (k === 'openfix') { await autoOpeningFixLocked(runId); await refreshClaimIfStale(runId); if (from === 'final') await refreshOpeningIfStale(runId); continue; }
       if (k === 'autopatch') { await autoPatchLocked(runId); continue; }
       try { if (k === 'audit') await runReverseAudit(runId); else if (k === 'final') await runFinal(runId); else await runPass(runId, k); } catch (e) { break; }
     }
@@ -3246,7 +3266,7 @@ async function runPasses(runId, from) {
   // v1.97 终审跑过:对一遍蓝图审留下的问题解决没有(便宜渠道;稿子没变不重复查)
   await require('./blueprint').leftCheckIfStale(runId);
   // 中文对照放在锁外:翻译可能要好几分钟,期间不该挡住换赛道重新终审(翻译保存前会重读任务,只合并译文)
-  await translateRun(runId);
+  await explainRun(runId);
 }
 
 // ---------- 自动补改(终审之后):平均不到 PUBLISH_AVG,不等人点,按每个问题的推荐改法自动补改一轮 ----------
@@ -4254,7 +4274,7 @@ function startClaimCheck(runId, body) {
       if (patched) { try { await runOpenOptions(runId); } catch (e) {} }
       // 开头单独审要对照新标题重新审(开头句子没变,refreshOpeningIfStale 不会重跑)
       try { await runOpeningCard(runId); } catch (e) {}
-      await translateRun(runId);
+      await explainRun(runId);
     })();
     return { ok: true };
   }
@@ -4273,7 +4293,7 @@ function startClaimCheck(runId, body) {
       if (fix && claimBlocking(c)) patched = (await claimFixOnce(runId, c, 'manual')).patched;
       else if (!fix) await runClaimCheck(runId);
     } catch (e) {} finally { passRunning.delete(runId); }
-    if (patched) { try { await runOpenOptions(runId); } catch (e) {} await autoOpeningFix(runId); await refreshOpeningIfStale(runId); await translateRun(runId); }
+    if (patched) { try { await runOpenOptions(runId); } catch (e) {} await autoOpeningFix(runId); await refreshOpeningIfStale(runId); await explainRun(runId); }
   })();
   return { ok: true };
 }
@@ -4433,7 +4453,7 @@ function startOpeningFix(runId) {
     try { await runOpeningFix(runId); } catch (e) {} finally { passRunning.delete(runId); }
     await refreshClaimIfStale(runId);
     await refreshOpeningIfStale(runId);
-    await translateRun(runId);
+    await explainRun(runId);
   })();
   return { ok: true };
 }
@@ -4637,7 +4657,7 @@ async function resumeDraftFirst(runId) {
   if ((st.draft_check || {}).status !== 'done') return runPasses(runId);
   // 终审要等人看完审稿报告再跑,这里只补审稿报告(旧任务已经终审过的不补)
   if ((st.reverse_audit || {}).status !== 'done' && (st.final_review || {}).status !== 'done') return runPasses(runId, 'audit');
-  await translateRun(runId);
+  await explainRun(runId);
 }
 
 // ---------- 人工处理 ----------
@@ -4779,4 +4799,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };
+module.exports = { explainRun, stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE };

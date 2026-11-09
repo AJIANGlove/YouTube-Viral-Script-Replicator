@@ -1171,9 +1171,10 @@ async function reviewLoop(opts) {
     soft_keys: cur.rv.pass ? [] : cur.rv.items.filter(i => !i.pass && SOFT_KEYS.includes(i.key)).map(i => i.key),
     ...(onlyProg ? { soft_notes: softOf('progression'), soft_facts: softOf('facts') } : {})
   };
-  // v1.91 AI 写成韩文/外文的翻成中文(便宜渠道;失败不挡)
-  try { await zhReview(run, pl().loadConfig(), content); } catch (e) { run.steps.blueprint_review.zh_error = '翻成中文没成功:' + e.message; }
   store.saveRun(run);
+  // v1.101(用户 2026-11-09):蓝图审的说明照旧自动翻中文,但改成后台翻,不等翻完就开始写稿(以前要翻完才写);
+  // 译文另外存在 bp_zh,写稿管线整份写回任务时不会盖掉。翻不成功页面上还有「翻成中文」按钮
+  if (!run.ephemeral) { try { zhNow(run.id); } catch (e) { /* 不挡写稿 */ } }
   return { content, messages, r, held: status === 'held', pc: cur.pc, revised };
 }
 
@@ -1187,10 +1188,10 @@ function bpForeignSlots(run, content) {
   const slots = [];
   const add = (obj, key) => { if (obj && typeof obj[key] === 'string' && obj[key].trim() && R.mostlyForeign(obj[key])) slots.push({ obj, key }); };
   const addArr = list => arr(list).forEach((x, i) => add(list, i));
-  const items = list => arr(list).forEach(it => { add(it, 'plain'); arr(it.problems).concat(arr(it.notes)).forEach(p => { add(p, 'text'); add(p, 'fix'); }); });
+  const items = list => arr(list).forEach(it => { add(it, 'plain'); arr(it.problems).concat(arr(it.notes), arr(it.minor)).forEach(p => { add(p, 'text'); add(p, 'fix'); }); }); // v1.101 轻微问题也翻
   const br = (run.steps || {}).blueprint_review;
   if (br) {
-    items(br.items); add(br, 'summary'); addArr(br.reasons_zh); addArr(br.plain_zh); addArr(br.soft_notes); addArr(br.soft_facts);
+    items(br.items); add(br, 'summary'); addArr(br.reasons_zh); addArr(br.plain_zh); addArr(br.soft_notes); addArr(br.soft_facts); addArr(br.minor_notes);
     arr(br.rounds).forEach(x => { items(x.items); add(x, 'summary'); });
   }
   const od = outlineDiffRaw(run, content);
@@ -1213,28 +1214,42 @@ async function zhReview(run, cfg, content) {
   });
   return n;
 }
-// 页面上的「翻成中文」按钮(老任务用):只翻译,不改状态;任务在跑时不翻,免得和管线抢着存
+// v1.101 蓝图审说明的中文另外存在 run.bp_zh.map(原文 hash → 中文),页面显示时套上;蓝图审记录本身不改。
+// 这样任务在写稿时也能翻(写稿管线整份写回任务时,store 会保住 bp_zh,不会把译文盖掉)
+const bpZhBusy = new Map(); // runId → 开始时间;错误也只记内存
+const bpZhErr = new Map();
+function withBpZh(run) {
+  const map = ((run || {}).bp_zh || {}).map;
+  if (!map || !Object.keys(map).length) return run;
+  const c = JSON.parse(JSON.stringify(run));
+  bpForeignSlots(c).forEach(s => {
+    const t = s.outline != null ? s.outline : s.obj[s.key];
+    const z = map[zhHash(t)];
+    if (!z) return;
+    if (s.outline != null) { c.outline_diff_zh = { src: zhHash(t), zh: z }; return; }
+    if (!Array.isArray(s.obj)) s.obj[s.key + '_orig'] = t;
+    s.obj[s.key] = z;
+  });
+  return c;
+}
+// 页面上的「翻成中文」按钮:只翻译,不改状态;写稿时也能点
 function zhNow(runId) {
-  const run = store.getRun(runId);
-  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
-  if (['running', 'analyzing', 'queued'].includes(run.status)) throw Object.assign(new Error('任务还在跑,等它停下来再翻'), { status: 409 });
-  if (run.bp_zh_busy) return { ok: true, busy: true };
-  if (!bpForeignSlots(run).length) return { ok: true, n: 0 };
-  run.bp_zh_busy = true; delete run.bp_zh_error;
-  store.saveRun(run);
+  const run0 = store.getRun(runId);
+  if (!run0) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  if (bpZhBusy.has(runId)) return { ok: true, busy: true };
+  const slots = bpForeignSlots(withBpZh(run0));
+  if (!slots.length) return { ok: true, n: 0 };
+  bpZhBusy.set(runId, Date.now()); bpZhErr.delete(runId);
   (async () => {
-    const r = store.getRun(runId);
-    let err = '';
-    try { await zhReview(r, pl().loadConfig()); } catch (e) { err = e.message; }
-    const fresh = store.getRun(runId) || r;
-    const a = (r.steps || {}).blueprint_review, b = (fresh.steps || {}).blueprint_review;
-    if (a && b && a.finished_at === b.finished_at) {
-      ['items', 'rounds', 'summary', 'summary_orig', 'reasons_zh', 'plain_zh', 'soft_notes', 'soft_facts'].forEach(k => { if (a[k] !== undefined) b[k] = a[k]; });
-    }
-    if (r.outline_diff_zh) fresh.outline_diff_zh = r.outline_diff_zh;
-    delete fresh.bp_zh_busy;
-    if (err) fresh.bp_zh_error = '翻译没成功:' + err; else delete fresh.bp_zh_error;
-    store.saveRun(fresh);
+    try {
+      const texts = slots.map(s => (s.outline != null ? s.outline : s.obj[s.key]));
+      const tr = await require('./review').translateTexts(run0, pl().loadConfig(), texts, '中文对照·蓝图审');
+      const fresh = store.getRun(runId) || run0;
+      fresh.bp_zh = { at: new Date().toISOString(), map: { ...((fresh.bp_zh || {}).map || {}), ...tr } };
+      if (run0.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run0.attempts);
+      store.saveRun(fresh);
+    } catch (e) { bpZhErr.set(runId, '翻译没成功:' + e.message); }
+    finally { bpZhBusy.delete(runId); }
   })().catch(() => {});
   return { ok: true };
 }
@@ -1411,6 +1426,7 @@ function draftCheckItem(run) {
 
 // 页面用:功能表 + 蓝图每章的排法 + 蓝图审
 function view(run) {
+  run = withBpZh(run); // v1.101 点过「翻成中文」的,显示中文
   const ft = run.function_table || null;
   const br = (run.steps || {}).blueprint_review || null;
   let chapters = [];
@@ -1429,10 +1445,10 @@ function view(run) {
   if (!ft && !br && !run.blueprint_mode) return null;
   const fn = modeOf(run) === 'function';
   return { mode: modeOf(run), mode_label: MODES[modeOf(run)], mode_why: str(run.blueprint_mode_why), setting: settingMode(), delete_max: ft && ft.delete_max != null ? ft.delete_max : deleteMax(), deleted_segments: arr(run.deleted_segments), deleted_ratio: run.deleted_ratio, table: fn ? ft : null, chapters, review: fn ? br : null, held: run.status === 'blueprint_hold', outline_diff: outlineDiff, outline_diff_orig: outlineDiffOrig, outline_picked: picked && !!s1,
-    zh_foreign: (() => { try { return bpForeignSlots(run).length; } catch (e) { return 0; } })(), zh_busy: !!run.bp_zh_busy, zh_error: str(run.bp_zh_error || (br || {}).zh_error),
+    zh_foreign: (() => { try { return bpForeignSlots(run).length; } catch (e) { return 0; } })(), zh_busy: !!run.bp_zh_busy || bpZhBusy.has(run.id), zh_error: str(bpZhErr.get(run.id) || run.bp_zh_error || (br || {}).zh_error),
     left: fn ? (() => { try { return leftView(run); } catch (e) { return null; } })() : null,
     later_now: br && br.status !== 'passed' ? arr(br.items).filter(i => !i.pass).map(i => LATER[i.key] || '') : [], later_who: br ? arr(br.items).filter(i => !i.pass).map(i => ({ key: i.key, name: str(i.name), who: LATER_WHO[i.key] || '' })) : [] };
 }
 
-module.exports = { LEVELS, normLevel, checkPlan, planBrief, applyPatch, hasSevere, minorNotes, materialOf, LATER_WHO, leftItems, leftFindings, leftCheck, leftCheckIfStale, leftCheckNow, leftView, SOFT_KEYS, LATER, newInfoSimilar, factSpread, spreadText, researchNotes, chapterSwap, chapterFunctions, draftCheckItem, DELETE_MAX_DEFAULT, deleteMax, setDeleteMax, deletionCheck, enforceDeletions, deletedOf, checkDeletions, plannedFacts, restoreDeletions, recordDeletions, MODES, settingMode, setSettingMode, decideMode, modeOf, segmentsOf, locksOf, ladderOf, TREATMENTS, normTreatment, normalizeTable, tableSourceHits, sourceTerms, sourceHits, ensureTable, tableBrief, locksBrief, ladderBrief, frameworkCore, timelineCore, step1Template,
+module.exports = { withBpZh, LEVELS, normLevel, checkPlan, planBrief, applyPatch, hasSevere, minorNotes, materialOf, LATER_WHO, leftItems, leftFindings, leftCheck, leftCheckIfStale, leftCheckNow, leftView, SOFT_KEYS, LATER, newInfoSimilar, factSpread, spreadText, researchNotes, chapterSwap, chapterFunctions, draftCheckItem, DELETE_MAX_DEFAULT, deleteMax, setDeleteMax, deletionCheck, enforceDeletions, deletedOf, checkDeletions, plannedFacts, restoreDeletions, recordDeletions, MODES, settingMode, setSettingMode, decideMode, modeOf, segmentsOf, locksOf, ladderOf, TREATMENTS, normTreatment, normalizeTable, tableSourceHits, sourceTerms, sourceHits, ensureTable, tableBrief, locksBrief, ladderBrief, frameworkCore, timelineCore, step1Template,
   checkLocks, adjacentSimilar, checkLadder, checkCopy, checkUnreachable, checkFacts, checkReversal, programChecks, ITEMS, reviewPrompt, parseReview, mergeReview, reasonsZh, reviewLoop, MAX_REVISE, holdChoice, backToAnalysis, view, bpForeignSlots, zhReview, zhNow, jaccard, chapterKeep, chapterBrief, step2Rules };

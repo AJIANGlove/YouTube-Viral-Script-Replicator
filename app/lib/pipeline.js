@@ -670,7 +670,7 @@ async function runGeneration(runId) {
 
   // 每次 LLM 调用(首轮/闸门重试/截断续写)都记一条流水到 run.attempts(封顶 100 条),失败原因不再随重试丢失
   const logAttempt = (label, result, usage) => {
-    if (usage) { const U = require('./usage'); const disk = store.getRun(run.id); run.usage = U.newer(run.usage, disk && disk.usage); U.record(run, label, usage); } // v1.85 token 用量(写前分析等可能同时在盘上记过)
+    if (usage || (result && result.secs)) { const U = require('./usage'); const disk = store.getRun(run.id); run.usage = U.newer(run.usage, disk && disk.usage); U.record(run, label, usage, '', result && result.secs); } // v1.101 也记用时 // v1.85 token 用量(写前分析等可能同时在盘上记过)
     run.attempts = [...(run.attempts || []), {
       ts: new Date().toISOString(), label,
       provider: cfg.provider || '', model: cfg.model || '',
