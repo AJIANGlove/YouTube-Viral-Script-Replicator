@@ -100,6 +100,14 @@
   .rv-spin { display: inline-block; width: 12px; height: 12px; border: 2px solid #93c5fd; border-top-color: #1d4ed8; border-radius: 50%; animation: rvspin .8s linear infinite; vertical-align: -1px; }
   @keyframes rvspin { to { transform: rotate(360deg); } }
   .card.jump-flash { box-shadow: 0 0 0 3px #93c5fd; transition: box-shadow .3s; }
+  .step-pill.webwait { background: #7c3aed; color: #fff; font-weight: 600; cursor: pointer; animation: webpulse 1.6s ease-in-out infinite; } /* v1.107 轮到你在网页版复制粘贴的那一步 */
+  @keyframes webpulse { 0%,100% { box-shadow: 0 0 0 0 rgba(124,58,237,.5); } 50% { box-shadow: 0 0 0 4px rgba(124,58,237,.15); } }
+  .web-how { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 8px 0; padding: 10px 12px; border-radius: 8px; font-size: 15px; line-height: 1.5; }
+  .web-how.new { background: #dcfce7; border: 2px solid #16a34a; color: #14532d; }
+  .web-how.cont { background: #fef3c7; border: 2px solid #d97706; color: #78350f; }
+  .web-how .tag { font-size: 16px; font-weight: 700; padding: 3px 10px; border-radius: 6px; color: #fff; white-space: nowrap; }
+  .web-how.new .tag { background: #16a34a; } .web-how.cont .tag { background: #d97706; }
+  .web-chat { font-weight: 700; background: #fff; border: 1px dashed currentColor; padding: 1px 8px; border-radius: 5px; user-select: all; }
   .hidden { display: none; }
   .hint { font-size: 11px; color: #9ca3af; margin-top: 4px; }
   .err-list { color: #dc2626; font-size: 12px; }
@@ -2763,6 +2771,7 @@ async function loadRunDetail() {
     const extra = s.secs ? ` (${s.secs}s)` : '';
     const gate = s.gate_retry ? ' ⟳重试' : '';
     const jump = STEP_JUMP[k] && (k === 'analysis' ? !!r.analysis : !!r.draft_first || !!(r.review || {}).versions);
+    if (webWaitSteps(r).includes(k)) return `<div class="step-pill webwait" onclick="webJump()" title="这一步在你的 Claude 网页版做,点这里去复制、粘贴">${STEP_LABELS[k]}<br>👉 等你复制粘贴</div>`; // v1.107
     return `<div class="step-pill ${cls}${jump ? ' link' : ''}"${jump ? ` onclick="stepJump('${k}')" title="点击查看这一步的内容"` : ''}>${STEP_LABELS[k]}${extra}${gate}</div>`;
   }).join('') + ((r.live_calls || []).length ? `<div style="flex-basis:100%;margin-top:4px;font-size:12px;color:#374151">正在调用:${liveTag(r.live_calls)}</div>` : '');
   renderUsage(r);
@@ -5955,11 +5964,35 @@ function thSrc(list) {
 let webRenderedKey = null;
 const webDrafts = {}; // 粘贴框里还没提交的内容(页面每 3 秒刷新,不能丢)
 const webCopied = {};
-function webHow(p) {
-  if (p.kind === 'script') return '在 Claude 网页版<b>新开一个对话</b>,按顺序发下面几条(每条等它写完再发下一条)。最后一条的回答粘到下面。';
-  return p.how === 'continue'
-    ? '在「' + esc(p.chat_name) + '」那个对话里<b>接着发</b>(只发下面这一句,前面的不用再发)。'
-    : '在 Claude 网页版<b>新开一个对话</b>,发下面这条。';
+// v1.107 网页版对话的名字:步骤名 + 题目开头,建议人在网页版把对话改成这个名字,接着发时按名字找
+function webChatName(name, r) {
+  const t = String((r && r.topic) || '').replace(/["'“”‘’「」『』<>]/g, '').replace(/\s+/g, ' ').trim();
+  return name + (t ? ' · ' + (t.length > 14 ? t.slice(0, 14) + '…' : t) : '');
+}
+function webHow(p, r) {
+  if (p.kind === 'script' || p.how !== 'continue') {
+    const nm = webChatName(p.kind === 'script' ? '写稿' : p.chat_name || webTitle(p), r);
+    const what = p.kind === 'script' ? '按顺序发下面几条(每条等它写完再发下一条),最后一条的回答粘到下面。' : '发下面这条,把回答粘到下面。';
+    return `<div class="web-how new"><span class="tag">① 新开一个对话</span><span>在 Claude 网页版点「新对话」,${what}<br>发完把这个对话改名为 <span class="web-chat">${esc(nm)}</span>,后面要接着发时按这个名字找。</span></div>`;
+  }
+  const nm = webChatName(p.chat_name, r);
+  return `<div class="web-how cont"><span class="tag">② 不要开新对话</span><span>回到 <span class="web-chat">${esc(nm)}</span> 那个对话,接着发下面这一句(前面的不用再发),把回答粘到下面。</span></div>`;
+}
+// 正在等粘贴的条目属于哪一步(步骤条上把这一步标成紫色)
+function webStepOf(p) {
+  const l = p.label || '';
+  if (p.kind === 'script' || /^Step 2/.test(l)) return 'script';
+  if (/^Step 1 功能表/.test(l)) return 'function_table';
+  if (/^Step 1/.test(l)) return 'blueprint';
+  if (/^(写前分析|原片对照表|联网查询词|AI |账本|论点对账)/.test(l)) return 'analysis';
+  return '';
+}
+function webWaitSteps(r) { return (((r || {}).web || {}).pending || []).map(webStepOf).filter(Boolean); }
+function webJump() {
+  const el = document.querySelector('#web-panel .web-item') || document.getElementById('web-panel');
+  if (!el || el.offsetParent === null) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  el.classList.add('jump-flash'); setTimeout(() => el.classList.remove('jump-flash'), 1200);
 }
 function renderWebPanel(r) {
   const el = document.getElementById('web-panel');
@@ -5984,9 +6017,10 @@ function renderWebPanel(r) {
         <textarea readonly rows="${p.kind === 'script' ? 3 : 5}" style="width:100%;box-sizing:border-box;font-size:12px;color:#4b5563;margin-top:3px">${esc(m.text.length > 4000 ? m.text.slice(0, 4000) + '\n……(太长只显示开头,点「复制」复制的是全文)' : m.text)}</textarea></div>`;
     }).join('');
     const ph = p.kind === 'script' ? '把 Claude 最后输出的纯净稿粘到这里(被截断点了「继续」的,几段按顺序一起粘;也可以把每批的回答按顺序粘进来)' : '把 Claude 的回答原样粘到这里(用它回答下面的复制按钮,别自己删改)';
-    return `<div style="border:1px solid #ddd6fe;border-radius:6px;padding:8px;margin-top:8px;background:#faf5ff">
-      <div><b>${esc(webTitle(p))}</b> <span class="hint">${esc(p.label)}</span></div>
-      <div class="hint" style="color:#374151;margin:3px 0">${webHow(p)}</div>
+    const stepName = (STEP_LABELS[webStepOf(p)] || '').replace(/^\S+\s/, '');
+    return `<div class="web-item card" style="border:1px solid #ddd6fe;border-radius:6px;padding:10px;margin-top:8px;background:#faf5ff">
+      <div style="font-size:18px;font-weight:700;color:#6d28d9">轮到你了:${esc(webTitle(p))} <span class="hint" style="font-size:12px;font-weight:400">${stepName ? '步骤条上的「' + esc(stepName) + '」 · ' : ''}${esc(p.label)}</span></div>
+      ${webHow(p, r)}
       ${msgs}
       <textarea id="web-ans-${escAttr(p.id)}" rows="6" placeholder="${escAttr(ph)}" style="width:100%;box-sizing:border-box" oninput="webDrafts['${escAttr(p.id)}']=this.value">${esc(webDrafts[p.id] || '')}</textarea>
       <div style="margin-top:4px"><button class="primary" onclick="webAnswer('${escAttr(p.id)}',this)">粘好了,交给程序</button>
