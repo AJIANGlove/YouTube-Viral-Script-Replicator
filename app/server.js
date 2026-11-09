@@ -646,6 +646,7 @@ const server = http.createServer(async (req, res) => {
       }
       // v1.73 蓝图方式、功能表、每章排法、蓝图审结果(页面的「蓝图」面板用),不落盘
       try { const bv = require('./lib/blueprint').view(r); if (bv) r.blueprint_view = bv; } catch (e) { /* 旧任务数据不全:不显示面板 */ }
+      { const wv = require('./lib/manual').view(r); if (wv) { r.web = wv; r.live_calls = (r.live_calls || []).filter(c => !wv.pending.some(p => p.label === c.label || (p.kind === 'script' && /^Step 2/.test(c.label)))); } } // v1.105 网页版接力:等你粘贴的消息;等粘贴的不算「正在调用」 网页版接力:等你粘贴的消息(不带存下的回答)
       return send(res, 200, r);
     }
 
@@ -677,6 +678,19 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       try { return send(res, 200, require('./lib/thesis').holdChoice(thMatch[1], body)); }
       catch (e) { return send(res, e.status || 500, { error: e.message }); }
+    }
+
+    // v1.105 网页版接力:answer 粘回 Claude 的回答(id, text)/ api 这一条改用 API 跑(id)/ off 后面全部改用 API
+    const webMatch = url.match(/^\/api\/runs\/([\w-]+)\/web$/);
+    if (webMatch && method === 'POST') {
+      const body = await readBody(req);
+      const M = require('./lib/manual');
+      try {
+        if (body.action === 'answer') return send(res, 200, M.answer(webMatch[1], String(body.id || ''), body.text));
+        if (body.action === 'api') return send(res, 200, M.useApi(webMatch[1], String(body.id || '')));
+        if (body.action === 'off') return send(res, 200, M.turnOff(webMatch[1]));
+        return send(res, 400, { error: '不认识的操作' });
+      } catch (e) { return send(res, e.status || 500, { error: e.message }); }
     }
 
     // ---------- 写前分析:人工确认 / 保存修改 / 重新分析 ----------
@@ -1116,11 +1130,13 @@ const server = http.createServer(async (req, res) => {
       if (r.status === 'queued' || r.status === 'awaiting_review' || r.status === 'blueprint_hold' || r.status === 'thesis_hold') {
         r.status = 'cancelled';
         store.saveRun(r);
+        require('./lib/manual').cancelRun(r.id); // v1.105 AI 调整阶段(待确认状态)正在等粘贴的也停掉
         return send(res, 200, { ok: true, id: r.id, status: 'cancelled' });
       }
       if (r.status === 'running' || r.status === 'analyzing') {
         r.cancel_requested = true;
         store.saveRun(r);
+        require('./lib/manual').cancelRun(r.id); // v1.105 正在等粘贴的步骤直接停
         return send(res, 200, { ok: true, id: r.id, status: 'cancelling' });
       }
       return send(res, 400, { error: '仅排队中/分析中/待选论点/待确认/蓝图待定/生成中的任务可取消(当前: ' + r.status + ')' });

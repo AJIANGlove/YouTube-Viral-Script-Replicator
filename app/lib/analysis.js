@@ -974,7 +974,9 @@ function setPovMode(runId, mode) {
 }
 
 // ---------- B②–⑧:写前分析 ----------
-async function runAnalysis(runId) {
+// v1.105 记下在跑哪个任务(网页版接力按它判断这一步要不要等人粘贴)
+async function runAnalysis(runId) { return require('./pipeline').inRun(runId, () => runAnalysis0(runId)); }
+async function runAnalysis0(runId) {
   const pipeline = require('./pipeline');
   const run = store.getRun(runId);
   if (!run) return;
@@ -1533,7 +1535,8 @@ const EVIDENCE_ROUND_NOTE = '【这一轮是补素材】上一轮调整后素材
 
 // 「AI 先调整」:可先联网查询,再一次性改事实表、论点卡、模块、留存地图、钩子、候选标题。
 // draft:界面上当前的草稿(可能还没保存),以它为底;结果写回 run.analysis,改前版本存 analysis_before_adjust 便于撤回
-async function runAutoAdjust(runId, draft, opts) {
+async function runAutoAdjust(runId, draft, opts) { return require('./pipeline').inRun(runId, () => runAutoAdjust0(runId, draft, opts)); }
+async function runAutoAdjust0(runId, draft, opts) {
   const { run, cfg, asset } = loadRunAsset(runId);
   assertReviewable(run);
   const base = draft || run.analysis;

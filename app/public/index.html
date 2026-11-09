@@ -869,6 +869,7 @@
       <div id="detail-usage"></div>
       <div id="detail-error" class="err-list"></div>
     </div>
+    <div class="card hidden" id="web-panel" style="border:2px solid #7c3aed"></div>
     <div class="card hidden bp-panel" id="bp-panel"></div>
     <div class="card hidden" id="rv-panel"></div>
     <div class="card hidden" id="rf-panel"></div>
@@ -2775,6 +2776,7 @@ async function loadRunDetail() {
     ((r.status === 'failed' || r.status === 'cancelled')
       ? ' <button class="primary" style="margin-left:8px" onclick="retryRun()">续跑此任务</button>' : '');
 
+  renderWebPanel(r); // v1.105 网页版接力
   renderBlueprintPanel(r);
   renderReviewPanel(r);
   renderReframePanel(r);
@@ -5949,6 +5951,100 @@ function thCards(ts) {
 function thSrc(list) {
   return (list || []).slice(0, 3).map(s => /^https?:\/\//i.test(s.url || '') ? `<a href="${escAttr(s.url)}" target="_blank" rel="noopener">${esc(s.site || s.title || s.url)}</a>` : esc(s.site || s.title || '')).join('、');
 }
+// ---------- v1.105 网页版接力:等你粘贴的消息 ----------
+let webRenderedKey = null;
+const webDrafts = {}; // 粘贴框里还没提交的内容(页面每 3 秒刷新,不能丢)
+const webCopied = {};
+function webHow(p) {
+  if (p.kind === 'script') return '在 Claude 网页版<b>新开一个对话</b>,按顺序发下面几条(每条等它写完再发下一条)。最后一条的回答粘到下面。';
+  return p.how === 'continue'
+    ? '在「' + esc(p.chat_name) + '」那个对话里<b>接着发</b>(只发下面这一句,前面的不用再发)。'
+    : '在 Claude 网页版<b>新开一个对话</b>,发下面这条。';
+}
+function renderWebPanel(r) {
+  const el = document.getElementById('web-panel');
+  const w = r.web;
+  if (!w || (!w.on && !(w.pending || []).length)) { el.classList.add('hidden'); webRenderedKey = null; return; }
+  const pend = w.pending || [];
+  const key = JSON.stringify([w.on, pend.map(p => p.id + ':' + (p.waiting ? 1 : 0)), (w.done || []).length, r.status]);
+  if (key === webRenderedKey && !el.classList.contains('hidden')) return;
+  webRenderedKey = key;
+  el.classList.remove('hidden');
+  const done = w.done || [];
+  let html = `<h2 style="color:#6d28d9;display:flex;justify-content:space-between;align-items:center"><span>网页版写稿${pend.length ? ':等你粘贴(' + pend.length + ' 条)' : ''}</span>
+    ${w.on ? '<button class="an-btn" onclick="webOff()">后面全部改用 API</button>' : ''}</h2>
+    <div class="hint">${w.on ? '写前分析、AI 调整、出蓝图、写稿这几步在你的 Claude 网页版做:复制消息发过去,把回答粘回来。粘回稿子后,审核、优化、初稿检查、终审照旧自动走 API。' : '已改回 API,后面的步骤自动跑。'}
+      ${done.length ? '已完成 ' + done.length + ' 条。' : ''}</div>`;
+  if (!pend.length && w.on) html += `<div class="hint" style="margin-top:6px">程序正在处理${['running', 'analyzing', 'awaiting_review', 'queued'].includes(r.status) ? '(检查、查资料或跑 API 的步骤),下一条消息准备好会出现在这里' : ''}。</div>`;
+  html += pend.map(p => {
+    const msgs = (p.texts || []).map((m, i) => {
+      const k = p.id + '_' + i;
+      return `<div style="margin:6px 0">${m.title ? '<b>' + esc(m.title) + '</b> ' : ''}<button class="an-btn v13" onclick="webCopy('${escAttr(p.id)}',${i},this)">${webCopied[k] ? '已复制 ✓ 再复制' : '复制'}</button>
+        <span class="hint">${m.text.length.toLocaleString()} 字</span>
+        <textarea readonly rows="${p.kind === 'script' ? 3 : 5}" style="width:100%;box-sizing:border-box;font-size:12px;color:#4b5563;margin-top:3px">${esc(m.text.length > 4000 ? m.text.slice(0, 4000) + '\n……(太长只显示开头,点「复制」复制的是全文)' : m.text)}</textarea></div>`;
+    }).join('');
+    const ph = p.kind === 'script' ? '把 Claude 最后输出的纯净稿粘到这里(被截断点了「继续」的,几段按顺序一起粘;也可以把每批的回答按顺序粘进来)' : '把 Claude 的回答原样粘到这里(用它回答下面的复制按钮,别自己删改)';
+    return `<div style="border:1px solid #ddd6fe;border-radius:6px;padding:8px;margin-top:8px;background:#faf5ff">
+      <div><b>${esc(webTitle(p))}</b> <span class="hint">${esc(p.label)}</span></div>
+      <div class="hint" style="color:#374151;margin:3px 0">${webHow(p)}</div>
+      ${msgs}
+      <textarea id="web-ans-${escAttr(p.id)}" rows="6" placeholder="${escAttr(ph)}" style="width:100%;box-sizing:border-box" oninput="webDrafts['${escAttr(p.id)}']=this.value">${esc(webDrafts[p.id] || '')}</textarea>
+      <div style="margin-top:4px"><button class="primary" onclick="webAnswer('${escAttr(p.id)}',this)">粘好了,交给程序</button>
+        ${p.kind !== 'script' ? `<button class="an-btn" onclick="webApi('${escAttr(p.id)}',this)">这一条改用 API 跑</button>` : ''}
+        ${p.waiting ? '' : '<span class="hint" style="color:#b45309">程序刚重启过:粘好后等任务接着跑到这一步就会用上</span>'}</div>
+    </div>`;
+  }).join('');
+  el.innerHTML = html;
+}
+function webTitle(p) {
+  const l = p.label || '';
+  if (p.kind === 'script') return '写稿';
+  if (/^写前分析/.test(l)) return /重试/.test(l) ? '写前分析(格式不对,重发)' : /续写/.test(l) ? '写前分析(断了,接着写)' : '写前分析';
+  if (/^原片对照表/.test(l)) return '原片 → 本地对照表';
+  if (/^联网查询词/.test(l)) return 'AI 调整:定要查的资料';
+  if (/^(AI 先调整|AI 补素材)/.test(l)) return 'AI 调整:按查到的资料改分析';
+  if (/^(AI 修账本|账本对照事实|账本补推算行|论点对账)/.test(l)) return 'AI 调整:核对账本';
+  if (/^Step 1 功能表/.test(l)) return '出蓝图:先排功能表';
+  if (/^Step 1 按蓝图审改/.test(l)) return '按蓝图审的意见改蓝图';
+  if (/^Step 1/.test(l)) return /重试/.test(l) ? '蓝图(检查没过,按意见重出)' : '出蓝图';
+  if (/^Step 2/.test(l)) return '稿子(检查没过,按意见改)';
+  return l;
+}
+async function webCopy(id, i, btn) {
+  const p = (((lastRunDetail || {}).web || {}).pending || []).find(x => x.id === id);
+  const m = p && (p.texts || [])[i];
+  if (!m) return;
+  try { await navigator.clipboard.writeText(m.text); }
+  catch (e) { const ta = document.createElement('textarea'); ta.value = m.text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+  webCopied[id + '_' + i] = true;
+  if (btn) btn.textContent = '已复制 ✓ 再复制';
+}
+async function webAnswer(id, btn) {
+  const ta = document.getElementById('web-ans-' + id);
+  const text = ta ? ta.value : '';
+  if (!text.trim()) { alert('还没粘贴'); return; }
+  if (btn) btn.disabled = true;
+  try { await api('/api/runs/' + currentRunId + '/web', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'answer', id, text }) }); }
+  catch (e) { alert(e.message); if (btn) btn.disabled = false; return; }
+  delete webDrafts[id];
+  webRenderedKey = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 400);
+}
+async function webApi(id, btn) {
+  if (!confirm('这一条改用 API 跑(会花这一步的钱)?')) return;
+  if (btn) btn.disabled = true;
+  try { await api('/api/runs/' + currentRunId + '/web', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'api', id }) }); }
+  catch (e) { alert(e.message); if (btn) btn.disabled = false; return; }
+  webRenderedKey = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 400);
+}
+async function webOff() {
+  if (!confirm('后面全部改用 API 自动跑?正在等你粘贴的这几条也改用 API。')) return;
+  try { await api('/api/runs/' + currentRunId + '/web', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'off' }) }); }
+  catch (e) { alert(e.message); return; }
+  webRenderedKey = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 400);
+}
 function renderThesisPanel(r) {
   const el = document.getElementById('th-panel');
   const ts = r.thesis_scout || null;
@@ -5990,6 +6086,7 @@ function renderThesisPanel(r) {
       ${(card.missing || []).length ? `<div class="th-row"><b>还没查到:</b>${esc(card.missing.join(';'))}</div>` : ''}
       ${outline.length ? `<div class="th-row"><b>整篇大概会这样讲:</b><ol>${outline.map(x => `<li>${esc(x.says)}${x.uses ? '<span style="color:#4b5563">(用:' + esc(x.uses) + ')</span>' : ''}${x.leaves ? '<span style="color:#6b7280"> → ' + esc(x.leaves) + '</span>' : ''}</li>`).join('')}</ol></div>` : ''}
       <div class="rv-ops" style="margin-top:6px"><button class="an-btn v13" onclick="thChoose('pick','${escAttr(a.id)}',this)">选这个</button>
+        <button class="an-btn" style="border-color:#7c3aed;color:#6d28d9" onclick="thChoose('pickweb','${escAttr(a.id)}',this)" title="写前分析、AI 调整、出蓝图、写稿改成复制到你自己的 Claude 网页版,把回答粘回来;后面的审核、优化、初稿检查、终审照旧自动跑">选这个,后面在网页版写</button>
         <button class="an-btn" onclick="thEdit('${escAttr(a.id)}')">改一句再选</button></div>
       ${editing ? `<div style="margin-top:6px"><textarea id="th-edit-text" rows="2" style="width:100%;box-sizing:border-box">${esc(one)}</textarea>
         <div class="hint">改完会按你这句重新联网核对一次(1–3 分钟),核对完再停在这里给你看。</div>
@@ -6015,6 +6112,10 @@ async function thChoose(action, id, btn) {
   const body = { action, id };
   if (action === 'edit') { const t = (document.getElementById('th-edit-text') || {}).value || ''; if (!t.trim()) { alert('论点是空的'); return; } body.text = t.trim(); }
   if (action === 'novel') { body.action = 'regen'; body.novel = true; }
+  if (action === 'pickweb') {
+    if (!confirm('选这个论点,后面在你自己的 Claude 网页版写?\n\n写前分析、AI 调整、出蓝图、写稿这几步,程序会把拼好的消息给你复制,你发到 Claude 网页版,再把回答粘回来(一篇大约发 10 条、粘回 7 次左右)。\n粘回稿子以后,审核、优化、初稿检查、二稿审稿、终审照旧自动走 API。\n中途可以随时点「后面全部改用 API」。')) return;
+    body.action = 'pick'; body.web = true;
+  }
   const hint = ((document.getElementById('th-hint') || {}).value || '').trim();
   if ((action === 'regen' || action === 'novel') && hint) body.hint = hint;
   if (action === 'regen' && !confirm('换完全不同的方向再出 3 个论点?')) return;

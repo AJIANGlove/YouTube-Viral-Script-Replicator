@@ -4775,14 +4775,16 @@ function openingView(run) {
 }
 
 // ---------- 一键生成 ----------
-async function runDraftFirst(runId) {
+async function runDraftFirst(runId) { return pl().inRun(runId, () => runDraftFirst0(runId)); } // v1.105
+async function runDraftFirst0(runId) {
   await an().runAnalysis(runId);
   return finishDraftFirst(runId);
 }
 
 // 分析之后的部分:AI 先调整 → 自动确认 → 点火写初稿 → 初稿检查出二稿 → 二稿审稿报告 → 停下等人选 → 中文对照。
 // 单独抽出是为了重启接管:分析已完成、调整被中断的任务从这里续跑,不重复调用分析(见 resumeDraftFirst)
-async function finishDraftFirst(runId) {
+async function finishDraftFirst(runId) { return pl().inRun(runId, () => finishDraftFirst0(runId)); } // v1.105
+async function finishDraftFirst0(runId) {
   let run = store.getRun(runId);
   if (!run || run.status !== 'awaiting_review') return; // 分析失败或已取消
   // 写前分析判「换框架」:不调整、不写稿,停下来推荐框架等人选(人选「仍按现在的框架写」后从这里续跑)
@@ -4829,7 +4831,8 @@ async function finishDraftFirst(runId) {
 }
 
 // 续跑(重试 / 重启接管):分析没跑完就从头跑一键生成;分析跑完但调整被中断,从调整续跑;已经在写稿就接着写,写完补二稿、审稿报告和翻译
-async function resumeDraftFirst(runId) {
+async function resumeDraftFirst(runId) { return pl().inRun(runId, () => resumeDraftFirst0(runId)); } // v1.105
+async function resumeDraftFirst0(runId) {
   const run = store.getRun(runId);
   if (!run) return;
   if (!run.analysis_confirmed) {

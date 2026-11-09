@@ -13,6 +13,12 @@ const retention = require('./retention');
 const analysis = require('./analysis');
 const voice = require('./voice');
 const narration = require('./narration');
+const { AsyncLocalStorage } = require('async_hooks');
+// v1.105 网页版接力:记下「现在在跑哪个任务」,llmCall 据此判断这一步要不要改成等人粘贴(调用方不用传 runId)
+const runCtx = new AsyncLocalStorage();
+function inRun(runId, fn) { const c = runCtx.getStore(); return c && c.runId === runId ? fn() : runCtx.run({ runId }, fn); }
+function currentRunId() { const c = runCtx.getStore(); return c ? c.runId : null; }
+const manual = () => require('./manual');
 const bpm = () => require('./blueprint'); // v1.73 蓝图按功能重排 + 蓝图审(lib/blueprint.js 反过来要用本模块的 loadConfig,延迟加载避免循环)
 
 const CONFIG_PATH = path.join(__dirname, '..', 'config.json');
@@ -335,6 +341,8 @@ function isRetryable(e) {
 // opts.fastFailEmpty:空响应不做 4 次原地重试(每次白等约 90 秒),第一轮就抛给上层降级(拆小请求/换提示)
 async function llmCall(cfg, messages, label, opts) {
   const o = opts || {};
+  // v1.105 这篇选了「后面在网页版写」、这一步属于网页版:不发请求,挂一条等人粘贴
+  if (!o.noManual) { const rid = currentRunId(); if (rid && manual().wants(rid, label)) return manual().relay(rid, cfg, messages, label, o); }
   const built = buildRequest(cfg, messages, o.cachePrefix ? { cachePrefix: o.cachePrefix } : undefined);
   const { isAnthropic, url, headers } = built;
   let body = built.body;
@@ -503,6 +511,22 @@ function extractChapterBlock(text, id) {
 // Step 2 分章生成:逐章调用并落盘。返回拼接后的整篇脚本。
 // segments 存 run.steps.script.segments —— 任务重试/进程重启后已完成的章直接复用,不重写、不再看渠道脸色。
 // 抽成模块级函数(而非 runGeneration 内闭包)是为了能用桩 callLlm 单测三条路径:空响应降级、断流续写、断点续跑
+// v1.105 网页版分批写:一章的要求(标签行、篇幅、信息目标、承担的高峰、衔接、内容推进),和逐章调 API 时给的一样
+function chapterNeeds(run, chapters, i) {
+  const c = chapters[i];
+  const id = String(c.id || ('CH' + String(i + 1).padStart(2, '0')));
+  return '—— ' + id + '(第 ' + (i + 1) + '/' + chapters.length + ' 章)——\n' +
+    '第一行必须严格是:\n' + chapterTagLine(c) + '\n' +
+    '本章 word_budget=' + (c.word_budget || '(见蓝图)') + ';本章信息目标:' + (c.information_goal || c.function || '(见蓝图)') + '\n' +
+    (c.carries_peaks ? '本章必须承担的高峰:' + c.carries_peaks + '\n' : '') +
+    (c.answers_prev ? '本章开头先接住上一章留下的问题:' + c.answers_prev + '\n' : '') +
+    (c.new_lens ? '本章观众第一次知道的新信息 / 新角度(只用本章分到的事实推进,前面章节讲过的事实和结论不要再展开):' + c.new_lens + '\n' : '') +
+    (Array.isArray(c.cases) && c.cases.length ? '本章出场的真人案例(按写前分析里写好的这次要带出的新信息写):' + c.cases.map(x => (typeof x === 'string' ? x : (x && (x.nick || x.name)) || '')).filter(Boolean).join('、') + '\n' : '') +
+    (c.leaves_question ? '本章结尾抛出留给下一章的问题:' + c.leaves_question + '\n' : '') +
+    bpm().planBrief(chapters, i) +
+    bpm().chapterBrief(run, c);
+}
+
 async function runScriptByChapters(opts) {
   const { run, chapters, basePrompt, callLlm, onSave } = opts;
   const save = () => { if (onSave) onSave(); };
@@ -628,7 +652,8 @@ function lengthCheck(script, blueprint, audience, wpm) {
       (short ? ',低于下限 ' + Math.round(minR * 100) + '%' : !ok ? ',超过上限 ' + Math.round(LENGTH_MAX_RATIO * 100) + '%' : warn ? ',偏短(低于 ' + Math.round(warnR * 100) + '%)' : '') + ')' };
 }
 
-async function runGeneration(runId) {
+async function runGeneration(runId) { return inRun(runId, () => runGeneration0(runId)); }
+async function runGeneration0(runId) {
   const run = store.getRun(runId);
   if (!run) return;
   if (run.checks && run.checks.gate_fail) { delete run.checks.gate_fail; } // 续跑:上次的失败记录作废
@@ -792,7 +817,18 @@ async function runGeneration(runId) {
       if (step === 2) {
         const chs = bpChaptersOf(ctx.blueprint);
         const budget = bpWordBudget(chs);
-        if (chs.length >= 2 && budget >= CHAPTER_SPLIT_MIN_WORDS) {
+        // v1.105 网页版写稿:几条消息在同一个网页对话里按顺序发,最后输出纯净稿,人粘一次。
+        // 之后的结构 / 篇幅 / 听感闸门照旧;不合格要重写时按整篇反馈,在同一个网页对话里接着发
+        if (chs.length && manual().isOn(store.getRun(run.id))) {
+          const t0 = Date.now();
+          try {
+            const br = await manual().relayWrite(run.id, prompt, chs, i => chapterNeeds(run, chs, i));
+            content = br.content;
+            r = { content, secs: Math.round(br.secs * 10) / 10, stopReason: 'end_turn', streams: 1, manual: true };
+            logAttempt('Step 2 网页版写稿', { ok: true, secs: Math.round((Date.now() - t0) / 100) / 10, manual: true });
+          } catch (e) { if (e.kind !== 'web_off') throw e; } // 人点了「后面全部改用 API」:按原来的方式写
+        }
+        if (!content && chs.length >= 2 && budget >= CHAPTER_SPLIT_MIN_WORDS) {
           step2Split = true;
           run.steps.script = { ...(run.steps.script || {}), split: { threshold: CHAPTER_SPLIT_MIN_WORDS, budget, chapters: chs.length } };
           store.saveRun(run);
@@ -1248,4 +1284,4 @@ async function runGeneration(runId) {
 }
 
 module.exports = { STEP_CHANNELS, stepChannelValue, loadStepConfig, gptChannel, onlyPings, STALL_MIN_SECS, lengthCheck, todayStr, loadConfig, saveConfig, resolveProvider, normalizeModels, loadTweakConfig, buildRequest, postJson, probeProvider, runGeneration, fillTemplate, loadTemplates, llmCall, parseSSE, isRetryable,
-  CHAPTER_SPLIT_MIN_WORDS, withCache, noCacheHosts, bpChaptersOf, bpWordBudget, chapterTagLine, extractChapterBlock, runScriptByChapters, dumpLlmFailure };
+  CHAPTER_SPLIT_MIN_WORDS, withCache, noCacheHosts, bpChaptersOf, bpWordBudget, chapterTagLine, extractChapterBlock, runScriptByChapters, dumpLlmFailure, inRun, currentRunId, chapterNeeds };
