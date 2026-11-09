@@ -236,6 +236,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `locate_quote.md` | 问题里没引原句时按问题描述到稿子里找出对应句子 | 19 |
 | `translate_marked.md` | 原文详情翻译（标出的句子在中文里也括出来画线） | 13 |
 | `info_reuse_check.md` | 写完查信息重复（重讲/缺回顾/双重总结，最多 10 处） | 51 |
+| `info_reuse_check.md` | 写完查信息重复（重讲/缺回顾/双重总结，最多 10 处） | 51 |
 | `thesis_novel.md` | 「要更新颖的」——避开常见说法、六种切口出 3 个角度 | 11 |
 | `step2.md` | 脚本施工（含每章问题链与新角度要求、对照表、网友说法带出处） | 61 |
 | `function_table.md` | 蓝图按功能重排第一步：原片每段一行功能表（作用、必须保留、可以换、四选一处理；换内容 > 合并 > 删，删要写查过的事实，合计不超过 `{{delete_max}}`%） | 84 |
