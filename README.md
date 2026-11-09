@@ -279,7 +279,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 68 份 `.md`（3962 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 73 份，合计 4171 行。
+合计 68 份 `.md`（4001 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 73 份，合计 4210 行。
 
 ### 历史版本
 
