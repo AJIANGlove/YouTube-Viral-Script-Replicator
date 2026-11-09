@@ -230,7 +230,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `blueprint_research_fill.md` | 蓝图补搜摘事实（具体人和事也摘成一条） | 31 |
 | `revise.md` | 按人工意见只重做一行 | 29 |
 | `title_audit.md` | 自写标题审核 | 26 |
-| `step1.md` | Blueprint 生成（问题链 + 新角度 + 事实只用一次，编号一律 CH，含对照表与叙事方式、照大纲排） | 105 |
+| `step1.md` | Blueprint 生成（问题链 + 新角度 + 事实只用一次，编号一律 CH，含对照表与叙事方式、照大纲排、每章分工/内容单元/素材三栏） | 119 |
 | `apply_suggest.md` | 单条问题出可替换改法（原句逐字+中文意思，按选的 A/B/C 出） | 32 |
 | `apply_suggest_batch.md` | 勾选的多条一起出改法（全文只发一次，最多 8 条一批） | 28 |
 | `locate_quote.md` | 问题里没引原句时按问题描述到稿子里找出对应句子 | 19 |
@@ -238,8 +238,8 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `thesis_novel.md` | 「要更新颖的」——避开常见说法、六种切口出 3 个角度 | 11 |
 | `step2.md` | 脚本施工（含每章问题链与新角度要求、对照表、网友说法带出处） | 61 |
 | `function_table.md` | 蓝图按功能重排第一步：原片每段一行功能表（作用、必须保留、可以换、四选一处理；换内容 > 合并 > 删，删要写查过的事实，合计不超过 `{{delete_max}}`%） | 84 |
-| `step1_function.md` | 蓝图按功能重排第二步：按功能表排章（锁定项、为什么这样排、等级重点、照大纲排写 outline_diff） | 126 |
-| `blueprint_review.md` | 蓝图审（写稿前 7 项：递进、揭示顺序、标题和主线、事实支撑、反转、硬套、删除是否成立） | 64 |
+| `step1_function.md` | 蓝图按功能重排第二步：按功能表排章（锁定项、为什么这样排、等级重点、照大纲排、推进一步/内容单元/复现用途） | 140 |
+| `blueprint_review.md` | 蓝图审（7 项 + 分严重/中等/轻微三级，局部修只交回改过的章） | 72 |
 | `step3.md` | 质量审核 | 72 |
 | `step4.md` | 终稿优化 | 58 |
 | `step5.md` | 开头逐句仿写（强化开头） | 27 |
@@ -248,7 +248,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `fact_audit.md` | 事实审计（拆主张、标风险、给搜索词） | 51 |
 | `fact_verify.md` | 联网核验（按证据定级 A–E，必改或收窄；网友说法只核有没有人这样说） | 56 |
 | `reverse_audit.md` | 二稿逆向工程审稿报告（九部分 + 逐条预估加分） | 523 |
-| `final_audit.md` | 终审①独立审稿（七方面 + P0–P3 清单 + 结论能发/还不能发，不再打分） | 224 |
+| `final_audit.md` | 终审①独立审稿（七方面 + P0–P3 清单 + 结论能发/还不能发，不再打分；复现≠复述） | 227 |
 | `final_revise.md` | 终审②按诊断修改（逐处原句→改成+理由） | 88 |
 | `final_recheck.md` | 终审③独立复审（只列问题+结论能发/还不能发，含论点自检、原地打转、假设交代与人物一致） | 80 |
 | `final_patch.md` | 按复审 OPEN 清单补改终稿 | 59 |

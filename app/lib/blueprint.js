@@ -504,6 +504,106 @@ function spreadText(sp) {
     '\n一条事实只在最合适的一章讲透;其他章要提就写进 recap_ids 一句带过,或者从新角度带出新信息(在 new_lens 写清新在哪)。';
 }
 
+// ---------- v1.100 结论推进、复现、内容预算(蓝图里一次排好,程序对账,不调模型) ----------
+// 问题分三级:严重(核心结论没证据、数据口径冲突)必须修;中等(章节明显重叠、素材严重不足)调整相关章节;轻微(过渡、个别字数偏差)保留,写稿时处理
+const LEVELS = ['严重', '中等', '轻微'];
+function normLevel(v, dflt) {
+  const s = str(v).trim().toLowerCase();
+  if (/严重|嚴重|severe|critical|high|p0/.test(s)) return '严重';
+  if (/轻微|輕微|minor|low|p2/.test(s)) return '轻微';
+  if (/中等|medium|moderate|p1/.test(s)) return '中等';
+  return dflt || '中等';
+}
+const levelRank = l => Math.max(0, LEVELS.indexOf(l)); // 0 最重
+const UNIT_KINDS = ['事实数据', '商业解释', '经营场景', '计算推导', '对比案例', '观点判断', '过渡'];
+const unitsOf = c => arr(c && c.units).filter(u => u && (str(u.task).trim() || Number(u.words) > 0));
+const unitWords = c => unitsOf(c).reduce((n, u) => n + (Number(u.words) || 0), 0);
+const ideasOf = c => arr(c && c.ideas_new).map(x => str(typeof x === 'string' ? x : (x && (x.idea || x.name)) || '').trim()).filter(Boolean);
+const reusesOf = c => arr(c && c.reuses).filter(r => r && typeof r === 'object').map(r => ({ idea: str(r.idea).trim(), from: str(r.from).trim().toUpperCase(), use: str(r.use).trim() })).filter(r => r.idea);
+// material:「够」/「补素材:…」/「合并:…」/「缩小:…」
+function materialOf(c) {
+  const m = c && c.material;
+  const t = str(typeof m === 'object' && m ? (m.action ? m.action + ':' + str(m.note) : m.note) : m).trim();
+  if (!t) return { action: '', note: '' };
+  const action = /补素材|補素材|补充素材|补搜/.test(t) ? '补素材' : /合并|合併|并入/.test(t) ? '合并' : /缩小|縮小|降低/.test(t) ? '缩小' : /^够|足够|充足/.test(t) ? '够' : '';
+  return { action, note: t.replace(/^(补素材|补充素材|合并|缩小|够)\s*[::]?\s*/, '') };
+}
+const UNIT_SHORT = 0.75, UNIT_OVER = 1.35, IDEA_SIM = 0.5, CLAIM_SOFT = 0.35, CLAIM_HARD = 0.55, REUSE_SAME = 0.6;
+function checkPlan(chs) {
+  const out = { planned: 0, short: [], over: [], thin_chain: [], dup_ideas: [], bad_reuse: [], same_claim: [], material: [] };
+  const idx = {};
+  chs.forEach((c, i) => { idx[str(c.id).toUpperCase()] = i; });
+  chs.forEach((c, i) => {
+    const us = unitsOf(c);
+    const budget = Number(c.word_budget) || 0;
+    if (us.length) out.planned++;
+    const w = unitWords(c);
+    const mat = materialOf(c);
+    if (mat.action && mat.action !== '够') out.material.push({ ch: c.id, action: mat.action, note: mat.note });
+    if (us.length && budget > 0) {
+      if (w < budget * UNIT_SHORT && mat.action !== '缩小' && mat.action !== '合并') out.short.push({ ch: c.id, words: w, budget, gap: mat.action === '补素材' });
+      else if (w > budget * UNIT_OVER) out.over.push({ ch: c.id, words: w, budget });
+      const kinds = new Set(us.map(u => str(u.kind).trim()).filter(Boolean));
+      if (budget >= 250 && kinds.size < 2) out.thin_chain.push({ ch: c.id, kinds: [...kinds] });
+    }
+    // 后一章又把前面讲透的概念当新内容讲(没写进 reuses)
+    ideasOf(c).forEach(idea => {
+      for (let j = 0; j < i; j++) {
+        const hit = ideasOf(chs[j]).find(x => jaccard(x, idea) >= IDEA_SIM);
+        if (hit) { out.dup_ideas.push({ ch: c.id, idea, from: chs[j].id, prev: hit }); break; }
+      }
+    });
+    // 复现必须写新用途;from 要是前面的章;新用途不能就是原来那一章的结论(原地复述)
+    reusesOf(c).forEach(r => {
+      const fi = idx[r.from];
+      if (!r.use) { out.bad_reuse.push({ ch: c.id, idea: r.idea, from: r.from, why: '没写这次拿它做什么(新用途)' }); return; }
+      if (fi == null || fi >= i) return; // 章号写错不算原地复述,交给 AI 看
+      const prev = chs[fi];
+      const same = [str(prev.claim), ...ideasOf(prev)].some(t => t && jaccard(t, r.use) >= REUSE_SAME);
+      if (same) out.bad_reuse.push({ ch: c.id, idea: r.idea, from: r.from, why: '写的新用途和 ' + r.from + ' 讲过的几乎一样(原地复述)' });
+    });
+  });
+  // 两章推进的是同一步、结论也差不多:同一个结论证明了两遍
+  for (let i = 0; i < chs.length; i++) for (let j = i + 1; j < chs.length; j++) {
+    const a = str(chs[i].claim), b = str(chs[j].claim);
+    if (!a.trim() || !b.trim()) continue;
+    const s = jaccard(a, b);
+    const sameStep = str(chs[i].step).trim() && str(chs[i].step).trim() === str(chs[j].step).trim();
+    if (s >= CLAIM_HARD || (sameStep && s >= CLAIM_SOFT)) out.same_claim.push({ a: chs[i].id, b: chs[j].id, sim: Math.round(s * 100) / 100, hard: s >= CLAIM_HARD && (sameStep || !str(chs[i].step).trim()), step: str(chs[j].step), ta: cut(a, 50), tb: cut(b, 50) });
+  }
+  out.same_claim = out.same_claim.sort((x, y) => y.sim - x.sim).slice(0, 6);
+  return out;
+}
+// 蓝图自己写的 self_check(生成时三项自查后还没解决的)
+function selfCheckOf(bp) {
+  return arr((bp || {}).self_check).filter(x => x && str(x.problem).trim()).map(x => ({ level: normLevel(x.level, '中等'), chapter: str(x.chapter).toUpperCase(), problem: cut(x.problem, 200) })).slice(0, 8);
+}
+
+// 写稿时每章多给的几行:前面讲过什么、本章推进哪一步、可以复现什么、内容单元、开头结尾怎么接
+function planBrief(chapters, i) {
+  const chs = arr(chapters);
+  const c = chs[i];
+  if (!c) return '';
+  const prev = chs.slice(0, i).map(p => {
+    const bits = [];
+    if (str(p.claim).trim()) bits.push('结论:' + cut(p.claim, 80));
+    const ids = ideasOf(p);
+    if (ids.length) bits.push('讲透了:' + ids.slice(0, 5).join('、'));
+    return bits.length ? '- ' + p.id + ' ' + bits.join(';') : '';
+  }).filter(Boolean);
+  const us = unitsOf(c);
+  const ru = reusesOf(c);
+  const mat = materialOf(c);
+  const last = i === chs.length - 1;
+  return (prev.length ? '前面各章已经讲过的(不要再展开讲一遍;要用就一句话回顾,紧接着说这次拿它做什么):\n' + prev.join('\n') + '\n' : '') +
+    (str(c.claim).trim() ? '本章把结论往前推的一步' + (str(c.step).trim() ? '(' + str(c.step).trim() + ')' : '') + ':' + str(c.claim).trim() + '\n' : '') +
+    (ru.length ? '本章可以复现前面的内容,但只能用在新用途上(一句回顾 + 新推导/新计算/新对比):\n' + ru.map(r => '- 「' + r.idea + '」(' + (r.from || '前面') + '讲过)→ 这次用来:' + (r.use || '(蓝图没写新用途:那就不要再讲)')).join('\n') + '\n' : '') +
+    (us.length ? '本章内容单元(按这个顺序写,字数靠这些单元撑起来;某一块写短了就把这一块的场景、算账过程、细节写足,不要拿前面的观点重讲来凑字数):\n' + us.map(u => '- ' + (str(u.kind).trim() || '内容') + ':' + str(u.task).trim() + (Number(u.words) > 0 ? '(约 ' + Number(u.words) + ' 词)' : '')).join('\n') + '\n' : '') +
+    (mat.action === '缩小' ? '本章论证范围已经缩小:' + (mat.note || '只回答蓝图 claim 里的具体问题') + '。只证明这个更具体的结论,不要扩回原来的大结论。\n' : '') +
+    (i > 0 ? '开头:第一句直接进上一章留下的问题,不要先复述或总结上一章的结论。\n' : '') +
+    (!last ? '结尾:停在留给下一章的新矛盾上(一句话抛出来),不要总结本章;下一章开头会直接接这个问题。\n' : '');
+}
+
 const LEVEL_TAG = /제\s*(\d{1,2})\s*급|第\s*(\d{1,2})\s*级|level\s*(\d{1,2})/i;
 const levelNo = c => { const m = str(c.purpose).match(LEVEL_TAG); return m ? Number(m[1] || m[2] || m[3]) : null; };
 function checkLadder(chs, ft) {
@@ -623,7 +723,10 @@ function programChecks(run, asset, text, ft) {
   const segs = segmentsOf(asset);
   const locks = arr((ft || {}).locks).length ? ft.locks : locksOf(run, asset, segs);
   const P = {}; ITEMS.forEach(it => { P[it.key] = []; });
-  const add = (k, hard, text_, ch) => P[k].push({ by: '程序', hard: !!hard, text: text_, ...(ch ? { chapter: ch } : {}) });
+  // v1.100 hard 的问题带等级(严重 / 中等);轻微的不挡,记进 minor,写稿时提醒
+  const add = (k, hard, text_, ch, level) => P[k].push({ by: '程序', hard: !!hard, text: text_, ...(ch ? { chapter: ch } : {}), ...(hard ? { level: normLevel(level, '中等') } : {}) });
+  const minor = [];
+  const addMinor = (k, text_, ch) => { minor.push({ key: k, text: text_, ...(ch ? { chapter: ch } : {}) }); };
 
   // v1.79 放松:事实重复只在 3 章以上展开讲时提出来,交给 AI 判断(后面的章带出新东西就不算问题)
   const prog = checks.checkProgression(text, { loose: true, skip: hookFactIds(run) });
@@ -636,6 +739,25 @@ function programChecks(run, asset, text, ft) {
   const lad = checkLadder(chs, ft);
   lad.same.forEach(s => add('progression', true, s.a + ' 和 ' + s.b + ' 这两级的重点一样(都是「' + s.focus + '」),相邻两级要不一样', s.a));
   lad.empty.forEach(e => add('progression', true, e.ch + ' 是等级章,没写 ' + e.miss.join('、'), e.ch));
+  // v1.100 结论推进、复现、内容预算
+  const plan = checkPlan(chs);
+  plan.dup_ideas.forEach(d => add('progression', true, d.ch + ' 又把 ' + d.from + ' 讲透的「' + d.prev + '」当新内容讲(ideas_new 写了「' + d.idea + '」);要用就写进 reuses 并写清这次的新用途,没有新用途就别在这一章讲', d.ch, '中等'));
+  plan.bad_reuse.forEach(d => add('progression', true, d.ch + ' 复现「' + d.idea + '」(' + (d.from || '前面') + '讲过):' + d.why + ';写清这次拿它算什么、比什么,写不出就删掉这处复现', d.ch, '中等'));
+  plan.same_claim.forEach(x => (x.hard
+    ? add('progression', true, x.a + ' 和 ' + x.b + ' 证明的是同一个结论(「' + x.ta + '」/「' + x.tb + '」);后一章要往前推一步(为什么 → 有多少 → 成本和限制 → 新风险),或者两章并掉', x.b, '中等')
+    : add('progression', false, x.a + ' 和 ' + x.b + ' 推进的一步一样(' + (x.step || '没写') + '),结论写得有点像(「' + x.ta + '」/「' + x.tb + '」)。请判断后一章有没有往前推一步', x.b)));
+  plan.short.forEach(x => (x.gap
+    ? add('facts', true, x.ch + ' 素材不够:内容单元合计约 ' + x.words + ' 词,word_budget ' + x.budget + ' 词,蓝图写了要补素材(' + (materialOf(chs.find(c => c.id === x.ch)).note || '没写缺什么') + ')', x.ch, '中等')
+    : add('progression', true, x.ch + ' 的内容单元合计约 ' + x.words + ' 词,撑不起 word_budget ' + x.budget + ' 词:补几块不同作用的内容(场景、计算、成本、对比),或者在 material 里写补素材 / 合并 / 缩小论证范围;不要靠重讲前面的观点凑字数', x.ch, '中等')));
+  plan.material.filter(m => m.action === '补素材' && !plan.short.some(x => x.ch === m.ch)).forEach(m => add('facts', true, m.ch + ' 蓝图写了要补素材:' + (m.note || '没写缺什么'), m.ch, '中等'));
+  plan.over.forEach(x => addMinor('progression', x.ch + ' 的内容单元合计约 ' + x.words + ' 词,比 word_budget ' + x.budget + ' 词多不少,写的时候每块写紧一点', x.ch));
+  plan.thin_chain.forEach(x => add('progression', false, x.ch + ' 的内容单元只有一种(' + (x.kinds.join('、') || '没写类型') + '),可能连不成分析链。请判断这一章有没有收入、成本、条件这些能连起来推导的内容', x.ch));
+  if (chs.length && !plan.planned) addMinor('progression', '蓝图没写各章的内容单元(units),没法核对素材够不够撑字数');
+  selfCheckOf(bp).forEach(x => {
+    const k = /证据|事实|口径|数据|推翻|素材|出处/.test(x.problem) ? 'facts' : 'progression';
+    if (x.level === '轻微') addMinor(k, '蓝图自查:' + x.problem, x.chapter);
+    else add(k, false, '蓝图自查(' + x.level + '):' + x.problem + '。请判断是不是真问题', x.chapter);
+  });
 
   const lk = checkLocks(chs, locks);
   lk.missing.forEach(l => add('reveal', true, l.label + '(原片在 ' + l.segment + ')没有落到任何一章'));
@@ -648,7 +770,7 @@ function programChecks(run, asset, text, ft) {
   if (last && !arr(last.locks).map(normLock).includes('ENDING') && !/回扣|回答|标题|제목|처음|첫/.test(chText(last))) add('thesis', false, '最后一章没写结尾回扣(locks 里没有 ENDING,文字里也没提回答标题)', last.id);
 
   const fc = checkFacts(run, chs);
-  fc.unknown.forEach(u => add('facts', true, u.ch + ' 写的事实编号 ' + u.ids.join('、') + ' 不在事实表里', u.ch));
+  fc.unknown.forEach(u => add('facts', true, u.ch + ' 写的事实编号 ' + u.ids.join('、') + ' 不在事实表里', u.ch, '严重'));
   // v1.82 补搜过的:降级的章写成「可能」「有说法」了就不再提「事实不够」;还写成确定的算问题。相反的新事实要有章正面处理
   const rec = ((run.steps || {}).blueprint_review || {}).research;
   const ri = rs().programItems(rec, chs, fc.thin);
@@ -658,12 +780,12 @@ function programChecks(run, asset, text, ft) {
     else if (ri.unhedged.includes(id)) add('facts', true, t.ch + ' 补搜查不到实录,这一章的主张要降一级写成「可能」「有说法认为」或者并掉,现在还写成确定的事实', t.ch);
     else add('facts', false, t.ch + ' 只用了 ' + t.ids.map((x, i) => x + '[' + t.kinds[i] + ']').join('、') + ',事实不够', t.ch);
   });
-  ri.against.forEach(id => add('reversal', true, '补搜到和论点或反转相反的事实 ' + id + ',蓝图没有一章正面处理(要写进某一章的 fact_ids,并写这一章怎么回应它)'));
+  ri.against.forEach(id => add('reversal', true, '补搜到和论点或反转相反的事实 ' + id + ',蓝图没有一章正面处理(要写进某一章的 fact_ids,并写这一章怎么回应它)', '', '严重'));
   if (fc.none.length) add('facts', false, fc.none.join('、') + ' 没写事实编号');
-  fc.weak.forEach(w => add('facts', true, '核验判 ' + w.grade + ' 的说法「' + cut(w.claim, 60) + '」在 ' + w.uses.map(u => u.ch).join('、') + ' 还当主张用', (w.uses[0] || {}).ch));
+  fc.weak.forEach(w => add('facts', true, '核验判 ' + w.grade + ' 的说法「' + cut(w.claim, 60) + '」在 ' + w.uses.map(u => u.ch).join('、') + ' 还当主张用', (w.uses[0] || {}).ch, '严重'));
 
   const rv = checkReversal(run, chs, ft);
-  rv.issues.forEach(x => add('reversal', x.hard, x.text, x.ch));
+  rv.issues.forEach(x => add('reversal', x.hard, x.text, x.ch, '严重'));
 
   const cs = consistency.scanBlueprint(run, text);
   if (cs.residue.length) cs.residue.forEach(h => add('forced', true, '原片残留词 ' + h.words.map(w => '「' + w + '」').join('') + '(' + h.ch + ')', h.ch));
@@ -680,7 +802,7 @@ function programChecks(run, asset, text, ft) {
   dl.dropped.forEach(d => add('deletion', true, d.segment + ' 功能表是「' + d.treatment + '」,蓝图里没有落到任何一章(合并的也要写进并入那一章的 source_segments)', ''));
   if (dl.ratio * 100 > dl.max + 1e-9) add('deletion', true, '蓝图里没有落到任何一章的原片段合计占原片 ' + Math.round(dl.ratio * 100) + '%,超过上限 ' + dl.max + '%');
   dl.deleted.forEach(d => add('deletion', false, '删了 ' + d.segment + '(占原片 ' + Math.round(d.ratio * 100) + '%)。理由:' + (d.reason || '没写') + ';查过的事实:' + (arr(d.checked_facts).join('、') || '没写') + (dl.unused.length ? ';事实表里还没分给任何一章的事实:' + dl.unused.slice(0, 12).join('、') : '') + '。请判断删除成立不成立(事实表里有能完成这段作用的事实就不成立)', ''));
-  return { items: P, consistency: cs, retention: ret, progression: prog, similar: sim, new_info: ni, spread: factSpread(run, chs), ladder: lad, locks: lk, copy: cp, unreachable: un, facts: fc, reversal: rv, deletion: dl };
+  return { items: P, minor, plan, consistency: cs, retention: ret, progression: prog, similar: sim, new_info: ni, spread: factSpread(run, chs), ladder: lad, locks: lk, copy: cp, unreachable: un, facts: fc, reversal: rv, deletion: dl };
 }
 
 // 蓝图这一层的删除:没有落到任何一章的原片段就是删掉了。功能表没判删的不许悄悄丢;合计不超过上限
@@ -710,7 +832,7 @@ function reviewPrompt(run, text, ft, pc) {
   const a = run.analysis || {};
   const th = a.thesis_card || {};
   const bp = bpOf(text);
-  const keep = ['id', 'time_range', 'function', 'purpose', 'information_goal', 'source_segments', 'treatment', 'layout_reason', 'locks', 'carries_peaks', 'open_loop', 'fact_ids', 'recap_ids', 'answers_prev', 'new_lens', 'leaves_question', 'level_focus', 'level_new_info'];
+  const keep = ['id', 'time_range', 'function', 'purpose', 'information_goal', 'source_segments', 'treatment', 'layout_reason', 'locks', 'carries_peaks', 'open_loop', 'fact_ids', 'recap_ids', 'answers_prev', 'new_lens', 'leaves_question', 'level_focus', 'level_new_info', 'word_budget', 'step', 'claim', 'ideas_new', 'reuses', 'units', 'material'];
   const slim = arr(bp.chapters).map(c => { const o = {}; keep.forEach(k => { if (c[k] != null && c[k] !== '') o[k] = c[k]; }); return o; });
   const facts = arr(a.facts).map(f => '- ' + f.id + ' [' + str(f.kind) + '] ' + cut(f.content, 200)).join('\n');
   const prog = ITEMS.map(it => '【' + it.name + '】\n' + (pc.items[it.key].length ? pc.items[it.key].map(p => '- ' + (p.hard ? '(程序确定)' : '(请判断)') + p.text).join('\n') : '- 程序没查出问题')).join('\n');
@@ -724,7 +846,7 @@ function reviewPrompt(run, text, ft, pc) {
     .replaceAll('{{function_table}}', ft ? tableBrief(ft) : '(没有)')
     .replaceAll('{{program}}', prog)
     .replaceAll('{{research}}', rs().reviewBrief(((run.steps || {}).blueprint_review || {}).research))
-    .replaceAll('{{blueprint}}', JSON.stringify({ chapters: slim, hook: bp.hook || {} }, null, 1));
+    .replaceAll('{{blueprint}}', JSON.stringify({ chapters: slim, hook: bp.hook || {}, ...(arr(bp.self_check).length ? { self_check: bp.self_check } : {}) }, null, 1));
 }
 // 重画蓝图的老任务:上一版稿子做过联网核验,判 C/D/E 的说法(和核验找到的反例)给 AI 审反转和事实支撑用。
 // 核验编号(F01…)是稿子里说法的编号,不是事实表的编号,两边不能混用
@@ -879,8 +1001,11 @@ function mergeReview(pc, ai) {
   const items = ITEMS.map(it => {
     const prog = pc.items[it.key];
     const x = ((ai || {}).items || {})[it.key] || {};
-    const aiProblems = arr(x.problems).map(p => ({ by: 'AI', hard: true, chapter: str(p.chapter), ...(str(p.segment) ? { segment: str(p.segment).toUpperCase() } : {}), text: str(p.problem || p.text), fix: str(p.fix) })).filter(p => p.text);
-    const aiPass = ai ? (x.pass === true || (x.pass !== false && !aiProblems.length)) : null;
+    // v1.100 AI 给每条问题定等级:轻微的不挡(记进 notes,写稿时提醒),严重 / 中等的才算不过
+    const aiAll = arr(x.problems).map(p => ({ by: 'AI', hard: true, level: normLevel(p.level, '中等'), chapter: str(p.chapter), ...(str(p.segment) ? { segment: str(p.segment).toUpperCase() } : {}), text: str(p.problem || p.text), fix: str(p.fix) })).filter(p => p.text);
+    const aiMinor = aiAll.filter(p => p.level === '轻微');
+    const aiProblems = aiAll.filter(p => p.level !== '轻微');
+    const aiPass = ai ? (x.pass === true || !aiProblems.length && (x.pass !== false || aiMinor.length > 0)) : null;
     const hard = prog.filter(p => p.hard).map(p => ({ ...p }));
     // AI 常把程序已经确定的问题再说一遍:和程序的某条差不多的不重复列,AI 写的改法补到程序那条上
     const own = aiProblems.filter(a => {
@@ -891,12 +1016,18 @@ function mergeReview(pc, ai) {
     const pass = !hard.length && aiPass !== false;
     // v1.78:不过的项给一句大白话(AI 写的优先,没写就用程序的通用说法)
     const plain = pass ? '' : (aiPass === false && str(x.plain).trim() ? cut(str(x.plain).trim(), 120) : PLAIN[it.key] || '');
-    return { key: it.key, name: it.name, pass, ai_pass: aiPass, plain, problems: hard.concat(aiPass === false ? own : []), notes: prog.filter(p => !p.hard).concat(aiPass !== false ? own.map(p => ({ ...p, hard: false })) : []) };
+    const problems = hard.concat(aiPass === false ? own : []);
+    const level = problems.length ? LEVELS[Math.min(...problems.map(p => levelRank(normLevel(p.level, '中等'))))] : '';
+    return { key: it.key, name: it.name, pass, ai_pass: aiPass, level, plain, problems, notes: prog.filter(p => !p.hard).concat(aiPass !== false ? own.map(p => ({ ...p, hard: false })) : []), minor: aiMinor.map(p => ({ ...p, hard: false })).concat(arr((pc.minor || [])).filter(m => m.key === it.key).map(m => ({ by: '程序', hard: false, level: '轻微', text: m.text, ...(m.chapter ? { chapter: m.chapter } : {}) }))) };
   });
-  return { pass: items.every(i => i.pass), items };
+  return { pass: items.every(i => i.pass), severe: items.some(i => !i.pass && i.level === '严重'), items };
+}
+// v1.100 轻微问题:不挡,写稿时提醒(最多 8 条)
+function minorNotes(rv) {
+  return arr(rv && rv.items).flatMap(i => arr(i.minor)).map(p => ((p.chapter && !str(p.text).startsWith(p.chapter)) ? p.chapter + ' ' : '') + cut(p.text, 140) + (p.fix ? '(改法:' + cut(p.fix, 80) + ')' : '')).slice(0, 8);
 }
 function failText(rv) {
-  return rv.items.filter(i => !i.pass).map(i => '【' + i.name + '】' + i.problems.map(p => (p.chapter ? p.chapter + ' ' : '') + p.text + (p.fix ? '(改法:' + p.fix + ')' : '')).join(';')).join('\n');
+  return rv.items.filter(i => !i.pass).map(i => '【' + i.name + '】' + i.problems.map(p => (p.level ? '(' + p.level + ')' : '') + (p.chapter ? p.chapter + ' ' : '') + p.text + (p.fix ? '(改法:' + p.fix + ')' : '')).join(';')).join('\n');
 }
 // 停下来时给人看的中文原因:每项一句,最多 3 条问题
 function reasonsZh(rv) {
@@ -904,6 +1035,37 @@ function reasonsZh(rv) {
 }
 
 const MAX_REVISE = 2;
+// v1.100 有严重问题才最多改 2 次、改完再让 AI 审;只有中等问题改 1 次,改完只让程序对账(不再调一次 AI 审)
+const hasSevere = rv => arr(rv && rv.items).some(i => !i.pass && arr(i.problems).some(p => normLevel(p.level, '中等') === '严重'));
+const reviseCap = rv => (hasSevere(rv) ? MAX_REVISE : 1);
+// v1.100 局部修:AI 只输出改动的章(按 id 覆盖到上一版上);要合并、拆分、挪时间的输出完整蓝图并写 "full": true
+function changedChapters(a, b) {
+  const A = {}, out = new Set();
+  arr(bpOf(a).chapters).forEach(c => { A[str(c.id).toUpperCase()] = JSON.stringify(c); });
+  const B = arr(bpOf(b).chapters);
+  B.forEach(c => { const id = str(c.id).toUpperCase(); if (A[id] !== JSON.stringify(c)) out.add(id); });
+  Object.keys(A).forEach(id => { if (!B.some(c => str(c.id).toUpperCase() === id)) out.add(id); });
+  return out;
+}
+function applyPatch(prevText, outText) {
+  const o = bpOf(prevText), n = bpOf(outText);
+  const nch = arr(n.chapters);
+  if (!nch.length) return { text: outText, mode: 'full' };
+  const och = arr(o.chapters);
+  const oldIds = new Set(och.map(c => str(c.id).toUpperCase()));
+  const newIds = nch.map(c => str(c.id).toUpperCase());
+  const subset = newIds.every(id => id && oldIds.has(id));
+  if (n.full === true || !subset || nch.length >= och.length) {
+    const { full, ...rest } = n;
+    return { text: JSON.stringify(rest, null, 1), mode: 'full' };
+  }
+  const by = {};
+  nch.forEach(c => { by[str(c.id).toUpperCase()] = c; });
+  const merged = { ...o, chapters: och.map(c => (by[str(c.id).toUpperCase()] ? { ...c, ...by[str(c.id).toUpperCase()] } : c)) };
+  ['hook', 'outline_diff', 'self_check'].forEach(k => { if (n[k] !== undefined) merged[k] = n[k]; });
+  return { text: JSON.stringify(merged, null, 1), mode: 'patch', changed: newIds };
+}
+const PATCH_RULE = '\n只修这些问题,不要重排没点到的章。输出格式(禁止代码围栏):只改个别章时,只输出改过的章 {"chapters":[改过的章,每章写全部字段]},程序会按 id 换掉原来那几章;要合并、拆分章节或挪动时间范围时,输出完整蓝图 JSON,并在顶层写 "full": true。';
 // 蓝图审:审 → 不过就改(最多 2 次)→ 每次改完再审;还不过就 held。改坏了时长或 JSON 的那次不用,算一次。
 // opts:{ run, asset, content, messages, r, callLlm, gate(c) → checkBlueprint 结果, ft }
 async function reviewLoop(opts) {
@@ -922,6 +1084,19 @@ async function reviewLoop(opts) {
     const rv = rs().applyKept(mergeReview(pc, ai), ((run.steps || {}).blueprint_review || {}).research, arr(bpOf(content).chapters));
     return { pc, ai, rv, aiError };
   };
+  // 只有中等问题、改完以后:只让程序再对一遍账(AI 上一轮点的中等问题当作已按意见改了;轻微的照旧留给写稿)
+  // AI 点到的章这次没改动的,那条问题照旧算没解决(不假装改好了)
+  const programOnly = (prevAi, prevContent) => {
+    const pc = programChecks(run, asset, content, ft);
+    const changed = changedChapters(prevContent, content);
+    const keep = prevAi ? { items: Object.fromEntries(Object.entries(prevAi.items || {}).map(([k, v]) => {
+      const ps = arr((v || {}).problems);
+      const left = ps.filter(p => normLevel(p.level, '中等') !== '轻微' && (str(p.chapter).trim() ? !changed.has(str(p.chapter).trim().toUpperCase()) : !changed.size));
+      return [k, { pass: !left.length, plain: (v || {}).plain, problems: left.concat(ps.filter(p => normLevel(p.level, '中等') === '轻微')) }];
+    })) } : null;
+    const rv = rs().applyKept(mergeReview(pc, keep), ((run.steps || {}).blueprint_review || {}).research, arr(bpOf(content).chapters));
+    return { pc, ai: null, rv, aiError: '', program_only: true, changed: [...changed] };
+  };
   run.steps = { ...(run.steps || {}), blueprint_review: { status: 'running', started_at: new Date().toISOString(), rounds: [] } };
   store.saveRun(run);
   let cur = await doReview('Step 1 蓝图审');
@@ -932,10 +1107,13 @@ async function reviewLoop(opts) {
   };
   record(cur);
   let revised = 0, researched = false;
-  while (!cur.rv.pass && revised < MAX_REVISE) {
+  let lastAi = cur.ai;
+  while (!cur.rv.pass && revised < reviseCap(cur.rv)) {
+    const severeBefore = hasSevere(cur.rv);
+    let researchedNow = false;
     // v1.82「事实支撑」不过:先按点名的章联网补搜(一次),查到的追加进事实表,再按新事实改蓝图
     if (!researched && cur.rv.items.some(i => i.key === 'facts' && !i.pass)) {
-      researched = true;
+      researched = true; researchedNow = true;
       const rec = await rs().research({ run, asset, ft, content, cur, callLlm });
       rounds.push({ at: new Date().toISOString(), research: { status: rec.status, added: arr(rec.added).length, found: arr(rec.found), downgrade: arr(rec.downgrade).map(d => d.ch), kept: arr(rec.kept).map(d => d.ch), why: rec.why || rec.error || '', secs: rec.secs } });
       run.steps.blueprint_review = { ...run.steps.blueprint_review, rounds: rounds.slice() };
@@ -950,25 +1128,31 @@ async function reviewLoop(opts) {
     const progFail = cur.rv.items.some(i => i.key === 'progression' && !i.pass);
     const fb = '蓝图审没通过,按下面的意见改蓝图。' + (progFail
       ? '「递进」的问题可以跨章调整:把一件事挪到最合适的一章讲透,其他章要提到它就写进 recap_ids 一句带过,或者换成事实表里还没用上的事实、新角度、新案例;挪完空出来的章可以并到相邻章或写短,不许为了凑时长编事实表里没有的东西。你觉得原来的安排更顺的地方可以不挪。其他问题只改点到的章节和字段。锁定项、功能表、总时长和其余要求不变'
-      : '只改点到的章节和字段,功能表、锁定项、总时长和其余要求不变') + ';重新输出完整 JSON(禁止代码围栏):\n' + failText(cur.rv) +
+      : '只改点到的章节和字段,功能表、锁定项、总时长和其余要求不变') + ';要改的问题(只列严重和中等的;轻微的写稿时再处理,这次不用改):\n' + failText(cur.rv) +
       (restored.length ? '\n功能表已改:' + restored.join('、') + ' 的删除不成立,改成「保留功能换内容」,要排进某一章(可以和相邻章一起讲),写进那一章的 source_segments,时间从其他章匀出来,总时长不变。' : '') +
       (cur.pc.items.progression.some(p => /level_focus/.test(p.text)) ? '\n等级章每一级都要写 level_focus 和 level_new_info,相邻两级的 level_focus 不能一样。' : '') +
       rs().feedback(((run.steps || {}).blueprint_review || {}).research) +
       spreadText(cur.pc.spread || []) +
       '\n每章的 new_lens 用一句话写观众在这一章第一次知道的新信息;改完先把各章 new_lens 排成清单逐对核对,两章讲同一件事的合并或挪走,核对完再输出(清单不要输出)。' +
-      '\noutline_diff 只写和人选论点时看到的大纲哪里不一样、为什么,用中文大白话;不要把这次按意见改了什么写进去。';
+      '\noutline_diff 只写和人选论点时看到的大纲哪里不一样、为什么,用中文大白话;不要把这次按意见改了什么写进去。' +
+      '\n素材不够的章三选一:补素材(事实表里有能用的就用上)、和相关的章合并、缩小这一章的论证范围(claim 改成更具体、现有素材撑得住的结论),在 material 里写清选了哪种;不要为了凑字数塞不相关的信息。' + PATCH_RULE;
     const m2 = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: fb }];
-    let r2 = null, c2 = '', why = '';
+    let r2 = null, c2 = '', why = '', patched = null;
     try {
       r2 = await callLlm(m2, 'Step 1 按蓝图审改(第 ' + revised + ' 次)');
-      c2 = checks.stripFence(r2.content.trim());
+      patched = applyPatch(content, checks.stripFence(r2.content.trim()));
+      c2 = patched.text;
       const g = gate(c2);
       if (g.duration.ok === false) why = '改完的蓝图不合格(' + g.duration.detail + '),没采用,保留上一版';
     } catch (e) { why = '改蓝图的调用失败(' + e.message + '),保留上一版'; }
     if (why) { rounds.push({ at: new Date().toISOString(), revise: revised, rejected: why }); run.steps.blueprint_review.rounds = rounds.slice(); store.saveRun(run); continue; }
-    content = c2; r = r2; messages = m2;
-    cur = await doReview('Step 1 蓝图审(改后第 ' + revised + ' 次)');
-    record(cur, { after_revise: revised });
+    // 后面接着改时,对话里的上一版要是合并好的完整蓝图(不是只有几章的补丁)
+    const prevContent = content;
+    content = c2; r = { ...r2, content: c2 }; messages = m2;
+    // 有严重问题,或者这一轮联网补搜过(事实表变了),改完再让 AI 审一次;只有中等问题的只让程序对账
+    if (severeBefore || researchedNow) { cur = await doReview('Step 1 蓝图审(改后第 ' + revised + ' 次)'); lastAi = cur.ai || lastAi; }
+    else cur = programOnly(lastAi, prevContent);
+    record(cur, { after_revise: revised, patch: patched.mode, ...(patched.changed ? { changed: patched.changed } : {}), recheck: severeBefore || researchedNow ? 'ai' : 'program' });
   }
   // v1.79:改完只剩「递进」没过 → 不停,接着写稿;没过的点交给写稿时提醒(step2Rules)
   // v1.95:「事实支撑」也不挡(写稿只用事实表;后面有联网核验、论点核对、终审事实,发布前没出处的数会挡),写稿时提醒
@@ -979,7 +1163,8 @@ async function reviewLoop(opts) {
   run.steps.blueprint_review = {
     ...(research ? { research } : {}),
     status, secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: new Date().toISOString(), revised, rounds,
-    items: cur.rv.items, summary: str((cur.ai || {}).summary), retopic: arr((cur.ai || {}).retopic).map(String).filter(Boolean).slice(0, 3),
+    items: cur.rv.items, summary: str((cur.ai || lastAi || {}).summary),
+    minor_notes: minorNotes(cur.rv), retopic: arr((cur.ai || lastAi || {}).retopic).map(String).filter(Boolean).slice(0, 3),
     reasons_zh: cur.rv.pass ? [] : reasonsZh(cur.rv),
     plain_zh: cur.rv.pass ? [] : cur.rv.items.filter(i => !i.pass).map(i => i.plain || ''),
     later_zh: cur.rv.pass ? [] : cur.rv.items.filter(i => !i.pass).map(i => LATER[i.key] || ''),
@@ -1190,9 +1375,11 @@ function step2Rules(run, blueprintText) {
 // v1.79 蓝图审只剩「递进」没过、接着写的:写稿时提醒这几处别讲重复
 function softNotes(run) {
   const br = (run.steps || {}).blueprint_review || {};
-  if (br.status !== 'passed_soft') return '';
+  const minor = arr(br.minor_notes).length && (br.status === 'passed' || br.status === 'passed_soft' || (br.status === 'held' && br.override))
+    ? '\n- 蓝图审留下的小问题(不影响结构,写的时候顺手处理):' + br.minor_notes.join(' / ') + '。' : '';
+  if (br.status !== 'passed_soft') return minor;
   return (arr(br.soft_notes).length ? '\n- 蓝图审提醒(这几处在蓝图里有点重复,写的时候注意):' + br.soft_notes.join(' / ') + '。同一件事在后面的章再出现时,要么一句带过当回顾,要么带出新东西(新角度、新案例、新推论),不要换个说法重讲一遍。' : '') +
-    (arr(br.soft_facts).length ? '\n- 蓝图审提醒(这几章的事实支撑弱,写的时候注意):' + br.soft_facts.join(' / ') + '。只用事实表里有的数和事;标「待查」「假设」的数当估算讲(第一次拿来算的时候顺口说一句是估算);事实表里没有的,写成方向或比较,不写具体数字、人名、年份。' : '');
+    (arr(br.soft_facts).length ? '\n- 蓝图审提醒(这几章的事实支撑弱,写的时候注意):' + br.soft_facts.join(' / ') + '。只用事实表里有的数和事;标「待查」「假设」的数当估算讲(第一次拿来算的时候顺口说一句是估算);事实表里没有的,写成方向或比较,不写具体数字、人名、年份。' : '') + minor;
 }
 
 // v1.82 蓝图补搜查不到的章:写稿时也不许硬编(降级的写成「可能」「有说法」;保持原样的章照蓝图写,但只用事实表里有的)
@@ -1229,7 +1416,8 @@ function view(run) {
   let chapters = [];
   const s1 = (run.outputs || {}).step1;
   if (s1 && modeOf(run) === 'function') {
-    chapters = arr(bpOf(s1).chapters).map(c => ({ id: c.id, time_range: c.time_range, source_segments: arr(c.source_segments), treatment: str(c.treatment), layout_reason: str(c.layout_reason), locks: arr(c.locks), level_focus: str(c.level_focus), level_new_info: str(c.level_new_info), purpose: cut(c.purpose, 160) }));
+    chapters = arr(bpOf(s1).chapters).map(c => ({ id: c.id, time_range: c.time_range, source_segments: arr(c.source_segments), treatment: str(c.treatment), layout_reason: str(c.layout_reason), locks: arr(c.locks), level_focus: str(c.level_focus), level_new_info: str(c.level_new_info), purpose: cut(c.purpose, 160),
+      word_budget: Number(c.word_budget) || 0, step: str(c.step), claim: str(c.claim), ideas_new: ideasOf(c), reuses: reusesOf(c), units: unitsOf(c).map(u => ({ kind: str(u.kind), task: str(u.task), words: Number(u.words) || 0 })), material: str(typeof c.material === 'object' && c.material ? JSON.stringify(c.material) : c.material) }));
   }
   // v1.89:人选论点时看到的大纲,蓝图哪里和它不一样
   let outlineDiff = '';
@@ -1246,5 +1434,5 @@ function view(run) {
     later_now: br && br.status !== 'passed' ? arr(br.items).filter(i => !i.pass).map(i => LATER[i.key] || '') : [], later_who: br ? arr(br.items).filter(i => !i.pass).map(i => ({ key: i.key, name: str(i.name), who: LATER_WHO[i.key] || '' })) : [] };
 }
 
-module.exports = { LATER_WHO, leftItems, leftFindings, leftCheck, leftCheckIfStale, leftCheckNow, leftView, SOFT_KEYS, LATER, newInfoSimilar, factSpread, spreadText, researchNotes, chapterSwap, chapterFunctions, draftCheckItem, DELETE_MAX_DEFAULT, deleteMax, setDeleteMax, deletionCheck, enforceDeletions, deletedOf, checkDeletions, plannedFacts, restoreDeletions, recordDeletions, MODES, settingMode, setSettingMode, decideMode, modeOf, segmentsOf, locksOf, ladderOf, TREATMENTS, normTreatment, normalizeTable, tableSourceHits, sourceTerms, sourceHits, ensureTable, tableBrief, locksBrief, ladderBrief, frameworkCore, timelineCore, step1Template,
+module.exports = { LEVELS, normLevel, checkPlan, planBrief, applyPatch, hasSevere, minorNotes, materialOf, LATER_WHO, leftItems, leftFindings, leftCheck, leftCheckIfStale, leftCheckNow, leftView, SOFT_KEYS, LATER, newInfoSimilar, factSpread, spreadText, researchNotes, chapterSwap, chapterFunctions, draftCheckItem, DELETE_MAX_DEFAULT, deleteMax, setDeleteMax, deletionCheck, enforceDeletions, deletedOf, checkDeletions, plannedFacts, restoreDeletions, recordDeletions, MODES, settingMode, setSettingMode, decideMode, modeOf, segmentsOf, locksOf, ladderOf, TREATMENTS, normTreatment, normalizeTable, tableSourceHits, sourceTerms, sourceHits, ensureTable, tableBrief, locksBrief, ladderBrief, frameworkCore, timelineCore, step1Template,
   checkLocks, adjacentSimilar, checkLadder, checkCopy, checkUnreachable, checkFacts, checkReversal, programChecks, ITEMS, reviewPrompt, parseReview, mergeReview, reasonsZh, reviewLoop, MAX_REVISE, holdChoice, backToAnalysis, view, bpForeignSlots, zhReview, zhNow, jaccard, chapterKeep, chapterBrief, step2Rules };

@@ -195,6 +195,7 @@
   .bp-tbl th { background: #f9fafb; font-weight: 600; white-space: nowrap; }
   .bp-ok { color: #047857; font-weight: 600; white-space: nowrap; }
   .bp-bad { color: #b91c1c; font-weight: 600; white-space: nowrap; }
+  .bp-lv{display:inline-block;font-size:11px;border-radius:4px;padding:0 4px;margin-right:4px}.bp-lv-a{background:#fee2e2;color:#991b1b}.bp-lv-b{background:#fef3c7;color:#92400e}.bp-lv-c{background:#e5e7eb;color:#374151}
   .bp-by { display: inline-block; font-size: 11px; padding: 0 6px; border-radius: 999px; background: #e5e7eb; color: #374151; margin-right: 4px; }
   .bp-tr-del { color: #9ca3af; }
   .bp-del { border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 10px; margin: 8px 0; font-size: 13px; }
@@ -6257,6 +6258,15 @@ function bpLaterHtml(rv) {
   const xs = (rv.later_zh || []).filter(Boolean);
   return xs.length ? '<div style="margin-top:4px;color:#047857">' + xs.map(esc).join('<br>') + '</div>' : '';
 }
+// v1.100 每章的结论推进、复现和内容单元(蓝图里一次排好的)
+function bpPlanHtml(chs) {
+  const unitSum = c => (c.units || []).reduce((n, u) => n + (Number(u.words) || 0), 0);
+  return `<details><summary>每章推进哪一步、内容单元够不够撑字数</summary><table class="bp-tbl"><tr><th>章</th><th>推进的一步 / 结论</th><th>内容单元(预计词数)</th><th>素材</th><th>复现前面的(这次的新用途)</th></tr>${chs.map(c => {
+    const sum = unitSum(c), b = Number(c.word_budget) || 0;
+    const warn = b && sum && sum < b * 0.75;
+    return `<tr><td>${esc(c.id)}</td><td>${c.step ? '<b>' + esc(c.step) + '</b>:' : ''}${esc(c.claim || '')}${(c.ideas_new || []).length ? '<div class="hint">第一次讲透:' + c.ideas_new.map(esc).join('、') + '</div>' : ''}</td><td>${(c.units || []).map(u => '<div>· ' + (u.kind ? '<b>' + esc(u.kind) + '</b> ' : '') + esc(u.task) + (u.words ? ' <span class="hint">' + u.words + '</span>' : '') + '</div>').join('')}${(c.units || []).length ? '<div class="hint" style="' + (warn ? 'color:#b91c1c' : '') + '">合计 ' + sum + ' / 预算 ' + (b || '?') + ' 词' + (warn ? '(偏少)' : '') + '</div>' : '<span class="hint">没写</span>'}</td><td>${esc(c.material || '')}</td><td>${(c.reuses || []).map(r => '<div>「' + esc(r.idea) + '」' + (r.from ? '<span class="hint">(' + esc(r.from) + ')</span>' : '') + ' → ' + esc(r.use || '没写新用途') + '</div>').join('')}</td></tr>`;
+  }).join('')}</table></details>`;
+}
 function bpPlain(rv, i) {
   if ((rv.plain_zh || [])[i]) return rv.plain_zh[i];
   const it = (rv.items || []).filter(x => !x.pass)[i];
@@ -6592,7 +6602,7 @@ function renderBlueprintPanel(r) {
   const rv = v.review || null;
   const chip = !rv ? '<span class="bp-chip run">蓝图审还没跑</span>'
     : rv.status === 'running' ? '<span class="bp-chip run">蓝图审中…</span>'
-    : rv.status === 'passed' ? `<span class="bp-chip ok">蓝图审通过${rv.revised ? '(AI 按意见改了 ' + rv.revised + ' 次)' : ''}</span>`
+    : rv.status === 'passed' ? `<span class="bp-chip ok">蓝图审通过${rv.revised ? '(AI 按意见改了 ' + rv.revised + ' 次)' : ''}${(rv.minor_notes || []).length ? ',轻微 ' + rv.minor_notes.length + ' 条留给写稿' : ''}</span>`
     : rv.status === 'passed_soft' ? '<span class="bp-chip ok">蓝图审基本通过(没过的只有' + esc(bpSoftNames(rv)) + ',后面会处理,已接着写)</span>'
     : `<span class="bp-chip bad">蓝图审没通过${rv.override ? ' · 你选了仍然写' : ''}</span>`;
   const leftChip = v.left && v.left.status !== 'none' && (v.left.solved + v.left.still + v.left.unsure) ? `<span class="bp-chip ${v.left.still ? 'bad' : 'ok'}">留下的问题:已解决 ${v.left.solved}/${v.left.items.length}</span>` : '';
@@ -6624,9 +6634,9 @@ function renderBlueprintPanel(r) {
   if (rv && rv.status === 'passed_soft') html += `<div class="hint" style="color:#92400e;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:8px 10px;margin:6px 0"><b>大白话:没过的这几项后面的步骤能接住,所以没停下来,已经接着写稿。</b>${(rv.soft_notes || []).length ? '<div style="margin-top:4px">重复:写稿时已提醒 AI 这几处别重讲:' + rv.soft_notes.map(esc).join(';') + '</div>' : ''}${(rv.soft_facts || []).length ? '<div style="margin-top:4px">事实支撑弱:写稿时已提醒 AI 只用事实表里的数,待查的当估算讲:' + rv.soft_facts.map(esc).join(';') + '</div>' : ''}${bpLaterHtml(rv)}</div>`;
   if (v.left && !v.held) html += bpLeftHtml(v.left);
   if (rv && (rv.items || []).length) {
-    const prob = p => `<div><span class="bp-by">${esc(p.by)}</span>${p.chapter && !String(p.text).startsWith(p.chapter) ? esc(p.chapter) + ' ' : ''}${esc(p.text)}${p.fix ? `<div class="hint" style="margin:0 0 0 4px">改法:${esc(p.fix)}</div>` : ''}</div>`;
-    html += `<table class="bp-tbl"><tr><th>审的项</th><th>结果</th><th>问题</th></tr>${rv.items.map(it => `<tr><td style="white-space:nowrap">${esc(it.name)}</td><td>${it.pass ? '<span class="bp-ok">✓ 通过</span>' : '<span class="bp-bad">✗ 不过</span>'}</td><td>${!it.pass && (it.plain || BP_PLAIN[it.name]) ? `<div style="margin-bottom:4px"><b>大白话:${esc(it.plain || BP_PLAIN[it.name])}</b></div>` : ''}${(it.problems || []).map(prob).join('') || '<span class="hint">—</span>'}${(it.notes || []).length ? `<details><summary style="font-weight:400" class="hint">参考 ${it.notes.length} 条(程序提示 / AI 认为不算问题)</summary>${it.notes.map(prob).join('')}</details>` : ''}</td></tr>`).join('')}</table>`;
-    const rounds = (rv.rounds || []).map(x => x.research ? `联网补搜:${bpResearchShort(x.research)}` : x.rejected ? `改第 ${x.revise} 次:${esc(x.rejected)}` : `${x.after_revise ? '改第 ' + x.after_revise + ' 次后再审' : '第一次审'}:${x.pass ? '通过' : '不过(' + (x.items || []).filter(i => !i.pass).map(i => esc(i.name)).join('、') + ')'}${x.ai_error ? '(' + esc(x.ai_error) + ')' : ''}`);
+    const prob = p => `<div><span class="bp-by">${esc(p.by)}</span>${p.level ? '<span class="bp-lv bp-lv-' + (p.level === '严重' ? 'a' : p.level === '轻微' ? 'c' : 'b') + '">' + esc(p.level) + '</span>' : ''}${p.chapter && !String(p.text).startsWith(p.chapter) ? esc(p.chapter) + ' ' : ''}${esc(p.text)}${p.fix ? `<div class="hint" style="margin:0 0 0 4px">改法:${esc(p.fix)}</div>` : ''}</div>`;
+    html += `<table class="bp-tbl"><tr><th>审的项</th><th>结果</th><th>问题</th></tr>${rv.items.map(it => `<tr><td style="white-space:nowrap">${esc(it.name)}</td><td>${it.pass ? '<span class="bp-ok">✓ 通过</span>' : '<span class="bp-bad">✗ 不过</span>'}</td><td>${!it.pass && (it.plain || BP_PLAIN[it.name]) ? `<div style="margin-bottom:4px"><b>大白话:${esc(it.plain || BP_PLAIN[it.name])}</b></div>` : ''}${(it.problems || []).map(prob).join('') || '<span class="hint">—</span>'}${(it.minor || []).length ? `<details><summary style="font-weight:400" class="hint">轻微 ${it.minor.length} 条(不挡,写稿时处理)</summary>${it.minor.map(prob).join('')}</details>` : ''}${(it.notes || []).length ? `<details><summary style="font-weight:400" class="hint">参考 ${it.notes.length} 条(程序提示 / AI 认为不算问题)</summary>${it.notes.map(prob).join('')}</details>` : ''}</td></tr>`).join('')}</table>`;
+    const rounds = (rv.rounds || []).map(x => x.research ? `联网补搜:${bpResearchShort(x.research)}` : x.rejected ? `改第 ${x.revise} 次:${esc(x.rejected)}` : `${x.after_revise ? '改第 ' + x.after_revise + ' 次' + (x.patch === 'patch' && (x.changed || []).length ? '(只改了 ' + esc(x.changed.join('、')) + ')' : '') + (x.recheck === 'program' ? '后程序对账' : '后再审') : '第一次审'}:${x.pass ? '通过' : '不过(' + (x.items || []).filter(i => !i.pass).map(i => esc(i.name)).join('、') + ')'}${x.ai_error ? '(' + esc(x.ai_error) + ')' : ''}`);
     if (rounds.length) html += `<div class="hint">过程:${rounds.join(' → ')}${rv.secs ? ',共 ' + rv.secs + ' 秒' : ''}</div>`;
     // 前几轮审出来、AI 已经按意见改过的问题:折起来,方便对照这次改掉了什么
     const earlier = (rv.rounds || []).filter(x => !x.rejected && !x.research && !x.pass).slice(0, rv.status === 'held' ? -1 : undefined);
@@ -6641,6 +6651,7 @@ function renderBlueprintPanel(r) {
   if (chs.length) {
     html += `<details open><summary>每章怎么排(${chs.length} 章)</summary><table class="bp-tbl"><tr><th>章</th><th>时间</th><th>承接原片段</th><th>处理</th><th>锁定项</th><th>为什么这样排</th>${chs.some(c => c.level_focus) ? '<th>这一级的重点 / 新信息</th>' : ''}</tr>${chs.map(c => `<tr><td>${esc(c.id)}</td><td style="white-space:nowrap">${esc(c.time_range)}</td><td>${esc((c.source_segments || []).join('、') || '新加')}</td><td>${esc(c.treatment)}</td><td>${esc((c.locks || []).join('、'))}</td><td>${esc(c.layout_reason)}</td>${chs.some(x => x.level_focus) ? `<td>${c.level_focus ? '<b>' + esc(c.level_focus) + '</b>:' + esc(c.level_new_info) : ''}</td>` : ''}</tr>`).join('')}</table></details>`;
   }
+  if (chs.some(c => c.claim || (c.units || []).length)) html += bpPlanHtml(chs);
   const t = v.table;
   if (t && (t.rows || []).length) {
     const pct = x => Math.round((x || 0) * 100) + '%';

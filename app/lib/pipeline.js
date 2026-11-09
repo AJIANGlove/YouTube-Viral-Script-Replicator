@@ -495,8 +495,9 @@ async function runScriptByChapters(opts) {
       (c.new_lens ? '本章观众第一次知道的新信息 / 新角度(只用本章分到的事实推进,前面章节讲过的事实和结论不要再展开):' + c.new_lens + '\n' : '') +
       (Array.isArray(c.cases) && c.cases.length ? '本章出场的真人案例(按写前分析里写好的这次要带出的新信息写):' + c.cases.map(x => (typeof x === 'string' ? x : (x && (x.nick || x.name)) || '')).filter(Boolean).join('、') + '\n' : '') +
       (c.leaves_question ? '本章结尾抛出留给下一章的问题:' + c.leaves_question + '\n' : '') +
+      bpm().planBrief(chapters, i) + // v1.100:前面讲过什么、本章推进哪一步、复现的新用途、内容单元、开头结尾怎么接
       bpm().chapterBrief(run, c) + // v1.73:按功能重排的蓝图才有(为什么这样排、必须保留的那一步、锁定项、这一级的重点和新信息)
-      (tail ? '上一章结尾(仅用于衔接,不得重复):\n' + tail + '\n' : '') +
+      (tail ? '上一章结尾(仅用于衔接,不得重复,也不要换个说法再总结一遍):\n' + tail + '\n' : '') +
       (ahead ? '后续章节(不要写,只用于把握铺垫与节奏):\n' + ahead + '\n' : '') +
       '现在直接开始写正文,不要输出思考过程、提纲或解释。';
     let msg = [{ role: 'user', content: basePrompt + brief }];
