@@ -17,10 +17,11 @@ function load(runId) { try { return JSON.parse(fs.readFileSync(fileOf(runId), 'u
 function save(runId, st) { fs.mkdirSync(WEB_DIR, { recursive: true }); const f = fileOf(runId); fs.writeFileSync(f + '.tmp', JSON.stringify(st)); fs.renameSync(f + '.tmp', f); }
 function must(runId) { const st = load(runId); if (!st) throw err('这个任务没有开网页版', 404); return webOf(st); }
 
-// 哪些步骤走网页版:写前分析(含原片对照表)、AI 调整(查询词、调整、补素材、修账本、账本对照、论点对账)、蓝图(含功能表、按蓝图审改)、写稿
+// 哪些步骤走网页版(v1.106 收窄):写前分析(那条最长的消息,格式不对重发也在同一个对话)、蓝图(含闸门重试、按蓝图审改)、写稿
+// 原片对照表、AI 调整(查询词、调整、补素材、修账本、账本对照、论点对账)、蓝图前的功能表、蓝图补搜自动走 API,不用人点
 // 蓝图审照旧走 API(人选的:蓝图先粘回来,程序检查 + 蓝图审)
-const WEB_RE = /^(写前分析|原片对照表|联网查询词|AI 先调整|AI 补素材|AI 修账本|账本对照事实|账本补推算行|论点对账|Step 1|Step 2)/;
-const API_RE = /蓝图审(?!改)/;
+const WEB_RE = /^(写前分析|Step 1|Step 2)/;
+const API_RE = /蓝图审(?!改)|^Step 1 (蓝图补搜|功能表)/;
 const ANSWERS_MAX = 40;
 
 const hash = s => crypto.createHash('sha1').update(String(s)).digest('hex').slice(0, 16);
@@ -252,7 +253,8 @@ function view(runOrId) {
   if (!w) return null;
   return {
     on: !!w.on, at: w.at, off_at: w.off_at,
-    pending: arr(w.pending).map(({ prior, key, ...p }) => ({ ...p, waiting: waiters.has(wkey(id, p.id)) })),
+    pending: arr(w.pending).filter(p => p.kind === 'script' || waiters.has(wkey(id, p.id)) || (WEB_RE.test(String(p.label || '')) && !API_RE.test(String(p.label || '')))) // v1.106 升级前挂着、现在改走 API 的步骤不再显示
+      .map(({ prior, key, ...p }) => ({ ...p, waiting: waiters.has(wkey(id, p.id)) })),
     done: arr(w.done)
   };
 }

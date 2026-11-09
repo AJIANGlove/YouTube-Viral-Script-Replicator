@@ -5973,7 +5973,7 @@ function renderWebPanel(r) {
   const done = w.done || [];
   let html = `<h2 style="color:#6d28d9;display:flex;justify-content:space-between;align-items:center"><span>网页版写稿${pend.length ? ':等你粘贴(' + pend.length + ' 条)' : ''}</span>
     ${w.on ? '<button class="an-btn" onclick="webOff()">后面全部改用 API</button>' : ''}</h2>
-    <div class="hint">${w.on ? '写前分析、AI 调整、出蓝图、写稿这几步在你的 Claude 网页版做:复制消息发过去,把回答粘回来。粘回稿子后,审核、优化、初稿检查、终审照旧自动走 API。' : '已改回 API,后面的步骤自动跑。'}
+    <div class="hint">${w.on ? '写前分析、出蓝图、写稿这三步在你的 Claude 网页版做:复制消息发过去,把回答粘回来。中间的 AI 调整、原片对照表、功能表和后面的审核、优化、初稿检查、终审都自动走 API,不用你点。' : '已改回 API,后面的步骤自动跑。'}
       ${done.length ? '已完成 ' + done.length + ' 条。' : ''}</div>`;
   if (!pend.length && w.on) html += `<div class="hint" style="margin-top:6px">程序正在处理${['running', 'analyzing', 'awaiting_review', 'queued'].includes(r.status) ? '(检查、查资料或跑 API 的步骤),下一条消息准备好会出现在这里' : ''}。</div>`;
   html += pend.map(p => {
@@ -6086,7 +6086,7 @@ function renderThesisPanel(r) {
       ${(card.missing || []).length ? `<div class="th-row"><b>还没查到:</b>${esc(card.missing.join(';'))}</div>` : ''}
       ${outline.length ? `<div class="th-row"><b>整篇大概会这样讲:</b><ol>${outline.map(x => `<li>${esc(x.says)}${x.uses ? '<span style="color:#4b5563">(用:' + esc(x.uses) + ')</span>' : ''}${x.leaves ? '<span style="color:#6b7280"> → ' + esc(x.leaves) + '</span>' : ''}</li>`).join('')}</ol></div>` : ''}
       <div class="rv-ops" style="margin-top:6px"><button class="an-btn v13" onclick="thChoose('pick','${escAttr(a.id)}',this)">选这个</button>
-        <button class="an-btn" style="border-color:#7c3aed;color:#6d28d9" onclick="thChoose('pickweb','${escAttr(a.id)}',this)" title="写前分析、AI 调整、出蓝图、写稿改成复制到你自己的 Claude 网页版,把回答粘回来;后面的审核、优化、初稿检查、终审照旧自动跑">选这个,后面在网页版写</button>
+        <button class="an-btn" style="border-color:#7c3aed;color:#6d28d9" onclick="thChoose('pickweb','${escAttr(a.id)}',this)" title="写前分析、出蓝图、写稿改成复制到你自己的 Claude 网页版,把回答粘回来;AI 调整、功能表和后面的审核、优化、初稿检查、终审照旧自动跑">选这个,后面在网页版写</button>
         <button class="an-btn" onclick="thEdit('${escAttr(a.id)}')">改一句再选</button></div>
       ${editing ? `<div style="margin-top:6px"><textarea id="th-edit-text" rows="2" style="width:100%;box-sizing:border-box">${esc(one)}</textarea>
         <div class="hint">改完会按你这句重新联网核对一次(1–3 分钟),核对完再停在这里给你看。</div>
@@ -6113,7 +6113,7 @@ async function thChoose(action, id, btn) {
   if (action === 'edit') { const t = (document.getElementById('th-edit-text') || {}).value || ''; if (!t.trim()) { alert('论点是空的'); return; } body.text = t.trim(); }
   if (action === 'novel') { body.action = 'regen'; body.novel = true; }
   if (action === 'pickweb') {
-    if (!confirm('选这个论点,后面在你自己的 Claude 网页版写?\n\n写前分析、AI 调整、出蓝图、写稿这几步,程序会把拼好的消息给你复制,你发到 Claude 网页版,再把回答粘回来(一篇大约发 10 条、粘回 7 次左右)。\n粘回稿子以后,审核、优化、初稿检查、二稿审稿、终审照旧自动走 API。\n中途可以随时点「后面全部改用 API」。')) return;
+    if (!confirm('选这个论点,后面在你自己的 Claude 网页版写?\n\n写前分析、出蓝图、写稿这三步,程序会把拼好的消息给你复制,你发到 Claude 网页版,再把回答粘回来(一篇大约粘回 4 次)。\n中间的 AI 调整、原片对照表、功能表,以及粘回稿子以后的审核、优化、初稿检查、二稿审稿、终审,都自动走 API。\n中途可以随时点「后面全部改用 API」。')) return;
     body.action = 'pick'; body.web = true;
   }
   const hint = ((document.getElementById('th-hint') || {}).value || '').trim();

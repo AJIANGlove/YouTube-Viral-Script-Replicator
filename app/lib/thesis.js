@@ -242,7 +242,7 @@ function holdChoice(runId, body) {
   if (((run.steps || {}).thesis_pick || {}).translating) throw Object.assign(new Error('论点卡正在翻成中文,等一下再点'), { status: 409 });
   if (action === 'pick') {
     choose(run, str(b.id));
-    // v1.105 「选这个,后面在网页版写」:写前分析、AI 调整、蓝图、写稿改成复制到自己的 Claude 网页版、粘回来;审稿照旧走 API
+    // v1.105 「选这个,后面在网页版写」:写前分析、蓝图、写稿改成(v1.106 起 AI 调整自动走 API)复制到自己的 Claude 网页版、粘回来;审稿照旧走 API
     if (b.web) require('./manual').turnOn(run); else require('./manual').clear(run);
     run.steps = { ...(run.steps || {}), thesis_pick: { status: 'done', at: now, choice: str(b.id) } };
   } else if (action === 'edit') {
