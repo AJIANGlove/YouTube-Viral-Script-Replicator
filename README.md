@@ -235,6 +235,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `apply_suggest_batch.md` | 勾选的多条一起出改法（全文只发一次，最多 8 条一批） | 28 |
 | `locate_quote.md` | 问题里没引原句时按问题描述到稿子里找出对应句子 | 19 |
 | `translate_marked.md` | 原文详情翻译（标出的句子在中文里也括出来画线） | 13 |
+| `info_reuse_check.md` | 写完查信息重复（重讲/缺回顾/双重总结，最多 10 处） | 51 |
 | `thesis_novel.md` | 「要更新颖的」——避开常见说法、六种切口出 3 个角度 | 11 |
 | `step2.md` | 脚本施工（含每章问题链与新角度要求、对照表、网友说法带出处） | 61 |
 | `function_table.md` | 蓝图按功能重排第一步：原片每段一行功能表（作用、必须保留、可以换、四选一处理；换内容 > 合并 > 删，删要写查过的事实，合计不超过 `{{delete_max}}`%） | 84 |
@@ -244,7 +245,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `step4.md` | 终稿优化 | 58 |
 | `step5.md` | 开头逐句仿写（强化开头） | 27 |
 | `script_check.md` | 稿件检查 K1-K5 | 38 |
-| `draft_check.md` | 初稿检查出二稿（「按功能重排」的任务多第 9 项「蓝图功能是否落实」，由程序填进 `{{function_check}}`，严格照原片时为空） | 56 |
+| `draft_check.md` | 初稿检查出二稿（「按功能重排」多第 9 项蓝图功能；并列入「信息复现核对」查出的重讲/缺回顾/双重总结） | 59 |
 | `fact_audit.md` | 事实审计（拆主张、标风险、给搜索词） | 51 |
 | `fact_verify.md` | 联网核验（按证据定级 A–E，必改或收窄；网友说法只核有没有人这样说） | 56 |
 | `reverse_audit.md` | 二稿逆向工程审稿报告（九部分 + 逐条预估加分） | 523 |
@@ -279,7 +280,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 68 份 `.md`（4001 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 73 份，合计 4210 行。
+合计 69 份 `.md`（4055 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 74 份，合计 4264 行。
 
 ### 历史版本
 

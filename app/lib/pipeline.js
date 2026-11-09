@@ -115,6 +115,7 @@ const STEP_CHANNELS = [
   { key: 'final_revise', name: '终审·修改', def: 'gpt' },
   { key: 'final_options', name: '给每个问题出 A/B/C 改法', def: 'gpt' },
   { key: 'ai_fix', name: 'AI 出改法', def: 'gpt' },
+  { key: 'info_check', name: '信息复现核对(按实际稿子找重讲、缺回顾)', def: 'main' }, // v1.104
   { key: 'explain', name: '问题在哪 / 大白话(只给人看)', def: 'tweak' }
 ];
 function gptChannel(cfg) {

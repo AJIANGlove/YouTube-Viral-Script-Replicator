@@ -781,7 +781,7 @@ const server = http.createServer(async (req, res) => {
 
     // ---------- 先写后改:逐段对照审稿 ----------
     // GET 视图(每次按当前稿子现算);POST status/undo 立即返回;rewrite/fact 等模型返回再响应(单章约 0.5–2 分钟)
-    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact|accept_claim|ignore_block|ignore_item|apply_fix|suggest_fix|suggest_fix_batch|quote_context|confirm_ok|source_mapping|pov_mode))?$/);
+    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact|accept_claim|ignore_block|ignore_item|apply_fix|suggest_fix|suggest_fix_batch|quote_context|confirm_ok|source_mapping|pov_mode|info_check))?$/);
     if (rvMatch) {
       const [, id, action] = rvMatch;
       try {
@@ -828,6 +828,7 @@ const server = http.createServer(async (req, res) => {
           if (action === 'opening_fix') return send(res, 200, review.startOpeningFix(id));
           // 论点核对(后台跑):用稿子自己的数字检验开头的主张;fix:true 按核对结果补改一次再核对
           if (action === 'claim_check') return send(res, 200, review.startClaimCheck(id, body));
+          if (action === 'info_check') return send(res, 200, review.startInfoCheck(id)); // v1.104 信息复现核对:重新检查
           // 终稿之后去AI感(后台跑):生成多方案建议 → 人勾选改法 → 按选择修改
           if (action === 'deai') return send(res, 200, review.startDeai(id, body));
           // 复审没达标:按复审意见补改(后台跑):整理未解决问题清单(extract)或勾选问题+决定补改;以终稿为底,不从二稿重来
