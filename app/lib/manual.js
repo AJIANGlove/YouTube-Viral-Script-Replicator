@@ -1,6 +1,6 @@
 // v1.105 网页版接力:选完论点后,写前分析、AI 调整、出蓝图、写稿这几步不调 API,
 // 程序把拼好的提示词交给人复制到自己的 Claude 网页版,人把回答粘回来,程序照常解析、检查、往下走。
-// 后面的审核、优化、初稿检查、二稿审稿、终审照旧走 API。
+// 后面的审核、初稿检查、二稿审稿、终审照旧走 API。v1.113 起优化(Step 4)也走网页版。
 //
 // 做法:llmCall 遇到「这篇开了网页版 + 这一步属于网页版」时不发请求,改成在任务上挂一条「等你粘贴」,
 // 等人粘回来再把回答当成 AI 的输出交回调用方。调用方(重试、续写、闸门)的逻辑一行不改。
@@ -20,8 +20,9 @@ function must(runId) { const st = load(runId); if (!st) throw err('这个任务�
 // 哪些步骤走网页版(v1.106 收窄):写前分析(那条最长的消息,格式不对重发也在同一个对话)、蓝图(含闸门重试、按蓝图审改)、写稿
 // 原片对照表、AI 调整(查询词、调整、补素材、修账本、账本对照、论点对账)、蓝图前的功能表、蓝图补搜自动走 API,不用人点
 // 蓝图审照旧走 API(人选的:蓝图先粘回来,程序检查 + 蓝图审)
-const WEB_RE = /^(写前分析|Step 1|Step 2)/;
-const API_RE = /蓝图审(?!改)|^Step 1 (蓝图补搜|功能表)/;
+// v1.113 优化(Step 4)也走网页版:主调用新开「优化」对话,结构/篇幅/听感重试回这个对话接着发;外文字符修正(逐行小修)照旧走 API。审核(Step 3)照旧走 API
+const WEB_RE = /^(写前分析|Step 1|Step 2|Step 4)/;
+const API_RE = /蓝图审(?!改)|^Step 1 (蓝图补搜|功能表)|^Step 4 外文字符修正/;
 const ANSWERS_MAX = 40;
 
 const hash = s => crypto.createHash('sha1').update(String(s)).digest('hex').slice(0, 16);
@@ -45,6 +46,7 @@ function chatName(label) {
   if (/^Step 1 功能表/.test(l)) return '蓝图·功能表';
   if (/^Step 1/.test(l)) return '蓝图';
   if (/^Step 2/.test(l)) return '写稿';
+  if (/^Step 4/.test(l)) return '优化';
   return l;
 }
 
@@ -97,6 +99,25 @@ function fixTitle(runId, web) {
   web.chat_title = web.chats.length || web.done.length ? topic : (zhTitleOf(topic) || topic);
 }
 
+// v1.113 优化这一步:蓝图里有哪些章(粘回来时先看齐没齐)
+function bpIds(runId) {
+  try {
+    const run = store.getRun(runId) || {};
+    const bp = JSON.parse(require('./checks').stripFence(String((run.outputs || {}).step1 || '')));
+    return arr(bp.chapters).map(c => String(c.id || '')).filter(Boolean);
+  } catch (e) { return []; }
+}
+// 粘回来的终稿:去掉代码框那几行;一章都认不出、或者后面的章没有(网页版回答被截断),直接让人补齐再粘
+function checkFinal(content, ids) {
+  const checks = require('./checks'), textnorm = require('./textnorm');
+  const text = content.split('\n').filter(l => !/^\s*```[a-z]*\s*$/i.test(l)).join('\n').trim();
+  const have = checks.parseChapters(checks.extractFinalScript(textnorm.normalizeChapterTags(text))).map(c => 'CH' + String(Number(c.ch)).padStart(2, '0'));
+  if (!have.length) throw err('没找到任何章节标签行(像 [CH01 | 0:00-1:00 | 功能] 这样的行)。请把 Claude 输出的终稿整段复制过来,标签行要带上');
+  const missing = arr(ids).filter(id => !have.includes('CH' + String(Number(String(id).replace(/\D/g, ''))).padStart(2, '0')));
+  if (missing.length) throw err('还缺 ' + missing.join('、') + '。Claude 的回答可能被截断了:在网页里点「继续」(或说「继续」),等它写完,把前后几段按顺序拼在一起再粘进来');
+  return text;
+}
+
 // 挂一条「等你粘贴」;返回和 llmCall 一样形状的结果
 function relay(runId, cfg, messages, label, opts) {
   const w = titleWait.get(runId);
@@ -120,7 +141,8 @@ function relay0(runId, cfg, messages, label, opts) {
       chat: chat ? chat.id : null, chat_name: chat ? chat.name : chatName(label),
       how: chat ? 'continue' : 'new',
       texts: [{ text: chat ? last.content : flatten(messages) }],
-      prior, last: msgHash(last)
+      prior, last: msgHash(last),
+      ...(/^Step 4/.test(String(label || '')) ? { check: 'final', chapters: bpIds(runId) } : {})
     };
     fixTitle(runId, web);
     web.pending.push(p);
@@ -233,6 +255,7 @@ function answer(runId, id, text) {
     const chat = { id: chatId(web), name: '写稿', at: now(), hashes: [p.base, msgHash({ role: 'assistant', content })] };
     web.chats.push(chat);
   } else {
+    if (p.check === 'final') content = checkFinal(content, p.chapters);
     // 记进对话:下一条如果是在这段对话上接着问的,只显示新的那句
     let chat = p.chat ? web.chats.find(c => c.id === p.chat) : null;
     if (!chat) { chat = { id: chatId(web), name: p.chat_name, at: now(), hashes: [] }; web.chats.push(chat); }
