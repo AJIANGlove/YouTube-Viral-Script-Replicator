@@ -94,7 +94,9 @@ function buildAnalysisPrompt(run, asset) {
   // v1.74:按功能重排时「第 1 步 适配判定」换成新标准(严格照原片时原样)
   // v1.83:经济拆账另加账本规则(税前、论点要账本撑得住、账本行数上限);其他赛道提示词不变
   const econ = ledgerSayOn(run) ? '\n\n' + ECON_ANALYSIS_NOTE : '';
-  return { prompt: fillVars(require('./fitrule').analysisPrompt(readPrompt('analysis.md')), vars) + econ + (keep ? '\n\n' + keep : ''), track_card_name: card ? card.name : null };
+  // v1.110 经济拆账:多拆一张开头节拍表(原片前 45 秒)和声音指纹
+  const beats = require('./openbeats').wanted(run) ? '\n\n' + require('./openbeats').analysisNote(run, asset) : '';
+  return { prompt: fillVars(require('./fitrule').analysisPrompt(readPrompt('analysis.md')), vars) + econ + beats + (keep ? '\n\n' + keep : ''), track_card_name: card ? card.name : null };
 }
 
 const ECON_ANALYSIS_NOTE = '【经济拆账账本补充规则(本题适用;和上面第 4 步说法冲突时以这里为准)】\n' +
@@ -205,6 +207,9 @@ function analysisBrief(a, run, trackKey, mode) {
   if (Array.isArray(tc.contradicts) && tc.contradicts.length) out.push('反转验证:事实 ' + tc.contradicts.join('、') + ' 和反转结论相反(' + (tc.note || '') + ')。写稿时反转的说法必须和这些事实一致,不能回避。');
   out.push('模块取舍(「保留」只保留功能和节奏,内容用本题事实):\n' + (a.modules || []).map(m => '- ' + m.segment + ' ' + m.decision + (m.hook_type && !/删除/.test(m.decision || '') ? '[钩子:' + hookType(m.hook_type) + ']' : '') + ':' + (m.reason || '') + (m.fact_ids && m.fact_ids.length ? '(' + m.fact_ids.join(',') + ')' : '') + staleTag(stale.modules, m.segment)).join('\n'));
   out.push('留存地图:\n' + (a.retention_map || []).map(r => '- ' + r.source_peak + '(' + (r.source_segment || '') + ')→' + (r.new_chapter_hint || '') + ' ' + r.status + (r.fact_ids && r.fact_ids.length ? '(' + r.fact_ids.join(',') + ')' : '')).join('\n'));
+  // v1.110 开头节拍表(写蓝图、写稿照它写;改稿时是锁定开头的规矩)
+  const obText = run ? require('./openbeats').briefText(run, a, mode) : '';
+  if (obText) out.push(obText);
   const h = a.hook || {};
   const chosen = (h.candidates || [])[h.chosen || 0];
   if (chosen) out.push('钩子(已选定):' + chosen.text + '(事实 ' + (chosen.fact_ids || []).join(',') + ';第一个甜头 ' + chosen.first_payoff_sec + ' 秒)');
@@ -1076,6 +1081,7 @@ async function runAnalysis0(runId) {
       err = r.stopReason === 'max_tokens' ? '输出被 max_tokens 截断(请在设置里调大 Max Tokens)' : analysisShapeError(a);
     }
     if (err) throw new Error(err);
+    require('./openbeats').normalize(a); // v1.110 开头节拍表整理一遍
     if (run.cancel_requested) {
       run.status = 'cancelled';
       run.steps.analysis = { ...run.steps.analysis, status: 'failed' };
@@ -1212,7 +1218,9 @@ async function runScriptCheck(runId) {
       // 已基于 V1 生成 V2:V1 锁定,不再自动改,只提示
       issues.filter(i => i.type === 'K3' && i.status === '已修改').forEach(i => { i.status = '待选择'; i.problem = (i.problem || '') + '(已生成 V2,V1 不再自动修改)'; });
     }
-    const after = checks.cleanForeignScript(applyK3(before, issues), (run.audience || {}).target_language).text;
+    let after = checks.cleanForeignScript(applyK3(before, issues), (run.audience || {}).target_language).text;
+    // v1.110 锁定开头(经济拆账):自动改的把开头改坏了,开头章换回改之前的
+    if (after !== before) after = require('./openbeats').guard(run, before, after, '稿件检查').text;
     if (after !== before) {
       // 改前版本留档;改后结构不合格则整体放弃自动修改
       if (checks.chapterStructureError(after)) issues.filter(i => i.applied).forEach(i => { i.applied = false; i.status = '待选择'; });

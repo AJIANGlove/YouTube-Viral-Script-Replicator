@@ -3018,7 +3018,7 @@ function rvDraw() {
   if (rvState.tab === 'audit') {
     el.innerHTML = `<h2 style="display:flex;justify-content:space-between;align-items:center"><span class="v13">审稿:初稿 → 二稿 → 审稿报告 → 终稿</span>
       <span><button class="an-btn v13" onclick="rvTranslate()" ${v.translating ? 'disabled' : ''}>${v.translating ? '中文对照翻译中…' : '补齐中文对照'}</button></span></h2>
-      ${passLine}${rvOpeningHtml(v)}${tabs}${rvConsCardHtml(v)}
+      ${passLine}${rvOpeningHtml(v)}${rvOpenCompareHtml(v)}${tabs}${rvConsCardHtml(v)}
       ${rvState.err ? `<div class="err-list">${esc(rvState.err)}</div>` : ''}
       ${rvAuditHtml(v)}`;
     return;
@@ -3026,7 +3026,7 @@ function rvDraw() {
   if (rvState.tab !== 'current') {
     el.innerHTML = `<h2 style="display:flex;justify-content:space-between;align-items:center"><span class="v13">审稿:初稿 → 二稿 → 终稿</span>
       <span><button class="an-btn v13" onclick="rvTranslate()" ${v.translating ? 'disabled' : ''}>${v.translating ? '中文对照翻译中…' : '补齐中文对照'}</button></span></h2>
-      ${passLine}${rvOpeningHtml(v)}${tabs}${rvConsCardHtml(v)}
+      ${passLine}${rvOpeningHtml(v)}${rvOpenCompareHtml(v)}${tabs}${rvConsCardHtml(v)}
       ${v.zh_error ? `<div class="err-list">中文对照翻译失败:${esc(v.zh_error)}</div>` : ''}
       ${rvState.err ? `<div class="err-list">${esc(rvState.err)}</div>` : ''}
       ${rvState.tab === 'd2' ? rvFactHtml(v.factcheck, v.translating) : ''}
@@ -3039,7 +3039,7 @@ function rvDraw() {
       <span><button class="an-btn v13" onclick="rvToggleFlags()">${rvState.onlyFlags ? '显示全部章节' : '只看有问题的章节'}</button>
       <button class="an-btn v13" onclick="rvTranslate()" ${v.translating ? 'disabled' : ''}>${v.translating ? '中文对照翻译中…' : '补齐中文对照'}</button>
       ${lastRunDetail && !lastRunDetail.draft_first ? '<button class="an-btn" onclick="rvToggleOpen()">收起</button>' : ''}</span></h2>
-    ${passLine}${rvOpeningHtml(v)}${tabs}
+    ${passLine}${rvOpeningHtml(v)}${rvOpenCompareHtml(v)}${tabs}
     ${rvPublishBriefHtml(v)}${rvConsCardHtml(v)}
     <div class="rv-bar v13">
       <span>篇幅 <b>${s.words}</b>${s.budget ? ' / 预算 ' + s.budget + ' 词(' + ratio + ')' : ' 词'}</span>
@@ -3412,6 +3412,42 @@ function rvOpeningHtml(v) {
     ${factsHtml}${vqHtml}${webNote}
     <div class="rv-ops v13">${btn}<span class="hint">要改哪句,在下面 CH01 点「我的意见」写给 AI,改完再点「重新分析开头」。</span></div></details>`;
 }
+// ---------- v1.110 开头对比(经济拆账锁定开头):原片前 45 秒节拍 / 初稿开头 / 当前开头 逐拍对齐 ----------
+const OB_STATE = { same: ['没动', '#047857'], changed: ['换了说法', '#b45309'], deleted: ['这一拍没了', '#b91c1c'], moved: ['顺序变了', '#b91c1c'] };
+function rvOpenCompareHtml(v) {
+  const c = v.opening_compare;
+  if (!c || !(c.rows || []).length) return '';
+  const cc = c.current_check || {};
+  const bad = (cc.issues || []).length;
+  const changed = c.rows.filter(r => r.state !== 'same').length;
+  const evs = c.events || [];
+  const pk = c.promise;
+  const sum = bad ? `<span class="rv-flag">${esc(cc.issues.join(';'))}</span>`
+    : c.same ? '<span style="color:#047857"><b>✓ 开头和初稿一样</b></span>'
+    : `<span style="color:#047857"><b>✓ 每一拍都在</b></span>${changed ? ` <span class="hint">(${changed} 拍换了说法)</span>` : ''}`;
+  const cell = (t, st) => t ? esc(t) : `<span class="hint">${st === 'deleted' ? '(没找到这一拍)' : '(没对上关键词)'}</span>`;
+  const rows = c.rows.map(r => {
+    const [lab, col] = OB_STATE[r.state] || OB_STATE.same;
+    const bg = r.state === 'deleted' || r.state === 'moved' ? ' style="background:#fef2f2"' : r.state === 'changed' ? ' style="background:#fffbeb"' : '';
+    return `<tr${bg}><td><b>${esc(r.id)}</b><div class="hint" style="margin:0">${esc(r.role || '')}</div><div style="color:${col};font-size:12px;white-space:nowrap">${lab}</div></td>
+      <td><span class="hint" style="margin:0">${esc(r.src_time || '')}</span> ${esc(r.src_line || '')}${r.demo ? `<div class="hint" style="margin:2px 0 0">示范:${esc(r.demo)}</div>` : ''}</td>
+      <td>${cell(r.draft, r.draft_found ? '' : 'deleted')}</td><td>${cell(r.current, r.state)}</td></tr>`;
+  }).join('');
+  const evHtml = evs.length ? `<div style="margin-top:6px;font-size:13px"><b>改稿时开头被改坏、已自动退回的 ${evs.length} 次</b><ul>${evs.slice(-6).reverse().map(e => `<li>${esc(fmtTime(e.at))} ${esc(e.stage || '')}:${esc((e.reasons || []).join('、'))}${e.tried ? `<details><summary class="hint" style="cursor:pointer">它想改成的开头</summary><div class="hint" style="white-space:pre-wrap">${esc(e.tried)}</div></details>` : ''}</li>`).join('')}</ul></div>` : '';
+  const pkHtml = pk ? `<div style="margin-top:6px;font-size:13px"><b>承诺要兑现</b>:开头承诺「${esc(pk.shape || '')}」 → ${pk.ok ? `<span style="color:#047857">正文里找到了揭晓(${esc(pk.hit.join('、'))})</span>` : `<span style="color:#b91c1c">正文里没找到揭晓的段落(找的关键词:${esc(pk.words.join('、'))})</span>`}</div>` : '';
+  const busy = !!(v.running);
+  return `<details class="rv-md-box"${rvState.openCmpOpen || bad || evs.length ? ' open' : ''} ontoggle="rvState.openCmpOpen=this.open"><summary><b>开头对比</b>(原片前 45 秒节拍 / 初稿 / 现在):${sum}${evs.length ? ` <span class="rv-flag">自动退回过 ${evs.length} 次</span>` : ''}</summary>
+    <div class="hint" style="margin:6px 0">经济拆账的开头是照原片前 45 秒一拍一拍写的,后面的改稿只能原位替换。按每拍的关键词对齐;黄底是换了说法,红底是这一拍没了或顺序变了。</div>
+    <div class="rv-md"><div class="rv-md-table"><table><tr><th style="width:90px">拍</th><th>原片</th><th>初稿开头</th><th>现在的开头</th></tr>${rows}</table></div></div>
+    ${pkHtml}${evHtml}
+    <div class="rv-ops">${c.can_restore ? `<button class="an-btn" onclick="rvRestoreOpening()" ${busy ? 'disabled' : ''}>恢复初稿开头</button><span class="hint">把现在稿子的开头章 CH01 换回初稿的,后面的章不动;恢复后可以在 CH01 点「撤回」再换回来。</span>` : '<span class="hint">现在的开头和初稿一样,不用恢复。</span>'}</div></details>`;
+}
+async function rvRestoreOpening() {
+  if (!confirm('把开头章 CH01 换回初稿的?后面的章不动。')) return;
+  try { await rvPost('restore_opening', {}); } catch (e) { rvState.err = e.message; alert('没能恢复:' + e.message); return; }
+  rvState.key = null;
+  rvRefresh();
+}
 async function rvOpeningRun() {
   try { await rvPost('opening', {}); } catch (e) { rvState.err = e.message; alert('没能开始:' + e.message); return; }
   rvState.key = null;
@@ -3421,7 +3457,7 @@ const RV_OPEN_CLS = { 关键: 'red', 结构: 'red', 次要: 'yellow', 待核实:
 // ---------- 终审页(合并版,用户 2026-10-31):一行状态 + 一个主按钮「AI 改一轮」→「还差什么」逐项 →「改稿记录」默认收起 ----------
 // 原来光改稿就有 6 个按钮(接着改到能发布 / 按选中的方式补改 / 按核对结果改稿 / 找原因再试 / 自动改开头 / 保留标题改稿),
 // 跑的都是「改一轮再复审」,同一个问题又在 3–4 个框里各写一遍,人不知道点哪个。
-const RV_BLOCK_ZH = { open_fact: '开头事实', hard_open: '复审问题', red_facts: '没出处的数', ledger: '账本错数', thesis: '反转', claim: '账/论点', listen_open: '开头', listen_dense: '数字太密', listen_register: '语体', listen_other: '听感', no_final: '终审', residue: '原片残留', pov: '人物连贯', weak_claims: '没出处的说法', info_repeat: '信息重复' };
+const RV_BLOCK_ZH = { open_fact: '开头事实', hard_open: '复审问题', red_facts: '没出处的数', ledger: '账本错数', thesis: '反转', claim: '账/论点', listen_open: '开头', listen_dense: '数字太密', listen_register: '语体', listen_other: '听感', no_final: '终审', residue: '原片残留', pov: '人物连贯', weak_claims: '没出处的说法', info_repeat: '信息重复', open_beats: '开头节拍', open_promise: '开头承诺', promise_kept: '承诺要兑现' };
 // 问题旁边「直接应用」(v1.64):改法里有完整的替换句、原句在终稿里只出现一次 → 程序直接换掉,不调 AI、不复审,可以撤回
 function rvApplyHtml(source, x, busy) {
   const p = ((rvState.view || {}).summary || {}).publish || {};
@@ -3603,7 +3639,10 @@ const RV_PLAIN_BLOCK = {
   open_fact: t => ({ problem: '开头有句话和网上查到的说法相反', fix: '改成查到的说法', level: '大', impact: '一开头就可能被挑错' }),
   red_facts: t => ({ problem: '用了一个找不到出处的数' + t.replace(/^稿里用了没出处的数[:：]/, '(') + (/^稿里用了没出处的数/.test(t) ? ')' : ''), fix: '换成有出处的数,或者删掉', level: '中', impact: '被问到出处时答不上' }),
   claim: t => ({ problem: /论点对不上/.test(t) ? '开头的主张被稿子自己的数推翻了' : t, fix: '点「查看详情」看怎么算的,逐条「AI 出改法」', level: '大', impact: '论点站不住' }),
-  hard_open: t => ({ problem: t, fix: '点「查看详情」逐条「AI 出改法」', level: '中', impact: '' })
+  hard_open: t => ({ problem: t, fix: '点「查看详情」逐条「AI 出改法」', level: '中', impact: '' }),
+  open_beats: t => ({ problem: t, fix: '看下面「开头对比」哪一拍没了,可以点「恢复初稿开头」,或者在稿子里把这一拍补回原位', level: '大', impact: '开头是照原片留住人的那几拍,少一拍观众就容易走' }),
+  open_promise: t => ({ problem: t, fix: '换成带钩子的承诺:说有个意外的答案,但不说答案是什么(可以说「不是什么」)', level: '大', impact: '答案一说破,观众就没理由往下看' }),
+  promise_kept: t => ({ problem: t, fix: '在正文里明确揭晓开头承诺的那个答案,并点回开头那句', level: '中', impact: '观众看到最后没等到答案,会觉得被骗' })
 };
 function rvPlainToggle(btn, key) {
   const d = btn.closest('.rv-plain').querySelector('.rv-plain-detail');
@@ -4945,6 +4984,7 @@ function analysisHtml(a, materials, say) {
   if (pp.what || a.core_dilemma || a.comment_question) html += `<div class="an-sec">埋点、两难和评论问题</div><div style="font-size:13px;line-height:1.7">
     ${pp.what ? `埋点:${esc(pp.what)}${pp.plant_at ? '(在 ' + esc(pp.plant_at) + ' 埋' : ''}${pp.payoff_at ? (pp.plant_at ? ',' : '(') + '在 ' + esc(pp.payoff_at) + ' 回收)' : pp.plant_at ? ')' : ''}<br>` : ''}
     ${a.core_dilemma ? `核心两难:${esc(a.core_dilemma)}<br>` : ''}${a.comment_question ? `结尾评论问题:<b>${esc(a.comment_question)}</b>` : ''}</div>`;
+  html += anBeatsViewHtml(a);
   // 事实表:待查/估算标黄,时效风险标红(人工重点核对)
   const mu = matUse(a, materials);
   html += `<div class="an-sec">事实表(写稿只能用这些)</div>`;
@@ -5491,6 +5531,7 @@ function anSetText(el) {
   anSnapshot(el.dataset.anPath);
   let v = el.value;
   if (el.dataset.anType === 'num') v = v === '' ? null : Number(v);
+  if (el.dataset.anType === 'list') v = v.split(/[,，、]/).map(x => x.trim()).filter(Boolean);
   anSetPath(anEdit.draft, el.dataset.anPath, v);
   if (el.dataset.anPath === 'title.final_title') {
     anRepaintPicks();
@@ -5767,12 +5808,103 @@ function anApplyDraftToControls() {
   if (!anEdit) return;
   document.querySelectorAll('#an-panel [data-an-path]').forEach(el => {
     const v = anGetPath(anEdit.draft, el.dataset.anPath);
-    el.value = v == null ? '' : v;
+    el.value = v == null ? (el.dataset.anDefault || '') : Array.isArray(v) ? v.join('、') : v;
   });
   anRepaintPicks();
   anRepaintRows();
   anPaintAiFields();
   anSyncJson();
+}
+
+// ---------- v1.110 开头节拍表(经济拆账:开头照原片前 45 秒的节拍写,后面的步骤只能原位替换) ----------
+const AN_BEATS_HINT = '经济拆账题:开头照原片前 45 秒一拍一拍写。蓝图第一章就是这张表,写稿照着写;后面的终审、补改、去AI感、自动改开头、事实核验在开头里只能原位替换(换数字、换说法、改语法),删了拍、调了顺序、说破答案、去掉「당신」,程序会退回改之前的开头。「关键词」是程序逐拍核对用的,每拍 2–3 个,不管怎么换说法都会留着的词(不要写数字)。';
+function anBeatsViewHtml(a) {
+  const bs = Array.isArray(a.opening_beats) ? a.opening_beats.filter(b => b && typeof b === 'object') : [];
+  if (!bs.length) return '';
+  const vp = Array.isArray(a.voice_prints) ? a.voice_prints : [];
+  const hp = a.hook_promise || {};
+  const ids = v => (Array.isArray(v) ? v : String(v || '').split(/[,，、]/)).filter(Boolean).join('、');
+  let html = `<div class="an-sec">开头节拍表(原片前 45 秒,锁定开头)</div><div class="hint" style="margin:0 0 4px">${esc(AN_BEATS_HINT)}</div>`;
+  html += anTable(['拍', '原片', '作用', '新题目示范', '事实', '关键词'], bs.map(b => `<tr><td>${esc(b.id)}${b.you === true || b.you === 'true' ? '<div class="hint" style="margin:0">对观众说「你」</div>' : ''}</td><td><span class="hint" style="margin:0">${esc(b.src_time || '')}</span><br>${esc(b.src_line || '')}</td><td>${esc(b.role || '')}</td><td><b>${esc(b.new_line || '')}</b></td><td>${esc(ids(b.fact_ids))}</td><td>${esc(ids(b.anchors))}</td></tr>`));
+  if (vp.length) html += `<div class="an-sec">声音指纹(原片的口头禅和固定句式)</div><div style="font-size:13px;line-height:1.7">${vp.map(v => `· 原片「${esc(v.source || '')}」→ ${(Array.isArray(v.targets) ? v.targets : []).map(t => '「' + esc(t) + '」').join(' / ')}${v.beat ? '(' + esc(v.beat) + ')' : ''}`).join('<br>')}</div>`;
+  if (hp.shape || hp.answer) html += `<div class="an-sec">带钩子的价值承诺</div><div style="font-size:13px;line-height:1.7">开头怎么说(${esc(hp.beat || '')}):<b>${esc(hp.shape || '')}</b><br>真正的答案(开头不说):${esc(hp.answer || '')}${hp.reveal_at ? `<br>在哪揭晓:${esc(hp.reveal_at)}` : ''}${(hp.reveal_anchors || []).length ? ` · 揭晓关键词:${esc(ids(hp.reveal_anchors))}` : ''}${(a.spoiler_terms || []).length ? `<br>开头 45 秒不许出现的本质词:${esc(ids(a.spoiler_terms))}` : ''}</div>`;
+  return html;
+}
+function anBeatsEditHtml(d) {
+  const bs = Array.isArray(d.opening_beats) ? d.opening_beats : [];
+  if (!bs.length) return '';
+  const vp = Array.isArray(d.voice_prints) ? d.voice_prints : [];
+  const ta = (path, rows, ph) => `<textarea class="an-edit-input" rows="${rows}" data-an-path="${path}" oninput="anSetText(this)"${ph ? ` placeholder="${escAttr(ph)}"` : ''}></textarea>`;
+  const inp = (path, ph, w, list) => `<input class="an-edit-input"${w ? ` style="width:${w}"` : ''} data-an-path="${path}"${list ? ' data-an-type="list"' : ''} oninput="anSetText(this)"${ph ? ` placeholder="${escAttr(ph)}"` : ''}>`;
+  let html = `<div data-an-target="opening_beats"><div class="an-sec">开头节拍表(原片前 45 秒,锁定开头)</div>
+  <div class="hint" style="margin:0 0 4px">${esc(AN_BEATS_HINT)}</div>
+  <table class="an-table"><tr><th>拍</th><th>原片</th><th>作用</th><th>新题目这一拍说什么(示范)</th><th>事实 / 关键词</th><th></th></tr>
+  ${bs.map((b, i) => `<tr data-an-row="beats" data-an-i="${i}">
+    <td>${inp('opening_beats.' + i + '.id', '', '44px')}<div style="margin-top:4px"><select class="an-edit-input" style="width:auto" data-an-path="opening_beats.${i}.you" data-an-default="false" onchange="anSetSelect(this)"><option value="true">说「你」</option><option value="false">不说「你」</option></select></div></td>
+    <td>${inp('opening_beats.' + i + '.src_time', '0:00-0:04', '84px')}${ta('opening_beats.' + i + '.src_line', 2, '原片原句')}</td>
+    <td>${ta('opening_beats.' + i + '.role', 2, '让观众当店主 / 一句反转 / 内行大数字…')}</td>
+    <td>${ta('opening_beats.' + i + '.new_line', 3, '目标语言示范句')}</td>
+    <td>${inp('opening_beats.' + i + '.fact_ids', '事实编号', '', true)}${inp('opening_beats.' + i + '.anchors', '关键词,用顿号隔开', '', true)}</td>
+    <td><button class="an-btn" onclick="anMoveBeat(${i},-1)" title="上移">↑</button><button class="an-btn" onclick="anMoveBeat(${i},1)" title="下移">↓</button><br><button class="an-btn del" onclick="anDeleteBeat(${i})">删除</button></td>
+  </tr>`).join('')}</table>
+  <div><button class="an-btn" onclick="anAddBeat()">+ 加一拍</button></div>`;
+  html += `<div class="an-sec">声音指纹(原片的口头禅和固定句式)</div>
+  <table class="an-table"><tr><th>原片说法</th><th>目标语言的说法(用顿号隔开)</th><th>放在哪拍</th><th></th></tr>
+  ${vp.map((v, i) => `<tr><td>${ta('voice_prints.' + i + '.source', 2)}</td><td>${inp('voice_prints.' + i + '.targets', '', '', true)}</td><td>${inp('voice_prints.' + i + '.beat', 'B1', '56px')}</td><td><button class="an-btn del" onclick="anDeleteVoice(${i})">删除</button></td></tr>`).join('')}</table>
+  <div><button class="an-btn" onclick="anAddVoice()">+ 加一条</button></div>`;
+  html += `<div class="an-sec">带钩子的价值承诺</div>
+  <div class="hint" style="margin:0 0 4px">承诺观众会得到一个出乎意料的答案,但不说答案:可以说答案「不是什么」(맛이 아닙니다),可以给答案一个具体形状(장부에 안 적히는 숫자 하나);不要「오늘은 ~를 계산해보겠습니다」这种只报流程的句子。放在内行大数字那一拍之后,大约 20–35 秒。</div>
+  <div class="hint" style="margin:0 0 2px">放在哪拍</div>${inp('hook_promise.beat', 'B5', '56px')}
+  <div class="hint" style="margin:6px 0 2px">开头怎么说(答案的形状)</div>${ta('hook_promise.shape', 2)}
+  <div class="hint" style="margin:6px 0 2px">真正的答案(只给写稿看,开头不说)</div>${ta('hook_promise.answer', 2)}
+  <div class="hint" style="margin:6px 0 2px">正文哪一段揭晓</div>${inp('hook_promise.reveal_at', '例如 CH03')}
+  <div class="hint" style="margin:6px 0 2px">揭晓那段一定会出现的关键词(程序查「承诺要兑现」用,顿号隔开)</div>${inp('hook_promise.reveal_anchors', '', '', true)}
+  <div class="hint" style="margin:6px 0 2px">开头 45 秒不许出现的本质词(顿号隔开;수익구조、객단가、업셀 这类程序本来就查)</div>${inp('spoiler_terms', '', '', true)}
+  </div>`;
+  return html;
+}
+function anAddBeat() {
+  if (!anEdit) return;
+  const bs = anEdit.draft.opening_beats || (anEdit.draft.opening_beats = []);
+  let max = 0;
+  bs.forEach(b => { const m = /^B(\d+)$/.exec(String(b.id || '')); if (m) max = Math.max(max, Number(m[1])); });
+  anSnapshot('opening_beats');
+  bs.push({ id: 'B' + (max + 1), src_time: '', src_line: '', role: '', new_line: '', fact_ids: [], anchors: [], you: false });
+  anRenderEditor();
+  anMarkDirty();
+}
+function anDeleteBeat(i) {
+  if (!anEdit) return;
+  const b = (anEdit.draft.opening_beats || [])[i] || {};
+  if (!confirm('删掉开头的这一拍 ' + (b.id || '') + '「' + (b.role || '') + '」?写稿时开头就没有这一拍了。')) return;
+  anSnapshot('opening_beats');
+  anEdit.draft.opening_beats.splice(i, 1);
+  anRenderEditor();
+  anMarkDirty();
+}
+function anMoveBeat(i, dir) {
+  if (!anEdit) return;
+  const bs = anEdit.draft.opening_beats || [];
+  const j = i + dir;
+  if (j < 0 || j >= bs.length) return;
+  anSnapshot('opening_beats');
+  [bs[i], bs[j]] = [bs[j], bs[i]];
+  anRenderEditor();
+  anMarkDirty();
+}
+function anAddVoice() {
+  if (!anEdit) return;
+  anSnapshot('voice_prints');
+  (anEdit.draft.voice_prints || (anEdit.draft.voice_prints = [])).push({ source: '', targets: [], beat: '' });
+  anRenderEditor();
+  anMarkDirty();
+}
+function anDeleteVoice(i) {
+  if (!anEdit) return;
+  anSnapshot('voice_prints');
+  (anEdit.draft.voice_prints || []).splice(i, 1);
+  anRenderEditor();
+  anMarkDirty();
 }
 
 function anEditorShell() {
@@ -5874,6 +6006,8 @@ function anEditorShell() {
       <span class="hint" style="margin:0">· 第一个甜头 ${esc(c.first_payoff_sec)} 秒${bad ? '（晚于原片 ' + esc(sf) + ' 秒）' : ''} · 事实 ${esc(anIds(c.fact_ids))}</span>
     </label>`;
   }).join('')}${anOpinionBox('hook')}</div>`;
+
+  html += anBeatsEditHtml(d);
 
   if (d.estimated_duration) html += `<div class="hint">预计时长：${esc(d.estimated_duration)}</div>`;
   if ((d.risks || []).length) html += `<div class="an-sec">风险</div><div style="font-size:13px">${d.risks.map(x => '· ' + esc(x)).join('<br>')}</div>`;

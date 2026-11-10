@@ -636,7 +636,7 @@ const server = http.createServer(async (req, res) => {
       // 听感检查(开头点题、前 10 秒数字、连念数字、语体)按当前稿现算,不落盘
       if (r.final_script) {
         const nw = (r.checks || {}).narration || narration.narrationWpm(r, null);
-        r.listen_check = checks.listenCheck(checks.extractFinalScript(r.final_script), { wpm: nw.wpm, title: ((r.analysis || {}).title || {}).final_title || r.topic, lang: (r.audience || {}).target_language });
+        r.listen_check = checks.listenCheck(checks.extractFinalScript(r.final_script), { wpm: nw.wpm, title: ((r.analysis || {}).title || {}).final_title || r.topic, lang: (r.audience || {}).target_language, locked: require('./lib/openbeats').on(r) });
         r.narration_label = nw.label || narration.narrationLabel(nw);
       }
       // 确认文案版本后内容被改过?现算给前端提示,不落盘(索引里也不存哈希)
@@ -709,7 +709,7 @@ const server = http.createServer(async (req, res) => {
         if (r.analysis && !r.analysis_original) r.analysis_original = analysis.cloneJson(r.analysis);
         // 对照表/叙事方式只由程序和「叙事方式」下拉框改,页面上的旧副本不覆盖它(v1.69)
         if (r.analysis && r.analysis.source_mapping) body.analysis.source_mapping = r.analysis.source_mapping;
-        r.analysis = body.analysis;
+        r.analysis = require('./lib/openbeats').normalize(body.analysis); // v1.110 开头节拍表整理一遍
         r.analysis_edited = true;
       }
       // 人改过账本:有公式的行改成程序算的数再开写(账本体检,不调 AI)
@@ -740,7 +740,7 @@ const server = http.createServer(async (req, res) => {
       if (shapeErr) return send(res, 400, { error: '分析结果不合格: ' + shapeErr });
       if (r.analysis && !r.analysis_original) r.analysis_original = analysis.cloneJson(r.analysis);
       if (r.analysis && r.analysis.source_mapping) body.analysis.source_mapping = r.analysis.source_mapping;
-      r.analysis = body.analysis;
+      r.analysis = require('./lib/openbeats').normalize(body.analysis); // v1.110
       r.analysis_edited = true;
       r.analysis_saved_at = new Date().toISOString();
       store.saveRun(r);
@@ -795,7 +795,7 @@ const server = http.createServer(async (req, res) => {
 
     // ---------- 先写后改:逐段对照审稿 ----------
     // GET 视图(每次按当前稿子现算);POST status/undo 立即返回;rewrite/fact 等模型返回再响应(单章约 0.5–2 分钟)
-    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|claim_check|audit_sel|accept_fact|accept_claim|ignore_block|ignore_item|apply_fix|suggest_fix|suggest_fix_batch|quote_context|confirm_ok|source_mapping|pov_mode|info_check))?$/);
+    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|restore_opening|claim_check|audit_sel|accept_fact|accept_claim|ignore_block|ignore_item|apply_fix|suggest_fix|suggest_fix_batch|quote_context|confirm_ok|source_mapping|pov_mode|info_check))?$/);
     if (rvMatch) {
       const [, id, action] = rvMatch;
       try {
@@ -840,6 +840,8 @@ const server = http.createServer(async (req, res) => {
           if (action === 'opening') return send(res, 200, review.startOpeningCard(id));
           // 自动改开头(后台跑):只改开头几句,改到听感检查的开头两条过关,最多试 3 次
           if (action === 'opening_fix') return send(res, 200, review.startOpeningFix(id));
+          // v1.110 恢复初稿开头(经济拆账锁定开头):把现在稿子的开头章换回初稿的
+          if (action === 'restore_opening') return send(res, 200, review.restoreOpening(id));
           // 论点核对(后台跑):用稿子自己的数字检验开头的主张;fix:true 按核对结果补改一次再核对
           if (action === 'claim_check') return send(res, 200, review.startClaimCheck(id, body));
           if (action === 'info_check') return send(res, 200, review.startInfoCheck(id)); // v1.104 信息复现核对:重新检查

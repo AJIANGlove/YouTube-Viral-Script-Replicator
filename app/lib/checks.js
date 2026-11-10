@@ -508,15 +508,18 @@ function listenCheck(script, opts) {
   const lines = narrationLines(script, wpm);
   if (!lines.length) return null;
   const issues = [];
+  // v1.110 locked(经济拆账有开头节拍表):开头这两条(前 10 秒数字、8 秒标题关键词)让位给节拍表,只放进 hints 提示,不算问题、不打回、不挡发布
+  const hints = [];
+  const openIssues = o.locked ? hints : issues;
   // 开头:前 10 秒最多 1 个数字;前 8 秒要出现标题里的说法
   const nums10 = lines.filter(l => l.start < OPEN_NUM_SEC).reduce((n, l) => n + l.nums, 0);
-  if (nums10 > OPEN_MAX_NUMS) issues.push('前 ' + OPEN_NUM_SEC + ' 秒一共念了 ' + nums10 + ' 个数字(不管是不是连着念,加起来最多 ' + OPEN_MAX_NUMS + ' 个)');
+  if (nums10 > OPEN_MAX_NUMS) openIssues.push('前 ' + OPEN_NUM_SEC + ' 秒一共念了 ' + nums10 + ' 个数字(不管是不是连着念,加起来最多 ' + OPEN_MAX_NUMS + ' 个)');
   const stems = titleStems(o.title);
   const seen = stems.map(st => { const l = lines.find(x => x.text.toLowerCase().includes(st)); return { word: st, sec: l ? Math.round(l.start) : null }; });
   const early = seen.filter(x => x.sec != null && x.sec < OPEN_TITLE_SEC).length;
   const titleHit = stems.length ? Math.round(early / stems.length * 100) / 100 : null;
   // 8 秒内出现 3 个以上标题关键词就算点题(长标题按比例算会误报)
-  if (stems.length >= 3 && titleHit < 0.34 && early < 3) issues.push('前 ' + OPEN_TITLE_SEC + ' 秒只出现了标题里 ' + early + '/' + stems.length + ' 个关键词' +
+  if (stems.length >= 3 && titleHit < 0.34 && early < 3) openIssues.push('前 ' + OPEN_TITLE_SEC + ' 秒只出现了标题里 ' + early + '/' + stems.length + ' 个关键词' +
     (seen.some(x => x.sec != null && x.sec >= OPEN_TITLE_SEC) ? '(' + seen.filter(x => x.sec != null && x.sec >= OPEN_TITLE_SEC).map(x => x.word + ' 在 ' + fmt(x.sec)).join('、') + ')' : ''));
   // 数字串:一行(一句)最多 2 个数字
   const denseAll = lines.filter(l => l.nums > LINE_MAX_NUMS).map(l => ({ sec: Math.round(l.start), nums: l.nums, text: l.text }));
@@ -524,13 +527,13 @@ function listenCheck(script, opts) {
   if (dense.length) issues.push('前 ' + DENSE_OPEN_SEC / 60 + ' 分钟有 ' + dense.length + ' 句一口气念 3 个以上的数字(最早在 ' + fmt(dense[0].sec) + ')');
   const register = /^(Korean|韩|한국|ko)/i.test(String(o.lang || '')) ? koreanRegister(lines) : null;
   if (register && register.mixed) issues.push('语体混用:-다 体 ' + register.plain + ' 句,-니다/-요 体 ' + register.formal + ' 句');
-  return { wpm, ok: !issues.length, issues, opening: { nums_10s: nums10, title_hit: titleHit, title_words: seen }, dense, dense_late, register };
+  return { wpm, ok: !issues.length, issues, ...(o.locked ? { locked: true, hints } : {}), opening: { nums_10s: nums10, title_hit: titleHit, title_words: seen }, dense, dense_late, register };
 }
 // 问题轻重,用来比较重写前后哪版更好(越小越好)
 function listenScore(lc) {
   if (!lc) return 0;
   const o = lc.opening || {};
-  return Math.max(0, (o.nums_10s || 0) - OPEN_MAX_NUMS) * 2 + (lc.issues.some(i => /关键词/.test(i)) ? 4 : 0) +
+  return (lc.locked ? 0 : Math.max(0, (o.nums_10s || 0) - OPEN_MAX_NUMS) * 2) + (lc.issues.some(i => /关键词/.test(i)) ? 4 : 0) +
     lc.dense.length + (lc.register && lc.register.mixed ? 6 : 0);
 }
 // 写稿、优化、审稿共用的听感规则(提示词里也是这几条)

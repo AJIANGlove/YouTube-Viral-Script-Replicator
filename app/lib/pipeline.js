@@ -695,7 +695,8 @@ async function runGeneration0(runId) {
   ctx.narration_wpm = nw.wpm;
   run.checks = { ...(run.checks || {}), narration: { ...nw, label: narration.narrationLabel(nw) } };
   // 听感检查(开头 8 秒点题、前 10 秒数字、一句连念 3 个以上数字、语体混用)用的标题
-  const listenOpts = () => ({ wpm: nw.wpm, title: (((run.analysis || {}).title || {}).final_title) || run.topic, lang: (run.audience || {}).target_language });
+  // v1.110 locked:经济拆账有开头节拍表时,开头 8 秒关键词、前 10 秒数字两条只提示,不打回
+  const listenOpts = () => ({ wpm: nw.wpm, title: (((run.analysis || {}).title || {}).final_title) || run.topic, lang: (run.audience || {}).target_language, locked: require('./openbeats').on(run) });
 
   // 听感闸门:不合格反馈重写一次;重写后结构完好、篇幅没坏、问题更少才采用,否则保留原稿,结果都记进 checks
   // rewriteAll:整篇重写不可用时(Step 2 分章模式)的替身,按章重写并返回 { content, secs };不传则走原来的整篇反馈重试
@@ -706,6 +707,7 @@ async function runGeneration0(runId) {
     run.steps[name].gate_retry = { reason: '听感检查: ' + lc.issues.join(';'), attempt: 1 };
     store.saveRun(run);
     const feedback = '这份稿子是配音给人听的,听感检查不合格:\n' + checks.listenFeedback(lc) + '\n\n' + checks.LISTEN_RULES +
+      (require('./openbeats').on(run) ? '\n\n锁定开头:开头章 CH01 是照原片前 45 秒节拍写的,「前 10 秒最多 1 个数字」「8 秒内标题关键词」在 CH01 里只是提示,不要按它们改 CH01;CH01 里只能原位替换(换数字、换说法、改语法),不删拍、不调顺序、不说破答案、不去掉「당신」。' : '') +
       '\n\n只改上面点到的句子和开头,其他句子原样保留,不要加长;章节标签和时间范围不变。' +
       (step === 4 ? '只输出一份完整终稿,格式要求不变(Change Log 与 fact_check_list 放在终稿之后)。' : '输出完整脚本,不要解释。');
     const m2 = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];
@@ -720,9 +722,13 @@ async function runGeneration0(runId) {
     const c2 = textnorm.normalizeChapterTags(r2.content.trim());
     const lc2 = checks.listenCheck(extract(c2), listenOpts());
     if (r2.stopReason !== 'max_tokens' && lc2 && valid(c2) && checks.listenScore(lc2) < checks.listenScore(lc)) {
-      return { content: c2, r: r2, messages: m2, lc: { ...lc2, retried: true, before: lc.issues } };
+      // v1.110 锁定开头:听感重试把开头的拍改没了 / 说破答案,开头退回原稿的
+      const gd = require('./openbeats').guard(run, content, c2, 'Step ' + step + ' 听感重试');
+      const c3 = gd.text;
+      return { content: c3, r: c3 === c2 ? r2 : { ...r2, content: c3 }, messages: m2, lc: { ...checks.listenCheck(extract(c3), listenOpts()), retried: true, before: lc.issues }, last: rewriteAll ? null : { messages: m2, r: r2 } };
     }
-    return { content, r, messages, lc: { ...lc, retried: true, retry_rejected: true } };
+    // last:对话里最后一来一回(没采用也是),后面接着发的(开头重试)要接在它后面,网页版才认得是同一个对话
+    return { content, r, messages, lc: { ...lc, retried: true, retry_rejected: true }, last: rewriteAll ? null : { messages: m2, r: r2 } };
   };
 
   // 每次 LLM 调用(首轮/闸门重试/截断续写)都记一条流水到 run.attempts(封顶 100 条),失败原因不再随重试丢失
@@ -931,6 +937,28 @@ async function runGeneration0(runId) {
           if (g2.duration.ok !== false && payoffOf(c2) && payoffOf(c2) < payoff) { r = r2; content = c2; gate = g2; payoff = payoffOf(c2); }
         }
         run.checks.first_payoff = { sec: payoff, max: FIRST_PAYOFF_MAX, ok: payoff == null ? null : payoff <= FIRST_PAYOFF_MAX };
+
+        // v1.110 经济拆账:蓝图第一章按开头节拍表排(0:00–约 0:45,opening_beats 按顺序列全部拍);不合格反馈一次,改坏时长就保留原版
+        const ob = require('./openbeats');
+        if (ob.on(run)) {
+          let bc = ob.checkBlueprint(run, content);
+          if (!bc.ok) {
+            run.steps.blueprint.gate_retry = { reason: '开头节拍: ' + bc.issues.join(';'), attempt: 1 };
+            store.saveRun(run);
+            const feedback = '蓝图第一章没按开头节拍表排:' + bc.issues.join(';') + '。第一章 ' + ob.OPEN_CH + ' 只放节拍表那一段(0:00 到约 0:45,不超过 1:00),key_points 按拍写(每拍几秒、说什么),' +
+              '并加字段 "opening_beats" 按顺序列出全部拍;其余章节、总时长和其余要求不变,重新输出完整 JSON(禁止代码围栏)。';
+            const m2 = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];
+            try {
+              const r2 = await callLlm(m2, 'Step 1 开头节拍重试');
+              const c2 = checks.stripFence(r2.content.trim());
+              const g2 = checks.checkBlueprint(c2, tools, (run.audience || {}).video_goal);
+              const bc2 = ob.checkBlueprint(run, c2);
+              if (g2.duration.ok !== false && bc2.issues.length < bc.issues.length) { r = r2; content = c2; gate = g2; messages = m2; bc = { ...bc2, retried: true, before: bc.issues }; payoff = payoffOf(c2) || payoff; }
+              else bc = { ...bc, retried: true, retry_rejected: true };
+            } catch (e) { bc = { ...bc, retried: true, retry_error: e.message }; }
+          }
+          run.checks.opening_beats_bp = bc;
+        }
 
         // 原片残留 + 等级跳号(v1.69):写前分析有「原片 → 本地对照表」时扫蓝图,命中就打回一次;
         // 改完时长坏了或命中没变少就保留原版,结果记在 run.checks.consistency 交人看(审稿页还会再扫稿子)
@@ -1142,6 +1170,27 @@ async function runGeneration0(runId) {
         content = lg.content; r = lg.r; messages = lg.messages;
         run.checks.script_listen = lg.lc;
         if (lg.lc && lg.lc.retried && !lg.lc.retry_rejected) run.checks.script_length = lengthCheck(content, ctx.blueprint, run.audience, tools.targetWpm);
+
+        // v1.110 经济拆账闸门 E:开头逐拍核对(拍在不在、顺序、说破答案、议程句、「당신」)。不合格只重写开头章一次,问题变少才换进去
+        const ob = require('./openbeats');
+        if (ob.on(run)) {
+          let oc = ob.check(run, content);
+          if (!oc.ok && !oc.no_opening) {
+            run.steps.script.gate_retry = { reason: '开头节拍: ' + oc.issues.join(';'), attempt: 1 };
+            store.saveRun(run);
+            const conv = lg.last ? [...lg.last.messages, { role: 'assistant', content: lg.last.r.content }] : [...messages, { role: 'assistant', content: r.content }];
+            const m2 = [...conv, { role: 'user', content: ob.rewriteFeedback(run, oc) }];
+            try {
+              const r2 = await callLlm(m2, 'Step 2 开头重试');
+              const c2 = ob.spliceOpening(content, textnorm.normalizeChapterTags(r2.content.trim()));
+              const oc2 = c2 ? ob.check(run, c2) : null;
+              if (oc2 && oc2.issues.length < oc.issues.length && !checks.chapterStructureError(c2, bpChapters.length)) {
+                content = c2; r = { ...r2, content: c2 }; messages = m2; oc = { ...oc2, retried: true, before: oc.issues };
+              } else oc = { ...oc, retried: true, retry_rejected: true };
+            } catch (e) { oc = { ...oc, retried: true, retry_error: e.message }; }
+          }
+          run.checks.opening_beats = oc;
+        }
       }
 
       // Step 4 断流续写:终稿一万多字,单次常被渠道在约 90 秒切断。
@@ -1242,6 +1291,8 @@ async function runGeneration0(runId) {
         // 非中文稿里混进的汉字/日文假名(如「에레베타가루 (エレベーターガール)」):规则修 + 模型逐行改写,改不掉的留痕
         const pure = await purify.purifyScript(meta.text, run.audience, async p => (await callLlm([{ role: 'user', content: p }], 'Step 4 外文字符修正')).content);
         run.final_script = pure.text;
+        // v1.110 锁定开头:优化把开头改坏了(删拍、调顺序、说破答案、去掉「당신」)就把开头章换回写稿时的
+        if (outputs.step2) run.final_script = require('./openbeats').guard(run, outputs.step2, run.final_script, 'Step 4 优化').text;
         run.checks.listen = checks.listenCheck(run.final_script, listenOpts());
         if (meta.removed.length) run.checks.optimized.meta_lines = meta.removed;
         if (purify.hasLog(pure.log)) run.checks.optimized.foreign = pure.log;
