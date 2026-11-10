@@ -6152,7 +6152,7 @@ function renderWebPanel(r) {
   const w = r.web;
   if (!w || (!w.on && !(w.pending || []).length)) { el.classList.add('hidden'); webRenderedKey = null; return; }
   const pend = w.pending || [];
-  const key = JSON.stringify([w.on, pend.map(p => p.id + ':' + (p.waiting ? 1 : 0)), (w.done || []).length, r.status]);
+  const key = JSON.stringify([w.on, pend.map(p => p.id + ':' + (p.waiting ? 1 : 0) + ':' + Object.keys(p.copied || {}).join('.')), (w.done || []).length, r.status, w.chat_title]);
   if (key === webRenderedKey && !el.classList.contains('hidden')) return;
   webRenderedKey = key;
   el.classList.remove('hidden');
@@ -6165,7 +6165,7 @@ function renderWebPanel(r) {
   html += pend.map(p => {
     const msgs = (p.texts || []).map((m, i) => {
       const k = p.id + '_' + i;
-      return `<div style="margin:6px 0">${m.title ? '<b>' + esc(m.title) + '</b> ' : ''}<button class="an-btn v13" onclick="webCopy('${escAttr(p.id)}',${i},this)">${webCopied[k] ? '已复制 ✓ 再复制' : '复制'}</button>
+      return `<div style="margin:6px 0">${m.title ? '<b>' + esc(m.title) + '</b> ' : ''}<button class="an-btn v13" onclick="webCopy('${escAttr(p.id)}',${i},this)">${webCopied[k] || (p.copied || {})[i] ? '已复制 ✓ 再复制' : '复制'}</button>
         <span class="hint">${m.text.length.toLocaleString()} 字</span>
         <textarea readonly rows="${p.kind === 'script' ? 3 : 5}" style="width:100%;box-sizing:border-box;font-size:12px;color:#4b5563;margin-top:3px">${esc(m.text.length > 4000 ? m.text.slice(0, 4000) + '\n……(太长只显示开头,点「复制」复制的是全文)' : m.text)}</textarea></div>`;
     }).join('');
@@ -6205,6 +6205,8 @@ async function webCopy(id, i, btn) {
   catch (e) { const ta = document.createElement('textarea'); ta.value = m.text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
   webCopied[id + '_' + i] = true;
   if (btn) btn.textContent = '已复制 ✓ 再复制';
+  // v1.112 记到程序里:刷新、换页面、重启以后也还显示「已复制」(记不上不影响复制本身)
+  if (!(p.copied || {})[i]) api('/api/runs/' + currentRunId + '/web', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'copied', id, i }) }).then(x => { if (x && x.copied) p.copied = x.copied; }).catch(() => {});
 }
 async function webAnswer(id, btn) {
   const ta = document.getElementById('web-ans-' + id);

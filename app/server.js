@@ -688,6 +688,7 @@ const server = http.createServer(async (req, res) => {
       try {
         if (body.action === 'answer') return send(res, 200, M.answer(webMatch[1], String(body.id || ''), body.text));
         if (body.action === 'api') return send(res, 200, M.useApi(webMatch[1], String(body.id || '')));
+        if (body.action === 'copied') return send(res, 200, M.markCopied(webMatch[1], String(body.id || ''), body.i)); // v1.112 点过复制的记下来
         if (body.action === 'off') return send(res, 200, M.turnOff(webMatch[1]));
         return send(res, 400, { error: '不认识的操作' });
       } catch (e) { return send(res, e.status || 500, { error: e.message }); }

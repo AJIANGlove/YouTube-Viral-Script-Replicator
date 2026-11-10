@@ -206,6 +206,17 @@ function finish(web, p, content, how) {
 }
 
 // 人粘回来了
+// v1.112 点过「复制」的那一段记下来(刷新、换页面、重启程序都还在),页面上一直显示「已复制 ✓ 再复制」;这条粘回去就不再显示了
+function markCopied(runId, id, i) {
+  const web = must(runId);
+  const p = web.pending.find(x => x.id === id);
+  if (!p) throw err('这一条已经处理过了,刷新一下页面', 409);
+  const n = Number(i);
+  if (!Number.isInteger(n) || n < 0 || n >= arr(p.texts).length) throw err('没有这一段');
+  p.copied = { ...(p.copied || {}), [n]: now() };
+  save(runId, web);
+  return { ok: true, copied: p.copied };
+}
 function answer(runId, id, text) {
   const web = must(runId);
   const p = web.pending.find(x => x.id === id);
@@ -302,4 +313,4 @@ function view(runOrId) {
   };
 }
 
-module.exports = { WEB_RE, wants, relay, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, _waiters: waiters };
+module.exports = { WEB_RE, wants, relay, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, _waiters: waiters };
