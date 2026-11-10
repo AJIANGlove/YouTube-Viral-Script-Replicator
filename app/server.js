@@ -646,6 +646,7 @@ const server = http.createServer(async (req, res) => {
       }
       // v1.73 蓝图方式、功能表、每章排法、蓝图审结果(页面的「蓝图」面板用),不落盘
       try { const bv = require('./lib/blueprint').view(r); if (bv) r.blueprint_view = bv; } catch (e) { /* 旧任务数据不全:不显示面板 */ }
+      try { const cv = require('./lib/thesis').coreView(r); if (cv) r.core_view = cv; } catch (e) { /* 旧任务数据不全:不显示核心观点 */ } // v1.114
       { const wv = require('./lib/manual').view(r); if (wv) { r.web = wv; r.live_calls = (r.live_calls || []).filter(c => !wv.pending.some(p => p.label === c.label || (p.kind === 'script' && /^Step 2/.test(c.label)))); } } // v1.105 网页版接力:等你粘贴的消息;等粘贴的不算「正在调用」 网页版接力:等你粘贴的消息(不带存下的回答)
       return send(res, 200, r);
     }
@@ -677,6 +678,13 @@ const server = http.createServer(async (req, res) => {
     if (thMatch && method === 'POST') {
       const body = await readBody(req);
       try { return send(res, 200, require('./lib/thesis').holdChoice(thMatch[1], body)); }
+      catch (e) { return send(res, e.status || 500, { error: e.message }); }
+    }
+
+    // v1.114 任务页「核心观点」:选定论点卡上还有外文的,翻成中文(只翻这一张,译文另存)
+    const czMatch = url.match(/^\/api\/runs\/([\w-]+)\/core-zh$/);
+    if (czMatch && method === 'POST') {
+      try { return send(res, 200, require('./lib/thesis').translateCore(czMatch[1])); }
       catch (e) { return send(res, e.status || 500, { error: e.message }); }
     }
 

@@ -400,4 +400,72 @@ async function ensure(run, cfg, asset, setStage) {
   return run.thesis_scout;
 }
 
-module.exports = { zhCards, foreignSlots, cardsForeign, ensure, scout, researchText, queriesOf, cleanAngles, cleanPick, scoutKey, needHold, choose, holdChoice, enoughOf, cardOf, chosenOutline, outlineText, batchesFrom, ENOUGH_MIN };
+// ---------- v1.114 任务页「核心观点」:选定的那张论点卡,任何步骤都能展开看 ----------
+// 卡上还有韩文/外文的,点翻译只翻这一张卡,译文另存在 data/thesis_zh/<任务>.json,不写回任务(任务可能正在跑,整对象写回会互相覆盖)
+const CORE_DIR = () => path.join(require('./store').APP_ROOT, 'data', 'thesis_zh');
+const coreFile = id => path.join(CORE_DIR(), String(id).replace(/[^\w-]/g, '') + '.json');
+const coreBusy = new Map(); // runId → 正在翻
+function coreLoad(id) { try { return JSON.parse(fs.readFileSync(coreFile(id), 'utf8')); } catch (e) { return {}; } }
+function coreSave(id, st) { fs.mkdirSync(CORE_DIR(), { recursive: true }); const f = coreFile(id); fs.writeFileSync(f + '.tmp', JSON.stringify(st)); fs.renameSync(f + '.tmp', f); }
+// 选定的那张:人选的(含「改一句再选」的 U 卡)或 AI 定的;还在「待选论点」、没有定下来的不算
+function coreCard(run) {
+  const ts = run && run.thesis_scout, p = ts && ts.pick;
+  if (!p || !p.chosen || !p.final || !str(p.final.one_line || p.final.claim).trim()) return null;
+  if (run.status === 'thesis_hold' || (run.thesis_choose && !ts.user_pick)) return null;
+  const id = p.chosen;
+  const a = arr(ts.angles).find(x => x.id === id) || null;
+  const c = arr(p.checks).find(x => x.id === id) || null;
+  const mine = f => !arr(f.for).length || f.for.includes(id);
+  return { id, by_user: !!(ts.user_pick && ts.user_pick.id === id), a, c, card: (c && c.card) || {}, final: p.final,
+    facts: arr(p.facts).filter(mine), cons: arr(p.con_facts).filter(mine), searched: !!ts.searched };
+}
+// 卡上要显示的字(和选论点时那张卡同样的字段)
+function coreStrings(k) {
+  const out = [];
+  const add = v => { if (typeof v === 'string' && v.trim()) out.push(v); };
+  const { a, c, card, final } = k;
+  ['one_line', 'belief', 'claim', 'ending_landing', 'opening_line'].forEach(f => { add(card[f]); add(final[f]); if (a) add(a[f]); });
+  if (a) add(a.risk);
+  if (c) add(c.note);
+  arr(card.missing).forEach(add);
+  arr(card.outline).forEach(o => ['says', 'uses', 'leaves'].forEach(f => add(o[f])));
+  k.facts.slice(0, 5).forEach(f => add(f.content));
+  k.cons.slice(0, 3).forEach(f => add(f.content));
+  return [...new Set(out)];
+}
+// 「F1」「CH03」这种编号不算外文:要有韩文/日文假名,或者成段的英文
+function coreForeign(k, zh) { const R = require('./review'); return coreStrings(k).filter(t => R.mostlyForeign(t) && /[\uac00-\ud7af\u3040-\u30ff]|[A-Za-z]{4,}/.test(t) && !(zh && zh[t])); }
+// 页面用:卡 + 译文 + 翻译状态;没有选定论点的老任务返回 null(不显示这一块)
+function coreView(run) {
+  const k = coreCard(run);
+  if (!k) return null;
+  const st = coreLoad(run.id);
+  const zh = st.zh || {};
+  return { ...k, zh, foreign: coreForeign(k, zh).length, translating: coreBusy.has(run.id), zh_error: st.error || '' };
+}
+function translateCore(runId) {
+  const store = require('./store');
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  const k = coreCard(run);
+  if (!k) throw Object.assign(new Error('这个任务没有选定的论点'), { status: 400 });
+  if (coreBusy.has(runId)) return { ok: true, busy: true };
+  const st0 = coreLoad(runId);
+  const todo = coreForeign(k, st0.zh);
+  if (!todo.length) return { ok: true, n: 0 };
+  const job = (async () => {
+    let error = '', got = {};
+    try {
+      const R = require('./review');
+      const tr = await R.translateTexts(run, require('./pipeline').loadConfig(), todo, '中文对照·核心观点');
+      todo.forEach(t => { const z = tr[zhHash(t)]; if (z) got[t] = z; });
+      if (!Object.keys(got).length) error = '翻译没返回内容';
+    } catch (e) { error = e.message; }
+    const st = coreLoad(runId);
+    coreSave(runId, { zh: { ...(st.zh || {}), ...got }, at: new Date().toISOString(), ...(error ? { error: '翻译没成功:' + error } : {}) });
+  })().catch(() => {}).then(() => coreBusy.delete(runId));
+  coreBusy.set(runId, job);
+  return { ok: true, n: todo.length };
+}
+
+module.exports = { coreView, translateCore, coreCard, _coreBusy: coreBusy, zhCards, foreignSlots, cardsForeign, ensure, scout, researchText, queriesOf, cleanAngles, cleanPick, scoutKey, needHold, choose, holdChoice, enoughOf, cardOf, chosenOutline, outlineText, batchesFrom, ENOUGH_MIN };

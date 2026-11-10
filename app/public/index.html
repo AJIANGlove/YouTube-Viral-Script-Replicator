@@ -192,6 +192,10 @@
   .th-card .th-row { font-size: 13px; margin: 3px 0; }
   .th-card ol { margin: 4px 0 4px 18px; padding: 0; font-size: 13px; }
   .th-card ol li { margin: 2px 0; }
+  .core-box { margin-top: 10px; border: 1px solid #fcd34d; border-radius: 8px; background: #fffbeb; padding: 8px 12px; }
+  .core-box > summary { cursor: pointer; font-size: 14px; line-height: 1.5; }
+  .core-box .core-label { display: inline-block; background: #92400e; color: #fff; border-radius: 4px; padding: 0 6px; font-size: 12px; margin-right: 4px; }
+  .core-box .th-card { background: #fff; }
   /* v1.73 蓝图面板:功能表、每章排法、蓝图审 */
   .bp-hold { border: 2px solid #dc2626; background: #fef2f2; border-radius: 8px; padding: 12px 14px; margin: 8px 0 12px; }
   .bp-hold h3 { margin: 0 0 6px; color: #b91c1c; font-size: 15px; }
@@ -874,6 +878,7 @@
       </h2>
       <div class="hint" id="detail-sub"></div>
       <div class="steps" id="detail-steps"></div>
+      <div id="core-panel" class="hidden"></div>
       <div id="detail-usage"></div>
       <div id="detail-error" class="err-list"></div>
     </div>
@@ -2785,6 +2790,7 @@ async function loadRunDetail() {
     ((r.status === 'failed' || r.status === 'cancelled')
       ? ' <button class="primary" style="margin-left:8px" onclick="retryRun()">续跑此任务</button>' : '');
 
+  renderCorePanel(r); // v1.114 核心观点
   renderWebPanel(r); // v1.105 网页版接力
   renderBlueprintPanel(r);
   renderReviewPanel(r);
@@ -6242,6 +6248,62 @@ async function webOff() {
   webRenderedKey = null;
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 400);
 }
+// 论点卡上的资料核对标签(站得住/资料够不够)
+function thChips(c) {
+  const en = c && c.enough;
+  return (c ? `<span class="rv-chip ${TH_VERDICT[c.verdict] || ''}">${esc(c.verdict)}</span> ` : '<span class="rv-chip">没核对</span> ')
+    + (en ? `<span class="rv-chip ${TH_ENOUGH[en.level] || ''}">资料${esc(en.level)}(${en.sources} 个来源${en.key_found ? ',关键那条查到了' : ',关键那条没查到'})</span> ` : '');
+}
+// 论点卡正文(选论点时的卡、任务页「核心观点」共用,保证两处一样);z:外文换成中文译文(没有就原样)
+function thCardRows({ a, c, card, facts, cons }, z) {
+  z = z || (t => t);
+  a = a || {}; card = card || {}; facts = facts || []; cons = cons || [];
+  const outline = (card.outline || []);
+  const risk = [c && c.note, a.risk].filter(Boolean);
+  const T = t => esc(z(t || ''));
+  return `<div class="th-row"><b>观众原来以为:</b>${T(card.belief || a.belief || '')}</div>
+      <div class="th-row"><b>真相:</b>${T(card.claim || a.claim || '')}</div>
+      ${card.ending_landing ? `<div class="th-row"><b>结尾落在:</b>${T(card.ending_landing)}</div>` : ''}
+      ${card.opening_line ? `<div class="th-row"><b>开头第一句大概:</b>${T(card.opening_line)}</div>` : ''}
+      <div class="th-row"><b>靠这些资料撑着:</b>${facts.length ? '<ul style="margin:2px 0 2px 18px;padding:0">' + facts.slice(0, 5).map(f => `<li>${T(f.content)}${f.year ? '(' + esc(f.year) + ')' : ''} — ${thSrc(f.sources)}</li>`).join('') + '</ul>' : (c && c.pro && c.pro.length ? thSrc(c.pro) : '<span style="color:#b91c1c">没查到有出处的资料</span>')}</div>
+      ${risk.length || cons.length ? `<div class="th-row"><b>可能站不住的地方:</b>${esc(risk.map(z).join(';'))}${cons.length ? '<ul style="margin:2px 0 2px 18px;padding:0">' + cons.slice(0, 3).map(f => `<li>反对:${T(f.content)} — ${thSrc(f.sources)}</li>`).join('') + '</ul>' : ''}</div>` : ''}
+      ${(card.missing || []).length ? `<div class="th-row"><b>还没查到:</b>${esc(card.missing.map(z).join(';'))}</div>` : ''}
+      ${outline.length ? `<div class="th-row"><b>整篇大概会这样讲:</b><ol>${outline.map(x => `<li>${T(x.says)}${x.uses ? '<span style="color:#4b5563">(用:' + T(x.uses) + ')</span>' : ''}${x.leaves ? '<span style="color:#6b7280"> → ' + T(x.leaves) + '</span>' : ''}</li>`).join('')}</ol></div>` : ''}
+`;
+}
+// ---------- v1.114 任务页「核心观点」:默认折叠,标题行是选定论点那一句,展开和选论点时那张卡一样(只读) ----------
+let coreRenderedKey = null;
+const coreOpen = {}; // 每个任务展开没展开(页面每 3 秒刷新,不能收回去)
+function renderCorePanel(r) {
+  const el = document.getElementById('core-panel');
+  const k = r.core_view;
+  if (!k) { el.innerHTML = ''; el.classList.add('hidden'); coreRenderedKey = null; return; }
+  const key = JSON.stringify([r.id, k.id, k.final && k.final.one_line, Object.keys(k.zh || {}).length, k.foreign, k.translating, k.zh_error]);
+  if (key === coreRenderedKey && !el.classList.contains('hidden')) return;
+  coreRenderedKey = key;
+  el.classList.remove('hidden');
+  const z = t => (k.zh || {})[t] || t;
+  const card = k.card || {}, a = k.a || {};
+  const one = card.one_line || a.one_line || (k.final || {}).one_line || (k.final || {}).claim || '';
+  const cardX = Object.keys(card).length ? card : { belief: (k.final || {}).belief, claim: (k.final || {}).claim, ending_landing: (k.final || {}).ending_landing, one_line: one };
+  const who = /^U\d+$/.test(k.id) ? '<span class="rv-chip">你改的</span>' : k.by_user ? '<span class="rv-chip green">你选的</span>' : '<span class="rv-chip">AI 定的</span>';
+  const zhBtn = k.translating ? '<div class="hint" style="color:#92400e">正在把这张卡翻成中文…一般不到 1 分钟,翻完自动刷新。</div>'
+    : k.foreign ? `<div style="margin-top:6px"><button class="an-btn v13" onclick="coreZh(this)">卡上有韩文/外文,翻成中文</button>${k.zh_error ? ` <span class="hint" style="color:#b91c1c">${esc(k.zh_error)}</span>` : ''}</div>` : '';
+  el.innerHTML = `<details class="core-box"${coreOpen[r.id] ? ' open' : ''} ontoggle="coreOpen['${escAttr(r.id)}']=this.open">
+    <summary><span class="core-label">核心观点</span> <b>${esc(z(one))}</b></summary>
+    <div class="th-card" style="margin-top:8px">
+      <div>${thChips(k.c)}${who}${k.searched ? '' : ' <span class="hint">(这次没开联网搜索,没有核对资料)</span>'}</div>
+      ${thCardRows({ a: k.a, c: k.c, card: cardX, facts: k.facts, cons: k.cons }, z)}
+      ${zhBtn}
+    </div></details>`;
+}
+async function coreZh(btn) {
+  if (btn) btn.disabled = true;
+  try { await api('/api/runs/' + currentRunId + '/core-zh', { method: 'POST' }); }
+  catch (e) { alert(e.message); if (btn) btn.disabled = false; return; }
+  coreRenderedKey = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 400);
+}
 function renderThesisPanel(r) {
   const el = document.getElementById('th-panel');
   const ts = r.thesis_scout || null;
@@ -6263,25 +6325,14 @@ function renderThesisPanel(r) {
   if (st.translating) html += `<div class="hint" style="color:#92400e">正在把论点卡翻成中文…一般不到 1 分钟,翻完自动刷新。</div>`;
   else if (thForeign(ts)) html += `<div style="margin-top:6px"><button class="an-btn v13" onclick="thChoose('zh','',this)">卡上有韩文/外文,翻成中文</button>${zhErr ? ` <span class="hint" style="color:#b91c1c">${esc(zhErr)}</span>` : ''}</div>`;
   html += cards.map(({ a, c, card, facts, cons }) => {
-    const en = c && c.enough;
-    const chips = (c ? `<span class="rv-chip ${TH_VERDICT[c.verdict] || ''}">${esc(c.verdict)}</span> ` : '<span class="rv-chip">没核对</span> ')
-      + (en ? `<span class="rv-chip ${TH_ENOUGH[en.level] || ''}">资料${esc(en.level)}(${en.sources} 个来源${en.key_found ? ',关键那条查到了' : ',关键那条没查到'})</span> ` : '')
+    const chips = thChips(c)
       + (a.id === rec ? '<span class="rv-chip green">AI 推荐</span>' : '')
       + (/^U\d+$/.test(a.id) ? '<span class="rv-chip">你改的</span>' : '');
     const one = card.one_line || a.one_line;
-    const outline = (card.outline || []);
-    const risk = [c && c.note, a.risk].filter(Boolean);
     const editing = thEditing === a.id;
     return `<div class="th-card${a.id === rec ? ' rec' : ''}">
       <h3>${esc(one)}</h3><div>${chips}</div>
-      <div class="th-row"><b>观众原来以为:</b>${esc(card.belief || a.belief || '')}</div>
-      <div class="th-row"><b>真相:</b>${esc(card.claim || a.claim || '')}</div>
-      ${card.ending_landing ? `<div class="th-row"><b>结尾落在:</b>${esc(card.ending_landing)}</div>` : ''}
-      ${card.opening_line ? `<div class="th-row"><b>开头第一句大概:</b>${esc(card.opening_line)}</div>` : ''}
-      <div class="th-row"><b>靠这些资料撑着:</b>${facts.length ? '<ul style="margin:2px 0 2px 18px;padding:0">' + facts.slice(0, 5).map(f => `<li>${esc(f.content)}${f.year ? '(' + esc(f.year) + ')' : ''} — ${thSrc(f.sources)}</li>`).join('') + '</ul>' : (c && c.pro && c.pro.length ? thSrc(c.pro) : '<span style="color:#b91c1c">没查到有出处的资料</span>')}</div>
-      ${risk.length || cons.length ? `<div class="th-row"><b>可能站不住的地方:</b>${esc(risk.join(';'))}${cons.length ? '<ul style="margin:2px 0 2px 18px;padding:0">' + cons.slice(0, 3).map(f => `<li>反对:${esc(f.content)} — ${thSrc(f.sources)}</li>`).join('') + '</ul>' : ''}</div>` : ''}
-      ${(card.missing || []).length ? `<div class="th-row"><b>还没查到:</b>${esc(card.missing.join(';'))}</div>` : ''}
-      ${outline.length ? `<div class="th-row"><b>整篇大概会这样讲:</b><ol>${outline.map(x => `<li>${esc(x.says)}${x.uses ? '<span style="color:#4b5563">(用:' + esc(x.uses) + ')</span>' : ''}${x.leaves ? '<span style="color:#6b7280"> → ' + esc(x.leaves) + '</span>' : ''}</li>`).join('')}</ol></div>` : ''}
+      ${thCardRows({ a, c, card, facts, cons })}
       <div class="rv-ops" style="margin-top:6px"><button class="an-btn v13" onclick="thChoose('pick','${escAttr(a.id)}',this)">选这个</button>
         <button class="an-btn" style="border-color:#7c3aed;color:#6d28d9" onclick="thChoose('pickweb','${escAttr(a.id)}',this)" title="写前分析、出蓝图、写稿、优化改成复制到你自己的 Claude 网页版,把回答粘回来;AI 调整、功能表、审核和后面的初稿检查、终审照旧自动跑">选这个,后面在网页版写</button>
         <button class="an-btn" onclick="thEdit('${escAttr(a.id)}')">改一句再选</button></div>
