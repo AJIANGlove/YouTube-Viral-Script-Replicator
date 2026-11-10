@@ -19,8 +19,28 @@ const str = v => (v == null ? '' : String(v));
 
 // ---------- 开不开 ----------
 function trackOf(run) { try { return require('./craft').trackOf(run); } catch (e) { return ''; } }
-// 写前分析要不要拆节拍表:只开经济拆账
-function wanted(run) { return !!run && trackOf(run) === 'econ'; }
+// v1.117 开头规则每个任务自己选(新建任务页「开头规则」):
+//   source  = 照原片开头:节拍表 + 声音指纹 + 带钩子的承诺 + 锁定开头 + 通用规则让位 + 开头对比(v1.110 那一套,所有赛道都能用)
+//   formula = 通用开头公式:8 秒点题、前 10 秒最多 1 个数字、删冷开场、45 秒前给第一个答案,终审后自动改开头(以前非经济拆账赛道的规则)
+// 老任务(没选过):拆过节拍表的按照原片开头;没拆过的,经济拆账算照原片开头,其它赛道算通用开头公式
+const TRACKS = ['econ', 'history', 'science', 'pov', 'general'];
+const TRACK_NAMES = { econ: '经济拆账', history: '历史与古人', science: '心理与动物科普', pov: 'POV 与等级沉浸', general: '通用' };
+const RULES = { source: '照原片开头', formula: '通用开头公式' };
+function ruleOf(run) {
+  if (!run) return 'formula';
+  if (run.opening_rule === 'source' || run.opening_rule === 'formula') return run.opening_rule;
+  if (arr(((run.analysis || {}).opening_beats)).length) return 'source';
+  return trackOf(run) === 'econ' ? 'source' : 'formula';
+}
+// 写前分析要不要拆节拍表 / 这篇的锁定开头生不生效:看这篇选的开头规则
+function wanted(run) { return !!run && ruleOf(run) === 'source'; }
+// 任务页显示:这篇用的哪种开头规则;选了照原片开头、但写前分析是之前跑的(没有节拍表)实际按通用公式
+function ruleView(run) {
+  const rule = ruleOf(run);
+  const noBeats = rule === 'source' && !!run.analysis && beatsOf(run).length < 2;
+  return { rule, label: RULES[rule], chosen: run.opening_rule === 'source' || run.opening_rule === 'formula', no_beats: noBeats };
+}
+function trackName(run) { return TRACK_NAMES[trackOf(run)] || '通用'; }
 // 这篇有没有节拍表(只对装了以后跑写前分析的新任务生效;老任务没有这张表,什么都不变)
 function beatsOf(run) { return arr(((run || {}).analysis || {}).opening_beats).filter(b => b && (str(b.new_line).trim() || str(b.src_line).trim())); }
 function on(run) { return wanted(run) && beatsOf(run).length >= 2; }
@@ -42,28 +62,78 @@ function sourceOpening(asset, secs) {
 }
 
 // ---------- 写前分析:多拆一张节拍表 ----------
+// v1.116 各赛道的节拍作用、本质词、承诺示范(经济拆账照 v1.110 原样)
+const TRACK_NOTE = {
+  econ: {
+    roles: '让观众当店主 / 美好想象 / 一句反转 / 内行大数字 / 同样生意也会亏 / 价值承诺 / 过渡到算账',
+    spoil: '수익구조、객단가、업셀 这类机制名',
+    tie: '和观众自己挂钩:你如果开一家会站在哪边,你上次结账为什么多花钱',
+    place: '放在「内行大数字 / 同样生意也会亏」那一拍之后、开始算账之前',
+    demo: '   示范(부침개):「같은 철판, 같은 3,000원인데 한 사람은 1년에 6천만 원을 가져가고, 한 사람은 1년을 못 버팁니다. 그 차이는 맛이 아닙니다. 장부에 안 적히는 숫자 하나입니다. 끝까지 보면, 당신이 차리면 어느 쪽일지 계산이 나옵니다.」\n' +
+      '   示范(만두):「8,000원짜리 만두 먹으러 들어갔는데 계산서는 1만 8,000원. 우연이 아닙니다. 메뉴판 안에 당신 지갑을 여는 장치가 있습니다. 그게 뭔지, 한 줄씩 따라가 보겠습니다.」\n',
+    shape: '「장부에 안 적히는 숫자 하나」「메뉴판 안의 장치」',
+    no: '「맛이 아닙니다」'
+  },
+  history: {
+    roles: '一个人物的处境 / 一个反常的事实 / 时代背景一句话 / 悬念提问 / 一句反转 / 价值承诺 / 过渡到正文',
+    spoil: '真正原因或结局的名字,例如某个制度名、某场事件名、某个人物的真实下场',
+    tie: '和观众挂钩:原片对观众说 you 的(「如果你生在那个年代…」),新稿也这样说;原片是旁白讲故事的,就挂到观众熟悉的东西上(今天也有的制度、习惯、地名),不要硬加「你」',
+    place: '放在交代完人物处境 / 反常事实之后、开始讲来龙去脉之前',
+    demo: '',
+    shape: '「教科书里没写的一道命令」「那一年多出来的一笔税」',
+    no: '「不是因为战争」'
+  },
+  science: {
+    roles: '一个反常现象 / 一个具体的动物或人 / 常识被推翻 / 一句反转 / 惊人的数字 / 价值承诺 / 过渡到解释',
+    spoil: '机制名或学术名词,例如某种激素、某个效应名、某种进化解释',
+    tie: '和观众挂钩:原片对观众说 you 的(「你也有过这种感觉…」),新稿也这样说;原片是旁白讲现象的,就挂到观众日常里见得到的场景上,不要硬加「你」',
+    place: '放在反常现象 / 常识被推翻之后、开始解释原因之前',
+    demo: '',
+    shape: '「大脑里一个很小的开关」「它身上一个你没注意过的部位」',
+    no: '「不是因为它聪明」'
+  },
+  pov: {
+    roles: '让观众代入身份 / 交代规则 / 第一个等级或场景 / 代价或危险 / 一句反转 / 价值承诺 / 过渡到第一级',
+    spoil: '最后一级、结局或隐藏规则的名字',
+    tie: '和观众挂钩:这类片子通常全程对观众说 you,原片说 you 的拍新稿都用「당신」',
+    place: '放在交代完身份和规则之后、进入第一级之前',
+    demo: '',
+    shape: '「最后一级只有一个人活下来的理由」「规则里没写的一条」',
+    no: '「不是靠运气」'
+  },
+  general: {
+    roles: '一个场景或人物 / 冲突 / 一句反转 / 惊人的事实 / 价值承诺 / 过渡到正文',
+    spoil: '答案本身的关键名词(机制名、原因名、结局名)',
+    tie: '和观众挂钩:原片对观众说 you 的,新稿也这样说;原片是旁白讲述的,挂到观众熟悉的东西上,不要硬加「你」',
+    place: '放在原片里承诺 / 预告的那一拍(通常在冲突或反转之后、正文开始之前)',
+    demo: '',
+    shape: '「一个大家都忽略的数字」「一条没人说过的规则」',
+    no: '「不是大家以为的那样」'
+  }
+};
+function trackNote(run) { return TRACK_NOTE[trackOf(run)] || TRACK_NOTE.general; }
 function analysisNote(run, asset) {
   const lang = str(((run || {}).audience || {}).target_language) || '目标语言';
   const src = sourceOpening(asset, LOCK_SEC + 3);
-  return '【第 7 步 开头节拍表(经济拆账题必做;和上面第 6 步的钩子冲突时以这里为准)】\n' +
+  const T = trackNote(run);
+  return '【第 7 步 开头节拍表(' + trackName(run) + '赛道必做;和上面第 6 步的钩子冲突时以这里为准)】\n' +
     '原片前 45 秒字幕(左边是秒数):\n' + (src || '(没有原片字幕,按「开场契约」和留存地图里开头那一段拆)') + '\n\n' +
     '1. 把原片前 45 秒逐拍拆开(一拍 = 一个作用,通常 5–8 拍),写进 opening_beats。每一拍写:\n' +
     '   - src_time(原片几秒到几秒)、src_line(原片原句);\n' +
-    '   - role:这一拍的作用,用短语写,例如:让观众当店主 / 美好想象 / 一句反转 / 内行大数字 / 同样生意也会亏 / 价值承诺 / 过渡到算账;\n' +
+    '   - role:这一拍的作用,用短语写,例如:' + T.roles + '(照原片这一拍实际起的作用写,不要套);\n' +
     '   - new_line:新题目这一拍说什么,用' + lang + '写一句示范。照原片这一拍的句式、长短和语气写(不是直译);数字只用事实表或账本里有出处的;\n' +
     '   - fact_ids:这一拍用到事实表哪几条;\n' +
     '   - anchors:2–3 个' + lang + '关键词(名词为主,不要数字),这一拍不管怎么换说法都会留着的词,程序用它逐拍核对这一拍在不在、顺序对不对;\n' +
-    '   - you:这一拍是不是直接对观众说「你/당신」(原片是 you 的拍写 true)。\n' +
+    '   - you:这一拍是不是直接对观众说「你/당신」(原片是 you 的拍写 true;原片这一拍是旁白在讲别人、没有对观众说 you,写 false,新稿也不要硬加「당신」)。\n' +
     '2. 声音指纹(voice_prints):原片的口头禅和固定句式,例如「Okay, so you want to own a…」「What could go wrong? Almost everything.」。每个给 1–2 个' + lang + '的对应说法(不是直译,是这个语言里同样口气的说法),写明放在哪一拍。\n' +
     '3. 价值承诺要有,但必须是「带钩子的承诺」:承诺观众会得到一个出乎意料的答案,但不告诉他答案是什么。写进 hook_promise,同时作为节拍表里 role 为「价值承诺」的那一拍:\n' +
     '   ① 承诺结果,不报流程:不要单独出现「오늘은 ~를 계산해보겠습니다 / 알아보겠습니다」这种议程句;\n' +
-    '   ② 点出有个答案、而且很意外,但把答案藏住:可以否定大家以为的答案(「맛이 아닙니다」),可以给答案一个具体的形状(「장부에 안 적히는 숫자 하나」「메뉴판 안의 장치」);不能说出本质词(수익구조、객단가、업셀 这类机制名);只说「놀라운 비밀」这种空话不合格;\n' +
-    '   ③ 和观众自己挂钩:你如果开一家会站在哪边,你上次结账为什么多花钱;\n' +
-    '   ④ 放在「内行大数字 / 同样生意也会亏」那一拍之后、开始算账之前,大约 20–35 秒,一两句话。\n' +
-    '   示范(부침개):「같은 철판, 같은 3,000원인데 한 사람은 1년에 6천만 원을 가져가고, 한 사람은 1년을 못 버팁니다. 그 차이는 맛이 아닙니다. 장부에 안 적히는 숫자 하나입니다. 끝까지 보면, 당신이 차리면 어느 쪽일지 계산이 나옵니다.」\n' +
-    '   示范(만두):「8,000원짜리 만두 먹으러 들어갔는데 계산서는 1만 8,000원. 우연이 아닙니다. 메뉴판 안에 당신 지갑을 여는 장치가 있습니다. 그게 뭔지, 한 줄씩 따라가 보겠습니다.」\n' +
+    '   ② 点出有个答案、而且很意外,但把答案藏住:可以否定大家以为的答案(像' + T.no + '这样),可以给答案一个具体的形状(像' + T.shape + '这样);不能说出本质词(' + T.spoil + ');只说「놀라운 비밀」这种空话不合格;\n' +
+    '   ③ ' + T.tie + ';\n' +
+    '   ④ ' + T.place + ',大约 20–35 秒,一两句话。原片前 45 秒里本来就有承诺 / 预告的,照它的位置放。\n' +
+    T.demo +
     '   hook_promise 写:beat(哪一拍)、shape(答案的形状,开头怎么说)、answer(真正的答案,只给后面写稿看,开头不说)、reveal_at(正文哪一段揭晓)、reveal_anchors(揭晓那段一定会出现的 2–3 个' + lang + '关键词)。\n' +
-    '4. spoiler_terms:本题的本质词(答案的机制名,' + lang + ',例如 수익구조、객단가、업셀),开头 45 秒里一个都不许出现。\n' +
+    '4. spoiler_terms:本题的本质词(答案的关键名词,' + lang + ',例如 ' + T.spoil + '),开头 45 秒里一个都不许出现。按这篇的题目写,程序就按这几个词查。\n' +
     '5. 保留这几条:8 秒内用一个人或场景说出标题的冲突(题目要清楚,藏的是答案);45 秒前给出第一个甜头(一半答案),最晚 60 秒;一句最多 2 个数字;全篇一种语体。\n' +
     '   下面这几条通用开头规则在这张节拍表里让位,冲突时按节拍表:「8 秒内至少 3 个标题关键词」「前 10 秒最多 1 个数字」「删冷开场」「早点说本质」。\n' +
     '在输出的 JSON 里多加这几个字段:\n' +
@@ -101,11 +171,11 @@ function beatLine(b) {
   return '- ' + b.id + (b.src_time ? '(原片 ' + b.src_time + ')' : '') + ' [' + (b.role || '?') + '] 原片「' + b.src_line + '」→ 示范「' + b.new_line + '」' +
     (b.fact_ids.length ? '(' + b.fact_ids.join(',') + ')' : '') + (b.anchors.length ? ' 关键词:' + b.anchors.join('、') : '') + (b.you ? ' 对观众说「你」' : '');
 }
-function promiseText(a) {
+function promiseText(a, run) {
   const h = a.hook_promise || {};
-  const sp = spoilers(a);
+  const sp = spoilers(a, run);
   return '价值承诺(带钩子的承诺' + (h.beat ? ',在 ' + h.beat : '') + '):承诺观众会得到一个出乎意料的答案,但不说答案是什么;可以说答案「不是什么」,可以给答案一个具体的形状' + (h.shape ? '(这篇:「' + h.shape + '」)' : '') +
-    ',和观众自己挂钩(你开一家会站在哪边 / 你上次为什么多花钱);不要「오늘은 ~를 계산해보겠습니다 / 알아보겠습니다」这种只报流程的议程句' +
+    (trackOf(run) === 'econ' ? ',和观众自己挂钩(你开一家会站在哪边 / 你上次为什么多花钱)' : ',和观众挂钩(原片对观众说 you 的才对观众说「你」,不要硬加)') + ';不要「오늘은 ~를 계산해보겠습니다 / 알아보겠습니다」这种只报流程的议程句' +
     (sp.length ? ';开头 45 秒里不许出现本质词:' + sp.join('、') : '') +
     (h.answer ? '。答案是「' + h.answer + '」,' + (h.reveal_at ? '在 ' + h.reveal_at + ' 揭晓' : '在正文里揭晓') + ',揭晓时明确点回开头那句承诺' : '') + '。';
 }
@@ -116,25 +186,26 @@ function briefText(run, a, mode) {
   const vp = arr(a.voice_prints).filter(v => v.source || arr(v.targets).length);
   const vpText = vp.length ? '声音指纹(原片的口头禅、固定句式,放进对应的拍):\n' + vp.map(v => '- 原片「' + v.source + '」→ ' + arr(v.targets).map(t => '「' + t + '」').join(' / ') + (v.beat ? '(' + v.beat + ')' : '')).join('\n') : '';
   if (mode === 'review') {
-    return '锁定开头(经济拆账:' + OPEN_CH + ' 就是按原片前 45 秒节拍写的开头,观众留不留下来全看这一段):\n' +
-      '- 在 ' + OPEN_CH + ' 里只能在原句位置替换:换数字、换说法、改语法。不许删拍、并拍、调顺序;不许提前说出答案(本质词不许出现);不许把「당신/你」去掉;不要加报流程的议程句。\n' +
+    return '锁定开头(' + trackName(run) + ':' + OPEN_CH + ' 就是按原片前 45 秒节拍写的开头,观众留不留下来全看这一段):\n' +
+      '- 在 ' + OPEN_CH + ' 里只能在原句位置替换:换数字、换说法、改语法。不许删拍、并拍、调顺序;不许提前说出答案(本质词不许出现);原片对观众说「你」的拍不许把「당신/你」去掉;不要加报流程的议程句。\n' +
       '- 开头的数字没出处:换成事实表里有出处的数,或改成不带数字的说法,这一拍要留着,不能整拍删。\n' +
       '- ' + YIELD_RULES + '这几条通用开头规则在 ' + OPEN_CH + ' 里只做提示,不要按它们改 ' + OPEN_CH + ';「本质未点明」在开头不算问题。\n' +
       '- 程序改完会逐拍核对,少了拍、顺序变了、说破答案、没了「你」,这一章会退回改之前的样子。\n' +
-      '节拍(按顺序):\n' + beats.map(beatLine).join('\n') + '\n' + promiseText(a);
+      '节拍(按顺序):\n' + beats.map(beatLine).join('\n') + '\n' + promiseText(a, run);
   }
-  return '开头节拍表(经济拆账:开头照原片前 45 秒的节拍写。和' + YIELD_RULES + '这些通用开头规则冲突时,按节拍表来):\n' +
+  return '开头节拍表(' + trackName(run) + ':开头照原片前 45 秒的节拍写。和' + YIELD_RULES + '这些通用开头规则冲突时,按节拍表来):\n' +
     '- 蓝图:第一章 ' + OPEN_CH + ' 就是这张节拍表,时长从 0:00 到约 0:45(不超过 1:00),不放别的内容;' + OPEN_CH + ' 的 key_points 按拍写,每拍几秒、说什么;在 ' + OPEN_CH + ' 里加一个字段 "opening_beats": [' + beats.map(b => '"' + b.id + '"').join(', ') + '],按顺序列出全部拍。\n' +
     '- 写稿:' + OPEN_CH + ' 一拍一拍照着写,顺序不变,不删拍、不并拍;示范句可以润色,但保留它的句式、长短和作用;原片对观众说「你」的拍,新稿也对观众说「당신/你」。\n' +
-    beats.map(beatLine).join('\n') + '\n' + (vpText ? vpText + '\n' : '') + promiseText(a) + '\n' +
+    beats.map(beatLine).join('\n') + '\n' + (vpText ? vpText + '\n' : '') + promiseText(a, run) + '\n' +
     '保留:8 秒内用一个人或场景说出标题的冲突(题目要清楚,藏的是答案);45 秒前给出第一个甜头(一半答案),最晚 60 秒;一句最多 2 个数字;全篇一种语体。';
 }
 
 // ---------- 程序检查 ----------
+// 经济拆账另外固定查这几个机制名;其他赛道只查写前分析按这篇题目写的 spoiler_terms(v1.116)
 const DEFAULT_SPOILERS = ['수익구조', '수익 구조', '객단가', '업셀', '업셀링', '비즈니스 모델', '收益结构', '盈利模式', '客单价', 'profit structure', 'business model', 'upsell'];
-function spoilers(a) {
+function spoilers(a, run) {
   const own = arr((a || {}).spoiler_terms).map(str).filter(t => t.trim().length >= 2);
-  return [...new Set(own.concat(DEFAULT_SPOILERS))];
+  return [...new Set(run && trackOf(run) !== 'econ' ? own : own.concat(DEFAULT_SPOILERS))];
 }
 // 只报流程的议程句:「오늘은 ~를 계산해보겠습니다 / 알아보겠습니다」
 const AGENDA_RE = [
@@ -183,7 +254,7 @@ function check(run, script, aIn) {
   });
   const missing = rows.filter(r => r.checked && !r.found).map(r => r.id);
   const outOfOrder = rows.filter(r => r.out_of_order).map(r => r.id);
-  const sp = spoilers(a).filter(t => text.includes(low(t)));
+  const sp = spoilers(a, run).filter(t => text.includes(low(t)));
   const sents = sentences(ch.text);
   const agenda = sents.filter(s => AGENDA_RE.some(re => re.test(s)));
   const you = YOU_RE.test(ch.text);
@@ -241,7 +312,7 @@ function lockReasons(cb, ca) {
   const newSp = ca.spoilers.filter(t => !cb.spoilers.includes(t));
   if (newSp.length) out.push('提前说破答案(' + newSp.join('、') + ')');
   if (ca.agenda.length > cb.agenda.length) out.push('加了报流程的议程句');
-  if (cb.you && !ca.you) out.push('去掉了「당신/你」');
+  if (cb.you_needed && cb.you && !ca.you) out.push('去掉了「당신/你」'); // 原片对观众说 you 的才管(v1.116 历史类等旁白片不强加)
   return out;
 }
 // before → after 的改动如果把开头改坏了,开头章换回 before 的,返回 { text, reverted, reasons }
@@ -311,4 +382,4 @@ function compare(run, draftText, curText) {
   };
 }
 
-module.exports = { LOCK_SEC, OPEN_CH, wanted, on, beatsOf, sourceOpening, analysisNote, normalize, briefText, check, checkBlueprint, rewriteFeedback, spliceOpening, guard, lockReasons, promiseKept, compare, openingOf, replaceOpening, spoilers, AGENDA_RE, YOU_RE };
+module.exports = { TRACKS, TRACK_NAMES, RULES, ruleOf, ruleView, trackName, TRACK_NOTE, LOCK_SEC, OPEN_CH, wanted, on, beatsOf, sourceOpening, analysisNote, normalize, briefText, check, checkBlueprint, rewriteFeedback, spliceOpening, guard, lockReasons, promiseKept, compare, openingOf, replaceOpening, spoilers, AGENDA_RE, YOU_RE };

@@ -707,7 +707,7 @@ async function runGeneration0(runId) {
     run.steps[name].gate_retry = { reason: '听感检查: ' + lc.issues.join(';'), attempt: 1 };
     store.saveRun(run);
     const feedback = '这份稿子是配音给人听的,听感检查不合格:\n' + checks.listenFeedback(lc) + '\n\n' + checks.LISTEN_RULES +
-      (require('./openbeats').on(run) ? '\n\n锁定开头:开头章 CH01 是照原片前 45 秒节拍写的,「前 10 秒最多 1 个数字」「8 秒内标题关键词」在 CH01 里只是提示,不要按它们改 CH01;CH01 里只能原位替换(换数字、换说法、改语法),不删拍、不调顺序、不说破答案、不去掉「당신」。' : '') +
+      (require('./openbeats').on(run) ? '\n\n锁定开头:开头章 CH01 是照原片前 45 秒节拍写的,「前 10 秒最多 1 个数字」「8 秒内标题关键词」在 CH01 里只是提示,不要按它们改 CH01;CH01 里只能原位替换(换数字、换说法、改语法),不删拍、不调顺序、不说破答案;原片对观众说「你」的拍不去掉「당신」。' : '') +
       '\n\n只改上面点到的句子和开头,其他句子原样保留,不要加长;章节标签和时间范围不变。' +
       (step === 4 ? '只输出一份完整终稿,格式要求不变(Change Log 与 fact_check_list 放在终稿之后)。' : '输出完整脚本,不要解释。');
     const m2 = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];

@@ -807,6 +807,15 @@
           <input type="radio" name="gen-thesis" value="auto" style="width:auto" onchange="thesisModeSave()">
           <span>自动选论点:AI 自己挑一个,不停(和以前一样)</span>
         </label>
+        <div class="v13" style="font-size:13px;font-weight:600;margin:8px 0 4px">开头规则</div>
+        <label style="display:flex;align-items:flex-start;gap:6px;cursor:pointer">
+          <input type="radio" name="gen-open" value="source" checked style="width:auto;margin-top:3px" onchange="openRuleSave()">
+          <span>照原片开头(推荐)<br><span class="hint" style="margin:0">先把原片前 45 秒一拍一拍拆开(比如让观众当主角、一句反转、一个吓人的数字、一句吊胃口的承诺),新稿照着这个节奏写,原片的口头禅换成韩语里同样口气的说法。写好后开头就锁住,后面审稿、改稿只能换词、换数字,不能删掉某一拍、调顺序,也不能提前把答案说出来。适合原片开头本身就很抓人的。</span></span>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:6px;cursor:pointer">
+          <input type="radio" name="gen-open" value="formula" style="width:auto;margin-top:3px" onchange="openRuleSave()">
+          <span>通用开头公式<br><span class="hint" style="margin:0">不看原片怎么开头,按一套固定标准写和改:8 秒内说出标题里的关键词和冲突,前 10 秒最多一个数字,开门见山不铺垫,45 秒前先给一个答案。终审后程序还会自动改开头,去满足这些标准。好处是点题快、信息清楚;坏处是容易把原片的代入感和悬念改平,变成「今天我们来算一算」这种报流程的开头。</span></span>
+        </label>
         <label style="margin-top:6px">参考资料(选填 · 写前分析用:粘贴你查到的数据、报道、链接摘要,或在下面上传表格;AI 只能用这里和它已知的事实)</label>
         <textarea id="gen-materials" rows="4" style="width:100%;box-sizing:border-box" placeholder="例如:2024 年韩国美发店平均月营业额 …(来源:统计厅)"></textarea>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px"><button type="button" class="ghost" onclick="matPick('gen-materials')">上传表格(xlsx / csv)</button><span id="gen-materials-up" class="hint" style="margin:0">表格会转成文字加到上面,AI 写前分析时自己读;只按主题找来、没有现成观点的资料也可以放</span></div>
@@ -877,6 +886,7 @@
         <button type="button" id="detail-title" class="detail-title-copy" title="点击复制标题" onclick="copyDetailTitle()"></button><span id="detail-title-copy-status" class="detail-title-copy-status" role="status" aria-live="polite"></span>
       </h2>
       <div class="hint" id="detail-sub"></div>
+      <div class="hint" id="detail-open-rule" style="margin-top:2px"></div>
       <div class="steps" id="detail-steps"></div>
       <div id="core-panel" class="hidden"></div>
       <div id="detail-usage"></div>
@@ -1147,6 +1157,12 @@ function genMode() {
 // v1.89 论点:我来选 / 自动选(记住上次选的)
 const THESIS_MODE_KEY = 'thesis_mode_v189';
 function thesisMode() { const el = document.querySelector('input[name="gen-thesis"]:checked'); return el ? el.value : 'choose'; }
+// v1.117 开头规则:照原片开头 / 通用开头公式(记住上次选的)
+const OPEN_RULE_KEY = 'open_rule_v1117';
+function openRule() { const el = document.querySelector('input[name="gen-open"]:checked'); return el ? el.value : 'source'; }
+function openRuleSave() { try { localStorage.setItem(OPEN_RULE_KEY, openRule()); } catch (e) {} }
+function openRuleLoad() { let v = null; try { v = localStorage.getItem(OPEN_RULE_KEY); } catch (e) {} const el = v && document.querySelector('input[name="gen-open"][value="' + v + '"]'); if (el) el.checked = true; }
+document.addEventListener('DOMContentLoaded', openRuleLoad);
 function thesisModeSave() { try { localStorage.setItem(THESIS_MODE_KEY, thesisMode()); } catch (e) {} }
 function thesisModeLoad() { let v = null; try { v = localStorage.getItem(THESIS_MODE_KEY); } catch (e) {} const el = v && document.querySelector('input[name="gen-thesis"][value="' + v + '"]'); if (el) el.checked = true; }
 document.addEventListener('DOMContentLoaded', thesisModeLoad);
@@ -2081,6 +2097,7 @@ async function createRun() {
     draft_first: genMode() === 'draft_first',
     pre_analysis: genMode() === 'pre_analysis',
     thesis_choose: genMode() !== 'direct' && thesisMode() === 'choose',
+    opening_rule: openRule(), // v1.117
     track: document.getElementById('gen-track').value.trim(),
     review_track: (document.getElementById('gen-review-track') || {}).value || '',
     materials: document.getElementById('gen-materials').value.trim(),
@@ -2761,6 +2778,7 @@ async function loadRunDetail() {
     (r.original_title ? `原题目:${r.original_title} · ` : '') + `${r.asset_name || r.asset_id} · ${statusLabel(r)}${r.draft_first ? ' · 先写后改' : ''} · 创建于 ${fmtTime(r.created_at)}` +
     (r.voice_used ? ` · 频道声音:${r.voice_used}` : '') +
     (r.confirmed_version && r.confirmed_version.version ? ` · 确认 ${versionLabel(r.confirmed_version.version)}` : '');
+  { const orl = document.getElementById('detail-open-rule'); if (orl) orl.innerHTML = openRuleTag(r); } // v1.117
   const stepKeys = ['blueprint', 'script', 'audit', 'optimized'];
   if (r.pre_analysis || (r.steps || {}).analysis) stepKeys.unshift('analysis');
   if (r.boost_opening || (r.steps || {}).opening_boost) stepKeys.push('opening_boost');
@@ -3444,7 +3462,7 @@ function rvOpenCompareHtml(v) {
   const pkHtml = pk ? `<div style="margin-top:6px;font-size:13px"><b>承诺要兑现</b>:开头承诺「${esc(pk.shape || '')}」 → ${pk.ok ? `<span style="color:#047857">正文里找到了揭晓(${esc(pk.hit.join('、'))})</span>` : `<span style="color:#b91c1c">正文里没找到揭晓的段落(找的关键词:${esc(pk.words.join('、'))})</span>`}</div>` : '';
   const busy = !!(v.running);
   return `<details class="rv-md-box"${rvState.openCmpOpen || bad || evs.length ? ' open' : ''} ontoggle="rvState.openCmpOpen=this.open"><summary><b>开头对比</b>(原片前 45 秒节拍 / 初稿 / 现在):${sum}${evs.length ? ` <span class="rv-flag">自动退回过 ${evs.length} 次</span>` : ''}</summary>
-    <div class="hint" style="margin:6px 0">经济拆账的开头是照原片前 45 秒一拍一拍写的,后面的改稿只能原位替换。按每拍的关键词对齐;黄底是换了说法,红底是这一拍没了或顺序变了。</div>
+    <div class="hint" style="margin:6px 0">这篇的开头是照原片前 45 秒一拍一拍写的,后面的改稿只能原位替换。按每拍的关键词对齐;黄底是换了说法,红底是这一拍没了或顺序变了。</div>
     <div class="rv-md"><div class="rv-md-table"><table><tr><th style="width:90px">拍</th><th>原片</th><th>初稿开头</th><th>现在的开头</th></tr>${rows}</table></div></div>
     ${pkHtml}${evHtml}
     <div class="rv-ops">${c.can_restore ? `<button class="an-btn" onclick="rvRestoreOpening()" ${busy ? 'disabled' : ''}>恢复初稿开头</button><span class="hint">把现在稿子的开头章 CH01 换回初稿的,后面的章不动;恢复后可以在 CH01 点「撤回」再换回来。</span>` : '<span class="hint">现在的开头和初稿一样,不用恢复。</span>'}</div></details>`;
@@ -5824,7 +5842,7 @@ function anApplyDraftToControls() {
 }
 
 // ---------- v1.110 开头节拍表(经济拆账:开头照原片前 45 秒的节拍写,后面的步骤只能原位替换) ----------
-const AN_BEATS_HINT = '经济拆账题:开头照原片前 45 秒一拍一拍写。蓝图第一章就是这张表,写稿照着写;后面的终审、补改、去AI感、自动改开头、事实核验在开头里只能原位替换(换数字、换说法、改语法),删了拍、调了顺序、说破答案、去掉「당신」,程序会退回改之前的开头。「关键词」是程序逐拍核对用的,每拍 2–3 个,不管怎么换说法都会留着的词(不要写数字)。';
+const AN_BEATS_HINT = '开头照原片前 45 秒一拍一拍写(新建任务时「开头规则」选了「照原片开头」的才有这张表)。蓝图第一章就是这张表,写稿照着写;后面的终审、补改、去AI感、自动改开头、事实核验在开头里只能原位替换(换数字、换说法、改语法),删了拍、调了顺序、说破答案、去掉原片对观众说「你」的那句「당신」,程序会退回改之前的开头。「关键词」是程序逐拍核对用的,每拍 2–3 个,不管怎么换说法都会留着的词(不要写数字)。';
 function anBeatsViewHtml(a) {
   const bs = Array.isArray(a.opening_beats) ? a.opening_beats.filter(b => b && typeof b === 'object') : [];
   if (!bs.length) return '';
@@ -5849,7 +5867,7 @@ function anBeatsEditHtml(d) {
   ${bs.map((b, i) => `<tr data-an-row="beats" data-an-i="${i}">
     <td>${inp('opening_beats.' + i + '.id', '', '44px')}<div style="margin-top:4px"><select class="an-edit-input" style="width:auto" data-an-path="opening_beats.${i}.you" data-an-default="false" onchange="anSetSelect(this)"><option value="true">说「你」</option><option value="false">不说「你」</option></select></div></td>
     <td>${inp('opening_beats.' + i + '.src_time', '0:00-0:04', '84px')}${ta('opening_beats.' + i + '.src_line', 2, '原片原句')}</td>
-    <td>${ta('opening_beats.' + i + '.role', 2, '让观众当店主 / 一句反转 / 内行大数字…')}</td>
+    <td>${ta('opening_beats.' + i + '.role', 2, '这一拍的作用:当店主 / 人物处境 / 一句反转 / 价值承诺…')}</td>
     <td>${ta('opening_beats.' + i + '.new_line', 3, '目标语言示范句')}</td>
     <td>${inp('opening_beats.' + i + '.fact_ids', '事实编号', '', true)}${inp('opening_beats.' + i + '.anchors', '关键词,用顿号隔开', '', true)}</td>
     <td><button class="an-btn" onclick="anMoveBeat(${i},-1)" title="上移">↑</button><button class="an-btn" onclick="anMoveBeat(${i},1)" title="下移">↓</button><br><button class="an-btn del" onclick="anDeleteBeat(${i})">删除</button></td>
@@ -6305,6 +6323,13 @@ function thCardRows({ a, c, card, facts, cons }, z) {
 // ---------- v1.114 任务页「核心观点」:默认折叠,标题行是选定论点那一句,展开和选论点时那张卡一样(只读) ----------
 let coreRenderedKey = null;
 const coreOpen = {}; // 每个任务展开没展开(页面每 3 秒刷新,不能收回去)
+// v1.117 这篇用的哪种开头规则(任务页标题下面那行)
+function openRuleTag(r) {
+  const v = r.opening_rule_view;
+  if (!v) return '';
+  const tip = v.rule === 'source' ? '照原片开头:原片前 45 秒一拍一拍拆开,新稿照着这个节奏写;写好后开头锁住,后面只能换词、换数字' : '通用开头公式:8 秒内说出标题里的关键词和冲突,前 10 秒最多一个数字,开门见山,45 秒前先给一个答案;终审后自动改开头';
+  return `<span title="${escAttr(tip)}" style="color:${v.rule === 'source' ? '#92400e' : '#374151'};font-weight:600">开头规则:${esc(v.label)}</span>${v.no_beats ? '<span class="hint" style="margin:0">(这篇的写前分析没拆节拍表,实际按通用公式)</span>' : ''}${v.chosen ? '' : '<span class="hint" style="margin:0">(老任务,按赛道算的)</span>'}`;
+}
 function renderCorePanel(r) {
   const el = document.getElementById('core-panel');
   const k = r.core_view;

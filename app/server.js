@@ -563,6 +563,8 @@ const server = http.createServer(async (req, res) => {
         materials: typeof body.materials === 'string' ? body.materials.trim() : '',
         // v1.89 论点:true = 出完 3 张论点卡停下来等人选;false = 照旧自动选
         thesis_choose: body.thesis_choose === true && (!!body.pre_analysis || !!body.draft_first),
+        // v1.117 开头规则:source 照原片开头(节拍表、锁定开头)/ formula 通用开头公式;没传默认照原片开头
+        opening_rule: body.opening_rule === 'formula' ? 'formula' : 'source',
         // 频道声音设定:'__auto__' 按频道名匹配(默认) / '__none__' 不用 / 设定名
         voice_name: typeof body.voice_name === 'string' ? body.voice_name : voice.AUTO
       });
@@ -647,6 +649,7 @@ const server = http.createServer(async (req, res) => {
       // v1.73 蓝图方式、功能表、每章排法、蓝图审结果(页面的「蓝图」面板用),不落盘
       try { const bv = require('./lib/blueprint').view(r); if (bv) r.blueprint_view = bv; } catch (e) { /* 旧任务数据不全:不显示面板 */ }
       try { const cv = require('./lib/thesis').coreView(r); if (cv) r.core_view = cv; } catch (e) { /* 旧任务数据不全:不显示核心观点 */ } // v1.114
+      try { r.opening_rule_view = require('./lib/openbeats').ruleView(r); } catch (e) {} // v1.117 这篇用的哪种开头规则
       { const wv = require('./lib/manual').view(r); if (wv) { r.web = wv; r.live_calls = (r.live_calls || []).filter(c => !wv.pending.some(p => p.label === c.label || (p.kind === 'script' && /^Step 2/.test(c.label)))); } } // v1.105 网页版接力:等你粘贴的消息;等粘贴的不算「正在调用」 网页版接力:等你粘贴的消息(不带存下的回答)
       return send(res, 200, r);
     }
