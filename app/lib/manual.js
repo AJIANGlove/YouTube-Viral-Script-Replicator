@@ -23,7 +23,8 @@ function must(runId) { const st = load(runId); if (!st) throw err('这个任务�
 // 原片对照表、AI 调整(查询词、调整、补素材、修账本、账本对照、论点对账)、蓝图前的功能表、蓝图补搜自动走 API,不用人点
 // 蓝图审照旧走 API(人选的:蓝图先粘回来,程序检查 + 蓝图审)
 // v1.113 优化(Step 4)也走网页版:主调用新开「优化」对话,结构/篇幅/听感重试回这个对话接着发;外文字符修正(逐行小修)照旧走 API。审核(Step 3)照旧走 API
-const WEB_RE = /^(写前分析|Step 1|Step 2|Step 4)/;
+// v1.115 ⑧ 二稿审稿报告的主调用也走网页版(新开「二稿审稿」对话,不沿用写稿/优化的对话,免得审自己写的稿);中文对照、问题在哪/大白话照旧走 API
+const WEB_RE = /^(写前分析|Step 1|Step 2|Step 4|二稿审稿)/;
 const API_RE = /蓝图审(?!改)|^Step 1 (蓝图补搜|功能表)|^Step 4 外文字符修正/;
 const ANSWERS_MAX = 40;
 
@@ -49,6 +50,7 @@ function chatName(label) {
   if (/^Step 1/.test(l)) return '蓝图';
   if (/^Step 2/.test(l)) return '写稿';
   if (/^Step 4/.test(l)) return '优化';
+  if (/^二稿审稿/.test(l)) return '二稿审稿';
   return l;
 }
 
@@ -120,6 +122,14 @@ function checkFinal(content, ids) {
   return text;
 }
 
+// v1.115 粘回来的二稿审稿报告:结尾给程序读的问题清单(===ISSUES===)和路线(===ROUTE===)要在,不在就是没写完,不收
+function checkAudit(content) {
+  const t = content.replace(/^[*`\s]*(===\s*[A-Za-z]+\s*===)[*`\s]*$/gm, '$1');
+  const miss = ['ISSUES', 'ROUTE'].filter(k => !new RegExp('^===\\s*' + k + '\\s*===\\s*$', 'm').test(t));
+  if (miss.length) throw err('报告没写完(结尾的 ' + miss.map(k => '===' + k + '===').join(' / ') + ' 不在)。回到网页版点「继续」(或者发一句「继续」),等它写到最后,把后半段拼上再粘');
+  return content;
+}
+
 // 挂一条「等你粘贴」;返回和 llmCall 一样形状的结果
 function relay(runId, cfg, messages, label, opts) {
   const w = titleWait.get(runId);
@@ -132,7 +142,8 @@ function relay0(runId, cfg, messages, label, opts) {
   const t0 = Date.now();
   const result = content => ({ content, secs: (Date.now() - t0) / 1000, stopReason: 'end_turn', streams: 1, usage: null, manual: true });
   // 程序重启后重跑到同一步:粘过的直接用
-  if (typeof web.answers[key] === 'string') return Promise.resolve(result(web.answers[key]));
+  // v1.115 二稿审稿报告点「重跑」就是要一份新的:不拿上次粘过的(稿子没变、提示词一样也重新出一条)
+  if (typeof web.answers[key] === 'string' && !/^二稿审稿/.test(String(label || ''))) return Promise.resolve(result(web.answers[key]));
   let p = web.pending.find(x => x.key === key);
   if (!p) {
     const prior = messages.slice(0, -1).map(msgHash);
@@ -144,7 +155,8 @@ function relay0(runId, cfg, messages, label, opts) {
       how: chat ? 'continue' : 'new',
       texts: [{ text: chat ? last.content : flatten(messages) }],
       prior, last: msgHash(last),
-      ...(/^Step 4/.test(String(label || '')) ? { check: 'final', chapters: bpIds(runId) } : {})
+      ...(/^Step 4/.test(String(label || '')) ? { check: 'final', chapters: bpIds(runId) } : {}),
+      ...(/^二稿审稿/.test(String(label || '')) ? { check: 'audit' } : {})
     };
     fixTitle(runId, web);
     web.pending.push(p);
@@ -258,6 +270,7 @@ function answer(runId, id, text) {
     web.chats.push(chat);
   } else {
     if (p.check === 'final') content = checkFinal(content, p.chapters);
+    if (p.check === 'audit') content = checkAudit(content);
     // 记进对话:下一条如果是在这段对话上接着问的,只显示新的那句
     let chat = p.chat ? web.chats.find(c => c.id === p.chat) : null;
     if (!chat) { chat = { id: chatId(web), name: p.chat_name, at: now(), hashes: [] }; web.chats.push(chat); }

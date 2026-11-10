@@ -3096,7 +3096,8 @@ function rvPassLine(v) {
   const p = v.passes || {};
   const one = k => {
     const st = p[k];
-    const txt = !st ? (k === 'final' && v.audit ? '等你在审稿报告里选要改的问题' : '没跑') : st.status === 'running' ? '<span class="rv-busy">进行中' + (st.stage ? '(' + esc(st.stage) + ')' : '') + '…</span>' : st.status === 'failed' ? '<span class="err-list">失败:' + esc(st.error || '') + '</span>'
+    const webWait = k === 'audit' && st && st.status === 'running' && webWaitSteps(lastRunDetail).includes('reverse_audit'); // v1.115
+    const txt = !st ? (k === 'final' && v.audit ? '等你在审稿报告里选要改的问题' : '没跑') : webWait ? '<a href="javascript:void 0" onclick="webJump()" style="color:#6d28d9;font-weight:700">👉 等你在网页版复制粘贴(点这里去)</a>' : st.status === 'running' ? '<span class="rv-busy">进行中' + (st.stage ? '(' + esc(st.stage) + ')' : '') + '…</span>' : st.status === 'failed' ? '<span class="err-list">失败:' + esc(st.error || '') + '</span>'
       : k === 'audit' ? '完成(' + (st.issues || 0) + ' 个问题)'
       : st.edits != null ? '完成(改了 ' + st.edits + ' 处' + (st.edits_failed ? ',' + st.edits_failed + ' 处没采用' : '') + (st.verdict ? ',复审判' + (st.verdict === '达标' ? '能发' : st.verdict === '未达标' ? '还不能发' : esc(st.verdict)) : '') + ')'
       : '完成(' + (st.facts ? '核验 ' + st.facts + ' 条事实' + (st.facts_wrong ? ',' + st.facts_wrong + ' 条与证据矛盾' : '') + ';' : '') + (st.issues || 0) + ' 个问题,改了 ' + (st.changed || 0) + ' 章' + (st.growth_rejected ? ',' + st.growth_rejected + ' 章因改长被退回' : '') + ')';
@@ -3110,7 +3111,7 @@ function rvPassLine(v) {
 }
 
 async function rvRunPass(kind) {
-  const msg = kind === 'check' ? '重跑初稿检查?会基于当前稿重新出二稿,然后接着出审稿报告。' : kind === 'audit' ? '重跑二稿审稿报告?会基于当前稿重新审一遍,之前的选择会清空。' : '重跑终审?会基于二稿重新出终稿。';
+  const msg = kind === 'check' ? '重跑初稿检查?会基于当前稿重新出二稿,然后接着出审稿报告。' : kind === 'audit' ? '重跑二稿审稿报告?会基于当前稿重新审一遍,之前的选择会清空。' + (((lastRunDetail || {}).web || {}).on ? '\n\n这篇是网页版:会在上面「网页版写稿」里出一条新的,新开一个对话发过去,把报告粘回来。' : '') : '重跑终审?会基于二稿重新出终稿。';
   if (!confirm(msg)) return;
   try { await rvPost('pass', { kind }); } catch (e) { rvState.err = e.message; }
   rvState.key = null;
@@ -6165,6 +6166,7 @@ function webStepOf(p) {
   if (/^Step 1 功能表/.test(l)) return 'function_table';
   if (/^Step 1/.test(l)) return 'blueprint';
   if (/^Step 4/.test(l)) return 'optimized'; // v1.113 优化也在网页版做
+  if (/^二稿审稿/.test(l)) return 'reverse_audit'; // v1.115 二稿审稿报告也在网页版做
   if (/^(写前分析|原片对照表|联网查询词|AI |账本|论点对账)/.test(l)) return 'analysis';
   return '';
 }
@@ -6187,7 +6189,7 @@ function renderWebPanel(r) {
   const done = w.done || [];
   let html = `<h2 style="color:#6d28d9;display:flex;justify-content:space-between;align-items:center"><span>网页版写稿${pend.length ? ':等你粘贴(' + pend.length + ' 条)' : ''}</span>
     ${w.on ? '<button class="an-btn" onclick="webOff()">后面全部改用 API</button>' : ''}</h2>
-    <div class="hint">${w.on ? '写前分析、出蓝图、写稿、优化这四步在你的 Claude 网页版做:复制消息发过去,把回答粘回来。中间的 AI 调整、原片对照表、功能表、审核,和后面的初稿检查、终审都自动走 API,不用你点。' : '已改回 API,后面的步骤自动跑。'}
+    <div class="hint">${w.on ? '写前分析、出蓝图、写稿、优化、二稿审稿报告这五步在你的 Claude 网页版做:复制消息发过去,把回答粘回来。中间的 AI 调整、原片对照表、功能表、审核,和后面的初稿检查、终审、中文对照都自动走 API,不用你点。' : '已改回 API,后面的步骤自动跑。'}
       ${done.length ? '已完成 ' + done.length + ' 条。' : ''}</div>`;
   if (!pend.length && w.on) html += `<div class="hint" style="margin-top:6px">程序正在处理${['running', 'analyzing', 'awaiting_review', 'queued'].includes(r.status) ? '(检查、查资料或跑 API 的步骤),下一条消息准备好会出现在这里' : ''}。</div>`;
   html += pend.map(p => {
@@ -6198,8 +6200,10 @@ function renderWebPanel(r) {
         <textarea readonly rows="${p.kind === 'script' ? 3 : 5}" style="width:100%;box-sizing:border-box;font-size:12px;color:#4b5563;margin-top:3px">${esc(m.text.length > 4000 ? m.text.slice(0, 4000) + '\n……(太长只显示开头,点「复制」复制的是全文)' : m.text)}</textarea></div>`;
     }).join('');
     const fin = p.check === 'final'; // v1.113 优化:回答是一整篇终稿,很长,常被截断
-    const ph = p.kind === 'script' ? '把 Claude 最后输出的纯净稿粘到这里(被截断点了「继续」的,几段按顺序一起粘;也可以把每批的回答按顺序粘进来)' : fin ? '把 Claude 输出的整篇终稿粘到这里(连同后面的 Change Log 和 fact_check_list)。被截断点了「继续」的,几段按顺序拼在一起粘' : '把 Claude 的回答原样粘到这里(用它回答下面的复制按钮,别自己删改)';
-    const finTip = fin ? `<div class="hint" style="margin:4px 0;color:#6d28d9">⚠ 终稿很长,Claude 网页版常常写到一半停下。<b>没写到最后一章就停了,在网页里点「继续」</b>(或者发一句「继续」),等它写完,把前后几段<b>按顺序拼在一起</b>粘进来。程序会先看章节齐不齐,缺章会告诉你缺哪几章;粘好后照样检查章节结构和篇幅,开头锁定也照样管。</div>` : '';
+    const aud = p.check === 'audit'; // v1.115 二稿审稿报告:也很长,结尾那段 === 清单常被截掉
+    const ph = p.kind === 'script' ? '把 Claude 最后输出的纯净稿粘到这里(被截断点了「继续」的,几段按顺序一起粘;也可以把每批的回答按顺序粘进来)' : fin ? '把 Claude 输出的整篇终稿粘到这里(连同后面的 Change Log 和 fact_check_list)。被截断点了「继续」的,几段按顺序拼在一起粘' : aud ? '把 Claude 输出的整份审稿报告粘到这里(一直到最后 ===ISSUES=== / ===ROUTE=== 那几行)。被截断点了「继续」的,几段按顺序拼在一起粘' : '把 Claude 的回答原样粘到这里(用它回答下面的复制按钮,别自己删改)';
+    const finTip = fin ? `<div class="hint" style="margin:4px 0;color:#6d28d9">⚠ 终稿很长,Claude 网页版常常写到一半停下。<b>没写到最后一章就停了,在网页里点「继续」</b>(或者发一句「继续」),等它写完,把前后几段<b>按顺序拼在一起</b>粘进来。程序会先看章节齐不齐,缺章会告诉你缺哪几章;粘好后照样检查章节结构和篇幅,开头锁定也照样管。</div>`
+      : aud ? `<div class="hint" style="margin:4px 0;color:#6d28d9">⚠ 审稿报告很长,Claude 网页版常常写到一半停下。<b>中途停了,在网页里点「继续」</b>(或者发一句「继续」),等它写到最后(最后几行是 ===ISSUES===、===ROUTE=== 这样给程序读的清单),把前后几段<b>按顺序拼在一起</b>粘进来。没有这几行,程序不收,会让你回去点「继续」。</div>` : '';
     const stepName = (STEP_LABELS[webStepOf(p)] || '').replace(/^\S+\s/, '');
     return `<div class="web-item card" style="border:1px solid #ddd6fe;border-radius:6px;padding:10px;margin-top:8px;background:#faf5ff">
       <div style="font-size:18px;font-weight:700;color:#6d28d9">轮到你了:${esc(webTitle(p))} <span class="hint" style="font-size:12px;font-weight:400">${stepName ? '步骤条上的「' + esc(stepName) + '」 · ' : ''}${esc(p.label)}</span></div>
@@ -6228,6 +6232,7 @@ function webTitle(p) {
   if (/^Step 4 篇幅重试/.test(l)) return '优化(太长了,按意见删减)';
   if (/^Step 4 听感重试/.test(l)) return '优化(听感检查没过,按意见改)';
   if (/^Step 4/.test(l)) return '优化稿子';
+  if (/^二稿审稿/.test(l)) return /被拒/.test(l) ? '二稿审稿报告(上次没审,换个说法重发)' : '二稿审稿报告';
   return l;
 }
 async function webCopy(id, i, btn) {
@@ -6360,7 +6365,7 @@ function renderThesisPanel(r) {
       <h3>${esc(one)}</h3><div>${chips}</div>
       ${thCardRows({ a, c, card, facts, cons })}
       <div class="rv-ops" style="margin-top:6px"><button class="an-btn v13" onclick="thChoose('pick','${escAttr(a.id)}',this)">选这个</button>
-        <button class="an-btn" style="border-color:#7c3aed;color:#6d28d9" onclick="thChoose('pickweb','${escAttr(a.id)}',this)" title="写前分析、出蓝图、写稿、优化改成复制到你自己的 Claude 网页版,把回答粘回来;AI 调整、功能表、审核和后面的初稿检查、终审照旧自动跑">选这个,后面在网页版写</button>
+        <button class="an-btn" style="border-color:#7c3aed;color:#6d28d9" onclick="thChoose('pickweb','${escAttr(a.id)}',this)" title="写前分析、出蓝图、写稿、优化、二稿审稿报告改成复制到你自己的 Claude 网页版,把回答粘回来;AI 调整、功能表、审核和后面的初稿检查、终审照旧自动跑">选这个,后面在网页版写</button>
         <button class="an-btn" onclick="thEdit('${escAttr(a.id)}')">改一句再选</button></div>
       ${editing ? `<div style="margin-top:6px"><textarea id="th-edit-text" rows="2" style="width:100%;box-sizing:border-box">${esc(one)}</textarea>
         <div class="hint">改完会按你这句重新联网核对一次(1–3 分钟),核对完再停在这里给你看。</div>
@@ -6387,7 +6392,7 @@ async function thChoose(action, id, btn) {
   if (action === 'edit') { const t = (document.getElementById('th-edit-text') || {}).value || ''; if (!t.trim()) { alert('论点是空的'); return; } body.text = t.trim(); }
   if (action === 'novel') { body.action = 'regen'; body.novel = true; }
   if (action === 'pickweb') {
-    if (!confirm('选这个论点,后面在你自己的 Claude 网页版写?\n\n写前分析、出蓝图、写稿、优化这四步,程序会把拼好的消息给你复制,你发到 Claude 网页版,再把回答粘回来(一篇大约粘回 5 次)。\n中间的 AI 调整、原片对照表、功能表、审核,以及后面的初稿检查、二稿审稿、终审,都自动走 API。\n中途可以随时点「后面全部改用 API」。')) return;
+    if (!confirm('选这个论点,后面在你自己的 Claude 网页版写?\n\n写前分析、出蓝图、写稿、优化、二稿审稿报告这五步,程序会把拼好的消息给你复制,你发到 Claude 网页版,再把回答粘回来(一篇大约粘回 6 次)。\n中间的 AI 调整、原片对照表、功能表、审核,以及后面的初稿检查、终审,都自动走 API。\n中途可以随时点「后面全部改用 API」。')) return;
     body.action = 'pick'; body.web = true;
   }
   const hint = ((document.getElementById('th-hint') || {}).value || '').trim();

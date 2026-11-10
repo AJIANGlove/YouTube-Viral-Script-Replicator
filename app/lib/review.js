@@ -2108,7 +2108,8 @@ async function runReverseAudit(runId) {
       analysis: run.analysis ? an().analysisBrief(a, run, null, 'review') : '(无写前分析)',
       script: base
     });
-    const r = await callLong(run, cfg, prompt, '二稿审稿');
+    // v1.115 网页版任务:这一条挂到「网页版写稿」里等人粘(重跑也一样);inRun 让从「重跑」按钮进来的也认得是哪个任务
+    const r = await pl().inRun(runId, () => callLong(run, cfg, prompt, '二稿审稿'));
     // 模型偶尔给清单的分隔行加粗或包进代码围栏:先把 **===SCORE===** / `===SCORE===` 还原成裸分隔行,再去掉围栏
     const content = r.content.replace(/^[*`\s]*(===\s*[A-Za-z]+\s*===)[*`\s]*$/gm, '$1');
     let cut = content.search(/^===\s*(SCORE|ISSUES|ROUTE)\s*===\s*$/m);
