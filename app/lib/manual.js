@@ -66,8 +66,44 @@ function flatten(messages) {
 function chatId(web) { return 'C' + (web.cseq = (web.cseq || 0) + 1); }
 function nextId(web) { return 'M' + (web.seq = (web.seq || 0) + 1); }
 
+// ---------- v1.111 对话名里的题目用中文 ----------
+// 对话名 = 步骤名 + ' · ' + 题目开头。题目用任务列表那个自动翻的中文标题;没有就在选论点时先翻一次存起来;实在没有用原文。
+// 第一次给人看对话名时定下来(存在 chat_title),之后新开、接着发都用这同一个,不会前后对不上。
+const titleWait = new Map(); // runId → 选论点时正在翻的那一次
+const isZh = t => { const s = String(t || ''); const cjk = (s.match(/[\u4e00-\u9fff]/g) || []).length; return cjk > 0 && cjk >= (s.match(/[A-Za-z\uac00-\ud7af\u3040-\u30ff]/g) || []).length; };
+function zhTitleOf(topic) {
+  const t = String(topic || '').trim();
+  if (!t) return '';
+  if (isZh(t)) return t;
+  try { return require('./topiczh').get(t) || ''; } catch (e) { return ''; }
+}
+// 选论点(网页版)时调:列表里还没有中文标题就先翻一次(最多等 20 秒),存进主题译文缓存
+function prepareTitle(run) {
+  const id = run && run.id, topic = String((run && run.topic) || '').trim();
+  if (!id || !topic || zhTitleOf(topic)) return Promise.resolve();
+  const tz = require('./topiczh');
+  const job = Promise.race([
+    tz.translateOne(topic).then(zh => { if (zh) tz.put(topic, zh); }),
+    new Promise(r => setTimeout(r, 20000))
+  ]).catch(() => {}).then(() => { titleWait.delete(id); });
+  titleWait.set(id, job);
+  return job;
+}
+// 定下这篇的对话名题目(只定一次)。升级前已经开过对话的,继续用原文,免得和你已经改好的对话名对不上
+function fixTitle(runId, web) {
+  if (web.chat_title != null) return;
+  const run = store.getRun(runId) || {};
+  const topic = String(run.topic || '').trim();
+  web.chat_title = web.chats.length || web.done.length ? topic : (zhTitleOf(topic) || topic);
+}
+
 // 挂一条「等你粘贴」;返回和 llmCall 一样形状的结果
 function relay(runId, cfg, messages, label, opts) {
+  const w = titleWait.get(runId);
+  if (w) return w.then(() => relay0(runId, cfg, messages, label, opts));
+  return relay0(runId, cfg, messages, label, opts);
+}
+function relay0(runId, cfg, messages, label, opts) {
   const web = must(runId);
   const key = keyOf(messages);
   const t0 = Date.now();
@@ -86,6 +122,7 @@ function relay(runId, cfg, messages, label, opts) {
       texts: [{ text: chat ? last.content : flatten(messages) }],
       prior, last: msgHash(last)
     };
+    fixTitle(runId, web);
     web.pending.push(p);
     save(runId, web);
   }
@@ -107,6 +144,11 @@ function writeBatches(chapters) {
   return out;
 }
 function relayWrite(runId, basePrompt, chapters, briefOf) {
+  const w = titleWait.get(runId);
+  if (w) return w.then(() => relayWrite0(runId, basePrompt, chapters, briefOf));
+  return relayWrite0(runId, basePrompt, chapters, briefOf);
+}
+function relayWrite0(runId, basePrompt, chapters, briefOf) {
   const web = must(runId);
   const key = hash('write|' + basePrompt + '|' + chapters.map(c => c.id).join(','));
   const t0 = Date.now();
@@ -133,6 +175,7 @@ function relayWrite(runId, basePrompt, chapters, briefOf) {
         '太长一次写不完就停在两章之间,我说「继续」你再接着输出。'
     });
     p = { id: nextId(web), key, label: 'Step 2 写稿', at: now(), kind: 'script', how: 'new', chat_name: '写稿', chapters: ids, texts, prior: [], base: msgHash({ role: 'user', content: basePrompt }) };
+    fixTitle(runId, web);
     web.pending.push(p);
     save(runId, web);
   }
@@ -252,11 +295,11 @@ function view(runOrId) {
   const w = id ? load(id) : null;
   if (!w) return null;
   return {
-    on: !!w.on, at: w.at, off_at: w.off_at,
+    on: !!w.on, at: w.at, off_at: w.off_at, chat_title: w.chat_title != null ? w.chat_title : null,
     pending: arr(w.pending).filter(p => p.kind === 'script' || waiters.has(wkey(id, p.id)) || (WEB_RE.test(String(p.label || '')) && !API_RE.test(String(p.label || '')))) // v1.106 升级前挂着、现在改走 API 的步骤不再显示
       .map(({ prior, key, ...p }) => ({ ...p, waiting: waiters.has(wkey(id, p.id)) })),
     done: arr(w.done)
   };
 }
 
-module.exports = { WEB_RE, wants, relay, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, _waiters: waiters };
+module.exports = { WEB_RE, wants, relay, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, _waiters: waiters };

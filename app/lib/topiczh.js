@@ -214,4 +214,4 @@ async function backfill(opts) {
   return { total: topics.length, todo: todo.length, ok, skipped, failed };
 }
 
-module.exports = { get, ensure, translateOne, backfill, isChinese, pending, CACHE_PATH, loadCache };
+module.exports = { get, put, ensure, translateOne, backfill, isChinese, pending, CACHE_PATH, loadCache };

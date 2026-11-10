@@ -6116,8 +6116,10 @@ let webRenderedKey = null;
 const webDrafts = {}; // 粘贴框里还没提交的内容(页面每 3 秒刷新,不能丢)
 const webCopied = {};
 // v1.107 网页版对话的名字:步骤名 + 题目开头,建议人在网页版把对话改成这个名字,接着发时按名字找
+// v1.111 题目用中文:程序第一次给你看对话名时定下来的中文标题(r.web.chat_title),新开、接着发都用它,前后一样
 function webChatName(name, r) {
-  const t = String((r && r.topic) || '').replace(/["'“”‘’「」『』<>]/g, '').replace(/\s+/g, ' ').trim();
+  const ct = r && r.web && r.web.chat_title;
+  const t = String(ct != null ? ct : ((r && r.topic) || '')).replace(/["'“”‘’「」『』<>]/g, '').replace(/\s+/g, ' ').trim();
   return name + (t ? ' · ' + (t.length > 14 ? t.slice(0, 14) + '…' : t) : '');
 }
 function webHow(p, r) {
