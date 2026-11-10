@@ -6137,6 +6137,27 @@ function webHow(p, r) {
   const nm = webChatName(p.chat_name, r);
   return `<div class="web-how cont"><span class="tag">② 不要开新对话</span><span>回到 <span class="web-chat">${esc(nm)}</span> 那个对话,接着发下面这一句(前面的不用再发),把回答粘到下面。</span></div>`;
 }
+// 本地模型按钮与进度:调用中禁用其它提交入口,避免同一条被 API 和本地双点火
+function webLocalBar(p) {
+  const L = p.local || {};
+  const busy = L.status === 'queued' || L.status === 'running';
+  const total = Number(L.total) || (p.texts || []).length || 1;
+  const idx = Number(L.index) || 0;
+  let tip = '';
+  if (L.status === 'queued') tip = `<span class="hint" style="color:#6d28d9">排队中:前面还有一条本地调用在跑</span>`;
+  else if (L.status === 'running') {
+    const what = L.phase === 'sending' ? '发送中' : L.phase === 'waiting' ? '已入队,等本地服务接收' : L.phase === 'running' ? '正在生成' : L.phase === 'submitting' ? '本地已返回,正在交给程序' : L.phase === 'sent' ? '已返回' : '发送中';
+    tip = `<span class="hint" style="color:#6d28d9">本地模型调用中:${what} · 第 ${idx + 1}/${total} 条${L.timed_out ? ' · 这条可能不完整' : ''}</span>`;
+  } else if (L.status === 'failed') {
+    const next = Number(L.next) || 0;
+    tip = `<span class="hint" style="color:#b91c1c">本地模型没跑完:${esc(L.error || '')}${total > 1 ? '(再点从第 ' + (next + 1) + ' 条继续)' : ''}</span>`;
+  }
+  return `<div style="margin-top:4px"><button class="primary" onclick="webAnswer('${escAttr(p.id)}',this)" ${busy ? 'disabled' : ''}>粘好了,交给程序</button>
+    ${p.kind !== 'script' ? `<button class="an-btn" onclick="webApi('${escAttr(p.id)}',this)" ${busy ? 'disabled' : ''}>这一条改用 API 跑</button>` : ''}
+    <button class="an-btn" onclick="webLocal('${escAttr(p.id)}',this)" ${busy ? 'disabled' : ''}>本地模型调用</button>
+    ${tip}
+    ${p.waiting || busy ? '' : '<span class="hint" style="color:#b45309">程序刚重启过:粘好后等任务接着跑到这一步就会用上</span>'}</div>`;
+}
 // 正在等粘贴的条目属于哪一步(步骤条上把这一步标成紫色)
 function webStepOf(p) {
   const l = p.label || '';
@@ -6159,7 +6180,7 @@ function renderWebPanel(r) {
   const w = r.web;
   if (!w || (!w.on && !(w.pending || []).length)) { el.classList.add('hidden'); webRenderedKey = null; return; }
   const pend = w.pending || [];
-  const key = JSON.stringify([w.on, pend.map(p => p.id + ':' + (p.waiting ? 1 : 0) + ':' + Object.keys(p.copied || {}).join('.')), (w.done || []).length, r.status, w.chat_title]);
+  const key = JSON.stringify([w.on, pend.map(p => p.id + ':' + (p.waiting ? 1 : 0) + ':' + Object.keys(p.copied || {}).join('.') + ':' + ((p.local && [p.local.status, p.local.phase, p.local.index, p.local.error].join('|')) || '')), (w.done || []).length, r.status, w.chat_title]);
   if (key === webRenderedKey && !el.classList.contains('hidden')) return;
   webRenderedKey = key;
   el.classList.remove('hidden');
@@ -6186,9 +6207,7 @@ function renderWebPanel(r) {
       ${msgs}
       ${finTip}
       <textarea id="web-ans-${escAttr(p.id)}" rows="6" placeholder="${escAttr(ph)}" style="width:100%;box-sizing:border-box" oninput="webDrafts['${escAttr(p.id)}']=this.value">${esc(webDrafts[p.id] || '')}</textarea>
-      <div style="margin-top:4px"><button class="primary" onclick="webAnswer('${escAttr(p.id)}',this)">粘好了,交给程序</button>
-        ${p.kind !== 'script' ? `<button class="an-btn" onclick="webApi('${escAttr(p.id)}',this)">这一条改用 API 跑</button>` : ''}
-        ${p.waiting ? '' : '<span class="hint" style="color:#b45309">程序刚重启过:粘好后等任务接着跑到这一步就会用上</span>'}</div>
+      ${webLocalBar(p)}
     </div>`;
   }).join('');
   el.innerHTML = html;
@@ -6240,6 +6259,13 @@ async function webApi(id, btn) {
   catch (e) { alert(e.message); if (btn) btn.disabled = false; return; }
   webRenderedKey = null;
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 400);
+}
+async function webLocal(id, btn) {
+  if (btn) btn.disabled = true;
+  try { await api('/api/runs/' + currentRunId + '/web', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'local', id }) }); }
+  catch (e) { alert(e.message); if (btn) btn.disabled = false; return; }
+  webRenderedKey = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 300);
 }
 async function webOff() {
   if (!confirm('后面全部改用 API 自动跑?正在等你粘贴的这几条也改用 API。')) return;

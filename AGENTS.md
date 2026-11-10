@@ -46,6 +46,20 @@
 > **v1.10 重打记录**：上游 v1.10（0010–0015）仍不含上述修复，但**增量叠加可行**——在 `claude-v18-series` 链顶（已入本地历史）直接 `git am 0010-0015`，合并基点是真祖先，唯一冲突是 review.js exports 行（合并双方导出名即可）。另新增一处本地修复：**启动崩溃清理扩展到 `steps.deai`**（去AI感卡 running 会被 `deaiGuard` 永久挡死；落成 failed 手动重跑，去AI感绝不自动续跑）。
 > **v1.29 清理扩展**：上游 v1.29 新增 `steps.opening_fix`（自动改开头，后台跑 2–3 分钟），包内**未**加启动清理；本地已在 `server.js` 的 `stuck` 列表补 `opening_fix`，崩溃后落 failed、页面可手动重跑，**不自动续改**（避免自动改稿）。以后合并上游需确认该键仍在。
 
+## 本地模型调用（2026-11-10，本地功能，合并上游补丁时不要弄丢）
+
+详情页「网页版写稿·等你粘贴」每张卡新增「本地模型调用」：把这一条自动发给局域网里的本地模型服务，拿回回答直接当作人工粘贴提交。**不是 API 渠道**，不出现在设置页的渠道单选/步骤渠道里。
+
+- **配置**：`config.json` 的 `local_service`（`url` / `token` / `enabled` / `poll_ms` / `max_missing_polls`）。不进 `providers`，`GET /api/settings` 不返回，页面不渲染。token 明文，`config.json` 不入库。
+- **入口**：`manual.localRun(runId, id)` ← `POST /api/runs/:id/web` `{ action: 'local', id }`；前端 `webLocalBar` 生成按钮与进度，`webLocal` 发请求。
+- **窗口策略**：第 1 条按卡片 `p.how`（`new`→`always`、`continue`→`never`），同一条 pending 的后续消息一律 `never`（写稿分批在同一个对话里接着发）。
+- **顺序**：`localChain` 全局串行（进程内 Promise 链），一次只跑一条链，保证 `never` 复用对话时不会插进别的任务的消息。
+- **失败**：停在待粘贴，`p.local.next` 记失败那条，再点从那条继续，已成功的批次不重发；不做自动重试。
+- **重启**：`resetInterrupted()` 在 `server.listen` 里把 `local.running/queued` 落成 `failed`，不自动重投。
+- **提交**复用 `manual.answer()`，章节解析、对话记录、唤醒管线与人工粘贴完全一致。
+- **等待无上限**：只对「连续查不到 task id」做 60 次（约 3 分钟）兜底。轮询走 `GET /queue`，完成的任务带 `reply`。
+- 代码与注释统一叫「本地模型」，不写「桥接」。合并上游时按本节逐条核对。
+
 ## 视频推送文案 == 纯净稿（2026-10-26，跨文件不变量，改清洗规则时两处必须同步）
 
 「存草稿 / 自动生视频」推送的正文必须与「下载纯净稿」逐字节相同，否则同一版本文案在两处内容不同。

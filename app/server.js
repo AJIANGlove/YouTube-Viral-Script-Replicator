@@ -698,6 +698,8 @@ const server = http.createServer(async (req, res) => {
         if (body.action === 'api') return send(res, 200, M.useApi(webMatch[1], String(body.id || '')));
         if (body.action === 'copied') return send(res, 200, M.markCopied(webMatch[1], String(body.id || ''), body.i)); // v1.112 点过复制的记下来
         if (body.action === 'off') return send(res, 200, M.turnOff(webMatch[1]));
+        // 本地模型:把这一条自动发出去,拿回回答直接当人粘的(逐条发,失败可再点续传)
+        if (body.action === 'local') return send(res, 200, M.localRun(webMatch[1], String(body.id || '')));
         return send(res, 400, { error: '不认识的操作' });
       } catch (e) { return send(res, e.status || 500, { error: e.message }); }
     }
@@ -1544,6 +1546,8 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, HOST, () => {
   store.ensureDirs();
+  // 进程重启:上次没跑完的本地模型调用已经断了,把假 running 落成 failed(页面上可再点,不自动重投)
+  try { const n = require('./lib/manual').resetInterrupted(); if (n) console.log(`本地模型调用:重置 ${n} 条被中断的记录`); } catch (e) { console.log('本地模型调用重置失败(不影响运行): ' + e.message); }
   // 预热任务列表索引(不存在/已过期则在此重建一次),避免第一次打开列表页时要等全量解析
   try { store.queryRuns({ page: 1, pageSize: 50 }); } catch (e) { console.log('任务索引预热失败(不影响运行): ' + e.message); }
   const os = require('os');

@@ -7,6 +7,8 @@
 // 同一段对话的后续消息(格式不对重发、续写、按意见改)只显示新的那一句,让人在同一个网页对话里接着发。
 const crypto = require('crypto');
 const fs = require('fs');
+const http = require('http');
+const https = require('https');
 const path = require('path');
 const store = require('./store');
 // 接力状态单独存一个文件(data/web/<任务>.json),不放在任务里:
@@ -283,6 +285,197 @@ function useApi(runId, id) {
   return { ok: true, id };
 }
 
+// ---------- 本地模型:把「等你粘贴」这一条自动发给本地模型服务,拿回回答直接当人粘的 ----------
+// 一条 pending 里有多条消息时(写稿分批)按顺序发:第 1 条按卡片提示(新开对话→always / 接着发→never),
+// 后面几条一律 never(在同一个对话里接着发)。全局串行:同一时刻只跑一条链,保证对话里不会插进别的任务的消息。
+// 失败停在原地并记住 next,再点时从失败那条继续,已成功的批次不重发。
+let localChain = Promise.resolve();
+
+function localConfig() {
+  let cfg = null;
+  try { cfg = require('./pipeline').loadConfig(); } catch (e) { cfg = null; }
+  const ls = (cfg && cfg.local_service) || {};
+  return {
+    url: String(ls.url || '').replace(/\/+$/, ''),
+    token: String(ls.token || ''),
+    enabled: ls.enabled !== false,
+    poll_ms: Number(ls.poll_ms) > 0 ? Number(ls.poll_ms) : 3000,
+    max_missing_polls: Number(ls.max_missing_polls) > 0 ? Number(ls.max_missing_polls) : 60
+  };
+}
+
+function localRequest(cfg, method, p, payload) {
+  return new Promise((resolve, reject) => {
+    let u;
+    try { u = new URL(cfg.url + p); } catch (e) { return reject(new Error('本地模型服务地址不对: ' + cfg.url)); }
+    const body = payload == null ? '' : JSON.stringify(payload);
+    const headers = { Accept: 'application/json' };
+    if (cfg.token) headers.Authorization = 'Bearer ' + cfg.token;
+    if (body) { headers['Content-Type'] = 'application/json'; headers['Content-Length'] = Buffer.byteLength(body); }
+    const mod = u.protocol === 'https:' ? https : http;
+    const req = mod.request({
+      hostname: u.hostname,
+      port: u.port || (u.protocol === 'https:' ? 443 : 80),
+      path: u.pathname + u.search,
+      method,
+      headers
+    }, res => {
+      const chunks = [];
+      res.on('data', c => chunks.push(c));
+      res.on('end', () => {
+        const text = Buffer.concat(chunks).toString('utf-8');
+        let json = null;
+        try { json = JSON.parse(text); } catch (e) {}
+        resolve({ status: res.statusCode, text, json });
+      });
+      res.on('error', reject);
+    });
+    req.on('error', e => reject(new Error('连不上本地模型服务(' + cfg.url + '): ' + e.message)));
+    req.setTimeout(60000, () => req.destroy(new Error('本地模型服务 60 秒没有响应')));
+    if (body) req.write(body);
+    req.end();
+  });
+}
+
+async function localSend(cfg, text, chatPolicy) {
+  const r = await localRequest(cfg, 'POST', '/queue', { message: text, chatPolicy, source: 'viral-script' });
+  if (r.status === 401) throw new Error('本地模型服务要访问令牌,检查 config.json 的 local_service.token');
+  const j = r.json || {};
+  const t = Array.isArray(j.tasks) ? j.tasks[0] : null;
+  if (!j.ok || !t || !t.id) throw new Error('本地模型服务没有接单: ' + (j.error || ('HTTP ' + r.status)));
+  return String(t.id);
+}
+
+async function localWait(cfg, taskId, onPhase, alive) {
+  let missing = 0;
+  let lastPhase = '';
+  for (;;) {
+    // 这一条已经被手动粘好 / 改用 API / 取消:不用再等,立刻把串行位让出来
+    if (alive && !alive()) throw new Error('这一条已经不在等粘贴了');
+    const r = await localRequest(cfg, 'GET', '/queue', null);
+    if (r.status === 401) throw new Error('本地模型服务要访问令牌,检查 config.json 的 local_service.token');
+    const j = r.json || {};
+    const t = (Array.isArray(j.tasks) ? j.tasks : []).find(x => x.id === taskId);
+    if (!t) {
+      if (++missing >= cfg.max_missing_polls) throw new Error('本地模型队列里找不到这条任务了(那边可能重启过)');
+    } else {
+      missing = 0;
+      if (onPhase && t.status && t.status !== lastPhase) { lastPhase = t.status; onPhase(t.status); }
+      if (t.status === 'done') {
+        const reply = String(t.reply || '').trim();
+        if (!reply) throw new Error('本地模型返回了空回复');
+        return { reply, timedOut: !!t.timedOut, elapsedMs: Number(t.elapsedMs) || 0 };
+      }
+      if (t.status === 'failed') throw new Error('本地模型处理失败: ' + (t.error || '没有说明原因'));
+    }
+    await new Promise(x => setTimeout(x, cfg.poll_ms));
+  }
+}
+
+// 只改这一条的 local 状态(每次都重新读盘:管线那边随时会整对象重写 pending)
+function localState(runId, id, patch) {
+  const w = load(runId);
+  if (!w) return null;
+  const p = arr(w.pending).find(x => x.id === id);
+  if (!p) return null;
+  p.local = { ...(p.local || {}), ...patch, at: now() };
+  save(runId, w);
+  return p;
+}
+
+function localRun(runId, id) {
+  const web = must(runId);
+  const p = web.pending.find(x => x.id === id);
+  if (!p) throw err('这一条已经处理过了,刷新一下页面', 409);
+  const texts = arr(p.texts);
+  if (!texts.length) throw err('这一条没有可发送的内容');
+  const st = p.local || {};
+  if (st.status === 'running' || st.status === 'queued') throw err('这一条正在等本地模型返回,不用重复点', 409);
+  const cfg = localConfig();
+  if (!cfg.enabled) throw err('本地模型调用没有打开(config.json 的 local_service.enabled)');
+  if (!cfg.url) throw err('没有配置本地模型服务地址(config.json 的 local_service.url)');
+  const total = texts.length;
+  // 断点:上次停在 failed 且记了 next 就从那条继续;否则从头
+  const from = Number.isInteger(st.next) && st.next > 0 && st.next < total ? st.next : 0;
+  localState(runId, id, {
+    status: 'queued', phase: 'queued', index: from, total, error: '', timed_out: false,
+    started_at: st.status === 'failed' ? now() : (st.started_at || now()), next: from
+  });
+  runLocalChain(runId, id, from);
+  return { ok: true, id, from, total };
+}
+
+function runLocalChain(runId, id, from) {
+  const job = async () => {
+    const cfg = localConfig();
+    let idx = from;
+    try {
+      for (idx = from; ; idx++) {
+        const w = load(runId);
+        const p = w && arr(w.pending).find(x => x.id === id);
+        if (!p) return; // 已被「改用 API」「后面全部改用 API」或取消处理掉
+        const texts = arr(p.texts);
+        if (idx >= texts.length) break;
+        const total = texts.length;
+        localState(runId, id, { status: 'running', phase: 'sending', index: idx, total, error: '' });
+        // 第 1 条按卡片提示:新开对话→always;接着发→never。后面一律 never(同一对话里继续)
+        const policy = idx === 0 ? (p.how === 'continue' ? 'never' : 'always') : 'never';
+        const taskId = await localSend(cfg, texts[idx].text, policy);
+        localState(runId, id, { status: 'running', phase: 'waiting', index: idx, total, task_id: taskId });
+        const r = await localWait(cfg, taskId, phase => localState(runId, id, { status: 'running', phase, index: idx, total, task_id: taskId }),
+          () => { const x = load(runId); return !!(x && arr(x.pending).find(y => y.id === id)); });
+        localState(runId, id, { status: 'running', phase: 'sent', index: idx, total, task_id: taskId, timed_out: !!r.timedOut, last_ms: r.elapsedMs });
+        if (idx === texts.length - 1) { submitLocal(runId, id, r.reply); return; }
+      }
+      throw new Error('这一条没有可发送的内容');
+    } catch (e) {
+      const w = load(runId);
+      const p = w && arr(w.pending).find(x => x.id === id);
+      if (!p) return; // 已经不在等粘贴了,失败也不用记
+      const total = arr(p.texts).length;
+      localState(runId, id, {
+        status: 'failed', phase: 'failed', error: e.message || String(e),
+        next: Math.max(0, Math.min(idx, total - 1))
+      });
+    }
+  };
+  localChain = localChain.then(job, job).catch(() => {});
+  return localChain;
+}
+
+// 和人工粘贴走同一条路:章节校验、对话记录、唤醒管线全都一样
+function submitLocal(runId, id, reply) {
+  localState(runId, id, { status: 'running', phase: 'submitting' });
+  answer(runId, id, reply);
+}
+
+// 进程重启:上次在跑/排队的本地调用已经没了,落成 failed,页面上可以再点(不自动重投)
+function resetInterrupted() {
+  let files = [];
+  try { files = fs.readdirSync(WEB_DIR).filter(f => /\.json$/.test(f)); } catch (e) { return 0; }
+  let n = 0;
+  for (const f of files) {
+    const fp = path.join(WEB_DIR, f);
+    let w;
+    try { w = JSON.parse(fs.readFileSync(fp, 'utf-8')); } catch (e) { continue; }
+    let hit = false;
+    arr(w.pending).forEach(p => {
+      const st = p.local || {};
+      if (st.status !== 'running' && st.status !== 'queued') return;
+      p.local = {
+        ...st, status: 'failed', phase: 'failed',
+        error: '程序重启过,这一条没跑完,可以再点「本地模型调用」',
+        next: Number.isInteger(st.index) ? st.index : 0, at: now()
+      };
+      hit = true; n++;
+    });
+    if (hit) {
+      try { fs.writeFileSync(fp + '.tmp', JSON.stringify(w)); fs.renameSync(fp + '.tmp', fp); } catch (e) {}
+    }
+  }
+  return n;
+}
+
 // 关掉网页版:后面全部改回 API(正在等的写稿这一步,程序按原来的方式逐章写)
 function turnOff(runId) {
   const web = must(runId);
@@ -336,4 +529,4 @@ function view(runOrId) {
   };
 }
 
-module.exports = { WEB_RE, wants, relay, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, _waiters: waiters };
+module.exports = { WEB_RE, wants, relay, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, _waiters: waiters };
