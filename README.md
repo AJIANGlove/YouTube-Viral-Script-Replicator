@@ -274,13 +274,13 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `fingerprints.json` | 指纹模式库（各语言正则 + 结构判定要点） | — |
 | `compliance_check.md` | YouTube 商业化检查 | 287 |
 | `opening_retention_check.md` | 开头留存检查 | 126 |
-| `opening_card.md` | 开头单独审（前 60 秒逐句打分 + 硬指标 + 掉人点 + 联网核对数字与观众疑问） | 45 |
+| `opening_card.md` | 开头单独审（前 60 秒逐句打分 + 硬指标 + 掉人点 + 联网核对数字与观众疑问 + 1–4 条大白话改法） | 46 |
 | `opening_fix.md` | 自动改开头（只动前 30 秒、不许改长/编数字，最多 3 次） | 41 |
 | `claim_check.md` | 论点核对（账本锁数 + 账外的数 + 验算一致性 + 直接应用改法写法 + 换算与基准数核对；人选论点不改标题不换论点） | 50 |
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 69 份 `.md`（4055 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 74 份，合计 4264 行。
+合计 69 份 `.md`（4056 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 74 份，合计 4265 行。
 
 ### 历史版本
 

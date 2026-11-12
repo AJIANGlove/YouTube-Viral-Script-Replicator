@@ -321,7 +321,10 @@ function guard(run, before, after, stage) {
   const ob = openingOf(before), oa = openingOf(after);
   if (!ob) return { text: after, reverted: false };
   if (oa && ob.text === oa.text) return { text: after, reverted: false };
-  const reasons = lockReasons(check(run, before), check(run, after));
+  // v1.118 照原片开头:终审、补改、自动改开头一律不许动开头(哪怕只换词);开头只在「开头单独审」那一栏人点按钮改
+  const strict = /^(终审|补改|自动改开头)/.test(String(stage || ''));
+  let reasons = lockReasons(check(run, before), check(run, after));
+  if (strict && !reasons.length) reasons = ['照原片开头已锁定,' + stage + '不改开头(要改开头在「开头单独审」里点「按开头审意见改开头」)'];
   if (!reasons.length) return { text: after, reverted: false };
   const restored = oa ? replaceOpening(after, ob.text) : null;
   if (!restored) return { text: after, reverted: false, reasons };

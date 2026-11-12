@@ -871,7 +871,7 @@ const server = http.createServer(async (req, res) => {
           // 开头单独审:开头 60 秒逐句 + 中文 + 好在哪 + 风险(后台跑)
           if (action === 'opening') return send(res, 200, review.startOpeningCard(id));
           // 自动改开头(后台跑):只改开头几句,改到听感检查的开头两条过关,最多试 3 次
-          if (action === 'opening_fix') return send(res, 200, review.startOpeningFix(id));
+          if (action === 'opening_fix') return send(res, 200, review.startOpeningFix(id, body || {}));
           // v1.110 恢复初稿开头(经济拆账锁定开头):把现在稿子的开头章换回初稿的
           if (action === 'restore_opening') return send(res, 200, review.restoreOpening(id));
           // 论点核对(后台跑):用稿子自己的数字检验开头的主张;fix:true 按核对结果补改一次再核对

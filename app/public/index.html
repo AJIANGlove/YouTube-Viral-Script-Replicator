@@ -3228,7 +3228,9 @@ function rvAuditSel(au) {
     const s = au.selection;
     rvState.auditSel = {
       at: au.at,
-      ids: new Set(s ? s.ids : au.issues.filter(x => /^[SA]$/.test(x.severity) || /^P[01]$/.test(x.priority)).map(x => x.id)),
+      ids: new Set((s ? s.ids : au.issues.filter(x => /^[SA]$/.test(x.severity) || /^P[01]$/.test(x.priority)).map(x => x.id))
+        // v1.118 另外几项检查(核验、原片残留):旧的勾选里没有它们,E 级 / P0 默认勾上
+        .concat(s && s.extras ? [] : (au.extras || []).filter(x => x.priority === 'P0').map(x => x.id))),
       route: (s && s.route) || au.recommended || 'A', note: (s && s.note) || '', open: {},
       track: (s && s.track) || rvState.view.track_default || 'general'
     };
@@ -3255,6 +3257,7 @@ function rvAuditGains(au) {
     const g = typeof x.gain === 'number' ? x.gain : (guessed = true, RV_SEV_GAIN[x.severity] || 1);
     out[x.id] = g; raw += g;
   });
+  (au.extras || []).forEach(x => { out[x.id] = 0; }); // 另外几项检查的问题不算进审稿报告的分
   if (score != null && raw > 0) {
     const cap = guessed ? Math.max(0, 92 - score) : Math.max(0, 100 - score);
     if (raw > cap) Object.keys(out).forEach(k => { out[k] = out[k] * cap / raw; });
@@ -3275,7 +3278,7 @@ function rvAuditHtml(v) {
   const busy = fin.status === 'running' || ((v.passes || {}).audit || {}).status === 'running';
   const used = au.used_selection;
   const order = { P0: 0, P1: 1, P2: 2 };
-  const issues = [...au.issues].sort((a, b) => (order[a.priority] - order[b.priority]) || a.id.localeCompare(b.id));
+  const issues = [...au.issues].sort((a, b) => (order[a.priority] - order[b.priority]) || a.id.localeCompare(b.id)).concat(au.extras || []);
   const G = rvAuditGains(au);
   const sumOf = ids => Math.round([...ids].reduce((n, id) => n + (G.gains[id] || 0), 0) * 10) / 10;
   const base = typeof au.score === 'number' ? au.score : null;
@@ -3284,7 +3287,7 @@ function rvAuditHtml(v) {
   const rows = issues.map(x => `<div class="rv-ai${sel.ids.has(x.id) ? ' on' : ''}">
       <label class="rv-ai-head"><input type="checkbox" ${sel.ids.has(x.id) ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="rvAuditToggle('${escAttr(x.id)}', this.checked)">
         <b>${esc(x.id)}</b> <span class="rv-chip ${RV_SEV_CLS[x.severity] || ''}">${esc(x.severity)} 级</span> <span class="rv-chip ${x.priority === 'P0' ? 'red' : x.priority === 'P1' ? 'yellow' : 'green'}">${esc(x.priority)}</span>
-        <span class="rv-gain" title="改好这一处,总分预计提高">+${G.gains[x.id]} 分</span>
+        ${x.extra ? '<span class="rv-chip yellow">另外的检查</span>' : `<span class="rv-gain" title="改好这一处,总分预计提高">+${G.gains[x.id]} 分</span>`}
         <span class="hint">${esc(x.chapter)} · ${esc(x.zh_type || x.type)}</span></label>
       <div class="rv-ai-body"><div class="rv-ai-cols"><div>${esc(x.problem)}${x.direction ? `<br><span class="hint">修改方向:${esc(x.direction)}</span>` : ''}</div>
         <div class="rv-ai-zh">${!x.need_zh ? '<span class="hint">(已是中文)</span>' : (x.zh_problem || x.zh_direction || !x.need_zh) ? `${esc(x.zh_problem || x.problem)}${x.direction ? `<br><span class="hint">修改方向:${esc(x.zh_direction || x.direction)}</span>` : ''}` : `<span class="hint">${v.translating ? '中文翻译中…' : '还没有中文,点上方「补齐中文对照」'}</span>`}</div></div>
@@ -3295,9 +3298,11 @@ function rvAuditHtml(v) {
   const routeTip = `<div class="hint v13" style="margin:4px 0">${sel.route}. ${RV_ROUTES[sel.route]}:${RV_ROUTE_TIPS[sel.route]}</div>`;
   const routeText = routeTip + (au.routes && au.routes[sel.route] ? `<details class="rv-md-box"><summary>报告里对「${sel.route}. ${RV_ROUTES[sel.route]}」的说明</summary><div class="rv-md">${rvMd(au.routes[sel.route])}</div></details>` : '');
   return `<div class="rv-bar v13">
-      <span>问题 <b>${au.issues.length}</b> 个(S/A 级 ${au.issues.filter(x => /^[SA]$/.test(x.severity)).length} 个)</span>
+      <span>审稿报告问题 <b>${au.issues.length}</b> 个(S/A 级 ${au.issues.filter(x => /^[SA]$/.test(x.severity)).length} 个)${(au.extras || []).length ? ` · 另外几项检查 <b>${au.extras.length}</b> 个(也在下面勾选里)` : ''}</span>
       <span>AI 推荐路线 <b>${au.recommended ? au.recommended + '. ' + RV_ROUTES[au.recommended] : '—'}</b>${au.route_reason ? '(' + esc(au.route_reason) + ')' : ''}</span>
     </div>
+    ${au.parse_failed && !au.issues.length ? '<div class="rv-flag"><b>注意:这里的「0 个」不是没问题</b>。报告里写了要改的问题(推荐理由里也提到 P0),但结尾清单程序没认出来。请点上面二稿审稿报告的「重跑」再出一份;网页版的话用回答下面的「复制」按钮复制整份报告再粘。</div>' : ''}
+    ${au.recovered ? `<div class="hint v13">这份报告当时程序没认出问题清单(显示成 0 个),现在从报告正文的「问题编号」小节里补回了 ${au.issues.length} 个;等级、章节是从正文里读的,加分按严重程度估。</div>` : ''}
     ${au.stale ? '<div class="rv-flag"><b>注意</b>:报告出来以后稿子又改过,报告里引用的原句可能对不上;可以在上面重跑审稿报告。</div>' : ''}
     ${au.truncated ? '<div class="rv-flag"><b>注意</b>:报告太长,续写几次后仍被截断,后半部分可能不全;可以在设置里调大 Max Tokens 再重跑。</div>' : ''}
     ${used ? `<div class="hint v13">终稿是按这次选择改的:${used.ids.length ? used.ids.map(esc).join('、') : '没选问题'}${used.route ? ',路线 ' + used.route + '. ' + RV_ROUTES[used.route] : ''}${used.note ? ',补充:' + esc(used.note) : ''}。换一组再终审,会从二稿重新改。</div>` : ''}
@@ -3333,7 +3338,7 @@ function rvAuditOpen(id) { const s = rvState.auditSel; s.open[id] = !s.open[id];
 function rvAuditRoute(k) { rvState.auditSel.route = k; rvAuditSaveSoon(); rvDraw(); }
 function rvAuditAll(mode) {
   const au = rvState.view.audit, s = rvState.auditSel;
-  s.ids = new Set(au.issues.filter(x => mode === true || (mode === 'sa' && /^[SA]$/.test(x.severity))).map(x => x.id));
+  s.ids = new Set(au.issues.concat(au.extras || []).filter(x => mode === true || (mode === 'sa' && /^[SA]$/.test(x.severity))).map(x => x.id));
   rvAuditSaveSoon();
   rvDraw();
 }
@@ -3476,13 +3481,28 @@ function rvOpeningHtml(v) {
   const vqHtml = (o.viewer_questions || []).length || o.hook_match ? `<div class="v13"><b>真实观众在问什么</b>${o.hook_match ? `(开头的问题和它们<b>${esc(o.hook_match)}</b>${o.hook_match_why ? ':' + esc(o.hook_match_why) : ''})` : ''}<ul>${list(o.viewer_questions, '#1d4ed8')}</ul></div>` : '';
   return `<details class="rv-md-box"${rvState.openingOpen ? ' open' : ''} ontoggle="rvState.openingOpen=this.open"><summary><b>开头单独审</b>:${sum}${scoreTxt}${o.at ? ` <span class="hint">(${esc(fmtTime(o.at))} 审的)</span>` : ''}</summary>
     <div class="hint v13" style="margin:6px 0">时间按配音语速 ${o.wpm} 词/分钟推算 · ${hard}</div>
+    ${rvOpeningFixBox(v, o)}
     ${o.hook ? `<div class="v13" style="margin:6px 0"><b>靠什么留人</b>:${esc(o.hook)}</div>` : ''}
     <div class="rv-md"><div class="rv-md-table"><table><tr><th>#</th><th>时间</th><th>原文 / 中文</th></tr>${lines}</table></div></div>
     ${(o.strengths || []).length ? `<div class="v13"><b>好在哪</b><ul>${list(o.strengths, '#047857')}</ul></div>` : ''}
     ${(o.risks || []).length ? `<div class="v13"><b>可能掉人的地方</b><ul>${list(o.risks, '#b45309')}</ul></div>` : ''}
     ${o.score_why ? `<div class="hint v13">打分理由:${esc(o.score_why)}</div>` : ''}
     ${factsHtml}${vqHtml}${webNote}
-    <div class="rv-ops v13">${btn}<span class="hint">要改哪句,在下面 CH01 点「我的意见」写给 AI,改完再点「重新分析开头」。</span></div></details>`;
+    <div class="rv-ops v13">${btn}<span class="hint">也可以在下面 CH01 点「我的意见」自己写要怎么改。</span></div></details>`;
+}
+// v1.118 开头单独审判「建议改」:大白话写出怎么改 + 在这一栏直接改开头(只动开头约 60 秒,改完自动重新审开头)
+function rvOpeningFixBox(v, o) {
+  const fs = o.fix_step || {};
+  const fixing = fs.status === 'running';
+  const plain = (o.fix_plain || []).length ? `<ol style="margin:4px 0 6px 18px;padding:0">${o.fix_plain.map(x => `<li>${esc(x)}</li>`).join('')}</ol>`
+    : '<div class="hint">这份开头审是旧版程序出的,没有写大白话改法。点下面「重新分析开头」会补上;也可以直接点「按开头审意见改开头」,AI 会照上面没过的指标和「可能掉人的地方」改。</div>';
+  const last = fs.status === 'done' ? `<span style="color:#047857">上次改好了${fs.edits ? '(改了 ' + fs.edits + ' 处)' : ''},开头已重新审</span>`
+    : fs.status === 'failed' ? `<span style="color:#b91c1c">上次没改成:${esc(fs.error || '')}</span>` : '';
+  if (o.verdict !== '建议改' || o.stale) return '';
+  return `<div class="v13" style="margin:8px 0;padding:8px 10px;border:1px solid #fca5a5;border-radius:8px;background:#fff7f7">
+      <b>怎么改(大白话)</b>${plain}
+      <div class="rv-ops"><button class="an-btn v13" style="background:#dc2626;color:#fff;border-color:#dc2626" onclick="rvOpeningFix(true)" ${fixing || v.running ? 'disabled' : ''}>${fixing ? '正在改开头…' + (fs.stage ? '(' + esc(fs.stage) + ')' : '') : '按开头审意见改开头'}</button>
+      <span class="hint">只改开头约 60 秒,不动正文;改完自动重新审一遍开头。和二稿审稿报告的勾选分开,不用写进补充意见。</span> ${last}</div></div>`;
 }
 // ---------- v1.110 开头对比(经济拆账锁定开头):原片前 45 秒节拍 / 初稿开头 / 当前开头 逐拍对齐 ----------
 const OB_STATE = { same: ['没动', '#047857'], changed: ['换了说法', '#b45309'], deleted: ['这一拍没了', '#b91c1c'], moved: ['顺序变了', '#b91c1c'] };
@@ -4294,8 +4314,8 @@ async function rvClaim(fix) {
   rvState.key = null;
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
 }
-async function rvOpeningFix() {
-  try { await rvPost('opening_fix', {}); } catch (e) { alert('没能开始:' + e.message); return; }
+async function rvOpeningFix(card) {
+  try { await rvPost('opening_fix', card ? { card: true } : {}); } catch (e) { alert('没能开始:' + e.message); return; }
   rvState.key = null;
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
 }

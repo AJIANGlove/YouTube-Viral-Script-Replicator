@@ -127,6 +127,13 @@ function checkAudit(content) {
   const t = content.replace(/^[*`\s]*(===\s*[A-Za-z]+\s*===)[*`\s]*$/gm, '$1');
   const miss = ['ISSUES', 'ROUTE'].filter(k => !new RegExp('^===\\s*' + k + '\\s*===\\s*$', 'm').test(t));
   if (miss.length) throw err('报告没写完(结尾的 ' + miss.map(k => '===' + k + '===').join(' / ') + ' 不在)。回到网页版点「继续」(或者发一句「继续」),等它写到最后,把后半段拼上再粘');
+  // v1.118 清单在,但一条问题都认不出来,报告里却有 P01 小节 / 推荐理由说要改 P0:不能当成「0 个问题」收下
+  const R = require('./review');
+  const cut = t.search(/^===\s*(SCORE|ISSUES|ROUTE)\s*===\s*$/m);
+  const report = cut >= 0 ? t.slice(0, cut) : t;
+  const block = k => ((t.split(new RegExp('^===\\s*' + k + '\\s*===\\s*$', 'm'))[1] || '').split(/^===\s*[A-Za-z]+\s*===\s*$/m)[0] || '').replace(/^```.*$/gm, '');
+  if (!R.parseAuditIssues(block('ISSUES')).length && !Object.keys(R.auditSections(report)).length && R.auditLooksNonEmpty(report, block('ROUTE')))
+    throw err('报告里写了要改的问题(有 P01 这样的编号,或推荐理由提到 P0),但程序一条都没认出来,不能当成「0 个问题」收下。多半是复制时格式丢了:请用网页版回答下面的「复制」按钮(不要拖选文字)把整份报告复制过来再粘');
   return content;
 }
 

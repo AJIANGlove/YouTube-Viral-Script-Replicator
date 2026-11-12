@@ -371,6 +371,8 @@ function buildView(run, asset) {
     }
   };
   out.summary.consistency = consistencyView(run, rows, out.track_default);
+  // v1.118 审稿报告之外几项检查的问题,也放进「勾选要改的问题」里(id 以 X- 开头),勾上的终审一起改
+  if (out.audit) { try { out.audit.extras = auditExtras(run, out.summary.consistency); } catch (e) { out.audit.extras = []; } }
   // v1.103 原片残留、人物连贯:每句残留、每个没有「你」的章各一条,能勾选「AI 出改法」、各自「直接应用」
   if (out.final) { try { out.final.consist_items = consistItems(run, out.summary.consistency).map(x => ({ ...applyView(run.id, script, lang, 'consist', x), ...(x.quote ? { quote_zh: zhOf(state, x.quote) } : {}) })); } catch (e) { out.final.consist_items = []; } }
   const lastRc = out.final ? arr(out.final.rechecks).slice(-1)[0] : null;
@@ -972,6 +974,7 @@ function loadRunAsset(runId) {
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
   const asset = store.getAsset(run.asset_id);
   if (!asset) throw Object.assign(new Error('资产不存在: ' + run.asset_id), { status: 400 });
+  if (recoverAuditIssues(run)) store.saveRun(run);
   return { run, asset };
 }
 
@@ -1900,7 +1903,8 @@ async function runPass(runId, kind) {
 // 把原片标题、原文案、拆解框架、新题目、新标题和二稿交给模型,按用户的审稿提示词出完整报告(赛道、评分、迁移对照、
 // 逐段问题 P01…、深层问题、P0/P1/P2、三种修改路线)。报告末尾附一段 ===SCORE=== / ===ISSUES=== / ===ROUTE=== 清单给程序读。
 // 报告出来后流程停住:人在页面上勾选要改的问题、选修改路线,再带着这些去终审。
-const AUDIT_ISSUE_RE = /^\s*[-*•]\s*\[(P\d+)\]\s*\[([SABC])[级]?\]\s*\[(P[012])\]\s*\[([^\]]+)\]\s*(?:\[\s*\+?\s*(\d+(?:\.\d+)?)\s*分?\s*\]\s*)?(.+)$/i;
+// v1.118 网页版粘回来的报告常常是「选中文字复制」的:列表的「- 」、标题的「## 」、加粗都没了,或者成了「1. 」编号、全角【】。这些都认
+const AUDIT_ISSUE_RE = /^\s*(?:[-*•·]\s*|\d+\s*[.、)）]\s*)?(?:\*\*)?\s*[\[【]\s*(P\d+)\s*[\]】]\s*[\[【]\s*([SABC])\s*级?\s*[\]】]\s*[\[【]\s*(P[012])\s*[\]】]\s*[\[【]\s*([^\]】]+?)\s*[\]】]\s*(?:[\[【]\s*\+?\s*(\d+(?:\.\d+)?)\s*分?\s*[\]】]\s*)?(?:\*\*)?\s*(.+)$/i;
 const AUDIT_MAX_ROUNDS = 4; // 报告很长,被 max_tokens 截断就接着写,最多续 3 次
 const ROUTE_NAMES = { A: '最小修改', B: '结构优化', C: '深度重构' };
 
@@ -1908,7 +1912,7 @@ function parseAuditIssues(text) {
   return String(text || '').split('\n').map(l => {
     const m = l.match(AUDIT_ISSUE_RE);
     if (!m) return null;
-    const parts = m[6].split(/\s*[｜|]\s*/);
+    const parts = m[6].replace(/^\*\*\s*|\s*\*\*$/g, '').split(/\s*[｜|]\s*/);
     return {
       id: m[1].toUpperCase().replace(/^P(\d)$/, 'P0$1'), severity: m[2].toUpperCase(), priority: m[3].toUpperCase(),
       gain: m[5] != null ? +m[5] : null,
@@ -1919,21 +1923,45 @@ function parseAuditIssues(text) {
   }).filter(Boolean);
 }
 
+// v1.118 已经存下「问题 0 个」的审稿报告:报告正文里明明有「问题编号:P01」小节,只是当时格式没认出来。打开任务时从正文里补回来
+function auditFromSections(sections) {
+  return Object.keys(sections).map(id => {
+    const s = sections[id];
+    const sev = (s.match(/严重程度[^SABC]{0,20}([SABC])\s*级?/) || [])[1] || 'B';
+    const pri = (s.match(/优先级[^P]{0,20}(P[012])/i) || [])[1];
+    return { id, severity: sev, priority: pri ? pri.toUpperCase() : sev === 'S' ? 'P0' : sev === 'A' ? 'P1' : 'P2', chapter: (s.match(/CH\d+/i) || ['全篇'])[0].toUpperCase(), type: auditField(s, '问题类型'), problem: auditField(s, '为什么不好').slice(0, 120), direction: auditField(s, '修改方向').slice(0, 120), detail: s };
+  });
+}
+function recoverAuditIssues(run) {
+  const au = (run.review || {}).audit;
+  if (!au || arr(au.issues).length || !au.report) return false;
+  const issues = auditFromSections(auditSections(au.report));
+  if (!issues.length) return false;
+  au.issues = issues; au.recovered = new Date().toISOString(); au.selection = null;
+  if (run.steps && run.steps.reverse_audit) run.steps.reverse_audit.issues = issues.length;
+  return true;
+}
+// 报告看起来是有问题的(有 P01 小节、或推荐理由里提到 P0/P1),却一个都没认出来
+function auditLooksNonEmpty(report, route) {
+  return /问题编号\s*\**\s*[:：]\s*\**\s*P\d+/i.test(String(report || '')) || /\bP0\d\b|\[P\d+\]|【P\d+】|\bP[01]\b/.test(String(route || ''));
+}
+
 // 报告里每个「问题编号:P01」小节的全文(给终审用,里面有原文位置、为什么不好、修改方向、示范修改)
 function auditSections(report) {
   const out = {};
-  const re = /^#{1,6}\s*\**\s*问题编号\s*[:：]\s*(P\d+)/gim;
+  // v1.118 标题的「## 」被复制丢了也认(行首直接是「问题编号:P01」)
+  const re = /^(?:#{1,6}\s*)?\**\s*问题编号\s*\**\s*[:：]\s*\**\s*(P\d+)/gim;
   const marks = [];
   let m;
-  while ((m = re.exec(report)) !== null) marks.push({ id: m[1].toUpperCase(), index: m.index, after: m.index + m[0].length, level: (m[0].match(/^#+/) || ['##'])[0].length });
+  while ((m = re.exec(report)) !== null) marks.push({ id: m[1].toUpperCase(), index: m.index, after: m.index + m[0].length, level: (m[0].match(/^#+/) || [''])[0].length });
   marks.forEach((k, i) => {
     let end = i + 1 < marks.length ? marks[i + 1].index : report.length;
     // 最后一个问题之后是「深层问题」等大标题:截到下一个同级或更高级的标题
     if (i + 1 === marks.length) {
-      const nx = report.slice(k.after).search(new RegExp('^#{1,' + k.level + '}\\s', 'm'));
+      const nx = report.slice(k.after).search(k.level ? new RegExp('^#{1,' + k.level + '}\\s', 'm') : /^(?:#{1,6}\s|\**\s*(?:[一二三四五六七八九十]+[、.．]|第[一二三四五六七八九十]+部分)?\s*(?:深层问题|修改路线|三种修改路线|总结|总评)\s*\**\s*$)/m);
       if (nx >= 0) end = k.after + nx;
     }
-    out[k.id] = report.slice(k.index, end).trim();
+    if (!out[k.id]) out[k.id] = report.slice(k.index, end).trim();
   });
   return out;
 }
@@ -1948,7 +1976,7 @@ function routeSections(report) {
   marks.forEach(k => {
     const nx = report.slice(k.after).search(new RegExp('^#{1,' + k.level + '}\\s', 'm'));
     const end = nx >= 0 ? k.after + nx : report.length;
-    if (!out[k.id]) out[k.id] = report.slice(k.index, end).trim();
+    if (!out[k.id]) if (!out[k.id]) out[k.id] = report.slice(k.index, end).trim();
   });
   return out;
 }
@@ -2119,11 +2147,7 @@ async function runReverseAudit(runId) {
     let issues = parseAuditIssues(blocks.ISSUES || '');
     // 清单没出来(截断或模型漏写):从报告的 P 小节里兜底取编号和严重程度
     if (!issues.length) {
-      issues = Object.keys(sections).map(id => {
-        const s = sections[id];
-        const sev = (s.match(/严重程度[^SABC]{0,20}([SABC])\s*级?/) || [])[1] || 'B';
-        return { id, severity: sev, priority: sev === 'S' ? 'P0' : sev === 'A' ? 'P1' : 'P2', chapter: (s.match(/CH\d+/i) || ['全篇'])[0].toUpperCase(), type: auditField(s, '问题类型'), problem: auditField(s, '为什么不好').slice(0, 120), direction: auditField(s, '修改方向').slice(0, 120) };
-      });
+      issues = auditFromSections(sections);
     }
     issues.forEach(x => { x.detail = sections[x.id] || ''; });
     const score = reportScore(report, blocks.SCORE);
@@ -2134,7 +2158,8 @@ async function runReverseAudit(runId) {
     fresh.review.audit = {
       at: new Date().toISOString(), base_hash: hash(base), report, score, issues,
       routes: routeSections(report), recommended, route_reason: routeLine.replace(/^[^|｜]*[|｜]\s*/, '').trim(),
-      truncated: r.truncated, selection: null
+      truncated: r.truncated, selection: null,
+      parse_failed: !issues.length && auditLooksNonEmpty(report, routeLine)
     };
     fresh.steps = { ...(fresh.steps || {}), reverse_audit: { status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString(), issues: issues.length, score } };
     if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
@@ -2148,12 +2173,36 @@ async function runReverseAudit(runId) {
   }
 }
 
+// v1.118 二稿审稿报告页上能勾选的「另外几项检查」:核验 C/D/E 级还在当论点用的说法、原片残留 / 人物连贯
+function auditExtras(run, cs) {
+  const out = [];
+  if (cs) {
+    arr(cs.weak).filter(w => !w.accepted).forEach(w => {
+      const e = /E/.test(String(w.grade || ''));
+      const chs = [...new Set(arr(w.uses).map(u => u.ch))];
+      out.push({ id: 'X-' + w.id, extra: 'weak', severity: e ? 'S' : 'A', priority: e ? 'P0' : 'P1', chapter: chs[0] || '全篇',
+        type: '核验 ' + w.grade + ' 级 · 没出处的说法',
+        problem: (w.zh_claim || w.claim) + (e ? '(和找到的证据矛盾,必须改)' : '(只有部分证据,说得比证据满)'),
+        direction: '删掉,或改成核验结论支持的说法' + (w.fix ? '(' + w.fix + ')' : '') + ';由它推出的结论一起改',
+        detail: '## 问题编号:X-' + w.id + '(事实核验)\n**问题类型:** 核验 ' + w.grade + ' 级的说法还在当论点用\n**核验的说法:** ' + w.claim + '\n**核验结论:** ' + (w.finding || '没有核实') + '\n**原文位置:** ' + arr(w.uses).map(u => u.ch + '「' + u.text + '」').join(' ') + '\n**修改方向:** 删掉,或改成核验结论支持的说法' + (w.fix ? '(' + w.fix + ')' : '') + ';不要换成别的没出处的说法,前后由它推出的结论一起改' });
+    });
+    const rest = consistencyOpen(run, cs, new Set(['weak_claims']));
+    if (rest.length) out.push({ id: 'X-CONS', extra: 'cons', severity: 'A', priority: 'P1', chapter: rest[0].chapter || '全篇', type: '原片残留 / 人物连贯',
+      problem: rest.length + ' 处:' + rest.slice(0, 3).map(x => String(x.problem).slice(0, 60)).join(';') + (rest.length > 3 ? '…' : ''), direction: '照下面每条的改法改',
+      detail: '## 问题编号:X-CONS(原片残留 / 人物连贯)\n' + rest.map((x, i) => (i + 1) + '. ' + (x.chapter ? x.chapter + ' ' : '') + x.problem + '\n   改法:' + x.suggestion).join('\n') });
+  }
+  // 开头单独审不放进这里:开头单独在「开头单独审」那一栏里改(v1.118「按开头审意见改开头」)
+  return out;
+}
+// 存进 selection 时用:当前这份任务能勾的另外几项
+function auditExtrasNow(runId) { try { return arr((getView(runId).audit || {}).extras); } catch (e) { return []; } }
+
 // 人选中的问题 + 路线 → 终审提示词里的「人工确认要改的问题」
 function selectedFixes(run) {
   const au = (run.review || {}).audit;
   const sel = au && au.selection;
   if (!sel) return '(无。这一遍按常规终审。)';
-  const picked = arr(au.issues).filter(x => arr(sel.ids).includes(x.id));
+  const picked = arr(au.issues).filter(x => arr(sel.ids).includes(x.id)).concat(arr(sel.extras).filter(x => x && arr(sel.ids).includes(x.id)));
   const out = [];
   if (sel.route && ROUTE_NAMES[sel.route]) {
     out.push('修改路线:' + sel.route + ' ' + ROUTE_NAMES[sel.route] + (au.routes && au.routes[sel.route] ? '\n' + au.routes[sel.route] : ''));
@@ -2176,9 +2225,10 @@ function saveAuditSelection(runId, body) {
   if (!au) throw Object.assign(new Error('还没有审稿报告'), { status: 400 });
   if (String(body.audit_at || '') !== String(au.at || '')) return { ok: false, stale: true }; // 报告已经重跑过,旧页面的勾选不再适用
   if (((run.steps || {}).final_review || {}).status === 'running') return { ok: false, running: true };
-  const ids = arr(body.ids).map(String).filter(id => arr(au.issues).some(x => x.id === id));
+  const extras = auditExtrasNow(runId);
+  const ids = arr(body.ids).map(String).filter(id => arr(au.issues).concat(extras).some(x => x.id === id));
   const track = lockedTrack(run) || (TRACK_KEYS.includes(body.track) ? body.track : '');
-  au.selection = { ids, route: ROUTE_NAMES[body.route] ? body.route : '', note: String(body.note || '').trim().slice(0, 2000), track, at: new Date().toISOString(), draft: true };
+  au.selection = { ids, extras: extras.filter(x => ids.includes(x.id)), route: ROUTE_NAMES[body.route] ? body.route : '', note: String(body.note || '').trim().slice(0, 2000), track, at: new Date().toISOString(), draft: true };
   store.saveRun(run);
   return { ok: true };
 }
@@ -2191,8 +2241,9 @@ function startFinal(runId, body) {
   if (lockedTrack(run)) body = { ...body, track: run.review_track };
   const au = (run.review || {}).audit;
   if (au) {
-    const ids = arr(body.ids).map(String).filter(id => arr(au.issues).some(x => x.id === id));
-    au.selection = { ids, route: ROUTE_NAMES[body.route] ? body.route : '', note: String(body.note || '').trim().slice(0, 2000), track: TRACK_KEYS.includes(body.track) ? body.track : '', at: new Date().toISOString() };
+    const extras = auditExtrasNow(runId);
+    const ids = arr(body.ids).map(String).filter(id => arr(au.issues).concat(extras).some(x => x.id === id));
+    au.selection = { ids, extras: extras.filter(x => ids.includes(x.id)), route: ROUTE_NAMES[body.route] ? body.route : '', note: String(body.note || '').trim().slice(0, 2000), track: TRACK_KEYS.includes(body.track) ? body.track : '', at: new Date().toISOString() };
   }
   run.review = run.review || {};
   if (TRACK_KEYS.includes(body.track)) run.review.final_track = body.track;
@@ -4559,13 +4610,18 @@ function setOpenFixStage(runId, stage) {
   fresh.steps = { ...(fresh.steps || {}), opening_fix: { ...((fresh.steps || {}).opening_fix || {}), status: 'running', stage } };
   store.saveRun(fresh);
 }
-async function runOpeningFix(runId) {
+// v1.118 card:从「开头单独审」那一栏点的「按开头审意见改开头」:程序硬指标都过了、但开头审判「建议改」也照它的大白话改法改一轮,能改到开头 60 秒
+const cardWantsFix = oc => !!oc && !oc.stale && !!oc.lines && oc.verdict === '建议改';
+async function runOpeningFix(runId, opts = {}) {
   const cfg = pl().loadConfig();
   if (!cfg || !cfg.api_key) throw Object.assign(new Error('未配置 API Key'), { status: 400 });
   const run = store.getRun(runId);
   const start = currentScript(run);
   const lc0 = listenOf(run, start);
-  if (!openingIssues(lc0).length) return { ok: true, already: true };
+  const card = !!opts.card && cardWantsFix((run.review || {}).opening);
+  if (!openingIssues(lc0).length && !card) return { ok: true, already: true };
+  const until = card ? 60 : 30;
+  let cardDone = !card;
   const t0 = Date.now();
   run.steps = { ...(run.steps || {}), opening_fix: { status: 'running', stage: '改开头', started_at: new Date().toISOString() } };
   store.saveRun(run);
@@ -4577,18 +4633,22 @@ async function runOpeningFix(runId) {
   const title = ((run.analysis || {}).title || {}).final_title || run.topic;
   const maxWords = scriptWords(start) + 8;
   const limit = { openingWords: 0, maxWords, wpm: growthLimit(run, start).wpm };
+  // v1.118 开头单独审里 AI 指出的「可能掉人的地方」也一起交给改开头(只当参考,硬指标仍以程序算的为准)
+  const oc = (run.review || {}).opening;
+  const cardRisks = (oc && !oc.stale && arr(oc.fix_plain).length ? '\n\n开头单独审给的具体改法(按这个改,句子编号是上面开头逐句的编号):\n' + arr(oc.fix_plain).map(x => '- ' + x).join('\n') : '') + (oc && !oc.stale && arr(oc.risks).length ? '\n\n开头单独审还指出这些可能掉人的地方(参考,能顺手改就改):\n' + arr(oc.risks).slice(0, 4).map(x => '- ' + x).join('\n') : '');
   let text = start, curLc = lc0, verEdits = target ? arr(target.edits).filter(e => e.ok) : [], applied = 0;
   const tries = [];
   try {
-    for (let k = 1; k <= OPEN_FIX_TRIES && openingIssues(curLc).length; k++) {
+    for (let k = 1; k <= OPEN_FIX_TRIES && (openingIssues(curLc).length || !cardDone); k++) {
       if (k > 1) setOpenFixStage(runId, '改开头(第 ' + k + ' 次,上次还差:' + openingIssues(curLc).map(i => i.replace(/\(.*?\)/g, '')).join(';') + ')');
       const sl = openingSlice({ ...run, script_v1: text });
       const prompt = an().fillVars(readPrompt('opening_fix.md'), {
         target_language: lang, wpm: String(sl.wpm), title,
-        issues: curLc.issues.filter(i => /^前 \d+ 秒/.test(i)).map(i => '- ' + i).join('\n'),
+        issues: curLc.issues.filter(i => /^前 \d+ 秒/.test(i)).map(i => '- ' + i).join('\n') + cardRisks,
         title_words: arr((curLc.opening || {}).title_words).map(w => w.word + (w.sec == null ? '(没出现)' : '(现在在 ' + checks.fmt(w.sec) + ')')).join('、') || '(无)',
-        lines: sl.lines.filter(l => l.sec < 30).map(l => l.n + ' | ' + checks.fmt(l.sec) + ' | ' + l.nums + ' | ' + l.text).join('\n'),
-        after: sl.lines.filter(l => l.sec >= 30).slice(0, 6).map(l => l.text).join(' ') || sl.after || '(无)',
+        lines: sl.lines.filter(l => l.sec < until).map(l => l.n + ' | ' + checks.fmt(l.sec) + ' | ' + l.nums + ' | ' + l.text).join('\n'),
+        after: sl.lines.filter(l => l.sec >= until).slice(0, 6).map(l => l.text).join(' ') || sl.after || '(无)',
+        edit_until: '0:' + until, why: card ? '开头单独审判了「建议改」,下面是要改的地方' : '这篇稿子整体已经审过、复审判能发了,现在只剩开头没过程序的听感检查',
         fact_check: factBrief((run.review || {}).factcheck),
         prev_tries: tries.length ? '## 之前几次没改成的原因(这次换个改法)\n' + tries.map(t => '- 第 ' + t.k + ' 次:' + t.note).join('\n') : ''
       });
@@ -4600,7 +4660,8 @@ async function runOpeningFix(runId) {
       const pure = await purifyText(run, cfg, a.next, '自动改开头');
       const lc = listenOf(run, pure.text);
       const worse = lc.dense.length > curLc.dense.length ? '数字密的句子从 ' + curLc.dense.length + ' 句变成 ' + lc.dense.length + ' 句' : '';
-      if (!worse && openingFixScore(lc) < openingFixScore(curLc)) {
+      if (!worse && (openingFixScore(lc) < openingFixScore(curLc) || (!cardDone && openingFixScore(lc) <= openingFixScore(curLc)))) {
+        cardDone = true;
         if (target) verEdits = mergeRounds(base, text, verEdits, ok);
         text = pure.text; curLc = lc; applied += ok.length;
         tries.push({ k, ok: ok.length, note: openingIssues(lc).length ? '改了 ' + ok.length + ' 处,还差:' + openingIssues(lc).join(';') : '改了 ' + ok.length + ' 处,过关' });
@@ -4609,7 +4670,7 @@ async function runOpeningFix(runId) {
     const passed = !openingIssues(curLc).length;
     const fresh = store.getRun(runId) || run;
     if (currentScript(fresh) !== start) throw new Error('改开头期间稿子被改过,结果没有保存,请重试');
-    const rec = { at: new Date().toISOString(), passed, edits: applied, before: openingIssues(lc0), after: openingIssues(curLc), tries, on: target ? target.key : 'script' };
+    const rec = { at: new Date().toISOString(), passed, edits: applied, before: openingIssues(lc0), after: openingIssues(curLc), tries, on: target ? target.key : 'script', ...(card ? { card: true } : {}) };
     if (text !== start) {
       if (target) {
         const tv = fresh.review.versions.find(v => v.key === target.key);
@@ -4621,7 +4682,14 @@ async function runOpeningFix(runId) {
           tv.changed = scriptChapters(text).filter(c => { const b = scriptChapters(base).find(x => x.id === c.id); return b && b.text !== c.text; }).map(c => c.id);
         }
       }
-      writeScript(fresh, text, '自动改开头');
+      // v1.118 人自己点的改开头(「开头单独审」的按钮、「还不能发布」里的「AI 改开头」):照原片开头锁定时也放行(不传 stage,不过锁)
+      writeScript(fresh, text, card || opts.manual ? '' : '自动改开头');
+      // v1.118 终审之前在「开头单独审」里改开头:二稿跟着更新,不然重跑终审会从旧二稿改、把改好的开头丢掉;审稿报告也不因只改了开头就标「稿子改过」
+      const d2 = !target && fresh.review.versions.find(v => v.key === 'd2' && v.text === start);
+      if (d2 && !fresh.review.versions.some(v => v.key === 'd3')) {
+        d2.text = currentScript(fresh); d2.opening_fixed = rec.at;
+        if (fresh.review.audit && fresh.review.audit.base_hash === hash(start)) fresh.review.audit.base_hash = hash(d2.text);
+      }
     }
     if (fresh.review.final) fresh.review.final.opening_fix = rec;
     fresh.steps = { ...(fresh.steps || {}), opening_fix: { status: passed ? 'done' : 'failed', secs: Math.round((Date.now() - t0) / 100) / 10, finished_at: rec.at, edits: applied, passed,
@@ -4642,6 +4710,7 @@ async function autoOpeningFix(runId) {
     const run = store.getRun(runId);
     if (!run || passBusy(runId)) return;
     if (finalGood(run) !== true || ignoredBlocks(run).has('listen_open')) return;
+    if (require('./openbeats').on(run)) return; // v1.118 照原片开头:不自动改开头
     if (!openingIssues(listenOf(run, currentScript(run))).length) return;
     passRunning.set(runId, '自动改开头');
     try { await runOpeningFix(runId); } finally { passRunning.delete(runId); }
@@ -4651,21 +4720,22 @@ async function autoOpeningFix(runId) {
 async function autoOpeningFixLocked(runId) {
   try {
     const run = store.getRun(runId);
-    if (finalGood(run) !== true || ignoredBlocks(run).has('listen_open') || !openingIssues(listenOf(run, currentScript(run))).length) return;
+    if (finalGood(run) !== true || ignoredBlocks(run).has('listen_open') || require('./openbeats').on(run) || !openingIssues(listenOf(run, currentScript(run))).length) return;
     passRunning.set(runId, '自动改开头');
     await runOpeningFix(runId);
   } catch (e) { /* 失败已记在 steps.opening_fix */ }
 }
-function startOpeningFix(runId) {
+function startOpeningFix(runId, body = {}) {
   const run = store.getRun(runId);
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
   const st = run.steps || {};
   const busyStep = (st.final_review || {}).status === 'running' ? '终审' : (st.deai || {}).status === 'running' ? '去AI感' : (st.opening_fix || {}).status === 'running' ? '自动改开头' : '';
   if (passBusy(runId) || busyStep) throw Object.assign(new Error('「' + (passLabel(runId) || busyStep) + '」正在跑,等它跑完再改开头'), { status: 409 });
-  if (!openingIssues(listenOf(run, currentScript(run))).length) throw Object.assign(new Error('开头已经通过听感检查,不用改'), { status: 400 });
+  const card = !!body.card && cardWantsFix((run.review || {}).opening);
+  if (!card && !openingIssues(listenOf(run, currentScript(run))).length) throw Object.assign(new Error(body.card ? '开头单独审没判「建议改」(或者分析是旧的,先点「重新分析开头」)' : '开头已经通过听感检查,不用改'), { status: 400 });
   passRunning.set(runId, '自动改开头');
   (async () => {
-    try { await runOpeningFix(runId); } catch (e) {} finally { passRunning.delete(runId); }
+    try { await runOpeningFix(runId, { card, manual: true }); } catch (e) {} finally { passRunning.delete(runId); }
     await refreshClaimIfStale(runId);
     await refreshOpeningIfStale(runId);
     await explainRun(runId);
@@ -4743,7 +4813,8 @@ async function runOpeningCard(runId) {
       target_language: (run.audience || {}).target_language || '', wpm: String(sl.wpm), title,
       thesis: JSON.stringify(a.thesis_card || {}), hook: bpHook || '(无)',
       hard: '- 前 10 秒念了 ' + hard.nums_10s + ' 个数字\n- 标题关键词出现时间:' + (hard.title_words.map(w => w.word + (w.sec == null ? ' 没出现' : ' ' + w.sec + ' 秒')).join('、') || '(无)') +
-        '\n- 一句超过 2 个数字的句子编号:' + (hard.dense.join('、') || '无'),
+        '\n- 一句超过 2 个数字的句子编号:' + (hard.dense.join('、') || '无') +
+        (require('./openbeats').on(run) ? '\n- 这篇开头是「照原片开头」:照原片前 45 秒的节拍写的,终审不会动开头。给大白话改法时,尽量保留每一拍和它们的顺序,优先换词、换数字、把话说得更早更清楚;真要删拍或调顺序,在那条改法里写明「会打乱原片节拍」' : ''),
       lines: sl.lines.map(l => l.n + ' | ' + checks.fmt(l.sec) + ' | ' + l.text).join('\n'),
       after: sl.after || '(无)'
     }), '开头单独审', x => Array.isArray(x.lines) && x.lines.length);
@@ -4764,7 +4835,7 @@ async function runOpeningCard(runId) {
       at: new Date().toISOString(), hash: sl.hash, wpm: sl.wpm, title,
       lines: sl.lines.map(l => ({ ...l, zh: zh[l.n] || '' })),
       hook: String(out.hook || ''), title_conflict_sec: out.title_conflict_sec ?? null, first_payoff_sec: out.first_payoff_sec ?? null,
-      strengths: arr(out.strengths).filter(Boolean).map(String), risks: arr(out.risks).filter(Boolean).map(String),
+      strengths: arr(out.strengths).filter(Boolean).map(String), risks: arr(out.risks).filter(Boolean).map(String), fix_plain: arr(out.fix_plain).filter(Boolean).map(String).slice(0, 4),
       verdict: hard.issues.length || contra.length ? '建议改' : String(out.verdict || ''), hard,
       score_0_30: s030, score_30_60: s3060, score_why: String(out.score_why || ''),
       web: { status: web.status, ...(web.error ? { error: web.error } : {}), queries: arr(web.queries), ...(web.status === 'done' ? { brief: String(web.brief || '').slice(0, 12000) } : {}), ...(web.reused ? { reused: true } : {}) },
@@ -4830,7 +4901,7 @@ function openingView(run) {
   if (!o) return st ? { status: st } : null;
   let stale = false;
   try { stale = openingSlice(run).hash !== o.hash; } catch (e) {}
-  return { ...o, stale, status: st };
+  return { ...o, stale, status: st, fix_step: (run.steps || {}).opening_fix || null, fix_rec: ((run.review || {}).final || {}).opening_fix || null };
 }
 
 // ---------- 一键生成 ----------
@@ -5053,4 +5124,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { infoCheckRun, startInfoCheck, infoReuseCheck, infoNormalize, infoBrief, INFO_GUARD, explainRun, stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE, restoreOpening, openingCompareView, draftScript };
+module.exports = { auditExtras, selectedFixes, parseAuditIssues, auditSections, auditLooksNonEmpty, recoverAuditIssues, infoCheckRun, startInfoCheck, infoReuseCheck, infoNormalize, infoBrief, INFO_GUARD, explainRun, stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE, restoreOpening, openingCompareView, draftScript };
