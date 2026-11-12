@@ -231,10 +231,13 @@ function parseScript(text, ids) {
   return { missing, content: textnorm.normalizeChapterTags(blocks.join('\n\n')) };
 }
 
-function finish(web, p, content, how) {
+function finish(web, p, content, how, meta) {
   web.pending = web.pending.filter(x => x.id !== p.id);
-  web.done = [...web.done, { id: p.id, label: p.label, chat_name: p.chat_name, at: now(), chars: content.length, by: how }].slice(-60);
-  if (how === 'paste') {
+  web.done = [...web.done, {
+    id: p.id, label: p.label, chat_name: p.chat_name, at: now(), chars: content.length, by: how,
+    ...(meta || {}) // 本地模型调用:task_id / elapsed_ms / timed_out / sent / started_at,人工粘贴没有这些
+  }].slice(-60);
+  if (how === 'paste' || how === 'local') { // 本地提交与人工粘贴语义相同:都要留答案缓存,程序重启后跑到这一步直接取用,不用重发
     web.answers[p.key] = content;
     const ks = Object.keys(web.answers);
     if (ks.length > ANSWERS_MAX) ks.slice(0, ks.length - ANSWERS_MAX).forEach(k => delete web.answers[k]);
@@ -253,7 +256,8 @@ function markCopied(runId, id, i) {
   save(runId, web);
   return { ok: true, copied: p.copied };
 }
-function answer(runId, id, text) {
+// opts.by: 来源标记(paste=人粘的 / local=本地模型自动提交),记进 done 供事后区分;opts.meta 一并落盘
+function answer(runId, id, text, opts) {
   const web = must(runId);
   const p = web.pending.find(x => x.id === id);
   if (!p) throw err('这一条已经处理过了,刷新一下页面', 409);
@@ -277,7 +281,7 @@ function answer(runId, id, text) {
     chat.hashes = [...arr(p.prior), p.last, msgHash({ role: 'assistant', content })];
   }
   web.chats = web.chats.slice(-20);
-  finish(web, p, content, 'paste');
+  finish(web, p, content, (opts && opts.by) || 'paste', opts && opts.meta);
   save(runId, web);
   if (w) { waiters.delete(wkey(runId, id)); w.resolve(content); }
   return { ok: true, id, waiting: !!w };
@@ -312,7 +316,7 @@ function localConfig() {
     url: String(ls.url || '').replace(/\/+$/, ''),
     token: String(ls.token || ''),
     enabled: ls.enabled !== false,
-    poll_ms: Number(ls.poll_ms) > 0 ? Number(ls.poll_ms) : 3000,
+    poll_ms: Number(ls.poll_ms) > 0 ? Number(ls.poll_ms) : 5000,
     max_missing_polls: Number(ls.max_missing_polls) > 0 ? Number(ls.max_missing_polls) : 60
   };
 }
@@ -356,30 +360,54 @@ async function localSend(cfg, text, chatPolicy) {
   const j = r.json || {};
   const t = Array.isArray(j.tasks) ? j.tasks[0] : null;
   if (!j.ok || !t || !t.id) throw new Error('本地模型服务没有接单: ' + (j.error || ('HTTP ' + r.status)));
-  return String(t.id);
+  return { id: String(t.id), seq: t.seq == null ? null : t.seq };
 }
 
+// 队列概况:只用来拿「暂停/静默/额度闸门」这类队列级等待原因(单任务接口里没有)
+async function localQueueState(cfg) {
+  const r = await localRequest(cfg, 'GET', '/queue', null);
+  if (r.status === 401) throw new Error('本地模型服务要访问令牌,检查 config.json 的 local_service.token');
+  const j = r.json || {};
+  const st = j.stats || {};
+  return {
+    paused: !!j.paused,
+    pauseReason: String(j.pauseReason || ''),
+    waitingFor: String(st.waitingFor || ''),
+    waitMs: Number(st.waitMs) || 0,
+    quotaBlocked: !!(j.quota && j.quota.blocked)
+  };
+}
+
+// 单任务查这一条,不再拉全量队列(队列会越积越多);新版接口 /tasks/:id 同时接受 id 和 seq
 async function localWait(cfg, taskId, onPhase, alive) {
   let missing = 0;
   let lastPhase = '';
   for (;;) {
     // 这一条已经被手动粘好 / 改用 API / 取消:不用再等,立刻把串行位让出来
     if (alive && !alive()) throw new Error('这一条已经不在等粘贴了');
-    const r = await localRequest(cfg, 'GET', '/queue', null);
+    const r = await localRequest(cfg, 'GET', '/tasks/' + encodeURIComponent(taskId), null);
     if (r.status === 401) throw new Error('本地模型服务要访问令牌,检查 config.json 的 local_service.token');
-    const j = r.json || {};
-    const t = (Array.isArray(j.tasks) ? j.tasks : []).find(x => x.id === taskId);
+    const t = (r.json && r.json.task) || null;
     if (!t) {
-      if (++missing >= cfg.max_missing_polls) throw new Error('本地模型队列里找不到这条任务了(那边可能重启过)');
+      if (++missing >= cfg.max_missing_polls) throw new Error('本地模型里找不到这条任务了(可能被清理,或那边重启过)');
     } else {
       missing = 0;
-      if (onPhase && t.status && t.status !== lastPhase) { lastPhase = t.status; onPhase(t.status); }
-      if (t.status === 'done') {
-        const reply = String(t.reply || '').trim();
+      const st = String(t.status || '');
+      if (onPhase && st && st !== lastPhase) { lastPhase = st; onPhase(st, t); }
+      if (st === 'done') {
+        // 新版接口:reply 是列表用的 300 字摘要,fullReply 才是完整正文;必须取完整的那份
+        if (t.hasFullBody === false) throw new Error('本地服务没有取到完整正文(只有摘要),这一条不能当答案,请重试');
+        const full = typeof t.fullReply === 'string' && t.fullReply.trim() ? t.fullReply : '';
+        const reply = String(full || t.reply || '').trim();
         if (!reply) throw new Error('本地模型返回了空回复');
         return { reply, timedOut: !!t.timedOut, elapsedMs: Number(t.elapsedMs) || 0 };
       }
-      if (t.status === 'failed') throw new Error('本地模型处理失败: ' + (t.error || '没有说明原因'));
+      // 以下都是「不会再有完整结果」的状态,一律判失败,不把半截内容当答案
+      if (st === 'timeout') throw new Error('本地模型等待超时(30 分钟没有新进展),这一条的内容不完整,没有提交' + (t.reason ? '(' + t.reason + ')' : ''));
+      if (st === 'interrupted') throw new Error('本地服务重启,这条任务被中断了' + (t.reason ? '(' + t.reason + ')' : '') + ',再点一次会重新发');
+      if (st === 'cancelled') throw new Error('这条任务已经在本地服务里被删除了,再点一次会重新发');
+      if (st === 'failed') throw new Error('本地模型处理失败: ' + (t.error || t.reason || '没有说明原因'));
+      if (st === 'legacy') throw new Error('本地服务把这条标成了历史记录,不会再处理,再点一次会重新发');
     }
     await new Promise(x => setTimeout(x, cfg.poll_ms));
   }
@@ -412,8 +440,19 @@ function localRun(runId, id) {
   const from = Number.isInteger(st.next) && st.next > 0 && st.next < total ? st.next : 0;
   localState(runId, id, {
     status: 'queued', phase: 'queued', index: from, total, error: '', timed_out: false,
-    started_at: st.status === 'failed' ? now() : (st.started_at || now()), next: from
+    started_at: st.status === 'failed' ? now() : (st.started_at || now()), next: from, waiting_for: '', wait_ms: 0
   });
+  // 队列级的等待原因(暂停/静默时段/额度闸门)只在 /queue 里有,查一次带回来给界面;查不到不影响入队
+  localQueueState(cfg).then(q => {
+    if (!q.paused && !q.waitingFor && !q.quotaBlocked) return;
+    const cur = load(runId);
+    const pp = cur && arr(cur.pending).find(x => x.id === id);
+    if (!pp || !pp.local || pp.local.status !== 'queued') return; // 已经开跑了就不用再显示队列原因
+    localState(runId, id, {
+      waiting_for: q.paused ? ('队列已暂停:' + (q.pauseReason || '等待人工确认')) : (q.quotaBlocked ? '额度闸门:等待恢复' : q.waitingFor),
+      wait_ms: q.waitMs || 0
+    });
+  }).catch(() => {});
   runLocalChain(runId, id, from);
   return { ok: true, id, from, total };
 }
@@ -422,6 +461,7 @@ function runLocalChain(runId, id, from) {
   const job = async () => {
     const cfg = localConfig();
     let idx = from;
+    let lastTaskId = '', elapsed = 0, timedOut = false, sentCount = 0, startedAt = '', totalSeen = 0;
     try {
       for (idx = from; ; idx++) {
         const w = load(runId);
@@ -430,15 +470,29 @@ function runLocalChain(runId, id, from) {
         const texts = arr(p.texts);
         if (idx >= texts.length) break;
         const total = texts.length;
-        localState(runId, id, { status: 'running', phase: 'sending', index: idx, total, error: '' });
+        totalSeen = total;
+        startedAt = (p.local && p.local.started_at) || startedAt;
+        localState(runId, id, { status: 'running', phase: 'sending', index: idx, total, error: '', waiting_for: '', wait_ms: 0 });
         // 第 1 条按卡片提示:新开对话→always;接着发→never。后面一律 never(同一对话里继续)
         const policy = idx === 0 ? (p.how === 'continue' ? 'never' : 'always') : 'never';
-        const taskId = await localSend(cfg, texts[idx].text, policy);
-        localState(runId, id, { status: 'running', phase: 'waiting', index: idx, total, task_id: taskId });
-        const r = await localWait(cfg, taskId, phase => localState(runId, id, { status: 'running', phase, index: idx, total, task_id: taskId }),
+        const queued = await localSend(cfg, texts[idx].text, policy);
+        lastTaskId = queued.id;
+        localState(runId, id, { status: 'running', phase: 'waiting', index: idx, total, task_id: queued.id, task_seq: queued.seq });
+        const r = await localWait(cfg, queued.id, (st, t) => {
+          // 本地队列在排队/等配额时,把它的原因带出来(界面上显示"为什么还没开始");开跑后清掉
+          const waiting = st === 'queued' || st === 'waiting';
+          const extra = { waiting_for: waiting && t && t.reason ? String(t.reason) : '', wait_ms: 0 };
+          localState(runId, id, { status: 'running', phase: st, index: idx, total, task_id: queued.id, ...extra });
+        },
           () => { const x = load(runId); return !!(x && arr(x.pending).find(y => y.id === id)); });
-        localState(runId, id, { status: 'running', phase: 'sent', index: idx, total, task_id: taskId, timed_out: !!r.timedOut, last_ms: r.elapsedMs });
-        if (idx === texts.length - 1) { submitLocal(runId, id, r.reply); return; }
+        elapsed += Number(r.elapsedMs) || 0;
+        timedOut = timedOut || !!r.timedOut;
+        sentCount = idx + 1;
+        localState(runId, id, { status: 'running', phase: 'sent', index: idx, total, task_id: queued.id, timed_out: !!r.timedOut, last_ms: r.elapsedMs });
+        if (idx === texts.length - 1) {
+          submitLocal(runId, id, r.reply, { task_id: lastTaskId, elapsed_ms: elapsed, timed_out: timedOut, sent: sentCount, total: totalSeen, started_at: startedAt });
+          return;
+        }
       }
       throw new Error('这一条没有可发送的内容');
     } catch (e) {
@@ -456,10 +510,10 @@ function runLocalChain(runId, id, from) {
   return localChain;
 }
 
-// 和人工粘贴走同一条路:章节校验、对话记录、唤醒管线全都一样
-function submitLocal(runId, id, reply) {
+// 和人工粘贴走同一条路:章节校验、对话记录、唤醒管线全都一样;只是来源记成 local 并带上下面的耗时信息
+function submitLocal(runId, id, reply, meta) {
   localState(runId, id, { status: 'running', phase: 'submitting' });
-  answer(runId, id, reply);
+  answer(runId, id, reply, { by: 'local', meta: meta || {} });
 }
 
 // 进程重启:上次在跑/排队的本地调用已经没了,落成 failed,页面上可以再点(不自动重投)
@@ -478,7 +532,7 @@ function resetInterrupted() {
       p.local = {
         ...st, status: 'failed', phase: 'failed',
         error: '程序重启过,这一条没跑完,可以再点「本地模型调用」',
-        next: Number.isInteger(st.index) ? st.index : 0, at: now()
+        next: Number.isInteger(st.index) ? st.index : 0, waiting_for: '', wait_ms: 0, at: now()
       };
       hit = true; n++;
     });

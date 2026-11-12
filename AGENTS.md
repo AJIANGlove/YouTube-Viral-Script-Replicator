@@ -57,7 +57,13 @@
 - **失败**：停在待粘贴，`p.local.next` 记失败那条，再点从那条继续，已成功的批次不重发；不做自动重试。
 - **重启**：`resetInterrupted()` 在 `server.listen` 里把 `local.running/queued` 落成 `failed`，不自动重投。
 - **提交**复用 `manual.answer()`，章节解析、对话记录、唤醒管线与人工粘贴完全一致。
-- **等待无上限**：只对「连续查不到 task id」做 60 次（约 3 分钟）兜底。轮询走 `GET /queue`，完成的任务带 `reply`。
+- **轮询（2026-11-11 改单任务查询）**：`GET /tasks/:id`（同时接受 id 和 seq，返回 `{ok, task}`），5 秒一次；不再每次拉全量 `/queue`（队列越积越多，单次几百 KB）。`config.json` 的 `poll_ms` 默认 5000。
+- **状态映射（2026-11-11 适配新版服务）**：`done` → 提交；`failed` / `timeout` / `interrupted` / `cancelled` / `legacy` → 一律判失败，**不提交半截内容**（`timeout` 的 `reply` 是半截正文 + 网页 UI 噪音，如 `2m 59s` / `running`）。等待本身不设上限，交给本地服务的 30 分钟无变化超时。
+- **完整正文（2026-11-12 修）**：`/tasks/:id` 的 `reply` / `message` 是列表用的 **300 字摘要**，完整正文在 `fullReply` / `fullMessage`；`localWait` 必须取 `fullReply || reply`，`hasFullBody === false` 直接判失败。曾因只读 `reply` 导致写稿只解析出 CH01、误报「还缺 CH02…CH10」，事后还错怪本地服务截断。
+- **队列级原因**：入队后查一次 `GET /queue`，把 `paused` / `stats.waitingFor` / `quota.blocked` 写进 `p.local.waiting_for` + `wait_ms`；任务自身的 `reason` 在状态变化时同步。界面显示「静默时段 2-7，暂不发送 · 约 22:00 恢复」。静默时段按 `quietTz: America/Los_Angeles`，不是北京时间。
+- **没有管理权限**：普通 token 调 `POST /tasks/:seq/cancel` 返回「管理操作需要管理员令牌（本机访问免令牌）」。**入队后无法从我们这边取消或删除**，只能在那台 Mac 的本地服务页面上操作。
+- **完成留痕（2026-11-11 补）**：`finish(web, p, content, how, meta)` 增加第 5 个参数，`answer(runId, id, text, opts)` 增加 `opts.by` / `opts.meta`。本地提交记 `by:'local'` 并写 `task_id` / `elapsed_ms` / `timed_out` / `sent` / `total` / `started_at`；人工粘贴仍是 `'paste'`，`useApi` 仍是 `'api'`。旧记录没有这些字段，前端按「人工」显示。
+- **界面反馈（2026-11-11 补）**：面板顶部加「最近完成」绿色横幅（取 30 分钟内最后一条 `by:'local'`，不是严格最后一条，避免随后的人工粘贴把它顶掉）；「已完成 N 条」改成可展开列表（来源 / 字数 / 耗时 / 时间）；进行中显示 排队 / 发送 / 生成 / 已返回 / 提交 五段文案 + 已等时长 + 上一条耗时；提交后空窗提示「上一条已提交(来源),程序正在跑下一步」。
 - 代码与注释统一叫「本地模型」，不写「桥接」。合并上游时按本节逐条核对。
 
 ## 视频推送文案 == 纯净稿（2026-10-26，跨文件不变量，改清洗规则时两处必须同步）
@@ -201,3 +207,15 @@
 - **约定**：全部类名 `ad-` 前缀；红色只表失败/危险（弹窗内不用）；样本原文保持源语言、说明中文；`adState` 为常驻 state，开新弹窗时整体重置（不同资产不串数据，参考 or-panel 残留修复的教训）。
 - **验证方法**：`node tools/.work/test_asset_detail.js`（从 index.html 抽 ad* 模块喂真实资产做渲染冒烟：六个 tab 无 undefined/NaN、SVG 有图形、样本筛选工作、空数据降级 ad-empty、无留存卡时「怎么写」回退正常、写稿跳转链路顺序正确）。改弹窗渲染后应重跑。
 
+## 框架包下载 zip（2026-11-11 新增，本地功能）
+
+资产详情弹窗标题栏右侧（关闭按钮左边）新增「下载框架 zip」，把当前框架的**全部原始数据** + 一份说明文件打成 zip，供外部 AI/同事直接使用。
+
+- **接口**：`GET /api/assets/:id/download` → `application/zip`；`Content-Disposition` 同时给 `filename="frame-<id>.zip"`（ASCII 兜底）与 `filename*=UTF-8''框架-<id>.zip`（中文名）。内存直出，不落盘、不留临时文件。
+- **打包内容**：`<id>/` 目录下 `README.md` + `meta.json` / `framework.json` / `timeline.json` / `style.json` / `examples.json` / `retention_cards.json` / `source.srt`；有 `source_zh.srt` 的资产一并带上（当前 10 个）。原始文件逐字节照搬，不做重新序列化。
+- **README.md 结构**：0 三十秒速读（含骨架总表：步号 / stage_id / 功能 / 占比 / 折算秒数 / 折算词数 / 可删性）→ 1 包内文件清单 → 2 字段字典（逐文件逐字段：是什么 + 拿它干什么）→ 3 可直接复制给 AI 的写作指令（由 framework + timeline + retention_cards 现场编译：标题公式、兑现方式、must_deliver 清单、节奏锚点、逐步施工表、禁区、语气、输出要求）→ 4 来源与使用限制（原片字幕仅研究用途）。
+- **实现**：`app/lib/assetzip.js`，零依赖——`zlib.deflateRawSync` 手写本地文件头 + 中央目录 + EOCD，CRC32 自算；包内文件名全 ASCII，避免解压端编码乱码。`store.assetTrack(id)` 为新增只读方法，只用于往 README 里写分类名。
+- **异常口径**：文件缺失或 JSON 解析失败**不阻断下载**，坏文件照原样打进包，README 顶部标 ⚠ 列出是哪些文件；资产不存在返回 404 JSON。前端按钮走 fetch（不是直接跳转），失败时按钮显示「下载失败」并 alert 原因，不会把浏览器带到一段 JSON 报错页。
+- **与「怎么写」tab 的差异（勿改回）**：tab 把 `title_hook_contract.must_deliver` 放在「前 30 秒必须完成」里，但这批条目含结尾要落的账；README 改称「必须在成片里全部兑现（前 30 秒是主战场）」，不对外宣称只是前 30 秒。
+- **验证方法**：`node -e "const az=require('./app/lib/assetzip.js');require('fs').writeFileSync('x.zip',az.build('<id>').buffer)"` 后 `unzip -t x.zip`；或遍历 `assets/*/` 逐个 build，检查 README 不出现 `undefined` / `NaN` / `[object Object]`。既有弹窗冒烟 `node tools/.work/test_asset_detail.js` 仍应全绿。
+- **需要重启**：改了 `app/server.js` + 新增 `app/lib/assetzip.js`，必须重启进程；`index.html` 部分刷新即可。

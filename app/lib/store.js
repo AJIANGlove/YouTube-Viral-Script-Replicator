@@ -51,6 +51,14 @@ function loadAssetCategories() {
 // 分类定义(顺序即前端 chip 顺序)
 function assetCategories() { return loadAssetCategories().tracks; }
 
+// 单个资产当前的分类(导出框架包时写进 README;只读,不写回 meta.json)
+function assetTrack(id) {
+  const cats = loadAssetCategories();
+  const key = cats.items[id] || '';
+  const hit = cats.tracks.find(t => t.key === key);
+  return { key, name: hit ? hit.name : '' };
+}
+
 // 人工改分类(2026-11-05 本地功能):只改 items[asset_id] 一行,保留 version/note/cats 与 2 空格缩进
 // 只接受 cats 里已有的 key —— 用户口径「不允许清空为未分类」,所以不存在写空值的路径
 // 临时文件 + rename 落盘:写失败不会留下半截 JSON,也不会把已有 213 条分类写丢
@@ -547,7 +555,7 @@ function queryRuns(opts) {
 
 module.exports = { waitFor,
   APP_ROOT, ASSETS_ROOT, RUNS_ROOT, ensureDirs, slugify,
-  listAssets, getAsset, saveAsset, deleteAsset, newAssetId, assetCategories, setAssetTrack,
+  listAssets, getAsset, saveAsset, deleteAsset, newAssetId, assetCategories, assetTrack, setAssetTrack,
   newRun, saveRun, getRun, listRuns, setRunViral, setRunConfirmed,
   queryRuns, RUNS_INDEX, SCRIPT_TEXT_FIELDS, normalizeRunText
 };

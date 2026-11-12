@@ -24,6 +24,7 @@ const narration = require('./lib/narration');
 const video = require('./lib/video');
 const ytdata = require('./lib/ytdata');
 const topiczh = require('./lib/topiczh');
+const assetzip = require('./lib/assetzip');
 
 const PORT = Number(process.env.PORT) || 8080; // 默认 8080,可用 PORT 环境变量覆盖(如调试时不占用正式实例)
 const HOST = '0.0.0.0';
@@ -348,6 +349,23 @@ const server = http.createServer(async (req, res) => {
       if (typeof files.channel === 'string' && files.channel.trim()) meta.channel = files.channel.trim();
       store.saveAsset(id, meta, files);
       return send(res, 200, { ok: true, id, meta });
+    }
+
+    // 下载框架包:该资产的原始数据文件(meta/framework/timeline/style/examples/retention_cards/source.srt)
+    // 加一份 README.md(逐文件逐字段说明 + 可直接用的写作指令)打成 zip,内存直出、不落盘
+    const assetZipMatch = url.match(/^\/api\/assets\/([\w-]+)\/download$/);
+    if (assetZipMatch && method === 'GET') {
+      const pack = assetzip.build(assetZipMatch[1]);
+      if (!pack) return send(res, 404, { error: '资产不存在' });
+      res.writeHead(200, {
+        'Content-Type': 'application/zip',
+        'Content-Length': pack.bytes,
+        'Cache-Control': 'no-store',
+        // 中文名走 filename*,ASCII 名兜底:哪个浏览器认哪个,都不会落成乱码
+        'Content-Disposition': 'attachment; filename="' + pack.asciiFilename + '"; filename*=UTF-8\'\'' + encodeURIComponent(pack.filename)
+      });
+      res.end(pack.buffer);
+      return;
     }
 
     const assetMatch = url.match(/^\/api\/assets\/([\w-]+)$/);

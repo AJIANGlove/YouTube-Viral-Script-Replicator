@@ -537,6 +537,11 @@
 
   /* ---------- 资产详情弹窗(纯只读) ---------- */
   .modal-box.ad-box { max-width: 1080px; }
+  /* 弹窗标题栏右侧动作区:下载框架包 + 关闭 */
+  .ad-head-actions { display: flex; align-items: center; gap: 10px; }
+  .ad-dl { font-size: 12px; padding: 4px 10px; border: 1px solid #bfdbfe; border-radius: 5px; background: #eff6ff; color: #2563eb; cursor: pointer; white-space: nowrap; }
+  .ad-dl:hover:not(:disabled) { background: #dbeafe; border-color: #93c5fd; }
+  .ad-dl:disabled { opacity: .55; cursor: default; }
   .modal-body.ad-body { max-height: 78vh; padding: 0 0 16px; }
   .ad-meta { padding: 10px 18px 0; font-size: 12px; color: #6b7280; display: flex; flex-wrap: wrap; gap: 6px 16px; }
   .ad-tabs { display: flex; gap: 6px; padding: 10px 18px 0; border-bottom: 1px solid #e5e7eb; flex-wrap: wrap; }
@@ -1123,7 +1128,11 @@
   <div class="modal-box ad-box" role="dialog" aria-modal="true" aria-labelledby="asset-modal-title">
     <div class="modal-head">
       <h3 id="asset-modal-title">框架详情</h3>
-      <button class="modal-close" type="button" onclick="closeAssetDetail()" aria-label="关闭">×</button>
+      <div class="ad-head-actions">
+        <button class="ad-dl" type="button" id="asset-dl-btn" onclick="adDownloadZip()" disabled
+          title="把这个框架的全部数据文件 + 一份说明文件(README.md)打包成 zip 下载">下载框架 zip</button>
+        <button class="modal-close" type="button" onclick="closeAssetDetail()" aria-label="关闭">×</button>
+      </div>
     </div>
     <div class="modal-body ad-body" id="asset-modal-body"></div>
     <div class="modal-foot" id="asset-modal-foot" style="justify-content:space-between"></div>
@@ -1493,11 +1502,49 @@ function onAssetModalMask(ev) { if (ev.target === ev.currentTarget) closeAssetDe
 function adTab(t) { if (!adState) return; adState.tab = t; renderAssetDetail(); }
 function adExFilter(t) { if (!adState) return; adState.exType = adState.exType === t ? '' : t; renderAssetDetail(); }
 
+// 下载框架包:服务端现打 zip(7 个原始数据文件 + README.md 说明文件),内存直出不落盘
+// 走 fetch 而不是直接跳转,失败时能把原因显示出来,而不是把浏览器带到一段 JSON 报错页
+async function adDownloadZip() {
+  const btn = document.getElementById('asset-dl-btn');
+  if (!btn || !adState || !adState.data || adState.data.__error) return;
+  const id = adState.id;
+  btn.disabled = true;
+  btn.textContent = '打包中…';
+  try {
+    const resp = await fetch('/api/assets/' + encodeURIComponent(id) + '/download');
+    if (!resp.ok) {
+      let msg = 'HTTP ' + resp.status;
+      try { const j = await resp.json(); if (j && j.error) msg = j.error; } catch (e2) {}
+      throw new Error(msg);
+    }
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '框架-' + id + '.zip';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    btn.textContent = '已下载 ' + (Math.round(blob.size / 1024) || 1) + ' KB';
+    setTimeout(() => { btn.textContent = '下载框架 zip'; }, 2200);
+  } catch (e) {
+    btn.textContent = '下载失败';
+    btn.title = '下载失败:' + ((e && e.message) || '未知错误');
+    alert('下载失败:' + ((e && e.message) || '未知错误'));
+    setTimeout(() => { btn.textContent = '下载框架 zip'; }, 2200);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 function renderAssetDetail() {
   const body = document.getElementById('asset-modal-body');
   const foot = document.getElementById('asset-modal-foot');
   if (!adState) return;
   const d = adState.data;
+  const dl = document.getElementById('asset-dl-btn');
+  if (dl) { dl.disabled = !d || !!d.__error; dl.textContent = '下载框架 zip'; }
   if (!d) { document.getElementById('asset-modal-title').textContent = '框架详情'; body.innerHTML = '<div class="ad-empty">加载中…</div>'; foot.innerHTML = ''; return; }
   if (d.__error) { document.getElementById('asset-modal-title').textContent = '框架详情'; body.innerHTML = `<div class="ad-empty">加载失败:${esc(d.__error)}</div>`; foot.innerHTML = ''; return; }
   const m = d.meta || {};
@@ -6156,6 +6203,12 @@ function webHow(p, r) {
   const nm = webChatName(p.chat_name, r);
   return `<div class="web-how cont"><span class="tag">② 不要开新对话</span><span>回到 <span class="web-chat">${esc(nm)}</span> 那个对话,接着发下面这一句(前面的不用再发),把回答粘到下面。</span></div>`;
 }
+// 时长/时钟:本地调用可能跑几分钟,界面必须给「已等多久」,否则看起来像卡死
+function webDur(sec) { const s = Math.max(0, Math.round(Number(sec) || 0)); const m = Math.floor(s / 60); return m ? m + ' 分 ' + String(s % 60).padStart(2, '0') + ' 秒' : s + ' 秒'; }
+function webMs(ms) { return webDur((Number(ms) || 0) / 1000); }
+function webClock(at) { const d = at ? new Date(at) : null; return d && !isNaN(d.getTime()) ? String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') : ''; }
+function webElapsed(L) { const t = L && L.started_at ? new Date(L.started_at).getTime() : 0; return t && !isNaN(t) ? webDur((Date.now() - t) / 1000) : ''; }
+function webByLabel(by) { return by === 'local' ? '本地' : by === 'api' ? '改用API' : '人工'; }
 // 本地模型按钮与进度:调用中禁用其它提交入口,避免同一条被 API 和本地双点火
 function webLocalBar(p) {
   const L = p.local || {};
@@ -6163,10 +6216,14 @@ function webLocalBar(p) {
   const total = Number(L.total) || (p.texts || []).length || 1;
   const idx = Number(L.index) || 0;
   let tip = '';
-  if (L.status === 'queued') tip = `<span class="hint" style="color:#6d28d9">排队中:前面还有一条本地调用在跑</span>`;
-  else if (L.status === 'running') {
-    const what = L.phase === 'sending' ? '发送中' : L.phase === 'waiting' ? '已入队,等本地服务接收' : L.phase === 'running' ? '正在生成' : L.phase === 'submitting' ? '本地已返回,正在交给程序' : L.phase === 'sent' ? '已返回' : '发送中';
-    tip = `<span class="hint" style="color:#6d28d9">本地模型调用中:${what} · 第 ${idx + 1}/${total} 条${L.timed_out ? ' · 这条可能不完整' : ''}</span>`;
+  const wf = L.waiting_for ? ' · ' + esc(L.waiting_for) : '';
+  const eta = Number(L.wait_ms) > 0 ? ' · 约 ' + webClock(new Date(Date.now() + Number(L.wait_ms)).toISOString()) + ' 恢复' : '';
+  if (L.status === 'queued') {
+    tip = `<span class="hint" style="color:#6d28d9">排队中:前面还有一条本地调用在跑${wf}${eta} · 已等 ${webElapsed(L)} · 可以离开此页,跑完自动提交</span>`;
+  } else if (L.status === 'running') {
+    const what = L.phase === 'sending' ? '正在发送' : L.phase === 'queued' ? '在本地队列里排队' : L.phase === 'waiting' ? '已入队,等本地服务接收' : L.phase === 'running' ? '正在生成' : L.phase === 'sent' ? '已返回,准备下一条' : L.phase === 'submitting' ? '已全部返回,正在交给程序' : '处理中';
+    const last = L.last_ms ? ' · 上一条 ' + webMs(L.last_ms) : '';
+    tip = `<span class="hint" style="color:#6d28d9">本地模型调用中:${what} 第 ${idx + 1}/${total} 条${wf}${eta} · 已等 ${webElapsed(L)}${last}${L.timed_out ? ' · 这条可能不完整' : ''} · 可以离开此页,跑完自动提交</span>`;
   } else if (L.status === 'failed') {
     const next = Number(L.next) || 0;
     tip = `<span class="hint" style="color:#b91c1c">本地模型没跑完:${esc(L.error || '')}${total > 1 ? '(再点从第 ' + (next + 1) + ' 条继续)' : ''}</span>`;
@@ -6200,16 +6257,22 @@ function renderWebPanel(r) {
   const w = r.web;
   if (!w || (!w.on && !(w.pending || []).length)) { el.classList.add('hidden'); webRenderedKey = null; return; }
   const pend = w.pending || [];
-  const key = JSON.stringify([w.on, pend.map(p => p.id + ':' + (p.waiting ? 1 : 0) + ':' + Object.keys(p.copied || {}).join('.') + ':' + ((p.local && [p.local.status, p.local.phase, p.local.index, p.local.error].join('|')) || '')), (w.done || []).length, r.status, w.chat_title]);
+  const done = w.done || [];
+  const lastDone = done.length ? done[done.length - 1] : null;
+  const key = JSON.stringify([w.on, pend.map(p => p.id + ':' + (p.waiting ? 1 : 0) + ':' + Object.keys(p.copied || {}).join('.') + ':' + ((p.local && [p.local.status, p.local.phase, p.local.index, p.local.error].join('|')) || '')), done.length, lastDone ? lastDone.at : '', r.status, w.chat_title]);
   if (key === webRenderedKey && !el.classList.contains('hidden')) return;
   webRenderedKey = key;
   el.classList.remove('hidden');
-  const done = w.done || [];
+  // 最近 30 分钟内最后一条「本地模型自动提交」:取它而不是严格最后一条,避免随后一次人工粘贴把横幅顶掉
+  const recentLocal = done.slice().reverse().find(d => d && d.by === 'local' && d.at && (Date.now() - new Date(d.at).getTime() < 30 * 60 * 1000)) || null;
   let html = `<h2 style="color:#6d28d9;display:flex;justify-content:space-between;align-items:center"><span>网页版写稿${pend.length ? ':等你粘贴(' + pend.length + ' 条)' : ''}</span>
     ${w.on ? '<button class="an-btn" onclick="webOff()">后面全部改用 API</button>' : ''}</h2>
-    <div class="hint">${w.on ? '写前分析、出蓝图、写稿、优化、二稿审稿报告这五步在你的 Claude 网页版做:复制消息发过去,把回答粘回来。中间的 AI 调整、原片对照表、功能表、审核,和后面的初稿检查、终审、中文对照都自动走 API,不用你点。' : '已改回 API,后面的步骤自动跑。'}
-      ${done.length ? '已完成 ' + done.length + ' 条。' : ''}</div>`;
-  if (!pend.length && w.on) html += `<div class="hint" style="margin-top:6px">程序正在处理${['running', 'analyzing', 'awaiting_review', 'queued'].includes(r.status) ? '(检查、查资料或跑 API 的步骤),下一条消息准备好会出现在这里' : ''}。</div>`;
+    <div class="hint">${w.on ? '写前分析、出蓝图、写稿、优化、二稿审稿报告这五步在你的 Claude 网页版做:复制消息发过去,把回答粘回来。中间的 AI 调整、原片对照表、功能表、审核,和后面的初稿检查、终审、中文对照都自动走 API,不用你点。' : '已改回 API,后面的步骤自动跑。'}</div>
+    ${recentLocal ? `<div style="margin:6px 0;padding:7px 10px;border-radius:6px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;font-size:12.5px">✓ 本地模型已返回并自动提交:${esc(recentLocal.label || '')} · ${Number(recentLocal.chars || 0).toLocaleString()} 字${recentLocal.elapsed_ms ? ' · ' + webMs(recentLocal.elapsed_ms) : ''}${recentLocal.timed_out ? ' · 可能不完整' : ''} · ${webClock(recentLocal.at)}</div>` : ''}
+    ${done.length ? `<details style="margin:2px 0 4px"><summary class="hint" style="cursor:pointer">已完成 ${done.length} 条(点开看每条的来源和耗时)</summary>
+      <div style="margin-top:4px;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden">${done.slice(-12).reverse().map(d => `<div style="display:flex;gap:8px;align-items:center;padding:4px 8px;font-size:12px;border-bottom:1px solid #f3f4f6"><span style="color:#9ca3af;width:32px">${esc(d.id || '')}</span><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(d.label || '')}</span><span style="color:${d.by === 'local' ? '#059669' : '#6b7280'};width:52px">${webByLabel(d.by)}</span><span style="color:#6b7280;width:72px;text-align:right">${Number(d.chars || 0).toLocaleString()} 字</span><span style="color:#6b7280;width:74px;text-align:right">${d.elapsed_ms ? webMs(d.elapsed_ms) : ''}</span><span style="color:#9ca3af;width:40px;text-align:right">${webClock(d.at)}</span></div>`).join('')}</div>
+    </details>` : ''}`;
+  if (!pend.length && w.on) html += `<div class="hint" style="margin-top:6px">${lastDone ? '上一条已提交(' + webByLabel(lastDone.by) + '),' : ''}程序正在跑下一步${['running', 'analyzing', 'awaiting_review', 'queued'].includes(r.status) ? '(检查、查资料或跑 API 的步骤)' : ''},下一条消息准备好会出现在这里。</div>`;
   html += pend.map(p => {
     const msgs = (p.texts || []).map((m, i) => {
       const k = p.id + '_' + i;
