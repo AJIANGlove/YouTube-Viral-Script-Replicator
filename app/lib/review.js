@@ -1044,6 +1044,8 @@ function parseBlocks(text, truncated) {
 
 // ---------- 按步骤选渠道(v1.99):设置页「步骤用哪个渠道」;这一步的渠道出错(Key、额度、模型不支持)时,自动用主流程再来一次,步骤名后加「·换主渠道」 ----------
 function stepCfg(key, mainCfg) { const c = pl().loadStepConfig(key); return c || mainCfg; }
+// v1.119 模型回了空内容(实測 grsai gpt-5.6-sol:stop_reason=stop、out_tok=1)
+const emptyReply = r => !r || !String(r.content || '').trim();
 async function viaStep(key, mainCfg, fn) {
   const c = stepCfg(key, mainCfg);
   if (c === mainCfg) return fn(mainCfg, '');
@@ -2686,12 +2688,34 @@ async function runFinal(runId) {
     const common = { ...finalCommon(run, tr, dims), selected_fixes: selectedFixes(run) };
     // ① 审稿
     const r1 = await viaStep('final_audit', cfg, (c, sfx) => callLong(run, c, an().fillVars(readPrompt('final_audit.md'), { ...common, chapter_map: chapterMap(run, asset), program_findings: programFindings(run, asset), script: base }), '终审·审稿' + sfx));
+    if (emptyReply(r1)) throw new Error('终审「审稿」这一步模型回了空内容。稿子没动,请点「重跑」再终审一次;连续这样,在设置页把「终审·审稿」换个渠道');
     const s1 = splitReport(r1.content);
     const scoresBefore = fillScores(parseScores(parseBlocks(s1.tail, false).SCORES, dims), s1.report, dims, 1);
     // ② 修改
     setFinalStage(runId, '修改');
-    const reviseCfg = stepCfg('final_revise', cfg);
-    const r2 = await viaStep('final_revise', cfg, (c, sfx) => callLong(run, c, an().fillVars(readPrompt('final_revise.md'), { ...common, audit_report: s1.report, listen_findings: listenFindings(run, base), script: base }), '终审·修改' + sfx));
+    let reviseCfg = stepCfg('final_revise', cfg);
+    const revisePrompt = an().fillVars(readPrompt('final_revise.md'), { ...common, audit_report: s1.report, listen_findings: listenFindings(run, base), script: base });
+    let r2 = await viaStep('final_revise', cfg, (c, sfx) => callLong(run, c, revisePrompt, '终审·修改' + sfx));
+    // v1.119「修改」失败(回了空内容,或你勾了问题却一处修改都没读到):① 自动换 Claude 主渠道再试一次;② 还不行就挂到「网页版接力」等你复制粘贴(那里也能点「本地模型调用」);③ 都不行才报错,不存成「改了 0 处」的终稿
+    const picked = arr((((run.review || {}).audit || {}).selection || {}).ids);
+    const reviseBad = r => emptyReply(r) || (picked.length > 0 && !parseEdits(r.content).length);
+    const why = r => emptyReply(r) ? '回了空内容' : '一处修改都没给';
+    const tries = [];
+    if (reviseBad(r2)) {
+      tries.push('步骤渠道' + why(r2)); dumpRaw(run, 'final_noedits', '【审稿报告】\n' + r1.content + '\n\n【修改·步骤渠道】\n' + r2.content);
+      setFinalStage(runId, '修改(' + tries[0] + ',换 Claude 主渠道再试一次)');
+      r2 = await callLong(run, cfg, revisePrompt, '终审·修改·换Claude主渠道');
+      reviseCfg = cfg; // 后面补对原句也用主渠道
+    }
+    if (reviseBad(r2)) {
+      tries.push('Claude 主渠道' + why(r2));
+      setFinalStage(runId, '修改:等你复制粘贴(' + tries.join(';') + ')');
+      r2 = await pl().inRun(runId, () => require('./manual').relayForce(runId, cfg, [{ role: 'user', content: revisePrompt }], '终审·修改'));
+    }
+    if (reviseBad(r2)) {
+      const log = dumpRaw(run, 'final_noedits', '【审稿报告】\n' + r1.content + '\n\n【修改】\n' + r2.content);
+      throw new Error('终审「修改」' + (tries.length ? tries.join(',') + ',' : '') + '最后一次也' + why(r2) + (picked.length ? '(你勾了 ' + picked.length + ' 个要改的问题)' : '') + '。稿子没动,没存成终稿。请点「重跑」再终审一次;连续这样请把 data/logs 里的 ' + (log || 'final_noedits 开头的文件') + ' 发给我');
+    }
     let edits1 = parseEdits(r2.content);
     if (r2.truncated && !/^===\s*END\s*===/m.test(r2.content)) edits1 = edits1.slice(0, -1);
     const noEditsLog = edits1.length ? '' : dumpRaw(run, 'final_noedits', '【审稿报告】\n' + r1.content + '\n\n【修改】\n' + r2.content);

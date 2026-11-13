@@ -51,6 +51,7 @@ function chatName(label) {
   if (/^Step 2/.test(l)) return '写稿';
   if (/^Step 4/.test(l)) return '优化';
   if (/^二稿审稿/.test(l)) return '二稿审稿';
+  if (/^终审·修改/.test(l)) return '终审·修改';
   return l;
 }
 
@@ -163,7 +164,8 @@ function relay0(runId, cfg, messages, label, opts) {
       texts: [{ text: chat ? last.content : flatten(messages) }],
       prior, last: msgHash(last),
       ...(/^Step 4/.test(String(label || '')) ? { check: 'final', chapters: bpIds(runId) } : {}),
-      ...(/^二稿审稿/.test(String(label || '')) ? { check: 'audit' } : {})
+      ...(/^二稿审稿/.test(String(label || '')) ? { check: 'audit' } : {}),
+      ...(/^终审·修改/.test(String(label || '')) ? { check: 'edits' } : {})
     };
     fixTitle(runId, web);
     web.pending.push(p);
@@ -282,6 +284,7 @@ function answer(runId, id, text, opts) {
   } else {
     if (p.check === 'final') content = checkFinal(content, p.chapters);
     if (p.check === 'audit') content = checkAudit(content);
+    if (p.check === 'edits' && !/^\s*[*`]*\s*===\s*EDIT\s*===/m.test(content)) throw err('没找到任何一处修改(===EDIT=== 开头的块)。请把 Claude 的整段回答粘进来;回答被截断了就在网页里点「继续」,几段按顺序拼起来粘');
     // 记进对话:下一条如果是在这段对话上接着问的,只显示新的那句
     let chat = p.chat ? web.chats.find(c => c.id === p.chat) : null;
     if (!chat) { chat = { id: chatId(web), name: p.chat_name, at: now(), hashes: [] }; web.chats.push(chat); }
@@ -292,6 +295,12 @@ function answer(runId, id, text, opts) {
   save(runId, web);
   if (w) { waiters.delete(wkey(runId, id)); w.resolve(content); }
   return { ok: true, id, waiting: !!w };
+}
+
+// v1.119 终审「修改」:步骤渠道、Claude 主渠道都没回修改,就挂到「网页版接力」等你复制粘贴(没开网页版的任务也挂,但不开网页版,后面的步骤照旧走 API)
+function relayForce(runId, cfg, messages, label, opts) {
+  if (!load(runId)) save(runId, { on: false, at: now(), chats: [], pending: [], done: [], answers: {} });
+  return relay0(runId, cfg, messages, label, opts);
 }
 
 // 这一条改用 API 跑
@@ -608,4 +617,4 @@ function view(runOrId) {
   };
 }
 
-module.exports = { WEB_RE, wants, relay, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, _waiters: waiters };
+module.exports = { WEB_RE, wants, relay, relayForce, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, _waiters: waiters };

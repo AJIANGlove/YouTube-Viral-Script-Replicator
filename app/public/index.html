@@ -6251,7 +6251,7 @@ function webLocalBar(p) {
     tip = `<span class="hint" style="color:#b91c1c">本地模型没跑完:${esc(L.error || '')}${total > 1 ? '(再点从第 ' + (next + 1) + ' 条继续)' : ''}</span>`;
   }
   return `<div style="margin-top:4px"><button class="primary" onclick="webAnswer('${escAttr(p.id)}',this)" ${busy ? 'disabled' : ''}>粘好了,交给程序</button>
-    ${p.kind !== 'script' ? `<button class="an-btn" onclick="webApi('${escAttr(p.id)}',this)" ${busy ? 'disabled' : ''}>这一条改用 API 跑</button>` : ''}
+    ${p.kind !== 'script' ? `<button class="an-btn" onclick="webApi('${escAttr(p.id)}',this)" ${busy ? 'disabled' : ''}>${p.check === 'edits' ? '再跑一次 API' : '这一条改用 API 跑'}</button>` : ''}
     <button class="an-btn" onclick="webLocal('${escAttr(p.id)}',this)" ${busy ? 'disabled' : ''}>本地模型调用</button>
     ${tip}
     ${p.waiting || busy ? '' : '<span class="hint" style="color:#b45309">程序刚重启过:粘好后等任务接着跑到这一步就会用上</span>'}</div>`;
@@ -6264,6 +6264,7 @@ function webStepOf(p) {
   if (/^Step 1/.test(l)) return 'blueprint';
   if (/^Step 4/.test(l)) return 'optimized'; // v1.113 优化也在网页版做
   if (/^二稿审稿/.test(l)) return 'reverse_audit'; // v1.115 二稿审稿报告也在网页版做
+  if (/^终审·修改/.test(l)) return 'final_review'; // v1.119 终审「修改」两次都没回修改,等你粘
   if (/^(写前分析|原片对照表|联网查询词|AI |账本|论点对账)/.test(l)) return 'analysis';
   return '';
 }
@@ -6289,7 +6290,7 @@ function renderWebPanel(r) {
   const recentLocal = done.slice().reverse().find(d => d && d.by === 'local' && d.at && (Date.now() - new Date(d.at).getTime() < 30 * 60 * 1000)) || null;
   let html = `<h2 style="color:#6d28d9;display:flex;justify-content:space-between;align-items:center"><span>网页版写稿${pend.length ? ':等你粘贴(' + pend.length + ' 条)' : ''}</span>
     ${w.on ? '<button class="an-btn" onclick="webOff()">后面全部改用 API</button>' : ''}</h2>
-    <div class="hint">${w.on ? '写前分析、出蓝图、写稿、优化、二稿审稿报告这五步在你的 Claude 网页版做:复制消息发过去,把回答粘回来。中间的 AI 调整、原片对照表、功能表、审核,和后面的初稿检查、终审、中文对照都自动走 API,不用你点。' : '已改回 API,后面的步骤自动跑。'}</div>
+    <div class="hint">${w.on ? '写前分析、出蓝图、写稿、优化、二稿审稿报告这五步在你的 Claude 网页版做:复制消息发过去,把回答粘回来。中间的 AI 调整、原片对照表、功能表、审核,和后面的初稿检查、终审、中文对照都自动走 API,不用你点。' : (pend.some(p => p.check === 'edits') && !(done || []).length ? '这个任务没开网页版;只有下面这一条终审「修改」两次都没回修改,挂到这里等你处理,别的步骤照旧自动走 API。' : '已改回 API,后面的步骤自动跑。')}</div>
     ${recentLocal ? `<div style="margin:6px 0;padding:7px 10px;border-radius:6px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;font-size:12.5px">✓ 本地模型已返回并自动提交:${esc(recentLocal.label || '')} · ${Number(recentLocal.chars || 0).toLocaleString()} 字${recentLocal.elapsed_ms ? ' · ' + webMs(recentLocal.elapsed_ms) : ''}${recentLocal.timed_out ? ' · 可能不完整' : ''} · ${webClock(recentLocal.at)}</div>` : ''}
     ${done.length ? `<details style="margin:2px 0 4px"><summary class="hint" style="cursor:pointer">已完成 ${done.length} 条(点开看每条的来源和耗时)</summary>
       <div style="margin-top:4px;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden">${done.slice(-12).reverse().map(d => `<div style="display:flex;gap:8px;align-items:center;padding:4px 8px;font-size:12px;border-bottom:1px solid #f3f4f6"><span style="color:#9ca3af;width:32px">${esc(d.id || '')}</span><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(d.label || '')}</span><span style="color:${d.by === 'local' ? '#059669' : '#6b7280'};width:52px">${webByLabel(d.by)}</span><span style="color:#6b7280;width:72px;text-align:right">${Number(d.chars || 0).toLocaleString()} 字</span><span style="color:#6b7280;width:74px;text-align:right">${d.elapsed_ms ? webMs(d.elapsed_ms) : ''}</span><span style="color:#9ca3af;width:40px;text-align:right">${webClock(d.at)}</span></div>`).join('')}</div>
@@ -6303,9 +6304,10 @@ function renderWebPanel(r) {
         <textarea readonly rows="${p.kind === 'script' ? 3 : 5}" style="width:100%;box-sizing:border-box;font-size:12px;color:#4b5563;margin-top:3px">${esc(m.text.length > 4000 ? m.text.slice(0, 4000) + '\n……(太长只显示开头,点「复制」复制的是全文)' : m.text)}</textarea></div>`;
     }).join('');
     const fin = p.check === 'final'; // v1.113 优化:回答是一整篇终稿,很长,常被截断
+    const eds = p.check === 'edits'; // v1.119 终审「修改」:步骤渠道和 Claude 主渠道都没回修改
     const aud = p.check === 'audit'; // v1.115 二稿审稿报告:也很长,结尾那段 === 清单常被截掉
     const ph = p.kind === 'script' ? '把 Claude 最后输出的纯净稿粘到这里(被截断点了「继续」的,几段按顺序一起粘;也可以把每批的回答按顺序粘进来)' : fin ? '把 Claude 输出的整篇终稿粘到这里(连同后面的 Change Log 和 fact_check_list)。被截断点了「继续」的,几段按顺序拼在一起粘' : aud ? '把 Claude 输出的整份审稿报告粘到这里(一直到最后 ===ISSUES=== / ===ROUTE=== 那几行)。被截断点了「继续」的,几段按顺序拼在一起粘' : '把 Claude 的回答原样粘到这里(用它回答下面的复制按钮,别自己删改)';
-    const finTip = fin ? `<div class="hint" style="margin:4px 0;color:#6d28d9">⚠ 终稿很长,Claude 网页版常常写到一半停下。<b>没写到最后一章就停了,在网页里点「继续」</b>(或者发一句「继续」),等它写完,把前后几段<b>按顺序拼在一起</b>粘进来。程序会先看章节齐不齐,缺章会告诉你缺哪几章;粘好后照样检查章节结构和篇幅,开头锁定也照样管。</div>`
+    const finTip = eds ? `<div class="hint" style="margin:4px 0;color:#6d28d9">⚠ 终审「修改」这一步,步骤渠道和 Claude 主渠道都没回修改(${esc(((r.steps || {}).final_review || {}).stage || '')})。两种办法:① <b>新开一个对话</b>复制发过去,把回答粘回来(要有 ===EDIT=== 开头的修改块);② 点「<b>本地模型调用</b>」让程序再调一次模型。</div>` : fin ? `<div class="hint" style="margin:4px 0;color:#6d28d9">⚠ 终稿很长,Claude 网页版常常写到一半停下。<b>没写到最后一章就停了,在网页里点「继续」</b>(或者发一句「继续」),等它写完,把前后几段<b>按顺序拼在一起</b>粘进来。程序会先看章节齐不齐,缺章会告诉你缺哪几章;粘好后照样检查章节结构和篇幅,开头锁定也照样管。</div>`
       : aud ? `<div class="hint" style="margin:4px 0;color:#6d28d9">⚠ 审稿报告很长,Claude 网页版常常写到一半停下。<b>中途停了,在网页里点「继续」</b>(或者发一句「继续」),等它写到最后(最后几行是 ===ISSUES===、===ROUTE=== 这样给程序读的清单),把前后几段<b>按顺序拼在一起</b>粘进来。没有这几行,程序不收,会让你回去点「继续」。</div>` : '';
     const stepName = (STEP_LABELS[webStepOf(p)] || '').replace(/^\S+\s/, '');
     return `<div class="web-item card" style="border:1px solid #ddd6fe;border-radius:6px;padding:10px;margin-top:8px;background:#faf5ff">
@@ -6322,6 +6324,7 @@ function renderWebPanel(r) {
 function webTitle(p) {
   const l = p.label || '';
   if (p.kind === 'script') return '写稿';
+  if (/^终审·修改/.test(l)) return '终审「修改」(自动两次都没回修改)';
   if (/^写前分析/.test(l)) return /重试/.test(l) ? '写前分析(格式不对,重发)' : /续写/.test(l) ? '写前分析(断了,接着写)' : '写前分析';
   if (/^原片对照表/.test(l)) return '原片 → 本地对照表';
   if (/^联网查询词/.test(l)) return 'AI 调整:定要查的资料';
@@ -6361,7 +6364,7 @@ async function webAnswer(id, btn) {
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 400);
 }
 async function webApi(id, btn) {
-  if (!confirm('这一条改用 API 跑(会花这一步的钱)?')) return;
+  if (!confirm(btn && /本地模型调用/.test(btn.textContent) ? '用本地模型调用再跑一次这一条?' : '这一条改用 API 跑(会花这一步的钱)?')) return;
   if (btn) btn.disabled = true;
   try { await api('/api/runs/' + currentRunId + '/web', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'api', id }) }); }
   catch (e) { alert(e.message); if (btn) btn.disabled = false; return; }
