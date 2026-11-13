@@ -60,6 +60,31 @@ function extractJsonObject(text) {
 // 模型在字符串里直接写了英文双引号(引原句时常见:改成"월세는…")或裸换行,JSON.parse 会失败。
 // 兜底修复:字符串里遇到 " 时往后看,后面紧跟 , } ] : 才当作字符串结束(逗号后还要是 " { [ 数字 true/false/null 才算),否则当成正文里的引号转义;裸换行转成 \n。
 // 在直接解析失败后、花括号配平之前用:配平会退到里面的小对象,看起来解析成功,其实丢了整份(实测 run_1f67a92553fd「终审·出解决方案」连续 3 次 end_turn 仍判不是合法 JSON)。
+// 把 JSON 字符串边界的弯引号(“”)换成直引号:键名 “verdict”、值包裹 “best”;
+// 字符串内部的中文标点不动(正文多为直角引号「」,不在范围;值内偶尔的弯引号,后面不跟结构符号的也保留)
+function repairCurlyQuotes(text) {
+  const s = String(text || '');
+  const start = s.indexOf('{');
+  if (start < 0) return null;
+  let out = '', inStr = false, i = start;
+  const nextSig = j => { while (j < s.length && /\s/.test(s[j])) j++; return j; };
+  while (i < s.length) {
+    const c = s[i];
+    if (!inStr) {
+      if (c === '“') { out += '"'; inStr = true; i++; continue; } // 键名或值的左边界
+      out += c; i++; continue;
+    }
+    if (c === '”') {
+      const n = s[nextSig(i + 1)];
+      if (n === ':' || n === ',' || n === '}' || n === ']' || n === undefined) { out += '"'; inStr = false; i++; continue; } // 边界结束
+      out += c; i++; continue; // 正文里的右弯引号,保留
+    }
+    if (c === '“') { out += c; i++; continue; } // 正文里的左弯引号,保留
+    if (c === '"') { out += c; inStr = false; i++; continue; } // 本来就直引号
+    out += c; i++;
+  }
+  return out;
+}
 function repairJsonQuotes(text) {
   const s = String(text || '');
   const start = s.indexOf('{');
@@ -681,4 +706,4 @@ function hookGap(script, opts) {
   return { gap: Math.round(gap), at: Math.round(at) };
 }
 
-module.exports = { HOOK_RE, hookGap, checkProgression, normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, repairJsonQuotes, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, DENSE_OPEN_SEC, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble, speechTidy, duplicateParagraphs, englishInKorean, titlePromiseGaps };
+module.exports = { HOOK_RE, hookGap, checkProgression, normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, repairJsonQuotes, repairCurlyQuotes, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, DENSE_OPEN_SEC, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble, speechTidy, duplicateParagraphs, englishInKorean, titlePromiseGaps };

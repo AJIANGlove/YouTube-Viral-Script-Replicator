@@ -822,7 +822,9 @@ function analysisShapeError(a) {
 }
 
 function parseJsonLoose(text) {
-  const s = checks.stripFence((text || '').trim());
+  const s0 = checks.stripFence((text || '').trim());
+  // 网页版中文语境常把键名/值边界写成弯引号;只在真含弯引号时才修,不碰本来合法的内容
+  const s = s0.includes('“') ? (checks.repairCurlyQuotes(s0) || s0) : s0;
   return parse(s) || checks.repairJsonQuotes(s) || checks.extractJsonObject(s);
 }
 

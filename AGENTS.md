@@ -59,7 +59,9 @@
 - **提交**复用 `manual.answer()`，章节解析、对话记录、唤醒管线与人工粘贴完全一致。
 - **轮询（2026-11-11 改单任务查询）**：`GET /tasks/:id`（同时接受 id 和 seq，返回 `{ok, task}`），5 秒一次；不再每次拉全量 `/queue`（队列越积越多，单次几百 KB）。`config.json` 的 `poll_ms` 默认 5000。
 - **状态映射（2026-11-11 适配新版服务）**：`done` → 提交；`failed` / `timeout` / `interrupted` / `cancelled` / `legacy` → 一律判失败，**不提交半截内容**（`timeout` 的 `reply` 是半截正文 + 网页 UI 噪音，如 `2m 59s` / `running`）。等待本身不设上限，交给本地服务的 30 分钟无变化超时。
-- **完整正文（2026-11-12 修）**：`/tasks/:id` 的 `reply` / `message` 是列表用的 **300 字摘要**，完整正文在 `fullReply` / `fullMessage`；`localWait` 必须取 `fullReply || reply`，`hasFullBody === false` 直接判失败。曾因只读 `reply` 导致写稿只解析出 CH01、误报「还缺 CH02…CH10」，事后还错怪本地服务截断。
+- **完整正文（2026-11-12 修，11-13 再修）**：`/tasks/:id` 的 `reply` / `message` 是列表用的 **300 字摘要**；完整正文在 `fullReply`（复制纯文本，可能带弯引号）和 `fullMarkdown`（复制 Markdown，直引号）。`localWait` 取值：`fullMarkdown` 存在且以 `{` 开头（JSON 类）优先用它，否则 `fullReply`，最后 `reply`。稿件以 `[CH01 |` 开头不会误取 Markdown。`hasFullBody === false` 直接判失败。
+- **弯引号修复（2026-11-13）**：网页版中文语境会把键名/值边界写成 `“”`（`#5149` 实测 2,918 个，`JSON.parse` 第 2 字符就崩）。`checks.repairCurlyQuotes` 用状态机只换字符串边界的弯引号（正文 `「」` 与值内不跟结构符号的弯引号原样保留）；`analysis.js` 的 `parseJsonLoose` 只在文本含 `“` 时才调它，不影响本来合法的内容。曾因只读 `reply` 摘要误判缺章、又只读 `fullReply` 撞弯引号。
+- **等待原因实时同步（2026-11-13 修）**：`localWait` 的去重键从 `status` 改成 `status + reason`。本地服务把 `reason` 从「拟人间隔 25s」换成「额度提示仍在（已过重置时间）…」时，界面跟着更新；`waiting_for` 里带「额度 / 用尽 / 限制 / quota / limit」的标橙色 `#b45309`，其余保持紫色。曾有一条卡了 15 小时，界面一直显示过期的「拟人间隔 25s」，真实原因是 `quota.blocked: true`（Claude 账号额度用完，需在比特浏览器手动刷新）。
 - **队列级原因**：入队后查一次 `GET /queue`，把 `paused` / `stats.waitingFor` / `quota.blocked` 写进 `p.local.waiting_for` + `wait_ms`；任务自身的 `reason` 在状态变化时同步。界面显示「静默时段 2-7，暂不发送 · 约 22:00 恢复」。静默时段按 `quietTz: America/Los_Angeles`，不是北京时间。
 - **没有管理权限**：普通 token 调 `POST /tasks/:seq/cancel` 返回「管理操作需要管理员令牌（本机访问免令牌）」。**入队后无法从我们这边取消或删除**，只能在那台 Mac 的本地服务页面上操作。
 - **完成留痕（2026-11-11 补）**：`finish(web, p, content, how, meta)` 增加第 5 个参数，`answer(runId, id, text, opts)` 增加 `opts.by` / `opts.meta`。本地提交记 `by:'local'` 并写 `task_id` / `elapsed_ms` / `timed_out` / `sent` / `total` / `started_at`；人工粘贴仍是 `'paste'`，`useApi` 仍是 `'api'`。旧记录没有这些字段，前端按「人工」显示。

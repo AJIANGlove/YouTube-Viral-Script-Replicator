@@ -400,12 +400,17 @@ async function localWait(cfg, taskId, onPhase, alive) {
     } else {
       missing = 0;
       const st = String(t.status || '');
-      if (onPhase && st && st !== lastPhase) { lastPhase = st; onPhase(st, t); }
+      // 去重键带上 reason:额度提示、拟人间隔、静默时段这类等待原因会变,只比 status 会一直显示旧文案
+      const sig = st + '|' + String(t.reason || '');
+      if (onPhase && st && sig !== lastPhase) { lastPhase = sig; onPhase(st, t); }
       if (st === 'done') {
-        // 新版接口:reply 是列表用的 300 字摘要,fullReply 才是完整正文;必须取完整的那份
         if (t.hasFullBody === false) throw new Error('本地服务没有取到完整正文(只有摘要),这一条不能当答案,请重试');
+        // 三个字段:reply 是列表摘要,fullReply 是复制纯文本(可能带弯引号),fullMarkdown 是复制 Markdown(直引号)
+        // JSON 类内容优先 fullMarkdown(直引号,不用修);稿件类(以 [CH01 | 开头,不是 {)用 fullReply,避免被 markdown 格式污染
+        const md = typeof t.fullMarkdown === 'string' ? t.fullMarkdown.trim() : '';
         const full = typeof t.fullReply === 'string' && t.fullReply.trim() ? t.fullReply : '';
-        const reply = String(full || t.reply || '').trim();
+        const pick = md && /^\{/.test(md) ? md : full;
+        const reply = String(pick || t.reply || '').trim();
         if (!reply) throw new Error('本地模型返回了空回复');
         return { reply, timedOut: !!t.timedOut, elapsedMs: Number(t.elapsedMs) || 0 };
       }

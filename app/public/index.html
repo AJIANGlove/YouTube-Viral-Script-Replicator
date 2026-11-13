@@ -6236,7 +6236,9 @@ function webLocalBar(p) {
   const total = Number(L.total) || (p.texts || []).length || 1;
   const idx = Number(L.index) || 0;
   let tip = '';
-  const wf = L.waiting_for ? ' · ' + esc(L.waiting_for) : '';
+  const wfText = L.waiting_for || '';
+  const wfHot = /额度|用尽|限制|quota|limit/i.test(wfText); // 额度闸门单独标橙,别混在普通进度里
+  const wf = wfText ? ` · <span style="color:${wfHot ? '#b45309' : '#6d28d9'}">${esc(wfText)}</span>` : '';
   const eta = Number(L.wait_ms) > 0 ? ' · 约 ' + webClock(new Date(Date.now() + Number(L.wait_ms)).toISOString()) + ' 恢复' : '';
   if (L.status === 'queued') {
     tip = `<span class="hint" style="color:#6d28d9">排队中:前面还有一条本地调用在跑${wf}${eta} · 已等 ${webElapsed(L)} · 可以离开此页,跑完自动提交</span>`;
