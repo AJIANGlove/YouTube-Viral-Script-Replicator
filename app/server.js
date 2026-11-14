@@ -827,7 +827,7 @@ const server = http.createServer(async (req, res) => {
 
     // ---------- 先写后改:逐段对照审稿 ----------
     // GET 视图(每次按当前稿子现算);POST status/undo 立即返回;rewrite/fact 等模型返回再响应(单章约 0.5–2 分钟)
-    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|restore_opening|claim_check|audit_sel|accept_fact|accept_claim|ignore_block|ignore_item|apply_fix|suggest_fix|suggest_fix_batch|quote_context|confirm_ok|source_mapping|pov_mode|info_check))?$/);
+    const rvMatch = url.match(/^\/api\/runs\/([\w-]+)\/review(?:\/(status|rewrite|undo|fact|translate|pass|final|deai|final_patch|opening_fix|opening|restore_opening|claim_check|audit_sel|accept_fact|accept_claim|ignore_block|ignore_item|apply_fix|suggest_fix|suggest_fix_batch|quote_context|confirm_ok|source_mapping|pov_mode|info_check|fold_revert))?$/);
     if (rvMatch) {
       const [, id, action] = rvMatch;
       try {
@@ -871,6 +871,7 @@ const server = http.createServer(async (req, res) => {
           // 开头单独审:开头 60 秒逐句 + 中文 + 好在哪 + 风险(后台跑)
           if (action === 'opening') return send(res, 200, review.startOpeningCard(id));
           // 自动改开头(后台跑):只改开头几句,改到听感检查的开头两条过关,最多试 3 次
+          if (action === 'fold_revert') return send(res, 200, review.foldRevert(id, body)); // v1.120
           if (action === 'opening_fix') return send(res, 200, review.startOpeningFix(id, body || {}));
           // v1.110 恢复初稿开头(经济拆账锁定开头):把现在稿子的开头章换回初稿的
           if (action === 'restore_opening') return send(res, 200, review.restoreOpening(id));

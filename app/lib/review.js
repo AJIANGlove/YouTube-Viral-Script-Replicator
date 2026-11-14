@@ -352,6 +352,7 @@ function buildView(run, asset) {
       return { ...f, info_check: infoView(run.id, script, lang, f.info_check), thesis_item: ti ? applyView(run.id, script, lang, 'thesis', ti) : null, manual_applies: arr(f.manual_applies).map(({ before_text, diff, ...r }) => r), rechecks, scores_before: fillScores(f.scores_before, f.audit_report, dims, 1), scores_after: last ? { ...last.scores, ...(f.scores_after || {}) } : f.scores_after };
     })() : null,
     opening: openingView(run),
+    folded_reverts: arr(state.folded_reverts), // v1.120 「已退回」提醒条你手动折叠过的(按退回记录存)
     opening_compare: openingCompareView(run),
     tracks: trackList(), track_default: lockedTrack(run) || state.final_track || autoTrack(run, asset), track_locked: !!lockedTrack(run),
     translating: ((run.steps || {}).review_zh || {}).status === 'running',
@@ -2220,6 +2221,19 @@ function selectedFixes(run) {
 // 人确认审稿意见后开始终审:存下选择,后台跑终审和翻译
 // 二稿审稿报告的勾选:人每改一次就存到 audit.selection(之前只在点终审时存,终审前刷新或改了没点就丢了)。
 // 只存选择,不点火;终审跑的时候不改,免得改掉正在用的那份
+// v1.120 「已退回」提醒条:你手动折叠/展开后记在任务里,刷新、重开都按这个来;新的退回记录(key 不同)照常先展开
+function foldRevert(runId, body) {
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  const key = String((body || {}).key || '').slice(0, 80);
+  if (!key) throw Object.assign(new Error('缺少退回记录'), { status: 400 });
+  run.review = run.review || {};
+  const set = new Set(arr(run.review.folded_reverts));
+  if (body.folded === false) set.delete(key); else set.add(key);
+  run.review.folded_reverts = [...set].slice(-50);
+  store.saveRun(run);
+  return { ok: true, folded: set.has(key) };
+}
 function saveAuditSelection(runId, body) {
   const run = store.getRun(runId);
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
@@ -5148,4 +5162,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { auditExtras, selectedFixes, parseAuditIssues, auditSections, auditLooksNonEmpty, recoverAuditIssues, infoCheckRun, startInfoCheck, infoReuseCheck, infoNormalize, infoBrief, INFO_GUARD, explainRun, stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE, restoreOpening, openingCompareView, draftScript };
+module.exports = { foldRevert, auditExtras, selectedFixes, parseAuditIssues, auditSections, auditLooksNonEmpty, recoverAuditIssues, infoCheckRun, startInfoCheck, infoReuseCheck, infoNormalize, infoBrief, INFO_GUARD, explainRun, stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE, restoreOpening, openingCompareView, draftScript };

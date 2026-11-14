@@ -4387,6 +4387,19 @@ function rvDiagList(d) {
   if (!ch.length) return '';
   return `<details><summary class="hint">AI 换了 ${ch.length} 个问题的改法</summary>${ch.map(x => `<div class="hint">${esc(x.id)}:${esc(rvKeyText(x.from))} → ${esc(rvKeyText(x.to))}(${esc(RV_ACT[x.action] || x.action)})${x.why ? ' · ' + esc(x.why) : ''}</div>`).join('')}</details>`;
 }
+// v1.120 「已退回」提醒条折叠状态:页面里先记(马上生效),同时存进任务
+function rvRevertKey(rv, list) { const t = rv || (list || []).slice(-1)[0] || {}; return String(t.at || ((list || []).length + ':' + (t.round || ''))); }
+function rvRevertFolded(key) {
+  const loc = (rvState.revFold || {})[key];
+  if (loc != null) return loc;
+  return ((rvState.view || {}).folded_reverts || []).includes(key);
+}
+function rvRevertToggle(key, open) {
+  rvState.revFold = rvState.revFold || {};
+  if (rvRevertFolded(key) === !open) return; // 重画时的 toggle 事件,不是人点的
+  rvState.revFold[key] = !open;
+  rvPost('fold_revert', { key, folded: !open }).catch(() => {});
+}
 function rvRevertHtml(rc, rv, busy, panel) {
   const list = rc.reverted || [];
   const auto = list.filter(t => t.auto).length;
@@ -4403,10 +4416,13 @@ function rvRevertHtml(rc, rv, busy, panel) {
     : `<b>补改把稿子改差了(${esc(whyOf(rv))}),已退回,终稿没有换</b>`;
   const steps = list.map((t, i) => t.diagnosis ? `<div class="hint">第 ${i + 1} 次前 AI 找的原因:${esc(t.diagnosis.cause || '(没写)')}</div>${rvDiagList(t.diagnosis)}` : '').join('');
   const why = stopped ? `<div class="hint"><b>停下来了:${esc(nx.stop || 'AI 判断不值得再试')}</b>。AI 找的原因:${esc(nx.cause || '')}</div>` : nx ? `<div class="hint">最后一次 AI 找的原因:${esc(nx.cause || '')}</div>` : '';
-  return `<div class="rv-flag v13">${head}。${leave}${steps}${why}
+  // v1.120 可折叠:第一次展开;你手动折叠后记在任务里,刷新、重开都保持折叠;有新的退回记录(key 变了)才再展开
+  const fkey = rvRevertKey(rv, list);
+  const folded = rvRevertFolded(fkey);
+  return `<details class="rv-flag v13 rv-revert" ${folded ? '' : 'open'} ontoggle="rvRevertToggle('${escAttr(fkey)}', this.open)"><summary style="cursor:pointer">${head}${folded ? ' <span class="hint">(已折叠,点开看详情)</span>' : ''}</summary>${leave}${steps}${why}
     ${panel || RV_NO_PATCH ? '' : `<div class="rv-ops"><button class="an-btn v13" onclick="rvPatchAuto()" ${busy ? 'disabled' : ''}>让 AI 找原因、换改法再自动试</button>
     <span class="hint">不用自己挑问题。也可以不再补改,按上面「可发布」标准判断现在的终稿能不能直接用。下面的改法已经按 AI 最后一次的判断选好。</span></div>`}
-    <details><summary class="hint">看最后一次补改改了什么和复审报告</summary>${(rv.structural || []).filter(x => x.ok).length ? `<div class="hint">整章重写了:${(rv.structural || []).filter(x => x.ok).map(x => esc(x.chapter)).join('、')}</div>` : ''}${(rv.edits || []).map(e => `<div class="hint">[${esc(e.chapter || '')}]${e.category ? '[' + esc(e.category) + ']' : ''} ${esc(e.old)} → ${esc(e.new || '(删除)')}</div>`).join('')}<div class="hint" style="white-space:pre-wrap;margin-top:6px">${esc(rv.report || '')}</div></details></div>`;
+    <details><summary class="hint">看最后一次补改改了什么和复审报告</summary>${(rv.structural || []).filter(x => x.ok).length ? `<div class="hint">整章重写了:${(rv.structural || []).filter(x => x.ok).map(x => esc(x.chapter)).join('、')}</div>` : ''}${(rv.edits || []).map(e => `<div class="hint">[${esc(e.chapter || '')}]${e.category ? '[' + esc(e.category) + ']' : ''} ${esc(e.old)} → ${esc(e.new || '(删除)')}</div>`).join('')}<div class="hint" style="white-space:pre-wrap;margin-top:6px">${esc(rv.report || '')}</div></details></details>`;
 }
 async function rvRecheckOnly() {
   try { await rvPost('final_patch', { recheck: true }); } catch (e) { rvState.err = e.message; alert('没能开始:' + e.message); return; }
