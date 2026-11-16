@@ -808,6 +808,8 @@ function cloneJson(v) {
 // 数组类型必须是数组:模型偶尔把这几项输出成对象,前端表格会直接崩
 function analysisShapeError(a) {
   if (!a || typeof a !== 'object' || Array.isArray(a)) return '不是 JSON 对象';
+  // v1.121 只缺标题这一块(网页版回答偶尔漏写):不算失败,标题用任务题目,后面「定标题」照常
+  if (a.title == null && a.facts && a.thesis_card) a.title = { candidates: [], final_title: '', missing: true };
   for (const k of ['verdict', 'title', 'thesis_card', 'facts', 'modules', 'retention_map', 'hook']) {
     if (a[k] == null) return '缺少字段 ' + k;
   }
@@ -1068,6 +1070,7 @@ async function runAnalysis0(runId) {
     const built = buildAnalysisPrompt(run, asset);
     run.track_card_name = built.track_card_name;
     let messages = [{ role: 'user', content: built.prompt }];
+    const asked = [messages]; // v1.121 失败时把网页版记下的这几条回答删掉,续跑能重新发
     let r = await callWithLog(run, cfg, messages, '写前分析');
     let a = parseJsonLoose(r.content);
     let err = r.stopReason === 'max_tokens' ? '输出被 max_tokens 截断' : analysisShapeError(a);
@@ -1078,11 +1081,16 @@ async function runAnalysis0(runId) {
         ? '上一次输出被长度上限截断。请压缩每个字段的文字(理由一句话以内),一次性输出完整 JSON,禁止代码围栏和解释。'
         : '上一次输出不合格:' + err + '。请严格只输出格式要求里的 JSON 对象,字段齐全,禁止代码围栏和解释。';
       messages = [...messages, { role: 'assistant', content: r.content }, { role: 'user', content: feedback }];
+      asked.push(messages);
       r = await callWithLog(run, cfg, messages, '写前分析重试');
       a = parseJsonLoose(r.content);
       err = r.stopReason === 'max_tokens' ? '输出被 max_tokens 截断(请在设置里调大 Max Tokens)' : analysisShapeError(a);
     }
-    if (err) throw new Error(err);
+    if (err) {
+      let n = 0; try { n = require('./manual').forget(run.id, asked); } catch (e) {}
+      throw new Error(err + (n ? '(网页版粘回来的这份回答不合格,已作废;点「续跑此任务」会重新出一条让你发)' : ''));
+    }
+    if (a.title && a.title.missing && !a.title.final_title) { a.title.final_title = run.topic || ''; a.title.candidates = run.topic ? [run.topic] : []; } // v1.121 漏了标题:用任务题目
     require('./openbeats').normalize(a); // v1.110 开头节拍表整理一遍
     if (run.cancel_requested) {
       run.status = 'cancelled';
@@ -1668,7 +1676,7 @@ async function auditTitle(runId, draft, title) {
   return out;
 }
 
-module.exports = { PICKED_RULE, casesBrief, caseOneVoice, keepNotesText, buildSourceMapping, runSourceMapping, setPovMode, sourceMappingBrief, cleanSourceMapping, POV_RULES, ledgerWriteBack, ledgerProblems, ledgerCheckup, ledgerGaps, ledgerSanity, krMoney, moneyScale, ledgerSayOn, ledgerSay, ledgerSayText, ledgerSayAmounts,
+module.exports = { analysisShapeError, PICKED_RULE, casesBrief, caseOneVoice, keepNotesText, buildSourceMapping, runSourceMapping, setPovMode, sourceMappingBrief, cleanSourceMapping, POV_RULES, ledgerWriteBack, ledgerProblems, ledgerCheckup, ledgerGaps, ledgerSanity, krMoney, moneyScale, ledgerSayOn, ledgerSay, ledgerSayText, ledgerSayAmounts,
   loadTrackCards, pickTrackCard, buildAnalysisPrompt, analysisBrief, HOOK_TYPES, hookType, acceptedGaps, verifyLedger,
   analysisContext, cloneJson, analysisShapeError, runAnalysis, buildCheckPrompt,
   applyK3, applyOptionExact, scriptProgramStats, v1Text, runScriptCheck,

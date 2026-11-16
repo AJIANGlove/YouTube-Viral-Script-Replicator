@@ -3736,6 +3736,12 @@ const RV_PLAIN_BLOCK = {
   open_promise: t => ({ problem: t, fix: '换成带钩子的承诺:说有个意外的答案,但不说答案是什么(可以说「不是什么」)', level: '大', impact: '答案一说破,观众就没理由往下看' }),
   promise_kept: t => ({ problem: t, fix: '在正文里明确揭晓开头承诺的那个答案,并点回开头那句', level: '中', impact: '观众看到最后没等到答案,会觉得被骗' })
 };
+function rvPlainOpen(a, key) {
+  const box = a.closest('.rv-plain'); const d = box.querySelector('.rv-plain-detail'); if (!d) return;
+  d.style.display = ''; rvState.folds = rvState.folds || {}; rvState.folds[key] = true;
+  const b = [...box.querySelectorAll('.rv-plain-btns button')].find(x => /详情/.test(x.textContent)); if (b) b.textContent = '收起详情';
+  d.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
 function rvPlainToggle(btn, key) {
   const d = btn.closest('.rv-plain').querySelector('.rv-plain-detail');
   const open = d.style.display === 'none';
@@ -3763,8 +3769,19 @@ function rvPlainRow(o, busy) {
        ${pl.fix ? `<div class="rv-plain-fix">怎么改:${esc(pl.fix)}</div>` : ''}
        ${pl.impact ? `<div class="rv-plain-imp">不改会怎样:${esc(pl.impact)}</div>` : ''}`
     : `${o.tag ? '<b>' + esc(o.tag) + '</b> ' : ''}${esc(String(o.fb || '').slice(0, 160))}${o.id ? ` <span class="hint">${esc(o.id)}</span>` : ''}${waiting}`;
+  // v1.121 AI 出改法的结果直接写在这一条上(以前只在「查看详情」里,勾了出改法看起来像没反应)
+  let aiLine = '';
+  if (o.pick && o.pick.x) {
+    const x = o.pick.x, af = x.ai_fix || {};
+    const ing = !!(rvState.aiFixing || {})[o.pick.source + ':' + o.pick.id] || af.status === 'running';
+    const openBtn = o.detail ? ` <a href="javascript:void 0" onclick="rvPlainOpen(this, '${escAttr(fk)}')">看改法</a>` : '';
+    if (x.applied) aiLine = '';
+    else if (ing) aiLine = '<div class="hint" style="color:#1d4ed8"><span class="rv-spin"></span> AI 正在出改法…</div>';
+    else if (x.apply && x.apply.ai) aiLine = `<div style="color:#047857;font-size:12px;margin-top:2px"><b>✓ AI 改法出好了</b>(${(x.apply.edits || []).length} 处)${openBtn},看过点「按这处换」,或勾上用上面「按勾选的直接应用」</div>`;
+    else if (af.status === 'failed' || af.status === 'stale') aiLine = `<div style="color:#b91c1c;font-size:12px;margin-top:2px"><b>AI 没出成改法</b>:${esc(af.error || '上次没出成')} <button class="an-btn" style="font-size:11px;padding:0 8px" onclick="rvSuggestFix('${escAttr(o.pick.source)}', '${escAttr(o.pick.id)}')" ${busy ? 'disabled' : ''}>再出一次</button></div>`;
+  }
   return `<div class="rv-plain ${imp ? imp[0] : ''} v13">
-    <div class="rv-plain-top">${cb}<div class="rv-plain-text">${text}</div>
+    <div class="rv-plain-top">${cb}<div class="rv-plain-text">${text}${aiLine}</div>
       <div class="rv-plain-btns">${o.ctx || ''}${o.detail ? `<button class="an-btn" onclick="rvPlainToggle(this, '${escAttr(fk)}')">${open ? '收起详情' : '查看详情'}</button>` : ''}${o.ign ? `<button class="an-btn" onclick="${o.ign}" ${busy ? 'disabled' : ''} title="忽略后不挡发布;可以在下面「你点了忽略的」里撤回">忽略</button>` : ''}</div></div>
     ${o.detail ? `<div class="rv-plain-detail" style="${open ? '' : 'display:none'}">${o.detail}</div>` : ''}</div>`;
 }

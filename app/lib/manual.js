@@ -309,6 +309,18 @@ function relayForce(runId, cfg, messages, label, opts) {
   return relay0(runId, cfg, messages, label, opts);
 }
 
+// v1.121 粘回来的回答程序判不合格(比如写前分析「缺少字段 title」),这一步最后失败了:把这几条记下的回答删掉。
+// 不删的话点「续跑此任务」会直接拿同一份回答再判一次,马上又失败,看起来像点了没反应
+function forget(runId, messageLists) {
+  const st = load(runId);
+  if (!st) return 0;
+  const web = webOf(st);
+  let n = 0;
+  arr(messageLists).forEach(m => { const k = keyOf(m); if (typeof web.answers[k] === 'string') { delete web.answers[k]; n++; } });
+  if (n) save(runId, web);
+  return n;
+}
+
 // 这一条改用 API 跑。opts.skipSegEnd:批量「后面全部改用 API」时由 turnOff 统一处理,避免每张卡重复释放/写盘
 function useApi(runId, id, opts) {
   const web = must(runId);
@@ -988,4 +1000,4 @@ function view(runOrId) {
   };
 }
 
-module.exports = { WEB_RE, wants, relay, relayForce, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, _waiters: waiters };
+module.exports = { WEB_RE, wants, relay, relayForce, forget, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, _waiters: waiters };

@@ -3929,7 +3929,7 @@ function thesisItem(run) {
   const rows = ids.map(id => { const f = facts.find(x => x.id === id) || {}; return id + ' ' + String(f.content || '').slice(0, 200); }).join(';');
   const card = a.thesis_card || {};
   const problem = '稿子的反转结论和事实相反:' + rows + ((a.thesis_check || {}).note ? '。写前分析的说明:' + String(a.thesis_check.note).slice(0, 300) : '') + (th && !th.resolved && th.note ? '。复审判定还没解决:' + th.note : '');
-  const fix = '只改稿子里和这些事实冲突的说法(多半是反转那几句或后面的结论),改到和事实一致:能改成「有条件成立」「不是所有人都这样」就不要整段推翻;数字以账本为准' + (card.one_line_thesis ? '。论点卡一句话论点:' + card.one_line_thesis : '');
+  const fix = '只改稿子里和这些事实冲突的说法(多半是开头的反转句、反转那几句和最后的结论),改到和事实一致,最多 5 处。三种改法按顺序选:① 收窄结论:把「唯一原因 / 全都」改成事实撑得住的范围(比如「同类里受伤最重的」「最大的那个原因之一」);② 先认反例再转回:在反转句前后用一句承认稿子里已经写到的反例(别的原因、别的店也这样),再说为什么这个原因仍然最关键;③ 开头问题换个问法,让结论能完整回答它。开头的反转句和结尾的结论要一起改,前后说法一致;不许编新的数字和案例,数字以账本为准' + (card.one_line_thesis ? '。论点卡一句话论点:' + card.one_line_thesis : '');
   const cur = fin.thesis_item;
   if (cur && cur.sig === ids.join(',')) { cur.problem = problem; cur.fix = fix; return cur; }
   fin.thesis_item = { id: 'T1', sig: ids.join(','), level: '关键', chapter: '', quote: '', problem, fix };
@@ -3976,28 +3976,42 @@ function undoByContext(text, d) {
 // ---------- AI 出改法(v1.65,用户 2026-11-02):改法只是说明的条目,只针对这一条调一次 AI,落成具体的「原句 → 改成」,人确认后走直接应用 ----------
 // 实测 b196 CH14【关键】改法是「开头增加一句…;或在 CH14 总结时明确对比…」,人不懂韩文没法手改,又不想整轮重跑
 const AI_FIX_MAX = 3;
+// v1.121 反转被推翻要动开头、反转句、结论好几处:最多 5 处
+const fixMax = source => (source === 'thesis' ? 5 : AI_FIX_MAX);
+const skippedNote = v => (arr(v && v.skipped).length ? '(AI 另外给的 ' + v.skipped.length + ' 处没对上原句,没采用:' + v.skipped[0] + ')' : '');
 const aiFixBusy = new Set();
 // AI 给的每一处:原句在稿子里唯一、改句是稿子的语言、几处不重叠 → 换成程序能直接应用的计划;不行给一句原因(重试时告诉 AI)
-function aiFixPlans(text, edits, lang) {
+// v1.121 opts.lenient:几处里有对不上的(原句找不到、不唯一、和别处重叠…)就丢掉那几处、留下能用的,一处都没有才算没出成;opts.max:最多几处
+function aiFixPlans(text, edits, lang, opts = {}) {
+  const max = opts.max || AI_FIX_MAX;
   const list = arr(edits).filter(e => e && String(e.old || '').trim());
   if (!list.length) return { why: '没有给出任何一处原句 → 改成' };
-  if (list.length > AI_FIX_MAX) return { why: '改了 ' + list.length + ' 处,最多 ' + AI_FIX_MAX + ' 处' };
-  const plans = [];
+  if (list.length > max && !opts.lenient) return { why: '改了 ' + list.length + ' 处,最多 ' + max + ' 处' };
+  const plans = [], skipped = [];
   for (const e of list) {
+    if (plans.length >= max) { skipped.push('超过 ' + max + ' 处'); continue; }
     const old = String(e.old).trim(), nw = String(e.new == null ? '' : e.new).trim();
-    if (/^\[CH\d+/m.test(old)) return { why: '原句里带了章节标签行「' + old.slice(0, 30) + '」' };
-    const h = findUnique(text, old);
-    if (h.start == null) return { why: h.count > 1 ? '原句「' + old.slice(0, 60) + '」在稿子里不止一处,要带上前后的字直到唯一' : '原句「' + old.slice(0, 60) + '」在稿子里找不到,必须逐字复制' };
-    if (!zhLang(lang) && HAN_RE.test(nw)) return { why: '改句「' + nw.slice(0, 40) + '」里有中文,改句只能用稿子的语言' };
-    const actual = text.slice(h.start, h.end);
-    if (actual === nw) return { why: '有一处改句和原句一模一样' };
-    const chapter = (String(e.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase();
-    if (!nw) plans.push({ start: h.start, end: h.end, ins: '', old: actual, new: '', del: true, chapter, new_zh: '' });
-    else { const d = minimalDiff(actual, nw); plans.push({ start: h.start + d.start, end: h.start + d.end, ins: d.ins, old: actual, new: nw, chapter, new_zh: String(e.new_zh || ''), span: [h.start, h.end] }); }
+    let why = '', plan = null;
+    if (/^\[CH\d+/m.test(old)) why = '原句里带了章节标签行「' + old.slice(0, 30) + '」';
+    const h = why ? {} : findUnique(text, old);
+    if (!why && h.start == null) why = h.count > 1 ? '原句「' + old.slice(0, 60) + '」在稿子里不止一处,要带上前后的字直到唯一' : '原句「' + old.slice(0, 60) + '」在稿子里找不到(要逐字复制)';
+    if (!why && !zhLang(lang) && HAN_RE.test(nw)) why = '改句「' + nw.slice(0, 40) + '」里有中文,改句只能用稿子的语言';
+    if (!why) {
+      const actual = text.slice(h.start, h.end);
+      if (actual === nw) why = '有一处改句和原句一模一样';
+      else {
+        const chapter = (String(e.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase();
+        if (!nw) plan = { start: h.start, end: h.end, ins: '', old: actual, new: '', del: true, chapter, new_zh: '' };
+        else { const d = minimalDiff(actual, nw); plan = { start: h.start + d.start, end: h.start + d.end, ins: d.ins, old: actual, new: nw, chapter, new_zh: String(e.new_zh || ''), span: [h.start, h.end] }; }
+        const sp = plan.span || [plan.start, plan.end];
+        if (plans.some(q => { const o = q.span || [q.start, q.end]; return sp[0] < o[1] && o[0] < sp[1]; })) { why = '有两处原句重叠了,同一段只能改一次'; plan = null; }
+      }
+    }
+    if (why) { if (!opts.lenient) return { why }; skipped.push(why); continue; }
+    plans.push(plan);
   }
-  const spans = plans.map(p => p.span || [p.start, p.end]).sort((a, b) => a[0] - b[0]);
-  for (let i = 1; i < spans.length; i++) if (spans[i][0] < spans[i - 1][1]) return { why: '有两处原句重叠了,同一段只能改一次' };
-  return { plans };
+  if (!plans.length) return { why: skipped[0] || '没有能用的改法', skipped };
+  return { plans, skipped };
 }
 // 几处一起换:从后往前换,前面的位置不受影响
 function applyPlansText(text, plans) {
@@ -4071,13 +4085,13 @@ async function suggestFix(runId, body) {
     for (; tries < 2 && !got; tries++) {
       const prompt = an().fillVars(readPrompt('apply_suggest.md'), { ...base, retry_note: why ? '\n【上一次给的改法不能用】' + why + '。按规则改正后重新输出。\n' : '' });
       out = await viaStep('ai_fix', cfg, (c, sfx) => an().callJson(run, c, prompt, 'AI 出改法' + (tries ? '·重试' : '') + sfx, o => !!o && Array.isArray(o.edits)));
-      const v = aiFixPlans(text, out.edits, lang);
+      const v = aiFixPlans(text, out.edits, lang, { lenient: true, max: fixMax(source) });
       if (v.why) why = v.why; else got = v;
     }
     const fresh0 = store.getRun(runId) || run;
     if (currentScript(fresh0) !== text) throw new Error('出改法的时候稿子被改过了,再点一次');
     const af = got
-      ? { status: 'done', at, tries, why: String(out.why_zh || ''), edits: got.plans.map(p => ({ chapter: p.chapter || item.chapter || '', old: p.old, new: p.new, new_zh: p.new_zh })) }
+      ? { status: 'done', at, tries, why: String(out.why_zh || '') + skippedNote(got), edits: got.plans.map(p => ({ chapter: p.chapter || item.chapter || '', old: p.old, new: p.new, new_zh: p.new_zh })) }
       : { status: 'failed', at, tries, error: 'AI 没给出能直接替换的改法(试了 ' + tries + ' 次,最后一次:' + why + ')。可以再点一次,或者在下面逐章对比里那一章点「我的意见」写给 AI' };
     save(af);
     return af;
@@ -4139,13 +4153,13 @@ async function suggestFixBatch(runId, body) {
         const into = String(f.merged_into || '').trim();
         const host = into && into !== t.id ? chunk.find(c => c.id === into) : null;
         if (host && !arr(f.edits).length) return (results[t.k] = { status: 'merged', at, batch: true, into: host.source + ':' + host.id, into_id: host.id, why: String(f.why_zh || '') });
-        const v = aiFixPlans(text, f.edits, lang);
+        const v = aiFixPlans(text, f.edits, lang, { lenient: true, max: fixMax(t.source) });
         if (v.why) return (results[t.k] = { status: 'failed', at, batch: true, error: 'AI 给的改法不能直接用(' + v.why + '),可以单独点「AI 出改法」再出一次' });
         const spans = v.plans.map(p => p.span || [p.start, p.end]);
         const hit = taken.find(o => spans.some(s => s[0] < o.span[1] && o.span[0] < s[1]));
         if (hit) return (results[t.k] = { status: 'failed', at, batch: true, error: '和 ' + hit.id + ' 改的是同一句,先应用 ' + hit.id + ',再单独给这条出改法' });
         spans.forEach(sp => taken.push({ id: t.id, span: sp }));
-        results[t.k] = { status: 'done', at, batch: true, why: String(f.why_zh || ''), edits: v.plans.map(p => ({ chapter: p.chapter || t.item.chapter || '', old: p.old, new: p.new, new_zh: p.new_zh })) };
+        results[t.k] = { status: 'done', at, batch: true, why: String(f.why_zh || '') + skippedNote(v), edits: v.plans.map(p => ({ chapter: p.chapter || t.item.chapter || '', old: p.old, new: p.new, new_zh: p.new_zh })) };
       });
       // 合并到的那条没出成:这条也算没出成
       chunk.forEach(t => { const r = results[t.k]; if (r && r.status === 'merged' && (results[r.into] || {}).status !== 'done') results[t.k] = { status: 'failed', at, batch: true, error: 'AI 说和 ' + r.into_id + ' 一起改,但 ' + r.into_id + ' 没出成,可以单独点「AI 出改法」' }; });
@@ -5162,4 +5176,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { foldRevert, auditExtras, selectedFixes, parseAuditIssues, auditSections, auditLooksNonEmpty, recoverAuditIssues, infoCheckRun, startInfoCheck, infoReuseCheck, infoNormalize, infoBrief, INFO_GUARD, explainRun, stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE, restoreOpening, openingCompareView, draftScript };
+module.exports = { aiFixPlans, thesisItem, foldRevert, auditExtras, selectedFixes, parseAuditIssues, auditSections, auditLooksNonEmpty, recoverAuditIssues, infoCheckRun, startInfoCheck, infoReuseCheck, infoNormalize, infoBrief, INFO_GUARD, explainRun, stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE, restoreOpening, openingCompareView, draftScript };

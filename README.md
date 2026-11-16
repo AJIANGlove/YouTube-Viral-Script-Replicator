@@ -209,7 +209,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 
 | 文件 | 用途 | 行数 |
 |---|---|---|
-| `analysis.md` | 写前分析（题目与框架匹配、论点卡、事实表、主角设定、写法规则接入、表格来源写法、经济题利润行写法、真人案例、账本假设对照报道值） | 134 |
+| `analysis.md` | 写前分析（题目与框架匹配、论点卡、事实表、主角设定、写法规则接入、表格来源写法、经济题利润行写法、真人案例、账本假设对照报道值；论点不写「唯一原因/全都是因为」，事实表里的反例要写进边界） | 135 |
 | `ledger_fix.md` | 账本体检后 AI 修账本一轮（只填原始数与公式，含补漏成本） | 37 |
 | `ledger_vs_facts.md` | 账本关键假设对照事实表报道值（标偏差） | 17 |
 | `source_mapping.md` | 原片 → 本地对照表与叙事方式判断 | 39 |
@@ -281,7 +281,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 69 份 `.md`（4056 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 74 份，合计 4265 行。
+合计 69 份 `.md`（4057 行）+ `final_tracks/` 5 份（209 行）+ `fingerprints.json` 模式库；物理文件 74 份，合计 4266 行。
 
 ### 历史版本
 
