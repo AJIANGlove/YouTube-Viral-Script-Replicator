@@ -66,6 +66,21 @@
 - **没有管理权限**：普通 token 调 `POST /tasks/:seq/cancel` 返回「管理操作需要管理员令牌（本机访问免令牌）」。**入队后无法从我们这边取消或删除**，只能在那台 Mac 的本地服务页面上操作。
 - **完成留痕（2026-11-11 补）**：`finish(web, p, content, how, meta)` 增加第 5 个参数，`answer(runId, id, text, opts)` 增加 `opts.by` / `opts.meta`。本地提交记 `by:'local'` 并写 `task_id` / `elapsed_ms` / `timed_out` / `sent` / `total` / `started_at`；人工粘贴仍是 `'paste'`，`useApi` 仍是 `'api'`。旧记录没有这些字段，前端按「人工」显示。
 - **界面反馈（2026-11-11 补）**：面板顶部加「最近完成」绿色横幅（取 30 分钟内最后一条 `by:'local'`，不是严格最后一条，避免随后的人工粘贴把它顶掉）；「已完成 N 条」改成可展开列表（来源 / 字数 / 耗时 / 时间）；进行中显示 排队 / 发送 / 生成 / 已返回 / 提交 五段文案 + 已等时长 + 上一条耗时；提交后空窗提示「上一条已提交(来源),程序正在跑下一步」。
+- **会话段调度（2026-11-16 大改，取代上面的「全局串行」）**：本地服务是「每账号一个独立 worker、跨账号可并行、同账号严格串行」，`chatPolicy: never` 复用的是**该账号当前打开的 tab**（与 source/批次无关），`always` 会 SPA 新建会话并改掉当前窗口，没有入队时的会话快照。会话窗口按账号隔离，所以**段必须绑定账号**。
+  - **段定义**：一个 `always` 起头 + 之后所有 `never`（直到下一个 `always` 之前）算一段；段内独占账号（含卡与卡之间的 API 步骤闲着也不让号），段与段之间可以换号或让给别人。
+  - **进程内状态**：`segAccounts: Map<account, {owner, busy, chain}>`（每账号一条串行链 + 段级 owner）、`segFifo`（按 `ticket` 严格 FIFO）、`segAccountsCache`（10 秒）。**没有长文本全局锁**：服务侧的全局剪贴板锁已覆盖 `doPaste`(write+press) 与 `captureReplyMarkdown`(Copy 读回完整周期)，无锁外写剪贴板路径；曾加 `longChain` 把 `POST + localWait` 全程串行，与服务侧粘贴时刻不重叠，反而让多账号并行失效，已删。跨账号互斥交给服务侧那把锁，我方只保证同账号段级串行。
+  - **落盘 `data/web/<run>.json`**：`web.segment = {account, chat_url, started_at}`（段绑定，**重启不清**）、`web.force_new`（「上一张卡被粘贴/API 打断」的一次性标记）、`web.segment_notice = {kind, text, at}`（常驻提示，刷新/切页/重启回来都在）。`kind`: `switch` 换段 / `ended` 强制结束 / `broken` 上下文中断 / `error` 普通失败 / `warn` 告警。
+  - **段边界判定**（`localRun` 同步完成，立即回 200）：`retry = p.local.status==='failed' || !!p.local.account`；`force_new` 优先（一律新段）；否则 `!retry && p.how!=='continue'` 才算新段。**失败重试同一段、回原账号、不换号**；段首 `always` 失败重试仍要发 `always`（`open_anchor` 重建锚点）。
+  - **分配**：`pumpSeg()` 按 ticket 顺序分配；`segChoose` 硬排除 `enabled:false/offline/paused`，软闸门（`quota.blocked`/`waitingFor`）只降权不排除，主排序 `usage.last24h` 升序 + 平手按 id。新段 `avoid_account` 排除刚释放的旧账号（**只有一个可用账号时允许复用，防死锁**）。`need_account` 的段内卡被别的段占着就排队等，绝不换号。全部账号不可用 → 停下报错，不自动换号（D3）。
+  - **严格 FIFO**：run1 出现下一张 `always` 卡时释放旧账号，排队最久的 run3 先拿；run1 的新段去按均衡选另一个账号；另一个账号也被占则 run1 排队尾，不抢占、不回退。
+  - **释放时机**：段切换（下一张 `always` 卡被点）、run 终态（`segSweepTerminal` 在 `pumpSeg` 里懒扫描，不依赖前端通知）、`turnOff` / `cancelRun` / 强制结束段。仍 busy 时标 `release_pending`，job 结束再放。
+  - **强制结束段**：人工粘贴 `by:'paste'`、`useApi`、`turnOff` 都调 `segForceEnd()`（释放占用 + 清锚点 + `force_new=true` + notice）。**本地自动提交 `by:'local'` 属于段内延续，不结束段**。被打断后原本 `how:'continue'` 的卡只带最后一句 → 从 `waiters` 取完整 `messages` 用 `flatten()` 重发；`waiters` 空则**停下报错提示人工粘贴，绝不静默发半截**。
+  - **锚点校验**：段首 `always` 完成后的 `task.url` 存 `web.segment.chat_url`；之后每批发送前用 `GET /health` **顶层** `accounts[].url` 比对（`/queue` 的 `accounts[]` 没有 url），每条 `done` 后再比 `task.url`；不一致 → 中止链、落 `failed`、红字「上下文已中断」。拿不到 url 就不拦，避免误伤。
+  - **显式账号**：`localSend` 一定传 `account`，**绝不用 `auto`**（服务端按每条消息独立选号会拆断同一段）；返回里若 `tasks[0].account` 与段绑定不一致也停下。`localQueueState(cfg, account)` 必须按本链账号读 `accounts[]`（顶层 `stats`/`quota` 只代表默认账号）。
+  - **其它**：`markdownSource === 'copy'` 且是 JSON 类才用 `fullMarkdown`，否则降级 `fullReply` + 弯引号修复并写 `warn`；`blocked` 状态判失败；waiting 超 6 小时只橙色告警不自动重发（额度放行以提示消失为准，不设短超时）；不设自动超时/自动重发。
+  - **界面**：面板常驻横幅（中断/结束/告警）+ 「当前连续会话:账号 X」；`continue` 卡显示「连续会话 · 账号 · 段内第 N 条」；进度条显示账号与排队原因；`webRenderedKey` 含 `segment`/`notice`/`account`/`waiting_for`，否则 3 秒轮询不重绘。
+  - **弯引号解析补齐（2026-11-16）**：`checks.parseJsonLoose`（原样 parse → 含 `“` 才 `repairCurlyQuotes` → 数组类补回 `{` 之前的前缀）替换 `checkBlueprint` / `checkProgression` / `checkOptimized` 三处裸 `JSON.parse`；`checkOptimized` 与 `extractFinalScript` 的 Change Log 正则/`openArr` 也兼容 `“before”`。曾因只读 `reply` 摘要误判缺章、只读 `fullReply` 撞弯引号、蓝图又提示「格式不对」。
+  - 自测：`tools/_seg_selftest.js`（内存 fs + 模拟本地服务，55 项，不点火 LLM）。改动后必须 `node --check` 三处 + 跑它。
 - 代码与注释统一叫「本地模型」，不写「桥接」。合并上游时按本节逐条核对。
 
 ## 视频推送文案 == 纯净稿（2026-10-26，跨文件不变量，改清洗规则时两处必须同步）

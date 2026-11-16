@@ -6231,13 +6231,18 @@ function webChatName(name, r) {
   return name + (t ? ' · ' + (t.length > 14 ? t.slice(0, 14) + '…' : t) : '');
 }
 function webHow(p, r) {
+  const seg = (r && r.web && r.web.segment) || null;
+  const acc = (p.local && p.local.account) || (seg && seg.account) || '';
+  const segNo = p.local && p.local.seg_no ? '第 ' + p.local.seg_no + ' 条' : '';
+  const cont = p.kind !== 'script' && p.how === 'continue';
+  const segTag = (cont || (r && r.web && r.web.force_new)) ? `<div class="hint" style="margin:4px 0;color:#6d28d9">🔗 这一条属于连续会话${acc ? ' · 账号 <b>' + esc(acc) + '</b>' : ''}${segNo ? ' · 段内 ' + segNo : ''}${r && r.web && r.web.force_new ? ' · <b>上一次会话已结束,这一条会新开会话</b>' : ''}。点「本地模型调用」会沿用原账号;若走人工粘贴或 API,会话会结束并在页面上提示。</div>` : '';
   if (p.kind === 'script' || p.how !== 'continue') {
     const nm = webChatName(p.kind === 'script' ? '写稿' : p.chat_name || webTitle(p), r);
     const what = p.kind === 'script' ? '按顺序发下面几条(每条等它写完再发下一条),最后一条的回答粘到下面。' : '发下面这条,把回答粘到下面。';
-    return `<div class="web-how new"><span class="tag">① 新开一个对话</span><span>在 Claude 网页版点「新对话」,${what}<br>发完把这个对话改名为 <span class="web-chat">${esc(nm)}</span>,后面要接着发时按这个名字找。</span></div>`;
+    return segTag + `<div class="web-how new"><span class="tag">① 新开一个对话</span><span>在 Claude 网页版点「新对话」,${what}<br>发完把这个对话改名为 <span class="web-chat">${esc(nm)}</span>,后面要接着发时按这个名字找。</span></div>`;
   }
   const nm = webChatName(p.chat_name, r);
-  return `<div class="web-how cont"><span class="tag">② 不要开新对话</span><span>回到 <span class="web-chat">${esc(nm)}</span> 那个对话,接着发下面这一句(前面的不用再发),把回答粘到下面。</span></div>`;
+  return segTag + `<div class="web-how cont"><span class="tag">② 不要开新对话</span><span>回到 <span class="web-chat">${esc(nm)}</span> 那个对话,接着发下面这一句(前面的不用再发),把回答粘到下面。</span></div>`;
 }
 // 时长/时钟:本地调用可能跑几分钟,界面必须给「已等多久」,否则看起来像卡死
 function webDur(sec) { const s = Math.max(0, Math.round(Number(sec) || 0)); const m = Math.floor(s / 60); return m ? m + ' 分 ' + String(s % 60).padStart(2, '0') + ' 秒' : s + ' 秒'; }
@@ -6256,12 +6261,13 @@ function webLocalBar(p) {
   const wfHot = /额度|用尽|限制|quota|limit/i.test(wfText); // 额度闸门单独标橙,别混在普通进度里
   const wf = wfText ? ` · <span style="color:${wfHot ? '#b45309' : '#6d28d9'}">${esc(wfText)}</span>` : '';
   const eta = Number(L.wait_ms) > 0 ? ' · 约 ' + webClock(new Date(Date.now() + Number(L.wait_ms)).toISOString()) + ' 恢复' : '';
+  const acct = L.account ? ' · 账号 ' + esc(L.account) : '';
   if (L.status === 'queued') {
-    tip = `<span class="hint" style="color:#6d28d9">排队中:前面还有一条本地调用在跑${wf}${eta} · 已等 ${webElapsed(L)} · 可以离开此页,跑完自动提交</span>`;
+    tip = `<span class="hint" style="color:#6d28d9">排队中:等账号空闲(按点击顺序,前面还有任务)${acct}${wf}${eta} · 已等 ${webElapsed(L)} · 可以离开此页,跑完自动提交</span>`;
   } else if (L.status === 'running') {
     const what = L.phase === 'sending' ? '正在发送' : L.phase === 'queued' ? '在本地队列里排队' : L.phase === 'waiting' ? '已入队,等本地服务接收' : L.phase === 'running' ? '正在生成' : L.phase === 'sent' ? '已返回,准备下一条' : L.phase === 'submitting' ? '已全部返回,正在交给程序' : '处理中';
     const last = L.last_ms ? ' · 上一条 ' + webMs(L.last_ms) : '';
-    tip = `<span class="hint" style="color:#6d28d9">本地模型调用中:${what} 第 ${idx + 1}/${total} 条${wf}${eta} · 已等 ${webElapsed(L)}${last}${L.timed_out ? ' · 这条可能不完整' : ''} · 可以离开此页,跑完自动提交</span>`;
+    tip = `<span class="hint" style="color:#6d28d9">本地模型调用中:${what} 第 ${idx + 1}/${total} 条${acct}${wf}${eta} · 已等 ${webElapsed(L)}${last}${L.timed_out ? ' · 这条可能不完整' : ''} · 可以离开此页,跑完自动提交</span>`;
   } else if (L.status === 'failed') {
     const next = Number(L.next) || 0;
     tip = `<span class="hint" style="color:#b91c1c">本地模型没跑完:${esc(L.error || '')}${total > 1 ? '(再点从第 ' + (next + 1) + ' 条继续)' : ''}</span>`;
@@ -6298,7 +6304,9 @@ function renderWebPanel(r) {
   const pend = w.pending || [];
   const done = w.done || [];
   const lastDone = done.length ? done[done.length - 1] : null;
-  const key = JSON.stringify([w.on, pend.map(p => p.id + ':' + (p.waiting ? 1 : 0) + ':' + Object.keys(p.copied || {}).join('.') + ':' + ((p.local && [p.local.status, p.local.phase, p.local.index, p.local.error].join('|')) || '')), done.length, lastDone ? lastDone.at : '', r.status, w.chat_title]);
+  const noticeSig = w.segment_notice ? [w.segment_notice.kind, w.segment_notice.text, w.segment_notice.at].join('|') : '';
+  const segSig = w.segment ? [w.segment.account, w.segment.chat_url, w.segment.started_at].join('|') : '';
+  const key = JSON.stringify([w.on, pend.map(p => p.id + ':' + (p.waiting ? 1 : 0) + ':' + Object.keys(p.copied || {}).join('.') + ':' + ((p.local && [p.local.status, p.local.phase, p.local.index, p.local.error, p.local.account, p.local.seg_no, p.local.waiting_for].join('|')) || '')), done.length, lastDone ? lastDone.at : '', r.status, w.chat_title, noticeSig, segSig, w.force_new]);
   if (key === webRenderedKey && !el.classList.contains('hidden')) return;
   webRenderedKey = key;
   el.classList.remove('hidden');
@@ -6308,6 +6316,8 @@ function renderWebPanel(r) {
     ${w.on ? '<button class="an-btn" onclick="webOff()">后面全部改用 API</button>' : ''}</h2>
     <div class="hint">${w.on ? '写前分析、出蓝图、写稿、优化、二稿审稿报告这五步在你的 Claude 网页版做:复制消息发过去,把回答粘回来。中间的 AI 调整、原片对照表、功能表、审核,和后面的初稿检查、终审、中文对照都自动走 API,不用你点。' : (pend.some(p => p.check === 'edits') && !(done || []).length ? '这个任务没开网页版;只有下面这一条终审「修改」两次都没回修改,挂到这里等你处理,别的步骤照旧自动走 API。' : '已改回 API,后面的步骤自动跑。')}</div>
     ${recentLocal ? `<div style="margin:6px 0;padding:7px 10px;border-radius:6px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;font-size:12.5px">✓ 本地模型已返回并自动提交:${esc(recentLocal.label || '')} · ${Number(recentLocal.chars || 0).toLocaleString()} 字${recentLocal.elapsed_ms ? ' · ' + webMs(recentLocal.elapsed_ms) : ''}${recentLocal.timed_out ? ' · 可能不完整' : ''} · ${webClock(recentLocal.at)}</div>` : ''}
+    ${w.segment_notice ? `<div style="margin:6px 0;padding:8px 10px;border-radius:6px;font-size:12.5px;line-height:1.6;background:${['broken','error'].includes(w.segment_notice.kind) ? '#fef2f2' : w.segment_notice.kind === 'warn' ? '#fffbeb' : '#f5f3ff'};border:1px solid ${['broken','error'].includes(w.segment_notice.kind) ? '#fecaca' : w.segment_notice.kind === 'warn' ? '#fde68a' : '#ddd6fe'};color:${['broken','error'].includes(w.segment_notice.kind) ? '#991b1b' : w.segment_notice.kind === 'warn' ? '#92400e' : '#5b21b6'}">${w.segment_notice.kind === 'broken' ? '⚠ 上下文已中断' : w.segment_notice.kind === 'error' ? '⚠ 本地模型没跑完(已停下等你处理)' : w.segment_notice.kind === 'warn' ? '⚠ 注意' : w.segment_notice.kind === 'ended' ? '⛓ 连续会话已结束' : '🔗 会话段已切换'}:${esc(w.segment_notice.text || '')} <span class="hint">${webClock(w.segment_notice.at)}</span></div>` : ''}
+    ${w.segment && w.segment.account ? `<div class="hint" style="margin:2px 0 4px;color:#6d28d9">🔗 当前连续会话:账号 <b>${esc(w.segment.account)}</b>${w.segment.chat_url ? ' · 窗口 ' + esc(String(w.segment.chat_url).slice(-8)) : ' · 锚点待建立'}${w.segment.started_at ? ' · 起于 ' + webClock(w.segment.started_at) : ''}。段内不要新开对话、不要混用人工粘贴或 API,否则上下文会中断。</div>` : ''}
     ${done.length ? `<details style="margin:2px 0 4px"><summary class="hint" style="cursor:pointer">已完成 ${done.length} 条(点开看每条的来源和耗时)</summary>
       <div style="margin-top:4px;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden">${done.slice(-12).reverse().map(d => `<div style="display:flex;gap:8px;align-items:center;padding:4px 8px;font-size:12px;border-bottom:1px solid #f3f4f6"><span style="color:#9ca3af;width:32px">${esc(d.id || '')}</span><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(d.label || '')}</span><span style="color:${d.by === 'local' ? '#059669' : '#6b7280'};width:52px">${webByLabel(d.by)}</span><span style="color:#6b7280;width:72px;text-align:right">${Number(d.chars || 0).toLocaleString()} 字</span><span style="color:#6b7280;width:74px;text-align:right">${d.elapsed_ms ? webMs(d.elapsed_ms) : ''}</span><span style="color:#9ca3af;width:40px;text-align:right">${webClock(d.at)}</span></div>`).join('')}</div>
     </details>` : ''}`;

@@ -62,6 +62,22 @@ function extractJsonObject(text) {
 // 在直接解析失败后、花括号配平之前用:配平会退到里面的小对象,看起来解析成功,其实丢了整份(实测 run_1f67a92553fd「终审·出解决方案」连续 3 次 end_turn 仍判不是合法 JSON)。
 // 把 JSON 字符串边界的弯引号(“”)换成直引号:键名 “verdict”、值包裹 “best”;
 // 字符串内部的中文标点不动(正文多为直角引号「」,不在范围;值内偶尔的弯引号,后面不跟结构符号的也保留)
+// 网页版回复的 JSON 常把键名/值边界写成中文弯引号。先原样 parse,失败且含弯引号才修;
+// repairCurlyQuotes 从第一个 { 起输出,数组类文本要补回 { 之前的部分(如 Change Log 的 "[ ... ]")
+function parseJsonLoose(s) {
+  const raw = stripFence(String(s || '').trim());
+  try { return JSON.parse(raw); } catch (e) {}
+  if (raw.includes('“')) {
+    const fixed = repairCurlyQuotes(raw);
+    if (fixed) {
+      const pre = raw.slice(0, raw.indexOf('{'));
+      try { return JSON.parse(pre + fixed); } catch (e) {}
+      try { return JSON.parse(fixed); } catch (e) {} // 前面夹了说明文字时,只取对象本体
+    }
+  }
+  return null;
+}
+
 function repairCurlyQuotes(text) {
   const s = String(text || '');
   const start = s.indexOf('{');
@@ -232,7 +248,13 @@ function checkBlueprint(text, tools, videoGoal) {
     return result;
   }
   try {
-    const bp = JSON.parse(stripFence(text));
+    const bp = parseJsonLoose(text);
+    if (!bp || typeof bp !== 'object') {
+      // parseJsonLoose 返回 null 说明「原样 parse + 弯引号修复」都失败了。
+      // 再跑一次原生 parse 只为拿到带位置的错误信息,避免排查「格式不对」时只剩一句笼统文案。
+      try { JSON.parse(stripFence(text)); } catch (e0) { throw e0; }
+      throw new Error('不是 JSON 对象(可能含弯引号或格式损坏)');
+    }
     const last = (bp.chapters || [])[(bp.chapters || []).length - 1];
     const lastEnd = last && last.time_range ? require('./textnorm').normalizeTimeRange(String(last.time_range)).split(/[-–—~〜～∼至到]/).pop().trim() : null;
     const goal = goalSeconds(videoGoal);
@@ -255,7 +277,11 @@ const PROG_LABEL = { answers_prev: '接上一章哪个问题', new_lens: '新角
 function checkProgression(text, opt) {
   opt = opt || {};
   let chs;
-  try { chs = (JSON.parse(stripFence(text)) || {}).chapters || []; } catch (e) { return { ok: null, issues: [], detail: '蓝图 JSON 解析失败' }; }
+  try {
+    const bp = parseJsonLoose(text);
+    if (!bp || typeof bp !== 'object') return { ok: null, issues: [], detail: '蓝图 JSON 解析失败' };
+    chs = bp.chapters || [];
+  } catch (e) { return { ok: null, issues: [], detail: '蓝图 JSON 解析失败' }; }
   if (!Array.isArray(chs) || chs.length < 2) return { ok: null, issues: [], detail: '章节太少,不查' };
   const n = chs.length, idOf = (c, i) => String((c && c.id) || ('CH' + String(i + 1).padStart(2, '0')));
   const missing = [];
@@ -580,11 +606,12 @@ function checkOptimized(optText, origScript) {
   const meta = [/\[VERIFY/i, /\(unchanged\)/i, /note\s*[:：]/i, /all (the )?fixes are/i, /I need to flag/i].filter(p => p.test(optText)).map(p => p.source);
   const r = { metaHits: meta, preamble: null, changeLog: null, timeDrift: null, tail: null };
   r.preamble = stripLeadingPreamble(optText).dropped; // 终稿前的计划/自我说明(会被 extractFinalScript 丢弃,此处留痕)
-  const arrMatch = optText.match(/\[\s*\{[\s\S]*"before"[\s\S]*\}\s*\]/);
+  const arrMatch = optText.match(/\[\s*\{[\s\S]*["“]before["”][\s\S]*\}\s*\]/);
   if (!arrMatch) { r.changeLog = { found: false }; return r; }
   const heading = /change\s*log/i.test(optText.slice(0, arrMatch.index));
   try {
-    const log = JSON.parse(arrMatch[0]);
+    const log = parseJsonLoose(arrMatch[0]);
+    if (!Array.isArray(log)) throw new Error('Change Log 不是数组');
     const norm = s => (s || '').replace(/\s+/g, ' ').trim();
     const oN = norm(origScript);
     const fake = log.filter(e => e.before && !oN.includes(norm(e.before))).length;
@@ -624,10 +651,10 @@ function stripTrailingJunk(text) {
 // 最后剥离尾部残留(分隔线/围栏/反引号),再丢弃首个章节标签之前混入的计划/自我说明(保留标题行)
 function extractFinalScript(optText) {
   const headMatch = optText.match(/^\s*(?:#{1,6}\s*)?change\s*log\s*[*:：]*\s*$/im);
-  const arrMatch = optText.match(/\[\s*\{[\s\S]*"before"[\s\S]*\}\s*\]/);
+  const arrMatch = optText.match(/\[\s*\{[\s\S]*["“]before["”][\s\S]*\}\s*\]/);
   // Change Log 数组没写完(输出被截断,没有收尾的 ]),上面两个都匹配不到:按「独占一行的 [ + 下一行是 location/before 键」切。
   // 实测 run_a2f108398c13:Step 4 在 Change Log 中途断流,半截 JSON 和中文修改理由整段混进终稿,CH13 多出 700 多词
-  const openArr = optText.match(/^[ \t]*\[[ \t]*\r?\n\s*\{\s*"(?:location|before|after|reason)"/m);
+  const openArr = optText.match(/^[ \t]*\[[ \t]*\r?\n\s*\{\s*["“](?:location|before|after|reason)["”]/m);
   let cut = -1;
   if (headMatch) cut = headMatch.index;
   if (arrMatch && (cut === -1 || arrMatch.index < cut)) cut = arrMatch.index;
@@ -706,4 +733,4 @@ function hookGap(script, opts) {
   return { gap: Math.round(gap), at: Math.round(at) };
 }
 
-module.exports = { HOOK_RE, hookGap, checkProgression, normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, repairJsonQuotes, repairCurlyQuotes, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, DENSE_OPEN_SEC, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble, speechTidy, duplicateParagraphs, englishInKorean, titlePromiseGaps };
+module.exports = { HOOK_RE, hookGap, checkProgression, normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, repairJsonQuotes, parseJsonLoose, repairCurlyQuotes, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, DENSE_OPEN_SEC, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble, speechTidy, duplicateParagraphs, englishInKorean, titlePromiseGaps };
