@@ -3978,7 +3978,8 @@ function rvClaimPlainHtml(p, v, busy) {
   const issues = (c.issues || []).filter(x => !x.not_found);
   const rows = issues.filter(real).map(x => rvPlainRow({ key: 'C_' + x.id, pick: { source: 'claim', id: x.id, x }, ctx: ctxBtn(x.quote, x.chapter, '看原文', [x.problem, x.fix, (x.plain || {}).problem, (x.plain || {}).fix].filter(Boolean).join('\n')).trim(), tag: rvChName(x.chapter), pl: x.plain, fb: x.why_zh || x.problem, detail: `<ul style="margin:0 0 0 18px">${rvClaimLi(x, busy)}</ul>`, ign: `rvIgnoreItem('claim', '${escAttr(x.id)}', true)` }, busy));
   const rest = issues.filter(x => !real(x) && !x.ignored);
-  const vNo = c.verdict === '不成立' && !c.verdict_applied;
+  // v1.122 已经补了一条开头(L0)能出改法的问题:上面那句结论就不重复显示了
+  const vNo = c.verdict === '不成立' && !c.verdict_applied && !issues.some(x => x.verdict_item && real(x));
   const head = vNo ? rvPlainRow({ key: 'C_verdict', tag: '', pl: { problem: '开头的主张被稿子自己的数推翻了:' + (c.claim || ''), fix: c.fix_claim ? '开头改成:' + c.fix_claim : '点「查看详情」看怎么算的', level: '大', impact: '论点站不住,整片立不住' }, detail: `<div class="v13"><b>怎么算的</b>:${esc(c.calc || '')}</div>` }, busy) : '';
   const titleBox = c.fix_title ? `<div class="v13" style="margin:6px 0;padding:6px 8px;background:#fff;border:1px solid #fca5a5;border-radius:6px"><b>要你拿主意</b>:问题出在标题,全文都是另一种说法,改稿改不过来。建议把标题改成「<b>${esc(c.fix_title)}</b>」${c.fix_title_zh ? '(' + esc(c.fix_title_zh) + ')' : ''}。<button class="an-btn v13" onclick="rvClaimTitle()" ${busy ? 'disabled' : ''}>改用这个标题</button> 想保留原标题,就逐条「AI 出改法」。</div>` : '';
   const aiIds = issues.filter(x => x.ai_able && !(x.ai_fix && x.ai_fix.status === 'done') && !x.applied && !x.ignored).map(x => x.id);
@@ -3987,7 +3988,9 @@ function rvClaimPlainHtml(p, v, busy) {
     <div style="color:#374151;margin:4px 0"><b>怎么算的</b>:${esc(c.calc || '')}${c.fix_claim ? `<br><b>开头应该怎么说</b>:${esc(c.fix_claim)}` : ''}</div>
     ${aiIds.length >= 2 ? `<div style="margin:4px 0"><button class="an-btn apply" onclick="rvSuggestAll('claim', ${escAttr(JSON.stringify(aiIds))})" ${busy ? 'disabled' : ''}>全部出改法(${aiIds.length} 条)</button> 一次调用一起出,不改稿</div>` : ''}
     ${rest.length ? `<ul style="color:#374151">${rest.map(x => rvClaimLi(x, busy)).join('')}</ul>` : ''}</details>`;
-  return `<div id="rv-claim-card">${c.stale ? '<div class="hint">(稿子改过,这是改之前的核对结果)</div>' : ''}${titleBox}${head}${rows.join('')}${more}</div>`;
+  // v1.122 简洁版也给「重新核对」按钮(以前只在完整版里有;稿子改过以后最该点它)
+  const recheck = `<div class="rv-ops v13" style="margin:4px 0">${c.stale ? '<span class="hint" style="color:#b45309">稿子改过,这是改之前的核对结果,先点右边重新核对一次,过了就不用改。</span> ' : ''}<button class="an-btn" onclick="rvClaim(false)" ${busy ? 'disabled' : ''}>重新核对</button></div>`;
+  return `<div id="rv-claim-card">${recheck}${titleBox}${head}${rows.join('')}${more}</div>`;
 }
 // 「还差 N 项」的每一项 + 它下面对应的问题(复审问题按 item_groups 分到各项下面,服务端分好)
 function rvGroupsHtml(v, p, busy) {

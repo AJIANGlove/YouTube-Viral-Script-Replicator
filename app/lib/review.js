@@ -975,7 +975,9 @@ function loadRunAsset(runId) {
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
   const asset = store.getAsset(run.asset_id);
   if (!asset) throw Object.assign(new Error('资产不存在: ' + run.asset_id), { status: 400 });
-  if (recoverAuditIssues(run)) store.saveRun(run);
+  let dirty = recoverAuditIssues(run);
+  try { if (claimVerdictIssue(((run.review || {}).final || {}).claim_check, currentScript(run))) dirty = true; } catch (e) {}
+  if (dirty) store.saveRun(run);
   return { run, asset };
 }
 
@@ -3769,6 +3771,19 @@ function claimVerdictApplied(cc) {
   const fc = compactOf(cc.fix_claim);
   return arr(cc.issues).some(x => x.applied && (x.chapter === 'CH01' || (fc && compactOf(x.applied.new).length >= 4 && fc.includes(compactOf(x.applied.new)))));
 }
+// v1.122 只判「开头主张被推翻」、没有单独一条开头的问题时:补一条 CH01 的问题(L0),能勾选、能「AI 出改法」、能直接应用;应用了就算开头主张改好了
+// 以前这种情况页面上只有一句结论,没有任何按钮
+function claimVerdictIssue(cc, text) {
+  if (!cc || cc.verdict !== '不成立' || claimVerdictApplied(cc)) return false;
+  if (arr(cc.issues).some(x => x.chapter === 'CH01' && !x.not_found && !x.ignored)) return false;
+  if (arr(cc.issues).some(x => x.id === 'L0')) return false;
+  const cl = String(cc.claim || '').trim();
+  const quote = cl && text && locate(text, cl) ? cl : '';
+  cc.issues = [{ id: 'L0', chapter: 'CH01', level: '关键', quote, verdict_item: true,
+    problem: '开头的主张被稿子自己的数推翻了:' + cl + (cc.calc ? '。账是这样算的:' + String(cc.calc).slice(0, 600) : ''),
+    fix: (cc.fix_claim ? '只改开头(CH01)里说这个主张的那一两句,改成和稿子自己的账一致的说法:' + cc.fix_claim : '只改开头(CH01)里说这个主张的那一两句,改成和稿子自己的账一致') + '。正文的数字不动;不要删开头的钩子,只换说法' }].concat(arr(cc.issues));
+  return true;
+}
 function claimBlocking(cc) { return !!cc && ((cc.verdict === '不成立' && !claimVerdictApplied(cc)) || arr(cc.issues).some(x => x.level === '关键' && claimReal(x))); }
 
 // ---------- 直接应用(v1.64,用户 2026-11-02):改法里给了完整的替换句、原句在终稿里只出现一次时,程序直接换掉,不调 AI、不复审,可以撤回 ----------
@@ -4512,6 +4527,7 @@ async function runClaimCheck(runId) {
     fresh.review.final.claim_check = { at: new Date().toISOString(), hash: hash(text), claim: String(out.claim || ''), verdict, calc: String(out.calc || ''), fix_claim: String(out.fix_claim || ''),
       ...(verdict === '不成立' && fixTitle && fixTitle !== curTitle ? { fix_title: fixTitle, fix_title_zh: String(out.fix_title_zh || '').trim(), title_for: curTitle } : {}),
       issues, protect: arr(out.protect).map(String).filter(q => q.trim() && locate(text, q)), fixes: prevFixes };
+    claimVerdictIssue(fresh.review.final.claim_check, text); // v1.122
     markIgnored(fresh); // v1.98:之前单条忽略过的问题,新核对里一样的照样算忽略
     fresh.steps = { ...(fresh.steps || {}), claim_check: { status: 'done', finished_at: new Date().toISOString(), verdict, blocking: claimBlocking(fresh.review.final.claim_check) } };
     if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
@@ -5176,4 +5192,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { aiFixPlans, thesisItem, foldRevert, auditExtras, selectedFixes, parseAuditIssues, auditSections, auditLooksNonEmpty, recoverAuditIssues, infoCheckRun, startInfoCheck, infoReuseCheck, infoNormalize, infoBrief, INFO_GUARD, explainRun, stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE, restoreOpening, openingCompareView, draftScript };
+module.exports = { claimVerdictIssue, aiFixPlans, thesisItem, foldRevert, auditExtras, selectedFixes, parseAuditIssues, auditSections, auditLooksNonEmpty, recoverAuditIssues, infoCheckRun, startInfoCheck, infoReuseCheck, infoNormalize, infoBrief, INFO_GUARD, explainRun, stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE, restoreOpening, openingCompareView, draftScript };
