@@ -3528,7 +3528,10 @@ function rvOpenCompareHtml(v) {
   const evHtml = evs.length ? `<div style="margin-top:6px;font-size:13px"><b>改稿时开头被改坏、已自动退回的 ${evs.length} 次</b><ul>${evs.slice(-6).reverse().map(e => `<li>${esc(fmtTime(e.at))} ${esc(e.stage || '')}:${esc((e.reasons || []).join('、'))}${e.tried ? `<details><summary class="hint" style="cursor:pointer">它想改成的开头</summary><div class="hint" style="white-space:pre-wrap">${esc(e.tried)}</div></details>` : ''}</li>`).join('')}</ul></div>` : '';
   const pkHtml = pk ? `<div style="margin-top:6px;font-size:13px"><b>承诺要兑现</b>:开头承诺「${esc(pk.shape || '')}」 → ${pk.ok ? `<span style="color:#047857">正文里找到了揭晓(${esc(pk.hit.join('、'))})</span>` : `<span style="color:#b91c1c">正文里没找到揭晓的段落(找的关键词:${esc(pk.words.join('、'))})</span>`}</div>` : '';
   const busy = !!(v.running);
-  return `<details class="rv-md-box"${rvState.openCmpOpen || bad || evs.length ? ' open' : ''} ontoggle="rvState.openCmpOpen=this.open"><summary><b>开头对比</b>(原片前 45 秒节拍 / 初稿 / 现在):${sum}${evs.length ? ` <span class="rv-flag">自动退回过 ${evs.length} 次</span>` : ''}</summary>
+  // v1.123 开头被改坏/自动退回过时会自动展开;你手动折叠后存进任务(和「已退回」提醒条一样),刷新、重开都不再展开,有新的退回记录才再展开
+  const okey = 'opencmp:' + (evs.length ? (evs[evs.length - 1].at || evs.length) : '') + ':' + (bad ? 1 : 0);
+  const cmpOpen = (bad || evs.length) ? !rvRevertFolded(okey) : !!rvState.openCmpOpen;
+  return `<details class="rv-md-box rv-opencmp"${cmpOpen ? ' open' : ''} ontoggle="rvState.openCmpOpen=this.open;${(bad || evs.length) ? `rvRevertToggle('${escAttr(okey)}', this.open)` : ''}"><summary><b>开头对比</b>(原片前 45 秒节拍 / 初稿 / 现在):${sum}${evs.length ? ` <span class="rv-flag">自动退回过 ${evs.length} 次</span>` : ''}</summary>
     <div class="hint" style="margin:6px 0">这篇的开头是照原片前 45 秒一拍一拍写的,后面的改稿只能原位替换。按每拍的关键词对齐;黄底是换了说法,红底是这一拍没了或顺序变了。</div>
     <div class="rv-md"><div class="rv-md-table"><table><tr><th style="width:90px">拍</th><th>原片</th><th>初稿开头</th><th>现在的开头</th></tr>${rows}</table></div></div>
     ${pkHtml}${evHtml}
