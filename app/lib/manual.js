@@ -171,9 +171,11 @@ function relay0(runId, cfg, messages, label, opts) {
     web.pending.push(p);
     save(runId, web);
   }
-  return new Promise((resolve, reject) => {
+  const pr = new Promise((resolve, reject) => {
     waiters.set(wkey(runId, p.id), { resolve: c => resolve(result(c)), reject, cfg, messages, label, opts });
   });
+  autoKick(runId, p.id);
+  return pr;
 }
 
 // 写稿:按蓝图分几批,在同一个网页对话里按顺序发;最后让它输出纯净稿,人只粘一次
@@ -224,9 +226,11 @@ function relayWrite0(runId, basePrompt, chapters, briefOf) {
     web.pending.push(p);
     save(runId, web);
   }
-  return new Promise((resolve, reject) => {
+  const pr = new Promise((resolve, reject) => {
     waiters.set(wkey(runId, p.id), { resolve: c => resolve(result(c)), reject, write: true });
   });
+  autoKick(runId, p.id);
+  return pr;
 }
 
 // 粘回来的稿子:按标签切章,每个章号取第一次出现的那段;缺章就报出来
@@ -844,7 +848,7 @@ async function segJob(job, account) {
       status: 'failed', phase: 'failed', error: msg,
       next: Math.max(0, Math.min(idx, total - 1))
     });
-    segNotice(runId, /上下文已中断/.test(msg) ? 'broken' : 'error', msg);
+    segNotice(runId, /上下文已中断/.test(msg) ? 'broken' : 'error', msg + (autoWanted(webOf(w), p) ? AUTO_STOP_TIP : ''));
   } finally {
     if (slot) {
       slot.busy = false;
@@ -974,9 +978,70 @@ function segDropAll(runId) {
 }
 
 // 选论点时打开
-function turnOn(runOrId) {
+function turnOn(runOrId, opts) {
   const id = runOrId && typeof runOrId === 'object' ? runOrId.id : runOrId;
-  save(id, { on: true, at: now(), chats: [], pending: [], done: [], answers: {} });
+  save(id, { on: true, at: now(), chats: [], pending: [], done: [], answers: {}, ...(opts && opts.autoLocal ? { auto_local: true, auto_at: now() } : {}) });
+}
+
+// ---------- v1.124 自动本地模型调用 ----------
+// 选论点时点「选这个,自动本地模型调用」(或在接力页点「自动本地模型调用」打开):之后每出现一条「等你粘贴」,
+// 程序自己点「本地模型调用」,一直到二稿审稿报告出来(review.js 出完报告调 autoLocalDone)就不再自动。
+// 某条失败:停在那条不重试,等人点「本地模型调用」/ 人工粘贴 / 改用 API;那条处理好以后,后面新出来的条目照旧自动调用(开关一直开着)。
+// 终审「修改」(check:'edits')在二稿审稿之后、要人看,不自动。
+const AUTO_STOP_TIP = '。自动本地模型调用停在这一条:可以再点「本地模型调用」、人工粘贴,或点「这一条改用 API 跑」;这一条处理好后,后面的照旧自动调用';
+function autoWanted(web, p) {
+  if (!web || !p || !web.on || !web.auto_local || web.auto_local_done) return false;
+  if (p.check === 'edits') return false;
+  const l = String(p.label || '');
+  return p.kind === 'script' || (WEB_RE.test(l) && !API_RE.test(l));
+}
+// 新挂出来的这一条:自动走本地模型。已经跑过/失败过/停过的不碰(失败停下等人,不自动重试)
+function autoKick(runId, id) {
+  setImmediate(() => {
+    try {
+      const st = load(runId);
+      if (!st) return;
+      const web = webOf(st);
+      const p = web.pending.find(x => x.id === id);
+      if (!p || !autoWanted(web, p) || (p.local && p.local.status)) return;
+      if (!waiters.has(wkey(runId, id))) return;
+      autoStart(runId, id);
+    } catch (e) { console.log('自动本地模型调用异常(不影响任务): ' + (e && e.message)); }
+  });
+}
+function autoStart(runId, id) {
+  try { localRun(runId, id); return true; }
+  catch (e) {
+    const w = load(runId);
+    const p = w && arr(w.pending).find(x => x.id === id);
+    // localRun 在发出去之前就报错(比如本地服务没打开):记成 stopped,不记 failed(failed 会被当成「同一段重试」)
+    if (p && !(p.local && ['failed', 'running', 'queued'].includes(p.local.status))) localState(runId, id, { status: 'stopped', phase: 'stopped', error: e.message, waiting_for: '', wait_ms: 0 });
+    segNotice(runId, 'error', (e.message || String(e)) + AUTO_STOP_TIP);
+    return false;
+  }
+}
+// 接力页上的开关。打开时把正在等的条目(没在跑的)立刻交给本地模型
+function setAuto(runId, on) {
+  const web = must(runId);
+  if (on && !web.on) throw err('这个任务没开网页版,不能自动本地模型调用');
+  web.auto_local = !!on;
+  web.auto_at = now();
+  if (on) delete web.auto_local_done;
+  save(runId, web);
+  let started = 0;
+  if (on) web.pending.forEach(p => {
+    const s = (p.local || {}).status;
+    if (s === 'running' || s === 'queued' || !autoWanted(web, p) || !waiters.has(wkey(runId, p.id))) return;
+    if (autoStart(runId, p.id)) started++;
+  });
+  return { ok: true, auto_local: !!on, started };
+}
+// 二稿审稿报告出来了:到这里该人看报告、勾问题,不再自动
+function autoLocalDone(runId) {
+  const st = load(runId);
+  if (!st || !st.auto_local || st.auto_local_done) return;
+  st.auto_local_done = now();
+  save(runId, st);
 }
 // 选论点时没选网页版:清掉(重新选论点的任务以前开过的也作废)
 function clear(runOrId) {
@@ -994,10 +1059,12 @@ function view(runOrId) {
     segment: w.segment || null,           // 当前连续会话:账号 / 锚点窗口 / 起段时间
     segment_notice: w.segment_notice || null, // 常驻提示(换段/被粘贴或 API 结束/上下文中断/告警)
     force_new: !!w.force_new,             // 下一张卡一律按新段起头
+    auto_local: !!w.auto_local,           // v1.124 自动本地模型调用开着
+    auto_local_done: w.auto_local_done || null, // 二稿审稿报告已出,自动到此为止
     pending: arr(w.pending).filter(p => p.kind === 'script' || waiters.has(wkey(id, p.id)) || (WEB_RE.test(String(p.label || '')) && !API_RE.test(String(p.label || '')))) // v1.106 升级前挂着、现在改走 API 的步骤不再显示
       .map(({ prior, key, ...p }) => ({ ...p, waiting: waiters.has(wkey(id, p.id)) })),
     done: arr(w.done)
   };
 }
 
-module.exports = { WEB_RE, wants, relay, relayForce, forget, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, _waiters: waiters };
+module.exports = { WEB_RE, wants, relay, relayForce, forget, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, setAuto, autoLocalDone, _waiters: waiters };

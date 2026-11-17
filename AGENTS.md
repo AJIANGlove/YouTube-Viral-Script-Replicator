@@ -83,6 +83,8 @@
   - 自测：`tools/_seg_selftest.js`（内存 fs + 模拟本地服务，55 项，不点火 LLM）。改动后必须 `node --check` 三处 + 跑它。
 - 代码与注释统一叫「本地模型」，不写「桥接」。合并上游时按本节逐条核对。
 
+- **自动本地模型调用（v1.124）**：论点页「选这个,自动本地模型调用」(`thesis-choice` 带 `web:true, auto_local:true` → `turnOn(run,{autoLocal})`)，或接力页按钮(`POST /web {action:'auto', on}` → `manual.setAuto`，打开时立刻把正在等的条目交给本地)。`web.auto_local` 落盘；`relay0`/`relayWrite0` 挂出新卡后 `autoKick` 自动 `localRun`。**只碰没有 `p.local.status` 的卡**：失败(`failed`)或发送前就报错(记 `stopped`，不记 `failed`，免得被当成同段重试)都停在那条不自动重试；人点本地模型调用/粘贴/改用 API 处理好后，后面新卡照旧自动。`review.js` 二稿审稿报告存好后调 `autoLocalDone` 写 `web.auto_local_done`，之后不再自动；终审「修改」(`check:'edits'`)永远不自动。
+
 ## 视频推送文案 == 纯净稿（2026-10-26，跨文件不变量，改清洗规则时两处必须同步）
 
 「存草稿 / 自动生视频」推送的正文必须与「下载纯净稿」逐字节相同，否则同一版本文案在两处内容不同。

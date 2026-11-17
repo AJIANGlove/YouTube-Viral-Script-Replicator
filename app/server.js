@@ -721,6 +721,8 @@ const server = http.createServer(async (req, res) => {
         if (body.action === 'off') return send(res, 200, M.turnOff(webMatch[1]));
         // 本地模型:把这一条自动发出去,拿回回答直接当人粘的(逐条发,失败可再点续传)
         if (body.action === 'local') return send(res, 200, M.localRun(webMatch[1], String(body.id || '')));
+        // v1.124 自动本地模型调用开关(on: true/false)
+        if (body.action === 'auto') return send(res, 200, M.setAuto(webMatch[1], !!body.on));
         return send(res, 400, { error: '不认识的操作' });
       } catch (e) { return send(res, e.status || 500, { error: e.message }); }
     }

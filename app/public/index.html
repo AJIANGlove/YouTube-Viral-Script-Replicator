@@ -6274,7 +6274,7 @@ function webClock(at) { const d = at ? new Date(at) : null; return d && !isNaN(d
 function webElapsed(L) { const t = L && L.started_at ? new Date(L.started_at).getTime() : 0; return t && !isNaN(t) ? webDur((Date.now() - t) / 1000) : ''; }
 function webByLabel(by) { return by === 'local' ? '本地' : by === 'api' ? '改用API' : '人工'; }
 // 本地模型按钮与进度:调用中禁用其它提交入口,避免同一条被 API 和本地双点火
-function webLocalBar(p) {
+function webLocalBar(p, w) {
   const L = p.local || {};
   const busy = L.status === 'queued' || L.status === 'running';
   const total = Number(L.total) || (p.texts || []).length || 1;
@@ -6291,6 +6291,8 @@ function webLocalBar(p) {
     const what = L.phase === 'sending' ? '正在发送' : L.phase === 'queued' ? '在本地队列里排队' : L.phase === 'waiting' ? '已入队,等本地服务接收' : L.phase === 'running' ? '正在生成' : L.phase === 'sent' ? '已返回,准备下一条' : L.phase === 'submitting' ? '已全部返回,正在交给程序' : '处理中';
     const last = L.last_ms ? ' · 上一条 ' + webMs(L.last_ms) : '';
     tip = `<span class="hint" style="color:#6d28d9">本地模型调用中:${what} 第 ${idx + 1}/${total} 条${acct}${wf}${eta} · 已等 ${webElapsed(L)}${last}${L.timed_out ? ' · 这条可能不完整' : ''} · 可以离开此页,跑完自动提交</span>`;
+  } else if (L.status === 'stopped') {
+    tip = `<span class="hint" style="color:#b91c1c">自动本地模型调用停在这一条:${esc(L.error || '')}</span>`;
   } else if (L.status === 'failed') {
     const next = Number(L.next) || 0;
     tip = `<span class="hint" style="color:#b91c1c">本地模型没跑完:${esc(L.error || '')}${total > 1 ? '(再点从第 ' + (next + 1) + ' 条继续)' : ''}</span>`;
@@ -6298,6 +6300,9 @@ function webLocalBar(p) {
   return `<div style="margin-top:4px"><button class="primary" onclick="webAnswer('${escAttr(p.id)}',this)" ${busy ? 'disabled' : ''}>粘好了,交给程序</button>
     ${p.kind !== 'script' ? `<button class="an-btn" onclick="webApi('${escAttr(p.id)}',this)" ${busy ? 'disabled' : ''}>${p.check === 'edits' ? '再跑一次 API' : '这一条改用 API 跑'}</button>` : ''}
     <button class="an-btn" onclick="webLocal('${escAttr(p.id)}',this)" ${busy ? 'disabled' : ''}>本地模型调用</button>
+    ${w && w.on && p.check !== 'edits' ? (w.auto_local && !w.auto_local_done
+      ? `<button class="an-btn" style="border-color:#059669;color:#047857;background:#ecfdf5" onclick="webAuto(false,this)" title="开着:后面每条自动走本地模型调用,直到二稿审稿报告出来。点一下关掉">自动本地模型调用:开 ✓</button>`
+      : `<button class="an-btn" style="border-color:#7c3aed;color:#6d28d9" onclick="webAuto(true,this)" title="打开后:这一条和后面每条都自动走本地模型调用,直到二稿审稿报告出来;某条失败就停在那条等你处理">自动本地模型调用</button>`) : ''}
     ${tip}
     ${p.waiting || busy ? '' : '<span class="hint" style="color:#b45309">程序刚重启过:粘好后等任务接着跑到这一步就会用上</span>'}</div>`;
 }
@@ -6329,7 +6334,7 @@ function renderWebPanel(r) {
   const lastDone = done.length ? done[done.length - 1] : null;
   const noticeSig = w.segment_notice ? [w.segment_notice.kind, w.segment_notice.text, w.segment_notice.at].join('|') : '';
   const segSig = w.segment ? [w.segment.account, w.segment.chat_url, w.segment.started_at].join('|') : '';
-  const key = JSON.stringify([w.on, pend.map(p => p.id + ':' + (p.waiting ? 1 : 0) + ':' + Object.keys(p.copied || {}).join('.') + ':' + ((p.local && [p.local.status, p.local.phase, p.local.index, p.local.error, p.local.account, p.local.seg_no, p.local.waiting_for].join('|')) || '')), done.length, lastDone ? lastDone.at : '', r.status, w.chat_title, noticeSig, segSig, w.force_new]);
+  const key = JSON.stringify([w.on, pend.map(p => p.id + ':' + (p.waiting ? 1 : 0) + ':' + Object.keys(p.copied || {}).join('.') + ':' + ((p.local && [p.local.status, p.local.phase, p.local.index, p.local.error, p.local.account, p.local.seg_no, p.local.waiting_for].join('|')) || '')), done.length, lastDone ? lastDone.at : '', r.status, w.chat_title, noticeSig, segSig, w.force_new, w.auto_local, w.auto_local_done]);
   if (key === webRenderedKey && !el.classList.contains('hidden')) return;
   webRenderedKey = key;
   el.classList.remove('hidden');
@@ -6338,6 +6343,7 @@ function renderWebPanel(r) {
   let html = `<h2 style="color:#6d28d9;display:flex;justify-content:space-between;align-items:center"><span>网页版写稿${pend.length ? ':等你粘贴(' + pend.length + ' 条)' : ''}</span>
     ${w.on ? '<button class="an-btn" onclick="webOff()">后面全部改用 API</button>' : ''}</h2>
     <div class="hint">${w.on ? '写前分析、出蓝图、写稿、优化、二稿审稿报告这五步在你的 Claude 网页版做:复制消息发过去,把回答粘回来。中间的 AI 调整、原片对照表、功能表、审核,和后面的初稿检查、终审、中文对照都自动走 API,不用你点。' : (pend.some(p => p.check === 'edits') && !(done || []).length ? '这个任务没开网页版;只有下面这一条终审「修改」两次都没回修改,挂到这里等你处理,别的步骤照旧自动走 API。' : '已改回 API,后面的步骤自动跑。')}</div>
+    ${w.on && w.auto_local ? `<div style="margin:6px 0;padding:7px 10px;border-radius:6px;background:${w.auto_local_done ? '#f3f4f6' : '#ecfdf5'};border:1px solid ${w.auto_local_done ? '#e5e7eb' : '#a7f3d0'};color:${w.auto_local_done ? '#4b5563' : '#065f46'};font-size:12.5px">${w.auto_local_done ? '🤖 二稿审稿报告已出来,自动本地模型调用到此停下:去审稿页勾要改的问题。后面如果还有要粘贴的,需要你自己点。' : '🤖 自动本地模型调用:开。后面每条都自动交给本地模型,直到二稿审稿报告出来。某条失败会停在那条:你可以再点「本地模型调用」、人工粘贴,或改用 API;处理好后,后面的照旧自动。'}${w.auto_local_done ? '' : ' <button class="an-btn" style="font-size:12px;padding:1px 8px" onclick="webAuto(false,this)">关掉自动</button>'}</div>` : ''}
     ${recentLocal ? `<div style="margin:6px 0;padding:7px 10px;border-radius:6px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;font-size:12.5px">✓ 本地模型已返回并自动提交:${esc(recentLocal.label || '')} · ${Number(recentLocal.chars || 0).toLocaleString()} 字${recentLocal.elapsed_ms ? ' · ' + webMs(recentLocal.elapsed_ms) : ''}${recentLocal.timed_out ? ' · 可能不完整' : ''} · ${webClock(recentLocal.at)}</div>` : ''}
     ${w.segment_notice ? `<div style="margin:6px 0;padding:8px 10px;border-radius:6px;font-size:12.5px;line-height:1.6;background:${['broken','error'].includes(w.segment_notice.kind) ? '#fef2f2' : w.segment_notice.kind === 'warn' ? '#fffbeb' : '#f5f3ff'};border:1px solid ${['broken','error'].includes(w.segment_notice.kind) ? '#fecaca' : w.segment_notice.kind === 'warn' ? '#fde68a' : '#ddd6fe'};color:${['broken','error'].includes(w.segment_notice.kind) ? '#991b1b' : w.segment_notice.kind === 'warn' ? '#92400e' : '#5b21b6'}">${w.segment_notice.kind === 'broken' ? '⚠ 上下文已中断' : w.segment_notice.kind === 'error' ? '⚠ 本地模型没跑完(已停下等你处理)' : w.segment_notice.kind === 'warn' ? '⚠ 注意' : w.segment_notice.kind === 'ended' ? '⛓ 连续会话已结束' : '🔗 会话段已切换'}:${esc(w.segment_notice.text || '')} <span class="hint">${webClock(w.segment_notice.at)}</span></div>` : ''}
     ${w.segment && w.segment.account ? `<div class="hint" style="margin:2px 0 4px;color:#6d28d9">🔗 当前连续会话:账号 <b>${esc(w.segment.account)}</b>${w.segment.chat_url ? ' · 窗口 ' + esc(String(w.segment.chat_url).slice(-8)) : ' · 锚点待建立'}${w.segment.started_at ? ' · 起于 ' + webClock(w.segment.started_at) : ''}。段内不要新开对话、不要混用人工粘贴或 API,否则上下文会中断。</div>` : ''}
@@ -6365,7 +6371,7 @@ function renderWebPanel(r) {
       ${msgs}
       ${finTip}
       <textarea id="web-ans-${escAttr(p.id)}" rows="6" placeholder="${escAttr(ph)}" style="width:100%;box-sizing:border-box" oninput="webDrafts['${escAttr(p.id)}']=this.value">${esc(webDrafts[p.id] || '')}</textarea>
-      ${webLocalBar(p)}
+      ${webLocalBar(p, w)}
     </div>`;
   }).join('');
   el.innerHTML = html;
@@ -6423,6 +6429,15 @@ async function webApi(id, btn) {
 async function webLocal(id, btn) {
   if (btn) btn.disabled = true;
   try { await api('/api/runs/' + currentRunId + '/web', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'local', id }) }); }
+  catch (e) { alert(e.message); if (btn) btn.disabled = false; return; }
+  webRenderedKey = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 300);
+}
+// v1.124 自动本地模型调用开关
+async function webAuto(on, btn) {
+  if (!confirm(on ? '打开自动本地模型调用?\n\n正在等的这一条和后面每一条都自动发给本地模型,直到二稿审稿报告出来再停下给你勾问题。\n某条失败会停在那条,你处理好(再点本地模型调用 / 人工粘贴 / 改用 API)后,后面的照旧自动。' : '关掉自动本地模型调用?后面每条要你自己点。')) return;
+  if (btn) btn.disabled = true;
+  try { await api('/api/runs/' + currentRunId + '/web', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'auto', on: !!on }) }); }
   catch (e) { alert(e.message); if (btn) btn.disabled = false; return; }
   webRenderedKey = null;
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 300);
@@ -6528,6 +6543,7 @@ function renderThesisPanel(r) {
       ${thCardRows({ a, c, card, facts, cons })}
       <div class="rv-ops" style="margin-top:6px"><button class="an-btn v13" onclick="thChoose('pick','${escAttr(a.id)}',this)">选这个</button>
         <button class="an-btn" style="border-color:#7c3aed;color:#6d28d9" onclick="thChoose('pickweb','${escAttr(a.id)}',this)" title="写前分析、出蓝图、写稿、优化、二稿审稿报告改成复制到你自己的 Claude 网页版,把回答粘回来;AI 调整、功能表、审核和后面的初稿检查、终审照旧自动跑">选这个,后面在网页版写</button>
+        <button class="an-btn" style="border-color:#059669;color:#047857" onclick="thChoose('pickauto','${escAttr(a.id)}',this)" title="和「后面在网页版写」一样的几步,但每条自动走本地模型调用,不用你粘贴;二稿审稿报告出来后停下等你勾问题;中途失败停在那条">选这个,自动本地模型调用</button>
         <button class="an-btn" onclick="thEdit('${escAttr(a.id)}')">改一句再选</button></div>
       ${editing ? `<div style="margin-top:6px"><textarea id="th-edit-text" rows="2" style="width:100%;box-sizing:border-box">${esc(one)}</textarea>
         <div class="hint">改完会按你这句重新联网核对一次(1–3 分钟),核对完再停在这里给你看。</div>
@@ -6553,6 +6569,10 @@ async function thChoose(action, id, btn) {
   const body = { action, id };
   if (action === 'edit') { const t = (document.getElementById('th-edit-text') || {}).value || ''; if (!t.trim()) { alert('论点是空的'); return; } body.text = t.trim(); }
   if (action === 'novel') { body.action = 'regen'; body.novel = true; }
+  if (action === 'pickauto') { // v1.124 网页版 + 自动本地模型调用
+    if (!confirm('选这个论点,后面自动用本地模型调用写?\n\n写前分析、出蓝图、写稿、优化、二稿审稿报告这几步,程序自动发给本地模型、拿回回答自动提交,不用你复制粘贴。\n二稿审稿报告出来后停下,等你勾要改的问题。\n中途某条失败会停在那条:你可以再点「本地模型调用」、人工粘贴,或改用 API;处理好后,后面的照旧自动。')) return;
+    body.action = 'pick'; body.web = true; body.auto_local = true;
+  }
   if (action === 'pickweb') {
     if (!confirm('选这个论点,后面在你自己的 Claude 网页版写?\n\n写前分析、出蓝图、写稿、优化、二稿审稿报告这五步,程序会把拼好的消息给你复制,你发到 Claude 网页版,再把回答粘回来(一篇大约粘回 6 次)。\n中间的 AI 调整、原片对照表、功能表、审核,以及后面的初稿检查、终审,都自动走 API。\n中途可以随时点「后面全部改用 API」。')) return;
     body.action = 'pick'; body.web = true;

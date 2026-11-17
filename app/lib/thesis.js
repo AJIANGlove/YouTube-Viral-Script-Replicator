@@ -243,7 +243,7 @@ function holdChoice(runId, body) {
   if (action === 'pick') {
     choose(run, str(b.id));
     // v1.105 「选这个,后面在网页版写」:写前分析、蓝图、写稿改成(v1.106 起 AI 调整自动走 API)复制到自己的 Claude 网页版、粘回来;审稿照旧走 API
-    if (b.web) require('./manual').turnOn(run); else require('./manual').clear(run);
+    if (b.web) require('./manual').turnOn(run, { autoLocal: !!b.auto_local }); // v1.124 auto_local:之后每条自动走本地模型,直到二稿审稿报告出来 else require('./manual').clear(run);
     if (b.web) require('./manual').prepareTitle(run); // v1.111 对话名里的题目用中文:列表里还没有中文标题就先翻一次
     run.steps = { ...(run.steps || {}), thesis_pick: { status: 'done', at: now, choice: str(b.id) } };
   } else if (action === 'edit') {

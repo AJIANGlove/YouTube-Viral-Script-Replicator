@@ -2169,6 +2169,7 @@ async function runReverseAudit(runId) {
     fresh.steps = { ...(fresh.steps || {}), reverse_audit: { status: 'done', secs: Math.round(r.secs * 10) / 10, finished_at: new Date().toISOString(), issues: issues.length, score } };
     if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
+    try { require('./manual').autoLocalDone(runId); } catch (e) {} // v1.124 报告出来了:自动本地模型调用到此为止,等人勾问题
     return { ok: true, issues: issues.length, score };
   } catch (e) {
     const fresh = store.getRun(runId) || run;
