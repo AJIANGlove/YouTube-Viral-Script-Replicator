@@ -261,3 +261,10 @@
 - **与「怎么写」tab 的差异（勿改回）**：tab 把 `title_hook_contract.must_deliver` 放在「前 30 秒必须完成」里，但这批条目含结尾要落的账；README 改称「必须在成片里全部兑现（前 30 秒是主战场）」，不对外宣称只是前 30 秒。
 - **验证方法**：`node -e "const az=require('./app/lib/assetzip.js');require('fs').writeFileSync('x.zip',az.build('<id>').buffer)"` 后 `unzip -t x.zip`；或遍历 `assets/*/` 逐个 build，检查 README 不出现 `undefined` / `NaN` / `[object Object]`。既有弹窗冒烟 `node tools/.work/test_asset_detail.js` 仍应全绿。
 - **需要重启**：改了 `app/server.js` + 新增 `app/lib/assetzip.js`，必须重启进程；`index.html` 部分刷新即可。
+
+## POV 真人题与亲历感(v1.125,2026-11-19)
+
+起因:「궁녀에서 황귀비까지」(run_b9f643517854)用真人엄씨当「你」,记录断档 + 内心对白都标假设,稿子退成人生节点清单(「记录/资料/无法确认」每千字 7.5 处,其余 14 篇 POV ≤1.2;篇幅 5,742 字,同框架同日的재벌 3세 篇 11,974 字且有完整处境)。结论:是题目问题,不是赛道规则坏了,也不是 v1.121–1.124 的更新。
+
+- **真人题改无名视角(硬规则)**:`track_cards.md` 的 POV 卡——主角是有名有姓的真实人物时,「你」改成同时代、在这个人身边的无名人物,真人只当背景人物、只写有来源的事;无名主角的处境/心理/对话是虚构设定,按时代真实制度写,不逐句写「记录未载」;`title.final_title` 带上无名视角。写前分析和定论点都读这张卡。
+- **亲历感(只 POV)**:`analysis.js` 的 `POV_FOUR` 接在叙事方式规则后(仅 `pov_mode` 为 climb/per_level 时进摘要);`craft_rules.md` P5(待验证=建议);`step1.md`/`step1_function.md`/`step2.md` 的 POV 条;`reverse_audit.md` B 段 POV 条件检查;`final_tracks/pov.md` C2。硬要求只有「每一级至少有一个『你』的具体处境,不能只报节点」;失去/能决定/决定不了是建议,不每级凑齐(其余 POV 稿逐章统计这三样本来就时有时无,硬凑会每级一个套路,和 DEAI_FOCUS 冲突)。
