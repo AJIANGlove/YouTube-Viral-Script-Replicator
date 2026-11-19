@@ -709,6 +709,17 @@ const server = http.createServer(async (req, res) => {
       catch (e) { return send(res, e.status || 500, { error: e.message }); }
     }
 
+    // 只读诊断:会话段调度的内存态。项目监听 0.0.0.0 且没有鉴权,这里只允许本机访问,
+    // 不把账号 id / runId / 排队原因暴露到局域网;也不进前端页面,避免变成人工干预入口。
+    const dbgMatch = url.match(/^\/api\/local\/debug$/);
+    if (dbgMatch && method === 'GET') {
+      const ra = String((req.socket && req.socket.remoteAddress) || '');
+      if (!/^(127\.0\.0\.1|::1|::ffff:127\.0\.0\.1)$/.test(ra))
+        return send(res, 403, { error: '仅本机可访问' });
+      try { return send(res, 200, require('./lib/manual').localDebug()); }
+      catch (e) { return send(res, 500, { error: e.message }); }
+    }
+
     // v1.105 网页版接力:answer 粘回 Claude 的回答(id, text)/ api 这一条改用 API 跑(id)/ off 后面全部改用 API
     const webMatch = url.match(/^\/api\/runs\/([\w-]+)\/web$/);
     if (webMatch && method === 'POST') {
@@ -1570,8 +1581,13 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, HOST, () => {
   store.ensureDirs();
-  // 进程重启:上次没跑完的本地模型调用已经断了,把假 running 落成 failed(页面上可再点,不自动重投)
-  try { const n = require('./lib/manual').resetInterrupted(); if (n) console.log(`本地模型调用:重置 ${n} 条被中断的记录`); } catch (e) { console.log('本地模型调用重置失败(不影响运行): ' + e.message); }
+  // 进程重启:上次没跑完的本地模型调用转成挂起,把假 running/queued 恢复成可自动续的状态;同时挂 30s 自愈时钟
+  try {
+    const M = require('./lib/manual');
+    const n = M.resetInterrupted();
+    if (n) console.log(`本地模型调用:重置 ${n} 条被中断的记录`);
+    M.startLocalTick();
+  } catch (e) { console.log('本地模型调用重置失败(不影响运行): ' + e.message); }
   // 预热任务列表索引(不存在/已过期则在此重建一次),避免第一次打开列表页时要等全量解析
   try { store.queryRuns({ page: 1, pageSize: 50 }); } catch (e) { console.log('任务索引预热失败(不影响运行): ' + e.message); }
   const os = require('os');

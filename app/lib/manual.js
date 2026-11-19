@@ -34,6 +34,12 @@ const keyOf = messages => hash(messages.map(msgHash).join('|'));
 const arr = v => (Array.isArray(v) ? v : []);
 const now = () => new Date().toISOString();
 const err = (msg, status) => Object.assign(new Error(msg), { status: status || 400 });
+// 本地模型错误分层:让调度器按「性质」分流,不再事后用正则从错误文案里猜。
+// infra   = 连不上 / 服务重启 / 任务丢失这类瞬时基础设施故障(可自动续一次)
+// content = 模型没跑完、格式坏、弹窗拦截、配置错(停下等人,绝不自动重跑)
+// context = 会话窗口或锚点变了(只能人工粘贴或改用 API)
+const localErr = (lkind, msg, extra) => Object.assign(new Error(msg), { lkind: lkind || 'content', ...(extra || {}) });
+const localKind = e => (e && e.lkind) || 'content';
 
 function isOn(runOrId) { const id = runOrId && typeof runOrId === 'object' ? runOrId.id : runOrId; const st = id ? load(id) : null; return !!(st && st.on); }
 function wants(runId, label) {
@@ -350,10 +356,16 @@ function useApi(runId, id, opts) {
 // 失败/上下文中断一律停下报错、保留账号占用等人处理;重试同一段不换号。
 // 段绑定落盘 data/web/<任务>.json 的 web.segment,进程重启后据重试卡里的 account 重建占用锁。
 const VIRTUAL_ACCOUNT = '__default__';
-const segAccounts = new Map(); // accountId → { owner, busy, seg_at, release_pending, chain }
+const segAccounts = new Map(); // accountId → { owner, busy, seg_at, release_pending, chain, lock_id }
+let segLockSeq = 0; // 每次 segStart 发一个锁身份;segJob 的 finally 只释放自己那一把,避免误清新任务的 busy
 const segFifo = [];            // 等账号的 job,按 ticket 从小到大(点击顺序)
 let segTicket = 0, segPumping = false, segNeedsRerun = false, segKickPending = false;
 let segAccountsCache = { at: 0, list: [] };
+// 自愈参数:连接层故障最多自动重投 1 次;已入队的只回查服务侧状态,不重新点火
+const RETRY_DELAY_MS = 15000, QUEUED_STALE_MS = 120000, MAX_AUTO_RETRY = 1, MAX_REUSE_CHECKS = 20,
+      RUNNING_STALE_MS = 45 * 60 * 1000, HEAL_INTERVAL_MS = 10 * 60 * 1000;
+const localActive = new Set(); // 有待推进 local 状态的 runId,tick 只扫这些,不做全量扫盘
+let localTickTimer = null, localTicking = false;
 // 不再由我方加长文本全局锁:服务侧的全局剪贴板锁已覆盖 write+press 与 Copy 读回完整周期,
 // 我方锁的 POST+轮询区间与服务侧粘贴时刻不重叠,只会把「等生成」也串行,让多账号并行失效。
 const segVirtual = a => !a || a === VIRTUAL_ACCOUNT;
@@ -363,14 +375,26 @@ const RUN_END = new Set(['done', 'failed', 'cancelled']);
 async function segListAccounts(cfg) {
   if (Date.now() - segAccountsCache.at < 10000 && segAccountsCache.list.length) return segAccountsCache.list;
   const r = await localRequest(cfg, 'GET', '/queue', null);
-  if (r.status === 401) throw new Error('本地模型服务要访问令牌,检查 config.json 的 local_service.token');
-  let list = arr((r.json || {}).accounts).map(a => ({
+  if (r.status === 401) throw localErr('content', '本地模型服务要访问令牌,检查 config.json 的 local_service.token');
+  // 关键:网络失败 / 非 200 / 空响应一律抛 infra,绝不就地降级成虚拟账号再写盘。
+  // 旧实现在 catch 里造一个 __default__ 落盘,服务恢复后反而被「绑定的账号不可用」挡死。
+  if (r.status !== 200 || !r.json || typeof r.json !== 'object')
+    throw localErr('infra', '本地模型服务的账号列表暂时取不到(HTTP ' + r.status + ')', { phase: 'list' });
+  let list = arr(r.json.accounts).map(a => ({
     id: String(a.id || ''), enabled: a.enabled !== false, offline: !!a.offline, paused: !!a.paused,
     blocked: !!(a.quota && a.quota.blocked), waitingFor: String((a.stats && a.stats.waitingFor) || ''),
-    usage24h: Number((a.usage && a.usage.last24h) || 0) || 0
+    usage24h: Number((a.usage && a.usage.last24h) || 0) || 0,
+    // 以下只用于「排队原因」展示与只读诊断,绝不参与 ok 过滤或 segSort 排序。
+    // connected / workerStarted 尤其只是解释信息:按决策不作为账号可用性判据。
+    waitMs: Number((a.stats && a.stats.waitMs) || 0) || 0,
+    quotaBanner: String((a.quota && a.quota.banner) || ''),
+    resetsAtMs: Number((a.quota && a.quota.resetsAtMs) || 0) || 0,
+    quietText: String((a.stats && a.stats.quietBeijing && a.stats.quietBeijing.text) || ''),
+    plan: String(a.plan || ''), tz: String(a.tz || ''),
+    connected: a.connected !== false, workerStarted: a.workerStarted !== false
   })).filter(a => a.id);
-  // 老服务没有 accounts 字段:退回单账号虚拟槽,行为等价于原来的全局串行
-  if (!list.length) list = [{ id: VIRTUAL_ACCOUNT, enabled: true, offline: false, paused: false, blocked: false, waitingFor: '', usage24h: 0 }];
+  // 只有「服务明确回了 200 且确实没有 accounts 字段」才算老服务:虚拟槽只在运行时用,不落盘
+  if (!list.length) list = [{ id: VIRTUAL_ACCOUNT, enabled: true, offline: false, paused: false, blocked: false, waitingFor: '', usage24h: 0, waitMs: 0, quotaBanner: '', resetsAtMs: 0, quietText: '', plan: '', tz: '', connected: true, workerStarted: true }];
   segAccountsCache = { at: Date.now(), list };
   return list;
 }
@@ -418,6 +442,12 @@ function segReleaseAccounts(runId) {
 }
 function segClearSegment(runId) { const w = load(runId); if (w) { delete w.segment; save(runId, w); } }
 function segBind(runId, account) {
+  // 虚拟账号只是「老服务无 accounts 字段」的运行时占位,不能写成持久段绑定
+  if (segVirtual(account)) {
+    const w0 = load(runId);
+    if (w0 && w0.segment && segVirtual(w0.segment.account)) { delete w0.segment; save(runId, w0); }
+    return;
+  }
   const w = load(runId); if (!w) return;
   w.segment = { account, chat_url: '', started_at: now() };
   save(runId, w);
@@ -471,7 +501,17 @@ function segSweepTerminal() {
 function segKick() {
   if (segKickPending) return;
   segKickPending = true;
-  setImmediate(() => { segKickPending = false; pumpSeg().catch(e => console.log('本地模型调度异常(不影响其它任务): ' + (e && e.message))); });
+  setImmediate(() => {
+    segKickPending = false;
+    pumpSeg().catch(e => {
+      console.log('本地模型调度异常(不影响其它任务): ' + (e && e.message));
+      // 异常不能让 fifo 里的 job 永久静止:即使时钟没起来,也安排一次延迟重入
+      if (segFifo.length) {
+        const t = setTimeout(() => segKick(), 30000);
+        if (t && t.unref) t.unref();
+      }
+    });
+  });
 }
 // 按点击顺序分配:队首能分就先分;队首拿不到账号时允许后面的 job 用其它账号,避免互相卡死
 async function pumpSeg() {
@@ -483,7 +523,11 @@ async function pumpSeg() {
       let list;
       const cfg = localConfig();
       try { list = await segListAccounts(cfg); }
-      catch (e) { list = [{ id: VIRTUAL_ACCOUNT, enabled: true, offline: false, paused: false, blocked: false, waitingFor: '', usage24h: 0 }]; }
+      catch (e) {
+        // 账号列表拿不到:不降级、不 segStart、不写盘,job 原样留在 fifo。
+        // 由 30s 的 localTick 重新 kick,服务恢复后自然接着跑;不在这里忙循环重试。
+        break;
+      }
       segFifo.sort((a, b) => a.ticket - b.ticket);
       let moved = false;
       for (let i = 0; i < segFifo.length; i++) {
@@ -511,11 +555,13 @@ function segStart(job, account) {
   let s = segAccounts.get(account);
   if (!s) { s = { chain: Promise.resolve(), owner: '', busy: false }; segAccounts.set(account, s); }
   s.owner = job.runId; s.busy = true; s.seg_at = now(); s.release_pending = false;
+  s.lock_id = ++segLockSeq;
   if (job.new_seg) segBind(job.runId, account);
   // 成功拿到账号并开跑:之前的中断/失败/告警已经过去,清掉常驻横幅(switch/ended 保留作本次提示)
   const nw = load(job.runId);
   if (nw && nw.segment_notice && ['broken', 'error', 'warn'].includes(nw.segment_notice.kind)) { delete nw.segment_notice; save(job.runId, nw); }
-  localState(job.runId, job.id, { account, status: 'queued', phase: 'queued', waiting_for: '', wait_ms: 0 });
+  localState(job.runId, job.id, { account, status: 'queued', phase: 'queued', waiting_for: '', wait_ms: 0,
+    block_reason: '', wait_hint: '' });
   // 排队/开跑前就按本链账号把「为什么还没开始」带回来(顶层 stats 只代表默认账号)
   localQueueState(localConfig(), account).then(q => {
     if (!q.paused && !q.waitingFor && !q.quotaBlocked) return;
@@ -568,10 +614,10 @@ function localRequest(cfg, method, p, payload) {
         try { json = JSON.parse(text); } catch (e) {}
         resolve({ status: res.statusCode, text, json });
       });
-      res.on('error', reject);
+      res.on('error', e => reject(e && e.lkind ? e : localErr('infra', '本地模型服务响应中断: ' + (e && e.message), { phase: 'connect' })));
     });
-    req.on('error', e => reject(new Error('连不上本地模型服务(' + cfg.url + '): ' + e.message)));
-    req.setTimeout(60000, () => req.destroy(new Error('本地模型服务 60 秒没有响应')));
+    req.on('error', e => reject(e && e.lkind ? e : localErr('infra', '连不上本地模型服务(' + cfg.url + '): ' + (e && e.message), { phase: 'connect' })));
+    req.setTimeout(60000, () => req.destroy(localErr('infra', '本地模型服务 60 秒没有响应', { phase: 'connect' })));
     if (body) req.write(body);
     req.end();
   });
@@ -582,13 +628,16 @@ async function localSend(cfg, text, chatPolicy, account) {
   const body = { message: text, chatPolicy, source: 'viral-script' };
   if (!segVirtual(account)) body.account = account;
   const r = await localRequest(cfg, 'POST', '/queue', body);
-  if (r.status === 401) throw new Error('本地模型服务要访问令牌,检查 config.json 的 local_service.token');
+  if (r.status === 401) throw localErr('content', '本地模型服务要访问令牌,检查 config.json 的 local_service.token', { phase: 'connect' });
   const j = r.json || {};
   const t = Array.isArray(j.tasks) ? j.tasks[0] : null;
-  if (!j.ok || !t || !t.id) throw new Error('本地模型服务没有接单: ' + (j.error || ('HTTP ' + r.status)));
-  const mismatch = !segVirtual(account) && t.account && String(t.account) !== String(account)
-    ? String(t.account) : '';
-  return { id: String(t.id), seq: t.seq == null ? null : t.seq, account: account, mismatch };
+  if (!j.ok || !t || !t.id)
+    throw localErr(r.status >= 500 || r.status === 0 ? 'infra' : 'content',
+      '本地模型服务没有接单: ' + (j.error || ('HTTP ' + r.status)), { phase: 'connect' });
+  // 服务侧字段叫 accountId(旧版可能叫 account):以前只读 account,mismatch 检测一直失效
+  const got = t.accountId != null ? String(t.accountId) : (t.account != null ? String(t.account) : '');
+  const mismatch = !segVirtual(account) && got && got !== String(account) ? got : '';
+  return { id: String(t.id), seq: t.seq == null ? null : t.seq, account: account, account_actual: got, mismatch };
 }
 
 // 队列概况:顶层 stats/quota 只代表默认账号,必须按本链账号读 accounts[] 里的那一份
@@ -618,19 +667,73 @@ async function localCurrentUrl(cfg, account) {
   return a ? String(a.url || '') : '';
 }
 
+// 从服务侧任务对象里挑可用的完整回复(列表的 reply 只是 300 字摘要)
+function localReplyOf(t, taskId) {
+  const src = String(t.markdownSource || '');
+  const md = typeof t.fullMarkdown === 'string' ? t.fullMarkdown.trim() : '';
+  const full = typeof t.fullReply === 'string' && t.fullReply.trim() ? t.fullReply : '';
+  const jsonLike = /^\{/.test(md) || /^\{/.test(full);
+  const clean = src === 'copy' && md && /^\{/.test(md);
+  const pick = clean ? md : full;
+  const reply = String(pick || t.reply || '').trim();
+  if (!reply) throw localErr('content', '本地模型返回了空回复', { phase: 'wait', taskId });
+  return {
+    reply, timedOut: !!t.timedOut, elapsedMs: Number(t.elapsedMs) || 0,
+    url: String(t.url || ''), markdownSource: src,
+    degraded: !!(jsonLike && !clean) // JSON 类没拿到干净的 Copy 源码就标橙(含 markdownSource 缺失/legacy)
+  };
+}
+
+// 服务侧任务终态判定:唯一真相源,localWait 与自愈时钟共用,避免两处口径分叉。
+// 返回 null = 还没结束(继续等);返回 { kind, msg, interrupted } = 已终态,按 lkind 停下。
+// 服务侧状态是开放集合(先后新增过 blocked / send_failed 等),不能用封闭白名单:
+// 任何「带 finishedAt 却不是 done 的未知状态」一律当终态收敛,绝不再默认继续等,
+// 否则新增一个状态就让我方 for(;;) 永久死等、占死账号(2026-11-19 send_failed 事故)。
+// 活跃态白名单即便哪天也带上 finishedAt 也不误杀,静默时段 / 额度闸门的长等不受影响。
+const LOCAL_ACTIVE_ST = new Set(['', 'queued', 'waiting', 'running', 'sending', 'long_wait']);
+function localTerminal(t) {
+  if (!t) return null;
+  const st = String(t.status || '');
+  const reason = t.reason ? String(t.reason) : '';
+  const err = t.error ? String(t.error) : '';
+  const tail = reason ? '(' + reason + ')' : '';
+  switch (st) {
+    case 'timeout': return { kind: 'content', msg: '本地模型等待超时(30 分钟没有新进展),这一条的内容不完整,没有提交' + tail };
+    case 'interrupted': return { kind: 'infra', msg: '本地服务重启,这条任务被中断了' + tail, interrupted: true };
+    case 'cancelled': return { kind: 'content', msg: '这条任务已经在本地服务里被删除了,再点一次会重新发' };
+    case 'blocked': return { kind: 'content', msg: '上下文已中断:本地服务被页面弹窗拦截了,需要在那台机器上人工处理后重试' + tail };
+    case 'failed': return { kind: 'content', msg: '本地模型处理失败: ' + (err || reason || '没有说明原因') };
+    case 'legacy': return { kind: 'infra', msg: '本地服务把这条标成了历史记录,不会再处理,再点一次会重新发' };
+    // 「发送未确认」:服务侧把消息粘进了输入框但没成功发出,内容可能已部分落地。
+    // 必须停下等人,绝不自动重发(重复点火),让用户先到那台机器上确认会话里有没有重复内容。
+    case 'send_failed': return { kind: 'content', msg: '本地服务发送未确认(内容可能已粘进输入框但没成功发出):' + (err || reason || '没有说明原因') + '。已停下等人:请先到那台机器上确认会话里有没有重复内容,再点「本地模型调用」重试;程序不会自动重发' };
+    case 'done': return null;
+    default: break;
+  }
+  if (LOCAL_ACTIVE_ST.has(st)) return null;
+  if (t.finishedAt) return { kind: 'content', msg: '本地服务返回了程序还没单独适配的终态 ' + st + ':' + (err || reason || '没有说明原因') + '。已停下等人,不会自动重发;请确认后点「本地模型调用」重试' };
+  return null;
+}
+
 // 单任务查这一条,不再拉全量队列(队列会越积越多);新版接口 /tasks/:id 同时接受 id 和 seq
 async function localWait(cfg, taskId, onPhase, alive) {
   let missing = 0;
   let lastPhase = '', longWarned = false;
   const startedAt = Date.now();
+  const L = (kind, msg, extra) => localErr(kind, msg, { ...(extra || {}), taskId, phase: 'wait' });
   for (;;) {
-    // 这一条已经被手动粘好 / 改用 API / 取消:不用再等,立刻把串行位让出来
-    if (alive && !alive()) throw new Error('这一条已经不在等粘贴了');
-    const r = await localRequest(cfg, 'GET', '/tasks/' + encodeURIComponent(taskId), null);
-    if (r.status === 401) throw new Error('本地模型服务要访问令牌,检查 config.json 的 local_service.token');
+    // 这一条已经被手动粘好 / 改用 API / 取消 / 被自愈时钟收敛:不用再等,立刻把串行位让出来。
+    // 打 halted 标记:catch 里不再覆盖盘上状态(那一状态由接管方负责写),finally 仍释放账号。
+    if (alive && !alive()) throw L('content', '这一条已经不在等粘贴了', { halted: true });
+    // 已经入队后才断连:这里必须把错误重新标成「wait + 带 taskId」,
+    // 否则会继承 localRequest 的 connect 标记,被当成「还没入队」而自动重投,造成双份点火
+    let r;
+    try { r = await localRequest(cfg, 'GET', '/tasks/' + encodeURIComponent(taskId), null); }
+    catch (e) { throw L(localKind(e), e.message || String(e)); }
+    if (r.status === 401) throw L('content', '本地模型服务要访问令牌,检查 config.json 的 local_service.token');
     const t = (r.json && r.json.task) || null;
     if (!t) {
-      if (++missing >= cfg.max_missing_polls) throw new Error('本地模型里找不到这条任务了(可能被清理,或那边重启过)');
+      if (++missing >= cfg.max_missing_polls) throw L('infra', '本地模型里找不到这条任务了(可能被清理,或那边重启过)');
     } else {
       missing = 0;
       const st = String(t.status || '');
@@ -640,30 +743,14 @@ async function localWait(cfg, taskId, onPhase, alive) {
       // 到点不自动放行,只看提示是否消失:不设短超时,超过 6 小时只告警一次,不自动失败/重发
       if (!longWarned && (st === 'waiting' || st === 'queued') && Date.now() - startedAt > 6 * 3600 * 1000 && onPhase) { longWarned = true; onPhase('long_wait', t); }
       if (st === 'done') {
-        if (t.hasFullBody === false) throw new Error('本地服务没有取到完整正文(只有摘要),这一条不能当答案,请重试');
-        // reply 是列表摘要,fullReply 是复制纯文本(可能带弯引号),fullMarkdown 是复制 Markdown(直引号)
-        // 只有 markdownSource === 'copy' 且是 JSON 类(以 { 开头)才用 Markdown 那份;否则降级 fullReply + 弯引号修复
-        const src = String(t.markdownSource || '');
-        const md = typeof t.fullMarkdown === 'string' ? t.fullMarkdown.trim() : '';
-        const full = typeof t.fullReply === 'string' && t.fullReply.trim() ? t.fullReply : '';
-        const jsonLike = /^\{/.test(md) || /^\{/.test(full);
-        const clean = src === 'copy' && md && /^\{/.test(md);
-        const pick = clean ? md : full;
-        const reply = String(pick || t.reply || '').trim();
-        if (!reply) throw new Error('本地模型返回了空回复');
-        return {
-          reply, timedOut: !!t.timedOut, elapsedMs: Number(t.elapsedMs) || 0,
-          url: String(t.url || ''), markdownSource: src,
-          degraded: !!(jsonLike && !clean) // JSON 类没拿到干净的 Copy 源码就标橙(含 markdownSource 缺失/legacy)
-        };
+        if (t.hasFullBody === false) throw L('content', '本地服务没有取到完整正文(只有摘要),这一条不能当答案,请重试');
+        return localReplyOf(t, taskId);
       }
-      // 以下都是「不会再有完整结果」的状态,一律判失败,不把半截内容当答案
-      if (st === 'timeout') throw new Error('本地模型等待超时(30 分钟没有新进展),这一条的内容不完整,没有提交' + (t.reason ? '(' + t.reason + ')' : ''));
-      if (st === 'interrupted') throw new Error('本地服务重启,这条任务被中断了' + (t.reason ? '(' + t.reason + ')' : '') + ',再点一次会重新发');
-      if (st === 'cancelled') throw new Error('这条任务已经在本地服务里被删除了,再点一次会重新发');
-      if (st === 'blocked') throw new Error('上下文已中断:本地服务被页面弹窗拦截了,需要在那台机器上人工处理后重试' + (t.reason ? '(' + t.reason + ')' : ''));
-      if (st === 'failed') throw new Error('本地模型处理失败: ' + (t.error || t.reason || '没有说明原因'));
-      if (st === 'legacy') throw new Error('本地服务把这条标成了历史记录,不会再处理,再点一次会重新发');
+      // 终态判定收敛到 localTerminal:与自愈时钟共用同一份口径,服务侧状态是开放集合,
+      // 不能再逐个枚举;未知但已结束(带 finishedAt)的状态也一律停下,绝不无限等。
+      // 全部按 content/infra 停下等人,绝不自动重发(避免重复点火);done 已在上面单独处理。
+      const term = localTerminal(t);
+      if (term) throw L(term.kind, term.msg, term.interrupted ? { interrupted: true } : undefined);
     }
     await new Promise(x => setTimeout(x, cfg.poll_ms));
   }
@@ -687,7 +774,20 @@ function localRun(runId, id) {
   const texts = arr(p.texts);
   if (!texts.length) throw err('这一条没有可发送的内容');
   const st = p.local || {};
-  if (st.status === 'running' || st.status === 'queued') throw err('这一条正在等本地模型返回,不用重复点', 409);
+  localActive.add(runId);
+  // 故障期降级写进盘的虚拟账号段绑定:不可信,清掉按新段重新选号。
+  // 这些段的 chat_url 从来没建立过(段首 always 没发成功),清掉不丢任何上下文。
+  if (web.segment && segVirtual(web.segment.account)) { delete web.segment; save(runId, web); }
+  if (st.status === 'retry_wait') segDrop(runId, id); // 从挂起重投:先清掉可能残留的 fifo job
+  if (st.status === 'running' || st.status === 'queued') {
+    // queued 僵死(不在 fifo、没有链在跑、且超时)允许再点,解掉旧的死锁;否则照旧 409
+    const stale = st.status === 'queued'
+      && Date.now() - new Date(st.at || 0).getTime() > QUEUED_STALE_MS
+      && !segFifo.some(j => j.runId === runId && j.id === id)
+      && !Array.from(segAccounts.values()).some(s => s.owner === runId && s.busy);
+    if (!stale) throw err('这一条正在等本地模型返回,不用重复点', 409);
+    segDrop(runId, id); // 放行,后面 localState 会重新写成 queued 并重新入 fifo
+  }
   const cfg = localConfig();
   if (!cfg.enabled) throw err('本地模型调用没有打开(config.json 的 local_service.enabled)');
   if (!cfg.url) throw err('没有配置本地模型服务地址(config.json 的 local_service.url)');
@@ -696,7 +796,7 @@ function localRun(runId, id) {
   const from = Number.isInteger(st.next) && st.next > 0 && st.next < total ? st.next : 0;
   // 段边界:重跑(failed/已有 account)一律同一段不换号;只有从没跑过、且这张卡要新开会话才算新段。
   // run 级 force_new 是「上一张卡走了粘贴/API」留下的强制标记,覆盖 p.how。
-  const retry = st.status === 'failed' || !!st.account;
+  const retry = st.status === 'failed' || (!!st.account && !segVirtual(st.account));
   const forceNew = !!web.force_new;
   // force_new 是「上一张卡被粘贴/API 打断」的一次性标记,当前卡一律按新段起头(优先于失败重试)
   // 没有它时:失败重试算同一段、回原账号;从没跑过且要新开会话才算新段
@@ -711,13 +811,14 @@ function localRun(runId, id) {
       throw err(msg);
     }
   }
-  const bound = (web.segment && web.segment.account) || st.account || '';
+  const segAcc = web.segment && web.segment.account;
+  const bound = (!segVirtual(segAcc) && segAcc) || (!segVirtual(st.account) && st.account) || '';
   // 段首 always 失败后重试:仍是同一段、同一账号、不换号,但第 1 条必须重新发 always(新段锚点还没建起来)
   // force_new 打断过的 continue 卡也一样:要新建会话 + 重建锚点
   const openAnchor = newSeg || needFull || (retry && from === 0 && bound && !(web.segment && web.segment.chat_url));
   let need = '';
   if (!newSeg) {
-    need = st.account || (web.segment && web.segment.account) || '';
+    need = (!segVirtual(st.account) && st.account) || (!segVirtual(segAcc) && segAcc) || '';
     if (!need) {
       const msg = '上下文已中断:这一条要接着上一个会话发,但没有记录它绑定的账号。请人工粘贴,或点「这一条改用 API 跑」';
       segFail(runId, id, msg, 'broken');
@@ -731,7 +832,10 @@ function localRun(runId, id) {
     status: 'queued', phase: 'queued', index: from, total, error: '', timed_out: false,
     started_at: st.status === 'failed' ? now() : (st.started_at || now()), next: from,
     waiting_for: '', wait_ms: 0, ticket, account: newSeg ? '' : need, new_seg: newSeg,
-    need_full: !!needFull, avoid_account: newSeg ? bound : ''
+    need_full: !!needFull, avoid_account: newSeg ? bound : '',
+    // 从挂起自动重投:计数 +1(到 1 就不再自动投);手动点 / 全新 / 僵死重置:清零
+    auto_retried: st.status === 'retry_wait' ? Number(st.auto_retried || 0) + 1 : 0,
+    lkind: '', lphase: '', retry_checks: 0, next_at: ''
   });
   if (newSeg) {
     // 段切换:释放旧账号(严格按点击顺序,排队最久的先拿),清锚点。账号在段内 API 步骤期间一直独占。
@@ -758,7 +862,7 @@ async function segCheckAnchor(cfg, runId, account) {
   await new Promise(x => setTimeout(x, cfg.poll_ms));
   cur = await localCurrentUrl(cfg, account);
   if (!cur || cur === anchor) return;
-  throw new Error('上下文已中断:账号 ' + account + ' 的会话窗口已经变了(有人新开了对话或刷新了页面)。已停下,不能接着发。请人工粘贴,或点「这一条改用 API 跑」');
+  throw localErr('context', '上下文已中断:账号 ' + account + ' 的会话窗口已经变了(有人新开了对话或刷新了页面)。已停下,不能接着发。请人工粘贴,或点「这一条改用 API 跑」', { phase: 'anchor' });
 }
 
 async function segJob(job, account) {
@@ -767,6 +871,9 @@ async function segJob(job, account) {
   let idx = from;
   let lastTaskId = '', elapsed = 0, timedOut = false, sentCount = 0, startedAt = '', totalSeen = 0;
   const slot = segAccounts.get(account);
+  // 记下本链接管锁时的身份:若期间这条被重新点火(segStart 会换一个 lock_id),
+  // finally 就不能把新链的 busy 清掉,否则会把新任务误判成空闲、串进别的消息。
+  const slotLockId = slot && slot.lock_id;
   try {
     for (idx = from; ; idx++) {
       const w = load(runId);
@@ -786,7 +893,7 @@ async function segJob(job, account) {
       // 强制新段 + 原本是 continue 卡:它只带最后一句,必须改发完整对话,否则新会话里没有上下文
       if (idx === 0 && job.need_full) {
         const wt = waiters.get(wkey(runId, id));
-        if (!wt || !arr(wt.messages).length) throw new Error('上下文已中断:程序里的完整提示词已不在了(可能重启过),不能只发半截。请人工粘贴,或点「这一条改用 API 跑」');
+        if (!wt || !arr(wt.messages).length) throw localErr('context', '上下文已中断:程序里的完整提示词已不在了(可能重启过),不能只发半截。请人工粘贴,或点「这一条改用 API 跑」', { phase: 'context' });
         text = flatten(wt.messages);
       }
       // 段首 always 起新段(失败重试重建锚点也算);段内一律 never。同一张卡后续消息也在同一段里接着发
@@ -796,20 +903,31 @@ async function segJob(job, account) {
       // >200 字走全局单链:服务侧的剪贴板写入只锁住 write+press,双账号长文本并行未实测
       const sendAndWait = async () => {
         const queued = await localSend(cfg, text, policy, account);
-        // 服务返回的账号与段绑定不一致:只记录 + 告警,不中断(该字段语义未经端到端实测,硬断言会误伤)
+        // 服务侧 accountId 是真相源:与我方段绑定不一致时记下来并告警(不改锁,避免段内独占被打乱)
         if (queued.mismatch) {
-          localState(runId, id, { account_mismatch: queued.mismatch });
+          localState(runId, id, { account_mismatch: queued.mismatch, account_actual: queued.account_actual });
           segNotice(runId, 'warn', '本地服务把这条记在账号 ' + queued.mismatch + ',段绑定的是 ' + account + '。已继续发送;若后续消息串了会话,请检查服务侧的账号回填。');
         }
         lastTaskId = queued.id;
         localState(runId, id, { status: 'running', phase: 'waiting', index: idx, total, task_id: queued.id, task_seq: queued.seq });
+        // 本链是否仍是这一条的合法持有者:被粘好/改用 API/取消/自愈收敛/重新点火都会让它变 false。
+        // onPhase 与 alive 共用同一份判据,杜绝「await 期间被收敛,回来又把 status 写回 running」的竞态。
+        const mine = () => {
+          const x = load(runId);
+          const cur = x && arr(x.pending).find(y => y.id === id);
+          if (!cur) return false;
+          const L = cur.local || {};
+          if (L.status !== 'running' && L.status !== 'queued') return false;
+          if (L.task_id && String(L.task_id) !== String(queued.id)) return false;
+          return true;
+        };
         return localWait(cfg, queued.id, (st, t) => {
+          if (!mine()) return; // 已被接管:不再写盘,更不把 status 覆盖回 running
           const waiting = st === 'queued' || st === 'waiting';
           const extra = { waiting_for: waiting && t && t.reason ? String(t.reason) : '', wait_ms: 0 };
           localState(runId, id, { status: 'running', phase: st === 'long_wait' ? 'waiting' : st, index: idx, total, task_id: queued.id, ...extra });
           if (st === 'long_wait') segNotice(runId, 'warn', '已经在队列里等了超过 6 小时。额度放行以页面提示消失为准,不会自动重发;请到那台机器上检查是否需要人工处理。');
-        },
-          () => { const x = load(runId); return !!(x && arr(x.pending).find(y => y.id === id)); });
+        }, mine);
       };
       const r = await sendAndWait();
       // 段首那条 always 的 url 就是本段锚点;之后每条都比对,变了就中断
@@ -818,7 +936,7 @@ async function segJob(job, account) {
         const cur = load(runId);
         const anchor = cur && cur.segment && cur.segment.chat_url;
         if (anchor && r.url && r.url !== anchor)
-          throw new Error('上下文已中断:这条回复落在了另一个会话窗口里(不是本段的窗口)。已停下,请人工粘贴或点「这一条改用 API 跑」');
+          throw localErr('context', '上下文已中断:这条回复落在了另一个会话窗口里(不是本段的窗口)。已停下,请人工粘贴或点「这一条改用 API 跑」', { phase: 'anchor' });
       }
       if (r.degraded) segNotice(runId, 'warn', '本地服务这次没取到 Markdown 原始源码(markdownSource=' + (r.markdownSource || '缺失') + '),已降级用纯文本 + 弯引号修复继续;蓝图/分析若报格式不对,请重试这一条。');
       elapsed += Number(r.elapsedMs) || 0;
@@ -841,16 +959,44 @@ async function segJob(job, account) {
     const w = load(runId);
     const p = w && arr(w.pending).find(x => x.id === id);
     if (!p) return; // 已经不在等粘贴了,失败也不用记
+    // 被自愈时钟收敛 / 人工处理 / 重新点火:盘上状态由接管方负责,这里绝不再写,
+    // 否则会把「已停下等人」覆盖回 running,或把新任务的 failed 文案冲掉。
+    if (e && e.halted) return;
     const total = arr(p.texts).length;
     const msg = e.message || String(e);
-    // D3:停下报错,保留账号占用与段绑定,等人处理后重试(重试同一段不换号)
-    localState(runId, id, {
-      status: 'failed', phase: 'failed', error: msg,
-      next: Math.max(0, Math.min(idx, total - 1))
-    });
-    segNotice(runId, /上下文已中断/.test(msg) ? 'broken' : 'error', msg + (autoWanted(webOf(w), p) ? AUTO_STOP_TIP : ''));
+    const kind = localKind(e), phase = (e && e.phase) || '';
+    // 只信 localSend 成功后才产生的 taskId(或 localWait 抛错时带回来的);
+    // 绝不用 lastTaskId 兜底:多条消息时第 N 条 POST 失败,lastTaskId 还是第 1 条的,复用会交错答案
+    const taskId = (e && e.taskId) || '';
+    const prev = p.local || {}, tried = Number(prev.auto_retried || 0);
+    const nextIdx = Math.max(0, Math.min(idx, total - 1));
+    if (kind === 'infra' && phase === 'connect' && !taskId && tried < MAX_AUTO_RETRY) {
+      // 连接阶段就失败:这条还没进服务队列,挂起等 /health 恢复后自动重投一次,零重复点火
+      localState(runId, id, {
+        status: 'retry_wait', phase: 'retry_wait', error: msg, next: nextIdx,
+        waiting_for: '', wait_ms: 0, lkind: kind, lphase: phase, task_id: '',
+        next_at: new Date(Date.now() + RETRY_DELAY_MS).toISOString(), retry_checks: 0
+      });
+      segNotice(runId, 'warn', '连不上本地模型服务,已挂起:服务恢复后会自动重投 1 次(这条还没进服务队列,不会重复点火)。也可以人工粘贴或改用 API。');
+    } else if (kind === 'infra' && taskId && tried < MAX_AUTO_RETRY) {
+      // 已入队:不重新点火,等服务恢复后回查这一条在服务侧有没有已经跑完的完整回复
+      localState(runId, id, {
+        status: 'retry_wait', phase: 'retry_wait', error: msg, next: nextIdx,
+        waiting_for: '', wait_ms: 0, lkind: kind, lphase: phase, task_id: taskId,
+        next_at: new Date(Date.now() + RETRY_DELAY_MS).toISOString(), retry_checks: 0
+      });
+      segNotice(runId, 'warn', '本地模型服务中断了这条(已入队):不重新点火,等服务恢复后先查服务侧有没有已经跑完的完整回复;查不到再停下等你处理。');
+    } else {
+      // content / context,或 infra 已经自动重投过一次:落终态,停下等人(红线:不把半截内容当答案)
+      localState(runId, id, {
+        status: 'failed', phase: 'failed', error: msg, next: nextIdx, lkind: kind, lphase: phase
+      });
+      segNotice(runId, kind === 'context' ? 'broken' : 'error', msg + (autoWanted(webOf(w), p) ? AUTO_STOP_TIP : ''));
+    }
   } finally {
-    if (slot) {
+    // 只有锁还是本链这一把(lock_id 没被新链换掉)才释放;否则新任务的 busy 会被旧链清掉。
+    // 无 slot / 无 lock_id(老数据):按旧行为释放,不漏放账号。
+    if (slot && (slot.lock_id == null || slot.lock_id === slotLockId)) {
       slot.busy = false;
       if (slot.release_pending) { slot.owner = ''; slot.release_pending = false; }
     }
@@ -864,6 +1010,11 @@ function submitLocal(runId, id, reply, meta) {
   answer(runId, id, reply, { by: 'local', meta: meta || {} });
 }
 
+// 判断盘上旧错误是不是「基础设施瞬时故障」(旧数据还没有 lkind 字段,只能按文案认)
+function isInfraText(s) {
+  const t = String(s || '');
+  return /ECONNREFUSED|ECONNRESET|ETIMEDOUT|ETIMEDOUT|连不上本地模型服务|60 秒没有响应|响应中断|服务重启|被清理,或那边重启过|找不到这条任务|账号列表暂时取不到|程序重启过/.test(t);
+}
 // 进程重启:上次在跑/排队的本地调用已经没了,落成 failed,页面上可以再点(不自动重投)
 // 段绑定不清除:失败的卡重试时是同一段、回原账号;同时把账号锁按盘上的段重建,防止别的任务插进来
 function resetInterrupted() {
@@ -871,6 +1022,7 @@ function resetInterrupted() {
   try { files = fs.readdirSync(WEB_DIR).filter(f => /\.json$/.test(f)); } catch (e) { return 0; }
   // 先扫一遍:同一账号被多个未终态 run 声明段绑定时,只让一个重建锁,
   // 其余清段 + force_new,避免重启后它们永远被「段被别人占着」挡在队列里。
+  // 虚拟账号段不参与这里:它是故障期降级写的,接下来会统一清掉
   const claims = new Map(); // account → [{ runId, active }]
   const parsed = [];
   for (const f of files) {
@@ -882,7 +1034,7 @@ function resetInterrupted() {
     try { run = store.getRun(runId); } catch (e) {}
     const ended = !!(run && RUN_END.has(String(run.status || '')));
     parsed.push({ fp, runId, w, ended });
-    if (!ended && w.segment && w.segment.account) {
+    if (!ended && w.segment && w.segment.account && !segVirtual(w.segment.account)) {
       const id = String(w.segment.account);
       if (!claims.has(id)) claims.set(id, []);
       claims.get(id).push({ runId, active: arr(w.pending).some(p => p.local && (p.local.status === 'running' || p.local.status === 'queued')) });
@@ -897,6 +1049,11 @@ function resetInterrupted() {
   for (const item of parsed) {
     const { fp, runId, w, ended } = item;
     let healNote = '';
+    // 故障期降级写进盘的虚拟账号段绑定:不可信,清掉(这些段的 chat_url 从未建立,清掉不丢上下文)
+    if (w.segment && segVirtual(w.segment.account)) {
+      delete w.segment; w.force_new = true;
+      healNote = '上次本地模型服务中断时,这条的连续会话绑定是无效的虚拟占位,已清掉;下一张卡会新开会话、重新选账号。';
+    }
     if (!ended && w.segment && w.segment.account) {
       const id = String(w.segment.account);
       if (winner.get(id) === runId) {
@@ -910,21 +1067,351 @@ function resetInterrupted() {
     let hit = false;
     arr(w.pending).forEach(p => {
       const st = p.local || {};
-      if (st.status !== 'running' && st.status !== 'queued') return;
-      p.local = {
-        ...st, status: 'failed', phase: 'failed',
-        error: '程序重启过,这一条没跑完,可以再点「本地模型调用」(同一段、原账号不变)',
-        next: Number.isInteger(st.index) ? st.index : 0, waiting_for: '', wait_ms: 0, at: now()
-      };
-      hit = true; n++;
+      if (!st.status) return;
+      // running/queued 是上次进程留下的假状态(实际没在跑):转成挂起,让 tick 自动恢复,不用手点
+      if (st.status === 'running' || st.status === 'queued') {
+        const infra = st.lkind ? st.lkind === 'infra' : isInfraText(st.error);
+        if (infra || !st.task_id) {
+          p.local = { ...st, status: 'retry_wait', phase: 'retry_wait', error: st.error || '程序重启过,这一条没跑完',
+            lkind: 'infra', lphase: st.task_id ? 'wait' : 'connect', next: Number.isInteger(st.index) ? st.index : 0,
+            next_at: new Date(Date.now() + RETRY_DELAY_MS).toISOString(), retry_checks: 0, waiting_for: '', wait_ms: 0, at: now() };
+        } else {
+          p.local = { ...st, status: 'failed', phase: 'failed', error: '程序重启过,这一条没跑完,可以再点「本地模型调用」',
+            next: Number.isInteger(st.index) ? st.index : 0, waiting_for: '', wait_ms: 0, at: now() };
+        }
+        hit = true; n++;
+        return;
+      }
+      // 旧数据里 failed 的 infra 类:转成挂起自动续一次,而不是永久等人点
+      if (st.status === 'failed') {
+        const infra = st.lkind ? st.lkind === 'infra' : isInfraText(st.error);
+        if (infra && Number(st.auto_retried || 0) < MAX_AUTO_RETRY) {
+          p.local = { ...st, status: 'retry_wait', phase: 'retry_wait',
+            lkind: 'infra', lphase: st.task_id ? 'wait' : 'connect',
+            next_at: new Date(Date.now() + RETRY_DELAY_MS).toISOString(), retry_checks: 0, at: now() };
+          hit = true; n++;
+        }
+      }
     });
+    if (hit) localActive.add(runId);
     if (healNote || hit) {
-      const base = hit ? '程序刚重启过:连续会话可能已经中断。再点「本地模型调用」会沿用原账号;发送前会校验会话窗口,不一致就停下让你改走粘贴或 API。' : '';
-      w.segment_notice = { kind: healNote ? 'switch' : 'broken', text: [healNote, base].filter(Boolean).join(' '), at: now() };
+      const base = hit ? '上次中断的条目已自动恢复:服务可用后会自动重投一次(没进服务队列的直接重发;已进队列的只查服务侧有没有完整回复,不重新点火)。' : '';
+      w.segment_notice = { kind: healNote ? 'switch' : 'warn', text: [healNote, base].filter(Boolean).join(' '), at: now() };
       try { fs.writeFileSync(fp + '.tmp', JSON.stringify(w)); fs.renameSync(fp + '.tmp', fp); } catch (e) {}
     }
   }
   return n;
+}
+
+// ---------- 自愈时钟:不靠「有人点按钮」来推进 ----------
+// 轻量探活:只看 /health(不拉全量 /queue),用于判断本地模型服务是否恢复
+async function localHealth(cfg) {
+  const r = await localRequest(cfg, 'GET', '/health', null);
+  return r.status === 200 && !!(r.json && r.json.ok);
+}
+// 已入队的条目:服务恢复后只回查服务侧状态。有完整回复就直接用(不重新点火);
+// 没有就落 failed 等人点一次重试。查不到(服务还没恢复)就保留挂起,等下次 tick。
+async function retryReuse(runId, id, L, cfg) {
+  try {
+    const r = await localRequest(cfg, 'GET', '/tasks/' + encodeURIComponent(L.task_id), null);
+    const t = r.json && r.json.task;
+    if (t && String(t.status) === 'done' && t.hasFullBody !== false) {
+      const got = localReplyOf(t, L.task_id);
+      submitLocal(runId, id, got.reply, {
+        task_id: L.task_id, elapsed_ms: got.elapsedMs, timed_out: got.timedOut,
+        sent: Number(L.sent) || 1, total: Number(L.total) || 1,
+        started_at: L.started_at, account: L.account, markdown_source: got.markdownSource, reused: true
+      });
+      segNotice(runId, 'warn', '这条在本地模型服务里其实已经跑完了,直接用了服务侧的完整回复,没有重新点火。');
+      return 'done';
+    }
+    const st = t ? String(t.status) : '查不到';
+    localState(runId, id, {
+      status: 'failed', phase: 'failed', waiting_for: '', wait_ms: 0,
+      error: '本地模型服务重启把这条打断了(服务侧状态:' + st + ',没有完整回复)。点一次「本地模型调用」重新发,或人工粘贴 / 改用 API。'
+    });
+    segNotice(runId, 'error', '本地模型服务重启打断了这条,服务侧没有留下完整回复;已停下等你点一次重试(会自动按新段重新选号)。');
+    return 'failed';
+  } catch (e) {
+    // 服务还没恢复:保留挂起,等下次 tick;回查次数到了就停下等人
+    const checks = Number(L.retry_checks || 0) + 1;
+    if (checks >= MAX_REUSE_CHECKS) {
+      localState(runId, id, {
+        status: 'failed', phase: 'failed', waiting_for: '', wait_ms: 0,
+        error: (L.error || '') + '(回查服务侧 ' + MAX_REUSE_CHECKS + ' 次都没恢复,已停下等人点一次重试)'
+      });
+      return 'failed';
+    }
+    localState(runId, id, { retry_checks: checks, next_at: new Date(Date.now() + RETRY_DELAY_MS).toISOString() });
+    return 'wait';
+  }
+}
+// 强制回收一个 run 占住的账号:只在「确认服务侧已结束、本地链却卡死」时调用。
+// 清 owner/busy/release_pending(内存锁) + 清段绑定 + force_new(上下文可能已断,
+// 下一张卡必须新段起头,不能假装续旧锚点)。不动盘上卡的状态,由调用方收敛。
+function segReclaim(runId) {
+  for (const [, s] of segAccounts) {
+    if (s.owner !== runId) continue;
+    s.owner = ''; s.busy = false; s.release_pending = false;
+  }
+  const w = load(runId);
+  if (w) {
+    let changed = false;
+    if (w.segment) { delete w.segment; changed = true; }
+    if (!w.force_new) { w.force_new = true; changed = true; }
+    if (changed) save(runId, w);
+  }
+  segKick();
+}
+
+// 无进展 running 的自愈:盘上 at 超过阈值没动,才回查一次服务侧这条任务的真实状态。
+// 只有服务侧确实已结束才收敛(停下等人 + 回收账号);服务侧仍活跃(静默时段/额度闸门/
+// 长文本生成)一律不动,绝不按本地时钟猜测。绝不自动提交、绝不自动重发(重复点火)。
+async function healStaleRunning(runId, id, L, cfg) {
+  let t;
+  try {
+    const r = await localRequest(cfg, 'GET', '/tasks/' + encodeURIComponent(L.task_id), null);
+    t = r.json && r.json.task;
+  } catch (e) { return false; } // 服务没恢复:不写盘、不收敛,等下一轮
+  if (!t) return false;
+  const st = String(t.status || '');
+  const term = localTerminal(t);
+  const done = st === 'done';
+  if (!term && !done) return false; // 服务侧仍活跃:正常长等,不打扰
+  // 服务侧已结束,本地却还挂在 running → 收敛成 failed 停下等人,并释放占死的账号。
+  // 保留 status(不清空),否则 autoKick 会把没有 local 状态的卡当成新卡自动点火。
+  const msg = done
+    ? '服务侧这条其实已经跑完了,但程序这边一直没接上。请先到那台机器的任务会话里把完整回复复制出来人工粘贴;不要点「本地模型调用」重发,避免重复点火。'
+    : term.msg;
+  localState(runId, id, {
+    status: 'failed', phase: 'failed', waiting_for: '', wait_ms: 0,
+    next: Number.isInteger(L.index) ? L.index : 0,
+    lkind: term ? term.kind : 'content', lphase: 'wait', error: msg
+  });
+  segNotice(runId, 'error', '这条卡在「处理中」太久,回查发现本地模型服务里状态已经是 ' + st + '。已自动停下并释放账号,不会自动重发;请按提示处理后手动继续。');
+  segReclaim(runId);
+  return true;
+}
+
+// 每 30s 推进一次:僵死 queued 重置、retry_wait 恢复重投 / 回查、fifo 有人排队就 kick
+async function localTick() {
+  if (localTicking) return;
+  if (!localActive.size && !segFifo.length) return;
+  localTicking = true;
+  try {
+    const cfg = localConfig();
+    if (!cfg.enabled || !cfg.url) return;
+    let healthOk = null;
+    const health = async () => { if (healthOk === null) healthOk = await localHealth(cfg).catch(() => false); return healthOk; };
+    for (const runId of Array.from(localActive)) {
+      let w = load(runId);
+      if (!w) { localActive.delete(runId); continue; }
+      let busy = false;
+      for (const p of arr(w.pending)) {
+        const L = p.local || {};
+        if (L.status === 'queued') {
+          const age = Date.now() - new Date(L.at || 0).getTime();
+          const job = segFifo.find(j => j.runId === runId && j.id === p.id);
+          const inFifo = !!job;
+          const onChain = Array.from(segAccounts.values()).some(s => s.owner === runId && s.busy);
+          if (!inFifo && !onChain && age > QUEUED_STALE_MS) {
+            localState(runId, p.id, {
+              status: 'failed', phase: 'failed', waiting_for: '', wait_ms: 0,
+              error: '上一次排队没有推进(调度没接上),已重置。可以再点「本地模型调用」。'
+            });
+            segNotice(runId, 'warn', '有一条排队没有推进,已自动重置,可以再点「本地模型调用」。');
+          } else {
+            busy = true;
+            // 把调度真实看到的阻塞原因写进展示字段:只写展示、不改 status/phase、结论未变不写盘。
+            // 这样排队再久也有可解释的原因,而不是前端硬编码「前面还有任务」。
+            if (job) {
+              const b = whyBlocked(job);
+              localDisplay(runId, p.id, { block_reason: b.text, wait_hint: b.hint });
+            } else if (L.account && !segVirtual(L.account)) {
+              // 已经分到账号、正要发送(segStart 已把 job 从 fifo 取走):说清是「等本地服务接」而不是「等账号」
+              const acc = segAccountsCache.list.find(a => a.id === L.account);
+              localDisplay(runId, p.id, {
+                block_reason: '已分到账号 ' + L.account + ',正在等本地服务接收',
+                wait_hint: acc && acc.waitingFor ? '本地模型服务:' + acc.waitingFor : ''
+              });
+            }
+          }
+        } else if (L.status === 'running') {
+          busy = true;
+          // 无进展自愈:running 是黑盒(可能卡在我方不认识的服务侧终态上,本次 send_failed 事故就是这样)。
+          // 只在盘上 at 超过阈值没动、且有 task_id 可回查时才动作;每 HEAL_INTERVAL_MS 最多回查一次,
+          // 节流标记用 localDisplay 写(不刷 at —— at 是僵死判据,刷了就永远不僵死)。
+          const age = Date.now() - new Date(L.at || 0).getTime();
+          const lastHeal = new Date(L.heal_at || 0).getTime();
+          if (L.task_id && age > RUNNING_STALE_MS && Date.now() - lastHeal > HEAL_INTERVAL_MS) {
+            localDisplay(runId, p.id, { heal_at: new Date().toISOString() });
+            await healStaleRunning(runId, p.id, L, cfg);
+          }
+        } else if (L.status === 'retry_wait') {
+          busy = true;
+          if (Date.now() < new Date(L.next_at || 0).getTime()) continue;
+          if (L.task_id) {
+            await retryReuse(runId, p.id, L, cfg);
+          } else if (Number(L.auto_retried || 0) < MAX_AUTO_RETRY) {
+            if (await health()) {
+              try { localRun(runId, p.id); }
+              catch (e) {
+                localState(runId, p.id, {
+                  status: 'failed', phase: 'failed', waiting_for: '', wait_ms: 0,
+                  error: (e && e.message) || String(e)
+                });
+              }
+            }
+          } else {
+            localState(runId, p.id, {
+              status: 'failed', phase: 'failed', waiting_for: '', wait_ms: 0,
+              error: (L.error || '') + '(自动重投过一次仍连不上,已停下等人)'
+            });
+          }
+        }
+      }
+      if (!busy) {
+        w = load(runId);
+        if (!w || !arr(w.pending).some(p => p.local && ['queued', 'running', 'retry_wait'].includes((p.local || {}).status))) localActive.delete(runId);
+      }
+    }
+    // release_pending 孤儿:段切换时账号还在忙,segReleaseAccounts 只标「跑完再放」,
+    // 由 segJob 的 finally 消费。若那条链永远不结束(本次 send_failed 事故),标记会永久挂着,
+    // owner 不放 → 一个 run 占死多个账号。判据用「owner 盘上已无任何活跃卡且不在 fifo 排队」,
+    // 不依赖时间阈值,避免误伤静默时段里正常跑几十分钟的段。
+    for (const [, s] of segAccounts) {
+      if (!s.release_pending || !s.owner) continue;
+      const ow = load(s.owner);
+      const active = ow && arr(ow.pending).some(p => p.local && ['queued', 'running', 'retry_wait'].includes(p.local.status));
+      if (active || segFifo.some(j => j.runId === s.owner)) continue;
+      const rid = s.owner;
+      s.owner = ''; s.busy = false; s.release_pending = false;
+      segNotice(rid, 'warn', '检测到一条本地模型链已结束但账号占用没释放,已自动回收;后面的排队任务可以继续了。');
+      segKick();
+    }
+    if (segFifo.length) segKick();
+  } finally {
+    localTicking = false;
+  }
+}
+function startLocalTick(ms) {
+  if (localTickTimer) return localTickTimer;
+  localTickTimer = setInterval(() => { localTick().catch(e => console.log('本地模型自愈扫描异常: ' + (e && e.message))); }, ms || 30000);
+  if (localTickTimer.unref) localTickTimer.unref();
+  return localTickTimer;
+}
+
+// ---------- 排队归因:只读诊断与卡片展示共用同一份计算 ----------
+// 页面写的「为什么没轮到我」必须就是调度真实看到的状态,不能由前端拼文案或猜。
+// 严格只读:不调用 segChoose(它在 need_account 分支会清 slot.owner,有副作用),不发请求、不点火、不写盘。
+function whyBlocked(job) {
+  const list = (segAccountsCache.list || []).slice();
+  const ok = list.filter(a => a.enabled && !a.offline && !a.paused);
+  const short = id => String(id || '').replace(/^run_/, '').slice(0, 8);
+  const r = {
+    ok: ok.map(a => a.id), excluded_by_avoid: job.avoid_account || null, pool: [], free: [],
+    owners: list.map(a => {
+      const s = segAccounts.get(a.id);
+      return { id: a.id, owner: (s && s.owner) || '', busy: !!(s && s.busy), blocked: !!a.blocked,
+               waitingFor: a.waitingFor || '', waitMs: Number(a.waitMs) || 0 };
+    }),
+    verdict: '', text: '', hint: ''
+  };
+  if (!list.length) {
+    r.verdict = '账号列表缓存为空(还没拉过 /queue),无法判定';
+    r.text = '正在确认本地模型服务的账号状态,请稍候';
+    return r;
+  }
+  // 服务侧权威原因(静默时段/长休息/额度闸门):只转述一句稳定原文。
+  // 不写相对时长、不写 waitMs/resetsAtMs:这些会随轮询变小,写进落盘字段会让 30s 一轮不断写盘。
+  // 服务侧原文里已含「北京 19:00–01:00(次日)」这类窗口信息,足够用户判断。
+  const waiting = list.find(a => a.waitingFor);
+  const quota = list.find(a => a.blocked && a.quotaBanner);
+  if (waiting) r.hint = '本地模型服务:' + waiting.waitingFor;
+  else if (quota) r.hint = '本地模型服务:账号 ' + quota.id + ' 触发 5 小时额度闸门(' + quota.quotaBanner + '),以页面提示消失为准,不会自动重发';
+  if (job.need_account) {
+    const want = job.need_account, slot = segAccounts.get(want);
+    r.pool = [want];
+    if (slot && slot.owner && slot.owner !== job.runId) {
+      const ow = load(slot.owner);
+      r.verdict = '绑定账号被别的任务占着,继续排队';
+      r.text = '这一条要接着上一个会话发,但账号 ' + want + ' 还被任务 ' + short(slot.owner) + ' 占着'
+        + (ow && arr(ow.pending).length ? '(那边还有卡没处理完)' : '(占用残留)');
+    } else if (!ok.some(a => a.id === want)) {
+      r.verdict = '绑定账号不可用';
+      r.text = '绑定的账号 ' + want + ' 现在不可用(禁用/离线/熔断),按约定不自动换号';
+    } else {
+      r.free = [want]; r.verdict = '可分配 ' + want;
+      r.text = '等账号 ' + want + ' 空出来(这张卡要续用上一个会话)';
+    }
+    return r;
+  }
+  const others = ok.filter(a => a.id !== job.avoid_account);
+  const pool = others.length ? others : ok;
+  const free = segSort(pool).filter(a => { const s = segAccounts.get(a.id); return !s || !s.owner || s.owner === job.runId; });
+  r.pool = pool.map(a => a.id);
+  r.free = free.map(a => a.id);
+  r.verdict = free.length ? ('可分配 ' + free[0].id) : '无空闲账号(继续排队)';
+  if (free.length) {
+    r.text = '有空闲账号 ' + free[0].id + ',正在分配';
+  } else {
+    const busyDesc = pool.map(a => {
+      const s = segAccounts.get(a.id);
+      return a.id + (s && s.owner ? '(被任务 ' + short(s.owner) + ' 占用' + (s.busy ? ',正在跑' : '') + ')' : '(空闲)');
+    }).join('、');
+    // 只有「确实排除了一个账号」(others 非空且比 ok 短)才写这句;回退到唯一账号时不能说避开
+    const avoided = job.avoid_account && others.length > 0 && others.length < ok.length;
+    const avoid = avoided ? ';上次用过 ' + job.avoid_account + ',这次按规则避开' : '';
+    r.text = '没有空闲账号:' + busyDesc + avoid;
+  }
+  return r;
+}
+
+// 只写「非状态机」字段(展示归因 block_reason/wait_hint、自愈节流标记 heal_at 等):
+// 不动 status/phase/next/task_id,也不刷新 at(at 是「僵死排队」判据,排队时长按 started_at 算,
+// 展示刷新或节流标记都不能重置它)。结论未变就不写盘,避免 30s 一轮空转刷盘。
+function localDisplay(runId, id, patch) {
+  const w = load(runId);
+  if (!w) return;
+  const p = arr(w.pending).find(x => x.id === id);
+  if (!p) return;
+  const L = p.local || {};
+  if (Object.keys(patch).every(k => String(L[k] == null ? '' : L[k]) === String(patch[k] == null ? '' : patch[k]))) return;
+  p.local = { ...L, ...patch };
+  save(runId, w);
+}
+
+// ---------- 只读诊断 ----------
+// 会话段调度的真相在内存里(segAccounts / segFifo / localActive),磁盘只能看到落盘结果。
+// 这里把内存态与磁盘态并排输出,并复算每个排队 job 在 segChoose 里的判定,用于定位「排队没推进」。
+// 严格只读:不写盘、不改状态、不发外部请求、不点火。账号列表用 10s 缓存,不重新拉 /queue。
+function localDebug() {
+  const diskSegment = runId => {
+    const w = load(runId);
+    if (!w || !w.segment) return null;
+    return { account: w.segment.account || '', chat_url: w.segment.chat_url || '', started_at: w.segment.started_at || '' };
+  };
+  const seen = new Set();
+  for (const j of segFifo) seen.add(j.runId);
+  for (const [, s] of segAccounts) if (s.owner) seen.add(s.owner);
+  return {
+    at: new Date().toISOString(), pid: process.pid, uptime_ms: Math.round(process.uptime() * 1000),
+    flags: {
+      segPumping, segNeedsRerun, segKickPending, localTicking,
+      tick_started: !!localTickTimer, accounts_cache_age_ms: segAccountsCache.at ? Date.now() - segAccountsCache.at : null
+    },
+    active: Array.from(localActive),
+    accounts: Array.from(segAccounts, ([id, s]) => ({
+      id, owner: s.owner || '', busy: !!s.busy, release_pending: !!s.release_pending,
+      seg_at: s.seg_at || '', age_ms: s.seg_at ? Date.now() - new Date(s.seg_at).getTime() : null
+    })),
+    fifo: segFifo.slice().sort((a, b) => a.ticket - b.ticket).map(j => ({
+      ticket: j.ticket, runId: j.runId, id: j.id, new_seg: !!j.new_seg,
+      need_account: j.need_account || '', avoid_account: j.avoid_account || '',
+      disk_segment: diskSegment(j.runId), why: whyBlocked(j)
+    })),
+    owners_on_disk: Array.from(seen).map(runId => ({ runId, segment: diskSegment(runId) }))
+  };
 }
 
 // 关掉网页版:后面全部改回 API(正在等的写稿这一步,程序按原来的方式逐章写)
@@ -1015,7 +1502,7 @@ function autoStart(runId, id) {
     const w = load(runId);
     const p = w && arr(w.pending).find(x => x.id === id);
     // localRun 在发出去之前就报错(比如本地服务没打开):记成 stopped,不记 failed(failed 会被当成「同一段重试」)
-    if (p && !(p.local && ['failed', 'running', 'queued'].includes(p.local.status))) localState(runId, id, { status: 'stopped', phase: 'stopped', error: e.message, waiting_for: '', wait_ms: 0 });
+    if (p && !(p.local && ['failed', 'running', 'queued', 'retry_wait'].includes(p.local.status))) localState(runId, id, { status: 'stopped', phase: 'stopped', error: e.message, waiting_for: '', wait_ms: 0 });
     segNotice(runId, 'error', (e.message || String(e)) + AUTO_STOP_TIP);
     return false;
   }
@@ -1031,7 +1518,7 @@ function setAuto(runId, on) {
   let started = 0;
   if (on) web.pending.forEach(p => {
     const s = (p.local || {}).status;
-    if (s === 'running' || s === 'queued' || !autoWanted(web, p) || !waiters.has(wkey(runId, p.id))) return;
+    if (s === 'running' || s === 'queued' || s === 'retry_wait' || !autoWanted(web, p) || !waiters.has(wkey(runId, p.id))) return;
     if (autoStart(runId, p.id)) started++;
   });
   return { ok: true, auto_local: !!on, started };
@@ -1067,4 +1554,4 @@ function view(runOrId) {
   };
 }
 
-module.exports = { WEB_RE, wants, relay, relayForce, forget, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, setAuto, autoLocalDone, _waiters: waiters };
+module.exports = { WEB_RE, wants, relay, relayForce, forget, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, setAuto, autoLocalDone, startLocalTick, localTick, localDebug, whyBlocked, localDisplay, localTerminal, healStaleRunning, segReclaim, _waiters: waiters };
