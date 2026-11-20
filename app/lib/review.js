@@ -331,7 +331,7 @@ function buildView(run, asset) {
   const out = {
     run_id: run.id, status: run.status, target_language: lang,
     running: passLabel(run.id),
-    passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null, deai: (run.steps || {}).deai || null, final_open: (run.steps || {}).final_open || null, final_options: (run.steps || {}).final_options || null, info_check: (run.steps || {}).info_check || null }, info_draft: state.info_draft ? { at: state.info_draft.at, error: state.info_draft.error || '', items: arr(state.info_draft.items), problems: arr(state.info_draft.problems).map(({ sig, ...x }) => x) } : null, // v1.104
+    passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null, deai: (run.steps || {}).deai || null, final_open: (run.steps || {}).final_open || null, final_options: (run.steps || {}).final_options || null, info_check: infoStepView(run.id, (run.steps || {}).info_check || null) }, info_draft: state.info_draft ? { at: state.info_draft.at, error: state.info_draft.error || '', items: arr(state.info_draft.items), problems: arr(state.info_draft.problems).map(({ sig, ...x }) => x) } : null, // v1.104
     audit: state.audit ? { ...state.audit, issues: arr(state.audit.issues).map(x => ({ ...x, zh_type: hasForeign(x.type) ? zhOf(state, x.type) : '', zh_problem: hasForeign(x.problem) ? zhOf(state, x.problem) : '', zh_direction: hasForeign(x.direction) ? zhOf(state, x.direction) : '', need_zh: hasForeign(x.problem) || hasForeign(x.direction) })), score: state.audit.score != null ? state.audit.score : reportScore(state.audit.report), stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
     factcheck: state.factcheck ? { ...state.factcheck, items: arr(state.factcheck.items).map(x => ({ ...x, zh_claim: hasForeign(x.claim) ? zhOf(state, x.claim) : '' })) } : null,
     versions: arr(state.versions).map(v => ({ key: v.key, label: v.label, at: v.at, issues: arr(v.issues), changed: arr(v.changed), truncated: !!v.truncated })),
@@ -709,7 +709,15 @@ function infoBrief(ic) {
   return '实际信息表(按初稿实际内容整理):\n' + (items || '(没有列出)') + '\n\n要在二稿里处理的问题:\n' + (probs || '(没有查出重讲、缺回顾、双重总结)') + '\n处理规则:' + INFO_GUARD + '缺回顾:在用之前补一句回顾(一句,不重讲来源)。双重总结:删掉后一章开头的总结,第一句直接进问题。';
 }
 // 终审后跑:按终稿实际内容查,结果存在 review.final.info_check;以前出过改法、应用过、忽略过的按 sig 认回来
+// v1.130 正在查的任务(内存里):程序重启后任务文件里还写着 running,但其实没人在查,页面会一直转圈
+const infoBusy = new Set();
+const infoStepView = (runId, st) => st && st.status === 'running' && !infoBusy.has(runId) ? { ...st, status: 'failed', error: '上次检查被中断了(程序重启过或出错退出),点「重新检查」再查一次' } : st;
 async function infoCheckRun(runId) {
+  if (infoBusy.has(runId)) return null;
+  infoBusy.add(runId);
+  try { return await infoCheckRunInner(runId); } finally { infoBusy.delete(runId); }
+}
+async function infoCheckRunInner(runId) {
   const cfg = pl().loadConfig();
   const run = store.getRun(runId);
   if (!cfg || !cfg.api_key || !run || !(run.review || {}).final) return null;
@@ -742,7 +750,7 @@ function startInfoCheck(runId) {
   const run = store.getRun(runId);
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
   if (!(run.review || {}).final) throw Object.assign(new Error('还没跑终审'), { status: 400 });
-  if (((run.steps || {}).info_check || {}).status === 'running') throw Object.assign(new Error('正在查,等一下'), { status: 409 });
+  if (infoBusy.has(runId)) throw Object.assign(new Error('正在查,等一下'), { status: 409 });
   if (passBusy(runId)) throw Object.assign(new Error('「' + (passLabel(runId) || '审稿') + '」正在跑,等它跑完再查'), { status: 409 });
   infoCheckRun(runId).catch(() => {});
   return { ok: true, started: true };
