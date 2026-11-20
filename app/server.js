@@ -734,6 +734,8 @@ const server = http.createServer(async (req, res) => {
         if (body.action === 'local') return send(res, 200, M.localRun(webMatch[1], String(body.id || '')));
         // v1.124 自动本地模型调用开关(on: true/false)
         if (body.action === 'auto') return send(res, 200, M.setAuto(webMatch[1], !!body.on));
+        // 兜底:手动丢弃一张已被判定为过期的卡(自动收敛正常跑时不需要,只作应急出口)
+        if (body.action === 'drop') return send(res, 200, M.dropCard(webMatch[1], String(body.id || '')));
         return send(res, 400, { error: '不认识的操作' });
       } catch (e) { return send(res, e.status || 500, { error: e.message }); }
     }

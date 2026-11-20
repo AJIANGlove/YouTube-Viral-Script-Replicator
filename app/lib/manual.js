@@ -991,7 +991,7 @@ async function segJob(job, account) {
       localState(runId, id, {
         status: 'failed', phase: 'failed', error: msg, next: nextIdx, lkind: kind, lphase: phase
       });
-      segNotice(runId, kind === 'context' ? 'broken' : 'error', msg + (autoWanted(webOf(w), p) ? AUTO_STOP_TIP : ''));
+      segNotice(runId, kind === 'context' ? 'broken' : 'error', msg + (autoWanted(webOf(w), p, runId) ? AUTO_STOP_TIP : ''));
     }
   } finally {
     // 只有锁还是本链这一把(lock_id 没被新链换掉)才释放;否则新任务的 busy 会被旧链清掉。
@@ -1020,6 +1020,9 @@ function isInfraText(s) {
 function resetInterrupted() {
   let files = [];
   try { files = fs.readdirSync(WEB_DIR).filter(f => /\.json$/.test(f)); } catch (e) { return 0; }
+  // 先按落盘步骤判据收敛历史过期卡(重启后 waiters 为空,不能靠内存 waiting 判断),
+  // 再重建段占用锁:顺序反了会让过期卡继续占着账号,交叉死锁重启后原样复现。
+  sweepAllOrphans();
   // 先扫一遍:同一账号被多个未终态 run 声明段绑定时,只让一个重建锁,
   // 其余清段 + force_new,避免重启后它们永远被「段被别人占着」挡在队列里。
   // 虚拟账号段不参与这里:它是故障期降级写的,接下来会统一清掉
@@ -1193,14 +1196,143 @@ async function healStaleRunning(runId, id, L, cfg) {
   return true;
 }
 
+// ---------- 孤儿卡的单一真相源:系统自己认出「已经没有意义的待粘贴卡」并收敛 ----------
+// 主判据用落盘的「这一卡对应步骤已经完成」:waiters 是纯内存态,进程重启后必然为空,
+// 只用 waiting 会把「重启后管线还没重新跑到」的真卡(例如当前步骤仍 running 的失败卡)误删。
+// 步骤已 done + 没有活管线 + 是本地模型链点火留下的痕迹 = 这张卡再也不会被任何代码路径 resolve。
+// 误删可自恢复:relay0/relayWrite0 按 key 找卡、找不到会重挂,answers 缓存则直接返回。
+const CARD_STEP_RE = [
+  [/^Step 1 功能表/, 'function_table'], [/^Step 1/, 'blueprint'], [/^Step 2/, 'script'],
+  [/^Step 4/, 'optimized'], [/^二稿审稿/, 'reverse_audit'], [/^终审·修改/, 'final_review'],
+  [/^(写前分析|原片对照表|联网查询词|AI |账本|论点对账)/, 'analysis']
+];
+function cardStepOf(p) {
+  if (p.kind === 'script') return 'script';
+  const l = String(p.label || '');
+  for (const [re, k] of CARD_STEP_RE) if (re.test(l)) return k;
+  return '';
+}
+function cardStepDone(runId, p) {
+  const key = cardStepOf(p);
+  if (!key) return false;
+  let run = null;
+  try { run = store.getRun(runId); } catch (e) {}
+  if (!run) return false;
+  const st = (run.steps || {})[key];
+  if (st && ['done', 'passed_soft', 'passed', 'skipped'].includes(String(st.status || ''))) return true;
+  if (key === 'reverse_audit' && run.review && run.review.audit) return true;
+  return false;
+}
+function orphanCard(runId, p) {
+  if (!p || p.check === 'edits') return false;          // 人工交互卡:永不自动清
+  const L = p.local || {};
+  if (L.status === 'running' || L.status === 'sending') return false; // 链还在跑
+  if (!cardStepDone(runId, p)) return false;             // 落盘主判据(重启安全)
+  if (waiters.has(wkey(runId, p.id))) return false;       // 还有活管线在等结果
+  const trace = !!(L.task_id || L.task_seq || L.ticket || (L.account && !segVirtual(L.account)));
+  if (!trace) return false;                              // 排除「重启后还没跑到」的合法卡
+  return ['queued', 'failed', 'stopped', 'retry_wait'].includes(L.status);
+}
+// 清完卡后,只有这个 run 已经没有任何活跃本地卡才释放账号占用;
+// 否则段内独占还在(例如同一 run 还有一张正常排队的 continue 卡),不能让号被别的任务抢走。
+function releaseIfIdle(runId, w) {
+  const stillActive = arr(w.pending).some(p => p.local && ['queued', 'running', 'retry_wait'].includes(p.local.status));
+  if (!stillActive) segReleaseAccounts(runId);
+}
+// 一次读、一次写地清掉一个 run 的孤儿卡:不动 done/answers/run.status、不点火、不写横幅(用户零感知)。
+// 顺带清 fifo job 与账号占用,让交叉死锁在同一轮里解开。
+function sweepOrphans(runId) {
+  const w = load(runId);
+  if (!w) return 0;
+  const orphans = arr(w.pending).filter(p => orphanCard(runId, p));
+  if (!orphans.length) return 0;
+  const ids = new Set(orphans.map(p => p.id));
+  w.pending = w.pending.filter(p => !ids.has(p.id));
+  save(runId, w);
+  orphans.forEach(p => {
+    segDrop(runId, p.id);
+    waiters.delete(wkey(runId, p.id)); // 防御性:orphanCard 已判定无管线,不 reject 任何 Promise
+  });
+  releaseIfIdle(runId, w);
+  console.log('本地模型:自动收敛 ' + runId + ' 的 ' + orphans.length + ' 张过期卡(' + [...ids].join(',') + '),未重发、未花配额');
+  return orphans.length;
+}
+// 启动时全量收敛一次(清掉历史存量);之后 30s tick 只扫内存已知的 run,不常态全量扫盘。
+function sweepAllOrphans() {
+  let files = [];
+  try { files = fs.readdirSync(WEB_DIR).filter(f => /\.json$/.test(f)); } catch (e) { return 0; }
+  let n = 0;
+  for (const f of files) n += sweepOrphans(f.replace(/\.json$/, ''));
+  return n;
+}
+// 手动兜底入口(页面折叠区里的「丢弃这张过期卡」);自动收敛正常跑时几乎不会用到
+function dropCard(runId, id) {
+  const w = load(runId);
+  if (!w) throw err('这个任务没有开网页版', 404);
+  const p = arr(w.pending).find(x => x.id === id);
+  if (!p) throw err('这一条已经处理过了,刷新一下页面', 409);
+  if (!orphanCard(runId, p)) throw err('这一条还在等程序结果,不能丢弃:请人工粘贴、改用 API,或等自动收敛', 409);
+  w.pending = w.pending.filter(x => x.id !== id);
+  save(runId, w);
+  segDrop(runId, id);
+  waiters.delete(wkey(runId, id));
+  releaseIfIdle(runId, w);
+  return { ok: true, dropped: 1 };
+}
+
+// ---------- 残留 owner 自动回收:用「活跃证据」而不是「空闲状态」判定 ----------
+// 段内独占期间:run 未终态 + 段锚点已建立 + 账号与段绑定一致 → 一律保留,
+// 哪怕此刻 pending 为空、busy=false(那正是本地提交完、程序去跑 API 步骤的正常空隙)。
+function ownerAlive(runId, account) {
+  const w = load(runId);
+  if (!w) return false;
+  let run = null;
+  try { run = store.getRun(runId); } catch (e) {}
+  const ended = !!(run && RUN_END.has(String(run.status || '')));
+  const seg = w.segment;
+  if (!ended && seg && seg.chat_url && seg.account === account) return true;
+  if (arr(w.pending).some(p => p.local && p.local.status === 'running')) return true;
+  if (segFifo.some(j => j.runId === runId && j.need_account === account)) return true;
+  return false;
+}
+function reclaimResidualOwners() {
+  for (const [acc, s] of segAccounts) {
+    if (!s.owner) continue;
+    // 路径 A(原有语义,不能动):release_pending 孤儿——owner 盘上无活跃卡且不在 fifo 排队。
+    // 这类即使 busy=true 也要回收,否则服务侧故障期会永久占死账号。
+    if (s.release_pending) {
+      const ow = load(s.owner);
+      const active = ow && arr(ow.pending).some(p => p.local && ['queued', 'running', 'retry_wait'].includes(p.local.status));
+      if (active || segFifo.some(j => j.runId === s.owner)) continue;
+      const rid = s.owner;
+      s.owner = ''; s.busy = false; s.release_pending = false;
+      segNotice(rid, 'warn', '检测到一条本地模型链已结束但账号占用没释放,已自动回收;后面的排队任务可以继续了。');
+      segKick();
+      continue;
+    }
+    // 路径 B(新增):普通残留 owner。链还在跑绝不抢;只有「确无活跃证据」才静默回收。
+    if (s.busy) continue;
+    if (ownerAlive(s.owner, acc)) continue;
+    s.owner = ''; s.busy = false; s.release_pending = false;
+    segKick();
+  }
+}
+
 // 每 30s 推进一次:僵死 queued 重置、retry_wait 恢复重投 / 回查、fifo 有人排队就 kick
 async function localTick() {
   if (localTicking) return;
-  if (!localActive.size && !segFifo.length) return;
   localTicking = true;
   try {
     const cfg = localConfig();
     if (!cfg.enabled || !cfg.url) return;
+    // 阶段 0:过期卡与残留账号占用收敛。必须放在 early-return 之前,
+    // 否则 fifo 清空 / localActive 清空后就再也没有入口解开残留 owner。
+    const touched = new Set(Array.from(localActive));
+    for (const j of segFifo) touched.add(j.runId);
+    for (const [, s] of segAccounts) if (s.owner) touched.add(s.owner);
+    for (const rid of touched) sweepOrphans(rid);
+    reclaimResidualOwners();
+    if (!localActive.size && !segFifo.length) return;
     let healthOk = null;
     const health = async () => { if (healthOk === null) healthOk = await localHealth(cfg).catch(() => false); return healthOk; };
     for (const runId of Array.from(localActive)) {
@@ -1274,20 +1406,6 @@ async function localTick() {
         w = load(runId);
         if (!w || !arr(w.pending).some(p => p.local && ['queued', 'running', 'retry_wait'].includes((p.local || {}).status))) localActive.delete(runId);
       }
-    }
-    // release_pending 孤儿:段切换时账号还在忙,segReleaseAccounts 只标「跑完再放」,
-    // 由 segJob 的 finally 消费。若那条链永远不结束(本次 send_failed 事故),标记会永久挂着,
-    // owner 不放 → 一个 run 占死多个账号。判据用「owner 盘上已无任何活跃卡且不在 fifo 排队」,
-    // 不依赖时间阈值,避免误伤静默时段里正常跑几十分钟的段。
-    for (const [, s] of segAccounts) {
-      if (!s.release_pending || !s.owner) continue;
-      const ow = load(s.owner);
-      const active = ow && arr(ow.pending).some(p => p.local && ['queued', 'running', 'retry_wait'].includes(p.local.status));
-      if (active || segFifo.some(j => j.runId === s.owner)) continue;
-      const rid = s.owner;
-      s.owner = ''; s.busy = false; s.release_pending = false;
-      segNotice(rid, 'warn', '检测到一条本地模型链已结束但账号占用没释放,已自动回收;后面的排队任务可以继续了。');
-      segKick();
     }
     if (segFifo.length) segKick();
   } finally {
@@ -1476,9 +1594,17 @@ function turnOn(runOrId, opts) {
 // 某条失败:停在那条不重试,等人点「本地模型调用」/ 人工粘贴 / 改用 API;那条处理好以后,后面新出来的条目照旧自动调用(开关一直开着)。
 // 终审「修改」(check:'edits')在二稿审稿之后、要人看,不自动。
 const AUTO_STOP_TIP = '。自动本地模型调用停在这一条:可以再点「本地模型调用」、人工粘贴,或点「这一条改用 API 跑」;这一条处理好后,后面的照旧自动调用';
-function autoWanted(web, p) {
+function autoWanted(web, p, runId) {
   if (!web || !p || !web.on || !web.auto_local || web.auto_local_done) return false;
   if (p.check === 'edits') return false;
+  // run 终态 / 二稿审稿报告已出:自动链路到此为止。任何点火路径都必须过这一关,
+  // 不让「报告出来后又点开自动」把已完成的步骤重新点火(本次多卡叠加的机制源头)。
+  // runId 缺省时跳过(兼容只做文案判断的调用),但 autoKick / setAuto 都会传。
+  if (runId) {
+    let run = null;
+    try { run = store.getRun(runId); } catch (e) {}
+    if (run && (RUN_END.has(String(run.status || '')) || (run.review && run.review.audit))) return false;
+  }
   const l = String(p.label || '');
   return p.kind === 'script' || (WEB_RE.test(l) && !API_RE.test(l));
 }
@@ -1490,7 +1616,7 @@ function autoKick(runId, id) {
       if (!st) return;
       const web = webOf(st);
       const p = web.pending.find(x => x.id === id);
-      if (!p || !autoWanted(web, p) || (p.local && p.local.status)) return;
+      if (!p || !autoWanted(web, p, runId) || (p.local && p.local.status)) return;
       if (!waiters.has(wkey(runId, id))) return;
       autoStart(runId, id);
     } catch (e) { console.log('自动本地模型调用异常(不影响任务): ' + (e && e.message)); }
@@ -1507,21 +1633,39 @@ function autoStart(runId, id) {
     return false;
   }
 }
-// 接力页上的开关。打开时把正在等的条目(没在跑的)立刻交给本地模型
+// 接力页上的开关。打开时把「正在等的这一条」立刻交给本地模型,后面新挂的卡由 autoKick 接手。
+// 不再无差别遍历所有 pending 卡点火(那会把已 done 步骤的过期卡重新点火),
+// 也不再清 auto_local_done(那是 review.js 出报告时设的停止标记)。
 function setAuto(runId, on) {
   const web = must(runId);
   if (on && !web.on) throw err('这个任务没开网页版,不能自动本地模型调用');
+  let run = null;
+  try { run = store.getRun(runId); } catch (e) {}
+  const ended = !!web.auto_local_done || !!(run && (RUN_END.has(String(run.status || '')) || (run.review && run.review.audit)));
+  if (on && ended) {
+    // run 已结束 / 报告已出:强制不变量,自动链路到此为止,不再点火、不再制造过期卡
+    web.auto_local = false;
+    if (!web.auto_local_done) web.auto_local_done = now();
+    save(runId, web);
+    const cleaned = sweepOrphans(runId);
+    return { ok: true, auto_local: false, started: 0, cleaned,
+      note: '二稿审稿报告已出来或任务已结束,自动本地模型调用到此为止:去审稿页勾要改的问题' };
+  }
   web.auto_local = !!on;
   web.auto_at = now();
-  if (on) delete web.auto_local_done;
   save(runId, web);
-  let started = 0;
-  if (on) web.pending.forEach(p => {
-    const s = (p.local || {}).status;
-    if (s === 'running' || s === 'queued' || s === 'retry_wait' || !autoWanted(web, p) || !waiters.has(wkey(runId, p.id))) return;
-    if (autoStart(runId, p.id)) started++;
-  });
-  return { ok: true, auto_local: !!on, started };
+  let started = 0, cleaned = 0;
+  if (on) {
+    // 把「清理」内化进打开开关这一个动作,用户不需要额外点任何东西
+    cleaned = sweepOrphans(runId);
+    const fresh = load(runId);
+    const cur = fresh ? webOf(fresh) : web;
+    // 只点「最新一张 + 还没跑过 + 确实有活管线在等」的卡;过期卡/failed 卡一律不碰
+    const cand = arr(cur.pending).slice().reverse().find(p =>
+      !(p.local && p.local.status) && waiters.has(wkey(runId, p.id)) && autoWanted(cur, p, runId));
+    if (cand && autoStart(runId, cand.id)) started++;
+  }
+  return { ok: true, auto_local: !!on, started, cleaned };
 }
 // 二稿审稿报告出来了:到这里该人看报告、勾问题,不再自动
 function autoLocalDone(runId) {
@@ -1549,9 +1693,9 @@ function view(runOrId) {
     auto_local: !!w.auto_local,           // v1.124 自动本地模型调用开着
     auto_local_done: w.auto_local_done || null, // 二稿审稿报告已出,自动到此为止
     pending: arr(w.pending).filter(p => p.kind === 'script' || waiters.has(wkey(id, p.id)) || (WEB_RE.test(String(p.label || '')) && !API_RE.test(String(p.label || '')))) // v1.106 升级前挂着、现在改走 API 的步骤不再显示
-      .map(({ prior, key, ...p }) => ({ ...p, waiting: waiters.has(wkey(id, p.id)) })),
+      .map(({ prior, key, ...p }) => ({ ...p, waiting: waiters.has(wkey(id, p.id)), droppable: orphanCard(id, p) })),
     done: arr(w.done)
   };
 }
 
-module.exports = { WEB_RE, wants, relay, relayForce, forget, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, setAuto, autoLocalDone, startLocalTick, localTick, localDebug, whyBlocked, localDisplay, localTerminal, healStaleRunning, segReclaim, _waiters: waiters };
+module.exports = { WEB_RE, wants, relay, relayForce, forget, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, setAuto, autoLocalDone, startLocalTick, localTick, localDebug, whyBlocked, localDisplay, localTerminal, healStaleRunning, segReclaim, orphanCard, cardStepDone, sweepOrphans, sweepAllOrphans, dropCard, ownerAlive, reclaimResidualOwners, _waiters: waiters };
