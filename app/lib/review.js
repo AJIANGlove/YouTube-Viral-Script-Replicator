@@ -349,7 +349,7 @@ function buildView(run, asset) {
       // 最后一轮复审的问题:建议里写明了「原句」改成「新句」、原句只出现一次的,可以直接应用
       if (last) last.open = last.open.map(x => applyView(run.id, script, lang, 'recheck', x));
       const ti = thesisItem(run);
-      return { ...f, length_fit: f.length_fit ? (({ before_text, after_text, ...x }) => ({ ...x, can_undo: x.status === 'done' && !!before_text && after_text === script }))(f.length_fit) : null, info_check: infoView(run.id, script, lang, f.info_check), thesis_item: ti ? applyView(run.id, script, lang, 'thesis', ti) : null, manual_applies: arr(f.manual_applies).map(({ before_text, diff, ...r }) => r), rechecks, scores_before: fillScores(f.scores_before, f.audit_report, dims, 1), scores_after: last ? { ...last.scores, ...(f.scores_after || {}) } : f.scores_after };
+      return { ...f, length: lengthView(run, script), info_check: infoView(run.id, script, lang, f.info_check), thesis_item: ti ? applyView(run.id, script, lang, 'thesis', ti) : null, manual_applies: arr(f.manual_applies).map(({ before_text, diff, ...r }) => r), rechecks, scores_before: fillScores(f.scores_before, f.audit_report, dims, 1), scores_after: last ? { ...last.scores, ...(f.scores_after || {}) } : f.scores_after };
     })() : null,
     opening: openingView(run),
     folded_reverts: arr(state.folded_reverts), // v1.120 「已退回」提醒条你手动折叠过的(按退回记录存)
@@ -1585,6 +1585,78 @@ function locate(text, old) {
 // 前 2 分钟只许删和换:这段里净加词的修改不采用;整篇改完不许超过改前词数的 3%,超了从加得最多的那处开始退回。
 const GROWTH_OPENING_SEC = 120, GROWTH_TOLERANCE = 0.03;
 const scriptWords = text => checks.parseChapters(text || '').reduce((n, c) => n + c.words, 0);
+// v1.129 篇幅:按配音语速把稿子折成分钟,和目标时长比。超过目标 5% 算偏长,不到 90% 算偏短。
+// 偏了就在二稿审稿报告的问题列表里多一条「X-LEN」(S 级,默认勾上),勾了就和别的问题一起在终审里改,终审复审一次全查
+const LEN_LOW = 0.9, LEN_HIGH = 1.05;
+function lengthTarget(run) {
+  const goalSec = checks.goalSeconds((run.audience || {}).video_goal);
+  const wpm = require('./narration').narrationWpm(run, null).wpm;
+  if (!goalSec || !wpm) return null;
+  return { goal_min: Math.round(goalSec / 6) / 10, wpm, target: Math.round(goalSec * wpm / 60) };
+}
+function lengthNeed(run, text) {
+  const t = lengthTarget(run);
+  if (!t) return null;
+  const words = scriptWords(text);
+  if (!words) return null;
+  const ratio = words / t.target;
+  const mode = ratio > LEN_HIGH ? 'trim' : ratio < LEN_LOW ? 'expand' : '';
+  return { ...t, words, ratio: Math.round(ratio * 100) / 100, mode, minutes: Math.round(words / t.wpm * 10) / 10, delta: Math.abs(t.target - words) };
+}
+// 终审改的底稿:稿子在二稿之后没动过就是二稿,动过就是现在的稿子(和 runFinal 一致)
+function finalBaseText(run) {
+  const vs = Object.fromEntries(arr((run.review || {}).versions).map(v => [v.key, v]));
+  const start = currentScript(run);
+  const untouched = (vs.d3 && vs.d3.text === start) || (vs.d4 && vs.d4.text === start);
+  return vs.d2 && untouched ? vs.d2.text : start;
+}
+// 开头锁:起点落在前 2 分钟里的章节
+function openingChapters(run, text) {
+  const lim = growthLimit(run, text);
+  let acc = 0; const out = [];
+  scriptChapters(text).forEach(c => { if (acc < lim.openingWords) out.push(c.id); acc += checks.countWords(c.text); });
+  return out;
+}
+function lengthIssue(run) {
+  const base = finalBaseText(run);
+  const ln = lengthNeed(run, base);
+  if (!ln || !ln.mode) return null;
+  const trim = ln.mode === 'trim';
+  const locked = openingChapters(run, base);
+  const thesis = infoThesis(run);
+  const problem = (trim ? '偏长' : '偏短') + ':现在 ' + ln.words + ' 词,按配音语速 ' + ln.wpm + ' 词/分钟约 ' + ln.minutes + ' 分钟;目标 ' + ln.goal_min + ' 分钟约 ' + ln.target + ' 词,' + (trim ? '要删' : '要补') + '约 ' + ln.delta + ' 词';
+  const direction = trim
+    ? '删重复、双重总结、空话、绕圈子的过渡;和勾选的其他问题重合的地方优先删。开头(' + (locked.join('、') || '前 2 分钟') + ')、核心论点不动'
+    : '在讲得太快的地方展开(数字太密的句子拆开说、补上跳过的那一步、补一句画面);和勾选的其他问题重合的地方优先补。不加新事实。开头(' + (locked.join('、') || '前 2 分钟') + ')、核心论点不动';
+  const how = trim
+    ? '怎么删(按顺序):\n1. 重复:前面已经讲透、后面又完整讲一遍的,后面那处压成一句回顾或整段删掉;上一章结尾和下一章开头的双重总结删一个。\n2. 空话:不带新信息的感叹、套话、绕圈子的过渡句、同一个意思换说法再说一遍的句子。\n3. 举例太多的地方留最有力的那个。\n不删:事实和数字第一次出现的地方、算账过程、案例的关键情节、高峰段、钩子和悬念句、每章自己的结论。删完前后要接得上。'
+    : '怎么补:\n1. 讲得太快的地方展开:把关键的数换成观众熟悉的东西比一下,把算账的中间一步说出来。\n2. 场景:用这一章已有的事实,补一两句具体画面(在哪、什么时候、谁在做什么)。\n3. 过渡:在进长解释前补一句理由(为什么要看这个)。\n不补:新事实、新数字、新案例、新观点;不重复前面讲过的内容。每处补一两句,分散到不同章节。';
+  const detail = '## 问题编号:X-LEN(篇幅)\n**问题类型:** 篇幅和目标时长对不上\n**现状:** ' + problem + '。\n**要求:** 把这一项和上面勾选的其他问题一起改;改完全稿控制在 ' + Math.round(ln.target * 0.95) + '–' + Math.round(ln.target * LEN_HIGH) + ' 词(上面其他问题的修改也算在里面)。\n' +
+    '**优先:** 先看上面勾选的问题里,有没有正好能靠' + (trim ? '删' : '补') + '解决的(比如某条问题本来就是重复、啰嗦、跳步、讲得太快),在那里' + (trim ? '删' : '补') + ',一处同时解决两件事。\n' + how + '\n' +
+    '**不许动:** 开头章节 ' + (locked.join('、') || '(前 2 分钟)') + ' 一个字都不改;核心论点' + (thesis ? '「' + thesis + '」' : '') + '和支撑它的关键数字、算账、反转不删不改;不改事实和数字,不加新事实。\n' +
+    '**标记:** 为篇幅做的修改,「类别」里写 X-LEN;同时解决了别的问题就把编号都写上,如「P05 X-LEN」。「理由」用中文大白话写清这处' + (trim ? '删了什么、为什么能删' : '补了什么、为什么要补') + '。';
+  return { id: 'X-LEN', extra: 'len', severity: 'S', priority: 'P0', chapter: '全篇', type: '篇幅和目标时长对不上', problem, direction, detail, len: { mode: ln.mode, words: ln.words, target: ln.target, goal_min: ln.goal_min, wpm: ln.wpm, minutes: ln.minutes } };
+}
+// 终审结果里的篇幅:二稿 → 终稿的词数和分钟;勾了 X-LEN 的,列出为篇幅做的每一处修改
+function lengthView(run, script) {
+  const t = lengthTarget(run);
+  if (!t || !script) return null;
+  const au = (run.review || {}).audit || {};
+  const used = au.used_selection || null;
+  const picked = !!(used && arr(used.ids).includes('X-LEN'));
+  const d3 = arr((run.review || {}).versions).find(v => v.key === 'd3');
+  const base = d3 && d3.base_text;
+  const now = scriptWords(script);
+  const minOf = w => Math.round(w / t.wpm * 10) / 10;
+  const edits = picked && d3 ? arr(d3.edits).filter(e => e.ok && /X-LEN/i.test(e.category || '')).map(e => ({
+    chapter: e.chapter, old: e.old, new: e.new || '', reason: e.reason || '',
+    also: [...new Set((String(e.category || '').toUpperCase().match(/\bP\d+|X-[A-Z0-9]+/g) || []).filter(x => x !== 'X-LEN'))],
+    kind: !e.new ? 'del' : checks.countWords(e.new) >= checks.countWords(e.old || '') ? 'add' : 'cut'
+  })) : [];
+  const ratio = now / t.target;
+  return { ...t, picked, base_words: base ? scriptWords(base) : null, base_min: base ? minOf(scriptWords(base)) : null, now_words: now, now_min: minOf(now),
+    state: ratio > LEN_HIGH ? 'long' : ratio < LEN_LOW ? 'short' : 'ok', edits };
+}
 // maxWords:改完最多多少词。终审多轮修改共用第一轮算出的上限,不让每轮各涨 3%
 function growthLimit(run, base) {
   const wpm = require('./narration').narrationWpm(run, null).wpm || 150;
@@ -2197,6 +2269,8 @@ function auditExtras(run, cs) {
       problem: rest.length + ' 处:' + rest.slice(0, 3).map(x => String(x.problem).slice(0, 60)).join(';') + (rest.length > 3 ? '…' : ''), direction: '照下面每条的改法改',
       detail: '## 问题编号:X-CONS(原片残留 / 人物连贯)\n' + rest.map((x, i) => (i + 1) + '. ' + (x.chapter ? x.chapter + ' ' : '') + x.problem + '\n   改法:' + x.suggestion).join('\n') });
   }
+  // v1.129 篇幅偏了:多一条 X-LEN,勾了就和别的问题一起在终审里改
+  try { const li = lengthIssue(run); if (li) out.push(li); } catch (e) { /* 篇幅算不出来不影响别的 */ }
   // 开头单独审不放进这里:开头单独在「开头单独审」那一栏里改(v1.118「按开头审意见改开头」)
   return out;
 }
@@ -2737,6 +2811,8 @@ async function runFinal(runId) {
     if (r2.truncated && !/^===\s*END\s*===/m.test(r2.content)) edits1 = edits1.slice(0, -1);
     const noEditsLog = edits1.length ? '' : dumpRaw(run, 'final_noedits', '【审稿报告】\n' + r1.content + '\n\n【修改】\n' + r2.content);
     const limit = growthLimit(run, base);
+    // v1.129 勾了篇幅偏短(X-LEN):这一遍终审允许把全篇补到目标时长(原来只许比二稿多 3%)
+    if (picked.includes('X-LEN')) { const ln = lengthNeed(run, base); if (ln && ln.mode === 'expand') limit.maxWords = Math.max(limit.maxWords, Math.round(ln.target * LEN_HIGH)); }
     const a1 = await applyWithRepair(run, reviseCfg, base, edits1, '终审·修改', limit);
     let text = a1.next, edits = a1.edits.filter(e => e.ok).map(e => ({ ...e })), failed = a1.edits.filter(e => !e.ok);
     // ③ 复审(没达标就再改一轮,再复审一次)
@@ -3512,116 +3588,6 @@ function startDeai(runId, body) {
 // 用进程内集合而不是 run 文件里的 running 状态:进程重启后集合自然清空,崩溃留下的假 running 不会挡续跑
 // 正在跑的审稿:任务 id → 现在在跑哪一步(给页面和 409 提示说清楚是什么在跑)
 const passRunning = new Map();
-// ---------- v1.127 终稿篇幅调整(用户 2026-11-20):写稿流程不变,终审那一串跑完后看终稿词数 ----------
-// 按配音语速折成分钟,太长就删重复(优先删重复信息检查查到的重讲、双重总结),太短就在已有内容上稍微展开;
-// 开头(前 2 分钟)不动,不加新事实。只在结果更接近目标时才换终稿,换了可以一键撤回。
-// 实测(yt-studio 导出 15 条):26 分钟目标成片 20–31.6 分钟,长的多是写满预算后配音又慢
-const LENFIT_LOW = 0.9, LENFIT_HIGH = 1.05;
-function lengthFitTarget(run) {
-  const goalSec = checks.goalSeconds((run.audience || {}).video_goal);
-  const wpm = require('./narration').narrationWpm(run, null).wpm;
-  if (!goalSec || !wpm) return null;
-  return { goal_min: Math.round(goalSec / 6) / 10, wpm, target: Math.round(goalSec * wpm / 60) };
-}
-function lengthFitNeed(run, text) {
-  const t = lengthFitTarget(run);
-  if (!t) return null;
-  const words = scriptWords(text);
-  if (!words) return null;
-  const ratio = words / t.target;
-  const mode = ratio > LENFIT_HIGH ? 'trim' : ratio < LENFIT_LOW ? 'expand' : '';
-  return { ...t, words, ratio: Math.round(ratio * 100) / 100, mode, minutes: Math.round(words / t.wpm * 10) / 10 };
-}
-async function runLengthFit(runId) {
-  const cfg = pl().loadConfig();
-  let { run } = loadRunAsset(runId);
-  const start = currentScript(run);
-  const need = lengthFitNeed(run, start);
-  if (!need || !need.mode) return { ok: true, skipped: true };
-  const t0 = Date.now();
-  const setLf = patch => { const f = store.getRun(runId); if (!f || !(f.review || {}).final) return f; f.review.final.length_fit = { ...patch }; store.saveRun(f); return f; };
-  setLf({ status: 'running', at: new Date().toISOString(), mode: need.mode, before_words: need.words, target_words: need.target, goal_min: need.goal_min, wpm: need.wpm });
-  try {
-    const trim = need.mode === 'trim';
-    const chs = scriptChapters(start);
-    const lim = growthLimit(run, start);
-    // 开头锁:起点落在前 2 分钟里的章节整章不动
-    let acc = 0; const locked = [];
-    chs.forEach(c => { if (acc < lim.openingWords) locked.push(c.id); acc += checks.countWords(c.text); });
-    const fin = (run.review || {}).final || {};
-    const reps = arr((fin.info_check || {}).problems).filter(x => !x.applied && !x.ignored && /重讲|双重总结/.test(x.type || '')).map(x => '- ' + x.chapter + ' ' + x.type + ':「' + String(x.quote || '').slice(0, 120) + '」' + ((x.plain || {}).problem ? '(' + x.plain.problem + ')' : ''));
-    const delta = Math.abs(need.target - need.words);
-    const lang = (run.audience || {}).target_language || '';
-    const prompt = an().fillVars(readPrompt('length_fit.md'), {
-      target_language: lang, topic: run.topic || '', thesis: infoThesis(run),
-      task: trim ? '把稿子删短到目标时长。' : '把稿子稍微写长一点,补到目标时长。',
-      words: need.words, wpm: need.wpm, minutes: need.minutes, goal: need.goal_min, target: need.target,
-      direction: trim ? '要删掉' : '要补上', delta,
-      locked: locked.length ? locked.join('、') : '无',
-      repeats: trim && reps.length ? reps.join('\n') : '(无)',
-      category: trim ? '删重复' : '展开',
-      rules: trim
-        ? '怎么删(按顺序):\n1. 重复:前面已经讲透、后面又完整讲一遍的,后面那处压成一句回顾或整段删掉;上一章结尾和下一章开头的双重总结删一个。\n2. 空话:不带新信息的感叹、套话、绕圈子的过渡句、同一个意思换说法再说一遍的句子。\n3. 举例太多的地方留最有力的那个。\n不删:事实和数字第一次出现的地方、算账过程、案例的关键情节、高峰段、钩子和悬念句、每章自己的结论。删完读起来要连得上(删段落时注意前后衔接)。'
-        : '怎么补:\n1. 讲得太快的地方展开:把关键的数换成观众熟悉的东西比一下,把算账的中间一步说出来。\n2. 场景:用这一章已有的事实,补一两句具体画面(在哪、什么时候、谁在做什么)。\n3. 过渡:在进长解释前补一句理由(为什么要看这个)。\n不补:新事实、新数字、新案例、新观点;不重复前面讲过的内容;不在开头(上面锁定的章节)加字。每处补的不要太长(一两句),分散到不同章节。',
-      script: start
-    });
-    let r = await callLong(run, cfg, prompt, '篇幅调整');
-    let edits = parseEdits(r.content);
-    if (r.truncated && !/^===\s*END\s*===/m.test(r.content)) edits = edits.slice(0, -1);
-    edits = edits.filter(e => !locked.includes(e.chapter));
-    if (!edits.length) throw new Error('AI 没有给出能用的修改(或都在锁定的开头里)');
-    const limit = { openingWords: lim.openingWords, maxWords: trim ? need.words : Math.round(need.target * LENFIT_HIGH), wpm: need.wpm };
-    const a = await applyWithRepair(run, cfg, start, edits.map(e => ({ ...e, round: '篇幅调整' })), '篇幅调整', limit);
-    const okEdits = a.edits.filter(e => e.ok);
-    if (!okEdits.length) throw new Error('AI 给的 ' + edits.length + ' 处都没对上原句,稿子没变');
-    const pure = await purifyText(run, cfg, a.next, '篇幅调整');
-    const text = pure.text;
-    if (checks.chapterStructureError(text, chs.length)) throw new Error('改完章节结构不对,没有采用');
-    const after = scriptWords(text);
-    // 只在更接近目标时才换:删的不许删过头太多,补的不许补过头
-    if (Math.abs(after - need.target) >= Math.abs(need.words - need.target)) throw new Error('改完 ' + after + ' 词,没有比原来(' + need.words + ' 词)更接近目标 ' + need.target + ' 词,没有采用');
-    const fresh = store.getRun(runId) || run;
-    if (currentScript(fresh) !== start) throw new Error('篇幅调整期间稿子被改过,这次结果没有保存');
-    writeScript(fresh, text, '终审·篇幅调整');
-    const saved = currentScript(fresh);
-    fresh.review.final.length_fit = {
-      status: 'done', at: new Date().toISOString(), secs: Math.round((Date.now() - t0) / 100) / 10, mode: need.mode,
-      before_words: need.words, after_words: scriptWords(saved), target_words: need.target, goal_min: need.goal_min, wpm: need.wpm,
-      before_min: need.minutes, after_min: Math.round(scriptWords(saved) / need.wpm * 10) / 10,
-      edits: okEdits.map(e => ({ chapter: e.chapter, old: e.old, new: e.new, reason: e.reason || '' })), failed: a.edits.filter(e => !e.ok).length,
-      before_text: start, after_text: saved
-    };
-    if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
-    store.saveRun(fresh);
-    return { ok: true, changed: true };
-  } catch (e) {
-    setLf({ status: 'failed', error: e.message, at: new Date().toISOString(), mode: need.mode, before_words: need.words, target_words: need.target, goal_min: need.goal_min, wpm: need.wpm });
-    return { ok: false, error: e.message };
-  }
-}
-async function lengthFitLocked(runId) {
-  try {
-    const run = store.getRun(runId);
-    const need = run && (run.review || {}).final ? lengthFitNeed(run, currentScript(run)) : null;
-    if (!need || !need.mode) return false;
-    passRunning.set(runId, need.mode === 'trim' ? '篇幅调整(终稿偏长,删重复)' : '篇幅调整(终稿偏短,稍微补长)');
-    const res = await runLengthFit(runId);
-    return !!(res && res.changed);
-  } catch (e) { return false; }
-}
-// 撤回篇幅调整:稿子之后没再改过才能撤
-function lengthFitUndo(runId) {
-  const run = store.getRun(runId);
-  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
-  const lf = ((run.review || {}).final || {}).length_fit;
-  if (!lf || lf.status !== 'done' || !lf.before_text) throw Object.assign(new Error('没有可以撤回的篇幅调整'), { status: 400 });
-  if (currentScript(run) !== lf.after_text) throw Object.assign(new Error('篇幅调整之后稿子又改过了,不能直接撤回'), { status: 409 });
-  writeScript(run, lf.before_text);
-  run.review.final.length_fit = { ...lf, status: 'undone', undone_at: new Date().toISOString(), before_text: '', after_text: '' };
-  store.saveRun(run);
-  return { ok: true };
-}
-
 function passBusy(runId) { return passRunning.has(runId); }
 function passLabel(runId) { return passRunning.get(runId) || ''; }
 const busyMsg = (runId, what) => '「' + (passLabel(runId) || '审稿') + '」正在跑,等它跑完再' + what;
@@ -3642,8 +3608,7 @@ async function runPasses(runId, from) {
       }
     }
     // v1.101:终审后论点核对、出解决方案、开头单独审互不依赖,同时跑;改开头会动稿子,放在它们之后,改了再重审开头
-    // v1.127 终审那一串最后加「篇幅调整」:终稿太长删重复、太短稍微补长(在范围内就跳过)
-    const order = from === 'final' ? ['final', 'claim', 'options', 'opening', 'openfix', 'lengthfit'] : from === 'autofix' ? ['claim', 'autopatch', 'openfix', 'opening', 'lengthfit'] : from === 'audit' ? ['audit'] : ['check', 'opening', 'audit'];
+    const order = from === 'final' ? ['final', 'claim', 'options', 'opening', 'openfix'] : from === 'autofix' ? ['claim', 'autopatch', 'openfix', 'opening'] : from === 'audit' ? ['audit'] : ['check', 'opening', 'audit'];
     for (let oi = 0; oi < order.length; oi++) {
       const k = order[oi];
       passRunning.set(runId, PASS_LABELS[k] || k);
@@ -3672,7 +3637,6 @@ async function runPasses(runId, from) {
       if (k === 'claim') { try { await claimCheckAndFix(runId); } catch (e) {} continue; }
       if (k === 'openfix') { await autoOpeningFixLocked(runId); await refreshClaimIfStale(runId); if (from === 'final') await refreshOpeningIfStale(runId); continue; }
       if (k === 'autopatch') { await autoPatchLocked(runId); continue; }
-      if (k === 'lengthfit') { if (await lengthFitLocked(runId)) { await refreshClaimIfStale(runId); await refreshOpeningIfStale(runId); } continue; }
       try { if (k === 'audit') await runReverseAudit(runId); else if (k === 'final') await runFinal(runId); else await runPass(runId, k); } catch (e) { break; }
     }
   } finally { passRunning.delete(runId); }
@@ -5305,4 +5269,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { lengthFitNeed, runLengthFit, lengthFitUndo, LENFIT_LOW, LENFIT_HIGH, claimVerdictIssue, aiFixPlans, thesisItem, foldRevert, auditExtras, selectedFixes, parseAuditIssues, auditSections, auditLooksNonEmpty, recoverAuditIssues, infoCheckRun, startInfoCheck, infoReuseCheck, infoNormalize, infoBrief, INFO_GUARD, explainRun, stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE, restoreOpening, openingCompareView, draftScript };
+module.exports = { lengthTarget, lengthNeed, lengthIssue, lengthView, finalBaseText, LEN_LOW, LEN_HIGH, claimVerdictIssue, aiFixPlans, thesisItem, foldRevert, auditExtras, selectedFixes, parseAuditIssues, auditSections, auditLooksNonEmpty, recoverAuditIssues, infoCheckRun, startInfoCheck, infoReuseCheck, infoNormalize, infoBrief, INFO_GUARD, explainRun, stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE, restoreOpening, openingCompareView, draftScript };

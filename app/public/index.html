@@ -3089,7 +3089,7 @@ function rvDraw() {
   if (rvState.tab === 'audit') {
     el.innerHTML = `<h2 style="display:flex;justify-content:space-between;align-items:center"><span class="v13">审稿:初稿 → 二稿 → 审稿报告 → 终稿</span>
       <span><button class="an-btn v13" onclick="rvTranslate()" ${v.translating ? 'disabled' : ''}>${v.translating ? '中文对照翻译中…' : '补齐中文对照'}</button></span></h2>
-      ${passLine}${rvLengthFitHtml(v)}${rvOpeningHtml(v)}${rvOpenCompareHtml(v)}${tabs}${rvConsCardHtml(v)}
+      ${passLine}${rvLengthHtml(v)}${rvOpeningHtml(v)}${rvOpenCompareHtml(v)}${tabs}${rvConsCardHtml(v)}
       ${rvState.err ? `<div class="err-list">${esc(rvState.err)}</div>` : ''}
       ${rvAuditHtml(v)}`;
     return;
@@ -3097,7 +3097,7 @@ function rvDraw() {
   if (rvState.tab !== 'current') {
     el.innerHTML = `<h2 style="display:flex;justify-content:space-between;align-items:center"><span class="v13">审稿:初稿 → 二稿 → 终稿</span>
       <span><button class="an-btn v13" onclick="rvTranslate()" ${v.translating ? 'disabled' : ''}>${v.translating ? '中文对照翻译中…' : '补齐中文对照'}</button></span></h2>
-      ${passLine}${rvLengthFitHtml(v)}${rvOpeningHtml(v)}${rvOpenCompareHtml(v)}${tabs}${rvConsCardHtml(v)}
+      ${passLine}${rvLengthHtml(v)}${rvOpeningHtml(v)}${rvOpenCompareHtml(v)}${tabs}${rvConsCardHtml(v)}
       ${v.zh_error ? `<div class="err-list">中文对照翻译失败:${esc(v.zh_error)}</div>` : ''}
       ${rvState.err ? `<div class="err-list">${esc(rvState.err)}</div>` : ''}
       ${rvState.tab === 'd2' ? rvFactHtml(v.factcheck, v.translating) : ''}
@@ -3110,7 +3110,7 @@ function rvDraw() {
       <span><button class="an-btn v13" onclick="rvToggleFlags()">${rvState.onlyFlags ? '显示全部章节' : '只看有问题的章节'}</button>
       <button class="an-btn v13" onclick="rvTranslate()" ${v.translating ? 'disabled' : ''}>${v.translating ? '中文对照翻译中…' : '补齐中文对照'}</button>
       ${lastRunDetail && !lastRunDetail.draft_first ? '<button class="an-btn" onclick="rvToggleOpen()">收起</button>' : ''}</span></h2>
-    ${passLine}${rvLengthFitHtml(v)}${rvOpeningHtml(v)}${rvOpenCompareHtml(v)}${tabs}
+    ${passLine}${rvLengthHtml(v)}${rvOpeningHtml(v)}${rvOpenCompareHtml(v)}${tabs}
     ${rvPublishBriefHtml(v)}${rvConsCardHtml(v)}
     <div class="rv-bar v13">
       <span>篇幅 <b>${s.words}</b>${s.budget ? ' / 预算 ' + s.budget + ' 词(' + ratio + ')' : ' 词'}</span>
@@ -3287,7 +3287,7 @@ function rvAuditHtml(v) {
   const rows = issues.map(x => `<div class="rv-ai${sel.ids.has(x.id) ? ' on' : ''}">
       <label class="rv-ai-head"><input type="checkbox" ${sel.ids.has(x.id) ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="rvAuditToggle('${escAttr(x.id)}', this.checked)">
         <b>${esc(x.id)}</b> <span class="rv-chip ${RV_SEV_CLS[x.severity] || ''}">${esc(x.severity)} 级</span> <span class="rv-chip ${x.priority === 'P0' ? 'red' : x.priority === 'P1' ? 'yellow' : 'green'}">${esc(x.priority)}</span>
-        ${x.extra ? '<span class="rv-chip yellow">另外的检查</span>' : `<span class="rv-gain" title="改好这一处,总分预计提高">+${G.gains[x.id]} 分</span>`}
+        ${x.extra ? '<span class="rv-chip yellow">' + (x.extra === 'len' ? '篇幅' : '另外的检查') + '</span>' : `<span class="rv-gain" title="改好这一处,总分预计提高">+${G.gains[x.id]} 分</span>`}
         <span class="hint">${esc(x.chapter)} · ${esc(x.zh_type || x.type)}</span></label>
       <div class="rv-ai-body"><div class="rv-ai-cols"><div>${esc(x.problem)}${x.direction ? `<br><span class="hint">修改方向:${esc(x.direction)}</span>` : ''}</div>
         <div class="rv-ai-zh">${!x.need_zh ? '<span class="hint">(已是中文)</span>' : (x.zh_problem || x.zh_direction || !x.need_zh) ? `${esc(x.zh_problem || x.problem)}${x.direction ? `<br><span class="hint">修改方向:${esc(x.zh_direction || x.direction)}</span>` : ''}` : `<span class="hint">${v.translating ? '中文翻译中…' : '还没有中文,点上方「补齐中文对照」'}</span>`}</div></div>
@@ -3449,26 +3449,24 @@ function rvRevisionHtml(rev, translating) {
 // 复审没达标:按复审意见再改一轮(只补改勾选的问题,再复审一次)
 // 开头单独审:开头约 60 秒逐句(时间按配音语速推算)+ 中文 + 好在哪 + 风险 + 程序硬指标
 // 默认收起;展开/收起记在页面状态里,轮询重绘不会弹回去,刷新页面回到收起
-// v1.127 终稿篇幅调整:终审那一串跑完后,终稿太长删重复、太短稍微补长;这里显示结果,可以撤回
-function rvLengthFitHtml(v) {
-  const lf = (v.final || {}).length_fit;
-  if (!lf) return '';
-  const what = lf.mode === 'trim' ? '终稿偏长,删了重复' : '终稿偏短,稍微补长了';
-  const goal = `目标 ${esc(lf.goal_min)} 分钟(约 ${esc(lf.target_words)} 词,按 ${esc(lf.wpm)} 词/分钟)`;
-  if (lf.status === 'running') return `<div class="hint" style="margin:6px 0;color:#6d28d9">正在做篇幅调整:${lf.mode === 'trim' ? '终稿偏长,删重复' : '终稿偏短,稍微补长'}(现在 ${esc(lf.before_words)} 词,${goal})…</div>`;
-  if (lf.status === 'failed') return `<div class="hint" style="margin:6px 0;color:#b45309">篇幅调整没做成,终稿没动:${esc(lf.error || '')}(现在 ${esc(lf.before_words)} 词,${goal})</div>`;
-  if (lf.status === 'undone') return `<div class="hint" style="margin:6px 0">篇幅调整已撤回,终稿回到调整前(${esc(lf.before_words)} 词)。</div>`;
-  const rows = (lf.edits || []).map(e => `<li style="font-size:13px;margin:6px 0"><b>${esc(e.chapter || '')}</b> ${esc(e.reason || '')}<div class="hint" style="margin:2px 0">原:${esc(String(e.old || '').slice(0, 160))}</div><div class="hint" style="margin:2px 0">改:${esc(String(e.new || '').slice(0, 160)) || '(删除)'}</div></li>`).join('');
-  return `<details class="rv-md-box"><summary><b>篇幅调整</b>:${what} · ${esc(lf.before_words)} → ${esc(lf.after_words)} 词,约 ${esc(lf.before_min)} → ${esc(lf.after_min)} 分钟(${goal}) · 改了 ${(lf.edits || []).length} 处</summary>
-    <div class="hint" style="margin:6px 0">终审那一串跑完后,程序按配音语速把终稿折成分钟:超过目标 5% 就删重复,不到 90% 就在已有内容上稍微补一点。开头(前 2 分钟)不动,不加新事实。</div>
-    <ul style="margin:4px 0;padding-left:20px">${rows}</ul>
-    ${lf.can_undo ? `<div class="rv-ops"><button class="an-btn" onclick="rvLengthFitUndo(this)">撤回篇幅调整</button></div>` : ''}</details>`;
-}
-async function rvLengthFitUndo(btn) {
-  if (!confirm('撤回篇幅调整,终稿回到调整前?')) return;
-  if (btn) btn.disabled = true;
-  try { await rvPost('length_fit_undo', {}); } catch (e) { alert(e.message); if (btn) btn.disabled = false; return; }
-  rvRefresh();
+// v1.129 篇幅:终稿按配音语速折成几分钟、和目标比;审稿报告里勾了 X-LEN 的,列出终审为篇幅做的每一处修改(大白话理由)
+function rvLengthHtml(v) {
+  const L = (v.final || {}).length;
+  if (!L) return '';
+  const goal = `目标 ${esc(L.goal_min)} 分钟(约 ${esc(L.target)} 词,按 ${esc(L.wpm)} 词/分钟)`;
+  const nowTxt = `终稿 ${esc(L.now_words)} 词,约 ${esc(L.now_min)} 分钟`;
+  const stateTxt = L.state === 'long' ? '<span style="color:#b45309">还是偏长</span>' : L.state === 'short' ? '<span style="color:#b45309">还是偏短</span>' : '<span style="color:#047857">在目标范围内</span>';
+  if (!L.picked) {
+    if (L.state === 'ok') return '';
+    return `<div class="hint" style="margin:6px 0">篇幅:${nowTxt},${goal},${stateTxt}。这次终审没勾「X-LEN 篇幅」;想调,就在二稿审稿报告里勾上 X-LEN 再点终审。</div>`;
+  }
+  const del = L.edits.filter(e => e.kind !== 'add').length, add = L.edits.filter(e => e.kind === 'add').length;
+  const did = [del ? `删/压了 ${del} 处` : '', add ? `补了 ${add} 处` : ''].filter(Boolean).join('、') || '没有专门为篇幅改的地方';
+  const rows = L.edits.map(e => `<li style="font-size:13px;margin:6px 0"><b>${esc(e.chapter || '')}</b> ${e.kind === 'add' ? '补' : '删'}:${esc(e.reason || '')}${(e.also || []).length ? ` <span style="color:#047857">(同时解决 ${esc(e.also.join('、'))})</span>` : ''}
+    <div class="hint" style="margin:2px 0">原:${esc(String(e.old || '').slice(0, 160))}</div><div class="hint" style="margin:2px 0">改:${esc(String(e.new || '').slice(0, 160)) || '(删除)'}</div></li>`).join('');
+  return `<details class="rv-md-box"><summary><b>篇幅调整</b>(审稿报告里勾了 X-LEN):${L.base_words != null ? `二稿 ${esc(L.base_words)} 词约 ${esc(L.base_min)} 分钟 → ` : ''}${nowTxt}(${goal}),${stateTxt} · ${did}</summary>
+    <div class="hint" style="margin:6px 0">篇幅是和其他勾选的问题一起在终审里改的,改完的终稿已经复审过一次。开头(前 2 分钟)和核心论点没动。不想要这次的篇幅调整:在二稿审稿报告里取消勾选 X-LEN,再点终审。</div>
+    ${rows ? `<ul style="margin:4px 0;padding-left:20px">${rows}</ul>` : ''}</details>`;
 }
 function rvOpeningHtml(v) {
   const o = v.opening;
