@@ -277,6 +277,10 @@
 - **真人题改无名视角(硬规则)**:`track_cards.md` 的 POV 卡——主角是有名有姓的真实人物时,「你」改成同时代、在这个人身边的无名人物,真人只当背景人物、只写有来源的事;无名主角的处境/心理/对话是虚构设定,按时代真实制度写,不逐句写「记录未载」;`title.final_title` 带上无名视角。写前分析和定论点都读这张卡。
 - **亲历感(只 POV)**:`analysis.js` 的 `POV_FOUR` 接在叙事方式规则后(仅 `pov_mode` 为 climb/per_level 时进摘要);`craft_rules.md` P5(待验证=建议);`step1.md`/`step1_function.md`/`step2.md` 的 POV 条;`reverse_audit.md` B 段 POV 条件检查;`final_tracks/pov.md` C2。硬要求只有「每一级至少有一个『你』的具体处境,不能只报节点」;失去/能决定/决定不了是建议,不每级凑齐(其余 POV 稿逐章统计这三样本来就时有时无,硬凑会每级一个套路,和 DEAI_FOCUS 冲突)。
 
+## 二稿审稿报告重跑后不再一直「进行中」(v1.131,2026-11-20)
+
+点「重跑」二稿审稿报告后程序重启:`steps.reverse_audit` 一直是 running,而 `runPasses` 已经不在了,重启续跑(`resumeRun`)也不补已经终审过的任务;本地模型那张卡还会被 `manual.cardStepDone` 当成完成清掉(旧的 `review.audit` 还在,`key === 'reverse_audit' && run.review.audit` 判成 done),页面上没有要粘贴的卡。现在视图里 `passes.audit` 走 `passStepView`:running 但 `passRunning` 里没有这个任务,就显示「上次被中断了」并放出「重跑」按钮。`manual.js` 的判据没改。
+
 ## 信息重复检查不再一直转圈(v1.130,2026-11-20)
 
 `steps.info_check.status` 写成 running 后程序重启(或进程中途退出),任务文件里一直是 running,页面一直转圈、「重新检查」也被 409 挡住。现在 `review.js` 用内存里的 `infoBusy` 记正在查的任务:视图里 running 但不在 `infoBusy` 的显示成「上次检查被中断了」,`startInfoCheck` 只按 `infoBusy` 判断在不在查,能直接重新检查。

@@ -331,7 +331,7 @@ function buildView(run, asset) {
   const out = {
     run_id: run.id, status: run.status, target_language: lang,
     running: passLabel(run.id),
-    passes: { check: (run.steps || {}).draft_check || null, audit: (run.steps || {}).reverse_audit || null, final: (run.steps || {}).final_review || null, deai: (run.steps || {}).deai || null, final_open: (run.steps || {}).final_open || null, final_options: (run.steps || {}).final_options || null, info_check: infoStepView(run.id, (run.steps || {}).info_check || null) }, info_draft: state.info_draft ? { at: state.info_draft.at, error: state.info_draft.error || '', items: arr(state.info_draft.items), problems: arr(state.info_draft.problems).map(({ sig, ...x }) => x) } : null, // v1.104
+    passes: { check: (run.steps || {}).draft_check || null, audit: passStepView(run.id, (run.steps || {}).reverse_audit || null), final: (run.steps || {}).final_review || null, deai: (run.steps || {}).deai || null, final_open: (run.steps || {}).final_open || null, final_options: (run.steps || {}).final_options || null, info_check: infoStepView(run.id, (run.steps || {}).info_check || null) }, info_draft: state.info_draft ? { at: state.info_draft.at, error: state.info_draft.error || '', items: arr(state.info_draft.items), problems: arr(state.info_draft.problems).map(({ sig, ...x }) => x) } : null, // v1.104
     audit: state.audit ? { ...state.audit, issues: arr(state.audit.issues).map(x => ({ ...x, zh_type: hasForeign(x.type) ? zhOf(state, x.type) : '', zh_problem: hasForeign(x.problem) ? zhOf(state, x.problem) : '', zh_direction: hasForeign(x.direction) ? zhOf(state, x.direction) : '', need_zh: hasForeign(x.problem) || hasForeign(x.direction) })), score: state.audit.score != null ? state.audit.score : reportScore(state.audit.report), stale: state.audit.base_hash !== hash(script) && ((arr(state.versions).find(v => v.key === 'd3') || {}).text) !== script } : null,
     factcheck: state.factcheck ? { ...state.factcheck, items: arr(state.factcheck.items).map(x => ({ ...x, zh_claim: hasForeign(x.claim) ? zhOf(state, x.claim) : '' })) } : null,
     versions: arr(state.versions).map(v => ({ key: v.key, label: v.label, at: v.at, issues: arr(v.issues), changed: arr(v.changed), truncated: !!v.truncated })),
@@ -711,6 +711,8 @@ function infoBrief(ic) {
 // 终审后跑:按终稿实际内容查,结果存在 review.final.info_check;以前出过改法、应用过、忽略过的按 sig 认回来
 // v1.130 正在查的任务(内存里):程序重启后任务文件里还写着 running,但其实没人在查,页面会一直转圈
 const infoBusy = new Set();
+// v1.131 二稿审稿报告同理:点了「重跑」后程序重启,任务里一直写着进行中,其实已经没人在跑(审稿走 runPasses,在跑时 passRunning 里有它)
+const passStepView = (runId, st) => st && st.status === 'running' && !passRunning.has(runId) ? { ...st, status: 'failed', error: '上次被中断了(程序重启过或出错退出),点「重跑」再出一次' } : st;
 const infoStepView = (runId, st) => st && st.status === 'running' && !infoBusy.has(runId) ? { ...st, status: 'failed', error: '上次检查被中断了(程序重启过或出错退出),点「重新检查」再查一次' } : st;
 async function infoCheckRun(runId) {
   if (infoBusy.has(runId)) return null;
