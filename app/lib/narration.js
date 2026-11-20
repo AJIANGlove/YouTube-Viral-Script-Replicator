@@ -6,7 +6,9 @@ const store = require('./store');
 const checks = require('./checks');
 const voice = require('./voice');
 
-const DEFAULT_WPM = { Korean: 113 };
+// v1.126 韩文默认改成 106:yt-studio 导出(2026-11-20)15 条已发布韩文经济视频,推出去那版词数 ÷ 成片时长 = 96–118 词/分钟,中位 106。
+// 按 113 算,稿子正好写满预算成片也会长 5%–15%(호떡집 3,029 词 / 31.6 分钟 = 96)。导入了 YouTube 数据的任务会自动改用实测中位数
+const DEFAULT_WPM = { Korean: 106 };
 const WPM_MIN = 60, WPM_MAX = 260; // 超出这个范围的实测值当成数据有误,不用
 
 // 一条已发布视频的实测语速:推出去那版的词数 ÷ 视频时长

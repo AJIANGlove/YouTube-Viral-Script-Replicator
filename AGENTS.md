@@ -276,3 +276,12 @@
 
 - **真人题改无名视角(硬规则)**:`track_cards.md` 的 POV 卡——主角是有名有姓的真实人物时,「你」改成同时代、在这个人身边的无名人物,真人只当背景人物、只写有来源的事;无名主角的处境/心理/对话是虚构设定,按时代真实制度写,不逐句写「记录未载」;`title.final_title` 带上无名视角。写前分析和定论点都读这张卡。
 - **亲历感(只 POV)**:`analysis.js` 的 `POV_FOUR` 接在叙事方式规则后(仅 `pov_mode` 为 climb/per_level 时进摘要);`craft_rules.md` P5(待验证=建议);`step1.md`/`step1_function.md`/`step2.md` 的 POV 条;`reverse_audit.md` B 段 POV 条件检查;`final_tracks/pov.md` C2。硬要求只有「每一级至少有一个『你』的具体处境,不能只报节点」;失去/能决定/决定不了是建议,不每级凑齐(其余 POV 稿逐章统计这三样本来就时有时无,硬凑会每级一个套路,和 DEAI_FOCUS 冲突)。
+
+## 终稿篇幅调整(v1.127,2026-11-20)
+
+起因:yt-studio 导出(2026-11-20)对上 15 条已发布韩文视频,成片时长 = 推出去那版词数 ÷ 配音语速,词数占蓝图预算 73%–111%,配音 96–118 词/分钟(中位 106);26 分钟目标成片 20–31.6 分钟,长的居多,整体完播差。用户要求写稿流程不动,只在终稿出来后调。
+
+- **语速**:`narration.js` 的 `DEFAULT_WPM.Korean` 113 → 106(优先级不变:声音设定 narration_wpm > 已发布视频实测中位数 > 语言默认值)。写稿时的篇幅闸门(`pipeline.lengthCheck`)不改。
+- **篇幅调整**:`review.js` 的 `runLengthFit` / `lengthFitLocked`,挂在 `runPasses` 的 `final` 和 `autofix` 两串最后(`'lengthfit'`)。目标词数 = `video_goal` 秒 × 配音语速 / 60;终稿 > 105% 删重复(优先用 `final.info_check` 里没处理的「重讲 / 双重总结」),< 90% 在已有内容上稍微展开,90%–105% 跳过不调模型。提示词 `prompts/length_fit.md`,===EDIT=== 格式走 `applyWithRepair` + `purifyText`。
+- **护栏**:起点在前 2 分钟内的章节整章锁定(提示词里列出 + 程序丢掉这些章的修改);保存走 `writeScript(..., '终审·篇幅调整')`(经济拆账开头锁 strict);改完必须比原来更接近目标才换终稿,期间稿子被改过就不存;改了会重跑论点核对 / 开头审的过期刷新。
+- **记录与撤回**:`review.final.length_fit = {status, mode, before_words, after_words, target_words, goal_min, wpm, before_min, after_min, edits, before_text, after_text}`;页面在终审区「篇幅调整」一栏显示,`POST /review/length_fit_undo` 撤回(稿子之后没再改过才行)。
