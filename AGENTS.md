@@ -285,6 +285,7 @@
 - **通用开头公式**:`briefText` 不再返回空,给 `formulaBrief`(四步 + 避坑,不带节拍表);写前分析加 `formulaAnalysisNote`(钩子候选按四步写)。各赛道四步填法在 `openbeats.FOUR_STEP`(econ/pov/history/science/general)。`checks.LISTEN_RULES`、`opening_fix.md`、`opening_card.md`、`draft_check.md`、`final_recheck.md` 同步改了。「前 10 秒最多 1 个数字」保留(兑现标题那句的数字算这一个)。
 - **避坑检查**(`checks.listenCheck`):前 15 秒打招呼/自我介绍(`GREET_RE`)、前 30 秒议程句(`AGENDA_RE`,从 openbeats 挪到 checks)算问题,文字以「前 N 秒」开头,所以进 `openingIssues`(挡发布 listen_open、自动改开头会改);照原片开头时打招呼进 hints,由 `openbeats.check` 报(改稿新加打招呼也会被锁定开头退回)。软提示放 `lc.avoid`(不挡发布,进「还不能发布」的 notes 和开头单独审):标题里的数字 15 秒内没说到;经济拆账第一个数字晚于 30 秒(`listenCheck` 新参数 `track`)。
 - **开头三选一**:`review.runOpeningVariants`(提示词 `opening_variants.md`,存 `review.opening_variants`,步骤 `steps.opening_variants`,重启时落成 failed)按四步写 3 个 CH01(数字先说 / 人先说 / 反常识先说),每个用 `variantIssues` 跑一遍程序检查;照原片开头时要求保留每拍关键词和顺序(只许在第一拍前加兑现标题句、压场景拍),免得换上后节拍核对报顺序乱。`applyOpeningVariant`(人点「用这个」)换 CH01、不过锁、记 CH01 历史(可撤回)、终审前同步二稿、触发重审开头;开头在出版本后又被改过就 409。界面在「开头单独审」底部。AI 同时推荐一个(`pick` + 大白话 `pick_why`,界面顶上蓝框、卡片标「AI 推荐」);它推荐的那个没过程序检查而别的版本全过时,程序改推全过的那个并在 `pick_note` 写明。只是推荐,不自动换。
+- **建议点哪个按钮**(`review.openingAdvice`,进 `openingView` 的 `advice`):开头审判「建议改」时,标题说的事 15 秒后才出来/没出来、打招呼或议程句、经济拆账第一个数字晚于 30 秒、前 30 秒 ≤4 分 → 推「按四步写 3 个开头」;否则推「按开头审意见改开头」。显示在「怎么改(大白话)」框顶上。
 
 ## 二稿审稿报告重跑后不再一直「进行中」(v1.131,2026-11-20)
 

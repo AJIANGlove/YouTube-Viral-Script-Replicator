@@ -3563,8 +3563,11 @@ function rvOpeningFixBox(v, o) {
   const last = fs.status === 'done' ? `<span style="color:#047857">上次改好了${fs.edits ? '(改了 ' + fs.edits + ' 处)' : ''},开头已重新审</span>`
     : fs.status === 'failed' ? `<span style="color:#b91c1c">上次没改成:${esc(fs.error || '')}</span>` : '';
   if (o.verdict !== '建议改' || o.stale) return '';
+  const ad = o.advice;
+  const adv = ad ? `<div style="margin:0 0 8px;padding:6px 8px;border-radius:6px;background:${ad.pick === 'variants' ? '#eff6ff' : '#f0fdf4'};border:1px solid ${ad.pick === 'variants' ? '#bfdbfe' : '#bbf7d0'}">
+      <b>建议点哪个:${ad.pick === 'variants' ? '下面的「按四步写 3 个开头」' : '「按开头审意见改开头」'}</b><div>${esc(ad.plain)}</div>${(ad.why || []).length ? `<div class="hint">程序看到的:${esc(ad.why.join(';'))}</div>` : ''}</div>` : '';
   return `<div class="v13" style="margin:8px 0;padding:8px 10px;border:1px solid #fca5a5;border-radius:8px;background:#fff7f7">
-      <b>怎么改(大白话)</b>${plain}
+      ${adv}<b>怎么改(大白话)</b>${plain}
       <div class="rv-ops"><button class="an-btn v13" style="background:#dc2626;color:#fff;border-color:#dc2626" onclick="rvOpeningFix(true)" ${fixing || v.running ? 'disabled' : ''}>${fixing ? '正在改开头…' + (fs.stage ? '(' + esc(fs.stage) + ')' : '') : '按开头审意见改开头'}</button>
       <span class="hint">只改开头约 60 秒,不动正文;改完自动重新审一遍开头。和二稿审稿报告的勾选分开,不用写进补充意见。</span> ${last}</div></div>`;
 }

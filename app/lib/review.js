@@ -5190,13 +5190,28 @@ function variantsView(run) {
   const appliedText = ov.applied != null ? ((arr(ov.variants).find(x => x.i === ov.applied) || {}).text || '') : '';
   return { ...ov, status: st, stale: curHash !== ov.base && !(appliedText && curHash === hash(appliedText.trim())), current: ov.applied != null && appliedText && curHash === hash(appliedText.trim()) ? ov.applied : null };
 }
+// v1.132 开头判「建议改」时,程序用大白话提示点哪个按钮:开头整体慢(标题说的事 15 秒后才出来、打招呼、
+// 经济拆账第一个数字晚于 30 秒、前 30 秒分数低)→「按四步写 3 个开头」重写;只是数字多、句子密这种小毛病 →「按开头审意见改开头」小修
+function openingAdvice(o) {
+  if (!o || !o.lines || o.verdict !== '建议改') return null;
+  const h = o.hard || {};
+  const big = [];
+  const tc = o.title_conflict_sec;
+  if (tc == null) big.push('标题说的事开头 60 秒里一直没说出来');
+  else if (tc > 15) big.push('标题说的事到 ' + checks.fmt(tc) + ' 才说出来,观众前 ' + tc + ' 秒都不知道点进来看什么');
+  arr(h.issues).filter(i => /打招呼|报流程/.test(i)).forEach(i => big.push(i.replace(/\(.*?\)/g, '')));
+  arr(h.avoid).filter(x => /第一个数字/.test(x)).forEach(x => big.push(x.replace(/:经济拆账.*$/, '')));
+  if (o.score_0_30 != null && o.score_0_30 <= 4) big.push('前 30 秒只有 ' + o.score_0_30 + ' 分');
+  if (big.length) return { pick: 'variants', why: big, plain: '这篇开头的毛病是整段太慢,小修只能把一两句往前挪,前面的铺垫还在。点「按四步写 3 个开头」整段重写,再挑 AI 推荐的那个。' };
+  return { pick: 'fix', why: [], plain: '开头整体顺序是对的(标题说的事 ' + (tc != null ? checks.fmt(tc) : '') + ' 就出来了),只是几句话要改,点「按开头审意见改开头」小修就够了。' };
+}
 function openingView(run) {
   const o = (run.review || {}).opening;
   const st = (run.steps || {}).opening_card || null;
   if (!o) return st ? { status: st } : null;
   let stale = false;
   try { stale = openingSlice(run).hash !== o.hash; } catch (e) {}
-  return { ...o, stale, status: st, fix_step: (run.steps || {}).opening_fix || null, fix_rec: ((run.review || {}).final || {}).opening_fix || null };
+  return { ...o, stale, advice: stale ? null : openingAdvice(o), status: st, fix_step: (run.steps || {}).opening_fix || null, fix_rec: ((run.review || {}).final || {}).opening_fix || null };
 }
 
 // ---------- 一键生成 ----------
@@ -5419,4 +5434,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { runOpeningVariants, startOpeningVariants, applyOpeningVariant, variantsView, variantIssues, lengthTarget, lengthNeed, lengthIssue, lengthView, finalBaseText, LEN_LOW, LEN_HIGH, claimVerdictIssue, aiFixPlans, thesisItem, foldRevert, auditExtras, selectedFixes, parseAuditIssues, auditSections, auditLooksNonEmpty, recoverAuditIssues, infoCheckRun, startInfoCheck, infoReuseCheck, infoNormalize, infoBrief, INFO_GUARD, explainRun, stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE, restoreOpening, openingCompareView, draftScript };
+module.exports = { openingAdvice, runOpeningVariants, startOpeningVariants, applyOpeningVariant, variantsView, variantIssues, lengthTarget, lengthNeed, lengthIssue, lengthView, finalBaseText, LEN_LOW, LEN_HIGH, claimVerdictIssue, aiFixPlans, thesisItem, foldRevert, auditExtras, selectedFixes, parseAuditIssues, auditSections, auditLooksNonEmpty, recoverAuditIssues, infoCheckRun, startInfoCheck, infoReuseCheck, infoNormalize, infoBrief, INFO_GUARD, explainRun, stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE, restoreOpening, openingCompareView, draftScript };
