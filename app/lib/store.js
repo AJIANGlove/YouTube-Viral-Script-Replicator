@@ -215,6 +215,34 @@ function setRunConfirmed(id, version, hash) {
   run.confirmed_version = version
     ? { version, at: new Date().toISOString(), hash: hash || null }
     : null;
+  // 成功确认任意版本 = 有了新决定,整体清空弃标(含刚确认那版自己的);
+  // 取消确认(version 为空)不清——用户口径:"取消确认不清除弃标"
+  if (version) run.deprecated_versions = {};
+  saveRun(run, { touch: false });
+  return run;
+}
+
+// 弃用文案版本(本地功能):可同时弃多版,{ v1: {at}, v1_5: {at} }。
+// 只做状态标识:不改稿、不挡推送/复制/确认。成功确认任意版本时由 setRunConfirmed 整体清空
+function deprecatedVersions(run) {
+  const src = run && run.deprecated_versions;
+  const out = {};
+  if (!src || typeof src !== 'object' || Array.isArray(src)) return out;
+  for (const v of ['v1', 'v1_5', 'v2', 'v2_5']) {
+    const x = src[v];
+    if (x) out[v] = { at: (x && x.at) || null };
+  }
+  return out;
+}
+
+// 标记/取消弃用某一版(再点一次取消);返回最新 run,saveRun 会同步索引
+function setRunDeprecated(id, version, deprecated) {
+  const run = getRun(id);
+  if (!run) return null;
+  const map = deprecatedVersions(run);
+  if (deprecated) map[version] = { at: new Date().toISOString() };
+  else delete map[version];
+  run.deprecated_versions = map;
   saveRun(run, { touch: false });
   return run;
 }
@@ -245,7 +273,8 @@ const RUNS_INDEX = path.join(APP_ROOT, 'data', 'runs.index.json');
 // 5: 合并上游 v1.21.5 的 verdict / reframe / analysis_confirmed(列表「待换框架」「换框架中」)。
 //    上游把这三个字段也叫 4,与本地 v1.23 评分列的 4 撞号;合并后升 5 强制重建一次,两 schema 字段齐全
 // 6: v1.95 评分列改成「能发 / 还差几项」(score 里加 verdict、left、good)
-const INDEX_VERSION = 7;
+// 8: 新增 deprecated(列表「确认文案版本」列版本号下的「弃」),旧索引需重建
+const INDEX_VERSION = 8;
 let indexCache = null;
 
 // 源标题中文只用于列表副标题,按资产 id 缓存,避免重复读 meta.json
@@ -409,6 +438,11 @@ function indexEntry(run) {
     confirmed: (run.confirmed_version && run.confirmed_version.version)
       ? { version: run.confirmed_version.version, at: run.confirmed_version.at || null }
       : null,
+    // 弃用版本(本地功能):列表在「确认文案版本」版本号下面挂一个「弃」,
+    // 可多版同时弃用,按弃用时间升序(最后一条 = 最近弃用),hover 时列全
+    deprecated: Object.entries(deprecatedVersions(run))
+      .map(([version, x]) => ({ version, at: x.at || null }))
+      .sort((a, b) => String(a.at || '').localeCompare(String(b.at || ''))),
     video: p ? {
       push_id: p.push_id || null,
       version: p.version || null,
@@ -556,6 +590,6 @@ function queryRuns(opts) {
 module.exports = { waitFor,
   APP_ROOT, ASSETS_ROOT, RUNS_ROOT, ensureDirs, slugify,
   listAssets, getAsset, saveAsset, deleteAsset, newAssetId, assetCategories, assetTrack, setAssetTrack,
-  newRun, saveRun, getRun, listRuns, setRunViral, setRunConfirmed,
+  newRun, saveRun, getRun, listRuns, setRunViral, setRunConfirmed, setRunDeprecated,
   queryRuns, RUNS_INDEX, SCRIPT_TEXT_FIELDS, normalizeRunText
 };

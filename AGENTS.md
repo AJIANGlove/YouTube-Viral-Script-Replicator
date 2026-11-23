@@ -303,3 +303,13 @@
 - **X-LEN**:`review.js` 的 `lengthIssue` 由 `auditExtras` 调用。按终审底稿(`finalBaseText`,和 `runFinal` 一样:二稿之后没动过就是二稿)算词数,目标 = `video_goal` 秒 × 配音语速 / 60;> 105% 偏长、< 90% 偏短才出这一条(S 级 P0,新任务默认勾上,页面标「篇幅」)。detail 写给终审:目标词数区间(95%–105%)、优先在勾选的其他问题重合处删/补、开头章节(起点在前 2 分钟内,`openingChapters`)和核心论点(`infoThesis`)不动、不改事实数字、为篇幅做的修改「类别」写 X-LEN(同时解决别的问题写多个编号)、「理由」用中文大白话。
 - **终审**:`runFinal` 勾了 X-LEN 且偏短时,`limit.maxWords` 放宽到目标 × 105%(原来只许比底稿多 3%)。没有单独的篇幅调整步骤,也没有撤回;不想要就取消勾选 X-LEN 再终审。
 - **显示**:`lengthView` → `final.length`:二稿 → 终稿词数和分钟、是否在范围内、`used_selection` 勾了 X-LEN 时列出 d3.edits 里类别带 X-LEN 的每一处(删/补、理由、同时解决的编号)。页面 `rvLengthHtml` 在终审区「篇幅调整」一栏;没勾且终稿偏了只显示一行提示。
+
+## 文案版本「弃用」标记（2026-11-23 新增，本地功能）
+
+详情页每张版本卡标题行最右端（「确认此版本」之后）加「弃用」按钮，点一次标红「✓ 已弃用」，再点取消；列表「确认文案版本」列在版本号下面显示一个红色「弃」小胶囊。**纯状态标识：不改稿、不挡推送/复制/确认/下载**。
+
+- **存法**：`run.deprecated_versions = { v1: {at}, v1_5: {at} }`，可同时弃多版（用户口径 1=B）。`store.setRunDeprecated(id, version, deprecated)` 增删单版；`store.deprecatedVersions(run)` 是唯一读口（只认四个版本键）。不入库。
+- **清除时机**：成功确认任意版本（`setRunConfirmed` 的 version 非空）→ 整体清空弃标（含刚确认那版自己的）；**取消确认（version 为空）不清**。前端再点同一卡「弃用」= 取消该版。
+- **列表**：`store.indexEntry` 加 `deprecated`（按弃用时间升序）；`INDEX_VERSION` 7→8 强制重建。`confirmVersionCell(r)` 已改为接收**整行**（原来是 `r.confirmed`），没有确认版本但仍有弃标时在「—」下面照挂「弃」；hover 列全并给最近弃用时间。`loadRuns()` 的 `runsSig` 必须含 `r.deprecated`，否则 3 秒轮询不重绘。
+- **接口**：`POST /api/runs/:id/deprecate-version` `{version, deprecated}`；仅 `status==='done'` 且该版本文案存在时可用（与「确认此版本」同口径），失败 400。
+- 合并上游补丁时注意这三处：四张卡的 `dp-btn-*`/`dp-pill-*`、`confirmVersionCell` 的调用签名、`indexEntry` 的 `deprecated` 字段与 `INDEX_VERSION`。

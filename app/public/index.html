@@ -612,6 +612,16 @@
   .cf-pill { display: inline-block; margin-left: 8px; font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 999px; background: #d1fae5; color: #047857; vertical-align: 1px; }
   .cf-pill.stale { background: #fef3c7; color: #b45309; }
   .cf-pill.hidden { display: none; }
+  /* 弃用文案版本(本地功能):红色只在这里表示"已弃用",按钮/胶囊文案始终写「弃用」,与失败区分 */
+  button.dp-btn { padding: 6px 12px; border: 1px solid #dc2626; border-radius: 5px; font-size: 12px; cursor: pointer; background: #fff; color: #b91c1c; font-weight: 600; }
+  button.dp-btn:hover { background: #fef2f2; border-color: #b91c1c; }
+  button.dp-btn.on { background: #dc2626; border-color: #dc2626; color: #fff; }
+  button.dp-btn.on:hover { background: #b91c1c; border-color: #b91c1c; }
+  .dp-pill { display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 999px; background: #fee2e2; color: #b91c1c; vertical-align: 1px; }
+  .dp-pill.hidden { display: none; }
+  /* 列表「确认文案版本」列:弃用标记挂在版本号下面(没有确认版本时挂在 — 下面) */
+  .cf-dep-wrap { display: inline-block; }
+  .cf-dep { display: block; width: fit-content; margin-top: 3px; padding: 0 6px; border-radius: 999px; background: #fee2e2; color: #b91c1c; font-size: 10px; font-weight: 600; line-height: 1.5; }
   /* 卡片标题行:标题不换行;按钮多时整体右对齐换行,不会把标题挤成两行 */
   #detail-scripts h2 { gap: 10px; }
   #detail-scripts h2 > span:first-child { flex-shrink: 0; white-space: nowrap; }
@@ -909,7 +919,7 @@
     <div id="detail-scripts" class="script-grid">
       <div class="script-col">
         <div class="card hidden" id="detail-final-card">
-          <h2 style="display:flex;justify-content:space-between;align-items:center"><span>V1文案<span class="cf-pill hidden" id="cf-pill-v1">已确认</span></span>
+          <h2 style="display:flex;justify-content:space-between;align-items:center"><span>V1文案<span class="cf-pill hidden" id="cf-pill-v1">已确认</span><span class="dp-pill hidden" id="dp-pill-v1">已弃用</span></span>
             <span>
               <button class="ghost" id="desc-btn-v1" onclick="genDescription('v1')">生成简介</button>
               <button class="ghost" id="fp-btn-v1" onclick="openFpPanel('v1')">指纹检测</button>
@@ -922,6 +932,8 @@
               <button class="primary" onclick="copyScript('detail-final', this)" title="复制纯净稿:去掉章节标签、标题行、分隔线,以及停顿/转场/音效、改稿备注等标注">复制</button>
               <span class="btn-sep" aria-hidden="true"></span>
               <button class="cf-btn" id="cf-btn-v1" onclick="confirmVersion('v1')" title="把这一版标为最终交付版本(再点一次取消)">确认此版本</button>
+              <span class="btn-sep" aria-hidden="true"></span>
+              <button class="dp-btn" id="dp-btn-v1" onclick="deprecateVersion('v1')" title="标记这一版已弃用(只在列表显示「弃」,不影响任何操作)">弃用</button>
             </span>
           </h2>
           <div class="mono" id="detail-final"></div>
@@ -929,7 +941,7 @@
           <div class="desc-box hidden" id="ob-box-v1"></div>
         </div>
         <div class="card v15 hidden" id="detail-v15-card">
-          <h2 style="display:flex;justify-content:space-between;align-items:center"><span>V1.5文案<span class="cf-pill hidden" id="cf-pill-v1_5">已确认</span></span>
+          <h2 style="display:flex;justify-content:space-between;align-items:center"><span>V1.5文案<span class="cf-pill hidden" id="cf-pill-v1_5">已确认</span><span class="dp-pill hidden" id="dp-pill-v1_5">已弃用</span></span>
             <span>
               <button class="ghost" id="desc-btn-v1_5" onclick="genDescription('v1_5')">生成简介</button>
               <button class="ghost" id="cp-btn-v1_5" onclick="openCpPanel('v1_5')">YouTube 商业化检查</button>
@@ -941,6 +953,8 @@
               <button class="primary" onclick="copyScript('detail-v15', this)" title="复制纯净稿:去掉章节标签、标题行、分隔线,以及停顿/转场/音效、改稿备注等标注">复制</button>
               <span class="btn-sep" aria-hidden="true"></span>
               <button class="cf-btn" id="cf-btn-v1_5" onclick="confirmVersion('v1_5')" title="把这一版标为最终交付版本(再点一次取消)">确认此版本</button>
+              <span class="btn-sep" aria-hidden="true"></span>
+              <button class="dp-btn" id="dp-btn-v1_5" onclick="deprecateVersion('v1_5')" title="标记这一版已弃用(只在列表显示「弃」,不影响任何操作)">弃用</button>
             </span>
           </h2>
           <div class="mono" id="detail-v15"></div>
@@ -950,7 +964,7 @@
       </div>
       <div class="script-col">
         <div class="card hidden" id="detail-v2-card">
-          <h2 style="display:flex;justify-content:space-between;align-items:center"><span>V2文案(已强化开头)<span class="cf-pill hidden" id="cf-pill-v2">已确认</span></span>
+          <h2 style="display:flex;justify-content:space-between;align-items:center"><span>V2文案(已强化开头)<span class="cf-pill hidden" id="cf-pill-v2">已确认</span><span class="dp-pill hidden" id="dp-pill-v2">已弃用</span></span>
             <span>
               <button class="ghost" id="desc-btn-v2" onclick="genDescription('v2')">生成简介</button>
               <button class="ghost" id="fp-btn-v2" onclick="openFpPanel('v2')">指纹检测</button>
@@ -963,6 +977,8 @@
               <button class="primary" onclick="copyScript('detail-v2', this)" title="复制纯净稿:去掉章节标签、标题行、分隔线,以及停顿/转场/音效、改稿备注等标注">复制</button>
               <span class="btn-sep" aria-hidden="true"></span>
               <button class="cf-btn" id="cf-btn-v2" onclick="confirmVersion('v2')" title="把这一版标为最终交付版本(再点一次取消)">确认此版本</button>
+              <span class="btn-sep" aria-hidden="true"></span>
+              <button class="dp-btn" id="dp-btn-v2" onclick="deprecateVersion('v2')" title="标记这一版已弃用(只在列表显示「弃」,不影响任何操作)">弃用</button>
             </span>
           </h2>
           <div class="mono" id="detail-v2"></div>
@@ -970,7 +986,7 @@
           <div class="desc-box hidden" id="ob-box-v2"></div>
         </div>
         <div class="card v15 hidden" id="detail-v25-card">
-          <h2 style="display:flex;justify-content:space-between;align-items:center"><span>V2.5文案<span class="cf-pill hidden" id="cf-pill-v2_5">已确认</span></span>
+          <h2 style="display:flex;justify-content:space-between;align-items:center"><span>V2.5文案<span class="cf-pill hidden" id="cf-pill-v2_5">已确认</span><span class="dp-pill hidden" id="dp-pill-v2_5">已弃用</span></span>
             <span>
               <button class="ghost" id="desc-btn-v2_5" onclick="genDescription('v2_5')">生成简介</button>
               <button class="ghost" id="cp-btn-v2_5" onclick="openCpPanel('v2_5')">YouTube 商业化检查</button>
@@ -982,6 +998,8 @@
               <button class="primary" onclick="copyScript('detail-v25', this)" title="复制纯净稿:去掉章节标签、标题行、分隔线,以及停顿/转场/音效、改稿备注等标注">复制</button>
               <span class="btn-sep" aria-hidden="true"></span>
               <button class="cf-btn" id="cf-btn-v2_5" onclick="confirmVersion('v2_5')" title="把这一版标为最终交付版本(再点一次取消)">确认此版本</button>
+              <span class="btn-sep" aria-hidden="true"></span>
+              <button class="dp-btn" id="dp-btn-v2_5" onclick="deprecateVersion('v2_5')" title="标记这一版已弃用(只在列表显示「弃」,不影响任何操作)">弃用</button>
             </span>
           </h2>
           <div class="mono" id="detail-v25"></div>
@@ -2405,10 +2423,22 @@ function videoStatusCell(v) {
 }
 
 // 列表"确认文案版本"列:只读(操作统一在详情页),只展示版本号,确认时间放悬浮提示;
-// 未确认显示 —,与"频道 / 是否生成视频"的空值表达一致
-function confirmVersionCell(c) {
-  if (!c || !c.version) return '<span class="vb-none">—</span>';
-  return `<span class="cf-ver" title="${esc(c.at ? '确认于 ' + fmtTime(c.at) : '')}">${esc(versionLabel(c.version))}</span>`;
+// 未确认显示 —,与"频道 / 是否生成视频"的空值表达一致。
+// 弃用标记(本地功能)挂在版本号下面:可多版同时弃用,列表只放一个「弃」,hover 列全并带最近弃用时间;
+// 没有确认版本但仍有弃标时,「—」下面照挂「弃」,不凭空消失
+function confirmVersionCell(r) {
+  const c = r.confirmed;
+  const dps = Array.isArray(r.deprecated) ? r.deprecated : [];
+  const hasC = !!(c && c.version);
+  if (!hasC && !dps.length) return '<span class="vb-none">—</span>';
+  const head = hasC
+    ? `<span class="cf-ver" title="${esc(c.at ? '确认于 ' + fmtTime(c.at) : '')}">${esc(versionLabel(c.version))}</span>`
+    : '<span class="vb-none">—</span>';
+  if (!dps.length) return head;
+  const names = dps.map(d => versionLabel(d.version)).join('、');
+  const last = dps.map(d => d.at).filter(Boolean).sort().pop();
+  const tip = '已弃用:' + names + (last ? ' · 最近弃用于 ' + fmtTime(last) : '') + '(只在列表显示标记,不影响任何操作)';
+  return `<span class="cf-dep-wrap">${head}<span class="cf-dep" title="${esc(tip)}">弃</span></span>`;
 }
 
 // 列表「终审」列(v1.95 不打分):最后一轮复审判能发 → 「能发」;否则「还差 N 项」(剩下的关键/结构问题);没跑到终审显示 —
@@ -2548,7 +2578,8 @@ async function loadRuns(opts) {
       r.score ? [r.score.audit, r.score.final] : null,
       r.video ? [r.video.status, r.video.stage_label, r.video.updated_at] : null,
       !!(r.viral && r.viral.marked),
-      r.confirmed ? [r.confirmed.version, r.confirmed.at] : null])]);
+      r.confirmed ? [r.confirmed.version, r.confirmed.at] : null,
+      Array.isArray(r.deprecated) && r.deprecated.length ? r.deprecated.map(d => [d.version, d.at]) : null])]);
   if (silent && sig === runsSig) return; // 无变化不重绘:不打断输入/翻页/滚动
   runsSig = sig;
   runsData = data;
@@ -2600,7 +2631,7 @@ function runRowHtml(r) {
       <td style="font-size:12px;color:#4b5563">${r.channel_name ? esc(r.channel_name) : '<span class="vb-none">—</span>'}</td>
       <td><span class="badge badge-${r.status}">${statusLabel(r)}${r.has_error ? ' ✗' : ''}</span>${runProgressHtml(r)}${r.wait ? `<div class="wait-tag${/^后台在跑/.test(r.wait) ? ' bg' : ''}" title="${escAttr(r.wait)}">${/^后台在跑/.test(r.wait) ? '⏳' : '👉'} ${esc(r.wait)}</div>` : ''}</td>
       <td>${scoreCell(r.score)}</td>
-      <td>${confirmVersionCell(r.confirmed)}</td>
+      <td>${confirmVersionCell(r)}</td>
       <td>${videoStatusCell(r.video)}</td>
       <td class="time">${stepText}</td>
       <td class="time">${fmtTime(r.created_at)}</td>
@@ -2728,6 +2759,27 @@ async function confirmVersion(v) {
     alert('确认失败:' + (e.message || '未知错误'));
   } finally {
     confirmBusy = false;
+  }
+}
+
+// 弃用文案版本(本地功能):可同时弃多版,再点同一版 = 取消;只做状态标识,不挡推送/复制/确认。
+// 成功确认任意版本时服务端会整体清空弃标(取消确认不清),列表靠轮询指纹刷新
+let deprecateBusy = false;
+async function deprecateVersion(v) {
+  if (deprecateBusy || !currentRunId || !lastRunDetail) return;
+  const cur = !!((lastRunDetail.deprecated_versions || {})[v]);
+  deprecateBusy = true;
+  try {
+    await api('/api/runs/' + currentRunId + '/deprecate-version', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ version: v, deprecated: !cur })
+    });
+    await loadRunDetail();
+  } catch (e) {
+    alert('弃用失败:' + (e.message || '未知错误'));
+  } finally {
+    deprecateBusy = false;
   }
 }
 
@@ -2912,6 +2964,19 @@ async function loadRunDetail() {
     pill.classList.toggle('hidden', !on);
     pill.classList.toggle('stale', on && cfStale);
     pill.textContent = cfStale ? '已确认 · 内容已改' : '已确认';
+  });
+  // 弃用文案版本(本地功能):可同时弃多版;只做标识,不改稿、不挡推送/复制/确认。
+  // 成功确认任意版本时服务端整体清空弃标;取消确认不清(用户口径)。按钮可用性与"确认此版本"同口径
+  const dpMap = (r.deprecated_versions && typeof r.deprecated_versions === 'object') ? r.deprecated_versions : {};
+  ['v1', 'v2', 'v1_5', 'v2_5'].forEach(v => {
+    const btn = document.getElementById('dp-btn-' + v);
+    const pill = document.getElementById('dp-pill-' + v);
+    const dep = !!dpMap[v];
+    btn.style.display = fpUsable && cpVersions[v] ? '' : 'none';
+    btn.classList.toggle('on', dep);
+    btn.textContent = dep ? '✓ 已弃用' : '弃用';
+    btn.title = dep ? '这一版已弃用(只在列表显示「弃」,不影响任何操作);再点一次取消' : '标记这一版已弃用(只在列表显示「弃」,不影响任何操作)';
+    pill.classList.toggle('hidden', !dep);
   });
   // 视频简介:按钮可用性与指纹检测一致;已缓存的简介随轮询渲染(进行中的版本跳过,防冲掉加载态)
   document.getElementById('desc-btn-v1').style.display = fpUsable && v1Text ? '' : 'none';

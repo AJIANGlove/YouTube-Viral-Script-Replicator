@@ -1175,6 +1175,24 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true, id: r.id, confirmed_version: saved.confirmed_version });
     }
 
+    // 弃用文案版本(本地功能):可同时弃多版,再点一次取消(deprecated:false)。
+    // 只做状态标识:不改稿、不挡推送/复制/确认;成功确认任意版本时由 store 整体清空弃标。
+    const depVerMatch = url.match(/^\/api\/runs\/([\w-]+)\/deprecate-version$/);
+    if (depVerMatch && method === 'POST') {
+      const body = await readBody(req);
+      const r = store.getRun(depVerMatch[1]);
+      if (!r) return send(res, 404, { error: '任务不存在' });
+      const version = body.version ? String(body.version) : null;
+      if (!version || !['v1', 'v1_5', 'v2', 'v2_5'].includes(version)) {
+        return send(res, 400, { error: 'version 必须是 v1/v1_5/v2/v2_5 之一' });
+      }
+      if (r.status !== 'done') return send(res, 400, { error: '仅已完成的任务可标记弃用(当前: ' + (r.status || '?') + ')' });
+      if (!description.versionText(r, version)) return send(res, 400, { error: '该版本文案不存在' });
+      const saved = store.setRunDeprecated(r.id, version, body.deprecated !== false);
+      if (!saved) return send(res, 404, { error: '任务不存在' });
+      return send(res, 200, { ok: true, id: r.id, deprecated_versions: saved.deprecated_versions });
+    }
+
     // 取消任务:排队中直接取消;生成中打标记,当前步骤跑完后由管线停置为 cancelled
     const cancelMatch = url.match(/^\/api\/runs\/([\w-]+)\/cancel$/);
     if (cancelMatch && method === 'POST') {
