@@ -695,11 +695,17 @@ function infoNormalize(out, text) {
   problems.forEach((x, k) => { x.id = 'X' + (k + 1); });
   return { items, problems, dropped };
 }
-async function infoReuseCheck(run, cfg, text, label) {
+// v1.133 每章的哈希:下次重查只查改过的章
+const infoChHash = text => Object.fromEntries(scriptChapters(String(text || '')).map(c => [c.id, hash(c.text)]));
+async function infoReuseCheck(run, cfg, text, label, only) {
   const t0 = Date.now();
-  const prompt = an().fillVars(readPrompt('info_reuse_check.md'), { target_language: (run.audience || {}).target_language || '', topic: run.topic || '', thesis: infoThesis(run), chapter_claims: infoClaims(run), script: text });
+  let prompt = an().fillVars(readPrompt('info_reuse_check.md'), { target_language: (run.audience || {}).target_language || '', topic: run.topic || '', thesis: infoThesis(run), chapter_claims: infoClaims(run), script: text });
+  // v1.133 只查改过的章:全文照样给(重讲要对照前面),但只列这几章里的问题、不输出信息表,输出短很多
+  if (only && only.length) prompt += '\n\n【这次只查改过的章】上次检查之后只改了 ' + only.join('、') + '。problems 只列 chapter 在 ' + only.join('、') + ' 里的问题(这几章里的重讲、缺回顾、双重总结,对照全文判断);别的章上次查过了,不要再列。items 输出空数组 []。';
   const out = await viaStep('info_check', cfg, (c, sfx) => an().callJson(run, c, prompt, label + sfx, o => !!o && Array.isArray(o.problems)));
-  return { at: new Date().toISOString(), hash: hash(text), secs: Math.round((Date.now() - t0) / 100) / 10, ...infoNormalize(out, text) };
+  const r = { at: new Date().toISOString(), hash: hash(text), ch_hash: infoChHash(text), secs: Math.round((Date.now() - t0) / 100) / 10, ...infoNormalize(out, text) };
+  if (only && only.length) { r.only = only; r.problems = r.problems.filter(x => only.includes(x.chapter)); }
+  return r;
 }
 // 写进初稿检查提示词
 function infoBrief(ic) {
@@ -715,29 +721,49 @@ const infoBusy = new Set();
 // v1.131 二稿审稿报告同理:点了「重跑」后程序重启,任务里一直写着进行中,其实已经没人在跑(审稿走 runPasses,在跑时 passRunning 里有它)
 const passStepView = (runId, st) => st && st.status === 'running' && !passRunning.has(runId) ? { ...st, status: 'failed', error: '上次被中断了(程序重启过或出错退出),点「重跑」再出一次' } : st;
 const infoStepView = (runId, st) => st && st.status === 'running' && !infoBusy.has(runId) ? { ...st, status: 'failed', error: '上次检查被中断了(程序重启过或出错退出),点「重新检查」再查一次' } : st;
-async function infoCheckRun(runId) {
+// v1.133 上次检查之后改过哪几章(没有按章记录的旧结果:null = 整篇查)
+const INFO_MANUAL_MAX = 5;
+function infoChanged(run) {
+  const ic = (((run || {}).review || {}).final || {}).info_check;
+  if (!ic || !ic.ch_hash || ic.error) return null;
+  const now = infoChHash(checks.extractFinalScript(currentScript(run)) || currentScript(run));
+  return Object.keys(now).filter(id => now[id] !== ic.ch_hash[id]);
+}
+async function infoCheckRun(runId, opts = {}) {
   if (infoBusy.has(runId)) return null;
   infoBusy.add(runId);
-  try { return await infoCheckRunInner(runId); } finally { infoBusy.delete(runId); }
+  try { return await infoCheckRunInner(runId, opts); } finally { infoBusy.delete(runId); }
 }
-async function infoCheckRunInner(runId) {
+async function infoCheckRunInner(runId, opts = {}) {
   const cfg = pl().loadConfig();
   const run = store.getRun(runId);
   if (!cfg || !cfg.api_key || !run || !(run.review || {}).final) return null;
   const text = currentScript(run);
+  const changed = opts.full ? null : infoChanged(run);
+  if (changed && !changed.length) return run.review.final.info_check; // 稿子没改过:沿用上次结果,不调 AI
   const mark = st => { const f = store.getRun(runId); if (!f) return f; f.steps = { ...(f.steps || {}), info_check: st }; return f; };
   const f0 = mark({ status: 'running', started_at: new Date().toISOString() }); if (f0) store.saveRun(f0);
   try {
-    const ic = await infoReuseCheck(run, cfg, checks.extractFinalScript(text) || text, '信息复现核对·终稿');
+    const body = checks.extractFinalScript(text) || text;
+    const ic = await infoReuseCheck(run, cfg, body, '信息复现核对·终稿' + (changed ? '·只查改过的章' : ''), changed);
     const fresh = store.getRun(runId) || run;
     const fin = fresh.review.final;
-    const old = arr((fin.info_check || {}).problems);
+    const prev = fin.info_check || {};
+    const old = arr(prev.problems);
+    if (changed) {
+      // 没改的章:上次查出、还没处理的问题原样留着(原句还在稿子里才留);信息表沿用上次的
+      const keep = old.filter(y => !y.applied && !changed.includes(y.chapter) && findUnique(body, y.quote).start != null).filter(y => !ic.problems.some(x => x.sig === y.sig));
+      ic.problems = keep.map(y => ({ ...y })).concat(ic.problems).slice(0, INFO_MAX);
+      ic.items = arr(prev.items);
+    }
+    ic.manual_rounds = (prev.manual_rounds || 0) + (opts.manual ? 1 : 0);
     const ign = new Map(arr(fresh.review.ignored_items).filter(g => g.source === 'info').map(g => [g.sig, g]));
     ic.problems.forEach(x => { const o = old.find(y => y.sig === x.sig && !y.applied); if (o && o.ai_fix && o.ai_fix.status !== 'running') x.ai_fix = o.ai_fix; const g = ign.get(x.sig); if (g) x.ignored = { at: g.at }; });
+    ic.problems.forEach((x, k) => { x.id = 'X' + (k + 1); });
     const n0 = ic.problems.length;
     old.filter(y => y.applied && !ic.problems.some(x => x.sig === y.sig)).forEach((y, k) => ic.problems.push({ ...y, id: 'X' + (n0 + k + 1) }));
     fin.info_check = ic;
-    fresh.steps = { ...(fresh.steps || {}), info_check: { status: 'done', secs: ic.secs, finished_at: new Date().toISOString(), problems: n0 } };
+    fresh.steps = { ...(fresh.steps || {}), info_check: { status: 'done', secs: ic.secs, finished_at: new Date().toISOString(), problems: n0, ...(changed ? { only: changed } : {}) } };
     if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     if (run.usage) fresh.usage = require('./usage').newer(fresh.usage, run.usage);
     store.saveRun(fresh);
@@ -749,14 +775,18 @@ async function infoCheckRunInner(runId) {
   }
 }
 // 页面「重新检查」:后台跑,页面轮询
-function startInfoCheck(runId) {
+function startInfoCheck(runId, body = {}) {
   const run = store.getRun(runId);
   if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
   if (!(run.review || {}).final) throw Object.assign(new Error('还没跑终审'), { status: 400 });
   if (infoBusy.has(runId)) throw Object.assign(new Error('正在查,等一下'), { status: 409 });
   if (passBusy(runId)) throw Object.assign(new Error('「' + (passLabel(runId) || '审稿') + '」正在跑,等它跑完再查'), { status: 409 });
-  infoCheckRun(runId).catch(() => {});
-  return { ok: true, started: true };
+  const changed = infoChanged(run);
+  if (changed && !changed.length) return { ok: true, unchanged: true, message: '上次检查之后稿子没改过,沿用上次的结果(没调 AI)' };
+  const rounds = ((((run.review || {}).final || {}).info_check) || {}).manual_rounds || 0;
+  if (rounds >= INFO_MANUAL_MAX && !body.force) return { ok: false, cap: true, rounds, message: '这篇已经手动重查了 ' + rounds + ' 次。每次重查 AI 都可能挑出几处新的小重复,越改越多、越花钱;剩下的问题可以直接忽略,或者直接发布。还要再查一次吗?' };
+  infoCheckRun(runId, { manual: true }).catch(() => {});
+  return { ok: true, started: true, only: changed };
 }
 // 页面用:原句已经不在稿子里(别处改稿时顺带改掉了)的算解决了
 function infoView(runId, text, lang, ic) {
@@ -3816,7 +3846,10 @@ function openingSlice(run) {
 }
 // 开头改过了(补改、单章重写、去AI感之后)就自动重审一次开头,让「开头单独审」一直对得上现在的稿子:
 // 实测 run_1f67a92553fd 补改了两轮,开头卡片一直停在终审后那份「建议改」,人看不出开头到底改好没有
-async function refreshOpeningIfStale(runId) {
+// v1.133 省钱:改稿(补改、去AI感、单章重写、终审后续)以后不再自动重审开头,页面标「这份分析是旧的」,人点「重新分析开头」再审;
+// 只有人点了改开头的按钮(「按开头审意见改开头」「用这个」)才传 force 自动重审
+async function refreshOpeningIfStale(runId, opts = {}) {
+  if (!opts.force) return;
   try {
     const run = store.getRun(runId);
     if (!run || !(run.review || {}).opening) return;
@@ -4894,7 +4927,7 @@ function startOpeningFix(runId, body = {}) {
   (async () => {
     try { await runOpeningFix(runId, { card, manual: true }); } catch (e) {} finally { passRunning.delete(runId); }
     await refreshClaimIfStale(runId);
-    await refreshOpeningIfStale(runId);
+    await refreshOpeningIfStale(runId, { force: true });
     await explainRun(runId);
   })();
   return { ok: true };
@@ -5178,7 +5211,7 @@ function applyOpeningVariant(runId, body = {}) {
   }
   ov.applied = v.i; ov.applied_at = new Date().toISOString(); ov.base = hash(v.text.trim());
   store.saveRun(run);
-  refreshOpeningIfStale(runId).catch(() => {});
+  refreshOpeningIfStale(runId, { force: true }).catch(() => {});
   return { ok: true };
 }
 function variantsView(run) {
@@ -5434,4 +5467,4 @@ async function updateFact(runId, factId, patch) {
   return { ok: true, fact: factId, affected, rewritten: results };
 }
 
-module.exports = { openingAdvice, runOpeningVariants, startOpeningVariants, applyOpeningVariant, variantsView, variantIssues, lengthTarget, lengthNeed, lengthIssue, lengthView, finalBaseText, LEN_LOW, LEN_HIGH, claimVerdictIssue, aiFixPlans, thesisItem, foldRevert, auditExtras, selectedFixes, parseAuditIssues, auditSections, auditLooksNonEmpty, recoverAuditIssues, infoCheckRun, startInfoCheck, infoReuseCheck, infoNormalize, infoBrief, INFO_GUARD, explainRun, stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE, restoreOpening, openingCompareView, draftScript };
+module.exports = { infoChanged, infoChHash, INFO_MANUAL_MAX, openingAdvice, runOpeningVariants, startOpeningVariants, applyOpeningVariant, variantsView, variantIssues, lengthTarget, lengthNeed, lengthIssue, lengthView, finalBaseText, LEN_LOW, LEN_HIGH, claimVerdictIssue, aiFixPlans, thesisItem, foldRevert, auditExtras, selectedFixes, parseAuditIssues, auditSections, auditLooksNonEmpty, recoverAuditIssues, infoCheckRun, startInfoCheck, infoReuseCheck, infoNormalize, infoBrief, INFO_GUARD, explainRun, stepCfg, viaStep, setIgnoreItem, markIgnored, ignSig, plainOf, plainTargets, parsePlain, fillPlain, plainRun, currentScript, translateCfg, rawCall, hardLeft, rcGood, stalledOpen, healthOf, healthDiff, judgeRevert, compareVersions, finalGood, finalLeft, revertWhy, programFindings, translateTexts, whyKey, whyOf, whyTargets, whyItemText, fillWhy, mostlyForeign, consistencyView, consistencyBlocks, consistencyOpen, acceptClaim, confirmOk, claimLooksOk, suggestFix, suggestFixBatch, quoteContext, scriptParas, findPara, ctxMarked, aiFixPlans, applyFix, applyLeftovers, planApply, planOpen, applyPlanText, extractFix, minimalDiff, splitReport, looksRefused, claimNoIssue, claimBlocking, parseThesis, offLedgerAmounts, acceptFact, setIgnoreBlock, openBlockKey, startClaimCheck, runClaimCheck, claimBlocking, startOpeningFix, runOpeningFix, passLabel, saveAuditSelection, callLong, TRACK_KEYS, lockedTrack, runOpenOptions, listenFindings, runOpeningCard, startOpeningCard, openingSlice, growthLimit, limitChapterGrowth, limitEditGrowth, scriptWords, runFactCheck, factBrief, parseClaims, parseVerdicts, parseFactQueries, startFinalPatch, runFinalPatch, parseOpen, runDeai, applyDeai, parseDeaiItems, startDeai, runFinal, mergeRounds, parseScores, trackList, loadTrack, autoTrack, parseEdits, applyEdits, locate, revisionView, parseBlocks, parseIssues, parseAuditIssues, auditSections, auditField, reportScore, routeSections, runPass, runPasses, runReverseAudit, startFinal, selectedFixes, PASSES, passBusy, sourceSegments, scriptChapters, replaceChapter, factNumbers, factState, buildView, getView, translateRun, runDraftFirst, resumeDraftFirst, setStatus, undo, rewriteChapter, updateFact, COMPRESS_NOTE, restoreOpening, openingCompareView, draftScript };

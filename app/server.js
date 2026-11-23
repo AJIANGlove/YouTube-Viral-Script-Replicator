@@ -895,7 +895,7 @@ const server = http.createServer(async (req, res) => {
           if (action === 'opening_variant_apply') return send(res, 200, review.applyOpeningVariant(id, body || {}));
           // 论点核对(后台跑):用稿子自己的数字检验开头的主张;fix:true 按核对结果补改一次再核对
           if (action === 'claim_check') return send(res, 200, review.startClaimCheck(id, body));
-          if (action === 'info_check') return send(res, 200, review.startInfoCheck(id)); // v1.104 信息复现核对:重新检查
+          if (action === 'info_check') return send(res, 200, review.startInfoCheck(id, body || {})); // v1.104 信息复现核对:重新检查
           // 终稿之后去AI感(后台跑):生成多方案建议 → 人勾选改法 → 按选择修改
           if (action === 'deai') return send(res, 200, review.startDeai(id, body));
           // 复审没达标:按复审意见补改(后台跑):整理未解决问题清单(extract)或勾选问题+决定补改;以终稿为底,不从二稿重来

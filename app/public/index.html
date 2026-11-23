@@ -4063,7 +4063,7 @@ function rvInfoHead(ic, busy) {
   const running = st.status === 'running';
   const items = (ic.items || []).map(i => `<div>· <b>${esc(i.id)}</b> ${esc(i.info)}:${(i.path || []).map(p => esc(p.ch) + ' ' + esc(p.act)).join(' → ')}</div>`).join('');
   return `<div class="hint" style="margin:4px 0">按终稿实际写出来的内容查的${ic.at ? '(' + esc(fmtTime(ic.at)) + ')' : ''}。观点、论点本身不删,只把重复的几句压成一句回顾,压掉的字数用这一章已有的细节补。
-    <button class="an-btn" style="font-size:12px;padding:0 8px" onclick="rvInfoRecheck()" ${busy || running ? 'disabled' : ''}>${running ? '<span class="rv-spin"></span> 正在查…' : '重新检查'}</button> <span>改过稿以后可以再查一次(调一次 AI)</span>
+    <button class="an-btn" style="font-size:12px;padding:0 8px" onclick="rvInfoRecheck()" ${busy || running ? 'disabled' : ''}>${running ? '<span class="rv-spin"></span> 正在查…' : '重新检查'}</button> <span>改过稿以后可以再查一次(只查改过的章;稿子没改不调 AI)</span>
     ${items ? `<details style="margin-top:3px"><summary>实际信息表(${(ic.items || []).length} 条:每条信息在哪章怎么用)</summary>${items}</details>` : ''}</div>`;
 }
 function rvInfoDetail(x, busy) {
@@ -4090,9 +4090,13 @@ function rvInfoStatusHtml(v) {
   const btn = running ? '' : `<button class="an-btn" style="font-size:12px;padding:0 8px" onclick="rvInfoRecheck()" ${busy ? 'disabled' : ''}>${ic ? '重新检查' : '查一次'}</button>`;
   return `<div class="hint" style="margin:6px 0;font-size:13px"><b>信息重复检查</b>:${msg} ${btn}</div>`;
 }
-async function rvInfoRecheck() {
-  try { await rvPost('info_check', {}); } catch (e) { alert(e.message); return; }
-  rvToast('开始重新检查,一般 1–2 分钟,查完自动刷新');
+async function rvInfoRecheck(force) {
+  let r;
+  try { r = await rvPost('info_check', force ? { force: true } : {}); } catch (e) { alert(e.message); return; }
+  // v1.133 稿子没改过:沿用上次结果;手动重查到上限:先问一句
+  if (r && r.unchanged) { rvToast(r.message); return; }
+  if (r && r.cap) { if (confirm(r.message)) rvInfoRecheck(true); return; }
+  rvToast((r && r.only && r.only.length ? '只重查改过的 ' + r.only.join('、') + ',' : '开始重新检查,') + '一般 1–2 分钟,查完自动刷新');
   const t = setInterval(async () => { await rvRefresh().catch(() => {}); const st = (((rvState.view || {}).passes) || {}).info_check || {}; if (st.status !== 'running') clearInterval(t); }, 5000);
   rvRefresh();
 }
