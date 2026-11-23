@@ -2951,7 +2951,7 @@ let rvState = null;
 
 function rvKeyOf(r) {
   const s = r.script_v1 || r.final_script || '';
-  return [r.id, r.status, s.length, s.slice(-80), JSON.stringify(r.review || {}).length, JSON.stringify((r.steps || {}).review_zh || {}), JSON.stringify((r.steps || {}).draft_check || {}), JSON.stringify((r.steps || {}).reverse_audit || {}), JSON.stringify((r.steps || {}).final_review || {}), JSON.stringify((r.steps || {}).deai || {}), JSON.stringify((r.steps || {}).final_open || {}), JSON.stringify((r.steps || {}).final_options || {}), JSON.stringify((r.steps || {}).opening_card || {}), JSON.stringify(((r.analysis || {}).facts) || []).length].join('|');
+  return [r.id, r.status, s.length, s.slice(-80), JSON.stringify(r.review || {}).length, JSON.stringify((r.steps || {}).review_zh || {}), JSON.stringify((r.steps || {}).draft_check || {}), JSON.stringify((r.steps || {}).reverse_audit || {}), JSON.stringify((r.steps || {}).final_review || {}), JSON.stringify((r.steps || {}).deai || {}), JSON.stringify((r.steps || {}).final_open || {}), JSON.stringify((r.steps || {}).final_options || {}), JSON.stringify((r.steps || {}).opening_card || {}), JSON.stringify((r.steps || {}).opening_variants || {}), JSON.stringify(((r.analysis || {}).facts) || []).length].join('|');
 }
 
 function rvEditing() {
@@ -3474,7 +3474,7 @@ function rvOpeningHtml(v) {
   const running = st.status === 'running';
   const btn = `<button class="an-btn v13" onclick="rvOpeningRun()" ${running ? 'disabled' : ''}>${running ? '正在分析开头…' : o && o.lines ? '重新分析开头' : '分析开头'}</button>`;
   if (!o || !o.lines) return `<details class="rv-md-box"${rvState.openingOpen ? ' open' : ''} ontoggle="rvState.openingOpen=this.open"><summary><b>开头单独审</b>(开头 60 秒逐句 + 中文 + 好在哪)</summary><div class="rv-ops v13">${btn}
-    <span class="hint">${st.status === 'failed' ? '上次失败:' + esc(st.error || '') : running ? '一般 1 分钟左右' : '二稿出来后会自动生成;也可以现在点'}</span></div></details>`;
+    <span class="hint">${st.status === 'failed' ? '上次失败:' + esc(st.error || '') : running ? '一般 1 分钟左右' : '二稿出来后会自动生成;也可以现在点'}</span></div>${rvOpeningVariantsHtml(v)}</details>`;
   const fmt = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
   const h = o.hard || {};
   const dense = new Set(h.dense || []);
@@ -3483,7 +3483,8 @@ function rvOpeningHtml(v) {
     `标题冲突在 <b>${o.title_conflict_sec != null ? fmt(o.title_conflict_sec) : '没说出来'}</b>(要在 0:08 内)`,
     `第一个答案在 <b>${o.first_payoff_sec != null ? fmt(o.first_payoff_sec) : '开头 60 秒里没有'}</b>(要在 0:45 内)`,
     `一句超过 2 个数字:<b>${dense.size ? [...dense].map(n => '第 ' + n + ' 句').join('、') : '无'}</b>`
-  ].join(' · ');
+  ].concat(h.first_num_sec !== undefined ? [`第一个数字在 <b>${h.first_num_sec != null ? fmt(h.first_num_sec) : '开头没有'}</b>`] : []).join(' · ') +
+    ((h.avoid || []).length ? `<div style="color:#b45309;margin-top:2px">开头避坑:${esc(h.avoid.join(';'))}</div>` : '');
   const lines = o.lines.map(l => `<tr${dense.has(l.n) ? ' style="background:#fef2f2"' : ''}><td class="hint">${l.n}</td><td class="hint">${fmt(l.sec)}</td><td>${esc(l.text)}${l.zh ? `<div class="rv-zh" style="border:0;margin:2px 0 0;padding:0">${esc(l.zh)}</div>` : ''}</td></tr>`).join('');
   const list = (xs, color) => (xs || []).map(x => `<li style="color:${color}">${esc(x)}</li>`).join('');
   // 一眼看出开头现在过没过:改过开头会自动重审;过了写「开头过关」,没过写还差什么
@@ -3507,7 +3508,51 @@ function rvOpeningHtml(v) {
     ${(o.risks || []).length ? `<div class="v13"><b>可能掉人的地方</b><ul>${list(o.risks, '#b45309')}</ul></div>` : ''}
     ${o.score_why ? `<div class="hint v13">打分理由:${esc(o.score_why)}</div>` : ''}
     ${factsHtml}${vqHtml}${webNote}
-    <div class="rv-ops v13">${btn}<span class="hint">也可以在下面 CH01 点「我的意见」自己写要怎么改。</span></div></details>`;
+    <div class="rv-ops v13">${btn}<span class="hint">也可以在下面 CH01 点「我的意见」自己写要怎么改。</span></div>${rvOpeningVariantsHtml(v)}</details>`;
+}
+// v1.132 按前 30 秒四步写 3 个开头,人挑一个换上
+function rvOpeningVariantsHtml(v) {
+  const ov = v.opening_variants || null;
+  const st = (ov && ov.status) || {};
+  const running = st.status === 'running';
+  const busy = running || !!v.running;
+  const btn = `<button class="an-btn v13" onclick="rvOpeningVariantsRun()" ${busy ? 'disabled' : ''}>${running ? '正在写 3 个开头…' : ov && (ov.variants || []).length ? '重新写 3 个开头' : '按四步写 3 个开头'}</button>`;
+  const head = `<div class="v13" style="margin-top:10px;padding-top:8px;border-top:1px dashed #d1d5db"><b>换个开头:按前 30 秒四步写 3 个,挑一个换上</b>
+    <div class="hint" style="margin:2px 0 6px">四步:① 0–5 秒第一句兑现标题 → ② 5–15 秒和观众扯上关系 → ③ 15–25 秒留一个没答案的问题 → ④ 25–30 秒直接进第一个数字。只换开头章 CH01,后面不动;换上后可以在 CH01 撤回。</div>`;
+  if (!ov || !(ov.variants || []).length) return head + `<div class="rv-ops">${btn}<span class="hint">${st.status === 'failed' ? '上次失败:' + esc(st.error || '') : running ? '一般 1 分钟左右' : ''}</span></div></div>`;
+  const kind = ov.title_kind ? `<span class="hint">标题类型:${esc(ov.title_kind)}</span> ` : '';
+  const nowBad = (ov.now || []).length ? `<div class="hint" style="color:#b45309">现在的开头:${esc(ov.now.join(';'))}</div>` : '';
+  const STEP = [['payoff', '① 兑现标题'], ['tie', '② 扯上关系'], ['question', '③ 留的问题'], ['first', '④ 进正文']];
+  const cards = ov.variants.map(x => {
+    const on = ov.current === x.i;
+    const rec = ov.pick === x.i;
+    const bad = (x.issues || []).length;
+    const steps = STEP.filter(([k]) => (x.steps || {})[k]).map(([k, lab]) => `<div><b>${lab}</b>:${esc(x.steps[k])}</div>`).join('');
+    return `<div style="flex:1 1 280px;min-width:0;border:${rec && !on ? 2 : 1}px solid ${on ? '#10b981' : rec ? '#2563eb' : '#e5e7eb'};border-radius:8px;padding:8px 10px;background:${on ? '#f0fdf4' : '#fff'}">
+      <div><b>版本 ${x.i + 1}:${esc(x.name)}</b> <span class="hint">${x.words} 词</span>${rec ? ' <span style="background:#2563eb;color:#fff;border-radius:4px;padding:0 6px;font-size:12px">AI 推荐</span>' : ''}</div>
+      <div style="white-space:pre-wrap;margin:6px 0">${esc(x.text)}</div>
+      ${x.zh ? `<div class="rv-zh" style="white-space:pre-wrap">${esc(x.zh)}</div>` : ''}
+      <div style="font-size:13px;margin:6px 0">${steps}</div>
+      ${x.why ? `<div class="hint">${esc(x.why)}</div>` : ''}
+      <div style="font-size:13px;margin:4px 0;color:${bad ? '#b91c1c' : '#047857'}">${bad ? '程序检查:' + esc(x.issues.join(';')) : '✓ 程序检查都过了'}</div>
+      <div class="rv-ops">${on ? '<span style="color:#047857"><b>✓ 现在用的就是这个</b></span>' : `<button class="an-btn v13" onclick="rvOpeningVariantUse(${x.i})" ${busy || ov.stale ? 'disabled' : ''}>用这个</button>`}</div>
+    </div>`;
+  }).join('');
+  const stale = ov.stale ? '<div class="rv-flag" style="margin:4px 0">开头在出这 3 个版本之后又改过了,要换的话先点「重新写 3 个开头」</div>' : '';
+  const recHtml = ov.pick != null && ov.variants.some(x => x.i === ov.pick) ? `<div style="margin:6px 0;padding:8px 10px;border:1px solid #bfdbfe;border-radius:8px;background:#eff6ff"><b>AI 推荐:版本 ${ov.pick + 1}(${esc((ov.variants.find(x => x.i === ov.pick) || {}).name || '')})</b>${ov.pick_why ? `<div style="margin-top:2px">${esc(ov.pick_why)}</div>` : ''}${ov.pick_note ? `<div class="hint" style="color:#b45309">${esc(ov.pick_note)}</div>` : ''}<div class="hint">只是推荐,换不换、换哪个还是你点。</div></div>` : '';
+  return head + `<div style="margin:4px 0">${kind}<span class="hint">${esc(fmtTime(ov.at))} 写的</span></div>${nowBad}${stale}${recHtml}<div style="display:flex;flex-wrap:wrap;gap:8px">${cards}</div><div class="rv-ops" style="margin-top:6px">${btn}<span class="hint">${st.status === 'failed' ? '上次失败:' + esc(st.error || '') : ''}</span></div></div>`;
+}
+async function rvOpeningVariantsRun() {
+  try { await rvPost('opening_variants', {}); } catch (e) { alert('没能开始:' + e.message); return; }
+  rvState.openingOpen = true;
+  rvState.key = null;
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 800);
+}
+async function rvOpeningVariantUse(i) {
+  if (!confirm('把开头章 CH01 换成版本 ' + (i + 1) + '?后面的章不动,换上后可以在 CH01 撤回。')) return;
+  try { await rvPost('opening_variant_apply', { i }); } catch (e) { alert('没能换上:' + e.message); return; }
+  rvState.key = null;
+  rvRefresh();
 }
 // v1.118 开头单独审判「建议改」:大白话写出怎么改 + 在这一栏直接改开头(只动开头约 60 秒,改完自动重新审开头)
 function rvOpeningFixBox(v, o) {

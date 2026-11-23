@@ -696,7 +696,7 @@ async function runGeneration0(runId) {
   run.checks = { ...(run.checks || {}), narration: { ...nw, label: narration.narrationLabel(nw) } };
   // 听感检查(开头 8 秒点题、前 10 秒数字、一句连念 3 个以上数字、语体混用)用的标题
   // v1.110 locked:经济拆账有开头节拍表时,开头 8 秒关键词、前 10 秒数字两条只提示,不打回
-  const listenOpts = () => ({ wpm: nw.wpm, title: (((run.analysis || {}).title || {}).final_title) || run.topic, lang: (run.audience || {}).target_language, locked: require('./openbeats').on(run) });
+  const listenOpts = () => ({ wpm: nw.wpm, title: (((run.analysis || {}).title || {}).final_title) || run.topic, lang: (run.audience || {}).target_language, locked: require('./openbeats').on(run), track: require('./openbeats').trackOf(run) });
 
   // 听感闸门:不合格反馈重写一次;重写后结构完好、篇幅没坏、问题更少才采用,否则保留原稿,结果都记进 checks
   // rewriteAll:整篇重写不可用时(Step 2 分章模式)的替身,按章重写并返回 { content, secs };不传则走原来的整篇反馈重试

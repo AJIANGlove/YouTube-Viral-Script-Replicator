@@ -494,6 +494,21 @@ const NUM_TOKEN = /\d[\d,.]*/g;
 const OPEN_TITLE_SEC = 8, OPEN_NUM_SEC = 10, OPEN_MAX_NUMS = 1, LINE_MAX_NUMS = 2;
 // 一句连念 3 个以上数字:只有前 2 分钟内的算问题(挡发布、要改);之后的只提醒,等发布后看真实留存数据再定(用户 2026-10-31 定)
 const DENSE_OPEN_SEC = 120;
+// v1.132 开头避坑:打招呼 / 自我介绍(前 15 秒)、只报流程的议程句(前 30 秒)
+const GREET_SEC = 15, AGENDA_SEC = 30, FIRST_NUM_SEC = 30, TITLE_NUM_SEC = 15;
+const GREET_RE = [
+  /안녕하세요|안녕하십니까|반갑습니다|여러분\s*안녕|찾아\s*주셔서|오신\s*걸\s*환영|채널에\s*오신|구독(과|하고|,)?\s*좋아요|제\s*이름은|저는\s*[^.!?\n]{0,24}(입니다|이에요|예요|라고\s*합니다)/,
+  /^(hi|hello|hey)\b[^.!?]{0,30}(guys|everyone|everybody|folks|there)|welcome (back )?to (my|the|our) channel|my name is|^i'?m [a-z]+ and (this|welcome)/i,
+  /大家好|欢迎(来到|回到)|我是[^,，。]{1,12}(,|，|。)|点赞(和|、)?订阅/
+];
+const AGENDA_RE = [
+  /(오늘은?|이번 영상(에서는?|은)|지금부터)[^.!?\n]{0,60}(계산해\s*보|알아보|살펴보|정리해\s*보|분석해\s*보|따져\s*보|파헤쳐\s*보|뜯어\s*보)[^.!?\n]{0,6}(겠습니다|겠어요|ㄹ게요|볼게요|봅시다|보죠|보도록)/,
+  /^(today|in this video)[, ]+(we|i)('ll| will| are going to|'re going to| am going to)\s+(look at|break down|calculate|explore|go through|walk through)/i,
+  /^今天(我们)?(就)?(来|要)?(算|聊|看看|拆|分析|讲讲)/
+];
+// 标题里的数字(600만、3,000원、4시 반):开头 15 秒内要说到(兑现标题);只比数字本身,去掉逗号
+const numCore = t => String(t).replace(/[,.]/g, '');
+function titleNums(title) { return [...new Set((String(title || '').match(NUM_TOKEN) || []).map(numCore).filter(n => n.length && n !== '0'))]; }
 // 句末标点后接空白才算断句(5.5시간 里的点不算);引号跟在句末标点后面的一起带走
 function sentencesOf(line) {
   return String(line).split(/(?<=[.!?。！？…]["”’」)]?)\s+/).map(t => t.trim()).filter(Boolean);
@@ -570,6 +585,19 @@ function listenCheck(script, opts) {
   const early = seen.filter(x => x.sec != null && x.sec < OPEN_TITLE_SEC).length;
   const titleHit = stems.length ? Math.round(early / stems.length * 100) / 100 : null;
   // 8 秒内出现 3 个以上标题关键词就算点题(长标题按比例算会误报)
+  // v1.132 开头避坑
+  const greet = lines.filter(l => l.start < GREET_SEC && GREET_RE.some(re => re.test(l.text)));
+  if (greet.length) openIssues.push('前 ' + GREET_SEC + ' 秒在打招呼或自我介绍:「' + greet[0].text.slice(0, 60) + '」(第一句直接兑现标题)');
+  const agenda = o.locked ? [] : lines.filter(l => l.start < AGENDA_SEC && AGENDA_RE.some(re => re.test(l.text)));
+  if (agenda.length) issues.push('前 ' + AGENDA_SEC + ' 秒用了只报流程的句子:「' + agenda[0].text.slice(0, 60) + '」(换成带钩子的问题,不说「今天来看看」)');
+  const avoid = [];
+  const tn = titleNums(o.title);
+  const early15 = lines.filter(l => l.start < TITLE_NUM_SEC).map(l => numCore(l.text)).join(' ');
+  const tnLate = tn.filter(n => !early15.includes(n));
+  if (tn.length && tnLate.length === tn.length) avoid.push('标题里的数字(' + tnLate.join('、') + ')开头 ' + TITLE_NUM_SEC + ' 秒内没说到:第一句就兑现标题');
+  const firstNum = lines.find(l => l.nums > 0);
+  const firstNumSec = firstNum ? Math.round(firstNum.start) : null;
+  if (o.track === 'econ' && (firstNumSec == null || firstNumSec > FIRST_NUM_SEC)) avoid.push('第一个数字' + (firstNumSec == null ? '一直没出现' : '到 ' + fmt(firstNumSec) + ' 才出现') + ':经济拆账 30 秒内要进第一个数字');
   if (stems.length >= 3 && titleHit < 0.34 && early < 3) openIssues.push('前 ' + OPEN_TITLE_SEC + ' 秒只出现了标题里 ' + early + '/' + stems.length + ' 个关键词' +
     (seen.some(x => x.sec != null && x.sec >= OPEN_TITLE_SEC) ? '(' + seen.filter(x => x.sec != null && x.sec >= OPEN_TITLE_SEC).map(x => x.word + ' 在 ' + fmt(x.sec)).join('、') + ')' : ''));
   // 数字串:一行(一句)最多 2 个数字
@@ -578,18 +606,19 @@ function listenCheck(script, opts) {
   if (dense.length) issues.push('前 ' + DENSE_OPEN_SEC / 60 + ' 分钟有 ' + dense.length + ' 句一口气念 3 个以上的数字(最早在 ' + fmt(dense[0].sec) + ')');
   const register = /^(Korean|韩|한국|ko)/i.test(String(o.lang || '')) ? koreanRegister(lines) : null;
   if (register && register.mixed) issues.push('语体混用:-다 体 ' + register.plain + ' 句,-니다/-요 体 ' + register.formal + ' 句');
-  return { wpm, ok: !issues.length, issues, ...(o.locked ? { locked: true, hints } : {}), opening: { nums_10s: nums10, title_hit: titleHit, title_words: seen }, dense, dense_late, register };
+  return { wpm, ok: !issues.length, issues, ...(o.locked ? { locked: true, hints } : {}), opening: { nums_10s: nums10, title_hit: titleHit, title_words: seen, first_num_sec: firstNumSec, title_nums: tn, greet: greet.map(l => l.text), agenda: agenda.map(l => l.text) }, avoid, dense, dense_late, register };
 }
 // 问题轻重,用来比较重写前后哪版更好(越小越好)
 function listenScore(lc) {
   if (!lc) return 0;
   const o = lc.opening || {};
-  return (lc.locked ? 0 : Math.max(0, (o.nums_10s || 0) - OPEN_MAX_NUMS) * 2) + (lc.issues.some(i => /关键词/.test(i)) ? 4 : 0) +
+  return (lc.locked ? 0 : Math.max(0, (o.nums_10s || 0) - OPEN_MAX_NUMS) * 2) + (lc.issues.some(i => /关键词/.test(i)) ? 4 : 0) + (lc.issues.some(i => /打招呼|报流程/.test(i)) ? 4 : 0) +
     lc.dense.length + (lc.register && lc.register.mixed ? 6 : 0);
 }
 // 写稿、优化、审稿共用的听感规则(提示词里也是这几条)
 const LISTEN_RULES = '听感规则(稿子是配音给人听的,观众不能回看):\n' +
-  '- 开头 ' + OPEN_TITLE_SEC + ' 秒内,用一个人或一个场景说出标题里的冲突;前 ' + OPEN_NUM_SEC + ' 秒最多 ' + OPEN_MAX_NUMS + ' 个数字;45 秒前给出第一个答案(一半答案或甜头;全片最终的答案留到后面再揭晓)。\n' +
+  '- 开头前 30 秒四步:0–5 秒第一句兑现标题(标题说的结果、数字直接说出来,可以借一个人或场景说);5–15 秒用 1–2 句和观众扯上关系;15–25 秒留一个没答案的问题;25–30 秒直接进正文第一个数字或第一幕。前 ' + OPEN_NUM_SEC + ' 秒最多 ' + OPEN_MAX_NUMS + ' 个数字(兑现标题那句的数字就算这一个);45 秒前给出第一个答案(一半答案或甜头;全片最终的答案留到后面再揭晓)。\n' +
+  '- 开头避坑:不打招呼、不自我介绍、不用「오늘은 ~ 알아보겠습니다」这种报流程的句子;场景描写最多一句;开头和标题对得上。\n' +
   '- 一句最多 ' + LINE_MAX_NUMS + ' 个数字;价格表、配料克数这类清单不要一口气念完,只留最关键的一两个,其余拆开或删掉。\n' +
   '- 全篇只用一种语体(韩文:-다 体和 -니다/-요 体二选一),引用别人的话除外。';
 // 给模型的修改意见(写稿重试、复审用)
@@ -733,4 +762,4 @@ function hookGap(script, opts) {
   return { gap: Math.round(gap), at: Math.round(at) };
 }
 
-module.exports = { HOOK_RE, hookGap, checkProgression, normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, repairJsonQuotes, parseJsonLoose, repairCurlyQuotes, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, DENSE_OPEN_SEC, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble, speechTidy, duplicateParagraphs, englishInKorean, titlePromiseGaps };
+module.exports = { GREET_RE, AGENDA_RE, titleNums, GREET_SEC, AGENDA_SEC, FIRST_NUM_SEC, TITLE_NUM_SEC, HOOK_RE, hookGap, checkProgression, normWords, ngrams, countWords, overlapMode, OVERLAP_WORDS, OVERLAP_CHARS, stripFence, extractJsonObject, repairJsonQuotes, parseJsonLoose, repairCurlyQuotes, toSec, fmt, parseChapters, chapterStructureError, malformedChapterTags, isMetaNoteLine, stripMetaNotes, foreignCheckApplies, foreignLines, cleanForeignScript, narrationLines, titleStems, listenCheck, listenFeedback, listenScore, LISTEN_RULES, DENSE_OPEN_SEC, collapseHits, makeRefTools, goalSeconds, checkBlueprint, checkScript, checkAudit, checkOptimized, extractFinalScript, stripLeadingPreamble, speechTidy, duplicateParagraphs, englishInKorean, titlePromiseGaps };

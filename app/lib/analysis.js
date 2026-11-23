@@ -95,7 +95,8 @@ function buildAnalysisPrompt(run, asset) {
   // v1.83:经济拆账另加账本规则(税前、论点要账本撑得住、账本行数上限);其他赛道提示词不变
   const econ = ledgerSayOn(run) ? '\n\n' + ECON_ANALYSIS_NOTE : '';
   // v1.110 经济拆账:多拆一张开头节拍表(原片前 45 秒)和声音指纹
-  const beats = require('./openbeats').wanted(run) ? '\n\n' + require('./openbeats').analysisNote(run, asset) : '';
+  // v1.132 通用开头公式:钩子候选按前 30 秒四步写
+  const beats = '\n\n' + (require('./openbeats').wanted(run) ? require('./openbeats').analysisNote(run, asset) : require('./openbeats').formulaAnalysisNote(run));
   return { prompt: fillVars(require('./fitrule').analysisPrompt(readPrompt('analysis.md')), vars) + econ + beats + (keep ? '\n\n' + keep : ''), track_card_name: card ? card.name : null };
 }
 

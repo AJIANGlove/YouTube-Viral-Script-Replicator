@@ -112,12 +112,41 @@ const TRACK_NOTE = {
   }
 };
 function trackNote(run) { return TRACK_NOTE[trackOf(run)] || TRACK_NOTE.general; }
+
+// ---------- v1.132 前 30 秒四步(照原片开头、通用开头公式都按它) ----------
+// 0–5 秒兑现标题 → 5–15 秒和观众扯上关系 → 15–25 秒留一个没答案的问题 → 25–30 秒直接进第一个数字/第一幕
+const FOUR_STEP = {
+  econ: { payoff: '标题里那个反常识的结果或数字,第一句就说出来(例:「같은 3,000원 붕어빵인데, 한 집은 한 달에 600만 원을 남기고 한 집은 문을 닫습니다」)', tie: '你也想开一家 / 你也是这家店的客人 / 你也算过这笔账(1–2 句)', question: '钱到底漏在哪 / 差在哪一笔(不说答案)', first: '开始算账的第一笔:原价、租金、一天卖多少(一个数)' },
+  pov: { payoff: '身份落差的终点或代价(从哪里到哪里、要付出什么)', tie: '「당신」的具体处境:你几岁、在哪、手里有什么(1–2 句)', question: '哪一个选择会改变你的命运', first: '进入第一级处境(第一级的规则或第一个场景)' },
+  history: { payoff: '标题里那个反常识的事实,第一句就说出来', tie: '和今天有关:今天还在用的制度、习惯、东西、地名(1–2 句)', question: '为什么没人说清 / 后来到底发生了什么', first: '时间、地点、人物,进第一幕' },
+  science: { payoff: '答案里反常识的那一半(另一半留到后面)', tie: '你身上也有 / 你也见过这个现象(1–2 句)', question: '这个证据是怎么找到的 / 为什么会这样', first: '第一个证据:一个实验、一个案例或一个数' },
+  general: { payoff: '标题说的那件事或结果,第一句就说出来', tie: '和观众自己有关(1–2 句)', question: '一个还没答案、观众想知道的问题', first: '第一个具体的事实、案例或数字' }
+};
+function fourStep(run) { return FOUR_STEP[trackOf(run)] || FOUR_STEP.general; }
+const AVOID_TEXT = '开头避坑:不打招呼(안녕하세요、여러분 반갑습니다)、不自我介绍(저는 ~입니다、채널 소개)、不用「오늘은 ~ 알아보겠습니다」这种报流程的句子;场景描写最多一句,不要慢热铺垫;开头说的和标题对得上(标题里的数字、说法第一两句就出现);30 秒内不说破最终答案;不堆数字(前 10 秒最多 1 个,兑现标题那句的数字就算这一个)。';
+const TITLE_KIND_TEXT = '标题类型(title_kind):标题说了一个具体的结果、数字或说法(例如「붕어빵 하나 팔면 남는 돈」「월 600만 원 버는 김밥집」「4시 반에 문 닫는 중국집」),写「具体说法」;标题只是一个话题(例如「빵집 창업의 경제학」「조선의 노비」),写「话题」。';
+function fourStepText(run) {
+  const S = fourStep(run);
+  return '前 30 秒四步(' + trackName(run) + '):\n' +
+    '① 0–5 秒 兑现标题:' + S.payoff + ';\n' +
+    '② 5–15 秒 和观众扯上关系:' + S.tie + ';\n' +
+    '③ 15–25 秒 留一个没答案的问题:' + S.question + ';\n' +
+    '④ 25–30 秒 直接进正文:' + S.first + '。\n' + AVOID_TEXT;
+}
+function titleKindOf(run, a) {
+  const k = str(((a || (run || {}).analysis) || {}).title_kind);
+  return /具体/.test(k) ? '具体说法' : /话题/.test(k) ? '话题' : '';
+}
 function analysisNote(run, asset) {
   const lang = str(((run || {}).audience || {}).target_language) || '目标语言';
   const src = sourceOpening(asset, LOCK_SEC + 3);
   const T = trackNote(run);
   return '【第 7 步 开头节拍表(' + trackName(run) + '赛道必做;和上面第 6 步的钩子冲突时以这里为准)】\n' +
     '原片前 45 秒字幕(左边是秒数):\n' + (src || '(没有原片字幕,按「开场契约」和留存地图里开头那一段拆)') + '\n\n' +
+    '0. 先判断新标题的类型,写进 title_kind;' + TITLE_KIND_TEXT + 'title_payoff 写标题向观众承诺了什么(一句中文,开头第一句要兑现它)。\n' +
+    '   - 「具体说法」:原片的内容不扔,但按前 30 秒四步重排:第一拍(B1,0–5 秒)新加一拍「兑现标题」,把标题说的结果 / 数字直接说出来(src_line 写「(新加:兑现标题)」);原片的想象、场景那几拍压成 1–2 句当「代入」;原片的反转 / 承诺挪到 25 秒前当「悬念」;接着直接进第一个数字(第一幕);原片其余的拍照原顺序接在后面。\n' +
+    '   - 「话题」:可以照原片的顺序拍,但第一句也要说到标题那件事,不要慢热。\n' +
+    '   ' + fourStepText(run).split('\n').join('\n   ') + '\n' +
     '1. 把原片前 45 秒逐拍拆开(一拍 = 一个作用,通常 5–8 拍),写进 opening_beats。每一拍写:\n' +
     '   - src_time(原片几秒到几秒)、src_line(原片原句);\n' +
     '   - role:这一拍的作用,用短语写,例如:' + T.roles + '(照原片这一拍实际起的作用写,不要套);\n' +
@@ -134,9 +163,10 @@ function analysisNote(run, asset) {
     T.demo +
     '   hook_promise 写:beat(哪一拍)、shape(答案的形状,开头怎么说)、answer(真正的答案,只给后面写稿看,开头不说)、reveal_at(正文哪一段揭晓)、reveal_anchors(揭晓那段一定会出现的 2–3 个' + lang + '关键词)。\n' +
     '4. spoiler_terms:本题的本质词(答案的关键名词,' + lang + ',例如 ' + T.spoil + '),开头 45 秒里一个都不许出现。按这篇的题目写,程序就按这几个词查。\n' +
-    '5. 保留这几条:8 秒内用一个人或场景说出标题的冲突(题目要清楚,藏的是答案);45 秒前给出第一个甜头(一半答案),最晚 60 秒;一句最多 2 个数字;全篇一种语体。\n' +
+    '5. 保留这几条:第一句(5 秒内)兑现标题(题目要清楚,藏的是答案);45 秒前给出第一个甜头(一半答案),最晚 60 秒;一句最多 2 个数字;全篇一种语体。\n' +
     '   下面这几条通用开头规则在这张节拍表里让位,冲突时按节拍表:「8 秒内至少 3 个标题关键词」「前 10 秒最多 1 个数字」「删冷开场」「早点说本质」。\n' +
     '在输出的 JSON 里多加这几个字段:\n' +
+    '"title_kind": "具体说法 或 话题", "title_payoff": "",\n' +
     '"opening_beats": [{"id": "B1", "src_time": "0:00-0:04", "src_line": "", "role": "", "new_line": "", "fact_ids": [], "anchors": [""], "you": true}],\n' +
     '"voice_prints": [{"source": "原片说法", "targets": ["对应说法"], "beat": "B1"}],\n' +
     '"hook_promise": {"beat": "B5", "shape": "", "answer": "", "reveal_at": "", "reveal_anchors": [""]},\n' +
@@ -161,6 +191,8 @@ function normalize(a) {
     const h = a.hook_promise;
     a.hook_promise = { beat: str(h.beat), shape: str(h.shape), answer: str(h.answer), reveal_at: str(h.reveal_at), reveal_anchors: arr(h.reveal_anchors).map(x => str(x).trim()).filter(Boolean).slice(0, 5) };
   }
+  if (a.title_kind != null) a.title_kind = /具体/.test(str(a.title_kind)) ? '具体说法' : /话题/.test(str(a.title_kind)) ? '话题' : '';
+  if (a.title_payoff != null) a.title_payoff = str(a.title_payoff);
   if (a.spoiler_terms != null) a.spoiler_terms = (Array.isArray(a.spoiler_terms) ? a.spoiler_terms : str(a.spoiler_terms).split(/[,，、]/)).map(x => str(x).trim()).filter(Boolean).slice(0, 12);
   return a;
 }
@@ -179,9 +211,27 @@ function promiseText(a, run) {
     (sp.length ? ';开头 45 秒里不许出现本质词:' + sp.join('、') : '') +
     (h.answer ? '。答案是「' + h.answer + '」,' + (h.reveal_at ? '在 ' + h.reveal_at + ' 揭晓' : '在正文里揭晓') + ',揭晓时明确点回开头那句承诺' : '') + '。';
 }
+function titleLine(run, a) {
+  const k = titleKindOf(run, a);
+  const p = str((a || {}).title_payoff).trim();
+  return (k ? '标题类型:' + k + (k === '具体说法' ? '(第一句就兑现标题,原片的场景铺垫压到 1–2 句)' : '(可以照原片顺序,但第一句要说到标题那件事)') : '') + (p ? (k ? ';' : '') + '标题承诺:' + p : '');
+}
+// v1.132 通用开头公式:写前分析的钩子、蓝图、写稿、改稿都按前 30 秒四步
+function formulaBrief(run, a, mode) {
+  const tl = titleLine(run, a);
+  if (mode === 'review') return '开头(通用开头公式):改开头时按下面的前 30 秒四步检查,不合的地方只换词、挪句、删句,不加长。\n' + (tl ? tl + '\n' : '') + fourStepText(run);
+  return '开头(通用开头公式):第一章开头按前 30 秒四步写,写前分析选定的钩子放进第 ① 步。\n' + (tl ? tl + '\n' : '') + fourStepText(run);
+}
+function formulaAnalysisNote(run) {
+  return '【开头:前 30 秒四步(第 6 步的 3 个开场候选都按它写)】\n' +
+    '先判断新标题的类型,写进 title_kind;' + TITLE_KIND_TEXT + 'title_payoff 写标题向观众承诺了什么(一句中文)。\n' +
+    fourStepText(run) + '\n' +
+    '每个开场候选的 text 按四步写成 4–6 句(目标语言),第一句兑现标题。\n' +
+    '在输出的 JSON 里多加:"title_kind": "具体说法 或 话题", "title_payoff": ""';
+}
 function briefText(run, a, mode) {
   a = a || (run || {}).analysis;
-  if (!on(run)) return '';
+  if (!on(run)) return a ? formulaBrief(run, a, mode) : '';
   const beats = beatsOf(run).map(b => normalize({ opening_beats: [b] }).opening_beats[0]);
   const vp = arr(a.voice_prints).filter(v => v.source || arr(v.targets).length);
   const vpText = vp.length ? '声音指纹(原片的口头禅、固定句式,放进对应的拍):\n' + vp.map(v => '- 原片「' + v.source + '」→ ' + arr(v.targets).map(t => '「' + t + '」').join(' / ') + (v.beat ? '(' + v.beat + ')' : '')).join('\n') : '';
@@ -191,13 +241,14 @@ function briefText(run, a, mode) {
       '- 开头的数字没出处:换成事实表里有出处的数,或改成不带数字的说法,这一拍要留着,不能整拍删。\n' +
       '- ' + YIELD_RULES + '这几条通用开头规则在 ' + OPEN_CH + ' 里只做提示,不要按它们改 ' + OPEN_CH + ';「本质未点明」在开头不算问题。\n' +
       '- 程序改完会逐拍核对,少了拍、顺序变了、说破答案、没了「你」,这一章会退回改之前的样子。\n' +
-      '节拍(按顺序):\n' + beats.map(beatLine).join('\n') + '\n' + promiseText(a, run);
+      (titleLine(run, a) ? titleLine(run, a) + '\n' : '') + '节拍(按顺序):\n' + beats.map(beatLine).join('\n') + '\n' + promiseText(a, run);
   }
   return '开头节拍表(' + trackName(run) + ':开头照原片前 45 秒的节拍写。和' + YIELD_RULES + '这些通用开头规则冲突时,按节拍表来):\n' +
     '- 蓝图:第一章 ' + OPEN_CH + ' 就是这张节拍表,时长从 0:00 到约 0:45(不超过 1:00),不放别的内容;' + OPEN_CH + ' 的 key_points 按拍写,每拍几秒、说什么;在 ' + OPEN_CH + ' 里加一个字段 "opening_beats": [' + beats.map(b => '"' + b.id + '"').join(', ') + '],按顺序列出全部拍。\n' +
     '- 写稿:' + OPEN_CH + ' 一拍一拍照着写,顺序不变,不删拍、不并拍;示范句可以润色,但保留它的句式、长短和作用;原片对观众说「你」的拍,新稿也对观众说「당신/你」。\n' +
+    (titleLine(run, a) ? titleLine(run, a) + '\n' : '') +
     beats.map(beatLine).join('\n') + '\n' + (vpText ? vpText + '\n' : '') + promiseText(a, run) + '\n' +
-    '保留:8 秒内用一个人或场景说出标题的冲突(题目要清楚,藏的是答案);45 秒前给出第一个甜头(一半答案),最晚 60 秒;一句最多 2 个数字;全篇一种语体。';
+    '保留:第一句(5 秒内)兑现标题(题目要清楚,藏的是答案);45 秒前给出第一个甜头(一半答案),最晚 60 秒;一句最多 2 个数字;全篇一种语体。\n' + AVOID_TEXT;
 }
 
 // ---------- 程序检查 ----------
@@ -208,11 +259,7 @@ function spoilers(a, run) {
   return [...new Set(run && trackOf(run) !== 'econ' ? own : own.concat(DEFAULT_SPOILERS))];
 }
 // 只报流程的议程句:「오늘은 ~를 계산해보겠습니다 / 알아보겠습니다」
-const AGENDA_RE = [
-  /(오늘은?|이번 영상(에서는?|은)|지금부터)[^.!?\n]{0,60}(계산해\s*보|알아보|살펴보|정리해\s*보|분석해\s*보|따져\s*보|파헤쳐\s*보|뜯어\s*보)[^.!?\n]{0,6}(겠습니다|겠어요|ㄹ게요|볼게요|봅시다|보죠|보도록)/,
-  /^(today|in this video)[, ]+(we|i)('ll| will| are going to|'re going to| am going to)\s+(look at|break down|calculate|explore|go through|walk through)/i,
-  /^今天(我们)?(就)?(来|要)?(算|聊|看看|拆|分析|讲讲)/
-];
+const AGENDA_RE = checks.AGENDA_RE; // v1.132 挪到 checks.js,通用开头公式也查
 const YOU_RE = /당신|여러분|(^|[\s"“])(너|네가|니가)(?=[\s,.!?은는가를의도])|\byou\b|\byour\b|你|您|あなた/i;
 function sentences(text) {
   return str(text).split('\n').map(l => l.trim()).filter(l => l && !/^\[CH\d+/.test(l)).flatMap(l => l.split(/(?<=[.!?。！？…]["”’」)]?)\s+/)).map(t => t.trim()).filter(Boolean);
@@ -259,13 +306,15 @@ function check(run, script, aIn) {
   const agenda = sents.filter(s => AGENDA_RE.some(re => re.test(s)));
   const you = YOU_RE.test(ch.text);
   const youNeeded = beats.some(b => b.you);
+  const greet = sents.slice(0, 4).filter(s => checks.GREET_RE.some(re => re.test(s)));
   const issues = [];
   if (missing.length) issues.push('开头少了拍:' + missing.map(id => id + '「' + ((beats.find(b => b.id === id) || {}).role || '') + '」').join('、'));
   if (outOfOrder.length) issues.push('开头的拍顺序乱了:' + outOfOrder.join('、'));
   if (sp.length) issues.push('开头 45 秒里说破了答案(本质词:' + sp.join('、') + ')');
   if (agenda.length) issues.push('开头的价值承诺是报流程的议程句:「' + agenda[0] + '」');
   if (youNeeded && !you) issues.push('开头没有对观众说「당신/你」');
-  return { ok: !issues.length, issues, beats: rows, missing, out_of_order: outOfOrder, spoilers: sp, agenda, you, you_needed: youNeeded, chars: ch.text.length, end_sec: ch.end };
+  if (greet.length) issues.push('开头在打招呼或自我介绍:「' + greet[0] + '」');
+  return { ok: !issues.length, issues, beats: rows, missing, out_of_order: outOfOrder, spoilers: sp, agenda, greet, you, you_needed: youNeeded, chars: ch.text.length, end_sec: ch.end };
 }
 
 // 蓝图第一章:时长、有没有按拍列 opening_beats
@@ -312,6 +361,7 @@ function lockReasons(cb, ca) {
   const newSp = ca.spoilers.filter(t => !cb.spoilers.includes(t));
   if (newSp.length) out.push('提前说破答案(' + newSp.join('、') + ')');
   if (ca.agenda.length > cb.agenda.length) out.push('加了报流程的议程句');
+  if (arr(ca.greet).length > arr(cb.greet).length) out.push('加了打招呼 / 自我介绍');
   if (cb.you_needed && cb.you && !ca.you) out.push('去掉了「당신/你」'); // 原片对观众说 you 的才管(v1.116 历史类等旁白片不强加)
   return out;
 }
@@ -385,4 +435,4 @@ function compare(run, draftText, curText) {
   };
 }
 
-module.exports = { TRACKS, TRACK_NAMES, RULES, ruleOf, ruleView, trackName, TRACK_NOTE, LOCK_SEC, OPEN_CH, wanted, on, beatsOf, sourceOpening, analysisNote, normalize, briefText, check, checkBlueprint, rewriteFeedback, spliceOpening, guard, lockReasons, promiseKept, compare, openingOf, replaceOpening, spoilers, AGENDA_RE, YOU_RE };
+module.exports = { trackOf, FOUR_STEP, fourStep, fourStepText, AVOID_TEXT, TITLE_KIND_TEXT, titleKindOf, titleLine, formulaBrief, formulaAnalysisNote, TRACKS, TRACK_NAMES, RULES, ruleOf, ruleView, trackName, TRACK_NOTE, LOCK_SEC, OPEN_CH, wanted, on, beatsOf, sourceOpening, analysisNote, normalize, briefText, check, checkBlueprint, rewriteFeedback, spliceOpening, guard, lockReasons, promiseKept, compare, openingOf, replaceOpening, spoilers, AGENDA_RE, YOU_RE };

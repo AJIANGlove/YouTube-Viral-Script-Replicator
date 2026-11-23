@@ -277,6 +277,15 @@
 - **真人题改无名视角(硬规则)**:`track_cards.md` 的 POV 卡——主角是有名有姓的真实人物时,「你」改成同时代、在这个人身边的无名人物,真人只当背景人物、只写有来源的事;无名主角的处境/心理/对话是虚构设定,按时代真实制度写,不逐句写「记录未载」;`title.final_title` 带上无名视角。写前分析和定论点都读这张卡。
 - **亲历感(只 POV)**:`analysis.js` 的 `POV_FOUR` 接在叙事方式规则后(仅 `pov_mode` 为 climb/per_level 时进摘要);`craft_rules.md` P5(待验证=建议);`step1.md`/`step1_function.md`/`step2.md` 的 POV 条;`reverse_audit.md` B 段 POV 条件检查;`final_tracks/pov.md` C2。硬要求只有「每一级至少有一个『你』的具体处境,不能只报节点」;失去/能决定/决定不了是建议,不每级凑齐(其余 POV 稿逐章统计这三样本来就时有时无,硬凑会每级一个套路,和 DEAI_FOCUS 冲突)。
 
+## 开头前 30 秒四步 + 避坑检查 + 开头三选一(v1.132,2026-11-23)
+
+用户定的前 30 秒框架:0–5 秒兑现标题 → 5–15 秒和观众扯上关系 → 15–25 秒留一个没答案的问题 → 25–30 秒直接进第一个数字(第一幕)。避坑:打招呼、自我介绍、报流程议程句、慢热场景、开头和标题对不上。数据依据:5 条有 30 秒留存的视频里,붕어빵(10 秒内数字+反差+问题)61%,부침개(议程式)42%;最近经济拆账都照 the-economics-of-owning-a-bakery 的慢热想象式开头,第一个数字约 25 秒才出来。
+- **标题类型**:写前分析多出 `title_kind`(具体说法 / 话题)和 `title_payoff`(`openbeats.normalize` 整理)。
+- **照原片开头**(`openbeats.analysisNote` 第 0 步):标题是「具体说法」时,节拍表第一拍新加「兑现标题」,原片想象/场景拍压成 1–2 句,反转/承诺挪到 25 秒前,原片其余拍照原顺序接后面——重排发生在节拍表里,后面逐拍核对、锁定开头都照新顺序;标题是「话题」可以照原片顺序。`briefText` 写上标题类型,「8 秒内用一个人或场景说出标题冲突」改成「第一句兑现标题」。
+- **通用开头公式**:`briefText` 不再返回空,给 `formulaBrief`(四步 + 避坑,不带节拍表);写前分析加 `formulaAnalysisNote`(钩子候选按四步写)。各赛道四步填法在 `openbeats.FOUR_STEP`(econ/pov/history/science/general)。`checks.LISTEN_RULES`、`opening_fix.md`、`opening_card.md`、`draft_check.md`、`final_recheck.md` 同步改了。「前 10 秒最多 1 个数字」保留(兑现标题那句的数字算这一个)。
+- **避坑检查**(`checks.listenCheck`):前 15 秒打招呼/自我介绍(`GREET_RE`)、前 30 秒议程句(`AGENDA_RE`,从 openbeats 挪到 checks)算问题,文字以「前 N 秒」开头,所以进 `openingIssues`(挡发布 listen_open、自动改开头会改);照原片开头时打招呼进 hints,由 `openbeats.check` 报(改稿新加打招呼也会被锁定开头退回)。软提示放 `lc.avoid`(不挡发布,进「还不能发布」的 notes 和开头单独审):标题里的数字 15 秒内没说到;经济拆账第一个数字晚于 30 秒(`listenCheck` 新参数 `track`)。
+- **开头三选一**:`review.runOpeningVariants`(提示词 `opening_variants.md`,存 `review.opening_variants`,步骤 `steps.opening_variants`,重启时落成 failed)按四步写 3 个 CH01(数字先说 / 人先说 / 反常识先说),每个用 `variantIssues` 跑一遍程序检查;照原片开头时要求保留每拍关键词和顺序(只许在第一拍前加兑现标题句、压场景拍),免得换上后节拍核对报顺序乱。`applyOpeningVariant`(人点「用这个」)换 CH01、不过锁、记 CH01 历史(可撤回)、终审前同步二稿、触发重审开头;开头在出版本后又被改过就 409。界面在「开头单独审」底部。AI 同时推荐一个(`pick` + 大白话 `pick_why`,界面顶上蓝框、卡片标「AI 推荐」);它推荐的那个没过程序检查而别的版本全过时,程序改推全过的那个并在 `pick_note` 写明。只是推荐,不自动换。
+
 ## 二稿审稿报告重跑后不再一直「进行中」(v1.131,2026-11-20)
 
 点「重跑」二稿审稿报告后程序重启:`steps.reverse_audit` 一直是 running,而 `runPasses` 已经不在了,重启续跑(`resumeRun`)也不补已经终审过的任务;本地模型那张卡还会被 `manual.cardStepDone` 当成完成清掉(旧的 `review.audit` 还在,`key === 'reverse_audit' && run.review.audit` 判成 done),页面上没有要粘贴的卡。现在视图里 `passes.audit` 走 `passStepView`:running 但 `passRunning` 里没有这个任务,就显示「上次被中断了」并放出「重跑」按钮。`manual.js` 的判据没改。
