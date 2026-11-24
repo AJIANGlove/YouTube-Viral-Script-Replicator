@@ -6409,6 +6409,24 @@ function webMs(ms) { return webDur((Number(ms) || 0) / 1000); }
 function webClock(at) { const d = at ? new Date(at) : null; return d && !isNaN(d.getTime()) ? String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') : ''; }
 function webElapsed(L) { const t = L && L.started_at ? new Date(L.started_at).getTime() : 0; return t && !isNaN(t) ? webDur((Date.now() - t) / 1000) : ''; }
 function webByLabel(by) { return by === 'local' ? '本地' : by === 'api' ? '改用API' : '人工'; }
+// 账号状态条:plan / 可用性 / 用量 / 额度重置时间。
+// 用量是本地服务的计数,不是 Claude 官方剩余额度;重置时间只有撞额度后服务侧才返回(resetsAtMs),
+// 没撞就没有该字段,这里只如实展示,不虚构「Pro 平时的重置时间」。
+function webAccountBar(w) {
+  const as = (w && w.accounts) || [];
+  if (!as.length) return '';
+  return `<div style="margin:4px 0 6px;display:flex;flex-wrap:wrap;gap:6px" title="用量是本地服务的计数,不是 Claude 官方剩余额度;重置时间只有撞额度后服务侧才会返回">` + as.map(a => {
+    const pro = String(a.plan || '').toLowerCase() === 'pro';
+    let st = '空闲', color = '#047857';
+    if (a.offline) { st = '离线'; color = '#6b7280'; }
+    else if (a.paused) { st = '已暂停'; color = '#b91c1c'; }
+    else if (a.blocked) { st = '撞额度'; color = '#b45309'; }
+    else if (a.owner) { st = '被占用'; color = '#6d28d9'; }
+    const reset = a.resetsAtMs ? ' · 重置 ' + webClock(new Date(Number(a.resetsAtMs)).toISOString()) : '';
+    const usage = '5h ' + (Number(a.usage5h) || 0) + ' · 24h ' + (Number(a.usage24h) || 0);
+    return `<span style="font-size:11.5px;border:1px solid ${pro ? '#c4b5fd' : '#e5e7eb'};background:${pro ? '#f5f3ff' : '#f9fafb'};border-radius:5px;padding:2px 7px;color:#374151"><b style="color:${pro ? '#6d28d9' : '#374151'}">${esc(a.id)}${pro ? '·Pro' : ''}</b> <span style="color:${color}">${st}</span> · ${usage}${reset}</span>`;
+  }).join('') + `</div>`;
+}
 // 本地模型按钮与进度:调用中禁用其它提交入口,避免同一条被 API 和本地双点火
 // 把服务侧那一大段 Playwright/超时日志压成一句能执行的话,减少用户要读的信息量。
 // 只改展示:落盘的 error 仍是原文(排查要用),也不改变任何状态机行为。
@@ -6491,7 +6509,9 @@ function renderWebPanel(r) {
   const lastDone = done.length ? done[done.length - 1] : null;
   const noticeSig = w.segment_notice ? [w.segment_notice.kind, w.segment_notice.text, w.segment_notice.at].join('|') : '';
   const segSig = w.segment ? [w.segment.account, w.segment.chat_url, w.segment.started_at].join('|') : '';
-  const key = JSON.stringify([w.on, pend.map(p => p.id + ':' + (p.waiting ? 1 : 0) + ':' + (p.droppable ? 1 : 0) + ':' + Object.keys(p.copied || {}).join('.') + ':' + ((p.local && [p.local.status, p.local.phase, p.local.index, p.local.error, p.local.account, p.local.seg_no, p.local.waiting_for, p.local.auto_retried, p.local.retry_checks, p.local.next_at, p.local.task_id, p.local.block_reason, p.local.wait_hint].join('|')) || '')), done.length, lastDone ? lastDone.at : '', r.status, w.chat_title, noticeSig, segSig, w.force_new, w.auto_local, w.auto_local_done]);
+  // 账号状态条也要纳入重绘指纹:额度/占用/暂停/用量变化时 3s 轮询能反映出来
+  const acctSig = (w.accounts || []).map(a => [a.id, a.plan, a.paused, a.offline, a.blocked, a.owner, a.busy, a.usage5h, a.usage24h, a.resetsAtMs].join(',')).join('|');
+  const key = JSON.stringify([w.on, pend.map(p => p.id + ':' + (p.waiting ? 1 : 0) + ':' + (p.droppable ? 1 : 0) + ':' + Object.keys(p.copied || {}).join('.') + ':' + ((p.local && [p.local.status, p.local.phase, p.local.index, p.local.error, p.local.account, p.local.seg_no, p.local.waiting_for, p.local.auto_retried, p.local.retry_checks, p.local.next_at, p.local.task_id, p.local.block_reason, p.local.wait_hint].join('|')) || '')), done.length, lastDone ? lastDone.at : '', r.status, w.chat_title, noticeSig, segSig, w.force_new, w.auto_local, w.auto_local_done, acctSig]);
   if (key === webRenderedKey && !el.classList.contains('hidden')) return;
   webRenderedKey = key;
   el.classList.remove('hidden');
@@ -6506,6 +6526,7 @@ function renderWebPanel(r) {
         : '🤖 自动本地模型调用:关。后面每条要你自己点「本地模型调用」或人工粘贴。'}
       ${w.auto_local_done ? '' : `<button class="an-btn" style="font-size:12px;padding:1px 8px" onclick="webAuto(${w.auto_local ? 'false' : 'true'},this)">${w.auto_local ? '关掉自动' : '打开自动'}</button>`}
     </div>` : ''}
+    ${webAccountBar(w)}
     ${recentLocal ? `<div style="margin:6px 0;padding:7px 10px;border-radius:6px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;font-size:12.5px">✓ 本地模型已返回并自动提交:${esc(recentLocal.label || '')} · ${Number(recentLocal.chars || 0).toLocaleString()} 字${recentLocal.elapsed_ms ? ' · ' + webMs(recentLocal.elapsed_ms) : ''}${recentLocal.timed_out ? ' · 可能不完整' : ''} · ${webClock(recentLocal.at)}</div>` : ''}
     ${w.segment_notice ? `<div style="margin:6px 0;padding:8px 10px;border-radius:6px;font-size:12.5px;line-height:1.6;background:${['broken','error'].includes(w.segment_notice.kind) ? '#fef2f2' : w.segment_notice.kind === 'warn' ? '#fffbeb' : '#f5f3ff'};border:1px solid ${['broken','error'].includes(w.segment_notice.kind) ? '#fecaca' : w.segment_notice.kind === 'warn' ? '#fde68a' : '#ddd6fe'};color:${['broken','error'].includes(w.segment_notice.kind) ? '#991b1b' : w.segment_notice.kind === 'warn' ? '#92400e' : '#5b21b6'}">${w.segment_notice.kind === 'broken' ? '⚠ 上下文已中断' : w.segment_notice.kind === 'error' ? '⚠ 本地模型没跑完(已停下等你处理)' : w.segment_notice.kind === 'warn' ? '⚠ 注意' : w.segment_notice.kind === 'ended' ? '⛓ 连续会话已结束' : '🔗 会话段已切换'}:${esc(w.segment_notice.text || '')} <span class="hint">${webClock(w.segment_notice.at)}</span></div>` : ''}
     ${w.segment && w.segment.account ? `<div class="hint" style="margin:2px 0 4px;color:#6d28d9">🔗 当前连续会话:账号 <b>${esc(w.segment.account)}</b>${w.segment.chat_url ? ' · 窗口 ' + esc(String(w.segment.chat_url).slice(-8)) : ' · 锚点待建立'}${w.segment.started_at ? ' · 起于 ' + webClock(w.segment.started_at) : ''}。段内不要新开对话、不要混用人工粘贴或 API,否则上下文会中断。</div>` : ''}

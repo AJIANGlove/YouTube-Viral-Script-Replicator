@@ -384,6 +384,12 @@ async function segListAccounts(cfg) {
     id: String(a.id || ''), enabled: a.enabled !== false, offline: !!a.offline, paused: !!a.paused,
     blocked: !!(a.quota && a.quota.blocked), waitingFor: String((a.stats && a.stats.waitingFor) || ''),
     usage24h: Number((a.usage && a.usage.last24h) || 0) || 0,
+    // 用量统计(本地服务计数,不是 Claude 官方剩余额度):只用于面板展示,不参与可用性判定
+    usage5h: Number((a.usage && a.usage.last5h) || 0) || 0,
+    usage7d: Number((a.usage && a.usage.last7d) || 0) || 0,
+    inChars: Number((a.usage && a.usage.in_chars) || 0) || 0,
+    outChars: Number((a.usage && a.usage.out_chars) || 0) || 0,
+    pauseReason: String(a.pauseReason || ''),
     // 以下只用于「排队原因」展示与只读诊断,绝不参与 ok 过滤或 segSort 排序。
     // connected / workerStarted 尤其只是解释信息:按决策不作为账号可用性判据。
     waitMs: Number((a.stats && a.stats.waitMs) || 0) || 0,
@@ -398,14 +404,66 @@ async function segListAccounts(cfg) {
   segAccountsCache = { at: Date.now(), list };
   return list;
 }
-// 均衡:硬状态可用优先 → 软闸门降权(不排除) → 24h 用量升序 → id 稳定
-function segSort(list) {
+// 均衡:硬状态可用优先 → 软闸门降权(不排除) → 上一段用过的账号降权(不硬排除) → 24h 用量升序 → id 稳定
+function segSort(list, avoidAccount) {
   return list.slice().sort((x, y) => {
-    const rank = a => [a.enabled && !a.offline && !a.paused ? 0 : 1, (a.blocked ? 2 : 0) + (a.waitingFor ? 1 : 0), a.usage24h];
+    const rank = a => [a.enabled && !a.offline && !a.paused ? 0 : 1,
+      (a.blocked ? 2 : 0) + (a.waitingFor ? 1 : 0),
+      (avoidAccount && a.id === avoidAccount) ? 1 : 0,
+      a.usage24h];
     const A = rank(x), B = rank(y);
-    for (let i = 0; i < 3; i++) if (A[i] !== B[i]) return A[i] - B[i];
+    for (let i = 0; i < 4; i++) if (A[i] !== B[i]) return A[i] - B[i];
     return String(x.id).localeCompare(String(y.id));
   });
+}
+
+// ---------- 分层调度(2026-11-24 拍板) ----------
+// 分层依据是「换号代价」,不是输出字数:
+//   Pro  = 写稿 / Step 4 优化 / 二稿审稿 / 终审·修改。多批连续或上下文链长,中断重来代价大,
+//          锁 Pro:Pro 被占用或撞额度就排队,不降级到 Free。
+//   Free = 写前分析 / Step 1 出蓝图。独立单条,撞额度可以换号重开,Free 优先;
+//          满足两个条件之一才允许上 Pro(见 segPlan)。
+// config.local_service.tiers = { pro:[label 前缀...], free:[label 前缀...] } 可覆盖默认分组。
+const TIER_PRO_DEFAULT = ['Step 2', 'Step 4', '二稿审稿', '终审·修改'];
+const TIER_FREE_DEFAULT = ['写前分析', 'Step 1'];
+function tierLabels() {
+  let t = null;
+  try { const c = require('./pipeline').loadConfig(); t = c && c.local_service && c.local_service.tiers; } catch (e) {}
+  return {
+    pro: arr(t && t.pro).length ? arr(t && t.pro).map(String) : TIER_PRO_DEFAULT,
+    free: arr(t && t.free).length ? arr(t && t.free).map(String) : TIER_FREE_DEFAULT
+  };
+}
+function taskTierOf(p) {
+  if (p && p.kind === 'script') return 'pro'; // 写稿多批次:换号代价最高
+  const l = String((p && p.label) || '');
+  const T = tierLabels();
+  if (T.pro.some(x => x && l.startsWith(x))) return 'pro';
+  if (T.free.some(x => x && l.startsWith(x))) return 'free';
+  return 'free';
+}
+// 只读的新段选号计算:segChoose 与 whyBlocked 共用,保证「页面写的排队原因」就是调度真实判定。
+// 不写盘、不改 owner(need_account 段内续用的副作用在 segChoose 里单独处理)。
+function segPlan(job, list) {
+  const proAcc = a => String(a.plan || '').toLowerCase() === 'pro';
+  const usable = list.filter(a => a.enabled && !a.offline && !a.paused); // 硬状态可用(含撞额度,用于解释)
+  const alloc = usable.filter(a => !a.blocked);                          // 可分配(撞 5 小时额度的一律不派)
+  const pro = alloc.filter(proAcc), free = alloc.filter(a => !proAcc(a));
+  const proUsable = usable.filter(proAcc), freeUsable = usable.filter(a => !proAcc(a));
+  const idleOf = arr => segSort(arr, job.avoid_account)
+    .filter(a => { const s = segAccounts.get(a.id); return !s || !s.owner || s.owner === job.runId; });
+  // 服务侧一个 plan 标签都没有(老服务/未登记)时,分层没有依据:退化为单池。
+  // 否则 Pro 组任务会被锁在一个不存在的 Pro 层上,永久排队、全链路停摆。
+  const tiered = list.some(a => String(a.plan || '').trim());
+  const tier = tiered ? (job.tier || 'free') : 'free';
+  let pool = [], rule = '';
+  if (tier === 'pro') { pool = pro; rule = '长任务仅 Pro'; }
+  else if (idleOf(free).length) { pool = free; rule = '短任务 Free 优先'; }
+  else if (!free.length) { pool = pro; rule = 'Free 全部不可用(撞额度/暂停/离线),改派 Pro'; }
+  else if (idleOf(pro).length) { pool = pro; rule = 'Free 全被占用且 Pro 空闲,改派 Pro'; }
+  else { pool = free; rule = 'Free 被占用且 Pro 也在忙,留在 Free 排队(不抢 Pro)'; }
+  if (!tiered) rule = '服务侧未登记 plan,不分层(单池)';
+  return { tier, tiered, rule, pool, idle: idleOf(pool), usable, alloc, pro, free, proUsable, freeUsable, idleOf, proAcc };
 }
 // 给一个 job 选账号。返回 {account} / null(拿不到,继续排队) / {error}(停下报错)
 function segChoose(job, list) {
@@ -414,6 +472,7 @@ function segChoose(job, list) {
   const ok = list.filter(a => a.enabled && !a.offline && !a.paused);
   if (!ok.length) return { error: '当前没有可用账号(都被禁用/离线/熔断),按约定不自动换号,已停下等人处理' };
   if (job.need_account) {
+    // 段内续用优先于分层:连续会话不能换号,换号就丢上下文
     const want = job.need_account, slot = segAccounts.get(want);
     if (slot && slot.owner && slot.owner !== job.runId) {
       // 残留 owner 兜底:占着账号的 run 一张待处理卡都没有了(段已结束却没释放),才清空;
@@ -425,12 +484,8 @@ function segChoose(job, list) {
     if (!ok.some(a => a.id === want)) return { error: '绑定的账号 ' + want + ' 现在不可用(禁用/离线/熔断),按约定不自动换号,已停下等人处理' };
     return { account: want };
   }
-  // 只有一个可用账号时没法换号:允许复用刚释放的旧账号(新段会 always 新建会话,不会串窗口)
-  const others = ok.filter(a => a.id !== job.avoid_account);
-  const pool = others.length ? others : ok;
-  const free = segSort(pool)
-    .filter(a => { const s = segAccounts.get(a.id); return !s || !s.owner || s.owner === job.runId; });
-  return free.length ? { account: free[0].id } : null;
+  const plan = segPlan(job, list);
+  return plan.idle.length ? { account: plan.idle[0].id } : null;
 }
 function segReleaseAccounts(runId) {
   for (const [, s] of segAccounts) {
@@ -846,7 +901,8 @@ function localRun(runId, id) {
   segFifo.push({
     runId, id, from, ticket, new_seg: newSeg, open_anchor: !!openAnchor, need_full: !!needFull,
     need_account: newSeg ? '' : need,
-    avoid_account: newSeg ? bound : ''
+    avoid_account: newSeg ? bound : '',
+    tier: taskTierOf(p) // 分层:pro 锁 Pro,free 优先 Free;段内续用(need_account)时该字段不参与选号
   });
   segKick();
   return { ok: true, id, from, total };
@@ -1424,14 +1480,17 @@ function startLocalTick(ms) {
 // 严格只读:不调用 segChoose(它在 need_account 分支会清 slot.owner,有副作用),不发请求、不点火、不写盘。
 function whyBlocked(job) {
   const list = (segAccountsCache.list || []).slice();
-  const ok = list.filter(a => a.enabled && !a.offline && !a.paused);
   const short = id => String(id || '').replace(/^run_/, '').slice(0, 8);
+  // 与 segChoose 共用同一份 segPlan 计算:页面写的「为什么没轮到我」必须就是调度真实判定
+  const plan = segPlan(job, list);
   const r = {
-    ok: ok.map(a => a.id), excluded_by_avoid: job.avoid_account || null, pool: [], free: [],
+    tier: plan.tier, rule: plan.rule,
+    ok: plan.usable.map(a => a.id), excluded_by_avoid: job.avoid_account || null,
+    pool: plan.pool.map(a => a.id), free: plan.idle.map(a => a.id),
     owners: list.map(a => {
       const s = segAccounts.get(a.id);
-      return { id: a.id, owner: (s && s.owner) || '', busy: !!(s && s.busy), blocked: !!a.blocked,
-               waitingFor: a.waitingFor || '', waitMs: Number(a.waitMs) || 0 };
+      return { id: a.id, plan: a.plan || '', owner: (s && s.owner) || '', busy: !!(s && s.busy), blocked: !!a.blocked,
+               paused: !!a.paused, waitingFor: a.waitingFor || '', waitMs: Number(a.waitMs) || 0 };
     }),
     verdict: '', text: '', hint: ''
   };
@@ -1442,45 +1501,49 @@ function whyBlocked(job) {
   }
   // 服务侧权威原因(静默时段/长休息/额度闸门):只转述一句稳定原文。
   // 不写相对时长、不写 waitMs/resetsAtMs:这些会随轮询变小,写进落盘字段会让 30s 一轮不断写盘。
-  // 服务侧原文里已含「北京 19:00–01:00(次日)」这类窗口信息,足够用户判断。
   const waiting = list.find(a => a.waitingFor);
   const quota = list.find(a => a.blocked && a.quotaBanner);
   if (waiting) r.hint = '本地模型服务:' + waiting.waitingFor;
   else if (quota) r.hint = '本地模型服务:账号 ' + quota.id + ' 触发 5 小时额度闸门(' + quota.quotaBanner + '),以页面提示消失为准,不会自动重发';
+  const tierName = !plan.tiered ? '未分层(服务侧未登记 plan)' : (plan.tier === 'pro' ? '长任务(写稿/优化/审稿)' : '短任务(写前分析/蓝图)');
   if (job.need_account) {
+    // 段内续用优先于分层:连续会话换号就丢上下文
     const want = job.need_account, slot = segAccounts.get(want);
     r.pool = [want];
     if (slot && slot.owner && slot.owner !== job.runId) {
       const ow = load(slot.owner);
       r.verdict = '绑定账号被别的任务占着,继续排队';
-      r.text = '这一条要接着上一个会话发,但账号 ' + want + ' 还被任务 ' + short(slot.owner) + ' 占着'
+      r.text = '这一条要接着上一个会话发(连续段不能换号),但账号 ' + want + ' 还被任务 ' + short(slot.owner) + ' 占着'
         + (ow && arr(ow.pending).length ? '(那边还有卡没处理完)' : '(占用残留)');
-    } else if (!ok.some(a => a.id === want)) {
+    } else if (!plan.usable.some(a => a.id === want)) {
       r.verdict = '绑定账号不可用';
-      r.text = '绑定的账号 ' + want + ' 现在不可用(禁用/离线/熔断),按约定不自动换号';
+      r.text = '这一条要接着上一个会话发,但绑定的账号 ' + want + ' 现在不可用(禁用/离线/熔断),按约定不自动换号';
     } else {
       r.free = [want]; r.verdict = '可分配 ' + want;
-      r.text = '等账号 ' + want + ' 空出来(这张卡要续用上一个会话)';
+      r.text = '等账号 ' + want + ' 空出来(这张卡要续用上一个会话,不能换号)';
     }
     return r;
   }
-  const others = ok.filter(a => a.id !== job.avoid_account);
-  const pool = others.length ? others : ok;
-  const free = segSort(pool).filter(a => { const s = segAccounts.get(a.id); return !s || !s.owner || s.owner === job.runId; });
-  r.pool = pool.map(a => a.id);
-  r.free = free.map(a => a.id);
-  r.verdict = free.length ? ('可分配 ' + free[0].id) : '无空闲账号(继续排队)';
-  if (free.length) {
-    r.text = '有空闲账号 ' + free[0].id + ',正在分配';
+  if (plan.idle.length) {
+    r.verdict = '可分配 ' + plan.idle[0].id;
+    // 保留用户熟悉的关键提示语,分层归因追加在后面(既有契约不破坏)
+    r.text = '有空闲账号 ' + plan.idle[0].id + ',正在分配;' + tierName + ':' + plan.rule;
   } else {
-    const busyDesc = pool.map(a => {
+    r.verdict = '无空闲账号(继续排队)';
+    const busyDesc = plan.pool.map(a => {
       const s = segAccounts.get(a.id);
       return a.id + (s && s.owner ? '(被任务 ' + short(s.owner) + ' 占用' + (s.busy ? ',正在跑' : '') + ')' : '(空闲)');
-    }).join('、');
-    // 只有「确实排除了一个账号」(others 非空且比 ok 短)才写这句;回退到唯一账号时不能说避开
-    const avoided = job.avoid_account && others.length > 0 && others.length < ok.length;
-    const avoid = avoided ? ';上次用过 ' + job.avoid_account + ',这次按规则避开' : '';
-    r.text = '没有空闲账号:' + busyDesc + avoid;
+    }).join('、') || '(该层没有可分配账号)';
+    r.text = '没有空闲账号:' + busyDesc + ';' + tierName + ':' + plan.rule;
+    if (plan.tiered && plan.tier === 'pro') {
+      // Pro 组排队:把 Pro 被谁占用/何时恢复写清楚,并说明不降级,避免看起来像卡死
+      const proBusy = plan.proUsable.map(a => {
+        const s = segAccounts.get(a.id);
+        const why = a.blocked ? '触发 5 小时额度闸门' : (s && s.owner ? '被任务 ' + short(s.owner) + ' 占用' : '不可用');
+        return a.id + '(' + why + ')';
+      }).join('、');
+      if (proBusy) r.text += ';Pro 现状:' + proBusy + ',按规则不降级到 Free';
+    }
   }
   return r;
 }
@@ -1685,6 +1748,12 @@ function view(runOrId) {
   const id = runOrId && typeof runOrId === 'object' ? runOrId.id : runOrId;
   const w = id ? load(id) : null;
   if (!w) return null;
+  // 面板账号状态条需要较新的用量/额度数据:缓存过期就在后台刷一次(不阻塞本次返回)。
+  // segListAccounts 自带 10s 缓存,这里不会放大请求频率;服务不可用时不影响 view。
+  try {
+    const cfg = localConfig();
+    if (cfg.enabled && cfg.url && Date.now() - segAccountsCache.at > 10000) segListAccounts(cfg).catch(() => {});
+  } catch (e) {}
   return {
     on: !!w.on, at: w.at, off_at: w.off_at, chat_title: w.chat_title != null ? w.chat_title : null,
     segment: w.segment || null,           // 当前连续会话:账号 / 锚点窗口 / 起段时间
@@ -1692,10 +1761,22 @@ function view(runOrId) {
     force_new: !!w.force_new,             // 下一张卡一律按新段起头
     auto_local: !!w.auto_local,           // v1.124 自动本地模型调用开着
     auto_local_done: w.auto_local_done || null, // 二稿审稿报告已出,自动到此为止
+    // 账号状态条:plan / 可用性 / 用量 / 额度重置时间(服务侧给了才显示)。用量是本地服务计数,非官方剩余额度。
+    accounts: (segAccountsCache.list || []).map(a => {
+      const s = segAccounts.get(a.id) || {};
+      return {
+        id: a.id, plan: a.plan || '', enabled: !!a.enabled, offline: !!a.offline, paused: !!a.paused,
+        pauseReason: a.pauseReason || '', blocked: !!a.blocked, waitingFor: a.waitingFor || '',
+        quotaBanner: a.quotaBanner || '', resetsAtMs: Number(a.resetsAtMs) || 0,
+        usage5h: Number(a.usage5h) || 0, usage24h: Number(a.usage24h) || 0, usage7d: Number(a.usage7d) || 0,
+        inChars: Number(a.inChars) || 0, outChars: Number(a.outChars) || 0,
+        owner: s.owner || '', busy: !!s.busy
+      };
+    }),
     pending: arr(w.pending).filter(p => p.kind === 'script' || waiters.has(wkey(id, p.id)) || (WEB_RE.test(String(p.label || '')) && !API_RE.test(String(p.label || '')))) // v1.106 升级前挂着、现在改走 API 的步骤不再显示
-      .map(({ prior, key, ...p }) => ({ ...p, waiting: waiters.has(wkey(id, p.id)), droppable: orphanCard(id, p) })),
+      .map(({ prior, key, ...p }) => ({ ...p, waiting: waiters.has(wkey(id, p.id)), droppable: orphanCard(id, p), tier: taskTierOf(p) })),
     done: arr(w.done)
   };
 }
 
-module.exports = { WEB_RE, wants, relay, relayForce, forget, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, setAuto, autoLocalDone, startLocalTick, localTick, localDebug, whyBlocked, localDisplay, localTerminal, healStaleRunning, segReclaim, orphanCard, cardStepDone, sweepOrphans, sweepAllOrphans, dropCard, ownerAlive, reclaimResidualOwners, _waiters: waiters };
+module.exports = { WEB_RE, wants, relay, relayForce, forget, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, setAuto, autoLocalDone, startLocalTick, localTick, localDebug, whyBlocked, localDisplay, localTerminal, healStaleRunning, segReclaim, orphanCard, cardStepDone, sweepOrphans, sweepAllOrphans, dropCard, ownerAlive, reclaimResidualOwners, taskTierOf, segPlan, _waiters: waiters };
