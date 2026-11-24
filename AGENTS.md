@@ -286,6 +286,20 @@
 - **真人题改无名视角(硬规则)**:`track_cards.md` 的 POV 卡——主角是有名有姓的真实人物时,「你」改成同时代、在这个人身边的无名人物,真人只当背景人物、只写有来源的事;无名主角的处境/心理/对话是虚构设定,按时代真实制度写,不逐句写「记录未载」;`title.final_title` 带上无名视角。写前分析和定论点都读这张卡。
 - **亲历感(只 POV)**:`analysis.js` 的 `POV_FOUR` 接在叙事方式规则后(仅 `pov_mode` 为 climb/per_level 时进摘要);`craft_rules.md` P5(待验证=建议);`step1.md`/`step1_function.md`/`step2.md` 的 POV 条;`reverse_audit.md` B 段 POV 条件检查;`final_tracks/pov.md` C2。硬要求只有「每一级至少有一个『你』的具体处境,不能只报节点」;失去/能决定/决定不了是建议,不每级凑齐(其余 POV 稿逐章统计这三样本来就时有时无,硬凑会每级一个套路,和 DEAI_FOCUS 冲突)。
 
+## 新流程「只改一次」:体检只查不改 → 拍板 → 整篇重写一次 → 终检只查不改 → 硬伤只修一句(v1.134,2026-11-24)
+
+起因:「떡갈비 12억」终稿读不下去(同一意思绕 6 遍、跳场景、补丁句叠加、870 和 1,430 两套口径)。根因是初稿后被不同模型局部打补丁 7–10 遍(优化、初稿检查、终审改、补改、自动改开头、AI 出改法、去AI感),互相看不见。人工按「先一条线大纲、再整篇重写一次」改出来的版本用户认可,所以做成流程,老流程保留。
+
+- **开关**:建任务 `flow`('one_pass' 新流程 / 'classic' 老流程,只对 draft_first 有效;页面单选 `gen-flow`,默认新流程,记在 localStorage `flow_v1134`)。没有 `flow` 字段的旧任务都按老流程。
+- **跳过优化**:`pipeline.runGeneration0` 里 `step === 4 && run.flow === 'one_pass'`:不调 Step 4,初稿去说明行 / 外文字符后直接当 `final_script`,`steps.optimized.status = 'skipped'`。
+- **① 体检**(`onepass.checkup`):`finishDraftFirst0` / `resumeDraftFirst0` 对新流程调 `onepassCheckup` 而不是 `runPasses`。同时跑二稿审稿报告(`runReverseAudit`,照旧走网页版)、开头单独审 + 三选一、信息复现(`infoReuseCheck`)、论点核对(`claimFind`,不依赖 review.final),再加账本算错(`ledgerWrongUsed`)、`auditExtras`、听感;`mergeItems` 合成按章排序的清单(关键默认勾),存 `run.onepass.items`,全程不改稿。
+- **② 拍板**(`decide`):`picked_ids`、`opening_choice`(-1 = 保留现在的开头)、`note`。
+- **③ 整篇重写一次**(`rewrite`,提示词 `onepass_rewrite.md`,标签「一遍重写」,在 `manual.WEB_RE` 里所以走网页版 / 本地模型;`autoWanted` 对它不受 auto_local_done 限制):先 OUTLINE 一条线大纲,再 SCRIPT,再 NEW_NUMBERS。章节标签和章数必须不变,不对就报错不换稿。选了开头的,程序把人选的 CH01 原样放回去。`newNumbers` 列出初稿 / 事实表 / 账本里都没有的数(三位以上、小数、百分比)。版本存 `review.versions` 的 `op`。
+- **④ 终检**(`finalCheck`,提示词 `onepass_final.md`,渠道 `final_audit`):只查不改,给 verdict、勾的问题改没改、硬伤(只算数字错 / 和事实矛盾,每条带改好的那一句)。
+- **⑤ 只修这一句**(`fixOne`):终检给了改好的句子就直接替换(不调 AI);新数字没有改法时用 `ai_fix` 渠道只让 AI 回一句,再替换。`markOk` 标成没问题。硬伤和新数字都处理完 = 可以发布。
+- **接口**:`POST /api/runs/:id/onepass/(checkup|decide|final_check|fix|ok|retry)`;详情接口带 `onepass_view`。页面 `op-panel`(新流程隐藏老的逐段对照 `rv-panel`)。
+- 测试:`mock_test_v1134.js`(30 条)。
+
 ## 修稿循环省钱:信息重复检查只查改过的章、手动重查上限、开头改稿后不自动重审(v1.133,2026-11-23)
 
 实测 11-19 到 11-23 的 API 账单:写稿前各步(走本地模型的那几步)没变回 API,多出来的全在终审之后的修稿循环——信息复现核对 5 天 119 次(之前 7 天 23 次,v1.130 修好卡转圈之后每次「重新检查」都真调 Opus,一次输出 5k–13k token)、开头单独审/自动改开头 192 次、AI 出改法 187 次;一篇稿子「AI 出改法 → 应用 → 重新检查」能来回 28 轮,每轮 AI 都会再挑出几处新的。

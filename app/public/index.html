@@ -822,6 +822,15 @@
           <input type="radio" name="gen-thesis" value="auto" style="width:auto" onchange="thesisModeSave()">
           <span>自动选论点:AI 自己挑一个,不停(和以前一样)</span>
         </label>
+        <div class="v13" style="font-size:13px;font-weight:600;margin:8px 0 4px">初稿写好以后怎么改(只对「先写后改」有效)</div>
+        <label style="display:flex;align-items:flex-start;gap:6px;cursor:pointer">
+          <input type="radio" name="gen-flow" value="one_pass" checked style="width:auto;margin-top:3px" onchange="flowSave()">
+          <span>新流程:只改一次(推荐)<br><span class="hint" style="margin:0">初稿写好后,所有检查只查不改,合成一张清单;你勾要改的、从 3 个开头里挑一个;AI 先写一条线大纲,再把整篇从头到尾重写一次;最后终检只查不改,有硬伤(数字错、和事实矛盾)就只修那一句。稿子从初稿到终稿只整篇动一次,不会越改越乱,也省钱。</span></span>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:6px;cursor:pointer">
+          <input type="radio" name="gen-flow" value="classic" style="width:auto;margin-top:3px" onchange="flowSave()">
+          <span>老流程<br><span class="hint" style="margin:0">初稿 → 优化 → 初稿检查出二稿 → 审稿报告 → 终审改稿 → 复审、补改、自动改开头、AI 出改法…每一步都会改一点稿子(和以前一样)。</span></span>
+        </label>
         <div class="v13" style="font-size:13px;font-weight:600;margin:8px 0 4px">开头规则</div>
         <label style="display:flex;align-items:flex-start;gap:6px;cursor:pointer">
           <input type="radio" name="gen-open" value="source" checked style="width:auto;margin-top:3px" onchange="openRuleSave()">
@@ -909,6 +918,7 @@
     </div>
     <div class="card hidden" id="web-panel" style="border:2px solid #7c3aed"></div>
     <div class="card hidden bp-panel" id="bp-panel"></div>
+    <div class="card hidden" id="op-panel"></div>
     <div class="card hidden" id="rv-panel"></div>
     <div class="card hidden" id="rf-panel"></div>
     <div class="card hidden" id="th-panel"></div>
@@ -1186,6 +1196,12 @@ const THESIS_MODE_KEY = 'thesis_mode_v189';
 function thesisMode() { const el = document.querySelector('input[name="gen-thesis"]:checked'); return el ? el.value : 'choose'; }
 // v1.117 开头规则:照原片开头 / 通用开头公式(记住上次选的)
 const OPEN_RULE_KEY = 'open_rule_v1117';
+// v1.134 初稿之后的流程:新流程「只改一次」/ 老流程(记住上次选的)
+const FLOW_KEY = 'flow_v1134';
+function flowPick() { const el = document.querySelector('input[name="gen-flow"]:checked'); return el ? el.value : 'one_pass'; }
+function flowSave() { try { localStorage.setItem(FLOW_KEY, flowPick()); } catch (e) {} }
+function flowLoad() { let v = null; try { v = localStorage.getItem(FLOW_KEY); } catch (e) {} const el = v && document.querySelector('input[name="gen-flow"][value="' + v + '"]'); if (el) el.checked = true; }
+document.addEventListener('DOMContentLoaded', flowLoad);
 function openRule() { const el = document.querySelector('input[name="gen-open"]:checked'); return el ? el.value : 'source'; }
 function openRuleSave() { try { localStorage.setItem(OPEN_RULE_KEY, openRule()); } catch (e) {} }
 function openRuleLoad() { let v = null; try { v = localStorage.getItem(OPEN_RULE_KEY); } catch (e) {} const el = v && document.querySelector('input[name="gen-open"][value="' + v + '"]'); if (el) el.checked = true; }
@@ -2163,6 +2179,7 @@ async function createRun() {
     pre_analysis: genMode() === 'pre_analysis',
     thesis_choose: genMode() !== 'direct' && thesisMode() === 'choose',
     opening_rule: openRule(), // v1.117
+    flow: flowPick(), // v1.134
     track: document.getElementById('gen-track').value.trim(),
     review_track: (document.getElementById('gen-review-track') || {}).value || '',
     materials: document.getElementById('gen-materials').value.trim(),
@@ -2349,6 +2366,7 @@ function statusLabel(r) {
   if (switched && !r.analysis_confirmed && (r.status === 'analyzing' || (r.draft_first && r.status === 'awaiting_review'))) return Array.isArray(rf.switched) && (rf.switched.slice(-1)[0] || {}).by === 'auto' ? '自动换框架中' : '换框架中';
   if (r.draft_first && r.status === 'awaiting_review') return 'AI 调整中';
   const st = r.steps || {};
+  if (r.flow === 'one_pass' && r.status === 'done' && r.onepass_view) { const ov = r.onepass_view; return ov.stalled ? '中断了,点重试' : ov.stage === 'done' ? (ov.publish && ov.publish.ok ? '可以发布' : '终检完成·有硬伤') : ov.stage_zh; }
   if (r.draft_first && r.status === 'done' && (st.reverse_audit || {}).status === 'done' && !st.final_review) return '待选审稿意见';
   return STATUS_LABELS[r.status] || r.status;
 }
@@ -2882,7 +2900,8 @@ async function loadRunDetail() {
   if (r.pre_analysis || (r.steps || {}).analysis) stepKeys.unshift('analysis');
   if (r.boost_opening || (r.steps || {}).opening_boost) stepKeys.push('opening_boost');
   if (r.analysis_confirmed || (r.steps || {}).script_check) stepKeys.push('script_check');
-  if (r.draft_first || (r.steps || {}).draft_check) stepKeys.push('draft_check', 'reverse_audit', 'final_review');
+  if (r.flow === 'one_pass') stepKeys.push('reverse_audit'); // v1.134 新流程:体检里的审稿报告;重写、终检在下面的面板里看
+  else if (r.draft_first || (r.steps || {}).draft_check) stepKeys.push('draft_check', 'reverse_audit', 'final_review');
   if ((r.steps || {}).deai) stepKeys.push('deai');
   // v1.73 按功能重排:蓝图前有功能表、蓝图后有蓝图审
   if ((r.steps || {}).function_table) stepKeys.splice(stepKeys.indexOf('blueprint'), 0, 'function_table');
@@ -2890,7 +2909,7 @@ async function loadRunDetail() {
   document.getElementById('detail-steps').innerHTML = stepKeys.map((k, i) => {
     const s = (r.steps || {})[k] || {};
     const cls = s.status === 'done' || s.status === 'passed' || s.status === 'passed_soft' ? 'done' : (s.status === 'running' ? 'running' : (s.status === 'failed' || s.status === 'held' ? 'failed' : ''));
-    const extra = s.secs ? ` (${s.secs}s)` : '';
+    const extra = s.status === 'skipped' ? ' · 新流程跳过' : s.secs ? ` (${s.secs}s)` : '';
     const gate = s.gate_retry ? ' ⟳重试' : '';
     const jump = STEP_JUMP[k] && (k === 'analysis' ? !!r.analysis : !!r.draft_first || !!(r.review || {}).versions);
     if (webWaitSteps(r).includes(k)) return `<div class="step-pill webwait" onclick="webJump()" title="这一步在你的 Claude 网页版做,点这里去复制、粘贴">${STEP_LABELS[k]}<br>👉 等你复制粘贴</div>`; // v1.107
@@ -2911,6 +2930,7 @@ async function loadRunDetail() {
   renderWebPanel(r); // v1.105 网页版接力
   renderBlueprintPanel(r);
   renderReviewPanel(r);
+  renderOnePassPanel(r); // v1.134
   renderReframePanel(r);
   renderThesisPanel(r);
   renderLedgerChoicePanel(r);
@@ -3019,6 +3039,144 @@ function rvKeyOf(r) {
   return [r.id, r.status, s.length, s.slice(-80), JSON.stringify(r.review || {}).length, JSON.stringify((r.steps || {}).review_zh || {}), JSON.stringify((r.steps || {}).draft_check || {}), JSON.stringify((r.steps || {}).reverse_audit || {}), JSON.stringify((r.steps || {}).final_review || {}), JSON.stringify((r.steps || {}).deai || {}), JSON.stringify((r.steps || {}).final_open || {}), JSON.stringify((r.steps || {}).final_options || {}), JSON.stringify((r.steps || {}).opening_card || {}), JSON.stringify((r.steps || {}).opening_variants || {}), JSON.stringify(((r.analysis || {}).facts) || []).length].join('|');
 }
 
+// ---------- v1.134 新流程「只改一次」面板 ----------
+// ① 体检(只查不改)→ ② 你拍板(勾问题 + 开头三选一)→ ③ 整篇重写一次 → ④ 终检(只查不改)→ ⑤ 硬伤只修这一句
+let opState = null; // { runId, sel: Set, opening, note, key, msg }
+function opKey(v) { return JSON.stringify([v.stage, v.running, v.stalled, v.error, v.items.length, (v.final || {}).at, (v.final || {}).hard, v.new_numbers, (v.opening || {}).pick, v.fixes.length, (v.rewrite || {}).at]); }
+function renderOnePassPanel(r) {
+  const el = document.getElementById('op-panel');
+  const v = r.onepass_view;
+  if (!v) { el.classList.add('hidden'); opState = null; return; }
+  el.classList.remove('hidden');
+  if (!opState || opState.runId !== r.id) opState = { runId: r.id, sel: null, opening: null, note: '', key: '', msg: '' };
+  if (opState.sel === null && v.items.length) opState.sel = new Set(v.picked_ids || v.items.filter(x => x.checked).map(x => x.id));
+  if (opState.opening === null && v.opening) opState.opening = v.opening_choice;
+  const key = opKey(v) + opState.msg;
+  if (key === opState.key) return;
+  if (el.contains(document.activeElement) && document.activeElement.tagName === 'TEXTAREA') return; // 正在写备注,先不刷新
+  opState.key = key;
+  el.innerHTML = opHtml(r, v);
+}
+function opSteps(v) {
+  const order = ['checking', 'decide', 'rewriting', 'final_check', 'done'];
+  const names = ['① 一次体检', '② 你拍板', '③ 整篇重写一次', '④ 终检', '⑤ 修硬伤'];
+  const at = order.indexOf(v.stage);
+  return `<div class="steps">${names.map((n, i) => { const cls = at < 0 ? '' : v.stage === 'done' || i < at ? 'done' : i === at ? 'running' : ''; return `<div class="step-pill ${cls}">${n}</div>`; }).join('')}</div>`;
+}
+function opHtml(r, v) {
+  let h = `<h2 class="v13">新流程:只改一次</h2><div class="hint">稿子从初稿到终稿只整篇动一次:检查只查不改 → 你拍板 → 整篇重写一次 → 终检只查不改 → 有硬伤只修那一句。</div>` + opSteps(v);
+  if (opState.msg) h += `<div class="hint v13" style="margin:6px 0">${esc(opState.msg)}</div>`;
+  if (v.stalled || v.stage === 'failed') {
+    return h + `<div class="err-list" style="margin:8px 0">${esc(v.error || '上次跑到一半程序重启了,这一步没跑完。')}</div><button class="primary" onclick="opPost('retry')">从断掉的那一步接着跑</button>`;
+  }
+  if (v.stage === 'writing' || v.stage === 'pending') return h + `<div class="hint v13" style="margin-top:8px">${r.status === 'done' ? '初稿写好了,体检马上开始。' : '正在写初稿,写好后自动体检(各项检查同时跑,只查不改)。'}</div>${r.status === 'done' && !v.running ? '<button class="an-btn v13" onclick="opPost(\'checkup\')">开始体检</button>' : ''}`;
+  if (v.stage === 'checking') return h + `<div class="hint v13" style="margin-top:8px">正在体检:审稿报告、开头单独审 + 写 3 个开头、信息重复、论点核对、账本、听感,同时跑,只查不改。一般几分钟。${v.running ? '' : '(审稿报告在等网页版 / 本地模型,去上面「网页版接力」看看)'}</div>`;
+  if (v.stage === 'decide') return h + opDecideHtml(v);
+  if (v.stage === 'rewriting') return h + `<div class="hint v13" style="margin-top:8px">正在整篇重写:先写一条线大纲,再从头到尾写一遍。勾了 ${(v.picked_ids || []).length} 条问题${v.opening_choice >= 0 ? ',开头用版本 ' + (v.opening_choice + 1) : ''}。走网页版 / 本地模型时在上面「网页版接力」里。</div>`;
+  if (v.stage === 'final_check') return h + opRewriteHtml(v) + `<div class="hint v13" style="margin-top:8px">正在终检(只查不改)…</div>`;
+  return h + opFinalHtml(v) + opRewriteHtml(v);
+}
+function opDecideHtml(v) {
+  const errs = Object.entries(v.errors || {}).map(([k, e]) => ({ audit: '审稿报告', opening: '写 3 个开头', info: '信息重复', claim: '论点核对' }[k] || k) + ':' + e);
+  const groups = {};
+  v.items.forEach(x => { (groups[x.chapter] = groups[x.chapter] || []).push(x); });
+  const n = opState.sel ? opState.sel.size : 0;
+  let h = `<div style="margin-top:10px"><b class="v13">体检清单(${v.items.length} 条,已勾 <span id="op-n">${n}</span> 条)</b>
+    <span class="hint">关键的默认勾上了。勾上的会在整篇重写时一起改掉;没勾的不改。</span>
+    <div style="margin:4px 0"><button class="an-btn" onclick="opSelAll(1)">全勾</button> <button class="an-btn" onclick="opSelAll(0)">全不勾</button> <button class="an-btn" onclick="opSelAll(2)">只勾关键</button></div>
+    ${errs.length ? `<div class="hint" style="color:#b45309">这几项检查没跑成(不挡拍板,可以先改):${esc(errs.join(';'))}</div>` : ''}
+    ${v.claim && v.claim.verdict === '不成立' ? `<div class="err-list">论点核对:开头的主张被稿子自己的数推翻了(已列在清单里,默认勾上)。</div>` : ''}`;
+  h += Object.keys(groups).map(ch => `<div style="margin-top:8px"><div class="v13" style="font-weight:600">${esc(ch)}</div>${groups[ch].map(x => `
+    <label style="display:flex;gap:6px;align-items:flex-start;margin:4px 0;cursor:pointer">
+      <input type="checkbox" style="width:auto;margin-top:3px" ${opState.sel.has(x.id) ? 'checked' : ''} onchange="opToggle('${escAttr(x.id)}',this.checked)">
+      <span><span class="${x.level === '关键' ? 'v13' : 'hint'}">[${esc(x.level)}]</span> <span class="hint">${esc(x.src)}</span> ${esc(x.problem)}
+      ${x.quote ? `<br><span class="hint">原句:「${esc(x.quote)}」</span>` : ''}${x.fix ? `<br><span class="hint">改法:${esc(x.fix)}</span>` : ''}</span></label>`).join('')}</div>`).join('');
+  h += `</div>` + opOpeningHtml(v) + `
+    <div style="margin-top:10px"><div class="v13" style="font-weight:600">还有别的要交代的(选填)</div>
+    <textarea id="op-note" rows="2" style="width:100%;box-sizing:border-box" placeholder="例如:CH05 那个店主的故事删掉;结尾少说两句" oninput="opState.note=this.value">${esc(opState.note || v.note || '')}</textarea></div>
+    <div style="margin-top:10px"><button class="primary" onclick="opDecide()">按这些整篇重写一次</button>
+    <span class="hint">重写只发一次;重写完自动终检。</span></div>`;
+  return h;
+}
+function opOpeningHtml(v) {
+  const o = v.opening;
+  if (!o || !o.variants.length) return `<div class="hint" style="margin-top:10px">开头:没出 3 个版本,重写时按规则改现在的开头。</div>`;
+  const pick = opState.opening;
+  const STEP = [['payoff', '① 0–5 秒 兑现标题'], ['tie', '② 5–15 秒 和观众扯上关系'], ['question', '③ 15–25 秒 留的问题'], ['first', '④ 25–30 秒 进正文的第一个数']];
+  opState.openOpen = opState.openOpen || {};
+  const card = x => {
+    const rec = o.pick === x.i, on = pick === x.i, bad = x.issues.length;
+    const steps = STEP.filter(([k]) => (x.steps || {})[k]).map(([k, lab]) => `<div style="margin:2px 0"><b>${lab}</b>:${esc(x.steps[k])}</div>`).join('');
+    const open = opState.openOpen[x.i];
+    return `<div style="border:${on ? 2 : 1}px solid ${on ? '#2563eb' : '#e5e7eb'};border-radius:8px;padding:8px 10px;margin:6px 0;background:${on ? '#eff6ff' : '#fff'}">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap">
+        <label style="cursor:pointer"><input type="radio" name="op-open" style="width:auto" ${on ? 'checked' : ''} onchange="opPickOpening(${x.i})"> <b>版本 ${x.i + 1}:${esc(x.name)}</b> ${x.words ? `<span class="hint">${x.words} 词</span>` : ''}${rec ? ' <span style="background:#2563eb;color:#fff;border-radius:4px;padding:0 6px;font-size:12px">AI 推荐</span>' : ''}</label>
+        <button class="an-btn" onclick="opOpenToggle(${x.i})">${open ? '收起详情' : '看详情'}</button></div>
+      <div style="white-space:pre-wrap;margin:6px 0">${esc(x.text)}</div>
+      ${x.zh ? `<div class="rv-zh" style="white-space:pre-wrap">中文:${esc(x.zh)}</div>` : ''}
+      ${rec && o.pick_why ? `<div style="margin:6px 0;padding:6px 8px;border-radius:6px;background:#dbeafe"><b>为什么推荐它:</b>${esc(o.pick_why)}${o.pick_note ? `<div class="hint" style="color:#b45309">${esc(o.pick_note)}</div>` : ''}</div>` : ''}
+      ${x.why ? `<div style="font-size:13px;margin:4px 0"><b>这个版本的打法:</b>${esc(x.why)}</div>` : ''}
+      ${open ? `<div style="font-size:13px;margin:6px 0;padding:6px 8px;border-left:3px solid #93c5fd;background:#f8fafc"><div class="hint">前 30 秒四步,这个版本是这样走的:</div>${steps || '<div class="hint">(这次没写四步拆解)</div>'}</div>` : ''}
+      <div style="font-size:13px;margin:4px 0;color:${bad ? '#b91c1c' : '#047857'}">${bad ? '程序检查没过:' + esc(x.issues.join(';')) : '✓ 程序检查都过了(数字个数、没提前说破答案、没打招呼报流程)'}</div>
+    </div>`;
+  };
+  return `<div style="margin-top:12px"><div class="v13" style="font-weight:600">开头三选一</div>
+    <div class="hint">选中的开头重写时原样放进稿子,后面的章节接着它写。点「看详情」看它前 30 秒怎么走。</div>
+    ${o.variants.map(card).join('')}
+    <label style="display:block;border:${pick === -1 ? 2 : 1}px solid ${pick === -1 ? '#2563eb' : '#e5e7eb'};border-radius:8px;padding:8px 10px;margin:6px 0;cursor:pointer">
+      <input type="radio" name="op-open" style="width:auto" ${pick === -1 ? 'checked' : ''} onchange="opPickOpening(-1)"> <b>保留现在的开头</b>
+      <span class="hint">重写时开头只按规则顺一顺${o.now.length ? '(现在的开头有:' + esc(o.now.join(';')) + ')' : ''}</span></label></div>`;
+}
+function opOpenToggle(i) { opState.openOpen[i] = !opState.openOpen[i]; opState.key = ''; renderOnePassPanel(lastRunDetail); }
+function opRewriteHtml(v) {
+  const rw = v.rewrite;
+  if (!rw) return '';
+  return `<details style="margin-top:10px"><summary class="v13" style="cursor:pointer">这次重写的一条线大纲 · ${rw.base_words} → ${rw.words} 词${rw.opening_used >= 0 ? ' · 开头用了版本 ' + (rw.opening_used + 1) : ''}</summary>
+    <div class="rv-text" style="margin-top:6px">${esc(rw.outline || '(没写大纲)')}</div>
+    ${rw.new_numbers_note && rw.new_numbers_note !== '无' ? `<div class="hint" style="margin-top:6px">AI 说新推出来的数:${esc(rw.new_numbers_note)}</div>` : ''}</details>`;
+}
+function opFinalHtml(v) {
+  const f = v.final;
+  if (!f) return `<div class="hint">还没有终检结果。</div><button class="an-btn v13" onclick="opPost('final_check')">终检</button>`;
+  const pub = v.publish || {};
+  let h = `<div style="margin-top:10px;padding:8px;border-radius:8px;background:${pub.ok ? '#ecfdf5' : '#fff7ed'}"><b>${pub.ok ? '✅ 可以发布' : '还剩 ' + (pub.hard_left + pub.num_left) + ' 处要你看一下'}</b>
+    <span class="hint">终检结论:${esc(f.verdict || '—')}。${esc(f.summary || '')}</span></div>`;
+  const hard = (f.hard || []);
+  if (hard.length) h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">硬伤(数字错 / 和事实矛盾):只修这一句,别的地方不动</div>${hard.map(x => opFixRow(x, x.kind, x.problem, x.fix)).join('')}</div>`;
+  const nn = v.new_numbers || [];
+  if (nn.length) h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">新出现的数字(初稿、事实表、账本里都没有)</div><div class="hint">AI 推出来或编的。看一下:算得对就点「没问题」;不对就点「只修这一句」,AI 只改这一句。</div>${nn.map(x => opFixRow({ ...x, done: x.ok }, x.chapter, '「' + (/^\d+$/.test(x.num) ? Number(x.num).toLocaleString('en-US') : x.num) + '」没有出处', '')).join('')}</div>`;
+  if ((f.picked || []).length) h += `<details style="margin-top:8px"><summary class="hint" style="cursor:pointer">你勾的问题改掉没有(${f.picked.filter(x => x.done).length}/${f.picked.length} 改掉了)</summary>${f.picked.map(x => `<div class="hint">${x.done ? '✓' : '✗'} ${esc(x.id)} ${esc(x.note)}</div>`).join('')}</details>`;
+  if ((f.notes || []).length) h += `<details style="margin-top:6px"><summary class="hint" style="cursor:pointer">小意见(不算硬伤,可以不管)${f.notes.length} 条</summary>${f.notes.map(x => `<div class="hint">· ${esc(x)}</div>`).join('')}</details>`;
+  if ((f.listen || []).length) h += `<div class="hint" style="margin-top:6px">听感提示:${esc(f.listen.join(';'))}</div>`;
+  h += `<div style="margin-top:8px"><button class="an-btn" onclick="opPost('final_check')">重新终检</button> <span class="hint">只查不改。</span></div>`;
+  return h;
+}
+function opFixRow(x, tag, problem, fix) {
+  return `<div style="border-left:3px solid ${x.done ? '#10b981' : '#f59e0b'};padding:4px 8px;margin:6px 0">
+    <div>${tag ? `<span class="hint">[${esc(tag)}]</span> ` : ''}${esc(problem)}${x.done ? ` <span style="color:#059669">· ${x.accepted ? '已确认没问题' : '已修'}</span>` : ''}</div>
+    ${x.quote ? `<div class="hint">原句:「${esc(x.quote)}」</div>` : ''}
+    ${x.fixed_to ? `<div class="hint">改成:「${esc(x.fixed_to)}」</div>` : fix && !x.done ? `<div class="hint">改法:「${esc(fix)}」</div>` : ''}
+    ${x.done ? '' : `<div style="margin-top:4px"><button class="an-btn v13" onclick="opFix('${escAttr(x.id)}')">只修这一句</button> <button class="an-btn" onclick="opOk('${escAttr(x.id)}')">没问题,不用改</button></div>`}</div>`;
+}
+function opToggle(id, on) { if (on) opState.sel.add(id); else opState.sel.delete(id); const n = document.getElementById('op-n'); if (n) n.textContent = opState.sel.size; }
+function opSelAll(mode) { const v = (lastRunDetail || {}).onepass_view; if (!v) return; opState.sel = new Set(v.items.filter(x => mode === 1 || (mode === 2 && x.level === '关键')).map(x => x.id)); opState.key = ''; renderOnePassPanel(lastRunDetail); }
+function opPickOpening(i) { opState.opening = i; opState.key = ''; renderOnePassPanel(lastRunDetail); }
+async function opPost(action, body) {
+  try {
+    const r = await api('/api/runs/' + opState.runId + '/onepass/' + action, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
+    opState.msg = action === 'fix' ? '已改成:「' + (r.to || '') + '」' : '';
+  } catch (e) { opState.msg = '没成功:' + e.message; }
+  opState.key = '';
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 600);
+}
+function opDecide() {
+  const note = (document.getElementById('op-note') || {}).value || '';
+  opState.msg = '已开始整篇重写…';
+  opPost('decide', { ids: [...(opState.sel || [])], opening: opState.opening == null ? -1 : opState.opening, note });
+}
+function opFix(id) { opState.msg = '正在只修这一句…'; opState.key = ''; renderOnePassPanel(lastRunDetail); opPost('fix', { id }); }
+function opOk(id) { opPost('ok', { id }); }
+
 function rvEditing() {
   const el = document.getElementById('rv-panel');
   if (!el) return false;
@@ -3029,6 +3187,7 @@ function rvEditing() {
 async function renderReviewPanel(r) {
   const el = document.getElementById('rv-panel');
   const hasScript = !!(r.script_v1 || r.final_script);
+  if (r.flow === 'one_pass') { el.classList.add('hidden'); rvState = null; return; } // v1.134 新流程用自己的面板
   if (!r.draft_first && !(hasScript && r.status === 'done')) { el.classList.add('hidden'); rvState = null; return; }
   el.classList.remove('hidden');
   if (!rvState || rvState.runId !== r.id) rvState = { runId: r.id, open: !!r.draft_first, key: null, view: null, busy: {}, panel: {}, onlyFlags: false, err: '', msg: {} };

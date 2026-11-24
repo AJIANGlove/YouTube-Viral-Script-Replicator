@@ -583,6 +583,8 @@ const server = http.createServer(async (req, res) => {
         thesis_choose: body.thesis_choose === true && (!!body.pre_analysis || !!body.draft_first),
         // v1.117 开头规则:source 照原片开头(节拍表、锁定开头)/ formula 通用开头公式;没传默认照原片开头
         opening_rule: body.opening_rule === 'formula' ? 'formula' : 'source',
+        // v1.134 初稿之后的流程:one_pass 新流程「只改一次」(体检 → 拍板 → 整篇重写一次 → 终检);classic 老流程。只对一键生成有效
+        flow: body.flow === 'one_pass' && !!body.draft_first ? 'one_pass' : 'classic',
         // 频道声音设定:'__auto__' 按频道名匹配(默认) / '__none__' 不用 / 设定名
         voice_name: typeof body.voice_name === 'string' ? body.voice_name : voice.AUTO
       });
@@ -612,6 +614,22 @@ const server = http.createServer(async (req, res) => {
         if (r) { r.status = 'failed'; r.error = '管线异常: ' + e.message; store.saveRun(r); }
       });
       return send(res, 200, { ok: true, id: run.id });
+    }
+
+    // v1.134 新流程「只改一次」:checkup 重新体检 / decide 拍板并整篇重写一次(后台跑)/ final_check 重新终检 / fix 硬伤只修这一句 / ok 标成没问题 / retry 从断掉的一步接着跑
+    const opMatch = url.match(/^\/api\/runs\/([\w-]+)\/onepass\/(checkup|decide|final_check|fix|ok|retry)$/);
+    if (opMatch && method === 'POST') {
+      const body = await readBody(req);
+      const op = require('./lib/onepass');
+      const [, id, action] = opMatch;
+      try {
+        if (action === 'checkup') return send(res, 200, op.startCheckup(id));
+        if (action === 'decide') return send(res, 200, op.decide(id, body || {}));
+        if (action === 'final_check') return send(res, 200, op.startFinalCheck(id));
+        if (action === 'fix') return send(res, 200, await op.fixOne(id, body || {}));
+        if (action === 'ok') return send(res, 200, op.markOk(id, body || {}));
+        return send(res, 200, op.retry(id));
+      } catch (e) { return send(res, e.status || 500, { error: e.message }); }
     }
 
     // ---------- YouTube 真实数据(插件 extension/ 从 Studio 抓来) ----------
@@ -668,6 +686,7 @@ const server = http.createServer(async (req, res) => {
       try { const bv = require('./lib/blueprint').view(r); if (bv) r.blueprint_view = bv; } catch (e) { /* 旧任务数据不全:不显示面板 */ }
       try { const cv = require('./lib/thesis').coreView(r); if (cv) r.core_view = cv; } catch (e) { /* 旧任务数据不全:不显示核心观点 */ } // v1.114
       try { r.opening_rule_view = require('./lib/openbeats').ruleView(r); } catch (e) {} // v1.117 这篇用的哪种开头规则
+      try { const opv = require('./lib/onepass').view(r); if (opv) r.onepass_view = opv; } catch (e) {} // v1.134 新流程「只改一次」
       { const wv = require('./lib/manual').view(r); if (wv) { r.web = wv; r.live_calls = (r.live_calls || []).filter(c => !wv.pending.some(p => p.label === c.label || (p.kind === 'script' && /^Step 2/.test(c.label)))); } } // v1.105 网页版接力:等你粘贴的消息;等粘贴的不算「正在调用」 网页版接力:等你粘贴的消息(不带存下的回答)
       return send(res, 200, r);
     }

@@ -24,7 +24,7 @@ function must(runId) { const st = load(runId); if (!st) throw err('这个任务�
 // 蓝图审照旧走 API(人选的:蓝图先粘回来,程序检查 + 蓝图审)
 // v1.113 优化(Step 4)也走网页版:主调用新开「优化」对话,结构/篇幅/听感重试回这个对话接着发;外文字符修正(逐行小修)照旧走 API。审核(Step 3)照旧走 API
 // v1.115 ⑧ 二稿审稿报告的主调用也走网页版(新开「二稿审稿」对话,不沿用写稿/优化的对话,免得审自己写的稿);中文对照、问题在哪/大白话照旧走 API
-const WEB_RE = /^(写前分析|Step 1|Step 2|Step 4|二稿审稿)/;
+const WEB_RE = /^(写前分析|Step 1|Step 2|Step 4|二稿审稿|一遍重写)/; // v1.134 新流程的整篇重写也走网页版 / 本地模型
 const API_RE = /蓝图审(?!改)|^Step 1 (蓝图补搜|功能表)|^Step 4 外文字符修正/;
 const ANSWERS_MAX = 40;
 
@@ -57,6 +57,7 @@ function chatName(label) {
   if (/^Step 2/.test(l)) return '写稿';
   if (/^Step 4/.test(l)) return '优化';
   if (/^二稿审稿/.test(l)) return '二稿审稿';
+  if (/^一遍重写/.test(l)) return '整篇重写';
   if (/^终审·修改/.test(l)) return '终审·修改';
   return l;
 }
@@ -1259,7 +1260,7 @@ async function healStaleRunning(runId, id, L, cfg) {
 // 误删可自恢复:relay0/relayWrite0 按 key 找卡、找不到会重挂,answers 缓存则直接返回。
 const CARD_STEP_RE = [
   [/^Step 1 功能表/, 'function_table'], [/^Step 1/, 'blueprint'], [/^Step 2/, 'script'],
-  [/^Step 4/, 'optimized'], [/^二稿审稿/, 'reverse_audit'], [/^终审·修改/, 'final_review'],
+  [/^Step 4/, 'optimized'], [/^二稿审稿/, 'reverse_audit'], [/^一遍重写/, 'onepass_rewrite'], [/^终审·修改/, 'final_review'],
   [/^(写前分析|原片对照表|联网查询词|AI |账本|论点对账)/, 'analysis']
 ];
 function cardStepOf(p) {
@@ -1658,6 +1659,8 @@ function turnOn(runOrId, opts) {
 // 终审「修改」(check:'edits')在二稿审稿之后、要人看,不自动。
 const AUTO_STOP_TIP = '。自动本地模型调用停在这一条:可以再点「本地模型调用」、人工粘贴,或点「这一条改用 API 跑」;这一条处理好后,后面的照旧自动调用';
 function autoWanted(web, p, runId) {
+  // v1.134 新流程的整篇重写:人拍板后才发出来,自动开关开过就照样自动调用(不受「审稿报告已出、到此为止」的限制)
+  if (web && p && web.on && web.auto_local && /^一遍重写/.test(String(p.label || ''))) return true;
   if (!web || !p || !web.on || !web.auto_local || web.auto_local_done) return false;
   if (p.check === 'edits') return false;
   // run 终态 / 二稿审稿报告已出:自动链路到此为止。任何点火路径都必须过这一关,

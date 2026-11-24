@@ -793,6 +793,19 @@ async function runGeneration0(runId) {
       store.saveRun(run);
       return;
     }
+    // v1.134 新流程「只改一次」:不跑 Step 4 优化(整篇改写),初稿直接当底稿,体检后只整篇重写一次
+    if (step === 4 && run.flow === 'one_pass') {
+      const meta = checks.stripMetaNotes(checks.extractFinalScript(outputs.step2), (run.audience || {}).target_language);
+      const pure = await purify.purifyScript(meta.text, run.audience, async p => (await callLlm([{ role: 'user', content: p }], 'Step 4 外文字符修正')).content);
+      run.final_script = checks.speechTidy(pure.text);
+      outputs.step4 = outputs.step2;
+      run.outputs = outputs;
+      run.checks = { ...(run.checks || {}), listen: checks.listenCheck(run.final_script, listenOpts()) };
+      run.steps.optimized = { status: 'skipped', note: '新流程:不做优化,体检后整篇只重写一次', finished_at: new Date().toISOString() };
+      run.current_step = 4;
+      store.saveRun(run);
+      continue;
+    }
     run.current_step = step;
     const prevStep = run.steps[stepNames[step - 1]] || {};
     // Step 2 分章产物(segments)必须跨重试保留:任务失败后点重试,已写好的章不再重写
