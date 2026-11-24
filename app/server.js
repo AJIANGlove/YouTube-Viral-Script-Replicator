@@ -617,13 +617,15 @@ const server = http.createServer(async (req, res) => {
     }
 
     // v1.134 新流程「只改一次」:checkup 重新体检 / decide 拍板并整篇重写一次(后台跑)/ final_check 重新终检 / fix 硬伤只修这一句 / ok 标成没问题 / retry 从断掉的一步接着跑
-    const opMatch = url.match(/^\/api\/runs\/([\w-]+)\/onepass\/(checkup|decide|final_check|fix|ok|retry)$/);
+    const opMatch = url.match(/^\/api\/runs\/([\w-]+)\/onepass\/(checkup|decide|final_check|fix|ok|retry|switch|switch_back)$/);
     if (opMatch && method === 'POST') {
       const body = await readBody(req);
       const op = require('./lib/onepass');
       const [, id, action] = opMatch;
       try {
         if (action === 'checkup') return send(res, 200, op.startCheckup(id));
+        if (action === 'switch') return send(res, 200, op.switchToOnePass(id)); // 老流程跑完的任务:回到初稿改走新流程
+        if (action === 'switch_back') return send(res, 200, op.switchBack(id));
         if (action === 'decide') return send(res, 200, op.decide(id, body || {}));
         if (action === 'final_check') return send(res, 200, op.startFinalCheck(id));
         if (action === 'fix') return send(res, 200, await op.fixOne(id, body || {}));
@@ -687,6 +689,8 @@ const server = http.createServer(async (req, res) => {
       try { const cv = require('./lib/thesis').coreView(r); if (cv) r.core_view = cv; } catch (e) { /* 旧任务数据不全:不显示核心观点 */ } // v1.114
       try { r.opening_rule_view = require('./lib/openbeats').ruleView(r); } catch (e) {} // v1.117 这篇用的哪种开头规则
       try { const opv = require('./lib/onepass').view(r); if (opv) r.onepass_view = opv; } catch (e) {} // v1.134 新流程「只改一次」
+      try { r.onepass_can_switch = require('./lib/onepass').canSwitch(r); } catch (e) {}
+      r.onepass_has_saved = !!r.onepass_backup;
       { const wv = require('./lib/manual').view(r); if (wv) { r.web = wv; r.live_calls = (r.live_calls || []).filter(c => !wv.pending.some(p => p.label === c.label || (p.kind === 'script' && /^Step 2/.test(c.label)))); } } // v1.105 网页版接力:等你粘贴的消息;等粘贴的不算「正在调用」 网页版接力:等你粘贴的消息(不带存下的回答)
       return send(res, 200, r);
     }

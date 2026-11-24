@@ -351,6 +351,64 @@ function retry(runId) {
   return startFinalCheck(runId);
 }
 
+// ---------- 老流程已经跑完的任务:回到初稿改走新流程(不重做写前分析、蓝图、写稿) ----------
+// 老终稿、老审稿记录整份备份在 run.classic_backup,随时可以切回去
+const SWITCH_KEYS = ['final_script', 'script_v1', 'review', 'onepass'];
+function canSwitch(run) {
+  return !!run && !isOn(run) && run.draft_first && run.status === 'done' && !!((run.outputs || {}).step2 || cur(run));
+}
+function draftOf(run) {
+  const s2 = (run.outputs || {}).step2;
+  if (s2) {
+    const meta = checks.stripMetaNotes(checks.extractFinalScript(s2), lang(run));
+    return checks.cleanForeignScript(checks.speechTidy(meta.text), lang(run)).text;
+  }
+  const d1 = arr((run.review || {}).versions).find(v => v.key === 'd1');
+  return (d1 && d1.text) || '';
+}
+function switchToOnePass(runId) {
+  const run = store.getRun(runId);
+  if (!run) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  if (!canSwitch(run)) throw Object.assign(new Error('只有「先写后改」、已经完成、还在老流程的任务能切'), { status: 400 });
+  if (rv().passBusy(runId)) throw Object.assign(new Error('「' + rv().passLabel(runId) + '」正在跑,等它跑完再切'), { status: 409 });
+  const keep = { at: now(), ...Object.fromEntries(SWITCH_KEYS.map(k => [k, run[k] === undefined ? null : run[k]])) };
+  // 之前切过新流程又切回来的:新流程那份(体检、重写稿、终检)原样放回,不再花钱重跑
+  if (run.onepass_backup) {
+    const nb = run.onepass_backup;
+    SWITCH_KEYS.forEach(k => { if (nb[k] == null) delete run[k]; else run[k] = nb[k]; });
+    run.classic_backup = keep;
+    run.flow = FLOW;
+    delete run.onepass_backup;
+    store.saveRun(run);
+    return { ok: true, restored: true };
+  }
+  const draft = draftOf(run);
+  if (!draft) throw Object.assign(new Error('找不到初稿'), { status: 400 });
+  run.classic_backup = keep;
+  run.flow = FLOW;
+  run.final_script = draft;
+  if (run.script_v1) run.script_v1 = draft;
+  run.review = { versions: [{ key: 'd1', label: '初稿', at: now(), text: draft, issues: [] }] };
+  delete run.onepass;
+  ['reverse_audit', 'opening_card', 'opening_variants', 'claim_check', 'info_check'].forEach(k => { if (run.steps && run.steps[k]) delete run.steps[k]; });
+  store.saveRun(run);
+  startCheckup(runId);
+  return { ok: true };
+}
+// 切回老流程:老终稿和老审稿记录原样放回去;新流程这份也备份着(onepass_backup),再点「改用新流程」直接切回来,两份文案都留着
+function switchBack(runId) {
+  const run = store.getRun(runId);
+  if (!run || !run.classic_backup) throw Object.assign(new Error('没有老流程的备份'), { status: 400 });
+  if (busy.has(runId)) throw Object.assign(new Error('「' + busy.get(runId) + '」正在跑,等它跑完再切'), { status: 409 });
+  const b = run.classic_backup;
+  run.onepass_backup = { at: now(), ...Object.fromEntries(SWITCH_KEYS.map(k => [k, run[k] === undefined ? null : run[k]])) };
+  SWITCH_KEYS.forEach(k => { if (b[k] == null) delete run[k]; else run[k] = b[k]; });
+  run.flow = 'classic';
+  delete run.classic_backup;
+  store.saveRun(run);
+  return { ok: true };
+}
+
 // ---------- 给页面 ----------
 const STAGE_ZH = { checking: '① 一次体检中', decide: '② 等你拍板', rewriting: '③ 整篇重写中', final_check: '④ 终检中', done: '⑤ 终检完成', failed: '出错了' };
 function view(run) {
@@ -373,8 +431,9 @@ function view(run) {
     opening_choice: op.opening_choice != null ? op.opening_choice : (ov && ov.pick != null ? ov.pick : -1),
     rewrite: op.rewrite ? { at: op.rewrite.at, outline: op.rewrite.outline, words: op.rewrite.words, base_words: op.rewrite.base_words, opening_used: op.rewrite.opening_used, new_numbers_note: op.rewrite.new_numbers_note } : null,
     new_numbers: arr(op.new_numbers), final: fin, fixes: arr(op.fixes),
+    has_backup: !!run.classic_backup,
     publish: fin ? { ok: hardLeft === 0 && numLeft === 0, hard_left: hardLeft, num_left: numLeft } : null
   };
 }
 
-module.exports = { FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };
+module.exports = { canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };

@@ -3046,6 +3046,11 @@ function opKey(v) { return JSON.stringify([v.stage, v.running, v.stalled, v.erro
 function renderOnePassPanel(r) {
   const el = document.getElementById('op-panel');
   const v = r.onepass_view;
+  if (!v && r.onepass_can_switch) { // 老流程跑完的任务:可以回到初稿改走新流程
+    el.classList.remove('hidden'); opState = null;
+    el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span><b class="v13">想试新流程「只改一次」?</b> <span class="hint">${r.onepass_has_saved ? '这篇之前用新流程改过一版,点右边直接切过去看(不重跑、不花钱)。现在这份老流程终稿也会留着。' : '不重做写前分析、蓝图和写稿,直接拿这篇的初稿重新体检 → 你拍板 → 整篇重写一次 → 终检。现在的终稿和审稿记录会整份备份,随时能切回来。'}</span></span><button class="an-btn v13" onclick="opSwitch(${r.onepass_has_saved ? 1 : 0})">${r.onepass_has_saved ? '切到新流程那一版' : '从初稿改用新流程'}</button></div>`;
+    return;
+  }
   if (!v) { el.classList.add('hidden'); opState = null; return; }
   el.classList.remove('hidden');
   if (!opState || opState.runId !== r.id) opState = { runId: r.id, sel: null, opening: null, note: '', key: '', msg: '' };
@@ -3066,6 +3071,7 @@ function opSteps(v) {
 function opHtml(r, v) {
   let h = `<h2 class="v13">新流程:只改一次</h2><div class="hint">稿子从初稿到终稿只整篇动一次:检查只查不改 → 你拍板 → 整篇重写一次 → 终检只查不改 → 有硬伤只修那一句。</div>` + opSteps(v);
   if (opState.msg) h += `<div class="hint v13" style="margin:6px 0">${esc(opState.msg)}</div>`;
+  if (v.has_backup && !v.running) h += `<div class="hint" style="margin:4px 0">这篇有两版文案:现在看的是新流程这版,老流程的终稿也留着。<button class="an-btn" onclick="opSwitchBack()">切回老流程的终稿</button></div>`;
   if (v.stalled || v.stage === 'failed') {
     return h + `<div class="err-list" style="margin:8px 0">${esc(v.error || '上次跑到一半程序重启了,这一步没跑完。')}</div><button class="primary" onclick="opPost('retry')">从断掉的那一步接着跑</button>`;
   }
@@ -3176,6 +3182,18 @@ function opDecide() {
 }
 function opFix(id) { opState.msg = '正在只修这一句…'; opState.key = ''; renderOnePassPanel(lastRunDetail); opPost('fix', { id }); }
 function opOk(id) { opPost('ok', { id }); }
+async function opSwitch(saved) {
+  if (!saved && !confirm('从初稿改用新流程?\n\n会拿这篇的初稿重新体检(审稿报告、写 3 个开头、信息重复、论点核对,大约几分钟),然后停下来等你拍板。\n现在的终稿和审稿记录会整份备份,点「切回老流程的终稿」就能原样回来。')) return;
+  try { await api('/api/runs/' + currentRunId + '/onepass/switch', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }); }
+  catch (e) { alert('没切成:' + e.message); return; }
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 600);
+}
+async function opSwitchBack() {
+  if (!confirm('切回老流程的终稿?\n\n新流程这一版(重写稿、终检结果)会留着,之后点「切到新流程那一版」就能切回来,不用重跑。')) return;
+  try { await api('/api/runs/' + currentRunId + '/onepass/switch_back', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }); }
+  catch (e) { alert('没切成:' + e.message); return; }
+  setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 600);
+}
 
 function rvEditing() {
   const el = document.getElementById('rv-panel');
