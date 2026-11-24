@@ -392,6 +392,7 @@ function switchToOnePass(runId) {
   delete run.onepass;
   ['reverse_audit', 'opening_card', 'opening_variants', 'claim_check', 'info_check'].forEach(k => { if (run.steps && run.steps[k]) delete run.steps[k]; });
   store.saveRun(run);
+  try { require('./manual').reopenAuto(runId); } catch (e) {}
   startCheckup(runId);
   return { ok: true };
 }
@@ -423,7 +424,7 @@ function view(run) {
   const hardLeft = fin ? arr(fin.hard).filter(x => !x.done).length : 0;
   const numLeft = arr(op.new_numbers).filter(x => !x.ok).length;
   return {
-    stage, stage_zh: STAGE_ZH[stage] || (stage === 'writing' ? '写初稿中' : '等体检'), running, stalled,
+    failed_at: op.failed_at || '', stage, stage_zh: STAGE_ZH[stage] || (stage === 'writing' ? '写初稿中' : '等体检'), running, stalled,
     error: op.error || '', errors: op.errors || {},
     items: arr(op.items), picked_ids: op.picked_ids || null, note: op.note || '', claim: op.claim || null,
     opening: ov ? { pick: ov.pick, pick_why: ov.pick_why || '', pick_note: ov.pick_note || '', now: arr(ov.now), title_kind: ov.title_kind || '',

@@ -2342,7 +2342,19 @@ function setTrack(v) {
 }
 
 // ---------- 任务 ----------
-const STEP_LABELS = { analysis: '⓪ 写前分析', function_table: '① 功能表', blueprint: '① 蓝图', blueprint_review: '① 蓝图审', script: '② 脚本', audit: '③ 审核', optimized: '④ 优化', opening_boost: '⑤ 强化开头', script_check: '⑥ 稿件检查', draft_check: '⑦ 初稿检查→二稿', reverse_audit: '⑧ 二稿审稿报告', final_review: '⑨ 终审→终稿', deai: '⑩ 去AI感' };
+// v1.134 新流程步骤条:体检 / 拍板 / 整篇重写 / 终检
+function opPillStatus(r, k) {
+  const v = r.onepass_view || {};
+  const order = ['op_check', 'op_decide', 'op_rewrite', 'op_final'];
+  const at = { checking: 0, decide: 1, rewriting: 2, final_check: 3, done: 4 }[v.stage];
+  const i = order.indexOf(k);
+  if (v.stage === 'failed' || v.stalled) return { status: i === order.indexOf({ checking: 'op_check', rewriting: 'op_rewrite', final_check: 'op_final' }[v.failed_at || v.stage] || 'op_check') ? 'failed' : '' };
+  if (at == null) return {};
+  if (i < at || at === 4) return { status: 'done' };
+  if (i === at) return { status: k === 'op_decide' ? 'waiting_you' : 'running' };
+  return {};
+}
+const STEP_LABELS = { op_check: '⑦ 一次体检', op_decide: '⑧ 你拍板', op_rewrite: '⑨ 整篇重写一次', op_final: '⑩ 终检', analysis: '⓪ 写前分析', function_table: '① 功能表', blueprint: '① 蓝图', blueprint_review: '① 蓝图审', script: '② 脚本', audit: '③ 审核', optimized: '④ 优化', opening_boost: '⑤ 强化开头', script_check: '⑥ 稿件检查', draft_check: '⑦ 初稿检查→二稿', reverse_audit: '⑧ 二稿审稿报告', final_review: '⑨ 终审→终稿', deai: '⑩ 去AI感' };
 // v1.99 正在用的模型:进行中的提示旁边显示,好知道这一步效果好坏是哪个模型出的
 function modelNick(m) { m = String(m || ''); return /gpt/i.test(m) ? 'GPT' : /deepseek/i.test(m) ? 'DeepSeek' : /opus/i.test(m) ? 'Opus' : /sonnet/i.test(m) ? 'Sonnet' : /claude/i.test(m) ? 'Claude' : /kimi/i.test(m) ? 'Kimi' : /gemini/i.test(m) ? 'Gemini' : m; }
 function liveTag(list, style) {
@@ -2900,18 +2912,19 @@ async function loadRunDetail() {
   if (r.pre_analysis || (r.steps || {}).analysis) stepKeys.unshift('analysis');
   if (r.boost_opening || (r.steps || {}).opening_boost) stepKeys.push('opening_boost');
   if (r.analysis_confirmed || (r.steps || {}).script_check) stepKeys.push('script_check');
-  if (r.flow === 'one_pass') stepKeys.push('reverse_audit'); // v1.134 新流程:体检里的审稿报告;重写、终检在下面的面板里看
+  if (r.flow === 'one_pass') stepKeys.push('op_check', 'op_decide', 'op_rewrite', 'op_final'); // v1.134 新流程的四步,状态看 onepass_view
   else if (r.draft_first || (r.steps || {}).draft_check) stepKeys.push('draft_check', 'reverse_audit', 'final_review');
   if ((r.steps || {}).deai) stepKeys.push('deai');
   // v1.73 按功能重排:蓝图前有功能表、蓝图后有蓝图审
   if ((r.steps || {}).function_table) stepKeys.splice(stepKeys.indexOf('blueprint'), 0, 'function_table');
   if ((r.steps || {}).blueprint_review) stepKeys.splice(stepKeys.indexOf('blueprint') + 1, 0, 'blueprint_review');
   document.getElementById('detail-steps').innerHTML = stepKeys.map((k, i) => {
-    const s = (r.steps || {})[k] || {};
+    const s = /^op_/.test(k) ? opPillStatus(r, k) : k === 'optimized' && r.flow === 'one_pass' ? {} : (r.steps || {})[k] || {};
     const cls = s.status === 'done' || s.status === 'passed' || s.status === 'passed_soft' ? 'done' : (s.status === 'running' ? 'running' : (s.status === 'failed' || s.status === 'held' ? 'failed' : ''));
-    const extra = s.status === 'skipped' ? ' · 新流程跳过' : s.secs ? ` (${s.secs}s)` : '';
+    const extra = s.status === 'skipped' || (k === 'optimized' && r.flow === 'one_pass') ? ' · 新流程不用' : s.secs ? ` (${s.secs}s)` : '';
     const gate = s.gate_retry ? ' ⟳重试' : '';
     const jump = STEP_JUMP[k] && (k === 'analysis' ? !!r.analysis : !!r.draft_first || !!(r.review || {}).versions);
+    if (s.status === 'waiting_you') return `<div class="step-pill webwait" onclick="document.getElementById('op-panel').scrollIntoView({behavior:'smooth'})" title="去下面勾问题、选开头">${STEP_LABELS[k]}<br>👉 等你拍板</div>`;
     if (webWaitSteps(r).includes(k)) return `<div class="step-pill webwait" onclick="webJump()" title="这一步在你的 Claude 网页版做,点这里去复制、粘贴">${STEP_LABELS[k]}<br>👉 等你复制粘贴</div>`; // v1.107
     return `<div class="step-pill ${cls}${jump ? ' link' : ''}"${jump ? ` onclick="stepJump('${k}')" title="点击查看这一步的内容"` : ''}>${STEP_LABELS[k]}${extra}${gate}</div>`;
   }).join('') + ((r.live_calls || []).length ? `<div style="flex-basis:100%;margin-top:4px;font-size:12px;color:#374151">正在调用:${liveTag(r.live_calls)}</div>` : '');
@@ -6670,7 +6683,10 @@ function webStepOf(p) {
   if (/^(写前分析|原片对照表|联网查询词|AI |账本|论点对账)/.test(l)) return 'analysis';
   return '';
 }
-function webWaitSteps(r) { return (((r || {}).web || {}).pending || []).map(webStepOf).filter(Boolean); }
+function webWaitSteps(r) {
+  const op = (r || {}).flow === 'one_pass';
+  return (((r || {}).web || {}).pending || []).map(p => { const k = webStepOf(p); if (!op) return k; if (/^一遍重写/.test(p.label || '')) return 'op_rewrite'; return k === 'reverse_audit' ? 'op_check' : k; }).filter(Boolean);
+}
 function webJump() {
   const el = document.querySelector('#web-panel .web-item') || document.getElementById('web-panel');
   if (!el || el.offsetParent === null) return;
@@ -6688,7 +6704,7 @@ function renderWebPanel(r) {
   const segSig = w.segment ? [w.segment.account, w.segment.chat_url, w.segment.started_at].join('|') : '';
   // 账号状态条也要纳入重绘指纹:额度/占用/暂停/用量变化时 3s 轮询能反映出来
   const acctSig = (w.accounts || []).map(a => [a.id, a.plan, a.paused, a.offline, a.blocked, a.owner, a.busy, a.usage5h, a.usage24h, a.resetsAtMs].join(',')).join('|');
-  const key = JSON.stringify([w.on, pend.map(p => p.id + ':' + (p.waiting ? 1 : 0) + ':' + (p.droppable ? 1 : 0) + ':' + Object.keys(p.copied || {}).join('.') + ':' + ((p.local && [p.local.status, p.local.phase, p.local.index, p.local.error, p.local.account, p.local.seg_no, p.local.waiting_for, p.local.auto_retried, p.local.retry_checks, p.local.next_at, p.local.task_id, p.local.block_reason, p.local.wait_hint].join('|')) || '')), done.length, lastDone ? lastDone.at : '', r.status, w.chat_title, noticeSig, segSig, w.force_new, w.auto_local, w.auto_local_done, acctSig]);
+  const key = JSON.stringify([w.on, pend.map(p => p.id + ':' + (p.waiting ? 1 : 0) + ':' + (p.droppable ? 1 : 0) + ':' + Object.keys(p.copied || {}).join('.') + ':' + ((p.local && [p.local.status, p.local.phase, p.local.index, p.local.error, p.local.account, p.local.seg_no, p.local.waiting_for, p.local.auto_retried, p.local.retry_checks, p.local.next_at, p.local.task_id, p.local.block_reason, p.local.wait_hint].join('|')) || '')), done.length, lastDone ? lastDone.at : '', r.status, w.chat_title, noticeSig, segSig, w.force_new, w.auto_local, w.auto_local_done, r.flow, acctSig]);
   if (key === webRenderedKey && !el.classList.contains('hidden')) return;
   webRenderedKey = key;
   el.classList.remove('hidden');
@@ -6696,9 +6712,11 @@ function renderWebPanel(r) {
   const recentLocal = done.slice().reverse().find(d => d && d.by === 'local' && d.at && (Date.now() - new Date(d.at).getTime() < 30 * 60 * 1000)) || null;
   let html = `<h2 style="color:#6d28d9;display:flex;justify-content:space-between;align-items:center"><span>网页版写稿${pend.length ? ':等你粘贴(' + pend.length + ' 条)' : ''}</span>
     ${w.on ? '<button class="an-btn" onclick="webOff()">后面全部改用 API</button>' : ''}</h2>
-    <div class="hint">${w.on ? '写前分析、出蓝图、写稿、优化、二稿审稿报告这五步在你的 Claude 网页版做:复制消息发过去,把回答粘回来。中间的 AI 调整、原片对照表、功能表、审核,和后面的初稿检查、终审、中文对照都自动走 API,不用你点。' : (pend.some(p => p.check === 'edits') && !(done || []).length ? '这个任务没开网页版;只有下面这一条终审「修改」两次都没回修改,挂到这里等你处理,别的步骤照旧自动走 API。' : '已改回 API,后面的步骤自动跑。')}</div>
+    <div class="hint">${w.on && r.flow === 'one_pass' ? '新流程「只改一次」:写前分析、出蓝图、写稿、体检里的审稿报告、拍板后的整篇重写在网页版 / 本地模型做;论点核对、开头单独审、写 3 个开头、信息重复、终检这些短的检查自动走 API,不用你点。' : w.on ? '写前分析、出蓝图、写稿、优化、二稿审稿报告这五步在你的 Claude 网页版做:复制消息发过去,把回答粘回来。中间的 AI 调整、原片对照表、功能表、审核,和后面的初稿检查、终审、中文对照都自动走 API,不用你点。' : (pend.some(p => p.check === 'edits') && !(done || []).length ? '这个任务没开网页版;只有下面这一条终审「修改」两次都没回修改,挂到这里等你处理,别的步骤照旧自动走 API。' : '已改回 API,后面的步骤自动跑。')}</div>
     ${w.on && !(pend.length && pend.every(p => p.check === 'edits')) ? `<div style="margin:6px 0;padding:7px 10px;border-radius:6px;background:${w.auto_local && !w.auto_local_done ? '#ecfdf5' : '#f9fafb'};border:1px solid ${w.auto_local && !w.auto_local_done ? '#a7f3d0' : '#e5e7eb'};color:${w.auto_local && !w.auto_local_done ? '#065f46' : '#4b5563'};font-size:12.5px">
-      ${w.auto_local_done ? '🤖 二稿审稿报告已出来,自动本地模型调用到此停下:去审稿页勾要改的问题。后面如果还有要粘贴的,需要你自己点。'
+      ${r.flow === 'one_pass' && w.auto_local_done ? '🤖 体检里的审稿报告出来了,自动本地模型调用先停下:去下面「新流程:只改一次」勾问题、选开头。拍板后的整篇重写照样自动交给本地模型。'
+        : r.flow === 'one_pass' && w.auto_local ? '🤖 自动本地模型调用:开。体检里的审稿报告、拍板后的整篇重写都自动交给本地模型。某条失败会停在那条:你可以再点「本地模型调用」、人工粘贴,或改用 API。'
+        : w.auto_local_done ? '🤖 二稿审稿报告已出来,自动本地模型调用到此停下:去审稿页勾要改的问题。后面如果还有要粘贴的,需要你自己点。'
         : w.auto_local ? '🤖 自动本地模型调用:开。后面每条都自动交给本地模型,直到二稿审稿报告出来。某条失败会停在那条:你可以再点「本地模型调用」、人工粘贴,或改用 API;处理好后,后面的照旧自动。'
         : '🤖 自动本地模型调用:关。后面每条要你自己点「本地模型调用」或人工粘贴。'}
       ${w.auto_local_done ? '' : `<button class="an-btn" style="font-size:12px;padding:1px 8px" onclick="webAuto(${w.auto_local ? 'false' : 'true'},this)">${w.auto_local ? '关掉自动' : '打开自动'}</button>`}

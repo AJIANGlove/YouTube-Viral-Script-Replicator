@@ -1740,6 +1740,14 @@ function autoLocalDone(runId) {
   st.auto_local_done = now();
   save(runId, st);
 }
+// v1.134 老任务切新流程:体检里的二稿审稿要重新出,打开过自动本地模型调用的,让它对这一条照样自动
+function reopenAuto(runId) {
+  const st = load(runId);
+  if (!st || !st.auto_local || !st.auto_local_done) return false;
+  delete st.auto_local_done;
+  save(runId, st);
+  return true;
+}
 // 选论点时没选网页版:清掉(重新选论点的任务以前开过的也作废)
 function clear(runOrId) {
   const id = runOrId && typeof runOrId === 'object' ? runOrId.id : runOrId;
@@ -1782,4 +1790,4 @@ function view(runOrId) {
   };
 }
 
-module.exports = { WEB_RE, wants, relay, relayForce, forget, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, setAuto, autoLocalDone, startLocalTick, localTick, localDebug, whyBlocked, localDisplay, localTerminal, healStaleRunning, segReclaim, orphanCard, cardStepDone, sweepOrphans, sweepAllOrphans, dropCard, ownerAlive, reclaimResidualOwners, taskTierOf, segPlan, _waiters: waiters };
+module.exports = { reopenAuto, WEB_RE, wants, relay, relayForce, forget, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, setAuto, autoLocalDone, startLocalTick, localTick, localDebug, whyBlocked, localDisplay, localTerminal, healStaleRunning, segReclaim, orphanCard, cardStepDone, sweepOrphans, sweepAllOrphans, dropCard, ownerAlive, reclaimResidualOwners, taskTierOf, segPlan, _waiters: waiters };
