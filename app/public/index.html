@@ -3061,7 +3061,7 @@ function rvKeyOf(r) {
 // ---------- v1.134 新流程「只改一次」面板 ----------
 // ① 体检(只查不改)→ ② 你拍板(勾问题 + 开头三选一)→ ③ 整篇重写一次 → ④ 终检(只查不改)→ ⑤ 硬伤只修这一句
 let opState = null; // { runId, sel: Set, opening, note, key, msg }
-function opKey(v) { return JSON.stringify([v.stage, v.running, v.stalled, v.error, v.items.length, (v.final || {}).at, (v.final || {}).hard, v.new_numbers, (v.opening || {}).pick, v.fixes.length, (v.rewrite || {}).at, (v.draft || {}).words]); }
+function opKey(v) { return JSON.stringify([v.stage, v.running, v.stalled, v.error, v.items.length, (v.final || {}).at, (v.final || {}).hard, v.new_numbers, (v.opening || {}).pick, v.fixes.length, (v.rewrite || {}).at, (v.draft || {}).words, v.finalfix, v.verify, v.finalfix_stage, v.finalfix_error, (v.final || {}).loops, (v.final || {}).basis]); }
 function renderOnePassPanel(r) {
   const el = document.getElementById('op-panel');
   const v = r.onepass_view;
@@ -3195,43 +3195,79 @@ function opRewriteHtml(v) {
     <div class="rv-text" style="margin-top:6px">${esc(rw.outline || '(没写大纲)')}</div>
     ${rw.new_numbers_note && rw.new_numbers_note !== '无' ? `<div class="hint" style="margin-top:6px">AI 说新推出来的数:${esc(rw.new_numbers_note)}</div>` : ''}</details>`;
 }
+// v1.134 终检后:勾选 → 一起改一次 → 复查就停(用户 2026-11-25)
+function opFinalItems(v) {
+  const f = v.final || {};
+  const rwNote = String((v.rewrite || {}).new_numbers_note || '');
+  return [
+    ...(f.loops || []).map(x => ({ ...x, kind: 'loop', group: 'loop', label: x.type || '重讲', def: true })),
+    ...(f.hard || []).map(x => ({ ...x, kind: 'hard', group: x.level === '可改可不改' ? 'soft' : 'must', label: x.kind || '硬伤', def: x.level !== '可改可不改' })),
+    ...(v.new_numbers || []).map(x => ({ ...x, kind: 'num', group: 'num', label: '新数字', done: x.ok, problem: '「' + (/^\d+$/.test(x.num) ? Number(x.num).toLocaleString('en-US') : x.num) + '」在初稿、事实表、账本里都没有,可能是 AI 编的', def: !rwNote.includes(String(x.num)) }))
+  ];
+}
 function opFinalHtml(v) {
   const f = v.final;
   if (!f) return `<div class="hint">还没有终检结果。</div><button class="an-btn v13" onclick="opPost('final_check')">终检</button>`;
   const pub = v.publish || {};
-  let h = `<div id="op-sec-op_final" style="margin-top:10px;padding:8px;border-radius:8px;background:${pub.ok ? '#ecfdf5' : '#fff7ed'}"><b>${pub.ok ? '✅ 可以发布' : '还剩 ' + (pub.hard_left + pub.num_left) + ' 处要你看一下'}</b>
+  const ff = v.finalfix && !v.finalfix.undone_at ? v.finalfix : null;
+  const running = /一起改|复查/.test(v.running || '') || !!v.finalfix_stage;
+  let h = `<div id="op-sec-op_final" style="margin-top:10px;padding:8px;border-radius:8px;background:${pub.ok ? '#ecfdf5' : '#fff7ed'}"><b>${pub.ok ? '✅ 可以发布' : running ? '正在' + esc(v.finalfix_stage || v.running) + '…' : ff ? '复查结果要你看一下' : '终检查出这些,勾要改的'}</b>
     <span class="hint">终检结论:${esc(f.verdict || '—')}。${esc(f.summary || '')}</span></div>`;
-  const loops = f.loops || [];
-  if (loops.length && loops.every(x => x.done)) h += `<div class="hint" style="margin-top:6px">绕圈 / 重讲的 ${loops.length} 处你看过了,保留不改。</div>`;
-  else if (loops.length) h += `<div id="op-sec-loops" style="margin-top:8px;padding:6px 8px;border-left:3px solid #dc2626;background:#fef2f2"><div class="v13" style="font-weight:600">还在绕圈 / 重讲的地方 ${loops.length} 处(最影响观众继续看下去)</div>
-    <div class="hint">同一个意思前面说过又说一遍。不在现在的稿子上一句句删(那就是又叠一层补丁)。点下面按钮:从初稿重新写一次,把这些一起避开;旧的这版作废,稿子从初稿到成稿还是只动一次。</div>
-    ${loops.map(x => `<div style="margin:4px 0"><span class="hint">[${esc(x.chapter)}][${esc(x.type)}]</span> ${esc(x.problem)}${x.quote ? `<div class="hint">原句:「${esc(x.quote)}」</div>` : ''}</div>`).join('')}
-    <button class="an-btn v13" onclick="opLoops()">从初稿重新写一次,避开这些</button> <button class="an-btn" onclick="opOk('LOOPS')">我看过了,能接受,不改</button> <span class="hint">重写会再花一次整篇重写的钱(走本地模型)。</span></div>`;
-  else if (loops && f.loops !== undefined && f.loops !== null) h += `<div class="hint" style="margin-top:6px;color:#047857">✓ 没查出绕圈、重讲的地方</div>`;
-  const basis = (f.basis || []);
-  if (basis.length) h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">口径要你定一下(一个决定,影响好几句,不能一句句修)</div>${basis.map(opBasisRow).join('')}</div>`;
-  const hard = (f.hard || []);
-  const must = hard.filter(x => x.level !== '可改可不改'), soft = hard.filter(x => x.level === '可改可不改');
-  if (must.filter(x => !x.done).length >= 4) h += `<div style="margin-top:8px;padding:6px 10px;border-radius:6px;background:#fef3c7;font-size:13px">⚠ 一下出来 ${must.filter(x => !x.done).length} 条数字问题,多半是同一个口径没定(比如利润按哪个数算)。先别一条条点「只修这一句」:一句句换,稿子会两套数混在一起。看下面每条的「不改会怎样」,如果是同一回事,在下面备注里写清用哪个数,点「按这个口径整篇重写一次」。</div>`;
-  if (must.length) h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">必须改(观众会听出来):只修这一句,别的地方不动</div>${must.map(x => opFixRow(x, x.kind, x.problem, x.fix)).join('')}</div>`;
-  if (soft.length) h += `<details style="margin-top:8px"${soft.some(x => !x.done) ? '' : ''}><summary class="hint" style="cursor:pointer">可改可不改(只是不够严谨,大多数观众听不出来,不挡发布)${soft.length} 条</summary>${soft.map(x => opFixRow(x, x.kind, x.problem, x.fix)).join('')}</details>`;
-  if (must.filter(x => !x.done).length >= 4 || basis.some(x => !x.done)) h += `<div style="margin-top:8px"><textarea id="op-basis-note" rows="2" style="width:100%;box-sizing:border-box" placeholder="例如:全片利润统一按账本的 1,430만 说,行业平均 8.7% 只当对比提一次"></textarea><button class="an-btn v13" onclick="opNoteRewrite()">按这个口径整篇重写一次</button> <span class="hint">从初稿重新写,不在现在的稿子上叠着改;会再花一次重写的钱(走本地模型),写完自动终检。</span></div>`;
-  const nn = v.new_numbers || [];
-  if (nn.length) h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">新出现的数字(初稿、事实表、账本里都没有)</div><div class="hint">AI 推出来或编的。看一下:算得对就点「没问题」;不对就点「只修这一句」,AI 只改这一句。</div>${nn.map(x => opFixRow({ ...x, done: x.ok }, x.chapter, '「' + (/^\d+$/.test(x.num) ? Number(x.num).toLocaleString('en-US') : x.num) + '」没有出处', '')).join('')}</div>`;
-  if ((f.picked || []).length) h += `<details style="margin-top:8px"><summary class="hint" style="cursor:pointer">你勾的问题改掉没有(${f.picked.filter(x => x.done).length}/${f.picked.length} 改掉了)</summary>${f.picked.map(x => `<div class="hint">${x.done ? '✓' : '✗'} ${esc(x.id)} ${esc(x.note)}</div>`).join('')}</details>`;
+  if (v.finalfix_error) h += `<div class="err-list" style="margin:6px 0">${esc(v.finalfix_error)}${ff && !v.verify ? ' <button class="an-btn" onclick="opPost(\'verify\')">重新复查</button>' : ''}</div>`;
+  if (running) return h + `<div class="hint v13" style="margin-top:6px">${/复查/.test(v.finalfix_stage || v.running || '') ? '复查只看你勾的有没有解决、这次改动有没有带出新问题,没动的章不查。' : '只改勾到的句子所在的章,别的章一字不动;走本地模型时在上面「网页版接力」里。改完自动复查。'}</div>`;
+  if (ff) return h + opVerifyHtml(v, ff) + opFinalExtras(f);
+  if (v.finalfix && v.finalfix.undone_at) h += `<div class="hint" style="margin-top:6px">上次「一起改」已撤回,稿子和终检结果都是改之前的。</div>`;
+  // 勾选单
+  const items = opFinalItems(v).filter(x => !x.done);
+  if (!opState.fsel || opState.fselAt !== f.at) { opState.fsel = new Set(items.filter(x => x.def).map(x => x.id)); opState.fbasis = {}; opState.fselAt = f.at; }
+  const basis = (f.basis || []).filter(x => !x.done);
+  const doneN = opFinalItems(v).filter(x => x.done).length + (f.basis || []).filter(x => x.done).length;
+  if (!items.length && !basis.length) return h + (doneN ? `<div class="hint" style="margin-top:6px">终检查出的 ${doneN} 处都处理过了。</div>` : `<div class="hint" style="margin-top:6px;color:#047857">✓ 终检没查出要改的地方</div>`) + opFinalExtras(f) + `<div style="margin-top:8px"><button class="an-btn" onclick="opPost('final_check')">重新终检</button> <span class="hint">只查不改。</span></div>`;
+  const row = x => `<label style="display:flex;gap:6px;align-items:flex-start;margin:6px 0;cursor:pointer;border-left:3px solid ${x.group === 'loop' ? '#dc2626' : x.group === 'must' ? '#f59e0b' : '#d1d5db'};padding-left:6px">
+      <input type="checkbox" style="width:auto;margin-top:3px" ${opState.fsel.has(x.id) ? 'checked' : ''} onchange="opFToggle('${escAttr(x.id)}',this.checked)">
+      <span><span class="hint">[${esc(x.chapter || '')}][${esc(x.label)}]</span> ${esc(x.problem || '')}
+      ${x.plain ? `<br><span style="font-size:13px">不改会怎样:${esc(x.plain)}</span>` : ''}
+      ${x.quote ? `<br><span class="hint">原句:「${esc(x.quote)}」</span>` : ''}${x.fix ? `<br><span class="hint">改法:「${esc(x.fix)}」</span>` : ''}</span></label>`;
+  const grp = (g, title, open) => { const xs = items.filter(x => x.group === g); if (!xs.length) return ''; const body = xs.map(row).join(''); return open ? `<div style="margin-top:8px"${g === 'loop' ? ' id="op-sec-loops"' : ''}><div class="v13" style="font-weight:600">${title}(${xs.length})</div>${body}</div>` : `<details style="margin-top:8px"><summary class="hint" style="cursor:pointer">${title}(${xs.length},默认不勾)</summary>${body}</details>`; };
+  h += `<div class="hint" style="margin-top:6px">勾上的会在下面点一次一起改掉,没勾的就是你看过、不改。改的时候只动勾到的句子所在的章,别的章一字不动;改完自动复查一次(勾的解决没有、改动有没有带出新问题),复查完就停,不会再改第二次。</div>`;
+  if (basis.length) h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">口径要你定一下(一个决定,影响好几句)</div>${basis.map(opBasisRow).join('')}</div>`;
+  h += grp('loop', '还在绕圈 / 重讲(最影响观众继续看下去)', true) + grp('must', '必须改(观众会听出来)', true) + grp('num', '新出现的数字(算得对就别勾)', true) + grp('soft', '可改可不改(大多数观众听不出来,不挡发布)', false);
+  const bOther = Object.values(opState.fbasis || {}).some(i => i > 0);
+  h += `<div style="margin-top:8px"><textarea id="op-ff-note" rows="2" style="width:100%;box-sizing:border-box" placeholder="还有别的要交代的(选填),例如:CH08 那段删掉就行,不用补" oninput="opState.ffNote=this.value">${esc(opState.ffNote || '')}</textarea></div>
+    <div style="margin-top:6px"><button class="primary" onclick="opFinalFix()">${bOther ? '按新口径从初稿整篇重写一次' : '按勾的一起改(已勾 <span id="op-fn">' + opState.fsel.size + '</span> 条)'}</button>
+    <button class="an-btn" onclick="opAcceptAll()">都不改,直接能发布</button> <button class="an-btn" onclick="opRedo()">从初稿整篇重写一次</button></div>
+    <div class="hint" style="margin-top:4px">${bOther ? '口径选了另一种:影响整篇,只能从初稿整篇重写(勾的问题一起带上),写完自动终检。' : '一起改:终检给了改好句子的,程序直接换;要动几句的(绕圈、没改法的数字),把所在的几章一次交给 AI(走本地模型)。'}</div>`;
+  return h + opFinalExtras(f) + `<div style="margin-top:8px"><button class="an-btn" onclick="opPost('final_check')">重新终检</button> <span class="hint">只查不改。</span></div>`;
+}
+function opVerifyHtml(v, ff) {
+  const vr = v.verify;
+  let h = `<div style="margin-top:8px;padding:6px 8px;border-radius:6px;background:#eff6ff"><b>这次一起改了</b>:勾了 ${ff.picked.length} 条,${ff.replaced ? '程序直接换了 ' + ff.replaced + ' 句,' : ''}${ff.chapters.length ? '改了 ' + esc(ff.chapters.join('、')) + '(' + ff.words_before + ' → ' + ff.words_after + ' 词),别的章一字没动' : '没动别的章'}。</div>`;
+  if (!vr) return h + `<div class="hint" style="margin-top:6px">还没复查。<button class="an-btn" onclick="opPost('verify')">复查</button></div>`;
+  const byId = {}; ff.picked.forEach(x => { byId[x.id] = x; });
+  const bad = (vr.resolved || []).filter(x => !x.ok);
+  h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">① 你勾的解决了没有(${(vr.resolved || []).length - bad.length}/${(vr.resolved || []).length})</div>${(vr.resolved || []).map(x => `<div style="margin:3px 0;font-size:13px">${x.ok ? '<span style="color:#059669">✓</span>' : '<span style="color:#dc2626">✗</span>'} <span class="hint">[${esc((byId[x.id] || {}).label || x.id)}]</span> ${esc((byId[x.id] || {}).problem || x.id)}${x.note ? ` <span class="hint">— ${esc(x.note)}</span>` : ''}</div>`).join('')}</div>`;
+  const ni = vr.new_issues || [];
+  h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">② 这次改动带出来的新问题(${ni.length})</div>${ni.length ? ni.map(x => `<div style="margin:3px 0;font-size:13px;border-left:3px solid #dc2626;padding-left:6px"><span class="hint">[${esc(x.chapter || '')}·${esc(x.by || '')}查的]</span> ${esc(x.problem)}${x.plain ? `<br>不管会怎样:${esc(x.plain)}` : ''}${x.quote ? `<br><span class="hint">「${esc(x.quote)}」</span>` : ''}</div>`).join('') : '<div class="hint" style="color:#047857">✓ 没有。数字没被动,没多出提醒句,改了的章前后接得上。</div>'}</div>`;
+  if (vr.ok) return h + `<div class="hint" style="margin-top:8px;color:#047857">勾的都解决了,也没改出新问题。${ff.can_undo ? ' <button class="an-btn" onclick="opFinalFixUndo()">撤回,换回改之前的</button>' : ''}</div>`;
+  if (vr.accepted) return h + `<div class="hint" style="margin-top:8px">你看过了,接受这一版。${ff.can_undo ? ' <button class="an-btn" onclick="opFinalFixUndo()">撤回,换回改之前的</button>' : ''}</div>`;
+  return h + `<div style="margin-top:8px;padding:6px 8px;background:#fff7ed;border-radius:6px"><div class="hint">已经一起改过一次了,不再改第二次(越改越乱就是这么来的)。三选一:</div>
+    <button class="an-btn v13" onclick="opAcceptAll()">能接受,就用这一版</button> ${ff.can_undo ? '<button class="an-btn" onclick="opFinalFixUndo()">撤回,换回改之前的</button> ' : ''}<button class="an-btn" onclick="opRedo()">从初稿整篇重写一次</button></div>`;
+}
+function opFinalExtras(f) {
+  let h = '';
+  if ((f.picked || []).length) h += `<details style="margin-top:8px"><summary class="hint" style="cursor:pointer">拍板时勾的问题,整篇重写改掉没有(${f.picked.filter(x => x.done).length}/${f.picked.length} 改掉了)</summary>${f.picked.map(x => `<div class="hint">${x.done ? '✓' : '✗'} ${esc(x.id)} ${esc(x.note)}</div>`).join('')}</details>`;
   if ((f.notes || []).length) h += `<details style="margin-top:6px"><summary class="hint" style="cursor:pointer">小意见(不算硬伤,可以不管)${f.notes.length} 条</summary>${f.notes.map(x => `<div class="hint">· ${esc(x)}</div>`).join('')}</details>`;
   if ((f.listen || []).length) h += `<div class="hint" style="margin-top:6px">听感提示:${esc(f.listen.join(';'))}</div>`;
-  h += `<div style="margin-top:8px"><button class="an-btn" onclick="opPost('final_check')">重新终检</button> <span class="hint">只查不改。</span></div>`;
   return h;
 }
 function opBasisRow(x) {
   const recI = x.options.findIndex(o => o.trim().startsWith(x.recommend));
-  return `<div style="border-left:3px solid ${x.done ? '#10b981' : '#7c3aed'};padding:6px 8px;margin:6px 0;background:#faf5ff">
-    <div><b>${esc(x.topic)}</b>${x.done ? ' <span style="color:#059669">· 已定</span>' : ''}</div>
-    ${x.options.map((o, i) => `<div style="margin:2px 0">${i === recI ? '👉 ' : ''}${esc(o)}${i === recI ? ' <span class="hint">(建议)</span>' : ''}</div>`).join('')}
+  const sel = (opState.fbasis || {})[x.id] || 0;
+  return `<div style="border-left:3px solid #7c3aed;padding:6px 8px;margin:6px 0;background:#faf5ff">
+    <div><b>${esc(x.topic)}</b></div>
+    ${x.options.map((o, i) => `<label style="display:flex;gap:6px;align-items:flex-start;margin:3px 0;cursor:pointer"><input type="radio" name="opb-${escAttr(x.id)}" style="width:auto;margin-top:3px" ${sel === i ? 'checked' : ''} onchange="opFBasis('${escAttr(x.id)}',${i})"><span>${esc(o)}${i === 0 ? ' <span class="hint">(现在稿子用的,不改)</span>' : ''}${i === recI ? ' <span class="hint">👉 建议</span>' : ''}</span></label>`).join('')}
     ${x.why ? `<div class="hint">为什么:${esc(x.why)}</div>` : ''}
-    ${x.quotes.length ? `<details><summary class="hint" style="cursor:pointer">影响 ${x.quotes.length} 句</summary>${x.quotes.map(q => `<div class="hint">「${esc(q)}」</div>`).join('')}</details>` : ''}
-    ${x.done ? '' : `<div style="margin-top:4px">${x.options.map((o, i) => i === 0 ? `<button class="an-btn v13" onclick="opOk('${escAttr(x.id)}')">用 ${esc(o.slice(0, 1))}(现在稿子用的),不改</button> ` : `<button class="an-btn" onclick="opBasis('${escAttr(x.id)}',${i})">改用 ${esc(o.slice(0, 1))},整篇重写一次</button> `).join('')}</div>`}</div>`;
+    ${x.quotes.length ? `<details><summary class="hint" style="cursor:pointer">影响 ${x.quotes.length} 句</summary>${x.quotes.map(q => `<div class="hint">「${esc(q)}」</div>`).join('')}</details>` : ''}</div>`;
 }
 function opFixRow(x, tag, problem, fix) {
   return `<div style="border-left:3px solid ${x.done ? '#10b981' : '#f59e0b'};padding:4px 8px;margin:6px 0">
@@ -3259,6 +3295,22 @@ function opDecide() {
 }
 function opFix(id) { opState.msg = '正在只修这一句…'; opState.key = ''; renderOnePassPanel(lastRunDetail); opPost('fix', { id }); }
 function opOk(id) { opPost('ok', { id }); }
+function opFToggle(id, on) { if (on) opState.fsel.add(id); else opState.fsel.delete(id); const n = document.getElementById('op-fn'); if (n) n.textContent = opState.fsel.size; }
+function opFBasis(id, i) { opState.fbasis = opState.fbasis || {}; opState.fbasis[id] = i; opState.key = ''; renderOnePassPanel(lastRunDetail); }
+function opFinalFix() {
+  const bOther = Object.values(opState.fbasis || {}).some(i => i > 0);
+  const note = (document.getElementById('op-ff-note') || {}).value || '';
+  if (bOther) { if (!confirm('按新口径从初稿整篇重写一次?会再花一次整篇重写的钱(走本地模型),写完自动终检。')) return; }
+  else {
+    if (!opState.fsel.size) { alert('一条都没勾。都不用改的话点「都不改,直接能发布」'); return; }
+    if (!confirm('按勾的 ' + opState.fsel.size + ' 条一起改?\n\n只动勾到的句子所在的章,别的章一字不动;改完自动复查(勾的解决没有、改动有没有带出新问题)。\n这一版只能一起改这一次,复查完不再改第二次。')) return;
+  }
+  opState.msg = '';
+  opPost('finalfix', { ids: [...opState.fsel], basis: opState.fbasis || {}, note });
+}
+function opAcceptAll() { if (!confirm('剩下的都不改,就用现在这一版?')) return; opPost('accept_all'); }
+function opFinalFixUndo() { if (!confirm('撤回这次「一起改」?稿子和终检结果都换回改之前的。')) return; opPost('finalfix_undo'); }
+function opRedo() { if (!confirm('从初稿整篇重写一次?终检查出的问题会一起带上避开;现在这版作废,会再花一次整篇重写的钱(走本地模型),写完自动终检。')) return; opState.msg = '已开始从初稿整篇重写…'; opPost('redo'); }
 function opLoops() { if (!confirm('从初稿重新写一次,把这些重复一起避开?现在这版作废(不是在它上面再改),会再花一次重写的钱,写完自动终检。')) return; opState.msg = '已开始去掉绕圈、整篇重写…'; opPost('loops'); }
 // 步骤条上点新流程的四步:跳到面板里对应的位置(没有对应位置就跳到面板顶上)
 function opJump(k) {

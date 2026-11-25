@@ -617,7 +617,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     // v1.134 新流程「只改一次」:checkup 重新体检 / decide 拍板并整篇重写一次(后台跑)/ final_check 重新终检 / fix 硬伤只修这一句 / ok 标成没问题 / retry 从断掉的一步接着跑
-    const opMatch = url.match(/^\/api\/runs\/([\w-]+)\/onepass\/(checkup|decide|final_check|fix|ok|retry|switch|switch_back|basis|loops)$/);
+    const opMatch = url.match(/^\/api\/runs\/([\w-]+)\/onepass\/(checkup|decide|final_check|fix|ok|retry|switch|switch_back|basis|loops|finalfix|finalfix_undo|verify|accept_all|redo)$/);
     if (opMatch && method === 'POST') {
       const body = await readBody(req);
       const op = require('./lib/onepass');
@@ -626,6 +626,11 @@ const server = http.createServer(async (req, res) => {
         if (action === 'checkup') return send(res, 200, op.startCheckup(id));
         if (action === 'switch') return send(res, 200, op.switchToOnePass(id)); // 老流程跑完的任务:回到初稿改走新流程
         if (action === 'switch_back') return send(res, 200, op.switchBack(id));
+        if (action === 'finalfix') return send(res, 200, op.startFinalFix(id, body || {})); // 终检后:按勾的一起改一次,改完自动复查
+        if (action === 'finalfix_undo') return send(res, 200, op.finalFixUndo(id));
+        if (action === 'verify') return send(res, 200, op.startVerify(id));
+        if (action === 'accept_all') return send(res, 200, op.acceptAll(id));
+        if (action === 'redo') return send(res, 200, op.redoFromDraft(id)); // 从初稿整篇重写一次
         if (action === 'loops') return send(res, 200, op.loopRewrite(id)); // 终检查出还在绕圈:整篇再重写一次
         if (action === 'basis') return send(res, 200, op.basisRewrite(id, body || {})); // 口径问题选了另一种口径:整篇按它重写一次
         if (action === 'decide') return send(res, 200, op.decide(id, body || {}));

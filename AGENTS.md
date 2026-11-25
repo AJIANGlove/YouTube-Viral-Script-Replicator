@@ -309,7 +309,8 @@
 - 看初稿:`onepass.view().draft`(d1 原样,没有 d1 时用 draftOf)+ 词数;新流程面板顶上可展开的「看初稿」(`#op-sec-draft`,展开状态存 opState.draftOpen;默认显示纯净稿 cleanScriptText,可切「带章节标签」,能复制/下载初稿纯净稿);步骤条「② 脚本」在新流程点了跳到这里并展开。
 - 免责 / 口径说明太多(用户 2026-11-25,칼국수 初稿 12 句):根因是规则打架——step2「假设必须在稿中明说」+ 写前分析事实类型「假设（稿中必须明说）」+ craft K9「每个关键数字说口径」,压过了「免责只说一次」;经济拆账账本一半是假设行,所以每章都声明。改法:源头(初稿)统一交代一次、全片提醒合计最多 2 句、和行业平均最多比一次、边界半句不放结尾、结尾不重铺开头场景;论点句不塞括号口径。兜底:体检里程序数(`onepass.hedgeItems`,不调 AI),超过 2 句出一条「免责/口径」关键项默认勾上;结尾 ≥2 句和开头几乎一样出「结尾重复」项;一次重写的删减加「删提醒」一类。
 - 从选论点重新来:`thesis.restartFromThesis`(POST `/api/runs/:id/restart_thesis`)按建任务的字段新建一份任务,带上原来的 thesis_scout(去掉 user_pick,推荐换回 AI 当时推荐的)和 fit_quick,status 直接 `thesis_hold`;选完 thesis_resume 跳过快速适配判断,ensure 因 key 相同复用论点卡。原任务不动,新任务记 `restarted_from`。按钮在「核心观点」下面;thesis_hold 时新流程面板隐藏。
-- 测试:`mock_test_v1134.js`(69 条)。
+- 终检后:勾选 → 一起改一次 → 复查就停(用户 2026-11-25,替代单独的「只改这几章」和逐条「只修这一句」按钮)。`onepass.startFinalFix`(POST `onepass/finalfix`,body ids/basis/note):终检结果(绕圈、必须改、新数字默认勾,可改可不改默认不勾)勾完一次改——有改法的硬伤程序直接换句;其余按原句定位到章,`onepass_finalfix.md` 只让 AI 写这几章(每条附前一句/后一句、列出这几章没勾到的数不许动、动笔前自查),标签 `一遍重写·终检后一起改`(走本地模型),replaceChapter 拼回,别的章一字不动;口径选了 B 走从初稿整篇重写(带上勾的问题)。改完 `verifyFix` 复查:程序比改动章的数字(删没了 / 新冒出)和提醒句数,`onepass_verify.md` 只看改前→改后:勾的解决没有 + 改动带出的新问题(衔接、矛盾、数字、意思丢、新重复)。复查完就停:同一版不能再一起改(服务端拒绝),只能接受(`accept_all`)、撤回(`finalfix_undo`,稿子和终检结果都换回)、从初稿整篇重写(`redo`)。publish.ok 在有 finalfix 时看 verify.ok || accepted。给 AI 的材料(用户 2026-11-25:要把它改好需要的东西给它):`chapterRoles` 按蓝图给每个要改的章写「在全片里的任务」——claim、留存目标、开头接上一章(answers_prev + 实际上一章最后一句 / 本章第一句)、结尾钩子(leaves_question + 本章最后一句 / 下一章第一句)、open_loop、埋点回收(planted_payoff 按 source_segments 对上)、hook_plan 留存钩子、本章算账链的数;`relatedOf` 给每条问题点名牵扯的章和那章讲透了什么(不改只对照);prompt 要求每条先想「牵扯哪几章 / 怎么改最省 / 会不会碰到本章功能 / 删了接不接得上」;复查也拿同一份「各管什么」查钩子、回收、算账链有没有被弄没。
+- 测试:`mock_test_v1134.js`(86 条)。
 
 ## 修稿循环省钱:信息重复检查只查改过的章、手动重查上限、开头改稿后不自动重审(v1.133,2026-11-23)
 
