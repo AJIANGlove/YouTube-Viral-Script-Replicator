@@ -3070,7 +3070,7 @@ function renderOnePassPanel(r) {
     el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span><b class="v13">想试新流程「只改一次」?</b> <span class="hint">${r.onepass_has_saved ? '这篇之前用新流程改过一版,点右边直接切过去看(不重跑、不花钱)。现在这份老流程终稿也会留着。' : '不重做写前分析、蓝图和写稿,直接拿这篇的初稿重新体检 → 你拍板 → 整篇重写一次 → 终检。现在的终稿和审稿记录会整份备份,随时能切回来。'}</span></span><button class="an-btn v13" onclick="opSwitch(${r.onepass_has_saved ? 1 : 0})">${r.onepass_has_saved ? '切到新流程那一版' : '从初稿改用新流程'}</button></div>`;
     return;
   }
-  if (!v) { el.classList.add('hidden'); opState = null; return; }
+  if (!v || r.status === 'thesis_hold') { el.classList.add('hidden'); opState = null; return; } // 还在选论点:新流程面板先不出
   el.classList.remove('hidden');
   if (!opState || opState.runId !== r.id) opState = { runId: r.id, sel: null, opening: null, note: '', key: '', msg: '' };
   if (opState.sel === null && v.items.length) opState.sel = new Set(v.picked_ids || v.items.filter(x => x.checked).map(x => x.id));
@@ -6993,7 +6993,19 @@ function renderCorePanel(r) {
       <div>${thChips(k.c)}${who}${k.searched ? '' : ' <span class="hint">(这次没开联网搜索,没有核对资料)</span>'}</div>
       ${thCardRows({ a: k.a, c: k.c, card: cardX, facts: k.facts, cons: k.cons }, z)}
       ${zhBtn}
-    </div></details>`;
+    </div></details>
+    <div style="margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="an-btn v13" onclick="restartThesis(this)">从选论点重新来(新建一份)</button>
+      <span class="hint" style="margin:0">用这篇已经出好的论点卡新建一份任务,直接停在选论点那一页(不用再等出论点)。选完以后按最新的程序重新写;这一份原样留着,两篇能对比。${r.restarted_from ? ' · 这份是从 <a href="javascript:void 0" onclick="openRun(\'' + escAttr(r.restarted_from.id) + '\')">原来那份</a> 重新来的' : ''}</span></div>`;
+}
+async function restartThesis(btn) {
+  const r = lastRunDetail || {};
+  const op = confirm('从选论点重新来?\n\n会新建一份任务,用这篇已经出好的论点卡,直接停在选论点那一页(不用再等出论点)。' + (r.draft_first ? '选完以后写前分析、蓝图、写稿和新流程「只改一次」都按现在的程序重新跑(会花这些步骤的钱)。' : '选完以后按现在的程序重新跑。') + '\n这一份原样留着,不会被改。');
+  if (!op) return;
+  if (btn) btn.disabled = true;
+  try {
+    const res = await api('/api/runs/' + currentRunId + '/restart_thesis', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ flow: 'one_pass' }) });
+    openRun(res.id);
+  } catch (e) { alert(e.message); if (btn) btn.disabled = false; }
 }
 async function coreZh(btn) {
   if (btn) btn.disabled = true;

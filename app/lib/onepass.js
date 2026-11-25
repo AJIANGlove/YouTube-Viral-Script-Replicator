@@ -68,6 +68,59 @@ async function claimFind(run, cfg, text) {
 }
 
 // 各检查的结果 → 一张清单。每条:id、章、严重(关键/一般)、默认勾不勾、出处、问题、原句、改法
+// v1.134 免责 / 口径说明数一数(程序查,不调 AI):「这是我假设的 / 추정 / 不是这家店的数 / 和业界平均比 / 不能直接比」
+// 全片超过 2 句就并进体检清单(关键、默认勾上),在那一次整篇重写里压到 1–2 句;结尾把开头场景整段再铺一遍也一起查
+const HEDGE_RE = {
+  ko: /가정(해|한|이|하면|이에요|일 뿐)|추정|제가 (잡은|정한|가정)|실제 (가게|매장|점포)?\s*(의 )?(숫자|수치|자료)가 아니|감사 자료가 아니|업계 평균|평균보다|평균이라|직접 비교|비교하기(는)? 어렵|단정하기|가게마다|매장마다|다를 수 있|그 정도 선이라고|라고만 들어/,
+  en: /\b(assum(e|ed|ing|ption)s?|estimat(e|ed|es)|hypothetical|industry average|can'?t (directly )?compare|varies (by|from)|not (the|this) (shop|store|company)'?s? (real|actual)|ballpark|take (this|these) (number|figure)s? with)\b/i,
+  zh: /假设|估算|推算|不是这家|行业平均|不能直接比|每家(店)?不一样|仅供参考/
+};
+function chaptersOf(text) {
+  const out = []; let cur = null;
+  String(text || '').split('\n').forEach(l => {
+    const m = l.match(/^\s*\[(CH\d+)/i);
+    if (m) { cur = { ch: m[1].toUpperCase(), lines: [] }; out.push(cur); return; }
+    if (cur) cur.lines.push(l); else { cur = { ch: 'CH01', lines: [l] }; out.push(cur); }
+  });
+  return out.map(c => ({ ch: c.ch, sents: c.lines.join(' ').split(/(?<=[.?!。？！])\s+/).map(x => x.trim()).filter(Boolean) }));
+}
+function hedgeScan(text, language) {
+  const L = /韩|ko/i.test(language) || /[가-힯]/.test(String(text).slice(0, 2000)) ? 'ko' : /中文|zh/i.test(language) ? 'zh' : 'en';
+  const re = HEDGE_RE[L];
+  const hits = [];
+  chaptersOf(text).forEach(c => c.sents.forEach(s => { if (re.test(s)) hits.push({ ch: c.ch, quote: s }); }));
+  return hits;
+}
+function grams(s) { const t = String(s).replace(/[\s.,!?'"“”‘’·…-]/g, ''); const g = new Set(); for (let i = 0; i + 3 <= t.length; i++) g.add(t.slice(i, i + 3)); return g; }
+function endEchoScan(text) {
+  const chs = chaptersOf(text);
+  if (chs.length < 3) return [];
+  const first = chs[0].sents.map(s => ({ s, g: grams(s) })).filter(x => x.g.size >= 8);
+  const last = chs[chs.length - 1];
+  const out = [];
+  last.sents.forEach(s => {
+    const g = grams(s); if (g.size < 8) return;
+    const best = first.reduce((m, f) => { let n = 0; g.forEach(x => { if (f.g.has(x)) n++; }); return Math.max(m, n / Math.min(g.size, f.g.size)); }, 0);
+    if (best >= 0.5) out.push({ ch: last.ch, quote: s });
+  });
+  return out;
+}
+function hedgeItems(text, language) {
+  const items = [];
+  const h = hedgeScan(text, language);
+  if (h.length > 2) {
+    const chs = [...new Set(h.map(x => x.ch))];
+    items.push({ id: 'D-1', chapter: '全篇', level: '关键', checked: true, src: '免责/口径(程序数的)',
+      problem: '「这是我假设的 / 估算的 / 不是这家店的真实数字 / 和行业平均比 / 不能直接比」这类提醒说了 ' + h.length + ' 次(' + chs.join('、') + '),观众还没听到结论,就先听了一堆提醒,会走神',
+      quote: h[0].quote,
+      fix: '全片只留 1–2 句:第一次算账时用半句话交代一次「下面是按我假设的一家店算的,听个大概」;和行业平均最多比一次;其余的直接删,不换个说法留着。出现的地方:' + h.map(x => x.ch + '「' + x.quote.slice(0, 40) + (x.quote.length > 40 ? '…' : '') + '」').join(';') });
+  }
+  const e = endEchoScan(text);
+  if (e.length >= 2) items.push({ id: 'D-2', chapter: e[0].ch, level: '关键', checked: true, src: '结尾重复(程序查的)',
+    problem: '结尾把开头的场景又整段铺了一遍(' + e.length + ' 句和开头几乎一样),听起来像在重讲',
+    quote: e[0].quote, fix: '结尾回收开头只用一句话点一下那个画面,然后直接落到结论;不把开头的描写和前面的账再说一遍' });
+  return items;
+}
 function mergeItems(run, parts) {
   const items = [];
   const add = x => {
@@ -100,6 +153,7 @@ function mergeItems(run, parts) {
     add({ id: 'S-' + (i + 1), chapter: (String(x.location || '').match(/CH\d+/i) || [''])[0], level: /K1/.test(String(x.type || '')) ? '关键' : '一般', src: '稿件检查',
       problem: x.problem, quote: x.quote, fix: opt.length ? opt.map((o, k) => (k + 1) + ') ' + o).join(';') : '' });
   });
+  arr(parts.hedges).forEach(x => add(x));
   const lc = parts.listen;
   if (lc) arr(lc.issues).forEach((t, i) => add({ id: 'H-' + (i + 1), chapter: /前 \d+ 秒|开头/.test(t) ? 'CH01' : '', level: '一般', checked: true, src: '听感', problem: t }));
   const order = c => (c === '全篇' ? 0 : Number((c.match(/\d+/) || [999])[0]));
@@ -133,7 +187,8 @@ async function checkup(runId) {
     try { extras = arr((R.getView(runId).audit || {}).extras); } catch (e) { /* 视图算不出来不挡 */ }
     try { ledger = R.ledgerWrongUsed(run); } catch (e) {}
     const listen = checks.listenCheck(checks.extractFinalScript(text), listenOpts(run));
-    const items = mergeItems(run, { audit: (run.review || {}).audit, extras, info, claim, ledger, listen, scriptCheck: run.script_check });
+    const hedges = hedgeItems(checks.extractFinalScript(text) || text, lang(run));
+    const items = mergeItems(run, { audit: (run.review || {}).audit, extras, info, claim, ledger, listen, hedges, scriptCheck: run.script_check });
     const ov = (run.review || {}).opening_variants;
     run.onepass = { ...(run.onepass || {}), stage: 'decide', checked_at: now(), items, errors, sc_merged: true,
       opening_pick: ov && ov.pick != null ? ov.pick : -1, claim: claim ? { verdict: claim.verdict, claim: claim.claim } : null };
@@ -492,4 +547,4 @@ function view(run) {
   };
 }
 
-module.exports = { loopRewrite, basisRewrite, syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };
+module.exports = { hedgeScan, endEchoScan, hedgeItems, loopRewrite, basisRewrite, syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };

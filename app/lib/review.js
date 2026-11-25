@@ -139,7 +139,7 @@ function factState(f) {
   // v1.93:论坛、博客、评论里的话是「网友说法」:能当感受、故事讲(第一次出现带半句出处),不能当统计、不能进账本、不能当证明论点的主证据。不挡发布
   if (kind === '网友说法' || (WEAK_SOURCES.test(src) && kind !== '估算' && kind !== '假设')) return { state: 'yellow', voice: true, why: VOICE_WHY };
   if (kind === '估算') return f.method ? { state: 'yellow', why: '估算:' + f.method } : { state: 'red', why: '估算但没写算法' };
-  if (kind === '假设') return { state: 'yellow', why: '假设,稿中要明说' };
+  if (kind === '假设') return { state: 'yellow', why: '假设,稿中统一交代一次即可' };
   if (!f.source && !f.url) return { state: 'red', why: '没有写来源' };
   return { state: 'green', why: f.url ? '有链接' : '有来源' };
 }
@@ -5467,7 +5467,7 @@ async function updateFact(runId, factId, patch) {
   const contentChanged = before.content !== f.content || before.kind !== f.kind;
   const results = [];
   if (contentChanged) {
-    const note = '事实 ' + factId + ' 已改为:' + f.content + '(类型:' + (f.kind || '') + (f.kind === '假设' ? ',稿中要明说是假设' : '') + ')。只改这一章里和它有关的句子和由它算出来的数,其他不动。';
+    const note = '事实 ' + factId + ' 已改为:' + f.content + '(类型:' + (f.kind || '') + (f.kind === '假设' ? ',全片统一交代一次是假设即可,不逐句说' : '') + ')。只改这一章里和它有关的句子和由它算出来的数,其他不动。';
     for (const ch of affected) {
       try { results.push(await rewriteChapter(runId, ch, note, { by: 'fact' })); }
       catch (e) { results.push({ ok: false, chapter: ch, error: e.message }); }

@@ -728,6 +728,14 @@ const server = http.createServer(async (req, res) => {
       catch (e) { return send(res, e.status || 500, { error: e.message }); }
     }
 
+    // v1.134 从选论点重新来:用这篇的论点卡新建一份任务,停在「待选论点」
+    const rtMatch = url.match(/^\/api\/runs\/([\w-]+)\/restart_thesis$/);
+    if (rtMatch && method === 'POST') {
+      const body = await readBody(req);
+      try { return send(res, 200, require('./lib/thesis').restartFromThesis(rtMatch[1], body)); }
+      catch (e) { return send(res, e.status || 500, { error: e.message }); }
+    }
+
     // v1.114 任务页「核心观点」:选定论点卡上还有外文的,翻成中文(只翻这一张,译文另存)
     const czMatch = url.match(/^\/api\/runs\/([\w-]+)\/core-zh$/);
     if (czMatch && method === 'POST') {

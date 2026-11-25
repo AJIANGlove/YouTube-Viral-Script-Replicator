@@ -471,4 +471,45 @@ function translateCore(runId) {
   return { ok: true, n: todo.length };
 }
 
-module.exports = { coreView, translateCore, coreCard, _coreBusy: coreBusy, zhCards, foreignSlots, cardsForeign, ensure, scout, researchText, queriesOf, cleanAngles, cleanPick, scoutKey, needHold, choose, holdChoice, enoughOf, cardOf, chosenOutline, outlineText, batchesFrom, ENOUGH_MIN };
+// v1.134 从选论点重新来:拿这篇已经出好的论点卡新建一份任务,停在「待选论点」(不重新出论点、不重做快速适配判断);
+// 选完以后写前分析、蓝图、写稿、新流程全部按现在的程序重新跑。原来那份任务原样留着,两篇能对比
+const RESTART_KEYS = ['asset_id', 'asset_name', 'topic', 'channel_id', 'channel_name', 'audience', 'prompt_version', 'draft_first', 'pre_analysis', 'track',
+  'review_track', 'track_card_name', 'materials', 'opening_rule', 'voice_name'];
+function restartFromThesis(runId, body) {
+  const store = require('./store');
+  const src = store.getRun(runId);
+  if (!src) throw Object.assign(new Error('任务不存在'), { status: 404 });
+  const ts0 = src.thesis_scout;
+  if (!ts0 || ts0.error || !arr(ts0.angles).length) throw Object.assign(new Error('这篇没有出好的论点卡,没法从选论点重新来'), { status: 400 });
+  if (ts0.key && ts0.key !== scoutKey(src)) throw Object.assign(new Error('这篇的题目或参考资料在出论点之后改过,论点卡对不上了'), { status: 400 });
+  const ts = JSON.parse(JSON.stringify(ts0));
+  // 回到「还没选」:去掉人选的,推荐换回 AI 当时推荐的那张
+  const rec = (ts.user_pick && ts.user_pick.recommended) || (ts.pick && ts.pick.chosen) || ts.recommended || '';
+  delete ts.user_pick; delete ts.request_error;
+  if (ts.pick && rec) {
+    const c = arr(ts.pick.checks).find(x => x.id === rec);
+    const a = ts.angles.find(x => x.id === rec);
+    if (c || a) { ts.pick.chosen = rec; ts.pick.final = c && c.card ? finalOfCard(c.card) : { belief: a.belief, claim: a.claim, one_line: a.one_line, method: a.method, ending_landing: '', boundary: '' }; }
+  }
+  const b = body || {};
+  const draftFirst = !!src.draft_first;
+  const data = {};
+  RESTART_KEYS.forEach(k => { if (src[k] !== undefined) data[k] = JSON.parse(JSON.stringify(src[k])); });
+  const now = new Date().toISOString();
+  const steps = { analysis: { status: 'waiting', stage: '等你选论点' }, thesis_pick: { status: 'waiting', at: now } };
+  if ((src.steps || {}).fit_quick) steps.fit_quick = src.steps.fit_quick;
+  const run = store.newRun({
+    ...data,
+    pre_analysis: true,
+    thesis_choose: true,
+    flow: b.flow === 'classic' || !draftFirst ? 'classic' : 'one_pass',
+    status: 'thesis_hold',
+    steps,
+    thesis_scout: ts,
+    ...(src.fit_quick ? { fit_quick: JSON.parse(JSON.stringify(src.fit_quick)) } : {}),
+    restarted_from: { id: src.id, at: now }
+  });
+  return { ok: true, id: run.id };
+}
+
+module.exports = { restartFromThesis, coreView, translateCore, coreCard, _coreBusy: coreBusy, zhCards, foreignSlots, cardsForeign, ensure, scout, researchText, queriesOf, cleanAngles, cleanPick, scoutKey, needHold, choose, holdChoice, enoughOf, cardOf, chosenOutline, outlineText, batchesFrom, ENOUGH_MIN };
