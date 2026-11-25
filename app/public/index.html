@@ -7797,7 +7797,8 @@ function renderScriptCheck(r) {
       ${sc.stale_after_adopt ? '<span class="hint" style="margin:0;color:#b45309">稿子已改，建议重新检查一次</span>' : ''}
     </div>`;
   }
-  const canAdopt = r.status === 'done' && !r.script_v2 && st.status !== 'running';
+  const canAdopt = r.status === 'done' && !r.script_v2 && st.status !== 'running' && r.flow !== 'one_pass';
+  if (r.flow === 'one_pass') html += `<div style="margin:6px 0;padding:6px 10px;border-radius:6px;background:#eff6ff;border:1px solid #bfdbfe;font-size:13px">新流程「只改一次」:这里只查不改,不用点「采用」。还没处理的问题已经并进上面「新流程」的体检清单(出处写「稿件检查」),你在那里勾,整篇重写时一起改。</div>`;
   const items = (sc.issues || []).map((it, idx) => {
     const cls = it.applied ? 's-done' : (it.status === '待选择' ? 's-pick' : 's-note');
     const tag = it.adopted ? '✅ 已采用' : (it.applied ? '✅ 已修改' : (it.status === '待选择' ? '🟡 待选择' : '⚪ 仅提示'));

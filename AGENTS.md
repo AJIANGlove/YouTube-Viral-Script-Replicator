@@ -299,7 +299,8 @@
 - **⑤ 只修这一句**(`fixOne`):终检给了改好的句子就直接替换(不调 AI);新数字没有改法时用 `ai_fix` 渠道只让 AI 回一句,再替换。`markOk` 标成没问题。硬伤和新数字都处理完 = 可以发布。
 - **接口**:`POST /api/runs/:id/onepass/(checkup|decide|final_check|fix|ok|retry)`;详情接口带 `onepass_view`。页面 `op-panel`(新流程隐藏老的逐段对照 `rv-panel`)。
 - **老任务切新流程**:老流程跑完的先写后改任务,页面上有「从初稿改用新流程」(`onepass.switchToOnePass`):终稿、`script_v1`、`review`、`onepass` 整份备份进 `run.classic_backup`,稿子换回初稿(`outputs.step2` 去说明行、清外文字符;没有就用 d1),然后自动体检。不重做写前分析、蓝图、写稿。`switchBack` 原样放回老终稿,新流程这份存进 `run.onepass_backup`;再切新流程时直接放回(不重跑),两版文案都留着,方便同一选题做对比测试。接口 `onepass/switch`、`onepass/switch_back`;详情带 `onepass_can_switch`。
-- 测试:`mock_test_v1134.js`(38 条)。
+- **稿件检查**:新流程里 `runScriptCheck` 不自动改(已修改的改回待选择);没处理的问题并进体检清单(出处「稿件检查」,K1 算关键)。早先出的清单在拍板前由 `syncScriptCheck` 补进去(详情接口调,不调 AI)。页面上稿件检查的「采用」在新流程里不可点,换成一句说明。
+- 测试:`mock_test_v1134.js`(42 条)。
 
 ## 修稿循环省钱:信息重复检查只查改过的章、手动重查上限、开头改稿后不自动重审(v1.133,2026-11-23)
 

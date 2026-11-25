@@ -94,6 +94,12 @@ function mergeItems(run, parts) {
     cc.issues.forEach((x, i) => add({ id: 'L-' + (i + 1), chapter: x.chapter, level: x.level === '关键' ? '关键' : '一般', src: '论点核对', problem: x.problem, quote: x.quote, fix: x.fix }));
   }
   arr(parts.ledger).filter(x => x.used).forEach(x => add({ id: 'G-' + x.id, chapter: '', level: '关键', src: '账本', problem: '稿子里写的「' + x.used + '」来自账本 ' + rv().ledgerLine(x) + ',这个数算错了', fix: '按公式改成 ' + x.calc + (x.unit ? ' ' + x.unit : '') + ',前后用到它的句子一起改' }));
+  // 稿件检查(标题和结论对不上、旧数据…):还没处理的并进来
+  arr((parts.scriptCheck || {}).issues).filter(x => x && !x.applied && !x.adopted && x.problem).forEach((x, i) => {
+    const opt = arr(x.options).map(o => (typeof o === 'string' ? o : (o && o.label) || '')).filter(Boolean);
+    add({ id: 'S-' + (i + 1), chapter: (String(x.location || '').match(/CH\d+/i) || [''])[0], level: /K1/.test(String(x.type || '')) ? '关键' : '一般', src: '稿件检查',
+      problem: x.problem, quote: x.quote, fix: opt.length ? opt.map((o, k) => (k + 1) + ') ' + o).join(';') : '' });
+  });
   const lc = parts.listen;
   if (lc) arr(lc.issues).forEach((t, i) => add({ id: 'H-' + (i + 1), chapter: /前 \d+ 秒|开头/.test(t) ? 'CH01' : '', level: '一般', checked: true, src: '听感', problem: t }));
   const order = c => (c === '全篇' ? 0 : Number((c.match(/\d+/) || [999])[0]));
@@ -127,9 +133,9 @@ async function checkup(runId) {
     try { extras = arr((R.getView(runId).audit || {}).extras); } catch (e) { /* 视图算不出来不挡 */ }
     try { ledger = R.ledgerWrongUsed(run); } catch (e) {}
     const listen = checks.listenCheck(checks.extractFinalScript(text), listenOpts(run));
-    const items = mergeItems(run, { audit: (run.review || {}).audit, extras, info, claim, ledger, listen });
+    const items = mergeItems(run, { audit: (run.review || {}).audit, extras, info, claim, ledger, listen, scriptCheck: run.script_check });
     const ov = (run.review || {}).opening_variants;
-    run.onepass = { ...(run.onepass || {}), stage: 'decide', checked_at: now(), items, errors,
+    run.onepass = { ...(run.onepass || {}), stage: 'decide', checked_at: now(), items, errors, sc_merged: true,
       opening_pick: ov && ov.pick != null ? ov.pick : -1, claim: claim ? { verdict: claim.verdict, claim: claim.claim } : null };
     store.saveRun(run);
     try { require('./manual').autoLocalDone(runId); } catch (e) {}
@@ -143,6 +149,20 @@ function startCheckup(runId) {
   if (busy.has(runId)) throw Object.assign(new Error('「' + busy.get(runId) + '」正在跑'), { status: 409 });
   checkup(runId).catch(e => save(runId, { stage: 'failed', failed_at: 'checking', error: '体检没跑完:' + e.message }));
   return { ok: true };
+}
+
+// 体检清单是 v1.134 早期出的、还没并进稿件检查的问题:补进去(不调 AI);只在拍板前补
+function syncScriptCheck(runId) {
+  const run = store.getRun(runId);
+  const op = run && run.onepass;
+  if (!isOn(run) || !op || op.stage !== 'decide' || op.sc_merged || !arr(op.items).length) return false;
+  const add = mergeItems(run, { scriptCheck: run.script_check }).filter(x => !op.items.some(y => y.sig === x.sig));
+  op.items = op.items.concat(add);
+  const order = c => (c === '全篇' ? 0 : Number((c.match(/\d+/) || [999])[0]));
+  op.items.sort((a, b) => order(a.chapter) - order(b.chapter) || (a.level === '关键' ? 0 : 1) - (b.level === '关键' ? 0 : 1));
+  op.sc_merged = true;
+  store.saveRun(run);
+  return add.length;
 }
 
 // ---------- ② 拍板 + ③ 整篇重写一次 ----------
@@ -437,4 +457,4 @@ function view(run) {
   };
 }
 
-module.exports = { canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };
+module.exports = { syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };

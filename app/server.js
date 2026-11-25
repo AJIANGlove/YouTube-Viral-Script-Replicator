@@ -688,6 +688,7 @@ const server = http.createServer(async (req, res) => {
       try { const bv = require('./lib/blueprint').view(r); if (bv) r.blueprint_view = bv; } catch (e) { /* 旧任务数据不全:不显示面板 */ }
       try { const cv = require('./lib/thesis').coreView(r); if (cv) r.core_view = cv; } catch (e) { /* 旧任务数据不全:不显示核心观点 */ } // v1.114
       try { r.opening_rule_view = require('./lib/openbeats').ruleView(r); } catch (e) {} // v1.117 这篇用的哪种开头规则
+      try { if (require('./lib/onepass').syncScriptCheck(r.id)) Object.assign(r, { onepass: store.getRun(r.id).onepass }); } catch (e) {} // v1.134 稿件检查的问题并进体检清单
       try { const opv = require('./lib/onepass').view(r); if (opv) r.onepass_view = opv; } catch (e) {} // v1.134 新流程「只改一次」
       try { r.onepass_can_switch = require('./lib/onepass').canSwitch(r); } catch (e) {}
       r.onepass_has_saved = !!r.onepass_backup;

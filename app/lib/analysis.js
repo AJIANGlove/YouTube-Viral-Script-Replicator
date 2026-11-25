@@ -1230,6 +1230,9 @@ async function runScriptCheck(runId) {
     if (run.script_v2) {
       // 已基于 V1 生成 V2:V1 锁定,不再自动改,只提示
       issues.filter(i => i.type === 'K3' && i.status === '已修改').forEach(i => { i.status = '待选择'; i.problem = (i.problem || '') + '(已生成 V2,V1 不再自动修改)'; });
+    } else if (run.flow === 'one_pass') {
+      // v1.134 新流程「只改一次」:稿件检查只查不改,问题并进体检清单,整篇重写时一起改
+      issues.filter(i => i.status === '已修改').forEach(i => { i.status = '待选择'; });
     }
     let after = checks.cleanForeignScript(applyK3(before, issues), (run.audience || {}).target_language).text;
     // v1.110 锁定开头(经济拆账):自动改的把开头改坏了,开头章换回改之前的
