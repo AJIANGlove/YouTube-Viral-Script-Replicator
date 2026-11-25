@@ -286,10 +286,13 @@ async function finalCheck(runId) {
     const hard = arr(out.hard).filter(x => x && x.problem).map((x, i) => {
       const quote = String(x.quote || '').trim();
       return { id: 'F' + (i + 1), chapter: (String(x.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase(), kind: String(x.kind || '硬伤'), quote, problem: String(x.problem), fix: String(x.fix || '').trim(),
+        level: /可改可不改|可以不改|次要|minor/i.test(String(x.level || '')) ? '可改可不改' : '必须改', plain: String(x.plain || '').trim(),
         found: !!(quote && R.locate(text, quote)), done: false };
     });
+    // 口径问题(整篇用哪个基准):一条,不拆成一句句的硬伤
+    const basis = arr(out.basis).filter(x => x && x.topic).map((x, i) => ({ id: 'B' + (i + 1), topic: String(x.topic), options: arr(x.options).map(String).slice(0, 3), recommend: String(x.recommend || ''), why: String(x.why || ''), quotes: arr(x.quotes).map(String).slice(0, 12), done: false }));
     const listen = checks.listenCheck(checks.extractFinalScript(text), listenOpts(fresh));
-    fresh.onepass = { ...(fresh.onepass || {}), stage: 'done', final: { at: now(), hash: hash(text), verdict: String(out.verdict || ''), summary: String(out.summary || ''),
+    fresh.onepass = { ...(fresh.onepass || {}), stage: 'done', final: { at: now(), hash: hash(text), verdict: String(out.verdict || ''), summary: String(out.summary || ''), basis,
       picked: arr(out.picked).map(x => ({ id: String(x.id || ''), done: x.done !== false, note: String(x.note || '') })), hard, notes: arr(out.notes).map(String).slice(0, 5), listen: listen ? arr(listen.issues) : [] } };
     if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
@@ -357,8 +360,20 @@ function markOk(runId, body = {}) {
   const o = run.onepass;
   o.new_numbers = arr(o.new_numbers).map(x => (x.id === id ? { ...x, ok: true, accepted: true } : x));
   if (o.final) o.final.hard = arr(o.final.hard).map(x => (x.id === id ? { ...x, done: true, accepted: true } : x));
+  if (o.final) o.final.basis = arr(o.final.basis).map(x => (x.id === id ? { ...x, done: true, accepted: true } : x));
   store.saveRun(run);
   return { ok: true };
+}
+// 口径问题人选了另一种口径:几句话要一起改,不能一句句修,整篇按这个口径再重写一次(同一份勾选,加一句交代)
+function basisRewrite(runId, body = {}) {
+  const run = store.getRun(runId);
+  const op = (run || {}).onepass || {};
+  const b = arr((op.final || {}).basis).find(x => x.id === String(body.id || ''));
+  if (!b) throw Object.assign(new Error('找不到这一条'), { status: 400 });
+  const opt = b.options[Number(body.option)];
+  if (!opt) throw Object.assign(new Error('选项不对'), { status: 400 });
+  const note = '全片口径统一改成:' + opt + '(要定的是:' + b.topic + ')。所有用到这个基准的数、由它算出来的数都按这个口径一起改,全片只用这一套。' + (op.note ? '\n' + op.note : '');
+  return decide(runId, { ids: op.picked_ids, opening: op.rewrite && op.rewrite.opening_used != null ? op.rewrite.opening_used : op.opening_choice, note, again: true });
 }
 // 失败后重试:从断掉的那一步接着跑
 function retry(runId) {
@@ -441,7 +456,7 @@ function view(run) {
   const stalled = ['checking', 'rewriting', 'final_check'].includes(stage) && !running && !(stage === 'checking' && (run.steps || {}).reverse_audit && run.steps.reverse_audit.status === 'running');
   const ov = (run.review || {}).opening_variants;
   const fin = op.final || null;
-  const hardLeft = fin ? arr(fin.hard).filter(x => !x.done).length : 0;
+  const hardLeft = fin ? arr(fin.hard).filter(x => !x.done && x.level !== '可改可不改').length + arr(fin.basis).filter(x => !x.done).length : 0;
   const numLeft = arr(op.new_numbers).filter(x => !x.ok).length;
   return {
     failed_at: op.failed_at || '', stage, stage_zh: STAGE_ZH[stage] || (stage === 'writing' ? '写初稿中' : '等体检'), running, stalled,
@@ -457,4 +472,4 @@ function view(run) {
   };
 }
 
-module.exports = { syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };
+module.exports = { basisRewrite, syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };

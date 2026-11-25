@@ -300,7 +300,9 @@
 - **接口**:`POST /api/runs/:id/onepass/(checkup|decide|final_check|fix|ok|retry)`;详情接口带 `onepass_view`。页面 `op-panel`(新流程隐藏老的逐段对照 `rv-panel`)。
 - **老任务切新流程**:老流程跑完的先写后改任务,页面上有「从初稿改用新流程」(`onepass.switchToOnePass`):终稿、`script_v1`、`review`、`onepass` 整份备份进 `run.classic_backup`,稿子换回初稿(`outputs.step2` 去说明行、清外文字符;没有就用 d1),然后自动体检。不重做写前分析、蓝图、写稿。`switchBack` 原样放回老终稿,新流程这份存进 `run.onepass_backup`;再切新流程时直接放回(不重跑),两版文案都留着,方便同一选题做对比测试。接口 `onepass/switch`、`onepass/switch_back`;详情带 `onepass_can_switch`。
 - **稿件检查**:新流程里 `runScriptCheck` 不自动改(已修改的改回待选择);没处理的问题并进体检清单(出处「稿件检查」,K1 算关键)。早先出的清单在拍板前由 `syncScriptCheck` 补进去(详情接口调,不调 AI)。页面上稿件检查的「采用」在新流程里不可点,换成一句说明。
-- 测试:`mock_test_v1134.js`(42 条)。
+- **终检的口径问题**:`onepass_final.md` 让终检分清口径(账本是这篇的口径,和账本一致的数不算错);整篇基准值得商量的写成一条 `basis`(两种口径、建议、受影响的句子),不拆成一句句硬伤。硬伤多 `level`(必须改 / 可改可不改,后者不挡发布)和 `plain`(不改会怎样)。口径选另一种:`basisRewrite` 带一句口径交代再整篇重写一次(`onepass/basis`);也可以在备注里写口径点「按这个口径整篇重写一次」。必须改的超过 4 条时页面提示先别一句句修。
+- 步骤条上新流程四格能点,跳到 `op-panel` 里对应的位置;`op-panel` 挪到网页版接力上面。
+- 测试:`mock_test_v1134.js`(47 条)。
 
 ## 修稿循环省钱:信息重复检查只查改过的章、手动重查上限、开头改稿后不自动重审(v1.133,2026-11-23)
 
