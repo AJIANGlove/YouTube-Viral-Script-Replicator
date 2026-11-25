@@ -484,6 +484,10 @@ function view(run) {
     rewrite: op.rewrite ? { at: op.rewrite.at, outline: op.rewrite.outline, words: op.rewrite.words, base_words: op.rewrite.base_words, opening_used: op.rewrite.opening_used, new_numbers_note: op.rewrite.new_numbers_note } : null,
     new_numbers: arr(op.new_numbers), final: fin, fixes: arr(op.fixes),
     has_backup: !!run.classic_backup,
+    draft: (() => { // v1.134 初稿原样(写稿那一步出来的,重写都从它开始),页面上能展开看、能复制
+      const t = (arr((run.review || {}).versions).find(x => x.key === 'd1') || {}).text || (run.status === 'done' ? draftOf(run) : '');
+      return t ? { text: t, words: String(t).replace(/\[CH\d+[^\]]*\]/g, ' ').split(/\s+/).filter(Boolean).length } : null;
+    })(),
     publish: fin ? { ok: hardLeft === 0 && numLeft === 0, hard_left: hardLeft, num_left: numLeft } : null
   };
 }
