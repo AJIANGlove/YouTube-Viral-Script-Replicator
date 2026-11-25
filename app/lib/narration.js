@@ -36,9 +36,57 @@ function measuredAll() {
 
 const median = a => { const s = [...a].sort((x, y) => x - y); return s.length % 2 ? s[(s.length - 1) / 2] : Math.round((s[s.length / 2 - 1] + s[s.length / 2]) / 2); };
 
+// v1.134 每个赛道配音的人不一样(用户 2026-11-25):设置页里每个赛道粘一篇文案、填实际配出来的时长,算出这个赛道的语速,存在 config.track_wpm
+const TRACK_LABEL = { econ: '经济', history: '历史', science: '科普', pov: 'POV', general: '通用' };
+function countWords(text) {
+  return String(text || '').split('\n').filter(l => !/^\s*\[CH\d+[^\]]*\]\s*$/i.test(l)).join(' ').split(/\s+/).filter(w => /[\p{L}\p{N}]/u.test(w)).length;
+}
+function parseDuration(v) {
+  if (typeof v === 'number') return v > 0 ? Math.round(v) : 0;
+  const s = String(v || '').trim().replace(/[分′']/g, ':').replace(/[秒″"]/g, '').replace(/\s+/g, '');
+  if (/^\d+(\.\d+)?$/.test(s)) return Math.round(Number(s) * 60); // 只写一个数:当成分钟
+  const m = s.match(/^(?:(\d+):)?(\d+):(\d{1,2})$/);
+  return m ? (Number(m[1] || 0) * 3600 + Number(m[2]) * 60 + Number(m[3])) : 0;
+}
+function trackCalib(track) {
+  const cfg = require('./pipeline').loadConfig() || {};
+  const c = (cfg.track_wpm || {})[track];
+  return c && c.wpm >= WPM_MIN && c.wpm <= WPM_MAX ? c : null;
+}
+function trackOfRun(run) {
+  const k = run && run.review_track;
+  return k && TRACK_LABEL[k] ? k : '';
+}
+function calibrateTrack(track, text, duration) {
+  if (!TRACK_LABEL[track]) throw Object.assign(new Error('不认识的赛道:' + track), { status: 400 });
+  const words = countWords(text), secs = parseDuration(duration);
+  if (words < 100) throw Object.assign(new Error('文案太短(' + words + ' 词),至少粘一篇完整的、拿去配音的那版'), { status: 400 });
+  if (!secs) throw Object.assign(new Error('时长看不懂,写成 9:52 或 9分52秒'), { status: 400 });
+  const wpm = Math.round(words / secs * 60);
+  if (wpm < WPM_MIN || wpm > WPM_MAX) throw Object.assign(new Error('算出来每分钟 ' + wpm + ' 词,不太对,检查一下文案和时长是不是同一篇'), { status: 400 });
+  const pl = require('./pipeline');
+  const cfg = pl.loadConfig() || {};
+  cfg.track_wpm = { ...(cfg.track_wpm || {}), [track]: { wpm, words, secs, at: new Date().toISOString(), sample: String(text).trim().slice(0, 60) } };
+  pl.saveConfig(cfg);
+  return { track, wpm, words, secs };
+}
+function clearTrack(track) {
+  const pl = require('./pipeline');
+  const cfg = pl.loadConfig() || {};
+  if (cfg.track_wpm) { delete cfg.track_wpm[track]; pl.saveConfig(cfg); }
+  return { ok: true };
+}
+function trackWpmView() {
+  return Object.keys(TRACK_LABEL).map(k => ({ key: k, name: TRACK_LABEL[k], calib: trackCalib(k) }));
+}
+
 // sourceWpm:原片字幕语速(没有就传 null)。返回 { wpm, from, source_wpm, samples? }
+// 取值顺序:这个赛道实测过的配音语速 > 频道声音设定 > 已发布视频实测 > 语言默认 > 原片
 function narrationWpm(run, sourceWpm) {
   const lang = (run.audience || {}).target_language || '';
+  const tk = trackOfRun(run);
+  const tc = tk ? trackCalib(tk) : null;
+  if (tc) return { wpm: tc.wpm, from: 'track', track: tk, source_wpm: sourceWpm || null };
   const v = voice.voiceForRun(run);
   const vw = v && Number(v.narration_wpm);
   if (vw >= WPM_MIN && vw <= WPM_MAX) return { wpm: Math.round(vw), from: 'voice', voice: v.name, source_wpm: sourceWpm || null };
@@ -51,7 +99,7 @@ function narrationWpm(run, sourceWpm) {
   return { wpm: sourceWpm || null, from: 'source', source_wpm: sourceWpm || null };
 }
 
-const FROM_LABEL = { voice: '频道声音设定', measured: '已发布视频实测', default: '语言默认值', source: '原片字幕语速' };
+const FROM_LABEL = { track: '这个赛道配音实测', voice: '频道声音设定', measured: '已发布视频实测', default: '语言默认值', source: '原片字幕语速' };
 function narrationLabel(n) {
   if (!n || !n.wpm) return '';
   return n.wpm + ' 词/分钟(' + (FROM_LABEL[n.from] || n.from) + (n.samples ? ',' + n.samples.length + ' 条视频' : '') + ')' +
@@ -73,4 +121,4 @@ function rescaleBlueprint(text, wpm) {
   return changed ? { text: JSON.stringify(bp, null, 2), changed } : { text, changed: 0 };
 }
 
-module.exports = { DEFAULT_WPM, narrationWpm, narrationLabel, measuredWpmOf, rescaleBlueprint };
+module.exports = { TRACK_LABEL, countWords, parseDuration, trackCalib, calibrateTrack, clearTrack, trackWpmView, DEFAULT_WPM, narrationWpm, narrationLabel, measuredWpmOf, rescaleBlueprint };

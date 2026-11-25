@@ -225,6 +225,20 @@ function issuesText(items) {
   if (!items.length) return '(人没有勾具体问题:按上面的规则把整篇理顺一遍,重点去掉重复绕圈、补丁句、数字口径不一致)';
   return items.map(x => '- [' + x.id + '][' + x.chapter + '][' + x.level + '] ' + x.problem + (x.quote ? '\n  原句:「' + x.quote + '」' : '') + (x.fix ? '\n  改法:' + x.fix : '')).join('\n');
 }
+// 篇幅:按「目标时长 × 配音语速」给出该写多少词(和终审篇幅同一个口径);没有目标时长时退回按初稿的 80%–100%
+function lengthWindow(run, base) {
+  const t = rv().lengthTarget(run);
+  if (!t) return null;
+  return { ...t, min: Math.round(t.target * 0.9), max: Math.round(t.target * 1.05), base: rv().scriptWords(base) };
+}
+function lengthRule(run, base) {
+  const w = lengthWindow(run, base);
+  const bw = rv().scriptWords(base);
+  if (!w) return '初稿约 ' + bw + ' 个词。删掉重复以后变短是对的,最多可以短 20%;**宁短勿绕**,不许为了凑字数把说过的意思再说一遍。不要比初稿长。';
+  return '目标成片 ' + w.goal_min + ' 分钟,配音每分钟约 ' + w.wpm + ' 词,成稿要写 **' + w.min + '–' + w.max + ' 词**(初稿现在 ' + bw + ' 词)。' +
+    (bw > w.max ? '初稿偏长:先删重复,删到这个范围就停。' : bw < w.min ? '初稿本身偏短:删掉重复以后,把讲得太快的地方展开(数字太密的句子拆开说、补上跳过的算账那一步、补一句画面),不加新事实。' : '删掉重复以后要还在这个范围里:删多了就把初稿里的算账过程、案例细节留下来。') +
+    '**不许**为了凑字数把说过的意思换个说法再说一遍——字数只能靠算账过程、具体细节、案例情节撑。';
+}
 function factsText(run) {
   const a = run.analysis || {};
   let t = rv().variantFacts(a);
@@ -276,11 +290,22 @@ async function rewrite(runId) {
       : 'CH01 前 30 秒按这个顺序:兑现标题 → 和观众扯上关系 → 留一个没答案的问题 → 进第一个数字;不打招呼、不报流程。';
     const prompt = an().fillVars(readPrompt('onepass_rewrite.md'), {
       target_language: lang(run), title: titleOf(run), thesis: thesisText(run), opening_rule: openingRule,
-      words: String(R.scriptWords(base)), issues: issuesText(picked), note: op.note ? '\n人另外交代的:' + op.note : '',
+      words: String(R.scriptWords(base)), length_rule: lengthRule(run, base), issues: issuesText(picked), note: op.note ? '\n人另外交代的:' + op.note : '',
       facts: factsText(run), script: base
     });
-    const r = await pl().inRun(runId, () => R.callLong(run, cfg, prompt, '一遍重写'));
-    const p = parseRewrite(r.content);
+    let r = await pl().inRun(runId, () => R.callLong(run, cfg, prompt, '一遍重写'));
+    let p = parseRewrite(r.content);
+    // 篇幅守门(用户 2026-11-25:目标 15 分钟,重写后只剩 1,054 词、配出来 9 分多钟):短得太多,带上原因从初稿再写一次(还是这一次重写,不叠着改)
+    const lw = lengthWindow(run, base);
+    const shortBy = w => lw && w < lw.min * 0.92;
+    let firstWords = 0;
+    if (p.script && shortBy(R.scriptWords(p.script))) {
+      firstWords = R.scriptWords(p.script);
+      const fb = '\n\n【注意】上一次你写出来只有 ' + firstWords + ' 词,按配音速度约 ' + (Math.round(firstWords / lw.wpm * 10) / 10) + ' 分钟,目标是 ' + lw.goal_min + ' 分钟(' + lw.min + '–' + lw.max + ' 词)。删得太多了:这次只删「同一个意思又说一遍」的句子,初稿里的算账过程、每一笔钱怎么来的、案例的具体情节、画面都要留下;还不够就把数字太密的句子拆开说、补上跳过的那一步。仍然不许把说过的意思再说一遍、不许加新事实。';
+      r = await pl().inRun(runId, () => R.callLong(run, cfg, prompt + fb, '一遍重写·篇幅不够再写'));
+      const p2 = parseRewrite(r.content);
+      if (p2.script && R.scriptWords(p2.script) > firstWords) p = p2;
+    }
     let next = require('./textnorm').normalizeChapterTags(p.script);
     const err = checks.chapterStructureError(next);
     if (err) throw new Error('重写出来的稿子章节不对(' + err + '),稿子没换。可以点「重新重写」');
@@ -298,6 +323,7 @@ async function rewrite(runId) {
     fresh.review.versions.push({ key: 'op', label: '重写稿', at: now(), text: cur(fresh), base_text: before, issues: [] });
     fresh.onepass = { ...(fresh.onepass || {}), stage: 'final_check', rewrite: { at: now(), secs: Math.round((Date.now() - t0) / 100) / 10, outline: p.outline, new_numbers_note: p.new_numbers, base: before, base_with_opening: base, opening_used: v ? v.i : -1, words: R.scriptWords(cur(fresh)), base_words: R.scriptWords(before) },
       new_numbers: nn.map((x, i) => ({ id: 'N' + (i + 1), ...x, ok: false })), fixes: [] };
+    if (firstWords) fresh.onepass.rewrite.retried_short = firstWords;
     if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
     return true;
@@ -613,6 +639,9 @@ function verifyProgram(run, ff) {
     if (gone.length) out.push({ chapter: id, problem: '这次改动把这些数删没了(没勾到它们):' + gone.join('、'), plain: '算账少了一步,观众可能对不上前后的数' });
     if (added.length) out.push({ chapter: id, problem: '这次改动冒出了新数字(哪里都没有出处):' + added.join('、'), plain: '可能是 AI 编的数' });
   });
+  const lw = lengthWindow(run, ff.before);
+  const wb = R.scriptWords(ff.before), wa = R.scriptWords(ff.after);
+  if (lw && wa < wb && wa < lw.min * 0.92) out.push({ chapter: '全篇', problem: '这次改动删到 ' + wa + ' 词,按配音速度约 ' + (Math.round(wa / lw.wpm * 10) / 10) + ' 分钟,比目标 ' + lw.goal_min + ' 分钟短太多', plain: '成片时长不够' });
   const hb = hedgeScan(ff.before, lang(run)).length, ha = hedgeScan(ff.after, lang(run)).length;
   if (ha > hb) out.push({ chapter: '全篇', problem: '这次改动多了 ' + (ha - hb) + ' 句「这是假设 / 不是这家店的数」这类提醒', plain: '观众又要多听提醒' });
   return out;
@@ -824,9 +853,10 @@ function view(run) {
     opening: ov ? { pick: ov.pick, pick_why: ov.pick_why || '', pick_note: ov.pick_note || '', now: arr(ov.now), title_kind: ov.title_kind || '',
       variants: arr(ov.variants).map(v => ({ i: v.i, name: v.name, text: v.text, zh: v.zh, why: v.why, steps: v.steps || {}, issues: arr(v.issues), words: v.words })) } : null,
     opening_choice: op.opening_choice != null ? op.opening_choice : (ov && ov.pick != null ? ov.pick : -1),
-    rewrite: op.rewrite ? { at: op.rewrite.at, outline: op.rewrite.outline, words: op.rewrite.words, base_words: op.rewrite.base_words, opening_used: op.rewrite.opening_used, new_numbers_note: op.rewrite.new_numbers_note } : null,
+    rewrite: op.rewrite ? { at: op.rewrite.at, retried_short: op.rewrite.retried_short || 0, outline: op.rewrite.outline, words: op.rewrite.words, base_words: op.rewrite.base_words, opening_used: op.rewrite.opening_used, new_numbers_note: op.rewrite.new_numbers_note } : null,
     new_numbers: arr(op.new_numbers), final: fin, fixes: arr(op.fixes),
     has_backup: !!run.classic_backup,
+    length: (() => { try { const ln = rv().lengthNeed(run, cur(run)); return ln ? { words: ln.words, minutes: ln.minutes, goal_min: ln.goal_min, target: ln.target, wpm: ln.wpm, mode: ln.mode } : null; } catch (e) { return null; } })(),
     finalfix: op.finalfix ? { at: op.finalfix.at, picked: arr(op.finalfix.picked), chapters: arr(op.finalfix.chapters), replaced: arr(op.finalfix.replaced).length, lost: arr(op.finalfix.lost), words_before: op.finalfix.words_before, words_after: op.finalfix.words_after, undone_at: op.finalfix.undone_at || '', can_undo: !op.finalfix.undone_at && cur(run) === op.finalfix.after } : null,
     verify: op.verify || null, finalfix_stage: op.finalfix_stage || '', finalfix_error: op.finalfix_error || '',
     draft: (() => { // v1.134 初稿原样(写稿那一步出来的,重写都从它开始),页面上能展开看、能复制
@@ -837,4 +867,4 @@ function view(run) {
   };
 }
 
-module.exports = { chapterRoles, relatedOf, finalItems, finalFix, verifyFix, verifyProgram, startFinalFix, startVerify, acceptAll, finalFixUndo, redoFromDraft, hedgeScan, endEchoScan, hedgeItems, loopRewrite, basisRewrite, syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };
+module.exports = { lengthWindow, lengthRule, chapterRoles, relatedOf, finalItems, finalFix, verifyFix, verifyProgram, startFinalFix, startVerify, acceptAll, finalFixUndo, redoFromDraft, hedgeScan, endEchoScan, hedgeItems, loopRewrite, basisRewrite, syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };

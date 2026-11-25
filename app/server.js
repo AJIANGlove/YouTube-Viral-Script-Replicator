@@ -227,6 +227,13 @@ const server = http.createServer(async (req, res) => {
     //               + 顶层 protocol/base_url/api_key/omit_temperature 为主流程渠道解析后的生效值(管线直接读取)
     //               + tweak 块为微调按钮(选题推荐/简介/指纹/商业化/留存/强化开头)的独立选择值,加载时经 pipeline.resolveProvider 现解析
     // 两套作用域共享同一份 providers 预设,Key 只在一处维护
+    // v1.134 每个赛道的配音语速:粘一篇文案 + 实际配出来的时长 → 这个赛道每分钟多少词(篇幅、词数预算都按它算)
+    if (url === '/api/track-wpm' && method === 'GET') return send(res, 200, { tracks: require('./lib/narration').trackWpmView() });
+    if (url === '/api/track-wpm' && method === 'POST') {
+      const body = await readBody(req);
+      try { const n = require('./lib/narration'); return send(res, 200, body.clear ? n.clearTrack(String(body.track || '')) : n.calibrateTrack(String(body.track || ''), body.text, body.duration)); }
+      catch (e) { return send(res, e.status || 500, { error: e.message }); }
+    }
     if (url === '/api/settings' && method === 'GET') {
       const cfg = pipeline.loadConfig() || {};
       const providers = Object.entries(cfg.providers || {}).map(([id, p]) => ({

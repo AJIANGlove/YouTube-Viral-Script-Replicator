@@ -1041,6 +1041,11 @@
       <div id="track-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"></div>
       <div id="track-view"><span class="hint">加载中…</span></div>
     </div>
+    <div class="card" id="twpm-card">
+      <h2>每个赛道的配音语速</h2>
+      <div class="hint" style="margin-bottom:8px">每个赛道配音的人不一样,念得快慢也不一样。在这里给每个赛道粘一篇拿去配音的文案、填实际配出来的时长,程序算出这个赛道每分钟念多少词;以后这个赛道的任务,蓝图每章写多少词、整篇重写要写多少词、预计配出来几分钟,都按它算。没测过的赛道按默认(韩语 106 词/分钟)。</div>
+      <div id="twpm-body"><span class="hint">加载中…</span></div>
+    </div>
     <div class="card" id="voice-card">
       <h2>频道声音设定(语体 · 称呼 · 风格)</h2>
       <div class="hint" style="margin-bottom:8px">每个频道一份,写稿和优化时自动带上。名字和频道名一致时,新建任务选「自动」就会用它。AI 起草后要人工核对再保存,保存即确认。</div>
@@ -3191,7 +3196,7 @@ function opDownloadDraft() {
 function opRewriteHtml(v) {
   const rw = v.rewrite;
   if (!rw) return '';
-  return `<details style="margin-top:10px" id="op-sec-op_rewrite"><summary class="v13" style="cursor:pointer">这次重写的一条线大纲 · ${rw.base_words} → ${rw.words} 词${rw.opening_used >= 0 ? ' · 开头用了版本 ' + (rw.opening_used + 1) : ''}</summary>
+  return `<details style="margin-top:10px" id="op-sec-op_rewrite"><summary class="v13" style="cursor:pointer">这次重写的一条线大纲 · ${rw.base_words} → ${rw.words} 词${rw.retried_short ? '(第一次只写了 ' + rw.retried_short + ' 词,太短,按目标字数又写了一次)' : ''}${rw.opening_used >= 0 ? ' · 开头用了版本 ' + (rw.opening_used + 1) : ''}</summary>
     <div class="rv-text" style="margin-top:6px">${esc(rw.outline || '(没写大纲)')}</div>
     ${rw.new_numbers_note && rw.new_numbers_note !== '无' ? `<div class="hint" style="margin-top:6px">AI 说新推出来的数:${esc(rw.new_numbers_note)}</div>` : ''}</details>`;
 }
@@ -3212,7 +3217,7 @@ function opFinalHtml(v) {
   const ff = v.finalfix && !v.finalfix.undone_at ? v.finalfix : null;
   const running = /一起改|复查/.test(v.running || '') || !!v.finalfix_stage;
   let h = `<div id="op-sec-op_final" style="margin-top:10px;padding:8px;border-radius:8px;background:${pub.ok ? '#ecfdf5' : '#fff7ed'}"><b>${pub.ok ? '✅ 可以发布' : running ? '正在' + esc(v.finalfix_stage || v.running) + '…' : ff ? '复查结果要你看一下' : '终检查出这些,勾要改的'}</b>
-    <span class="hint">终检结论:${esc(f.verdict || '—')}。${esc(f.summary || '')}</span></div>`;
+    <span class="hint">终检结论:${esc(f.verdict || '—')}。${esc(f.summary || '')}</span>${opLenHtml(v)}</div>`;
   if (v.finalfix_error) h += `<div class="err-list" style="margin:6px 0">${esc(v.finalfix_error)}${ff && !v.verify ? ' <button class="an-btn" onclick="opPost(\'verify\')">重新复查</button>' : ''}</div>`;
   if (running) return h + `<div class="hint v13" style="margin-top:6px">${/复查/.test(v.finalfix_stage || v.running || '') ? '复查只看你勾的有没有解决、这次改动有没有带出新问题,没动的章不查。' : '只改勾到的句子所在的章,别的章一字不动;走本地模型时在上面「网页版接力」里。改完自动复查。'}</div>`;
   if (ff) return h + opVerifyHtml(v, ff) + opFinalExtras(f);
@@ -3238,6 +3243,12 @@ function opFinalHtml(v) {
     <button class="an-btn" onclick="opAcceptAll()">都不改,直接能发布</button> <button class="an-btn" onclick="opRedo()">从初稿整篇重写一次</button></div>
     <div class="hint" style="margin-top:4px">${bOther ? '口径选了另一种:影响整篇,只能从初稿整篇重写(勾的问题一起带上),写完自动终检。' : '一起改:终检给了改好句子的,程序直接换;要动几句的(绕圈、没改法的数字),把所在的几章一次交给 AI(走本地模型)。'}</div>`;
   return h + opFinalExtras(f) + `<div style="margin-top:8px"><button class="an-btn" onclick="opPost('final_check')">重新终检</button> <span class="hint">只查不改。</span></div>`;
+}
+function opLenHtml(v) {
+  const L = v.length;
+  if (!L) return '';
+  const short = L.mode === 'expand', long = L.mode === 'trim';
+  return `<div style="margin-top:4px;font-size:13px;color:${short ? '#b91c1c' : long ? '#b45309' : '#047857'}">篇幅:${L.words} 词,按配音每分钟 ${L.wpm} 词预计约 <b>${L.minutes} 分钟</b>(目标 ${L.goal_min} 分钟,约 ${L.target} 词)${short ? '。偏短:删重复删多了,想补回来点「从初稿整篇重写一次」(重写会按目标字数写)' : long ? '。偏长' : ''}</div>`;
 }
 function opVerifyHtml(v, ff) {
   const vr = v.verify;
@@ -5289,6 +5300,27 @@ async function rvTranslate() {
 }
 
 
+// ---------- v1.134 每个赛道的配音语速 ----------
+let twpmOpen = null;
+async function twpmLoad() {
+  const el = document.getElementById('twpm-body');
+  if (!el) return;
+  let d; try { d = await api('/api/track-wpm'); } catch (e) { el.innerHTML = `<span class="hint">${esc(e.message)}</span>`; return; }
+  const mmss = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  el.innerHTML = d.tracks.map(t => { const c = t.calib; return `<div style="border-top:1px solid #f3f4f6;padding:8px 0">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span><b>${esc(t.name)}</b> ${c ? `<span class="v13">每分钟 ${c.wpm} 词</span> <span class="hint">(${c.words.toLocaleString()} 词配出 ${mmss(c.secs)},${esc(String(c.at).slice(0, 10))} 测的;15 分钟约写 ${Math.round(c.wpm * 15).toLocaleString()} 词)</span>` : '<span class="hint">还没测过,按默认算</span>'}</span>
+      <span><button class="an-btn v13" onclick="twpmToggle('${t.key}')">${c ? '重新测' : '测一下'}</button>${c ? ` <button class="an-btn" onclick="twpmClear('${t.key}')">清掉</button>` : ''}</span></div>
+    ${twpmOpen === t.key ? `<div style="margin-top:6px"><textarea id="twpm-text" rows="6" style="width:100%;box-sizing:border-box" placeholder="粘一篇这个赛道拿去配音的完整文案(纯净稿就行)"></textarea>
+      <div style="margin-top:4px;display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span>实际配出来的时长</span><input id="twpm-dur" placeholder="比如 9:52" style="width:100px"> <button class="primary" onclick="twpmSave('${t.key}',this)">算一下并保存</button> <span id="twpm-msg" class="hint"></span></div></div>` : ''}</div>`; }).join('');
+}
+function twpmToggle(k) { twpmOpen = twpmOpen === k ? null : k; twpmLoad(); }
+async function twpmSave(k, btn) {
+  const text = (document.getElementById('twpm-text') || {}).value || '', duration = (document.getElementById('twpm-dur') || {}).value || '';
+  btn.disabled = true;
+  try { const r = await api('/api/track-wpm', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ track: k, text, duration }) }); twpmOpen = null; await twpmLoad(); alert('算好了:' + r.words + ' 词 ÷ ' + Math.floor(r.secs / 60) + ' 分 ' + (r.secs % 60) + ' 秒 = 每分钟 ' + r.wpm + ' 词。以后这个赛道按它算篇幅。'); }
+  catch (e) { const m = document.getElementById('twpm-msg'); if (m) m.textContent = e.message; btn.disabled = false; }
+}
+async function twpmClear(k) { if (!confirm('清掉这个赛道测的语速,改回默认?')) return; await api('/api/track-wpm', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ track: k, clear: true }) }); twpmLoad(); }
 // ---------- v1.94 赛道规则(只读) ----------
 let trackRulesCache = null, trackRulesCur = 'econ';
 async function trackRulesData() {
@@ -9410,6 +9442,7 @@ async function saveStepChannels() {
   catch (e) { st.textContent = '保存失败:' + e.message; }
 }
 async function loadSettings() {
+  twpmLoad();
   loadSearchSettings();
   loadStepChannels();
   loadReframeSettings();
