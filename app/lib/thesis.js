@@ -28,6 +28,7 @@ function cleanAngles(o) {
   return arr(o.angles).filter(x => x && typeof x === 'object' && (x.one_line || x.claim)).slice(0, 4).map((x, i) => ({
     id: str(x.id) || ('A' + (i + 1)), belief: str(x.belief), claim: str(x.claim), one_line: str(x.one_line || x.claim),
     method: arr(x.method).map(str).filter(m => /^M[1-8]$/.test(m)), key_fact: str(x.key_fact), why_watch: str(x.why_watch), risk: str(x.risk),
+    ...(x.hint_fit != null ? { hint_fit: str(x.hint_fit).trim().slice(0, 200) } : {}),
     queries: arr(x.queries).filter(q => q && q.query).map(q => ({ query: str(q.query).slice(0, 120), side: q.side === 'con' ? 'con' : 'pro' })).slice(0, 3)
   }));
 }
@@ -293,11 +294,13 @@ async function scout(run, cfg, asset, setStage, opts) {
     ...vars, thesis_methods: methods, max_queries: MAX_Q,
     keep_notes: keep + (opts && arr(opts.avoid).length ? '\n【人已经看过、不要的论点(这次换完全不同的方向,不要换个说法再出一遍)】\n' + opts.avoid.map(x => '- ' + x).join('\n') : '')
       + (opts && opts.novel ? '\n' + readPrompt('thesis_novel.md') : '')
-      + (opts && opts.hint ? '\n【人想往这个方向想(优先按这个出,至少 2 个角度要沾边)】' + opts.hint : ''),
+      + (opts && opts.hint ? '\n【人想往这个方向想(优先按这个出,至少 2 个角度要沾边)】' + opts.hint
+        + '\n每个角度在 JSON 里多写一个字段 "hint_fit":这个角度和人填的方向沾边就用一句中文大白话说怎么沾的(比如「从想开店的人的角度,算他投进去多久能回本」);不沾边就写空字符串 ""。不要硬说沾边。' : ''),
     discovery: (disc.length && arr(disc[0].results).length ? '【先搜了一轮(按题目原文)】\n' + search.resultsBrief(disc) : '') + (tw ? '\n\n' + T.scoutHint(tw) : '')
   });
   const ao = await A.callJson(run, cfg, prompt, '定论点角度', anglesOk);
   out.angles = cleanAngles(ao);
+  if (opts && opts.hint) out.hint = String(opts.hint);
   out.recommended = out.angles.some(a => a.id === str(ao.recommended)) ? str(ao.recommended) : (out.angles[0] || {}).id || '';
   out.rec_why = str(ao.why);
   if (arr(ao.common_takes).length) out.common_takes = arr(ao.common_takes).map(str).filter(Boolean).slice(0, 5);

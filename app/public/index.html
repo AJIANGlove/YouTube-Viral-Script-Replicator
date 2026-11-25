@@ -189,6 +189,10 @@
   .th-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; margin-top: 10px; }
   .th-card.rec { border-color: #10b981; box-shadow: 0 0 0 1px #10b98133; }
   .th-card h3 { margin: 0 0 6px; font-size: 15px; }
+  /* v1.134 选论点时就把核心观点放大(和任务页「核心观点」一样的标签) */
+  .th-core { margin: 0 0 8px; padding: 6px 10px; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 6px; line-height: 1.5; }
+  .th-core .core-label { display: inline-block; background: #92400e; color: #fff; border-radius: 4px; padding: 0 6px; font-size: 12px; margin-right: 6px; vertical-align: 2px; }
+  .th-core-text { font-size: 18px; font-weight: 700; color: #111827; }
   .th-card .th-row { font-size: 13px; margin: 3px 0; }
   .th-card ol { margin: 4px 0 4px 18px; padding: 0; font-size: 13px; }
   .th-card ol li { margin: 2px 0; }
@@ -6607,6 +6611,14 @@ function thCards(ts) {
     return { a, c, card, facts, cons };
   });
 }
+// v1.134 人填了方向再重出时:每张卡标出沾不沾边、怎么沾的
+function thHintFit(ts, a) {
+  if (!ts.hint || a.hint_fit == null) return '';
+  const fit = String(a.hint_fit || '').trim();
+  return fit
+    ? `<div style="margin:4px 0;padding:4px 8px;border-left:3px solid #2563eb;background:#eff6ff;font-size:12px"><span class="rv-chip" style="background:#dbeafe;color:#1d4ed8">沾你填的方向</span> ${esc(fit)}</div>`
+    : `<div class="hint" style="margin:4px 0;color:#6b7280">和你填的方向不沾边(AI 另外想的角度)</div>`;
+}
 function thSrc(list) {
   return (list || []).slice(0, 3).map(s => /^https?:\/\//i.test(s.url || '') ? `<a href="${escAttr(s.url)}" target="_blank" rel="noopener">${esc(s.site || s.title || s.url)}</a>` : esc(s.site || s.title || '')).join('、');
 }
@@ -6973,6 +6985,11 @@ function renderThesisPanel(r) {
   const zhErr = st.zh_error || ts.zh_error;
   if (st.translating) html += `<div class="hint" style="color:#92400e">正在把论点卡翻成中文…一般不到 1 分钟,翻完自动刷新。</div>`;
   else if (thForeign(ts)) html += `<div style="margin-top:6px"><button class="an-btn v13" onclick="thChoose('zh','',this)">卡上有韩文/外文,翻成中文</button>${zhErr ? ` <span class="hint" style="color:#b91c1c">${esc(zhErr)}</span>` : ''}</div>`;
+  if (ts.hint) {
+    const n = (ts.angles || []).filter(a => (a.hint_fit || '').trim()).length;
+    const marked = (ts.angles || []).some(a => a.hint_fit != null);
+    html += `<div class="hint" style="margin-top:6px;color:#1d4ed8">你填的方向:<b>${esc(ts.hint)}</b>${marked ? `。这批里有 <b>${n}</b> 个沾边,卡上用蓝色标出来了,下面写了怎么沾的。` : '(这批是旧版出的,AI 没标哪个沾边)'}</div>`;
+  }
   html += cards.map(({ a, c, card, facts, cons }) => {
     const chips = thChips(c)
       + (a.id === rec ? '<span class="rv-chip green">AI 推荐</span>' : '')
@@ -6980,7 +6997,8 @@ function renderThesisPanel(r) {
     const one = card.one_line || a.one_line;
     const editing = thEditing === a.id;
     return `<div class="th-card${a.id === rec ? ' rec' : ''}">
-      <h3>${esc(one)}</h3><div>${chips}</div>
+      <div class="th-core"><span class="core-label">核心观点</span><span class="th-core-text">${esc(one)}</span></div><div>${chips}</div>
+      ${thHintFit(ts, a)}
       ${thCardRows({ a, c, card, facts, cons })}
       <div class="rv-ops" style="margin-top:6px"><button class="an-btn v13" onclick="thChoose('pick','${escAttr(a.id)}',this)">选这个</button>
         <button class="an-btn" style="border-color:#7c3aed;color:#6d28d9" onclick="thChoose('pickweb','${escAttr(a.id)}',this)" title="写前分析、出蓝图、写稿、优化、二稿审稿报告改成复制到你自己的 Claude 网页版,把回答粘回来;AI 调整、功能表、审核和后面的初稿检查、终审照旧自动跑">选这个,后面在网页版写</button>
