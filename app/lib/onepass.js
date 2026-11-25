@@ -208,7 +208,8 @@ async function rewrite(runId) {
     let run = store.getRun(runId);
     const op = run.onepass || {};
     const picked = arr(op.items).filter(x => arr(op.picked_ids).includes(x.id));
-    let base = cur(run);
+    // 每次重写都从初稿开始,不在上一次重写的稿子上叠着改:不管重做几次,稿子从初稿到成稿都只动这一次
+    let base = (arr((run.review || {}).versions).find(x => x.key === 'd1') || {}).text || cur(run);
     const ov = (run.review || {}).opening_variants;
     const v = op.opening_choice != null && op.opening_choice >= 0 && ov ? arr(ov.variants).find(x => x.i === op.opening_choice) : null;
     if (v) { const b2 = ob().replaceOpening(base, v.text); if (b2) base = b2; }
@@ -257,7 +258,7 @@ function decide(runId, body = {}) {
   if (!arr(op.items).length && op.stage !== 'decide' && !body.again) throw Object.assign(new Error('还没有体检清单'), { status: 400 });
   const ids = arr(body.ids).map(String).filter(id => arr(op.items).some(x => x.id === id));
   const ovN = Number(body.opening);
-  run.onepass = { ...op, picked_ids: ids, opening_choice: Number.isFinite(ovN) ? ovN : -1, note: String(body.note || '').trim().slice(0, 600), decided_at: now() };
+  run.onepass = { ...op, picked_ids: ids, opening_choice: Number.isFinite(ovN) ? ovN : -1, note: String(body.note || '').trim().slice(0, 2000), decided_at: now() };
   store.saveRun(run);
   (async () => {
     try { await rewrite(runId); } catch (e) { save(runId, { stage: 'failed', failed_at: 'rewriting', error: '整篇重写没成功:' + e.message }); return; }
@@ -280,7 +281,12 @@ async function finalCheck(runId) {
     const prompt = an().fillVars(readPrompt('onepass_final.md'), {
       target_language: lang(run), title: titleOf(run), thesis: thesisText(run), issues: issuesText(picked), facts: factsText(run), script: checks.extractFinalScript(text)
     });
-    const out = await R.viaStep('final_audit', cfg, (c, sfx) => an().callJson(run, c, prompt, '一遍终检' + sfx, o => !!o && typeof o === 'object' && (o.verdict != null || Array.isArray(o.hard))));
+    // 终检和「重讲 / 绕圈」检查同时跑:绕圈是这次最影响读下去的毛病,单独查、单独列
+    const [out, ic] = await Promise.all([
+      R.viaStep('final_audit', cfg, (c, sfx) => an().callJson(run, c, prompt, '一遍终检' + sfx, o => !!o && typeof o === 'object' && (o.verdict != null || Array.isArray(o.hard)))),
+      R.infoReuseCheck(run, cfg, checks.extractFinalScript(text) || text, '信息复现核对·终检').catch(() => null)
+    ]);
+    const loops = ic ? arr(ic.problems).map((x, i) => ({ id: 'R' + (i + 1), chapter: x.chapter || '', type: x.type || '重讲', quote: String(x.quote || ''), problem: (x.plain || {}).problem || x.type || '', fix: (x.plain || {}).fix || '' })) : null;
     const fresh = store.getRun(runId) || run;
     if (cur(fresh) !== text) throw new Error('终检期间稿子被改过,请重新终检');
     const hard = arr(out.hard).filter(x => x && x.problem).map((x, i) => {
@@ -292,7 +298,7 @@ async function finalCheck(runId) {
     // 口径问题(整篇用哪个基准):一条,不拆成一句句的硬伤
     const basis = arr(out.basis).filter(x => x && x.topic).map((x, i) => ({ id: 'B' + (i + 1), topic: String(x.topic), options: arr(x.options).map(String).slice(0, 3), recommend: String(x.recommend || ''), why: String(x.why || ''), quotes: arr(x.quotes).map(String).slice(0, 12), done: false }));
     const listen = checks.listenCheck(checks.extractFinalScript(text), listenOpts(fresh));
-    fresh.onepass = { ...(fresh.onepass || {}), stage: 'done', final: { at: now(), hash: hash(text), verdict: String(out.verdict || ''), summary: String(out.summary || ''), basis,
+    fresh.onepass = { ...(fresh.onepass || {}), stage: 'done', final: { at: now(), hash: hash(text), verdict: String(out.verdict || ''), summary: String(out.summary || ''), basis, loops,
       picked: arr(out.picked).map(x => ({ id: String(x.id || ''), done: x.done !== false, note: String(x.note || '') })), hard, notes: arr(out.notes).map(String).slice(0, 5), listen: listen ? arr(listen.issues) : [] } };
     if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
@@ -361,6 +367,7 @@ function markOk(runId, body = {}) {
   o.new_numbers = arr(o.new_numbers).map(x => (x.id === id ? { ...x, ok: true, accepted: true } : x));
   if (o.final) o.final.hard = arr(o.final.hard).map(x => (x.id === id ? { ...x, done: true, accepted: true } : x));
   if (o.final) o.final.basis = arr(o.final.basis).map(x => (x.id === id ? { ...x, done: true, accepted: true } : x));
+  if (o.final && o.final.loops) o.final.loops = arr(o.final.loops).map(x => (x.id === id || id === 'LOOPS' ? { ...x, done: true, accepted: true } : x));
   store.saveRun(run);
   return { ok: true };
 }
@@ -374,6 +381,15 @@ function basisRewrite(runId, body = {}) {
   if (!opt) throw Object.assign(new Error('选项不对'), { status: 400 });
   const note = '全片口径统一改成:' + opt + '(要定的是:' + b.topic + ')。所有用到这个基准的数、由它算出来的数都按这个口径一起改,全片只用这一套。' + (op.note ? '\n' + op.note : '');
   return decide(runId, { ids: op.picked_ids, opening: op.rewrite && op.rewrite.opening_used != null ? op.rewrite.opening_used : op.opening_choice, note, again: true });
+}
+// 终检查出还在绕圈 / 重讲:把这些当成要改的问题,整篇再重写一次(不一句句删,删了前后接不上)
+function loopRewrite(runId) {
+  const run = store.getRun(runId);
+  const op = (run || {}).onepass || {};
+  const loops = arr((op.final || {}).loops);
+  if (!loops.length) throw Object.assign(new Error('终检没查出绕圈的地方'), { status: 400 });
+  const note = '上一次从初稿重写出来,下面这些地方还在绕圈、重讲(原句是上一版的,意思对得上就行)。这次从初稿重新写时,这些意思全片只说一次:\n' + loops.map(x => '- [' + x.chapter + '][' + x.type + '] 「' + x.quote + '」 ' + x.problem + (x.fix ? ' → ' + x.fix : '')).join('\n');
+  return decide(runId, { ids: op.picked_ids, opening: op.rewrite && op.rewrite.opening_used != null ? op.rewrite.opening_used : op.opening_choice, note: note.slice(0, 1800), again: true });
 }
 // 失败后重试:从断掉的那一步接着跑
 function retry(runId) {
@@ -456,7 +472,7 @@ function view(run) {
   const stalled = ['checking', 'rewriting', 'final_check'].includes(stage) && !running && !(stage === 'checking' && (run.steps || {}).reverse_audit && run.steps.reverse_audit.status === 'running');
   const ov = (run.review || {}).opening_variants;
   const fin = op.final || null;
-  const hardLeft = fin ? arr(fin.hard).filter(x => !x.done && x.level !== '可改可不改').length + arr(fin.basis).filter(x => !x.done).length : 0;
+  const hardLeft = fin ? arr(fin.hard).filter(x => !x.done && x.level !== '可改可不改').length + arr(fin.basis).filter(x => !x.done).length + arr(fin.loops).filter(x => !x.done).length : 0;
   const numLeft = arr(op.new_numbers).filter(x => !x.ok).length;
   return {
     failed_at: op.failed_at || '', stage, stage_zh: STAGE_ZH[stage] || (stage === 'writing' ? '写初稿中' : '等体检'), running, stalled,
@@ -472,4 +488,4 @@ function view(run) {
   };
 }
 
-module.exports = { basisRewrite, syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };
+module.exports = { loopRewrite, basisRewrite, syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };

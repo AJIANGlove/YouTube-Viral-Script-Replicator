@@ -3161,6 +3161,13 @@ function opFinalHtml(v) {
   const pub = v.publish || {};
   let h = `<div id="op-sec-op_final" style="margin-top:10px;padding:8px;border-radius:8px;background:${pub.ok ? '#ecfdf5' : '#fff7ed'}"><b>${pub.ok ? '✅ 可以发布' : '还剩 ' + (pub.hard_left + pub.num_left) + ' 处要你看一下'}</b>
     <span class="hint">终检结论:${esc(f.verdict || '—')}。${esc(f.summary || '')}</span></div>`;
+  const loops = f.loops || [];
+  if (loops.length && loops.every(x => x.done)) h += `<div class="hint" style="margin-top:6px">绕圈 / 重讲的 ${loops.length} 处你看过了,保留不改。</div>`;
+  else if (loops.length) h += `<div id="op-sec-loops" style="margin-top:8px;padding:6px 8px;border-left:3px solid #dc2626;background:#fef2f2"><div class="v13" style="font-weight:600">还在绕圈 / 重讲的地方 ${loops.length} 处(最影响观众继续看下去)</div>
+    <div class="hint">同一个意思前面说过又说一遍。不在现在的稿子上一句句删(那就是又叠一层补丁)。点下面按钮:从初稿重新写一次,把这些一起避开;旧的这版作废,稿子从初稿到成稿还是只动一次。</div>
+    ${loops.map(x => `<div style="margin:4px 0"><span class="hint">[${esc(x.chapter)}][${esc(x.type)}]</span> ${esc(x.problem)}${x.quote ? `<div class="hint">原句:「${esc(x.quote)}」</div>` : ''}</div>`).join('')}
+    <button class="an-btn v13" onclick="opLoops()">从初稿重新写一次,避开这些</button> <button class="an-btn" onclick="opOk('LOOPS')">我看过了,能接受,不改</button> <span class="hint">重写会再花一次整篇重写的钱(走本地模型)。</span></div>`;
+  else if (loops && f.loops !== undefined && f.loops !== null) h += `<div class="hint" style="margin-top:6px;color:#047857">✓ 没查出绕圈、重讲的地方</div>`;
   const basis = (f.basis || []);
   if (basis.length) h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">口径要你定一下(一个决定,影响好几句,不能一句句修)</div>${basis.map(opBasisRow).join('')}</div>`;
   const hard = (f.hard || []);
@@ -3168,7 +3175,7 @@ function opFinalHtml(v) {
   if (must.filter(x => !x.done).length >= 4) h += `<div style="margin-top:8px;padding:6px 10px;border-radius:6px;background:#fef3c7;font-size:13px">⚠ 一下出来 ${must.filter(x => !x.done).length} 条数字问题,多半是同一个口径没定(比如利润按哪个数算)。先别一条条点「只修这一句」:一句句换,稿子会两套数混在一起。看下面每条的「不改会怎样」,如果是同一回事,在下面备注里写清用哪个数,点「按这个口径整篇重写一次」。</div>`;
   if (must.length) h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">必须改(观众会听出来):只修这一句,别的地方不动</div>${must.map(x => opFixRow(x, x.kind, x.problem, x.fix)).join('')}</div>`;
   if (soft.length) h += `<details style="margin-top:8px"${soft.some(x => !x.done) ? '' : ''}><summary class="hint" style="cursor:pointer">可改可不改(只是不够严谨,大多数观众听不出来,不挡发布)${soft.length} 条</summary>${soft.map(x => opFixRow(x, x.kind, x.problem, x.fix)).join('')}</details>`;
-  if (must.filter(x => !x.done).length >= 4 || basis.some(x => !x.done)) h += `<div style="margin-top:8px"><textarea id="op-basis-note" rows="2" style="width:100%;box-sizing:border-box" placeholder="例如:全片利润统一按账本的 1,430만 说,行业平均 8.7% 只当对比提一次"></textarea><button class="an-btn v13" onclick="opNoteRewrite()">按这个口径整篇重写一次</button> <span class="hint">会再花一次整篇重写的钱(走本地模型),写完自动终检。</span></div>`;
+  if (must.filter(x => !x.done).length >= 4 || basis.some(x => !x.done)) h += `<div style="margin-top:8px"><textarea id="op-basis-note" rows="2" style="width:100%;box-sizing:border-box" placeholder="例如:全片利润统一按账本的 1,430만 说,行业平均 8.7% 只当对比提一次"></textarea><button class="an-btn v13" onclick="opNoteRewrite()">按这个口径整篇重写一次</button> <span class="hint">从初稿重新写,不在现在的稿子上叠着改;会再花一次重写的钱(走本地模型),写完自动终检。</span></div>`;
   const nn = v.new_numbers || [];
   if (nn.length) h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">新出现的数字(初稿、事实表、账本里都没有)</div><div class="hint">AI 推出来或编的。看一下:算得对就点「没问题」;不对就点「只修这一句」,AI 只改这一句。</div>${nn.map(x => opFixRow({ ...x, done: x.ok }, x.chapter, '「' + (/^\d+$/.test(x.num) ? Number(x.num).toLocaleString('en-US') : x.num) + '」没有出处', '')).join('')}</div>`;
   if ((f.picked || []).length) h += `<details style="margin-top:8px"><summary class="hint" style="cursor:pointer">你勾的问题改掉没有(${f.picked.filter(x => x.done).length}/${f.picked.length} 改掉了)</summary>${f.picked.map(x => `<div class="hint">${x.done ? '✓' : '✗'} ${esc(x.id)} ${esc(x.note)}</div>`).join('')}</details>`;
@@ -3212,6 +3219,7 @@ function opDecide() {
 }
 function opFix(id) { opState.msg = '正在只修这一句…'; opState.key = ''; renderOnePassPanel(lastRunDetail); opPost('fix', { id }); }
 function opOk(id) { opPost('ok', { id }); }
+function opLoops() { if (!confirm('从初稿重新写一次,把这些重复一起避开?现在这版作废(不是在它上面再改),会再花一次重写的钱,写完自动终检。')) return; opState.msg = '已开始去掉绕圈、整篇重写…'; opPost('loops'); }
 // 步骤条上点新流程的四步:跳到面板里对应的位置(没有对应位置就跳到面板顶上)
 function opJump(k) {
   const panel = document.getElementById('op-panel');
