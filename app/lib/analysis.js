@@ -84,6 +84,7 @@ function frameworkVars(run, asset) {
 }
 
 function fillVars(tpl, vars) {
+  tpl = require('./standard').fill(tpl);
   for (const k of Object.keys(vars)) tpl = tpl.replaceAll('{{' + k + '}}', vars[k] == null ? '' : String(vars[k]));
   return tpl;
 }

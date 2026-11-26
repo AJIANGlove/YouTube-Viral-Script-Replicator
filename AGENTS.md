@@ -312,7 +312,19 @@
 - 终检后:勾选 → 一起改一次 → 复查就停(用户 2026-11-25,替代单独的「只改这几章」和逐条「只修这一句」按钮)。`onepass.startFinalFix`(POST `onepass/finalfix`,body ids/basis/note):终检结果(绕圈、必须改、新数字默认勾,可改可不改默认不勾)勾完一次改——有改法的硬伤程序直接换句;其余按原句定位到章,`onepass_finalfix.md` 只让 AI 写这几章(每条附前一句/后一句、列出这几章没勾到的数不许动、动笔前自查),标签 `一遍重写·终检后一起改`(走本地模型),replaceChapter 拼回,别的章一字不动;口径选了 B 走从初稿整篇重写(带上勾的问题)。改完 `verifyFix` 复查:程序比改动章的数字(删没了 / 新冒出)和提醒句数,`onepass_verify.md` 只看改前→改后:勾的解决没有 + 改动带出的新问题(衔接、矛盾、数字、意思丢、新重复)。复查完就停:同一版不能再一起改(服务端拒绝),只能接受(`accept_all`)、撤回(`finalfix_undo`,稿子和终检结果都换回)、从初稿整篇重写(`redo`)。publish.ok 在有 finalfix 时看 verify.ok || accepted。给 AI 的材料(用户 2026-11-25:要把它改好需要的东西给它):`chapterRoles` 按蓝图给每个要改的章写「在全片里的任务」——claim、留存目标、开头接上一章(answers_prev + 实际上一章最后一句 / 本章第一句)、结尾钩子(leaves_question + 本章最后一句 / 下一章第一句)、open_loop、埋点回收(planted_payoff 按 source_segments 对上)、hook_plan 留存钩子、本章算账链的数;`relatedOf` 给每条问题点名牵扯的章和那章讲透了什么(不改只对照);prompt 要求每条先想「牵扯哪几章 / 怎么改最省 / 会不会碰到本章功能 / 删了接不接得上」;复查也拿同一份「各管什么」查钩子、回收、算账链有没有被弄没。
 - 篇幅(用户 2026-11-25:칼국수 目标 15 分钟,配音稿 1,054 词 ÷ 106 = 9.9 分钟,语速口径是对的,是整篇重写删多了):`onepass.lengthWindow/lengthRule` 用 review.lengthTarget(目标时长 × narrationWpm)给重写一个 90%–105% 的词数范围,写进 onepass_rewrite 第 9 条(偏短就展开算账过程 / 拆数字密的句子,仍不许重复凑字);重写结果低于下限的 92% 就带原因再写一次(标签 `一遍重写·篇幅不够再写`,还是从初稿,取更长的那版,记 rewrite.retried_short);终检头部显示预计分钟数;一起改的程序复查删到太短也报;step2 整篇合计要到总预算 90% 以上。
 - **赛道配音语速**:`narration.js` 的 `calibrateTrack(track,text,duration)` 用 `countWords`(去掉 CH 标签行、按空白分)÷ `parseDuration`(`9:52` / `9分52秒` / 只写数字=分钟)算 wpm,词数 ≥ 100、wpm 在 60–260 才收,存 `config.track_wpm[track] = {wpm, words, secs, at, sample}`;`clearTrack` 清掉。`narrationWpm` 取值顺序:`run.review_track` 对应的赛道实测(from:'track')> 声音设定 > 已发布实测 > 语言默认 > 原片。路由 `/api/track-wpm` GET/POST(POST 带 clear 就清)。设置页 `#twpm-card`(`twpmLoad/twpmToggle/twpmSave/twpmClear`)。
-- 测试:`mock_test_v1134.js`(97 条)。
+- **复查(程序)**:`onepass.verifyProgram` 比章数、改过章节的数字、篇幅、提醒句;多出的提醒句用 `hedgeScan` 的 ch 标出所在章并附原句(`quote`)。
+- **问题在第几章**:`onepass.whereOf(text,x)` 按 x.chapter 里的 CH、quote / quotes(去标点比对,前 14 字也算)、num(含千分位写法)找出所在章;`view` 给 final.loops/hard/basis、new_numbers、finalfix.picked(按 before)、verify.new_issues(按 after)、拍板阶段的 items 加 `where`。页面 `opWhere`:有具体章写章,「全篇」写「全篇·牵扯 …」。
+- **文案总标准**:`prompts/script_standard.md`(A 写作目标 / B 观众体验 / C 时长结构 / D 内容质量 / E 修改流程,条目 `- **B4 名字**:说明`)。`lib/standard.js`:`text(parts)` 取几部分、`items()`、`nameOf(id)`、`fill(tpl)` 把 `{{standard}}` / `{{standard:BD}}` 换成原文;`analysis.fillVars` 和 `pipeline.fillTemplate` 都先过 `fill`。用到的提示词:step1.md、step1_function.md、step2.md、onepass_rewrite.md、onepass_final.md(第 4 项,输出 `std`)、onepass_verify.md(BD)、reverse_audit.md(问题类型括号写编号)、onepass_finalfix.md(按编号改)。E 部分不发给 AI。
+- **终检 std**:`finalCheck` 把 AI 的 `out.std` 和 `programStd(run,text)`(`danglingScan` 半句话 → B4,章末必须改;`chapterLenScan` 按蓝图 word_budget 等比缩放到目标字数,> 2 倍或 < 0.4 → C3 可改可不改)合成 `final.std`(id S1…,std 编号、kind=`nameOf`、level、by)。`finalItems` 加 kind 'std'(走 AI 改章),一起改 / 都不改 / hardLeft / view.where 都算上。体检 `hedgeItems` 加 D-3(半句话)。页面「没达到文案标准」一组(紫色)。
+- 测试:`mock_test_v1134.js`(122 条)。
+
+## 本地修补:`standard.js` 读标准文件要先归一换行(2026-11-26,合并上游时不要丢)
+
+`app/lib/standard.js` 的 `items()`/`sections()` 用 `^...$` + `.` 逐行匹配 `prompts/script_standard.md`;Windows 下该文件是 **CRLF**,而 JS 的 `.` 不匹配 `\r`,导致 **`items()` 返回 0 条**(标准五大点等于没生效:体检/终检拿不到编号和名字)。
+
+修法:读入时统一换行——`fs.readFileSync(FILE,'utf-8').replace(/\r\n?/g,'\n')`。不改语义,只去掉行尾 `\r`。
+
+验证:`node -e "console.log(require('./app/lib/standard').items().length)"` 应为 **26**(不是 0);`nameOf('B4')` 应返回「B4 悬念及时兑现」。**上游若重写该文件,先跑这两条确认。**
 
 ## 修稿循环省钱:信息重复检查只查改过的章、手动重查上限、开头改稿后不自动重审(v1.133,2026-11-23)
 

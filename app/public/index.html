@@ -3120,7 +3120,7 @@ function opDecideHtml(v) {
   h += Object.keys(groups).map(ch => `<div style="margin-top:8px"><div class="v13" style="font-weight:600">${esc(ch)}</div>${groups[ch].map(x => `
     <label style="display:flex;gap:6px;align-items:flex-start;margin:4px 0;cursor:pointer">
       <input type="checkbox" style="width:auto;margin-top:3px" ${opState.sel.has(x.id) ? 'checked' : ''} onchange="opToggle('${escAttr(x.id)}',this.checked)">
-      <span><span class="${x.level === '关键' ? 'v13' : 'hint'}">[${esc(x.level)}]</span> <span class="hint">${esc(x.src)}</span> ${esc(x.problem)}
+      <span><span class="${x.level === '关键' ? 'v13' : 'hint'}">[${esc(x.level)}]</span> <span class="hint">${esc(x.src)}</span>${/^CH\d+$/i.test(String(x.chapter || '').trim()) || !(x.where || []).length ? '' : ` <span class="hint">[牵扯 ${esc(x.where.join('、'))}]</span>`} ${esc(x.problem)}
       ${x.quote ? `<br><span class="hint">原句:「${esc(x.quote)}」</span>` : ''}${x.fix ? `<br><span class="hint">改法:${esc(x.fix)}</span>` : ''}</span></label>`).join('')}</div>`).join('');
   h += `</div>` + opOpeningHtml(v) + `
     <div style="margin-top:10px"><div class="v13" style="font-weight:600">还有别的要交代的(选填)</div>
@@ -3201,12 +3201,22 @@ function opRewriteHtml(v) {
     ${rw.new_numbers_note && rw.new_numbers_note !== '无' ? `<div class="hint" style="margin-top:6px">AI 说新推出来的数:${esc(rw.new_numbers_note)}</div>` : ''}</details>`;
 }
 // v1.134 终检后:勾选 → 一起改一次 → 复查就停(用户 2026-11-25)
+// v1.134 每条问题在第几章:有具体章就写章;「全篇」的写出牵扯哪几章
+function opWhere(x) {
+  const w = (x.where || []).filter(Boolean);
+  const own = String(x.chapter || '').trim();
+  const isAll = !own || /全篇|全片|整篇/.test(own);
+  if (!w.length) return isAll ? '全篇' : own;
+  if (isAll) return '全篇·牵扯 ' + w.join('、');
+  return w.join('、');
+}
 function opFinalItems(v) {
   const f = v.final || {};
   const rwNote = String((v.rewrite || {}).new_numbers_note || '');
   return [
     ...(f.loops || []).map(x => ({ ...x, kind: 'loop', group: 'loop', label: x.type || '重讲', def: true })),
     ...(f.hard || []).map(x => ({ ...x, kind: 'hard', group: x.level === '可改可不改' ? 'soft' : 'must', label: x.kind || '硬伤', def: x.level !== '可改可不改' })),
+    ...(f.std || []).map(x => ({ ...x, kind: 'std', group: x.level === '可改可不改' ? 'soft' : 'std', label: (x.kind || x.std || '没达到标准') + (x.by === '程序' ? '·程序查的' : ''), def: x.level !== '可改可不改' })),
     ...(v.new_numbers || []).map(x => ({ ...x, kind: 'num', group: 'num', label: '新数字', done: x.ok, problem: '「' + (/^\d+$/.test(x.num) ? Number(x.num).toLocaleString('en-US') : x.num) + '」在初稿、事实表、账本里都没有,可能是 AI 编的', def: !rwNote.includes(String(x.num)) }))
   ];
 }
@@ -3228,15 +3238,15 @@ function opFinalHtml(v) {
   const basis = (f.basis || []).filter(x => !x.done);
   const doneN = opFinalItems(v).filter(x => x.done).length + (f.basis || []).filter(x => x.done).length;
   if (!items.length && !basis.length) return h + (doneN ? `<div class="hint" style="margin-top:6px">终检查出的 ${doneN} 处都处理过了。</div>` : `<div class="hint" style="margin-top:6px;color:#047857">✓ 终检没查出要改的地方</div>`) + opFinalExtras(f) + `<div style="margin-top:8px"><button class="an-btn" onclick="opPost('final_check')">重新终检</button> <span class="hint">只查不改。</span></div>`;
-  const row = x => `<label style="display:flex;gap:6px;align-items:flex-start;margin:6px 0;cursor:pointer;border-left:3px solid ${x.group === 'loop' ? '#dc2626' : x.group === 'must' ? '#f59e0b' : '#d1d5db'};padding-left:6px">
+  const row = x => `<label style="display:flex;gap:6px;align-items:flex-start;margin:6px 0;cursor:pointer;border-left:3px solid ${x.group === 'loop' ? '#dc2626' : x.group === 'std' ? '#7c3aed' : x.group === 'must' ? '#f59e0b' : '#d1d5db'};padding-left:6px">
       <input type="checkbox" style="width:auto;margin-top:3px" ${opState.fsel.has(x.id) ? 'checked' : ''} onchange="opFToggle('${escAttr(x.id)}',this.checked)">
-      <span><span class="hint">[${esc(x.chapter || '')}][${esc(x.label)}]</span> ${esc(x.problem || '')}
+      <span><span class="hint">[${esc(opWhere(x))}][${esc(x.label)}]</span> ${esc(x.problem || '')}
       ${x.plain ? `<br><span style="font-size:13px">不改会怎样:${esc(x.plain)}</span>` : ''}
       ${x.quote ? `<br><span class="hint">原句:「${esc(x.quote)}」</span>` : ''}${x.fix ? `<br><span class="hint">改法:「${esc(x.fix)}」</span>` : ''}</span></label>`;
   const grp = (g, title, open) => { const xs = items.filter(x => x.group === g); if (!xs.length) return ''; const body = xs.map(row).join(''); return open ? `<div style="margin-top:8px"${g === 'loop' ? ' id="op-sec-loops"' : ''}><div class="v13" style="font-weight:600">${title}(${xs.length})</div>${body}</div>` : `<details style="margin-top:8px"><summary class="hint" style="cursor:pointer">${title}(${xs.length},默认不勾)</summary>${body}</details>`; };
   h += `<div class="hint" style="margin-top:6px">勾上的会在下面点一次一起改掉,没勾的就是你看过、不改。改的时候只动勾到的句子所在的章,别的章一字不动;改完自动复查一次(勾的解决没有、改动有没有带出新问题),复查完就停,不会再改第二次。</div>`;
   if (basis.length) h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">口径要你定一下(一个决定,影响好几句)</div>${basis.map(opBasisRow).join('')}</div>`;
-  h += grp('loop', '还在绕圈 / 重讲(最影响观众继续看下去)', true) + grp('must', '必须改(观众会听出来)', true) + grp('num', '新出现的数字(算得对就别勾)', true) + grp('soft', '可改可不改(大多数观众听不出来,不挡发布)', false);
+  h += grp('loop', '还在绕圈 / 重讲(最影响观众继续看下去)', true) + grp('std', '没达到文案标准(以观众身份读出来的,前面是标准编号)', true) + grp('must', '必须改(观众会听出来)', true) + grp('num', '新出现的数字(算得对就别勾)', true) + grp('soft', '可改可不改(大多数观众听不出来,不挡发布)', false);
   const bOther = Object.values(opState.fbasis || {}).some(i => i > 0);
   h += `<div style="margin-top:8px"><textarea id="op-ff-note" rows="2" style="width:100%;box-sizing:border-box" placeholder="还有别的要交代的(选填),例如:CH08 那段删掉就行,不用补" oninput="opState.ffNote=this.value">${esc(opState.ffNote || '')}</textarea></div>
     <div style="margin-top:6px"><button class="primary" onclick="opFinalFix()">${bOther ? '按新口径从初稿整篇重写一次' : '按勾的一起改(已勾 <span id="op-fn">' + opState.fsel.size + '</span> 条)'}</button>
@@ -3256,9 +3266,9 @@ function opVerifyHtml(v, ff) {
   if (!vr) return h + `<div class="hint" style="margin-top:6px">还没复查。<button class="an-btn" onclick="opPost('verify')">复查</button></div>`;
   const byId = {}; ff.picked.forEach(x => { byId[x.id] = x; });
   const bad = (vr.resolved || []).filter(x => !x.ok);
-  h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">① 你勾的解决了没有(${(vr.resolved || []).length - bad.length}/${(vr.resolved || []).length})</div>${(vr.resolved || []).map(x => `<div style="margin:3px 0;font-size:13px">${x.ok ? '<span style="color:#059669">✓</span>' : '<span style="color:#dc2626">✗</span>'} <span class="hint">[${esc((byId[x.id] || {}).label || x.id)}]</span> ${esc((byId[x.id] || {}).problem || x.id)}${x.note ? ` <span class="hint">— ${esc(x.note)}</span>` : ''}</div>`).join('')}</div>`;
+  h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">① 你勾的解决了没有(${(vr.resolved || []).length - bad.length}/${(vr.resolved || []).length})</div>${(vr.resolved || []).map(x => `<div style="margin:3px 0;font-size:13px">${x.ok ? '<span style="color:#059669">✓</span>' : '<span style="color:#dc2626">✗</span>'} <span class="hint">[${esc(opWhere(byId[x.id] || {}))}][${esc((byId[x.id] || {}).label || x.id)}]</span> ${esc((byId[x.id] || {}).problem || x.id)}${x.note ? ` <span class="hint">— ${esc(x.note)}</span>` : ''}</div>`).join('')}</div>`;
   const ni = vr.new_issues || [];
-  h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">② 这次改动带出来的新问题(${ni.length})</div>${ni.length ? ni.map(x => `<div style="margin:3px 0;font-size:13px;border-left:3px solid #dc2626;padding-left:6px"><span class="hint">[${esc(x.chapter || '')}·${esc(x.by || '')}查的]</span> ${esc(x.problem)}${x.plain ? `<br>不管会怎样:${esc(x.plain)}` : ''}${x.quote ? `<br><span class="hint">「${esc(x.quote)}」</span>` : ''}</div>`).join('') : '<div class="hint" style="color:#047857">✓ 没有。数字没被动,没多出提醒句,改了的章前后接得上。</div>'}</div>`;
+  h += `<div style="margin-top:8px"><div class="v13" style="font-weight:600">② 这次改动带出来的新问题(${ni.length})</div>${ni.length ? ni.map(x => `<div style="margin:3px 0;font-size:13px;border-left:3px solid #dc2626;padding-left:6px"><span class="hint">[${esc(opWhere(x))}·${esc(x.by || '')}查的]</span> ${esc(x.problem)}${x.plain ? `<br>不管会怎样:${esc(x.plain)}` : ''}${x.quote ? `<br><span class="hint">「${esc(x.quote)}」</span>` : ''}</div>`).join('') : '<div class="hint" style="color:#047857">✓ 没有。数字没被动,没多出提醒句,改了的章前后接得上。</div>'}</div>`;
   if (vr.ok) return h + `<div class="hint" style="margin-top:8px;color:#047857">勾的都解决了,也没改出新问题。${ff.can_undo ? ' <button class="an-btn" onclick="opFinalFixUndo()">撤回,换回改之前的</button>' : ''}</div>`;
   if (vr.accepted) return h + `<div class="hint" style="margin-top:8px">你看过了,接受这一版。${ff.can_undo ? ' <button class="an-btn" onclick="opFinalFixUndo()">撤回,换回改之前的</button>' : ''}</div>`;
   return h + `<div style="margin-top:8px;padding:6px 8px;background:#fff7ed;border-radius:6px"><div class="hint">已经一起改过一次了,不再改第二次(越改越乱就是这么来的)。三选一:</div>
@@ -3275,7 +3285,7 @@ function opBasisRow(x) {
   const recI = x.options.findIndex(o => o.trim().startsWith(x.recommend));
   const sel = (opState.fbasis || {})[x.id] || 0;
   return `<div style="border-left:3px solid #7c3aed;padding:6px 8px;margin:6px 0;background:#faf5ff">
-    <div><b>${esc(x.topic)}</b></div>
+    <div><b>${esc(x.topic)}</b> <span class="hint">[${esc((x.where || []).length ? '牵扯 ' + x.where.join('、') : '全篇')}]</span></div>
     ${x.options.map((o, i) => `<label style="display:flex;gap:6px;align-items:flex-start;margin:3px 0;cursor:pointer"><input type="radio" name="opb-${escAttr(x.id)}" style="width:auto;margin-top:3px" ${sel === i ? 'checked' : ''} onchange="opFBasis('${escAttr(x.id)}',${i})"><span>${esc(o)}${i === 0 ? ' <span class="hint">(现在稿子用的,不改)</span>' : ''}${i === recI ? ' <span class="hint">👉 建议</span>' : ''}</span></label>`).join('')}
     ${x.why ? `<div class="hint">为什么:${esc(x.why)}</div>` : ''}
     ${x.quotes.length ? `<details><summary class="hint" style="cursor:pointer">影响 ${x.quotes.length} 句</summary>${x.quotes.map(q => `<div class="hint">「${esc(q)}」</div>`).join('')}</details>` : ''}</div>`;

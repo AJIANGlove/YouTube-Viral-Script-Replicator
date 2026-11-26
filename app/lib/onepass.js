@@ -105,6 +105,47 @@ function endEchoScan(text) {
   });
   return out;
 }
+// B4:用「……」「...」收尾的半句话(吊着不说完的预告)。atEnd = 是这一章最后一句
+function danglingScan(text) {
+  const hits = [];
+  chaptersOf(text).forEach(c => c.sents.forEach((s, i) => {
+    if (/(…|⋯|\.{3,}|。{2,})\s*["'”’」』)]?\s*$/.test(s) && s.replace(/[.…⋯。\s]/g, '').length >= 4) hits.push({ ch: c.ch, quote: s, atEnd: i === c.sents.length - 1 });
+  }));
+  return hits;
+}
+// C3:每章篇幅和蓝图预算比(预算按全片目标字数等比缩放),明显拖沓(> 2 倍)或仓促(< 4 成)才列
+function chapterLenScan(run, text) {
+  const R = rv();
+  let bp = [];
+  try { bp = pl().bpChaptersOf((run.outputs || {}).step1) || []; } catch (e) { bp = []; }
+  const chs = R.scriptChapters(text);
+  const bud = chs.map(c => { const b = bp.find(x => String(x.id).toUpperCase() === c.id); return Number(b && b.word_budget) || 0; });
+  const sum = bud.reduce((a, b) => a + b, 0);
+  if (!sum || bud.filter(Boolean).length < chs.length * 0.6) return [];
+  let target = sum;
+  try { const lt = R.lengthTarget(run); if (lt && lt.target) target = lt.target; } catch (e) {}
+  const k = target / sum;
+  const out = [];
+  chs.forEach((c, i) => {
+    const want = Math.round(bud[i] * k);
+    if (want < 60) return;
+    const w = R.scriptWords(c.text);
+    if (w > want * 2) out.push({ ch: c.id, words: w, want, kind: 'long' });
+    else if (w < want * 0.4) out.push({ ch: c.id, words: w, want, kind: 'short' });
+  });
+  return out;
+}
+// 终检时程序按总标准查的(不花钱):半句话吊着、某章明显拖沓 / 仓促
+function programStd(run, text) {
+  const out = [];
+  danglingScan(text).forEach(h => out.push({ std: 'B4', chapter: h.ch, level: h.atEnd ? '必须改' : '可改可不改', quote: h.quote,
+    problem: '这句话没说完,用「……」吊着' + (h.atEnd ? '(这一章最后一句)' : ''), plain: '观众以为马上要讲答案,结果下一句讲别的,会听糊涂',
+    fix: '改成完整的一句问话,并让下一句 / 下一章开头直接回答它;要是答案在很后面才讲,就把这句预告挪到讲答案的那一章开头', by: '程序' }));
+  chapterLenScan(run, text).forEach(x => out.push({ std: 'C3', chapter: x.ch, level: '可改可不改', quote: '',
+    problem: x.kind === 'long' ? '这一章 ' + x.words + ' 词,按蓝图预算约 ' + x.want + ' 词,长了一倍多,可能拖沓' : '这一章只有 ' + x.words + ' 词,按蓝图预算约 ' + x.want + ' 词,不到四成,可能讲得太仓促',
+    plain: x.kind === 'long' ? '观众在这一章容易走神' : '这一步没讲透,后面的结论接不住', fix: x.kind === 'long' ? '删掉这一章里重复的解释和次要细节,保留算账和关键证据' : '用这一章蓝图的任务和事实表里没用上的事实把这一步讲透,不重复前面的话', by: '程序' }));
+  return out;
+}
 function hedgeItems(text, language) {
   const items = [];
   const h = hedgeScan(text, language);
@@ -119,6 +160,9 @@ function hedgeItems(text, language) {
   if (e.length >= 2) items.push({ id: 'D-2', chapter: e[0].ch, level: '关键', checked: true, src: '结尾重复(程序查的)',
     problem: '结尾把开头的场景又整段铺了一遍(' + e.length + ' 句和开头几乎一样),听起来像在重讲',
     quote: e[0].quote, fix: '结尾回收开头只用一句话点一下那个画面,然后直接落到结论;不把开头的描写和前面的账再说一遍' });
+  danglingScan(text).forEach((d, i) => items.push({ id: 'D-3' + (i ? '-' + (i + 1) : ''), chapter: d.ch, level: d.atEnd ? '关键' : '一般', checked: d.atEnd, src: 'B4 半句话吊着(程序查的)',
+    problem: '这句话没说完,用「……」吊着' + (d.atEnd ? '(这一章最后一句)' : '') + ',观众以为马上要讲答案,结果下一句讲别的',
+    quote: d.quote, fix: '改成完整的一句问话,下一句 / 下一章开头直接回答;答案在很后面才讲的,把这句预告挪到讲答案的那一章开头' }));
   return items;
 }
 function mergeItems(run, parts) {
@@ -378,8 +422,17 @@ async function finalCheck(runId) {
     });
     // 口径问题(整篇用哪个基准):一条,不拆成一句句的硬伤
     const basis = arr(out.basis).filter(x => x && x.topic).map((x, i) => ({ id: 'B' + (i + 1), topic: String(x.topic), options: arr(x.options).map(String).slice(0, 3), recommend: String(x.recommend || ''), why: String(x.why || ''), quotes: arr(x.quotes).map(String).slice(0, 12), done: false }));
+    // 按总标准逐条对照没做到的(AI 以观众身份读的 + 程序查的),每条标编号
+    const S = require('./standard');
+    const std = [...arr(out.std).filter(x => x && x.problem).map(x => ({ ...x, by: 'AI' })), ...programStd(fresh, text)].slice(0, 20).map((x, i) => {
+      const quote = String(x.quote || '').trim();
+      const sid = (String(x.std || x.id || '').toUpperCase().match(/[A-E]\d+/) || [''])[0];
+      return { id: 'S' + (i + 1), std: sid, kind: S.nameOf(sid) || sid || '没达到标准', chapter: (String(x.chapter || '').match(/CH\d+/i) || [''])[0].toUpperCase(), quote,
+        problem: String(x.problem), plain: String(x.plain || '').trim(), fix: String(x.fix || '').trim(), by: x.by,
+        level: /可改可不改|可以不改|次要|minor/i.test(String(x.level || '')) ? '可改可不改' : '必须改', found: !!(quote && R.locate(text, quote)), done: false };
+    });
     const listen = checks.listenCheck(checks.extractFinalScript(text), listenOpts(fresh));
-    fresh.onepass = { ...(fresh.onepass || {}), stage: 'done', final: { at: now(), hash: hash(text), verdict: String(out.verdict || ''), summary: String(out.summary || ''), basis, loops,
+    fresh.onepass = { ...(fresh.onepass || {}), stage: 'done', final: { at: now(), hash: hash(text), verdict: String(out.verdict || ''), summary: String(out.summary || ''), basis, loops, std,
       picked: arr(out.picked).map(x => ({ id: String(x.id || ''), done: x.done !== false, note: String(x.note || '') })), hard, notes: arr(out.notes).map(String).slice(0, 5), listen: listen ? arr(listen.issues) : [] } };
     if (run.attempts) fresh.attempts = an().mergeAttempts(fresh.attempts, run.attempts);
     store.saveRun(fresh);
@@ -482,6 +535,7 @@ function finalItems(op) {
   return [
     ...arr(fin.loops).map(x => ({ ...x, kind: 'loop', label: x.type || '重讲' })),
     ...arr(fin.hard).map(x => ({ ...x, kind: 'hard', label: x.kind || '硬伤' })),
+    ...arr(fin.std).map(x => ({ ...x, kind: 'std', label: x.kind || x.std || '没达到标准' })),
     ...arr(op.new_numbers).map(x => ({ ...x, kind: 'num', label: '新数字', problem: '「' + x.num + '」在初稿、事实表、账本里都没有,可能是 AI 编的', done: x.ok }))
   ];
 }
@@ -605,6 +659,7 @@ async function finalFix(runId, body = {}) {
     const mark = x => (ids.has(x.id) ? { ...x, done: true, fixed: true } : x.done ? x : { ...x, done: true, accepted: true });
     o.final.loops = arr(o.final.loops).map(mark);
     o.final.hard = arr(o.final.hard).map(mark);
+    o.final.std = arr(o.final.std).map(mark);
     o.final.basis = arr(o.final.basis).map(x => (x.done ? x : { ...x, done: true, accepted: true }));
     o.new_numbers = arr(o.new_numbers).map(x => (ids.has(x.id) ? { ...x, ok: true, fixed: true } : x.ok ? x : { ...x, ok: true, accepted: true }));
     const after = cur(fresh);
@@ -642,8 +697,13 @@ function verifyProgram(run, ff) {
   const lw = lengthWindow(run, ff.before);
   const wb = R.scriptWords(ff.before), wa = R.scriptWords(ff.after);
   if (lw && wa < wb && wa < lw.min * 0.92) out.push({ chapter: '全篇', problem: '这次改动删到 ' + wa + ' 词,按配音速度约 ' + (Math.round(wa / lw.wpm * 10) / 10) + ' 分钟,比目标 ' + lw.goal_min + ' 分钟短太多', plain: '成片时长不够' });
-  const hb = hedgeScan(ff.before, lang(run)).length, ha = hedgeScan(ff.after, lang(run)).length;
-  if (ha > hb) out.push({ chapter: '全篇', problem: '这次改动多了 ' + (ha - hb) + ' 句「这是假设 / 不是这家店的数」这类提醒', plain: '观众又要多听提醒' });
+  const hB = hedgeScan(ff.before, lang(run)), hA = hedgeScan(ff.after, lang(run));
+  if (hA.length > hB.length) {
+    const had = new Set(hB.map(h => h.quote.trim()));
+    const fresh = hA.filter(h => !had.has(h.quote.trim()));
+    const chs = [...new Set(fresh.map(h => h.ch).filter(Boolean))];
+    out.push({ chapter: chs.length ? chs.join('、') : '全篇', problem: '这次改动多了 ' + (hA.length - hB.length) + ' 句「这是假设 / 不是这家店的数」这类提醒', plain: '观众又要多听提醒', quote: fresh.map(h => h.quote).join(' / ') });
+  }
   return out;
 }
 async function verifyFix(runId) {
@@ -726,7 +786,7 @@ function acceptAll(runId) {
   const o = (run || {}).onepass;
   if (!o || !o.final) throw Object.assign(new Error('还没有终检结果'), { status: 400 });
   const acc = x => (x.done ? x : { ...x, done: true, accepted: true });
-  o.final.loops = arr(o.final.loops).map(acc); o.final.hard = arr(o.final.hard).map(acc); o.final.basis = arr(o.final.basis).map(acc);
+  o.final.loops = arr(o.final.loops).map(acc); o.final.hard = arr(o.final.hard).map(acc); o.final.std = arr(o.final.std).map(acc); o.final.basis = arr(o.final.basis).map(acc);
   o.new_numbers = arr(o.new_numbers).map(x => (x.ok ? x : { ...x, ok: true, accepted: true }));
   if (o.verify) o.verify.accepted = true;
   store.saveRun(run);
@@ -832,6 +892,26 @@ function switchBack(runId) {
   return { ok: true };
 }
 
+// v1.134 每条问题出现在第几章:写了 CH 就用它;原句 / 受影响的句子 / 新数字在哪几章出现也算上;
+// 「全篇」那种就列出牵扯到的章。只靠程序找,不花钱
+function whereOf(text, x) {
+  const R = rv();
+  const chs = R.scriptChapters(text || '');
+  const ids = new Set();
+  const refs = s => (String(s || '').match(/CH\d+/gi) || []).map(c => c.toUpperCase());
+  refs(x.chapter).forEach(c => ids.add(c));
+  const norm = t => String(t || '').replace(/[\s「」『』"“”'‘’.,!?。，！？…·-]/g, '');
+  const quotes = [x.quote, ...arr(x.quotes)].flatMap(q => String(q || '').split(/\s+\/\s+/)).map(q => q.trim()).filter(q => q.length >= 4);
+  quotes.forEach(q => {
+    const nq = norm(q), head = nq.slice(0, 14);
+    chs.forEach(c => { const nt = norm(c.text); if (nt.includes(nq) || (head.length >= 8 && nt.includes(head))) ids.add(c.id); });
+  });
+  if (x.num) { const ns = [String(x.num)]; if (/^\d{4,}$/.test(String(x.num))) ns.push(Number(x.num).toLocaleString('en-US')); chs.forEach(c => { if (ns.some(n => String(c.text).includes(n) || R.factNumbers(c.text).includes(String(x.num)))) ids.add(c.id); }); }
+  if (!ids.size) [x.problem, x.fix, x.plain].forEach(t => refs(typeof t === 'string' ? t : '').forEach(c => ids.add(c)));
+  const order = chs.map(c => c.id);
+  return [...ids].sort((a, b) => (order.indexOf(a) + 1 || 999) - (order.indexOf(b) + 1 || 999));
+}
+function withWhere(text, list) { return arr(list).map(x => { try { return { ...x, where: whereOf(text, x) }; } catch (e) { return x; } }); }
 // ---------- 给页面 ----------
 const STAGE_ZH = { checking: '① 一次体检中', decide: '② 等你拍板', rewriting: '③ 整篇重写中', final_check: '④ 终检中', done: '⑤ 终检完成', failed: '出错了' };
 function view(run) {
@@ -842,23 +922,24 @@ function view(run) {
   // 进程重启过:写着「跑着」但其实没在跑
   const stalled = ['checking', 'rewriting', 'final_check'].includes(stage) && !running && !(stage === 'checking' && (run.steps || {}).reverse_audit && run.steps.reverse_audit.status === 'running');
   const ov = (run.review || {}).opening_variants;
-  const fin = op.final || null;
+  const now0 = cur(run);
+  const fin = op.final ? { ...op.final, loops: op.final.loops ? withWhere(now0, op.final.loops) : op.final.loops, hard: withWhere(now0, op.final.hard), std: withWhere(now0, op.final.std), basis: withWhere(now0, op.final.basis) } : null;
   const ffOn = op.finalfix && !op.finalfix.undone_at;
-  const hardLeft = fin ? arr(fin.hard).filter(x => !x.done && x.level !== '可改可不改').length + arr(fin.basis).filter(x => !x.done).length + arr(fin.loops).filter(x => !x.done).length : 0;
+  const hardLeft = fin ? arr(fin.hard).filter(x => !x.done && x.level !== '可改可不改').length + arr(fin.std).filter(x => !x.done && x.level !== '可改可不改').length + arr(fin.basis).filter(x => !x.done).length + arr(fin.loops).filter(x => !x.done).length : 0;
   const numLeft = arr(op.new_numbers).filter(x => !x.ok).length;
   return {
     failed_at: op.failed_at || '', stage, stage_zh: STAGE_ZH[stage] || (stage === 'writing' ? '写初稿中' : '等体检'), running, stalled,
     error: op.error || '', errors: op.errors || {},
-    items: arr(op.items), picked_ids: op.picked_ids || null, note: op.note || '', claim: op.claim || null,
+    items: stage === 'decide' ? withWhere(now0, op.items) : arr(op.items), picked_ids: op.picked_ids || null, note: op.note || '', claim: op.claim || null,
     opening: ov ? { pick: ov.pick, pick_why: ov.pick_why || '', pick_note: ov.pick_note || '', now: arr(ov.now), title_kind: ov.title_kind || '',
       variants: arr(ov.variants).map(v => ({ i: v.i, name: v.name, text: v.text, zh: v.zh, why: v.why, steps: v.steps || {}, issues: arr(v.issues), words: v.words })) } : null,
     opening_choice: op.opening_choice != null ? op.opening_choice : (ov && ov.pick != null ? ov.pick : -1),
     rewrite: op.rewrite ? { at: op.rewrite.at, retried_short: op.rewrite.retried_short || 0, outline: op.rewrite.outline, words: op.rewrite.words, base_words: op.rewrite.base_words, opening_used: op.rewrite.opening_used, new_numbers_note: op.rewrite.new_numbers_note } : null,
-    new_numbers: arr(op.new_numbers), final: fin, fixes: arr(op.fixes),
+    new_numbers: withWhere(now0, op.new_numbers), final: fin, fixes: arr(op.fixes),
     has_backup: !!run.classic_backup,
     length: (() => { try { const ln = rv().lengthNeed(run, cur(run)); return ln ? { words: ln.words, minutes: ln.minutes, goal_min: ln.goal_min, target: ln.target, wpm: ln.wpm, mode: ln.mode } : null; } catch (e) { return null; } })(),
-    finalfix: op.finalfix ? { at: op.finalfix.at, picked: arr(op.finalfix.picked), chapters: arr(op.finalfix.chapters), replaced: arr(op.finalfix.replaced).length, lost: arr(op.finalfix.lost), words_before: op.finalfix.words_before, words_after: op.finalfix.words_after, undone_at: op.finalfix.undone_at || '', can_undo: !op.finalfix.undone_at && cur(run) === op.finalfix.after } : null,
-    verify: op.verify || null, finalfix_stage: op.finalfix_stage || '', finalfix_error: op.finalfix_error || '',
+    finalfix: op.finalfix ? { at: op.finalfix.at, picked: withWhere(op.finalfix.before, op.finalfix.picked), chapters: arr(op.finalfix.chapters), replaced: arr(op.finalfix.replaced).length, lost: arr(op.finalfix.lost), words_before: op.finalfix.words_before, words_after: op.finalfix.words_after, undone_at: op.finalfix.undone_at || '', can_undo: !op.finalfix.undone_at && cur(run) === op.finalfix.after } : null,
+    verify: op.verify ? { ...op.verify, new_issues: withWhere(op.finalfix ? op.finalfix.after : now0, op.verify.new_issues) } : null, finalfix_stage: op.finalfix_stage || '', finalfix_error: op.finalfix_error || '',
     draft: (() => { // v1.134 初稿原样(写稿那一步出来的,重写都从它开始),页面上能展开看、能复制
       const t = (arr((run.review || {}).versions).find(x => x.key === 'd1') || {}).text || (run.status === 'done' ? draftOf(run) : '');
       return t ? { text: t, words: String(t).replace(/\[CH\d+[^\]]*\]/g, ' ').split(/\s+/).filter(Boolean).length } : null;
@@ -867,4 +948,4 @@ function view(run) {
   };
 }
 
-module.exports = { lengthWindow, lengthRule, chapterRoles, relatedOf, finalItems, finalFix, verifyFix, verifyProgram, startFinalFix, startVerify, acceptAll, finalFixUndo, redoFromDraft, hedgeScan, endEchoScan, hedgeItems, loopRewrite, basisRewrite, syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };
+module.exports = { danglingScan, chapterLenScan, programStd, whereOf, lengthWindow, lengthRule, chapterRoles, relatedOf, finalItems, finalFix, verifyFix, verifyProgram, startFinalFix, startVerify, acceptAll, finalFixUndo, redoFromDraft, hedgeScan, endEchoScan, hedgeItems, loopRewrite, basisRewrite, syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };

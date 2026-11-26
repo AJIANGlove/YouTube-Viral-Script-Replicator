@@ -172,7 +172,7 @@ function fillTemplate(tpl, ctx, tools) {
     ? (hits.length ? hits.slice(0, 30).map(g => '- "' + g + '"').join('\n') : '无连续重合(英文等按 6 词、韩中日按 12 字计)。')
     : '(空)';
   const dens = script ? tools.densityLines(script).lines.join('\n') : '(空)';
-  return tpl
+  return require('./standard').fill(tpl)
     .replaceAll('{{today}}', todayStr())
     .replaceAll('{{framework}}', ctx.framework || '(未加载)')
     .replaceAll('{{timeline}}', ctx.timeline || '(未加载)')
