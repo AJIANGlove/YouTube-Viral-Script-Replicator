@@ -286,6 +286,32 @@
 - **真人题改无名视角(硬规则)**:`track_cards.md` 的 POV 卡——主角是有名有姓的真实人物时,「你」改成同时代、在这个人身边的无名人物,真人只当背景人物、只写有来源的事;无名主角的处境/心理/对话是虚构设定,按时代真实制度写,不逐句写「记录未载」;`title.final_title` 带上无名视角。写前分析和定论点都读这张卡。
 - **亲历感(只 POV)**:`analysis.js` 的 `POV_FOUR` 接在叙事方式规则后(仅 `pov_mode` 为 climb/per_level 时进摘要);`craft_rules.md` P5(待验证=建议);`step1.md`/`step1_function.md`/`step2.md` 的 POV 条;`reverse_audit.md` B 段 POV 条件检查;`final_tracks/pov.md` C2。硬要求只有「每一级至少有一个『你』的具体处境,不能只报节点」;失去/能决定/决定不了是建议,不每级凑齐(其余 POV 稿逐章统计这三样本来就时有时无,硬凑会每级一个套路,和 DEAI_FOCUS 冲突)。
 
+## 张力链 + 写法卡(v1.135 续,2026-11-26;方案二·第一次交付,经济账本类先行)
+
+用户定:链的种类看原片判断(对标和我们的赛道一致);问题只在转段处念;历史 / POV 以代入感为主;四个赛道都做,账本类最先。
+
+- **四种张力**(`qchain.KINDS`):info 想知道 / fate 后来怎样 / ladder 下一级 / why 为什么。
+- **原片张力链**(`prompts/source_chain.md`,`qchain.ensureSourceChain(asset, callLlm)`,标签 `Step 1 原片张力链`):按 `blueprint.segmentsOf` 的段把 `source.srt` 切开(`sourceSegmentsText`),读原文拆每段 kind / open / open_abs / payoff / raises / raises_abs / paid_at / voiced / voiced_line,全片 main_kind / voiced_style / max_open / big_tension。存进对标目录 `assets/<id>/tension_chain.json`(键 = srt sha + 段编号),同一个对标下次直接用。`ensureChain` 先跑它,结果放 `run.source_chain`;失败记 `run.source_chain_error`,不挡。给新链的只有抽象说法(`sourceBrief`),原片具体内容只给人看。
+- **写法卡**(`prompts/tension_cards.md`,`## info/fate/ladder/why` 四节,每节:怎么开 / 怎么收 / 怎么引出 / 念不念出来 / 终检看)。`cardsText(kinds)` 只取用到的。问题链提示词给原片用到的;写稿 / 重写 / 终检经 `framingRule(chain, source)` → `voicingRule` 给链里用到的,外加「问题怎么说出口照原片 voiced_style」。
+- **问题链 → 张力链**:每环多 `kind`(没写就跟原片同一段的 kind,`normalize(j, sc)`);ask / answer 按种类理解(fate:担心他会怎样 → 发生了什么;ladder:这一级 → 得失;why:现象 → 排除 / 真相)。`chapterQText` 写「本章要收的张力〈种类〉开…→收…」。代入式 `framingBase` 加「账本里的数就是你的店的数」。
+- **功能表**撤掉 v1.135 加的 viewer_question / raises(被原片张力链取代;旧数据里有也不显示)。
+- **终检**:`onepass_final.md` 第 4 项按写法卡的「终检看」查,故事段不按问答挑。
+- **页面**:蓝图面板「张力链:这篇的一条线」多一列种类;对照表 `bpChainCompareHtml` 用原片张力链(种类、开 → 收 → 引出、原片有没有说出口),右边是这篇放在这一段的环;步骤条 `① 张力链`。
+- 测试:`mock_test_v1135.js`(29 条,原片张力链用临时对标目录,跑完删掉)。
+
+## 问题链当主轴(v1.135,2026-11-26;方案二第一步)
+
+用户定的方向:保留原片大骨架和留人手法,格子里的内容改成「观众心里一个接一个的问题」;讲法看题目(代入式 / 真案例 / 混合);真名字绝不配编的数;全自动,但每一步的结果在对应环节能看到(折叠)。老流程以后不维护(第三步删)。
+
+- **原片问题链**:`function_table.md` 每行多写 `viewer_question`(这一段开始时观众心里的问题)和 `raises`(留下的新问题),抽象说法;`normalizeTable` 保留,`tableSourceHits` 也扫这两栏。
+- **问题链(新步骤,`lib/qchain.js` + `prompts/question_chain.md`)**:`pipeline` 第 1 步在 `ensureTable` 之后、`step1Template` 之前调 `ensureChain(run, asset, ft, callLlm)`(标签 `Step 1 问题链`,走网页版规则同 Step 1;失败不挡,记 `steps.question_chain.failed`,蓝图照旧画)。输出 `run.question_chain = {mode: you|case|mix, mode_why, setup, big_question, questions:[{id,ask,answer,fact_ids,raises,segment,beat}], cases_use, issues, retried}`。`normalize` 按顺序重编 Q 号、raises 跟着换;`validate`(程序):大问题、≥6 个且约每分钟一个、代入式要 setup、事实编号存在、段没被判删、raises 隔太远(非 LOOP)、一次吊着 >2、HOOK/PK/ENDING 都有 beat、没判删的原片段每段有问题。有问题反馈改一次,更少才用。缓存键 = 功能表 at + 写前分析确认时间。
+- **蓝图**:`step1_function.md` 加【问题链】一节和 `questions` 字段(每章回答哪几个 Q,连续、全覆盖;answers_prev / leaves_question 由链来;fact_ids 只放本章问题要用的;锁定项跟问题走,保顺序)。`step1Template` 填 `{{question_chain}}`(`qchain.brief`)。`programChecks`:有链时 `checkLocks` 容差 0.3(原 0.2);`qchain.checkBlueprint` 列没分到的 Q、顺序倒了(章内也算)、同一 Q 两章答、空章(中等,进蓝图审)。
+- **写稿 / 重写 / 终检**:`step2Rules` 加 `chainRules`(大问题、各章问题、`framingRule` 讲法);分章写稿 `chapterBrief` 开头加 `chapterQText`;`onepass_rewrite.md` / `onepass_final.md` 加 `{{question_chain}}` `{{framing}}`(`onepass.chainText` / `framingText`,旧任务没有链给一句说明);`chapterRoles` 加本章问题。step2 / 重写的「免责只说一次」改成「定了讲法的以讲法为准」。
+- **真名字配编的数**:`qchain.realNameNumbers(run,text)`(句子里有 `analysis.cases` / `cases_use` 的名字,又有事实表和案例里都没有的数);体检 D-4(关键,默认勾)、终检 `programStd` 记 D2 必须改。
+- **标准**:`script_standard.md` D2 改成「假设你 / 假如 / 比如」自然带出、不单独声明,真名字只配真数;D7 改成讲法本身交代口径,不写替数字辩护的句子。
+- **页面**:蓝图面板「问题链:这篇的一条线」(折叠,`bpChainHtml`;里面 `bpChainCompareHtml` 按原片段对照原片问题链和这篇的问题:讲法、代入前提、大问题、每个问题的问 / 答 / 引出 / 原片段 / 锁定项 / 章 / 事实、程序检查剩下的);「每章怎么排」多一列「回答的问题」;功能表多一列「原片这段观众心里的问题 → 留下的新问题」;步骤条 `① 问题链`。
+- 测试:`mock_test_v1135.js`(22 条)。
+
 ## 新流程「只改一次」:体检只查不改 → 拍板 → 整篇重写一次 → 终检只查不改 → 硬伤只修一句(v1.134,2026-11-24)
 
 起因:「떡갈비 12억」终稿读不下去(同一意思绕 6 遍、跳场景、补丁句叠加、870 和 1,430 两套口径)。根因是初稿后被不同模型局部打补丁 7–10 遍(优化、初稿检查、终审改、补改、自动改开头、AI 出改法、去AI感),互相看不见。人工按「先一条线大纲、再整篇重写一次」改出来的版本用户认可,所以做成流程,老流程保留。

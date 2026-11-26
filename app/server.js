@@ -1708,7 +1708,7 @@ server.listen(PORT, HOST, () => {
   // (去AI感不加进来,它卡 running 会把 deaiGuard 永久挡死,任务再无入口)
   for (const r of store.listRuns().filter(x => x.status === 'done')) {
     const st = r.steps || {};
-    const stuck = ['draft_check', 'reverse_audit', 'final_review', 'deai', 'final_open', 'opening_card', 'opening_variants', 'final_options', 'opening_fix', 'claim_check', 'function_table', 'blueprint_review'].filter(k => (st[k] || {}).status === 'running');
+    const stuck = ['draft_check', 'reverse_audit', 'final_review', 'deai', 'final_open', 'opening_card', 'opening_variants', 'final_options', 'opening_fix', 'claim_check', 'function_table', 'question_chain', 'blueprint_review'].filter(k => (st[k] || {}).status === 'running');
     const stuckZh = (st.review_zh || {}).status === 'running'; // 翻译已移出审稿锁(v1.10.4),崩溃在翻译期会永挂「翻译中…」并置灰补翻按钮
     if (!stuck.length && !stuckZh) continue;
     if (stuck.length && r.draft_first && !r.cancel_requested && stuck.every(k => k === 'draft_check' || k === 'reverse_audit')) {

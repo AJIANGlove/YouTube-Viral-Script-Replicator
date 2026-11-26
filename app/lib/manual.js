@@ -1259,7 +1259,7 @@ async function healStaleRunning(runId, id, L, cfg) {
 // 步骤已 done + 没有活管线 + 是本地模型链点火留下的痕迹 = 这张卡再也不会被任何代码路径 resolve。
 // 误删可自恢复:relay0/relayWrite0 按 key 找卡、找不到会重挂,answers 缓存则直接返回。
 const CARD_STEP_RE = [
-  [/^Step 1 功能表/, 'function_table'], [/^Step 1/, 'blueprint'], [/^Step 2/, 'script'],
+  [/^Step 1 功能表/, 'function_table'], [/^Step 1 (问题链|原片张力链)/, 'question_chain'], [/^Step 1/, 'blueprint'], [/^Step 2/, 'script'],
   [/^Step 4/, 'optimized'], [/^二稿审稿/, 'reverse_audit'], [/^一遍重写/, 'onepass_rewrite'], [/^终审·修改/, 'final_review'],
   [/^(写前分析|原片对照表|联网查询词|AI |账本|论点对账)/, 'analysis']
 ];

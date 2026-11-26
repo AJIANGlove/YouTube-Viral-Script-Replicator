@@ -822,6 +822,9 @@ async function runGeneration0(runId) {
         delete run.steps.blueprint_review;
         if (dm.mode === 'function') {
           ft = await bpm().ensureTable(run, asset, callLlm);
+          // v1.135 问题链:功能表之后、蓝图之前;没排出来不挡,蓝图照旧方式画(记下原因)
+          try { await require('./qchain').ensureChain(run, asset, ft, callLlm); }
+          catch (e) { run.steps.question_chain = { status: 'failed', error: String(e.message || e).slice(0, 300), finished_at: new Date().toISOString() }; delete run.question_chain; store.saveRun(run); }
           tpl = bpm().step1Template(run, asset, ft);
         } else delete run.steps.function_table;
         store.saveRun(run);

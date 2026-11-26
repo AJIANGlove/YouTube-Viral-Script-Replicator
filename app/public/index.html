@@ -2363,7 +2363,7 @@ function opPillStatus(r, k) {
   if (i === at) return { status: k === 'op_decide' ? 'waiting_you' : 'running' };
   return {};
 }
-const STEP_LABELS = { op_check: '⑦ 一次体检', op_decide: '⑧ 你拍板', op_rewrite: '⑨ 整篇重写一次', op_final: '⑩ 终检', analysis: '⓪ 写前分析', function_table: '① 功能表', blueprint: '① 蓝图', blueprint_review: '① 蓝图审', script: '② 脚本', audit: '③ 审核', optimized: '④ 优化', opening_boost: '⑤ 强化开头', script_check: '⑥ 稿件检查', draft_check: '⑦ 初稿检查→二稿', reverse_audit: '⑧ 二稿审稿报告', final_review: '⑨ 终审→终稿', deai: '⑩ 去AI感' };
+const STEP_LABELS = { op_check: '⑦ 一次体检', op_decide: '⑧ 你拍板', op_rewrite: '⑨ 整篇重写一次', op_final: '⑩ 终检', analysis: '⓪ 写前分析', function_table: '① 功能表', question_chain: '① 张力链', blueprint: '① 蓝图', blueprint_review: '① 蓝图审', script: '② 脚本', audit: '③ 审核', optimized: '④ 优化', opening_boost: '⑤ 强化开头', script_check: '⑥ 稿件检查', draft_check: '⑦ 初稿检查→二稿', reverse_audit: '⑧ 二稿审稿报告', final_review: '⑨ 终审→终稿', deai: '⑩ 去AI感' };
 // v1.99 正在用的模型:进行中的提示旁边显示,好知道这一步效果好坏是哪个模型出的
 function modelNick(m) { m = String(m || ''); return /gpt/i.test(m) ? 'GPT' : /deepseek/i.test(m) ? 'DeepSeek' : /opus/i.test(m) ? 'Opus' : /sonnet/i.test(m) ? 'Sonnet' : /claude/i.test(m) ? 'Claude' : /kimi/i.test(m) ? 'Kimi' : /gemini/i.test(m) ? 'Gemini' : m; }
 function liveTag(list, style) {
@@ -2926,6 +2926,7 @@ async function loadRunDetail() {
   if ((r.steps || {}).deai) stepKeys.push('deai');
   // v1.73 按功能重排:蓝图前有功能表、蓝图后有蓝图审
   if ((r.steps || {}).function_table) stepKeys.splice(stepKeys.indexOf('blueprint'), 0, 'function_table');
+  if ((r.steps || {}).question_chain) stepKeys.splice(stepKeys.indexOf('blueprint'), 0, 'question_chain');
   if ((r.steps || {}).blueprint_review) stepKeys.splice(stepKeys.indexOf('blueprint') + 1, 0, 'blueprint_review');
   document.getElementById('detail-steps').innerHTML = stepKeys.map((k, i) => {
     const s = /^op_/.test(k) ? opPillStatus(r, k) : k === 'optimized' && r.flow === 'one_pass' ? {} : (r.steps || {})[k] || {};
@@ -6861,6 +6862,7 @@ function webStepOf(p) {
   const l = p.label || '';
   if (p.kind === 'script' || /^Step 2/.test(l)) return 'script';
   if (/^Step 1 功能表/.test(l)) return 'function_table';
+  if (/^Step 1 (问题链|原片张力链)/.test(l)) return 'question_chain';
   if (/^Step 1/.test(l)) return 'blueprint';
   if (/^Step 4/.test(l)) return 'optimized'; // v1.113 优化也在网页版做
   if (/^二稿审稿/.test(l)) return 'reverse_audit'; // v1.115 二稿审稿报告也在网页版做
@@ -7821,12 +7823,46 @@ async function bpLeftPatch(btn) {
   catch (e) { alert('没能开始补改:' + e.message); if (btn) btn.disabled = false; return; }
   setTimeout(() => { if (lastRunDetail) loadRunDetail(); }, 400);
 }
+// v1.135 问题链:这篇的一条线(大问题 → 一个接一个的小问题),蓝图按它分章。默认折叠
+// 原片问题链 ↔ 新稿问题链,按原片段一行对照:看 AI 学到的节奏是不是原片那样一环套一环
+function bpChainCompareHtml(c, ft) {
+  const rows = ((ft || {}).rows || []);
+  const sc = c.source;
+  const K = c.kinds || { info: '想知道', fate: '后来怎样', ladder: '下一级', why: '为什么' };
+  if (!rows.length && !sc) return '';
+  const pct = x => Math.round((x || 0) * 100) + '%';
+  const segs = sc && (sc.segments || []).length ? sc.segments : rows.map(r => ({ segment: r.segment, position: r.position }));
+  const rowOf = id => rows.find(r => r.segment === id) || {};
+  return `<div style="margin-top:10px;font-weight:600">原片的张力链 ↔ 这篇的链(按原片段对照)</div>
+    ${sc ? `<div class="hint" style="margin:2px 0">原片主要靠「${esc(K[sc.main_kind] || sc.main_kind)}」推进${sc.main_why ? '(' + esc(sc.main_why) + ')' : ''};问题怎么说出口:${esc(sc.voiced_style || '—')};同一时刻最多吊着 ${esc(String(sc.max_open || '?'))} 个</div>` : `<div class="hint">${c.source_error ? '原片张力链没拆出来:' + esc(c.source_error) : '这篇还没拆原片张力链(更新前出的蓝图);「从选论点重新来」后这里会有原片那一列。'}</div>`}
+    <table class="bp-tbl"><tr><th>原片段</th><th>位置</th><th>原片:开了什么 → 怎么收 → 引出</th><th>这篇放在这一段的</th></tr>${segs.map(s => {
+      const r = rowOf(s.segment);
+      const qs = (c.questions || []).filter(q => q.segment === s.segment);
+      const del = r.treatment === '新题目没有这块可删';
+      return `<tr class="${del ? 'bp-tr-del' : ''}"><td>${esc(s.segment)}${(r.locks || []).length ? '<div class="hint" style="margin:0">' + esc(r.locks.join('、')) + '</div>' : ''}</td><td style="white-space:nowrap">${pct((s.position || r.position || [])[0])}–${pct((s.position || r.position || [])[1])}</td>
+        <td>${s.kind ? '<span class="hint">〈' + esc(K[s.kind] || s.kind) + '〉</span> ' + esc(s.open || '') + (s.payoff ? ' <span class="hint">→ 收:</span>' + esc(s.payoff) : '') + (s.raises ? ' <span class="hint">→ 引出:</span>' + esc(s.raises) : '') + (s.voiced ? '<div class="hint" style="margin:0">原片直接说出口:' + esc(s.voiced_line || '是') + '</div>' : '') : '<span class="hint">—</span>'}</td>
+        <td>${qs.length ? qs.map(q => '<b>' + esc(q.id) + '</b> <span class="hint">〈' + esc(K[q.kind] || '想知道') + '〉</span> ' + esc(q.ask)).join('<br>') : del ? '<span class="hint">(这段判了可删)</span>' : r.treatment === '合并到相邻章' ? '<span class="hint">(并到 ' + esc(r.merge_into || '相邻段') + ')</span>' : '<span class="hint" style="color:#b45309">没放</span>'}</td></tr>`;
+    }).join('')}</table>`;
+}
+function bpChainHtml(c, chs, ft) {
+  if (!c) return '';
+  const chOf = id => ((chs || []).find(x => (x.questions || []).map(q => String(q).toUpperCase()).includes(id)) || {}).id || '';
+  return `<details id="bp-chain"><summary>张力链:这篇的一条线(${(c.questions || []).length} 个问题 · 讲法:${esc(c.mode_label || c.mode || '')})</summary>
+    ${c.mode_why ? `<div class="hint">为什么用这种讲法:${esc(c.mode_why)}</div>` : ''}
+    ${c.setup ? `<div style="font-size:13px;margin:4px 0">代入前提:${esc(c.setup)}</div>` : ''}
+    <div style="font-size:14px;margin:6px 0"><b>大问题:${esc(c.big_question || '')}</b></div>
+    <table class="bp-tbl"><tr><th>#</th><th>种类</th><th>开了什么(观众心里的问题 / 担心)</th><th>这一段怎么收</th><th>引出</th><th>原片段 / 锁定项</th><th>章</th><th>事实</th></tr>${(c.questions || []).map(q => `<tr><td>${esc(q.id)}</td><td>${esc((c.kinds || {})[q.kind] || '想知道')}</td><td>${esc(q.ask)}</td><td>${esc(q.answer)}</td><td>${esc(q.raises || '—')}</td><td>${esc(q.segment || '')}${q.beat ? ' · ' + esc(q.beat) : ''}</td><td>${esc(chOf(q.id))}</td><td>${esc((q.fact_ids || []).join(','))}</td></tr>`).join('')}</table>
+    ${bpChainCompareHtml(c, ft)}
+    ${(c.cases_use || []).length ? `<div class="hint">真人案例怎么用(真名字旁边只放他自己的真数):${c.cases_use.map(x => esc(x.name) + (x.q ? '(' + esc(x.q) + ')' : '') + ':' + esc(x.as)).join(';')}</div>` : ''}
+    ${(c.issues || []).length ? `<div class="hint" style="color:#b45309">程序检查还剩这些没改好${c.retried ? '(已让 AI 改过一次)' : ''}:${c.issues.map(esc).join(';')}</div>` : ''}
+  </details>`;
+}
 function renderBlueprintPanel(r) {
   const el = document.getElementById('bp-panel');
   const v = r.blueprint_view;
   if (!v) { el.classList.add('hidden'); bpRenderedKey = null; return; }
   // 停下时有输入框:内容没变就不重绘,免得 3 秒轮询把人正在改的题目冲掉
-  const key = JSON.stringify([JSON.stringify(v.left || null), r.status, v.outline_diff || '', v.mode, (v.review || {}).status, (v.review || {}).finished_at, ((v.review || {}).rounds || []).length, ((v.review || {}).research || {}).status, (v.table || {}).at, (v.chapters || []).length, v.deleted_ratio, (v.deleted_segments || []).length, v.zh_foreign || 0, !!v.zh_busy, v.zh_error || '']);
+  const key = JSON.stringify([JSON.stringify(v.chain || null).length, JSON.stringify(v.left || null), r.status, v.outline_diff || '', v.mode, (v.review || {}).status, (v.review || {}).finished_at, ((v.review || {}).rounds || []).length, ((v.review || {}).research || {}).status, (v.table || {}).at, (v.chapters || []).length, v.deleted_ratio, (v.deleted_segments || []).length, v.zh_foreign || 0, !!v.zh_busy, v.zh_error || '']);
   if (key === bpRenderedKey && !el.classList.contains('hidden')) return;
   bpRenderedKey = key;
   el.classList.remove('hidden');
@@ -7883,8 +7919,9 @@ function renderBlueprintPanel(r) {
   if (rv && rv.research) html += bpResearchHtml(rv.research);
   if ((v.chapters || []).length || (v.table || {}).rows) html += bpDeletedHtml(v, false);
   const chs = v.chapters || [];
+  html += bpChainHtml(v.chain, chs, v.table);
   if (chs.length) {
-    html += `<details open><summary>每章怎么排(${chs.length} 章)</summary><table class="bp-tbl"><tr><th>章</th><th>时间</th><th>承接原片段</th><th>处理</th><th>锁定项</th><th>为什么这样排</th>${chs.some(c => c.level_focus) ? '<th>这一级的重点 / 新信息</th>' : ''}</tr>${chs.map(c => `<tr><td>${esc(c.id)}</td><td style="white-space:nowrap">${esc(c.time_range)}</td><td>${esc((c.source_segments || []).join('、') || '新加')}</td><td>${esc(c.treatment)}</td><td>${esc((c.locks || []).join('、'))}</td><td>${esc(c.layout_reason)}</td>${chs.some(x => x.level_focus) ? `<td>${c.level_focus ? '<b>' + esc(c.level_focus) + '</b>:' + esc(c.level_new_info) : ''}</td>` : ''}</tr>`).join('')}</table></details>`;
+    html += `<details open><summary>每章怎么排(${chs.length} 章)</summary><table class="bp-tbl"><tr><th>章</th>${chs.some(c => (c.questions || []).length) ? '<th>回答的问题</th>' : ''}<th>时间</th><th>承接原片段</th><th>处理</th><th>锁定项</th><th>为什么这样排</th>${chs.some(c => c.level_focus) ? '<th>这一级的重点 / 新信息</th>' : ''}</tr>${chs.map(c => `<tr><td>${esc(c.id)}</td>${chs.some(x => (x.questions || []).length) ? `<td>${esc((c.questions || []).join('、'))}</td>` : ''}<td style="white-space:nowrap">${esc(c.time_range)}</td><td>${esc((c.source_segments || []).join('、') || '新加')}</td><td>${esc(c.treatment)}</td><td>${esc((c.locks || []).join('、'))}</td><td>${esc(c.layout_reason)}</td>${chs.some(x => x.level_focus) ? `<td>${c.level_focus ? '<b>' + esc(c.level_focus) + '</b>:' + esc(c.level_new_info) : ''}</td>` : ''}</tr>`).join('')}</table></details>`;
   }
   if (chs.some(c => c.claim || (c.units || []).length)) html += bpPlanHtml(chs);
   const t = v.table;

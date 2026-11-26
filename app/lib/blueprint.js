@@ -21,6 +21,7 @@ const parse = t => { try { return typeof t === 'string' ? JSON.parse(t) : (t || 
 const dataOf = j => (j && j.data) || j || {};
 const PROMPTS = path.join(__dirname, '..', 'prompts');
 const readPrompt = f => fs.readFileSync(path.join(PROMPTS, f), 'utf-8');
+const qc = () => require('./qchain');
 const cut = (v, n) => { const t = str(v).replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n) + '…' : t; };
 
 // ---------- 设置:蓝图方式 ----------
@@ -193,7 +194,7 @@ function normalizeTable(run, j, segs, locks) {
     const lk = locks.filter(l => l.segment === s.id).map(l => l.id);
     const row = {
       segment: s.id, position: [s.start, s.end], source_function: s.function,
-      function: str(r && r.function).trim(), keep: str(r && r.keep).trim(), swap: str(r && r.swap).trim(),
+      function: str(r && r.function).trim(), viewer_question: str(r && r.viewer_question).trim(), raises: str(r && r.raises).trim(), keep: str(r && r.keep).trim(), swap: str(r && r.swap).trim(),
       treatment: normTreatment(r && r.treatment), merge_into: str(r && r.merge_into).trim(), reason: str(r && r.reason).trim(),
       is_reversal: !!(r && r.is_reversal), fact_ids: arr(r && r.fact_ids).map(String), checked_facts: arr(r && r.checked_facts).map(String), locks: lk, notes: []
     };
@@ -218,7 +219,7 @@ function tableSourceHits(run, rows, segs) {
   const out = [];
   rows.forEach(r => {
     const seg = segs.find(s => s.id === r.segment);
-    const hits = sourceHits([r.function, r.keep, r.swap, r.reason].join(' '), sourceTerms(run, seg));
+    const hits = sourceHits([r.function, r.viewer_question, r.raises, r.keep, r.swap, r.reason].join(' '), sourceTerms(run, seg));
     if (hits.length) out.push({ segment: r.segment, words: hits });
   });
   return out;
@@ -420,7 +421,8 @@ function step1Template(run, asset, ft) {
     .replaceAll('{{locks}}', locksBrief(ft))
     .replaceAll('{{ladder_rules}}', ladderBrief(ft))
     .replaceAll('{{framework_core}}', frameworkCore(asset))
-    .replaceAll('{{timeline_core}}', timelineCore(asset));
+    .replaceAll('{{timeline_core}}', timelineCore(asset))
+    .replaceAll('{{question_chain}}', run.question_chain && arr(run.question_chain.questions).length ? qc().brief(run.question_chain) : '(这篇没有问题链:按功能表和写前分析排章,answers_prev / leaves_question 自己写)');
 }
 
 // ---------- 程序检查(蓝图审的程序部分) ----------
@@ -432,7 +434,8 @@ const SIM_SOFT = 0.3, SIM_HARD = 0.45; // 仓库 1293 对相邻章:中位数 0.0
 const normLock = s => str(s).toUpperCase().replace(/\s+/g, '').replace(/[_:：]/g, '-').replace(/-?(OPEN|开)$/, '-open').replace(/-?(CLOSE|收|合)$/, '-close').replace(/-open$/i, '-open').replace(/-close$/i, '-close');
 const range = c => { const m = str(c.time_range).match(/(\d+:\d+(?::\d+)?)\s*[-–—~]\s*(\d+:\d+(?::\d+)?)/); return m ? [checks.toSec(m[1]), checks.toSec(m[2])] : null; };
 
-function checkLocks(chs, locks) {
+function checkLocks(chs, locks, tol) {
+  tol = tol || 0.2;
   const total = Math.max(0, ...chs.map(c => (range(c) || [0, 0])[1]));
   const at = {};
   chs.forEach((c, i) => {
@@ -453,7 +456,7 @@ function checkLocks(chs, locks) {
     if (l.kind === 'ending' && hit.i !== chs.length - 1) moved.push({ lock: l, ch: hit.ch, why: '结尾回扣不在最后一章' });
     if (hit.r && total && l.ratio != null && (l.kind === 'peak' || l.kind === 'loop_open' || l.kind === 'loop_close')) {
       const r = (hit.r[0] + hit.r[1]) / 2 / total;
-      if (Math.abs(r - l.ratio) > 0.2) moved.push({ lock: l, ch: hit.ch, why: '原片在 ' + Math.round(l.ratio * 100) + '% 处,蓝图放到了 ' + Math.round(r * 100) + '% 处', soft: true });
+      if (Math.abs(r - l.ratio) > tol) moved.push({ lock: l, ch: hit.ch, why: '原片在 ' + Math.round(l.ratio * 100) + '% 处,蓝图放到了 ' + Math.round(r * 100) + '% 处', soft: true });
     }
   });
   const loops = [...new Set(locks.filter(l => l.kind === 'loop_open').map(l => l.loop))];
@@ -759,7 +762,15 @@ function programChecks(run, asset, text, ft) {
     else add(k, false, '蓝图自查(' + x.level + '):' + x.problem + '。请判断是不是真问题', x.chapter);
   });
 
-  const lk = checkLocks(chs, locks);
+  // v1.135 有问题链:锁定项跟着问题走,保顺序、位置放宽到 30%;按问题链对账
+  const hasChain = !!(run.question_chain && arr(run.question_chain.questions).length);
+  const lk = checkLocks(chs, locks, hasChain ? 0.3 : 0.2);
+  const qk = qc().checkBlueprint(run, chs);
+  if (qk.missing.length) add('progression', true, '问题链里的 ' + qk.missing.join('、') + ' 没有分到任何一章(每个问题都要有一章回答)', '', '中等');
+  qk.order.forEach(x => add('progression', true, x.q + ' 放在 ' + x.ch + ',顺序比问题链靠前的问题还早(观众先听到答案再听到问题)', x.ch, '中等'));
+  qk.dup.forEach(x => add('progression', true, x.q + ' 在 ' + x.a + ' 和 ' + x.b + ' 都回答了一遍(一个问题只在一章回答)', x.b, '中等'));
+  qk.unknown.forEach(x => add('progression', false, x.ch + ' 写的问题编号 ' + x.q + ' 不在问题链里', x.ch));
+  if (hasChain) qk.empty.forEach(id => add('progression', true, id + ' 没有写回答哪个问题(questions 空);没有问题要答的章不该存在,并进相邻章', id, '中等'));
   lk.missing.forEach(l => add('reveal', true, l.label + '(原片在 ' + l.segment + ')没有落到任何一章'));
   lk.order.forEach(o => add('reveal', true, '悬念 ' + o.loop + ' 先收(' + o.close + ')后开(' + o.open + ')', o.close));
   lk.moved.forEach(m => add('reveal', !m.soft, m.lock.label + ':' + m.why, m.ch));
@@ -832,7 +843,7 @@ function reviewPrompt(run, text, ft, pc) {
   const a = run.analysis || {};
   const th = a.thesis_card || {};
   const bp = bpOf(text);
-  const keep = ['id', 'time_range', 'function', 'purpose', 'information_goal', 'source_segments', 'treatment', 'layout_reason', 'locks', 'carries_peaks', 'open_loop', 'fact_ids', 'recap_ids', 'answers_prev', 'new_lens', 'leaves_question', 'level_focus', 'level_new_info', 'word_budget', 'step', 'claim', 'ideas_new', 'reuses', 'units', 'material'];
+  const keep = ['id', 'questions', 'time_range', 'function', 'purpose', 'information_goal', 'source_segments', 'treatment', 'layout_reason', 'locks', 'carries_peaks', 'open_loop', 'fact_ids', 'recap_ids', 'answers_prev', 'new_lens', 'leaves_question', 'level_focus', 'level_new_info', 'word_budget', 'step', 'claim', 'ideas_new', 'reuses', 'units', 'material'];
   const slim = arr(bp.chapters).map(c => { const o = {}; keep.forEach(k => { if (c[k] != null && c[k] !== '') o[k] = c[k]; }); return o; });
   const facts = arr(a.facts).map(f => '- ' + f.id + ' [' + str(f.kind) + '] ' + cut(f.content, 200)).join('\n');
   const prog = ITEMS.map(it => '【' + it.name + '】\n' + (pc.items[it.key].length ? pc.items[it.key].map(p => '- ' + (p.hard ? '(程序确定)' : '(请判断)') + p.text).join('\n') : '- 程序没查出问题')).join('\n');
@@ -1366,9 +1377,10 @@ const FN_ONLY = '只能换内容,不能丢功能:「必须保留的功能」是�
 // 分章写稿时每章多给的几行(只在按功能重排的蓝图上加;严格照原片的蓝图没有这些字段,一行不加)
 function chapterBrief(run, c) {
   if (modeOf(run) !== 'function' || !c) return '';
+  const qt = qc().chapterQText(run, c);
   const keep = chapterKeep(run, c);
   const swap = chapterSwap(run, c);
-  return (str(c.layout_reason).trim() ? '本章为什么这样排(照这个作用写,不要回头照原片那一段的内容补):' + str(c.layout_reason).trim() + '\n' : '') +
+  return (qt ? qt + '\n' : '') + (str(c.layout_reason).trim() ? '本章为什么这样排(照这个作用写,不要回头照原片那一段的内容补):' + str(c.layout_reason).trim() + '\n' : '') +
     (keep.length ? '本章必须保留的功能(功能表「必须保留」,观众要经历的那一步):' + keep.join(';') + '\n' : '') +
     (swap.length ? '本章可以换的内容(功能表「可以换」,换成新题目自己的):' + swap.join(';') + '\n' : '') +
     (keep.length || swap.length ? FN_ONLY + '\n' : '') +
@@ -1385,7 +1397,15 @@ function step2Rules(run, blueprintText) {
   return '\n- 这份蓝图是「按功能重排」画的:章节不和原片一一对应,照每章的作用写,不要回头照原片那一段的内容补。每章的 layout_reason 说明这一章为什么这样排;locks 里的锁定项(开头钩子、高峰、悬念的开和收、结尾回扣)本章必须写到;等级章的 level_focus 是这一级只讲的重点(其他方面一句带过,不要每一级都把身份、收入、代价、信条走一遍),level_new_info 是这一级观众第一次知道的新信息,围绕它展开。' +
     (keeps.length ? '\n- 各章必须保留的功能(功能表「必须保留」,写的是作用,不是原片内容):' + keeps.join(' / ') : '') +
     (swaps.length ? '\n- 各章可以换的内容(功能表「可以换」,换成新题目自己的):' + swaps.join(' / ') : '') +
-    (keeps.length || swaps.length ? '\n- ' + FN_ONLY : '') + softNotes(run) + researchNotes(run, blueprintText);
+    (keeps.length || swaps.length ? '\n- ' + FN_ONLY : '') + chainRules(run, chs) + softNotes(run) + researchNotes(run, blueprintText);
+}
+// v1.135 问题链:整篇按它写;讲法决定假设怎么带出来(不再逐句声明)
+function chainRules(run, chs) {
+  const c = run.question_chain;
+  if (!c || !arr(c.questions).length) return '';
+  const per = chs.map(ch => { const t = qc().chapterQText(run, ch); return t ? ch.id + ':' + t : ''; }).filter(Boolean);
+  return '\n- 这篇按「问题链」写,这是最重要的一条:大问题「' + c.big_question + '」开头就让观众听到,结尾正面回答。每章就是回答它分到的问题:开头接住上一章引出的问题,问什么答什么(不许问 A 答 B,不许提前讲后面问题的答案),答完自然引出下一个问题(写成完整的一句问话),下一章开头就回答它。' +
+    (per.length ? '\n- 各章回答的问题:' + per.join(' / ') : '') + '\n- ' + qc().framingRule(c, run.source_chain);
 }
 // v1.79 蓝图审只剩「递进」没过、接着写的:写稿时提醒这几处别讲重复
 function softNotes(run) {
@@ -1432,7 +1452,7 @@ function view(run) {
   let chapters = [];
   const s1 = (run.outputs || {}).step1;
   if (s1 && modeOf(run) === 'function') {
-    chapters = arr(bpOf(s1).chapters).map(c => ({ id: c.id, time_range: c.time_range, source_segments: arr(c.source_segments), treatment: str(c.treatment), layout_reason: str(c.layout_reason), locks: arr(c.locks), level_focus: str(c.level_focus), level_new_info: str(c.level_new_info), purpose: cut(c.purpose, 160),
+    chapters = arr(bpOf(s1).chapters).map(c => ({ id: c.id, questions: arr(c.questions).map(String), time_range: c.time_range, source_segments: arr(c.source_segments), treatment: str(c.treatment), layout_reason: str(c.layout_reason), locks: arr(c.locks), level_focus: str(c.level_focus), level_new_info: str(c.level_new_info), purpose: cut(c.purpose, 160),
       word_budget: Number(c.word_budget) || 0, step: str(c.step), claim: str(c.claim), ideas_new: ideasOf(c), reuses: reusesOf(c), units: unitsOf(c).map(u => ({ kind: str(u.kind), task: str(u.task), words: Number(u.words) || 0 })), material: str(typeof c.material === 'object' && c.material ? JSON.stringify(c.material) : c.material) }));
   }
   // v1.89:人选论点时看到的大纲,蓝图哪里和它不一样
@@ -1444,7 +1464,7 @@ function view(run) {
   const picked = !!(run.thesis_scout && run.thesis_scout.user_pick);
   if (!ft && !br && !run.blueprint_mode) return null;
   const fn = modeOf(run) === 'function';
-  return { mode: modeOf(run), mode_label: MODES[modeOf(run)], mode_why: str(run.blueprint_mode_why), setting: settingMode(), delete_max: ft && ft.delete_max != null ? ft.delete_max : deleteMax(), deleted_segments: arr(run.deleted_segments), deleted_ratio: run.deleted_ratio, table: fn ? ft : null, chapters, review: fn ? br : null, held: run.status === 'blueprint_hold', outline_diff: outlineDiff, outline_diff_orig: outlineDiffOrig, outline_picked: picked && !!s1,
+  return { chain: qc().view(run), mode: modeOf(run), mode_label: MODES[modeOf(run)], mode_why: str(run.blueprint_mode_why), setting: settingMode(), delete_max: ft && ft.delete_max != null ? ft.delete_max : deleteMax(), deleted_segments: arr(run.deleted_segments), deleted_ratio: run.deleted_ratio, table: fn ? ft : null, chapters, review: fn ? br : null, held: run.status === 'blueprint_hold', outline_diff: outlineDiff, outline_diff_orig: outlineDiffOrig, outline_picked: picked && !!s1,
     zh_foreign: (() => { try { return bpForeignSlots(run).length; } catch (e) { return 0; } })(), zh_busy: !!run.bp_zh_busy || bpZhBusy.has(run.id), zh_error: str(bpZhErr.get(run.id) || run.bp_zh_error || (br || {}).zh_error),
     left: fn ? (() => { try { return leftView(run); } catch (e) { return null; } })() : null,
     later_now: br && br.status !== 'passed' ? arr(br.items).filter(i => !i.pass).map(i => LATER[i.key] || '') : [], later_who: br ? arr(br.items).filter(i => !i.pass).map(i => ({ key: i.key, name: str(i.name), who: LATER_WHO[i.key] || '' })) : [] };

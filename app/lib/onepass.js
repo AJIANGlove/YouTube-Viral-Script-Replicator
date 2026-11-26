@@ -141,10 +141,19 @@ function programStd(run, text) {
   danglingScan(text).forEach(h => out.push({ std: 'B4', chapter: h.ch, level: h.atEnd ? '必须改' : '可改可不改', quote: h.quote,
     problem: '这句话没说完,用「……」吊着' + (h.atEnd ? '(这一章最后一句)' : ''), plain: '观众以为马上要讲答案,结果下一句讲别的,会听糊涂',
     fix: '改成完整的一句问话,并让下一句 / 下一章开头直接回答它;要是答案在很后面才讲,就把这句预告挪到讲答案的那一章开头', by: '程序' }));
+  realNameItems(run, text).forEach(x => out.push({ std: 'D2', chapter: x.chapter, level: '必须改', quote: x.quote, problem: x.problem, plain: '观众会以为这是那家真店的真实账目,被查出来就是造假', fix: x.fix, by: '程序' }));
   chapterLenScan(run, text).forEach(x => out.push({ std: 'C3', chapter: x.ch, level: '可改可不改', quote: '',
     problem: x.kind === 'long' ? '这一章 ' + x.words + ' 词,按蓝图预算约 ' + x.want + ' 词,长了一倍多,可能拖沓' : '这一章只有 ' + x.words + ' 词,按蓝图预算约 ' + x.want + ' 词,不到四成,可能讲得太仓促',
     plain: x.kind === 'long' ? '观众在这一章容易走神' : '这一步没讲透,后面的结论接不住', fix: x.kind === 'long' ? '删掉这一章里重复的解释和次要细节,保留算账和关键证据' : '用这一章蓝图的任务和事实表里没用上的事实把这一步讲透,不重复前面的话', by: '程序' }));
   return out;
+}
+// v1.135 真名字旁边出现编出来的数(问题链的硬规矩):体检和终检都列,默认勾上
+function realNameItems(run, text) {
+  let hits = [];
+  try { hits = require('./qchain').realNameNumbers(run, text); } catch (e) { hits = []; }
+  return hits.slice(0, 6).map((h, i) => ({ id: 'D-4' + (i ? '-' + (i + 1) : ''), chapter: h.ch, level: '关键', checked: true, src: '真名字配了编的数(程序查的)',
+    problem: '「' + h.name + '」是真实的人 / 店,这句却配了事实表里没有的数 ' + h.nums.join('、') + ',观众会当成他的真账',
+    quote: h.quote, fix: '这个数是假设的,就挪到「你的店 / 假如一家店」身上说;要说他,就只用事实表里属于他的真数' }));
 }
 function hedgeItems(text, language) {
   const items = [];
@@ -231,7 +240,7 @@ async function checkup(runId) {
     try { extras = arr((R.getView(runId).audit || {}).extras); } catch (e) { /* 视图算不出来不挡 */ }
     try { ledger = R.ledgerWrongUsed(run); } catch (e) {}
     const listen = checks.listenCheck(checks.extractFinalScript(text), listenOpts(run));
-    const hedges = hedgeItems(checks.extractFinalScript(text) || text, lang(run));
+    const hedges = hedgeItems(checks.extractFinalScript(text) || text, lang(run)).concat(realNameItems(run, checks.extractFinalScript(text) || text));
     const items = mergeItems(run, { audit: (run.review || {}).audit, extras, info, claim, ledger, listen, hedges, scriptCheck: run.script_check });
     const ov = (run.review || {}).opening_variants;
     run.onepass = { ...(run.onepass || {}), stage: 'decide', checked_at: now(), items, errors, sc_merged: true,
@@ -289,6 +298,14 @@ function factsText(run) {
   try { const led = rv().claimLedgerText(run); if (led && led !== '(无)') t += '\n\n账本(程序重算过,以这个为准):\n' + led; } catch (e) {}
   return t;
 }
+// v1.135 问题链和讲法(没有问题链的旧任务给一句说明,提示词照常)
+function chainText(run) { try { const Q = require('./qchain'); const c = run.question_chain; return c && arr(c.questions).length ? Q.brief(c) + '\n各章回答哪几个问题:' + chapterQMap(run) : '(这篇没有问题链,按蓝图每章的 answers_prev / leaves_question 接)'; } catch (e) { return '(没有问题链)'; } }
+function framingText(run) { try { return require('./qchain').framingRule(run.question_chain, run.source_chain) || '(没定讲法)'; } catch (e) { return '(没定讲法)'; } }
+function chapterQMap(run) {
+  let bp = [];
+  try { bp = pl().bpChaptersOf((run.outputs || {}).step1) || []; } catch (e) { bp = []; }
+  return bp.filter(c => arr(c.questions).length).map(c => String(c.id).toUpperCase() + '=' + arr(c.questions).join('/')).join(' ') || '(蓝图没写)';
+}
 function thesisText(run) { return JSON.stringify(((run.analysis || {}).thesis_card) || {}); }
 function parseRewrite(content) {
   const c = String(content || '').replace(/^```[a-z]*\s*$/gim, '');
@@ -335,7 +352,7 @@ async function rewrite(runId) {
     const prompt = an().fillVars(readPrompt('onepass_rewrite.md'), {
       target_language: lang(run), title: titleOf(run), thesis: thesisText(run), opening_rule: openingRule,
       words: String(R.scriptWords(base)), length_rule: lengthRule(run, base), issues: issuesText(picked), note: op.note ? '\n人另外交代的:' + op.note : '',
-      facts: factsText(run), script: base
+      facts: factsText(run), script: base, question_chain: chainText(run), framing: framingText(run)
     });
     let r = await pl().inRun(runId, () => R.callLong(run, cfg, prompt, '一遍重写'));
     let p = parseRewrite(r.content);
@@ -404,7 +421,7 @@ async function finalCheck(runId) {
     save(runId, { stage: 'final_check' });
     const picked = arr(op.items).filter(x => arr(op.picked_ids).includes(x.id));
     const prompt = an().fillVars(readPrompt('onepass_final.md'), {
-      target_language: lang(run), title: titleOf(run), thesis: thesisText(run), issues: issuesText(picked), facts: factsText(run), script: checks.extractFinalScript(text)
+      target_language: lang(run), title: titleOf(run), thesis: thesisText(run), issues: issuesText(picked), facts: factsText(run), script: checks.extractFinalScript(text), question_chain: chainText(run), framing: framingText(run)
     });
     // 终检和「重讲 / 绕圈」检查同时跑:绕圈是这次最影响读下去的毛病,单独查、单独列
     const [out, ic] = await Promise.all([
@@ -556,6 +573,7 @@ function chapterRoles(run, text, ids) {
     const c = chs[i], b = bp.find(x => String(x.id).toUpperCase() === id) || {};
     const ss = sents(c.text);
     const L = ['=== ' + id + ' 在全片里的任务 ==='];
+    try { const qt = require('./qchain').chapterQText(run, b); if (qt) L.push(qt); } catch (e) {}
     if (b.claim) L.push('这一章往前推的一步:' + b.claim);
     if (b.retention_goal) L.push('留存目标:' + b.retention_goal);
     L.push('开头接上一章:' + (b.answers_prev ? b.answers_prev + ';' : '') + (i > 0 ? '上一章最后一句「' + (sents(chs[i - 1].text).pop() || '') + '」' : '(这是第一章)') + ';本章第一句「' + (ss[0] || '') + '」');
@@ -948,4 +966,4 @@ function view(run) {
   };
 }
 
-module.exports = { danglingScan, chapterLenScan, programStd, whereOf, lengthWindow, lengthRule, chapterRoles, relatedOf, finalItems, finalFix, verifyFix, verifyProgram, startFinalFix, startVerify, acceptAll, finalFixUndo, redoFromDraft, hedgeScan, endEchoScan, hedgeItems, loopRewrite, basisRewrite, syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };
+module.exports = { realNameItems, chainText, framingText, danglingScan, chapterLenScan, programStd, whereOf, lengthWindow, lengthRule, chapterRoles, relatedOf, finalItems, finalFix, verifyFix, verifyProgram, startFinalFix, startVerify, acceptAll, finalFixUndo, redoFromDraft, hedgeScan, endEchoScan, hedgeItems, loopRewrite, basisRewrite, syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };
