@@ -120,9 +120,16 @@ const FOUR_STEP = {
   pov: { payoff: '身份落差的终点或代价(从哪里到哪里、要付出什么)', tie: '「당신」的具体处境:你几岁、在哪、手里有什么(1–2 句)', question: '哪一个选择会改变你的命运', first: '进入第一级处境(第一级的规则或第一个场景)' },
   history: { payoff: '标题里那个反常识的事实,第一句就说出来', tie: '和今天有关:今天还在用的制度、习惯、东西、地名(1–2 句)', question: '为什么没人说清 / 后来到底发生了什么', first: '时间、地点、人物,进第一幕' },
   science: { payoff: '答案里反常识的那一半(另一半留到后面)', tie: '你身上也有 / 你也见过这个现象(1–2 句)', question: '这个证据是怎么找到的 / 为什么会这样', first: '第一个证据:一个实验、一个案例或一个数' },
-  general: { payoff: '标题说的那件事或结果,第一句就说出来', tie: '和观众自己有关(1–2 句)', question: '一个还没答案、观众想知道的问题', first: '第一个具体的事实、案例或数字' }
+  general: { payoff: '标题说的那件事或结果,第一句就说出来', tie: '和观众自己有关(1–2 句)', question: '一个还没答案、观众想知道的问题', first: '第一个具体的事实、案例或数字' },
+  // v1.135 代入为主(POV、故事式历史):四步就是开场合同,「你是谁 + 你和题目的关系」必须在细节之前
+  immersive: null // 代入为主:四步就是开场合同,从 qchain 的定义生成(见 immersiveStep)
 };
-function fourStep(run) { return FOUR_STEP[trackOf(run)] || FOUR_STEP.general; }
+function immersiveRun(run) { try { return require('./qchain').immersive(run); } catch (e) { return false; } }
+function immersiveStep() {
+  const Q = require('./qchain'), C = Q.CONTRACT, D = Q.CONTRACT_DESC;
+  return { payoff: C.hook + ' ' + D.hook, tie: C.who + '(' + D.who + ')+ ' + C.link + '(' + D.link + ')', question: C.want + ',面前只留一个没答案的问题(加上全片的大问题,开头一共不超过两个)', first: '进入第一级 / 第一幕的场景(不另起报站、不再开新问题)' };
+}
+function fourStep(run) { return (immersiveRun(run) && immersiveStep()) || FOUR_STEP[trackOf(run)] || FOUR_STEP.general; }
 const AVOID_TEXT = '开头避坑:不打招呼(안녕하세요、여러분 반갑습니다)、不自我介绍(저는 ~입니다、채널 소개)、不用「오늘은 ~ 알아보겠습니다」这种报流程的句子;场景描写最多一句,不要慢热铺垫;开头说的和标题对得上(标题里的数字、说法第一两句就出现);30 秒内不说破最终答案;不堆数字(前 10 秒最多 1 个,兑现标题那句的数字就算这一个)。';
 const TITLE_KIND_TEXT = '标题类型(title_kind):标题说了一个具体的结果、数字或说法(例如「붕어빵 하나 팔면 남는 돈」「월 600만 원 버는 김밥집」「4시 반에 문 닫는 중국집」),写「具体说法」;标题只是一个话题(例如「빵집 창업의 경제학」「조선의 노비」),写「话题」。';
 function fourStepText(run) {
@@ -131,7 +138,14 @@ function fourStepText(run) {
     '① 0–5 秒 兑现标题:' + S.payoff + ';\n' +
     '② 5–15 秒 和观众扯上关系:' + S.tie + ';\n' +
     '③ 15–25 秒 留一个没答案的问题:' + S.question + ';\n' +
-    '④ 25–30 秒 直接进正文:' + S.first + '。\n' + AVOID_TEXT;
+    '④ 25–30 秒 直接进正文:' + S.first + '。\n' + AVOID_TEXT + contractNote(run);
+}
+// 代入为主的片子:张力链排好以后,把开场合同的具体内容接在四步后面;还没排的(写前分析阶段)只提醒顺序
+function contractNote(run) {
+  if (!immersiveRun(run)) return '';
+  let ct = '';
+  try { ct = require('./qchain').contractText(run); } catch (e) { ct = ''; }
+  return ct ? '\n' + ct : '\n代入开头:' + require('./qchain').CONTRACT_RULES + '。';
 }
 function titleKindOf(run, a) {
   const k = str(((a || (run || {}).analysis) || {}).title_kind);
@@ -248,6 +262,7 @@ function briefText(run, a, mode) {
     '- 写稿:' + OPEN_CH + ' 一拍一拍照着写,顺序不变,不删拍、不并拍;示范句可以润色,但保留它的句式、长短和作用;原片对观众说「你」的拍,新稿也对观众说「당신/你」。\n' +
     (titleLine(run, a) ? titleLine(run, a) + '\n' : '') +
     beats.map(beatLine).join('\n') + '\n' + (vpText ? vpText + '\n' : '') + promiseText(a, run) + '\n' +
+    (contractNote(run) ? contractNote(run).trim() + '(节拍里要把合同的几项放进对应的拍)\n' : '') +
     '保留:第一句(5 秒内)兑现标题(题目要清楚,藏的是答案);45 秒前给出第一个甜头(一半答案),最晚 60 秒;一句最多 2 个数字;全篇一种语体。\n' + AVOID_TEXT;
 }
 
@@ -435,4 +450,4 @@ function compare(run, draftText, curText) {
   };
 }
 
-module.exports = { trackOf, FOUR_STEP, fourStep, fourStepText, AVOID_TEXT, TITLE_KIND_TEXT, titleKindOf, titleLine, formulaBrief, formulaAnalysisNote, TRACKS, TRACK_NAMES, RULES, ruleOf, ruleView, trackName, TRACK_NOTE, LOCK_SEC, OPEN_CH, wanted, on, beatsOf, sourceOpening, analysisNote, normalize, briefText, check, checkBlueprint, rewriteFeedback, spliceOpening, guard, lockReasons, promiseKept, compare, openingOf, replaceOpening, spoilers, AGENDA_RE, YOU_RE };
+module.exports = { trackOf, FOUR_STEP, fourStep, contractNote, immersiveRun, fourStepText, AVOID_TEXT, TITLE_KIND_TEXT, titleKindOf, titleLine, formulaBrief, formulaAnalysisNote, TRACKS, TRACK_NAMES, RULES, ruleOf, ruleView, trackName, TRACK_NOTE, LOCK_SEC, OPEN_CH, wanted, on, beatsOf, sourceOpening, analysisNote, normalize, briefText, check, checkBlueprint, rewriteFeedback, spliceOpening, guard, lockReasons, promiseKept, compare, openingOf, replaceOpening, spoilers, AGENDA_RE, YOU_RE };

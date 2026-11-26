@@ -5096,6 +5096,15 @@ function variantIssues(run, script) {
   const out = openingIssues(lc).map(i => i.replace(/\(第一句直接兑现标题\)|\(换成带钩子的问题,不说「今天来看看」\)/g, ''));
   arr(lc && lc.avoid).forEach(x => out.push(x));
   if (ob.on(run)) ob.check(run, script).issues.forEach(x => out.push(x));
+  // v1.135 开场合同:伏笔只埋不说;代入为主的开头要对观众说「你」
+  try {
+    const Q = require('./qchain');
+    const ch = ob.openingOf(script);
+    if (ch) {
+      Q.announceScan(ch.text).forEach(h => out.push('空预告(「这句话后面还会出现」):「' + h.quote.slice(0, 50) + '」'));
+      if (Q.immersive(run) && !ob.YOU_RE.test(ch.text)) out.push('开头没有对观众说「你」:代入为主的开头要先说清你是谁');
+    }
+  } catch (e) { /* 查不了不挡 */ }
   return { issues: [...new Set(out)], nums_10s: ((lc || {}).opening || {}).nums_10s || 0, first_num_sec: ((lc || {}).opening || {}).first_num_sec ?? null };
 }
 function variantFacts(a) {
@@ -5134,6 +5143,9 @@ async function runOpeningVariants(runId) {
       title_kind: (kind ? '标题类型:' + kind + (kind === '具体说法' ? '(标题说了具体结果,第一句就兑现它)' : '(标题是话题,第一句也要说到标题那件事)') : ob.TITLE_KIND_TEXT + '先自己判断这个标题是哪一类。') + (a.title_payoff ? '\n标题承诺:' + a.title_payoff : ''),
       thesis: JSON.stringify(a.thesis_card || {}), four_step: ob.fourStepText(run), mode_rule: modeRule,
       words: String(scriptWords(ch.text)), spoilers: sp.length ? '(这些本质词开头不许出现:' + sp.join('、') + ')' : '',
+      styles: ob.immersiveRun(run)
+        ? '- 版本 1「代价先说」:外面的钩子先说标题那件事要付出的代价,再进「你」;\n- 版本 2「你先说」:第一句就是「你」此刻的处境,第二句说清你和题目的关系,再点回标题;\n- 版本 3「反常先说」:先说一个和大家以为的相反的事实,第二句马上落到「你」身上。\n三个版本都按开场合同写全,只是先后打法不同。' + require('./qchain').contractRuleLine()
+        : '- 版本 1「数字先说」:第一句就把标题里的结果 / 数字说出来;\n- 版本 2「人先说」:第一句用一个具体的人(店主、主角、你自己)把标题的结果说出来;\n- 版本 3「反常识先说」:第一句先说一个和大家以为的相反的事实,第二句马上点回标题。',
       avoid: ob.AVOID_TEXT, card_notes: notes.length ? '开头单独审指出的问题(这次一起避开):\n' + notes.map(x => '- ' + x).join('\n') : '',
       current: ch.text, after: cur.slice(ch.bodyEnd).trim().split('\n').filter(l => l.trim() && !/^\[CH\d+/.test(l.trim())).slice(0, 3).join('\n').slice(0, 600) || '(无)',
       facts: variantFacts(a)

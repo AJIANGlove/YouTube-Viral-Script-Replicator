@@ -223,7 +223,7 @@ function analysisBrief(a, run, trackKey, mode) {
   if (hpl.length) out.push('钩子布局(这三处观众最容易走神,写稿时按这里放钩子):\n' + hpl.join('\n'));
   // 埋点回收、核心两难、评论问题(写法规则 C1、D1、D2):写稿照着埋、照着收、结尾照着问
   const pp = a.planted_payoff || {};
-  if (String(pp.what || '').trim()) out.push('埋点与回收:' + pp.what + '(' + [pp.plant_at && '在 ' + pp.plant_at + ' 埋', pp.payoff_at && '在 ' + pp.payoff_at + ' 回收'].filter(Boolean).join(',') + ');埋的时候明说「后面会回来」,回收时点明。');
+  if (String(pp.what || '').trim() && !(run && run.question_chain && 'plant' in run.question_chain)) out.push('埋点与回收:' + pp.what + '(' + [pp.plant_at && '在 ' + pp.plant_at + ' 埋', pp.payoff_at && '在 ' + pp.payoff_at + ' 回收'].filter(Boolean).join(',') + ');它必须是主线上某个问题的线索,尽快解开(留到后面的中间再出现一次);不空预告「这句话后面还会出现」,回收时让观众自己对上。');
   if (String(a.core_dilemma || '').trim()) out.push('核心两难:' + a.core_dilemma);
   if (String(a.comment_question || '').trim()) out.push('结尾评论问题(可选,只问这一个,一句话能答;正文中间的反问不超过两次):' + a.comment_question);
   if (run) { const cb = require('./craft').craftBrief(run, trackKey, mode); if (cb) out.push(cb); }

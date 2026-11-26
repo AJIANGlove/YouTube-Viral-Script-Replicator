@@ -18,6 +18,88 @@ const TRACK_ZH = { econ: '经济', history: '历史', science: '科普', pov: 'P
 const DELETED = '新题目没有这块可删';
 const KINDS = { info: '想知道', fate: '后来怎样', ladder: '下一级', why: '为什么' };
 const crypto = require('crypto');
+// v1.135 开场合同:代入为主的片子(POV、故事式历史;别的赛道原片主要靠「下一级 / 后来怎样」推的也算)开头先签合同
+// 开场合同只在这里定义一次:张力链提示词、前 30 秒四步、开头三选一、重写、终检的说法都从这里生成(v1.135 二阶修补:以前散在 5 处)
+const CONTRACT = { hook: '外面的钩子', who: '你是谁', link: '你和题目的关系', want: '你此刻想要什么、怕什么', first: '第一个张力' };
+const CONTRACT_DESC = {
+  hook: '2–3 句,标题那件事最反常 / 代价最大的一点,不说答案',
+  who: '几岁、在哪、什么处境',
+  link: '一句说清「你」为什么会卷进标题那件事(例如「你是王妃家的远房堂兄」)',
+  want: '此刻最想要的和最怕的',
+  first: '开头只留这一个没答案的问题(写 Q1 这种编号,一般就是 Q1),加上全片的大问题,开头一共不超过两个'
+};
+const CONTRACT_ORDER = '外面的钩子 → 你是谁 → 你和题目的关系 → 你想要什么、怕什么 → 留一个没答案的问题 → 进第一级 / 第一幕的场景';
+const CONTRACT_RULES = '你是谁、你和题目的关系一定在任何细节(物件、对白、地名、年份)之前;细节只放能让观众更懂这几项的;还没介绍过的人和事不许先出现;开头一共不超过两个没答案的问题;不写空预告(「这句话后面还会出现」)';
+function contractRuleLine() { return '开场合同(顺序:' + CONTRACT_ORDER + '):' + CONTRACT_RULES + '。'; }
+function immersive(run) {
+  let t = '';
+  try { t = require('./craft').trackOf(run); } catch (e) { t = ''; }
+  if (t === 'pov') return true;
+  if (t === 'history') { let st = ''; try { st = require('./craft').styleOf(run); } catch (e) {} return st !== '讲解式'; }
+  if (t === 'econ' || t === 'science') return false;
+  const mk = ((run || {}).source_chain || {}).main_kind;
+  return mk === 'ladder' || mk === 'fate';
+}
+// 说破伏笔:预告「这句话后面还会出现 / 记住这句话」(埋可以,不许说出来)
+// 空预告:「这句话 / 这一幕 后面还会再出现」——观众还不知道它为什么重要就被告知它会回来。
+// 「这个数先记住,后面要用」「你当时还不懂,很久以后才会懂」这类挂在主线上、很快兑现的提示不算(伏笔四条,用户 2026-11-26)
+const ANNOUNCE_RE = [
+  /(이|그)\s*(말|한마디|문장|대사|장면|목소리)[^.!?。\n]{0,24}(다시|나중에|또)[^.!?。\n]{0,16}(들|듣|나오|떠오|울리|등장|돌아)[가-힣]{0,3}\s*(게\s*(됩|될|돼)|겁니다|거예요|것입니다|거야|것이다|거다)/,
+  /(这句话|这句|这一幕|这个画面|这个声音)[^。!?\n]{0,14}(还会|会再|之后会|后面会|稍后会|以后会|待会)/,
+  /(you'?ll|you will) (hear|see) (this|that|these words) again/i
+];
+function announceScan(text) {
+  const hits = [];
+  let ch = 'CH01';
+  String(text || '').split('\n').forEach(line => {
+    const m = line.match(/^\s*\[(CH\d+)/i);
+    if (m) { ch = m[1].toUpperCase(); return; }
+    line.split(/(?<=[.?!。？！])\s*/).forEach(s => { if (ANNOUNCE_RE.some(re => re.test(s))) hits.push({ ch, quote: s.trim() }); });
+  });
+  return hits;
+}
+function normalizeOpening(o) {
+  o = o && typeof o === 'object' ? o : {};
+  const out = {};
+  Object.keys(CONTRACT).forEach(k => { out[k] = str(o[k]).trim(); });
+  out.first = out.first.toUpperCase().match(/^Q\d+$/) ? out.first.toUpperCase() : out.first;
+  return out;
+}
+// 伏笔四条:挂在张力链某一环上(是那个问题的线索)、同一级或下一级就解开(留到结尾的中间至少再出现一次)、没有合适的就不埋
+function normalizePlant(p, legacy) {
+  p = p && typeof p === 'object' ? p : (legacy ? { what: legacy } : {});
+  const q = v => { const m = str(v).trim().toUpperCase().match(/^Q\d+$/); return m ? m[0] : ''; };
+  const what = str(p.what).trim();
+  return what ? { what, clue_for: q(p.clue_for), plant_at: q(p.plant_at), payoff_at: q(p.payoff_at), mid_at: q(p.mid_at) } : null;
+}
+const num = id => Number(str(id).slice(1)) || 0;
+function plantIssues(plant, qs) {
+  if (!plant) return [];
+  const ids = new Set(arr(qs).map(q => q.id));
+  const out = [];
+  if (!plant.clue_for || !ids.has(plant.clue_for)) out.push('伏笔「' + cut(plant.what, 20) + '」没挂在张力链的某一环上(clue_for 写它是哪个问题的线索);挂不上就别埋,plant 留空');
+  if (!plant.plant_at || !plant.payoff_at || !ids.has(plant.plant_at) || !ids.has(plant.payoff_at)) out.push('伏笔没写在哪个问题埋(plant_at)、在哪个问题解开(payoff_at)');
+  else if (num(plant.payoff_at) - num(plant.plant_at) > 3 && !(plant.mid_at && num(plant.mid_at) > num(plant.plant_at) && num(plant.mid_at) < num(plant.payoff_at)))
+    out.push('伏笔在 ' + plant.plant_at + ' 埋、' + plant.payoff_at + ' 才解开,隔太远观众早忘了:改成同一级或下一级就解开,要留到后面就在中间(mid_at)再出现一次、意思变一层');
+  return out;
+}
+function plantText(chain) {
+  const p = (chain || {}).plant;
+  if (!p) return '伏笔:这篇不埋伏笔(没有挂在主线上的合适伏笔,不硬凑)。';
+  return '伏笔:' + p.what + '(它是 ' + (p.clue_for || '?') + ' 那个问题的线索;' + (p.plant_at ? '在 ' + p.plant_at + ' 那段埋' : '') + (p.mid_at ? ',' + p.mid_at + ' 那段再出现一次、意思变一层' : '') + (p.payoff_at ? ',' + p.payoff_at + ' 那段解开' : '') + ')。' + PLANT_RULE;
+}
+const PLANT_RULE = '埋的时候不解释、不空预告(不写「这句话后面还会出现」);可以像原片那样轻轻点一句「你当时还不懂」,前提是它很快就解开;解开时让观众自己对上。';
+// 给写稿 / 开头 / 重写 / 终检看的开场合同(没有返回空)
+function contractText(run) { return contractOf((run || {}).question_chain); }
+function contractOf(c) {
+  const o = c && c.opening;
+  if (!o || !(o.who || o.link)) return '';
+  const q = /^Q\d+$/.test(o.first) ? arr(c.questions).find(x => x.id === o.first) : null;
+  const val = { ...o, hook: o.hook || CONTRACT_DESC.hook, first: q ? q.id + '〈' + (KINDS[q.kind] || '') + '〉「' + q.ask + '」' : o.first };
+  return '开场合同(CH01 只按它写,顺序不变;它没写的东西开头不放):\n' +
+    ['hook', 'who', 'link', 'want', 'first'].map((k, i) => '①②③④⑤'[i] + ' ' + CONTRACT[k] + ':' + val[k]).join('\n') + '\n' +
+    CONTRACT_RULES + '。\n' + plantText(c);
+}
 const sha = t => crypto.createHash('sha1').update(String(t || '')).digest('hex').slice(0, 12);
 
 // ---------- 写法卡:只给用到的那几种 ----------
@@ -125,7 +207,12 @@ function fillPrompt(run, ft) {
     .replaceAll('{{table}}', rows || '(没有功能表)')
     .replaceAll('{{source_chain}}', sourceBrief(run.source_chain))
     .replaceAll('{{cards}}', cardsText(arr((run.source_chain || {}).segments).map(s => s.kind).concat([(run.source_chain || {}).main_kind || 'info'])))
-    .replaceAll('{{locks}}', locks || '(没有)');
+    .replaceAll('{{locks}}', locks || '(没有)')
+    .replaceAll('{{opening_rule}}', immersive(run)
+      ? '这篇是代入为主的片子(「你」就是一个身份),必须写 opening(开场合同),每一项都要写具体:\n' +
+        Object.keys(CONTRACT).map(k => '- ' + k + '(' + CONTRACT[k] + '):' + CONTRACT_DESC[k] + ';').join('\n') +
+        '\n' + contractRuleLine() + '\n讲法 mode 写 you,setup 写这个身份的前提(不是算账)。'
+      : '这篇不是代入身份的片子,opening 留空对象 {}。');
 }
 
 // 程序把关(不花钱):编号、衔接、问答、事实、段、锁定项
@@ -140,7 +227,8 @@ function normalize(j, sc) {
   qs.forEach(q => { q.raises = map[q.raises] || (/^Q\d+$/.test(q.raises) ? '' : q.raises); delete q.orig; });
   const mode = MODES[str(j && j.mode).trim()] ? str(j.mode).trim() : 'mix';
   return { mode, mode_why: str(j && j.mode_why).trim(), setup: str(j && j.setup).trim(), big_question: str(j && j.big_question).trim(),
-    cases_use: arr(j && j.cases_use).filter(c => c && str(c.name).trim()).map(c => ({ name: str(c.name).trim(), as: str(c.as).trim(), q: str(c.q).trim().toUpperCase() })), questions: qs };
+    cases_use: arr(j && j.cases_use).filter(c => c && str(c.name).trim()).map(c => ({ name: str(c.name).trim(), as: str(c.as).trim(), q: str(c.q).trim().toUpperCase() })), questions: qs,
+    opening: normalizeOpening(j && j.opening), plant: normalizePlant(j && j.plant, j && j.opening && j.opening.plant) };
 }
 function validate(run, chain, ft) {
   const issues = [];
@@ -152,6 +240,13 @@ function validate(run, chain, ft) {
   if (!chain.big_question) issues.push('没写大问题(big_question)');
   if (qs.length < 6) issues.push('只有 ' + qs.length + ' 个问题,最少 6 个');
   if (min && qs.length < Math.round(min * 0.6)) issues.push('目标 ' + min + ' 分钟,只排了 ' + qs.length + ' 个问题,大约每分钟一个');
+  if (immersive(run)) {
+    const o = chain.opening || {};
+    ['who', 'link', 'want'].forEach(k => { if (!o[k]) issues.push('开场合同没写「' + CONTRACT[k] + '」(opening.' + k + ')'); });
+    if (o.first && /^Q\d+$/.test(o.first) && !qs.some(q => q.id === o.first)) issues.push('开场合同的第一个张力 ' + o.first + ' 不在问题链里');
+  }
+  plantIssues(chain.plant, qs).forEach(x => issues.push(x));
+  if (chain.plant && ANNOUNCE_RE.some(re => re.test(chain.plant.what))) issues.push('伏笔写成了空预告(「这句话后面还会出现」),写埋的那句话 / 那个物件本身');
   if (chain.mode !== 'case' && !chain.setup) issues.push('讲法是「' + MODES[chain.mode] + '」,没写代入的前提(setup)');
   qs.forEach((q, i) => {
     if (!q.answer) issues.push(q.id + ' 没写答案(answer)');
@@ -179,13 +274,15 @@ function validate(run, chain, ft) {
   return issues;
 }
 
+// 提示词或合同规矩改了就升版本:老任务的张力链缓存作废,下次跑蓝图自动重排(v1.135 二阶修补)
+const CHAIN_VER = 'v1135-oc2';
 async function ensureChain(run, asset, ft, callLlm) {
   // 先拆原片张力链(每个对标一次,存起来复用);拆不出来不挡,新链按功能表排
   if (asset) {
     try { const sc = await ensureSourceChain(asset, callLlm); if (sc) run.source_chain = sc; }
     catch (e) { run.source_chain_error = String(e.message || e).slice(0, 200); }
   }
-  const key = str((ft || {}).at) + '|' + str(run.analysis_confirmed_at) + '|' + str(((run.steps || {}).analysis || {}).finished_at) + '|' + str((run.source_chain || {}).at);
+  const key = CHAIN_VER + '|' + str((ft || {}).at) + '|' + str(run.analysis_confirmed_at) + '|' + str(((run.steps || {}).analysis || {}).finished_at) + '|' + str((run.source_chain || {}).at);
   const old = run.question_chain;
   if (old && old.for_table === key && arr(old.questions).length) return old;
   const t0 = Date.now();
@@ -229,19 +326,27 @@ function brief(chain) {
     (chain.setup ? '代入前提:' + chain.setup + '\n' : '') +
     '大问题:' + chain.big_question + '\n' +
     chain.questions.map(q => '- ' + q.id + ' 〈' + (KINDS[q.kind] || '想知道') + '〉 [' + (q.segment || '—') + (q.beat ? ' · ' + q.beat : '') + '] 问:' + q.ask + ' → 答:' + q.answer + (q.fact_ids.length ? '(' + q.fact_ids.join(',') + ')' : '') + (q.raises ? ' → 引出 ' + q.raises : '')).join('\n') +
+    (contractOf(chain) ? '\n' + contractOf(chain) + '\n(蓝图 CH01 的 key_points 就按这份合同一项一项写。)' : '') +
+    (!contractOf(chain) && chain.plant ? '\n' + plantText(chain) : '') +
     (arr(chain.cases_use).length ? '\n真人案例怎么用:' + chain.cases_use.map(c => c.name + (c.q ? '(' + c.q + ')' : '') + ':' + c.as).join(';') : '');
 }
 // 写稿 / 重写时的讲法规矩(一段话)
-function framingRule(chain, sc) {
+function framingRule(chain, sc, run) {
   if (!chain || !chain.mode) return '';
-  return framingBase(chain) + voicingRule(chain, sc);
+  const fb = framingBase(chain, run);
+  return fb + (chain.plant && !/^讲法:代入式。全片/.test(fb) ? plantText(chain) : '') + voicingRule(chain, sc);
 }
 // 问题念不念出来照原片;各种张力怎么写,只给这篇用到的写法卡
 function voicingRule(chain, sc) {
   const kinds = [...new Set(arr(chain.questions).map(q => q.kind || 'info'))];
   return '\n- 问题怎么说出口:照原片(' + ((sc && sc.voiced_style) || '只在转段处直接问一句,段内靠陈述推进') + ');不每段都写「那么……呢?」。\n- 每一环按它的种类写(下面是这篇用到的写法卡):\n' + cardsText(kinds);
 }
-function framingBase(chain) {
+function framingBase(chain, run) {
+  const o = chain.opening || {};
+  if (run ? immersive(run) : (o.who || o.link)) {
+    return '讲法:代入式。全片的「你」就是这个身份' + (o.who ? ':' + o.who : '') + (o.link ? ';' + o.link : '') + (chain.setup ? '(' + chain.setup + ')' : '') + '。每一章都从「你」此刻的处境、看到的、想要的和怕的往前推,不变成第三人称讲解;真实的人(王、王妃、大臣这类)按史实出场,说他们真实做过的事。' +
+      plantText(chain) + '真名字旁边只放事实表里有出处、属于他的事和数。';
+  }
   const base = '真名字(真实的店、人、品牌)旁边只能出现事实表里有出处、属于他的真数;假设出来的数只用在「你的店 / 假如一家店」身上,不许把真店的名字和编出来的营业额、利润放在一起。';
   if (chain.mode === 'case') return '讲法:真案例。全片围绕真实的人和事讲,用事实表里的真数;出处在真人、真事第一次出场时半句带过,之后不再解释。' + base;
   return '讲法:' + MODES[chain.mode] + '。算账都在这个前提里:「' + chain.setup + '」。用「假设你 / 假如 / 比如」带出数字,观众自然知道是举例,不再单独声明「这是假设 / 不是真实数据 / 当估算看」。账本里的数就是「你的店」的数,算账一步一步跟着账本走。' +
@@ -307,7 +412,7 @@ function view(run) {
   const c = (run || {}).question_chain;
   if (!c) return null;
   const st = ((run.steps || {}).question_chain) || {};
-  return { source: run.source_chain ? { main_kind: run.source_chain.main_kind, main_why: run.source_chain.main_why, voiced_style: run.source_chain.voiced_style, max_open: run.source_chain.max_open, big_tension: run.source_chain.big_tension, segments: arr(run.source_chain.segments) } : null, source_error: str(run.source_chain_error), kinds: KINDS, mode: c.mode, mode_label: c.mode_label || MODES[c.mode], mode_why: c.mode_why, setup: c.setup, big_question: c.big_question, questions: arr(c.questions), cases_use: arr(c.cases_use), issues: arr(c.issues), retried: !!c.retried, status: st.status || 'done', secs: c.secs };
+  return { source: run.source_chain ? { main_kind: run.source_chain.main_kind, main_why: run.source_chain.main_why, voiced_style: run.source_chain.voiced_style, max_open: run.source_chain.max_open, big_tension: run.source_chain.big_tension, segments: arr(run.source_chain.segments) } : null, source_error: str(run.source_chain_error), kinds: KINDS, mode: c.mode, mode_label: c.mode_label || MODES[c.mode], mode_why: c.mode_why, setup: c.setup, big_question: c.big_question, questions: arr(c.questions), opening: c.opening && (c.opening.who || c.opening.link) ? c.opening : null, plant: c.plant || null, contract_labels: CONTRACT, immersive: immersive(run), cases_use: arr(c.cases_use), issues: arr(c.issues), retried: !!c.retried, status: st.status || 'done', secs: c.secs };
 }
 
-module.exports = { KINDS, cardsText, sourceSegmentsText, normalizeSource, readSource, ensureSourceChain, sourceBrief, voicingRule, MODES, fillPrompt, normalize, validate, ensureChain, brief, framingRule, chapterQuestions, chapterQText, checkBlueprint, realNameNumbers, casesOf, view };
+module.exports = { normalizePlant, plantIssues, plantText, PLANT_RULE, CONTRACT, CONTRACT_DESC, CONTRACT_ORDER, CONTRACT_RULES, contractRuleLine, immersive, ANNOUNCE_RE, announceScan, normalizeOpening, contractText, KINDS, cardsText, sourceSegmentsText, normalizeSource, readSource, ensureSourceChain, sourceBrief, voicingRule, MODES, fillPrompt, normalize, validate, ensureChain, brief, framingRule, chapterQuestions, chapterQText, checkBlueprint, realNameNumbers, casesOf, view };

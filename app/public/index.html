@@ -2933,7 +2933,7 @@ async function loadRunDetail() {
     const cls = s.status === 'done' || s.status === 'passed' || s.status === 'passed_soft' ? 'done' : (s.status === 'running' ? 'running' : (s.status === 'failed' || s.status === 'held' ? 'failed' : ''));
     const extra = s.status === 'skipped' || (k === 'optimized' && r.flow === 'one_pass') ? ' · 新流程不用' : s.secs ? ` (${s.secs}s)` : '';
     const gate = s.gate_retry ? ' ⟳重试' : '';
-    const jump = STEP_JUMP[k] && (k === 'analysis' ? !!r.analysis : !!r.draft_first || !!(r.review || {}).versions);
+    const jump = STEP_JUMP[k] && (k === 'analysis' ? !!r.analysis : STEP_JUMP[k].panel === 'bp-panel' ? true : !!r.draft_first || !!(r.review || {}).versions);
     if (/^op_/.test(k)) return `<div class="step-pill ${s.status === 'waiting_you' ? 'webwait' : cls} link" onclick="opJump('${k}')" title="点击跳到新流程面板里的这一步">${STEP_LABELS[k]}${s.status === 'waiting_you' ? '<br>👉 等你拍板' : ''}</div>`; // v1.134 新流程四步:点了跳到面板
     if (k === 'script' && r.flow === 'one_pass' && r.onepass_view && r.onepass_view.draft && !webWaitSteps(r).includes(k)) return `<div class="step-pill ${cls} link" onclick="opJump('draft')" title="点击看初稿">${STEP_LABELS[k]}${extra}<br>看初稿</div>`; // v1.134 新流程:脚本那格点了看初稿
     if (s.status === 'waiting_you') return `<div class="step-pill webwait" onclick="document.getElementById('op-panel').scrollIntoView({behavior:'smooth'})" title="去下面勾问题、选开头">${STEP_LABELS[k]}<br>👉 等你拍板</div>`;
@@ -7425,7 +7425,7 @@ function rfIgnore(btn) {
 }
 
 // 点上面的步骤条跳到这一步的内容:写前分析跳到分析卡并展开;初稿检查、二稿审稿报告、终审跳到审稿面板对应的页签
-const STEP_JUMP = { analysis: { panel: 'an-panel' }, draft_check: { panel: 'rv-panel', tab: 'd2' }, reverse_audit: { panel: 'rv-panel', tab: 'audit' }, final_review: { panel: 'rv-panel', tab: 'd3' } };
+const STEP_JUMP = { analysis: { panel: 'an-panel' }, function_table: { panel: 'bp-panel' }, question_chain: { panel: 'bp-panel', open: 'bp-chain' }, blueprint: { panel: 'bp-panel' }, blueprint_review: { panel: 'bp-panel' }, draft_check: { panel: 'rv-panel', tab: 'd2' }, reverse_audit: { panel: 'rv-panel', tab: 'audit' }, final_review: { panel: 'rv-panel', tab: 'd3' } };
 let anOpen = false; // 写前分析的折叠框:人展开过就保持展开(轮询重画时不收起)
 function stepJump(k) {
   const j = STEP_JUMP[k];
@@ -7434,14 +7434,17 @@ function stepJump(k) {
     anOpen = true;
     const d = document.querySelector('#an-panel details');
     if (d) d.open = true;
+  } else if (j.panel === 'bp-panel') { // v1.135 功能表 / 张力链 / 蓝图 / 蓝图审:点了跳到蓝图面板,张力链那格顺手展开
+    if (j.open) { bpChainOpen = true; const d = document.getElementById(j.open); if (d) d.open = true; }
   } else if (rvState) {
     rvState.open = true;
     rvState.tab = j.tab;
     rvState.key = null;
     if (lastRunDetail) renderReviewPanel(lastRunDetail);
   }
-  const el = document.getElementById(j.panel);
-  if (!el || el.classList.contains('hidden')) return;
+  const pe = document.getElementById(j.panel);
+  if (!pe || pe.classList.contains('hidden')) return;
+  const el = (j.open && document.getElementById(j.open)) || pe;
   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   el.classList.add('jump-flash');
   setTimeout(() => el.classList.remove('jump-flash'), 1200);
@@ -7844,13 +7847,26 @@ function bpChainCompareHtml(c, ft) {
         <td>${qs.length ? qs.map(q => '<b>' + esc(q.id) + '</b> <span class="hint">〈' + esc(K[q.kind] || '想知道') + '〉</span> ' + esc(q.ask)).join('<br>') : del ? '<span class="hint">(这段判了可删)</span>' : r.treatment === '合并到相邻章' ? '<span class="hint">(并到 ' + esc(r.merge_into || '相邻段') + ')</span>' : '<span class="hint" style="color:#b45309">没放</span>'}</td></tr>`;
     }).join('')}</table>`;
 }
+// v1.135 开场合同(代入为主的片子):开头按它写,一眼看出「你是谁、和题目什么关系」有没有交代
+function bpContractHtml(c) {
+  const o = c.opening;
+  if (!o) return c.immersive ? '<div class="hint" style="color:#b45309">这篇是代入为主的片子,但张力链没排出开场合同(重新从选论点开始会重排)</div>' : '';
+  const L = c.contract_labels || {};
+  const q = /^Q\d+$/.test(o.first || '') ? (c.questions || []).find(x => x.id === o.first) : null;
+  const row = (k, v) => `<tr><td style="white-space:nowrap">${esc(L[k] || k)}</td><td>${v ? esc(v) : '<span class="bp-bad">没写</span>'}</td></tr>`;
+  return `<div style="margin:6px 0"><b>开场合同</b> <span class="hint">CH01 只按这五项写,你是谁、和题目的关系在任何细节之前</span>
+    <table class="bp-tbl">${row('hook', o.hook)}${row('who', o.who)}${row('link', o.link)}${row('want', o.want)}${row('first', q ? q.id + ' ' + q.ask : o.first)}
+    <tr><td>伏笔</td><td>${c.plant ? esc(c.plant.what) + `<span class="hint">(${esc(c.plant.clue_for || '?')} 的线索 · ${esc(c.plant.plant_at || '?')} 埋${c.plant.mid_at ? ' · ' + esc(c.plant.mid_at) + ' 再出现' : ''} · ${esc(c.plant.payoff_at || '?')} 解开)</span>` : '<span class="hint">不埋(没有挂在主线上的合适伏笔)</span>'}</td></tr></table></div>`;
+}
+let bpChainOpen = false; // 张力链折叠框:人展开过就保持展开(轮询重画时不收起)
 function bpChainHtml(c, chs, ft) {
   if (!c) return '';
   const chOf = id => ((chs || []).find(x => (x.questions || []).map(q => String(q).toUpperCase()).includes(id)) || {}).id || '';
-  return `<details id="bp-chain"><summary>张力链:这篇的一条线(${(c.questions || []).length} 个问题 · 讲法:${esc(c.mode_label || c.mode || '')})</summary>
+  return `<details id="bp-chain"${bpChainOpen ? ' open' : ''} ontoggle="bpChainOpen=this.open"><summary>张力链:这篇的一条线(${(c.questions || []).length} 个问题 · 讲法:${esc(c.mode_label || c.mode || '')})</summary>
     ${c.mode_why ? `<div class="hint">为什么用这种讲法:${esc(c.mode_why)}</div>` : ''}
     ${c.setup ? `<div style="font-size:13px;margin:4px 0">代入前提:${esc(c.setup)}</div>` : ''}
     <div style="font-size:14px;margin:6px 0"><b>大问题:${esc(c.big_question || '')}</b></div>
+    ${bpContractHtml(c)}
     <table class="bp-tbl"><tr><th>#</th><th>种类</th><th>开了什么(观众心里的问题 / 担心)</th><th>这一段怎么收</th><th>引出</th><th>原片段 / 锁定项</th><th>章</th><th>事实</th></tr>${(c.questions || []).map(q => `<tr><td>${esc(q.id)}</td><td>${esc((c.kinds || {})[q.kind] || '想知道')}</td><td>${esc(q.ask)}</td><td>${esc(q.answer)}</td><td>${esc(q.raises || '—')}</td><td>${esc(q.segment || '')}${q.beat ? ' · ' + esc(q.beat) : ''}</td><td>${esc(chOf(q.id))}</td><td>${esc((q.fact_ids || []).join(','))}</td></tr>`).join('')}</table>
     ${bpChainCompareHtml(c, ft)}
     ${(c.cases_use || []).length ? `<div class="hint">真人案例怎么用(真名字旁边只放他自己的真数):${c.cases_use.map(x => esc(x.name) + (x.q ? '(' + esc(x.q) + ')' : '') + ':' + esc(x.as)).join(';')}</div>` : ''}

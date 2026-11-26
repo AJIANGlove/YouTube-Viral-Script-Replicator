@@ -1405,7 +1405,7 @@ function chainRules(run, chs) {
   if (!c || !arr(c.questions).length) return '';
   const per = chs.map(ch => { const t = qc().chapterQText(run, ch); return t ? ch.id + ':' + t : ''; }).filter(Boolean);
   return '\n- 这篇按「问题链」写,这是最重要的一条:大问题「' + c.big_question + '」开头就让观众听到,结尾正面回答。每章就是回答它分到的问题:开头接住上一章引出的问题,问什么答什么(不许问 A 答 B,不许提前讲后面问题的答案),答完自然引出下一个问题(写成完整的一句问话),下一章开头就回答它。' +
-    (per.length ? '\n- 各章回答的问题:' + per.join(' / ') : '') + '\n- ' + qc().framingRule(c, run.source_chain);
+    (per.length ? '\n- 各章回答的问题:' + per.join(' / ') : '') + '\n- ' + qc().framingRule(c, run.source_chain, run);
 }
 // v1.79 蓝图审只剩「递进」没过、接着写的:写稿时提醒这几处别讲重复
 function softNotes(run) {

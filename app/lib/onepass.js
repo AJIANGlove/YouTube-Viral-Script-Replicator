@@ -105,6 +105,9 @@ function endEchoScan(text) {
   });
   return out;
 }
+function immersiveOf(run) { try { return require('./qchain').immersive(run); } catch (e) { return false; } }
+// v1.135 伏笔只埋不说:预告「这句话后面还会出现 / 记住这句话」的句子(全篇查)
+function announceHits(text) { try { return require('./qchain').announceScan(text); } catch (e) { return []; } }
 // B4:用「……」「...」收尾的半句话(吊着不说完的预告)。atEnd = 是这一章最后一句
 function danglingScan(text) {
   const hits = [];
@@ -142,6 +145,9 @@ function programStd(run, text) {
     problem: '这句话没说完,用「……」吊着' + (h.atEnd ? '(这一章最后一句)' : ''), plain: '观众以为马上要讲答案,结果下一句讲别的,会听糊涂',
     fix: '改成完整的一句问话,并让下一句 / 下一章开头直接回答它;要是答案在很后面才讲,就把这句预告挪到讲答案的那一章开头', by: '程序' }));
   realNameItems(run, text).forEach(x => out.push({ std: 'D2', chapter: x.chapter, level: '必须改', quote: x.quote, problem: x.problem, plain: '观众会以为这是那家真店的真实账目,被查出来就是造假', fix: x.fix, by: '程序' }));
+  announceHits(text).forEach(h => out.push({ std: 'B4', chapter: h.ch, level: '必须改', quote: h.quote,
+    problem: '空预告(「这句话后面还会出现」)', plain: '观众还不知道这句话为什么重要,先被告知「它会回来」,只会觉得莫名其妙;伏笔要挂在主线上、很快解开,回收时让观众自己对上',
+    fix: '删掉预告的这一句,埋的那句话 / 那个物件照常留着;回收时直接再用一次,不点明「之前说过」', by: '程序' }));
   chapterLenScan(run, text).forEach(x => out.push({ std: 'C3', chapter: x.ch, level: '可改可不改', quote: '',
     problem: x.kind === 'long' ? '这一章 ' + x.words + ' 词,按蓝图预算约 ' + x.want + ' 词,长了一倍多,可能拖沓' : '这一章只有 ' + x.words + ' 词,按蓝图预算约 ' + x.want + ' 词,不到四成,可能讲得太仓促',
     plain: x.kind === 'long' ? '观众在这一章容易走神' : '这一步没讲透,后面的结论接不住', fix: x.kind === 'long' ? '删掉这一章里重复的解释和次要细节,保留算账和关键证据' : '用这一章蓝图的任务和事实表里没用上的事实把这一步讲透,不重复前面的话', by: '程序' }));
@@ -169,6 +175,9 @@ function hedgeItems(text, language) {
   if (e.length >= 2) items.push({ id: 'D-2', chapter: e[0].ch, level: '关键', checked: true, src: '结尾重复(程序查的)',
     problem: '结尾把开头的场景又整段铺了一遍(' + e.length + ' 句和开头几乎一样),听起来像在重讲',
     quote: e[0].quote, fix: '结尾回收开头只用一句话点一下那个画面,然后直接落到结论;不把开头的描写和前面的账再说一遍' });
+  announceHits(text).forEach((h, i) => items.push({ id: 'D-5' + (i ? '-' + (i + 1) : ''), chapter: h.ch, level: '关键', checked: true, src: '空预告(程序查的)',
+    problem: '预告了「这句话 / 这一幕后面还会出现」,观众还不知道它为什么重要,先被告知它会回来,只会莫名其妙',
+    quote: h.quote, fix: '删掉预告的这一句,埋的那句话 / 那个物件照常留着;回收时直接再用一次,让观众自己认出来' }));
   danglingScan(text).forEach((d, i) => items.push({ id: 'D-3' + (i ? '-' + (i + 1) : ''), chapter: d.ch, level: d.atEnd ? '关键' : '一般', checked: d.atEnd, src: 'B4 半句话吊着(程序查的)',
     problem: '这句话没说完,用「……」吊着' + (d.atEnd ? '(这一章最后一句)' : '') + ',观众以为马上要讲答案,结果下一句讲别的',
     quote: d.quote, fix: '改成完整的一句问话,下一句 / 下一章开头直接回答;答案在很后面才讲的,把这句预告挪到讲答案的那一章开头' }));
@@ -300,7 +309,7 @@ function factsText(run) {
 }
 // v1.135 问题链和讲法(没有问题链的旧任务给一句说明,提示词照常)
 function chainText(run) { try { const Q = require('./qchain'); const c = run.question_chain; return c && arr(c.questions).length ? Q.brief(c) + '\n各章回答哪几个问题:' + chapterQMap(run) : '(这篇没有问题链,按蓝图每章的 answers_prev / leaves_question 接)'; } catch (e) { return '(没有问题链)'; } }
-function framingText(run) { try { return require('./qchain').framingRule(run.question_chain, run.source_chain) || '(没定讲法)'; } catch (e) { return '(没定讲法)'; } }
+function framingText(run) { try { const Q = require('./qchain'); const f = Q.framingRule(run.question_chain, run.source_chain, run); const ct = Q.contractText(run); return (f || '(没定讲法)') + (ct ? '\n' + ct : ''); } catch (e) { return '(没定讲法)'; } }
 function chapterQMap(run) {
   let bp = [];
   try { bp = pl().bpChaptersOf((run.outputs || {}).step1) || []; } catch (e) { bp = []; }
@@ -348,6 +357,7 @@ async function rewrite(runId) {
     save(runId, { stage: 'rewriting', rewrite_started: now(), error: '' });
     const openingRule = v ? 'CH01 的正文已经由人选定(就是下面初稿里的 CH01),一字不改,原样照抄;CH02 第一句要能接上 CH01 最后一句。'
       : ob().on(run) ? 'CH01 是照原片节拍写的开头,保留每一拍的内容和顺序,只许为了接后文改词;不许提前说破全片的答案。'
+      : immersiveOf(run) ? 'CH01 按下面【讲法】里的开场合同写。' + require('./qchain').contractRuleLine() + '不打招呼、不报流程。'
       : 'CH01 前 30 秒按这个顺序:兑现标题 → 和观众扯上关系 → 留一个没答案的问题 → 进第一个数字;不打招呼、不报流程。';
     const prompt = an().fillVars(readPrompt('onepass_rewrite.md'), {
       target_language: lang(run), title: titleOf(run), thesis: thesisText(run), opening_rule: openingRule,
@@ -651,7 +661,7 @@ async function finalFix(runId, body = {}) {
       const locked = op.rewrite && op.rewrite.opening_used >= 0;
       const prompt = an().fillVars(readPrompt('onepass_finalfix.md'), {
         target_language: lang(run), chapters: chapters.join('、'),
-        opening_rule: locked ? 'CH01 的开头是人选定的:CH01 里只改勾到的那一句,别的句子一字不动。' : '改 CH01 时保住开头 30 秒的钩子(兑现标题、留问题、第一个数),只改勾到的句子。',
+        opening_rule: locked ? 'CH01 的开头是人选定的:CH01 里只改勾到的那一句,别的句子一字不动。' : immersiveOf(run) ? '改 CH01 时保住开场合同(你是谁、你和题目的关系、你想要什么、留的那一个问题),只改勾到的句子。' : '改 CH01 时保住开头 30 秒的钩子(兑现标题、留问题、第一个数),只改勾到的句子。',
         issues: aiItems.map(x => '- [' + x.id + '][' + x.ch + '][' + x.label + '] ' + (x.problem || '') + (x.quote ? '\n  原句:「' + x.quote + '」' : '') + ctxOf(next, x.quote) + relatedOf(run, x, x.ch) + (x.fix ? '\n  改法:' + x.fix : '')).join('\n'),
         keep_numbers: keepNumbers(next, chapters, aiItems), roles: chapterRoles(run, next, chapters) || '(蓝图里没有这几章的任务说明,按稿子本身的上下文保住衔接和钩子)',
         note: body.note ? '\n人另外交代的:' + String(body.note).slice(0, 1000) : '',
@@ -966,4 +976,4 @@ function view(run) {
   };
 }
 
-module.exports = { realNameItems, chainText, framingText, danglingScan, chapterLenScan, programStd, whereOf, lengthWindow, lengthRule, chapterRoles, relatedOf, finalItems, finalFix, verifyFix, verifyProgram, startFinalFix, startVerify, acceptAll, finalFixUndo, redoFromDraft, hedgeScan, endEchoScan, hedgeItems, loopRewrite, basisRewrite, syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };
+module.exports = { announceHits, immersiveOf, realNameItems, chainText, framingText, danglingScan, chapterLenScan, programStd, whereOf, lengthWindow, lengthRule, chapterRoles, relatedOf, finalItems, finalFix, verifyFix, verifyProgram, startFinalFix, startVerify, acceptAll, finalFixUndo, redoFromDraft, hedgeScan, endEchoScan, hedgeItems, loopRewrite, basisRewrite, syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };
