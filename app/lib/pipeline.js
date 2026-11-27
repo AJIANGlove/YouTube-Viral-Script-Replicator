@@ -793,6 +793,16 @@ async function runGeneration0(runId) {
       store.saveRun(run);
       return;
     }
+    // v1.135 新流程「只改一次」:不跑 ③ 审核。它的结果只给 ④ 优化用,新流程不跑优化;体检里的二稿审稿做同一类事。
+    // 占位写成合法 JSON(页面会 JSON.parse step3),断点续跑也不会回头再跑这一步
+    if (step === 3 && run.flow === 'one_pass') {
+      outputs.step3 = JSON.stringify({ skipped: '新流程不跑审核:结果只给优化用,新流程不做优化;体检里的二稿审稿做同一类事' });
+      run.outputs = outputs;
+      run.steps.audit = { status: 'skipped', note: '新流程:不跑审核(体检里的二稿审稿代替)', finished_at: new Date().toISOString() };
+      run.current_step = 3;
+      store.saveRun(run);
+      continue;
+    }
     // v1.134 新流程「只改一次」:不跑 Step 4 优化(整篇改写),初稿直接当底稿,体检后只整篇重写一次
     if (step === 4 && run.flow === 'one_pass') {
       const meta = checks.stripMetaNotes(checks.extractFinalScript(outputs.step2), (run.audience || {}).target_language);

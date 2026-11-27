@@ -6784,7 +6784,7 @@ function webDur(sec) { const s = Math.max(0, Math.round(Number(sec) || 0)); cons
 function webMs(ms) { return webDur((Number(ms) || 0) / 1000); }
 function webClock(at) { const d = at ? new Date(at) : null; return d && !isNaN(d.getTime()) ? String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') : ''; }
 function webElapsed(L) { const t = L && L.started_at ? new Date(L.started_at).getTime() : 0; return t && !isNaN(t) ? webDur((Date.now() - t) / 1000) : ''; }
-function webByLabel(by) { return by === 'local' ? '本地' : by === 'api' ? '改用API' : '人工'; }
+function webByLabel(by, auto) { return by === 'local' ? (auto ? '本地·自动' : '本地·你点的') : by === 'api' ? '改用API' : '人工'; }
 // 账号状态条:plan / 可用性 / 用量 / 额度重置时间。
 // 用量是本地服务的计数,不是 Claude 官方剩余额度;重置时间只有撞额度后服务侧才返回(resetsAtMs),
 // 没撞就没有该字段,这里只如实展示,不虚构「Pro 平时的重置时间」。
@@ -6913,7 +6913,7 @@ function renderWebPanel(r) {
     ${w.segment_notice ? `<div style="margin:6px 0;padding:8px 10px;border-radius:6px;font-size:12.5px;line-height:1.6;background:${['broken','error'].includes(w.segment_notice.kind) ? '#fef2f2' : w.segment_notice.kind === 'warn' ? '#fffbeb' : '#f5f3ff'};border:1px solid ${['broken','error'].includes(w.segment_notice.kind) ? '#fecaca' : w.segment_notice.kind === 'warn' ? '#fde68a' : '#ddd6fe'};color:${['broken','error'].includes(w.segment_notice.kind) ? '#991b1b' : w.segment_notice.kind === 'warn' ? '#92400e' : '#5b21b6'}">${w.segment_notice.kind === 'broken' ? '⚠ 上下文已中断' : w.segment_notice.kind === 'error' ? '⚠ 本地模型没跑完(已停下等你处理)' : w.segment_notice.kind === 'warn' ? '⚠ 注意' : w.segment_notice.kind === 'ended' ? '⛓ 连续会话已结束' : '🔗 会话段已切换'}:${esc(w.segment_notice.text || '')} <span class="hint">${webClock(w.segment_notice.at)}</span></div>` : ''}
     ${w.segment && w.segment.account ? `<div class="hint" style="margin:2px 0 4px;color:#6d28d9">🔗 当前连续会话:账号 <b>${esc(w.segment.account)}</b>${w.segment.chat_url ? ' · 窗口 ' + esc(String(w.segment.chat_url).slice(-8)) : ' · 锚点待建立'}${w.segment.started_at ? ' · 起于 ' + webClock(w.segment.started_at) : ''}。段内不要新开对话、不要混用人工粘贴或 API,否则上下文会中断。</div>` : ''}
     ${done.length ? `<details style="margin:2px 0 4px"><summary class="hint" style="cursor:pointer">已完成 ${done.length} 条(点开看每条的来源和耗时)</summary>
-      <div style="margin-top:4px;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden">${done.slice(-12).reverse().map(d => `<div style="display:flex;gap:8px;align-items:center;padding:4px 8px;font-size:12px;border-bottom:1px solid #f3f4f6"><span style="color:#9ca3af;width:32px">${esc(d.id || '')}</span><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(d.label || '')}</span><span style="color:${d.by === 'local' ? '#059669' : '#6b7280'};width:52px">${webByLabel(d.by)}</span><span style="color:#6b7280;width:72px;text-align:right">${Number(d.chars || 0).toLocaleString()} 字</span><span style="color:#6b7280;width:74px;text-align:right">${d.elapsed_ms ? webMs(d.elapsed_ms) : ''}</span><span style="color:#9ca3af;width:40px;text-align:right">${webClock(d.at)}</span></div>`).join('')}</div>
+      <div style="margin-top:4px;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden">${done.slice(-12).reverse().map(d => `<div style="display:flex;gap:8px;align-items:center;padding:4px 8px;font-size:12px;border-bottom:1px solid #f3f4f6"><span style="color:#9ca3af;width:32px">${esc(d.id || '')}</span><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(d.label || '')}</span><span style="color:${d.by === 'local' ? '#059669' : '#6b7280'};width:78px">${webByLabel(d.by, d.auto)}</span><span style="color:#6b7280;width:72px;text-align:right">${Number(d.chars || 0).toLocaleString()} 字</span><span style="color:#6b7280;width:74px;text-align:right">${d.elapsed_ms ? webMs(d.elapsed_ms) : ''}</span><span style="color:#9ca3af;width:40px;text-align:right">${webClock(d.at)}</span></div>`).join('')}</div>
     </details>` : ''}`;
   if (!pend.length && w.on) html += `<div class="hint" style="margin-top:6px">${lastDone ? '上一条已提交(' + webByLabel(lastDone.by) + '),' : ''}程序正在跑下一步${['running', 'analyzing', 'awaiting_review', 'queued'].includes(r.status) ? '(检查、查资料或跑 API 的步骤)' : ''},下一条消息准备好会出现在这里。</div>`;
   const cardHtml = p => {
@@ -6930,12 +6930,20 @@ function renderWebPanel(r) {
     const finTip = eds ? `<div class="hint" style="margin:4px 0;color:#6d28d9">⚠ 终审「修改」这一步,步骤渠道和 Claude 主渠道都没回修改(${esc(((r.steps || {}).final_review || {}).stage || '')})。两种办法:① <b>新开一个对话</b>复制发过去,把回答粘回来(要有 ===EDIT=== 开头的修改块);② 点「<b>本地模型调用</b>」让程序再调一次模型。</div>` : fin ? `<div class="hint" style="margin:4px 0;color:#6d28d9">⚠ 终稿很长,Claude 网页版常常写到一半停下。<b>没写到最后一章就停了,在网页里点「继续」</b>(或者发一句「继续」),等它写完,把前后几段<b>按顺序拼在一起</b>粘进来。程序会先看章节齐不齐,缺章会告诉你缺哪几章;粘好后照样检查章节结构和篇幅,开头锁定也照样管。</div>`
       : aud ? `<div class="hint" style="margin:4px 0;color:#6d28d9">⚠ 审稿报告很长,Claude 网页版常常写到一半停下。<b>中途停了,在网页里点「继续」</b>(或者发一句「继续」),等它写到最后(最后几行是 ===ISSUES===、===ROUTE=== 这样给程序读的清单),把前后几段<b>按顺序拼在一起</b>粘进来。没有这几行,程序不收,会让你回去点「继续」。</div>` : '';
     const stepName = (STEP_LABELS[webStepOf(p)] || '').replace(/^\S+\s/, '');
-    return `<div class="web-item card" style="border:1px solid #ddd6fe;border-radius:6px;padding:10px;margin-top:8px;background:#faf5ff">
-      <div style="font-size:18px;font-weight:700;color:#6d28d9">轮到你了:${esc(webTitle(p))} <span class="hint" style="font-size:12px;font-weight:400">${stepName ? '步骤条上的「' + esc(stepName) + '」 · ' : ''}${esc(p.label)}</span></div>
-      ${webHow(p, r)}
+    // v1.135 本地模型正在跑这一条:标题说清「不用动」,复制 / 粘贴那套收起来(要人工接手再点开)
+    const lst = (p.local || {}).status;
+    const busy = ['running', 'queued', 'retry_wait'].includes(lst);
+    const manualPart = `${webHow(p, r)}
       ${msgs}
       ${finTip}
-      <textarea id="web-ans-${escAttr(p.id)}" rows="6" placeholder="${escAttr(ph)}" style="width:100%;box-sizing:border-box" oninput="webDrafts['${escAttr(p.id)}']=this.value">${esc(webDrafts[p.id] || '')}</textarea>
+      <textarea id="web-ans-${escAttr(p.id)}" rows="6" placeholder="${escAttr(ph)}" style="width:100%;box-sizing:border-box" oninput="webDrafts['${escAttr(p.id)}']=this.value">${esc(webDrafts[p.id] || '')}</textarea>`;
+    const sub = `<span class="hint" style="font-size:12px;font-weight:400">${stepName ? '步骤条上的「' + esc(stepName) + '」 · ' : ''}${esc(p.label)}</span>`;
+    return `<div class="web-item card" style="border:1px solid ${busy ? '#a7f3d0' : '#ddd6fe'};border-radius:6px;padding:10px;margin-top:8px;background:${busy ? '#f0fdf4' : '#faf5ff'}">
+      ${busy ? `<div style="font-size:18px;font-weight:700;color:#047857">本地模型正在${p.local.auto ? '自动' : ''}跑:${esc(webTitle(p))},不用动 ${sub}</div>
+      <div class="hint" style="margin:2px 0 4px">跑完会自动提交,可以离开这个页面。卡住或失败时这里会变回「轮到你了」。</div>
+      <details style="margin:4px 0"><summary class="hint" style="cursor:pointer">要人工接手(复制提示词、粘贴回答)点这里</summary>${manualPart}</details>`
+      : `<div style="font-size:18px;font-weight:700;color:#6d28d9">轮到你了:${esc(webTitle(p))} ${sub}</div>
+      ${manualPart}`}
       ${webLocalBar(p)}
     </div>`;
   };

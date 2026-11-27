@@ -42,8 +42,19 @@ const localErr = (lkind, msg, extra) => Object.assign(new Error(msg), { lkind: l
 const localKind = e => (e && e.lkind) || 'content';
 
 function isOn(runOrId) { const id = runOrId && typeof runOrId === 'object' ? runOrId.id : runOrId; const st = id ? load(id) : null; return !!(st && st.on); }
+// v1.135 省 API 钱:这些步骤只在「自动本地模型调用」开着时交给本地模型;没开自动的照旧走 API(不让人多粘一条)
+const LOCAL_ONLY_RE = /^AI 先调整/;
+function localOnlyWanted(runId) {
+  const st = load(runId);
+  let enabled = false;
+  try { enabled = !!localConfig().enabled; } catch (e) { enabled = false; }
+  return !!(st && st.on && st.auto_local && enabled);
+}
 function wants(runId, label) {
-  if (!runId || !WEB_RE.test(String(label || '')) || API_RE.test(String(label || ''))) return false;
+  const l = String(label || '');
+  if (!runId || API_RE.test(l)) return false;
+  if (LOCAL_ONLY_RE.test(l)) return localOnlyWanted(runId);
+  if (!WEB_RE.test(l)) return false;
   return isOn(runId);
 }
 // 这一步在页面上叫什么、属于哪段对话
@@ -255,6 +266,7 @@ function finish(web, p, content, how, meta) {
   web.pending = web.pending.filter(x => x.id !== p.id);
   web.done = [...web.done, {
     id: p.id, label: p.label, chat_name: p.chat_name, at: now(), chars: content.length, by: how,
+    ...(how === 'local' && p.local && p.local.auto ? { auto: true } : {}), // v1.135 本地模型:自动调用 / 人点的
     ...(meta || {}) // 本地模型调用:task_id / elapsed_ms / timed_out / sent / started_at,人工粘贴没有这些
   }].slice(-60);
   if (how === 'paste' || how === 'local') { // 本地提交与人工粘贴语义相同:都要留答案缓存,程序重启后跑到这一步直接取用,不用重发
@@ -371,6 +383,14 @@ let localTickTimer = null, localTicking = false;
 // 我方锁的 POST+轮询区间与服务侧粘贴时刻不重叠,只会把「等生成」也串行,让多账号并行失效。
 const segVirtual = a => !a || a === VIRTUAL_ACCOUNT;
 const RUN_END = new Set(['done', 'failed', 'cancelled']);
+// v1.135 新流程「只改一次」:管线写完初稿 status 就是 done,但后面的体检(二稿审稿)、整篇重写、终检还要用本地模型。
+// 这几段在跑时不算结束:不然自动本地模型调用不点火、连续会话被当成结束让出账号(用户 2026-11-26:体检的二稿审稿要手点)
+const ONEPASS_LIVE = new Set(['checking', 'rewriting', 'final_check']);
+function runEnded(run) {
+  if (!run || !RUN_END.has(String(run.status || ''))) return false;
+  if (run.flow === 'one_pass' && String(run.status) === 'done' && ONEPASS_LIVE.has(String((run.onepass || {}).stage || ''))) return false;
+  return true;
+}
 
 // 账号列表:必须读 /queue 的 accounts[](顶层 stats/quota 只代表默认账号)
 async function segListAccounts(cfg) {
@@ -547,7 +567,7 @@ function segSweepTerminal() {
   for (const runId of active) {
     let run = null;
     try { run = store.getRun(runId); } catch (e) {}
-    if (!run || !RUN_END.has(String(run.status || ''))) continue;
+    if (!run || !runEnded(run)) continue;
     const w = load(runId);
     if (w && arr(w.pending).length) continue;
     segReleaseAccounts(runId);
@@ -823,6 +843,12 @@ function localState(runId, id, patch) {
   return p;
 }
 
+// 人在页面上点「本地模型调用」:和自动的分开记
+function localClick(runId, id) {
+  const r = localRun(runId, id);
+  localState(runId, id, { auto: false });
+  return r;
+}
 function localRun(runId, id) {
   const web = must(runId);
   const p = web.pending.find(x => x.id === id);
@@ -1092,7 +1118,7 @@ function resetInterrupted() {
     try { w = JSON.parse(fs.readFileSync(fp, 'utf-8')); } catch (e) { continue; }
     let run = null;
     try { run = store.getRun(runId); } catch (e) {}
-    const ended = !!(run && RUN_END.has(String(run.status || '')));
+    const ended = !!(run && runEnded(run));
     parsed.push({ fp, runId, w, ended });
     if (!ended && w.segment && w.segment.account && !segVirtual(w.segment.account)) {
       const id = String(w.segment.account);
@@ -1345,7 +1371,7 @@ function ownerAlive(runId, account) {
   if (!w) return false;
   let run = null;
   try { run = store.getRun(runId); } catch (e) {}
-  const ended = !!(run && RUN_END.has(String(run.status || '')));
+  const ended = !!(run && runEnded(run));
   const seg = w.segment;
   if (!ended && seg && seg.chat_url && seg.account === account) return true;
   if (arr(w.pending).some(p => p.local && p.local.status === 'running')) return true;
@@ -1669,10 +1695,10 @@ function autoWanted(web, p, runId) {
   if (runId) {
     let run = null;
     try { run = store.getRun(runId); } catch (e) {}
-    if (run && (RUN_END.has(String(run.status || '')) || (run.review && run.review.audit))) return false;
+    if (run && (runEnded(run) || (run.review && run.review.audit))) return false;
   }
   const l = String(p.label || '');
-  return p.kind === 'script' || (WEB_RE.test(l) && !API_RE.test(l));
+  return p.kind === 'script' || ((WEB_RE.test(l) || LOCAL_ONLY_RE.test(l)) && !API_RE.test(l));
 }
 // 新挂出来的这一条:自动走本地模型。已经跑过/失败过/停过的不碰(失败停下等人,不自动重试)
 function autoKick(runId, id) {
@@ -1689,7 +1715,7 @@ function autoKick(runId, id) {
   });
 }
 function autoStart(runId, id) {
-  try { localRun(runId, id); return true; }
+  try { localRun(runId, id); localState(runId, id, { auto: true }); return true; } // v1.135 记下是程序自动点的(页面显示「自动」)
   catch (e) {
     const w = load(runId);
     const p = w && arr(w.pending).find(x => x.id === id);
@@ -1707,7 +1733,7 @@ function setAuto(runId, on) {
   if (on && !web.on) throw err('这个任务没开网页版,不能自动本地模型调用');
   let run = null;
   try { run = store.getRun(runId); } catch (e) {}
-  const ended = !!web.auto_local_done || !!(run && (RUN_END.has(String(run.status || '')) || (run.review && run.review.audit)));
+  const ended = !!web.auto_local_done || !!(run && (runEnded(run) || (run.review && run.review.audit)));
   if (on && ended) {
     // run 已结束 / 报告已出:强制不变量,自动链路到此为止,不再点火、不再制造过期卡
     web.auto_local = false;
@@ -1790,4 +1816,4 @@ function view(runOrId) {
   };
 }
 
-module.exports = { reopenAuto, WEB_RE, wants, relay, relayForce, forget, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, setAuto, autoLocalDone, startLocalTick, localTick, localDebug, whyBlocked, localDisplay, localTerminal, healStaleRunning, segReclaim, orphanCard, cardStepDone, sweepOrphans, sweepAllOrphans, dropCard, ownerAlive, reclaimResidualOwners, taskTierOf, segPlan, _waiters: waiters };
+module.exports = { LOCAL_ONLY_RE, runEnded, autoWanted, localClick, reopenAuto, WEB_RE, wants, relay, relayForce, forget, relayWrite, answer, useApi, turnOn, turnOff, clear, load, cancelRun, view, isOn, writeBatches, parseScript, chatName, prepareTitle, zhTitleOf, markCopied, localRun, localConfig, resetInterrupted, setAuto, autoLocalDone, startLocalTick, localTick, localDebug, whyBlocked, localDisplay, localTerminal, healStaleRunning, segReclaim, orphanCard, cardStepDone, sweepOrphans, sweepAllOrphans, dropCard, ownerAlive, reclaimResidualOwners, taskTierOf, segPlan, _waiters: waiters };

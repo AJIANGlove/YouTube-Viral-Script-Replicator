@@ -777,7 +777,7 @@ const server = http.createServer(async (req, res) => {
         if (body.action === 'copied') return send(res, 200, M.markCopied(webMatch[1], String(body.id || ''), body.i)); // v1.112 点过复制的记下来
         if (body.action === 'off') return send(res, 200, M.turnOff(webMatch[1]));
         // 本地模型:把这一条自动发出去,拿回回答直接当人粘的(逐条发,失败可再点续传)
-        if (body.action === 'local') return send(res, 200, M.localRun(webMatch[1], String(body.id || '')));
+        if (body.action === 'local') return send(res, 200, M.localClick(webMatch[1], String(body.id || '')));
         // v1.124 自动本地模型调用开关(on: true/false)
         if (body.action === 'auto') return send(res, 200, M.setAuto(webMatch[1], !!body.on));
         // 兜底:手动丢弃一张已被判定为过期的卡(自动收敛正常跑时不需要,只作应急出口)
