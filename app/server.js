@@ -1416,11 +1416,11 @@ const server = http.createServer(async (req, res) => {
       r.fingerprint_log = [...(r.fingerprint_log || []), {
         ts: new Date().toISOString(), base,
         replaced_count: replaced.length, failed_count: failed.length,
-        items: replaced.map(x => ({ chapter: x.chapter, original: x.original, replacement: x.replacement, occurrences: x.occurrences })),
+        items: replaced.map(x => ({ chapter: x.chapter, original: x.original, replacement: x.replacement, occurrences: x.occurrences, ...(x.note ? { note: x.note } : {}) })),
         failed: failed.map(x => ({ chapter: x.chapter, original: x.original, reason: x.reason }))
       }].slice(-50);
       store.saveRun(r);
-      return send(res, 200, { ok: true, replaced_count: replaced.length, failed });
+      return send(res, 200, { ok: true, replaced_count: replaced.length, failed, notes: replaced.filter(x => x.note).map(x => ({ chapter: x.chapter, original: x.original, note: x.note })) });
     }
 
     // ---------- YouTube 商业化检查(外挂功能,不影响生成管线) ----------
@@ -1508,11 +1508,11 @@ const server = http.createServer(async (req, res) => {
       r.compliance_log = [...(r.compliance_log || []), {
         ts: new Date().toISOString(), version, target,
         replaced_count: replaced.length, failed_count: failed.length,
-        items: replaced.map(x => ({ chapter: x.chapter, original: x.original, replacement: x.replacement, occurrences: x.occurrences })),
+        items: replaced.map(x => ({ chapter: x.chapter, original: x.original, replacement: x.replacement, occurrences: x.occurrences, ...(x.note ? { note: x.note } : {}) })),
         failed: failed.map(x => ({ chapter: x.chapter, original: x.original, reason: x.reason }))
       }].slice(-50);
       store.saveRun(r);
-      return send(res, 200, { ok: true, replaced_count: replaced.length, failed, target });
+      return send(res, 200, { ok: true, replaced_count: replaced.length, failed, target, notes: replaced.filter(x => x.note).map(x => ({ chapter: x.chapter, original: x.original, note: x.note })) });
     }
 
     // ---------- 开头留存检查(外挂功能,不影响生成管线;模式与商业化检查一致) ----------
@@ -1595,11 +1595,11 @@ const server = http.createServer(async (req, res) => {
       r.opening_log = [...(r.opening_log || []), {
         ts: new Date().toISOString(), version, target,
         replaced_count: replaced.length, failed_count: failed.length,
-        items: replaced.map(x => ({ chapter: x.chapter, original: x.original, replacement: x.replacement, occurrences: x.occurrences })),
+        items: replaced.map(x => ({ chapter: x.chapter, original: x.original, replacement: x.replacement, occurrences: x.occurrences, ...(x.note ? { note: x.note } : {}) })),
         failed: failed.map(x => ({ chapter: x.chapter, original: x.original, reason: x.reason }))
       }].slice(-50);
       store.saveRun(r);
-      return send(res, 200, { ok: true, replaced_count: replaced.length, failed, target });
+      return send(res, 200, { ok: true, replaced_count: replaced.length, failed, target, notes: replaced.filter(x => x.note).map(x => ({ chapter: x.chapter, original: x.original, note: x.note })) });
     }
 
     // ---------- 视频简介生成(外挂功能,不影响生成管线) ----------

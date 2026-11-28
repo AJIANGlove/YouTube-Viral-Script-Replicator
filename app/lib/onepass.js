@@ -107,6 +107,10 @@ function endEchoScan(text) {
 }
 function immersiveOf(run) { try { return require('./qchain').immersive(run); } catch (e) { return false; } }
 // v1.135 伏笔只埋不说:预告「这句话后面还会出现 / 记住这句话」的句子(全篇查)
+// v1.136 给人看的备注(【待制片人确认】)和创作者声明(「我根据史料重建了这个世界……都是虚构的」),用户定了都不要
+function metaHits(text) { try { return require('./metanotes').scan(text); } catch (e) { return []; } }
+const META_ZH = { meta: { problem: '稿子里留着给人看的备注', plain: '这是写给制片人 / 自己看的标记,配音会把它念出来', fix: '把括号连同里面的字整个删掉;要是那句内容本身也没把握,换成事实表里有的说法' },
+  creator: { problem: '创作者声明:跟观众交代视频怎么做的、哪些是虚构 / 重建的', plain: '观众正看进去,突然被拉出来听一段「声明」,沉浸感就断了;你定了不要这种声明', fix: '整句删掉,不换个说法留着;前后句接不上的,只顺一下衔接' } };
 function announceHits(text) { try { return require('./qchain').announceScan(text); } catch (e) { return []; } }
 // B4:用「……」「...」收尾的半句话(吊着不说完的预告)。atEnd = 是这一章最后一句
 function danglingScan(text) {
@@ -148,6 +152,7 @@ function programStd(run, text) {
   announceHits(text).forEach(h => out.push({ std: 'B4', chapter: h.ch, level: '必须改', quote: h.quote,
     problem: '空预告(「这句话后面还会出现」)', plain: '观众还不知道这句话为什么重要,先被告知「它会回来」,只会觉得莫名其妙;伏笔要挂在主线上、很快解开,回收时让观众自己对上',
     fix: '删掉预告的这一句,埋的那句话 / 那个物件照常留着;回收时直接再用一次,不点明「之前说过」', by: '程序' }));
+  metaHits(text).forEach(h => out.push({ std: 'D7', chapter: h.ch, level: '必须改', quote: h.quote, problem: META_ZH[h.kind].problem, plain: META_ZH[h.kind].plain, fix: META_ZH[h.kind].fix, by: '程序' }));
   chapterLenScan(run, text).forEach(x => out.push({ std: 'C3', chapter: x.ch, level: '可改可不改', quote: '',
     problem: x.kind === 'long' ? '这一章 ' + x.words + ' 词,按蓝图预算约 ' + x.want + ' 词,长了一倍多,可能拖沓' : '这一章只有 ' + x.words + ' 词,按蓝图预算约 ' + x.want + ' 词,不到四成,可能讲得太仓促',
     plain: x.kind === 'long' ? '观众在这一章容易走神' : '这一步没讲透,后面的结论接不住', fix: x.kind === 'long' ? '删掉这一章里重复的解释和次要细节,保留算账和关键证据' : '用这一章蓝图的任务和事实表里没用上的事实把这一步讲透,不重复前面的话', by: '程序' }));
@@ -178,6 +183,8 @@ function hedgeItems(text, language) {
   announceHits(text).forEach((h, i) => items.push({ id: 'D-5' + (i ? '-' + (i + 1) : ''), chapter: h.ch, level: '关键', checked: true, src: '空预告(程序查的)',
     problem: '预告了「这句话 / 这一幕后面还会出现」,观众还不知道它为什么重要,先被告知它会回来,只会莫名其妙',
     quote: h.quote, fix: '删掉预告的这一句,埋的那句话 / 那个物件照常留着;回收时直接再用一次,让观众自己认出来' }));
+  metaHits(text).slice(0, 8).forEach((h, i) => items.push({ id: 'D-6' + (i ? '-' + (i + 1) : ''), chapter: h.ch, level: '关键', checked: true, src: h.kind === 'meta' ? '给人看的备注(程序查的)' : '创作者声明(程序查的)',
+    problem: META_ZH[h.kind].problem + ',' + META_ZH[h.kind].plain, quote: h.quote, fix: META_ZH[h.kind].fix }));
   danglingScan(text).forEach((d, i) => items.push({ id: 'D-3' + (i ? '-' + (i + 1) : ''), chapter: d.ch, level: d.atEnd ? '关键' : '一般', checked: d.atEnd, src: 'B4 半句话吊着(程序查的)',
     problem: '这句话没说完,用「……」吊着' + (d.atEnd ? '(这一章最后一句)' : '') + ',观众以为马上要讲答案,结果下一句讲别的',
     quote: d.quote, fix: '改成完整的一句问话,下一句 / 下一章开头直接回答;答案在很后面才讲的,把这句预告挪到讲答案的那一章开头' }));
@@ -976,4 +983,4 @@ function view(run) {
   };
 }
 
-module.exports = { announceHits, immersiveOf, realNameItems, chainText, framingText, danglingScan, chapterLenScan, programStd, whereOf, lengthWindow, lengthRule, chapterRoles, relatedOf, finalItems, finalFix, verifyFix, verifyProgram, startFinalFix, startVerify, acceptAll, finalFixUndo, redoFromDraft, hedgeScan, endEchoScan, hedgeItems, loopRewrite, basisRewrite, syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };
+module.exports = { metaHits, announceHits, immersiveOf, realNameItems, chainText, framingText, danglingScan, chapterLenScan, programStd, whereOf, lengthWindow, lengthRule, chapterRoles, relatedOf, finalItems, finalFix, verifyFix, verifyProgram, startFinalFix, startVerify, acceptAll, finalFixUndo, redoFromDraft, hedgeScan, endEchoScan, hedgeItems, loopRewrite, basisRewrite, syncScriptCheck, canSwitch, switchToOnePass, switchBack, draftOf, FLOW, isOn, checkup, startCheckup, mergeItems, decide, rewrite, parseRewrite, newNumbers, finalCheck, startFinalCheck, fixOne, markOk, retry, view, busyOf, STAGE_ZH };

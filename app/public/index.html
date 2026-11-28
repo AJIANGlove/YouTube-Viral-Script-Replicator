@@ -8760,7 +8760,7 @@ async function applyFpReplace() {
       h.checked = false;
     });
     const failN = (r.failed || []).length;
-    fpState.summary = `已替换 ${r.replaced_count} 处${failN ? ',跳过 ' + failN + ' 处(见标红项)' : ''} — ${fpState.base === 'v2' ? 'V2.5' : 'V1.5'} 已生成/更新`;
+    fpState.summary = `已替换 ${r.replaced_count} 处${failN ? ',跳过 ' + failN + ' 处(见标红项)' : ''} — ${fpState.base === 'v2' ? 'V2.5' : 'V1.5'} 已生成/更新${metaNoteTail(r)}`;
     closeFpPopover();
     renderFpPanel();
     loadRunDetail(); // 刷新下方 .5 版本卡片与文案高亮(已替换的句变绿)
@@ -9070,7 +9070,7 @@ async function applyCpReplace() {
     });
     const failN = (r.failed || []).length;
     cpState.summary = r.replaced_count
-      ? `已替换 ${r.replaced_count} 处${failN ? ',跳过 ' + failN + ' 处(见标红项)' : ''} — ${CP_VERSION_LABELS[r.target] || ''} 已生成/更新`
+      ? `已替换 ${r.replaced_count} 处${failN ? ',跳过 ' + failN + ' 处(见标红项)' : ''} — ${CP_VERSION_LABELS[r.target] || ''} 已生成/更新${metaNoteTail(r)}`
       : `未替换任何内容，${failN} 处失败(见标红项)，文案未生成或更新`;
     if (r.replaced_count && r.target === cpState.version) cpState.scan.stale = true; // 原地更新后,本次结果基于旧文案
     closeFpPopover();
@@ -9380,7 +9380,7 @@ async function applyOrReplace() {
       h.checked = false;
     });
     const failN = (r.failed || []).length;
-    orState.summary = `已采纳 ${r.replaced_count} 处${failN ? ',跳过 ' + failN + ' 处(见标红项)' : ''} — ${CP_VERSION_LABELS[r.target] || ''} 已生成/更新,可对该版本重新检测对比评分`;
+    orState.summary = `已采纳 ${r.replaced_count} 处${failN ? ',跳过 ' + failN + ' 处(见标红项)' : ''} — ${CP_VERSION_LABELS[r.target] || ''} 已生成/更新,可对该版本重新检测对比评分${metaNoteTail(r)}`;
     if (r.target === orState.version) orState.scan.stale = true; // 原地更新后,本次结果基于旧文案
     closeFpPopover();
     renderOrPanel();
@@ -9583,6 +9583,8 @@ async function testScopeConnection(scope, pfx) {
 function testConnection() { testScopeConnection('main', 'cfg'); }
 function testTweakConnection() { testScopeConnection('tweak', 'twk'); }
 
+// v1.136:采纳的建议里带了【待…确认】这类给人看的备注,程序已删掉,提示用户再看一眼
+function metaNoteTail(r) { const n = (r && r.notes || []).length; return n ? `;其中 ${n} 条建议带了「待确认/需核实」之类的备注,已自动删掉,请再看一眼这几句` : ''; }
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
 // ================= 视频生成网站集成:绑定 / 频道下拉 / 推送弹窗 =================

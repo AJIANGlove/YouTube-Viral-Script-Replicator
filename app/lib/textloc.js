@@ -39,13 +39,20 @@ function applyReplacements(script, items) {
   let text = script;
   const replaced = [];
   const failed = [];
-  for (const item of items) {
+  for (let item of items) {
     const original = (item.original || '').trim();
     const suggestion = (item.suggestion || '').trim();
     const fail = reason => failed.push({ id: item.id || null, chapter: item.chapter || null, original, reason });
     if (!original) { fail('原句为空'); continue; }
     if (!suggestion) { fail('改写建议为空'); continue; }
     if (suggestion === original) { fail('改写与原句相同'); continue; }
+    // v1.135 建议里带了给人看的备注(【待制片人确认】这类)先删掉再换;新加了创作者声明(「我根据史料重建……都是虚构的」)的不换(用户定了不要)
+    const mn = require('./metanotes');
+    if (mn.hasCreator(suggestion) && !mn.hasCreator(original)) { fail('这条建议加了创作者声明(交代视频怎么做、哪些是虚构的),你定了不要这种声明,没换进去'); continue; }
+    const sm = mn.stripMeta(suggestion);
+    if (sm.notes.length) item = { ...item, meta_removed: sm.notes };
+    const cleanSug = sm.text.trim();
+    if (!cleanSug) { fail('这条建议只有备注没有正文'); continue; }
 
     const sections = splitChapters(text);
     // 定位目标章节:指定了 chapter 就在该章内找;未指定(或文中无章节)退化为全范围
@@ -59,9 +66,9 @@ function applyReplacements(script, items) {
     if (!within.includes(original)) { fail('未在指定位置找到原句(可能已被前序替换改动)'); continue; }
     const count = within.split(original).length - 1;
     // 同一句在本章出现多处时全部替换(同一指纹不应留一半),替换次数记入日志
-    const newWithin = within.split(original).join(suggestion);
+    const newWithin = within.split(original).join(cleanSug);
     text = text.slice(0, scope.start) + newWithin + text.slice(scope.end);
-    replaced.push({ id: item.id || null, chapter: item.chapter || null, original, replacement: suggestion, occurrences: count });
+    replaced.push({ id: item.id || null, chapter: item.chapter || null, original, replacement: cleanSug, occurrences: count, ...(item.meta_removed ? { note: '建议里带了给人看的备注 ' + item.meta_removed.join('、') + ',已删掉;这句内容请你自己再看一眼' } : {}) });
   }
   return { result: text, replaced, failed };
 }
