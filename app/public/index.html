@@ -76,7 +76,7 @@
   /* 频道行独占一行、单行横向滚动（原来跟排序框挤同一行，21 个频道会被压得只剩两三个可见） */
   #lib-channels, #gen-channels { flex: 0 0 100%; display: inline-flex; flex-wrap: nowrap; overflow-x: auto; max-width: 100%; padding-bottom: 2px; }
   #lib-channels .chip, #gen-channels .chip { flex: 0 0 auto; margin-top: 0; }
-  /* 分类行独占一整行,允许换行(5 个 chip 通常一行放得下) */
+  /* 分类行独占一整行,允许换行(7 个 chip 会折成两行) */
   #lib-tracks, #gen-tracks { flex: 0 0 100%; display: inline-flex; flex-wrap: wrap; }
   #lib-tracks .chip, #gen-tracks .chip { flex: 0 0 auto; margin-top: 0; }
   #lib-tracks:empty, #gen-tracks:empty { display: none; }
@@ -1230,7 +1230,7 @@ async function api(url, opts) {
 let libAssets = [];
 const libFilter = { q: '', channel: '', track: '', sort: '' };
 
-// 框架分类(按终审 5 赛道人工归类):顺序即 chip 顺序,由 /api/assets 的 tracks 下发
+// 框架分类(按终审 5 赛道人工归类 + 历史悬疑/国家通史 两个仅归类用的分类):顺序即 chip 顺序,由 /api/assets 的 tracks 下发
 // DEFAULT_TRACKS 仅作旧接口兜底与中文名后备
 const DEFAULT_TRACKS = [
   { key: 'econ', name: '经济拆账' },
@@ -1240,6 +1240,9 @@ const DEFAULT_TRACKS = [
   { key: 'general', name: '通用' }
 ];
 let assetTracks = DEFAULT_TRACKS;
+// 有终审规则的赛道(与 app/lib/review.js 的 TRACK_KEYS 一致):审稿赛道下拉只认这几个
+// 分类(cats)可以比它多 —— 如「历史悬疑 / 国家通史」只用于归类筛选,选到这类框架时审稿方向按通用赛道
+const REVIEW_TRACK_KEYS = ['econ', 'history', 'science', 'pov', 'general'];
 
 // 兼容 /api/assets 两种返回:{ items, tracks } 或旧版直接数组
 function normalizeAssetPayload(d) {
@@ -1436,7 +1439,7 @@ function assetCard(a, forSelect, opts) {
   </div>`;
 }
 
-// ---------- 人工改分类(2026-11-05):点按钮弹小面板,选中即存;只 5 个赛道,不支持清空 ----------
+// ---------- 人工改分类(2026-11-05):点按钮弹小面板,选中即存;分类取自 asset_categories.json,不支持清空 ----------
 let trackPop = null;
 function trackName(key) {
   const t = (assetTracks || []).find(x => x.key === key);
@@ -1456,7 +1459,7 @@ function openTrackPicker(ev, id, target) {
   const el = document.createElement('div');
   el.className = 'track-pop';
   el.dataset.asset = id;
-  el.innerHTML = `<div class="tp-head">当前：${esc(trackName(cur) || '未分类')}<br>只能改成下列 5 个赛道之一</div>` +
+  el.innerHTML = `<div class="tp-head">当前：${esc(trackName(cur) || '未分类')}<br>只能改成下列分类之一</div>` +
     (assetTracks || []).map(t => `<div class="tp-item${t.key === cur ? ' on' : ''}" onclick="saveTrackPick(event,'${id}','${t.key}','${target}')"><span class="tp-tick">${t.key === cur ? '✓' : ''}</span>${esc(t.name)}</div>`).join('');
   document.body.appendChild(el);
   // 贴着按钮下方展开;超出视窗右/下边界时回收到视窗内
@@ -2018,10 +2021,16 @@ function gotoStep2() {
   if (a && a.source_duration_ms) {
     document.getElementById('gen-goal').value = Math.round(a.source_duration_ms / 60000) + '分钟';
   }
-  // 频道方向:框架库分类就是审稿赛道,默认取框架所在分类
+  // 频道方向:框架所在分类就是审稿赛道,默认取框架所在分类
+  // 下拉只列有终审规则的 5 个赛道(顺序仍按 cats);框架在「历史悬疑 / 国家通史」这类仅归类用的分类里时,默认通用赛道
   const rt = document.getElementById('gen-review-track');
-  const keyOf = (a && a.track) || 'general';
-  rt.innerHTML = (assetTracks || []).map(t => `<option value="${escAttr(t.key)}"${t.key === keyOf ? ' selected' : ''}>${esc(t.name)}${t.key === keyOf ? '(框架所在分类)' : ''}</option>`).join('');
+  const assetTrackKey = (a && a.track) || '';
+  const keyOf = REVIEW_TRACK_KEYS.includes(assetTrackKey) ? assetTrackKey : 'general';
+  const reviewOpts = (assetTracks || []).filter(t => REVIEW_TRACK_KEYS.includes(t.key));
+  rt.innerHTML = (reviewOpts.length === REVIEW_TRACK_KEYS.length ? reviewOpts : DEFAULT_TRACKS).map(t => {
+    const on = t.key === keyOf;
+    return `<option value="${escAttr(t.key)}"${on ? ' selected' : ''}>${esc(t.name)}${on && t.key === assetTrackKey ? '(框架所在分类)' : ''}</option>`;
+  }).join('');
   document.getElementById('gen-status').textContent = '';
   setGenStep(2);
 }
