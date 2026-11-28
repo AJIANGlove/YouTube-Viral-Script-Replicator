@@ -340,7 +340,7 @@ const server = http.createServer(async (req, res) => {
     // ---------- 资产库 ----------
     // items=资产列表(每项带 track 分类 key);tracks=分类定义(顺序即前端 chip 顺序)
     if (url === '/api/code-status' && method === 'GET') return send(res, 200, { stale: codeSig() !== CODE_SIG, started_at: STARTED_AT });
-    if (url === '/api/assets' && method === 'GET') return send(res, 200, { items: store.listAssets(), tracks: store.assetCategories() });
+    if (url === '/api/assets' && method === 'GET') return send(res, 200, { items: store.listAssets(), tracks: store.assetCategories(), review_tracks: require('./lib/trackkeys').TRACK_KEYS });
 
     if (url === '/api/assets' && method === 'POST') {
       const files = await readBody(req);

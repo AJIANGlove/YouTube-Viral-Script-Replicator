@@ -2393,7 +2393,7 @@ function startFinal(runId, body) {
 //   ② 修改(final_revise.md):按审稿报告 + 人工勾选的二稿审稿问题,列出一处一处的修改,程序套到二稿上;
 //   ③ 复审(final_recheck.md):把改后的全文当新稿再审,给修改前后评分对照;没达标就再给一轮修改,套上后再复审一次(只出报告)。
 // 赛道配置在 prompts/final_tracks/*.md:不同赛道替换「维度4」的审查内容、频道定位、留存重点。
-const TRACK_KEYS = ['econ', 'history', 'science', 'pov', 'general'];
+const { TRACK_KEYS } = require('./trackkeys'); // v1.137 赛道清单收到一处
 // 终审只改一轮:审稿 → 修改 → 复审一次(只出报告);没达标交给人决定要不要再让 AI 改(用户 2026-10-31:「AI 自己改一轮还不行人工就要介入」)
 const FINAL_RECHECK_ROUNDS = 1;
 

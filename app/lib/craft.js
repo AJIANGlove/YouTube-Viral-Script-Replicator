@@ -5,10 +5,11 @@ const path = require('path');
 
 const FILE = path.join(__dirname, '..', 'prompts', 'craft_rules.md');
 // 规则表里的赛道名 → 程序的赛道 key(final_tracks/*.md)
-const TRACK_ALIAS = { pov: 'pov', 'pov 与等级沉浸': 'pov', 经济: 'econ', 经济拆账: 'econ', 历史: 'history', 历史与古人: 'history', 科普: 'science', 心理与动物科普: 'science', 通用: 'general' };
+// v1.137 新赛道:「赛道:悬疑」只给历史悬疑用、「赛道:企业」只给企业与系统兴衰用;写「历史」「经济」的规则不自动带给它们
+const TRACK_ALIAS = { pov: 'pov', 'pov 与等级沉浸': 'pov', 经济: 'econ', 经济拆账: 'econ', 历史: 'history', 历史与古人: 'history', 科普: 'science', 心理与动物科普: 'science', 悬疑: 'history_mystery', 历史悬疑: 'history_mystery', 企业: 'national_history', 企业与系统兴衰: 'national_history', 国家通史: 'national_history', 通用: 'general' };
 // 赛道证据卡名 → 赛道 key
-const CARD_TRACK = { 'POV 与等级沉浸': 'pov', 经济拆账: 'econ', 历史与古人: 'history', 心理与动物科普: 'science' };
-const TRACK_KEYS = ['econ', 'history', 'science', 'pov', 'general'];
+const CARD_TRACK = { 'POV 与等级沉浸': 'pov', 经济拆账: 'econ', 历史与古人: 'history', 心理与动物科普: 'science', 历史悬疑: 'history_mystery', 企业与系统兴衰: 'national_history' };
+const { TRACK_KEYS } = require('./trackkeys');
 const LANG_ALIAS = [[/korean|韩|한국/i, '韩语'], [/english|英/i, '英语'], [/japanese|日/i, '日语'], [/chinese|中文|汉语/i, '中文']];
 
 function loadRules() {

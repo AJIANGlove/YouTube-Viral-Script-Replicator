@@ -63,7 +63,7 @@ function trackDefaultVoice(run, trackKey) {
 // 列出所有赛道默认口气(给「赛道」页看)
 function listTrackDefaults() {
   if (!fs.existsSync(VOICES_DIR)) return [];
-  return fs.readdirSync(VOICES_DIR).map(f => f.match(/^_track_([a-z]+)_([a-z]+)\.json$/)).filter(Boolean).map(m => {
+  return fs.readdirSync(VOICES_DIR).map(f => f.match(/^_track_([a-z_]+)_([a-z]+)\.json$/)).filter(Boolean).map(m => {
     try { return { track: m[1], lang: m[2], voice: JSON.parse(fs.readFileSync(path.join(VOICES_DIR, m[0]), 'utf-8')) }; } catch (e) { return null; }
   }).filter(Boolean);
 }

@@ -36,7 +36,8 @@ function immersive(run) {
   try { t = require('./craft').trackOf(run); } catch (e) { t = ''; }
   if (t === 'pov') return true;
   if (t === 'history') { let st = ''; try { st = require('./craft').styleOf(run); } catch (e) {} return st !== '讲解式'; }
-  if (t === 'econ' || t === 'science') return false;
+  // v1.137 历史悬疑(第三人称讲案子 / 讲事件)、企业与系统兴衰(讲解)不套「你」的开场合同;穿越亲历的放 POV
+  if (t === 'econ' || t === 'science' || t === 'history_mystery' || t === 'national_history') return false;
   const mk = ((run || {}).source_chain || {}).main_kind;
   return mk === 'ladder' || mk === 'fate';
 }

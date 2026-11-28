@@ -25,7 +25,7 @@ function slugify(title) {
 // ---------- 资产 ----------
 function assetDir(id) { return path.join(ASSETS_ROOT, id); }
 
-// 框架库分类筛选:assets/_library/asset_categories.json 里按终审 5 赛道人工归类
+// 框架库分类筛选:assets/_library/asset_categories.json 里按终审赛道人工归类
 // 只用于浏览筛选,不参与 autoTrack;按 mtime 缓存,改分类文件后不必重启进程
 const CATEGORIES_FILE = path.join(ASSETS_ROOT, '_library', 'asset_categories.json');
 let catCache = { mtime: 0, tracks: [], items: {} };

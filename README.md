@@ -263,12 +263,12 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `final_open_extract.md` | 从旧复审报告里抽出 OPEN 待改清单 | 17 |
 | `final_fix_quotes.md` | 原句定位失败时让模型对照原章逐字重抄 | 20 |
 | `foreign_fix.md` | 外文稿混入汉字/假名的整行改写（规则修兜底） | 20 |
-| `final_tracks/*.md` | 终审与去AI感赛道配置（经济拆账/历史与古人/心理与动物科普/POV/通用） | 214 |
+| `final_tracks/*.md` | 终审与去AI感赛道配置（经济拆账/历史与古人/历史悬疑/企业与系统兴衰/心理与动物科普/POV/通用） | 302 |
 | `deai_diagnose.md` | 去AI感诊断（A–K 类型、P0/P1/P2、每处 3–5 种改法，论点句与数字不动） | 118 |
 | `rewrite_segment.md` | 单章按意见重写（对照审稿） | 42 |
 | `translate.md` | 中文对照翻译（按文本哈希去重） | 12 |
 | `retention_card.md` | 留存卡后三项文字重写 | 15 |
-| `track_cards.md` | 赛道卡（各赛道的必备事实与查证路径） | 40 |
+| `track_cards.md` | 赛道卡（各赛道的必备事实与查证路径；含历史悬疑、企业与系统兴衰两张） | 58 |
 | `craft_rules.md` | 写法规则库（通用/赛道/语言三层，建议制） | 70 |
 | `voice_draft.md` | 频道声音设定起草 | 20 |
 | `fingerprint_detect.md` | 爆款声音指纹检测与改写 | 42 |
@@ -290,7 +290,7 @@ retention_cards.json  留存卡（v1.1，每段 7 项；node app/bin/build_reten
 | `description.md` | 视频简介素材 | 42 |
 | `topics.md` | 选题推荐 | 59 |
 
-合计 78 份 `.md`（4581 行）+ `final_tracks/` 5 份（214 行）+ `fingerprints.json` 模式库；物理文件 83 份，合计 4795 行。
+合计 78 份 `.md`（4599 行）+ `final_tracks/` 7 份（302 行）+ `fingerprints.json` 模式库；物理文件 85 份，合计 4901 行。
 
 ### 历史版本
 
